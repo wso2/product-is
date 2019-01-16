@@ -59,6 +59,12 @@
                             </value>
                         </property>
                         <property>
+                            <name>test.users.location</name>
+                            <value>
+                                ${basedir}/src/test/resources/users/
+                            </value>
+                        </property>
+                        <property>
                             <name>server.list</name>
                             <value>
                                 IS

@@ -31,7 +31,7 @@
         <requestedAudience>Travelocity2</requestedAudience>
     </requestedAudiences>
     <requestedRecipients/>
-    <enableAttributeProfile>false</enableAttributeProfile>
+    <enableAttributeProfile>true</enableAttributeProfile>
     <isAssertionQueryRequestProfileEnabled>false</isAssertionQueryRequestProfileEnabled>
     <enableAttributesByDefault>true</enableAttributesByDefault>
     <nameIDFormat>urn/oasis/names/tc/SAML/1.1/nameid-format/emailAddress</nameIDFormat>
@@ -85,11 +85,56 @@
   <OutboundProvisioningConfig>
     <ProvisioningIdentityProviders/>
   </OutboundProvisioningConfig>
+  <!--<ClaimConfig>-->
+    <!--<RoleClaimURI/>-->
+    <!--<LocalClaimDialect>true</LocalClaimDialect>-->
+    <!--<IdpClaim/>-->
+    <!--<ClaimMappings/>-->
+    <!--<AlwaysSendMappedLocalSubjectId>false</AlwaysSendMappedLocalSubjectId>-->
+    <!--<SPClaimDialects/>-->
+  <!--</ClaimConfig>-->
   <ClaimConfig>
     <RoleClaimURI/>
     <LocalClaimDialect>true</LocalClaimDialect>
     <IdpClaim/>
-    <ClaimMappings/>
+    <ClaimMappings>
+      <ClaimMapping>
+        <LocalClaim>
+          <ClaimUri>http://wso2.org/claims/givenname</ClaimUri>
+          <claimId>0</claimId>
+        </LocalClaim>
+        <RemoteClaim>
+          <ClaimUri>http://wso2.org/claims/givenname</ClaimUri>
+          <claimId>0</claimId>
+        </RemoteClaim>
+        <RequestClaim>true</RequestClaim>
+        <MandatoryClaim>false</MandatoryClaim>
+      </ClaimMapping>
+      <ClaimMapping>
+        <LocalClaim>
+          <ClaimUri>http://wso2.org/claims/lastname</ClaimUri>
+          <claimId>0</claimId>
+        </LocalClaim>
+        <RemoteClaim>
+          <ClaimUri>http://wso2.org/claims/lastname</ClaimUri>
+          <claimId>0</claimId>
+        </RemoteClaim>
+        <RequestClaim>true</RequestClaim>
+        <MandatoryClaim>false</MandatoryClaim>
+      </ClaimMapping>
+      <ClaimMapping>
+        <LocalClaim>
+          <ClaimUri>http://wso2.org/claims/emailaddress</ClaimUri>
+          <claimId>0</claimId>
+        </LocalClaim>
+        <RemoteClaim>
+          <ClaimUri>http://wso2.org/claims/emailaddress</ClaimUri>
+          <claimId>0</claimId>
+        </RemoteClaim>
+        <RequestClaim>true</RequestClaim>
+        <MandatoryClaim>false</MandatoryClaim>
+      </ClaimMapping>
+    </ClaimMappings>
     <AlwaysSendMappedLocalSubjectId>false</AlwaysSendMappedLocalSubjectId>
     <SPClaimDialects/>
   </ClaimConfig>

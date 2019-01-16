@@ -285,17 +285,16 @@ public class SSOUtil {
      * @param response   HttpResponse to be referred for request sending.
      * @param userAgent  User-Agent
      * @param referrer   Referer Url
-     * @param artifact
      * @param httpClient HttpClient to be used for request sending.
      * @return HttpResponse after redirect
      * @throws IOException
      */
     public static HttpResponse sendRedirectRequest(HttpResponse response, String userAgent, String referrer,
-            String artifact, HttpClient httpClient) throws IOException, URISyntaxException {
+                                                   HttpClient httpClient) throws IOException, URISyntaxException {
         String url = getRedirectUrlFromResponse(response);
         Header[] headers = new Header[2];
         headers[0] = new BasicHeader(HttpHeaders.USER_AGENT, userAgent);
-        headers[1] = new BasicHeader(HttpHeaders.REFERER, String.format(referrer, artifact));
+        headers[1] = new BasicHeader(HttpHeaders.REFERER, referrer);
         return sendGetRequest(httpClient, url, null, headers);
     }
 

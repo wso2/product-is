@@ -14,39 +14,39 @@
  * limitations under the License.
  */
 
-package org.wso2.identity.scenarios.sso.test.saml;
+package org.wso2.identity.scenarios.commons;
 
+import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.Property;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
+import org.wso2.carbon.identity.sso.saml.stub.IdentitySAMLSSOConfigServiceIdentityException;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
+import org.wso2.identity.scenarios.commons.SAML2SSOTestBase;
 import org.wso2.identity.scenarios.commons.SAMLConfig;
-import org.wso2.identity.scenarios.commons.ScenarioTestBase;
 import org.wso2.identity.scenarios.commons.TestConfig;
 import org.wso2.identity.scenarios.commons.TestUserMode;
 import org.wso2.identity.scenarios.commons.clients.application.mgt.ApplicationManagementServiceClient;
-import org.wso2.identity.scenarios.commons.clients.sso.saml.SAMLSSOConfigServiceClient;
-import org.wso2.identity.scenarios.commons.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.wso2.identity.scenarios.commons.util.SSOUtil.getClaimMappings;
 
-public abstract class AbstractSAMLSSOTestCase extends ScenarioTestBase {
+public class SAMLSSOExternalAppTestClient extends SAML2SSOTestBase {
 
-    private static final Log log = LogFactory.getLog(AbstractSAMLSSOTestCase.class);
+    private static final Log log = LogFactory.getLog(SAMLSSOExternalAppTestClient.class);
 
     protected static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
     private static final String INBOUND_AUTH_TYPE = "samlsso";
@@ -54,6 +54,7 @@ public abstract class AbstractSAMLSSOTestCase extends ScenarioTestBase {
     private static final String ATTRIBUTE_CS_INDEX_NAME = "attrConsumServiceIndex";
     public static final String TENANT_DOMAIN_PARAM = "tenantDomain";
 
+    private static final String SAML_SSO_INDEX_URL = "/%s/";
     protected static final String SAML_SSO_URL = "%s/samlsso";
     protected static final String SAML_IDP_SLO_URL = SAML_SSO_URL + "?slo=true";
     protected static final String SAML_SSO_LOGIN_URL = "/%s/samlsso?SAML2.HTTPBinding=%s";
@@ -63,79 +64,63 @@ public abstract class AbstractSAMLSSOTestCase extends ScenarioTestBase {
     private static final String NAMEID_FORMAT = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
     private static final String LOGIN_URL = "/carbon/admin/login.jsp";
 
-    //Claim Uris
-    private static final String profileName = "default";
-
     private ApplicationManagementServiceClient applicationManagementServiceClient;
-    protected SAMLSSOConfigServiceClient ssoConfigServiceClient;
-    private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
-    protected CloseableHttpClient httpClient;
+    private SAMLSSOServiceProviderDTO samlssoServiceProviderDTO;
+    private String commonAuthUrl;
+    private String webAppHostUrl;
+    private String acsUrl;
+    private String samlSSOLoginUrl;
+    private String samlAppIndexUrl;
 
-    protected String samlSSOIDPUrl;
-    protected String samlIdpSloUrl;
-    protected String commonAuthUrl;
+    public SAMLSSOExternalAppTestClient(String backendURL, String sessionCookie, String backendServiceURL, String webAppHost,
+                                 ConfigurationContext configContext, SAMLConfig config) throws
+            Exception {
 
-    protected enum HttpBinding {
-
-        HTTP_REDIRECT("HTTP-Redirect"),
-        HTTP_POST("HTTP-POST");
-
-        String binding;
-
-        HttpBinding(String binding) {
-
-            this.binding = binding;
-        }
+        super(backendURL, backendServiceURL, sessionCookie, configContext);
+        this.commonAuthUrl = String.format(COMMON_AUTH_URL, backendURL);
+        this.applicationManagementServiceClient = new ApplicationManagementServiceClient(sessionCookie,
+                backendServiceURL, configContext);
+        this.webAppHostUrl = webAppHost;
+        this.acsUrl = String.format(webAppHost + ACS_URL, config.getArtifact());
+        this.samlSSOLoginUrl = String.format(webAppHost + SAML_SSO_LOGIN_URL, config.getArtifact()
+                , config.getHttpBinding());
+        this.samlAppIndexUrl = String.format(webAppHost + SAML_SSO_INDEX_URL, config.getArtifact(),
+                config.getHttpBinding());
+        this.samlssoServiceProviderDTO = createSsoServiceProviderDTO(config);
     }
 
-    protected enum App {
-
-        SUPER_TENANT_APP_WITH_SIGNING("travelocity.com", true),
-        TENANT_APP_WITHOUT_SIGNING("travelocity.com-saml-tenantwithoutsigning", false);
-
-        private String artifact;
-        private boolean signingEnabled;
-
-        App(String artifact, boolean signingEnabled) {
-
-            this.artifact = artifact;
-            this.signingEnabled = signingEnabled;
-        }
-
-        public String getArtifact() {
-
-            return artifact;
-        }
-
-        public boolean isSigningEnabled() {
-
-            return signingEnabled;
-        }
+    public String getSamlSSOIDPUrl() {
+        return samlSSOIDPUrl;
     }
 
-    public void testInit() throws Exception {
-        super.init();
-        loginAndObtainSessionCookie();
-        commonAuthUrl = String.format(COMMON_AUTH_URL, backendURL);
-        samlSSOIDPUrl = String.format(SAML_SSO_URL, backendURL);
-        samlIdpSloUrl = String.format(SAML_IDP_SLO_URL, backendURL);
-        applicationManagementServiceClient = new ApplicationManagementServiceClient(sessionCookie, backendServiceURL,
-                configContext);
-        ssoConfigServiceClient = new SAMLSSOConfigServiceClient(backendServiceURL, sessionCookie);
-        remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendServiceURL, sessionCookie);
-        httpClient = HttpClients.createDefault();
+    public String getSamlIdpSloUrl() {
+        return samlIdpSloUrl;
     }
 
-    public void testClear() throws Exception {
+    public String getCommonAuthUrl() {
+        return commonAuthUrl;
+    }
+
+    public String getWebAppHostUrl() {
+        return webAppHostUrl;
+    }
+
+    public String getAcsUrl() {
+        return acsUrl;
+    }
+
+    public String getSamlSSOLoginUrl() {
+        return samlSSOLoginUrl;
+    }
+
+    public String getSamlAppIndexUrl() {
+        return samlAppIndexUrl;
+    }
+
+    public void clear() {
 
         ssoConfigServiceClient = null;
         applicationManagementServiceClient = null;
-        remoteUSMServiceClient = null;
-        httpClient = null;
-    }
-
-    protected void createUser(SAMLConfig config) {
-        super.createUser(config, remoteUSMServiceClient, "default");
     }
 
     public void createApplication(SAMLConfig config, String appName) throws Exception {
@@ -166,10 +151,6 @@ public abstract class AbstractSAMLSSOTestCase extends ScenarioTestBase {
         applicationManagementServiceClient.updateApplicationData(serviceProvider);
     }
 
-    protected void deleteUser(SAMLConfig config) {
-        super.deleteUser(config, remoteUSMServiceClient);
-    }
-
     public void deleteApplication(String appName) throws Exception {
 
         applicationManagementServiceClient.deleteApplication(appName);
@@ -180,9 +161,9 @@ public abstract class AbstractSAMLSSOTestCase extends ScenarioTestBase {
 
         SAMLSSOServiceProviderDTO samlssoServiceProviderDTO = new SAMLSSOServiceProviderDTO();
         samlssoServiceProviderDTO.setIssuer(config.getArtifact());
-        samlssoServiceProviderDTO.setAssertionConsumerUrls(new String[]{String.format(webAppHost + ACS_URL,
+        samlssoServiceProviderDTO.setAssertionConsumerUrls(new String[]{String.format(webAppHostUrl + ACS_URL,
                 config.getArtifact())});
-        samlssoServiceProviderDTO.setDefaultAssertionConsumerUrl(String.format(webAppHost + ACS_URL, config
+        samlssoServiceProviderDTO.setDefaultAssertionConsumerUrl(String.format(webAppHostUrl + ACS_URL, config
                 .getArtifact()));
         samlssoServiceProviderDTO.setAttributeConsumingServiceIndex(ATTRIBUTE_CS_INDEX_VALUE);
         samlssoServiceProviderDTO.setNameIDFormat(NAMEID_FORMAT);
@@ -198,8 +179,17 @@ public abstract class AbstractSAMLSSOTestCase extends ScenarioTestBase {
         return samlssoServiceProviderDTO;
     }
 
-    public HttpResponse sendSAMLMessage(String url, String samlMsgKey, String samlMsgValue, SAMLConfig config)
-            throws IOException {
+    public boolean createSAMLconfigForServiceProvider() throws RemoteException, IdentitySAMLSSOConfigServiceIdentityException {
+        return ssoConfigServiceClient.addServiceProvider(this.samlssoServiceProviderDTO);
+    }
+
+    public boolean removeServiceProvider(SAMLConfig config) throws RemoteException, IdentitySAMLSSOConfigServiceIdentityException {
+        return ssoConfigServiceClient.removeServiceProvider(config.getArtifact());
+    }
+
+
+    public HttpResponse sendSAMLMessage(String url, String samlMsgKey, String samlMsgValue, SAMLConfig config,
+                                        HttpClient httpClient) throws IOException {
 
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         HttpPost post = new HttpPost(url);

@@ -118,6 +118,7 @@ public class SAMLConfig extends TestConfig {
                 ", params=" + StringUtils.removeEnd(paramString.toString(), "&") +
                 ']';
     }
+
 }
 
 
