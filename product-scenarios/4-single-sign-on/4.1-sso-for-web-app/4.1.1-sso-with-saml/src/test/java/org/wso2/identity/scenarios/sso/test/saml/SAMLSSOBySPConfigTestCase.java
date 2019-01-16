@@ -37,8 +37,10 @@ import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.identity.scenarios.commons.SAML2SSOTestBase;
 import org.wso2.identity.scenarios.commons.SAMLConfig;
+import org.wso2.identity.scenarios.commons.ScenarioTestBase;
 import org.wso2.identity.scenarios.commons.TestConfig;
 import org.wso2.identity.scenarios.commons.TestUserMode;
+import org.wso2.identity.scenarios.commons.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -53,20 +55,24 @@ import static org.wso2.identity.scenarios.commons.util.DataExtractUtil.isConsent
 import static org.wso2.identity.scenarios.commons.util.SSOUtil.sendPOSTConsentMessage;
 import static org.wso2.identity.scenarios.commons.util.SSOUtil.sendRedirectRequest;
 
-public class SAMLSSOBySPConfigTestCase extends SAML2SSOTestBase {
+public class SAMLSSOBySPConfigTestCase extends ScenarioTestBase {
 
     private static final Log log = LogFactory.getLog(SAMLSSOBySPConfigTestCase.class);
     private static final String SP_CONFIG_FILE = "sso-saml-app.xml";
     private static final String SP_NAME = "sso-saml-app";
+    private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
+    private static final String defaultProfileName = "default";
 
     private CloseableHttpClient client;
     private ServiceProvider serviceProvider;
     private SAMLSSOServiceProviderDTO samlssoServiceProviderDTO;
     private SAMLConfig samlConfig;
     private String spName;
+    private SAML2SSOTestBase saml2SSOTestBase;
+    private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
 
     @Factory(dataProvider = "samlConfigProvider")
-    public SAMLSSOBySPConfigTestCase(String spName, SAMLConfig config) {
+    public SAMLSSOBySPConfigTestCase(String spName, SAMLConfig config) throws Exception {
 
         this.samlConfig = config;
         this.spName = spName;
@@ -92,20 +98,23 @@ public class SAMLSSOBySPConfigTestCase extends SAML2SSOTestBase {
 
         super.init();
         client = HttpClients.createDefault();
+        loginAndObtainSessionCookie();
+        saml2SSOTestBase = new SAML2SSOTestBase(backendURL, backendServiceURL, sessionCookie, configContext);
+        remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendServiceURL, sessionCookie);
 
         populateTestData();
 
-        serviceProvider = getServiceProvider(spName);
+        serviceProvider = saml2SSOTestBase.getServiceProvider(spName);
         Assert.assertNotNull(serviceProvider, "Failed to load service provider : " + spName);
 
-        samlssoServiceProviderDTO = getSAMLSSOServiceProvider(serviceProvider);
+        samlssoServiceProviderDTO = saml2SSOTestBase.getSAMLSSOServiceProvider(serviceProvider);
         Assert.assertNotNull(samlssoServiceProviderDTO, "Failed to load SAML2 application in SP : " + spName);
     }
 
     private void populateTestData() throws Exception {
 
-        super.createUserFromTestConfig(samlConfig);
-        spName = createServiceProvider(SP_CONFIG_FILE);
+        super.createUser(samlConfig, remoteUSMServiceClient, defaultProfileName);
+        spName = saml2SSOTestBase.createServiceProvider(SP_CONFIG_FILE);
         Assert.assertNotNull(spName, "Failed to create service provider from file: " + SP_CONFIG_FILE);
     }
 
@@ -113,13 +122,13 @@ public class SAMLSSOBySPConfigTestCase extends SAML2SSOTestBase {
     public void clear() throws Exception {
 
         cleanUpTestData();
-        clearRuntimeVariables();
+        saml2SSOTestBase.clearRuntimeVariables();
         client.close();
     }
 
     private void cleanUpTestData() throws Exception {
         if (serviceProvider != null) {
-            deleteServiceProvider(serviceProvider.getApplicationName());
+            saml2SSOTestBase.deleteServiceProvider(serviceProvider.getApplicationName());
         }
         deleteUser(samlConfig, remoteUSMServiceClient);
     }
@@ -130,30 +139,33 @@ public class SAMLSSOBySPConfigTestCase extends SAML2SSOTestBase {
         try {
             HttpResponse response = sendSAMLAuthenticationRequest();
 
-            response = sendLoginPostMessage(response, samlSSOIDPUrl, USER_AGENT,
-                    samlssoServiceProviderDTO.getDefaultAssertionConsumerUrl(), samlConfig.getArtifact(),
-                    samlConfig.getUser().getUsername(), samlConfig.getUser().getPassword(), client);
+            response = saml2SSOTestBase.sendLoginPostMessage(response, samlssoServiceProviderDTO
+                            .getDefaultAssertionConsumerUrl(), samlConfig.getArtifact(), samlConfig.getUser()
+                    .getUsername(), samlConfig.getUser().getPassword(), client, USER_AGENT);
 
             response = handleUserConsent(response);
 
             String redirectUrl = getRedirectUrlFromResponse(response);
             if (StringUtils.isNotBlank(redirectUrl)) {
                 response = sendRedirectRequest(response, USER_AGENT, samlssoServiceProviderDTO
-                        .getDefaultAssertionConsumerUrl(), samlConfig.getArtifact(), client);
+                        .getDefaultAssertionConsumerUrl(), client);
             }
 
-            Response samlResponse = extractAndProcessSAMLResponse(response);
-            Assertion assertion = getAssertionFromSAMLResponse(samlResponse, samlssoServiceProviderDTO,
-                    getDefaultX509Cred());
-            Assert.assertNotNull(assertion, "SAML Assertion was not found in the response for " + samlConfig.toString
-                    ());
+            Response samlResponse = saml2SSOTestBase.extractAndProcessSAMLResponse(response);
+            Assertion assertion = saml2SSOTestBase.getAssertionFromSAMLResponse(samlResponse, samlssoServiceProviderDTO,
+                    saml2SSOTestBase.getDefaultX509Cred());
+            Assert.assertNotNull(assertion, "SAML Assertion was not found in the response for " +  samlConfig
+                    .toString());
 
-            Assert.assertTrue(validateAudienceRestrictionBySAMLSSOSPConfig(samlResponse, samlssoServiceProviderDTO,
-                    getDefaultX509Cred()), "Audience restriction validation failed for " + samlConfig.toString());
-            Assert.assertTrue(validateSAMLAssertionSignature(samlResponse, samlssoServiceProviderDTO,
-                    getDefaultX509Cred()), "Assertion signature validation failed for " + samlConfig.toString());
-            Assert.assertTrue(validateSAMLResponseSignature(samlResponse, samlssoServiceProviderDTO,
-                    getDefaultX509Cred()), "SAML response signature validation failed for " + samlConfig.toString());
+            Assert.assertTrue(saml2SSOTestBase.validateAudienceRestrictionBySAMLSSOSPConfig(samlResponse,
+                    samlssoServiceProviderDTO, saml2SSOTestBase.getDefaultX509Cred()), "Audience restriction " +
+                    "validation failed for " + samlConfig.toString());
+            Assert.assertTrue(saml2SSOTestBase.validateSAMLAssertionSignature(samlResponse, samlssoServiceProviderDTO,
+                    saml2SSOTestBase.getDefaultX509Cred()), "Assertion signature validation failed for " +
+                    samlConfig.toString());
+            Assert.assertTrue(saml2SSOTestBase.validateSAMLResponseSignature(samlResponse, samlssoServiceProviderDTO,
+                    saml2SSOTestBase.getDefaultX509Cred()), "SAML response signature validation failed for " +
+                    samlConfig.toString());
         } catch (Exception e) {
             Assert.fail("SAML SSO Login test failed for " + samlConfig.toString(), e);
         }
@@ -165,7 +177,7 @@ public class SAMLSSOBySPConfigTestCase extends SAML2SSOTestBase {
             Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
             EntityUtils.consume(response.getEntity());
 
-            response = sendPOSTConsentMessage(response, getCommonauthEndpoint(), USER_AGENT,
+            response = sendPOSTConsentMessage(response, saml2SSOTestBase.getCommonauthEndpoint(), USER_AGENT,
                     String.format(samlssoServiceProviderDTO.getDefaultAssertionConsumerUrl(),
                             samlConfig.getArtifact()), client, pastrCookie);
             EntityUtils.consume(response.getEntity());
@@ -174,9 +186,9 @@ public class SAMLSSOBySPConfigTestCase extends SAML2SSOTestBase {
     }
 
     private HttpResponse sendSAMLAuthenticationRequest() throws Exception {
-        AuthnRequest authnRequest = buildAuthnRequest(samlssoServiceProviderDTO, false,
-                false, samlConfig, samlSSOIDPUrl);
-        return sendSAMLAuthenticationRequest(client, authnRequest, samlConfig, samlSSOIDPUrl,
-                samlssoServiceProviderDTO, getDefaultX509Cred());
+        AuthnRequest authnRequest = saml2SSOTestBase.buildAuthnRequest(samlssoServiceProviderDTO, false,
+                false, samlConfig);
+        return saml2SSOTestBase.sendSAMLAuthenticationRequest(client, authnRequest, samlConfig,
+                samlssoServiceProviderDTO, saml2SSOTestBase.getDefaultX509Cred(), USER_AGENT);
     }
 }

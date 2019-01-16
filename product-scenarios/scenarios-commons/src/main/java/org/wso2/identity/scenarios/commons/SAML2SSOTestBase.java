@@ -16,6 +16,7 @@
 
 package org.wso2.identity.scenarios.commons;
 
+import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -96,9 +97,9 @@ import org.wso2.carbon.identity.sso.saml.stub.IdentitySAMLSSOConfigServiceIdenti
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderInfoDTO;
 import org.wso2.identity.scenarios.commons.clients.sso.saml.SAMLSSOConfigServiceClient;
-import org.wso2.identity.scenarios.commons.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.scenarios.commons.security.SSOAgentX509KeyStoreCredential;
 import org.wso2.identity.scenarios.commons.security.X509CredentialImpl;
+import org.wso2.identity.scenarios.commons.util.DataExtractUtil;
 import org.xml.sax.SAXException;
 
 import javax.crypto.SecretKey;
@@ -156,11 +157,11 @@ import static org.wso2.identity.scenarios.commons.util.SSOUtil.sendRedirectReque
 /**
  * Base test class for SAML SSO tests.
  */
-public class SAML2SSOTestBase extends SSOTestBase {
+public class SAML2SSOTestBase extends SSOCommonClient {
 
     private static final Log log = LogFactory.getLog(SAML2SSOTestBase.class);
 
-    protected static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
+//    protected static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
 //    private static final String SIGNATURE_ALGORITHM_SHA1_RSA = "SHA1withRSA";
 //    private static final String XML_DIGEST_ALGORITHM_SHA1 = "http://www.w3.org/2000/09/xmldsig#sha1";
     private static final String TENANT_DOMAIN_PARAM = "tenantDomain";
@@ -179,19 +180,29 @@ public class SAML2SSOTestBase extends SSOTestBase {
     protected String samlSSOIDPUrl;
     protected String samlIdpSloUrl;
     protected SAMLSSOConfigServiceClient ssoConfigServiceClient;
-    protected RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
     private X509Credential defaultX509Cred;
 
     private static boolean isBootStrapped = false;
     private static Random random = new Random();
 
-    public void init() throws Exception {
+//    public void init() throws Exception {
+//
+//        super.init();
+//        samlSSOIDPUrl = String.format(SAML_SSO_URL, backendURL);
+//        samlIdpSloUrl = String.format(SAML_IDP_SLO_URL, backendURL);
+//        ssoConfigServiceClient = new SAMLSSOConfigServiceClient(backendServiceURL, sessionCookie);
+//        remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendServiceURL, sessionCookie);
+//        defaultX509Cred = new X509CredentialImpl(new SSOAgentX509KeyStoreCredential(new FileInputStream(
+//                System.getProperty(TRUSTSTORE_LOCATION)), System.getProperty(TRUSTSTORE_PASSWORD).toCharArray(),
+//                defaultPublicCertAlias, defaultPrivatekeyAlias, defaultPrivatekeyPassword.toCharArray()));
+//    }
+    public SAML2SSOTestBase(String backendURL, String backendServiceURL, String sessionCookie, ConfigurationContext
+            configContext) throws Exception {
 
-        super.init();
+        super(sessionCookie, backendServiceURL, backendURL, configContext);
         samlSSOIDPUrl = String.format(SAML_SSO_URL, backendURL);
         samlIdpSloUrl = String.format(SAML_IDP_SLO_URL, backendURL);
         ssoConfigServiceClient = new SAMLSSOConfigServiceClient(backendServiceURL, sessionCookie);
-        remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendServiceURL, sessionCookie);
         defaultX509Cred = new X509CredentialImpl(new SSOAgentX509KeyStoreCredential(new FileInputStream(
                 System.getProperty(TRUSTSTORE_LOCATION)), System.getProperty(TRUSTSTORE_PASSWORD).toCharArray(),
                 defaultPublicCertAlias, defaultPrivatekeyAlias, defaultPrivatekeyPassword.toCharArray()));
@@ -202,7 +213,7 @@ public class SAML2SSOTestBase extends SSOTestBase {
      *
      * @return
      */
-    protected X509Credential getDefaultX509Cred() {
+    public X509Credential getDefaultX509Cred() {
 
         return defaultX509Cred;
     }
@@ -215,7 +226,7 @@ public class SAML2SSOTestBase extends SSOTestBase {
      * @throws RemoteException
      * @throws IdentitySAMLSSOConfigServiceIdentityException
      */
-    protected SAMLSSOServiceProviderDTO getSAMLSSOServiceProvider(ServiceProvider serviceProvider)
+    public SAMLSSOServiceProviderDTO getSAMLSSOServiceProvider(ServiceProvider serviceProvider)
             throws RemoteException, IdentitySAMLSSOConfigServiceIdentityException {
 
         InboundAuthenticationRequestConfig[] inboundAuthRequestConfigs = serviceProvider
@@ -236,7 +247,7 @@ public class SAML2SSOTestBase extends SSOTestBase {
      * @throws RemoteException
      * @throws IdentitySAMLSSOConfigServiceIdentityException
      */
-    protected SAMLSSOServiceProviderDTO getSAMLSSOServiceProviderByIssuer(String issuerName)
+    public SAMLSSOServiceProviderDTO getSAMLSSOServiceProviderByIssuer(String issuerName)
             throws RemoteException, IdentitySAMLSSOConfigServiceIdentityException {
 
         SAMLSSOServiceProviderInfoDTO samlssoSPInfoDTO = ssoConfigServiceClient.getServiceProviders();
@@ -273,30 +284,29 @@ public class SAML2SSOTestBase extends SSOTestBase {
      * @param client                    Closable HTTP Client.
      * @param saml2AuthRequest          SAML2 authentication request.
      * @param samlConfig                SAML configuration.
-     * @param idpURL                    IDP URL.
      * @param samlssoServiceProviderDTO SAMLSSO Service Provider DTO.
      * @param x509Credential            x509Credential implementation.
+     * @param userAgent
      * @return HTTP Response with SessionDataKey from the IDP.
      * @throws Exception
      */
-    protected HttpResponse sendSAMLAuthenticationRequest(CloseableHttpClient client, AuthnRequest saml2AuthRequest,
-                                                         SAMLConfig samlConfig, String idpURL,
-                                                         SAMLSSOServiceProviderDTO samlssoServiceProviderDTO,
-                                                         X509Credential x509Credential) throws Exception {
+    public HttpResponse sendSAMLAuthenticationRequest(CloseableHttpClient client, AuthnRequest saml2AuthRequest,
+                                                      SAMLConfig samlConfig,
+                                                      SAMLSSOServiceProviderDTO samlssoServiceProviderDTO,
+                                                      X509Credential x509Credential, String userAgent) throws Exception {
 
         HttpResponse response;
         if (SAMLConstants.SAML2_POST_BINDING_URI.equals(samlConfig.getHttpBinding())) {
             String samlPostRequest = buildSAMLPOSTRequest(saml2AuthRequest, samlConfig, x509Credential);
-            response = sendSAMLPostMessage(client, idpURL, SAML_REQUEST_PARAM,
-                    samlPostRequest, samlConfig);
+            response = sendSAMLPostMessage(client, samlSSOIDPUrl, SAML_REQUEST_PARAM,
+                    samlPostRequest, samlConfig, userAgent);
             EntityUtils.consume(response.getEntity());
 
-            response = sendRedirectRequest(response, USER_AGENT, samlssoServiceProviderDTO
-                    .getDefaultAssertionConsumerUrl(), samlConfig.getArtifact(), client);
+            response = sendRedirectRequest(response, userAgent, samlssoServiceProviderDTO.getDefaultAssertionConsumerUrl(), client);
         } else if (SAMLConstants.SAML2_REDIRECT_BINDING_URI.equals(samlConfig.getHttpBinding())) {
-            String redirectRequest = buildRedirectRequest(saml2AuthRequest, samlConfig, idpURL, x509Credential);
+            String redirectRequest = buildRedirectRequest(saml2AuthRequest, samlConfig, samlSSOIDPUrl, x509Credential);
             response = sendGetRequest(client, redirectRequest, null, new Header[]{new BasicHeader(HttpHeaders
-                    .USER_AGENT, USER_AGENT)});
+                    .USER_AGENT, userAgent)});
         } else {
             throw new Exception("Unsupported HTTP binding format " + samlConfig.getHttpBinding());
         }
@@ -309,15 +319,16 @@ public class SAML2SSOTestBase extends SSOTestBase {
      * @param idpURL IDP URL.
      * @param samlMsgKey SAML request param name.
      * @param samlMsgValue Encoded SAML request message.
+     * @param userAgent
      * @return Redirection response to authentication endpoint.
      * @throws IOException
      */
     protected HttpResponse sendSAMLPostMessage(CloseableHttpClient client, String idpURL, String samlMsgKey,
-                                               String samlMsgValue, SAMLConfig samlConfig) throws IOException {
+                                               String samlMsgValue, SAMLConfig samlConfig, String userAgent) throws IOException {
 
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         HttpPost post = new HttpPost(idpURL);
-        post.setHeader(HEADER_USER_AGENT, USER_AGENT);
+        post.setHeader(HEADER_USER_AGENT, userAgent);
         urlParameters.add(new BasicNameValuePair(samlMsgKey, samlMsgValue));
         if (samlConfig.getUserMode() == TestUserMode.TENANT_ADMIN ||
                 samlConfig.getUserMode() == TestUserMode.TENANT_USER) {
@@ -344,16 +355,14 @@ public class SAML2SSOTestBase extends SSOTestBase {
      * @param isPassiveAuthn isPassiveAuthn
      * @param isForceAuthn isForceAuthn
      * @param samlConfig SAML configuration.
-     * @param destinationUrl Destination URL.
      * @return
      */
-    protected AuthnRequest buildAuthnRequest(SAMLSSOServiceProviderDTO samlssoSPDTO, boolean isPassiveAuthn,
-                                             boolean isForceAuthn, SAMLConfig samlConfig,
-                                             String destinationUrl) {
+    public AuthnRequest buildAuthnRequest(SAMLSSOServiceProviderDTO samlssoSPDTO, boolean isPassiveAuthn,
+                                          boolean isForceAuthn, SAMLConfig samlConfig) {
 
         return buildAuthnRequest(samlssoSPDTO.getIssuer(), samlssoSPDTO.getNameIDFormat(), isForceAuthn,
                 isPassiveAuthn, samlConfig.getHttpBinding(), samlssoSPDTO.getDefaultAssertionConsumerUrl(),
-                destinationUrl);
+                samlSSOIDPUrl);
     }
 
     /**
@@ -371,8 +380,8 @@ public class SAML2SSOTestBase extends SSOTestBase {
                                              boolean isForceAuthn, SAMLConfig samlConfig,
                                              String destinationUrl, Extensions extensions) {
 
-        AuthnRequest authRequest = buildAuthnRequest(samlssoSPDTO, isPassiveAuthn, isForceAuthn, samlConfig,
-                destinationUrl);
+        AuthnRequest authRequest = buildAuthnRequest(samlssoSPDTO, isPassiveAuthn, isForceAuthn, samlConfig
+        );
         authRequest.setExtensions(extensions);
         return authRequest;
     }
@@ -393,7 +402,7 @@ public class SAML2SSOTestBase extends SSOTestBase {
                                              String destinationUrl, Integer consumerServiceIndex) {
 
         AuthnRequest authRequest = buildAuthnRequest(samlssoSPDTO, isPassiveAuthn, isForceAuthn,
-                samlConfig, destinationUrl);
+                samlConfig);
         // Requesting Attributes. This Index value is registered in the IDP.
         authRequest.setAssertionConsumerServiceIndex(consumerServiceIndex);
         return authRequest;
@@ -417,7 +426,7 @@ public class SAML2SSOTestBase extends SSOTestBase {
                                              Integer consumerServiceIndex) {
 
         AuthnRequest authRequest = buildAuthnRequest(samlssoSPDTO, isPassiveAuthn,
-                isForceAuthn, samlConfig, destinationUrl);
+                isForceAuthn, samlConfig);
         authRequest.setExtensions(extensions);
         // Requesting Attributes. This Index value is registered in the IDP.
         authRequest.setAssertionConsumerServiceIndex(consumerServiceIndex);
@@ -649,27 +658,26 @@ public class SAML2SSOTestBase extends SSOTestBase {
      * Send basic authentication credentials to commonauth endpoint.
      *
      * @param response Response from the authentication endpoint with sessionDataKey.
-     * @param url CommmonAuth endpoint URL.
-     * @param userAgent User agent header value.
      * @param acsUrl Assertion consumer URL.
      * @param artifact Artifact name.
      * @param userName Username
      * @param password Password
      * @param httpClient Closable HTTP client.
+     * @param userAgent
      * @return Authentication response from the commonauth endpoint.
      * @throws Exception
      */
-    protected HttpResponse sendLoginPostMessage(HttpResponse response, String url, String userAgent, String acsUrl,
-                                                String artifact, String userName, String password, HttpClient
-                                                        httpClient) throws Exception {
+    public HttpResponse sendLoginPostMessage(HttpResponse response, String acsUrl,
+                                             String artifact, String userName, String password, HttpClient
+                                                     httpClient, String userAgent) throws Exception {
 
         Header[] headers = new Header[2];
         headers[0] = new BasicHeader(HttpHeaders.USER_AGENT, userAgent);
         headers[1] = new BasicHeader(HttpHeaders.REFERER, String.format(acsUrl, artifact));
         Map<String, String> urlParameters = new HashMap<>();
         urlParameters.put(TOCOMMONAUTH, "true");
-        return sendLoginPostWithParamsAndHeaders(httpClient, getSessionDataKey(response), url, userName, password,
-                urlParameters, headers);
+        return sendLoginPostWithParamsAndHeaders(httpClient, DataExtractUtil.getSessionDataKey(response),
+                samlSSOIDPUrl, userName, password, urlParameters, headers);
     }
 
     /**
@@ -679,7 +687,7 @@ public class SAML2SSOTestBase extends SSOTestBase {
      * @return SAML response instance.
      * @throws Exception
      */
-    protected Response extractAndProcessSAMLResponse(HttpResponse response) throws Exception {
+    public Response extractAndProcessSAMLResponse(HttpResponse response) throws Exception {
 
         String encodedSAML2ResponseString = extractSAMLResponse(response);
         EntityUtils.consume(response.getEntity());
@@ -714,7 +722,7 @@ public class SAML2SSOTestBase extends SSOTestBase {
      * @return SAML Response instance.
      * @throws Exception
      */
-    protected Assertion getAssertionFromSAMLResponse(Response samlResponse, SAMLSSOServiceProviderDTO samlssoSPDTO,
+    public Assertion getAssertionFromSAMLResponse(Response samlResponse, SAMLSSOServiceProviderDTO samlssoSPDTO,
                                                      X509Credential x509Credential) throws Exception {
 
         Assertion assertion = null;
@@ -796,7 +804,7 @@ public class SAML2SSOTestBase extends SSOTestBase {
      * @return returns true if the audiences in the SAMLSSO SP config are found.
      * @throws Exception
      */
-    protected boolean validateAudienceRestrictionBySAMLSSOSPConfig(Response samlResponse,
+    public boolean validateAudienceRestrictionBySAMLSSOSPConfig(Response samlResponse,
                                                                    SAMLSSOServiceProviderDTO samlssoSPDTO,
                                                                    X509Credential x509Credential) throws Exception {
 
@@ -870,7 +878,7 @@ public class SAML2SSOTestBase extends SSOTestBase {
      * @return returns true if SAML2 response signature validation is successful.
      * @throws Exception
      */
-    protected boolean validateSAMLResponseSignature(Response response,
+    public boolean validateSAMLResponseSignature(Response response,
                                                     SAMLSSOServiceProviderDTO samlssoServiceProviderDTO,
                                                     X509Credential x509Credential) throws Exception {
 
@@ -898,7 +906,7 @@ public class SAML2SSOTestBase extends SSOTestBase {
      * @return returns true if SAML2 assertion signature validation is successful.
      * @throws Exception
      */
-    protected boolean validateSAMLAssertionSignature(Response samlResponse,
+    public boolean validateSAMLAssertionSignature(Response samlResponse,
                                                      SAMLSSOServiceProviderDTO samlssoSPDTO,
                                                      X509Credential x509Credential) throws Exception {
 
@@ -968,16 +976,6 @@ public class SAML2SSOTestBase extends SSOTestBase {
     protected static String extractSAMLResponse(HttpResponse response) throws IOException {
 
         return extractValueFromResponse(response, "name='" + SAML_RESPONSE_PARAM + "'", 5);
-    }
-
-    /**
-     * Create user.
-     *
-     * @param samlConfig SAML configuration.
-     */
-    protected void createUserFromTestConfig(SAMLConfig samlConfig) {
-
-        super.createUser(samlConfig, remoteUSMServiceClient, defaultProfileName);
     }
 
     private XMLObject buildXMLObject(QName objectQName) throws ConfigurationException {

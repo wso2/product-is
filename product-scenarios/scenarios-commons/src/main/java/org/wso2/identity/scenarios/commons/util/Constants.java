@@ -122,4 +122,11 @@ public class Constants {
 
     }
 
+    public static class HttpBinding {
+
+        public static final String HTTP_REDIRECT = "HTTP-Redirect";
+        public static final String HTTP_POST = "HTTP-POST";
+
+    }
+
 }
