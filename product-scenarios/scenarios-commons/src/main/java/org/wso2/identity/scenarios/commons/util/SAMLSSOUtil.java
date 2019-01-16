@@ -35,10 +35,10 @@ import static org.wso2.identity.scenarios.commons.util.SSOUtil.sendLoginPostWith
 public class SAMLSSOUtil {
 
     public static HttpResponse sendLoginPostMessage(String sessionKey, String url, String userAgent, String
-            acsUrl, String artifact, String userName, String password, HttpClient httpClient) throws Exception {
+            acsUrl, String userName, String password, HttpClient httpClient) throws Exception {
         Header[] headers = new Header[2];
         headers[0] = new BasicHeader(HttpHeaders.USER_AGENT, userAgent);
-        headers[1] = new BasicHeader(HttpHeaders.REFERER, String.format(acsUrl, artifact));
+        headers[1] = new BasicHeader(HttpHeaders.REFERER, acsUrl);
         Map<String, String> urlParameters = new HashMap<>();
         urlParameters.put(TOCOMMONAUTH, "true");
         return sendLoginPostWithParamsAndHeaders(httpClient, sessionKey, url, userName, password, urlParameters,
