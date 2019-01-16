@@ -973,7 +973,7 @@ public class SAML2SSOTestBase extends SSOCommonClient {
      * @return SAML Response string
      * @throws IOException
      */
-    protected static String extractSAMLResponse(HttpResponse response) throws IOException {
+    public static String extractSAMLResponse(HttpResponse response) throws IOException {
 
         return extractValueFromResponse(response, "name='" + SAML_RESPONSE_PARAM + "'", 5);
     }
