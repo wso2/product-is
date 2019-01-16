@@ -42,6 +42,8 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.wso2.identity.scenarios.commons.util.Constants.SAML_REQUEST_PARAM;
+import static org.wso2.identity.scenarios.commons.util.DataExtractUtil.extractValueFromResponse;
 import static org.wso2.identity.scenarios.commons.util.SSOUtil.getClaimMappings;
 
 public class SAMLSSOExternalAppTestClient extends SAML2SSOTestBase {
@@ -201,5 +203,9 @@ public class SAMLSSOExternalAppTestClient extends SAML2SSOTestBase {
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
 
         return httpClient.execute(post);
+    }
+
+    public static String extractSAMLRequest(HttpResponse response) throws IOException {
+        return extractValueFromResponse(response, "name='" + SAML_REQUEST_PARAM + "'", 5);
     }
 }
