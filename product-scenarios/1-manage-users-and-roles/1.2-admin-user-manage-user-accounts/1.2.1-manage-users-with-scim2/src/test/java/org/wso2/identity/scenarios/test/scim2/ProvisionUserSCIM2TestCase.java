@@ -25,29 +25,33 @@ import org.apache.http.impl.client.HttpClients;
 import org.json.simple.JSONObject;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.identity.scenarios.commons.SCIM2TestBase;
+import org.wso2.identity.scenarios.commons.SCIM2CommonClient;
+import org.wso2.identity.scenarios.commons.ScenarioTestBase;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJSONFromResponse;
 
-public class ProvisionUserSCIM2TestCase extends SCIM2TestBase {
+public class ProvisionUserSCIM2TestCase extends ScenarioTestBase {
 
     private CloseableHttpClient client;
     private String userId;
+    private SCIM2CommonClient scim2Client;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
         super.init();
+        scim2Client = new SCIM2CommonClient(getDeploymentProperty(IS_HTTPS_URL));
         client = HttpClients.createDefault();
     }
 
     @Test(description = "1.2.1.1")
     public void testSCIM2ProvisionUser() throws Exception {
 
-        JSONObject userJSON = getUserJSON("scim2user.json");
-        HttpResponse response = provisionUser(client, userJSON);
+        JSONObject userJSON = scim2Client.getUserJSON("scim2user.json");
+        HttpResponse response = scim2Client.provisionUser(client, userJSON, ADMIN_USERNAME, ADMIN_PASSWORD);
 
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED,
                 "User has not been created successfully");
@@ -62,7 +66,7 @@ public class ProvisionUserSCIM2TestCase extends SCIM2TestBase {
           dependsOnMethods = "testSCIM2ProvisionUser")
     public void testSCIM2GetUser() throws Exception {
 
-        HttpResponse response = getUser(client, userId);
+        HttpResponse response = scim2Client.getUser(client, userId, ADMIN_USERNAME, ADMIN_PASSWORD);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK, "Failed to retrieve the user");
 
         JSONObject returnedUserJSON = getJSONFromResponse(response);
@@ -74,7 +78,7 @@ public class ProvisionUserSCIM2TestCase extends SCIM2TestBase {
           dependsOnMethods = "testSCIM2GetUser")
     private void testSCIM2DeleteUser() throws Exception {
 
-        HttpResponse response = deleteUser(client, userId);
+        HttpResponse response = scim2Client.deleteUser(client, userId, ADMIN_USERNAME, ADMIN_PASSWORD);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_NO_CONTENT, "Failed to delete the user");
     }
 }
