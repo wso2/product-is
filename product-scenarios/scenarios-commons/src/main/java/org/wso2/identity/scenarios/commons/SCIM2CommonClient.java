@@ -34,7 +34,7 @@ import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.send
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendPostRequestWithJSON;
 import static org.wso2.identity.scenarios.commons.util.SCIMProvisioningUtil.getCommonHeaders;
 
-public class SCIM2TestBase extends ScenarioTestBase {
+public class SCIM2CommonClient {
 
     private static final String SCIM2_USERS_LOCATION = "scim2.users.location";
 
@@ -44,11 +44,13 @@ public class SCIM2TestBase extends ScenarioTestBase {
 
     private static final String SCIM2_ENDPOINT_GROUPS = "Groups";
 
+    private String identityServerHttpsUrl;
+
     private JSONParser parser;
 
-    public void init() throws Exception {
+    public SCIM2CommonClient(String identityServerHttpsUrl) {
 
-        super.init();
+        this.identityServerHttpsUrl = identityServerHttpsUrl;
         parser = new JSONParser();
     }
 
@@ -100,12 +102,12 @@ public class SCIM2TestBase extends ScenarioTestBase {
      * @return Http Response.
      * @throws Exception Exception.
      */
-    public HttpResponse provisionUser(HttpClient client, JSONObject userJSON) throws Exception {
+    public HttpResponse provisionUser(HttpClient client, JSONObject userJSON, String username, String password)
+            throws Exception {
 
         System.out.println(getSCIM2UsersEndpoint());
         System.out.println(userJSON.toJSONString());
-        return sendPostRequestWithJSON(client, getSCIM2UsersEndpoint(), userJSON,
-                getCommonHeaders(ADMIN_USERNAME, ADMIN_PASSWORD));
+        return sendPostRequestWithJSON(client, getSCIM2UsersEndpoint(), userJSON, getCommonHeaders(username, password));
     }
 
     /**
@@ -116,10 +118,11 @@ public class SCIM2TestBase extends ScenarioTestBase {
      * @return Http Response.
      * @throws Exception Exception.
      */
-    public HttpResponse provisionGroup(HttpClient client, JSONObject groupJSON) throws Exception {
+    public HttpResponse provisionGroup(HttpClient client, JSONObject groupJSON, String username, String password)
+            throws Exception {
 
         return sendPostRequestWithJSON(client, getSCIM2GroupsEndpoint(), groupJSON,
-                getCommonHeaders(ADMIN_USERNAME, ADMIN_PASSWORD));
+                getCommonHeaders(username, password));
     }
 
     /**
@@ -130,38 +133,10 @@ public class SCIM2TestBase extends ScenarioTestBase {
      * @return Http Response.
      * @throws Exception Exception.
      */
-    public HttpResponse getUser(HttpClient client, String userId) throws Exception {
+    public HttpResponse getUser(HttpClient client, String userId, String username, String password) throws Exception {
 
         return sendGetRequest(client, getSCIM2UsersEndpoint() + "/" + userId, null,
-                getCommonHeaders(ADMIN_USERNAME, ADMIN_PASSWORD));
-    }
-
-    /**
-     * Delete group.
-     *
-     * @param client Http client.
-     * @param groupId Group id.
-     * @return Http Response.
-     * @throws Exception Exception.
-     */
-    public HttpResponse getGroup(HttpClient client, String groupId) throws Exception {
-
-        return sendGetRequest(client, getSCIM2GroupsEndpoint() + "/" + groupId, null,
-                getCommonHeaders(ADMIN_USERNAME, ADMIN_PASSWORD));
-    }
-
-    /**
-     * Delete user.
-     *
-     * @param client Http client.
-     * @param userId User id.
-     * @return Http Response.
-     * @throws Exception Exception.
-     */
-    public HttpResponse deleteUser(HttpClient client, String userId) throws Exception {
-
-        return sendDeleteRequest(client, getSCIM2UsersEndpoint() + "/" + userId,
-                getCommonHeaders(ADMIN_USERNAME, ADMIN_PASSWORD));
+                getCommonHeaders(username, password));
     }
 
     /**
@@ -172,10 +147,39 @@ public class SCIM2TestBase extends ScenarioTestBase {
      * @return Http Response.
      * @throws Exception Exception.
      */
-    public HttpResponse deleteGroup(HttpClient client, String groupId) throws Exception {
+    public HttpResponse getGroup(HttpClient client, String groupId, String username, String password) throws Exception {
+
+        return sendGetRequest(client, getSCIM2GroupsEndpoint() + "/" + groupId, null,
+                getCommonHeaders(username, password));
+    }
+
+    /**
+     * Delete user.
+     *
+     * @param client Http client.
+     * @param userId User id.
+     * @return Http Response.
+     * @throws Exception Exception.
+     */
+    public HttpResponse deleteUser(HttpClient client, String userId, String username, String password)
+            throws Exception {
+
+        return sendDeleteRequest(client, getSCIM2UsersEndpoint() + "/" + userId, getCommonHeaders(username, password));
+    }
+
+    /**
+     * Delete group.
+     *
+     * @param client  Http client.
+     * @param groupId Group id.
+     * @return Http Response.
+     * @throws Exception Exception.
+     */
+    public HttpResponse deleteGroup(HttpClient client, String groupId, String username, String password)
+            throws Exception {
 
         return sendDeleteRequest(client, getSCIM2GroupsEndpoint() + "/" + groupId,
-                getCommonHeaders(ADMIN_USERNAME, ADMIN_PASSWORD));
+                getCommonHeaders(username, password));
     }
 
     /**
@@ -185,7 +189,7 @@ public class SCIM2TestBase extends ScenarioTestBase {
      */
     public String getSCIM2UsersEndpoint() {
 
-        return backendURL + "/" + SCIM2_ENDPOINT + "/" + SCIM2_ENDPOINT_USERS;
+        return this.identityServerHttpsUrl + "/" + SCIM2_ENDPOINT + "/" + SCIM2_ENDPOINT_USERS;
     }
 
     /**
@@ -195,6 +199,6 @@ public class SCIM2TestBase extends ScenarioTestBase {
      */
     public String getSCIM2GroupsEndpoint() {
 
-        return backendURL + "/" + SCIM2_ENDPOINT + "/" + SCIM2_ENDPOINT_GROUPS;
+        return this.identityServerHttpsUrl + "/" + SCIM2_ENDPOINT + "/" + SCIM2_ENDPOINT_GROUPS;
     }
 }
