@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+  ~ Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<ServiceProvider>
+  <ApplicationName>sso-saml.app-2</ApplicationName>
+  <Description/>
+  <InboundAuthenticationConfig>
+    <InboundAuthenticationRequestConfigs>
+      <InboundAuthenticationRequestConfig>
+        <InboundAuthKey>sso-saml.app</InboundAuthKey>
+        <InboundAuthType>openid</InboundAuthType>
+        <InboundConfigType>standardAPP</InboundConfigType>
+        <Properties/>
+      </InboundAuthenticationRequestConfig>
+      <InboundAuthenticationRequestConfig>
+        <InboundAuthKey>Travelocity1</InboundAuthKey>
+        <InboundAuthType>samlsso</InboundAuthType>
+        <InboundConfigType>standardAPP</InboundConfigType>
+        <inboundConfiguration><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<samlssoServiceProviderDTO>
+    <issuer>Travelocity1</issuer>
+    <assertionConsumerUrls>
+        <assertionConsumerUrl>http://sso-saml.app/acs</assertionConsumerUrl>
+    </assertionConsumerUrls>
+    <defaultAssertionConsumerUrl>http://sso-saml.app/acs</defaultAssertionConsumerUrl>
+    <certAlias>wso2carbon</certAlias>
+    <loginPageURL></loginPageURL>
+    <attributeConsumingServiceIndex>932949473</attributeConsumingServiceIndex>
+    <doSingleLogout>true</doSingleLogout>
+    <doSignAssertions>true</doSignAssertions>
+    <doSignResponse>true</doSignResponse>
+    <requestedClaims/>
+    <requestedAudiences>
+        <requestedAudience>Travelocity2</requestedAudience>
+    </requestedAudiences>
+    <requestedRecipients/>
+    <enableAttributeProfile>true</enableAttributeProfile>
+    <isAssertionQueryRequestProfileEnabled>false</isAssertionQueryRequestProfileEnabled>
+    <enableAttributesByDefault>true</enableAttributesByDefault>
+    <nameIDFormat>urn/oasis/names/tc/SAML/1.1/nameid-format/emailAddress</nameIDFormat>
+    <idPInitSSOEnabled>false</idPInitSSOEnabled>
+    <idPInitSLOEnabled>false</idPInitSLOEnabled>
+    <idpInitSLOReturnToURLs/>
+    <doValidateSignatureInRequests>true</doValidateSignatureInRequests>
+    <signingAlgorithmURI>http://www.w3.org/2000/09/xmldsig#rsa-sha1</signingAlgorithmURI>
+    <digestAlgorithmURI>http://www.w3.org/2000/09/xmldsig#sha1</digestAlgorithmURI>
+    <enableSAML2ArtifactBinding>false</enableSAML2ArtifactBinding>
+    <doValidateSignatureInArtifactResolve>false</doValidateSignatureInArtifactResolve>
+</samlssoServiceProviderDTO>
+]]></inboundConfiguration>
+        <Properties>
+          <Property>
+            <Name>attrConsumServiceIndex</Name>
+            <Value>932949473</Value>
+            <IsConfidential>false</IsConfidential>
+            <Required>false</Required>
+            <DisplayOrder>0</DisplayOrder>
+            <IsAdvanced>false</IsAdvanced>
+          </Property>
+        </Properties>
+      </InboundAuthenticationRequestConfig>
+      <InboundAuthenticationRequestConfig>
+        <InboundAuthKey>sso-saml.app</InboundAuthKey>
+        <InboundAuthType>passivests</InboundAuthType>
+        <InboundConfigType>standardAPP</InboundConfigType>
+        <Properties/>
+      </InboundAuthenticationRequestConfig>
+    </InboundAuthenticationRequestConfigs>
+  </InboundAuthenticationConfig>
+  <LocalAndOutBoundAuthenticationConfig>
+    <AuthenticationSteps/>
+    <AuthenticationType>default</AuthenticationType>
+    <alwaysSendBackAuthenticatedListOfIdPs>false</alwaysSendBackAuthenticatedListOfIdPs>
+    <UseTenantDomainInUsername>false</UseTenantDomainInUsername>
+    <UseUserstoreDomainInRoles>true</UseUserstoreDomainInRoles>
+    <UseUserstoreDomainInUsername>false</UseUserstoreDomainInUsername>
+    <EnableAuthorization>false</EnableAuthorization>
+  </LocalAndOutBoundAuthenticationConfig>
+  <RequestPathAuthenticatorConfigs/>
+  <InboundProvisioningConfig>
+    <ProvisioningUserStore/>
+    <IsProvisioningEnabled>false</IsProvisioningEnabled>
+    <IsDumbModeEnabled>false</IsDumbModeEnabled>
+  </InboundProvisioningConfig>
+  <OutboundProvisioningConfig>
+    <ProvisioningIdentityProviders/>
+  </OutboundProvisioningConfig>
+  <!--<ClaimConfig>-->
+    <!--<RoleClaimURI/>-->
+    <!--<LocalClaimDialect>true</LocalClaimDialect>-->
+    <!--<IdpClaim/>-->
+    <!--<ClaimMappings/>-->
+    <!--<AlwaysSendMappedLocalSubjectId>false</AlwaysSendMappedLocalSubjectId>-->
+    <!--<SPClaimDialects/>-->
+  <!--</ClaimConfig>-->
+  <ClaimConfig>
+    <RoleClaimURI/>
+    <LocalClaimDialect>true</LocalClaimDialect>
+    <IdpClaim/>
+    <ClaimMappings>
+      <ClaimMapping>
+        <LocalClaim>
+          <ClaimUri>http://wso2.org/claims/givenname</ClaimUri>
+          <claimId>0</claimId>
+        </LocalClaim>
+        <RemoteClaim>
+          <ClaimUri>http://wso2.org/claims/givenname</ClaimUri>
+          <claimId>0</claimId>
+        </RemoteClaim>
+        <RequestClaim>true</RequestClaim>
+        <MandatoryClaim>false</MandatoryClaim>
+      </ClaimMapping>
+      <ClaimMapping>
+        <LocalClaim>
+          <ClaimUri>http://wso2.org/claims/lastname</ClaimUri>
+          <claimId>0</claimId>
+        </LocalClaim>
+        <RemoteClaim>
+          <ClaimUri>http://wso2.org/claims/lastname</ClaimUri>
+          <claimId>0</claimId>
+        </RemoteClaim>
+        <RequestClaim>true</RequestClaim>
+        <MandatoryClaim>false</MandatoryClaim>
+      </ClaimMapping>
+      <ClaimMapping>
+        <LocalClaim>
+          <ClaimUri>http://wso2.org/claims/emailaddress</ClaimUri>
+          <claimId>0</claimId>
+        </LocalClaim>
+        <RemoteClaim>
+          <ClaimUri>http://wso2.org/claims/emailaddress</ClaimUri>
+          <claimId>0</claimId>
+        </RemoteClaim>
+        <RequestClaim>true</RequestClaim>
+        <MandatoryClaim>false</MandatoryClaim>
+      </ClaimMapping>
+    </ClaimMappings>
+    <AlwaysSendMappedLocalSubjectId>false</AlwaysSendMappedLocalSubjectId>
+    <SPClaimDialects/>
+  </ClaimConfig>
+  <PermissionAndRoleConfig>
+    <Permissions/>
+    <RoleMappings/>
+    <IdpRoles/>
+  </PermissionAndRoleConfig>
+  <IsSaaSApp>false</IsSaaSApp>
+</ServiceProvider>
