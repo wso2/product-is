@@ -119,7 +119,7 @@ public class TestPassiveSTS extends ScenarioTestBase {
         appMgtclient = new ApplicationManagementServiceClient(sessionCookie, backendServiceURL, configContext);
         remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendServiceURL, sessionCookie);
 
-        client = HttpClients.createDefault();
+        client = createHttpClient();
         this.passiveStsURL = backendURL + PASSIVESTS_URI_CONTEXT;
         passiveStsSampleAppURL = String.format(PASSIVE_STS_SAMPLE_APP_URL, webAppHost);
         commonAuthUrl = backendURL + COMMONAUTH_URI_CONTEXT;
