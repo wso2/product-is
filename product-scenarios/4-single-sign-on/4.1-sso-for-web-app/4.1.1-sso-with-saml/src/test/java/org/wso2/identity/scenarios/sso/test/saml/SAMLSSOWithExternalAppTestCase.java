@@ -34,6 +34,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
+import org.wso2.identity.scenarios.commons.SAML2SSOTestBase;
 import org.wso2.identity.scenarios.commons.SAMLConfig;
 import org.wso2.identity.scenarios.commons.SAMLSSOExternalAppTestClient;
 import org.wso2.identity.scenarios.commons.ScenarioTestBase;
@@ -104,53 +105,29 @@ public class SAMLSSOWithExternalAppTestCase extends ScenarioTestBase {
         remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendServiceURL, sessionCookie);
         samlssoExternalAppClient = new SAMLSSOExternalAppTestClient(backendURL, sessionCookie, backendServiceURL,
                 webAppHost, configContext, config);
-
-        populateTestData();
-
-    }
-
-    private void populateTestData() throws Exception {
-        super.createUser(config, remoteUSMServiceClient, DEFAULT_PROFILE_NAME);
-        samlssoExternalAppClient.createApplication(config, APPLICATION_NAME);
-    }
-
-    private void cleanUpTestData() throws Exception {
-        super.deleteUser(config, remoteUSMServiceClient);
-        samlssoExternalAppClient.deleteApplication(APPLICATION_NAME);
     }
 
     @AfterClass(alwaysRun = true)
-    public void testClear() throws Exception {
-        cleanUpTestData();
+    public void testClear() {
         samlssoExternalAppClient.clear();
     }
 
     @Test(description = "4.1.1.1", priority = 1)
-    public void testAddSP() throws Exception {
-        Boolean isAddSuccess = samlssoExternalAppClient.createSAMLconfigForServiceProvider();
-        assertTrue(isAddSuccess, "Adding a service provider has failed for " + config);
+    public void retrieveSAMLSSOServiceProvider() throws Exception {
 
-        SAMLSSOServiceProviderDTO samlssoServiceProviderDTOs = samlssoExternalAppClient
-                .getSAMLSSOServiceProviderByIssuer(config.getArtifact());
+        SAMLSSOServiceProviderDTO samlssoServiceProviderDTOs = samlssoExternalAppClient.getSAMLSSOServiceProviderByIssuer(config.getArtifact());
         Assert.assertNotNull(samlssoServiceProviderDTOs, "Adding a service provider has failed for " + config);
     }
 
-    @Test(description = "4.1.1.3", groups = "wso2.is", dependsOnMethods = {"testSAMLSSOLogin"}, singleThreaded = true)
-    public void testRemoveSP()
-            throws Exception {
-        Boolean isAddSuccess = samlssoExternalAppClient.removeServiceProvider(config);
-        assertTrue(isAddSuccess, "Removing a service provider has failed for " + config);
-    }
-
-    @Test(alwaysRun = true, description = "4.1.1.2", dependsOnMethods = {"testAddSP"})
-    public void testSAMLSSOIsPassiveLogin() throws Exception {
+    @Test(alwaysRun = true, description = "4.1.1.2", dependsOnMethods = {"retrieveSAMLSSOServiceProvider"})
+    public void testSAMLSSOIsPassiveLogin() {
         try {
 
             CloseableHttpClient client = createHttpClient();
             HttpResponse response;
             response = sendGetRequest(client, samlssoExternalAppClient.getSamlAppIndexUrl(), null, new
                     Header[]{userAgentHeader});
-            String samlResponse = samlssoExternalAppClient.extractSAMLResponse(response);
+            String samlResponse = SAML2SSOTestBase.extractSAMLResponse(response);
             assertNotNull(samlResponse, "SAMLResponse is not recived in Passive Login.");
             samlResponse = IdentityScenarioUtil.bese64Decode(samlResponse);
             assertTrue(samlResponse.contains("Destination=\"" + samlssoExternalAppClient.getAcsUrl() + "\""));
@@ -169,7 +146,7 @@ public class SAMLSSOWithExternalAppTestCase extends ScenarioTestBase {
                     Header[]{userAgentHeader});
 
             if (HTTP_POST.equals(config.getHttpBinding())) {
-                String samlRequest = samlssoExternalAppClient.extractSAMLRequest(response);
+                String samlRequest = SAMLSSOExternalAppTestClient.extractSAMLRequest(response);
                 assertNotNull(samlRequest, "SAML Request is not available");
                 response = samlssoExternalAppClient.sendSAMLMessage(samlssoExternalAppClient.getSamlSSOIDPUrl(),
                         SAML_REQUEST_PARAM, samlRequest, config, httpClient);
@@ -200,7 +177,7 @@ public class SAMLSSOWithExternalAppTestCase extends ScenarioTestBase {
                 response = sendRedirectRequest(response, USER_AGENT, samlssoExternalAppClient.getAcsUrl(),
                         httpClient);
             }
-            String samlResponse = samlssoExternalAppClient.extractSAMLResponse(response);
+            String samlResponse = SAML2SSOTestBase.extractSAMLResponse(response);
             EntityUtils.consume(response.getEntity());
 
             response = samlssoExternalAppClient.sendSAMLMessage(samlssoExternalAppClient.getAcsUrl(),
@@ -220,9 +197,9 @@ public class SAMLSSOWithExternalAppTestCase extends ScenarioTestBase {
                 {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, new TestConfig.User(getTestUser("super-tenant-user" +
                         ".json"), SUPER_TENANT_DOMAIN_NAME), TestConfig.ClaimType.NONE, HTTP_REDIRECT, null,
                         ISSUER_NAME, "", XMLSignature.ALGO_ID_SIGNATURE_RSA, "", true), "SAML Login"},
-//                {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, new TestConfig.User(getTestUser("super-tenant-user" +
-//                        ".json"), SUPER_TENANT_DOMAIN_NAME), TestConfig.ClaimType.NONE, HTTP_POST, null,
-//                        ISSUER_NAME, "", XMLSignature.ALGO_ID_SIGNATURE_RSA, "", true), "SAML Login"}
+                {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, new TestConfig.User(getTestUser("super-tenant-user" +
+                        ".json"), SUPER_TENANT_DOMAIN_NAME), TestConfig.ClaimType.NONE, HTTP_POST, null,
+                        ISSUER_NAME, "", XMLSignature.ALGO_ID_SIGNATURE_RSA, "", true), "SAML Login"}
         };
     }
 
