@@ -19,7 +19,9 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.apache.xml.security.signature.XMLSignature;
@@ -97,7 +99,7 @@ public class SAMLSSOBySPConfigTestCase extends ScenarioTestBase {
     public void testInit() throws Exception {
 
         super.init();
-        client = HttpClients.createDefault();
+        client = createHttpClient();
         loginAndObtainSessionCookie();
         saml2SSOTestBase = new SAML2SSOTestBase(backendURL, backendServiceURL, sessionCookie, configContext);
         remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendServiceURL, sessionCookie);

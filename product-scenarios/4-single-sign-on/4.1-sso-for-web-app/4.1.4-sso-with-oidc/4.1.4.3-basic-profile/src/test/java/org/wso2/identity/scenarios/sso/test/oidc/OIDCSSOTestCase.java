@@ -62,7 +62,7 @@ public class OIDCSSOTestCase extends ScenarioTestBase {
                 configContext);
 
         populateTestData();
-        client = HttpClients.createDefault();
+        client = createHttpClient();
     }
 
     @AfterClass(alwaysRun = true)
