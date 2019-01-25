@@ -90,6 +90,7 @@ public class Constants {
     public static final String TENANT_DOMAIN = "tenantDomain";
     public static final String PASSWORD = "password";
     public static final String DEFAULT_PROFILE_NAME = "default";
+    public static final int DEFAULT_SOCKET_TIMEOUT_IN_SECONDS = 30;
 
     /**
      * SCIM Endpoints.

@@ -95,7 +95,7 @@ public class SAMLSSOWithExternalAppTestCase extends ScenarioTestBase {
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
         userAgentHeader = new BasicHeader(HttpHeaders.USER_AGENT, USER_AGENT);
-        httpClient = HttpClients.createDefault();
+        httpClient = createHttpClient();
         super.init();
         loginAndObtainSessionCookie();
         remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendServiceURL, sessionCookie);
@@ -143,7 +143,7 @@ public class SAMLSSOWithExternalAppTestCase extends ScenarioTestBase {
     public void testSAMLSSOIsPassiveLogin() throws Exception {
         try {
 
-            CloseableHttpClient client = HttpClients.createDefault();
+            CloseableHttpClient client = createHttpClient();
             HttpResponse response;
             response = sendGetRequest(client, samlssoExternalAppClient.getSamlAppIndexUrl(), null, new
                     Header[]{userAgentHeader});
