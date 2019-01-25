@@ -21,6 +21,9 @@ package org.wso2.identity.scenarios.commons;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.commons.collections.MapUtils;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
@@ -36,6 +39,7 @@ import java.util.Map;
 import static org.wso2.identity.scenarios.commons.util.Constants.ClaimURIs.EMAIL_CLAIM_URI;
 import static org.wso2.identity.scenarios.commons.util.Constants.ClaimURIs.FIRST_NAME_CLAIM_URI;
 import static org.wso2.identity.scenarios.commons.util.Constants.ClaimURIs.LAST_NAME_CLAIM_URI;
+import static org.wso2.identity.scenarios.commons.util.Constants.DEFAULT_SOCKET_TIMEOUT_IN_SECONDS;
 import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
 import static org.wso2.identity.scenarios.commons.util.Constants.IS_SAMPLES_HTTP_URL;
 
@@ -108,6 +112,15 @@ public class ScenarioTestBase {
         } catch (Exception e) {
             LOG.error("Error while deleting the user", e);
         }
+    }
+
+    public CloseableHttpClient createHttpClient(int timeOutInSeconds) {
+        RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(timeOutInSeconds * 1000).build();
+        return HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
+    }
+
+    public CloseableHttpClient createHttpClient() {
+        return createHttpClient(DEFAULT_SOCKET_TIMEOUT_IN_SECONDS);
     }
 
     public ClaimValue[] getUserClaims(TestConfig config) {
