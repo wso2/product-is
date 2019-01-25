@@ -22,12 +22,13 @@ import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.apache.xml.security.signature.XMLSignature;
 import org.testng.Assert;
+import org.testng.ITestResult;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
@@ -69,6 +70,7 @@ import static org.wso2.identity.scenarios.commons.util.SSOUtil.sendRedirectReque
 public class SAMLSSOWithExternalAppTestCase extends ScenarioTestBase {
 
     private static final Log log = LogFactory.getLog(SAMLSSOWithExternalAppTestCase.class);
+    String testScenarioIdentifier;
 
     // SAML Application attributes
     private static final String APPLICATION_NAME = "SAML-SSO-TestApplication";
@@ -85,11 +87,12 @@ public class SAMLSSOWithExternalAppTestCase extends ScenarioTestBase {
 
 
     @Factory(dataProvider = "samlSSOConfigProvider")
-    public SAMLSSOWithExternalAppTestCase(SAMLConfig config) {
+    public SAMLSSOWithExternalAppTestCase(SAMLConfig config, String testScenarioIdentifier) {
         if (log.isDebugEnabled()) {
             log.info("SAML SSO Test initialized for " + config);
         }
         this.config = config;
+        this.testScenarioIdentifier = testScenarioIdentifier + " - " + config.getHttpBinding();
     }
 
     @BeforeClass(alwaysRun = true)
@@ -132,7 +135,7 @@ public class SAMLSSOWithExternalAppTestCase extends ScenarioTestBase {
         Assert.assertNotNull(samlssoServiceProviderDTOs, "Adding a service provider has failed for " + config);
     }
 
-    @Test(description = "4.1.1.3", groups = "wso2.is", dependsOnMethods = {"testSAMLSSOLogin"})
+    @Test(description = "4.1.1.3", groups = "wso2.is", dependsOnMethods = {"testSAMLSSOLogin"}, singleThreaded = true)
     public void testRemoveSP()
             throws Exception {
         Boolean isAddSuccess = samlssoExternalAppClient.removeServiceProvider(config);
@@ -212,11 +215,14 @@ public class SAMLSSOWithExternalAppTestCase extends ScenarioTestBase {
     }
 
     @DataProvider(name = "samlSSOConfigProvider")
-    public static SAMLConfig[][] samlSSOConfigProvider() throws Exception {
-        return new SAMLConfig[][]{
+    public static Object[][] samlSSOConfigProvider() throws Exception {
+        return new Object[][]{
                 {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, new TestConfig.User(getTestUser("super-tenant-user" +
                         ".json"), SUPER_TENANT_DOMAIN_NAME), TestConfig.ClaimType.NONE, HTTP_REDIRECT, null,
-                        ISSUER_NAME, "", XMLSignature.ALGO_ID_SIGNATURE_RSA, "", true)}
+                        ISSUER_NAME, "", XMLSignature.ALGO_ID_SIGNATURE_RSA, "", true), "SAML Login"},
+//                {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, new TestConfig.User(getTestUser("super-tenant-user" +
+//                        ".json"), SUPER_TENANT_DOMAIN_NAME), TestConfig.ClaimType.NONE, HTTP_POST, null,
+//                        ISSUER_NAME, "", XMLSignature.ALGO_ID_SIGNATURE_RSA, "", true), "SAML Login"}
         };
     }
 
@@ -254,6 +260,11 @@ public class SAMLSSOWithExternalAppTestCase extends ScenarioTestBase {
         }
 
         return attributeMap;
+    }
+
+    @AfterMethod(alwaysRun = true)
+    public void changeTestCaseName(ITestResult result) {
+        result.getMethod().setDescription(result.getMethod().getDescription() + "-" + testScenarioIdentifier);
     }
 
 }
