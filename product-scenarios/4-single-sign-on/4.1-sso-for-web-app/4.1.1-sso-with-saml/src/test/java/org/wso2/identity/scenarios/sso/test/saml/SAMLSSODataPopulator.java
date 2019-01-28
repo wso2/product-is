@@ -30,6 +30,7 @@ import org.wso2.identity.scenarios.commons.TestUserMode;
 import org.wso2.identity.scenarios.commons.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 
 import static org.testng.Assert.assertTrue;
+import static org.testng.AssertJUnit.fail;
 import static org.wso2.carbon.utils.multitenancy.MultitenantConstants.SUPER_TENANT_DOMAIN_NAME;
 import static org.wso2.identity.scenarios.commons.util.Constants.DEFAULT_PROFILE_NAME;
 import static org.wso2.identity.scenarios.commons.util.Constants.HttpBinding.HTTP_REDIRECT;
@@ -60,15 +61,14 @@ public class SAMLSSODataPopulator extends ScenarioTestBase implements IExecution
                     backendServiceURL,
                     webAppHost, configContext, config);
 
-            super.createUser(config, remoteUSMServiceClient, DEFAULT_PROFILE_NAME);
+            Boolean isUserAdded = super.createUser(config, remoteUSMServiceClient, DEFAULT_PROFILE_NAME);
+            assertTrue(isUserAdded, "Unable to create user: " + config.getUser());
             samlssoExternalAppClient.createApplication(config, APPLICATION_NAME);
-            Boolean isAddSuccess = samlssoExternalAppClient.createSAMLconfigForServiceProvider();
-            assertTrue(isAddSuccess, "Adding a service provider has failed for " + config);
+            Boolean isSPAdded = samlssoExternalAppClient.createSAMLconfigForServiceProvider();
+            assertTrue(isSPAdded, "Adding a service provider has failed for " + config);
 
-        } catch (AxisFault axisFault) {
-            log.error("Unable to create RemoteUserStoreManagerServiceClient", axisFault);
         } catch (Exception e) {
-            log.error("Unable to populate test data", e);
+            fail("Unable to populate test data." + e.getMessage());
         }
     }
 
@@ -81,7 +81,7 @@ public class SAMLSSODataPopulator extends ScenarioTestBase implements IExecution
             assertTrue(isAddSuccess, "Removing a service provider has failed for " + config);
             samlssoExternalAppClient.deleteApplication(APPLICATION_NAME);
         } catch (Exception e) {
-            log.error("Unable to delete test data.", e);
+            fail("Unable to delete test data." + e.getMessage());
         }
     }
 }

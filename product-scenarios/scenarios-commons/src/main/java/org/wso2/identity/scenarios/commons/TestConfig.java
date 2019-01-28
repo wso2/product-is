@@ -125,6 +125,15 @@ public class TestConfig {
         public void setRoles(List<String> roles) {
             this.roles = roles;
         }
+
+        @Override
+        public String toString() {
+
+            return "User [" +
+                    "  userName=" + this.tenantAwareUsername +
+                    ", tenantDomain=" + this.tenantDomain +
+                    ']';
+        }
     }
 
     private TestUserMode userMode;
