@@ -66,7 +66,7 @@ public class SAMLSSOBySPConfigTestCase extends ScenarioTestBase {
     private static final String SP_CONFIG_FILE = "sso-saml-app.xml";
     private static final String SP_CONFIG_FILE_2 = "sso-saml-app-2.xml";
     private static final String SP_NAME = "sso-saml.app";
-    private static final String SP_NAME_2 = "sso-saml.app";
+    private static final String SP_NAME_2 = "sso-saml.app-2";
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
     private static final String defaultProfileName = "default";
 
@@ -98,12 +98,12 @@ public class SAMLSSOBySPConfigTestCase extends ScenarioTestBase {
 
         Map<String, String[]> params = new HashMap<>();
         return new Object[][]{
-                {SP_NAME,SP_CONFIG_FILE, new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, new TestConfig.User(getTestUser
+                {SP_NAME,SP_CONFIG_FILE, new SAMLConfig(TestUserMode.SUPER_TENANT_USER, new TestConfig.User(getTestUser
                         ("super-tenant-user.json"), SUPER_TENANT_DOMAIN_NAME), TestConfig.ClaimType.NONE, SAMLConstants
                         .SAML2_REDIRECT_BINDING_URI, params, "travelocity", SIGNATURE_ALGORITHM_SHA1_RSA, XMLSignature
                         .ALGO_ID_SIGNATURE_RSA, XML_DIGEST_ALGORITHM_SHA1, true), "SAML Login with Assertion " +
                         "Encryption" },
-                {SP_NAME_2 , SP_CONFIG_FILE_2,  new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, new TestConfig.User
+                {SP_NAME_2 , SP_CONFIG_FILE_2,  new SAMLConfig(TestUserMode.SUPER_TENANT_USER, new TestConfig.User
                 (getTestUser("super-tenant-user-2.json"), SUPER_TENANT_DOMAIN_NAME), TestConfig.ClaimType.NONE,
                         SAMLConstants.SAML2_REDIRECT_BINDING_URI, params, "travelocity", SIGNATURE_ALGORITHM_SHA1_RSA, XMLSignature
                         .ALGO_ID_SIGNATURE_RSA, XML_DIGEST_ALGORITHM_SHA1, true), "SAML Login without Assertion " +
