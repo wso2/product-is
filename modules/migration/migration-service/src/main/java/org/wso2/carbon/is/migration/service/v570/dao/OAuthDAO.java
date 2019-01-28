@@ -24,7 +24,7 @@ public class OAuthDAO {
             "AUTHORIZATION_CODE_HASH FROM IDN_OAUTH2_AUTHORIZATION_CODE";
 
     public static final String UPDATE_AUTHORIZATION_CODE =
-            "UPDATE IDN_OAUTH2_AUTHORIZATION_CODE SET AUTHORIZATION_CODE_HASH=? WHERE CODE_ID=?";
+            "UPDATE IDN_OAUTH2_AUTHORIZATION_CODE SET AUTHORIZATION_CODE=?, AUTHORIZATION_CODE_HASH=? WHERE CODE_ID=?";
 
     private OAuthDAO() { }
 
@@ -115,8 +115,9 @@ public class OAuthDAO {
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_AUTHORIZATION_CODE)) {
             for (AuthzCodeInfo authzCodeInfo : updatedAuthzCodeList) {
-                preparedStatement.setString(1, authzCodeInfo.getAuthorizationCodeHash());
-                preparedStatement.setString(2, authzCodeInfo.getCodeId());
+                preparedStatement.setString(1, authzCodeInfo.getAuthorizationCode());
+                preparedStatement.setString(2, authzCodeInfo.getAuthorizationCodeHash());
+                preparedStatement.setString(3, authzCodeInfo.getCodeId());
                 preparedStatement.addBatch();
             }
             preparedStatement.executeBatch();
