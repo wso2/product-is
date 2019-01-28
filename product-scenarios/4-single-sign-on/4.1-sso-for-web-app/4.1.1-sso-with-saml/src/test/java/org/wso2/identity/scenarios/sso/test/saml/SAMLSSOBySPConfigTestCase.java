@@ -79,6 +79,7 @@ public class SAMLSSOBySPConfigTestCase extends ScenarioTestBase {
     private SAML2SSOTestBase saml2SSOTestBase;
     private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
     private String testScenarioIdentifier;
+    Response samlResponse;
 
     @Factory(dataProvider = "samlConfigProvider")
     public SAMLSSOBySPConfigTestCase(String spName, String spConfigFile,  SAMLConfig config, String
@@ -174,24 +175,35 @@ public class SAMLSSOBySPConfigTestCase extends ScenarioTestBase {
                         .getDefaultAssertionConsumerUrl(), client);
             }
 
-            Response samlResponse = saml2SSOTestBase.extractAndProcessSAMLResponse(response);
+            samlResponse = saml2SSOTestBase.extractAndProcessSAMLResponse(response);
             Assertion assertion = saml2SSOTestBase.getAssertionFromSAMLResponse(samlResponse, samlssoServiceProviderDTO,
                     saml2SSOTestBase.getDefaultX509Cred());
             Assert.assertNotNull(assertion, "SAML Assertion was not found in the response for " +  samlConfig
                     .toString());
 
-            Assert.assertTrue(saml2SSOTestBase.validateAudienceRestrictionBySAMLSSOSPConfig(samlResponse,
-                    samlssoServiceProviderDTO, saml2SSOTestBase.getDefaultX509Cred()), "Audience restriction " +
-                    "validation failed for " + samlConfig.toString());
-            Assert.assertTrue(saml2SSOTestBase.validateSAMLAssertionSignature(samlResponse, samlssoServiceProviderDTO,
-                    saml2SSOTestBase.getDefaultX509Cred()), "Assertion signature validation failed for " +
-                    samlConfig.toString());
-            Assert.assertTrue(saml2SSOTestBase.validateSAMLResponseSignature(samlResponse, samlssoServiceProviderDTO,
-                    saml2SSOTestBase.getDefaultX509Cred()), "SAML response signature validation failed for " +
-                    samlConfig.toString());
         } catch (Exception e) {
             Assert.fail("SAML SSO Login test failed for " + samlConfig.toString(), e);
         }
+    }
+    @Test(description = "4.1.1.4.1", dependsOnMethods = "testSAMLSSOLogin")
+    public void validateSAMLResponseSignature() throws Exception {
+        Assert.assertTrue(saml2SSOTestBase.validateSAMLResponseSignature(samlResponse, samlssoServiceProviderDTO,
+                saml2SSOTestBase.getDefaultX509Cred()), "SAML response signature validation failed for " +
+                samlConfig.toString());
+    }
+
+    @Test(description = "4.1.1.4.2", dependsOnMethods = "testSAMLSSOLogin")
+    public void validateAssertionSignature() throws Exception {
+        Assert.assertTrue(saml2SSOTestBase.validateSAMLAssertionSignature(samlResponse, samlssoServiceProviderDTO,
+                saml2SSOTestBase.getDefaultX509Cred()), "Assertion signature validation failed for " +
+                samlConfig.toString());
+    }
+
+    @Test(description = "4.1.1.4.3", dependsOnMethods = "testSAMLSSOLogin")
+    public void validateAudiance() throws Exception {
+        Assert.assertTrue(saml2SSOTestBase.validateAudienceRestrictionBySAMLSSOSPConfig(samlResponse,
+                samlssoServiceProviderDTO, saml2SSOTestBase.getDefaultX509Cred()), "Audience restriction " +
+                "validation failed for " + samlConfig.toString());
     }
 
     private HttpResponse handleUserConsent(HttpResponse response) throws Exception {
