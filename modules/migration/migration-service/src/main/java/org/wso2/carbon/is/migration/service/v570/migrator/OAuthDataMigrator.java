@@ -67,15 +67,20 @@ public class OAuthDataMigrator extends Migrator {
         log.info(Constant.MIGRATION_LOG + "Migration starting on Authorization code table");
 
         List<AuthzCodeInfo> authzCodeInfos = getAuthzCoedList();
-        updateAuthzCodeHashColumnValues(authzCodeInfos, hashingAlgo);
-
-        try (Connection connection = getDataSource().getConnection()) {
-            //persists modified hash values
-            OAuthDAO.getInstance().updateNewAuthzCodeHash(authzCodeInfos, connection);
-            connection.commit();
-        } catch (SQLException e) {
-            String error = "SQL error while updating authorization code hash";
-            throw new MigrationClientException(error, e);
+        try {
+            List<AuthzCodeInfo> updatedAuthzCodeInfoList = updateAuthzCodeHashColumnValues(authzCodeInfos, hashingAlgo);
+            try (Connection connection = getDataSource().getConnection()) {
+                // persists modified hash values
+                OAuthDAO.getInstance().updateNewAuthzCodeHash(updatedAuthzCodeInfoList, connection);
+                connection.commit();
+            } catch (SQLException e) {
+                String error = "SQL error while updating authorization code hash";
+                throw new MigrationClientException(error, e);
+            }
+        } catch (CryptoException e) {
+            throw new MigrationClientException("Error while encrypting authorization codes.", e);
+        } catch (IdentityOAuth2Exception e) {
+            throw new MigrationClientException("Error while migrating authorization codes.", e);
         }
     }
 
@@ -246,27 +251,84 @@ public class OAuthDataMigrator extends Migrator {
         return updatedOauthTokenInfo;
     }
 
-    private void updateAuthzCodeHashColumnValues(List<AuthzCodeInfo> authzCodeInfos, String hashAlgorithm) {
+    private AuthzCodeInfo getAuthzCodeInfo(AuthzCodeInfo authzCodeInfo, String authzCode)
+            throws IdentityOAuth2Exception {
 
+        TokenPersistenceProcessor tokenPersistenceProcessor = new HashingPersistenceProcessor();
+        String authzCodeHash = tokenPersistenceProcessor.getProcessedAuthzCode(authzCode);
+
+        AuthzCodeInfo updatedAuthzCodeInfo = new AuthzCodeInfo(authzCode, authzCodeInfo.getCodeId());
+        updatedAuthzCodeInfo.setAuthorizationCodeHash(authzCodeHash);
+
+        return updatedAuthzCodeInfo;
+    }
+
+    private List<AuthzCodeInfo> updateAuthzCodeHashColumnValues(List<AuthzCodeInfo> authzCodeInfos, String hashAlgorithm)
+            throws IdentityOAuth2Exception, CryptoException {
+
+        List<AuthzCodeInfo> updatedAuthzCodeList = new ArrayList<>();
         if (authzCodeInfos != null) {
-            JSONObject authzCodeHashObject;
-            List<AuthzCodeInfo> alreadyProcessedRecords = new ArrayList<>();
+            boolean encryptionWithTransformationEnabled = OAuth2Util.isEncryptionWithTransformationEnabled();
 
             for (AuthzCodeInfo authzCodeInfo : authzCodeInfos) {
-                String oldAuthzCodeHash = authzCodeInfo.getAuthorizationCodeHash();
-                try {
-                    //If hash column already is a JSON value, no need to update the record
-                    new JSONObject(oldAuthzCodeHash);
-                    alreadyProcessedRecords.add(authzCodeInfo);
-                } catch (JSONException e) {
-                    //Exception is thrown because the hash value is not a json
-                    authzCodeHashObject = new JSONObject();
-                    authzCodeHashObject.put(ALGORITHM, hashAlgorithm);
-                    authzCodeHashObject.put(HASH, oldAuthzCodeHash);
-                    authzCodeInfo.setAuthorizationCodeHash(authzCodeHashObject.toString());
+                String authzCode = authzCodeInfo.getAuthorizationCode();
+
+                if (encryptionWithTransformationEnabled) {
+                    // Code encryption is enabled.
+                    if (!isBase64DecodeAndIsSelfContainedCipherText(authzCode)) {
+                        // Existing codes are not encrypted with OAEP.
+                        byte[] decryptedAuthzCode = CryptoUtil.getDefaultCryptoUtil()
+                                                                .base64DecodeAndDecrypt(authzCode, "RSA");
+                        String newEncryptedAuthzCode = CryptoUtil.getDefaultCryptoUtil().encryptAndBase64Encode
+                                (decryptedAuthzCode);
+                        TokenPersistenceProcessor tokenPersistenceProcessor = new HashingPersistenceProcessor();
+                        String authzCodeHash = tokenPersistenceProcessor
+                                .getProcessedAuthzCode(new String(decryptedAuthzCode, Charsets.UTF_8));
+                        AuthzCodeInfo updatedAuthzCodeInfo = (new AuthzCodeInfo(newEncryptedAuthzCode,
+                                                                                  authzCodeInfo.getCodeId()));
+                        updatedAuthzCodeInfo.setAuthorizationCodeHash(authzCodeHash);
+                        updatedAuthzCodeList.add(updatedAuthzCodeInfo);
+                    } else {
+                        if (StringUtils.isBlank(authzCodeInfo.getAuthorizationCodeHash())) {
+
+                            byte[] decryptedAuthzCode = CryptoUtil.getDefaultCryptoUtil()
+                                                                    .base64DecodeAndDecrypt(authzCode);
+
+                            TokenPersistenceProcessor tokenPersistenceProcessor = new HashingPersistenceProcessor();
+                            String authzCodeHash = tokenPersistenceProcessor
+                                    .getProcessedAuthzCode(new String(decryptedAuthzCode, Charsets.UTF_8));
+
+                            AuthzCodeInfo updatedAuthzCodeInfo = (new AuthzCodeInfo(authzCode, authzCodeInfo
+                                    .getCodeId()));
+                            updatedAuthzCodeInfo.setAuthorizationCodeHash(authzCodeHash);
+                            updatedAuthzCodeList.add(updatedAuthzCodeInfo);
+                        }
+                    }
+                } else {
+                    // Code encryption is not enabled.
+                    if (StringUtils.isBlank(authzCodeInfo.getAuthorizationCodeHash())) {
+
+                        AuthzCodeInfo updatedAuthzCodeInfo = getAuthzCodeInfo(authzCodeInfo, authzCode);
+                        updatedAuthzCodeList.add(updatedAuthzCodeInfo);
+                    } else {
+                        String oldAuthzCodeHash = authzCodeInfo.getAuthorizationCodeHash();
+                        try {
+                            // If hash column already is a JSON value, no need to update the record
+                            new JSONObject(oldAuthzCodeHash);
+                        } catch (JSONException e) {
+                            // Exception is thrown because the hash value is not a json
+                            JSONObject authzCodeHashObject = new JSONObject();
+                            authzCodeHashObject.put(ALGORITHM, hashAlgorithm);
+                            authzCodeHashObject.put(HASH, oldAuthzCodeHash);
+                            AuthzCodeInfo updatedAuthzCodeInfo = (new AuthzCodeInfo(authzCode, authzCodeInfo
+                                    .getCodeId()));
+                            updatedAuthzCodeInfo.setAuthorizationCodeHash(authzCodeHashObject.toString());
+                            updatedAuthzCodeList.add(updatedAuthzCodeInfo);
+                        }
+                    }
                 }
             }
-            authzCodeInfos.removeAll(alreadyProcessedRecords);
         }
+        return updatedAuthzCodeList;
     }
 }
