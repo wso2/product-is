@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.wso2.carbon.utils.multitenancy.MultitenantConstants.SUPER_TENANT_DOMAIN_NAME;
 import static org.wso2.identity.scenarios.commons.util.Constants.MULTI_ATTRIBUTE_SEPARATOR;
 
 public class TestConfig {
@@ -57,7 +58,6 @@ public class TestConfig {
         public User(JSONObject userInfo, String tenantDomain) {
             this.tenantDomain = tenantDomain;
             populateUserInfo(userInfo);
-            this.tenantAwareUsername = this.username;
         }
 
         protected void populateUserInfo(JSONObject userInfo) {
@@ -69,6 +69,7 @@ public class TestConfig {
                 String claimValue = basicUserClaims.get(claimUri).toString();
                 if (Constants.ClaimURIs.USER_NAME_CLAIM_URI.equals(claimUri)) {
                     this.username = claimValue;
+                    this.tenantAwareUsername = claimValue;
                 } else if (Constants.ClaimURIs.ROLE_CLAIM_URI.equals(claimUri)) {
                     this.roles = Arrays.asList(claimValue.split(MULTI_ATTRIBUTE_SEPARATOR));
                 } else if (Constants.TENANT_DOMAIN.equals(claimUri)) {
@@ -77,6 +78,10 @@ public class TestConfig {
                     this.password = claimValue;
                 } else {
                     this.userClaims.put(claimUri, claimValue);
+                }
+
+                if (!SUPER_TENANT_DOMAIN_NAME.equals(this.tenantDomain)) {
+                    this.username = this.tenantAwareUsername + "@" + this.tenantDomain;
                 }
             }
         }
