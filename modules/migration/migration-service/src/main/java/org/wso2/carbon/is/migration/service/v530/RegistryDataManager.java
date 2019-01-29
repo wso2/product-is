@@ -56,6 +56,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import static org.wso2.carbon.base.MultitenantConstants.SUPER_TENANT_DOMAIN_NAME;
+import static org.wso2.carbon.base.MultitenantConstants.SUPER_TENANT_ID;
 import static org.wso2.carbon.context.RegistryType.SYSTEM_CONFIGURATION;
 import static org.wso2.carbon.identity.recovery.IdentityRecoveryConstants.Questions.CHALLENGE_QUESTION_ID;
 import static org.wso2.carbon.identity.recovery.IdentityRecoveryConstants.Questions.CHALLENGE_QUESTION_LOCALE;
@@ -387,6 +388,16 @@ public class RegistryDataManager {
         carbonContext.setTenantDomain(tenant.getDomain());
     }
 
+    private void startTenantFlow(String tenantDomain) {
+
+        int tenantId = IdentityTenantUtil.getTenantId(tenantDomain);
+
+        PrivilegedCarbonContext.startTenantFlow();
+        PrivilegedCarbonContext carbonContext = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+        carbonContext.setTenantId(tenantId);
+        carbonContext.setTenantDomain(tenantDomain);
+    }
+
     @Deprecated
     public void copyOIDCScopeData(boolean migrateActiveTenantsOnly) throws Exception {
 
@@ -413,8 +424,8 @@ public class RegistryDataManager {
 
     public void copyOIDCScopeData(boolean migrateActiveTenantsOnly, boolean continueOnError) throws Exception {
 
-        // since copying oidc-config file for super tenant is handled by the OAuth component we only need to handle
-        // this in migrated tenants.
+        copyOIDCScopeDataOfSuperTenant(continueOnError);
+
         Set<Tenant> tenants = Utility.getTenants();
         for (Tenant tenant : tenants) {
             if (migrateActiveTenantsOnly && !tenant.isActive()) {
@@ -437,6 +448,23 @@ public class RegistryDataManager {
         }
     }
 
+    private void copyOIDCScopeDataOfSuperTenant(boolean continueOnError)
+            throws FileNotFoundException, IdentityException, RegistryException {
+
+        try {
+            startTenantFlow(SUPER_TENANT_DOMAIN_NAME);
+            IdentityTenantUtil.getTenantRegistryLoader().loadTenantRegistry(SUPER_TENANT_ID);
+            initiateOIDCScopes();
+            log.info("OIDC Scope data migrated for tenant: " + SUPER_TENANT_DOMAIN_NAME);
+        } catch (RegistryException | FileNotFoundException | IdentityException e) {
+            if (!continueOnError) {
+                throw e;
+            }
+            log.error("Error while migrating OIDC Scope data for tenant:  " + SUPER_TENANT_DOMAIN_NAME, e);
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
+        }
+    }
 
     private void initiateOIDCScopes() throws RegistryException, FileNotFoundException, IdentityException {
 
