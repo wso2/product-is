@@ -91,7 +91,8 @@ public class ScenarioTestBase {
         configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem(null, null);
     }
 
-    public void createUser(TestConfig config, RemoteUserStoreManagerServiceClient remoteUSMServiceClient, String profileName) {
+    public boolean createUser(TestConfig config, RemoteUserStoreManagerServiceClient remoteUSMServiceClient, String
+            profileName) {
 
         LOG.info("Creating User " + config.getUser().getUsername());
         try {
@@ -101,17 +102,21 @@ public class ScenarioTestBase {
                     profileName, true);
         } catch (Exception e) {
             LOG.error("Error while creating the user", e);
+            return false;
         }
+        return true;
     }
 
-    public void deleteUser(TestConfig config, RemoteUserStoreManagerServiceClient remoteUSMServiceClient) {
+    public boolean deleteUser(TestConfig config, RemoteUserStoreManagerServiceClient remoteUSMServiceClient) {
 
         LOG.info("Deleting User " + config.getUser().getUsername());
         try {
             remoteUSMServiceClient.deleteUser(config.getUser().getTenantAwareUsername());
         } catch (Exception e) {
             LOG.error("Error while deleting the user", e);
+            return false;
         }
+        return true;
     }
 
     public CloseableHttpClient createHttpClient(int timeOutInSeconds) {

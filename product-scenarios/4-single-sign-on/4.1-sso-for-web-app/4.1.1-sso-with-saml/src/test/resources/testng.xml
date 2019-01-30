@@ -25,6 +25,7 @@
     <parameter name="useDefaultListeners" value="false"/>
     <listeners>
         <listener class-name="org.wso2.identity.scenarios.commons.listeners.IdentityScenarioTestListener"/>
+        <listener class-name="org.wso2.identity.scenarios.sso.test.saml.SAMLSSODataPopulator"/>
     </listeners>
 
     <test name="is-application-mgt" preserve-order="true" parallel="false">
