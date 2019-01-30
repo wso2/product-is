@@ -726,7 +726,7 @@ public class SAML2SSOTestBase extends SSOCommonClient {
                                                      X509Credential x509Credential) throws Exception {
 
         Assertion assertion = null;
-        if (samlssoSPDTO.isDoEnableEncryptedAssertionSpecified()) {
+        if (samlssoSPDTO.getDoEnableEncryptedAssertion()) {
             List<EncryptedAssertion> encryptedAssertions = samlResponse.getEncryptedAssertions();
             EncryptedAssertion encryptedAssertion = null;
             if (!CollectionUtils.isEmpty(encryptedAssertions)) {
