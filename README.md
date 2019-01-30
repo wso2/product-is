@@ -15,7 +15,7 @@ Welcome to WSO2 Identity Server
 
 
 
-[![Join the chat at https://gitter.im/wso2/product-identity-server](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/wso2/product-identity-server?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://join.slack.com/t/wso2is/shared_invite/enQtNTM2MjU4MzM5NzYxLTEyNGRmMTBhMWM2ZWI2YjUxMTgyZDcwY2QzMDZmMjk5ZWVhZmRlM2UwYjY4NGRmZGZiNWQwNmQ0MDFiNzNlYzE](https://img.shields.io/badge/Join%20us%20on-Slack-%23e01563.svg)](https://join.slack.com/t/wso2is/shared_invite/enQtNTM2MjU4MzM5NzYxLTEyNGRmMTBhMWM2ZWI2YjUxMTgyZDcwY2QzMDZmMjk5ZWVhZmRlM2UwYjY4NGRmZGZiNWQwNmQ0MDFiNzNlYzE)
 
 ---
 
