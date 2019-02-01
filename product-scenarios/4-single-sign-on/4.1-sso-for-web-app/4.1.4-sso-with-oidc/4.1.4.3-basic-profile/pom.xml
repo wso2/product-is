@@ -28,7 +28,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>4.1.4.3-basic-profile</artifactId>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
     <name>Basic profile</name>
 
     <build>
@@ -59,7 +59,7 @@
                         <property>
                             <name>common.resource.location</name>
                             <value>
-                                ${basedir}/../../../scenarios-commons/src/main/resources/
+                                ${basedir}/../../../../scenarios-commons/src/main/resources/
                             </value>
                         </property>
                         <property>
