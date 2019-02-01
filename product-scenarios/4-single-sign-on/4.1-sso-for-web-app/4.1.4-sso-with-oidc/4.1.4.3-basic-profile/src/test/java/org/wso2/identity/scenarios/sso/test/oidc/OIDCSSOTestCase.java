@@ -58,6 +58,7 @@ public class OIDCSSOTestCase extends ScenarioTestBase {
     public void init() throws Exception {
 
         super.init();
+        super.loginAndObtainSessionCookie();
         oAuth2Client = new OAuth2CommonClient(sessionCookie, backendServiceURL, getDeploymentProperty(IS_HTTPS_URL),
                 configContext);
 
