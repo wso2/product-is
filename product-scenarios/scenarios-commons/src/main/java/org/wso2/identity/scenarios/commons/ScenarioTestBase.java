@@ -52,6 +52,7 @@ public class ScenarioTestBase {
 
     public static final String ADMIN_USERNAME = "admin";
     public static final String ADMIN_PASSWORD = "admin";
+    public static final String SUPER_TENANT_DOMAIN = "carbon.super";
 
     protected String backendURL;
     protected String backendServiceURL;
