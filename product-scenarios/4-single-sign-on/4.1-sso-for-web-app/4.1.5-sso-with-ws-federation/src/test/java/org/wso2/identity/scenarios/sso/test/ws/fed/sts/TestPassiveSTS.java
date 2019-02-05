@@ -32,6 +32,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.identity.application.common.model.xsd.ClaimConfig;
+import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.OutboundProvisioningConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.Property;
@@ -39,7 +40,6 @@ import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.identity.scenarios.commons.ScenarioTestBase;
 import org.wso2.identity.scenarios.commons.TestConfig;
 import org.wso2.identity.scenarios.commons.TestConfig.ClaimType;
-import org.wso2.identity.scenarios.commons.TestConfig.User;
 import org.wso2.identity.scenarios.commons.TestUserMode;
 import org.wso2.identity.scenarios.commons.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.scenarios.commons.clients.login.AuthenticatorClient;
@@ -176,8 +176,9 @@ public class TestPassiveSTS extends ScenarioTestBase {
                 0, "Fail to update service provider with passiveSTS configs");
     }
 
-    @Test(alwaysRun = true, description = "4.1.5.3",
-            dependsOnMethods = {"testUpdateSP"})
+    @Test(alwaysRun = true,
+          description = "4.1.5.3",
+          dependsOnMethods = { "testUpdateSP" })
     public void testAddClaimConfiguration() throws Exception {
 
         serviceProvider.getClaimConfig().setClaimMappings(getClaimMappings());
@@ -185,11 +186,20 @@ public class TestPassiveSTS extends ScenarioTestBase {
         ServiceProvider updatedServiceProvider = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
         ClaimConfig updatedClaimConfig = updatedServiceProvider.getClaimConfig();
 
-        Assert.assertEquals(updatedClaimConfig.getClaimMappings()[0].getLocalClaim().getClaimUri(),
-                FIRST_NAME_CLAIM_URI, "Failed update given name claim uri");
+        Assert.assertNotNull(updatedClaimConfig.getClaimMappings(),
+                "Claim mapping is null. Claim mapping creation failed.");
 
-        Assert.assertEquals(updatedClaimConfig.getClaimMappings()[2].getLocalClaim().getClaimUri(),
-                EMAIL_CLAIM_URI, "Failed update email claim uri");
+        for (ClaimMapping claimMapping : getClaimMappings()) {
+            boolean success = false;
+            for (ClaimMapping updatedClaimMapping : updatedClaimConfig.getClaimMappings()) {
+                if (claimMapping.getLocalClaim().getClaimUri()
+                        .equals(updatedClaimMapping.getLocalClaim().getClaimUri())) {
+                    success = true;
+                    break;
+                }
+            }
+            Assert.assertTrue(success, "Failed to set claim uri: " + claimMapping.getLocalClaim().getClaimUri());
+        }
     }
 
     @Test(alwaysRun = true, description = "4.1.5.4",
