@@ -1,0 +1,26 @@
+{
+  "user": {
+    "username": "self-reg-user2",
+    "realm": "PRIMARY",
+    "password": "Password1!",
+    "claims": [
+      {
+        "uri": "http://wso2.org/claims/givenname",
+        "value": "self-reg-user2"
+      },
+      {
+        "uri": "http://wso2.org/claims/emailaddress",
+        "value": "self-reg-user2@gmail.com"
+      },
+      {
+        "uri": "http://wso2.org/claims/lastname",
+        "value": "Peter"
+      },
+      {
+        "uri": "http://wso2.org/claims/mobile",
+        "value": "+94770444888"
+      }
+    ]
+  },
+  "properties": []
+}
