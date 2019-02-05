@@ -138,6 +138,7 @@ public class OIDCScopeDataMigrator extends Migrator {
         try {
             int tenantId = IdentityTenantUtil.getTenantId(tenantDomain);
             startTenantFlow(tenantDomain, tenantId);
+            IdentityTenantUtil.getTenantRegistryLoader().loadTenantRegistry(tenantId);
             RegistryService registryService = IdentityTenantUtil.getRegistryService();
             oidcScopesResource = registryService.getConfigSystemRegistry(tenantId).get(SCOPE_RESOURCE_PATH);
         } catch (org.wso2.carbon.registry.api.RegistryException e) {
