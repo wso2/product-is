@@ -119,7 +119,14 @@ public class OIDCScopeDataMigrator extends Migrator {
         for (Map.Entry<Object, Object> entry : properties.entrySet()) {
             ScopeDTO scopeDTO = new ScopeDTO();
             scopeDTO.setName(entry.getKey().toString());
-            scopeDTO.setClaim(entry.getValue().toString().split(","));
+            if (entry.getValue() != null) {
+                String[] claims = entry.getValue().toString().split(",");
+                String[] trimmedClaims = new String[claims.length];
+                for (int i = 0; i < claims.length; i++) {
+                    trimmedClaims[i] = claims[i].trim();
+                }
+                scopeDTO.setClaim(trimmedClaims);
+            }
             scopeDTOs.add(scopeDTO);
         }
         return scopeDTOs;
