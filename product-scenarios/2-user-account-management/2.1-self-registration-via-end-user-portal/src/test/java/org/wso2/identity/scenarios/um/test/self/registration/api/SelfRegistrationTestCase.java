@@ -28,6 +28,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
+import org.wso2.carbon.identity.application.common.model.idp.xsd.FederatedAuthenticatorConfig;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProviderProperty;
 import org.wso2.carbon.um.ws.api.stub.ClaimDTO;
@@ -42,8 +43,11 @@ import java.io.FileReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
@@ -88,6 +92,8 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
     private String tenantDomain;
 
     private String confirmationCode;
+
+    private String newConfirmationCode;
 
     private boolean resendCode;
 
@@ -156,6 +162,9 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
                 property.setValue("1440");
             }
         }
+        // This is to remove invalid authenticators
+        updateFederatedAuthenticators(identityProvider);
+
         identityProviderMgtServiceClient.updateResidentIdP(identityProvider);
 
         userStoreManagerServiceClient = new RemoteUserStoreManagerServiceClient(super.backendServiceURL,
@@ -182,6 +191,9 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
                 property.setValue("1440");
             }
         }
+        // This is to remove invalid authenticators
+        updateFederatedAuthenticators(identityProvider);
+
         identityProviderMgtServiceClient.updateResidentIdP(identityProvider);
 
         userStoreManagerServiceClient.deleteUser(((JSONObject) registerRequestJSON.get(USER)).get(USERNAME).toString());
@@ -241,16 +253,38 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
                 "Resend confirmation code failed. Confirmation code: " + confirmationCode + " Request Object: "
                         + registerRequestJSON.toJSONString());
 
-        confirmationCode = httpCommonClient.getStringFromResponse(response);
-        assertNotNull(confirmationCode, "Failed to receive the new confirmation code.");
+        newConfirmationCode = httpCommonClient.getStringFromResponse(response);
+        assertNotNull(newConfirmationCode, "Failed to receive the new confirmation code.");
     }
 
     @Test(description = "2.1.4",
           dependsOnMethods = { "resendCodeForUser" })
-    public void confirmUserRegistration() throws Exception {
+    public void verifyPreviousConfirmationCode() throws Exception {
+
+        if (!resendCode) {
+            return;
+        }
 
         JSONObject confirmRequestJSON = new JSONObject();
         confirmRequestJSON.put(CODE, confirmationCode);
+        HttpResponse response = httpCommonClient.sendPostRequestWithJSON(getEndPoint(VALIDATE_CODE), confirmRequestJSON,
+                getCommonHeaders(username, password));
+
+        assertNotEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_ACCEPTED,
+                "Previous confirmation code: " + confirmationCode + " is still valid. New confirmation code: "
+                        + newConfirmationCode + ", Request Object: " + registerRequestJSON.toJSONString());
+    }
+
+    @Test(description = "2.1.5",
+          dependsOnMethods = { "verifyPreviousConfirmationCode" })
+    public void confirmUserRegistration() throws Exception {
+
+        JSONObject confirmRequestJSON = new JSONObject();
+        if (resendCode) {
+            confirmRequestJSON.put(CODE, newConfirmationCode);
+        } else {
+            confirmRequestJSON.put(CODE, confirmationCode);
+        }
         HttpResponse response = httpCommonClient.sendPostRequestWithJSON(getEndPoint(VALIDATE_CODE), confirmRequestJSON,
                 getCommonHeaders(username, password));
 
@@ -307,5 +341,20 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
             }
         }
         return null;
+    }
+
+    private void updateFederatedAuthenticators(IdentityProvider identityProvider) {
+
+        List<FederatedAuthenticatorConfig> updatedConfigs = new ArrayList<>();
+        for (FederatedAuthenticatorConfig config : identityProvider.getFederatedAuthenticatorConfigs()) {
+            if ("samlsso".equals(config.getName())) {
+                updatedConfigs.add(config);
+            } else if ("openidconnect".equals(config.getName())) {
+                updatedConfigs.add(config);
+            } else if ("passivests".equals(config.getName())) {
+                updatedConfigs.add(config);
+            }
+        }
+        identityProvider.setFederatedAuthenticatorConfigs(updatedConfigs.toArray(new FederatedAuthenticatorConfig[0]));
     }
 }
