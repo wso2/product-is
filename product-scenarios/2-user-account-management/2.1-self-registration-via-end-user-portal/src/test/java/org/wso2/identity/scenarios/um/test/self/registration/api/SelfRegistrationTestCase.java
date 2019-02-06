@@ -115,10 +115,11 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
                 {
                         getRegisterRequestJSON("request1.json"), ADMIN_USERNAME, ADMIN_PASSWORD, SUPER_TENANT_DOMAIN,
                         false
-                }, {
-                        getRegisterRequestJSON("request2.json"), ADMIN_USERNAME, ADMIN_PASSWORD, SUPER_TENANT_DOMAIN,
-                        true
                 }
+//                }, {
+//                        getRegisterRequestJSON("request2.json"), ADMIN_USERNAME, ADMIN_PASSWORD, SUPER_TENANT_DOMAIN,
+//                        true
+//                }
         };
     }
 
@@ -207,10 +208,11 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
         HttpResponse response = httpCommonClient
                 .sendPostRequestWithJSON(getEndPoint(ME), registerRequestJSON, getCommonHeaders(username, password));
 
-        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED,
-                "Self registration failed. Request Object: " + registerRequestJSON.toJSONString());
-
         confirmationCode = httpCommonClient.getStringFromResponse(response);
+        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED,
+                "Self registration failed. Request Object: " + registerRequestJSON.toJSONString() + " Response body: "
+                        + confirmationCode);
+
         assertNotNull(confirmationCode, "Failed to receive the confirmation code.");
     }
 
