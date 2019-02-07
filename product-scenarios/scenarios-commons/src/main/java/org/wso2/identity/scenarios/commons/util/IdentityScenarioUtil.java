@@ -16,6 +16,8 @@
 
 package org.wso2.identity.scenarios.commons.util;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -32,6 +34,7 @@ import org.json.simple.JSONValue;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Base64;
 import java.util.List;
@@ -43,6 +46,8 @@ import static org.wso2.identity.scenarios.commons.util.Constants.BASIC;
  * Utility class for common functions across all scenarios.
  */
 public class IdentityScenarioUtil {
+
+    private static final Log log = LogFactory.getLog(IdentityScenarioUtil.class);
 
     /**
      * Send POST request with a payload.
@@ -125,7 +130,11 @@ public class IdentityScenarioUtil {
             }
         }
 
-        HttpGet getRequest = new HttpGet(uriBuilder.build());
+        URI uri = uriBuilder.build();
+
+        log.info("Error Info:7 " +  uri.toString());
+
+        HttpGet getRequest = new HttpGet(uri);
         if (headers != null) {
             getRequest.setHeaders(headers);
         }
