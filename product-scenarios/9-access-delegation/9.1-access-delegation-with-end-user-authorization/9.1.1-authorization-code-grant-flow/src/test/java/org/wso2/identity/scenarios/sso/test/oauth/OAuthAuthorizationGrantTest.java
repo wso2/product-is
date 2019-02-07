@@ -128,7 +128,7 @@ public class OAuthAuthorizationGrantTest extends ScenarioTestBase {
     public void intiAuthorizeRequest() throws Exception {
 
         HttpResponse response = sendAuthorizeGet(client, authzEndpoint, clientId, REDIRECT_URL, null, null);
-        log.info(">>>>> " + response.getStatusLine().getStatusCode());
+        log.info("Error Info:6 " + response.getStatusLine().getStatusCode());
         assertNotNull(response, "Response for authorize GET is null");
 
         sessionDataKey = getSessionDataKey(response);

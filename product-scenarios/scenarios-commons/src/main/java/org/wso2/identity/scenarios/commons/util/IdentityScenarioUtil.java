@@ -132,7 +132,7 @@ public class IdentityScenarioUtil {
 
         URI uri = uriBuilder.build();
 
-        log.info(">>** " +  uri.toString());
+        log.info("Error Info:7 " +  uri.toString());
 
         HttpGet getRequest = new HttpGet(uri);
         if (headers != null) {

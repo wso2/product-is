@@ -115,11 +115,10 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
                 {
                         getRegisterRequestJSON("request1.json"), ADMIN_USERNAME, ADMIN_PASSWORD, SUPER_TENANT_DOMAIN,
                         false
+                }, {
+                        getRegisterRequestJSON("request2.json"), ADMIN_USERNAME, ADMIN_PASSWORD, SUPER_TENANT_DOMAIN,
+                        true
                 }
-//                }, {
-//                        getRegisterRequestJSON("request2.json"), ADMIN_USERNAME, ADMIN_PASSWORD, SUPER_TENANT_DOMAIN,
-//                        true
-//                }
         };
     }
 
@@ -153,26 +152,6 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
 
     @AfterClass(alwaysRun = true)
     public void clear() throws Exception {
-
-//        IdentityProvider identityProvider = identityProviderMgtServiceClient.getResidentIdP();
-//
-//        for (IdentityProviderProperty property : identityProvider.getIdpProperties()) {
-//            if (SELF_REGISTRATION_ENABLE.equals(property.getName())) {
-//                property.setValue("false");
-//            } else if (SELF_REGISTRATION_LOCK_ON_CREATION.equals(property.getName())) {
-//                property.setValue("true");
-//            } else if (SELF_REGISTRATION_NOTIFICATION_IM.equals(property.getName())) {
-//                property.setValue("true");
-//            } else if (SELF_REGISTRATION_RE_CAPTCHA.equals(property.getName())) {
-//                property.setValue("true");
-//            } else if (SELF_REGISTRATION_CODE_EXPIRY_TIME.equals(property.getName())) {
-//                property.setValue("1440");
-//            }
-//        }
-//        // This is to remove invalid authenticators
-//        updateFederatedAuthenticators(identityProvider);
-//
-//        identityProviderMgtServiceClient.updateResidentIdP(identityProvider);
 
         userStoreManagerServiceClient.deleteUser(((JSONObject) registerRequestJSON.get(USER)).get(USERNAME).toString());
 
