@@ -144,33 +144,10 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
 
         super.init();
         super.loginAndObtainSessionCookie(username, password);
-
         identityProviderMgtServiceClient = new IdentityProviderMgtServiceClient(super.sessionCookie,
                 super.backendServiceURL, super.configContext);
-        IdentityProvider identityProvider = identityProviderMgtServiceClient.getResidentIdP();
-
-        for (IdentityProviderProperty property : identityProvider.getIdpProperties()) {
-
-            if (SELF_REGISTRATION_ENABLE.equals(property.getName())) {
-                property.setValue("true");
-            } else if (SELF_REGISTRATION_LOCK_ON_CREATION.equals(property.getName())) {
-                property.setValue("true");
-            } else if (SELF_REGISTRATION_NOTIFICATION_IM.equals(property.getName())) {
-                property.setValue("false");
-            } else if (SELF_REGISTRATION_RE_CAPTCHA.equals(property.getName())) {
-                property.setValue("false");
-            } else if (SELF_REGISTRATION_CODE_EXPIRY_TIME.equals(property.getName())) {
-                property.setValue("1440");
-            }
-        }
-        // This is to remove invalid authenticators
-        updateFederatedAuthenticators(identityProvider);
-
-        identityProviderMgtServiceClient.updateResidentIdP(identityProvider);
-
         userStoreManagerServiceClient = new RemoteUserStoreManagerServiceClient(super.backendServiceURL,
                 super.sessionCookie);
-
         httpCommonClient = new HTTPCommonClient();
     }
 
@@ -202,7 +179,51 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
         httpCommonClient.closeHttpClient();
     }
 
-    @Test(description = "2.1.1")
+    @Test(description = "2.1.0", alwaysRun = true)
+    public void updateResidentIdP() throws Exception {
+
+        IdentityProvider identityProvider = identityProviderMgtServiceClient.getResidentIdP();
+
+        for (IdentityProviderProperty property : identityProvider.getIdpProperties()) {
+
+            if (SELF_REGISTRATION_ENABLE.equals(property.getName())) {
+                property.setValue("true");
+            } else if (SELF_REGISTRATION_LOCK_ON_CREATION.equals(property.getName())) {
+                property.setValue("true");
+            } else if (SELF_REGISTRATION_NOTIFICATION_IM.equals(property.getName())) {
+                property.setValue("false");
+            } else if (SELF_REGISTRATION_RE_CAPTCHA.equals(property.getName())) {
+                property.setValue("false");
+            } else if (SELF_REGISTRATION_CODE_EXPIRY_TIME.equals(property.getName())) {
+                property.setValue("1440");
+            }
+        }
+        // This is to remove invalid authenticators
+        updateFederatedAuthenticators(identityProvider);
+
+        identityProviderMgtServiceClient.updateResidentIdP(identityProvider);
+
+        IdentityProvider updatedIdentityProvider = identityProviderMgtServiceClient.getResidentIdP();
+
+        for (IdentityProviderProperty property : updatedIdentityProvider.getIdpProperties()) {
+
+            if (SELF_REGISTRATION_ENABLE.equals(property.getName())) {
+                log.info(SELF_REGISTRATION_ENABLE + property.getValue());
+            } else if (SELF_REGISTRATION_LOCK_ON_CREATION.equals(property.getName())) {
+                log.info(SELF_REGISTRATION_LOCK_ON_CREATION + property.getValue());
+            } else if (SELF_REGISTRATION_NOTIFICATION_IM.equals(property.getName())) {
+                log.info(SELF_REGISTRATION_NOTIFICATION_IM + property.getValue());
+            } else if (SELF_REGISTRATION_RE_CAPTCHA.equals(property.getName())) {
+                log.info(SELF_REGISTRATION_RE_CAPTCHA + property.getValue());
+            } else if (SELF_REGISTRATION_CODE_EXPIRY_TIME.equals(property.getName())) {
+                log.info(SELF_REGISTRATION_CODE_EXPIRY_TIME + property.getValue());
+            }
+        }
+
+
+    }
+
+    @Test(description = "2.1.1", dependsOnMethods = {"updateResidentIdP"})
     public void selfRegisterUser() throws Exception {
 
         HttpResponse response = httpCommonClient

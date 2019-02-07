@@ -16,6 +16,8 @@
 
 package org.wso2.identity.scenarios.sso.test.oauth;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -63,6 +65,8 @@ import static org.wso2.identity.scenarios.commons.util.SSOUtil.sendOAuthConsentA
 import static org.wso2.identity.scenarios.commons.util.SSOUtil.sendTokenRequest;
 
 public class OAuthAuthorizationGrantTest extends ScenarioTestBase {
+
+    private static final Log log = LogFactory.getLog(OAuthAuthorizationGrantTest.class);
 
     private static final String REDIRECT_URL = "http://testapp.org";
     private static final String APPLICATION_NAME = "TestApp1";
@@ -124,6 +128,7 @@ public class OAuthAuthorizationGrantTest extends ScenarioTestBase {
     public void intiAuthorizeRequest() throws Exception {
 
         HttpResponse response = sendAuthorizeGet(client, authzEndpoint, clientId, REDIRECT_URL, null, null);
+        log.info(">>>>> " + response.getStatusLine().getStatusCode());
         assertNotNull(response, "Response for authorize GET is null");
 
         sessionDataKey = getSessionDataKey(response);

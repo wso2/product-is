@@ -16,8 +16,9 @@
 
 package org.wso2.identity.scenarios.commons.util;
 
-import org.apache.axis2.json.gson.factory.JsonObject;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
@@ -30,7 +31,6 @@ import org.json.simple.parser.ParseException;
 import org.wso2.identity.scenarios.commons.ScenarioTestException;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -56,6 +56,8 @@ import static org.wso2.identity.scenarios.commons.util.Constants.SystemPropertie
  */
 public class DataExtractUtil {
 
+    private static final Log log = LogFactory.getLog(DataExtractUtil.class);
+
     /**
      * Extract data from http response with the given keywords.
      *
@@ -75,6 +77,7 @@ public class DataExtractUtil {
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         String line;
         while ((line = rd.readLine()) != null) {
+            log.info(">>>> " + line);
             for (String key : keyPositionMap.keySet()) {
                 if (line.contains(key)) {
                     String[] tokens;
