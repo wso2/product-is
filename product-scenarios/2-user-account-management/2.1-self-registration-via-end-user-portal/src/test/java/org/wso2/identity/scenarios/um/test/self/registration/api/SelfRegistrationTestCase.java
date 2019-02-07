@@ -154,32 +154,32 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
     @AfterClass(alwaysRun = true)
     public void clear() throws Exception {
 
-        IdentityProvider identityProvider = identityProviderMgtServiceClient.getResidentIdP();
-
-        for (IdentityProviderProperty property : identityProvider.getIdpProperties()) {
-            if (SELF_REGISTRATION_ENABLE.equals(property.getName())) {
-                property.setValue("false");
-            } else if (SELF_REGISTRATION_LOCK_ON_CREATION.equals(property.getName())) {
-                property.setValue("true");
-            } else if (SELF_REGISTRATION_NOTIFICATION_IM.equals(property.getName())) {
-                property.setValue("true");
-            } else if (SELF_REGISTRATION_RE_CAPTCHA.equals(property.getName())) {
-                property.setValue("true");
-            } else if (SELF_REGISTRATION_CODE_EXPIRY_TIME.equals(property.getName())) {
-                property.setValue("1440");
-            }
-        }
-        // This is to remove invalid authenticators
-        updateFederatedAuthenticators(identityProvider);
-
-        identityProviderMgtServiceClient.updateResidentIdP(identityProvider);
+//        IdentityProvider identityProvider = identityProviderMgtServiceClient.getResidentIdP();
+//
+//        for (IdentityProviderProperty property : identityProvider.getIdpProperties()) {
+//            if (SELF_REGISTRATION_ENABLE.equals(property.getName())) {
+//                property.setValue("false");
+//            } else if (SELF_REGISTRATION_LOCK_ON_CREATION.equals(property.getName())) {
+//                property.setValue("true");
+//            } else if (SELF_REGISTRATION_NOTIFICATION_IM.equals(property.getName())) {
+//                property.setValue("true");
+//            } else if (SELF_REGISTRATION_RE_CAPTCHA.equals(property.getName())) {
+//                property.setValue("true");
+//            } else if (SELF_REGISTRATION_CODE_EXPIRY_TIME.equals(property.getName())) {
+//                property.setValue("1440");
+//            }
+//        }
+//        // This is to remove invalid authenticators
+//        updateFederatedAuthenticators(identityProvider);
+//
+//        identityProviderMgtServiceClient.updateResidentIdP(identityProvider);
 
         userStoreManagerServiceClient.deleteUser(((JSONObject) registerRequestJSON.get(USER)).get(USERNAME).toString());
 
         httpCommonClient.closeHttpClient();
     }
 
-    @Test(description = "2.1.0", alwaysRun = true)
+    @Test(description = "2.1.1")
     public void updateResidentIdP() throws Exception {
 
         IdentityProvider identityProvider = identityProviderMgtServiceClient.getResidentIdP();
@@ -219,11 +219,10 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
                 log.info(SELF_REGISTRATION_CODE_EXPIRY_TIME + property.getValue());
             }
         }
-
-
+        assertNotNull(updatedIdentityProvider);
     }
 
-    @Test(description = "2.1.1", dependsOnMethods = {"updateResidentIdP"})
+    @Test(description = "2.1.2", dependsOnMethods = {"updateResidentIdP"})
     public void selfRegisterUser() throws Exception {
 
         HttpResponse response = httpCommonClient
@@ -237,7 +236,7 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
         assertNotNull(confirmationCode, "Failed to receive the confirmation code.");
     }
 
-    @Test(description = "2.1.2",
+    @Test(description = "2.1.3",
           dependsOnMethods = { "selfRegisterUser" })
     public void validateUserRegistration() throws Exception {
 
@@ -254,7 +253,7 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
                 "Failed to lock the user during user" + " creation.");
     }
 
-    @Test(description = "2.1.3",
+    @Test(description = "2.1.4",
           dependsOnMethods = { "validateUserRegistration" })
     public void resendCodeForUser() throws Exception {
 
@@ -280,7 +279,7 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
         assertNotNull(newConfirmationCode, "Failed to receive the new confirmation code.");
     }
 
-    @Test(description = "2.1.4",
+    @Test(description = "2.1.5",
           dependsOnMethods = { "resendCodeForUser" })
     public void verifyPreviousConfirmationCode() throws Exception {
 
@@ -298,7 +297,7 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
                         + newConfirmationCode + ", Request Object: " + registerRequestJSON.toJSONString());
     }
 
-    @Test(description = "2.1.5",
+    @Test(description = "2.1.6",
           dependsOnMethods = { "verifyPreviousConfirmationCode" })
     public void confirmUserRegistration() throws Exception {
 

@@ -77,13 +77,15 @@ public class DataExtractUtil {
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         String line;
         while ((line = rd.readLine()) != null) {
-            log.info(">>>> " + line);
+            log.info(">>>>*** " + line);
             for (String key : keyPositionMap.keySet()) {
                 if (line.contains(key)) {
+                    log.info(">>>>&&& : " + line);
                     String[] tokens;
                     if (line.contains("'")) {
                         tokens = line.split("'");
                         KeyValue keyValue = new KeyValue(key, tokens[keyPositionMap.get(key)]);
+                        log.info(">>>>^^^ " + key + "   :  " + tokens[keyPositionMap.get(key)]);
                         keyValues.add(keyValue);
                         return keyValues;
                     } else {
@@ -93,6 +95,7 @@ public class DataExtractUtil {
                         if (matcher.find()) {
                             KeyValue keyValue = new KeyValue(key, matcher.group(1));
                             keyValues.add(keyValue);
+                            log.info(">>>>^^^ " + key + "   :  " + keyValue);
                             return keyValues;
                         }
                         return null;
