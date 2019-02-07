@@ -36,9 +36,6 @@ import java.rmi.RemoteException;
 import java.util.Base64;
 import java.util.Map;
 
-import static org.wso2.identity.scenarios.commons.util.Constants.ClaimURIs.EMAIL_CLAIM_URI;
-import static org.wso2.identity.scenarios.commons.util.Constants.ClaimURIs.FIRST_NAME_CLAIM_URI;
-import static org.wso2.identity.scenarios.commons.util.Constants.ClaimURIs.LAST_NAME_CLAIM_URI;
 import static org.wso2.identity.scenarios.commons.util.Constants.DEFAULT_SOCKET_TIMEOUT_IN_SECONDS;
 import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
 import static org.wso2.identity.scenarios.commons.util.Constants.IS_SAMPLES_HTTP_URL;
@@ -82,6 +79,13 @@ public class ScenarioTestBase {
     protected void loginAndObtainSessionCookie() throws LoginAuthenticationExceptionException, RemoteException {
         loginClient = new AuthenticatorClient(backendServiceURL);
         sessionCookie = loginClient.login(ADMIN_USERNAME, ADMIN_PASSWORD, null);
+    }
+
+    protected void loginAndObtainSessionCookie(String username, String password)
+            throws LoginAuthenticationExceptionException, RemoteException {
+
+        loginClient = new AuthenticatorClient(backendServiceURL);
+        sessionCookie = loginClient.login(username, password, null);
     }
 
     public void init() throws Exception {
