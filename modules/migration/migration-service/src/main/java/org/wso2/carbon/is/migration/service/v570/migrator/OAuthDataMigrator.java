@@ -47,6 +47,7 @@ public class OAuthDataMigrator extends Migrator {
         try {
             List<OauthTokenInfo> updateTokenInfoList = updateHashColumnValues(tokenInfoList, hashingAlgo);
             try (Connection connection = getDataSource().getConnection()) {
+                connection.setAutoCommit(false);
                 //persists modified hash values
                 OAuthDAO.getInstance().updateNewTokenHash(updateTokenInfoList, connection);
                 connection.commit();
@@ -70,6 +71,7 @@ public class OAuthDataMigrator extends Migrator {
         try {
             List<AuthzCodeInfo> updatedAuthzCodeInfoList = updateAuthzCodeHashColumnValues(authzCodeInfos, hashingAlgo);
             try (Connection connection = getDataSource().getConnection()) {
+                connection.setAutoCommit(false);
                 // persists modified hash values
                 OAuthDAO.getInstance().updateNewAuthzCodeHash(updatedAuthzCodeInfoList, connection);
                 connection.commit();
