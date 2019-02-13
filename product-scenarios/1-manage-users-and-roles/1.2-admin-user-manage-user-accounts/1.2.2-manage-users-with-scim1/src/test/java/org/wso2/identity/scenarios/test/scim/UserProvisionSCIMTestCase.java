@@ -77,8 +77,6 @@ public class UserProvisionSCIMTestCase extends ScenarioTestBase {
         HttpResponse response = sendPostRequestWithJSON(client, scimUsersEndpoint, rootObject,
                 new Header[]{getBasicAuthzHeader(), getContentTypeApplicationJSONHeader()});
 
-        log.info("Error Info:1 " + response.getStatusLine().getStatusCode());
-        log.info("Error Info:2 " + Arrays.toString(response.getAllHeaders()));
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED, "User has not been created successfully");
 
         JSONObject responseObj = getJSONFromResponse(response);
@@ -97,8 +95,6 @@ public class UserProvisionSCIMTestCase extends ScenarioTestBase {
         HttpResponse response = sendDeleteRequest(client, endpoint,
                 new Header[]{getBasicAuthzHeader(), getContentTypeApplicationJSONHeader()});
 
-        log.info("Error Info:3 " + response.getStatusLine().getStatusCode());
-        log.info("Error Info:4 " + Arrays.toString(response.getAllHeaders()));
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK, "User has not been retrieved successfully");
         EntityUtils.consume(response.getEntity());
 

@@ -177,7 +177,6 @@ public class SAMLSSOWithExternalAppTestCase extends ScenarioTestBase {
                 response = sendRedirectRequest(response, USER_AGENT, samlssoExternalAppClient.getAcsUrl(),
                         httpClient);
             }
-            log.info("Error Info:5 " + response.getStatusLine().getStatusCode());
             String samlResponse = SAML2SSOTestBase.extractSAMLResponse(response);
             EntityUtils.consume(response.getEntity());
 
