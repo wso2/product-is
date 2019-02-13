@@ -20,10 +20,10 @@ echo "ISHttpsURL is set to: $ISHttpsUrl"
 mkdir target
 cd target
 
-#wget https://www-us.apache.org/dist/tomcat/tomcat-8/v8.5.35/bin/apache-tomcat-8.5.35.zip
+wget archive.apache.org/dist/tomcat/tomcat-8/v8.5.35/bin/apache-tomcat-8.5.35.zip
 unzip apache-tomcat-8.5.35.zip
 
-#wget http://maven.wso2.org/nexus/content/repositories/releases/org/wso2/is/org.wso2.sample.is.sso.agent/5.7.0/org.wso2.sample.is.sso.agent-5.7.0.war
+wget http://maven.wso2.org/nexus/content/repositories/releases/org/wso2/is/org.wso2.sample.is.sso.agent/5.7.0/org.wso2.sample.is.sso.agent-5.7.0.war
 unzip org.wso2.sample.is.sso.agent-5.7.0.war -d travelocity.com
 mv travelocity.com apache-tomcat-8.5.35/webapps/
 

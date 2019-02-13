@@ -101,7 +101,6 @@ public class OIDCSSOTestCase extends ScenarioTestBase {
     public void sendAuthorizeRequestForSP1() throws Exception {
 
         HttpResponse response = oAuth2Client.sendAuthorizeGet(client, oAuthConsumerAppDTO1, "openid", null);
-        log.info("Error Info:12 " + response.getStatusLine().getStatusCode());
         Assert.assertNotNull(response, "Http response is null");
 
         try {
