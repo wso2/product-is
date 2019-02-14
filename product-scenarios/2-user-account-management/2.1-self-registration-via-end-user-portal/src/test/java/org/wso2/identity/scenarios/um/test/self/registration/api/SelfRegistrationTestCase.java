@@ -187,21 +187,23 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
         for (IdentityProviderProperty property : updatedIdentityProvider.getIdpProperties()) {
 
             if (SELF_REGISTRATION_ENABLE.equals(property.getName())) {
-                log.info(SELF_REGISTRATION_ENABLE + property.getValue());
+                assertEquals(property.getValue(), "true");
             } else if (SELF_REGISTRATION_LOCK_ON_CREATION.equals(property.getName())) {
-                log.info(SELF_REGISTRATION_LOCK_ON_CREATION + property.getValue());
+                assertEquals(property.getValue(), "true");
             } else if (SELF_REGISTRATION_NOTIFICATION_IM.equals(property.getName())) {
-                log.info(SELF_REGISTRATION_NOTIFICATION_IM + property.getValue());
+                assertEquals(property.getValue(), "false");
             } else if (SELF_REGISTRATION_RE_CAPTCHA.equals(property.getName())) {
-                log.info(SELF_REGISTRATION_RE_CAPTCHA + property.getValue());
+                assertEquals(property.getValue(), "false");
             } else if (SELF_REGISTRATION_CODE_EXPIRY_TIME.equals(property.getName())) {
-                log.info(SELF_REGISTRATION_CODE_EXPIRY_TIME + property.getValue());
+                assertEquals(property.getValue(), "1440");
             }
         }
-        assertNotNull(updatedIdentityProvider);
+        // To sync the local caches.
+        Thread.sleep(5000);
     }
 
-    @Test(description = "2.1.2", dependsOnMethods = {"updateResidentIdP"})
+    @Test(description = "2.1.2",
+          dependsOnMethods = { "updateResidentIdP" })
     public void selfRegisterUser() throws Exception {
 
         HttpResponse response = httpCommonClient

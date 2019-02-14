@@ -17,6 +17,8 @@
 package org.wso2.identity.scenarios.commons;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
@@ -54,6 +56,8 @@ import static org.wso2.identity.scenarios.commons.util.Constants.HTTP_RESPONSE_H
 import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
 
 public class OAuth2CommonClient {
+
+    private static final Log log = LogFactory.getLog(OAuth2CommonClient.class);
 
     private static final String DCR_REQUESTS_LOCATION = "dcr.requests.location";
 
@@ -224,8 +228,18 @@ public class OAuth2CommonClient {
         if (params != null) {
             requestParams.putAll(params);
         }
-
-        return httpCommonClient.sendGetRequest(authorizeEndpoint, requestParams, null);
+        log.info("###>: " + authorizeEndpoint);
+        log.info("###>: " + responseType);
+        log.info("###>: " + clientId);
+        log.info("###>: " + redirectUri);
+        log.info("###>: " + scope);
+        HttpResponse response = httpCommonClient.sendGetRequest(authorizeEndpoint, requestParams, null);
+        Header locationHeader = response.getFirstHeader(HTTP_RESPONSE_HEADER_LOCATION);
+        if (locationHeader != null) {
+            log.info("###>: " + locationHeader.getValue());
+        }
+        log.info(response.getStatusLine().getStatusCode());
+        return response;
     }
 
     /**
