@@ -157,7 +157,7 @@ import static org.wso2.identity.scenarios.commons.util.SSOUtil.sendRedirectReque
 /**
  * Base test class for SAML SSO tests.
  */
-public class SAML2SSOTestBase extends SSOCommonClient {
+public class SAML2SSOTestBase extends SSOCommonClientForSAML {
 
     private static final Log log = LogFactory.getLog(SAML2SSOTestBase.class);
 

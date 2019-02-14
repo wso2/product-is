@@ -24,7 +24,7 @@
 
     <test name="is-single-sign-on" preserve-order="true" parallel="false">
         <classes>
-            <class name="org.wso2.identity.scenarios.sso.test.oauth.OAuthAuthorizationGrantTest"/>
+            <class name="org.wso2.identity.scenarios.sso.test.oauth.OAuth2AuthorizationGrantTest"/>
         </classes>
     </test>
 </suite>
