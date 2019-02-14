@@ -91,14 +91,13 @@ mvn clean install -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf
 
 #=============== Copy Surefire Reports ===========================================
 
-echo "Copying surefire-reports to ${OUTPUT_DIR}"
+echo "Copying surefire-reports to ${OUTPUT_DIR}/scenarios"
 
-mkdir -p ${OUTPUT_DIR}
-find ./* -name "surefire-reports" -exec cp --parents -r {} ${OUTPUT_DIR} \;
+mkdir -p ${OUTPUT_DIR}/scenarios
+find ./* -name "surefire-reports" -exec cp --parents -r {} ${OUTPUT_DIR}/scenarios \;
 
 #=============== Code Coverage Report Generation ===========================================
 
 echo "Generating Scenario Code Coverage Reports"
 source ${HOME}/code-coverage/code-coverage.sh
-generate_code_coverage ${INPUT_DIR} ${OUTPUT_DIR}
-
+generate_code_coverage ${INPUT_DIR} ${OUTPUT_DIR}/scenarios
