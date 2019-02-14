@@ -16,6 +16,7 @@
 
 package org.wso2.identity.scenarios.commons;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -38,13 +39,17 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -262,7 +267,7 @@ public class OAuth2CommonClient {
     }
 
     /**
-     * Send token request.
+     * Send code grant token request.
      *
      * @param authorizationCode Authorization code.
      * @param redirectUri       Redirect uri.
@@ -271,14 +276,67 @@ public class OAuth2CommonClient {
      * @return Http response.
      * @throws IOException IO Exception.
      */
-    public HttpResponse sendTokenRequest(String authorizationCode, String redirectUri, String clientId,
-            String clientSecret) throws IOException {
+    public HttpResponse sendCodeGrantTokenRequest(String authorizationCode, String redirectUri, String clientId,
+            String clientSecret, String pkceVerifier) throws IOException {
 
         List<NameValuePair> requestParameters = new ArrayList<>();
         requestParameters.add(new BasicNameValuePair(OAuth2Constants.RequestParams.GRANT_TYPE,
                 OAuth2Constants.GrantTypes.AUTHORIZATION_CODE));
         requestParameters.add(new BasicNameValuePair(OAuth2Constants.RequestParams.CODE, authorizationCode));
         requestParameters.add(new BasicNameValuePair(OAuth2Constants.RequestParams.REDIRECT_URI, redirectUri));
+        if(StringUtils.isNotBlank(pkceVerifier)){
+            requestParameters.add(new BasicNameValuePair(OAuth2Constants.PKCERequestElements.CODE_VERIFIER, pkceVerifier));
+        }
+
+        return httpCommonClient.sendPostRequestWithParameters(tokenEndpoint, requestParameters,
+                getCommonHeadersURLEncoded(clientId, clientSecret));
+    }
+
+    /**
+     * Send client credentials grant token request.
+     *
+     * @param clientId     Client id.
+     * @param clientSecret Client secret.
+     * @param scope        Scope.
+     * @return Http response.
+     * @throws IOException IO Exception.
+     */
+    public HttpResponse sendClientCredentialsGrantTokenRequest(String clientId, String clientSecret, String scope)
+            throws IOException {
+
+        List<NameValuePair> requestParameters = new ArrayList<>();
+        requestParameters.add(new BasicNameValuePair(OAuth2Constants.RequestParams.GRANT_TYPE,
+                OAuth2Constants.GrantTypes.CLIENT_CREDENTIALS));
+        if (StringUtils.isNotBlank(scope)) {
+            requestParameters.add(new BasicNameValuePair(OAuth2Constants.RequestParams.SCOPE, scope));
+        }
+
+        return httpCommonClient.sendPostRequestWithParameters(tokenEndpoint, requestParameters,
+                getCommonHeadersURLEncoded(clientId, clientSecret));
+    }
+
+    /**
+     * Send password grant token request.
+     *
+     * @param username     Username.
+     * @param password     Password.
+     * @param clientId     Client id.
+     * @param clientSecret Client secret.
+     * @param scope        Scope.
+     * @return Http response.
+     * @throws IOException IO Exception.
+     */
+    public HttpResponse sendPasswordGrantTokenRequest(String username, String password, String clientId,
+            String clientSecret, String scope) throws IOException {
+
+        List<NameValuePair> requestParameters = new ArrayList<>();
+        requestParameters.add(new BasicNameValuePair(OAuth2Constants.RequestParams.GRANT_TYPE,
+                OAuth2Constants.GrantTypes.PASSWORD));
+        requestParameters.add(new BasicNameValuePair(OAuth2Constants.RequestParams.USERNAME, username));
+        requestParameters.add(new BasicNameValuePair(OAuth2Constants.RequestParams.PASSWORD, password));
+        if (StringUtils.isNotBlank(scope)) {
+            requestParameters.add(new BasicNameValuePair(OAuth2Constants.RequestParams.SCOPE, scope));
+        }
 
         return httpCommonClient.sendPostRequestWithParameters(tokenEndpoint, requestParameters,
                 getCommonHeadersURLEncoded(clientId, clientSecret));
@@ -307,13 +365,15 @@ public class OAuth2CommonClient {
      *
      * @param responseJSON response JSON.
      */
-    public void validateAccessToken(JSONObject responseJSON) {
+    public void validateAccessToken(JSONObject responseJSON, boolean refreshTokenAvailable) {
 
         assertNotNull(responseJSON.get(OAuth2Constants.TokenResponseElements.ACCESS_TOKEN),
                 "access_token parameter is not available.");
 
-        assertNotNull(responseJSON.get(OAuth2Constants.TokenResponseElements.REFRESH_TOKEN),
-                "refresh_token parameter is not available.");
+        if (refreshTokenAvailable) {
+            assertNotNull(responseJSON.get(OAuth2Constants.TokenResponseElements.REFRESH_TOKEN),
+                    "refresh_token parameter is not available.");
+        }
 
         assertEquals(responseJSON.get(OAuth2Constants.TokenResponseElements.TOKEN_TYPE).toString(),
                 OAuth2Constants.TokenTypes.BEARER, "token_type parameter is invalid.");

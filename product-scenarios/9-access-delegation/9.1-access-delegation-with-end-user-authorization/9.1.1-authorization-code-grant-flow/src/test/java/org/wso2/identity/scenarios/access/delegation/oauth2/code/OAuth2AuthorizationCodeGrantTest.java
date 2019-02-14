@@ -184,9 +184,10 @@ public class OAuth2AuthorizationCodeGrantTest extends ScenarioTestBase {
           dependsOnMethods = "submitOAuthConsent")
     public void getOAccessToken() throws Exception {
 
-        HttpResponse response = oAuth2CommonClient.sendTokenRequest(authorizeCode, redirectUri, clientId, clientSecret);
+        HttpResponse response = oAuth2CommonClient
+                .sendCodeGrantTokenRequest(authorizeCode, redirectUri, clientId, clientSecret, null);
         JSONObject responseJSON = httpCommonClient.getJSONFromResponse(response);
-        oAuth2CommonClient.validateAccessToken(responseJSON);
+        oAuth2CommonClient.validateAccessToken(responseJSON, true);
         accessToken = responseJSON.get(OAuth2Constants.TokenResponseElements.ACCESS_TOKEN).toString();
 
         httpCommonClient.consume(response);

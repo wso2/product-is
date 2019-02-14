@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package org.wso2.identity.scenarios.access.delegation.oauth2.implicit;
+package org.wso2.identity.scenarios.access.delegation.oauth2.password;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -27,43 +26,34 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.identity.scenarios.commons.HTTPCommonClient;
 import org.wso2.identity.scenarios.commons.OAuth2CommonClient;
-import org.wso2.identity.scenarios.commons.SSOCommonClient;
 import org.wso2.identity.scenarios.commons.ScenarioTestBase;
 import org.wso2.identity.scenarios.commons.util.OAuth2Constants;
-import org.wso2.identity.scenarios.commons.util.SSOConstants;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
 import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
 import static org.wso2.identity.scenarios.commons.util.OAuth2Constants.DCRResponseElements.CLIENT_ID;
-import static org.wso2.identity.scenarios.commons.util.OAuth2Constants.DCRResponseElements.REDIRECT_URIS;
+import static org.wso2.identity.scenarios.commons.util.OAuth2Constants.DCRResponseElements.CLIENT_SECRET;
 
 /**
- * This test class tests the access token retrieval using authorization code grant flow and validate the access token.
+ * This test class tests the access token retrieval using client credentials grant flow and validate the access token.
  */
-public class OAuth2ImplicitGrantTest extends ScenarioTestBase {
+public class OAuth2PasswordGrantTest extends ScenarioTestBase {
 
     private String dcrRequestFile;
-
-    private String appCreatorUsername;
-
-    private String appCreatorPassword;
 
     private String username;
 
     private String password;
 
+    private String appCreatorUsername;
+
+    private String appCreatorPassword;
+
     private String tenantDomain;
 
     private String clientId;
 
-    private String redirectUri;
-
-    private String sessionDataKey;
-
-    private String sessionDataKeyConsent;
-
-    private String consentUrl;
+    private String clientSecret;
 
     private String accessToken;
 
@@ -71,22 +61,20 @@ public class OAuth2ImplicitGrantTest extends ScenarioTestBase {
 
     private OAuth2CommonClient oAuth2CommonClient;
 
-    private SSOCommonClient ssoCommonClient;
-
-    @Factory(dataProvider = "oAuth2ImplicitGrantConfigProvider")
-    public OAuth2ImplicitGrantTest(String dcrRequestFile, String appCreatorUsername, String appCreatorPassword,
+    @Factory(dataProvider = "oAuth2PasswordGrantConfigProvider")
+    public OAuth2PasswordGrantTest(String dcrRequestFile, String appCreatorUsername, String appCreatorPassword,
             String username, String password, String tenantDomain) {
 
         this.appCreatorUsername = appCreatorUsername;
         this.appCreatorPassword = appCreatorPassword;
-        this.dcrRequestFile = dcrRequestFile;
         this.username = username;
         this.password = password;
+        this.dcrRequestFile = dcrRequestFile;
         this.tenantDomain = tenantDomain;
     }
 
-    @DataProvider(name = "oAuth2ImplicitGrantConfigProvider")
-    private static Object[][] oAuth2ImplicitGrantConfigProvider() throws Exception {
+    @DataProvider(name = "oAuth2PasswordGrantConfigProvider")
+    private static Object[][] oAuth2PasswordGrantConfigProvider() throws Exception {
 
         return new Object[][] {
                 {
@@ -102,7 +90,6 @@ public class OAuth2ImplicitGrantTest extends ScenarioTestBase {
         httpCommonClient = new HTTPCommonClient();
         oAuth2CommonClient = new OAuth2CommonClient(httpCommonClient, getDeploymentProperty(IS_HTTPS_URL),
                 tenantDomain);
-        ssoCommonClient = new SSOCommonClient(httpCommonClient, getDeploymentProperty(IS_HTTPS_URL), tenantDomain);
 
         // Register OAuth2 application.
         HttpResponse response = oAuth2CommonClient
@@ -115,7 +102,7 @@ public class OAuth2ImplicitGrantTest extends ScenarioTestBase {
         oAuth2CommonClient.validateApplicationCreationResponse(dcrRequestFile, responseJSON);
 
         clientId = responseJSON.get(CLIENT_ID).toString();
-        redirectUri = ((JSONArray) responseJSON.get(REDIRECT_URIS)).get(0).toString();
+        clientSecret = responseJSON.get(CLIENT_SECRET).toString();
     }
 
     @AfterClass(alwaysRun = true)
@@ -129,56 +116,24 @@ public class OAuth2ImplicitGrantTest extends ScenarioTestBase {
         httpCommonClient.closeHttpClient();
     }
 
-    @Test(description = "9.1.5.1")
-    public void intiAuthorizeRequest() throws Exception {
+    @Test(description = "9.1.7.1")
+    public void sendTokenRequest() throws Exception {
 
         HttpResponse response = oAuth2CommonClient
-                .sendAuthorizeGet(clientId, null, redirectUri, OAuth2Constants.ResponseTypes.TOKEN, null);
-        sessionDataKey = ssoCommonClient.getSessionDataKey(response);
-        assertNotNull(sessionDataKey, "sessionDataKey parameter value is null.");
+                .sendPasswordGrantTokenRequest(username, password, clientId, clientSecret, null);
+        JSONObject responseJSON = httpCommonClient.getJSONFromResponse(response);
+        oAuth2CommonClient.validateAccessToken(responseJSON, true);
+        accessToken = responseJSON.get(OAuth2Constants.TokenResponseElements.ACCESS_TOKEN).toString();
 
         httpCommonClient.consume(response);
     }
 
-    @Test(description = "9.1.5.2",
-          dependsOnMethods = "intiAuthorizeRequest")
-    public void authenticate() throws Exception {
-
-        HttpResponse response = ssoCommonClient.sendLoginPost(sessionDataKey, username, password);
-        consentUrl = ssoCommonClient.getLocationHeader(response);
-        assertNotNull(consentUrl, "Location header is null. Invalid consent page url.");
-
-        httpCommonClient.consume(response);
-    }
-
-    @Test(description = "9.1.5.3",
-          dependsOnMethods = "authenticate")
-    public void initOAuthConsent() throws Exception {
-
-        HttpResponse response = httpCommonClient.sendGetRequest(consentUrl, null, null);
-        sessionDataKeyConsent = ssoCommonClient.getSessionDataKeyConsent(response);
-        assertNotNull(sessionDataKeyConsent, "sessionDataKeyConsent parameter value is null");
-
-        httpCommonClient.consume(response);
-    }
-
-    @Test(description = "9.1.5.4",
-          dependsOnMethods = "initOAuthConsent")
-    public void submitOAuthConsent() throws Exception {
-
-        HttpResponse response = oAuth2CommonClient
-                .sendOAuthConsentApprovePost(sessionDataKeyConsent, SSOConstants.ApprovalType.APPROVE_ONCE);
-        accessToken = oAuth2CommonClient.getAccessToken(response);
-        assertNotNull(accessToken, "access_token parameter value is null. Invalid access token.");
-
-        httpCommonClient.consume(response);
-    }
-
-    @Test(description = "9.1.5.5",
-          dependsOnMethods = "submitOAuthConsent")
+    @Test(description = "9.1.7.2",
+          dependsOnMethods = "sendTokenRequest")
     public void introspectAccessToken() throws Exception {
 
-        HttpResponse response = oAuth2CommonClient.sendIntrospectRequest(accessToken, username, password);
+        HttpResponse response = oAuth2CommonClient
+                .sendIntrospectRequest(accessToken, appCreatorUsername, appCreatorPassword);
         JSONObject responseJSON = httpCommonClient.getJSONFromResponse(response);
         oAuth2CommonClient.validateIntrospectResponse(responseJSON);
 

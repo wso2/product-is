@@ -78,6 +78,10 @@ public class OAuth2Constants {
         public static final String CONSENT = "consent";
 
         public static final String TOKEN = "token";
+
+        public static final String USERNAME = "username";
+
+        public static final String PASSWORD = "password";
     }
 
     public static class DCRRequestElements {
@@ -135,5 +139,14 @@ public class OAuth2Constants {
         public static final String CLIENT_SECRET = "client_secret";
 
         public static final String REDIRECT_URIS = "redirect_uris";
+    }
+
+    public static class PKCERequestElements {
+
+        public static final String CODE_VERIFIER = "code_verifier";
+
+        public static final String CODE_CHALLENGE = "code_challenge";
+
+        public static final String CODE_CHALLENGE_METHOD = "code_challenge_method";
     }
 }

@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package org.wso2.identity.scenarios.access.delegation.oauth2.implicit;
+package org.wso2.identity.scenarios.access.delegation.oauth2.code.pkce;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.json.simple.JSONArray;
@@ -32,16 +33,25 @@ import org.wso2.identity.scenarios.commons.ScenarioTestBase;
 import org.wso2.identity.scenarios.commons.util.OAuth2Constants;
 import org.wso2.identity.scenarios.commons.util.SSOConstants;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
 import static org.wso2.identity.scenarios.commons.util.OAuth2Constants.DCRResponseElements.CLIENT_ID;
+import static org.wso2.identity.scenarios.commons.util.OAuth2Constants.DCRResponseElements.CLIENT_SECRET;
 import static org.wso2.identity.scenarios.commons.util.OAuth2Constants.DCRResponseElements.REDIRECT_URIS;
 
 /**
- * This test class tests the access token retrieval using authorization code grant flow and validate the access token.
+ * This test class tests the access token retrieval using authorization code grant flow with PKCE and validate the
+ * access token.
  */
-public class OAuth2ImplicitGrantTest extends ScenarioTestBase {
+public class OAuth2AuthorizationCodeGrantWithPKCES256Test extends ScenarioTestBase {
 
     private String dcrRequestFile;
 
@@ -57,6 +67,8 @@ public class OAuth2ImplicitGrantTest extends ScenarioTestBase {
 
     private String clientId;
 
+    private String clientSecret;
+
     private String redirectUri;
 
     private String sessionDataKey;
@@ -65,7 +77,11 @@ public class OAuth2ImplicitGrantTest extends ScenarioTestBase {
 
     private String consentUrl;
 
+    private String authorizeCode;
+
     private String accessToken;
+
+    private String pkceVerifier;
 
     private HTTPCommonClient httpCommonClient;
 
@@ -73,9 +89,9 @@ public class OAuth2ImplicitGrantTest extends ScenarioTestBase {
 
     private SSOCommonClient ssoCommonClient;
 
-    @Factory(dataProvider = "oAuth2ImplicitGrantConfigProvider")
-    public OAuth2ImplicitGrantTest(String dcrRequestFile, String appCreatorUsername, String appCreatorPassword,
-            String username, String password, String tenantDomain) {
+    @Factory(dataProvider = "oAuth2AuthorizationCodeGrantWithPKCES256ConfigProvider")
+    public OAuth2AuthorizationCodeGrantWithPKCES256Test(String dcrRequestFile, String appCreatorUsername,
+            String appCreatorPassword, String username, String password, String tenantDomain) {
 
         this.appCreatorUsername = appCreatorUsername;
         this.appCreatorPassword = appCreatorPassword;
@@ -85,8 +101,8 @@ public class OAuth2ImplicitGrantTest extends ScenarioTestBase {
         this.tenantDomain = tenantDomain;
     }
 
-    @DataProvider(name = "oAuth2ImplicitGrantConfigProvider")
-    private static Object[][] oAuth2ImplicitGrantConfigProvider() throws Exception {
+    @DataProvider(name = "oAuth2AuthorizationCodeGrantWithPKCES256ConfigProvider")
+    private static Object[][] oAuth2AuthorizationCodeGrantWithPKCES256ConfigProvider() throws Exception {
 
         return new Object[][] {
                 {
@@ -115,6 +131,7 @@ public class OAuth2ImplicitGrantTest extends ScenarioTestBase {
         oAuth2CommonClient.validateApplicationCreationResponse(dcrRequestFile, responseJSON);
 
         clientId = responseJSON.get(CLIENT_ID).toString();
+        clientSecret = responseJSON.get(CLIENT_SECRET).toString();
         redirectUri = ((JSONArray) responseJSON.get(REDIRECT_URIS)).get(0).toString();
     }
 
@@ -129,18 +146,23 @@ public class OAuth2ImplicitGrantTest extends ScenarioTestBase {
         httpCommonClient.closeHttpClient();
     }
 
-    @Test(description = "9.1.5.1")
+    @Test(description = "9.1.2.1")
     public void intiAuthorizeRequest() throws Exception {
 
+        pkceVerifier = getPKCECodeVerifier();
+        Map<String, String> params = new HashMap<>();
+        params.put(OAuth2Constants.PKCERequestElements.CODE_CHALLENGE, getPKCECodeChallenge(pkceVerifier));
+        params.put(OAuth2Constants.PKCERequestElements.CODE_CHALLENGE_METHOD, "S256");
+
         HttpResponse response = oAuth2CommonClient
-                .sendAuthorizeGet(clientId, null, redirectUri, OAuth2Constants.ResponseTypes.TOKEN, null);
+                .sendAuthorizeGet(clientId, null, redirectUri, OAuth2Constants.ResponseTypes.CODE, params);
         sessionDataKey = ssoCommonClient.getSessionDataKey(response);
         assertNotNull(sessionDataKey, "sessionDataKey parameter value is null.");
 
         httpCommonClient.consume(response);
     }
 
-    @Test(description = "9.1.5.2",
+    @Test(description = "9.1.2.2",
           dependsOnMethods = "intiAuthorizeRequest")
     public void authenticate() throws Exception {
 
@@ -151,7 +173,7 @@ public class OAuth2ImplicitGrantTest extends ScenarioTestBase {
         httpCommonClient.consume(response);
     }
 
-    @Test(description = "9.1.5.3",
+    @Test(description = "9.1.2.3",
           dependsOnMethods = "authenticate")
     public void initOAuthConsent() throws Exception {
 
@@ -162,20 +184,33 @@ public class OAuth2ImplicitGrantTest extends ScenarioTestBase {
         httpCommonClient.consume(response);
     }
 
-    @Test(description = "9.1.5.4",
+    @Test(description = "9.1.2.4",
           dependsOnMethods = "initOAuthConsent")
     public void submitOAuthConsent() throws Exception {
 
         HttpResponse response = oAuth2CommonClient
                 .sendOAuthConsentApprovePost(sessionDataKeyConsent, SSOConstants.ApprovalType.APPROVE_ONCE);
-        accessToken = oAuth2CommonClient.getAccessToken(response);
-        assertNotNull(accessToken, "access_token parameter value is null. Invalid access token.");
+        authorizeCode = oAuth2CommonClient.getAuthorizeCode(response);
+        assertNotNull(authorizeCode, "code parameter value is null. Invalid authorization code.");
 
         httpCommonClient.consume(response);
     }
 
-    @Test(description = "9.1.5.5",
+    @Test(description = "9.1.2.5",
           dependsOnMethods = "submitOAuthConsent")
+    public void getOAccessToken() throws Exception {
+
+        HttpResponse response = oAuth2CommonClient
+                .sendCodeGrantTokenRequest(authorizeCode, redirectUri, clientId, clientSecret, pkceVerifier);
+        JSONObject responseJSON = httpCommonClient.getJSONFromResponse(response);
+        oAuth2CommonClient.validateAccessToken(responseJSON, true);
+        accessToken = responseJSON.get(OAuth2Constants.TokenResponseElements.ACCESS_TOKEN).toString();
+
+        httpCommonClient.consume(response);
+    }
+
+    @Test(description = "9.1.2.6",
+          dependsOnMethods = "getOAccessToken")
     public void introspectAccessToken() throws Exception {
 
         HttpResponse response = oAuth2CommonClient.sendIntrospectRequest(accessToken, username, password);
@@ -183,5 +218,30 @@ public class OAuth2ImplicitGrantTest extends ScenarioTestBase {
         oAuth2CommonClient.validateIntrospectResponse(responseJSON);
 
         httpCommonClient.consume(response);
+    }
+
+    /**
+     * Generates PKCE code verifier.
+     *
+     * @return PKCE code verifier.
+     */
+    private String getPKCECodeVerifier() {
+
+        return (UUID.randomUUID().toString() + UUID.randomUUID().toString()).replaceAll("-", "");
+    }
+
+    /**
+     * Generates PKCE code challenge.
+     *
+     * @param codeVerifier PKCE code verifier.
+     * @return Code challenge.
+     * @throws NoSuchAlgorithmException No Such Algorithm Exception.
+     */
+    private String getPKCECodeChallenge(String codeVerifier) throws NoSuchAlgorithmException {
+
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] hash = digest.digest(codeVerifier.getBytes(StandardCharsets.US_ASCII));
+        //Base64 encoded string is trimmed to remove trailing CR LF
+        return new String(Base64.encodeBase64URLSafe(hash), StandardCharsets.UTF_8).trim();
     }
 }

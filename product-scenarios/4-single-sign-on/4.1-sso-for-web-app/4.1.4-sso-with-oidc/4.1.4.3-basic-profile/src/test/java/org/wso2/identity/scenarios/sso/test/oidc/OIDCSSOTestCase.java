@@ -215,9 +215,9 @@ public class OIDCSSOTestCase extends ScenarioTestBase {
     public void getOAccessTokenForApp1() throws Exception {
 
         HttpResponse response = oAuth2CommonClient
-                .sendTokenRequest(authorizeCode, redirectUri1, clientId1, clientSecret1);
+                .sendCodeGrantTokenRequest(authorizeCode, redirectUri1, clientId1, clientSecret1, null);
         JSONObject responseJSON = httpCommonClient.getJSONFromResponse(response);
-        oAuth2CommonClient.validateAccessToken(responseJSON);
+        oAuth2CommonClient.validateAccessToken(responseJSON, true);
         accessToken = responseJSON.get(OAuth2Constants.TokenResponseElements.ACCESS_TOKEN).toString();
 
         httpCommonClient.consume(response);
@@ -263,9 +263,9 @@ public class OIDCSSOTestCase extends ScenarioTestBase {
     public void getOAccessTokenForApp2() throws Exception {
 
         HttpResponse response = oAuth2CommonClient
-                .sendTokenRequest(authorizeCode, redirectUri2, clientId2, clientSecret2);
+                .sendCodeGrantTokenRequest(authorizeCode, redirectUri2, clientId2, clientSecret2, null);
         JSONObject responseJSON = httpCommonClient.getJSONFromResponse(response);
-        oAuth2CommonClient.validateAccessToken(responseJSON);
+        oAuth2CommonClient.validateAccessToken(responseJSON, true);
         accessToken = responseJSON.get(OAuth2Constants.TokenResponseElements.ACCESS_TOKEN).toString();
 
         httpCommonClient.consume(response);
