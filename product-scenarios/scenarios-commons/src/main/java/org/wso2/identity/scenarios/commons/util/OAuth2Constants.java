@@ -36,6 +36,8 @@ public class OAuth2Constants {
     public static class ResponseTypes {
 
         public static final String CODE = "code";
+
+        public static final String TOKEN = "token";
     }
 
     public static class TokenTypes {

@@ -24,7 +24,7 @@
 
     <test name="is-single-sign-on" preserve-order="true" parallel="false">
         <classes>
-            <class name="org.wso2.identity.scenarios.access.delegation.oauth2.code.OAuth2AuthorizationCodeGrantTest"/>
+            <class name="org.wso2.identity.scenarios.access.delegation.oauth2.implicit.OAuth2ImplicitGrantTest"/>
         </classes>
     </test>
 </suite>

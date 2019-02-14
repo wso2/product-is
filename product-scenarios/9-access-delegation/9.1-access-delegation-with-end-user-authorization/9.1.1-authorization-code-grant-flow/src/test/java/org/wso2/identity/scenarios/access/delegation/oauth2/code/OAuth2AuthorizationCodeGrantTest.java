@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.identity.scenarios.sso.test.oauth;
+package org.wso2.identity.scenarios.access.delegation.oauth2.code;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -42,7 +42,7 @@ import static org.wso2.identity.scenarios.commons.util.OAuth2Constants.DCRRespon
 /**
  * This test class tests the access token retrieval using authorization code grant flow and validate the access token.
  */
-public class OAuth2AuthorizationGrantTest extends ScenarioTestBase {
+public class OAuth2AuthorizationCodeGrantTest extends ScenarioTestBase {
 
     private String dcrRequestFile;
 
@@ -79,7 +79,7 @@ public class OAuth2AuthorizationGrantTest extends ScenarioTestBase {
     private SSOCommonClient ssoCommonClient;
 
     @Factory(dataProvider = "oAuthAuthorizationGrantConfigProvider")
-    public OAuth2AuthorizationGrantTest(String dcrRequestFile, String appCreatorUsername, String appCreatorPassword,
+    public OAuth2AuthorizationCodeGrantTest(String dcrRequestFile, String appCreatorUsername, String appCreatorPassword,
             String username, String password, String tenantDomain) {
 
         this.appCreatorUsername = appCreatorUsername;
@@ -138,7 +138,8 @@ public class OAuth2AuthorizationGrantTest extends ScenarioTestBase {
     @Test(description = "9.1.1.1")
     public void intiAuthorizeRequest() throws Exception {
 
-        HttpResponse response = oAuth2CommonClient.sendAuthorizeGet(clientId, null, redirectUri, null);
+        HttpResponse response = oAuth2CommonClient
+                .sendAuthorizeGet(clientId, null, redirectUri, OAuth2Constants.ResponseTypes.CODE, null);
         sessionDataKey = ssoCommonClient.getSessionDataKey(response);
         assertNotNull(sessionDataKey, "sessionDataKey parameter value is null.");
 

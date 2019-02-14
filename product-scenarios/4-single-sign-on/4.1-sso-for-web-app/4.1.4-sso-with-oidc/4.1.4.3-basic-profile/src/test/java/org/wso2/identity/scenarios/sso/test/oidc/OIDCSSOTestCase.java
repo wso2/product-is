@@ -168,7 +168,8 @@ public class OIDCSSOTestCase extends ScenarioTestBase {
     @Test(description = "4.1.4.3.1")
     public void intiAuthorizeRequestForApp1() throws Exception {
 
-        HttpResponse response = oAuth2CommonClient.sendAuthorizeGet(clientId1, null, redirectUri1, null);
+        HttpResponse response = oAuth2CommonClient
+                .sendAuthorizeGet(clientId1, null, redirectUri1, OAuth2Constants.ResponseTypes.CODE, null);
         sessionDataKey = ssoCommonClient.getSessionDataKey(response);
         assertNotNull(sessionDataKey, "sessionDataKey parameter value is null.");
 
@@ -237,7 +238,8 @@ public class OIDCSSOTestCase extends ScenarioTestBase {
           dependsOnMethods = { "introspectAccessTokenForApp1" })
     public void intiAuthorizeRequestForApp2() throws Exception {
 
-        HttpResponse response = oAuth2CommonClient.sendAuthorizeGet(clientId2, null, redirectUri2, null);
+        HttpResponse response = oAuth2CommonClient
+                .sendAuthorizeGet(clientId2, null, redirectUri2, OAuth2Constants.ResponseTypes.CODE, null);
         sessionDataKeyConsent = ssoCommonClient.getSessionDataKeyConsent(response);
         assertNotNull(sessionDataKeyConsent, "sessionDataKeyConsent parameter value is null");
 

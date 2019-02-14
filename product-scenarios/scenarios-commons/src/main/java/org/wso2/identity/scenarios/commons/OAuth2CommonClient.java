@@ -202,19 +202,20 @@ public class OAuth2CommonClient {
     /**
      * Send authorize GET request.
      *
-     * @param clientId    Client id of the OAuth2 application.
-     * @param scope       Scope for the request.
-     * @param redirectUri Redirect uri.
-     * @param params      Additional params.
+     * @param clientId     Client id of the OAuth2 application.
+     * @param scope        Scope for the request.
+     * @param redirectUri  Redirect uri.
+     * @param responseType Response type.
+     * @param params       Additional params.
      * @return Http response.
      * @throws IOException        IO Exception.
      * @throws URISyntaxException URI Syntax Exception.
      */
-    public HttpResponse sendAuthorizeGet(String clientId, String scope, String redirectUri, Map<String, String> params)
-            throws IOException, URISyntaxException {
+    public HttpResponse sendAuthorizeGet(String clientId, String scope, String redirectUri, String responseType,
+            Map<String, String> params) throws IOException, URISyntaxException {
 
         Map<String, String> requestParams = new HashMap<>();
-        requestParams.put(OAuth2Constants.RequestParams.RESPONSE_TYPE, OAuth2Constants.ResponseTypes.CODE);
+        requestParams.put(OAuth2Constants.RequestParams.RESPONSE_TYPE, responseType);
         requestParams.put(OAuth2Constants.RequestParams.CLIENT_ID, clientId);
         requestParams.put(OAuth2Constants.RequestParams.REDIRECT_URI, redirectUri);
         if (StringUtils.isNotBlank(scope)) {
@@ -323,7 +324,7 @@ public class OAuth2CommonClient {
      *
      * @param response HttpResponse with the authorization code.
      * @return Authorization code.
-     * @throws Exception If error occurs while sending the consent post.
+     * @throws Exception Exception.
      */
     public String getAuthorizeCode(HttpResponse response) throws Exception {
 
@@ -334,6 +335,28 @@ public class OAuth2CommonClient {
         Header locationHeader = response.getFirstHeader(HTTP_RESPONSE_HEADER_LOCATION);
         if (locationHeader != null) {
             return DataExtractUtil.getParamFromURIString(locationHeader.getValue(), OAuth2Constants.ResponseTypes.CODE);
+        }
+        return null;
+    }
+
+    /**
+     * Get access token in the location header.
+     *
+     * @param response HttpResponse with the access token.
+     * @return Access code.
+     * @throws Exception Exception.
+     */
+    public String getAccessToken(HttpResponse response) throws Exception {
+
+        if (response == null) {
+            return null;
+        }
+
+        Header locationHeader = response.getFirstHeader(HTTP_RESPONSE_HEADER_LOCATION);
+        if (locationHeader != null) {
+
+            return DataExtractUtil.getParamFromURIString(locationHeader.getValue().replace("#", "?"),
+                    OAuth2Constants.TokenResponseElements.ACCESS_TOKEN);
         }
         return null;
     }
