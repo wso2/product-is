@@ -105,6 +105,7 @@ public class SAMLSSOWithExternalAppTestCase extends ScenarioTestBase {
         remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendServiceURL, sessionCookie);
         samlssoExternalAppClient = new SAMLSSOExternalAppTestClient(backendURL, sessionCookie, backendServiceURL,
                 webAppHost, configContext, config);
+        Thread.sleep(5000);
     }
 
     @AfterClass(alwaysRun = true)

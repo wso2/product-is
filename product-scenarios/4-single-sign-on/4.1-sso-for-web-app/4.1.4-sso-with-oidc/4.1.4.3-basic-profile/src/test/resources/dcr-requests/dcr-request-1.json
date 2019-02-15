@@ -1,0 +1,9 @@
+{
+  "client_name": "4.1.4.3-sso-app-oidc-code-grant-1",
+  "grant_types": [
+    "authorization_code"
+  ],
+  "redirect_uris": [
+    "https://sso-app-oidc-code-grant-1.com/callback"
+  ]
+}

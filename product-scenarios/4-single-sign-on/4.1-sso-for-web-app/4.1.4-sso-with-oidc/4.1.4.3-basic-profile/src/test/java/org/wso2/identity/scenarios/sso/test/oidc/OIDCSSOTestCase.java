@@ -16,181 +16,269 @@
 
 package org.wso2.identity.scenarios.sso.test.oidc;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
-import org.testng.Assert;
+import org.apache.http.HttpStatus;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
-import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
-import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
+import org.wso2.identity.scenarios.commons.HTTPCommonClient;
 import org.wso2.identity.scenarios.commons.OAuth2CommonClient;
+import org.wso2.identity.scenarios.commons.SSOCommonClient;
 import org.wso2.identity.scenarios.commons.ScenarioTestBase;
+import org.wso2.identity.scenarios.commons.util.OAuth2Constants;
+import org.wso2.identity.scenarios.commons.util.SSOConstants;
 
-import static org.wso2.identity.scenarios.commons.util.Constants.APPROVE_ONCE;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
+import static org.wso2.identity.scenarios.commons.util.OAuth2Constants.DCRResponseElements.CLIENT_ID;
+import static org.wso2.identity.scenarios.commons.util.OAuth2Constants.DCRResponseElements.CLIENT_SECRET;
+import static org.wso2.identity.scenarios.commons.util.OAuth2Constants.DCRResponseElements.REDIRECT_URIS;
 
+/**
+ * This test class tests the single sign-on for web applications using OIDC.
+ */
 public class OIDCSSOTestCase extends ScenarioTestBase {
 
-    private static final Log log = LogFactory.getLog(OIDCSSOTestCase.class);
+    private String dcrRequestFile1;
 
-    private static final String SP_CONFIG_FILE_1 = "sso-oidc.app1.xml";
+    private String dcrRequestFile2;
 
-    private static final String SP_CONFIG_FILE_2 = "sso-oidc.app2.xml";
+    private String appCreatorUsername;
 
-    private CloseableHttpClient client;
+    private String appCreatorPassword;
 
-    private ServiceProvider serviceProvider1;
+    private String username;
 
-    private ServiceProvider serviceProvider2;
+    private String password;
 
-    private OAuthConsumerAppDTO oAuthConsumerAppDTO1;
+    private String tenantDomain;
 
-    private OAuthConsumerAppDTO oAuthConsumerAppDTO2;
+    private String clientId1;
 
-    private OAuth2CommonClient oAuth2Client;
+    private String clientSecret1;
+
+    private String redirectUri1;
+
+    private String clientId2;
+
+    private String clientSecret2;
+
+    private String redirectUri2;
+
+    private String sessionDataKey;
+
+    private String sessionDataKeyConsent;
+
+    private String consentUrl;
+
+    private String authorizeCode;
+
+    private String accessToken;
+
+    private HTTPCommonClient httpCommonClient;
+
+    private OAuth2CommonClient oAuth2CommonClient;
+
+    private SSOCommonClient ssoCommonClient;
+
+    @Factory(dataProvider = "oidcSSOConfigProvider")
+    public OIDCSSOTestCase(String dcrRequestFile1, String dcrRequestFile2, String appCreatorUsername,
+            String appCreatorPassword, String username, String password, String tenantDomain) {
+
+        this.appCreatorUsername = appCreatorUsername;
+        this.appCreatorPassword = appCreatorPassword;
+        this.dcrRequestFile1 = dcrRequestFile1;
+        this.dcrRequestFile2 = dcrRequestFile2;
+        this.username = username;
+        this.password = password;
+        this.tenantDomain = tenantDomain;
+    }
+
+    @DataProvider(name = "oidcSSOConfigProvider")
+    private static Object[][] oidcSSOConfigProvider() throws Exception {
+
+        return new Object[][] {
+                {
+                        "dcr-request-1.json", "dcr-request-2.json", ADMIN_USERNAME, ADMIN_PASSWORD, ADMIN_USERNAME,
+                        ADMIN_PASSWORD, SUPER_TENANT_DOMAIN
+                }
+        };
+    }
 
     @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    public void testInit() throws Exception {
 
-        super.init();
-        super.loginAndObtainSessionCookie();
-        oAuth2Client = new OAuth2CommonClient(sessionCookie, backendServiceURL, getDeploymentProperty(IS_HTTPS_URL),
-                configContext);
+        httpCommonClient = new HTTPCommonClient();
+        oAuth2CommonClient = new OAuth2CommonClient(httpCommonClient, getDeploymentProperty(IS_HTTPS_URL),
+                tenantDomain);
+        ssoCommonClient = new SSOCommonClient(httpCommonClient, getDeploymentProperty(IS_HTTPS_URL), tenantDomain);
 
-        populateTestData();
-        client = createHttpClient();
+        // Register OAuth2 application 1.
+        HttpResponse response = oAuth2CommonClient
+                .createOAuth2Application(dcrRequestFile1, appCreatorUsername, appCreatorPassword);
+        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED,
+                "OAuth2 Application creation failed. Request File: " + dcrRequestFile1);
+
+        JSONObject responseJSON = httpCommonClient.getJSONFromResponse(response);
+        // Validate application creation.
+        oAuth2CommonClient.validateApplicationCreationResponse(dcrRequestFile1, responseJSON);
+        clientId1 = responseJSON.get(CLIENT_ID).toString();
+        clientSecret1 = responseJSON.get(CLIENT_SECRET).toString();
+        redirectUri1 = ((JSONArray) responseJSON.get(REDIRECT_URIS)).get(0).toString();
+
+        httpCommonClient.consume(response);
+
+        // Register OAuth2 application 2.
+        response = oAuth2CommonClient.createOAuth2Application(dcrRequestFile2, appCreatorUsername, appCreatorPassword);
+        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED,
+                "OAuth2 Application creation failed. Request File: " + dcrRequestFile2);
+
+        responseJSON = httpCommonClient.getJSONFromResponse(response);
+        // Validate application creation.
+        oAuth2CommonClient.validateApplicationCreationResponse(dcrRequestFile2, responseJSON);
+        clientId2 = responseJSON.get(CLIENT_ID).toString();
+        clientSecret2 = responseJSON.get(CLIENT_SECRET).toString();
+        redirectUri2 = ((JSONArray) responseJSON.get(REDIRECT_URIS)).get(0).toString();
+
+        httpCommonClient.consume(response);
     }
 
     @AfterClass(alwaysRun = true)
-    public void clear() throws Exception {
+    public void atEnd() throws Exception {
 
-        clearTestData();
-        oAuth2Client.clearRuntimeVariables();
-        client.close();
+        HttpResponse response = oAuth2CommonClient
+                .deleteOAuth2Application(clientId1, appCreatorUsername, appCreatorPassword);
+        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_NO_CONTENT,
+                "Delete application failed for client id: " + clientId1 + ", Request File: " + dcrRequestFile1);
+        httpCommonClient.consume(response);
+
+        response = oAuth2CommonClient.deleteOAuth2Application(clientId2, appCreatorUsername, appCreatorPassword);
+        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_NO_CONTENT,
+                "Delete application failed for client id: " + clientId2 + ", Request File: " + dcrRequestFile2);
+        httpCommonClient.consume(response);
+
+        httpCommonClient.closeHttpClient();
     }
 
-    private void populateTestData() throws Exception {
+    @Test(description = "4.1.4.3.1")
+    public void intiAuthorizeRequestForApp1() throws Exception {
 
-        String spName1 = oAuth2Client.createServiceProvider(SP_CONFIG_FILE_1);
-        Assert.assertNotNull(spName1, "Failed to create service provider from file: " + SP_CONFIG_FILE_1);
-        serviceProvider1 = oAuth2Client.getServiceProvider(spName1);
-        Assert.assertNotNull(serviceProvider1, "Failed to load service provider : " + spName1);
-        oAuthConsumerAppDTO1 = oAuth2Client.getOAuthConsumerApp(serviceProvider1.getApplicationName());
-        Assert.assertNotNull(oAuthConsumerAppDTO1, "Failed to load OAuth2 application in SP : " + spName1);
+        HttpResponse response = oAuth2CommonClient
+                .sendAuthorizeGet(clientId1, "openid", redirectUri1, OAuth2Constants.ResponseTypes.CODE, null);
+        sessionDataKey = ssoCommonClient.getSessionDataKey(response);
+        assertNotNull(sessionDataKey, "sessionDataKey parameter value is null.");
 
-        String spName2 = oAuth2Client.createServiceProvider(SP_CONFIG_FILE_2);
-        Assert.assertNotNull(spName1, "Failed to create service provider from file: " + SP_CONFIG_FILE_2);
-        serviceProvider2 = oAuth2Client.getServiceProvider(spName2);
-        Assert.assertNotNull(serviceProvider2, "Failed to load service provider : " + spName2);
-        oAuthConsumerAppDTO2 = oAuth2Client.getOAuthConsumerApp(serviceProvider2.getApplicationName());
-        Assert.assertNotNull(oAuthConsumerAppDTO2, "Failed to load OAuth2 application in SP : " + spName2);
+        httpCommonClient.consume(response);
     }
 
-    private void clearTestData() throws Exception {
+    @Test(description = "4.1.4.3.2",
+          dependsOnMethods = { "intiAuthorizeRequestForApp1" })
+    public void authenticateForApp1() throws Exception {
 
-        oAuth2Client.deleteServiceProvider(serviceProvider1.getApplicationName());
-        oAuth2Client.deleteServiceProvider(serviceProvider2.getApplicationName());
+        HttpResponse response = ssoCommonClient.sendLoginPost(sessionDataKey, username, password);
+        consentUrl = ssoCommonClient.getLocationHeader(response);
+        assertNotNull(consentUrl, "Location header is null. Invalid consent page url.");
+
+        httpCommonClient.consume(response);
     }
 
-    @Test(description = "4.1.4.1")
-    public void sendAuthorizeRequestForSP1() throws Exception {
+    @Test(description = "4.1.4.3.3",
+          dependsOnMethods = { "authenticateForApp1" })
+    public void initOAuthConsentForApp1() throws Exception {
 
-        HttpResponse response = oAuth2Client.sendAuthorizeGet(client, oAuthConsumerAppDTO1, "openid", null);
-        Assert.assertNotNull(response, "Http response is null");
+        HttpResponse response = httpCommonClient.sendGetRequest(consentUrl, null, null);
+        sessionDataKeyConsent = ssoCommonClient.getSessionDataKeyConsent(response);
+        assertNotNull(sessionDataKeyConsent, "sessionDataKeyConsent parameter value is null");
 
-        try {
-            oAuth2Client.setSessionDataKey(response);
-        } finally {
-            EntityUtils.consume(response.getEntity());
-        }
-        Assert.assertNotNull(oAuth2Client.getSessionDataKey(), "Authorization request failed. sessionDataKey is null");
+        httpCommonClient.consume(response);
     }
 
-    @Test(description = "4.1.4.2",
-          dependsOnMethods = "sendAuthorizeRequestForSP1")
-    public void authenticateForSP1() throws Exception {
+    @Test(description = "4.1.4.3.4",
+          dependsOnMethods = { "initOAuthConsentForApp1" })
+    public void submitOAuthConsentForApp1() throws Exception {
 
-        HttpResponse response = oAuth2Client.sendLoginPost(client, ADMIN_USERNAME, ADMIN_PASSWORD);
-        Assert.assertNotNull(response, "Http response is null");
+        HttpResponse response = oAuth2CommonClient
+                .sendOAuthConsentApprovePost(sessionDataKeyConsent, SSOConstants.ApprovalType.APPROVE_ONCE);
+        authorizeCode = oAuth2CommonClient.getAuthorizeCode(response);
+        assertNotNull(authorizeCode, "code parameter value is null. Invalid authorization code.");
 
-        try {
-            oAuth2Client.setConsentUrl(response);
-        } finally {
-            EntityUtils.consume(response.getEntity());
-        }
-        Assert.assertNotNull(oAuth2Client.getConsentUrl(), "Authentication failed. Consent URL is null");
+        httpCommonClient.consume(response);
     }
 
-    @Test(description = "4.1.4.3",
-          dependsOnMethods = "authenticateForSP1")
-    public void initOAuthConsentForSP1() throws Exception {
+    @Test(description = "4.1.4.3.5",
+          dependsOnMethods = { "submitOAuthConsentForApp1" })
+    public void getOAccessTokenForApp1() throws Exception {
 
-        HttpResponse response = oAuth2Client.sendOAuthConsentRequest(client);
-        Assert.assertNotNull(response, "Http response is null");
+        HttpResponse response = oAuth2CommonClient
+                .sendCodeGrantTokenRequest(authorizeCode, redirectUri1, clientId1, clientSecret1, null);
+        JSONObject responseJSON = httpCommonClient.getJSONFromResponse(response);
+        oAuth2CommonClient.validateAccessToken(responseJSON, true);
+        accessToken = responseJSON.get(OAuth2Constants.TokenResponseElements.ACCESS_TOKEN).toString();
 
-        try {
-            oAuth2Client.setSessionDataKeyConsent(response);
-        } finally {
-            EntityUtils.consume(response.getEntity());
-        }
-        Assert.assertNotNull(oAuth2Client.getSessionDataKeyConsent(),
-                "Failed to get the consent url. SessionDataKeyConsent is null");
+        httpCommonClient.consume(response);
     }
 
-    @Test(description = "4.1.4.4",
-          dependsOnMethods = "initOAuthConsentForSP1")
-    public void submitOAuthConsentForSP1() throws Exception {
+    @Test(description = "4.1.4.3.6",
+          dependsOnMethods = { "getOAccessTokenForApp1" })
+    public void introspectAccessTokenForApp1() throws Exception {
 
-        HttpResponse response = oAuth2Client
-                .postOAuthConsent(client, oAuth2Client.getSessionDataKeyConsent(), APPROVE_ONCE);
-        Assert.assertNotNull(response, "Http response is null");
+        HttpResponse response = oAuth2CommonClient.sendIntrospectRequest(accessToken, username, password);
+        JSONObject responseJSON = httpCommonClient.getJSONFromResponse(response);
+        oAuth2CommonClient.validateIntrospectResponse(responseJSON);
 
-        String authorizeCode;
-        try {
-            authorizeCode = oAuth2Client.getAuthorizeCode(response);
-        } finally {
-            EntityUtils.consume(response.getEntity());
-        }
-        Assert.assertNotNull(authorizeCode, "Failed to get authorize code.");
-
-        oAuth2Client.clearRuntimeVariables();
+        httpCommonClient.consume(response);
     }
 
-    @Test(description = "4.1.4.5",
-          dependsOnMethods = "submitOAuthConsentForSP1")
-    public void sendAuthorizeRequestForSP2() throws Exception {
+    @Test(description = "4.1.4.3.7",
+          dependsOnMethods = { "introspectAccessTokenForApp1" })
+    public void intiAuthorizeRequestForApp2() throws Exception {
 
-        HttpResponse response = oAuth2Client.sendAuthorizeGet(client, oAuthConsumerAppDTO2, "openid", null);
-        Assert.assertNotNull(response, "Http response is null");
+        HttpResponse response = oAuth2CommonClient
+                .sendAuthorizeGet(clientId2, "openid", redirectUri2, OAuth2Constants.ResponseTypes.CODE, null);
+        sessionDataKeyConsent = ssoCommonClient.getSessionDataKeyConsent(response);
+        assertNotNull(sessionDataKeyConsent, "sessionDataKeyConsent parameter value is null");
 
-        try {
-            oAuth2Client.setSessionDataKeyConsent(response);
-        } finally {
-            EntityUtils.consume(response.getEntity());
-        }
-        Assert.assertNotNull(oAuth2Client.getSessionDataKeyConsent(),
-                "Failed to get the consent url. SessionDataKeyConsent is null. SSO failed.");
+        httpCommonClient.consume(response);
     }
 
-    @Test(description = "4.1.4.6",
-          dependsOnMethods = "sendAuthorizeRequestForSP2")
-    public void submitOAuthConsentForSP2() throws Exception {
+    @Test(description = "4.1.4.3.8",
+          dependsOnMethods = { "intiAuthorizeRequestForApp2" })
+    public void submitOAuthConsentForApp2() throws Exception {
 
-        HttpResponse response = oAuth2Client
-                .postOAuthConsent(client, oAuth2Client.getSessionDataKeyConsent(), APPROVE_ONCE);
-        Assert.assertNotNull(response, "Http response is null");
+        HttpResponse response = oAuth2CommonClient
+                .sendOAuthConsentApprovePost(sessionDataKeyConsent, SSOConstants.ApprovalType.APPROVE_ONCE);
+        authorizeCode = oAuth2CommonClient.getAuthorizeCode(response);
+        assertNotNull(authorizeCode, "code parameter value is null. Invalid authorization code.");
 
-        String authorizeCode;
-        try {
-            authorizeCode = oAuth2Client.getAuthorizeCode(response);
-        } finally {
-            EntityUtils.consume(response.getEntity());
-        }
-        Assert.assertNotNull(authorizeCode, "Failed to get authorize code. SSO failed.");
+        httpCommonClient.consume(response);
+    }
+
+    @Test(description = "4.1.4.3.9",
+          dependsOnMethods = "submitOAuthConsentForApp2")
+    public void getOAccessTokenForApp2() throws Exception {
+
+        HttpResponse response = oAuth2CommonClient
+                .sendCodeGrantTokenRequest(authorizeCode, redirectUri2, clientId2, clientSecret2, null);
+        JSONObject responseJSON = httpCommonClient.getJSONFromResponse(response);
+        oAuth2CommonClient.validateAccessToken(responseJSON, true);
+        accessToken = responseJSON.get(OAuth2Constants.TokenResponseElements.ACCESS_TOKEN).toString();
+
+        httpCommonClient.consume(response);
+    }
+
+    @Test(description = "4.1.4.3.10",
+          dependsOnMethods = "getOAccessTokenForApp2")
+    public void introspectAccessTokenForApp2() throws Exception {
+
+        HttpResponse response = oAuth2CommonClient.sendIntrospectRequest(accessToken, username, password);
+        JSONObject responseJSON = httpCommonClient.getJSONFromResponse(response);
+        oAuth2CommonClient.validateIntrospectResponse(responseJSON);
+
+        httpCommonClient.consume(response);
     }
 }

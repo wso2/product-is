@@ -18,6 +18,8 @@
 
 package org.wso2.identity.scenarios.test.scim;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
@@ -34,6 +36,8 @@ import org.testng.annotations.Test;
 import org.wso2.identity.scenarios.commons.ScenarioTestBase;
 import org.wso2.identity.scenarios.commons.util.Constants;
 
+import java.util.Arrays;
+
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
@@ -44,6 +48,8 @@ import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.send
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendPostRequestWithJSON;
 
 public class UserProvisionSCIMTestCase extends ScenarioTestBase {
+
+    private static final Log log = LogFactory.getLog(UserProvisionSCIMTestCase.class);
 
     private String userId;
     private CloseableHttpClient client;
