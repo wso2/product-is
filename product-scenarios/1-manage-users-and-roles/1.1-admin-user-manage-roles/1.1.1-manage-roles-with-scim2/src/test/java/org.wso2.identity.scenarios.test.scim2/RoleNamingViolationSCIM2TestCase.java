@@ -53,7 +53,7 @@ public class RoleNamingViolationSCIM2TestCase extends ScenarioTestBase {
     @DataProvider(name = "manageRolesConfigProvider")
     private static Object[][] manageRolesConfigProvider() throws Exception {
 
-        return new Object[][]{
+        return new Object[][] {
                 {
                         ADMIN_USERNAME, ADMIN_PASSWORD, SUPER_TENANT_DOMAIN
                 }
