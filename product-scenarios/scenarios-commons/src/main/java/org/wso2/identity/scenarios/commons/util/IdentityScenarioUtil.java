@@ -25,6 +25,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.utils.URIBuilder;
@@ -92,6 +93,26 @@ public class IdentityScenarioUtil {
         request.setEntity(new StringEntity(jsonObject.toString()));
 
         return client.execute(request);
+    }
+
+    /**
+     * Send PATCH request with a JSON payload.
+     *
+     * @param client     HttpClient to be used for request sending.
+     * @param url        Request URL.
+     * @param jsonObject JSON object for patch request.
+     * @param headers    Request headers.
+     * @return HttpResponse containing the response.
+     * @throws IOException If error occurs while sending the request.
+     */
+    public static HttpResponse sendUpdateRequest(HttpClient client, JSONObject jsonObject, String url,
+                                                 Header[] headers) throws IOException {
+        HttpPatch updateRequest = new HttpPatch(url);
+        if (headers != null) {
+            updateRequest.setHeaders(headers);
+        }
+        updateRequest.setEntity(new StringEntity(jsonObject.toString()));
+        return client.execute(updateRequest);
     }
 
     /**
