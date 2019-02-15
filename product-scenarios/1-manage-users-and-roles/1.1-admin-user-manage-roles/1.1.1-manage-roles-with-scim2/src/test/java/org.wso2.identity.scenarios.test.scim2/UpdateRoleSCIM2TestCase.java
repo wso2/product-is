@@ -43,7 +43,6 @@ public class UpdateRoleSCIM2TestCase extends ScenarioTestBase {
     private String password;
     private String tenantDomain;
     private String groupId;
-
     private SCIM2CommonClient scim2Client;
 
     @Factory(dataProvider = "manageRolesConfigProvider")
