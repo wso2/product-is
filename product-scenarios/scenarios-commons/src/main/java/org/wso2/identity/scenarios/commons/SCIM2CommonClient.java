@@ -32,11 +32,14 @@ import java.nio.file.Paths;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendDeleteRequest;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendGetRequest;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendPostRequestWithJSON;
+import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendUpdateRequest;
 import static org.wso2.identity.scenarios.commons.util.SCIMProvisioningUtil.getCommonHeaders;
 
 public class SCIM2CommonClient {
 
     private static final String SCIM2_USERS_LOCATION = "scim2.users.location";
+
+    private static final String SCIM2_GROUPS_LOCATION = "scim2.groups.location";
 
     private static final String SCIM2_ENDPOINT = "scim2";
 
@@ -63,7 +66,7 @@ public class SCIM2CommonClient {
      */
     public JSONObject getUserJSON(String fileName) throws Exception {
 
-        return (JSONObject) parser.parse(new FileReader(getFilePath(fileName)));
+        return (JSONObject) parser.parse(new FileReader(getFilePath(fileName, SCIM2_USERS_LOCATION)));
     }
 
     /**
@@ -75,7 +78,7 @@ public class SCIM2CommonClient {
      */
     public JSONObject getRoleJSON(String fileName) throws Exception {
 
-        return (JSONObject) parser.parse(new FileReader(getFilePath(fileName)));
+        return (JSONObject) parser.parse(new FileReader(getFilePath(fileName, SCIM2_GROUPS_LOCATION)));
     }
 
     /**
@@ -85,9 +88,9 @@ public class SCIM2CommonClient {
      * @return File path.
      * @throws Exception Exception.
      */
-    public String getFilePath(String fileName) throws Exception {
+    public String getFilePath(String fileName, String fileLocation) throws Exception {
 
-        Path path = Paths.get(System.getProperty(SCIM2_USERS_LOCATION) + fileName);
+        Path path = Paths.get(System.getProperty(fileLocation) + fileName);
         if (!Files.exists(path)) {
             throw new FileNotFoundException("Failed to find file: " + path.toString());
         }
@@ -179,6 +182,24 @@ public class SCIM2CommonClient {
             throws Exception {
 
         return sendDeleteRequest(client, getSCIM2GroupsEndpoint() + "/" + groupId,
+                getCommonHeaders(username, password));
+    }
+
+    /**
+     * Update group.
+     *
+     * @param client    Http client.
+     * @param groupJSON updated Group object.
+     * @param groupId   group id.
+     * @param username  username.
+     * @param password  password.
+     * @return Http response.
+     * @throws Exception Exception.
+     */
+    public HttpResponse updateGroup(HttpClient client, JSONObject groupJSON, String groupId, String username,
+                                    String password) throws Exception {
+
+        return sendUpdateRequest(client, groupJSON, getSCIM2GroupsEndpoint() + "/" + groupId,
                 getCommonHeaders(username, password));
     }
 
