@@ -122,6 +122,8 @@ public class OAuth2AuthorizationCodeGrantTest extends ScenarioTestBase {
         clientId = responseJSON.get(CLIENT_ID).toString();
         clientSecret = responseJSON.get(CLIENT_SECRET).toString();
         redirectUri = ((JSONArray) responseJSON.get(REDIRECT_URIS)).get(0).toString();
+
+        Thread.sleep(5000);
     }
 
     @AfterClass(alwaysRun = true)

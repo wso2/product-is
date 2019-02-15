@@ -116,6 +116,8 @@ public class OAuth2ImplicitGrantTest extends ScenarioTestBase {
 
         clientId = responseJSON.get(CLIENT_ID).toString();
         redirectUri = ((JSONArray) responseJSON.get(REDIRECT_URIS)).get(0).toString();
+
+        Thread.sleep(5000);
     }
 
     @AfterClass(alwaysRun = true)

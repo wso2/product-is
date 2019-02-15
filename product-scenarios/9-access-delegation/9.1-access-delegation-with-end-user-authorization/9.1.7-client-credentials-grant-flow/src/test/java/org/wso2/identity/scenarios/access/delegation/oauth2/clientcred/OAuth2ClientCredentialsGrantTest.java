@@ -96,6 +96,8 @@ public class OAuth2ClientCredentialsGrantTest extends ScenarioTestBase {
 
         clientId = responseJSON.get(CLIENT_ID).toString();
         clientSecret = responseJSON.get(CLIENT_SECRET).toString();
+
+        Thread.sleep(5000);
     }
 
     @AfterClass(alwaysRun = true)
