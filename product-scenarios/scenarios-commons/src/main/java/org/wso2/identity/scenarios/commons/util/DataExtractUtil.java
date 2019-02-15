@@ -77,6 +77,7 @@ public class DataExtractUtil {
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         String line;
         while ((line = rd.readLine()) != null) {
+            log.info("###: " + line);
             for (String key : keyPositionMap.keySet()) {
                 if (line.contains(key)) {
                     String[] tokens;

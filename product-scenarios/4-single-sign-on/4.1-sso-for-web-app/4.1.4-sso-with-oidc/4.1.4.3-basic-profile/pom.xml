@@ -63,9 +63,9 @@
                             </value>
                         </property>
                         <property>
-                            <name>service.providers.location</name>
+                            <name>dcr.requests.location</name>
                             <value>
-                                ${basedir}/src/test/resources/service-providers/
+                                ${basedir}/src/test/resources/dcr-requests/
                             </value>
                         </property>
                         <property>
