@@ -267,7 +267,7 @@ versions:
     -
       name: "OIDCScopeDataMigrator"
       order: 5
-  -
+ -
   version: "5.8.0"
   migratorConfigs:
     -

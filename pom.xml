@@ -28,7 +28,7 @@
     <artifactId>identity-server-parent</artifactId>
     <packaging>pom</packaging>
     <description>WSO2 Identity Server</description>
-    <version>5.8.0-m18-SNAPSHOT</version>
+    <version>5.8.0-m22-SNAPSHOT</version>
     <name>WSO2 Identity Server</name>
     <url>http://wso2.org/projects/identity</url>
 
@@ -2026,7 +2026,7 @@
             <url>http://maven.wso2.org/nexus/content/repositories/snapshots/</url>
             <snapshots>
                 <enabled>true</enabled>
-                <updatePolicy>never</updatePolicy>
+                <updatePolicy>daily</updatePolicy>
             </snapshots>
             <releases>
                 <enabled>false</enabled>

@@ -119,7 +119,14 @@ public class OIDCScopeDataMigrator extends Migrator {
         for (Map.Entry<Object, Object> entry : properties.entrySet()) {
             ScopeDTO scopeDTO = new ScopeDTO();
             scopeDTO.setName(entry.getKey().toString());
-            scopeDTO.setClaim(entry.getValue().toString().split(","));
+            if (entry.getValue() != null) {
+                String[] claims = entry.getValue().toString().split(",");
+                String[] trimmedClaims = new String[claims.length];
+                for (int i = 0; i < claims.length; i++) {
+                    trimmedClaims[i] = claims[i].trim();
+                }
+                scopeDTO.setClaim(trimmedClaims);
+            }
             scopeDTOs.add(scopeDTO);
         }
         return scopeDTOs;
@@ -131,6 +138,7 @@ public class OIDCScopeDataMigrator extends Migrator {
         try {
             int tenantId = IdentityTenantUtil.getTenantId(tenantDomain);
             startTenantFlow(tenantDomain, tenantId);
+            IdentityTenantUtil.getTenantRegistryLoader().loadTenantRegistry(tenantId);
             RegistryService registryService = IdentityTenantUtil.getRegistryService();
             oidcScopesResource = registryService.getConfigSystemRegistry(tenantId).get(SCOPE_RESOURCE_PATH);
         } catch (org.wso2.carbon.registry.api.RegistryException e) {
