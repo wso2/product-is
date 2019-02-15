@@ -18,122 +18,115 @@ package org.wso2.identity.scenarios.commons;
 
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.http.HttpResponse;
-import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.identity.scenarios.commons.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.scenarios.commons.util.DataExtractUtil;
-import org.wso2.identity.scenarios.commons.util.SSOUtil;
+import org.wso2.identity.scenarios.commons.util.SSOConstants;
 
 import java.io.FileNotFoundException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.wso2.identity.scenarios.commons.util.Constants.COMMONAUTH_URI_CONTEXT;
-import static org.wso2.identity.scenarios.commons.util.Constants.PARAM_SESSION_DATA_KEY;
-import static org.wso2.identity.scenarios.commons.util.Constants.PARAM_SESSION_DATA_KEY_CONSENT;
+import static org.wso2.identity.scenarios.commons.util.Constants.HTTP_RESPONSE_HEADER_LOCATION;
 import static org.wso2.identity.scenarios.commons.util.DataExtractUtil.extractDataFromResponse;
 
 public class SSOCommonClient {
 
     private static final String SERVICE_PROVIDERS_LOCATION = "service.providers.location";
 
+    private HTTPCommonClient httpCommonClient;
+
     private String commonauthEndpoint;
 
-    private String sessionDataKey;
-
-    private String sessionDataKeyConsent;
-
-    private String identityServerHttpsUrl;
+    private String tenantDomain;
 
     private ApplicationManagementServiceClient applicationManagementServiceClient;
 
-    public SSOCommonClient(String sessionCookie, String backendServiceURL, String identityServerHttpsUrl,
-            ConfigurationContext configContext) throws Exception {
+    public SSOCommonClient(HTTPCommonClient httpCommonClient, String serverHTTPsUrl, String tenantDomain,
+            String sessionCookie, String backendServiceURL, ConfigurationContext configContext) throws Exception {
 
-        this.identityServerHttpsUrl = identityServerHttpsUrl;
+        this.httpCommonClient = httpCommonClient;
+        this.tenantDomain = tenantDomain;
         this.applicationManagementServiceClient = new ApplicationManagementServiceClient(sessionCookie,
                 backendServiceURL, configContext);
+        setEndpoints(serverHTTPsUrl);
     }
 
-    public String getCommonauthEndpoint() {
+    public SSOCommonClient(HTTPCommonClient httpCommonClient, String serverHTTPsUrl, String tenantDomain) {
 
-        if (this.commonauthEndpoint == null) {
-            this.commonauthEndpoint = this.identityServerHttpsUrl + COMMONAUTH_URI_CONTEXT;
-        }
-        return this.commonauthEndpoint;
-    }
-
-    public void setCommonauthEndpoint(String commonauthEndpoint) {
-
-        this.commonauthEndpoint = commonauthEndpoint;
-    }
-
-    public String getSessionDataKey() {
-
-        return this.sessionDataKey;
+        this.httpCommonClient = httpCommonClient;
+        this.tenantDomain = tenantDomain;
+        setEndpoints(serverHTTPsUrl);
     }
 
     /**
-     * Extract and set session data key.
+     * Get session data key.
      *
      * @param response HttpResponse.
      * @throws Exception If error occurs while extracting SessionDataKey.
      */
-    public void setSessionDataKey(HttpResponse response) throws Exception {
+    public String getSessionDataKey(HttpResponse response) throws Exception {
+
+        if (response == null) {
+            return null;
+        }
 
         Map<String, Integer> keyPositionMap = new HashMap<>(1);
-        keyPositionMap.put("name=\"" + PARAM_SESSION_DATA_KEY + "\"", 1);
+        keyPositionMap.put("name=\"" + SSOConstants.CommonAuthParams.SESSION_DATA_KEY + "\"", 1);
         List<DataExtractUtil.KeyValue> keyValues = extractDataFromResponse(response, keyPositionMap);
         if (keyValues != null && !keyValues.isEmpty()) {
-            this.sessionDataKey = keyValues.get(0).getValue();
+            return keyValues.get(0).getValue();
         }
-    }
-
-    public String getSessionDataKeyConsent() {
-
-        return this.sessionDataKeyConsent;
+        return null;
     }
 
     /**
-     * Extract and set SessionDataKeyConsent.
+     * Get session data key consent.
      *
      * @param response Http Response.
      * @throws Exception exception if error occurs while extracting SessionDataKeyConsent.
      */
-    public void setSessionDataKeyConsent(HttpResponse response) throws Exception {
+    public String getSessionDataKeyConsent(HttpResponse response) throws Exception {
+
+        if (response == null) {
+            return null;
+        }
 
         Map<String, Integer> keyPositionMap = new HashMap<>(1);
-        keyPositionMap.put("name=\"" + PARAM_SESSION_DATA_KEY_CONSENT + "\"", 1);
+        keyPositionMap.put("name=\"" + SSOConstants.CommonAuthParams.SESSION_DATA_KEY_CONSENT + "\"", 1);
         List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil
                 .extractSessionConsentDataFromResponse(response, keyPositionMap);
 
         if (keyValues.get(0) != null) {
-            this.sessionDataKeyConsent = keyValues.get(0).getValue();
+            return keyValues.get(0).getValue();
         }
-    }
-
-    public String getIdentityServerHttpsUrl() {
-
-        return identityServerHttpsUrl;
-    }
-
-    public void setIdentityServerHttpsUrl(String identityServerHttpsUrl) {
-
-        this.identityServerHttpsUrl = identityServerHttpsUrl;
+        return null;
     }
 
     /**
-     * Clear run time variables.
+     * Send logging post.
+     *
+     * @param sessionDataKey Session data key.
+     * @param username       Username.
+     * @param password       Password.
+     * @return Http Response.
+     * @throws Exception If error occurs while sending login post.
      */
-    public void clearRuntimeVariables() {
+    public HttpResponse sendLoginPost(String sessionDataKey, String username, String password) throws Exception {
 
-        this.sessionDataKey = null;
-        this.sessionDataKeyConsent = null;
+        List<NameValuePair> requestParameters = new ArrayList<>();
+        requestParameters.add(new BasicNameValuePair(SSOConstants.CommonAuthParams.USERNAME, username));
+        requestParameters.add(new BasicNameValuePair(SSOConstants.CommonAuthParams.PASSWORD, password));
+        requestParameters.add(new BasicNameValuePair(SSOConstants.CommonAuthParams.SESSION_DATA_KEY, sessionDataKey));
+        return httpCommonClient.sendPostRequestWithParameters(commonauthEndpoint, requestParameters, null);
     }
 
     /**
@@ -177,17 +170,16 @@ public class SSOCommonClient {
         applicationManagementServiceClient.deleteApplication(serviceProviderName);
     }
 
-    /**
-     * Send logging post.
-     *
-     * @param client   HttpClient to be used for request sending.
-     * @param username username.
-     * @param password password.
-     * @return Http Response.
-     * @throws Exception If error occurs while sending login post.
-     */
-    public HttpResponse sendLoginPost(CloseableHttpClient client, String username, String password) throws Exception {
+    public String getLocationHeader(HttpResponse response) {
 
-        return SSOUtil.sendLoginPost(client, sessionDataKey, getCommonauthEndpoint(), username, password);
+        if (response.getFirstHeader(HTTP_RESPONSE_HEADER_LOCATION) != null) {
+            return response.getFirstHeader(HTTP_RESPONSE_HEADER_LOCATION).getValue();
+        }
+        return null;
+    }
+
+    private void setEndpoints(String serverHTTPsUrl) {
+
+        this.commonauthEndpoint = serverHTTPsUrl + "/commonauth";
     }
 }

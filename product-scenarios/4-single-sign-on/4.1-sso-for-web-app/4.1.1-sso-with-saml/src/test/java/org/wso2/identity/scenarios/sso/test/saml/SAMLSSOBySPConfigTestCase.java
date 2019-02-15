@@ -128,6 +128,8 @@ public class SAMLSSOBySPConfigTestCase extends ScenarioTestBase {
 
         this.samlssoServiceProviderDTO = saml2SSOTestBase.getSAMLSSOServiceProvider(serviceProvider);
         Assert.assertNotNull(samlssoServiceProviderDTO, "Failed to load SAML2 application in SP : " + spName);
+
+        Thread.sleep(5000);
     }
 
     private void populateTestData() throws Exception {
