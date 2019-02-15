@@ -55,7 +55,7 @@ public class UpdatePrimaryRoleSCIM1TestCase extends ScenarioTestBase {
         HttpResponse response = scim1Group.provisionGroup(client, userJSON, ADMIN_USERNAME, ADMIN_PASSWORD);
 
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED,
-                "Group has not been created successfully");
+            "Group has not been created successfully");
 
         JSONObject returnedUserJSON = getJSONFromResponse(response);
         groupId = returnedUserJSON.get(SCIM1Constants.ID_ATTRIBUTE).toString();
@@ -70,7 +70,7 @@ public class UpdatePrimaryRoleSCIM1TestCase extends ScenarioTestBase {
         HttpResponse response = scim1Group.provisionGroup(client, userJSON, ADMIN_USERNAME, ADMIN_PASSWORD);
 
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED,
-                "Group has not been created successfully");
+            "Group has not been created successfully");
 
         JSONObject returnedUserJSON = getJSONFromResponse(response);
         secoundGroupId = returnedUserJSON.get(SCIM1Constants.ID_ATTRIBUTE).toString();
@@ -84,7 +84,7 @@ public class UpdatePrimaryRoleSCIM1TestCase extends ScenarioTestBase {
         JSONObject updateUserJSON = scim1Group.getRoleJSON("scim1SecondGroup.json");
         HttpResponse response = scim1Group.updateGroup(client, updateUserJSON, groupId, ADMIN_USERNAME, ADMIN_PASSWORD);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_INTERNAL_SERVER_ERROR,
-                "Failed to delete the group");
+            "Failed to delete the group");
     }
 
     @Test(dependsOnMethods = "testSCIM1UpdateExistingGroup")

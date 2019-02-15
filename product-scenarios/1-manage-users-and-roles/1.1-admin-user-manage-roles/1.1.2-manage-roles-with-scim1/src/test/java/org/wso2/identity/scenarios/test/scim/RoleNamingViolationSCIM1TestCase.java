@@ -49,7 +49,7 @@ public class RoleNamingViolationSCIM1TestCase extends ScenarioTestBase {
         HttpResponse response = scim1Group.provisionGroup(client, userJSON, ADMIN_USERNAME, ADMIN_PASSWORD);
 
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_INTERNAL_SERVER_ERROR,
-                "Group has not been created successfully");
+            "Group has not been created successfully");
         EntityUtils.consume(response.getEntity());
     }
 
@@ -59,7 +59,7 @@ public class RoleNamingViolationSCIM1TestCase extends ScenarioTestBase {
         HttpResponse response = scim1Group.provisionGroup(client, userJSON, ADMIN_USERNAME, ADMIN_PASSWORD);
 
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_INTERNAL_SERVER_ERROR,
-                "Group has not been created successfully");
+            "Group has not been created successfully");
         EntityUtils.consume(response.getEntity());
     }
 }

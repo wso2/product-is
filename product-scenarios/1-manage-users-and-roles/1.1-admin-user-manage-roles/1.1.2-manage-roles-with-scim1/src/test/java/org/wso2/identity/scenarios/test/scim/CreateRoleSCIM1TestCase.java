@@ -35,7 +35,6 @@ import static org.testng.Assert.assertNotNull;
 import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJSONFromResponse;
 
-
 public class CreateRoleSCIM1TestCase extends ScenarioTestBase {
     private CloseableHttpClient client;
     private String groupId;
@@ -45,17 +44,15 @@ public class CreateRoleSCIM1TestCase extends ScenarioTestBase {
     private String inputFileName;
     private String tenantDomain;
 
-
     @DataProvider(name = "manageRolesConfigProvider")
     private static Object[][] manageRolesConfigProvider() {
 
-        return new Object[][]{
-                {
-                        ADMIN_USERNAME, ADMIN_PASSWORD, SUPER_TENANT_DOMAIN, "scim1group.json"
-                },
-                {
-                        ADMIN_USERNAME, ADMIN_PASSWORD, SUPER_TENANT_DOMAIN, "scim1InternalGroup.json"
-                }
+        return new Object[][] {
+            {
+                ADMIN_USERNAME, ADMIN_PASSWORD, SUPER_TENANT_DOMAIN, "scim1group.json"
+            }, {
+                ADMIN_USERNAME, ADMIN_PASSWORD, SUPER_TENANT_DOMAIN, "scim1InternalGroup.json"
+            }
         };
     }
 
@@ -83,7 +80,7 @@ public class CreateRoleSCIM1TestCase extends ScenarioTestBase {
         HttpResponse response = scim1Group.provisionGroup(client, userJSON, username, password);
 
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED,
-                "Group has not been created successfully");
+            "Group has not been created successfully");
 
         JSONObject returnedUserJSON = getJSONFromResponse(response);
         groupId = returnedUserJSON.get(SCIM1Constants.ID_ATTRIBUTE).toString();
@@ -98,7 +95,7 @@ public class CreateRoleSCIM1TestCase extends ScenarioTestBase {
         HttpResponse response = scim1Group.provisionGroup(client, userJSON, username, password);
 
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CONFLICT,
-                "Group has not been created successfully");
+            "Group has not been created successfully");
         EntityUtils.consume(response.getEntity());
     }
 
@@ -116,7 +113,7 @@ public class CreateRoleSCIM1TestCase extends ScenarioTestBase {
         HttpResponse response = scim1Group.provisionGroup(client, userJSON, username, password);
 
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED,
-                "Group has not been created successfully");
+            "Group has not been created successfully");
 
         JSONObject returnedUserJSON = getJSONFromResponse(response);
         groupId = returnedUserJSON.get(SCIM1Constants.ID_ATTRIBUTE).toString();
