@@ -1,0 +1,17 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="Identity-Scenario-Results">
+    <parameter name="useDefaultListeners" value="false"/>
+
+    <listeners>
+        <listener class-name="org.wso2.identity.scenarios.commons.listeners.IdentityScenarioTestListener"/>
+    </listeners>
+
+    <test name="is-groups-mgt-scim2" preserve-order="true" parallel="false">
+        <classes>
+            <class name="org.wso2.identity.scenarios.test.scim2.ManageRolesSCIM2TestCase"/>
+            <class name="org.wso2.identity.scenarios.test.scim2.UpdateRoleSCIM2TestCase"/>
+            <class name="org.wso2.identity.scenarios.test.scim2.RoleNamingViolationSCIM2TestCase"/>
+        </classes>
+    </test>
+</suite>
