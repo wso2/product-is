@@ -186,7 +186,7 @@ public class SCIM2CommonClient {
     }
 
     /**
-     * Update group
+     * Update group.
      *
      * @param client    Http client.
      * @param groupJSON updated Group object.
