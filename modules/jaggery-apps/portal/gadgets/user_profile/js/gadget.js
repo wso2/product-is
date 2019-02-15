@@ -1,6 +1,6 @@
 function drawPage() {
     var output = "";
-    var u2fScript="<script src=\"u2f-api.js\"></script>";
+    var u2fScript="<script src=\"/portal/gadgets/user_profile/js/u2f-api.js\"></script>";
     var start = "<div class=\"container-fluid\" style=\"width:95%\">\n" +
         "    <div class=\"row\">\n" +
         "        <div class=\"col-lg-12\" style=\"margin-top: 25px; margin-left: 25px; \">\n" +
