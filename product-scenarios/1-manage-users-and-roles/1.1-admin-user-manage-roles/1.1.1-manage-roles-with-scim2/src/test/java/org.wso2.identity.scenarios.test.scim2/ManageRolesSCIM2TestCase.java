@@ -53,7 +53,6 @@ public class ManageRolesSCIM2TestCase extends ScenarioTestBase {
         this.password = password;
         this.tenantDomain = tenantDomain;
         this.inputFileName = inputFile;
-
     }
 
     @DataProvider(name = "manageRolesConfigProvider")
@@ -62,10 +61,9 @@ public class ManageRolesSCIM2TestCase extends ScenarioTestBase {
         return new Object[][]{
                 {
                         ADMIN_USERNAME, ADMIN_PASSWORD, SUPER_TENANT_DOMAIN, "scim2Group1.json"
-                },
-                {
-                        ADMIN_USERNAME, ADMIN_PASSWORD, SUPER_TENANT_DOMAIN, "scim2Internalgroup.json"
-                }
+                }, {
+                ADMIN_USERNAME, ADMIN_PASSWORD, SUPER_TENANT_DOMAIN, "scim2Internalgroup.json"
+        }
         };
     }
 

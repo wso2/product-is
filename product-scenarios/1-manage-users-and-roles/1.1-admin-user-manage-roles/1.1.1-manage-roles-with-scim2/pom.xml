@@ -30,7 +30,6 @@
     <name>Manage roles with SCIM 2.0</name>
     <packaging>jar</packaging>
 
-
     <build>
         <plugins>
             <plugin>
