@@ -32,6 +32,7 @@ import static org.testng.Assert.assertEquals;
 import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
 
 public class RoleNamingViolationSCIM1TestCase extends ScenarioTestBase {
+
     private CloseableHttpClient client;
     private SCIM1CommonClient scim1Group;
 
@@ -45,6 +46,7 @@ public class RoleNamingViolationSCIM1TestCase extends ScenarioTestBase {
 
     @Test
     public void testSCAM1CreateGroupWithSpecialCharacter() throws Exception {
+
         JSONObject userJSON = scim1Group.getRoleJSON("scim1SpecialCharacterGroupName.json");
         HttpResponse response = scim1Group.provisionGroup(client, userJSON, ADMIN_USERNAME, ADMIN_PASSWORD);
 
@@ -55,6 +57,7 @@ public class RoleNamingViolationSCIM1TestCase extends ScenarioTestBase {
 
     @Test(dependsOnMethods = "testSCAM1CreateGroupWithSpecialCharacter")
     public void testSCIM1CreateGroupWithMinimumCharacter() throws Exception {
+
         JSONObject userJSON = scim1Group.getRoleJSON("scim1MinimumSpaceGroupName.json");
         HttpResponse response = scim1Group.provisionGroup(client, userJSON, ADMIN_USERNAME, ADMIN_PASSWORD);
 

@@ -36,6 +36,7 @@ import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJSONFromResponse;
 
 public class CreateRoleSCIM1TestCase extends ScenarioTestBase {
+
     private CloseableHttpClient client;
     private String groupId;
     private SCIM1CommonClient scim1Group;
@@ -63,7 +64,6 @@ public class CreateRoleSCIM1TestCase extends ScenarioTestBase {
         this.password = password;
         this.tenantDomain = tenantDomain;
         this.inputFileName = inputFile;
-
     }
 
     @BeforeClass(alwaysRun = true)
@@ -76,6 +76,7 @@ public class CreateRoleSCIM1TestCase extends ScenarioTestBase {
 
     @Test
     public void testSCIM1CreateGroup() throws Exception {
+
         JSONObject userJSON = scim1Group.getRoleJSON(inputFileName);
         HttpResponse response = scim1Group.provisionGroup(client, userJSON, username, password);
 
@@ -91,6 +92,7 @@ public class CreateRoleSCIM1TestCase extends ScenarioTestBase {
 
     @Test(dependsOnMethods = "testSCIM1CreateGroup")
     public void testSCIM1ExistingGroup() throws Exception {
+
         JSONObject userJSON = scim1Group.getRoleJSON(inputFileName);
         HttpResponse response = scim1Group.provisionGroup(client, userJSON, username, password);
 
@@ -109,6 +111,7 @@ public class CreateRoleSCIM1TestCase extends ScenarioTestBase {
 
     @Test(dependsOnMethods = "testSCIM1DeleteGroup")
     public void testSCIM1CreateGroupAgain() throws Exception {
+
         JSONObject userJSON = scim1Group.getRoleJSON(inputFileName);
         HttpResponse response = scim1Group.provisionGroup(client, userJSON, username, password);
 

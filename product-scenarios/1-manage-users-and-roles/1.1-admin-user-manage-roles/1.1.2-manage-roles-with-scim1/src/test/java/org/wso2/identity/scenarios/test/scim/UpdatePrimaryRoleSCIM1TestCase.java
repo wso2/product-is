@@ -38,7 +38,6 @@ public class UpdatePrimaryRoleSCIM1TestCase extends ScenarioTestBase {
     private CloseableHttpClient client;
     private String groupId;
     private String secoundGroupId;
-
     private SCIM1CommonClient scim1Group;
 
     @BeforeClass(alwaysRun = true)
@@ -51,6 +50,7 @@ public class UpdatePrimaryRoleSCIM1TestCase extends ScenarioTestBase {
 
     @Test
     public void testSCIM1CreateGroup() throws Exception {
+
         JSONObject userJSON = scim1Group.getRoleJSON("scim1group.json");
         HttpResponse response = scim1Group.provisionGroup(client, userJSON, ADMIN_USERNAME, ADMIN_PASSWORD);
 
@@ -66,6 +66,7 @@ public class UpdatePrimaryRoleSCIM1TestCase extends ScenarioTestBase {
 
     @Test(dependsOnMethods = "testSCIM1CreateGroup")
     public void testSCIM1CreateSecondGroup() throws Exception {
+
         JSONObject userJSON = scim1Group.getRoleJSON("scim1SecondGroup.json");
         HttpResponse response = scim1Group.provisionGroup(client, userJSON, ADMIN_USERNAME, ADMIN_PASSWORD);
 
@@ -81,6 +82,7 @@ public class UpdatePrimaryRoleSCIM1TestCase extends ScenarioTestBase {
 
     @Test(dependsOnMethods = "testSCIM1CreateSecondGroup")
     private void testSCIM1UpdateExistingGroup() throws Exception {
+
         JSONObject updateUserJSON = scim1Group.getRoleJSON("scim1SecondGroup.json");
         HttpResponse response = scim1Group.updateGroup(client, updateUserJSON, groupId, ADMIN_USERNAME, ADMIN_PASSWORD);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_INTERNAL_SERVER_ERROR,
@@ -89,6 +91,7 @@ public class UpdatePrimaryRoleSCIM1TestCase extends ScenarioTestBase {
 
     @Test(dependsOnMethods = "testSCIM1UpdateExistingGroup")
     private void testSCIM1UpdateGroup() throws Exception {
+
         JSONObject updateUserJSON = scim1Group.getRoleJSON("scim1UpdateGroup.json");
         HttpResponse response = scim1Group.updateGroup(client, updateUserJSON, groupId, ADMIN_USERNAME, ADMIN_PASSWORD);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK, "Failed to delete the group");

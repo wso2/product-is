@@ -19,5 +19,6 @@
 package org.wso2.identity.scenarios.test.scim;
 
 public class SCIM1Constants {
+
     static final String ID_ATTRIBUTE = "id";
 }
