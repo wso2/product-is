@@ -58,12 +58,12 @@ public class ManageRolesSCIM2TestCase extends ScenarioTestBase {
     @DataProvider(name = "manageRolesConfigProvider")
     private static Object[][] manageRolesConfigProvider() throws Exception {
 
-        return new Object[][]{
+        return new Object[][] {
                 {
                         ADMIN_USERNAME, ADMIN_PASSWORD, SUPER_TENANT_DOMAIN, "scim2Group1.json"
                 }, {
-                ADMIN_USERNAME, ADMIN_PASSWORD, SUPER_TENANT_DOMAIN, "scim2Internalgroup.json"
-        }
+                        ADMIN_USERNAME, ADMIN_PASSWORD, SUPER_TENANT_DOMAIN, "scim2Internalgroup.json"
+                }
         };
     }
 
@@ -92,8 +92,7 @@ public class ManageRolesSCIM2TestCase extends ScenarioTestBase {
     public void testGetGroup() throws Exception {
 
         HttpResponse response = scim2Client.getGroup(client, groupId, username, password);
-        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK,
-                "Unable to retrieve the group");
+        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK, "Unable to retrieve the group");
         EntityUtils.consume(response.getEntity());
     }
 

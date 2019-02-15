@@ -56,7 +56,7 @@ public class UpdateRoleSCIM2TestCase extends ScenarioTestBase {
     @DataProvider(name = "manageRolesConfigProvider")
     private static Object[][] manageRolesConfigProvider() throws Exception {
 
-        return new Object[][]{
+        return new Object[][] {
                 {
                         ADMIN_USERNAME, ADMIN_PASSWORD, SUPER_TENANT_DOMAIN
                 }
@@ -89,8 +89,7 @@ public class UpdateRoleSCIM2TestCase extends ScenarioTestBase {
 
         JSONObject groupJSON = scim2Client.getRoleJSON("scim2UpdateGroup.json");
         HttpResponse response = scim2Client.updateGroup(client, groupJSON, groupId, username, password);
-        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK,
-                "Group has been updated successfully");
+        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK, "Group has been updated successfully");
         JSONObject returnedUserJSON = getJSONFromResponse(response);
         groupId = returnedUserJSON.get(ID_ATTRIBUTE).toString();
         assertNotNull(groupId, "updated SCIM2 group id not available in the response.");
