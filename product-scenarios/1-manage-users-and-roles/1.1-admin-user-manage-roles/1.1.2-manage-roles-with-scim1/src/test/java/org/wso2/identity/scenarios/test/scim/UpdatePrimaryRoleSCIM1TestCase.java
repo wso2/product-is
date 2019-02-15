@@ -66,7 +66,7 @@ public class UpdatePrimaryRoleSCIM1TestCase extends ScenarioTestBase {
 
     @Test(dependsOnMethods = "testSCIM1CreateGroup")
     public void testSCIM1CreateSecondGroup() throws Exception {
-        JSONObject userJSON = scim1Group.getRoleJSON("scim1Secondgroup.json");
+        JSONObject userJSON = scim1Group.getRoleJSON("scim1SecondGroup.json");
         HttpResponse response = scim1Group.provisionGroup(client, userJSON, ADMIN_USERNAME, ADMIN_PASSWORD);
 
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED,
