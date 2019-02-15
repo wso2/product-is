@@ -1784,7 +1784,7 @@
         <!--Identity Repo Versions-->
         <identity.carbon.auth.saml2.version>5.2.12</identity.carbon.auth.saml2.version>
         <identity.inbound.auth.saml.version>5.4.26</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.0.82-SNAPSHOT</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.0.97-SNAPSHOT</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.2.6</identity.inbound.auth.openid.version>
         <identity.agent.sso.version>5.1.14</identity.agent.sso.version>
         <identity.inbound.auth.sts.version>5.2.16</identity.inbound.auth.sts.version>
@@ -1938,7 +1938,7 @@
         <axis2.jaxb.wso2.version>1.6.1.wso2v22</axis2.jaxb.wso2.version>
         <axiom.wso2.version>1.2.11-wso2v12</axiom.wso2.version>
         <carbon.automation.version>4.4.3</carbon.automation.version>
-        <carbon.automationutils.version>4.4.1</carbon.automationutils.version>
+        <carbon.automationutils.version>4.4.2-SNAPSHOT</carbon.automationutils.version>
         <charon.orbit.version>2.1.6</charon.orbit.version>
         <apache.wink.version>1.1.3-incubating</apache.wink.version>
         <apache.ws.security.version>1.6.9</apache.ws.security.version>
@@ -1946,8 +1946,8 @@
         <javax.servlet.version>2.5</javax.servlet.version>
         <slf4j.version>1.7.0</slf4j.version>
         <apache.openejb.version>4.5.2</apache.openejb.version>
-        <axis2.client.version>1.6.1-wso2v28</axis2.client.version>
-        <axis2.wso2.version>1.6.1-wso2v28</axis2.wso2.version>
+        <axis2.client.version>1.6.1-wso2v29</axis2.client.version>
+        <axis2.wso2.version>1.6.1-wso2v29</axis2.wso2.version>
         <axis2-transports.version>2.0.0-wso2v29</axis2-transports.version>
         <json-smart.version>1.3</json-smart.version>
         <nimbusds.version>5.8.0.wso2v1</nimbusds.version>
