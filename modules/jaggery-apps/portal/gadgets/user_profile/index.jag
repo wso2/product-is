@@ -26,9 +26,9 @@ if (totpAuthenticator !== null) {
 
 print( fieldValues );
     }catch(e){
-print(e);
         log.error(e);
-            }
+        response.sendRedirect("/portal/error_pages/error.jag");
+    }
 
 }
 
