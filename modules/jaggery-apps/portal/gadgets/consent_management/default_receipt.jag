@@ -72,8 +72,8 @@ try {
     print(responseJSON);
 
 } catch (e) {
-    print(e);
     log.error(e.message);
+    response.sendRedirect("/portal/error_pages/error.jag");
 }
 
 function loadResidentIDPInformation(tenantDomain, purposes) {
