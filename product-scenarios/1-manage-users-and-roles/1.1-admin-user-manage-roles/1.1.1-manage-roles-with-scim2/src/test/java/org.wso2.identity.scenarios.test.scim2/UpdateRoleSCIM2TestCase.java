@@ -38,12 +38,13 @@ import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJ
 public class UpdateRoleSCIM2TestCase extends ScenarioTestBase {
 
     public static final String ID_ATTRIBUTE = "id";
-    private CloseableHttpClient client;
+
     private String username;
     private String password;
     private String tenantDomain;
-    private String groupId;
+    private CloseableHttpClient client;
     private SCIM2CommonClient scim2Client;
+    private String groupId;
 
     @Factory(dataProvider = "manageRolesConfigProvider")
     public UpdateRoleSCIM2TestCase(String username, String password, String tenantDomain) {
@@ -54,7 +55,7 @@ public class UpdateRoleSCIM2TestCase extends ScenarioTestBase {
     }
 
     @DataProvider(name = "manageRolesConfigProvider")
-    private static Object[][] manageRolesConfigProvider() throws Exception {
+    private static Object[][] manageRolesConfigProvider() {
 
         return new Object[][] {
                 {
