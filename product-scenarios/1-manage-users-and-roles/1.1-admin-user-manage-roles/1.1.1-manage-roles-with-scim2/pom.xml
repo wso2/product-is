@@ -73,6 +73,12 @@
                                 ${basedir}/src/test/resources/scim2-groups/
                             </value>
                         </property>
+                        <property>
+                            <name>scim2.users.location</name>
+                            <value>
+                                ${basedir}/src/test/resources/scim2-users/
+                            </value>
+                        </property>
                     </systemProperties>
                     <workingDirectory>${basedir}/target</workingDirectory>
                 </configuration>

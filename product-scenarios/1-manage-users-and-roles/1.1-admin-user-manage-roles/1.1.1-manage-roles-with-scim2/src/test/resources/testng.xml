@@ -28,6 +28,8 @@
             <class name="org.wso2.identity.scenarios.test.scim2.ManageRolesSCIM2TestCase"/>
             <class name="org.wso2.identity.scenarios.test.scim2.UpdateRoleSCIM2TestCase"/>
             <class name="org.wso2.identity.scenarios.test.scim2.RoleNamingViolationSCIM2TestCase"/>
+            <class name="org.wso2.identity.scenarios.test.scim2.ManageRolesWithUsersSCIM2TestCase"/>
+            <class name="org.wso2.identity.scenarios.test.scim2.RenameExistingRoleToNameOfAnExistingRoleSCIM2TestCase"/>
         </classes>
     </test>
 </suite>
