@@ -80,6 +80,11 @@
     </build>
 
     <properties>
+        <h2database.wso2.version>1.2.140.wso2v3</h2database.wso2.version>
+        <automation.version>4.4.3</automation.version>
+        <automationutils.utils.version>4.4.1</automationutils.utils.version>
+        <identity.framework.version>5.12.182</identity.framework.version>
+        <automationutils.admin.client.version>4.4.1</automationutils.admin.client.version>
         <json.simple.version>1.1</json.simple.version>
         <httpcore.wso2.version>4.3.3.wso2v1</httpcore.wso2.version>
         <httpcore.version>4.3.3</httpcore.version>
@@ -245,6 +250,31 @@
                 <groupId>com.nimbusds</groupId>
                 <artifactId>oauth2-oidc-sdk</artifactId>
                 <version>${nimbus.oidc.sdk.version}</version>
+            </dependency>
+            <dependency>
+            <groupId>org.wso2.carbon.identity.framework</groupId>
+            <artifactId>org.wso2.carbon.identity.user.store.configuration.stub</artifactId>
+            <version>${identity.framework.version}</version>
+            </dependency>
+            <dependency>
+            <groupId>org.wso2.carbon.automationutils</groupId>
+            <artifactId>org.wso2.carbon.integration.common.admin.client</artifactId>
+            <version>${automationutils.admin.client.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.automation</groupId>
+                <artifactId>org.wso2.carbon.automation.test.utils</artifactId>
+                <version>${automation.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.automationutils</groupId>
+                <artifactId>org.wso2.carbon.integration.common.utils</artifactId>
+                <version>${automationutils.utils.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.h2database.wso2</groupId>
+                <artifactId>h2-database-engine</artifactId>
+                <version>${h2database.wso2.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

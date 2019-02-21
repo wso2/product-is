@@ -147,5 +147,13 @@
             <groupId>org.opensaml</groupId>
             <artifactId>opensaml</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.framework</groupId>
+            <artifactId>org.wso2.carbon.identity.user.store.configuration.stub</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.automationutils</groupId>
+            <artifactId>org.wso2.carbon.integration.common.admin.client</artifactId>
+        </dependency>
     </dependencies>
 </project>

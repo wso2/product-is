@@ -1,0 +1,20 @@
+{
+  "schemas": [],
+  "name": {
+    "familyName": "gunasinghe",
+    "givenName": "hasinitg"
+  },
+  "userName": "hasinitg",
+  "password": "hasinitg",
+  "emails": [
+    {
+      "primary": true,
+      "value": "hasini_home.com",
+      "type": "home"
+    },
+    {
+      "value": "hasini_work.com",
+      "type": "work"
+    }
+  ]
+}

@@ -59,6 +59,12 @@
                             </value>
                         </property>
                         <property>
+                            <name>scim1.location</name>
+                            <value>
+                                ${basedir}/src/test/resources/scim1-users/
+                            </value>
+                        </property>
+                        <property>
                             <name>server.list</name>
                             <value>
                                 IS

@@ -15,10 +15,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.wso2.identity.scenarios.test.scim;
 
 public class SCIM1Constants {
 
     static final String ID_ATTRIBUTE = "id";
+    static final String DISPLAY_ATTRIBUTE = "display";
+    static final String VALUE_PARAM = "value";
+    static final String MEMBERS_ATTRIBUTE = "members";
 }

@@ -54,6 +54,25 @@
             <artifactId>scenarios-commons</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.automation</groupId>
+            <artifactId>org.wso2.carbon.automation.test.utils</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.automationutils</groupId>
+            <artifactId>org.wso2.carbon.integration.common.utils</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-jdk14</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database.wso2</groupId>
+            <artifactId>h2-database-engine</artifactId>
+        </dependency>
     </dependencies>
     <packaging>jar</packaging>
 
@@ -95,7 +114,7 @@
                             </value>
                         </property>
                         <property>
-                        <name>scim1.groups.location</name>
+                        <name>scim1.location</name>
                         <value>
                             ${basedir}/src/test/resources/scim1-groups/
                         </value>

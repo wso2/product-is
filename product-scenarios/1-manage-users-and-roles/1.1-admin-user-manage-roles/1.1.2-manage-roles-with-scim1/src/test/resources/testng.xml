@@ -25,9 +25,12 @@
 
     <test name="is-usr-mgt-scim1" preserve-order="true" parallel="false">
         <classes>
+            <class name="org.wso2.identity.scenarios.test.scim.CreateRoleWithUserSCIM1TestCase"/>
+            <class name="org.wso2.identity.scenarios.test.scim.RenameExistingRoleToNameOfAnExistingRoleSCIM1TestCase"/>
             <class name="org.wso2.identity.scenarios.test.scim.CreateRoleSCIM1TestCase"/>
             <class name="org.wso2.identity.scenarios.test.scim.RoleNamingViolationSCIM1TestCase"/>
             <class name="org.wso2.identity.scenarios.test.scim.UpdatePrimaryRoleSCIM1TestCase"/>
+            <class name="org.wso2.identity.scenarios.test.scim.ManageSecondaryUserStoreSCIM1TestCase"/>
         </classes>
     </test>
 </suite>
