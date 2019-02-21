@@ -25,12 +25,10 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.identity.scenarios.commons.ScenarioTestBase;
 import org.wso2.identity.scenarios.commons.clients.UserManagementClient;
-import org.wso2.identity.scenarios.commons.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 
 import static org.testng.Assert.assertEquals;
 
 public class ManagePrimaryRolesWithPermissionTestCase extends ScenarioTestBase {
-
 
     private static final Logger LOG = LoggerFactory.getLogger(ManagePrimaryRolesWithPermissionTestCase.class);
 
@@ -40,7 +38,6 @@ public class ManagePrimaryRolesWithPermissionTestCase extends ScenarioTestBase {
     private String roleName;
     private String[] userList;
     private UserManagementClient userManagementClient;
-    private RemoteUserStoreManagerServiceClient remoteUserStoreManagerServiceClient;
 
     @Factory(dataProvider = "manageRolesConfigProvider")
     public ManagePrimaryRolesWithPermissionTestCase(String roleName, String[] userList) {
@@ -61,12 +58,27 @@ public class ManagePrimaryRolesWithPermissionTestCase extends ScenarioTestBase {
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
+
         super.init();
         loginAndObtainSessionCookie();
         userManagementClient = new UserManagementClient(backendServiceURL, sessionCookie);
     }
 
     @Test
+    public void addPrimaryRole() {
+
+        boolean status = addRole(roleName, new String[0], new String[0]);
+        assertEquals(status, true, "Role has not been created successfully");
+    }
+
+    @Test(dependsOnMethods = "addPrimaryRole")
+    public void deletePrimaryRole() {
+
+        boolean status = deleteRole(roleName);
+        assertEquals(status, true, "Role has not been deleted");
+    }
+
+    @Test(dependsOnMethods = "deletePrimaryRole")
     public void addPrimaryRoleWithPermissions() {
 
         boolean status = addRole(roleName, new String[0],
@@ -76,6 +88,7 @@ public class ManagePrimaryRolesWithPermissionTestCase extends ScenarioTestBase {
 
     @Test(dependsOnMethods = "addPrimaryRoleWithPermissions")
     public void deletePrimaryRoleWithPermissions() {
+
         boolean status = deleteRole(roleName);
         assertEquals(status, true, "Role has not been deleted");
 
@@ -83,6 +96,7 @@ public class ManagePrimaryRolesWithPermissionTestCase extends ScenarioTestBase {
 
     @Test(dependsOnMethods = "deletePrimaryRoleWithPermissions")
     public void addUsers() {
+
         for (int i = 0; i < userList.length; i++) {
             boolean status = addUser(userList[i], "password", new String[0], null);
             assertEquals(status, true, "User has not been created successfully");
@@ -91,12 +105,14 @@ public class ManagePrimaryRolesWithPermissionTestCase extends ScenarioTestBase {
 
     @Test(dependsOnMethods = "addUsers")
     public void addRoleWithUsersAndPermissions() {
+
         boolean status = addRole(roleName, userList, new String[] { PERMISSION_ADMIN_MANAGE, PERMISSION_ADMIN_LOGIN });
         assertEquals(status, true, "Group has not been created successfully with few permission and users");
     }
 
     @Test(dependsOnMethods = "addRoleWithUsersAndPermissions")
     public void deleteUsers() {
+
         for (int i = 0; i < userList.length; i++) {
             boolean status = deleteUser(userList[i]);
             assertEquals(status, true, "User has not been deleted successfully");
@@ -105,11 +121,13 @@ public class ManagePrimaryRolesWithPermissionTestCase extends ScenarioTestBase {
 
     @Test(dependsOnMethods = "deleteUsers")
     public void deleteRole() {
+
         boolean status = deleteRole(roleName);
         assertEquals(status, true, "Group has not been deleted");
     }
 
     private boolean addUser(String userName, String password, String[] roles, String profileName) {
+
         try {
             userManagementClient.addUser(userName, password, roles, profileName);
         } catch (Exception e) {
@@ -120,6 +138,7 @@ public class ManagePrimaryRolesWithPermissionTestCase extends ScenarioTestBase {
     }
 
     private boolean deleteUser(String userName) {
+
         try {
             userManagementClient.deleteUser(userName);
         } catch (Exception e) {
@@ -130,6 +149,7 @@ public class ManagePrimaryRolesWithPermissionTestCase extends ScenarioTestBase {
     }
 
     private boolean addRole(String roleName, String[] userList, String[] permissions) {
+
         try {
             userManagementClient.addRole(roleName, userList, permissions);
         } catch (Exception e) {
@@ -140,6 +160,7 @@ public class ManagePrimaryRolesWithPermissionTestCase extends ScenarioTestBase {
     }
 
     private boolean deleteRole(String roleName) {
+
         try {
             userManagementClient.deleteRole(roleName);
         } catch (Exception e) {

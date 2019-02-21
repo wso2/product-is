@@ -58,12 +58,27 @@ public class ManageInternalRolesWithPermissionTestCase extends ScenarioTestBase 
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
+
         super.init();
         loginAndObtainSessionCookie();
         userManagementClient = new UserManagementClient(backendServiceURL, sessionCookie);
     }
 
     @Test
+    public void addInternalRole() {
+
+        boolean status = addInternalRole(internalRoleName, new String[0], new String[0]);
+        assertEquals(status, true, "Internal role has not been created successfully");
+    }
+
+    @Test(dependsOnMethods = "addInternalRole")
+    public void deleteInternalRole() {
+
+        boolean status = deleteInternalRole("Internal/" + internalRoleName);
+        assertEquals(status, true, "Internal role has not been deleted");
+    }
+
+    @Test(dependsOnMethods = "deleteInternalRole")
     public void addInternalRoleWithPermissions() {
 
         boolean status = addInternalRole(internalRoleName, new String[0], new String[] {
@@ -74,6 +89,7 @@ public class ManageInternalRolesWithPermissionTestCase extends ScenarioTestBase 
 
     @Test(dependsOnMethods = "addInternalRoleWithPermissions")
     public void deleteInternalRoleWithPermissions() {
+
         boolean status = deleteInternalRole("Internal/" + internalRoleName);
         assertEquals(status, true, "Internal role has not been deleted");
 
@@ -81,6 +97,7 @@ public class ManageInternalRolesWithPermissionTestCase extends ScenarioTestBase 
 
     @Test(dependsOnMethods = "deleteInternalRoleWithPermissions")
     public void addUsers() {
+
         for (int i = 0; i < userList.length; i++) {
             boolean status = addUser(userList[i], "password", new String[0], null);
             assertEquals(status, true, "User has not been created successfully");
@@ -89,6 +106,7 @@ public class ManageInternalRolesWithPermissionTestCase extends ScenarioTestBase 
 
     @Test(dependsOnMethods = "addUsers")
     public void addInternalRoleWithUsersAndPermissions() {
+
         boolean status = addInternalRole(internalRoleName, userList,
                 new String[] { PERMISSION_ADMIN_MANAGE, PERMISSION_ADMIN_LOGIN });
         assertEquals(status, true, "internal role has not been created successfully with few permission and users");
@@ -96,6 +114,7 @@ public class ManageInternalRolesWithPermissionTestCase extends ScenarioTestBase 
 
     @Test(dependsOnMethods = "addInternalRoleWithUsersAndPermissions")
     public void deleteUsers() {
+
         for (int i = 0; i < userList.length; i++) {
             boolean status = deleteUser(userList[i]);
             assertEquals(status, true, "User has not been deleted successfully");
@@ -103,12 +122,14 @@ public class ManageInternalRolesWithPermissionTestCase extends ScenarioTestBase 
     }
 
     @Test(dependsOnMethods = "deleteUsers")
-    public void deleteInternalRole() {
+    public void deleteRole() {
+
         boolean status = deleteInternalRole("Internal/" + internalRoleName);
         assertEquals(status, true, "Group has not been deleted");
     }
 
     private boolean addUser(String userName, String password, String[] roles, String profileName) {
+
         try {
             userManagementClient.addUser(userName, password, roles, profileName);
         } catch (Exception e) {
@@ -119,6 +140,7 @@ public class ManageInternalRolesWithPermissionTestCase extends ScenarioTestBase 
     }
 
     private boolean deleteUser(String userName) {
+
         try {
             userManagementClient.deleteUser(userName);
         } catch (Exception e) {
