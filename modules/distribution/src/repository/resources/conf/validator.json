@@ -1,0 +1,74 @@
+{
+  "user_store.type": [
+    {
+      "default_value": "database",
+      "regex": "\\Adatabase\\Z|\\Aread_only_ldap\\Z|\\Aread_write_ldap\\Z|\\Aactive_directory\\Z"
+    }
+  ],
+  "user_store.properties.ConnectionURL": [
+    {
+      "if": {
+        "user_store.type": "read_only_ldap"
+      },
+      "match_regex": ".+",
+      "error_message": "Connection URL is required for read only ldap userstore"
+    },
+    {
+      "if": {
+        "user_store.type": "read_write_ldap"
+      },
+      "match_regex": ".+",
+      "error_message": "Connection URL is required for read write ldap userstore"
+    },
+    {
+      "if": {
+        "user_store.type": "active_directory"
+      },
+      "match_regex": ".+",
+      "error_message": "Connection URL is required for active directory userstore"
+    }
+  ],
+  "user_store.properties.ConnectionName": [
+    {
+      "if": {
+        "user_store.type": "read_only_ldap"
+      },
+      "match_regex": ".+",
+      "error_message": "Connection name is required for read only ldap userstore"
+    },
+    {
+      "if": {
+        "user_store.type": "read_only_ldap"
+      },
+      "match_regex": ".+",
+      "error_message": "Connection name is required for read write ldap userstore"
+    },
+    {
+      "if": {
+        "user_store.type": "active_directory"
+      },
+      "match_regex": ".+",
+      "error_message": "Connection name is required for active directory userstore"
+    }
+  ],
+  "super_admin.username": [
+    {
+      "default_value": "admin",
+      "match_regex": ""
+    }
+  ],
+  "encryption.type": [
+    {
+      "regex": "\\Aasymmetric\\Z|\\Asymmetric\\Z"
+    }
+  ],
+  "encryption.key": [
+    {
+      "if": {
+        "encryption.type": "symmetric"
+      },
+      "match_regex": ".+",
+      "error_message": "Encryption key required for symmetric encryption"
+    }
+  ]
+}
