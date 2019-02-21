@@ -57,6 +57,7 @@ public class ProvisionUserWithAdminRights extends ScenarioTestBase {
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
+
         super.init();
         loginAndObtainSessionCookie();
         userManagementClient = new UserManagementClient(backendServiceURL, sessionCookie);
@@ -71,12 +72,14 @@ public class ProvisionUserWithAdminRights extends ScenarioTestBase {
 
     @Test(dependsOnMethods = "addUserWithAdminRights")
     public void deleteUser() {
+
         boolean status = deleteUser(userName);
         assertEquals(status, true, "User has not been deleted successfully");
 
     }
 
     private boolean addUser(String userName, String password, String[] roles, String profileName) {
+
         try {
             userManagementClient.addUser(userName, password, roles, profileName);
         } catch (Exception e) {
@@ -87,6 +90,7 @@ public class ProvisionUserWithAdminRights extends ScenarioTestBase {
     }
 
     private boolean deleteUser(String userName) {
+
         try {
             userManagementClient.deleteUser(userName);
         } catch (Exception e) {
