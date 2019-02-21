@@ -30,6 +30,8 @@
             <class name="org.wso2.identity.scenarios.test.scim2.RoleNamingViolationSCIM2TestCase"/>
             <class name="org.wso2.identity.scenarios.test.scim2.ManageRolesWithUsersSCIM2TestCase"/>
             <class name="org.wso2.identity.scenarios.test.scim2.RenameExistingRoleToNameOfAnExistingRoleSCIM2TestCase"/>
+            <class name="org.wso2.identity.scenarios.test.scim2.ManagePrimaryRolesWithPermissionTestCase"/>
+            <class name="org.wso2.identity.scenarios.test.scim2.ManageInternalRolesWithPermissionTestCase"/>
         </classes>
     </test>
 </suite>
