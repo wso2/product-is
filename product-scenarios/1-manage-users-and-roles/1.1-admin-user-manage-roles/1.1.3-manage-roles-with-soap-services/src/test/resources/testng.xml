@@ -23,13 +23,11 @@
         <listener class-name="org.wso2.identity.scenarios.commons.listeners.IdentityScenarioTestListener"/>
     </listeners>
 
-    <test name="is-groups-mgt-scim2" preserve-order="true" parallel="false">
+    <test name="is-groups-mgt-soap-services" preserve-order="true" parallel="false">
         <classes>
-            <class name="org.wso2.identity.scenarios.test.scim2.ManageRolesSCIM2TestCase"/>
-            <class name="org.wso2.identity.scenarios.test.scim2.UpdateRoleSCIM2TestCase"/>
-            <class name="org.wso2.identity.scenarios.test.scim2.RoleNamingViolationSCIM2TestCase"/>
-            <class name="org.wso2.identity.scenarios.test.scim2.ManageRolesWithUsersSCIM2TestCase"/>
-            <class name="org.wso2.identity.scenarios.test.scim2.RenameExistingRoleToNameOfAnExistingRoleSCIM2TestCase"/>
+            <class name="org.wso2.identity.scenarios.test.services.ManagePrimaryRolesWithPermissionTestCase"/>
+            <class name="org.wso2.identity.scenarios.test.services.ManageInternalRolesWithPermissionTestCase"/>
+            <class name="org.wso2.identity.scenarios.test.services.ProvisionUserWithAdminRights"/>
         </classes>
     </test>
 </suite>
