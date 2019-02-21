@@ -15,7 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.identity.scenarios.test.scim2;
+package org.wso2.identity.scenarios.test.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +30,7 @@ import org.wso2.identity.scenarios.commons.clients.usermgt.remote.RemoteUserStor
 import static org.testng.Assert.assertEquals;
 
 public class ManagePrimaryRolesWithPermissionTestCase extends ScenarioTestBase {
+
 
     private static final Logger LOG = LoggerFactory.getLogger(ManagePrimaryRolesWithPermissionTestCase.class);
 
