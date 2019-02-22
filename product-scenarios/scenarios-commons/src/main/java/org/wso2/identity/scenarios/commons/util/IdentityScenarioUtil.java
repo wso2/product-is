@@ -26,6 +26,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.json.simple.JSONObject;
@@ -157,6 +158,27 @@ public class IdentityScenarioUtil {
         }
 
         return client.execute(deleteRequest);
+    }
+
+    /**
+     * Send PUT request to the given URL.
+     *
+     * @param client     HttpClient to be used for request sending.
+     * @param jsonObject JSON object for put request
+     * @param url        Request URL.
+     * @param headers    Request headers.
+     * @return HttpResponse containing the response.
+     * @throws IOException If error occurs while sending the request.
+     */
+    public static HttpResponse sendUpdateRequest(HttpClient client, JSONObject jsonObject, String url,
+                                                 Header[] headers) throws IOException {
+
+        HttpPut updateRequest = new HttpPut(url);
+        if (headers != null) {
+            updateRequest.setHeaders(headers);
+        }
+        updateRequest.setEntity(new StringEntity(jsonObject.toString()));
+        return client.execute(updateRequest);
     }
 
     /**
