@@ -32,7 +32,7 @@ import java.nio.file.Paths;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendDeleteRequest;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendGetRequest;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendPostRequestWithJSON;
-import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendUpdateRequest;
+import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendPutRequest;
 import static org.wso2.identity.scenarios.commons.util.SCIMProvisioningUtil.getCommonHeaders;
 
 public class SCIM2CommonClient {
@@ -197,7 +197,7 @@ public class SCIM2CommonClient {
     public HttpResponse updateGroup(HttpClient client, JSONObject groupJSON, String groupId, String username,
                                     String password) throws Exception {
 
-        return sendUpdateRequest(client, groupJSON, getSCIM2GroupsEndpoint() + "/" + groupId,
+        return sendPutRequest(client, groupJSON, getSCIM2GroupsEndpoint() + "/" + groupId,
                 getCommonHeaders(username, password));
     }
 

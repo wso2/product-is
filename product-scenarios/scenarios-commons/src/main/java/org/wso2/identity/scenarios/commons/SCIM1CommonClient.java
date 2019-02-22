@@ -179,7 +179,7 @@ public class SCIM1CommonClient {
      */
     public HttpResponse updateGroup(HttpClient client, JSONObject groupJSON, String groupId, String username,
                                     String password) throws Exception {
-        return sendUpdateRequest(client, groupJSON, getSCIM1GroupsEndpoint() + "/" + groupId,
+        return sendPatchRequest(client, groupJSON, getSCIM1GroupsEndpoint() + "/" + groupId,
                 getCommonHeaders(username, password));
     }
 

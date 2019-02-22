@@ -105,7 +105,7 @@ public class IdentityScenarioUtil {
      * @return HttpResponse containing the response.
      * @throws IOException If error occurs while sending the request.
      */
-    public static HttpResponse sendUpdateRequest(HttpClient client, JSONObject jsonObject, String url,
+    public static HttpResponse sendPatchRequest(HttpClient client, JSONObject jsonObject, String url,
                                                  Header[] headers) throws IOException {
         HttpPatch updateRequest = new HttpPatch(url);
         if (headers != null) {
@@ -191,7 +191,7 @@ public class IdentityScenarioUtil {
      * @return HttpResponse containing the response.
      * @throws IOException If error occurs while sending the request.
      */
-    public static HttpResponse sendUpdateRequest(HttpClient client, JSONObject jsonObject, String url,
+    public static HttpResponse sendPutRequest(HttpClient client, JSONObject jsonObject, String url,
                                                  Header[] headers) throws IOException {
 
         HttpPut updateRequest = new HttpPut(url);
