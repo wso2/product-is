@@ -87,6 +87,7 @@ public class ManageRolesWithUsersSCIM2TestCase extends ScenarioTestBase {
 
     @Test
     public void testProvisionUser() throws Exception {
+
         JSONObject userJSON = scim2Client.getUserJSON(userInputFileName);
         HttpResponse response = scim2Client.provisionUser(client, userJSON, ADMIN_USERNAME, ADMIN_PASSWORD);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED,
@@ -95,6 +96,7 @@ public class ManageRolesWithUsersSCIM2TestCase extends ScenarioTestBase {
         String userId = returnedUserJSON.get(ID_ATTRIBUTE).toString();
         users.put(userJSON.get("userName").toString(), userId);
         assertNotNull(userId, "SCIM2 user id not available in the response.");
+        EntityUtils.consume(response.getEntity());
     }
 
     @Test(dependsOnMethods = "testProvisionUser")
@@ -110,10 +112,9 @@ public class ManageRolesWithUsersSCIM2TestCase extends ScenarioTestBase {
         }
         groupJSON.put(MEMBERS_ATTRIBUTE, members);
 
-        // Create object
         HttpResponse response = scim2Client.provisionGroup(client, groupJSON, username, password);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED,
-                "Group has not been created " + "with members");
+                "Group has not been created with members");
         JSONObject returnedGroupJSON = getJSONFromResponse(response);
         groupId = returnedGroupJSON.get(ID_ATTRIBUTE).toString();
         assertNotNull(groupId, "SCIM2 group id not available in the response.");
@@ -127,6 +128,7 @@ public class ManageRolesWithUsersSCIM2TestCase extends ScenarioTestBase {
             HttpResponse response = scim2Client.deleteUser(client, user.getValue(), ADMIN_USERNAME, ADMIN_PASSWORD);
             assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_NO_CONTENT,
                     "Failed to delete the user");
+            EntityUtils.consume(response.getEntity());
         }
     }
 
@@ -137,5 +139,4 @@ public class ManageRolesWithUsersSCIM2TestCase extends ScenarioTestBase {
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_NO_CONTENT, "Failed to delete the group");
         EntityUtils.consume(response.getEntity());
     }
-
 }
