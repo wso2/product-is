@@ -134,7 +134,6 @@ public class OAuth2SelfContainedTokenImplicitGrantTest extends ScenarioTestBase 
             ssoCommonClient.deleteServiceProvider(serviceProvider.getApplicationName());
         }
         httpCommonClient.closeHttpClient();
-
     }
 
     @Test(description = "9.1.10.3.1")

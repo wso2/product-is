@@ -357,8 +357,8 @@ public class OAuth2CommonClient {
      * @return Http response.
      * @throws IOException IO Exception.
      */
-    public HttpResponse sendRefreshTokenRequest(String clientId,
-                                                String clientSecret, String refreshToken, String scope) throws IOException {
+    public HttpResponse sendRefreshTokenRequest(String clientId, String clientSecret, String refreshToken,
+                                                String scope) throws IOException {
 
         List<NameValuePair> requestParameters = new ArrayList<>();
         requestParameters.add(new BasicNameValuePair(OAuth2Constants.RequestParams.GRANT_TYPE,
