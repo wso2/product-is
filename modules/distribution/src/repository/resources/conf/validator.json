@@ -1,4 +1,23 @@
 {
+  "identity.recaptcha.site_key": [
+    {
+      "if": {
+        "identity.recaptcha.enabled": true
+      },
+      "match_regex": ".+",
+      "error_message": "Connection URL is required for read only ldap userstore"
+    }
+  ],
+
+  "identity.recaptcha.secret_key": [
+    {
+      "if": {
+        "identity.recaptcha.enabled": true
+      },
+      "match_regex": ".+"
+    }
+  ],
+
   "user_store.type": [
     {
       "default_value": "database",

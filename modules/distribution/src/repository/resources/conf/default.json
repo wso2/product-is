@@ -146,5 +146,11 @@
   "identity.auth_framework.filtered_outbound_query_parameters": ["username","password","SAMLRequest"],
   "identity.auth_framework.redirect_parameter_filter_policy" : "exclude",
   "identity.auth_framework.redirect_parameter_remove_on_consume" : true,
-  "identity.auth_framework.filtered_redirect_parameters": ["loggedInUser"]
+  "identity.auth_framework.filtered_redirect_parameters": ["loggedInUser"],
+
+  "identity.recaptcha.enabled" : false,
+  "identity.recaptcha.api_url" : "https://www.google.com/recaptcha/api.js",
+  "identity.recaptcha.verify_url" : "https://www.google.com/recaptcha/api/siteverify",
+
+
 }
