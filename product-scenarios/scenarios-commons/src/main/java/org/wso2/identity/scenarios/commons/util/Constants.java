@@ -76,6 +76,7 @@ public class Constants {
     public static final String AUTHN_CONTEXT_CLASS_REF = "AuthnContextClassRef";
     public static final String AUTHN_REQUEST = "AuthnRequest";
     public static final String INBOUND_AUTH_TYPE_SAML = "samlsso";
+    public static final String INBOUND_AUTH_TYPE_OAUTH2 = "oauth2";
     public static final String ISSUER = "Issuer";
     public static final String NAMESPACE_PREFIX = "samlp";
     public static final String PASSWORD_PROTECTED_TRANSPORT_CLASS =

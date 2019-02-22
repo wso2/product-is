@@ -31,6 +31,8 @@ public class OAuth2Constants {
         public static final String PASSWORD = "password";
 
         public static final String CLIENT_CREDENTIALS = "client_credentials";
+
+        public static final String REFRESH_TOKEN = "refresh_token";
     }
 
     public static class ResponseTypes {
@@ -82,6 +84,8 @@ public class OAuth2Constants {
         public static final String USERNAME = "username";
 
         public static final String PASSWORD = "password";
+
+        public static final String REFRESH_TOKEN = "refresh_token";
     }
 
     public static class DCRRequestElements {
