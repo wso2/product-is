@@ -25,7 +25,7 @@
     <test name="is-single-sign-on-refreshtoken" preserve-order="true" parallel="false">
         <classes>
             <class name="org.wso2.identity.scenarios.access.delegation.oauth2.refreshtoken.OAuth2RefreshTokenPasswordGrantTest"/>
-            <!--<class name="org.wso2.identity.scenarios.access.delegation.oauth2.refreshtoken.OAuth2RefreshTokenAuthorizationGrantTest"/>-->
+            <class name="org.wso2.identity.scenarios.access.delegation.oauth2.refreshtoken.OAuth2RefreshTokenAuthorizationGrantTest"/>
         </classes>
     </test>
 </suite>

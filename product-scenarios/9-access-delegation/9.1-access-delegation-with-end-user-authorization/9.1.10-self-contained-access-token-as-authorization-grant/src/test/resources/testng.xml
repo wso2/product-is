@@ -24,8 +24,8 @@
 
     <test name="is-single-sign-on" preserve-order="true" parallel="false">
         <classes>
-            <!--<class name="org.wso2.identity.scenarios.access.delegation.oauth2.selfcontainedtoken.OAuth2SelfContainedTokenCodeGrantTest"/>-->
-            <!--<class name="org.wso2.identity.scenarios.access.delegation.oauth2.selfcontainedtoken.OAuth2SelfContainedTokenImplicitGrantTest"/>-->
+            <class name="org.wso2.identity.scenarios.access.delegation.oauth2.selfcontainedtoken.OAuth2SelfContainedTokenCodeGrantTest"/>
+            <class name="org.wso2.identity.scenarios.access.delegation.oauth2.selfcontainedtoken.OAuth2SelfContainedTokenImplicitGrantTest"/>
             <class name="org.wso2.identity.scenarios.access.delegation.oauth2.selfcontainedtoken.OAuth2SelfContainedTokenPasswordGrantTest"/>
         </classes>
     </test>
