@@ -76,7 +76,6 @@
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
-
                     <execution>
                         <id>copy­jacoco­dependencies</id>
                         <phase>compile</phase>
@@ -130,7 +129,6 @@
             </plugin>
         </plugins>
     </build>
-
     <dependencies>
         <dependency>
             <groupId>org.wso2.is</groupId>

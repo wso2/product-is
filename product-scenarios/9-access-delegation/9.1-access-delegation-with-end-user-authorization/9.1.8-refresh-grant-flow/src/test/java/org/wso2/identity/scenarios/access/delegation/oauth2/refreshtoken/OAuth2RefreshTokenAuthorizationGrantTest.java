@@ -221,7 +221,6 @@ public class OAuth2RefreshTokenAuthorizationGrantTest extends ScenarioTestBase {
         assertNotNull(refreshToken, "Refresh token is null");
 
         httpCommonClient.consume(response);
-
     }
 
     @Test(description = "9.1.8.4", dependsOnMethods = "sendValidRefreshTokenRequest")

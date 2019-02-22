@@ -156,7 +156,6 @@ public class OAuth2RefreshTokenPasswordGrantTest extends ScenarioTestBase {
         refreshToken = responseJSON.get(OAuth2Constants.TokenResponseElements.REFRESH_TOKEN).toString();
 
         httpCommonClient.consume(response);
-
     }
 
     @Test(description = "9.1.8.4", dependsOnMethods = "sendValidRefreshTokenRequest")
