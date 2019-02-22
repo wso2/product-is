@@ -30,7 +30,12 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
+import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
+import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
+import org.wso2.identity.scenarios.commons.clients.oauth.OauthAdminClient;
 import org.wso2.identity.scenarios.commons.data.DeploymentDataHolder;
+import org.wso2.identity.scenarios.commons.util.Constants;
 import org.wso2.identity.scenarios.commons.util.DataExtractUtil;
 import org.wso2.identity.scenarios.commons.util.OAuth2Constants;
 import org.wso2.identity.scenarios.commons.util.SSOConstants;
@@ -343,6 +348,30 @@ public class OAuth2CommonClient {
     }
 
     /**
+     * Send refresh token grant request.
+     *
+     * @param clientId     client id.
+     * @param clientSecret client secret.
+     * @param refreshToken refresh token.
+     * @param scope        scope.
+     * @return Http response.
+     * @throws IOException IO Exception.
+     */
+    public HttpResponse sendRefreshTokenRequest(String clientId, String clientSecret, String refreshToken,
+                                                String scope) throws IOException {
+
+        List<NameValuePair> requestParameters = new ArrayList<>();
+        requestParameters.add(new BasicNameValuePair(OAuth2Constants.RequestParams.GRANT_TYPE,
+                OAuth2Constants.GrantTypes.REFRESH_TOKEN));
+        requestParameters.add(new BasicNameValuePair(OAuth2Constants.RequestParams.REFRESH_TOKEN, refreshToken));
+        if (StringUtils.isNotBlank(scope)) {
+            requestParameters.add(new BasicNameValuePair(OAuth2Constants.RequestParams.SCOPE, scope));
+        }
+        return httpCommonClient.sendPostRequestWithParameters(tokenEndpoint, requestParameters,
+                getCommonHeadersURLEncoded(clientId, clientSecret));
+    }
+
+    /**
      * Send introspect request.
      *
      * @param token    Access token.
@@ -481,5 +510,34 @@ public class OAuth2CommonClient {
             this.dcrEndpoint = serverHTTPsUrl + "/t/" + tenantDomain + "/api/identity/oauth2/dcr/v1.1/register";
             this.introspectEndpoint = serverHTTPsUrl + "/t/" + tenantDomain + "/oauth2/introspect";
         }
+    }
+
+    /**
+     * Returns OAuthConsumerAppDTO of a service provider.
+     *
+     * @param serviceProvider
+     * @param oauthAdminClient
+     * @return OAuthConsumerAppDTO
+     * @throws Exception
+     */
+    public OAuthConsumerAppDTO getOAuthConsumerApp(ServiceProvider serviceProvider, OauthAdminClient oauthAdminClient) throws Exception {
+
+        InboundAuthenticationRequestConfig[] inboundAuthRequestConfigs = serviceProvider
+                .getInboundAuthenticationConfig().getInboundAuthenticationRequestConfigs();
+        for (InboundAuthenticationRequestConfig inboundAuthRequestConfig : inboundAuthRequestConfigs) {
+            if (Constants.INBOUND_AUTH_TYPE_OAUTH2.equals(inboundAuthRequestConfig.getInboundAuthType())) {
+                return getOAuthSSOServiceProviderByName(serviceProvider.getApplicationName(), oauthAdminClient);
+            }
+        }
+        return null;
+    }
+
+    private OAuthConsumerAppDTO getOAuthSSOServiceProviderByName(String spName, OauthAdminClient oauthAdminClient) throws Exception {
+
+        OAuthConsumerAppDTO ssoSPInfoDTO = oauthAdminClient.getOAuthAppByName(spName);
+        if (ssoSPInfoDTO != null) {
+            return ssoSPInfoDTO;
+        }
+        return null;
     }
 }
