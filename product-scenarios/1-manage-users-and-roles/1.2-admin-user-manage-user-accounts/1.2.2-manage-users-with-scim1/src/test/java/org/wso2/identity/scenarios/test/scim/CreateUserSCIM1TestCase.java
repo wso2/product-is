@@ -49,7 +49,7 @@ public class CreateUserSCIM1TestCase extends ScenarioTestBase {
     @Test(description = "1.2.2.1")
     public void testSCIM1ProvisionUser() throws Exception {
 
-        JSONObject userJSON = scim1Client.getUserJSON("scim1User.json");
+        JSONObject userJSON = scim1Client.getUserJSON("scim1user.json");
         HttpResponse response = scim1Client.provisionUser(client, userJSON, ADMIN_USERNAME, ADMIN_PASSWORD);
 
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED,
