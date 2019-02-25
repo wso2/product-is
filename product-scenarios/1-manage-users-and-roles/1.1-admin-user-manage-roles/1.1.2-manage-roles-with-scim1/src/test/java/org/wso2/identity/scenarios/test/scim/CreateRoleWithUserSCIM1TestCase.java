@@ -114,6 +114,7 @@ public class CreateRoleWithUserSCIM1TestCase extends ScenarioTestBase {
         HttpResponse response = scim1Client.deleteUser(client, userId, ADMIN_USERNAME, ADMIN_PASSWORD);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK,
                 "Failed to delete the user");
+        EntityUtils.consume(response.getEntity());
     }
 
     @Test(dependsOnMethods = "testDeleteUser")

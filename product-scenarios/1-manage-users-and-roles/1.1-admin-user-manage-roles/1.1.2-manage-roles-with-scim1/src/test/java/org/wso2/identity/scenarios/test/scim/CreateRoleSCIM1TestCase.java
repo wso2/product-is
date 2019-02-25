@@ -77,14 +77,14 @@ public class CreateRoleSCIM1TestCase extends ScenarioTestBase {
     @Test
     public void testSCIM1CreateGroup() throws Exception {
 
-        JSONObject userJSON = scim1Group.getRoleJSON(inputFileName);
-        HttpResponse response = scim1Group.provisionGroup(client, userJSON, username, password);
+        JSONObject groupJSON = scim1Group.getRoleJSON(inputFileName);
+        HttpResponse response = scim1Group.provisionGroup(client, groupJSON, username, password);
 
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED,
             "Group has not been created successfully");
 
-        JSONObject returnedUserJSON = getJSONFromResponse(response);
-        groupId = returnedUserJSON.get(SCIM1Constants.ID_ATTRIBUTE).toString();
+        JSONObject returnedGroupJSON = getJSONFromResponse(response);
+        groupId = returnedGroupJSON.get(SCIM1Constants.ID_ATTRIBUTE).toString();
 
         assertNotNull(groupId, "SCIM1 group id not available in the response.");
         EntityUtils.consume(response.getEntity());
@@ -93,8 +93,8 @@ public class CreateRoleSCIM1TestCase extends ScenarioTestBase {
     @Test(dependsOnMethods = "testSCIM1CreateGroup")
     public void testSCIM1ExistingGroup() throws Exception {
 
-        JSONObject userJSON = scim1Group.getRoleJSON(inputFileName);
-        HttpResponse response = scim1Group.provisionGroup(client, userJSON, username, password);
+        JSONObject groupJSON = scim1Group.getRoleJSON(inputFileName);
+        HttpResponse response = scim1Group.provisionGroup(client, groupJSON, username, password);
 
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CONFLICT,
             "Group has not been created successfully");
@@ -112,8 +112,8 @@ public class CreateRoleSCIM1TestCase extends ScenarioTestBase {
     @Test(dependsOnMethods = "testSCIM1DeleteGroup")
     public void testSCIM1CreateGroupAgain() throws Exception {
 
-        JSONObject userJSON = scim1Group.getRoleJSON(inputFileName);
-        HttpResponse response = scim1Group.provisionGroup(client, userJSON, username, password);
+        JSONObject groupJSON = scim1Group.getRoleJSON(inputFileName);
+        HttpResponse response = scim1Group.provisionGroup(client, groupJSON, username, password);
 
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED,
             "Group has not been created successfully");

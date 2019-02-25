@@ -43,9 +43,10 @@ import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJ
 public class ManageSecondaryUserStoreSCIM1TestCase extends ScenarioTestBase {
 
     private static final String DOMAIN_ID = "USERSTOREDB";
-    private static final String USER_STORE_DB_NAME = "JDBC_USER_STORE_DB";
+    private static final String USER_STORE_DB_NAME = "WSO2CARBON_DB";
     private static final String DB_USER_NAME = "wso2carbon";
     private static final String DB_USER_PASSWORD = "wso2carbon";
+
     private UserStoreConfigAdminServiceClient userStoreConfigAdminServiceClient;
     private UserStoreConfigUtils userStoreConfigUtils = new UserStoreConfigUtils();
     private CloseableHttpClient client;
@@ -94,8 +95,8 @@ public class ManageSecondaryUserStoreSCIM1TestCase extends ScenarioTestBase {
                 USER_STORE_DB_NAME, DB_USER_NAME, DB_USER_PASSWORD);
         dbmanager.disconnect();
 
-        PropertyDTO[] propertyDTOs = new PropertyDTO[10];
-        for (int i = 0; i < 10; i++) {
+        PropertyDTO[] propertyDTOs = new PropertyDTO[12];
+        for (int i = 0; i < 12; i++) {
             propertyDTOs[i] = new PropertyDTO();
         }
 
@@ -103,7 +104,7 @@ public class ManageSecondaryUserStoreSCIM1TestCase extends ScenarioTestBase {
         propertyDTOs[0].setValue("org.h2.Driver");
 
         propertyDTOs[1].setName("url");
-        propertyDTOs[1].setValue("jdbc:h2:repository/database/" + USER_STORE_DB_NAME);
+        propertyDTOs[1].setValue("jdbc:h2:./repository/database/" + USER_STORE_DB_NAME);
 
         propertyDTOs[2].setName("userName");
         propertyDTOs[2].setValue(DB_USER_NAME);
@@ -129,6 +130,12 @@ public class ManageSecondaryUserStoreSCIM1TestCase extends ScenarioTestBase {
         propertyDTOs[9].setName("SCIMEnabled");
         propertyDTOs[9].setValue("true");
 
+        propertyDTOs[10].setName("ReadGroups");
+        propertyDTOs[10].setValue("true");
+
+        propertyDTOs[11].setName("WriteGroups");
+        propertyDTOs[11].setValue("true");
+
         UserStoreDTO userStoreDTO = userStoreConfigAdminServiceClient
                 .createUserStoreDTO(jdbcClass, DOMAIN_ID, propertyDTOs);
         userStoreConfigAdminServiceClient.addUserStore(userStoreDTO);
@@ -139,14 +146,14 @@ public class ManageSecondaryUserStoreSCIM1TestCase extends ScenarioTestBase {
     @Test(dependsOnMethods = "addSecondaryUserStore")
     public void testSCIM1CreateGroup() throws Exception {
 
-        JSONObject userJSON = scim1Group.getRoleJSON(inputFileName);
-        HttpResponse response = scim1Group.provisionGroup(client, userJSON, username, password);
+        JSONObject groupJSON = scim1Group.getRoleJSON(inputFileName);
+        HttpResponse response = scim1Group.provisionGroup(client, groupJSON, username, password);
 
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED,
                 "Group has not been created successfully");
 
-        JSONObject returnedUserJSON = getJSONFromResponse(response);
-        groupId = returnedUserJSON.get(SCIM1Constants.ID_ATTRIBUTE).toString();
+        JSONObject returnedGroupJSON = getJSONFromResponse(response);
+        groupId = returnedGroupJSON.get(SCIM1Constants.ID_ATTRIBUTE).toString();
 
         assertNotNull(groupId, "SCIM1 group id not available in the response.");
         EntityUtils.consume(response.getEntity());
@@ -165,5 +172,4 @@ public class ManageSecondaryUserStoreSCIM1TestCase extends ScenarioTestBase {
 
         userStoreConfigAdminServiceClient.deleteUserStore(DOMAIN_ID);
     }
-
 }

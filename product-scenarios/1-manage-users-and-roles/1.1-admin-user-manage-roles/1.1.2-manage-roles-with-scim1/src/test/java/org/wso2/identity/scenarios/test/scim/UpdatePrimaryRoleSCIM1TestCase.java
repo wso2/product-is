@@ -51,14 +51,14 @@ public class UpdatePrimaryRoleSCIM1TestCase extends ScenarioTestBase {
     @Test
     public void testSCIM1CreateGroup() throws Exception {
 
-        JSONObject userJSON = scim1Group.getRoleJSON("scim1group.json");
-        HttpResponse response = scim1Group.provisionGroup(client, userJSON, ADMIN_USERNAME, ADMIN_PASSWORD);
+        JSONObject groupJSON = scim1Group.getRoleJSON("scim1group.json");
+        HttpResponse response = scim1Group.provisionGroup(client, groupJSON, ADMIN_USERNAME, ADMIN_PASSWORD);
 
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED,
-            "Group has not been created successfully");
+                "Group has not been created successfully");
 
-        JSONObject returnedUserJSON = getJSONFromResponse(response);
-        groupId = returnedUserJSON.get(SCIM1Constants.ID_ATTRIBUTE).toString();
+        JSONObject returnedGroupJSON = getJSONFromResponse(response);
+        groupId = returnedGroupJSON.get(SCIM1Constants.ID_ATTRIBUTE).toString();
 
         assertNotNull(groupId, "SCIM1 group id not available in the response.");
         EntityUtils.consume(response.getEntity());
@@ -67,14 +67,14 @@ public class UpdatePrimaryRoleSCIM1TestCase extends ScenarioTestBase {
     @Test(dependsOnMethods = "testSCIM1CreateGroup")
     public void testSCIM1CreateSecondGroup() throws Exception {
 
-        JSONObject userJSON = scim1Group.getRoleJSON("scim1SecondGroup.json");
-        HttpResponse response = scim1Group.provisionGroup(client, userJSON, ADMIN_USERNAME, ADMIN_PASSWORD);
+        JSONObject groupJSON = scim1Group.getRoleJSON("scim1SecondGroup.json");
+        HttpResponse response = scim1Group.provisionGroup(client, groupJSON, ADMIN_USERNAME, ADMIN_PASSWORD);
 
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED,
-            "Group has not been created successfully");
+                "Group has not been created successfully");
 
-        JSONObject returnedUserJSON = getJSONFromResponse(response);
-        secoundGroupId = returnedUserJSON.get(SCIM1Constants.ID_ATTRIBUTE).toString();
+        JSONObject returnedGroupJSON = getJSONFromResponse(response);
+        secoundGroupId = returnedGroupJSON.get(SCIM1Constants.ID_ATTRIBUTE).toString();
 
         assertNotNull(secoundGroupId, "SCIM1 group id not available in the response.");
         EntityUtils.consume(response.getEntity());
@@ -83,21 +83,23 @@ public class UpdatePrimaryRoleSCIM1TestCase extends ScenarioTestBase {
     @Test(dependsOnMethods = "testSCIM1CreateSecondGroup")
     private void testSCIM1UpdateExistingGroup() throws Exception {
 
-        JSONObject updateUserJSON = scim1Group.getRoleJSON("scim1SecondGroup.json");
-        HttpResponse response = scim1Group.updateGroup(client, updateUserJSON, groupId, ADMIN_USERNAME, ADMIN_PASSWORD);
+        JSONObject updateGroupJSON = scim1Group.getRoleJSON("scim1SecondGroup.json");
+        HttpResponse response = scim1Group
+                .updateGroup(client, updateGroupJSON, groupId, ADMIN_USERNAME, ADMIN_PASSWORD);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_INTERNAL_SERVER_ERROR,
-            "Failed to delete the group");
+                "Failed to delete the group");
     }
 
     @Test(dependsOnMethods = "testSCIM1UpdateExistingGroup")
     private void testSCIM1UpdateGroup() throws Exception {
 
-        JSONObject updateUserJSON = scim1Group.getRoleJSON("scim1UpdateGroup.json");
-        HttpResponse response = scim1Group.updateGroup(client, updateUserJSON, groupId, ADMIN_USERNAME, ADMIN_PASSWORD);
-        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK, "Failed to delete the group");
+        JSONObject updateGroupJSON = scim1Group.getRoleJSON("scim1UpdateGroup.json");
+        HttpResponse response = scim1Group
+                .updateGroup(client, updateGroupJSON, groupId, ADMIN_USERNAME, ADMIN_PASSWORD);
+        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK, "Failed to update the group");
 
-        JSONObject returnedUserJSON = getJSONFromResponse(response);
-        groupId = returnedUserJSON.get(SCIM1Constants.ID_ATTRIBUTE).toString();
+        JSONObject returnedGroupJSON = getJSONFromResponse(response);
+        groupId = returnedGroupJSON.get(SCIM1Constants.ID_ATTRIBUTE).toString();
         assertNotNull(groupId, "SCIM1 group id not available in the response.");
         EntityUtils.consume(response.getEntity());
     }

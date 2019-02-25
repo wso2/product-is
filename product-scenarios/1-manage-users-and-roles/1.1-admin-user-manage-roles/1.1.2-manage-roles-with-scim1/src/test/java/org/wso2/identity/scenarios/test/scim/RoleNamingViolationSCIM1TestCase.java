@@ -47,8 +47,8 @@ public class RoleNamingViolationSCIM1TestCase extends ScenarioTestBase {
     @Test
     public void testSCAM1CreateGroupWithSpecialCharacter() throws Exception {
 
-        JSONObject userJSON = scim1Group.getRoleJSON("scim1SpecialCharacterGroupName.json");
-        HttpResponse response = scim1Group.provisionGroup(client, userJSON, ADMIN_USERNAME, ADMIN_PASSWORD);
+        JSONObject groupJSON = scim1Group.getRoleJSON("scim1SpecialCharacterGroupName.json");
+        HttpResponse response = scim1Group.provisionGroup(client, groupJSON, ADMIN_USERNAME, ADMIN_PASSWORD);
 
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_INTERNAL_SERVER_ERROR,
             "Group has not been created successfully");
@@ -58,8 +58,8 @@ public class RoleNamingViolationSCIM1TestCase extends ScenarioTestBase {
     @Test(dependsOnMethods = "testSCAM1CreateGroupWithSpecialCharacter")
     public void testSCIM1CreateGroupWithMinimumCharacter() throws Exception {
 
-        JSONObject userJSON = scim1Group.getRoleJSON("scim1MinimumSpaceGroupName.json");
-        HttpResponse response = scim1Group.provisionGroup(client, userJSON, ADMIN_USERNAME, ADMIN_PASSWORD);
+        JSONObject groupJSON = scim1Group.getRoleJSON("scim1MinimumSpaceGroupName.json");
+        HttpResponse response = scim1Group.provisionGroup(client, groupJSON, ADMIN_USERNAME, ADMIN_PASSWORD);
 
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_INTERNAL_SERVER_ERROR,
             "Group has not been created successfully");
