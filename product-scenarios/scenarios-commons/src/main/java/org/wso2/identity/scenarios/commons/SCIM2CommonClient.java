@@ -108,8 +108,6 @@ public class SCIM2CommonClient {
     public HttpResponse provisionUser(HttpClient client, JSONObject userJSON, String username, String password)
             throws Exception {
 
-        System.out.println(getSCIM2UsersEndpoint());
-        System.out.println(userJSON.toJSONString());
         return sendPostRequestWithJSON(client, getSCIM2UsersEndpoint(), userJSON, getCommonHeaders(username, password));
     }
 
