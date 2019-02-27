@@ -115,5 +115,37 @@
     "symmetric": {
       "encryption.internal_crypto_provider": "org.wso2.carbon.crypto.provider.SymmetricKeyInternalCryptoProvider"
     }
+  },
+
+  "identity.auth_framework.endpoint.mutual_ssl_manager_enabled": {
+    "true": {
+      "identity.auth_framework.endpoint.hostname_verification_enabled" : true,
+      "identity.auth_framework.endpoint.mutual_ssl_username" : "admin",
+      "identity.auth_framework.endpoint.client_keystore" : "$conf{keystore.tls.file_name}",
+      "identity.auth_framework.endpoint.carbon_security_keystore_password" : "$conf{keystore.tls.password}",
+      "identity.auth_framework.endpoint.client_truststore" : "$conf{truststore.file_name}",
+      "identity.auth_framework.endpoint.carbon_security_truststore_password" : "$conf{truststore.password}",
+      "identity.auth_framework.endpoint.identity_server_service_url" : "https://$conf{deployment.hostname}:$conf{deployment.port}/services/",
+      "identity.auth_framework.endpoint.username_header" : "UserName",
+      "identity.auth_framework.endpoint.key_manager_type" : "$conf{keystore.tls.type}",
+      "identity.auth_framework.endpoint.trust_manager_type" : "$conf{truststore.type}",
+      "identity.auth_framework.endpoint.tls_protocol" : "TLSv1.2"
+    }
+  },
+
+  "identity.auth_framework.endpoint.tenant_list_enabled": {
+    "true": {
+      "identity.auth_framework.endpoint.hostname_verification_enabled" : true,
+      "identity.auth_framework.endpoint.mutual_ssl_username" : "admin",
+      "identity.auth_framework.endpoint.client_keystore" : "$conf{keystore.tls.file_name}",
+      "identity.auth_framework.endpoint.carbon_security_keystore_password" : "$conf{keystore.tls.password}",
+      "identity.auth_framework.endpoint.client_truststore" : "$conf{truststore.file_name}",
+      "identity.auth_framework.endpoint.carbon_security_truststore_password" : "$conf{truststore.password}",
+      "identity.auth_framework.endpoint.identity_server_service_url" : "https://$conf{deployment.hostname}:$conf{deployment.port}/services/",
+      "identity.auth_framework.endpoint.username_header" : "UserName",
+      "identity.auth_framework.endpoint.key_manager_type" : "$conf{keystore.tls.type}",
+      "identity.auth_framework.endpoint.trust_manager_type" : "$conf{truststore.type}",
+      "identity.auth_framework.endpoint.tls_protocol" : "TLSv1.2"
+    }
   }
 }
