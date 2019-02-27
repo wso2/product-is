@@ -1,0 +1,190 @@
+{
+  "identity.auth_framework.proxy_mode": "smart",
+  "identity.auth_framework.login_page_url": "/authenticationendpoint/login.do",
+  "identity.auth_framework.retry_page_url": "/authenticationendpoint/retry.do",
+  "identity.auth_framework.request_claim_page_url": "/authenticationendpoint/claims.do",
+  "identity.auth_framework.request_coordinator": "org.wso2.carbon.identity.application.authentication.framework.handler.request.impl.DefaultRequestCoordinator",
+  "identity.auth_framework.auth_request_handler": "org.wso2.carbon.identity.application.authentication.framework.handler.request.impl.DefaultAuthenticationRequestHandler",
+  "identity.auth_framework.logout_request_handler": "org.wso2.carbon.identity.application.authentication.framework.handler.request.impl.DefaultLogoutRequestHandler",
+  "identity.auth_framework.step_based_sequence_handler": "org.wso2.carbon.identity.application.authentication.framework.handler.sequence.impl.GraphBasedSequenceHandler",
+  "identity.auth_framework.request_path_based_sequence_handler": "org.wso2.carbon.identity.application.authentication.framework.handler.sequence.impl.DefaultRequestPathBasedSequenceHandler",
+  "identity.auth_framework.step_handler": "org.wso2.carbon.identity.application.authentication.framework.handler.step.impl.GraphBasedStepHandler",
+  "identity.auth_framework.home_realm_discoverer": "org.wso2.carbon.identity.application.authentication.framework.handler.hrd.impl.DefaultHomeRealmDiscoverer",
+  "identity.auth_framework.claim_handler": "org.wso2.carbon.identity.application.authentication.framework.handler.claims.impl.DefaultClaimHandler",
+  "identity.auth_framework.provisioning_handler": "org.wso2.carbon.identity.application.authentication.framework.handler.provisioning.impl.DefaultProvisioningHandler",
+  "identity.auth_framework.authenticators": [
+    {
+      "name": "BasicAuthenticator",
+      "alias": "basic",
+      "parameters": {
+        "AuthMechanism": "basic"
+      }
+    },
+    {
+      "name": "OAuthRequestPathAuthenticator",
+      "alias": "oauth-bearer"
+    },
+    {
+      "name": "IWAAuthenticator",
+      "alias": "iwa"
+    },
+    {
+      "name": "SAMLSSOAuthenticator",
+      "alias": "samlsso"
+    },
+    {
+      "name": "OpenIDConnectAuthenticator",
+      "alias": "openidconnect"
+    },
+    {
+      "name": "PassiveSTSAuthenticator",
+      "alias": "passive-sts"
+    },
+    {
+      "name": "BasicAuthRequestPathAuthenticator",
+      "alias": "basic-auth",
+      "parameters": {
+        "AuthMechanism": "basic"
+      }
+    },
+    {
+      "name": "IdentifierExecutor",
+      "parameters": {
+        "ValidateUsername": "false"
+      }
+    },
+    {
+      "name": "FIDOAuthenticator",
+      "parameters": {
+        "FidoAuth": "/authenticationendpoint/fido-auth.jsp"
+      }
+    },
+    {
+      "name": "GoogleOIDCAuthenticator",
+      "parameters": {
+        "GoogleTokenEndpoint": "https://accounts.google.com/o/oauth2/token",
+        "GoogleAuthzEndpoint": "https://accounts.google.com/o/oauth2/auth",
+        "GoogleUserInfoEndpoint": "https://www.googleapis.com/oauth2/v3/userinfo"
+      }
+    },
+    {
+      "name": "MicrosoftWindowsLive",
+      "parameters": {
+        "AuthTokenEndpoint": "https://login.live.com/oauth20_token.srf",
+        "AuthnEndpoint": "https://login.live.com/oauth20_authorize.srf",
+        "UserInfoEndpoint": "https://apis.live.net/v5.0/me?access_token="
+      }
+    },
+    {
+      "name": "FacebookAuthenticator",
+      "parameters": {
+        "AuthTokenEndpoint": "https://graph.facebook.com/oauth/access_token",
+        "AuthnEndpoint": "http://www.facebook.com/dialog/oauth",
+        "UserInfoEndpoint": "https://graph.facebook.com/me"
+      }
+    },
+    {
+      "name": "YahooOAuth2Authenticator",
+      "parameters": {
+        "YahooTokenEndpoint": "https://api.login.yahoo.com/oauth2/get_token",
+        "YahooOAuthzEndpoint": "https://api.login.yahoo.com/oauth2/request_auth",
+        "YahooUserInfoEndpoint": "https://social.yahooapis.com/v1/user/"
+      }
+    },
+    {
+      "name": "MobileConnectAuthenticator",
+      "parameters": {
+        "MCAuthenticationEndpointURL": "mobileconnectauthenticationendpoint/mobileconnect.jsp",
+        "MCDiscoveryAPIURL": "https://discover.mobileconnect.io/gsma/v2/discovery/",
+        "redirectToMultiOptionPageOnFailure": "false"
+      }
+    },
+    {
+      "name": "EmailOTP",
+      "parameters": {
+        "GmailClientId": "gmailClientIdValue",
+        "GmailClientSecret": "gmailClientSecretValue",
+        "SendgridAPIKey": "sendgridAPIKeyValue",
+        "GmailRefreshToken": "gmailRefreshTokenValue",
+        "GmailEmailEndpoint": "https://www.googleapis.com/gmail/v1/users/[userId]/messages/send",
+        "SendgridEmailEndpoint": "https://api.sendgrid.com/api/mail.send.json",
+        "accessTokenRequiredAPIs": "Gmail",
+        "apiKeyHeaderRequiredAPIs": "Sendgrid",
+        "SendgridFormData": "sendgridFormDataValue",
+        "SendgridURLParams": "sendgridURLParamsValue",
+        "GmailAuthTokenType": "Bearer",
+        "GmailTokenEndpoint": "https://www.googleapis.com/oauth2/v3/token",
+        "SendgridAuthTokenType": "Bearer",
+        "redirectToMultiOptionPageOnFailure": false
+      }
+    },
+    {
+      "name": "SMSOTP",
+      "parameters": {
+        "SMSOTPAuthenticationEndpointURL": "smsotpauthenticationendpoint/smsotp.jsp",
+        "SMSOTPAuthenticationEndpointErrorPage": "smsotpauthenticationendpoint/smsotpError.jsp",
+        "MobileNumberRegPage": "smsotpauthenticationendpoint/mobile.jsp",
+        "RetryEnable": true,
+        "ResendEnable": true,
+        "BackupCode": true,
+        "SMSOTPEnableByUserClaim": true,
+        "SMSOTPMandatory": false,
+        "CaptureAndUpdateMobileNumber": true,
+        "SendOTPDirectlyToMobile": false,
+        "redirectToMultiOptionPageOnFailure": false
+      }
+    },
+    {
+      "name": "x509CertificateAuthenticator",
+      "parameters": {
+        "AuthenticationEndpoint": "https://localhost:8443/x509-certificate-servlet",
+        "username": "CN"
+      }
+    }
+  ],
+  "identity.auth_framework.outbound_query_parameter_filter_policy" : "exclude",
+  "identity.auth_framework.filtered_outbound_query_parameters": ["username","password","SAMLRequest"],
+  "identity.auth_framework.redirect_parameter_filter_policy" : "exclude",
+  "identity.auth_framework.redirect_parameter_remove_on_consume" : true,
+  "identity.auth_framework.filtered_redirect_parameters": ["loggedInUser"],
+
+
+  "identity.recaptcha.enabled" : false,
+  "identity.recaptcha.api_url" : "https://www.google.com/recaptcha/api.js",
+  "identity.recaptcha.verify_url" : "https://www.google.com/recaptcha/api/siteverify",
+
+
+  "identity.charon.properties": {
+    "user-schema-extension-enabled": true,
+    "patch-supported" : true,
+    "documentationUri" : "http://example.com/help/scim.html",
+    "bulk-supported" : true,
+    "bulk-maxOperations" : "1000",
+    "bulk-maxPayloadSize": "1048576",
+    "filter-supported" : true,
+    "filter-maxResults" : "200",
+    "changePassword" : true,
+    "sort-supported": false,
+    "etag-supported" : false,
+    "pagination-default-count" : "100"
+  },
+  "identity.charon.enabled_auth_schemes": ["oauth_bearer","http_basic"],
+  "identity.charon.authentication_schemes":{
+    "oauth_bearer": {
+      "name": "OAuth Bearer Token",
+      "description": "Authentication scheme using the OAuth Bearer Token Standard",
+      "specUri": "http://www.rfc-editor.org/info/rfc6750",
+      "documentationUri": "http://example.com/help/oauth.html",
+      "type": "oauthbearertoken",
+      "primary": true
+    },
+    "http_basic": {
+      "name": "HTTP Basic",
+      "description": "Authentication scheme using the HTTP Basic Standard",
+      "specUri": "http://www.rfc-editor.org/info/rfc2617",
+      "documentationUri": "http://example.com/help/httpBasic.html",
+      "type": "httpbasic",
+      "primary": false
+    }
+  }
+}
