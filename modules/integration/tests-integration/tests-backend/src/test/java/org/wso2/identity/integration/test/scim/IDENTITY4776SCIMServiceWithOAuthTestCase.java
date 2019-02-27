@@ -148,10 +148,10 @@ public class IDENTITY4776SCIMServiceWithOAuthTestCase extends OAuth2ServiceAbstr
 
     private void addSecondaryUserStore() throws Exception {
         String jdbcClass = "org.wso2.carbon.user.core.jdbc.JDBCUserStoreManager";
-        H2DataBaseManager dbmanager = new H2DataBaseManager("jdbc:h2:" + ServerConfigurationManager.getCarbonHome()
+        H2DataBaseManager dbmanager = new H2DataBaseManager("jdbc:h2:" + Utils.getResidentCarbonHome()
                 + "/repository/database/" + USER_STORE_DB_NAME,
                 DB_USER_NAME, DB_USER_PASSWORD);
-        dbmanager.executeUpdate(new File(ServerConfigurationManager.getCarbonHome() + "/dbscripts/h2.sql"));
+        dbmanager.executeUpdate(new File(Utils.getResidentCarbonHome() + "/dbscripts/h2.sql"));
         dbmanager.disconnect();
 
         PropertyDTO[] propertyDTOs = new PropertyDTO[10];
