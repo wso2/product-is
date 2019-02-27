@@ -86,11 +86,7 @@ public class OIDCDiscoveryTestCase extends ISIntegrationTest {
         Object links = ((JSONObject)obj).get("links");
         Assert.assertNotNull(links);
         discoveryBasePath = ((JSONObject)((JSONArray)links).get(0)).get("href").toString();
-        String urlExpected = isServerBackendUrl;
-        if (StringUtils.isNotBlank(config.getTenant())){
-            urlExpected = urlExpected + "/t/" + config.getTenant();
-        }
-        urlExpected = urlExpected + "/oauth2/oidcdiscovery";
+        String urlExpected = isServerBackendUrl + "/oauth2/token";
         Assert.assertEquals(discoveryBasePath, urlExpected);
     }
 
