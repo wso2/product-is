@@ -186,5 +186,9 @@
       "type": "httpbasic",
       "primary": false
     }
-  }
+  },
+
+
+  "identity.auth_framework.endpoint.tenant_list_enabled" : false,
+  "identity.auth_framework.endpoint.mutual_ssl_manager_enabled" : true
 }
