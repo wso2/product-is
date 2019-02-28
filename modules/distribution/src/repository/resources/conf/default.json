@@ -190,5 +190,67 @@
 
 
   "identity.auth_framework.endpoint.tenant_list_enabled" : false,
-  "identity.auth_framework.endpoint.mutual_ssl_manager_enabled" : true
+  "identity.auth_framework.endpoint.mutual_ssl_manager_enabled" : true,
+
+
+  "identity.entitlement.policy_point": {
+    "pdp": {
+      "enabled": false,
+      "default_caching_interval": "300",
+      "caching": {
+        "decision_caching": {
+          "enabled": true,
+          "caching_interval": "{{identity.entitlement.policy_point.pdp.default_caching_interval}}"
+        },
+        "attribute_caching": {
+          "enabled": true,
+          "caching_interval": "{{identity.entitlement.policy_point.pdp.default_caching_interval}}"
+        },
+        "resource_caching": {
+          "enabled": true,
+          "caching_interval": "{{identity.entitlement.policy_point.pdp.default_caching_interval}}"
+        },
+        "policy_caching": {
+          "caching_interval": "100"
+        }
+      },
+      "schema_validation_enabled": true,
+      "balana_config_enabled": true,
+      "multiple_decision_profile_enabled": true,
+      "global_policy_combining_algorithm": "urn:oasis:names:tc:xacml:3.0:policy-combining-algorithm:deny-overrides",
+      "registry_level_policy_cache_clear": false,
+      "reference_max_policy_entries": "3000",
+      "policy_finders": [
+        "org.wso2.carbon.identity.entitlement.policy.store.RegistryPolicyStoreManageModule"
+      ],
+      "policy_store_module": "org.wso2.carbon.identity.entitlement.policy.store.RegistryPolicyStoreManageModule",
+      "policy_data_store_module": "org.wso2.carbon.identity.entitlement.policy.store.DefaultPolicyDataStore"
+    },
+    "pap": {
+      "enabled": true,
+      "policy_add_start_enable": true,
+      "items_per_page": "10",
+      "entitlement_data_finders": [
+        "org.wso2.carbon.identity.entitlement.pap.CarbonEntitlementDataFinder"
+      ],
+      "policy_publisher_modules": [
+        "org.wso2.carbon.identity.entitlement.policy.publisher.CarbonBasicPolicyPublisherModule"
+      ],
+      "policy_version_module": "org.wso2.carbon.identity.entitlement.policy.version.DefaultPolicyVersionManager",
+      "status_data_handlers": [
+        "org.wso2.carbon.identity.entitlement.SimplePAPStatusDataHandler"
+      ]
+    },
+    "pip": {
+      "attribute_designators": [
+        "org.wso2.carbon.identity.entitlement.pip.DefaultAttributeFinder",
+        "org.wso2.carbon.identity.application.authz.xacml.pip.AuthenticationContextAttributePIP"
+      ],
+      "resource_finders": [
+        "org.wso2.carbon.identity.entitlement.pip.DefaultResourceFinder"
+      ]
+    }
+  },
+  "identity.entitlement.entitlement_engine_caching_interval": "100000",
+  "identity.entitlement.JSON_shorten_form_enabled": false
 }
