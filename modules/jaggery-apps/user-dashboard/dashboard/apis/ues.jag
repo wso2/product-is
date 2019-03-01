@@ -2,9 +2,8 @@
 response.addHeader("Access-Control-Allow-Origin", "*");
 response.addHeader("Content-Type", "application/json");
 
-var util = require("/util/utility.jag");
-util.setServerURL("false");
-var serverHttpsUrl = application.get(SERVER_CORE_URL);
+var identityServerURL = Packages.org.wso2.carbon.identity.core.util.IdentityUtil;
+var serverHttpsUrl = identityServerURL.getServerURL("", true, false);
 
 (function () {
 
