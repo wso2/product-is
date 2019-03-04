@@ -190,5 +190,50 @@
 
 
   "identity.auth_framework.endpoint.tenant_list_enabled" : false,
-  "identity.auth_framework.endpoint.mutual_ssl_manager_enabled" : true
+  "identity.auth_framework.endpoint.mutual_ssl_manager_enabled" : true,
+
+
+
+  "identity.entitlement.policy_point.pdp.enabled": false,
+  "identity.entitlement.policy_point.pdp.default_caching_interval": "300",
+  "identity.entitlement.policy_point.pdp.caching.decision_caching.enabled": true,
+  "identity.entitlement.policy_point.pdp.caching.decision_caching.caching_interval": "$conf{identity.entitlement.policy_point.pdp.default_caching_interval}",
+  "identity.entitlement.policy_point.pdp.caching.attribute_caching.enabled": true,
+  "identity.entitlement.policy_point.pdp.caching.attribute_caching.caching_interval": "$conf{identity.entitlement.policy_point.pdp.default_caching_interval}",
+  "identity.entitlement.policy_point.pdp.caching.resource_caching.enabled": true,
+  "identity.entitlement.policy_point.pdp.caching.resource_caching.caching_interval": "$conf{identity.entitlement.policy_point.pdp.default_caching_interval}",
+  "identity.entitlement.policy_point.pdp.caching.policy_caching.caching_interval": "100",
+  "identity.entitlement.policy_point.pdp.schema_validation_enabled": true,
+  "identity.entitlement.policy_point.pdp.balana_config_enabled": true,
+  "identity.entitlement.policy_point.pdp.multiple_decision_profile_enabled": true,
+  "identity.entitlement.policy_point.pdp.global_policy_combining_algorithm": "urn:oasis:names:tc:xacml:3.0:policy-combining-algorithm:deny-overrides",
+  "identity.entitlement.policy_point.pdp.registry_level_policy_cache_clear": false,
+  "identity.entitlement.policy_point.pdp.reference_max_policy_entries": "3000",
+  "identity.entitlement.policy_point.pdp.policy_finders": [
+    "org.wso2.carbon.identity.entitlement.policy.store.RegistryPolicyStoreManageModule"
+  ],
+  "identity.entitlement.policy_point.pdp.policy_store_module": "org.wso2.carbon.identity.entitlement.policy.store.RegistryPolicyStoreManageModule",
+  "identity.entitlement.policy_point.pdp.policy_data_store_module": "org.wso2.carbon.identity.entitlement.policy.store.DefaultPolicyDataStore",
+  "identity.entitlement.policy_point.pap.enabled": true,
+  "identity.entitlement.policy_point.pap.policy_add_start_enable": true,
+  "identity.entitlement.policy_point.pap.items_per_page": "10",
+  "identity.entitlement.policy_point.pap.entitlement_data_finders": [
+    "org.wso2.carbon.identity.entitlement.pap.CarbonEntitlementDataFinder"
+  ],
+  "identity.entitlement.policy_point.pap.policy_publisher_modules": [
+    "org.wso2.carbon.identity.entitlement.policy.publisher.CarbonBasicPolicyPublisherModule"
+  ],
+  "identity.entitlement.policy_point.pap.policy_version_module": "org.wso2.carbon.identity.entitlement.policy.version.DefaultPolicyVersionManager",
+  "identity.entitlement.policy_point.pap.status_data_handlers": [
+    "org.wso2.carbon.identity.entitlement.SimplePAPStatusDataHandler"
+  ],
+  "identity.entitlement.policy_point.pip.attribute_designators": [
+    "org.wso2.carbon.identity.entitlement.pip.DefaultAttributeFinder",
+    "org.wso2.carbon.identity.application.authz.xacml.pip.AuthenticationContextAttributePIP"
+  ],
+  "identity.entitlement.policy_point.pip.resource_finders": [
+    "org.wso2.carbon.identity.entitlement.pip.DefaultResourceFinder"
+  ],
+  "identity.entitlement.entitlement_engine_caching_interval": "100000",
+  "identity.entitlement.JSON_shorten_form_enabled": false
 }
