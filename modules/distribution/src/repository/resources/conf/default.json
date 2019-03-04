@@ -235,5 +235,188 @@
     "org.wso2.carbon.identity.entitlement.pip.DefaultResourceFinder"
   ],
   "identity.entitlement.entitlement_engine_caching_interval": "100000",
-  "identity.entitlement.JSON_shorten_form_enabled": false
+  "identity.entitlement.JSON_shorten_form_enabled": false,
+
+
+  "identity.events.threadPool_size": "10",
+  "identity.events.schemes": {
+    "account.lock.handler": {
+      "subscriptions": [
+        "PRE_AUTHENTICATION",
+        "POST_AUTHENTICATION",
+        "PRE_SET_USER_CLAIMS",
+        "POST_SET_USER_CLAIMS"
+      ],
+      "properties": {
+        "enable": false,
+        "login.fail.timeout.ratio": "2",
+        "On.Failure.Max.Attempts": "5",
+        "Time": "5",
+        "notification.manageInternally": true
+      }
+    },
+    "emailSend": {
+      "subscriptions": [
+        "TRIGGER_NOTIFICATION"
+      ]
+    },
+    "accountConfirmationValidation": {
+      "subscriptions": [
+        "PRE_AUTHENTICATION"
+      ]
+    },
+    "passwordHistory": {
+      "subscriptions": [
+        "PRE_UPDATE_CREDENTIAL",
+        "PRE_UPDATE_CREDENTIAL_BY_ADMIN",
+        "POST_UPDATE_CREDENTIAL",
+        "POST_UPDATE_CREDENTIAL_BY_ADMIN",
+        "POST_ADD_USER",
+        "POST_DELETE_USER"
+      ],
+      "properties": {
+        "enable": false,
+        "count": "5",
+        "hashingAlgorithm": "SHA-256",
+        "dataStore": "org.wso2.carbon.identity.password.history.store.Impl.DefaultPasswordHistoryDataStore"
+      }
+    },
+    "account.disable.handler": {
+      "subscriptions": [
+        "PRE_AUTHENTICATION",
+        "PRE_SET_USER_CLAIMS",
+        "POST_SET_USER_CLAIMS"
+      ],
+      "properties": {
+        "enable": false,
+        "notification.manageInternally": true
+      }
+    },
+    "userSelfRegistration": {
+      "subscriptions": [
+        "POST_ADD_USER"
+      ]
+    },
+    "userEmailVerification": {
+      "subscriptions": [
+        "PRE_ADD_USER",
+        "POST_ADD_USER"
+      ]
+    },
+    "passwordPolicy": {
+      "subscriptions": [
+        "PRE_UPDATE_CREDENTIAL",
+        "PRE_UPDATE_CREDENTIAL_BY_ADMIN",
+        "PRE_ADD_USER"
+      ],
+      "properties": {
+        "min.length": "6",
+        "max.length": "12",
+        "pattern": "^((?=.*\\\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*])).{0,100}$",
+        "errorMsg": "'Password pattern policy violated. Password should contain a digit[0-9], a lower case letter[a-z], an upper case letter[A-Z], and one of !@#$%&* characters'",
+        "class.PasswordLengthPolicy": "org.wso2.carbon.identity.mgt.policy.password.DefaultPasswordLengthPolicy",
+        "class.PasswordNamePolicy": "org.wso2.carbon.identity.mgt.policy.password.DefaultPasswordNamePolicy",
+        "class.PasswordPatternPolicy": "org.wso2.carbon.identity.mgt.policy.password.DefaultPasswordPatternPolicy",
+        "enable": false
+      }
+    },
+    "adminForcedPasswordReset": {
+      "subscriptions": [
+        "PRE_SET_USER_CLAIMS",
+        "PRE_AUTHENTICATION"
+      ]
+    },
+    "suspension.notification": {
+      "subscriptions": [
+        "POST_AUTHENTICATION"
+      ],
+      "properties": {
+        "enable": false,
+        "account.disable.delay": "90",
+        "trigger.time": "20:00:00",
+        "delays": "30,45,60,75"
+      }
+    },
+    "handleRequestObject": {
+      "subscriptions": [
+        "POST_REVOKE_ACESS_TOKEN",
+        "POST_REVOKE_CODE",
+        "POST_REVOKE_ACESS_TOKEN_BY_ID",
+        "POST_REVOKE_CODE_BY_ID",
+        "POST_REFRESH_TOKEN",
+        "POST_ISSUE_CODE",
+        "POST_ISSUE_ACCESS_TOKEN"
+      ]
+    },
+    "user.consent.delete": {
+      "subscriptions": [
+        "POST_DELETE_USER"
+      ],
+      "properties": {
+        "receipt.search.limit": "500"
+      }
+    },
+    "authenticationAuditLogger": {
+      "subscriptions": [
+        "AUTHENTICATION_STEP_SUCCESS",
+        "AUTHENTICATION_STEP_FAILURE",
+        "AUTHENTICATION_SUCCESS",
+        "AUTHENTICATION_FAILURE",
+        "SESSION_TERMINATE"
+      ],
+      "properties": {
+        "enable": true
+      }
+    },
+    "analyticsLoginDataPublisher": {
+      "subscriptions": [
+        "AUTHENTICATION_STEP_SUCCESS",
+        "AUTHENTICATION_STEP_FAILURE",
+        "AUTHENTICATION_SUCCESS",
+        "AUTHENTICATION_FAILURE"
+      ],
+      "properties": {
+        "enable": false
+      }
+    },
+    "analyticsSessionDataPublisher": {
+      "subscriptions": [
+        "SESSION_CREATE",
+        "SESSION_UPDATE",
+        "SESSION_TERMINATE"
+      ],
+      "properties": {
+        "enable": false
+      }
+    },
+    "failLoginAttemptValidator": {
+      "subscriptions": [
+        "AUTHENTICATION_STEP_FAILURE"
+      ],
+      "properties": {
+        "enable": true
+      }
+    },
+    "SAMLLogoutHandler": {
+      "subscriptions": [
+        "SESSION_TERMINATE"
+      ],
+      "properties": {
+        "enable": true
+      }
+    },
+    "OIDCLogoutHandler": {
+      "subscriptions": [
+        "SESSION_TERMINATE"
+      ],
+      "properties": {
+        "enable": false
+      }
+    },
+    "confirmationCodesInvalidate": {
+      "subscriptions": [
+        "POST_DELETE_USER"
+      ]
+    }
+  }
 }
