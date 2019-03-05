@@ -39,7 +39,7 @@ public class IDPMetadataTestCase extends ISIntegrationTest {
     private static final String SAML_SSO = "samlsso";
 
 
-    @BeforeClass
+    @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         identityProviderMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
@@ -113,7 +113,7 @@ public class IDPMetadataTestCase extends ISIntegrationTest {
 
     }
 
-    @AfterClass
+    @AfterClass(alwaysRun = true)
     public void endTest() throws RemoteException, IdentitySAMLSSOConfigServiceIdentityException {
         try {
             identityProviderMgtServiceClient.deleteIdP(ENTITYID);

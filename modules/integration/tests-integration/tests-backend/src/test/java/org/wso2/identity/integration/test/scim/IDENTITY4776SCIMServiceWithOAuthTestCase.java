@@ -45,7 +45,6 @@ import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
-import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.charon.core.client.SCIMClient;
 import org.wso2.charon.core.schema.SCIMConstants;
 import org.wso2.identity.integration.common.clients.UserManagementClient;
@@ -53,6 +52,7 @@ import org.wso2.identity.integration.common.clients.user.store.config.UserStoreC
 import org.wso2.identity.integration.common.utils.UserStoreConfigUtils;
 import org.wso2.identity.integration.test.oauth2.OAuth2ServiceAbstractIntegrationTest;
 import org.wso2.identity.integration.test.scim.utils.SCIMUtils;
+import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -94,11 +94,11 @@ public class IDENTITY4776SCIMServiceWithOAuthTestCase extends OAuth2ServiceAbstr
         serverConfigurationManager = new ServerConfigurationManager(isServer);
         String pathToCatalinaXML = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator + "IS"
                 + File.separator + "scim" + File.separator + "IDENTITY4776" + File.separator + "catalina-server.xml";
-        String targetCatalinaXML = CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator
+        String targetCatalinaXML = Utils.getResidentCarbonHome() + File.separator + "repository" + File.separator
                 + "conf" + File.separator + "tomcat" + File.separator + "catalina-server.xml";
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
-        serverConfigurationManager.applyConfiguration(new File(pathToCatalinaXML),
-                new File(targetCatalinaXML), true, true);
+        serverConfigurationManager.applyConfigurationWithoutRestart(new File(pathToCatalinaXML),
+                new File(targetCatalinaXML), true);
+        serverConfigurationManager.restartGracefully();
 
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         LoginLogoutClient loginLogoutClient = new LoginLogoutClient(isServer);
@@ -117,8 +117,7 @@ public class IDENTITY4776SCIMServiceWithOAuthTestCase extends OAuth2ServiceAbstr
         userMgtClient.deleteUser(SECONDARY_STORE_USER_NAME);
         userMgtClient.deleteRole(SECONDARY_STORE_USER_ROLE);
         userStoreConfigAdminServiceClient.deleteUserStore(DOMAIN_ID);
-        serverConfigurationManager.restoreToLastConfiguration();
-        log.info("Restored configuration and restarted gracefully...");
+        serverConfigurationManager.restoreToLastConfiguration(false);
     }
 
     @Test(groups = "wso2.is", description = "loginUsingSecondaryUserStoreUser")

@@ -20,7 +20,6 @@ package org.wso2.identity.integration.test.postAuthnHandler;
 
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
-import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -61,10 +60,8 @@ import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -103,7 +100,6 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
     private SAMLSSOConfigServiceClient ssoConfigServiceClient;
     private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
     private SAMLConfig config;
-    private Tomcat tomcatServer;
     private IdentityProviderMgtServiceClient superTenantIDPMgtClient;
     private IdentityProviderMgtServiceClient tenantIDPMgtClient;
     private IdentityProvider superTenantResidentIDP;
@@ -139,14 +135,6 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
         createUser();
         createApplication();
 
-        //Starting tomcat
-        log.info("Starting Tomcat");
-        tomcatServer = Utils.getTomcat(getClass());
-
-        URL resourceUrl = getClass()
-                .getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR + config.getApp().getArtifact() + ".war");
-        Utils.startTomcat(tomcatServer, "/" + config.getApp().getArtifact(), resourceUrl.getPath());
-
         AuthenticatorClient logManager = new AuthenticatorClient(backendURL);
         String secondaryTenantDomain = isServer.getTenantList().get(1);
 
@@ -163,13 +151,10 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
         deleteUser();
         deleteApplication();
 
+        updateResidentIDPProperty(superTenantResidentIDP, FORCE_ADD_PW_RECOVERY_QUESTION, "false", true);
         ssoConfigServiceClient = null;
         applicationManagementServiceClient = null;
         remoteUSMServiceClient = null;
-        //Stopping tomcat
-        tomcatServer.stop();
-        tomcatServer.destroy();
-        Thread.sleep(10000);
     }
 
     @Test(description = "Add service provider", groups = "wso2.is", priority = 1)

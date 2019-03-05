@@ -85,13 +85,9 @@ public class OIDCDiscoveryTestCase extends ISIntegrationTest {
         Object obj= JSONValue.parse(response);
         Object links = ((JSONObject)obj).get("links");
         Assert.assertNotNull(links);
-        discoveryBasePath = ((JSONObject)((JSONArray)links).get(0)).get("href").toString();
-        String urlExpected = isServerBackendUrl;
-        if (StringUtils.isNotBlank(config.getTenant())){
-            urlExpected = urlExpected + "/t/" + config.getTenant();
-        }
-        urlExpected = urlExpected + "/oauth2/oidcdiscovery";
-        Assert.assertEquals(discoveryBasePath, urlExpected);
+        String openIdProviderIssuerLocation = ((JSONObject)((JSONArray)links).get(0)).get("href").toString();
+        String urlExpected = isServerBackendUrl + "/oauth2/token";
+        Assert.assertEquals(openIdProviderIssuerLocation, urlExpected);
     }
 
     @Test(alwaysRun = true, groups = "wso2.is", description = "Discovery test", dependsOnMethods = { "testWebFinger" })
@@ -104,12 +100,7 @@ public class OIDCDiscoveryTestCase extends ISIntegrationTest {
         clientConfig.handlers(basicAuth);
 
         RestClient restClient = new RestClient(clientConfig);
-        String discoveryUrl;
-        if(discoveryBasePath.endsWith("/")){
-            discoveryUrl = discoveryBasePath + ".well-known/openid-configuration";
-        }else {
-            discoveryUrl = discoveryBasePath + "/.well-known/openid-configuration";
-        }
+        String discoveryUrl = isServerBackendUrl + "/oauth2/oidcdiscovery/.well-known/openid-configuration";
         Resource userResource = restClient.resource(discoveryUrl);
         String response = userResource.accept(SCIMConstants.APPLICATION_JSON).get(String.class);
         Object obj= JSONValue.parse(response);

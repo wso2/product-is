@@ -72,12 +72,8 @@ public abstract class VersionMigration {
             Class<?> migratorClass = Class.forName(basePackage + "." + migratorName);
             Migrator migrator = (Migrator)migratorClass.newInstance();
             return migrator ;
-        } catch (ClassNotFoundException e) {
-            log.error("Error while creating migration instance");
-        } catch (InstantiationException e) {
-            log.error("Error while creating migration instance");
-        } catch (IllegalAccessException e) {
-            log.error("Error while creating migration instance");
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            log.error("Error while creating migration instance", e);
         }
         return null;
     }

@@ -26,8 +26,7 @@ import org.wso2.carbon.core.util.CryptoException;
 import org.wso2.carbon.identity.core.migrate.MigrationClientException;
 import org.wso2.carbon.identity.core.util.IdentityIOStreamUtils;
 import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
-import org.wso2.carbon.is.migration.internal.ISMigrationServiceDataHolder;
-import org.wso2.carbon.is.migration.service.v550.util.EncryptionUtil;
+import org.wso2.carbon.is.migration.util.EncryptionUtil;
 import org.wso2.carbon.is.migration.util.Utility;
 import org.wso2.carbon.registry.core.Collection;
 import org.wso2.carbon.registry.core.Registry;
@@ -84,6 +83,7 @@ public class RegistryDataManager {
         carbonContext.setTenantDomain(tenant.getDomain());
     }
 
+    @Deprecated
     public void migrateSubscriberPassword(boolean migrateActiveTenantsOnly)
             throws UserStoreException, MigrationClientException {
 
@@ -114,12 +114,51 @@ public class RegistryDataManager {
         }
     }
 
+    public void migrateSubscriberPassword(boolean migrateActiveTenantsOnly, boolean continueOnError)
+            throws UserStoreException, MigrationClientException {
+
+        //migrating super tenant configurations
+        try {
+            migrateSubscriberDataForTenant(SUPER_TENANT_ID);
+            log.info("Policy Subscribers migrated for tenant: " + SUPER_TENANT_DOMAIN_NAME);
+        } catch (Exception e) {
+            String msg = "Error while migrating Policy Subscribers for tenant: " + SUPER_TENANT_DOMAIN_NAME;
+            if (!continueOnError) {
+                throw new MigrationClientException(msg, e);
+            }
+            log.error(msg, e);
+        }
+
+        //migrating tenant configurations
+        Set<Tenant> tenants = Utility.getTenants();
+        for (Tenant tenant : tenants) {
+            if (migrateActiveTenantsOnly && !tenant.isActive()) {
+                log.info("Tenant " + tenant.getDomain() + " is inactive. Skipping Subscriber migration!");
+                continue;
+            }
+            try {
+                startTenantFlow(tenant);
+                migrateSubscriberDataForTenant(tenant.getId());
+                log.info("Subscribers migrated for tenant : " + tenant.getDomain());
+            } catch (Exception e) {
+                String msg = "Error while migrating Subscribers for tenant : " + tenant.getDomain();
+                if (!continueOnError) {
+                    throw new MigrationClientException(msg, e);
+                }
+                log.error(msg, e);
+            } finally {
+                PrivilegedCarbonContext.endTenantFlow();
+            }
+        }
+    }
+
     /**
      * Method to migrate encrypted password of key stores
      *
      * @param migrateActiveTenantsOnly
      * @throws Exception
      */
+    @Deprecated
     public void migrateKeyStorePassword(boolean migrateActiveTenantsOnly) throws Exception {
 
         //migrating super tenant configurations
@@ -127,7 +166,7 @@ public class RegistryDataManager {
             migrateKeyStorePasswordForTenant(SUPER_TENANT_ID);
             log.info("Keystore passwords migrated for tenant : " + SUPER_TENANT_DOMAIN_NAME);
         } catch (Exception e) {
-            log.error("Error while migrating Keystore passwords for tenant : " + SUPER_TENANT_DOMAIN_NAME);
+            log.error("Error while migrating Keystore passwords for tenant : " + SUPER_TENANT_DOMAIN_NAME, e);
             throw e;
         }
 
@@ -143,8 +182,51 @@ public class RegistryDataManager {
                 migrateKeyStorePasswordForTenant(tenant.getId());
                 log.info("Keystore passwords migrated for tenant : " + tenant.getDomain());
             } catch (Exception e) {
-                log.error("Error while migrating keystore passwords for tenant : " + tenant.getDomain());
+                log.error("Error while migrating keystore passwords for tenant : " + tenant.getDomain(), e);
                 throw e;
+            } finally {
+                PrivilegedCarbonContext.endTenantFlow();
+            }
+        }
+    }
+
+
+    /**
+     * Method to migrate encrypted password of key stores
+     *
+     * @param migrateActiveTenantsOnly
+     * @param continueOnError
+     * @throws Exception
+     */
+    public void migrateKeyStorePassword(boolean migrateActiveTenantsOnly, boolean continueOnError) throws Exception {
+
+        //migrating super tenant configurations
+        try {
+            migrateKeyStorePasswordForTenant(SUPER_TENANT_ID);
+            log.info("Keystore passwords migrated for tenant: " + SUPER_TENANT_DOMAIN_NAME);
+        } catch (Exception e) {
+            if (!continueOnError) {
+                throw e;
+            }
+            log.error("Error while migrating Keystore passwords for tenant: " + SUPER_TENANT_DOMAIN_NAME, e);
+        }
+
+        //migrating tenant configurations
+        Set<Tenant> tenants = Utility.getTenants();
+        for (Tenant tenant : tenants) {
+            if (migrateActiveTenantsOnly && !tenant.isActive()) {
+                log.info("Tenant " + tenant.getDomain() + " is inactive. Skipping keystore passwords migration!");
+                continue;
+            }
+            try {
+                startTenantFlow(tenant);
+                migrateKeyStorePasswordForTenant(tenant.getId());
+                log.info("Keystore passwords migrated for tenant : " + tenant.getDomain());
+            } catch (Exception e) {
+                if (!continueOnError) {
+                    throw e;
+                }
+                log.error("Error while migrating keystore passwords for tenant : " + tenant.getDomain(), e);
             } finally {
                 PrivilegedCarbonContext.endTenantFlow();
             }
@@ -157,6 +239,7 @@ public class RegistryDataManager {
      * @param migrateActiveTenantsOnly
      * @throws UserStoreException,RegistryException,CryptoException,MigrationClientException
      */
+    @Deprecated
     public void migrateSysLogPropertyPassword(boolean migrateActiveTenantsOnly)
             throws UserStoreException, RegistryException, CryptoException, MigrationClientException {
 
@@ -183,6 +266,48 @@ public class RegistryDataManager {
     }
 
     /**
+     * Method to migrate encrypted password of SYSLOG_PROPERTIES registry resource
+     *
+     * @param continueOnError
+     * @param migrateActiveTenantsOnly
+     * @throws UserStoreException,RegistryException,CryptoException,MigrationClientException
+     */
+    public void migrateSysLogPropertyPassword(boolean migrateActiveTenantsOnly, boolean continueOnError)
+            throws UserStoreException, RegistryException, CryptoException, MigrationClientException {
+
+        //migrating super tenant configurations
+        try {
+            migrateSysLogPropertyPasswordForTenant(SUPER_TENANT_ID);
+            log.info("Sys log property password migrated for tenant : " + SUPER_TENANT_DOMAIN_NAME);
+        } catch (Exception e) {
+            String msg = "Error while migrating Sys log property password for tenant : " + SUPER_TENANT_DOMAIN_NAME;
+            if (!continueOnError) {
+                throw e;
+            }
+            log.error(msg, e);
+        }
+        Set<Tenant> tenants = Utility.getTenants();
+        for (Tenant tenant : tenants) {
+            if (migrateActiveTenantsOnly && !tenant.isActive()) {
+                log.info("Tenant " + tenant.getDomain() + " is inactive. Skipping SYSLOG_PROPERTIES file migration. ");
+                continue;
+            }
+            try {
+                startTenantFlow(tenant);
+                migrateSysLogPropertyPasswordForTenant(tenant.getId());
+
+            } catch (RegistryException | CryptoException e) {
+                if (!continueOnError) {
+                    throw e;
+                }
+                log.error("Error while migrating Sys log property password for tenant: " + tenant.getDomain(), e);
+            } finally {
+                PrivilegedCarbonContext.endTenantFlow();
+            }
+        }
+    }
+
+    /**
      * Method to migrate encrypted password of service principle registry resource
      *
      * @param migrateActiveTenantsOnly
@@ -190,6 +315,7 @@ public class RegistryDataManager {
      * @throws RegistryException
      * @throws UserStoreException,RegistryException,CryptoException,MigrationClientException
      */
+    @Deprecated
     public void migrateServicePrinciplePassword(boolean migrateActiveTenantsOnly) throws
             CryptoException, RegistryException, UserStoreException, MigrationClientException {
 
@@ -214,6 +340,53 @@ public class RegistryDataManager {
                 log.info("Service Principle Passwords migrated for tenant : " + tenant.getDomain());
             } catch (XMLStreamException e) {
                 log.error("Error while migrating Service Principle Passwords for tenant : " + tenant.getDomain(), e);
+            } finally {
+                PrivilegedCarbonContext.endTenantFlow();
+            }
+        }
+    }
+
+    /**
+     * Method to migrate encrypted password of service principle registry resource
+     *
+     * @param migrateActiveTenantsOnly
+     * @param continueOnError
+     * @throws CryptoException
+     * @throws RegistryException
+     * @throws UserStoreException,RegistryException,CryptoException,MigrationClientException
+     */
+    public void migrateServicePrinciplePassword(boolean migrateActiveTenantsOnly, boolean continueOnError) throws
+            CryptoException, RegistryException, UserStoreException, MigrationClientException {
+
+        //migrating super tenant configurations
+        try {
+            updateSecurityPolicyPassword(SUPER_TENANT_ID);
+            log.info("Policy Subscribers migrated for tenant: " + SUPER_TENANT_DOMAIN_NAME);
+        } catch (XMLStreamException e) {
+            String msg = "Error while migrating Policy Subscribers for tenant: " + SUPER_TENANT_DOMAIN_NAME;
+            if (!continueOnError) {
+                throw new MigrationClientException(msg, e);
+            }
+            log.error(msg, e);
+        }
+
+        //migrating tenant configurations
+        Set<Tenant> tenants = Utility.getTenants();
+        for (Tenant tenant : tenants) {
+            if (migrateActiveTenantsOnly && !tenant.isActive()) {
+                log.info("Tenant " + tenant.getDomain() + " is inactive. Skipping Service Principle Password migration!");
+                continue;
+            }
+            try {
+                startTenantFlow(tenant);
+                updateSecurityPolicyPassword(tenant.getId());
+                log.info("Service Principle Passwords migrated for tenant : " + tenant.getDomain());
+            } catch (XMLStreamException e) {
+                String msg = "Error while migrating Service Principle Passwords for tenant: " + tenant.getDomain();
+                log.error(msg, e);
+                if (!continueOnError) {
+                    throw new MigrationClientException(msg, e);
+                }
             } finally {
                 PrivilegedCarbonContext.endTenantFlow();
             }

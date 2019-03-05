@@ -40,7 +40,7 @@
             </fileset>
         </delete>
 
-          <delete file="${travelocity.webapp.classes}/travelocity.properties"/>
+        <delete file="${travelocity.webapp.classes}/travelocity.properties"/>
         <copy file="${properties}/travelocity.properties"
               tofile="${travelocity.webapp.classes}/travelocity.properties"/>
         <war destfile="${build}/travelocity.com.war" webxml="${travelocity.webapp}/WEB-INF/web.xml">
