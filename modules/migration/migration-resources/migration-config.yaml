@@ -1,11 +1,17 @@
 migrationEnable: "true"
 
-currentVersion: "5.7.0"
-migrateVersion: "5.8.0"
+# Migration Start Version
+currentVersion: "5.x.x"
+# Migration End Version
+migrateVersion: "5.x.x"
 
 continueOnError: "true"
 batchUpdate: "true"
 ignoreForInactiveTenants: "true"
+
+migrateTenantRange: "false"
+migrationStartingTenantID: "0"
+migrationEndingTenantID: "0"
 
 versions:
  -
@@ -56,19 +62,14 @@ versions:
   version: "5.2.0"
   migratorConfigs:
    -
-    name: "PermissionMigrator"
-    order: 1
-    parameters:
-          schema: "um"
-   -
     name: "SchemaMigrator"
-    order: 2
+    order: 1
     parameters:
       location: "step1"
       schema: "identity"
    -
     name: "SchemaMigrator"
-    order: 3
+    order: 2
     parameters:
       location: "step1"
       schema: "um"
@@ -126,29 +127,34 @@ versions:
       schema: "um"
    -
     name: "SchemaMigrator"
-    order: 1
+    order: 2
     parameters:
       location: "step1"
       schema: "identity"
    -
     name: "SchemaMigrator"
-    order: 2
+    order: 3
     parameters:
       location: "step1"
       schema: "um"
    -
-    name: "ClaimDataMigrator"
+    name: "UserStorePasswordMigrator"
     order: 4
+    parameters:
+      schema: "identity"
+   -
+    name: "ClaimDataMigrator"
+    order: 5
     parameters:
       schema: "um"
    -
     name: "OAuthDataMigrator"
-    order: 5
+    order: 6
     parameters:
       schema: "identity"
    -
     name: "SchemaMigrator"
-    order: 6
+    order: 7
     parameters:
       location: "step2"
       schema: "identity"
@@ -217,12 +223,12 @@ versions:
       order: 1
       parameters:
         location: "step1"
-        schema: "uma"
+        schema: "identity"
     -
-      name: "SchemaMigrator"
+      name: "SpClaimDialectSchemaMigrator"
       order: 2
       parameters:
-        location: "step1"
+        location: "step2"
         schema: "identity"
     -
       name: "ClaimDataMigrator"
@@ -258,12 +264,15 @@ versions:
       order: 4
       parameters:
         schema: "identity"
+    -
+      name: "OIDCScopeDataMigrator"
+      order: 5
  -
   version: "5.8.0"
   migratorConfigs:
     -
       name: "SchemaMigrator"
       order: 1
-      parameters:
+      parameter:
         location: "step1"
         schema: "identity"

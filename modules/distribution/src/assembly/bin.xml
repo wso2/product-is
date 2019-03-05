@@ -224,6 +224,16 @@
                 <include>api#identity#oauth2#dcr#v1.1.war</include>
             </includes>
         </fileSet>
+        <!--copy jaxrs web app for Template Management feature-->
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
+            <includes>
+                <include>api#identity#template#mgt#v1.0.0.war</include>
+            </includes>
+        </fileSet>
 
 
         <!--copy jaxrs web app for Mex feature-->
@@ -543,6 +553,7 @@
                 <exclude>conf/datasources/**</exclude>
                 <exclude>conf/product-config/**</exclude>
                 <exclude>conf/streams/**</exclude>
+                <exclude>conf/extensions/**</exclude>
             </excludes>
             <fileMode>644</fileMode>
         </fileSet>
@@ -552,11 +563,8 @@
             <fileMode>644</fileMode>
         </fileSet>
         <fileSet>
-            <directory>target/forget-me-webapp/</directory>
-            <outputDirectory>wso2is-${pom.version}/repository/deployment/server/webapps/</outputDirectory>
-            <includes>
-                <include>forgetme#v1.0.war</include>
-            </includes>
+            <directory>target/forget-me/identity-anonymization-tool-${forgetme.tool.version}/conf/extensions/identity/</directory>
+            <outputDirectory>wso2is-${pom.version}/repository/components/tools/forget-me/extensions/</outputDirectory>
             <fileMode>644</fileMode>
         </fileSet>
 

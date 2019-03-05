@@ -34,9 +34,13 @@ public class SecurityPolicyPasswordMigrator extends Migrator {
         log.info(Constant.MIGRATION_LOG + "Migration starting on Security Policies");
         RegistryDataManager registryDataManager = RegistryDataManager.getInstance();
         try {
-            registryDataManager.migrateServicePrinciplePassword(isIgnoreForInactiveTenants());
+            registryDataManager.migrateServicePrinciplePassword(isIgnoreForInactiveTenants(), isContinueOnError());
         } catch (Exception e) {
-            log.error("Error while migrating Service Principle Password", e);
+            String msg = "Error while migrating Service Principle Password";
+            if (!isContinueOnError()) {
+                throw new MigrationClientException(msg, e);
+            }
+            log.error(msg, e);
         }
     }
 }

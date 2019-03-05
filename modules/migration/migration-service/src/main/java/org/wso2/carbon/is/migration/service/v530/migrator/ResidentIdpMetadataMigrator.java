@@ -36,12 +36,17 @@ public class ResidentIdpMetadataMigrator extends Migrator {
         migrateResidentIdpMetadata();
     }
 
-    public void migrateResidentIdpMetadata()   {
+    public void migrateResidentIdpMetadata() throws MigrationClientException {
 
         try {
-            new ResidentIdpMetadataManager().migrateResidentIdpMetaData(isIgnoreForInactiveTenants());
+            new ResidentIdpMetadataManager().migrateResidentIdpMetaData(isIgnoreForInactiveTenants(),
+                                                                        isContinueOnError());
         } catch (Exception e) {
-            log.error("Error while migrating resident idp metadata", e);
+            String msg = "Error while migrating resident idp metadata";
+            if (!isContinueOnError()) {
+                throw new MigrationClientException(msg, e);
+            }
+            log.error(msg, e);
         }
     }
 

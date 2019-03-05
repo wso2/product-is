@@ -26,6 +26,7 @@ import java.util.List;
 
 import static org.wso2.carbon.is.migration.service.v550.SQLConstants.ADD_AUTHORIZATION_CODE_HASH_COLUMN;
 import static org.wso2.carbon.is.migration.service.v550.SQLConstants.RETRIEVE_ALL_AUTHORIZATION_CODES;
+import static org.wso2.carbon.is.migration.service.v550.SQLConstants.RETRIEVE_ALL_AUTHORIZATION_CODES_WITH_HASHES;
 import static org.wso2.carbon.is.migration.service.v550.SQLConstants.RETRIEVE_AUTHORIZATION_CODE_TABLE_DB2SQL;
 import static org.wso2.carbon.is.migration.service.v550.SQLConstants.RETRIEVE_AUTHORIZATION_CODE_TABLE_INFORMIX;
 import static org.wso2.carbon.is.migration.service.v550.SQLConstants.RETRIEVE_AUTHORIZATION_CODE_TABLE_MSSQL;
@@ -106,6 +107,30 @@ public class AuthzCodeDAO {
             while (resultSet.next()) {
                 authzCodeInfoList.add(new AuthzCodeInfo(resultSet.getString("AUTHORIZATION_CODE"),
                         resultSet.getString("CODE_ID")));
+            }
+            connection.commit();
+        }
+        return authzCodeInfoList;
+    }
+
+    /**
+     * Method to retrieve all the authorization codes and hashes from the database.
+     *
+     * @param connection JDBC connection.
+     * @return List of authorization codes.
+     * @throws SQLException If an error occurs while retrieving codes.
+     */
+    public List<AuthzCodeInfo> getAllAuthzCodesWithHashes(Connection connection) throws SQLException {
+
+        List<AuthzCodeInfo> authzCodeInfoList = new ArrayList<>();
+        try (PreparedStatement preparedStatement = connection.prepareStatement
+                (RETRIEVE_ALL_AUTHORIZATION_CODES_WITH_HASHES);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                AuthzCodeInfo authzCodeInfo = new AuthzCodeInfo(resultSet.getString("AUTHORIZATION_CODE"),
+                                                                resultSet.getString("CODE_ID"));
+                authzCodeInfo.setAuthorizationCodeHash(resultSet.getString("AUTHORIZATION_CODE_HASH"));
+                authzCodeInfoList.add(authzCodeInfo);
             }
             connection.commit();
         }
