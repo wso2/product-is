@@ -20,8 +20,19 @@ package org.wso2.identity.scenarios.commons.util;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.UserStoreDTO;
 import org.wso2.identity.scenarios.commons.clients.service.client.UserStoreConfigAdminServiceClient;
 
+/**
+ * The Util class which carries common functionality required by the user store configuration scenarios
+ */
 public class UserStoreConfigUtils {
 
+    /**
+     * waiting until user store deploy
+     *
+     * @param userStoreConfigAdminServiceClient request userStore config admin client
+     * @param domain request domain id
+     * @return true/false whether it waits until the given time for user store deployment
+     * @throws Exception If error occurs while waiting
+     */
     public boolean waitForUserStoreDeployment(UserStoreConfigAdminServiceClient userStoreConfigAdminServiceClient,
             String domain) throws Exception {
 
@@ -40,6 +51,14 @@ public class UserStoreConfigUtils {
         return false;
     }
 
+    /**
+     * wait until user store un-deploy
+     *
+     * @param userStoreConfigAdminServiceClient request userStore config admin client
+     * @param domain  request domain id
+     * @return true/false whether it waits until the given time for user store un-deployment
+     * @throws Exception If error occurs while waiting
+     */
     public boolean waitForUserStoreUnDeployment(UserStoreConfigAdminServiceClient userStoreConfigAdminServiceClient,
             String domain) throws Exception {
 
