@@ -38,12 +38,13 @@ import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJ
 public class UpdateRoleSCIM2TestCase extends ScenarioTestBase {
 
     public static final String ID_ATTRIBUTE = "id";
-    private CloseableHttpClient client;
+
     private String username;
     private String password;
     private String tenantDomain;
-    private String groupId;
+    private CloseableHttpClient client;
     private SCIM2CommonClient scim2Client;
+    private String groupId;
 
     @Factory(dataProvider = "manageRolesConfigProvider")
     public UpdateRoleSCIM2TestCase(String username, String password, String tenantDomain) {
@@ -54,9 +55,9 @@ public class UpdateRoleSCIM2TestCase extends ScenarioTestBase {
     }
 
     @DataProvider(name = "manageRolesConfigProvider")
-    private static Object[][] manageRolesConfigProvider() throws Exception {
+    private static Object[][] manageRolesConfigProvider() {
 
-        return new Object[][]{
+        return new Object[][] {
                 {
                         ADMIN_USERNAME, ADMIN_PASSWORD, SUPER_TENANT_DOMAIN
                 }
@@ -89,8 +90,7 @@ public class UpdateRoleSCIM2TestCase extends ScenarioTestBase {
 
         JSONObject groupJSON = scim2Client.getRoleJSON("scim2UpdateGroup.json");
         HttpResponse response = scim2Client.updateGroup(client, groupJSON, groupId, username, password);
-        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK,
-                "Group has been updated successfully");
+        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK, "Group has been updated successfully");
         JSONObject returnedUserJSON = getJSONFromResponse(response);
         groupId = returnedUserJSON.get(ID_ATTRIBUTE).toString();
         assertNotNull(groupId, "updated SCIM2 group id not available in the response.");
