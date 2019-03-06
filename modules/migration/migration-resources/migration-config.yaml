@@ -270,9 +270,3 @@ versions:
  -
   version: "5.8.0"
   migratorConfigs:
-    -
-      name: "SchemaMigrator"
-      order: 1
-      parameter:
-        location: "step1"
-        schema: "identity"
