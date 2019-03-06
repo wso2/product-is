@@ -35,7 +35,6 @@ import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
 
 public class RoleNamingViolationSCIM2TestCase extends ScenarioTestBase {
 
-    public static final String ID_ATTRIBUTE = "id";
     private CloseableHttpClient client;
     private String username;
     private String password;
@@ -51,9 +50,9 @@ public class RoleNamingViolationSCIM2TestCase extends ScenarioTestBase {
     }
 
     @DataProvider(name = "manageRolesConfigProvider")
-    private static Object[][] manageRolesConfigProvider() throws Exception {
+    private static Object[][] manageRolesConfigProvider() {
 
-        return new Object[][]{
+        return new Object[][] {
                 {
                         ADMIN_USERNAME, ADMIN_PASSWORD, SUPER_TENANT_DOMAIN
                 }
