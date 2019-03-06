@@ -77,8 +77,8 @@ public class ProvisionUserWithValidationFailuresTestCase extends ScenarioTestBas
         JSONArray schemasArray = new JSONArray();
         schemasArray.add(responseObj);
 
-        assertEquals(((JSONObject) responseObj).get("schemas"), SCIMConstants.ERROR_SCHEMA,"Expected ERROR_SCHEMA " +
-                "not returned");
+        assertEquals(((JSONArray) ((JSONObject) responseObj).get("schemas")).get(0), SCIMConstants.ERROR_SCHEMA,
+                "Expected ERROR_SCHEMA " + "not returned");
         assertTrue(responseObj.toString().contains("Credential is not valid"));
     }
 

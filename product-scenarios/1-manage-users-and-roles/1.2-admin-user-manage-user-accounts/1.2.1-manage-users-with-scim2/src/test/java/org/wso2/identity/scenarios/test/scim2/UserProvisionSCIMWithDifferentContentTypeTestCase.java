@@ -83,8 +83,8 @@ public class UserProvisionSCIMWithDifferentContentTypeTestCase extends ScenarioT
         JSONArray schemasArray = new JSONArray();
         schemasArray.add(responseObj);
 
-        assertEquals(((JSONObject) responseObj).get("schemas"),SCIMConstants.ERROR_SCHEMA,"Expected ERROR_SCHEMA," +
-                "not returned");
+        assertEquals(((JSONArray) ((JSONObject) responseObj).get("schemas")).get(0), SCIMConstants.ERROR_SCHEMA,
+                "Expected " + "ERROR_SCHEMA," + "not returned");
     }
 
     private Header getBasicAuthzHeader() {
