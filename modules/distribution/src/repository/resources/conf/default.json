@@ -1,4 +1,12 @@
 {
+  "realm_manager": {
+    "properties": {
+      "isCascadeDeleteEnabled": true,
+      "initializeNewClaimManager": true
+    }
+  },
+
+  "identity.datasource": "jdbc/WSO2IdentityDB",
   "identity.auth_framework.proxy_mode": "smart",
   "identity.auth_framework.login_page_url": "/authenticationendpoint/login.do",
   "identity.auth_framework.retry_page_url": "/authenticationendpoint/retry.do",

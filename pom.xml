@@ -548,6 +548,11 @@
                     <artifactId>liberty-maven-plugin</artifactId>
                     <version>${liberty.maven.plugin.version}</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.wso2.maven</groupId>
+                    <artifactId>wso2-maven-json-merge-plugin</artifactId>
+                    <version>${wso2.json.merge.plugin.version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
 
@@ -1990,6 +1995,7 @@
         <carbon.database.utils.version>2.0.7</carbon.database.utils.version>
         <carbon.identity.oauth.uma.version>1.0.17</carbon.identity.oauth.uma.version>
         <liberty.maven.plugin.version>2.2</liberty.maven.plugin.version>
+        <wso2.json.merge.plugin.version>5.2.0</wso2.json.merge.plugin.version>
         <maven.war.plugin.version>3.2.0</maven.war.plugin.version>
         <snakeyaml.version.range>[1.16.0, 1.17.0)</snakeyaml.version.range>
         <msf4j.version>2.6.2</msf4j.version>
