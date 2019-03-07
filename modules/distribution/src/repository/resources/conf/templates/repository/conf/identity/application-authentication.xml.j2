@@ -118,6 +118,7 @@
     <AuthenticationEndpointQueryParams action="{{identity.auth_framework.outbound_query_parameter_filter_policy}}">
         {% for parameter in identity.auth_framework.filtered_outbound_query_parameters %}
         <AuthenticationEndpointQueryParam name="{{parameter}}"/>
+        {% endfor %}
     </AuthenticationEndpointQueryParams>
 
     <!--
@@ -132,5 +133,6 @@
             removeOnConsumeFromAPI="{{identity.auth_framework.redirect_parameter_remove_on_consume}}">
         {% for parameter in identity.auth_framework.filtered_redirect_parameters %}
         <AuthenticationEndpointRedirectParam name="{{parameter}}"/>
+        {% endfor %}
     </AuthenticationEndpointRedirectParams>
 </ApplicationAuthentication>

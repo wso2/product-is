@@ -52,6 +52,8 @@
                 <exclude>**/tcpmon-1.0.jar</exclude>
                 <exclude>**/tcpmon.sh</exclude>
                 <exclude>**/tcpmon.bat</exclude>
+                <exclude>**/datasources/master-datasources.xml</exclude>
+                <exclude>**/repository/resources/conf/**</exclude>
             </excludes>
         </fileSet>
 
@@ -134,6 +136,15 @@
                 <include>**/**</include>
             </includes>
         </fileSet>
+        <fileSet>
+            <directory>
+                target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf
+            </directory>
+            <outputDirectory>wso2is-${pom.version}/repository/resources/conf</outputDirectory>
+            <includes>
+                <include>**/**</include>
+            </includes>
+        </fileSet>
 
         <!--<fileSet>
             <directory>
@@ -163,6 +174,13 @@
             <outputDirectory>wso2is-${pom.version}/repository/resources/identity/authntemplates</outputDirectory>
             <includes>
                 <include>**/*.json</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>src/repository/resources/conf/templates</directory>
+            <outputDirectory>wso2is-${pom.version}/repository/resources/conf/templates</outputDirectory>
+            <includes>
+                <include>**/*.j2</include>
             </includes>
         </fileSet>
 
@@ -611,6 +629,11 @@
         <file>
             <source>target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml</source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
+            <filtered>true</filtered>
+        </file>
+        <file>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/datasources/master-datasources.xml</source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/datasources/</outputDirectory>
             <filtered>true</filtered>
         </file>
         <file>

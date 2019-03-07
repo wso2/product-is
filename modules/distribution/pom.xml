@@ -130,6 +130,40 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.wso2.maven</groupId>
+                <artifactId>wso2-maven-json-merge-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>merge</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <task>
+                                    <input>
+                                        ${basedir}/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/default.json
+                                    </input>
+                                    <output>
+                                        ${basedir}/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/default.json
+                                    </output>
+                                    <config>${basedir}/src/repository/resources/conf/default.json</config>
+                                </task>
+                                <task>
+                                    <input>
+                                        ${basedir}/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/infer.json
+                                    </input>
+                                    <output>
+                                        ${basedir}/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/infer.json
+                                    </output>
+                                    <config>${basedir}/src/repository/resources/conf/infer.json</config>
+                                </task>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
@@ -157,6 +191,8 @@
                                 <property name="security-header-filter-mapping-is-token" value="&lt;filter-mapping&gt;${line.separator} &lt;filter-name&gt;HttpHeaderSecurityFilter&lt;/filter-name&gt;${line.separator} &lt;url-pattern&gt;*&lt;/url-pattern&gt;${line.separator} &lt;/filter-mapping&gt;${line.separator}${line.separator} &lt;filter-mapping&gt;${line.separator} &lt;filter-name&gt;CharsetFilter&lt;/filter-name&gt;${line.separator} &lt;url-pattern&gt;/*&lt;/url-pattern&gt;${line.separator} &lt;/filter-mapping&gt;${line.separator}${line.separator} &lt;filter-mapping&gt;${line.separator} &lt;filter-name&gt;HttpHeaderSecurityFilter_EnableAntiClickJacking&lt;/filter-name&gt;${line.separator} &lt;url-pattern&gt;/carbon/*&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/services/*&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/samlsso/*&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/openid/*&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/openidserver/*&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/passivests/*&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/acs/*&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/iwa/*&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/identity/*&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/thriftAuthenticator/*&lt;/url-pattern&gt;${line.separator} &lt;/filter-mapping&gt;${line.separator}${line.separator} &lt;filter-mapping&gt;${line.separator} &lt;filter-name&gt;CSRFGuard&lt;/filter-name&gt;${line.separator} &lt;url-pattern&gt;/*&lt;/url-pattern&gt;${line.separator} &lt;/filter-mapping&gt;${line.separator}" />
                                 <property name="hideMenu" value="&lt;/Security&gt;${line.separator}&lt;HideMenuItemIds&gt;${line.separator}&lt;HideMenuItemId&gt;claim_mgt_menu&lt;/HideMenuItemId&gt;${line.separator}&lt;HideMenuItemId&gt;identity_mgt_emailtemplate_menu&lt;/HideMenuItemId&gt;${line.separator}&lt;HideMenuItemId&gt;identity_security_questions_menu&lt;/HideMenuItemId&gt;${line.separator}&lt;/HideMenuItemIds&gt;" />
 
+                                <property name="identity-db" value="        &lt;datasource&gt;${line.separator}            &lt;name&gt;WSO2IdentityDB&lt;/name&gt;${line.separator}            &lt;description&gt;this database is WSO2IdentityDB&lt;/description&gt;${line.separator}            &lt;jndiConfig&gt;${line.separator}                &lt;name&gt;jdbc/WSO2IdentityDB&lt;/name&gt;${line.separator}            &lt;/jndiConfig&gt;${line.separator}            &lt;definition type=&quot;RDBMS&quot;&gt;${line.separator}                &lt;configuration&gt;${line.separator}                     &lt;url&gt;jdbc:h2:repository/database/WSO2IDENTITY_DB;DB_CLOSE_ON_EXIT=FALSE&lt;/url&gt;${line.separator}                     &lt;username&gt;wso2carbon&lt;/username&gt;${line.separator}                     &lt;password&gt;wso2carbon&lt;/password&gt;${line.separator}                     &lt;driverClassName&gt;org.h2.Driver&lt;/driverClassName&gt;${line.separator}                &lt;/configuration&gt;${line.separator}            &lt;/definition&gt;${line.separator}        &lt;/datasource&gt;${line.separator}&lt;/datasources&gt;"/>
+
                                 <property name="captcha-filter-is-token" value="&lt;filter&gt;${line.separator} &lt;filter-name&gt;CaptchaFilter&lt;/filter-name&gt;${line.separator} &lt;filter-class&gt;org.wso2.carbon.identity.captcha.filter.CaptchaFilter&lt;/filter-class&gt;${line.separator} &lt;/filter&gt;${line.separator}${line.separator} &lt;filter-mapping&gt;${line.separator} &lt;filter-name&gt;CaptchaFilter&lt;/filter-name&gt;${line.separator} &lt;url-pattern&gt;/samlsso&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/oauth2&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/commonauth&lt;/url-pattern&gt;${line.separator} &lt;dispatcher&gt;FORWARD&lt;/dispatcher&gt;${line.separator} &lt;dispatcher&gt;REQUEST&lt;/dispatcher&gt;${line.separator} &lt;/filter-mapping&gt;${line.separator}${line.separator} &lt;session-config&gt;" />
 
                                 <mkdir dir="${tempdir}" />
@@ -169,13 +205,23 @@
                                 <!--unzip src="wso2is-${project.version}.zip" dest="${tempdir}">
                                 </unzip-->
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="${product.name}" value="WSO2 Identity Server" />
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/carbon.xml.j2" token="${product.name}" value="WSO2 Identity Server" />
+
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="${product.version}" value="${project.version}" />
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/carbon.xml.j2" token="${product.version}" value="${project.version}" />
+
                                 <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/context.xml" token="&lt;Context crossContext=&quot;true&quot;&gt;" value="&lt;Context crossContext=&quot;true&quot; useHttpOnly=&quot;true&quot;&gt;" />
                                 <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/catalina-server.xml" token="clientAuth=&quot;false&quot;" value="clientAuth=&quot;want&quot;" />
+
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;ServerURL&gt;https://${carbon.local.ip}" value="&lt;ServerURL&gt;https://localhost" />
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/carbon.xml.j2" token="&lt;ServerURL&gt;https://${carbon.local.ip}" value="&lt;ServerURL&gt;https://localhost" />
+
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;!--MgtHostName&gt;mgt.wso2.org&lt;/MgtHostName--&gt;" value="&lt;MgtHostName&gt;localhost&lt;/MgtHostName&gt;" />
+
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;!--HostName&gt;www.wso2.org&lt;/HostName--&gt;" value="&lt;HostName&gt;localhost&lt;/HostName&gt;" />
+
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;!--LdapServer&gt;" value="&lt;LdapServer&gt;" />
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/carbon.xml.j2" token="&lt;!--LdapServer&gt;" value="&lt;LdapServer&gt;" />
 
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;/LdapServer--&gt;" value="&lt;/LdapServer&gt;" />
 
@@ -188,6 +234,9 @@
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="${xss-kernel-token}" value="${xss-is-token}" />
 
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;/Security&gt;" value="${hideMenu}" />
+
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/datasources/master-datasources.xml" token="&lt;/datasources&gt;" value="${identity-db}"/>
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/datasources/master-datasources.xml.j2" token="&lt;/datasources&gt;" value="${identity-db}"/>
 
                                 <!-- Enable AskPassword Admin UI in product-is -->
                                 <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/identity.xml" token="&lt;EnableAskPasswordAdminUI&gt;false&lt;/EnableAskPasswordAdminUI&gt;" value="&lt;EnableAskPasswordAdminUI&gt;true&lt;/EnableAskPasswordAdminUI&gt;" />
@@ -306,7 +355,7 @@
                                     <path refid="maven.compile.classpath" />
                                 </path>
                                 <echo message="########### Create Identity Database ##############" />
-                                <sql driver="org.h2.Driver" url="jdbc:h2:${basedir}/target/wso2carbon-core-${carbon.kernel.version}/repository/database/WSO2CARBON_DB" userid="wso2carbon" password="wso2carbon" autocommit="true" onerror="continue">
+                                <sql driver="org.h2.Driver" url="jdbc:h2:${basedir}/target/wso2carbon-core-${carbon.kernel.version}/repository/database/WSO2IDENTITY_DB" userid="wso2carbon" password="wso2carbon" autocommit="true" onerror="continue">
                                     <classpath>
                                         <path refid="h2.classpath" />
                                     </classpath>
@@ -314,7 +363,7 @@
                                 </sql>
                                 <echo message="##################### END ########################" />
                                 <echo message="########### Create Consent Management Database ##############" />
-                                <sql driver="org.h2.Driver" url="jdbc:h2:${basedir}/target/wso2carbon-core-${carbon.kernel.version}/repository/database/WSO2CARBON_DB" userid="wso2carbon" password="wso2carbon" autocommit="true" onerror="continue">
+                                <sql driver="org.h2.Driver" url="jdbc:h2:${basedir}/target/wso2carbon-core-${carbon.kernel.version}/repository/database/WSO2IDENTITY_DB" userid="wso2carbon" password="wso2carbon" autocommit="true" onerror="continue">
                                     <classpath>
                                         <path refid="h2.classpath" />
                                     </classpath>
@@ -322,7 +371,7 @@
                                 </sql>
                                 <echo message="##################### END ########################" />
                                 <echo message="########### Create UMA Database ##############" />
-                                <sql driver="org.h2.Driver" url="jdbc:h2:${basedir}/target/wso2carbon-core-${carbon.kernel.version}/repository/database/WSO2CARBON_DB" userid="wso2carbon" password="wso2carbon" autocommit="true" onerror="continue">
+                                <sql driver="org.h2.Driver" url="jdbc:h2:${basedir}/target/wso2carbon-core-${carbon.kernel.version}/repository/database/WSO2IDENTITY_DB" userid="wso2carbon" password="wso2carbon" autocommit="true" onerror="continue">
                                     <classpath>
                                         <path refid="h2.classpath" />
                                     </classpath>
