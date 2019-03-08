@@ -30,50 +30,50 @@
             following property to "true". -->
         <!-- <SkipDBSchemaCreation>false</SkipDBSchemaCreation> -->
         <SessionDataPersist>
-            <Enable>true</Enable>
-            <Temporary>true</Temporary>
-            <PoolSize>0</PoolSize>
+            <Enable>{{identity.session_data_persist.enable}}</Enable>
+            <Temporary>{{identity.session_data_persist.temporary}}</Temporary>
+            <PoolSize>{{identity.session_data_persist.pool_size}}</PoolSize>
             <SessionDataCleanUp>
-                <Enable>true</Enable>
-                <CleanUpTimeout>20160</CleanUpTimeout>
-                <CleanUpPeriod>1140</CleanUpPeriod>
+                <Enable>{{identity.session_data_persist.session_data_cleanup.enable}}</Enable>
+                <CleanUpTimeout>{{identity.session_data_persist.session_data_cleanup.cleanup_timeout}}</CleanUpTimeout>
+                <CleanUpPeriod>{{identity.session_data_persist.session_data_cleanup.cleanup_period}}</CleanUpPeriod>
                 <!--Instead of deleting all the records at once, we are deleting the records in chunks to prevent the -->
                 <!--possible deadlock and lock scenarios. The following property defines the chunk size.-->
-                <DeleteChunkSize>50000</DeleteChunkSize>
+                <DeleteChunkSize>{{identity.session_data_persist.session_data_cleanup.delete_chunk_size}}</DeleteChunkSize>
             </SessionDataCleanUp>
             <OperationDataCleanUp>
-                <Enable>true</Enable>
+                <Enable>{{identity.session_data_persist.operation_data_cleanup.enable}}</Enable>
             </OperationDataCleanUp>
             <TempDataCleanup>
                 <!-- Enabling separated cleanup for temporary authentication context data -->
-                <Enable>true</Enable>
+                <Enable>{{identity.session_data_persist.temp_data_cleanup.enable}}</Enable>
                 <!-- When PoolZize > 0, temporary data which have no usage after the authentication flow will be deleted immediately
                  When PoolZise = 0, data will be deleted only by the scheduled cleanup task-->
-                <PoolSize>20</PoolSize>
+                <PoolSize>{{identity.session_data_persist.temp_data_cleanup.pool_size}}</PoolSize>
                 <!-- All temporary authentication context data older than CleanUpTimeout value are considered as expired
                 and would be deleted during cleanup task -->
-                <CleanUpTimeout>40</CleanUpTimeout>
+                <CleanUpTimeout>{{identity.session_data_persist.temp_data_cleanup.cleanup_timeout}}</CleanUpTimeout>
             </TempDataCleanup>
         </SessionDataPersist>
     </JDBCPersistenceManager>
 
     <!-- Time configurations are in minutes -->
     <TimeConfig>
-        <SessionIdleTimeout>15</SessionIdleTimeout>
-        <RememberMeTimeout>20160</RememberMeTimeout>
+        <SessionIdleTimeout>{{identity.time_config.session_idle_timeout}}</SessionIdleTimeout>
+        <RememberMeTimeout>{{identity.time_config.remember_me_timeout}}</RememberMeTimeout>
     </TimeConfig>
 
     <!-- Security configurations -->
     <Security>
         <!-- The directory under which all other KeyStore files will be stored -->
-        <KeyStoresDir>${carbon.home}/conf/keystores</KeyStoresDir>
-        <KeyManagerType>SunX509</KeyManagerType>
-        <TrustManagerType>SunX509</TrustManagerType>
+        <KeyStoresDir>{{identity.security.keystore_directory_path}}</KeyStoresDir>
+        <KeyManagerType>{{identity.security.key_manager_type}}</KeyManagerType>
+        <TrustManagerType>{{identity.security.trust_manager_type}}</TrustManagerType>
     </Security>
 
     <Identity>
-        <IssuerPolicy>SelfAndManaged</IssuerPolicy>
-        <TokenValidationPolicy>CertValidate</TokenValidationPolicy>
+        <IssuerPolicy>{{identity.issuer_policy}}</IssuerPolicy>
+        <TokenValidationPolicy>{{identity.token_validation_policy}}</TokenValidationPolicy>
         <BlackList></BlackList>
         <WhiteList></WhiteList>
         <System>
@@ -88,15 +88,15 @@
             https://<HostName>:<MgtTrpProxyPort except 443>/<ProxyContextPath>/<context>
             If above format doesn't satisfy uncomment the following configs and explicitly configure the values
          -->
-        <OpenIDServerUrl>${carbon.protocol}://${carbon.host}:${carbon.management.port}/openidserver</OpenIDServerUrl>
-        <OpenIDUserPattern>${carbon.protocol}://${carbon.host}:${carbon.management.port}/openid</OpenIDUserPattern>
-        <OpenIDLoginUrl>${carbon.protocol}://${carbon.host}:${carbon.management.port}/authenticationendpoint/openid_login.do</OpenIDLoginUrl>
+        <OpenIDServerUrl>{{OpenID.server_url}}</OpenIDServerUrl>
+        <OpenIDUserPattern>{{OpenID.user_pattern}}</OpenIDUserPattern>
+        <OpenIDLoginUrl>{{OpenID.login_url}}</OpenIDLoginUrl>
         <!-- If the users must be prompted for approval -->
-        <OpenIDSkipUserConsent>false</OpenIDSkipUserConsent>
+        <OpenIDSkipUserConsent>{{OpenID.skip_user_consent}}</OpenIDSkipUserConsent>
         <!-- Expiry time of the OpenID RememberMe token in minutes -->
-        <OpenIDRememberMeExpiry>7200</OpenIDRememberMeExpiry>
+        <OpenIDRememberMeExpiry>{{OpenID.remember_me_expiry}}</OpenIDRememberMeExpiry>
         <!-- To enable or disable openid dumb mode -->
-        <DisableOpenIDDumbMode>false</DisableOpenIDDumbMode>
+        <DisableOpenIDDumbMode>{{OpenID.disable_dumb_mode}}</DisableOpenIDDumbMode>
         <!--
                OpenID private association store is configurable from following configs.
                It includes two new replication stores,
@@ -106,7 +106,7 @@
         -->
 
         <!-- Specify full qualified class name of the class which going to use as private association store -->
-        <!-- 
+        <!--
 		<OpenIDPrivateAssociationStoreClass>org.wso2.carbon.identity.provider.openid.PrivateAssociationCryptoStore</OpenIDPrivateAssociationStoreClass>
 	-->
 
@@ -136,9 +136,9 @@
         <!-- Token cleanup feature config to clean IDN_OAUTH2_ACCESS_TOKEN table-->
         <TokenCleanup>
             <!--If true old access token cleaning feature is enabled -->
-            <EnableTokenCleanup>true</EnableTokenCleanup>
+            <EnableTokenCleanup>{{OAuth.enable_token_cleanup}}</EnableTokenCleanup>
             <!--If true  old access token retained in audit table  -->
-            <RetainOldAccessToken>true</RetainOldAccessToken>
+            <RetainOldAccessToken>{{OAuth.retain_old_access_token}}</RetainOldAccessToken>
         </TokenCleanup>
         <!-- Specify the Token issuer class to be used.
              Default: org.wso2.carbon.identity.oauth2.token.OauthTokenIssuerImpl.
@@ -171,104 +171,76 @@
             https://<HostName>:<MgtTrpProxyPort except 443>/<ProxyContextPath>/<context>/<path>
             If above format doesn't satisfy uncomment the following configs and explicitly configure the values
          -->
-        <OAuth1RequestTokenUrl>${carbon.protocol}://${carbon.host}:${carbon.management.port}/oauth/request-token</OAuth1RequestTokenUrl>
-        <OAuth1AuthorizeUrl>${carbon.protocol}://${carbon.host}:${carbon.management.port}/oauth/authorize-url</OAuth1AuthorizeUrl>
-        <OAuth1AccessTokenUrl>${carbon.protocol}://${carbon.host}:${carbon.management.port}/oauth/access-token</OAuth1AccessTokenUrl>
-        <OAuth2AuthzEPUrl>${carbon.protocol}://${carbon.host}:${carbon.management.port}/oauth2/authorize</OAuth2AuthzEPUrl>
-        <OAuth2TokenEPUrl>${carbon.protocol}://${carbon.host}:${carbon.management.port}/oauth2/token</OAuth2TokenEPUrl>
-        <OAuth2RevokeEPUrl>${carbon.protocol}://${carbon.host}:${carbon.management.port}/oauth2/revoke</OAuth2RevokeEPUrl>
-        <OAuth2IntrospectEPUrl>${carbon.protocol}://${carbon.host}:${carbon.management.port}/oauth2/introspect</OAuth2IntrospectEPUrl>
-        <OAuth2UserInfoEPUrl>${carbon.protocol}://${carbon.host}:${carbon.management.port}/oauth2/userinfo</OAuth2UserInfoEPUrl>
-        <OIDCCheckSessionEPUrl>${carbon.protocol}://${carbon.host}:${carbon.management.port}/oidc/checksession</OIDCCheckSessionEPUrl>
-        <OIDCLogoutEPUrl>${carbon.protocol}://${carbon.host}:${carbon.management.port}/oidc/logout</OIDCLogoutEPUrl>
-        <OAuth2ConsentPage>${carbon.protocol}://${carbon.host}:${carbon.management.port}/authenticationendpoint/oauth2_authz.do</OAuth2ConsentPage>
-        <OAuth2ErrorPage>${carbon.protocol}://${carbon.host}:${carbon.management.port}/authenticationendpoint/oauth2_error.do</OAuth2ErrorPage>
-        <OIDCConsentPage>${carbon.protocol}://${carbon.host}:${carbon.management.port}/authenticationendpoint/oauth2_consent.do</OIDCConsentPage>
-        <OIDCLogoutConsentPage>${carbon.protocol}://${carbon.host}:${carbon.management.port}/authenticationendpoint/oauth2_logout_consent.do</OIDCLogoutConsentPage>
-        <OIDCLogoutPage>${carbon.protocol}://${carbon.host}:${carbon.management.port}/authenticationendpoint/oauth2_logout.do</OIDCLogoutPage>
+        <OAuth1RequestTokenUrl>{{OAuth.OAuth1.request_token.url}}</OAuth1RequestTokenUrl>
+        <OAuth1AuthorizeUrl>{{OAuth.OAuth1.authorize_url}}</OAuth1AuthorizeUrl>
+        <OAuth1AccessTokenUrl>{{OAuth.OAuth1.access_token_url}}</OAuth1AccessTokenUrl>
+        <OAuth2AuthzEPUrl>{{OAuth.OAuth2.authz_endpoint_url}}</OAuth2AuthzEPUrl>
+        <OAuth2TokenEPUrl>{{OAuth.OAuth2.token_endpoint_url}}</OAuth2TokenEPUrl>
+        <OAuth2RevokeEPUrl>{{OAuth.OAuth2.revoke_endpoint_url}}</OAuth2RevokeEPUrl>
+        <OAuth2IntrospectEPUrl>{{OAuth.OAuth2.introspect_endpoint_url}}</OAuth2IntrospectEPUrl>
+        <OAuth2UserInfoEPUrl>{{OAuth.OAuth2.userinfo_endpoint_url}}</OAuth2UserInfoEPUrl>
+        <OIDCCheckSessionEPUrl>{{OAuth.OIDC.check_session_endpoint_url}}</OIDCCheckSessionEPUrl>
+        <OIDCLogoutEPUrl>{{OAuth.OIDC.logout_endpoint_url}}</OIDCLogoutEPUrl>
+        <OAuth2ConsentPage>{{OAuth.OAuth2.consent_page}}</OAuth2ConsentPage>
+        <OAuth2ErrorPage>{{OAuth.OAuth2.error_page}}</OAuth2ErrorPage>
+        <OIDCConsentPage>{{OAuth.OIDC.consent_page}}</OIDCConsentPage>
+        <OIDCLogoutConsentPage>{{OAuth.OIDC.logout_consent_page}}</OIDCLogoutConsentPage>
+        <OIDCLogoutPage>{{OAuth.OIDC.logout_page}}</OIDCLogoutPage>
 
-        <OIDCWebFingerEPUrl>${carbon.protocol}://${carbon.host}:${carbon.management.port}/.well-known/webfinger</OIDCWebFingerEPUrl>
+        <OIDCWebFingerEPUrl>{{OAuth.OIDC.webfinger_endpoint_url}}</OIDCWebFingerEPUrl>
 
         <!-- For tenants below urls will be modified as https://<hostname>:<port>/t/<tenant domain>/<path>-->
-        <OAuth2DCREPUrl>${carbon.protocol}://${carbon.host}:${carbon.management.port}/api/identity/oauth2/dcr/v1.1/register</OAuth2DCREPUrl>
-        <OAuth2JWKSPage>${carbon.protocol}://${carbon.host}:${carbon.management.port}/oauth2/jwks</OAuth2JWKSPage>
-        <OIDCDiscoveryEPUrl>${carbon.protocol}://${carbon.host}:${carbon.management.port}/oauth2/oidcdiscovery</OIDCDiscoveryEPUrl>
+        <OAuth2DCREPUrl>{{OAuth.OAuth2.dcr_endpoint_url}}</OAuth2DCREPUrl>
+        <OAuth2JWKSPage>{{OAuth.OAuth2.jwks_page}}</OAuth2JWKSPage>
+        <OIDCDiscoveryEPUrl>{{OAuth.OIDC.discovery_endpoint_url}}</OIDCDiscoveryEPUrl>
+
+        <!-- If enabled, resident Idp entity id will be honoured as the issuer location in OpenId Connect Discovery -->
+        <UseEntityIdAsIssuerInOidcDiscovery>{{OAuth.use_entityId_as_issuer_in_OIDC_discovery}}</UseEntityIdAsIssuerInOidcDiscovery>
 
         <!-- Default validity period for Authorization Code in seconds -->
-        <AuthorizationCodeDefaultValidityPeriod>300</AuthorizationCodeDefaultValidityPeriod>
+        <AuthorizationCodeDefaultValidityPeriod>{{OAuth.authorization_code_default_validity_period}}</AuthorizationCodeDefaultValidityPeriod>
         <!-- Default validity period for application access tokens in seconds -->
-        <AccessTokenDefaultValidityPeriod>3600</AccessTokenDefaultValidityPeriod>
+        <AccessTokenDefaultValidityPeriod>{{OAuth.application_access_token_default_validity_period}}</AccessTokenDefaultValidityPeriod>
         <!-- Default validity period for user access tokens in seconds -->
-        <UserAccessTokenDefaultValidityPeriod>3600</UserAccessTokenDefaultValidityPeriod>
+        <UserAccessTokenDefaultValidityPeriod>{{OAuth.user_access_token_default_validity_period}}</UserAccessTokenDefaultValidityPeriod>
         <!-- Validity period for refresh token -->
-        <RefreshTokenValidityPeriod>84600</RefreshTokenValidityPeriod>
+        <RefreshTokenValidityPeriod>{{OAuth.refresh_token_validity_Period}}</RefreshTokenValidityPeriod>
         <!-- Timestamp skew in seconds -->
-        <TimestampSkew>0</TimestampSkew>
+        <TimestampSkew>{{OAuth.timestamp_skew}}</TimestampSkew>
         <!-- Enable renewal of refresh token for refresh_token grant -->
-        <RenewRefreshTokenForRefreshGrant>true</RenewRefreshTokenForRefreshGrant>
+        <RenewRefreshTokenForRefreshGrant>{{OAuth.renew_refresh_token_for_refresh_grant}}</RenewRefreshTokenForRefreshGrant>
         <!-- Process the token before storing it in database, e.g. encrypting -->
-        <TokenPersistenceProcessor>org.wso2.carbon.identity.oauth.tokenprocessor.PlainTextPersistenceProcessor</TokenPersistenceProcessor>
+        <TokenPersistenceProcessor>{{OAuth.token_persistence_processor}}</TokenPersistenceProcessor>
         <!-- This should be true if the oauth keys (consumer secret, access token, refresh token and authorization code) need to be hashed,
              before storing them in the database. If the value is false, the oauth keys will be saved in a plain text format.
              By default : false.
              Supported versions: IS 5.6.0 onwards.
         -->
-        <EnableClientSecretHash>false</EnableClientSecretHash>
+        <EnableClientSecretHash>{{OAuth.enable_client_secret_hash}}</EnableClientSecretHash>
         <!-- If the user is a federated, user will not be able to access claims from local userstore even if the username matches -->
-        <MapFederatedUsersToLocal>false</MapFederatedUsersToLocal>
+        <MapFederatedUsersToLocal>{{OAuth.map_federated_users_to_local}}</MapFederatedUsersToLocal>
         <!-- Supported Response Types -->
         <SupportedResponseTypes>
+            {% for response_type in OAuth.supported_response_types %}
             <SupportedResponseType>
-                <ResponseTypeName>token</ResponseTypeName>
-                <ResponseTypeHandlerImplClass>org.wso2.carbon.identity.oauth2.authz.handlers.AccessTokenResponseTypeHandler</ResponseTypeHandlerImplClass>
+                <ResponseTypeName>{{response_type}}</ResponseTypeName>
+                {% for key,value in OAuth.supported_response_type[response_type].items() %}
+                <{{key}}>{{value}}</{{key}}>
+                {% endfor %}
             </SupportedResponseType>
-            <SupportedResponseType>
-                <ResponseTypeName>code</ResponseTypeName>
-                <ResponseTypeHandlerImplClass>org.wso2.carbon.identity.oauth2.authz.handlers.CodeResponseTypeHandler</ResponseTypeHandlerImplClass>
-            </SupportedResponseType>
-            <SupportedResponseType>
-                <ResponseTypeName>id_token</ResponseTypeName>
-                <ResponseTypeHandlerImplClass>org.wso2.carbon.identity.oauth2.authz.handlers.IDTokenResponseTypeHandler</ResponseTypeHandlerImplClass>
-            </SupportedResponseType>
-            <SupportedResponseType>
-                <ResponseTypeName>id_token token</ResponseTypeName>
-                <ResponseTypeHandlerImplClass>org.wso2.carbon.identity.oauth2.authz.handlers.IDTokenTokenResponseTypeHandler</ResponseTypeHandlerImplClass>
-            </SupportedResponseType>
+            {% endfor %}
         </SupportedResponseTypes>
         <!-- Supported Grant Types -->
         <SupportedGrantTypes>
+        {% for grant_type in OAuth.supported_grant_types %}
             <SupportedGrantType>
-                <GrantTypeName>authorization_code</GrantTypeName>
-                <GrantTypeHandlerImplClass>org.wso2.carbon.identity.oauth2.token.handlers.grant.AuthorizationCodeGrantHandler</GrantTypeHandlerImplClass>
-            </SupportedGrantType>
-            <SupportedGrantType>
-                <GrantTypeName>password</GrantTypeName>
-                <GrantTypeHandlerImplClass>org.wso2.carbon.identity.oauth2.token.handlers.grant.PasswordGrantHandler</GrantTypeHandlerImplClass>
-            </SupportedGrantType>
-            <SupportedGrantType>
-                <GrantTypeName>refresh_token</GrantTypeName>
-                <GrantTypeHandlerImplClass>org.wso2.carbon.identity.oauth2.token.handlers.grant.RefreshGrantHandler</GrantTypeHandlerImplClass>
-            </SupportedGrantType>
-            <SupportedGrantType>
-                <GrantTypeName>client_credentials</GrantTypeName>
-                <GrantTypeHandlerImplClass>org.wso2.carbon.identity.oauth2.token.handlers.grant.ClientCredentialsGrantHandler</GrantTypeHandlerImplClass>
-                <IsRefreshTokenAllowed>false</IsRefreshTokenAllowed>
-                <IdTokenAllowed>false</IdTokenAllowed>
-            </SupportedGrantType>
-            <SupportedGrantType>
-                <GrantTypeName>urn:ietf:params:oauth:grant-type:saml2-bearer</GrantTypeName>
-                <GrantTypeHandlerImplClass>org.wso2.carbon.identity.oauth2.token.handlers.grant.saml.SAML2BearerGrantHandler</GrantTypeHandlerImplClass>
-            </SupportedGrantType>
-            <SupportedGrantType>
-                <GrantTypeName>iwa:ntlm</GrantTypeName>
-                <GrantTypeHandlerImplClass>org.wso2.carbon.identity.oauth2.token.handlers.grant.iwa.ntlm.NTLMAuthenticationGrantHandler</GrantTypeHandlerImplClass>
-            </SupportedGrantType>
-            <SupportedGrantType>
-                <GrantTypeName>urn:ietf:params:oauth:grant-type:jwt-bearer</GrantTypeName>
-                <GrantTypeHandlerImplClass>org.wso2.carbon.identity.oauth2.grant.jwt.JWTBearerGrantHandler</GrantTypeHandlerImplClass>
-                <GrantTypeValidatorImplClass>org.wso2.carbon.identity.oauth2.grant.jwt.JWTGrantValidator</GrantTypeValidatorImplClass>
-            </SupportedGrantType>
-        </SupportedGrantTypes>
+                <GrantTypeName>{{grant_type}}</GrantTypeName>
+                {% for key,value in OAuth.supported_grant_type[grant_type].items() %}
+                <{{key}}>{{value}}</{{key}}>
+                {% endfor %}
+             </SupportedGrantType>
+        {% endfor %}
+         </SupportedGrantTypes>
 
         <!--
             Defines the grant types that will filter user claims based on user consent in their responses such as
@@ -279,37 +251,45 @@
             Supported versions: IS 5.5.0 onwards.
         -->
         <UserConsentEnabledGrantTypes>
+        {% for grant_type in OAuth.user_consent_enable_grant_types %}
             <UserConsentEnabledGrantType>
-                <GrantTypeName>authorization_code</GrantTypeName>
+                <GrantTypeName>{{grant_type}}</GrantTypeName>
             </UserConsentEnabledGrantType>
-            <UserConsentEnabledGrantType>
-                <GrantTypeName>implicit</GrantTypeName>
-            </UserConsentEnabledGrantType>
+        {% endfor %}
         </UserConsentEnabledGrantTypes>
 
         <OAuthCallbackHandlers>
-            <OAuthCallbackHandler Class="org.wso2.carbon.identity.oauth.callback.DefaultCallbackHandler"/>
+        {% for callback_handler in OAuth.callback_handlers %}
+            <OAuthCallbackHandler Class="{{callback_handler}}"/>
+        {% endfor %}
         </OAuthCallbackHandlers>
+
         <TokenValidators>
-            <TokenValidator type="bearer" class="org.wso2.carbon.identity.oauth2.validators.DefaultOAuth2TokenValidator"/>
-            <TokenValidator type="jwt" class="org.wso2.carbon.identity.oauth2.validators.OAuth2JWTTokenValidator"/>
+        {% for token_validator in OAuth.token_validators %}
+            <TokenValidator type="{{token_validator.type}}" class="{{token_validator.class}}"/>
+        {% endfor %}
         </TokenValidators>
 
         <!-- Scope validators list. The validators registered here wil be executed during token validation. -->
         <ScopeValidators>
-            <ScopeValidator class="org.wso2.carbon.identity.oauth2.validators.JDBCScopeValidator" />
-            <ScopeValidator class="org.wso2.carbon.identity.oauth2.validators.xacml.XACMLScopeValidator"/>
+        {% for scope_validator in OAuth.scope_validators %}
+            <ScopeValidator class="{{scope_validator}}" />
+        {% endfor %}
         </ScopeValidators>
 
         <!-- Scope handlers list. The handlers registered here will be executed at the scope validation phase while
              issuing access tokens. -->
         <ScopeHandlers>
-            <ScopeHandler class="org.wso2.carbon.identity.oauth2.validators.OIDCScopeHandler" />
+        {% for scope_handler in OAuth.scope_handlers %}
+            <ScopeHandler class="{{scope_handler}}" />
+        {% endfor %}
         </ScopeHandlers>
 
         <!-- Assertions can be used to embedd parameters into access token. -->
         <EnableAssertions>
-            <UserName>false</UserName>
+        {% for key,value in OAuth.enable_assertions.items() %}
+            <{{key}}>{{value}}</{{key}}>
+        {% endfor %}
         </EnableAssertions>
 
 
@@ -331,7 +311,7 @@
             should saved into different tables according to the user store. By default
             all the application keys are saved in to the same table. UserName Assertion
             should be 'true' to use this. -->
-        <EnableAccessTokenPartitioning>false</EnableAccessTokenPartitioning>
+        <EnableAccessTokenPartitioning>{{OAuth.enable_access_token_partitioning}}</EnableAccessTokenPartitioning>
         <!-- user store domain names and mapping to new table name. eg: if you
             provide 'A:foo.com', foo.com should be the user store domain name and 'A'
             represent the relavant mapping of token store table, i.e. tokens will be

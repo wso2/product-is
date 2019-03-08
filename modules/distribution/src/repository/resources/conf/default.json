@@ -337,7 +337,135 @@
   "identity.events.schemes.OIDCLogoutHandler.properties.enable": false,
   "identity.events.schemes.confirmationCodesInvalidate.subscriptions": [
     "POST_DELETE_USER"
-  ]
+  ],
+
+
+
+  "identity.datasource": "jdbc/WSO2CarbonDB",
+
+  "identity.session_data_persist.enable": true,
+  "identity.session_data_persist.temporary": true,
+  "identity.session_data_persist.pool_size": "0",
+  "identity.session_data_persist.session_data_cleanup.enable": true,
+  "identity.session_data_persist.session_data_cleanup.cleanup_timeout": "20160",
+  "identity.session_data_persist.session_data_cleanup.cleanup_period": "1440",
+  "identity.session_data_persist.session_data_cleanup.delete_chunk_size": "50000",
+  "identity.session_data_persist.operation_data_cleanup.enable": true,
+  "identity.session_data_persist.temp_data_cleanup.enable": true,
+  "identity.session_data_persist.temp_data_cleanup.pool_size": "20",
+  "identity.session_data_persist.temp_data_cleanup.cleanup_timeout": "40",
+
+  "identity.time_config.session_idle_timeout": "15",
+  "identity.time_config.remember_me_timeout": "20160",
+
+  "identity.security.keystore_directory_path": "${carbon.home}/conf/keystores",
+  "identity.security.key_manager_type": "$conf{keystore.tls.type}",
+  "identity.security.trust_manager_type": "$conf{truststore.type}",
+
+  "identity.issuer_policy": "SelfAndManaged",
+  "identity.token_validation_policy": "CertValidate",
+
+  "OpenID.server_url": "${carbon.protocol}://${carbon.host}:${carbon.management.port}/openidserver",
+  "OpenID.user_pattern": "${carbon.protocol}://${carbon.host}:${carbon.management.port}/openid",
+  "OpenID.login_url": "${carbon.protocol}://${carbon.host}:${carbon.management.port}/authenticationendpoint/openid_login.do",
+  "OpenID.skip_user_consent": false,
+  "OpenID.remember_me_expiry": "7200",
+  "OpenID.disable_dumb_mode": false,
+
+  "OAuth.enable_token_cleanup": true,
+  "OAuth.retain_old_access_token": true,
+  "OAuth.use_entityId_as_issuer_in_OIDC_discovery": true,
+  "OAuth.authorization_code_default_validity_period": "300",
+  "OAuth.application_access_token_default_validity_period": "3600",
+  "OAuth.user_access_token_default_validity_period": "3600",
+  "OAuth.refresh_token_validity_Period": "84600",
+  "OAuth.timestamp_skew": "0",
+  "OAuth.renew_refresh_token_for_refresh_grant": true,
+  "OAuth.token_persistence_processor": "org.wso2.carbon.identity.oauth.tokenprocessor.PlainTextPersistenceProcessor",
+  "OAuth.enable_client_secret_hash": false,
+  "OAuth.map_federated_users_to_local": false,
+
+  "OAuth.OAuth1.request_token.url": "${carbon.protocol}://${carbon.host}:${carbon.management.port}/oauth/request-token",
+  "OAuth.OAuth1.authorize_url": "${carbon.protocol}://${carbon.host}:${carbon.management.port}/oauth/authorize-url",
+  "OAuth.OAuth1.access_token_url": "${carbon.protocol}://${carbon.host}:${carbon.management.port}/oauth/access-token",
+
+  "OAuth.OAuth2.authz_endpoint_url": "${carbon.protocol}://${carbon.host}:${carbon.management.port}/oauth2/authorize",
+  "OAuth.OAuth2.token_endpoint_url": "${carbon.protocol}://${carbon.host}:${carbon.management.port}/oauth2/token",
+  "OAuth.OAuth2.revoke_endpoint_url": "${carbon.protocol}://${carbon.host}:${carbon.management.port}/oauth2/revoke",
+  "OAuth.OAuth2.introspect_endpoint_url": "${carbon.protocol}://${carbon.host}:${carbon.management.port}/oauth2/introspect",
+  "OAuth.OAuth2.userinfo_endpoint_url": "${carbon.protocol}://${carbon.host}:${carbon.management.port}/oauth2/userinfo",
+  "OAuth.OAuth2.consent_page": "${carbon.protocol}://${carbon.host}:${carbon.management.port}/authenticationendpoint/oauth2_authz.do",
+  "OAuth.OAuth2.error_page": "${carbon.protocol}://${carbon.host}:${carbon.management.port}/authenticationendpoint/oauth2_error.do",
+  "OAuth.OAuth2.dcr_endpoint_url": "${carbon.protocol}://${carbon.host}:${carbon.management.port}/api/identity/oauth2/dcr/v1.1/register",
+  "OAuth.OAuth2.jwks_page": "${carbon.protocol}://${carbon.host}:${carbon.management.port}/oauth2/jwks",
+
+  "OAuth.OIDC.check_session_endpoint_url": "${carbon.protocol}://${carbon.host}:${carbon.management.port}/oidc/checksession",
+  "OAuth.OIDC.logout_endpoint_url": "${carbon.protocol}://${carbon.host}:${carbon.management.port}/oidc/logout",
+  "OAuth.OIDC.consent_page": "${carbon.protocol}://${carbon.host}:${carbon.management.port}/authenticationendpoint/oauth2_consent.do",
+  "OAuth.OIDC.logout_consent_page":"${carbon.protocol}://${carbon.host}:${carbon.management.port}/authenticationendpoint/oauth2_logout_consent.do",
+  "OAuth.OIDC.logout_page": "${carbon.protocol}://${carbon.host}:${carbon.management.port}/authenticationendpoint/oauth2_logout.do",
+  "OAuth.OIDC.webfinger_endpoint_url": "${carbon.protocol}://${carbon.host}:${carbon.management.port}/.well-known/webfinger",
+  "OAuth.OIDC.discovery_endpoint_url": "${carbon.protocol}://${carbon.host}:${carbon.management.port}/oauth2/oidcdiscovery",
+
+  "OAuth.supported_response_types": ["token","code","id_token","id_token token"],
+  "OAuth.supported_response_type.token.ResponseTypeHandlerImplClass": "org.wso2.carbon.identity.oauth2.authz.handlers.AccessTokenResponseTypeHandler",
+  "OAuth.supported_response_type.code.ResponseTypeHandlerImplClass": "org.wso2.carbon.identity.oauth2.authz.handlers.CodeResponseTypeHandler",
+  "OAuth.supported_response_type.id_token.ResponseTypeHandlerImplClass": "org.wso2.carbon.identity.oauth2.authz.handlers.IDTokenResponseTypeHandler",
+  "OAuth.supported_response_type.id_token token.ResponseTypeHandlerImplClass": "org.wso2.carbon.identity.oauth2.authz.handlers.IDTokenTokenResponseTypeHandler",
+  "OAuth.supported_grant_types": [
+    "authorization_code",
+    "password",
+    "refresh_token",
+    "client_credentials",
+    "urn:ietf:params:oauth:grant-type:saml2-bearer",
+    "iwa:ntlm",
+    "urn:ietf:params:oauth:grant-type:jwt-bearer",
+    "urn:ietf:params:oauth:grant-type:uma-ticket"
+  ],
+  "OAuth.supported_grant_type.authorization_code.GrantTypeHandlerImplClass": "org.wso2.carbon.identity.oauth2.token.handlers.grant.AuthorizationCodeGrantHandle",
+  "OAuth.supported_grant_type.password.GrantTypeHandlerImplClass": "org.wso2.carbon.identity.oauth2.token.handlers.grant.PasswordGrantHandler",
+  "OAuth.supported_grant_type.refresh_token.GrantTypeHandlerImplClass": "org.wso2.carbon.identity.oauth2.token.handlers.grant.RefreshGrantHandler",
+  "OAuth.supported_grant_type.client_credentials.GrantTypeHandlerImplClass": "org.wso2.carbon.identity.oauth2.token.handlers.grant.ClientCredentialsGrantHandler",
+  "OAuth.supported_grant_type.client_credentials.IsRefreshTokenAllowed": false,
+  "OAuth.supported_grant_type.client_credentials.IdTokenAllowed": false,
+  "OAuth.supported_grant_type.urn:ietf:params:oauth:grant-type:saml2-bearer.GrantTypeHandlerImplClass": "org.wso2.carbon.identity.oauth2.token.handlers.grant.saml.SAML2BearerGrantHandler",
+  "OAuth.supported_grant_type.iwa:ntlm.GrantTypeHandlerImplClass": "org.wso2.carbon.identity.oauth2.token.handlers.grant.iwa.ntlm.NTLMAuthenticationGrantHandler",
+  "OAuth.supported_grant_type.urn:ietf:params:oauth:grant-type:jwt-bearer.GrantTypeHandlerImplClass": "org.wso2.carbon.identity.oauth2.grant.jwt.JWTBearerGrantHandler",
+  "OAuth.supported_grant_type.urn:ietf:params:oauth:grant-type:jwt-bearer.GrantTypeValidatorImplClass": "org.wso2.carbon.identity.oauth2.grant.jwt.JWTGrantValidator",
+  "OAuth.supported_grant_type.urn:ietf:params:oauth:grant-type:uma-ticket.GrantTypeHandlerImplClass": "org.wso2.carbon.identity.oauth.uma.grant.UMA2GrantHandler",
+  "OAuth.supported_grant_type.urn:ietf:params:oauth:grant-type:uma-ticket.GrantTypeValidatorImplClass": "org.wso2.carbon.identity.oauth.uma.grant.GrantValidator",
+
+  "OAuth.user_consent_enable_grant_types": [
+    "authorization_code",
+    "implicit"
+  ],
+
+  "OAuth.callback_handlers": [
+    "org.wso2.carbon.identity.oauth.callback.DefaultCallbackHandler"
+  ],
+
+  "OAuth.token_validators": [
+    {
+      "type": "bearer",
+      "class": "org.wso2.carbon.identity.oauth2.validators.DefaultOAuth2TokenValidator"
+    },
+    {
+      "type": "jwt",
+      "class": "org.wso2.carbon.identity.oauth2.validators.OAuth2JWTTokenValidator"
+    }
+  ],
+
+  "OAuth.scope_validators": [
+    "org.wso2.carbon.identity.oauth2.validators.JDBCScopeValidator",
+    "org.wso2.carbon.identity.oauth2.validators.xacml.XACMLScopeValidator"
+  ],
+
+  "OAuth.scope_handlers": [
+    "org.wso2.carbon.identity.oauth2.validators.OIDCScopeHandler"
+  ],
+
+  "OAuth.enable_assertions.UserName": false,
+  "OAuth.enable_access_token_partitioning": false
 
 
 }
