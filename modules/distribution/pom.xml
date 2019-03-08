@@ -189,6 +189,8 @@
 
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;/Security&gt;" value="${hideMenu}" />
 
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;ForceLocalCache&gt;false&lt;/ForceLocalCache&gt;" value="&lt;ForceLocalCache&gt;true&lt;/ForceLocalCache&gt;"/>
+
                                 <!-- Enable AskPassword Admin UI in product-is -->
                                 <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/identity.xml" token="&lt;EnableAskPasswordAdminUI&gt;false&lt;/EnableAskPasswordAdminUI&gt;" value="&lt;EnableAskPasswordAdminUI&gt;true&lt;/EnableAskPasswordAdminUI&gt;" />
 
