@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!--
-~ Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-~
-~ Licensed under the Apache License, Version 2.0 (the "License");
-~ you may not use this file except in compliance with the License.
-~ You may obtain a copy of the License at
-~
-~ http://www.apache.org/licenses/LICENSE-2.0
-~
-~ Unless required by applicable law or agreed to in writing, software
-~ distributed under the License is distributed on an "AS IS" BASIS,
-~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-~ See the License for the specific language governing permissions and
-~ limitations under the License.
- -->
+  ~ Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~  WSO2 Inc. licenses this file to you under the Apache License,
+  ~  Version 2.0 (the "License"); you may not use this file except
+  ~  in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~  http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing,
+  ~  software distributed under the License is distributed on an
+  ~  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~  KIND, either express or implied.  See the License for the
+  ~  specific language governing permissions and limitations
+  ~  under the License.
+  -->
 
 <Server xmlns="http://wso2.org/projects/carbon/carbon.xml">
 
@@ -538,7 +540,7 @@
         <SAMLDefaultKeyEncryptionAlgorithmURI>{{saml.key_encryption_alg}}</SAMLDefaultKeyEncryptionAlgorithmURI>
         <SLOHostNameVerificationEnabled>{{saml.slo.host_name_verification}}</SLOHostNameVerificationEnabled>
 
-        <SAML2ArtifactValidityPeriodInMinutes>{{saml.artifact.validity}}</SAML2ArtifactValidityPeriodInMinutes>
+        <SAML2ArtifactValidityPeriodInMinutes>{{saml.artifact.validity_mins}}</SAML2ArtifactValidityPeriodInMinutes>
         <SAMLECPEndpoint>{{saml.endpoints.ecp}}</SAMLECPEndpoint>
     </SSOService>
 
@@ -843,6 +845,24 @@
             {% endfor %}
         </EventListener>
         {% endfor %}
+                       orderId="{{event.default_listener.user_failure_audit_logger.priority}}"
+                       enable="{{event.default_listener.user_failure_audit_logger.enable}}"/>
+        <EventListener id="user_claim_audit_logger"
+                       type="org.wso2.carbon.user.core.listener.UserOperationEventListener"
+                       name="org.wso2.carbon.user.mgt.listeners.UserClaimsAuditLogger"
+                       orderId="9"
+                       enable="false"/>
+        <!-- Custom Audit Loggers-->
+        {% for listener in event_listener %}
+        <EventListener id="{{listener.id}}"
+                       type="{{listener.type}}"
+                       name="{{listener.name}}"
+                       orderId="{{listener.order}}">
+            {% for key,value in listener.properties.items() %}
+            <Property name="{{key}}">{{value}}</Property>
+            {% endfor %}
+        </EventListener>
+        {% endfor %}
     </EventListeners>
 
     <!-- These recorders are used to write user delete information to specific sources. Default event recorder is CSV
@@ -998,43 +1018,6 @@
             <Permissions>/permission/admin/manage/identity/usermgt/view</Permissions>
         </Resource>
 
-        <Resource context="(.*)/api/identity/config-mgt/v1.0/search(.*)" secured="true" http-method="GET">
-            <Permissions>/permission/admin/manage/identity/configmgt/list</Permissions>
-        </Resource>
-
-        <Resource context="(.*)/api/identity/config-mgt/v1.0/resource-type" secured="true" http-method="POST">
-            <Permissions>/permission/admin/manage/identity/configmgt/add</Permissions>
-        </Resource>
-        <Resource context="(.*)/api/identity/config-mgt/v1.0/resource-type" secured="true" http-method="PUT">
-            <Permissions>/permission/admin/manage/identity/configmgt/update</Permissions>
-        </Resource>
-        <Resource context="(.*)/api/identity/config-mgt/v1.0/resource-type/(.*)" secured="true" http-method="GET"/>
-        <Resource context="(.*)/api/identity/config-mgt/v1.0/resource-type/(.*)" secured="true" http-method="DELETE">
-            <Permissions>/permission/admin/manage/identity/configmgt/delete</Permissions>
-        </Resource>
-
-        <Resource context="(.*)/api/identity/config-mgt/v1.0/resource/(.*)" secured="true" http-method="POST">
-            <Permissions>/permission/admin/manage/identity/configmgt/add</Permissions>
-        </Resource>
-        <Resource context="(.*)/api/identity/config-mgt/v1.0/resource/(.*)" secured="true" http-method="PUT">
-            <Permissions>/permission/admin/manage/identity/configmgt/update</Permissions>
-        </Resource>
-        <Resource context="(.*)/api/identity/config-mgt/v1.0/resource/(.*)/(.*)" secured="true" http-method="GET"/>
-        <Resource context="(.*)/api/identity/config-mgt/v1.0/resource/(.*)/(.*)" secured="true" http-method="DELETE">
-            <Permissions>/permission/admin/manage/identity/configmgt/delete</Permissions>
-        </Resource>
-
-        <Resource context="(.*)/api/identity/config-mgt/v1.0/resource/(.*)/(.*)" secured="true" http-method="POST">
-            <Permissions>/permission/admin/manage/identity/configmgt/add</Permissions>
-        </Resource>
-        <Resource context="(.*)/api/identity/config-mgt/v1.0/resource/(.*)/(.*)" secured="true" http-method="PUT">
-            <Permissions>/permission/admin/manage/identity/configmgt/update</Permissions>
-        </Resource>
-        <Resource context="(.*)/api/identity/config-mgt/v1.0/resource/(.*)/(.*)/(.*)" secured="true" http-method="GET"/>
-        <Resource context="(.*)/api/identity/config-mgt/v1.0/resource/(.*)/(.*)/(.*)" secured="true" http-method="DELETE">
-            <Permissions>/permission/admin/manage/identity/configmgt/delete</Permissions>
-        </Resource>
-
         <Resource context="(.*)/api/identity/consent-mgt/v1.0/consents" secured="true" http-method="all"/>
         <Resource context="(.*)/api/identity/consent-mgt/v1.0/consents/receipts/(.*)" secured="true" http-method="all"/>
 
@@ -1156,15 +1139,8 @@
 
         <Resource context="(.*)/api/identity/oauth2/uma/resourceregistration/v1.0/(.*)" secured="true" http-method="all"/>
         <Resource context="(.*)/api/identity/oauth2/uma/permission/v1.0/(.*)" secured="true" http-method="all"/>
-
-        <Resource context="(.*)/api/identity/auth/v1.2/data(.*)" secured="true" http-method="all"/>
-        <Resource context="(.*)/api/identity/auth/v1.2/context(.*)" secured="true" http-method="all"/>
-
+        <Resource context="(.*)/api/identity/auth/(.*)" secured="true" http-method="all"/>
         <Resource context="(.*)/api/identity/template/mgt/v1.0.0/(.*)" secured="true" http-method="all"/>
-
-        <Resource context="(.*)/api/identity/user/v1.0/update-username(.*)" secured="true" http-method="PUT">
-            <Permissions>/permission/admin/manage/identity/usermgt/update</Permissions>
-        </Resource>
     </ResourceAccessControl>
 
     <ClientAppAuthentication>
@@ -1211,6 +1187,7 @@
                 <Username>{{authentication.adaptive.event_publisher.authentication.basic.username}}</Username>
                 <Password>{{authentication.adaptive.event_publisher.authentication.basic.password}}</Password>
             </BasicAuthentication>
+            {% endif %}
         </EventPublisher>
         <!--End of default configs for event publisher-->
 
