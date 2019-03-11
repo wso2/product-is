@@ -26,7 +26,6 @@ import org.wso2.carbon.user.api.UserStoreException;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.introspector.BeanAccess;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -93,6 +92,9 @@ public class Utility {
                 log.error(errorMessage, e);
                 throw new MigrationClientException(errorMessage, e);
             }
+        } else {
+            throw new MigrationClientException(Constant.MIGRATION_CONFIG_FILE_NAME + " file does not exist at: " +
+                                               configFilePath);
         }
         return config;
     }
@@ -100,14 +102,14 @@ public class Utility {
     public static List<Integer> getInactiveTenants() {
         List<Integer> inactiveTenants = new ArrayList<>();
         try {
-            Tenant[] tenants = ISMigrationServiceDataHolder.getRealmService().getTenantManager().getAllTenants();
+            Set<Tenant> tenants = Utility.getTenants();
             for (Tenant tenant : tenants) {
                 if (!tenant.isActive()) {
                     inactiveTenants.add(tenant.getId());
                 }
             }
-        } catch (UserStoreException e) {
-            log.error("Error while getting inactive tenant details. Assuming zero inactive tenants.");
+        } catch (MigrationClientException e) {
+            log.error("Error while getting inactive tenant details. Assuming zero inactive tenants.", e);
             return new ArrayList<>();
         }
 
@@ -116,16 +118,19 @@ public class Utility {
 
     public static String setMySQLDBName(Connection conn) throws SQLException {
 
-        PreparedStatement ps = conn.prepareStatement("SELECT DATABASE() FROM DUAL;");
-        ResultSet rs = ps.executeQuery();
-        String name = null;
-        if (rs.next()) {
-            name = rs.getString(1);
-            ps = conn.prepareStatement("SET @databasename = ?;");
-            ps.setString(1, name);
-            ps.execute();
+        try (PreparedStatement ps = conn.prepareStatement("SELECT DATABASE() FROM DUAL;")) {
+            try (ResultSet rs = ps.executeQuery();) {
+                String name = null;
+                if (rs.next()) {
+                    name = rs.getString(1);
+                    try (PreparedStatement ps1 = conn.prepareStatement("SET @databasename = ?;")) {
+                        ps1.setString(1, name);
+                        ps1.execute();
+                    }
+                }
+                return name;
+            }
         }
-        return name;
     }
 
     /**
@@ -164,7 +169,6 @@ public class Utility {
             }
         } catch (UserStoreException e) {
             String msg = "Error while retrieving the tenants.";
-            log.error(msg, e);
             throw new MigrationClientException(msg, e);
         }
         return tenants;
@@ -196,7 +200,6 @@ public class Utility {
         } catch (UserStoreException e) {
             String msg = "Error while getting tenant range (" + startingTenantID + " - " + endingTenantID
                     + ") specified.";
-            log.error(msg, e);
             throw new MigrationClientException(msg, e);
         }
         return tenantsRange;

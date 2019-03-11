@@ -48,204 +48,212 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Matcher;
 
 public class ThriftServer implements Runnable {
-	private static Log log = LogFactory.getLog(ThriftServer.class);
-	private final String FILE_STREAM_DEFINITION_EXT = ".json";
-	private AbstractStreamDefinitionStore streamDefinitionStore = new InMemoryStreamDefinitionStore();
-	private ThriftDataReceiver thriftDataReceiver;
-	private boolean eventReceived = false;
-	private AtomicLong msgCount = new AtomicLong(0);
-	private String testCaseResourceFolderName;
-	private int listeningPort;
-	private List<Event> preservedEventList = null;
-	private boolean isPreservingEvents;
 
-	public ThriftServer(String testCaseResourceFolderName, int listeningPort, boolean isPreservingEvents) {
-		this.testCaseResourceFolderName = testCaseResourceFolderName;
-		this.listeningPort = listeningPort;
-		this.isPreservingEvents = isPreservingEvents;
-	}
+    private static Log log = LogFactory.getLog(ThriftServer.class);
+    private static final String FILE_STREAM_DEFINITION_EXT = ".json";
+    private AbstractStreamDefinitionStore streamDefinitionStore = new InMemoryStreamDefinitionStore();
+    private ThriftDataReceiver thriftDataReceiver;
+    private boolean eventReceived = false;
+    private AtomicLong msgCount = new AtomicLong(0);
+    private String testCaseResourceFolderName;
+    private int listeningPort;
+    private List<Event> preservedEventList = new ArrayList<>();
+    private boolean isPreservingEvents;
 
-	public void startServer() throws DataBridgeException, StreamDefinitionStoreException {
-		msgCount.set(0);
-		start(listeningPort);
-	}
+    public ThriftServer(String testCaseResourceFolderName, int listeningPort, boolean isPreservingEvents) {
 
-	public void start(int receiverPort) throws DataBridgeException, StreamDefinitionStoreException {
-		KeyStoreUtil.setKeyStoreParams();
-		DataBridge databridge = new DataBridge(new AuthenticationHandler() {
-			@Override public boolean authenticate(String userName, String password) {
-				// Always authenticate to true.
-				return true;
-			}
+        this.testCaseResourceFolderName = testCaseResourceFolderName;
+        this.listeningPort = listeningPort;
+        this.isPreservingEvents = isPreservingEvents;
+    }
 
-			@Override public String getTenantDomain(String userName) {
-				return "admin";
-			}
+    public void startServer() throws DataBridgeException, StreamDefinitionStoreException {
 
-			@Override public int getTenantId(String s) throws UserStoreException {
-				return -1234;
-			}
+        msgCount.set(0);
+        start(listeningPort);
+    }
 
-			@Override public void initContext(AgentSession agentSession) {
+    public void start(int receiverPort) throws DataBridgeException, StreamDefinitionStoreException {
 
-			}
+        KeyStoreUtil.setKeyStoreParams();
+        DataBridge databridge = new DataBridge(new AuthenticationHandler() {
+            @Override
+            public boolean authenticate(String userName, String password) {
+                // Always authenticate to true.
+                return true;
+            }
 
-			@Override public void destroyContext(AgentSession agentSession) {
+            @Override
+            public String getTenantDomain(String userName) {
 
-			}
+                return "admin";
+            }
 
-		}, streamDefinitionStore, getResourceFilePath("StatisticTestResources", "data-bridge-config.xml"));
-		thriftDataReceiver = new ThriftDataReceiver(receiverPort, databridge);
+            @Override
+            public int getTenantId(String s) throws UserStoreException {
 
-		for (StreamDefinition streamDefinition : loadStreamDefinitions()) {
-			streamDefinitionStore.saveStreamDefinitionToStore(streamDefinition, -1234);
-			log.info("StreamDefinition of '" + streamDefinition.getStreamId() + "' added to store");
-		}
+                return -1234;
+            }
 
-		databridge.subscribe(new AgentCallback() {
+            @Override
+            public void initContext(AgentSession agentSession) {
 
-			@Override public void definedStream(StreamDefinition streamDefinition, int tenantId) {
-				log.info("Added StreamDefinition " + streamDefinition);
-			}
+            }
 
-			@Override public void removeStream(StreamDefinition streamDefinition, int tenantId) {
-				log.info("Removed StreamDefinition " + streamDefinition);
-			}
+            @Override
+            public void destroyContext(AgentSession agentSession) {
 
-			@Override public void receive(List<Event> eventList, Credentials credentials) {
-				log.info("eventListSize=" + eventList.size() + " eventList " + eventList + " for username " +
-				         credentials.getUsername());
-				eventReceived = true;
-				msgCount.addAndGet(eventList.size());
-				if (isPreservingEvents) {
-					if (preservedEventList == null) {
-						preservedEventList = new ArrayList<>();
-					}
-					preservedEventList.addAll(eventList);
-				}
-			}
-		});
-		thriftDataReceiver.start("0.0.0.0");
-		log.info("Test Server Started.");
-	}
+            }
 
-	public void stop() {
-		if (!eventReceived) {
-			log.warn("Events did not received.");
-		}
-		thriftDataReceiver.stop();
-		log.info("Test Server Stopped.");
-	}
+        }, streamDefinitionStore, getResourceFilePath("StatisticTestResources", "data-bridge-config.xml"));
+        thriftDataReceiver = new ThriftDataReceiver(receiverPort, databridge);
 
-	@Override public void run() {
-		try {
-			startServer();
-		} catch (DataBridgeException e) {
-			log.error("Cannot start the test server.", e);
-		} catch (StreamDefinitionStoreException e) {
-			log.error("StreamDefinition cannot be added to the store.", e);
-		}
-	}
+        for (StreamDefinition streamDefinition : loadStreamDefinitions()) {
+            streamDefinitionStore.saveStreamDefinitionToStore(streamDefinition, -1234);
+            log.info("StreamDefinition of '" + streamDefinition.getStreamId() + "' added to store");
+        }
 
-	public long getMsgCount() {
-		return msgCount.get();
-	}
+        databridge.subscribe(new AgentCallback() {
 
-	public List<Event> getPreservedEventList() {
-		return preservedEventList;
-	}
+            @Override
+            public void definedStream(StreamDefinition streamDefinition, int tenantId) {
 
-	public void resetMsgCount() {
-		msgCount = new AtomicLong(0);
-	}
+                log.info("Added StreamDefinition " + streamDefinition);
+            }
 
-	public void resetPreservedEventList() {
-		preservedEventList.clear();
-	}
+            @Override
+            public void removeStream(StreamDefinition streamDefinition, int tenantId) {
 
-	public List<StreamDefinition> loadStreamDefinitions() {
+                log.info("Removed StreamDefinition " + streamDefinition);
+            }
 
-		String relativeFilePath = FrameworkPathUtil.getSystemResourceLocation() +
-		                          "artifacts" + File.separator + "ESB" + File.separator +
-		                          testCaseResourceFolderName;
-		String directoryPath = relativeFilePath.replaceAll("[\\\\/]", Matcher.quoteReplacement(File.separator));
-		directoryPath = getResourceFilePath(testCaseResourceFolderName,"");
-		GenericExtFilter filter = new GenericExtFilter(FILE_STREAM_DEFINITION_EXT);
-		File directory = new File(directoryPath);
-		List<StreamDefinition> streamDefinitions = new ArrayList<StreamDefinition>();
-		if (!directory.exists()) {
-			log.error("Cannot load stream definitions from " + directory.getAbsolutePath() + " directory not exist");
-			return streamDefinitions;
-		}
-		if (!directory.isDirectory()) {
-			log.error("Cannot load stream definitions from " + directory.getAbsolutePath() + " not a directory");
-			return streamDefinitions;
-		}
+            @Override
+            public void receive(List<Event> eventList, Credentials credentials) {
 
-		// List out all the file names and filter by the extension.
-		String[] listStreamDefinitionFiles = directory.list(filter);
-		if (listStreamDefinitionFiles != null) {
-			for (final String fileEntry : listStreamDefinitionFiles) {
-				BufferedReader bufferedReader = null;
-				StringBuilder stringBuilder = new StringBuilder();
-				String fullPathToStreamDefinitionFile = directoryPath + File.separator + fileEntry;
-				try {
-					bufferedReader = new BufferedReader(new FileReader(fullPathToStreamDefinitionFile));
-					String line;
-					while ((line = bufferedReader.readLine()) != null) {
-						stringBuilder.append(line).append("\n");
-					}
-					StreamDefinition streamDefinition =
-							EventDefinitionConverterUtils.convertFromJson(stringBuilder.toString().trim());
-					streamDefinitions.add(streamDefinition);
-				} catch (IOException e) {
-					log.error("Error in reading file : " + fullPathToStreamDefinitionFile, e);
-				} catch (MalformedStreamDefinitionException e) {
-					log.error("Error in converting Stream definition : " + e.getMessage(), e);
-				} finally {
-					try {
-						if (bufferedReader != null) {
-							bufferedReader.close();
-						}
-					} catch (IOException e) {
-						log.error("Error occurred when reading the file : " + e.getMessage(), e);
-					}
-				}
-			}
-		}
-		return streamDefinitions;
-	}
+                log.info("eventListSize=" + eventList.size() + " eventList " + eventList + " for username " +
+                        credentials.getUsername());
+                eventReceived = true;
+                msgCount.addAndGet(eventList.size());
+                if (isPreservingEvents) {
+                    preservedEventList.addAll(eventList);
+                }
+            }
+        });
+        thriftDataReceiver.start("0.0.0.0");
+        log.info("Test Server Started.");
+    }
 
-	public String getResourceFilePath(String testCaseFolderName, String resourceFileName) {
-		String relativeFilePath = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator +
-		"IS" + File.separator + "analytics" + File.separator + testCaseFolderName + File.separator + resourceFileName;
-		return relativeFilePath.replaceAll("[\\\\/]", Matcher.quoteReplacement(File.separator));
-	}
+    public void stop() {
 
-	// Inner class, generic extension filter
-	public class GenericExtFilter implements FilenameFilter {
+        if (!eventReceived) {
+            log.warn("Events did not received.");
+        }
+        thriftDataReceiver.stop();
+        log.info("Test Server Stopped.");
+    }
 
-		private String ext;
+    @Override
+    public void run() {
 
-		public GenericExtFilter(String ext) {
-			this.ext = ext;
-		}
+        try {
+            startServer();
+        } catch (DataBridgeException e) {
+            log.error("Cannot start the test server.", e);
+        } catch (StreamDefinitionStoreException e) {
+            log.error("StreamDefinition cannot be added to the store.", e);
+        }
+    }
 
-		public boolean accept(File dir, String name) {
-			return (name.endsWith(ext));
-		}
-	}
+    public long getMsgCount() {
 
-	public void waitToReceiveEvents(int maxWaitTime, int expectedCount){
-		for(int i = 0; i < maxWaitTime; i = i + 5000){
-			if(msgCount.get() >= expectedCount){
-				break;
-			}
-			try {
-				Thread.sleep(5000);
-			} catch (InterruptedException e) {
-				//ignored
-			}
-		}
-	}
+        return msgCount.get();
+    }
+
+    public List<Event> getPreservedEventList() {
+
+        return preservedEventList;
+    }
+
+    public void resetMsgCount() {
+
+        msgCount = new AtomicLong(0);
+    }
+
+    public void resetPreservedEventList() {
+
+        log.info("Clearing event list with " + preservedEventList.size() + " events.");
+        preservedEventList.clear();
+    }
+
+    public List<StreamDefinition> loadStreamDefinitions() {
+
+        String directoryPath = getResourceFilePath(testCaseResourceFolderName, "");
+        GenericExtFilter filter = new GenericExtFilter(FILE_STREAM_DEFINITION_EXT);
+        File directory = new File(directoryPath);
+        List<StreamDefinition> streamDefinitions = new ArrayList<StreamDefinition>();
+        if (!directory.exists()) {
+            log.error("Cannot load stream definitions from " + directory.getAbsolutePath() + " directory not exist");
+            return streamDefinitions;
+        }
+        if (!directory.isDirectory()) {
+            log.error("Cannot load stream definitions from " + directory.getAbsolutePath() + " not a directory");
+            return streamDefinitions;
+        }
+
+        // List out all the file names and filter by the extension.
+        String[] listStreamDefinitionFiles = directory.list(filter);
+        if (listStreamDefinitionFiles != null) {
+            for (final String fileEntry : listStreamDefinitionFiles) {
+                BufferedReader bufferedReader = null;
+                StringBuilder stringBuilder = new StringBuilder();
+                String fullPathToStreamDefinitionFile = directoryPath + File.separator + fileEntry;
+                try {
+                    bufferedReader = new BufferedReader(new FileReader(fullPathToStreamDefinitionFile));
+                    String line;
+                    while ((line = bufferedReader.readLine()) != null) {
+                        stringBuilder.append(line).append("\n");
+                    }
+                    StreamDefinition streamDefinition =
+                            EventDefinitionConverterUtils.convertFromJson(stringBuilder.toString().trim());
+                    streamDefinitions.add(streamDefinition);
+                } catch (IOException e) {
+                    log.error("Error in reading file : " + fullPathToStreamDefinitionFile, e);
+                } catch (MalformedStreamDefinitionException e) {
+                    log.error("Error in converting Stream definition : " + e.getMessage(), e);
+                } finally {
+                    try {
+                        if (bufferedReader != null) {
+                            bufferedReader.close();
+                        }
+                    } catch (IOException e) {
+                        log.error("Error occurred when reading the file : " + e.getMessage(), e);
+                    }
+                }
+            }
+        }
+        return streamDefinitions;
+    }
+
+    public String getResourceFilePath(String testCaseFolderName, String resourceFileName) {
+
+        String relativeFilePath = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator +
+                "IS" + File.separator + "analytics" + File.separator + testCaseFolderName + File.separator + resourceFileName;
+        return relativeFilePath.replaceAll("[\\\\/]", Matcher.quoteReplacement(File.separator));
+    }
+
+    // Inner class, generic extension filter
+    public class GenericExtFilter implements FilenameFilter {
+
+        private String ext;
+
+        public GenericExtFilter(String ext) {
+
+            this.ext = ext;
+        }
+
+        public boolean accept(File dir, String name) {
+
+            return (name.endsWith(ext));
+        }
+    }
 }

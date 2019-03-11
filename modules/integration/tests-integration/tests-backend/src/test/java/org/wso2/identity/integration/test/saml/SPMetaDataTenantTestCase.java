@@ -51,7 +51,7 @@ public class SPMetaDataTenantTestCase extends ISIntegrationTest {
     private static final String ADMIN_USERNAME = "admin@wso2.com";
     private static final String ADMIN_PASSWORD = "admin";
 
-    @BeforeClass
+    @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
 
         super.init(TestUserMode.TENANT_ADMIN);
@@ -109,7 +109,7 @@ public class SPMetaDataTenantTestCase extends ISIntegrationTest {
         Assert.assertTrue(Arrays.asList(storeEntries).contains(CERT_ALIAS));
     }
 
-    @AfterClass
+    @AfterClass(alwaysRun = true)
     public void endTest() throws RemoteException, IdentitySAMLSSOConfigServiceIdentityException {
 
         ssoConfigServiceClient.removeServiceProvider(ISSUER);

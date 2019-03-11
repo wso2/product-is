@@ -103,14 +103,7 @@ public class UserInformationRecoveryServiceTenantEmailUserTestCase extends ISInt
             userMgtClient.deleteUser(TENANT_USER);
         }
 
-        File identityMgtDefaultFile = new File(getISResourceLocation() + File.separator + "identityMgt" +
-                File.separator + "identity-mgt-default.properties");
-        File userMgtConfig = new File(getISResourceLocation() + File.separator + "identityMgt" + File.separator +
-                "user-mgt-default.xml");
-        scm.applyConfigurationWithoutRestart(identityMgtDefaultFile, identityMgtServerFile, true);
-        scm.applyConfigurationWithoutRestart(userMgtConfig, userMgtXml, true);
-        scm.restartGracefully();
-
+        scm.restoreToLastConfiguration(false);
     }
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})

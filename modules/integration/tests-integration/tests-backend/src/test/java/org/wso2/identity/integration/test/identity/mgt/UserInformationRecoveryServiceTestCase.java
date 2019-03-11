@@ -18,8 +18,6 @@
 
 package org.wso2.identity.integration.test.identity.mgt;
 
-import java.io.File;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
@@ -28,25 +26,27 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
+import org.wso2.carbon.captcha.mgt.beans.xsd.CaptchaInfoBean;
 import org.wso2.carbon.claim.mgt.stub.dto.ClaimDTO;
 import org.wso2.carbon.claim.mgt.stub.dto.ClaimMappingDTO;
-import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
-import org.wso2.identity.integration.common.clients.UserManagementClient;
-import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
-import org.wso2.identity.integration.common.clients.UserProfileMgtServiceClient;
-import org.wso2.identity.integration.common.clients.mgt.UserInformationRecoveryServiceClient;
-import org.wso2.carbon.captcha.mgt.beans.xsd.CaptchaInfoBean;
 import org.wso2.carbon.identity.mgt.stub.beans.VerificationBean;
 import org.wso2.carbon.identity.mgt.stub.dto.ChallengeQuestionDTO;
 import org.wso2.carbon.identity.mgt.stub.dto.ChallengeQuestionIdsDTO;
 import org.wso2.carbon.identity.mgt.stub.dto.UserChallengesDTO;
 import org.wso2.carbon.identity.mgt.stub.dto.UserIdentityClaimDTO;
-import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.carbon.identity.user.profile.stub.types.UserFieldDTO;
 import org.wso2.carbon.identity.user.profile.stub.types.UserProfileDTO;
+import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
-import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.identity.integration.common.clients.ClaimManagementServiceClient;
+import org.wso2.identity.integration.common.clients.UserManagementClient;
+import org.wso2.identity.integration.common.clients.UserProfileMgtServiceClient;
+import org.wso2.identity.integration.common.clients.mgt.UserInformationRecoveryServiceClient;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.util.Utils;
+
+import java.io.File;
 
 /*
  * TODO - Need to update all the methods with confirmation return check.
@@ -68,7 +68,7 @@ public class UserInformationRecoveryServiceTestCase extends ISIntegrationTest{
 	@BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 		super.init();
-        String carbonHome = CarbonUtils.getCarbonHome();
+        String carbonHome = Utils.getResidentCarbonHome();
 		identityMgtServerFile = new File(carbonHome + File.separator
 				+ "repository" + File.separator + "conf" + File.separator
 				+ "identity" + File.separator + "identity-mgt.properties");

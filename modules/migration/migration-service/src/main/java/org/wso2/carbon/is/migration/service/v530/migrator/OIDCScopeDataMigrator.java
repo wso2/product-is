@@ -39,7 +39,7 @@ public class OIDCScopeDataMigrator extends Migrator {
     public void copyOIDCScopeData() {
 
         try {
-            RegistryDataManager.getInstance().copyOIDCScopeData(isIgnoreForInactiveTenants());
+            RegistryDataManager.getInstance().copyOIDCScopeData(isIgnoreForInactiveTenants(), isContinueOnError());
         } catch (Exception e) {
             log.error("Error while copying scope data", e);
         }

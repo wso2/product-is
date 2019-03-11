@@ -1,0 +1,70 @@
+<LocalAndOutBoundAuthenticationConfig>
+    <AuthenticationSteps>
+      <AuthenticationStep>
+        <StepOrder>1</StepOrder>
+        <LocalAuthenticatorConfigs>
+          <LocalAuthenticatorConfig>
+            <Name>BasicAusssthenticator</Name>
+            <DisplayName>basic</DisplayName>
+            <IsEnabled>false</IsEnabled>
+            <Properties/>
+          </LocalAuthenticatorConfig>
+        </LocalAuthenticatorConfigs>
+        <FederatedIdentityProviders/>
+        <SubjectStep>true</SubjectStep>
+        <AttributeStep>true</AttributeStep>
+      </AuthenticationStep>
+      <AuthenticationStep>
+        <StepOrder>2</StepOrder>
+        <LocalAuthenticatorConfigs>
+          <LocalAuthenticatorConfig>
+            <Name>totp</Name>
+            <DisplayName>totp</DisplayName>
+            <IsEnabled>false</IsEnabled>
+            <Properties/>
+          </LocalAuthenticatorConfig>
+          <LocalAuthenticatorConfig>
+            <Name>FIDOAuthesssnticator</Name>
+            <DisplayName>fido</DisplayName>
+            <IsEnabled>false</IsEnabled>
+            <Properties/>
+          </LocalAuthenticatorConfig>
+        </LocalAuthenticatorConfigs>
+        <FederatedIdentityProviders/>
+        <SubjectStep>false</SubjectStep>
+        <AttributeStep>false</AttributeStep>
+      </AuthenticationStep>
+    </AuthenticationSteps>
+    <AuthenticationType>flow</AuthenticationType>
+    <alwaysSendBackAuthenticatedListOfIdPs>true</alwaysSendBackAuthenticatedListOfIdPs>
+    <subjectClaimUri>http://kkaka.com</subjectClaimUri>
+    <UseTenantDomainInUsername>true</UseTenantDomainInUsername>
+    <UseUserstoreDomainInRoles>true</UseUserstoreDomainInRoles>
+    <UseUserstoreDomainInUsername>true</UseUserstoreDomainInUsername>
+    <EnableAuthorization>true</EnableAuthorization>
+    <AuthenticationScript enabled="true" language="application/javascript"><![CDATA[
+// Role-Based from Template...
+
+// This script will step up authentication for any user belonging
+// to one of the given roles
+// If the user has any of the below roles, authentication will be stepped up
+var rolesToStepUp = ['admin', 'manager'];
+
+function onLoginRequest(context) {
+    executeStep(1, {
+        onSuccess: function (context) {
+            // Extracting authenticated subject from the first step
+            var user = context.currentKnownSubject;
+            // Checking if the user is assigned to one of the given roles
+            var hasRole = hasAnyOfTheRoles(user, rolesToStepUp);
+            if (hasRole) {
+                Log.info(user.username + ' Has one of Roles: ' + rolesToStepUp.toString());
+                executeStep(2);
+            }
+        }
+    });
+}
+
+// End of Role-Based.......
+]]></AuthenticationScript>
+  </LocalAndOutBoundAuthenticationConfig>

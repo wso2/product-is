@@ -30,7 +30,7 @@ import org.wso2.carbon.identity.core.util.IdentityIOStreamUtils;
 import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 import org.wso2.carbon.identity.recovery.model.ChallengeQuestion;
 import org.wso2.carbon.identity.recovery.util.Utils;
-import org.wso2.carbon.is.migration.internal.ISMigrationServiceDataHolder;
+import org.wso2.carbon.is.migration.util.Utility;
 import org.wso2.carbon.registry.api.Collection;
 import org.wso2.carbon.registry.api.Registry;
 import org.wso2.carbon.registry.api.RegistryException;
@@ -56,6 +56,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import static org.wso2.carbon.base.MultitenantConstants.SUPER_TENANT_DOMAIN_NAME;
+import static org.wso2.carbon.base.MultitenantConstants.SUPER_TENANT_ID;
 import static org.wso2.carbon.context.RegistryType.SYSTEM_CONFIGURATION;
 import static org.wso2.carbon.identity.recovery.IdentityRecoveryConstants.Questions.CHALLENGE_QUESTION_ID;
 import static org.wso2.carbon.identity.recovery.IdentityRecoveryConstants.Questions.CHALLENGE_QUESTION_LOCALE;
@@ -120,6 +121,7 @@ public class RegistryDataManager {
         return instance;
     }
 
+    @Deprecated
     public void migrateEmailTemplates(boolean migrateActiveTenantsOnly) throws Exception {
 
         //migrating super tenant configurations
@@ -131,8 +133,7 @@ public class RegistryDataManager {
         }
 
         //migrating tenant configurations
-        Tenant[] tenants = ISMigrationServiceDataHolder
-                .getRealmService().getTenantManager().getAllTenants();
+        Set<Tenant> tenants = Utility.getTenants();
         for (Tenant tenant : tenants) {
             if (migrateActiveTenantsOnly && !tenant.isActive()) {
                 log.info("Tenant " + tenant.getDomain() + " is inactive. Skipping Email Templates migration!!!!");
@@ -150,6 +151,44 @@ public class RegistryDataManager {
             }
         }
     }
+
+    public void migrateEmailTemplates(boolean migrateActiveTenantsOnly, boolean continueOnError) throws Exception {
+
+        //migrating super tenant configurations
+        try {
+            migrateTenantEmailTemplates();
+            log.info("Email templates migrated for tenant : " + SUPER_TENANT_DOMAIN_NAME);
+        } catch (Exception e) {
+            String msg = "Error while migrating email templates for tenant : " + SUPER_TENANT_DOMAIN_NAME;
+            if (!continueOnError) {
+                throw e;
+            }
+            log.error(msg, e);
+        }
+
+        //migrating tenant configurations
+        Set<Tenant> tenants = Utility.getTenants();
+        for (Tenant tenant : tenants) {
+            if (migrateActiveTenantsOnly && !tenant.isActive()) {
+                log.info("Tenant " + tenant.getDomain() + " is inactive. Skipping Email Templates migration!!!!");
+                continue;
+            }
+            try {
+                startTenantFlow(tenant);
+                IdentityTenantUtil.getTenantRegistryLoader().loadTenantRegistry(tenant.getId());
+                migrateTenantEmailTemplates();
+                log.info("Email templates migrated for tenant : " + tenant.getDomain());
+            } catch (Exception e) {
+                if (!continueOnError) {
+                    throw e;
+                }
+                log.error("Error while migrating email templates for tenant : " + tenant.getDomain(), e);
+            } finally {
+                PrivilegedCarbonContext.endTenantFlow();
+            }
+        }
+    }
+
 
     private void migrateTenantEmailTemplates() throws IdentityException {
 
@@ -207,7 +246,7 @@ public class RegistryDataManager {
         return s;
     }
 
-
+    @Deprecated
     public void migrateChallengeQuestions(boolean migrateActiveTenantsOnly) throws Exception {
         //migrating super tenant configurations
         try {
@@ -218,7 +257,40 @@ public class RegistryDataManager {
         }
 
         //migrating tenant configurations
-        Tenant[] tenants = ISMigrationServiceDataHolder.getRealmService().getTenantManager().getAllTenants();
+        Set<Tenant> tenants = Utility.getTenants();
+        for (Tenant tenant : tenants) {
+            if (migrateActiveTenantsOnly && !tenant.isActive()) {
+                log.info("Tenant " + tenant.getDomain() + " is inactive. Skipping challenge question migration.");
+                continue;
+            }
+            try {
+                startTenantFlow(tenant);
+                IdentityTenantUtil.getTenantRegistryLoader().loadTenantRegistry(tenant.getId());
+                migrateChallengeQuestionsForTenant();
+                log.info("Challenge Questions migrated for tenant : " + tenant.getDomain());
+            } catch (Exception e) {
+                log.error("Error while migrating challenge questions for tenant : " + tenant.getDomain(), e);
+            } finally {
+                PrivilegedCarbonContext.endTenantFlow();
+            }
+        }
+    }
+
+    public void migrateChallengeQuestions(boolean migrateActiveTenantsOnly, boolean continueOnError) throws Exception {
+
+        //migrating super tenant configurations
+        try {
+            migrateChallengeQuestionsForTenant();
+            log.info("Challenge Questions migrated for tenant : " + SUPER_TENANT_DOMAIN_NAME);
+        } catch (Exception e) {
+            if (!continueOnError) {
+                throw e;
+            }
+            log.error("Error while migrating challenge questions for tenant : " + SUPER_TENANT_DOMAIN_NAME, e);
+        }
+
+        //migrating tenant configurations
+        Set<Tenant> tenants = Utility.getTenants();
         for (Tenant tenant : tenants) {
             if (migrateActiveTenantsOnly && !tenant.isActive()) {
                 log.info("Tenant " + tenant.getDomain() + " is inactive. Skipping challenge question migration!!!!");
@@ -230,6 +302,9 @@ public class RegistryDataManager {
                 migrateChallengeQuestionsForTenant();
                 log.info("Challenge Questions migrated for tenant : " + tenant.getDomain());
             } catch (Exception e) {
+                if (!continueOnError) {
+                    throw e;
+                }
                 log.error("Error while migrating challenge questions for tenant : " + tenant.getDomain(), e);
             } finally {
                 PrivilegedCarbonContext.endTenantFlow();
@@ -313,11 +388,22 @@ public class RegistryDataManager {
         carbonContext.setTenantDomain(tenant.getDomain());
     }
 
+    private void startTenantFlow(String tenantDomain) {
+
+        int tenantId = IdentityTenantUtil.getTenantId(tenantDomain);
+
+        PrivilegedCarbonContext.startTenantFlow();
+        PrivilegedCarbonContext carbonContext = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+        carbonContext.setTenantId(tenantId);
+        carbonContext.setTenantDomain(tenantDomain);
+    }
+
+    @Deprecated
     public void copyOIDCScopeData(boolean migrateActiveTenantsOnly) throws Exception {
 
         // since copying oidc-config file for super tenant is handled by the OAuth component we only need to handle
         // this in migrated tenants.
-        Tenant[] tenants = ISMigrationServiceDataHolder.getRealmService().getTenantManager().getAllTenants();
+        Set<Tenant> tenants = Utility.getTenants();
         for (Tenant tenant : tenants) {
             if (migrateActiveTenantsOnly && !tenant.isActive()) {
                 log.info("Tenant " + tenant.getDomain() + " is inactive. Skipping copying OIDC Scopes Data !!!!");
@@ -336,6 +422,49 @@ public class RegistryDataManager {
         }
     }
 
+    public void copyOIDCScopeData(boolean migrateActiveTenantsOnly, boolean continueOnError) throws Exception {
+
+        copyOIDCScopeDataOfSuperTenant(continueOnError);
+
+        Set<Tenant> tenants = Utility.getTenants();
+        for (Tenant tenant : tenants) {
+            if (migrateActiveTenantsOnly && !tenant.isActive()) {
+                log.info("Tenant " + tenant.getDomain() + " is inactive. Skipping copying OIDC Scopes Data.");
+                continue;
+            }
+            try {
+                startTenantFlow(tenant);
+                IdentityTenantUtil.getTenantRegistryLoader().loadTenantRegistry(tenant.getId());
+                initiateOIDCScopes();
+                log.info("OIDC Scope data migrated for tenant : " + tenant.getDomain());
+            } catch (RegistryException | FileNotFoundException | IdentityException e) {
+                if (!continueOnError) {
+                    throw e;
+                }
+                log.error("Error while migrating OIDC Scope data for tenant:  " + tenant.getDomain(), e);
+            } finally {
+                PrivilegedCarbonContext.endTenantFlow();
+            }
+        }
+    }
+
+    private void copyOIDCScopeDataOfSuperTenant(boolean continueOnError)
+            throws FileNotFoundException, IdentityException, RegistryException {
+
+        try {
+            startTenantFlow(SUPER_TENANT_DOMAIN_NAME);
+            IdentityTenantUtil.getTenantRegistryLoader().loadTenantRegistry(SUPER_TENANT_ID);
+            initiateOIDCScopes();
+            log.info("OIDC Scope data migrated for tenant: " + SUPER_TENANT_DOMAIN_NAME);
+        } catch (RegistryException | FileNotFoundException | IdentityException e) {
+            if (!continueOnError) {
+                throw e;
+            }
+            log.error("Error while migrating OIDC Scope data for tenant:  " + SUPER_TENANT_DOMAIN_NAME, e);
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
+        }
+    }
 
     private void initiateOIDCScopes() throws RegistryException, FileNotFoundException, IdentityException {
 

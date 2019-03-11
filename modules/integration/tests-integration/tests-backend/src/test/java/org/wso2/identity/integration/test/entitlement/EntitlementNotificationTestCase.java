@@ -25,12 +25,12 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.identity.entitlement.stub.dto.PolicyDTO;
-import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
-import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.identity.integration.common.clients.entitlement.EntitlementPolicyServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -129,13 +129,14 @@ public class EntitlementNotificationTestCase extends ISIntegrationTest {
     private void changeISConfiguration() throws Exception {
         changeEntitlementPropertyConfig();
         changeNotificationMgtPropertyConfig();
-        serverConfigurationManager.restartForcefully();
+        serverConfigurationManager.restartGracefully();
     }
 
     private void changeEntitlementPropertyConfig() throws Exception {
+
         log.info("Changing entitlement.properties to add EntitlementNotificationExtension");
 
-        String carbonHome = CarbonUtils.getCarbonHome();
+        String carbonHome = Utils.getResidentCarbonHome();
         entitlementProperties = new File(carbonHome + File.separator
                 + "repository" + File.separator + "conf" + File.separator + "identity" + File.separator +
                 "entitlement.properties");
@@ -149,9 +150,10 @@ public class EntitlementNotificationTestCase extends ISIntegrationTest {
     }
 
     private void changeNotificationMgtPropertyConfig() throws Exception {
+
         log.info("Changing msg-mgt.properties to add EntitlementNotificationExtension");
 
-        String carbonHome = CarbonUtils.getCarbonHome();
+        String carbonHome = Utils.getResidentCarbonHome();
         String templateLocation = getISResourceLocation()
                 + File.separator + "notification-mgt" + File.separator + "templates" + File.separator
                 + "entitlement";
@@ -159,7 +161,7 @@ public class EntitlementNotificationTestCase extends ISIntegrationTest {
                 + File.separator + "notification-mgt" + File.separator + "config" + File.separator
                 + "entitlementNotificationMgt.properties";
 
-        HashMap<String, String> newProperties = new HashMap<String, String>();
+        HashMap<String, String> newProperties = new HashMap<>();
         newProperties.put("json.subscription.policyUpdate.jsonContentTemplate", templateLocation);
         replaceProperties(newProperties, msgMgtPropertiesFileLocation);
         notificationMgtProperties = new File(carbonHome + File.separator
@@ -167,8 +169,6 @@ public class EntitlementNotificationTestCase extends ISIntegrationTest {
                 "msg-mgt.properties");
 
         File configuredNotificationProperties = new File(msgMgtPropertiesFileLocation);
-
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredNotificationProperties,
                 notificationMgtProperties, true);
     }
@@ -201,30 +201,7 @@ public class EntitlementNotificationTestCase extends ISIntegrationTest {
     }
 
     private void resetISConfiguration() throws Exception {
-        resetEntitlementProperties();
-        resetMsgMgtProperties();
-        serverConfigurationManager.restartGracefully();
+
+        serverConfigurationManager.restoreToLastConfiguration(false);
     }
-
-    private void resetEntitlementProperties() throws Exception {
-        log.info("Replacing entitlement.properties with default configurations");
-
-        File defaultEntitlementProperties = new File(getISResourceLocation()
-                + File.separator + "entitlement" + File.separator + "config" + File.separator
-                + "entitlement_default.properties");
-
-        serverConfigurationManager.applyConfigurationWithoutRestart(defaultEntitlementProperties, entitlementProperties, true);
-    }
-
-    private void resetMsgMgtProperties() throws Exception {
-        log.info("Replacing msg-mgt.properties with default configurations");
-
-        File defaultMsgMgtPropertiesFile = new File(getISResourceLocation()
-                + File.separator + "notification-mgt" + File.separator + "config" + File.separator
-                + "msg-mgt-default.properties");
-
-        serverConfigurationManager.applyConfigurationWithoutRestart(defaultMsgMgtPropertiesFile, notificationMgtProperties, true);
-
-    }
-
 }

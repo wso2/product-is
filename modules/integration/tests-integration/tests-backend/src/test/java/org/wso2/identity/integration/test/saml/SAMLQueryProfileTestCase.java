@@ -19,9 +19,6 @@ package org.wso2.identity.integration.test.saml;
 
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
-import org.apache.catalina.LifecycleException;
-import org.apache.catalina.core.StandardHost;
-import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -45,8 +42,6 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
-import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
-import org.wso2.carbon.h2.osgi.utils.CarbonUtils;
 import org.wso2.carbon.identity.application.common.model.xsd.Claim;
 import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationConfig;
@@ -67,12 +62,10 @@ import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserSto
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
 
-import javax.xml.xpath.XPathExpressionException;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -80,6 +73,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.xml.xpath.XPathExpressionException;
 
 /**
  * Test case of SAMLQuery service
@@ -115,7 +109,6 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
     private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
     private HttpClient httpClient;
     private SAMLConfig config;
-    private Tomcat tomcatServer;
     private String resultPage;
 
     private String samlResponse;
@@ -124,6 +117,7 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
 
     @Factory(dataProvider = "samlConfigProvider")
     public SAMLQueryProfileTestCase(SAMLConfig config) {
+
         if (log.isDebugEnabled()) {
             log.info("SAML SSO Test initialized for " + config);
         }
@@ -143,6 +137,7 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
 
     @DataProvider(name = "samlConfigProvider")
     public static SAMLConfig[][] samlConfigProvider() {
+
         return new SAMLConfig[][]{
                 {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_REDIRECT,
                         ClaimType.NONE, App.SUPER_TENANT_APP_WITH_SIGNING)},
@@ -165,6 +160,7 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
+
         super.init();
         changeIdentityXml();
 
@@ -183,19 +179,11 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
 
         createUser();
         createApplication();
-
-        //Starting tomcat
-        log.info("Starting Tomcat");
-        tomcatServer = getTomcat();
-
-        URL resourceUrl = getClass()
-                .getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR + config.getApp().getArtifact() + ".war");
-        startTomcat(tomcatServer, "/" + config.getApp().getArtifact(), resourceUrl.getPath());
-
     }
 
     @AfterClass(alwaysRun = true)
     public void testClear() throws Exception {
+
         deleteUser();
         deleteApplication();
 
@@ -204,14 +192,11 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
         remoteUSMServiceClient = null;
         httpClient = null;
         replaceIdentityXml();
-        //Stopping tomcat
-        tomcatServer.stop();
-        tomcatServer.destroy();
-        Thread.sleep(10000);
     }
 
     @Test(description = "Add service provider", groups = "wso2.is", priority = 1)
     public void testAddSP() throws Exception {
+
         Boolean isAddSuccess = ssoConfigServiceClient
                 .addServiceProvider(createSsoServiceProviderDTO());
         Assert.assertTrue(isAddSuccess, "Adding a service provider has failed for " + config);
@@ -225,6 +210,7 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
     @Test(description = "Remove service provider", groups = "wso2.is", dependsOnMethods = {"testClaims"})
     public void testRemoveSP()
             throws Exception {
+
         Boolean isAddSuccess = ssoConfigServiceClient.removeServiceProvider(config.getApp().getArtifact());
         Assert.assertTrue(isAddSuccess, "Removing a service provider has failed for " + config);
     }
@@ -232,6 +218,7 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
     @Test(alwaysRun = true, description = "Testing SAML SSO login", groups = "wso2.is",
             dependsOnMethods = {"testAddSP"})
     public void testSAMLSSOLogin() {
+
         try {
             HttpResponse response;
 
@@ -256,7 +243,7 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
                     samlResponse);
             resultPage = extractDataFromResponse(response);
             Assert.assertTrue(resultPage.contains("You are logged in as " + config.getUser()
-                    .getTenantAwareUsername()),
+                            .getTenantAwareUsername()),
                     "SAML SSO Login failed for " + config);
             this.samlResponse = new String(Base64.decode(samlResponse));
 
@@ -268,6 +255,7 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
     @Test(alwaysRun = true, description = "Testing SAML SSO Claims", groups = "wso2.is",
             dependsOnMethods = {"testSAMLAttributeQueryRequest"})
     public void testClaims() {
+
         String claimString = resultPage.substring(resultPage.lastIndexOf("<table>"));
 
         switch (config.getClaimType()) {
@@ -283,6 +271,7 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
     @Test(alwaysRun = true, description = "Testing Assertion ID Request", groups = "wso2.is",
             dependsOnMethods = {"testSAMLSSOLogin"})
     public void testSAMLAssertionIDRequest() throws Exception {
+
         try {
             log.info("RESPONSE " + this.samlResponse);
             String id = QueryClientUtils.getAssertionId(this.samlResponse);
@@ -293,7 +282,7 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
                 signKeyDataHolder = new ClientSignKeyDataHolder(resourceUrl.getPath(),
                         "wso2carbon", "wso2carbon");
             } catch (Exception e) {
-                Assert.fail("Unable to initiate client sign key data holder"+config, e);
+                Assert.fail("Unable to initiate client sign key data holder" + config, e);
             }
             String serverURL = TestUserMode.TENANT_ADMIN.equals(config.getUserMode()) ? WSO2IS_TENANT_URL : WSO2IS_URL;
             SAMLQueryClient queryClient = new SAMLQueryClient(serverURL, signKeyDataHolder);
@@ -330,6 +319,7 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
     }
 
     private void assertLocalClaims(String claims) {
+
         Map<String, String> attributeMap = extractClaims(claims);
         Assert.assertTrue(attributeMap.containsKey(firstNameClaimURI), "Claim nickname is expected");
         Assert.assertEquals(attributeMap.get(firstNameClaimURI), config.getUser().getNickname(),
@@ -343,36 +333,13 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
     }
 
     private void assertNoneClaims(String claims) {
+
         String[] dataArray = StringUtils.substringsBetween(claims, "<td>", "</td>");
         Assert.assertNull(dataArray, "Claims are not expected for " + config);
     }
 
-    private void startTomcat(Tomcat tomcat, String webAppUrl, String webAppPath)
-            throws LifecycleException {
-        tomcat.addWebapp(tomcat.getHost(), webAppUrl, webAppPath);
-        tomcat.start();
-    }
-
-    private Tomcat getTomcat() {
-        Tomcat tomcat = new Tomcat();
-        tomcat.getService().setContainer(tomcat.getEngine());
-        tomcat.setPort(8490);
-        tomcat.setBaseDir("");
-
-        StandardHost stdHost = (StandardHost) tomcat.getHost();
-
-        stdHost.setAppBase("");
-        stdHost.setAutoDeploy(true);
-        stdHost.setDeployOnStartup(true);
-        stdHost.setUnpackWARs(true);
-        tomcat.setHost(stdHost);
-
-        setSystemProperties();
-        return tomcat;
-    }
-
-
     private void setSystemProperties() {
+
         URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "keystores" + ISIntegrationTest.URL_SEPARATOR
                 + "products" + ISIntegrationTest.URL_SEPARATOR + "wso2carbon.jks");
         System.setProperty("javax.net.ssl.trustStore", resourceUrl.getPath());
@@ -383,6 +350,7 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
 
     private String extractDataFromResponse(HttpResponse response, String key, int token)
             throws IOException {
+
         BufferedReader rd = new BufferedReader(
                 new InputStreamReader(response.getEntity().getContent()));
         String line;
@@ -399,6 +367,7 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
     }
 
     private HttpResponse sendPOSTMessage(String sessionKey) throws Exception {
+
         HttpPost post = new HttpPost(COMMON_AUTH_URL);
         post.setHeader("User-Agent", USER_AGENT);
         post.addHeader("Referer", String.format(ACS_URL, config.getApp().getArtifact()));
@@ -411,12 +380,14 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
     }
 
     private HttpResponse sendGetRequest(String url) throws Exception {
+
         HttpGet request = new HttpGet(url);
         request.addHeader("User-Agent", USER_AGENT);
         return httpClient.execute(request);
     }
 
     private HttpResponse sendSAMLMessage(String url, Map<String, String> parameters) throws IOException {
+
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         HttpPost post = new HttpPost(url);
         post.setHeader("User-Agent", USER_AGENT);
@@ -431,6 +402,7 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
     }
 
     private HttpResponse sendSAMLMessage(String url, String samlMsgKey, String samlMsgValue) throws IOException {
+
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         HttpPost post = new HttpPost(url);
         post.setHeader("User-Agent", USER_AGENT);
@@ -443,6 +415,7 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
     }
 
     private HttpResponse sendRedirectRequest(HttpResponse response) throws IOException {
+
         Header[] headers = response.getAllHeaders();
         String url = "";
         for (Header header : headers) {
@@ -458,6 +431,7 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
     }
 
     private String extractDataFromResponse(HttpResponse response) throws IOException {
+
         BufferedReader rd = new BufferedReader(
                 new InputStreamReader(response.getEntity().getContent()));
         StringBuilder result = new StringBuilder();
@@ -470,6 +444,7 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
     }
 
     private Map<String, String> extractClaims(String claimString) {
+
         String[] dataArray = StringUtils.substringsBetween(claimString, "<td>", "</td>");
         Map<String, String> attributeMap = new HashMap<String, String>();
         String key = null;
@@ -487,6 +462,7 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
     }
 
     private void createApplication() throws Exception {
+
         ServiceProvider serviceProvider = new ServiceProvider();
         serviceProvider.setApplicationName(APPLICATION_NAME);
         serviceProvider.setDescription("This is a test Service Provider");
@@ -514,10 +490,12 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
     }
 
     private void deleteApplication() throws Exception {
+
         applicationManagementServiceClient.deleteApplication(APPLICATION_NAME);
     }
 
     private void createUser() {
+
         log.info("Creating User " + config.getUser().getUsername());
         try {
             // creating the user
@@ -531,6 +509,7 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
     }
 
     private void deleteUser() {
+
         log.info("Deleting User " + config.getUser().getUsername());
         try {
             remoteUSMServiceClient.deleteUser(config.getUser().getTenantAwareUsername());
@@ -540,6 +519,7 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
     }
 
     private SAMLSSOServiceProviderDTO createSsoServiceProviderDTO() {
+
         SAMLSSOServiceProviderDTO samlssoServiceProviderDTO = new SAMLSSOServiceProviderDTO();
         samlssoServiceProviderDTO.setIssuer(config.getApp().getArtifact());
         samlssoServiceProviderDTO.setAssertionConsumerUrls(new String[]{String.format(ACS_URL,
@@ -565,6 +545,7 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
     }
 
     private ClaimMapping[] getClaimMappings() {
+
         List<ClaimMapping> claimMappingList = new ArrayList<ClaimMapping>();
 
         Claim firstNameClaim = new Claim();
@@ -595,6 +576,7 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
     }
 
     private ClaimValue[] getUserClaims() {
+
         ClaimValue[] claimValues = new ClaimValue[3];
 
         ClaimValue firstName = new ClaimValue();
@@ -643,6 +625,7 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
 
         User(String username, String password, String tenantDomain, String tenantAwareUsername, String email,
              String nickname) {
+
             this.username = username;
             this.password = password;
             this.tenantDomain = tenantDomain;
@@ -652,26 +635,32 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
         }
 
         public String getUsername() {
+
             return username;
         }
 
         public String getPassword() {
+
             return password;
         }
 
         public String getTenantDomain() {
+
             return tenantDomain;
         }
 
         public String getTenantAwareUsername() {
+
             return tenantAwareUsername;
         }
 
         public String getEmail() {
+
             return email;
         }
 
         public String getNickname() {
+
             return nickname;
         }
     }
@@ -684,20 +673,24 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
         private boolean signingEnabled;
 
         App(String artifact, boolean signingEnabled) {
+
             this.artifact = artifact;
             this.signingEnabled = signingEnabled;
         }
 
         public String getArtifact() {
+
             return artifact;
         }
 
         public boolean isSigningEnabled() {
+
             return signingEnabled;
         }
     }
 
     private static class SAMLConfig {
+
         private TestUserMode userMode;
         private User user;
         private HttpBinding httpBinding;
@@ -706,13 +699,15 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
 
         /**
          * Constructor
-         * @param userMode User mode
-         * @param user subject
+         *
+         * @param userMode    User mode
+         * @param user        subject
          * @param httpBinding Http binding of request
-         * @param claimType Claim types
-         * @param app Client application
+         * @param claimType   Claim types
+         * @param app         Client application
          */
         private SAMLConfig(TestUserMode userMode, User user, HttpBinding httpBinding, ClaimType claimType, App app) {
+
             this.userMode = userMode;
             this.user = user;
             this.httpBinding = httpBinding;
@@ -721,27 +716,33 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
         }
 
         public TestUserMode getUserMode() {
+
             return userMode;
         }
 
         public App getApp() {
+
             return app;
         }
 
         public User getUser() {
+
             return user;
         }
 
         public ClaimType getClaimType() {
+
             return claimType;
         }
 
         public HttpBinding getHttpBinding() {
+
             return httpBinding;
         }
 
         @Override
         public String toString() {
+
             return "SAMLConfig[" +
                     ", userMode=" + userMode.name() +
                     ", user=" + user.getUsername() +
@@ -752,10 +753,9 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
         }
     }
 
-
     public void changeIdentityXml() throws AutomationUtilException, IOException, XPathExpressionException {
-        log.info("Changing identity.xml file to enable assertion query profile");
 
+        log.info("Changing identity.xml file to enable assertion query profile");
 
         serverConfigurationManager = new ServerConfigurationManager(isServer);
         identityXml = new File(Utils.getResidentCarbonHome() + File.separator
@@ -771,6 +771,7 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
     }
 
     public void replaceIdentityXml() throws AutomationUtilException, IOException, XPathExpressionException {
+
         log.info("Reverting back to original identity.xml");
 
         serverConfigurationManager = new ServerConfigurationManager(isServer);
@@ -783,5 +784,4 @@ public class SAMLQueryProfileTestCase extends ISIntegrationTest {
                 identityXml, true);
         serverConfigurationManager.restartGracefully();
     }
-
 }
