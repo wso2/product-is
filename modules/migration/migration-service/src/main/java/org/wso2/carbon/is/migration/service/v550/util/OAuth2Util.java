@@ -30,9 +30,18 @@ public class OAuth2Util {
     public static boolean isEncryptionWithTransformationEnabled() throws IdentityOAuth2Exception {
 
         String cipherTransformation = System.getProperty(CIPHER_TRANSFORMATION_SYSTEM_PROPERTY);
+        return cipherTransformation != null && isTokenEncryptionEnabled();
+    }
+
+    /**
+     * This method will check whether token encryption is enabled via identity.xml
+     * @return whether token encryption is enabled.
+     * @throws IdentityOAuth2Exception
+     */
+    public static boolean isTokenEncryptionEnabled() throws IdentityOAuth2Exception {
+
         TokenPersistenceProcessor persistenceProcessor = OAuthServerConfiguration.getInstance()
                 .getPersistenceProcessor();
-        return cipherTransformation != null
-                && (persistenceProcessor instanceof EncryptionDecryptionPersistenceProcessor);
+        return (persistenceProcessor instanceof EncryptionDecryptionPersistenceProcessor);
     }
 }
