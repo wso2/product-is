@@ -3,10 +3,11 @@
 var util = require("util/utility.jag");
 include("util/constants.jag");
 
+var identityServerURL = Packages.org.wso2.carbon.identity.core.util.IdentityUtil;
+
 var i18n = util.initI18N();
 
 var lg = new Log();
-
 
 function login(){
     util.setServerURL("true");
@@ -26,7 +27,7 @@ function login(){
 			}
     		return;
     	}else{
-lg.info('saml not enabled');
+            lg.info('saml not enabled');
     	}
     }
     else{
@@ -46,22 +47,12 @@ function initAuthenticationProtocol(){
 	}
 	var authConfig = readFile("/authentication/auth_config.json");
 	if(authConfig.EnableSAMLSSOLogin === "true"){
-	
-
-			
 		//If only saml enabled, we do initialize the saml flow. 
 		var samlConfig = authConfig.saml_config;
 		var properties = {};
 		
 		var sys = Packages.java.lang.System;
 		var carbonHome = sys.getProperty("carbon.home");
-		var serverUrl = getServerUrl();
-		var server = stringify(serverUrl);
-		if(server.indexOf("[") > -1 || server.indexOf("]") > -1){
-			serverUrl = serverUrl[0];
-		}
-
-        var serverCoreUrl = application.get(SERVER_CORE_URL);
 
 		for (var prop in samlConfig){
 			if (samlConfig.hasOwnProperty(prop)) {
@@ -71,7 +62,7 @@ function initAuthenticationProtocol(){
 				}
 				if (prop === "SAML.IdPUrl") {
 					if (value.indexOf("http") == -1) {
-						value = serverCoreUrl + "/" + (value);
+						value = identityServerURL.getServerURL(value, true, true);
 					}
 				}
 				properties[prop] = value;
