@@ -95,11 +95,20 @@
       "database.shared_db.driver": "com.mysql.jdbc.Driver",
       "database.shared_db.url": "jdbc:mysql://$ref{database.shared_db.hostname}:$ref{database.shared_db.port}/$ref{database.shared_db.name}",
       "database.shared_db.validationQuery": "SELECT 1"
-    },
-    "h2": {
+    }
+  },
+  "deployment.pattern":{
+    "DEV" : {
       "database.shared_db.driver": "org.h2.Driver",
-      "database.shared_db.url": "jdbc:h2:./repository/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000",
-      "database.shared_db.validationQuery": "SELECT 1"
+      "database.shared_db.url": "jdbc:h2:./repository/database/WSO2SHARED_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000",
+      "database.shared_db.validationQuery": "SELECT 1",
+      "database.shared_db.username": "wso2carbon",
+      "database.shared_db.password": "wso2carbon",
+      "database.identity_db.driver": "org.h2.Driver",
+      "database.identity_db.url": "jdbc:h2:./repository/database/WSO2IDENTITY_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000",
+      "database.identity_db.validationQuery": "SELECT 1",
+      "database.identity_db.username": "wso2carbon",
+      "database.identity_db.password": "wso2carbon"
     }
   },
   "tenant_mgt.tenant_manager.type": {
@@ -131,7 +140,6 @@
       "identity.auth_framework.endpoint.tls_protocol" : "TLSv1.2"
     }
   },
-
   "identity.auth_framework.endpoint.tenant_list_enabled": {
     "true": {
       "identity.auth_framework.endpoint.hostname_verification_enabled" : true,

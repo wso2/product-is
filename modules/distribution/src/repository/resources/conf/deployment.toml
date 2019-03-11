@@ -1,4 +1,5 @@
 [deployment]
+pattern = "DEV"  #possible values, DEV,HA,HA_WITH_ANALYTICS
 hostname = "localhost"
 local_member_ip = "127.0.0.1"
 
@@ -9,3 +10,17 @@ create_admin_account = true
 
 [user_store]
 type = "read_write_ldap"
+connection_url = "ldap://localhost:${Ports.EmbeddedLDAP.LDAPServerPort}"
+connection_name = "uid=admin,ou=system"
+connection_password = "admin"
+base_dn = "dc=wso2,dc=org"      #refers the base dn on which the user and group search bases will be generated
+
+[database.identity_db]
+#type = "h2"         # Infers the local H2 DB connection details for 'DEV' pattern. SHOULD BE CHANGED TO PRODUCTION READY DB FOR PRODUCTION
+
+[database.shared_db]
+#type = "h2"         # Infers the local DB connection details. SHOULD BE CHANGED TO PRODUCTION READY DB FOR PRODUCTION
+
+[keystore.tls]
+name = "wso2carbon.jks"
+password = "wso2carbon"

@@ -7,7 +7,6 @@
   },
   "user_store.type": "read_write_ldap",
 
-  "identity.datasource": "jdbc/WSO2IdentityDB",
   "identity.auth_framework.proxy_mode": "smart",
   "identity.auth_framework.login_page_url": "/authenticationendpoint/login.do",
   "identity.auth_framework.retry_page_url": "/authenticationendpoint/retry.do",
