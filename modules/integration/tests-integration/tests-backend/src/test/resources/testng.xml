@@ -31,7 +31,7 @@
             <class name="org.wso2.identity.integration.test.scim.SCIMServiceProviderGroupTestCase" />
             <class name="org.wso2.identity.integration.test.application.mgt.ImportExportServiceProviderTest"/>
             <class name="org.wso2.identity.integration.test.application.mgt.ApplicationTemplateMgtTestCase"/>
-            <class name="org.wso2.identity.integration.test.application.mgt.DefaultAuthSeqManagementTestCase"/>
+            <!--<class name="org.wso2.identity.integration.test.application.mgt.DefaultAuthSeqManagementTestCase"/>-->
             <class name="org.wso2.identity.integration.test.user.account.connector.UserAccountConnectorTestCase"/>
             <class name="org.wso2.identity.integration.test.AuthenticationAdminTestCase"/>
             <class name="org.wso2.identity.integration.test.identity.mgt.AccountLockEnabledTestCase"/>
