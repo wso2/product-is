@@ -108,7 +108,9 @@
       "database.identity_db.url": "jdbc:h2:./repository/database/WSO2IDENTITY_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000",
       "database.identity_db.validationQuery": "SELECT 1",
       "database.identity_db.username": "wso2carbon",
-      "database.identity_db.password": "wso2carbon"
+      "database.identity_db.password": "wso2carbon",
+      "keystore.tls.name": "wso2carbon.jks",
+      "keystore.tls.password": "wso2carbon"
     }
   },
   "tenant_mgt.tenant_manager.type": {
