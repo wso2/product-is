@@ -1,12 +1,11 @@
 <%
 include("../wsUtil.jag");
 var util = require("../../util/utility.jag");
-var identityUtil = Packages.org.wso2.carbon.identity.core.util.IdentityUtil;
 
 var log = new Log();
 var serverUrl = util.getServerUrl();
 var serverUrl2 = serverUrl + "/SAML2SSOAuthenticationService";
-var identityServerUrl = identityUtil.getServerURL(getServicePath() + "/SAML2SSOAuthenticationService", true, true);
+var identityServerUrl = util.getServerUrl() + "/SAML2SSOAuthenticationService";
 var ws = require('ws');
 var webService = new ws.WSRequest();
 var carbon = require('carbon');

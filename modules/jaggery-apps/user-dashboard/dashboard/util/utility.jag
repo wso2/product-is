@@ -285,45 +285,26 @@ function setServerURL(isWebContextRootAvailable) {
 
         //retrieving site configuration for overiding ui urls
         var proxyConfHost = jsonConf.proxy.proxyHost;
+        var proxyConfPort = jsonConf.proxy.proxyHTTPSPort;
+        var proxyOrigin = '';
 
-        if (proxyConfHost == null || proxyConfHost === '' || proxyConfHost === 'null' || proxyConfHost.length <= 0) {
+        if (( proxyConfHost == null || proxyConfHost === '' || proxyConfHost === 'null' || proxyConfHost.length <= 0 )
+            || ( proxyConfPort == null || proxyConfPort === '' || proxyConfPort === 'null' || proxyConfPort.length <=
+                0 )) {
             //overriding carbon proxy settings configuration not available for ui urls
-            hostName = serverConfigService.getFirstProperty("HostName");
+            proxyOrigin = identityServerURL.getServerURL("", false, false);
+            if (log.isDebugEnabled()) {
+                log.debug("Carbon proxy settings available in carbon.xml- Proxy Origin Name: " + proxyOrigin);
+            }
         } else {
             //proxy settings available for ui urls
             if (log.isDebugEnabled()) {
-                log.debug("site configuration ui url overiding available - Proxy Host Name : " + proxyConfHost);
+                log.debug("site configuration ui url overiding available - Proxy Origin Name: " + proxyOrigin);
             }
-            hostName = proxyConfHost;
+            proxyOrigin = mgtTransport + "://" + proxyConfHost + ":" + proxyConfPort;
         }
 
         var mgtHostName = serverConfigService.getFirstProperty("MgtHostName");
-
-        var CarbonUtils = Packages.org.wso2.carbon.utils.CarbonUtils;
-
-
-        var proxyConfPort = jsonConf.proxy.proxyHTTPSPort;
-        if (proxyConfPort == null || proxyConfPort === '' || proxyConfPort === 'null' || proxyConfPort.length <= 0) {
-            //overriding carbon proxy settings configuration not available for ui urls
-            //retrieve https proxy port
-            var httpsProxyPort = CarbonUtils.getTransportProxyPort(configContext, "https");
-            if (httpsProxyPort < 0 || httpsProxyPort == null) {
-                //proxy port not configured
-                //retrieve http port instead
-                httpsPort = CarbonUtils.getTransportPort(configContext, "https");
-                if (log.isDebugEnabled()) {
-                    log.debug("proxy port not configured");
-                }
-            } else {
-                httpsPort = httpsProxyPort;
-            }
-        } else {
-            //proxy settings available for ui urls
-            if (log.isDebugEnabled()) {
-                log.debug("site configuration ui url overiding available - Proxy Port : " + proxyConfPort);
-            }
-            httpsPort = proxyConfPort;
-        }
 
 
         var proxyConfContextPath = jsonConf.proxy.proxyContextPath;
@@ -333,7 +314,8 @@ function setServerURL(isWebContextRootAvailable) {
         } else {
             //proxy settings available for ui urls
             if (log.isDebugEnabled()) {
-                log.debug("site configuration ui url overiding available - Proxy Port : " + proxyConfPort);
+                log.debug("site configuration ui url overiding available - Proxy Context Path : " +
+                    proxyConfContextPath);
             }
             proxyContextPath = proxyConfContextPath;
         }
@@ -347,28 +329,31 @@ function setServerURL(isWebContextRootAvailable) {
         }
 
         //create server service url
-        serverUrl = identityServerURL.getServerURL("/services", true, true);
-        var serverCoreUrl
-        //basic server core url : https://<HOST_NAME>:<PORT>/<PROXY_CONTEXT_PATH>
-        if (isWebContextRootAvailable === 'false') {
-            serverCoreUrl = identityServerURL.getServerURL("", true, false);
+        var serviceOrigin = jsonConf.service.serviceOrigin;
+        if (serviceOrigin == null || serviceOrigin === '' || serviceOrigin === 'null' || serviceOrigin.length <= 0) {
+            serverUrl = identityServerURL.getServerURL("/services", true, true);
+            var serverCoreUrl
+            //basic server core url : https://<HOST_NAME>:<PORT>/<PROXY_CONTEXT_PATH>
+            if (isWebContextRootAvailable === 'false') {
+                serverCoreUrl = identityServerURL.getServerURL("", true, false);
+            } else {
+                serverCoreUrl = identityServerURL.getServerURL("", true, true);
+            }
+        } else {
+            serverCoreUrl = identityServerURL.fillURLPlaceholders(serviceOrigin);
+            serverUrl = serverCoreUrl + "/services";
         }
-        else {
-            serverCoreUrl = identityServerURL.getServerURL("", true, true);
-        }
-
         //set server url infomation
         application.put(MGT_HOST_NAME, mgtHostName);
         application.put(MGT_TRANSPORT, mgtTransport);
-        application.put(HTTPS_PORT, httpsPort);
+        application.put(PROXY_ORIGIN, proxyOrigin);
         application.put(SERVER_URL, serverUrl);
         application.put(SERVER_CORE_URL, serverCoreUrl);
         application.put(PROXY_CONTEXT_PATH, proxyContextPath);
         application.put(HOST, hostName);
 
         if (log.isDebugEnabled()) {
-            log.debug("Host Name       :" + hostName);
-            log.debug("Https port      :" + httpsPort);
+            log.debug("Proxy Origin      :" + proxyOrigin);
             log.debug("Server Url      :" + serverUrl);
             log.debug("Server Core Url :" + serverCoreUrl);
             log.debug("Proxy Context Path :" + proxyContextPath);
