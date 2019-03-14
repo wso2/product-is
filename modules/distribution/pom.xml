@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>5.8.0-m26-SNAPSHOT</version>
+        <version>5.8.0-m26</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -191,11 +191,9 @@
 
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;ForceLocalCache&gt;false&lt;/ForceLocalCache&gt;" value="&lt;ForceLocalCache&gt;true&lt;/ForceLocalCache&gt;" />
 
-                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;!--${line.separator}            Uncomment the following configuration to use hardware security module for cryptographic operations.${line.separator}            Provide configurations as detailed in each tag.${line.separator}        --&gt;" value=" "/>
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;!--${line.separator} Uncomment the following configuration to use hardware security module for cryptographic operations.${line.separator}            Provide configurations as detailed in each tag.${line.separator}        --&gt;" value=" " />
 
-                                <replaceregexp file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml"
-                                               match="^(\s)*&lt;\!--(\s)*&lt;HSMBasedCryptoProviderConfig&gt;[\s\S]*?&lt;\/HSMBasedCryptoProviderConfig&gt;(\s)*-->"
-                                               replace=" " flags="m"/>
+                                <replaceregexp file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" match="^(\s)*&lt;\!--(\s)*&lt;HSMBasedCryptoProviderConfig&gt;[\s\S]*?&lt;\/HSMBasedCryptoProviderConfig&gt;(\s)*--&gt;" replace=" " flags="m" />
 
                                 <!-- Enable AskPassword Admin UI in product-is -->
                                 <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/identity.xml" token="&lt;EnableAskPasswordAdminUI&gt;false&lt;/EnableAskPasswordAdminUI&gt;" value="&lt;EnableAskPasswordAdminUI&gt;true&lt;/EnableAskPasswordAdminUI&gt;" />
