@@ -23,12 +23,12 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Factory;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 import org.wso2.identity.scenarios.commons.SCIM2CommonClient;
 import org.wso2.identity.scenarios.commons.ScenarioTestBase;
+import org.wso2.identity.scenarios.commons.util.SCIMConstants;
+
+import java.io.IOException;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -37,8 +37,6 @@ import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJ
 
 public class ManageRolesSCIM2TestCase extends ScenarioTestBase {
 
-    public static final String ID_ATTRIBUTE = "id";
-
     private String username;
     private String password;
     private String tenantDomain;
@@ -46,6 +44,7 @@ public class ManageRolesSCIM2TestCase extends ScenarioTestBase {
     private CloseableHttpClient client;
     private SCIM2CommonClient scim2Client;
     private String groupId;
+    private JSONObject requestJSON;
 
     @Factory(dataProvider = "manageRolesConfigProvider")
     public ManageRolesSCIM2TestCase(String username, String password, String tenantDomain, String inputFile) {
@@ -74,74 +73,105 @@ public class ManageRolesSCIM2TestCase extends ScenarioTestBase {
         super.init();
         scim2Client = new SCIM2CommonClient(getDeploymentProperty(IS_HTTPS_URL));
         client = HttpClients.createDefault();
+        requestJSON = scim2Client.getRoleJSON(inputFileName);
     }
 
-    @Test
+    @AfterClass(alwaysRun = true)
+    public void atEnd() throws Exception {
+
+        scim2Client.deleteGroup(client, groupId, username, password);
+        client.close();
+    }
+
+    @Test(description = "1.1.1.3")
     public void testCreateGroupWithoutPermission() throws Exception {
 
-        JSONObject groupJSON = scim2Client.getRoleJSON(inputFileName);
-        HttpResponse response = scim2Client.provisionGroup(client, groupJSON, username, password);
+        // Create group
+        HttpResponse response = scim2Client.provisionGroup(client, requestJSON, username, password);
+
+        // Validate create group response.
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED,
                 "Group has not been created successfully");
-        JSONObject returnedGroupJSON = getJSONFromResponse(response);
-        groupId = returnedGroupJSON.get(ID_ATTRIBUTE).toString();
-        assertNotNull(groupId, "SCIM2 group id not available in the response.");
+        JSONObject responseJSON = getJSONFromResponse(response);
+        validateResponse(requestJSON, responseJSON);
         EntityUtils.consume(response.getEntity());
-    }
+        groupId = responseJSON.get(SCIMConstants.ID_ATTRIBUTE).toString();
+        // Retrieve the created group for validation
+        response = scim2Client.getGroup(client, groupId, username, password);
 
-    @Test(dependsOnMethods = "testCreateGroupWithoutPermission")
-    public void testGetGroup() throws Exception {
-
-        HttpResponse response = scim2Client.getGroup(client, groupId, username, password);
+        // Validate response
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK, "Unable to retrieve the group");
+        responseJSON = getJSONFromResponse(response);
+        validateResponse(requestJSON, responseJSON);
         EntityUtils.consume(response.getEntity());
     }
 
-    @Test(dependsOnMethods = "testGetGroup")
+    @Test(description = "1.1.1.4",
+          dependsOnMethods = "testCreateGroupWithoutPermission")
     public void testCreateExistingGroup() throws Exception {
 
-        JSONObject groupJSON = scim2Client.getRoleJSON(inputFileName);
-        HttpResponse response = scim2Client.provisionGroup(client, groupJSON, username, password);
+        // Try to create an existing group
+        HttpResponse response = scim2Client.provisionGroup(client, requestJSON, username, password);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CONFLICT,
                 "Group has been added successfully without conflict");
         EntityUtils.consume(response.getEntity());
+
     }
 
-    @Test(dependsOnMethods = "testCreateExistingGroup")
+    @Test(description = "1.1.1.5",
+          dependsOnMethods = "testCreateExistingGroup")
     public void testDeleteGroup() throws Exception {
 
-        HttpResponse response = scim2Client.deleteGroup(client, groupId, ADMIN_USERNAME, ADMIN_PASSWORD);
+        HttpResponse response = scim2Client.deleteGroup(client, groupId, username, password);
+
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_NO_CONTENT, "Failed to delete the group");
-        EntityUtils.consume(response.getEntity());
-    }
 
-    @Test(dependsOnMethods = "testDeleteGroup")
-    public void testGetDeletedGroup() throws Exception {
+        // Retrieve the created group for validation
+        response = scim2Client.getGroup(client, groupId, username, password);
 
-        HttpResponse response = scim2Client.getGroup(client, groupId, username, password);
-        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_NOT_FOUND,
-                "Group has not been deleted successfully");
-        EntityUtils.consume(response.getEntity());
-    }
+        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_NOT_FOUND, "Unable to retrieve the group");
 
-    @Test(dependsOnMethods = "testGetDeletedGroup")
-    public void testReCreateGroup() throws Exception {
-
-        JSONObject groupJSON = scim2Client.getRoleJSON(inputFileName);
-        HttpResponse response = scim2Client.provisionGroup(client, groupJSON, username, password);
+        // Validate create group response.
+        response = scim2Client.provisionGroup(client, requestJSON, username, password);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED,
-                "Group has not been re created successfully");
-        JSONObject returnedGroupJSON = getJSONFromResponse(response);
-        groupId = returnedGroupJSON.get(ID_ATTRIBUTE).toString();
-        assertNotNull(groupId, "SCIM2 re created group id not available in the response.");
+                "Group has not been created successfully");
+        JSONObject responseJSON = getJSONFromResponse(response);
+        validateResponse(requestJSON, responseJSON);
         EntityUtils.consume(response.getEntity());
+        groupId = responseJSON.get(SCIMConstants.ID_ATTRIBUTE).toString();
     }
 
-    @Test(dependsOnMethods = "testReCreateGroup")
-    public void testDeleteReCreatedGroup() throws Exception {
+    private void validateResponse(JSONObject requestJSON, JSONObject returnedGroupJSON) throws IOException {
 
-        HttpResponse response = scim2Client.deleteGroup(client, groupId, ADMIN_USERNAME, ADMIN_PASSWORD);
-        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_NO_CONTENT, "Failed to delete the group");
-        EntityUtils.consume(response.getEntity());
+        String resourceType = null;
+        String modifiedTime = null;
+
+        assertNotNull(returnedGroupJSON.get(SCIMConstants.ID_ATTRIBUTE),
+                "Received ID value is null. Request Object: " + requestJSON.toJSONString() + ", Response Object: "
+                        + returnedGroupJSON.toJSONString());
+
+        if (((JSONObject) returnedGroupJSON.get(SCIMConstants.META_ATTRIBUTE))
+                .get(SCIMConstants.RESOURCE_TYPE_ATTRIBUTE) != null) {
+            resourceType = ((JSONObject) returnedGroupJSON.get(SCIMConstants.META_ATTRIBUTE))
+                    .get(SCIMConstants.RESOURCE_TYPE_ATTRIBUTE).toString();
+            assertNotNull(resourceType, "Received resource type value is null. Request Object:");
+            assertEquals(resourceType, "Group", "Received resource type is incorrect.");
+        }
+
+        if (((JSONObject) returnedGroupJSON.get(SCIMConstants.META_ATTRIBUTE))
+                .get(SCIMConstants.LAST_MODIFIED_ATTRIBUTE) != null) {
+            modifiedTime = ((JSONObject) returnedGroupJSON.get(SCIMConstants.META_ATTRIBUTE))
+                    .get(SCIMConstants.LAST_MODIFIED_ATTRIBUTE).toString();
+            assertNotNull(modifiedTime, "Received time value is null. Request Object:");
+        }
+
+        assertNotNull(returnedGroupJSON.get(SCIMConstants.SCHEMAS_ATTRIBUTE),
+                "Received schema value is null. Request Object: " + requestJSON.toJSONString() + ", Response Object: "
+                        + returnedGroupJSON.toJSONString());
+
+        assertNotNull(requestJSON.get(SCIMConstants.GROUP_NAME_ATTRIBUTE),
+                "Received group name value is null. Request Object: " + requestJSON.toJSONString()
+                        + ", Response Object: " + returnedGroupJSON.toJSONString());
     }
 }
+
