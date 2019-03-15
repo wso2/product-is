@@ -1783,12 +1783,12 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.12.292</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.12.296</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.11.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
         <identity.carbon.auth.saml2.version>5.2.14</identity.carbon.auth.saml2.version>
-        <identity.inbound.auth.saml.version>5.4.32</identity.inbound.auth.saml.version>
+        <identity.inbound.auth.saml.version>5.4.35</identity.inbound.auth.saml.version>
         <identity.inbound.auth.oauth.version>6.0.105</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.2.8</identity.inbound.auth.openid.version>
         <identity.agent.sso.version>5.1.14</identity.agent.sso.version>
@@ -1825,7 +1825,7 @@
         <!-- Authenticator Properties -->
         <identity.outbound.auth.oidc.version>5.1.19</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.passive.sts.version>5.2.2</identity.outbound.auth.passive.sts.version>
-        <identity.outbound.auth.samlsso.version>5.1.21</identity.outbound.auth.samlsso.version>
+        <identity.outbound.auth.samlsso.version>5.1.22</identity.outbound.auth.samlsso.version>
 
         <!-- Social Authenticator Properties -->
         <social.authenticator.facebook.version>5.1.14</social.authenticator.facebook.version>
@@ -1987,7 +1987,7 @@
         <json.version>3.0.0.wso2v1</json.version>
         <carbon.consent.mgt.version>2.0.19</carbon.consent.mgt.version>
         <carbon.database.utils.version>2.0.7</carbon.database.utils.version>
-        <carbon.identity.oauth.uma.version>1.0.17</carbon.identity.oauth.uma.version>
+        <carbon.identity.oauth.uma.version>1.0.18</carbon.identity.oauth.uma.version>
         <liberty.maven.plugin.version>2.2</liberty.maven.plugin.version>
         <maven.war.plugin.version>3.2.0</maven.war.plugin.version>
         <snakeyaml.version.range>[1.16.0, 1.17.0)</snakeyaml.version.range>
