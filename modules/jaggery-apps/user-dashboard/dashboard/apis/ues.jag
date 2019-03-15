@@ -2,9 +2,11 @@
 response.addHeader("Access-Control-Allow-Origin", "*");
 response.addHeader("Content-Type", "application/json");
 
-var util = require("/util/utility.jag");
-util.setServerURL("false");
-var serverHttpsUrl = application.get(SERVER_CORE_URL);
+//set server url infomation
+var proxyOrigin = application.get(PROXY_ORIGIN);
+var proxyContextPath = application.get(PROXY_CONTEXT_PATH);
+
+var serverHttpsUrl = proxyOrigin + proxyContextPath;
 
 (function () {
 

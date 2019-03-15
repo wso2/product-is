@@ -28,50 +28,28 @@ function setServerURL() {
         var jsonConf = parse(json);
 
         var hostName = '';
+        var serviceOrigin = jsonConf.service.serviceOrigin;
 
         //retrieving site configuration for overiding ui urls
         var proxyConfHost = jsonConf.proxy.proxyHost;
-        var fidoAppId = jsonConf.fido.appId;
-
-
-
-        if ( proxyConfHost == null || proxyConfHost === '' || proxyConfHost === 'null' || proxyConfHost.length <= 0 ){
-            //overriding carbon proxy settings configuration not available for ui urls
-            hostName = serverConfigService.getFirstProperty("HostName");
-        } else {
-            //proxy settings available for ui urls
-            if (log.isDebugEnabled()) {
-                log.debug("site configuration ui url overiding available - Proxy Host Name : " + proxyConfHost);
-            }
-            hostName = proxyConfHost;
-        }
-
-        var mgtHostName = serverConfigService.getFirstProperty("MgtHostName");
-
-        var CarbonUtils = Packages.org.wso2.carbon.utils.CarbonUtils;
-
-        var httpsPort;
         var proxyConfPort = jsonConf.proxy.proxyHTTPSPort;
-        if ( proxyConfPort == null || proxyConfPort === '' || proxyConfPort === 'null' || proxyConfPort.length <= 0 ){
+        var fidoAppId = jsonConf.fido.appId;
+        var proxyOrigin = '';
+
+
+
+        if (( proxyConfHost == null || proxyConfHost === '' || proxyConfHost === 'null' || proxyConfHost.length <= 0 )
+            || ( proxyConfPort == null || proxyConfPort === '' || proxyConfPort === 'null' || proxyConfPort.length <=
+            0 )) {
             //overriding carbon proxy settings configuration not available for ui urls
-            //retrieve https proxy port
-            var httpsProxyPort = CarbonUtils.getTransportProxyPort(configContext, "https");
-            if (httpsProxyPort < 0 || httpsProxyPort == null) {
-                //proxy port not configured
-                //retrieve http port instead
-                httpsPort = CarbonUtils.getTransportPort(configContext, "https");
-                if (log.isDebugEnabled()) {
-                    log.debug("proxy port not configured");
-                }
-            } else {
-                httpsPort = httpsProxyPort;
-            }
+            proxyOrigin = identityServerURL.getServerURL("", false, false);
         } else {
             //proxy settings available for ui urls
+            proxyOrigin = mgtTransport + "://" + proxyConfHost + ":" + proxyConfPort;
             if (log.isDebugEnabled()) {
-                log.debug("site configuration ui url overiding available - Proxy Port : " + proxyConfPort);
+                log.debug("site configuration ui url overiding available - Proxy Origin Name : " + proxyOrigin);
             }
-            httpsPort = proxyConfPort;
+
         }
 
         var proxyContextPath = '';
@@ -95,24 +73,25 @@ function setServerURL() {
             }
         }
 
-        //create server service url
-        serverUrl = identityServerURL.getServerURL("", true, true) + "/services";
-
-        //basic server core url : https://<HOST_NAME>:<PORT>/<PROXY_CONTEXT_PATH>
-        var serverCoreUrl = identityServerURL.getServerURL("", true, false);
+        var serverCoreUrl = '';
+        if ( serviceOrigin == null || serviceOrigin === '' || serviceOrigin === 'null' || serviceOrigin.length <= 0 ){
+            serverCoreUrl = identityServerURL.getServerURL("", true, false);
+            serverUrl = identityServerURL.getServerURL("/services", true, true);
+        } else {
+            serverCoreUrl = identityServerURL.fillURLPlaceholders(serviceOrigin);
+            serverUrl = serverCoreUrl + "/services";
+        }
 
         //set server url infomation
-        application.put(MGT_HOST_NAME, mgtHostName);
         application.put(MGT_TRANSPORT, mgtTransport);
-        application.put(HTTPS_PORT, httpsPort);
         application.put(SERVER_URL, serverUrl);
         application.put(SERVER_CORE_URL, serverCoreUrl);
         application.put(PROXY_CONTEXT_PATH, proxyContextPath);
         application.put(FIDO_APP_ID, fidoAppId);
+        application.put(PROXY_ORIGIN, proxyOrigin)
 
         if (log.isDebugEnabled()) {
-            log.debug("Host Name       :" + hostName);
-            log.debug("Https port      :" + httpsPort);
+            log.debug("Proxy Origin      :" + proxyOrigin);
             log.debug("Server Url      :" + serverUrl);
             log.debug("Server Core Url :" + serverCoreUrl);
             log.debug("Proxy Context Path :" + proxyContextPath);

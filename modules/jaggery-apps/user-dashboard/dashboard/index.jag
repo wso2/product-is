@@ -3,10 +3,8 @@
 
         var user = session.get('user');
         var log = new Log();
-        var util = require("util/utility.jag");
         var authzFailure = request.getParameter("authz_failure");
-
-        util.setServerURL("true");
+        var identityServerURL = Packages.org.wso2.carbon.identity.core.util.IdentityUtil;
 
         if (user == null) {
         if (authzFailure != null) {
@@ -16,10 +14,7 @@
         }
         }
 
-        var httpsCoreUrl = application.get(SERVER_CORE_URL);
-        if (httpsCoreUrl === 'null' || httpsCoreUrl == null || httpsCoreUrl.length <= 0) {
-        httpsCoreUrl = '';
-        }
+        var httpsCoreUrl = identityServerURL.getServerURL("", true, true);
 
         var proxyContextPath = application.get(PROXY_CONTEXT_PATH);
         if (proxyContextPath === 'null' || proxyContextPath == null || proxyContextPath.length <= 0) {
