@@ -56,8 +56,8 @@ public class OIDCBackchannelLogoutServlet extends HttpServlet {
 
         String sid = null;
         try {
-            sid = (String) SignedJWT.parse(req.getParameter("logoutToken")).getJWTClaimsSet().getClaim("sid");
-            log.info("Logout token: " + req.getParameter("logoutToken"));
+            sid = (String) SignedJWT.parse(req.getParameter("logout_token")).getJWTClaimsSet().getClaim("sid");
+            log.info("Logout token: " + req.getParameter("logout_token"));
         } catch (ParseException e) {
             log.error("Error in generating Logout Token.", e);
         }
