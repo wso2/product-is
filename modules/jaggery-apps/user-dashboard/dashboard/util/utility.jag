@@ -329,7 +329,15 @@ function setServerURL(isWebContextRootAvailable) {
         }
 
         //create server service url
-        var serviceOrigin = jsonConf.service.serviceOrigin;
+        //create server service url
+        var serviceOrigin = '' ;
+        if (jsonConf.service == undefined) {
+            serviceOrigin = '';
+        } else if (jsonConf.service.serviceOrigin == undefined) {
+            serviceOrigin = '';
+        } else {
+            serviceOrigin = jsonConf.service.serviceOrigin;
+        }
         if (serviceOrigin == null || serviceOrigin === '' || serviceOrigin === 'null' || serviceOrigin.length <= 0) {
             serverUrl = identityServerURL.getServerURL("/services", true, true);
             var serverCoreUrl
