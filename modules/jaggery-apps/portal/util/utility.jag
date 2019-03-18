@@ -23,11 +23,45 @@ function setServerURL() {
         var jsonConf = parse(json);
         var serverCoreUrl = '';
 
-        var serviceOrigin = jsonConf.server.serviceOrigin;
+        var mgtTransport = "https";
         var fidoAppId = jsonConf.fido.appId;
+        //retrieving site configuration for overiding ui urls
+        var proxyConfHost = jsonConf.proxy.proxyHost;
+        var proxyConfPort = jsonConf.proxy.proxyHTTPSPort;
+        var proxyOrigin = '';
+        var proxyContextPath = ''
 
-        var proxyContextPath = serverConfigService.getFirstProperty(PROXY_CONTEXT_PATH);
-        if (proxyContextPath === 'null' || proxyContextPath == null || proxyContextPath === '' || proxyContextPath.length <= 0 ){
+        if ((proxyConfHost == null || proxyConfHost === '' || proxyConfHost === 'null' || proxyConfHost.length <= 0)
+            || (proxyConfPort == null || proxyConfPort === '' || proxyConfPort === 'null' || proxyConfPort.length <=
+                0)) {
+            //overriding carbon proxy settings configuration not available for ui urls
+            proxyOrigin = identityServerURL.getServerURL("", false, false);
+            if (log.isDebugEnabled()) {
+                log.debug("Carbon proxy settings available in carbon.xml- Proxy Origin Name: " + proxyOrigin);
+            }
+        } else {
+            //proxy settings available for ui urls
+            if (log.isDebugEnabled()) {
+                log.debug("site configuration ui url overiding available - Proxy Origin Name: " + proxyOrigin);
+            }
+            proxyOrigin = mgtTransport + "://" + proxyConfHost + ":" + proxyConfPort;
+        }
+
+        var proxyConfContextPath = jsonConf.proxy.proxyContextPath;
+        if (proxyConfContextPath == null || proxyConfContextPath === '' || proxyConfContextPath === 'null' ||
+            proxyConfContextPath.length <= 0) {
+            //overriding carbon proxy settings configuration not available for ui urls
+            proxyContextPath = serverConfigService.getFirstProperty(PROXY_CONTEXT_PATH);
+        } else {
+            //proxy settings available for ui urls
+            if (log.isDebugEnabled()) {
+                log.debug("site configuration ui url overiding available - Proxy Context Path : " +
+                    proxyConfContextPath);
+            }
+            proxyContextPath = proxyConfContextPath;
+        }
+        if (proxyContextPath === 'null' || proxyContextPath == null || proxyContextPath === '' || proxyContextPath
+            .length <= 0) {
             proxyContextPath = "";
         } else {
             if (proxyContextPath.indexOf('/') != 0) {
@@ -35,6 +69,14 @@ function setServerURL() {
             }
         }
 
+        var serviceOrigin = '';
+        if (jsonConf.service == undefined) {
+            serviceOrigin = '';
+        } else if (jsonConf.service.serviceOrigin == undefined) {
+            serviceOrigin = '';
+        } else {
+            serviceOrigin = jsonConf.service.serviceOrigin;
+        }
         if ( serviceOrigin == null || serviceOrigin === '' || serviceOrigin === 'null' || serviceOrigin.length <= 0 ){
             serverCoreUrl = identityServerURL.getServerURL("", true, false);
             serverUrl = identityServerURL.getServerURL("services", true, true);
@@ -43,12 +85,15 @@ function setServerURL() {
             serverUrl = serverCoreUrl + "/services";
         }
 
+        application.put(MGT_TRANSPORT, mgtTransport);
         application.put(SERVER_URL, serverUrl);
         application.put(SERVER_CORE_URL, serverCoreUrl);
         application.put(FIDO_APP_ID, fidoAppId);
         application.put(PROXY_CONTEXT_PATH, proxyContextPath);
+        application.put(PROXY_ORIGIN, proxyOrigin);
 
         if (log.isDebugEnabled()) {
+            log.debug("Proxy Origin      :" + proxyOrigin);
             log.debug("Server Url      :" + serverUrl);
             log.debug("Server Core Url :" + serverCoreUrl);
             log.debug("Proxy Context Path :" + proxyContextPath);
