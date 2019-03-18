@@ -1,0 +1,20 @@
+{
+  "schemas": [],
+  "name": {
+    "familyName": "jackson",
+    "givenName": "ben"
+  },
+  "userName": "user5",
+  "password": "12345",
+  "emails": [
+    {
+      "primary": true,
+      "value": "ben.jackson@gmail.com",
+      "type": "home"
+    },
+    {
+      "value": "ben_j@wso2.com",
+      "type": "work"
+    }
+  ]
+}

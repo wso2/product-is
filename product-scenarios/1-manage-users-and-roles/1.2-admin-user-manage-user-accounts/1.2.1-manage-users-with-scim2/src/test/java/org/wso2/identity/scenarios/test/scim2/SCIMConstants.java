@@ -137,7 +137,6 @@ public class SCIMConstants {
    public static final String X509_CERTIFICAT_ATTRIBUTE = "x509Certificates";
    public static final String URN_ATTRIBUTE = "urn";
 
-
    public static final String META_ATTRIBUTE = "meta";
    public static final String META_CREATED_ATTRIBUTE = "created";
    public static final String META_CREATED_ATTRIBUTE_VALUE = "2010-01-23T04:56:22Z";
@@ -153,4 +152,20 @@ public class SCIMConstants {
    public static final String USER_SCHEMA = "urn:ietf:params:scim:schemas:core:2.0:User";
    public static final String ERROR_SCHEMA = "urn:ietf:params:scim:api:messages:2.0:Error";
    public static final String ENTERPRISE_SCHEMA = "urn:scim:schemas:extension:enterprise:1.0";
+
+   public static final String SCIM2_RESPONCE_TOTAL_RESULTS_ATTRIBUTE = "totalResults";
+   public static final String SCIM2_RESPONCE_START_INDEX_ATTRIBUTE = "startIndex";
+   public static final String SCIM2_RESPONCE_ITEMS_PER_PAGE_ATTRIBUTE = "itemsPerPage";
+   public static final String SCIM2_RESPONCE_RESOURCES_ATTRIBUTE = "Resources";
+   public static final String SCIM2_RESPONCE_USER_ID_ATTRIBUTE = "id";
+   public static final String SCIM2_RESPONCE_USER_NAME_ATTRIBUTE = "userName";
+
+   public static final String SCIM2_QUERY_PARAM_START_INDEX_ATTRIBUTE = "startIndex";
+   public static final String SCIM2_QUERY_PARAM_COUNT_ATTRIBUTE = "count";
+   public static final String SCIM2_QUERY_PARAM_DOMAIN_ATTRIBUTE = "domain";
+
+   public static final String QUERY_PARAMS_ATTRIBUTE = "Params";
+   public static final String RESULTS_ATTRIBUTE = "Results";
+
+   public static final String USER_NAMES_ATTRIBUTE = "userNames";
 }

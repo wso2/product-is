@@ -70,6 +70,12 @@
                                 ${basedir}/src/test/resources/scim2-users/
                             </value>
                         </property>
+                        <property>
+                            <name>scim2.requests.location</name>
+                            <value>
+                                ${basedir}/src/test/resources/scim2-requests/
+                            </value>
+                        </property>
                     </systemProperties>
                     <workingDirectory>${basedir}/target</workingDirectory>
                 </configuration>

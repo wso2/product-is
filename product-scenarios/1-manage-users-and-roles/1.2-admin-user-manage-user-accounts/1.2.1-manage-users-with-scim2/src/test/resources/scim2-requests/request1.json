@@ -1,0 +1,42 @@
+{
+  "requestSet1": {
+    "Params": {
+      "startIndex": "1",
+      "count": "2",
+      "domain": null
+    },
+    "Results": {
+      "userNames": [
+        {"name": "admin"},
+        {"name": "user1"}
+      ]
+    }
+  },
+  "requestSet2": {
+    "Params": {
+      "startIndex": "2",
+      "count": "2",
+      "domain": "PRIMARY"
+    },
+    "Results": {
+      "userNames": [
+        {"name": "user1"},
+        {"name": "user2"}
+      ]
+    }
+  },
+  "requestSet3": {
+    "Params": {
+      "startIndex": "1",
+      "count": "3",
+      "domain": null
+    },
+    "Results": {
+      "userNames": [
+        {"name": "admin"},
+        {"name": "user1"},
+        {"name": "user2"}
+      ]
+    }
+  }
+}

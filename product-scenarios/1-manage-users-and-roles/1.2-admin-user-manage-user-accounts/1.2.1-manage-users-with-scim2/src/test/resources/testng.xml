@@ -23,6 +23,7 @@
             <class name="org.wso2.identity.scenarios.test.scim2.ProvisionExistingUserTestCase"/>
             <class name="org.wso2.identity.scenarios.test.scim2.ProvisionUserWithValidationFailuresTestCase"/>
             <class name="org.wso2.identity.scenarios.test.scim2.UserProvisionWithInsufficientPrivilegesSCIM2TestCase"/>
+            <class name="org.wso2.identity.scenarios.test.scim2.UserRetrieveWithoutFilterParameterTestCase"/>
         </classes>
     </test>
 </suite>
