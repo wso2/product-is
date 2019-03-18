@@ -28,7 +28,6 @@ function setServerURL() {
         var jsonConf = parse(json);
 
         var hostName = '';
-        var serviceOrigin = jsonConf.service.serviceOrigin;
 
         //retrieving site configuration for overiding ui urls
         var proxyConfHost = jsonConf.proxy.proxyHost;
@@ -74,6 +73,15 @@ function setServerURL() {
         }
 
         var serverCoreUrl = '';
+        //create server service url
+        var serviceOrigin = '';
+        if (jsonConf.service == undefined) {
+            serviceOrigin = '';
+        } else if (jsonConf.service.serviceOrigin == undefined) {
+            serviceOrigin = '';
+        } else {
+            serviceOrigin = jsonConf.service.serviceOrigin;
+        }
         if ( serviceOrigin == null || serviceOrigin === '' || serviceOrigin === 'null' || serviceOrigin.length <= 0 ){
             serverCoreUrl = identityServerURL.getServerURL("", true, false);
             serverUrl = identityServerURL.getServerURL("/services", true, true);
