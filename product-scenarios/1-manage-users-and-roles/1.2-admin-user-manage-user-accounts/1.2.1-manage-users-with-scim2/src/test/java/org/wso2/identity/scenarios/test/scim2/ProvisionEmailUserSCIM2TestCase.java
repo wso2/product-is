@@ -22,70 +22,85 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.json.simple.JSONArray;
+import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
+import org.wso2.identity.scenarios.commons.SCIM2CommonClient;
 import org.wso2.identity.scenarios.commons.ScenarioTestBase;
-import org.wso2.identity.scenarios.commons.util.Constants;
-import org.wso2.identity.scenarios.commons.util.SCIMProvisioningUtil;
+import org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJSONFromResponse;
-
-
+import static org.wso2.identity.scenarios.commons.SCIMConstants.ID_ATTRIBUTE;
+import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
 
 public class ProvisionEmailUserSCIM2TestCase extends ScenarioTestBase {
 
     private CloseableHttpClient client;
-    private String userNameResponse;
-    private final String EMAIL_ID="scim2user@wso2.com";
     private String userId;
-
+    private String inputFile;
+    private String username;
+    private String password;
+    private String tenantDomain;
+    private SCIM2CommonClient scim2CommonClient;
+    private IdentityScenarioUtil identityScenarioUtil;
     HttpResponse response;
 
+    @Factory(dataProvider = "provisionEmailUserSCIM2")
+    public ProvisionEmailUserSCIM2TestCase(String tenantDomain, String username, String password, String inputFile) {
+
+        this.inputFile = inputFile;
+        this.username = username;
+        this.password = password;
+        this.tenantDomain = tenantDomain;
+    }
+
+    @DataProvider(name = "provisionEmailUserSCIM2")
+    private static Object[][] dcrConfigProvider() throws Exception {
+
+        return new Object[][] {
+                { SUPER_TENANT_DOMAIN, ADMIN_USERNAME, ADMIN_PASSWORD, "emailRegisterSCIM2.json" }
+        };
+    }
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
-
         client = HttpClients.createDefault();
+        scim2CommonClient = new SCIM2CommonClient(getDeploymentProperty(IS_HTTPS_URL));
+        identityScenarioUtil = new IdentityScenarioUtil();
         super.init();
-    }
-
-    @Test(description = "1.1.2.1.2.14")
-    public void testSCIM2CreateUser() throws Exception {
-
-        JSONObject rootObject = new JSONObject();
-        JSONArray schemas = new JSONArray();
-        rootObject.put(SCIMConstants.SCHEMAS_ATTRIBUTE, schemas);
-        JSONObject names = new JSONObject();
-        names.put(SCIMConstants.GIVEN_NAME_ATTRIBUTE, SCIMConstants.GIVEN_NAME_CLAIM_VALUE);
-        rootObject.put(SCIMConstants.NAME_ATTRIBUTE, names);
-        rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, EMAIL_ID);
-        rootObject.put(SCIMConstants.PASSWORD_ATTRIBUTE, SCIMConstants.PASSWORD);
-
-        response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, rootObject, Constants.SCIMEndpoints.SCIM2_ENDPOINT,
-                Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
-        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED, "Username format is not " +
-                "valid ");
-
-        userNameResponse = rootObject.get(SCIMConstants.USER_NAME_ATTRIBUTE).toString();
-        assertEquals(userNameResponse, EMAIL_ID, "username not found");
-
-        JSONObject responseObj = getJSONFromResponse(this.response);
-        userId = (responseObj).get(SCIMConstants.ID_ATTRIBUTE).toString();
-        assertNotNull(userId);
     }
 
     @AfterClass(alwaysRun = true)
     private void cleanUp() throws Exception {
 
-        response = SCIMProvisioningUtil.deleteUser(backendURL, userId, Constants.SCIMEndpoints.SCIM2_ENDPOINT,
-                Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
-        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_NO_CONTENT, "User has not been " +
-                "deleted successfully");
+        HttpResponse response = scim2CommonClient.deleteUser(client, userId, username, password);
+        assertEquals(response.getStatusLine().getStatusCode(), org.apache.commons.httpclient.HttpStatus.SC_NO_CONTENT,
+                "User has not been deleted successfully");
+        EntityUtils.consume(response.getEntity());
+        client.close();
     }
 
+    @Test(description = "1.2.1.14")
+    public void testProvisionEmailUserSCIM2() throws Exception {
+
+        //User creation
+        JSONObject requestJSONCreateUser = scim2CommonClient.getUserJSON(inputFile);
+        HttpResponse responseCreateUser = scim2CommonClient
+                .provisionUser(client, requestJSONCreateUser, username, password);
+        assertEquals(responseCreateUser.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED,
+                "User has not been created" + " successfully");
+        JSONObject responseJSONCreateUser = identityScenarioUtil.getJSONFromResponse(responseCreateUser);
+        scim2CommonClient.validateResponse(responseJSONCreateUser, requestJSONCreateUser);
+        userId = responseJSONCreateUser.get(ID_ATTRIBUTE).toString();
+        EntityUtils.consume(responseCreateUser.getEntity());
+
+        //created user validation
+        HttpResponse responseGetUser = scim2CommonClient.getUser(client, userId, username, password);
+        assertEquals(responseGetUser.getStatusLine().getStatusCode(), HttpStatus.SC_OK,
+                "User not available in the system");
+        JSONObject responseJSONGetUser = identityScenarioUtil.getJSONFromResponse(responseGetUser);
+        scim2CommonClient.validateResponse(responseJSONGetUser, requestJSONCreateUser);
+        EntityUtils.consume(responseCreateUser.getEntity());
+
+    }
 }

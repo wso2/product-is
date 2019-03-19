@@ -1,0 +1,18 @@
+{
+  "emails":[
+    {
+      "type":"home",
+      "value":"scimhome@test.com",
+      "primary":"true"
+    }
+  ],
+  "password":"scim2pwd",
+  "schemas":[
+
+  ],
+  "name":{
+    "familyName":"scim2",
+    "givenName":"user1"
+  },
+  "userName":"scim2user@wso2.com"
+}

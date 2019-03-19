@@ -22,6 +22,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.wso2.identity.scenarios.commons.util.Constants;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -29,11 +30,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.wso2.identity.scenarios.commons.SCIMConstants.*;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendDeleteRequest;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendGetRequest;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendPostRequestWithJSON;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendUpdateRequest;
 import static org.wso2.identity.scenarios.commons.util.SCIMProvisioningUtil.getCommonHeaders;
+import static org.wso2.identity.scenarios.commons.util.Constants.SEPERATOR;
 
 public class SCIM2CommonClient {
 
@@ -50,6 +55,8 @@ public class SCIM2CommonClient {
     private String identityServerHttpsUrl;
 
     private JSONParser parser;
+
+    // private CloseableHttpClient client;
 
     public SCIM2CommonClient(String identityServerHttpsUrl) {
 
@@ -195,7 +202,7 @@ public class SCIM2CommonClient {
      * @throws Exception Exception.
      */
     public HttpResponse updateGroup(HttpClient client, JSONObject groupJSON, String groupId, String username,
-                                    String password) throws Exception {
+            String password) throws Exception {
 
         return sendUpdateRequest(client, groupJSON, getSCIM2GroupsEndpoint() + "/" + groupId,
                 getCommonHeaders(username, password));
@@ -220,4 +227,77 @@ public class SCIM2CommonClient {
 
         return this.identityServerHttpsUrl + "/" + SCIM2_ENDPOINT + "/" + SCIM2_ENDPOINT_GROUPS;
     }
+
+    public String getSCIM2UserMeEndpoint() {
+        return this.identityServerHttpsUrl + SEPERATOR + Constants.SCIMEndpoints.SCIM2_ENDPOINT + SEPERATOR
+                + Constants.SCIMEndpoints.SCIM_ANONYMOUS_USER;
+    }
+
+    /**
+     * Provision user Me.
+     *
+     * @param client   Http client.
+     * @param userJSON User object.
+     * @return Http Response.
+     * @throws Exception Exception.
+     */
+    public HttpResponse provisionUserMe(HttpClient client, JSONObject userJSON, String username, String password)
+            throws Exception {
+
+        return sendPostRequestWithJSON(client, getSCIM2UserMeEndpoint(), userJSON,
+                getCommonHeaders(username, password));
+    }
+
+    /**
+     * SCIM2 validate Response
+     */
+    public void validateResponse(JSONObject responseObjJson, JSONObject requestJSON) {
+
+        assertEquals(responseObjJson.get(USER_NAME_ATTRIBUTE).toString(),
+                requestJSON.get(USER_NAME_ATTRIBUTE).toString(),
+                "Received client_name value is invalid. Request Object: " + requestJSON.toJSONString()
+                        + ", Response Object: " + responseObjJson.toJSONString());
+
+        assertNotNull(responseObjJson.get(SCHEMAS_ATTRIBUTE),
+                "Received Id schema value is null. Request Object: " + requestJSON.toJSONString()
+                        + ", Response Object: " + responseObjJson.toJSONString());
+
+        assertNotNull(responseObjJson.get(ID_ATTRIBUTE),
+                "Received Id attribute value is null. Request Object: " + requestJSON.toJSONString()
+                        + ", Response Object: " + responseObjJson.toJSONString());
+
+        assertEquals(((JSONObject) responseObjJson.get(META_ATTRIBUTE)).get(META_RESOURCE_TYPE_ATTRIBUTE).toString(),
+                META_RESOURCE_TYPE_ATTRIBUTE_VALUE,
+                "Received resource type value is invalid. Request Object: " + requestJSON.toJSONString()
+                        + ", Response Object: " + responseObjJson.toJSONString());
+
+        assertNotNull(((JSONObject) responseObjJson.get(META_ATTRIBUTE)).get(META_CREATED_ATTRIBUTE),
+                "Received created value is null. Request Object: " + requestJSON.toJSONString() + ", Response Object: "
+                        + responseObjJson.toJSONString());
+
+        assertNotNull(((JSONObject) responseObjJson.get(META_ATTRIBUTE)).get(META_LOCATION_ATTRIBUTE),
+                "Received created value is null. Request Object: " + requestJSON.toJSONString() + ", Response Object: "
+                        + responseObjJson.toJSONString());
+
+        assertNotNull(((JSONObject) responseObjJson.get(META_ATTRIBUTE)).get(META_LASTMODIFIED_ATTRIBUTE),
+                "Received last modified value is null. Request Object: " + requestJSON.toJSONString()
+                        + ", Response Object: " + responseObjJson.toJSONString());
+
+        if (((JSONObject) requestJSON.get(NAME_ATTRIBUTE)).get(FAMILY_NAME_ATTRIBUTE) != null) {
+            assertEquals(((JSONObject) responseObjJson.get(NAME_ATTRIBUTE)).get(FAMILY_NAME_ATTRIBUTE).toString(),
+                    ((JSONObject) requestJSON.get(NAME_ATTRIBUTE)).get(FAMILY_NAME_ATTRIBUTE).toString(),
+                    "Received family name value is invalid. Request Object: " + requestJSON.toJSONString()
+                            + ", Response Object: " + responseObjJson.toJSONString());
+        }
+
+        if (((JSONObject) requestJSON.get(NAME_ATTRIBUTE)).get(GIVEN_NAME_ATTRIBUTE) != null) {
+            assertEquals(((JSONObject) responseObjJson.get(NAME_ATTRIBUTE)).get(GIVEN_NAME_ATTRIBUTE).toString(),
+                    ((JSONObject) requestJSON.get(NAME_ATTRIBUTE)).get(GIVEN_NAME_ATTRIBUTE).toString(),
+                    "Received give name value is invalid. Rnjequest Object: " + requestJSON.toJSONString()
+                            + ", Response Object: " + responseObjJson.toJSONString());
+        }
+
+    }
 }
+
+

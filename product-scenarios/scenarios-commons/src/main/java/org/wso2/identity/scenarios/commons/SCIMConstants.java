@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.identity.scenarios.test.scim2;
+package org.wso2.identity.scenarios.commons;
 
 public class SCIMConstants {
 
@@ -153,4 +153,5 @@ public class SCIMConstants {
    public static final String USER_SCHEMA = "urn:ietf:params:scim:schemas:core:2.0:User";
    public static final String ERROR_SCHEMA = "urn:ietf:params:scim:api:messages:2.0:Error";
    public static final String ENTERPRISE_SCHEMA = "urn:scim:schemas:extension:enterprise:1.0";
+
 }

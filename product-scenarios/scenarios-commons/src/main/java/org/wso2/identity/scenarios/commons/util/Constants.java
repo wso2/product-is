@@ -25,7 +25,6 @@ public class Constants {
 
     }
 
-
     public static final String IS_HTTPS_URL = "ISHttpsUrl";
     public static final String IS_SAMPLES_HTTP_URL = "ISSamplesHttpUrl";
     public static final String MGT_CONSOLE_URL = "MgtConsoleUrl";
@@ -79,19 +78,17 @@ public class Constants {
     public static final String INBOUND_AUTH_TYPE_OAUTH2 = "oauth2";
     public static final String ISSUER = "Issuer";
     public static final String NAMESPACE_PREFIX = "samlp";
-    public static final String PASSWORD_PROTECTED_TRANSPORT_CLASS =
-            "urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport";
+    public static final String PASSWORD_PROTECTED_TRANSPORT_CLASS = "urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport";
     public static final String SAML_ASSERTION_URN = "urn:oasis:names:tc:SAML:2.0:assertion";
     public static final String SAML_PROTOCOL_URN = "urn:oasis:names:tc:SAML:2.0:protocol";
-    public static final String XML_DOCUMENT_BUILDER_FACTORY =
-            "javax.xml.parsers.DocumentBuilderFactory";
-    public static final String XML_DOCUMENT_BUILDER_FACTORY_IMPL =
-            "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl";
+    public static final String XML_DOCUMENT_BUILDER_FACTORY = "javax.xml.parsers.DocumentBuilderFactory";
+    public static final String XML_DOCUMENT_BUILDER_FACTORY_IMPL = "org.apache.xerces.jaxp.DocumentBuilderFactoryImpl";
     public static final String MULTI_ATTRIBUTE_SEPARATOR = ",";
     public static final String TENANT_DOMAIN = "tenantDomain";
     public static final String PASSWORD = "password";
     public static final String DEFAULT_PROFILE_NAME = "default";
     public static final int DEFAULT_SOCKET_TIMEOUT_IN_SECONDS = 30;
+    public static final String SEPERATOR = "/";
 
     /**
      * SCIM Endpoints.
