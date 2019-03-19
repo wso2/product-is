@@ -1,8 +1,6 @@
 {
-    "proxy" : {
-        "proxyHost" : "",
-        "proxyHTTPSPort" : "",
-        "proxyContextPath" : ""
+    "server" : {
+        "serviceOrigin" : "${carbon.protocol}://${carbon.host}:${mgt.transport.https.port}"
     },
     "fido" : {
         "appId" : ""
