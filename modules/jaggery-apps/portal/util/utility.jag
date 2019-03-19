@@ -40,11 +40,11 @@ function setServerURL() {
                 log.debug("Carbon proxy settings available in carbon.xml- Proxy Origin Name: " + proxyOrigin);
             }
         } else {
+            proxyOrigin = mgtTransport + "://" + proxyConfHost + ":" + proxyConfPort;
             //proxy settings available for ui urls
             if (log.isDebugEnabled()) {
                 log.debug("site configuration ui url overiding available - Proxy Origin Name: " + proxyOrigin);
             }
-            proxyOrigin = mgtTransport + "://" + proxyConfHost + ":" + proxyConfPort;
         }
 
         var proxyConfContextPath = jsonConf.proxy.proxyContextPath;
