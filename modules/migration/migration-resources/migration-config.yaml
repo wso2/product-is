@@ -273,6 +273,6 @@ versions:
     -
       name: "SchemaMigrator"
       order: 1
-      parameter:
+      parameters:
         location: "step1"
         schema: "identity"

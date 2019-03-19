@@ -197,6 +197,25 @@ public class OAuthDataMigrator extends Migrator {
                                 updatedOauthTokenInfo.setRefreshTokenhash(refreshTokenHash);
                             }
                             updatedOauthTokenList.add(updatedOauthTokenInfo);
+                        } else {
+                            String oldAccessTokenHash = tokenInfo.getAccessTokenHash();
+                            try {
+                                //If hash column already is a JSON value, no need to update the record
+                                new JSONObject(oldAccessTokenHash);
+                            } catch (JSONException e) {
+                                //Exception is thrown because the hash value is not a json
+                                accessTokenHashObject = new JSONObject();
+                                accessTokenHashObject.put(ALGORITHM, hashAlgorithm);
+                                accessTokenHashObject.put(HASH, oldAccessTokenHash);
+                                tokenInfo.setAccessTokenHash(accessTokenHashObject.toString());
+
+                                refreshTokenHashObject = new JSONObject();
+                                String oldRefreshTokenHash = tokenInfo.getRefreshTokenhash();
+                                refreshTokenHashObject.put(ALGORITHM, hashAlgorithm);
+                                refreshTokenHashObject.put(HASH, oldRefreshTokenHash);
+                                tokenInfo.setRefreshTokenhash(refreshTokenHashObject.toString());
+                                updatedOauthTokenList.add(tokenInfo);
+                            }
                         }
                     }
                 } else {

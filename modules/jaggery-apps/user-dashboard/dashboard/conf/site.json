@@ -1,8 +1,5 @@
 {
-    "proxy" : {
-        "proxyHost" : "",
-        "proxyHTTPSPort" : "",
-        "proxyContextPath" : "",
-        "servicePath" : "/services"
+    "server": {
+        "serviceOrigin" : "${carbon.protocol}://${carbon.host}:${mgt.transport.https.port}"
     }
 }
