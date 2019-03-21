@@ -450,6 +450,11 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.healthcheck:org.wso2.carbon.healthcheck.server.feature:${carbon.healthcheck.version}
                                 </featureArtifactDef>
+
+                                <!-- Configuration Management feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.configuration.mgt.server.feature:${carbon.identity.framework.version}
+                                </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -748,6 +753,13 @@
                                     </id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>
+                                        org.wso2.carbon.identity.configuration.mgt.server.feature.group
+                                    </id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+
                                 <feature>
                                     <id>
                                         org.wso2.carbon.identity.application.authz.xacml.server.feature.group
@@ -1265,6 +1277,13 @@
                                 </feature>
                                 <feature>
                                     <id>
+                                        org.wso2.carbon.identity.configuration.mgt.server.feature.group
+                                    </id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+
+                                <feature>
+                                    <id>
                                         org.wso2.carbon.identity.application.authz.xacml.server.feature.group
                                     </id>
                                     <version>${identity.app.authz.xacml.version}</version>
@@ -1701,6 +1720,13 @@
                                     </id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>
+                                        org.wso2.carbon.identity.configuration.mgt.server.feature.group
+                                    </id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+
                                 <feature>
                                     <id>
                                         org.wso2.carbon.identity.application.authz.xacml.server.feature.group
