@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!--
-  ~ Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-  ~
-  ~  WSO2 Inc. licenses this file to you under the Apache License,
-  ~  Version 2.0 (the "License"); you may not use this file except
-  ~  in compliance with the License.
-  ~  You may obtain a copy of the License at
-  ~
-  ~  http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~  Unless required by applicable law or agreed to in writing,
-  ~  software distributed under the License is distributed on an
-  ~  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-  ~  KIND, either express or implied.  See the License for the
-  ~  specific language governing permissions and limitations
-  ~  under the License.
-  -->
+~ Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~ http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+ -->
 
 <Server xmlns="http://wso2.org/projects/carbon/carbon.xml">
 
@@ -23,30 +21,30 @@
         <DataSource>
             <!-- Include a data source name (jndiConfigName) from the set of data
                 sources defined in master-datasources.xml -->
-            <Name>jdbc/WSO2IdentityDB</Name>
+            <Name>jdbc/WSO2CarbonDB</Name>
         </DataSource>
         <!-- If the identity database is created from another place and if it is
             required to skip schema initialization during the server start up, set the
             following property to "true". -->
-        <SkipDBSchemaCreation>{{jdbc.persistence_manager.skip_db_schema_creation}}</SkipDBSchemaCreation>
+        <!-- <SkipDBSchemaCreation>false</SkipDBSchemaCreation> -->
         <SessionDataPersist>
-            <Enable>{{session_data.persist.enable}}</Enable>
-            <Temporary>{{session_data.persist.temp_data}}</Temporary>
-            <PoolSize>{{session_data.persist.db_pool_size}}</PoolSize>
+            <Enable>{{session.data.persist.enable}}</Enable>
+            <Temporary>{{session.data.persist.temp_data}}</Temporary>
+            <PoolSize>{{session.data.persist.db_pool_size}}</PoolSize>
             <SessionDataCleanUp>
-                {% if "expired_data" in session_data.cleanup.enable_for %}
+                {% if "expired_data" in session.data.cleanup.enable_for %}
                 <Enable>true</Enable>
                 {% else %}
                 <Enable>false</Enable>
                 {% endif %}
-                <CleanUpTimeout>{{session_data.cleanup.expired_data.expiry_time}}</CleanUpTimeout>
-                <CleanUpPeriod>{{session_data.cleanup.expired_data.frequency}}</CleanUpPeriod>
+                <CleanUpTimeout>{{session.data.cleanup.expired_data.expiry_time_mins}}</CleanUpTimeout>
+                <CleanUpPeriod>{{session.data.cleanup.expired_data.frequency_mins}}</CleanUpPeriod>
                 <!--Instead of deleting all the records at once, we are deleting the records in chunks to prevent the -->
                 <!--possible deadlock and lock scenarios. The following property defines the chunk size.-->
-                <DeleteChunkSize>{{session_data.cleanup.expired_data.in_chunks_of}}</DeleteChunkSize>
+                <DeleteChunkSize>{{session.data.cleanup.expired_data.in_chunks_of}}</DeleteChunkSize>
             </SessionDataCleanUp>
             <OperationDataCleanUp>
-                {% if "invalidated_data" in session_data.cleanup.enable_for %}
+                {% if "invalidated_data" in session.data.cleanup.enable_for %}
                 <Enable>true</Enable>
                 {% else %}
                 <Enable>false</Enable>
@@ -54,25 +52,25 @@
             </OperationDataCleanUp>
             <TempDataCleanup>
                 <!-- Enabling separated cleanup for temporary authentication context data -->
-                {% if "temp_data" in session_data.cleanup.enable_for %}
+                {% if "temp_data" in session.data.cleanup.enable_for %}
                 <Enable>true</Enable>
                 {% else %}
                 <Enable>false</Enable>
                 {% endif %}
                 <!-- When PoolZize > 0, temporary data which have no usage after the authentication flow will be deleted immediately
                  When PoolZise = 0, data will be deleted only by the scheduled cleanup task-->
-                <PoolSize>{{session_data.cleanup.temp_data.db_pool_size}}</PoolSize>
+                <PoolSize>{{session.data.cleanup.temp_data.db_pool_size}}</PoolSize>
                 <!-- All temporary authentication context data older than CleanUpTimeout value are considered as expired
                 and would be deleted during cleanup task -->
-                <CleanUpTimeout>{{session_data.cleanup.temp_data.expiry_time}}</CleanUpTimeout>
+                <CleanUpTimeout>{{session.data.cleanup.temp_data.expiry_time_mins}}</CleanUpTimeout>
             </TempDataCleanup>
         </SessionDataPersist>
     </JDBCPersistenceManager>
 
     <!-- Time configurations are in minutes -->
     <TimeConfig>
-        <SessionIdleTimeout>{{session.timeout.idle_session_timeout}}</SessionIdleTimeout>
-        <RememberMeTimeout>{{session.timeout.remember_me_session_timeout}}</RememberMeTimeout>
+        <SessionIdleTimeout>{{session.timeout.idle_session_timeout_mins}}</SessionIdleTimeout>
+        <RememberMeTimeout>{{session.timeout.remember_me_session_timeout_mins}}</RememberMeTimeout>
     </TimeConfig>
 
     <!-- Security configurations -->
@@ -100,15 +98,15 @@
             https://<HostName>:<MgtTrpProxyPort except 443>/<ProxyContextPath>/<context>
             If above format doesn't satisfy uncomment the following configs and explicitly configure the values
          -->
-        <OpenIDServerUrl>${carbon.protocol}://${carbon.host}:${carbon.management.port}/openidserver</OpenIDServerUrl>
-        <OpenIDUserPattern>${carbon.protocol}://${carbon.host}:${carbon.management.port}/openid</OpenIDUserPattern>
-        <OpenIDLoginUrl>${carbon.protocol}://${carbon.host}:${carbon.management.port}/authenticationendpoint/openid_login.do</OpenIDLoginUrl>
+        <OpenIDServerUrl>{{openid.server_url}}</OpenIDServerUrl>
+        <OpenIDUserPattern>{{openid.user_pattern}}</OpenIDUserPattern>
+        <OpenIDLoginUrl>{{openid.login_url}}</OpenIDLoginUrl>
         <!-- If the users must be prompted for approval -->
-        <OpenIDSkipUserConsent>false</OpenIDSkipUserConsent>
+        <OpenIDSkipUserConsent>{{openid.skip_user_consent}}</OpenIDSkipUserConsent>
         <!-- Expiry time of the OpenID RememberMe token in minutes -->
-        <OpenIDRememberMeExpiry>7200</OpenIDRememberMeExpiry>
+        <OpenIDRememberMeExpiry>{{openid.remember_me_expiry_time_mins}}</OpenIDRememberMeExpiry>
         <!-- To enable or disable openid dumb mode -->
-        <DisableOpenIDDumbMode>false</DisableOpenIDDumbMode>
+        <DisableOpenIDDumbMode>{{openid.disable_dumb_mode}}</DisableOpenIDDumbMode>
         <!--
                OpenID private association store is configurable from following configs.
                It includes two new replication stores,
@@ -156,28 +154,26 @@
              Default: org.wso2.carbon.identity.oauth2.token.OauthTokenIssuerImpl.
              Applicable values: org.wso2.carbon.identity.oauth2.token.JWTTokenIssuer
         -->
-        {% if oauth.token.token_generator_class is defined%}
-        <IdentityOAuthTokenGenerator>{{oauth.token.token_generator_class}}</IdentityOAuthTokenGenerator>
-        {% endif %}
+        <!--<IdentityOAuthTokenGenerator>org.wso2.carbon.identity.oauth2.token.JWTTokenIssuer</IdentityOAuthTokenGenerator>-->
+
         <!-- True, if access token alias is stored in the database instead of access token.
              Eg. token alias and token is same when default AccessTokenValueGenerator is used.
              When JWTTokenIssuer is used, jti is used as the token alias
              Default: true.
              Applicable values: true,false
         -->
-        <PersistAccessTokenAlias>{{oauth.token.persist_access_token_alias}}</PersistAccessTokenAlias>
+        <!--<PersistAccessTokenAlias>false</PersistAccessTokenAlias>-->
 
         <!-- This configuration is used to specify the access token value generator.
              Default: org.apache.oltu.oauth2.as.issuer.UUIDValueGenerator
              Applicable values: org.apache.oltu.oauth2.as.issuer.UUIDValueGenerator,
                                 org.apache.oltu.oauth2.as.issuer.MD5Generator,
                                 org.wso2.carbon.identity.oauth.tokenvaluegenerator.SHA256Generator-->
-        {% if oauth.token.value_generator_class is defined %}
-        <AccessTokenValueGenerator>{{oauth.token.value_generator_class}}</AccessTokenValueGenerator>
-        {% endif %}
+        <!--<AccessTokenValueGenerator>org.wso2.carbon.identity.oauth.tokenvaluegenerator.SHA256Generator</AccessTokenValueGenerator>-->
+
         <!-- This configuration is used to specify whether the Service Provider tenant domain should be used when generating
              access token. Otherwise user domain will be used. Currently this value is only supported by the JWTTokenIssuer.-->
-        <UseSPTenantDomain>{{oauth.access_token.generate_with_sp_tenant_domain}}</UseSPTenantDomain>
+        <!--<UseSPTenantDomain>True</UseSPTenantDomain>-->
 
         <!--
             Default values for OAuth1RequestTokenUrl, OAuth1AccessTokenUrl, OAuth1AuthorizeUrl
@@ -209,16 +205,16 @@
         <OIDCDiscoveryEPUrl>{{oauth.endpoints.oidc.discovery}}</OIDCDiscoveryEPUrl>
 
         <!-- If enabled, resident Idp entity id will be honoured as the issuer location in OpenId Connect Discovery -->
-        <UseEntityIdAsIssuerInOidcDiscovery>{{oauth.use_entityid_as_issuer_in_oidc_discovery}}</UseEntityIdAsIssuerInOidcDiscovery>
+        <UseEntityIdAsIssuerInOidcDiscovery>{{oauth.use_entityId_as_issuer_in_OIDC_discovery}}</UseEntityIdAsIssuerInOidcDiscovery>
 
         <!-- Default validity period for Authorization Code in seconds -->
-        <AuthorizationCodeDefaultValidityPeriod>{{oauth.authz_code.validity_time}}</AuthorizationCodeDefaultValidityPeriod>
+        <AuthorizationCodeDefaultValidityPeriod>{{oauth.authz_code.validity_time_s}}</AuthorizationCodeDefaultValidityPeriod>
         <!-- Default validity period for application access tokens in seconds -->
-        <AccessTokenDefaultValidityPeriod>{{oauth.app_token.validity_time}}</AccessTokenDefaultValidityPeriod>
+        <AccessTokenDefaultValidityPeriod>{{oauth.app_token.validity_time_s}}</AccessTokenDefaultValidityPeriod>
         <!-- Default validity period for user access tokens in seconds -->
-        <UserAccessTokenDefaultValidityPeriod>{{oauth.user_token.validity_time}}</UserAccessTokenDefaultValidityPeriod>
+        <UserAccessTokenDefaultValidityPeriod>{{oauth.user_token.validity_time_s}}</UserAccessTokenDefaultValidityPeriod>
         <!-- Validity period for refresh token -->
-        <RefreshTokenValidityPeriod>{{oauth.refresh_token.validity_time}}</RefreshTokenValidityPeriod>
+        <RefreshTokenValidityPeriod>{{oauth.refresh_token.validity_time_s}}</RefreshTokenValidityPeriod>
         <!-- Timestamp skew in seconds -->
         <TimestampSkew>{{oauth.timestamp_skew}}</TimestampSkew>
         <!-- Enable renewal of refresh token for refresh_token grant -->
@@ -348,7 +344,7 @@
 
         Supported versions: IS 5.4.0 beta onwards
         -->
-        <BuildSubjectIdentifierFromSPConfig>{{oauth.build_subject_identifier_from_sp_config}}</BuildSubjectIdentifierFromSPConfig>
+        <!--<BuildSubjectIdentifierFromSPConfig>true</BuildSubjectIdentifierFromSPConfig>-->
 
         <!-- This should be set to true when using multiple user stores and keys
             should saved into different tables according to the user store. By default
@@ -380,7 +376,7 @@
             'EnableIATValidation' configuration should be set to 'true' in order to make use of the validity period.
             Default value is '30' minutes.
              -->
-            <IATValidityPeriod>{{oauth.jwt.iat_validity_period}}</IATValidityPeriod>
+            <IATValidityPeriod>{{oauth.jwt.iat_validity_period_mins}}</IATValidityPeriod>
         </JWTGrant>
 
 
@@ -415,7 +411,7 @@
             </SupportedIDTokenEncryptionMethods>
 
             <EnableAudiences>{{oauth.oidc.id_token.enable_audiences}}</EnableAudiences>
-
+            <!-- Comment out to add Audience values to the JWT token (id_token)  -->
             {% if oauth.oidc.id_token.audiences|length %}
             <Audiences>
                 {% for audience in oauth.oidc.id_token.audiences %}
@@ -430,24 +426,20 @@
             -->
             <IDTokenIssuerID>{{oauth.oidc.id_token.issuer_id}}</IDTokenIssuerID>
             <IDTokenCustomClaimsCallBackHandler>{{oauth.oidc.id_token.claim_callback_hander}}</IDTokenCustomClaimsCallBackHandler>
-            <IDTokenExpiration>{{oauth.oidc.id_token.validity_time}}</IDTokenExpiration>
+            <IDTokenExpiration>{{oauth.oidc.id_token.validity_time_s}}</IDTokenExpiration>
             <UserInfoJWTSignatureAlgorithm>{{oauth.oidc.user_info.jwt_signature_alg}}</UserInfoJWTSignatureAlgorithm>
             <UserInfoEndpointClaimRetriever>{{oauth.oidc.user_info.endpoint.claim_retriever}}</UserInfoEndpointClaimRetriever>
             <UserInfoEndpointRequestValidator>{{oauth.oidc.user_info.endpoint.request_validator}}</UserInfoEndpointRequestValidator>
             <UserInfoEndpointAccessTokenValidator>{{oauth.oidc.user_info.endpoint.token_validator}}</UserInfoEndpointAccessTokenValidator>
             <UserInfoEndpointResponseBuilder>{{oauth.oidc.user_info.endpoint.response_builder}}</UserInfoEndpointResponseBuilder>
-            {% if oauth.oidc.prompt_user_consent is sameas true %}
             <SkipUserConsent>false</SkipUserConsent>
-            {% else %}
-            <SkipUserConsent>true</SkipUserConsent>
-            {% endif %}
             <!-- Sign the ID Token with Service Provider Tenant Private Key-->
-            <SignJWTWithSPKey>{{oauth.oidc.id_token.sign_with_sp_key}}</SignJWTWithSPKey>
+            <SignJWTWithSPKey>false</SignJWTWithSPKey>
             <!--
                 Expiry period of the logout token used in OIDC Back Channel Logout in seconds.
                 Supported versions: IS 5.5.0 onwards
             -->
-            <LogoutTokenExpiration>{{oauth.oidc.logout_token.validity_time}}</LogoutTokenExpiration>
+            <LogoutTokenExpiration>{{oauth.oidc.logout_token.validity_time_s}}</LogoutTokenExpiration>
 
             <!--
                 OIDC Request Object builder implementation.
@@ -491,7 +483,7 @@
             Default value : false
             Supported versions : IS 5.8.0 onwards
          -->
-        <RenewTokenPerRequest>{{oauth.renew_token_per_request}}</RenewTokenPerRequest>
+        <!--<RenewTokenPerRequest>true</RenewTokenPerRequest>-->
     </OAuth>
 
     <MultifactorAuthentication>
@@ -520,7 +512,7 @@
         <NotificationEndpoint>{{saml.endpoints.notification}}</NotificationEndpoint>
         <ArtifactResolutionEndpoint>{{saml.endpoints.artifact_resolution}}</ArtifactResolutionEndpoint>
         <SingleLogoutRetryCount>{{saml.slo.retry_attempts}}</SingleLogoutRetryCount>
-        <SingleLogoutRetryInterval>{{saml.slo.retry_interval}}</SingleLogoutRetryInterval>
+        <SingleLogoutRetryInterval>{{saml.slo.retry_interval_ms}}</SingleLogoutRetryInterval>
         <!-- in milli seconds -->
         <TenantPartitioningEnabled>{{saml.tenant_partitioning.enable}}</TenantPartitioningEnabled>
         <AttributesClaimDialect>{{saml.attribute_claim_dialect}}</AttributesClaimDialect>
@@ -532,7 +524,7 @@
         <!--SAMLSSOResponseBuilder>{{saml.extensions.response_builder}}</SAMLSSOResponseBuilder-->
 
         <!-- SAML Token validity period in minutes -->
-        <SAMLResponseValidityPeriod>{{saml.response.validity}}</SAMLResponseValidityPeriod>
+        <SAMLResponseValidityPeriod>{{saml.response.validity_mins}}</SAMLResponseValidityPeriod>
         <UseAuthenticatedUserDomainCrypto>false</UseAuthenticatedUserDomainCrypto>
         <SAMLDefaultSigningAlgorithmURI>{{saml.signing_alg}}</SAMLDefaultSigningAlgorithmURI>
         <SAMLDefaultDigestAlgorithmURI>{{saml.digest_alg}}</SAMLDefaultDigestAlgorithmURI>
@@ -635,70 +627,70 @@
         <EnableFilteringEnhancements>{{scim2.filtering_enhancements_enable}}</EnableFilteringEnhancements>
     </SCIM2>
 
-      <Recovery>
+    <Recovery>
         <ReCaptcha>
             <Password>
-                <Enable>{{identity.mgt.recovery.password_recovery.recaptcha.enable}}</Enable>
+                <Enable>{{mgt.recovery.password_recovery.recaptcha.enable}}</Enable>
             </Password>
             <Username>
-                <Enable>{{identity.mgt.recovery.username_recovery.recaptcha.enable}}</Enable>
+                <Enable>{{mgt.recovery.username_recovery.recaptcha.enable}}</Enable>
             </Username>
         </ReCaptcha>
         <Notification>
             <Password>
-                <Enable>{{identity.mgt.recovery.password_recovery.with_notification.enable}}</Enable>
+                <Enable>{{mgt.recovery.password_recovery.with_notification.enable}}</Enable>
             </Password>
             <Username>
-                <Enable>{{identity.mgt.recovery.username_recovery.with_notification.enable}}</Enable>
+                <Enable>{{mgt.recovery.username_recovery.with_notification.enable}}</Enable>
             </Username>
-            <InternallyManage>{{identity.mgt.recovery.notification.manage_internally}}</InternallyManage>
+            <InternallyManage>{{mgt.recovery.notification.manage_internally}}</InternallyManage>
        </Notification>
        <Question>
             <Password>
-                <Enable>{{identity.mgt.recovery.password_recovery.with_challenge_question.enable}}</Enable>
-                <NotifyStart>{{identity.mgt.recovery.password_recovery.with_challenge_question.notify_start}}</NotifyStart>
-                <Separator>{{identity.mgt.recovery.password_recovery.with_challenge_question.separator_char}}</Separator>
-                <MinAnswers>{{identity.mgt.recovery.password_recovery.with_challenge_question.min_answers}}</MinAnswers>
+                <Enable>{{mgt.recovery.password_recovery.with_challenge_question.enable}}</Enable>
+                <NotifyStart>{{mgt.recovery.password_recovery.with_challenge_question.notify_start}}</NotifyStart>
+                <Separator>{{mgt.recovery.password_recovery.with_challenge_question.separator_char}}</Separator>
+                <MinAnswers>{{mgt.recovery.password_recovery.with_challenge_question.min_answers}}</MinAnswers>
                 <ReCaptcha>
-                    <Enable>{{identity.mgt.recovery.password_recovery.with_challenge_question.recaptcha.enable}}</Enable>
-                    <MaxFailedAttempts>{{identity.mgt.recovery.password_recovery.with_challenge_question.recaptcha.max_fails}}</MaxFailedAttempts>
+                    <Enable>{{mgt.recovery.password_recovery.with_challenge_question.recaptcha.enable}}</Enable>
+                    <MaxFailedAttempts>{{mgt.recovery.password_recovery.with_challenge_question.recaptcha.max_fails}}</MaxFailedAttempts>
                 </ReCaptcha>
             </Password>
         </Question>
-        <ExpiryTime>{{identity.mgt.recovery.notification.expiry_time}}</ExpiryTime>
-        <NotifySuccess>{{identity.mgt.recovery.notification.notify_success}}</NotifySuccess>
+        <ExpiryTime>{{mgt.recovery.notification.expiry_time_s}}</ExpiryTime>
+        <NotifySuccess>{{mgt.recovery.notification.notify_success}}</NotifySuccess>
         <AdminPasswordReset>
-            <Offline>{{identity.mgt.recovery.password_recovery.by_admin.offline}}</Offline>
-            <OTP>{{identity.mgt.recovery.password_recovery.by_admin.otp}}</OTP>
-            <RecoveryLink>{{identity.mgt.recovery.password_recovery.by_admin.recovery_link}}</RecoveryLink>
+            <Offline>{{mgt.recovery.password_recovery.by_admin.offline}}</Offline>
+            <OTP>{{mgt.recovery.password_recovery.by_admin.otp}}</OTP>
+            <RecoveryLink>{{mgt.recovery.password_recovery.by_admin.recovery_link}}</RecoveryLink>
         </AdminPasswordReset>
-        <CallbackRegex>{{identity.mgt.recovery.notification.callback_regex}}</CallbackRegex>
+        <CallbackRegex>{{mgt.recovery.notification.callback_regex}}</CallbackRegex>
     </Recovery>
 
     <EmailVerification>
-        <Enable>{{identity.mgt.email_verification.enable}}</Enable>
-	    <ExpiryTime>{{identity.mgt.email_verification.notification.expiry_time}}</ExpiryTime>
-        <LockOnCreation>{{identity.mgt.email_verification.account.lock_on_creation}}</LockOnCreation>
+        <Enable>{{mgt.email_verification.enable}}</Enable>
+	    <ExpiryTime>{{mgt.email_verification.notification.expiry_time_minutes}}</ExpiryTime>
+        <LockOnCreation>{{mgt.email_verification.account.lock_on_creation}}</LockOnCreation>
         <Notification>
-            <InternallyManage>{{identity.mgt.email_verification.notification.manage_internally}}</InternallyManage>
+            <InternallyManage>{{mgt.email_verification.notification.manage_internally}}</InternallyManage>
         </Notification>
         <AskPassword>
-	        <ExpiryTime>{{identity.mgt.email_verification.ask_password.expiry_time}}</ExpiryTime>
-	        <PasswordGenerator>{{identity.mgt.email_verification.ask_password.password_generator}}</PasswordGenerator>
+	        <ExpiryTime>{{mgt.email_verification.ask_password.expiry_time_minutes}}</ExpiryTime>
+	        <PasswordGenerator>{{mgt.email_verification.ask_password.password_generator}}</PasswordGenerator>
         </AskPassword>
     </EmailVerification>
 
     <SelfRegistration>
-        <Enable>{{identity.mgt.self_registration.enable}}</Enable>
-        <LockOnCreation>{{identity.mgt.self_registration.account.lock_on_creation}}</LockOnCreation>
+        <Enable>{{mgt.self_registration.enable}}</Enable>
+        <LockOnCreation>{{mgt.self_registration.account.lock_on_creation}}</LockOnCreation>
         <Notification>
-            <InternallyManage>{{identity.mgt.self_registration.notification.manage_internally}}</InternallyManage>
+            <InternallyManage>{{mgt.self_registration.notification.manage_internally}}</InternallyManage>
         </Notification>
-        <ReCaptcha>{{identity.mgt.self_registration.recaptcha.enable}}</ReCaptcha>
+        <ReCaptcha>{{mgt.self_registration.recaptcha.enable}}</ReCaptcha>
 	    <VerificationCode>
-	        <ExpiryTime>{{identity.mgt.self_registration.notification.expiry_time}}</ExpiryTime>
+	        <ExpiryTime>{{mgt.self_registration.notification.expiry_time_minutes}}</ExpiryTime>
 	    </VerificationCode>
-        <CallbackRegex>{{identity.mgt.self_registration.callback_regex}}</CallbackRegex>
+        <CallbackRegex>{{mgt.self_registration.callback_regex}}</CallbackRegex>
     </SelfRegistration>
 
     <!--
@@ -713,17 +705,17 @@
          Default - false.
      -->
 
-    <SPRoleManagement>
-        <ReturnOnlyMappedLocalRoles>{{identity.mgt.return_only_mapped_local_roles}}</ReturnOnlyMappedLocalRoles>
-    </SPRoleManagement>
+    <!--SPRoleManagement>
+        <ReturnOnlyMappedLocalRoles>false</ReturnOnlyMappedLocalRoles>
+    </SPRoleManagement-->
 
-    <EnableAskPasswordAdminUI>{{identity.mgt.email_verification.ask_password.admin_console_ui.enable}}</EnableAskPasswordAdminUI>
+    <EnableAskPasswordAdminUI>{{mgt.email_verification.ask_password.admin_console_ui.enable}}</EnableAskPasswordAdminUI>
 
-    <EnableRecoveryEndpoint>{{identity.mgt.recovery.endpoint.enable}}</EnableRecoveryEndpoint>
-    <EnableSelfSignUpEndpoint>{{identity.mgt.self_registration.endpoint.enable}}</EnableSelfSignUpEndpoint>
+    <EnableRecoveryEndpoint>{{mgt.recovery.endpoint.enable}}</EnableRecoveryEndpoint>
+    <EnableSelfSignUpEndpoint>{{mgt.self_registration.endpoint.enable}}</EnableSelfSignUpEndpoint>
 
     <AuthenticationPolicy>
-        <CheckAccountExist>{{identity.mgt.email_verification.check_account_existence}}</CheckAccountExist>
+        <CheckAccountExist>{{mgt.email_verification.check_account_existence}}</CheckAccountExist>
     </AuthenticationPolicy>
 
     <JITProvisioning>
@@ -831,25 +823,6 @@
         <EventListener id="user_claim_audit_logger"
                        type="org.wso2.carbon.user.core.listener.UserOperationEventListener"
                        name="org.wso2.carbon.user.mgt.listeners.UserClaimsAuditLogger"
-                       orderId="{{event.default_listener.user_claim_audit_logger.priority}}"
-                       enable="{{event.default_listener.user_claim_audit_logger.enable}}"/>
-        <!-- Custom Audit Loggers-->
-        {% for listener in event_listener %}
-        <EventListener id="{{listener.id}}"
-                       type="{{listener.type}}"
-                       name="{{listener.name}}"
-                       orderId="{{listener.order}}"
-                       enable="true">
-            {% for key,value in listener.properties.items() %}
-            <Property name="{{key}}">{{value}}</Property>
-            {% endfor %}
-        </EventListener>
-        {% endfor %}
-                       orderId="{{event.default_listener.user_failure_audit_logger.priority}}"
-                       enable="{{event.default_listener.user_failure_audit_logger.enable}}"/>
-        <EventListener id="user_claim_audit_logger"
-                       type="org.wso2.carbon.user.core.listener.UserOperationEventListener"
-                       name="org.wso2.carbon.user.mgt.listeners.UserClaimsAuditLogger"
                        orderId="9"
                        enable="false"/>
         <!-- Custom Audit Loggers-->
@@ -870,23 +843,13 @@
      EventListener "rg.wso2.carbon.user.mgt.listeners.UserDeletionEventListener" also should be enabled. Which is
      also disabled by default. -->
     <UserDeleteEventRecorders>
-        <UserDeleteEventRecorder name="{{event.default_recorder.user_delete_event.name}}"
-                                 enable="{{event.default_recorder.user_delete_event.enable}}">
-            {% if event.default_recorder.user_delete_event.write_to_separate_csv.path is defined %}
-            <Property name="path">{{event.default_recorder.user_delete_event.write_to_separate_csv.path}}</Property>
-            {% endif %}
-        </UserDeleteEventRecorder>
-
-        {% for recorder in event_recorder %}
-        <UserDeleteEventRecorder id="{{recorder.id}}"
-                                 name="{{recorder.name}}"
-                                 enable="true">
-            {% for key,value in recorder.properties.items() %}
-                <Property name="{{key}}">{{value}}</Property>
-            {% endfor %}
+        {% for event_recorder in event.user_delete_event_recorders%}
+        <UserDeleteEventRecorder name="{{event_recorder.name}}" enable="{{event_recorder.enable}}">
+            <!-- Un comment below line if you need to write entries to a separate .csv file. Otherwise this will be
+            written in to a log file using a separate appender. -->
+            <!--<Property name="path">${carbon.home}/repository/logs/delete-records.csv</Property>-->
         </UserDeleteEventRecorder>
         {% endfor %}
-
     </UserDeleteEventRecorders>
 
     <CacheConfig>
@@ -898,102 +861,102 @@
         <CacheManager name="IdentityApplicationManagementCacheManager">
             <Cache id="framework_session_context_cache" name="AppAuthFrameworkSessionContextCache"
                    enable="{{cache.framework_session_context_cache.enable}}"
-                   timeout="{{cache.framework_session_context_cache.timeout}}"
+                   timeout="{{cache.framework_session_context_cache.timeout_ms}}"
                    capacity="{{cache.framework_session_context_cache.capacity}}"
                    isDistributed="false"/>
             <Cache id="authentication_context_cache" name="AuthenticationContextCache"
                    enable="{{cache.authentication_context_cache.enable}}"
-                   timeout="{{cache.authentication_context_cache.timeout}}"
+                   timeout="{{cache.authentication_context_cache.timeout_ms}}"
                    capacity="{{cache.authentication_context_cache.capacity}}"
                    isDistributed="false"/>
             <Cache id="authentication_request_cache" name="AuthenticationRequestCache"
                    enable="{{cache.authentication_request_cache.enable}}"
-                   timeout="{{cache.authentication_request_cache.timeout}}"
+                   timeout="{{cache.authentication_request_cache.timeout_ms}}"
                    capacity="{{cache.authentication_request_cache.capacity}}"
                    isDistributed="false"/>
             <Cache id="authentication_result_cache" name="AuthenticationResultCache"
                    enable="{{cache.authentication_result_cache.enable}}"
-                   timeout="{{cache.authentication_result_cache.timeout}}"
+                   timeout="{{cache.authentication_result_cache.timeout_ms}}"
                    capacity="{{cache.authentication_result_cache.capacity}}"
                    isDistributed="false"/>
             <Cache id="app_info_cache" name="AppInfoCache"
                    enable="{{cache.app_info_cache.enable}}"
-                   timeout="{{cache.app_info_cache.timeout}}"
+                   timeout="{{cache.app_info_cache.timeout_ms}}"
                    capacity="{{cache.app_info_cache.capacity}}"
                    isDistributed="false"/>
             <Cache id="authorization_grant_cache" name="AuthorizationGrantCache"
                    enable="{{cache.authorization_grant_cache.enable}}"
-                   timeout="{{cache.authorization_grant_cache.timeout}}"
+                   timeout="{{cache.authorization_grant_cache.timeout_ms}}"
                    capacity="{{cache.authorization_grant_cache.capacity}}"
                    isDistributed="false"/>
             <Cache id="jwks_cache" name="JWKSCache"
                    enable="{{cache.jwks_cache.enable}}"
-                   timeout="{{cache.jwks_cache.timeout}}"
+                   timeout="{{cache.jwks_cache.timeout_ms}}"
                    capacity="{{cache.jwks_cache.capacity}}"
                    isDistributed="false"/>
             <Cache id="oauth_cache" name="OAuthCache"
                    enable="{{cache.oauth_cache.enable}}"
-                   timeout="{{cache.oauth_cache.timeout}}"
+                   timeout="{{cache.oauth_cache.timeout_ms}}"
                    capacity="{{cache.oauth_cache.capacity}}"
                    isDistributed="false"/>
             <Cache id="oauth_scope_cache" name="OAuthScopeCache"
                    enable="{{cache.oauth_scope_cache.enable}}"
-                   timeout="{{cache.oauth_scope_cache.timeout}}"
+                   timeout="{{cache.oauth_scope_cache.timeout_ms}}"
                    capacity="{{cache.oauth_scope_cache.capacity}}"
                    isDistributed="false"/>
             <Cache id="oauth_session_data_cache" name="OAuthSessionDataCache"
                    enable="{{cache.oauth_session_data_cache.enable}}"
-                   timeout="{{cache.oauth_session_data_cache.timeout}}"
+                   timeout="{{cache.oauth_session_data_cache.timeout_ms}}"
                    capacity="{{cache.oauth_session_data_cache.capacity}}"
                    isDistributed="false"/>
             <Cache id="saml_sso_participant_cache" name="SAMLSSOParticipantCache"
                    enable="{{cache.saml_sso_participant_cache.enable}}"
-                   timeout="{{cache.saml_sso_participant_cache.timeout}}"
+                   timeout="{{cache.saml_sso_participant_cache.timeout_ms}}"
                    capacity="{{cache.saml_sso_participant_cache.capacity}}"
                    isDistributed="false"/>
             <Cache id="saml_sso_session_index_cache" name="SAMLSSOSessionIndexCache"
                    enable="{{cache.saml_sso_session_index_cache.enable}}"
-                   timeout="{{cache.saml_sso_session_index_cache.timeout}}"
+                   timeout="{{cache.saml_sso_session_index_cache.timeout_ms}}"
                    capacity="{{cache.saml_sso_session_index_cache.capacity}}"
                    isDistributed="false"/>
             <Cache id="saml_sso_session_data_cache" name="SAMLSSOSessionDataCache"
                    enable="{{cache.saml_sso_session_data_cache.enable}}"
-                   timeout="{{cache.saml_sso_session_data_cache.timeout}}"
+                   timeout="{{cache.saml_sso_session_data_cache.timeout_ms}}"
                    capacity="{{cache.saml_sso_session_data_cache.capacity}}"
                    isDistributed="false"/>
             <Cache id="service_provider_cache" name="ServiceProviderCache"
                    enable="{{cache.service_provider_cache.enable}}"
-                   timeout="{{cache.service_provider_cache.timeouts}}"
+                   timeout="{{cache.service_provider_cache.timeout_ms}}"
                    capacity="{{cache.service_provider_cache.capacity}}"
                    isDistributed="false"/>
             <Cache id="provisioning_connector_cache" name="ProvisioningConnectorCache"
                    enable="{{cache.provisioning_connector_cache.enable}}"
-                   timeout="{{cache.provisioning_connector_cache.timeout}}"
+                   timeout="{{cache.provisioning_connector_cache.timeout_ms}}"
                    capacity="{{cache.provisioning_connector_cache.capacity}}"
                    isDistributed="false"/>
             <Cache id="provisioning_entity_cache" name="ProvisioningEntityCache"
                    enable="{{cache.provisioning_entity_cache.enable}}"
-                   timeout="{{cache.provisioning_entity_cache.timeout}}"
+                   timeout="{{cache.provisioning_entity_cache.timeout_ms}}"
                    capacity="{{cache.provisioning_entity_cache.capacity}}"
                    isDistributed="false"/>
             <Cache id="service_provider_provisioning_connector_cache" name="ServiceProviderProvisioningConnectorCache"
                    enable="{{cache.service_provider_provisioning_connector_cache.enable}}"
-                   timeout="{{cache.service_provider_provisioning_connector_cache.timeout}}"
+                   timeout="{{cache.service_provider_provisioning_connector_cache.timeout_ms}}"
                    capacity="{{cache.service_provider_provisioning_connector_cache.capacity}}"
                    isDistributed="false"/>
             <Cache id="idp_cache_by_auth_property" name="IdPCacheByAuthProperty"
                    enable="{{cache.idp_cache_by_auth_property.enable}}"
-                   timeout="{{cache.idp_cache_by_auth_property.timeout}}"
+                   timeout="{{cache.idp_cache_by_auth_property.timeout_ms}}"
                    capacity="{{cache.idp_cache_by_auth_property.capacity}}"
                    isDistributed="false"/>
             <Cache id="idp_cache_by_hri" name="IdPCacheByHRI"
                    enable="{{cache.idp_cache_by_hri.enable}}"
-                   timeout="{{cache.idp_cache_by_hri.timeout}}"
+                   timeout="{{cache.idp_cache_by_hri.timeout_ms}}"
                    capacity="{{cache.idp_cache_by_hri.capacity}}"
                    isDistributed="false"/>
             <Cache id="idp_cache_by_name" name="IdPCacheByName"
                    enable="{{cache.idp_cache_by_name.enable}}"
-                   timeout="{{cache.idp_cache_by_name.timeout}}"
+                   timeout="{{cache.idp_cache_by_name.timeout_ms}}"
                    capacity="{{cache.idp_cache_by_name.capacity}}"
                    isDistributed="false"/>
         </CacheManager>
@@ -1165,15 +1128,16 @@
             {% endfor %}
         </Servlet>
     </TenantContextsToRewrite>
+
     <!-- Server Synchronization Tolerance Configuration in seconds -->
-    <ClockSkew>{{deployment.clock_skew}}</ClockSkew>
+    <ClockSkew>300</ClockSkew>
 
     <!-- JWT validator configurations -->
     <JWTValidatorConfigs>
         <Enable>{{jwt_validator.enable}}</Enable>
         <JWKSEndpoint>
-            <HTTPConnectionTimeout>{{jwt_validator.jwks_endpoint.http_connection_timeout}}</HTTPConnectionTimeout>
-            <HTTPReadTimeout>{{jwt_validator.jwks_endpoint.http_read_timeout}}</HTTPReadTimeout>
+            <HTTPConnectionTimeout>{{jwt_validator.jwks_endpoint.http_connection_timeout_ms}}</HTTPConnectionTimeout>
+            <HTTPReadTimeout>{{jwt_validator.jwks_endpoint.http_read_timeout_ms}}</HTTPReadTimeout>
             <HTTPSizeLimit>{{jwt_validator.jwks_endpoint.http_size_limit}}</HTTPSizeLimit>
         </JWKSEndpoint>
     </JWTValidatorConfigs>
@@ -1182,8 +1146,9 @@
         <!--Default configs for event publisher-->
         <EventPublisher>
             <ReceiverURL>{{authentication.adaptive.event_publisher.url}}</ReceiverURL>
+            {% if basic|string() == authentication.adaptive.event_publisher.authentication|string() %}
             <BasicAuthentication>
-                <Enable>{{authentication.adaptive.event_publisher.authentication.basic.enable}}</Enable>
+                <Enable>true</Enable>
                 <Username>{{authentication.adaptive.event_publisher.authentication.basic.username}}</Username>
                 <Password>{{authentication.adaptive.event_publisher.authentication.basic.password}}</Password>
             </BasicAuthentication>
@@ -1197,18 +1162,18 @@
 
         <!--Timeouts in milliseconds-->
         <!--Default configs for timeouts-->
-        <HTTPConnectionTimeout>{{authentication.adaptive.http_connections.connection_timeout}}</HTTPConnectionTimeout>
-        <HTTPReadTimeout>{{authentication.adaptive.http_connections.read_timeout}}</HTTPReadTimeout>
-        <HTTPConnectionRequestTimeout>{{authentication.adaptive.http_connections.request_timeout}}</HTTPConnectionRequestTimeout>
+        <HTTPConnectionTimeout>{{authentication.adaptive.http_connections.connection_timeout_ms}}</HTTPConnectionTimeout>
+        <HTTPReadTimeout>{{authentication.adaptive.http_connections.read_timeout_ms}}</HTTPReadTimeout>
+        <HTTPConnectionRequestTimeout>{{authentication.adaptive.http_connections.request_timeout_ms}}</HTTPConnectionRequestTimeout>
         <!--End of default configs for timeouts-->
 
-        <RefreshInterval>{{authentication.adaptive.long_wait.page_refresh_interval}}</RefreshInterval>
+        <RefreshInterval>{{authentication.adaptive.long_wait.page_refresh_interval_ms}}</RefreshInterval>
         <!--End of timeouts in milliseconds-->
 
         <PromptOnLongWait>{{authentication.adaptive.long_wait.prompt}}</PromptOnLongWait>
 
         <!--Timeout in milliseconds for the waiting external calls-->
-        <LongWaitTimeout>{{authentication.adaptive.long_wait.timout}}</LongWaitTimeout>
+        <LongWaitTimeout>{{authentication.adaptive.long_wait.timout_ms}}</LongWaitTimeout>
     </AdaptiveAuth>
 
     <!--Intermediate certificate validation for certificate based requests-->
