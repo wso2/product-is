@@ -1,0 +1,67 @@
+{
+  "time": {
+
+    "deployment.clock_skew": "s",
+
+    "session_data.cleanup.expired_data.expiry_time": "m",
+    "session_data.cleanup.expired_data.frequency": "m",
+    "session_data.cleanup.temp_data.expiry_time": "m",
+
+    "session.timeout.idle_session_timeout": "m",
+    "session.timeout.remember_me_session_timeout": "m",
+
+    "oauth.authz_code.validity_time": "s",
+    "oauth.app_token.validity_time": "s",
+    "oauth.user_token.validity_time": "s",
+    "oauth.refresh_token.validity_time": "s",
+    "oauth.jwt.iat_validity_period": "m",
+    "oauth.oidc.id_token.validity_time": "s",
+    "oauth.oidc.logout_token.validity_time": "s",
+    "oauth.timestamp_skew": "s",
+
+    "saml.slo.retry_interval": "ms",
+    "saml.response.validity": "m",
+    "saml.artifact.validity": "m",
+
+    "entitlement.thrift.client_timeout": "ms",
+
+    "identity.mgt.recovery.default_expiry_time": "m",
+    "identity.mgt.recovery.notification.expiry_time": "m",
+    "identity.mgt.email_verification.notification.expiry_time": "m",
+    "identity.mgt.email_verification.ask_password.expiry_time": "m",
+    "identity.mgt.self_registration.notification.expiry_time": "m",
+
+    "cache.default_timeout": "ms",
+    "cache.framework_session_context_cache.timeout": "ms",
+    "cache.authentication_context_cache.timeout": "ms",
+    "cache.authentication_request_cache.timeout": "ms",
+    "cache.authentication_result_cache.timeout": "ms",
+    "cache.app_info_cache.timeout": "ms",
+    "cache.authorization_grant_cache.timeout": "ms",
+    "cache.jwks_cache.timeout": "ms",
+    "cache.oauth_cache.timeout": "ms",
+    "cache.oauth_scope_cache.timeout": "ms",
+    "cache.oauth_session_data_cache.timeout": "ms",
+    "cache.saml_sso_participant_cache.timeout": "ms",
+    "cache.saml_sso_session_index_cache.timeout": "ms",
+    "cache.saml_sso_session_data_cache.timeout": "ms",
+    "cache.service_provider_cache.timeout": "ms",
+    "cache.provisioning_connector_cache.timeout": "ms",
+    "cache.provisioning_entity_cache.timeout": "ms",
+    "cache.service_provider_provisioning_connector_cache.timeout": "ms",
+    "cache.idp_cache_by_auth_property.timeout": "ms",
+    "cache.idp_cache_by_hri.timeout": "ms",
+    "cache.idp_cache_by_name.timeout": "ms",
+
+    "jwt_validator.jwks_endpoint.http_default_timeout": "ms",
+    "jwt_validator.jwks_endpoint.http_connection_timeout": "ms",
+    "jwt_validator.jwks_endpoint.http_read_timeout": "ms",
+
+    "authentication.adaptive.http_connections.default_timeout": "ms",
+    "authentication.adaptive.http_connections.connection_timeout": "ms",
+    "authentication.adaptive.http_connections.read_timeout": "ms",
+    "authentication.adaptive.http_connections.request_timeout": "ms",
+    "authentication.adaptive.long_wait.page_refresh_interval": "ms",
+    "authentication.adaptive.long_wait.timout": "ms"
+  }
+}
