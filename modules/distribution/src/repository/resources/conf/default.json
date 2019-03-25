@@ -162,39 +162,13 @@
   "identity.recaptcha.verify_url" : "https://www.google.com/recaptcha/api/siteverify",
 
 
-  "identity.charon.properties": {
-    "user-schema-extension-enabled": true,
-    "patch-supported" : true,
-    "documentationUri" : "http://example.com/help/scim.html",
-    "bulk-supported" : true,
-    "bulk-maxOperations" : "1000",
-    "bulk-maxPayloadSize": "1048576",
-    "filter-supported" : true,
-    "filter-maxResults" : "200",
-    "changePassword" : true,
-    "sort-supported": false,
-    "etag-supported" : false,
-    "pagination-default-count" : "100"
-  },
-  "identity.charon.enabled_auth_schemes": ["oauth_bearer","http_basic"],
-  "identity.charon.authentication_schemes":{
-    "oauth_bearer": {
-      "name": "OAuth Bearer Token",
-      "description": "Authentication scheme using the OAuth Bearer Token Standard",
-      "specUri": "http://www.rfc-editor.org/info/rfc6750",
-      "documentationUri": "http://example.com/help/oauth.html",
-      "type": "oauthbearertoken",
-      "primary": true
-    },
-    "http_basic": {
-      "name": "HTTP Basic",
-      "description": "Authentication scheme using the HTTP Basic Standard",
-      "specUri": "http://www.rfc-editor.org/info/rfc2617",
-      "documentationUri": "http://example.com/help/httpBasic.html",
-      "type": "httpbasic",
-      "primary": false
-    }
-  },
+  "charon.properties.user_schema_extension.enabled": true,
+  "charon.properties.bulk_operations.max": "1000",
+  "charon.properties.bulk_payload_size.max": "1048576",
+  "charon.properties.documentation_uri": "https://docs.wso2.com/display/ISCONNECTORS/SCIM+2.0+Provisioning+Connector",
+  "charon.primary_authentication_scheme": "oauthbearertoken",
+  "charon.authentication_schemes.oauth_bearer.documentationUri": "$ref{charon.properties.documentation_uri}",
+  "charon.authentication_schemes.http_basic.documentationUri": "$ref{charon.properties.documentation_uri}",
 
 
   "identity.auth_framework.endpoint.tenant_list_enabled" : false,
