@@ -93,7 +93,7 @@
   "database.shared_db.type": {
     "mysql": {
       "database.shared_db.driver": "com.mysql.jdbc.Driver",
-      "database.shared_db.url": "jdbc:mysql://$conf{database.shared_db.hostname}:$conf{database.shared_db.port}/$conf{database.shared_db.name}",
+      "database.shared_db.url": "jdbc:mysql://$ref{database.shared_db.hostname}:$ref{database.shared_db.port}/$ref{database.shared_db.name}",
       "database.shared_db.validationQuery": "SELECT 1"
     },
     "h2": {
@@ -121,13 +121,13 @@
     "true": {
       "identity.auth_framework.endpoint.hostname_verification_enabled" : true,
       "identity.auth_framework.endpoint.mutual_ssl_username" : "admin",
-      "identity.auth_framework.endpoint.client_keystore" : "$conf{keystore.tls.file_name}",
-      "identity.auth_framework.endpoint.carbon_security_keystore_password" : "$conf{keystore.tls.password}",
-      "identity.auth_framework.endpoint.client_truststore" : "$conf{truststore.file_name}",
-      "identity.auth_framework.endpoint.carbon_security_truststore_password" : "$conf{truststore.password}",
+      "identity.auth_framework.endpoint.client_keystore" : "$ref{keystore.tls.file_name}",
+      "identity.auth_framework.endpoint.carbon_security_keystore_password" : "$ref{keystore.tls.password}",
+      "identity.auth_framework.endpoint.client_truststore" : "$ref{truststore.file_name}",
+      "identity.auth_framework.endpoint.carbon_security_truststore_password" : "$ref{truststore.password}",
       "identity.auth_framework.endpoint.username_header" : "UserName",
-      "identity.auth_framework.endpoint.key_manager_type" : "$conf{keystore.tls.type}",
-      "identity.auth_framework.endpoint.trust_manager_type" : "$conf{truststore.type}",
+      "identity.auth_framework.endpoint.key_manager_type" : "$ref{keystore.tls.type}",
+      "identity.auth_framework.endpoint.trust_manager_type" : "$ref{truststore.type}",
       "identity.auth_framework.endpoint.tls_protocol" : "TLSv1.2"
     }
   },
@@ -136,13 +136,13 @@
     "true": {
       "identity.auth_framework.endpoint.hostname_verification_enabled" : true,
       "identity.auth_framework.endpoint.mutual_ssl_username" : "admin",
-      "identity.auth_framework.endpoint.client_keystore" : "$conf{keystore.tls.file_name}",
-      "identity.auth_framework.endpoint.carbon_security_keystore_password" : "$conf{keystore.tls.password}",
-      "identity.auth_framework.endpoint.client_truststore" : "$conf{truststore.file_name}",
-      "identity.auth_framework.endpoint.carbon_security_truststore_password" : "$conf{truststore.password}",
+      "identity.auth_framework.endpoint.client_keystore" : "$ref{keystore.tls.file_name}",
+      "identity.auth_framework.endpoint.carbon_security_keystore_password" : "$ref{keystore.tls.password}",
+      "identity.auth_framework.endpoint.client_truststore" : "$ref{truststore.file_name}",
+      "identity.auth_framework.endpoint.carbon_security_truststore_password" : "$ref{truststore.password}",
       "identity.auth_framework.endpoint.username_header" : "UserName",
-      "identity.auth_framework.endpoint.key_manager_type" : "$conf{keystore.tls.type}",
-      "identity.auth_framework.endpoint.trust_manager_type" : "$conf{truststore.type}",
+      "identity.auth_framework.endpoint.key_manager_type" : "$ref{keystore.tls.type}",
+      "identity.auth_framework.endpoint.trust_manager_type" : "$ref{truststore.type}",
       "identity.auth_framework.endpoint.tls_protocol" : "TLSv1.2"
     }
   }
