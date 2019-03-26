@@ -363,7 +363,15 @@
   "identity.events.schemes.OIDCLogoutHandler.properties.enable": false,
   "identity.events.schemes.confirmationCodesInvalidate.subscriptions": [
     "POST_DELETE_USER"
-  ]
+  ],
 
+
+  "jaas.server.module": "com.sun.security.auth.module.Krb5LoginModule",
+  "jaas.server.useKeyTab": false,
+  "jaas.server.storeKey": true,
+  "jaas.server.useTicketCache": false,
+  "jaas.server.isInitiator": false,
+  "jaas.client.module": "com.sun.security.auth.module.Krb5LoginModule",
+  "jaas.client.useTicketCache": false
 
 }
