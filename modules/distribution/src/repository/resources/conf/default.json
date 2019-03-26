@@ -165,7 +165,7 @@
   "charon.properties.user_schema_extension.enabled": true,
   "charon.properties.bulk_operations.max": "1000",
   "charon.properties.bulk_payload_size.max": "1048576",
-  "charon.properties.documentation_uri": "https://docs.wso2.com/display/ISCONNECTORS/SCIM+2.0+Provisioning+Connector",
+  "charon.properties.documentation_uri": "https://docs.wso2.com/display/IS570/apidocs/SCIM2-endpoints/index.html",
   "charon.primary_authentication_scheme": "oauthbearertoken",
   "charon.authentication_schemes.oauth_bearer.documentationUri": "$ref{charon.properties.documentation_uri}",
   "charon.authentication_schemes.http_basic.documentationUri": "$ref{charon.properties.documentation_uri}",
