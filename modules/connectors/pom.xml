@@ -318,6 +318,29 @@
                             </artifactItems>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>download_x509_valve</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.carbon.extension.identity.x509certificate</groupId>
+                                    <artifactId>
+                                        org.wso2.carbon.extension.identity.x509Certificate.valve
+                                    </artifactId>
+                                    <version>${org.wso2.carbon.extension.identity.x509certificate.version}</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${basedir}/target/authenticatorCopied/jar
+                                    </outputDirectory>
+                                    <includes>**/*.jar</includes>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>

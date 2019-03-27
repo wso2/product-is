@@ -1694,6 +1694,11 @@
                 <version>${org.wso2.carbon.extension.identity.x509certificate.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.extension.identity.x509certificate</groupId>
+                <artifactId>org.wso2.carbon.extension.identity.x509Certificate.valve</artifactId>
+                <version>${org.wso2.carbon.extension.identity.x509certificate.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.identity.conditional.auth.functions</groupId>
                 <artifactId>org.wso2.carbon.identity.conditional.auth.functions.server.feature</artifactId>
                 <version>${conditional.authentication.functions.version}</version>
