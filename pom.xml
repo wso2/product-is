@@ -1783,13 +1783,13 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.12.317</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.12.312</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.11.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
         <identity.carbon.auth.saml2.version>5.2.15</identity.carbon.auth.saml2.version>
         <identity.inbound.auth.saml.version>5.4.36</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.0.116</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.0.115</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.2.9</identity.inbound.auth.openid.version>
         <identity.agent.sso.version>5.1.14</identity.agent.sso.version>
         <identity.inbound.auth.sts.version>5.2.20</identity.inbound.auth.sts.version>
@@ -1816,7 +1816,7 @@
         <identity.event.handler.notification.version>1.0.23</identity.event.handler.notification.version>
         <identity.app.authz.xacml.version>2.0.2</identity.app.authz.xacml.version>
         <identity.oauth2.validators.xacml.version>2.0.3</identity.oauth2.validators.xacml.version>
-        <org.wso2.carbon.extension.identity.x509certificate.version>1.0.4</org.wso2.carbon.extension.identity.x509certificate.version>
+        <org.wso2.carbon.extension.identity.x509certificate.version>1.0.3</org.wso2.carbon.extension.identity.x509certificate.version>
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
         <!--<identity.userstore.cassandra.version>5.1.1</identity.userstore.cassandra.version>-->
