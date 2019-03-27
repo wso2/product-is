@@ -145,5 +145,16 @@
       "identity.auth_framework.endpoint.trust_manager_type" : "$ref{truststore.type}",
       "identity.auth_framework.endpoint.tls_protocol" : "TLSv1.2"
     }
+  },
+
+  "charon.primary_authentication_scheme": {
+    "oauthbearertoken": {
+      "charon.authentication_schemes.oauth_bearer.primary": true,
+      "charon.authentication_schemes.http_basic.primary": false
+    },
+    "httpbasic": {
+      "charon.authentication_schemes.oauth_bearer.primary": false,
+      "charon.authentication_schemes.http_basic.primary": true
+    }
   }
 }
