@@ -337,7 +337,14 @@
   "identity.events.schemes.OIDCLogoutHandler.properties.enable": false,
   "identity.events.schemes.confirmationCodesInvalidate.subscriptions": [
     "POST_DELETE_USER"
-  ]
+  ],
 
 
+  "wso2event.thrift.tcp.url": "tcp://localhost:7612",
+  "wso2event.thrift.ssl.url": "ssl://localhost:7712",
+  "wso2event.binary.tcp.url": "tcp://localhost:9612",
+  "wso2event.binary.ssl.url": "ssl://localhost:9712",
+
+  "mail.publisher.host": "smtp.gmail.com",
+  "mail.publisher.port": "587"
 }

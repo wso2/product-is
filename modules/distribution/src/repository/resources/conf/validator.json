@@ -89,5 +89,78 @@
       "match_regex": ".+",
       "error_message": "Encryption key required for symmetric encryption"
     }
+  ],
+
+
+
+  "mail.publisher.address": [
+    {
+      "if": {
+        "identity.mgt.recovery.notification.manage_internally": true
+      },
+      "regex": ".+\\@.+\\..+",
+      "error_message": "Email publisher is incorrect or not provided"
+    },
+    {
+      "if": {
+        "identity.mgt.email_verification.notification.manage_internally": true
+      },
+      "regex": ".+\\@.+\\..+",
+      "error_message": "Email publisher is incorrect or not provided"
+    },
+    {
+      "if": {
+        "identity.mgt.self_registration.notification.manage_internally": true
+      },
+      "regex": ".+\\@.+\\..+",
+      "error_message": "Email publisher is incorrect or not provided"
+    }
+  ],
+
+  "mail.publisher.username": [
+    {
+      "if": {
+        "identity.mgt.recovery.notification.manage_internally": true
+      },
+      "regex": ".+",
+      "error_message": "Username is required for email configuration"
+    },
+    {
+      "if": {
+        "identity.mgt.email_verification.notification.manage_internally": true
+      },
+      "regex": ".+",
+      "error_message": "Username is required for email configuration"
+    },
+    {
+      "if": {
+        "identity.mgt.self_registration.notification.manage_internally": true
+      },
+      "regex": ".+",
+      "error_message": "Username is required for email configuration"
+    }
+  ],
+  "mail.publisher.password": [
+    {
+      "if": {
+        "identity.mgt.recovery.notification.manage_internally": true
+      },
+      "regex": ".+",
+      "error_message": "Password is required for email configuration"
+    },
+    {
+      "if": {
+        "identity.mgt.email_verification.notification.manage_internally": true
+      },
+      "regex": ".+",
+      "error_message": "Password is required for email configuration"
+    },
+    {
+      "if": {
+        "identity.mgt.self_registration.notification.manage_internally": true
+      },
+      "regex": ".+",
+      "error_message": "Password is required for email configuration"
+    }
   ]
 }
