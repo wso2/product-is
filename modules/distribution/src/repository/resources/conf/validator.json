@@ -162,5 +162,29 @@
       "regex": ".+",
       "error_message": "Password is required for email configuration"
     }
+  ],
+
+  "mail.publisher.host": [
+    {
+      "if": {
+        "identity.mgt.recovery.notification.manage_internally": true
+      },
+      "regex": ".+",
+      "error_message": "Mail publisher host is required for email configuration"
+    },
+    {
+      "if": {
+        "identity.mgt.email_verification.notification.manage_internally": true
+      },
+      "regex": ".+",
+      "error_message": "Mail publisher host is required for email configuration"
+    },
+    {
+      "if": {
+        "identity.mgt.self_registration.notification.manage_internally": true
+      },
+      "regex": ".+",
+      "error_message": "Mail publisher host is required for email configuration"
+    }
   ]
 }

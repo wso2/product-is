@@ -345,6 +345,7 @@
   "wso2event.binary.tcp.url": "tcp://localhost:9612",
   "wso2event.binary.ssl.url": "ssl://localhost:9712",
 
-  "mail.publisher.host": "smtp.gmail.com",
-  "mail.publisher.port": "587"
+  "mail.publisher.port": "587",
+  "mail.publisher.start_tls.enable": true,
+  "mail.publisher.auth.enable": true
 }

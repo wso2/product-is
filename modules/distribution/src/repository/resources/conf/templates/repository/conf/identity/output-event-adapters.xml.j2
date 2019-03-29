@@ -101,8 +101,8 @@
         {% endif %}
         <property key="mail.smtp.host">{{mail.publisher.host}}</property>
         <property key="mail.smtp.port">{{mail.publisher.port}}</property>
-        <property key="mail.smtp.starttls.enable">true</property>
-        <property key="mail.smtp.auth">true</property>
+        <property key="mail.smtp.starttls.enable">{{mail.publisher.start_tls.enable}}</property>
+        <property key="mail.smtp.auth">{{mail.publisher.auth.enable}}</property>
         <!-- Thread Pool Related Properties -->
         <property key="minThread">8</property>
         <property key="maxThread">100</property>
