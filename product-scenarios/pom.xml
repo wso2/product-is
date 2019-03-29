@@ -88,7 +88,7 @@
         <commons.codec.version>1.8</commons.codec.version>
         <testng.version>6.9.10</testng.version>
         <commons.lang.version>2.6</commons.lang.version>
-        <carbon.kernel.version>4.4.37</carbon.kernel.version>
+        <carbon.kernel.version>4.4.38</carbon.kernel.version>
         <carbon.identity.framework.version>5.12.283</carbon.identity.framework.version>
         <identity.inbound.provisioning.scim.version>5.3.31</identity.inbound.provisioning.scim.version>
         <identity.user.ws.version>5.1.11</identity.user.ws.version>
