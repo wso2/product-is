@@ -252,7 +252,7 @@
 
     <properties>
         <java-support.version>7.2.0</java-support.version>
-        <opensaml3.version>3.2.0</opensaml3.version>
+        <opensaml3.version>3.3.0</opensaml3.version>
     </properties>
 
 </project>
