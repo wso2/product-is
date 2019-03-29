@@ -1831,7 +1831,7 @@
         <social.authenticator.facebook.version>5.1.14</social.authenticator.facebook.version>
         <social.authenticator.google.version>5.1.6</social.authenticator.google.version>
         <social.authenticator.windowslive.version>5.1.4</social.authenticator.windowslive.version>
-        <social.authenticator.yahoo.version>5.1.4</social.authenticator.yahoo.version>
+        <social.authenticator.yahoo.version>5.1.5</social.authenticator.yahoo.version>
 
         <!-- Provisioning connector Properties -->
         <provisioning.connector.spml.version>5.1.2</provisioning.connector.spml.version>
