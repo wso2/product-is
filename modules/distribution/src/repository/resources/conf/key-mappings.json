@@ -4,5 +4,9 @@
   "database.shared_db.pool_options.max_wait": "database.shared_db.pool_options.maxWait",
   "database.shared_db.pool_options.test_on_borrow": "database.shared_db.pool_options.testOnBorrow",
   "database.shared_db.pool_options.validation_interval": "database.shared_db.pool_options.validationInterval",
-  "database.shared_db.pool_options.default_auto_commit": "database.shared_db.pool_options.defaultAutoCommit"
+  "database.shared_db.pool_options.default_auto_commit": "database.shared_db.pool_options.defaultAutoCommit",
+
+  "user_store.connection_url":"user_store.properties.ConnectionURL",
+  "user_store.connection_name":"user_store.properties.ConnectionName",
+  "user_store.connection_password":"user_store.properties.ConnectionPassword"
 }
