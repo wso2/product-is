@@ -1960,7 +1960,7 @@
         <commons-codec.version>1.4.0.wso2v1</commons-codec.version>
         <h2database.wso2.version>1.2.140.wso2v3</h2database.wso2.version>
         <felix.framework.version>1.0.3</felix.framework.version>
-        <osgi.compendium.version>1.0.0</osgi.compendium.version>
+        <osgi.compendium.version>1.4.0</osgi.compendium.version>
         <equinox.http.servlet.version>2.2.2</equinox.http.servlet.version>
         <equinox.http.helper.version>1.0.0</equinox.http.helper.version>
         <equinox.jsp.jasper.version>1.0.1.R33x_v20070816</equinox.jsp.jasper.version>
