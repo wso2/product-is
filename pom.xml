@@ -1783,13 +1783,13 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.12.323</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.12.330</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.11.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
         <identity.carbon.auth.saml2.version>5.2.15</identity.carbon.auth.saml2.version>
-        <identity.inbound.auth.saml.version>5.4.36</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.0.124</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.saml.version>5.4.37</identity.inbound.auth.saml.version>
+        <identity.inbound.auth.oauth.version>6.0.125</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.2.10</identity.inbound.auth.openid.version>
         <identity.agent.sso.version>5.1.14</identity.agent.sso.version>
         <identity.inbound.auth.sts.version>5.2.20</identity.inbound.auth.sts.version>
@@ -1799,7 +1799,7 @@
         <identity.user.workflow.version>5.1.5</identity.user.workflow.version>
         <identity.user.ws.version>5.1.11</identity.user.ws.version>
         <identity.userstore.ldap.version>5.1.6</identity.userstore.ldap.version>
-        <identity.userstore.remote.version>5.1.4</identity.userstore.remote.version>
+        <identity.userstore.remote.version>5.1.5</identity.userstore.remote.version>
         <identity.workflow.impl.bps.version>5.1.13</identity.workflow.impl.bps.version>
         <identity.carbon.auth.iwa.version>5.1.6</identity.carbon.auth.iwa.version>
         <identity.workflow.template.multisteps.version>5.1.5</identity.workflow.template.multisteps.version>
@@ -1810,7 +1810,7 @@
         <identity.data.publisher.authentication.version>5.1.12</identity.data.publisher.authentication.version>
         <identity.data.publisher.oauth.version>1.0.12</identity.data.publisher.oauth.version>
         <identity.data.publisher.audit.version>1.0.4</identity.data.publisher.audit.version>
-        <identity.governance.version>1.1.55</identity.governance.version>
+        <identity.governance.version>1.1.58</identity.governance.version>
         <carbon.identity.auth.version>1.1.26</carbon.identity.auth.version>
         <identity.event.handler.account.lock.version>1.1.15</identity.event.handler.account.lock.version>
         <identity.event.handler.notification.version>1.0.23</identity.event.handler.notification.version>
@@ -1985,9 +1985,9 @@
         <ds-annotations.version>1.2.10</ds-annotations.version>
         <snakeyaml.version>1.16.0.wso2v1</snakeyaml.version>
         <json.version>3.0.0.wso2v1</json.version>
-        <carbon.consent.mgt.version>2.0.20</carbon.consent.mgt.version>
+        <carbon.consent.mgt.version>2.0.22</carbon.consent.mgt.version>
         <carbon.database.utils.version>2.0.9</carbon.database.utils.version>
-        <carbon.identity.oauth.uma.version>1.0.19</carbon.identity.oauth.uma.version>
+        <carbon.identity.oauth.uma.version>1.0.21</carbon.identity.oauth.uma.version>
         <liberty.maven.plugin.version>2.2</liberty.maven.plugin.version>
         <maven.war.plugin.version>3.2.0</maven.war.plugin.version>
         <snakeyaml.version.range>[1.16.0, 1.17.0)</snakeyaml.version.range>
