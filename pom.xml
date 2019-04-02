@@ -1876,7 +1876,7 @@
         <axiom.impl.version>1.2.12</axiom.impl.version>
         <axiom.version>1.2.11-wso2v6</axiom.version>
         <gdata.core.wso2.version>1.47.0.wso2v1</gdata.core.wso2.version>
-        <json.simple.version>1.1</json.simple.version>
+        <json.simple.version>1.1.1</json.simple.version>
         <openid4java.consumer.version>1.0.0</openid4java.consumer.version>
         <opensaml.version>2.6.4</opensaml.version>
         <opensaml2.wso2.version>2.6.4.wso2v5</opensaml2.wso2.version>
