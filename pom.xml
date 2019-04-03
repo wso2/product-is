@@ -1997,7 +1997,7 @@
         <liberty.maven.plugin.version>2.2</liberty.maven.plugin.version>
         <maven.war.plugin.version>3.2.0</maven.war.plugin.version>
         <snakeyaml.version.range>[1.16.0, 1.17.0)</snakeyaml.version.range>
-        <msf4j.version>2.6.2</msf4j.version>
+        <msf4j.version>2.7.2</msf4j.version>
         <commons-lang.wso2.osgi.version.range>[2.6.0,3.0.0)</commons-lang.wso2.osgi.version.range>
         <carbon.healthcheck.version>1.0.1</carbon.healthcheck.version>
         <carbon.logging.admin.stub.version>4.6.60</carbon.logging.admin.stub.version>
