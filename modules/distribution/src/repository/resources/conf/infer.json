@@ -166,5 +166,51 @@
       "charon.authentication_schemes.oauth_bearer.primary": false,
       "charon.authentication_schemes.http_basic.primary": true
     }
+  },
+
+  "token.sign_with_tenant_of": {
+    "sp": {
+      "oauth.oidc.id_token.sign_with_sp_key": true,
+      "oauth.access_token.generate_with_sp_tenant_domain": true
+    },
+    "user": {
+      "oauth.oidc.id_token.sign_with_sp_key": false,
+      "oauth.access_token.generate_with_sp_tenant_domain": false
+    }
+  },
+
+  "oauth.token.generator": {
+    "default": {
+      "oauth.token.token_generator_class": "org.wso2.carbon.identity.oauth2.token.OauthTokenIssuerImpl",
+      "oauth.token.value_generator_class": "org.apache.oltu.oauth2.as.issuer.UUIDValueGenerator"
+    },
+    "jwt": {
+      "oauth.token.token_generator_class": "org.wso2.carbon.identity.oauth2.token.JWTTokenIssuer"
+    },
+    "md5": {
+      "oauth.token.value_generator_class": "org.apache.oltu.oauth2.as.issuer.MD5Generator"
+    },
+    "sha256": {
+      "oauth.token.value_generator_class": "org.wso2.carbon.identity.oauth.tokenvaluegenerator.SHA256Generator"
+    },
+    "uuid": {
+      "oauth.token.value_generator_class": "org.apache.oltu.oauth2.as.issuer.UUIDValueGenerator"
+    }
+  },
+
+  "authentication.adaptive.event_publisher.authentication_type": {
+    "basic": {
+      "authentication.adaptive.event_publisher.url": "https://localhost:8280/",
+      "authentication.adaptive.event_publisher.authentication.basic.enable": true,
+      "authentication.adaptive.event_publisher.authentication.basic.username": "admin",
+      "authentication.adaptive.event_publisher.authentication.basic.password": "admin"
+    }
+  },
+
+  "event.default_recorder.user_delete_event.write_to_separate_csv.enable": {
+    "true": {
+      "event.default_recorder.user_delete_event.write_to_separate_csv.path": "${carbon.home}/repository/logs/delete-records.csv"
+    }
   }
+
 }
