@@ -1897,7 +1897,7 @@
         <orbit.version.commons.httpclient>4.2.5.wso2v1</orbit.version.commons.httpclient>
         <commons.httpclient.version>3.1</commons.httpclient.version>
         <httpcore.wso2.version>4.3.3.wso2v1</httpcore.wso2.version>
-        <httpclient.version>4.3.3</httpclient.version>
+        <httpclient.version>4.5.8</httpclient.version>
         <xml.apis.version>1.4.01</xml.apis.version>
         <jstl.version>1.1.2</jstl.version>
         <taglibs.version>1.1.2</taglibs.version>
