@@ -16,7 +16,7 @@
 # under the License.
 #
 
-threadPool.size={{identity.events.thread_pool_size}}
+threadPool.size={{identity_mgt.events.thread_pool_size}}
 
 # Example Configuration Pattern for an event.
 #      module.name.1=event1
@@ -25,8 +25,8 @@ threadPool.size={{identity.events.thread_pool_size}}
 
 # count array is used to identify the number of events. This number is used to configure custom events.
 {% set count = [] %}
-{% for event_name, event_value in identity.events.schemes.items() %}
-module.name.{{loop.index}}={{event_name}}
+{% for event_name, event_value in identity_mgt.events.schemes.items() %}
+module.name.{{event_value.module_index}}={{event_name}}
 {% for subscription in event_value.subscriptions%}
 {{event_name}}.subscription.{{loop.index}}={{subscription}}
 {% endfor %}
@@ -35,10 +35,12 @@ module.name.{{loop.index}}={{event_name}}
 {% endfor %}
 {% if count.append(1) %}{% endif %}
 {% endfor %}
+
 # Custom event configuration.
+
 {% set custom_count = count|length %}
-{% for custom_event in identity.custom_events.schemes %}
-{% set index = custom_count + loop.index%}
+{% for custom_event in event_handler %}
+{% set index = custom_count + loop.index %}
 module.name.{{index}}={{custom_event.name}}
 {% for subscription in custom_event.subscriptions.toList()%}
 {{custom_event.name}}.subscription.{{loop.index}}={{subscription}}
