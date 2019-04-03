@@ -129,7 +129,7 @@
     parameters unavailable from the API on the first consumption.
     -->
     <AuthenticationEndpointRedirectParams
-            action="identity.auth_framework.redirect_parameter_filter_policy"
+            action="{{identity.auth_framework.redirect_parameter_filter_policy}}"
             removeOnConsumeFromAPI="{{identity.auth_framework.redirect_parameter_remove_on_consume}}">
         {% for parameter in identity.auth_framework.filtered_redirect_parameters %}
         <AuthenticationEndpointRedirectParam name="{{parameter}}"/>
