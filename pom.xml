@@ -1463,6 +1463,11 @@
                 <artifactId>org.wso2.carbon.identity.application.authentication.handler.identifier</artifactId>
                 <version>${identity.local.auth.basicauth.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.extension.identity.oauth.addons</groupId>
+                <artifactId>org.wso2.carbon.identity.oauth2.token.handler.clientauth.mutualtls</artifactId>
+                <version>${identity.local.auth.clientauth.mutualtls.version}</version>
+            </dependency>
 
             <!-- Local Authentication API Connector -->
             <dependency>
@@ -1843,6 +1848,7 @@
         <identity.local.auth.basicauth.version>6.0.7</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.1.14</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.3.11</identity.local.auth.iwa.version>
+        <identity.local.auth.clientauth.mutualtls.version>2.0.4</identity.local.auth.clientauth.mutualtls.version>
 
         <!-- Local Authentication API Connector Properties -->
         <identity.local.auth.api.version>2.1.3</identity.local.auth.api.version>
