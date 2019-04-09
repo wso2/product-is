@@ -1973,7 +1973,7 @@
         <javax.servlet.jsp.version>2.0.0.v200706191603</javax.servlet.jsp.version>
         <eclipse.microprofile.version>1.2</eclipse.microprofile.version>
         <cipher-tool.version>1.0.0-wso2v8</cipher-tool.version>
-        <jacoco.agent.version>0.7.5.201505241946</jacoco.agent.version>
+        <jacoco.agent.version>0.8.3</jacoco.agent.version>
         <project.scm.id>my-scm-server</project.scm.id>
         <carbon.business-process.version>4.4.94</carbon.business-process.version>
         <carbon.analytics-common.version>5.1.53</carbon.analytics-common.version>
