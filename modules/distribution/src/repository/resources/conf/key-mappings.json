@@ -8,5 +8,29 @@
 
   "user_store.connection_url":"user_store.properties.ConnectionURL",
   "user_store.connection_name":"user_store.properties.ConnectionName",
-  "user_store.connection_password":"user_store.properties.ConnectionPassword"
+  "user_store.connection_password":"user_store.properties.ConnectionPassword",
+
+  "identity_mgt.account_locking.enable_account_locking": "identity_mgt.events.schemes.'account.lock.handler'.properties.enable",
+  "identity_mgt.account_locking.allowed_failed_attempts": "identity_mgt.events.schemes.'account.lock.handler'.properties.'On.Failure.Max.Attempts'",
+  "identity_mgt.account_locking.auto_unlock_after": "identity_mgt.events.schemes.'account.lock.handler'.properties.Time",
+  "identity_mgt.account_locking.auto_unlock_time_increment_ratio": "identity_mgt.events.schemes.'account.lock.handler'.properties.'login.fail.timeout.ratio'",
+
+  "identity_mgt.account_disabling.enable_account_disabling": "identity_mgt.events.schemes.'account.disable.handler'.properties.enable",
+
+  "identity_mgt.password_policy.enable_password_policy": "identity_mgt.events.schemes.passwordPolicy.properties.enable",
+  "identity_mgt.password_policy.min_characters": "identity_mgt.events.schemes.passwordPolicy.properties.'min.length'",
+  "identity_mgt.password_policy.max_characters": "identity_mgt.events.schemes.passwordPolicy.properties.'max.length'",
+  "identity_mgt.password_policy.allow_username_inside_password": "",
+  "identity_mgt.password_policy.no_of_previous_passwords_to_disallow": "identity_mgt.events.schemes.passwordHistory.properties.count",
+  "identity_mgt.password_policy.match_pattern": "identity_mgt.events.schemes.passwordPolicy.properties.pattern",
+  "identity_mgt.password_policy.error_message_on_pattern_validation_failure": "identity_mgt.events.schemes.passwordPolicy.properties.errorMsg",
+  "identity_mgt.password_policy.pattern_validator": "identity_mgt.events.schemes.passwordPolicy.properties.'class.PasswordPatternPolicy'",
+  "identity_mgt.password_policy.enable_password_history": "identity_mgt.events.schemes.passwordHistory.properties.enable",
+  "identity_mgt.password_policy.password_history_store_hash_algorithm": "identity_mgt.events.schemes.passwordHistory.properties.hashingAlgorithm",
+  "identity_mgt.password_policy.password_history_datasource_class": "identity_mgt.events.schemes.passwordHistory.properties.dataStore",
+
+  "identity_mgt.inactive_account_suspention.enable_account_suspension": "identity_mgt.events.schemes.'suspension.notification'.properties.enable",
+  "identity_mgt.inactive_account_suspension.suspend_when_inactive_for": "identity_mgt.events.schemes.'suspension.notification'.properties.'account.disable.delay'",
+  "identity_mgt.inactive_account_suspension.notify_when_inactive_for": "identity_mgt.events.schemes.'suspension.notification'.properties.'trigger.time'",
+  "identity_mgt.inactive_account_suspension.trigger_notifications_at": "identity_mgt.events.schemes.'suspension.notification'.properties.'trigger.time'"
 }

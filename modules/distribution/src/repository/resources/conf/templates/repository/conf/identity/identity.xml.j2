@@ -15,7 +15,7 @@
 ~ limitations under the License.
  -->
 
-<Server xmlns="http://wso2.org/projects/carbon/carbon.xml">
+<Server xmlns="http://wso2.org/projects/carbon/carbon.xml" xmlns:svns="http://org.wso2.securevault/configuration">
 
     <JDBCPersistenceManager>
         <DataSource>
@@ -59,18 +59,18 @@
                 {% endif %}
                 <!-- When PoolZize > 0, temporary data which have no usage after the authentication flow will be deleted immediately
                  When PoolZise = 0, data will be deleted only by the scheduled cleanup task-->
-                <PoolSize>{{session_data.cleanup.temp_data.db_pool_size}}</PoolSize>
+                <PoolSize>{{session.data.cleanup.temp_data.db_pool_size}}</PoolSize>
                 <!-- All temporary authentication context data older than CleanUpTimeout value are considered as expired
                 and would be deleted during cleanup task -->
-                <CleanUpTimeout>{{session_data.cleanup.temp_data.expiry_time}}</CleanUpTimeout>
+                <CleanUpTimeout>{{session.data.cleanup.temp_data.expiry_time_mins}}</CleanUpTimeout>
             </TempDataCleanup>
         </SessionDataPersist>
     </JDBCPersistenceManager>
 
     <!-- Time configurations are in minutes -->
     <TimeConfig>
-        <SessionIdleTimeout>{{session.timeout.idle_session_timeout}}</SessionIdleTimeout>
-        <RememberMeTimeout>{{session.timeout.remember_me_session_timeout}}</RememberMeTimeout>
+        <SessionIdleTimeout>{{session.timeout.idle_session_timeout_mins}}</SessionIdleTimeout>
+        <RememberMeTimeout>{{session.timeout.remember_me_session_timeout_mins}}</RememberMeTimeout>
     </TimeConfig>
 
     <!-- Security configurations -->
@@ -636,67 +636,65 @@
       <Recovery>
         <ReCaptcha>
             <Password>
-                <Enable>{{identity.mgt.recovery.password_recovery.recaptcha.enable}}</Enable>
+                <Enable>{{identity_mgt.password_reset_email.enable_recaptcha}}</Enable>
             </Password>
             <Username>
-                <Enable>{{identity.mgt.recovery.username_recovery.recaptcha.enable}}</Enable>
+                <Enable>{{identity_mgt.username_recovery.email.enable_recaptcha}}</Enable>
             </Username>
         </ReCaptcha>
         <Notification>
             <Password>
-                <Enable>{{identity.mgt.recovery.password_recovery.with_notification.enable}}</Enable>
+                <Enable>{{identity_mgt.password_reset_email.enable_password_reset_email}}</Enable>
             </Password>
             <Username>
-                <Enable>{{identity.mgt.recovery.username_recovery.with_notification.enable}}</Enable>
+                <Enable>{{identity_mgt.username_recovery.email.enable_username_recovery}}</Enable>
             </Username>
-            <InternallyManage>{{identity.mgt.recovery.notification.manage_internally}}</InternallyManage>
+            <InternallyManage>{{identity_mgt.recovery.notification.manage_internally}}</InternallyManage>
        </Notification>
        <Question>
             <Password>
-                <Enable>{{identity.mgt.recovery.password_recovery.with_challenge_question.enable}}</Enable>
-                <NotifyStart>{{identity.mgt.recovery.password_recovery.with_challenge_question.notify_start}}</NotifyStart>
-                <Separator>{{identity.mgt.recovery.password_recovery.with_challenge_question.separator_char}}</Separator>
-                <MinAnswers>{{identity.mgt.recovery.password_recovery.with_challenge_question.min_answers}}</MinAnswers>
+                <Enable>{{identity_mgt.password_reset_challenge_questions.enable_password_reset_challenge_questions}}</Enable>
+                <NotifyStart>{{identity_mgt.password_reset_challenge_questions.notify_on_initiation}}</NotifyStart>
+                <Separator>{{identity_mgt.password_reset_challenge_questions.question_separator}}</Separator>
+                <MinAnswers>{{identity_mgt.password_reset_challenge_questions.min_required_answers}}</MinAnswers>
                 <ReCaptcha>
-                    <Enable>{{identity.mgt.recovery.password_recovery.with_challenge_question.recaptcha.enable}}</Enable>
-                    <MaxFailedAttempts>{{identity.mgt.recovery.password_recovery.with_challenge_question.recaptcha.max_fails}}</MaxFailedAttempts>
+                    <Enable>{{identity_mgt.password_reset_challenge_questions.enable_recaptcha}}</Enable>
+                    <MaxFailedAttempts>{{identity_mgt.password_reset_challenge_questions.failures_before_recaptcha}}</MaxFailedAttempts>
                 </ReCaptcha>
             </Password>
         </Question>
-        <ExpiryTime>{{identity.mgt.recovery.notification.expiry_time}}</ExpiryTime>
-        <NotifySuccess>{{identity.mgt.recovery.notification.notify_success}}</NotifySuccess>
+        <ExpiryTime>{{identity_mgt.password_reset_email.reset_mail_validity}}</ExpiryTime>
+        <NotifySuccess>{{identity_mgt.password_reset_email.notify_on_reset}}</NotifySuccess>
         <AdminPasswordReset>
-            <Offline>{{identity.mgt.recovery.password_recovery.by_admin.offline}}</Offline>
-            <OTP>{{identity.mgt.recovery.password_recovery.by_admin.otp}}</OTP>
-            <RecoveryLink>{{identity.mgt.recovery.password_recovery.by_admin.recovery_link}}</RecoveryLink>
+            <Offline>{{identity_mgt.password_reset_by_admin.enable_offline_otp_based_reset}}</Offline>
+            <OTP>{{identity_mgt.password_reset_by_admin.enable_emailed_otp_based_reset}}</OTP>
+            <RecoveryLink>{{identity_mgt.password_reset_by_admin.enable_emailed_link_based_reset}}</RecoveryLink>
         </AdminPasswordReset>
-        <CallbackRegex>{{identity.mgt.recovery.notification.callback_regex}}</CallbackRegex>
     </Recovery>
 
     <EmailVerification>
-        <Enable>{{identity.mgt.email_verification.enable}}</Enable>
-	    <ExpiryTime>{{identity.mgt.email_verification.notification.expiry_time}}</ExpiryTime>
-        <LockOnCreation>{{identity.mgt.email_verification.account.lock_on_creation}}</LockOnCreation>
+        <Enable>{{identity_mgt.user_onboarding.enable_email_verification}}</Enable>
+	    <ExpiryTime>{{identity_mgt.user_onboarding.verification_email_validity}}</ExpiryTime>
+        <LockOnCreation>{{identity_mgt.user_onboarding.lock_on_creation}}</LockOnCreation>
         <Notification>
-            <InternallyManage>{{identity.mgt.email_verification.notification.manage_internally}}</InternallyManage>
+            <InternallyManage>{{identity_mgt.user_onboarding.notification.manage_internally}}</InternallyManage>
         </Notification>
         <AskPassword>
-	        <ExpiryTime>{{identity.mgt.email_verification.ask_password.expiry_time}}</ExpiryTime>
-	        <PasswordGenerator>{{identity.mgt.email_verification.ask_password.password_generator}}</PasswordGenerator>
+	        <ExpiryTime>{{identity_mgt.user_onboarding.ask_password_email_validity}}</ExpiryTime>
+	        <PasswordGenerator>{{identity_mgt.user_onboarding.password_generator}}</PasswordGenerator>
         </AskPassword>
     </EmailVerification>
 
     <SelfRegistration>
-        <Enable>{{identity.mgt.self_registration.enable}}</Enable>
-        <LockOnCreation>{{identity.mgt.self_registration.account.lock_on_creation}}</LockOnCreation>
+        <Enable>{{identity_mgt.user_self_registration.allow_self_registration}}</Enable>
+        <LockOnCreation>{{identity_mgt.user_self_registration.lock_on_creation}}</LockOnCreation>
         <Notification>
-            <InternallyManage>{{identity.mgt.self_registration.notification.manage_internally}}</InternallyManage>
+            <InternallyManage>{{identity_mgt.user_self_registration.notification.manage_internally}}</InternallyManage>
         </Notification>
-        <ReCaptcha>{{identity.mgt.self_registration.recaptcha.enable}}</ReCaptcha>
+        <ReCaptcha>{{identity_mgt.user_self_registration.enable_recaptcha}}</ReCaptcha>
 	    <VerificationCode>
-	        <ExpiryTime>{{identity.mgt.self_registration.notification.expiry_time}}</ExpiryTime>
+	        <ExpiryTime>{{identity_mgt.user_self_registration.verification_email_validity}}</ExpiryTime>
 	    </VerificationCode>
-        <CallbackRegex>{{identity.mgt.self_registration.callback_regex}}</CallbackRegex>
     </SelfRegistration>
 
     <!--
@@ -712,16 +710,16 @@
      -->
 
     <SPRoleManagement>
-        <ReturnOnlyMappedLocalRoles>{{identity.mgt.return_only_mapped_local_roles}}</ReturnOnlyMappedLocalRoles>
+        <ReturnOnlyMappedLocalRoles>{{sp_role_management.return_only_mapped_local_roles}}</ReturnOnlyMappedLocalRoles>
     </SPRoleManagement>
 
-    <EnableAskPasswordAdminUI>{{identity.mgt.email_verification.ask_password.admin_console_ui.enable}}</EnableAskPasswordAdminUI>
+    <EnableAskPasswordAdminUI>{{identity_mgt.user_onboarding.ask_password_from_user}}</EnableAskPasswordAdminUI>
 
-    <EnableRecoveryEndpoint>{{identity.mgt.recovery.endpoint.enable}}</EnableRecoveryEndpoint>
-    <EnableSelfSignUpEndpoint>{{identity.mgt.self_registration.endpoint.enable}}</EnableSelfSignUpEndpoint>
+    <EnableRecoveryEndpoint>{{identity_mgt.endpoint.enable_recovery_endpoint}}</EnableRecoveryEndpoint>
+    <EnableSelfSignUpEndpoint>{{identity_mgt.endpoint.enable_self_signup_endpoint}}</EnableSelfSignUpEndpoint>
 
     <AuthenticationPolicy>
-        <CheckAccountExist>{{identity.mgt.email_verification.check_account_existence}}</CheckAccountExist>
+        <CheckAccountExist>{{authentication_policy.check_account_exist}}</CheckAccountExist>
     </AuthenticationPolicy>
 
     <JITProvisioning>
@@ -1189,6 +1187,7 @@
             {% endfor %}
         </Servlet>
     </TenantContextsToRewrite>
+
     <!-- Server Synchronization Tolerance Configuration in seconds -->
     <ClockSkew>{{deployment.clock_skew}}</ClockSkew>
 

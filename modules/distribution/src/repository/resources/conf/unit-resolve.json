@@ -25,11 +25,11 @@
 
     "entitlement.thrift.client_timeout": "ms",
 
-    "identity.mgt.recovery.default_expiry_time": "m",
-    "identity.mgt.recovery.notification.expiry_time": "m",
-    "identity.mgt.email_verification.notification.expiry_time": "m",
-    "identity.mgt.email_verification.ask_password.expiry_time": "m",
-    "identity.mgt.self_registration.notification.expiry_time": "m",
+    "identity_mgt.default_mail_validity_period": "m",
+    "identity_mgt.password_reset_email.reset_mail_validity": "m",
+    "identity_mgt.user_onboarding.verification_email_validity": "m",
+    "identity_mgt.user_onboarding.ask_password_email_validity": "m",
+    "identity_mgt.user_self_registration.verification_email_validity": "m",
 
     "cache.default_timeout": "ms",
     "cache.framework_session_context_cache.timeout": "ms",
@@ -62,6 +62,9 @@
     "authentication.adaptive.http_connections.read_timeout": "ms",
     "authentication.adaptive.http_connections.request_timeout": "ms",
     "authentication.adaptive.long_wait.page_refresh_interval": "ms",
-    "authentication.adaptive.long_wait.timout": "ms"
+    "authentication.adaptive.long_wait.timout": "ms",
+
+    "identity_mgt.events.schemes.'account.lock.handler'.properties.Time": "m",
+    "identity_mgt.events.schemes.'suspension.notification'.properties.'account.disable.delay'": "d"
   }
 }

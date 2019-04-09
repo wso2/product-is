@@ -1,95 +1,4 @@
 {
-  "user_store.type": {
-    "database": {
-      "user_store.class": "org.wso2.carbon.user.core.jdbc.JDBCUserStoreManager",
-      "user_store.properties.TenantManager": "org.wso2.carbon.user.core.tenant.JDBCTenantManager",
-      "user_store.properties.ReadOnly": false,
-      "user_store.properties.ReadGroups": true,
-      "user_store.properties.WriteGroups": true,
-      "user_store.properties.UsernameJavaRegEx": "^[\\S]{3,30}$",
-      "user_store.properties.UsernameJavaScriptRegEx": "^[\\S]{3,30}$",
-      "user_store.properties.UsernameJavaRegExViolationErrorMsg": "Username pattern policy violated",
-      "user_store.properties.PasswordJavaRegEx": "^[\\S]{5,30}$",
-      "user_store.properties.PasswordJavaScriptRegEx": "^[\\S]{5,30}$",
-      "user_store.properties.PasswordJavaRegExViolationErrorMsg": "Password length should be within 5 to 30 characters",
-      "user_store.properties.RolenameJavaRegEx": "^[\\S]{3,30}$",
-      "user_store.properties.RolenameJavaScriptRegEx": "^[\\S]{3,30}$",
-      "user_store.properties.CaseInsensitiveUsername": true,
-      "user_store.properties.SCIMEnabled": false,
-      "user_store.properties.IsBulkImportSupported": true,
-      "user_store.properties.PasswordDigest": "SHA-256",
-      "user_store.properties.StoreSaltedPassword": true,
-      "user_store.properties.MultiAttributeSeparator": ",",
-      "user_store.properties.MaxUserNameListLength": 100,
-      "user_store.properties.MaxRoleNameListLength": 100,
-      "user_store.properties.UserRolesCacheEnabled": true,
-      "user_store.properties.UserNameUniqueAcrossTenants": false,
-      "tenant_mgt.tenant_manager.type": "jdbc"
-    },
-    "read_only_ldap": {
-      "user_store.properties.AnonymousBind": false,
-      "user_store.properties.UserNameAttribute": "uid",
-      "user_store.properties.UserNameSearchFilter": "(&(objectClass=person)(uid=?))",
-      "user_store.properties.UserNameListFilter": "(objectClass=person)",
-      "user_store.properties.DisplayNameAttribute": "",
-      "user_store.properties.GroupNameAttribute": "cn",
-      "user_store.properties.GroupNameSearchFilter": "(&(objectClass=groupOfNames)(cn=?))",
-      "user_store.properties.GroupNameListFilter": "(objectClass=groupOfNames)",
-      "user_store.properties.MembershipAttribute": "member",
-      "user_store.properties.BackLinksEnabled": false,
-      "user_store.properties.PasswordHashMethod": "PLAIN_TEXT",
-      "user_store.properties.ConnectionPoolingEnabled": true,
-      "user_store.properties.LDAPConnectionTimeout": 5000,
-      "user_store.properties.ReplaceEscapeCharactersAtUserLogin": true
-    },
-    "read_write_ldap": {
-      "user_store.properties.AnonymousBind": false,
-      "user_store.properties.UserEntryObjectClass": "identityPerson",
-      "user_store.properties.UserNameAttribute": "uid",
-      "user_store.properties.UserNameSearchFilter": "(&(objectClass=person)(uid=?))",
-      "user_store.properties.UserNameListFilter": "(objectClass=person)",
-      "user_store.properties.DisplayNameAttribute": "",
-      "user_store.properties.GroupEntryObjectClass": "groupOfNames",
-      "user_store.properties.GroupNameAttribute": "cn",
-      "user_store.properties.GroupNameSearchFilter": "(&(objectClass=groupOfNames)(cn=?))",
-      "user_store.properties.GroupNameListFilter": "(objectClass=groupOfNames)",
-      "user_store.properties.MembershipAttribute": "member",
-      "user_store.properties.BackLinksEnabled": false,
-      "user_store.properties.PasswordHashMethod": "PLAIN_TEXT",
-      "user_store.properties.ConnectionPoolingEnabled": true,
-      "user_store.properties.LDAPConnectionTimeout": 5000,
-      "user_store.properties.ReplaceEscapeCharactersAtUserLogin": true,
-      "user_store.properties.EmptyRolesAllowed": true,
-      "user_store.properties.kdcEnabled": false,
-      "user_store.properties.defaultRealmName": "WSO2.ORG"
-    },
-    "active_directory": {
-      "user_store.properties.AnonymousBind": false,
-      "user_store.properties.UserEntryObjectClass": "identityPerson",
-      "user_store.properties.UserNameAttribute": "uid",
-      "user_store.properties.UserNameSearchFilter": "(&(objectClass=person)(uid=?))",
-      "user_store.properties.UserNameListFilter": "(objectClass=person)",
-      "user_store.properties.DisplayNameAttribute": "",
-      "user_store.properties.GroupEntryObjectClass": "groupOfNames",
-      "user_store.properties.GroupNameAttribute": "cn",
-      "user_store.properties.GroupNameSearchFilter": "(&(objectClass=groupOfNames)(cn=?))",
-      "user_store.properties.GroupNameListFilter": "(objectClass=groupOfNames)",
-      "user_store.properties.MembershipAttribute": "member",
-      "user_store.properties.MemberOfAttribute": "memberOf",
-      "user_store.properties.BackLinksEnabled": false,
-      "user_store.properties.PasswordHashMethod": "PLAIN_TEXT",
-      "user_store.properties.ConnectionPoolingEnabled": true,
-      "user_store.properties.LDAPConnectionTimeout": 5000,
-      "user_store.properties.ReplaceEscapeCharactersAtUserLogin": true,
-      "user_store.properties.EmptyRolesAllowed": true,
-      "user_store.properties.kdcEnabled": false,
-      "user_store.properties.defaultRealmName": "WSO2.ORG",
-      "user_store.properties.Referral": "follow",
-      "user_store.properties.isADLDSRole": false,
-      "user_store.properties.userAccountControl": 512,
-      "user_store.properties.MembershipAttributeRange": 1500
-    }
-  },
   "database.shared_db.type": {
     "mysql": {
       "database.shared_db.driver": "com.mysql.jdbc.Driver",
@@ -210,6 +119,23 @@
   "event.default_recorder.user_delete_event.write_to_separate_csv.enable": {
     "true": {
       "event.default_recorder.user_delete_event.write_to_separate_csv.path": "${carbon.home}/repository/logs/delete-records.csv"
+    }
+  },
+
+  "identity_mgt.email_sender": {
+    "internal": {
+      "identity_mgt.recovery.notification.manage_internally": true,
+      "identity_mgt.user_onboarding.notification.manage_internally": true,
+      "identity_mgt.user_self_registration.notification.manage_internally": true,
+      "identity_mgt.events.schemes.'account.lock.handler'.properties.'notification.manageInternally'": true,
+      "identity_mgt.events.schemes.'account.disable.handler'.properties.'notification.manageInternally'": true
+    },
+    "external": {
+      "identity_mgt.recovery.notification.manage_internally": false,
+      "identity_mgt.user_onboarding.notification.manage_internally": false,
+      "identity_mgt.user_self_registration.notification.manage_internally": false,
+      "identity_mgt.events.schemes.'account.lock.handler'.properties.'notification.manageInternally'": false,
+      "identity_mgt.events.schemes.'account.disable.handler'.properties.'notification.manageInternally'": false
     }
   }
 
