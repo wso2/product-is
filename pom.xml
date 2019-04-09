@@ -622,9 +622,9 @@
                 <version>${bcel.wso2.version}</version>
             </dependency>
             <dependency>
-                <groupId>asm.wso2</groupId>
-                <artifactId>asm</artifactId>
-                <version>${asm.wso2.version}</version>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-all</artifactId>
+                <version>${asm-all.version}</version>
             </dependency>
             <dependency>
                 <groupId>cglib.wso2</groupId>
@@ -1794,8 +1794,8 @@
         <!--Identity Repo Versions-->
         <identity.carbon.auth.saml2.version>5.2.15</identity.carbon.auth.saml2.version>
         <identity.inbound.auth.saml.version>5.4.39</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.0.134</identity.inbound.auth.oauth.version>
-        <identity.inbound.auth.openid.version>5.2.12</identity.inbound.auth.openid.version>
+        <identity.inbound.auth.oauth.version>6.0.135</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.openid.version>5.2.13</identity.inbound.auth.openid.version>
         <identity.agent.sso.version>5.1.14</identity.agent.sso.version>
         <identity.inbound.auth.sts.version>5.2.20</identity.inbound.auth.sts.version>
         <identity.outbound.auth.requestpath.basicauth.version>5.1.5</identity.outbound.auth.requestpath.basicauth.version>
@@ -1915,7 +1915,7 @@
         <hibernate.wso2.version>3.2.5.ga-wso2v1</hibernate.wso2.version>
         <ehcache.version>1.5.0.wso2v3</ehcache.version>
         <bcel.wso2.version>5.2.0.wso2v1</bcel.wso2.version>
-        <asm.wso2.version>3.1.wso2v1</asm.wso2.version>
+        <asm-all.version>5.2</asm-all.version>
         <cglib.wso2.version>2.2.wso2v1</cglib.wso2.version>
         <jibx.wso2.version>1.2.1.wso2v1</jibx.wso2.version>
         <jaxb.wso2.version>2.2.5.wso2v1</jaxb.wso2.version>
@@ -1975,7 +1975,7 @@
         <cipher-tool.version>1.0.0-wso2v8</cipher-tool.version>
         <jacoco.agent.version>0.7.5.201505241946</jacoco.agent.version>
         <project.scm.id>my-scm-server</project.scm.id>
-        <carbon.business-process.version>4.4.86</carbon.business-process.version>
+        <carbon.business-process.version>4.4.94</carbon.business-process.version>
         <carbon.analytics-common.version>5.1.53</carbon.analytics-common.version>
         <osgi.framework.imp.pkg.version.range>[1.7.0, 2.0.0)</osgi.framework.imp.pkg.version.range>
         <osgi.service.component.imp.pkg.version.range>[1.2.0, 2.0.0)</osgi.service.component.imp.pkg.version.range>
