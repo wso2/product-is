@@ -1,7 +1,7 @@
-[deployment]
+[server]
 pattern = "DEV"  #possible values, DEV,HA,HA_WITH_ANALYTICS
 hostname = "localhost"
-local_member_ip = "127.0.0.1"
+node_ip = "127.0.0.1"
 base_path = "https://localhost:9443"
 
 [super_admin]

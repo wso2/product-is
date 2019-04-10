@@ -6,7 +6,7 @@
       "database.shared_db.validationQuery": "SELECT 1"
     }
   },
-  "deployment.pattern":{
+  "server.pattern":{
     "DEV" : {
       "database.shared_db.driver": "org.h2.Driver",
       "database.shared_db.url": "jdbc:h2:./repository/database/WSO2SHARED_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000",
@@ -66,14 +66,14 @@
     }
   },
 
-  "charon.primary_authentication_scheme": {
+  "scim2.primary_authentication_scheme": {
     "oauthbearertoken": {
-      "charon.authentication_schemes.oauth_bearer.primary": true,
-      "charon.authentication_schemes.http_basic.primary": false
+      "scim2.oauth_bearer.primary": true,
+      "scim2.http_basic.primary": false
     },
     "httpbasic": {
-      "charon.authentication_schemes.oauth_bearer.primary": false,
-      "charon.authentication_schemes.http_basic.primary": true
+      "scim2.oauth_bearer.primary": false,
+      "scim2.http_basic.primary": true
     }
   },
 

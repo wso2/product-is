@@ -162,13 +162,13 @@
   "identity.recaptcha.verify_url" : "https://www.google.com/recaptcha/api/siteverify",
 
 
-  "charon.properties.user_schema_extension.enabled": true,
-  "charon.properties.bulk_operations.max": "1000",
-  "charon.properties.bulk_payload_size.max": "1048576",
-  "charon.properties.documentation_uri": "https://docs.wso2.com/display/IS570/apidocs/SCIM2-endpoints/index.html",
-  "charon.primary_authentication_scheme": "oauthbearertoken",
-  "charon.authentication_schemes.oauth_bearer.documentationUri": "$ref{charon.properties.documentation_uri}",
-  "charon.authentication_schemes.http_basic.documentationUri": "$ref{charon.properties.documentation_uri}",
+  "scim2.enable_schema_extension": true,
+  "scim2.max_bulk_operations": "1000",
+  "scim2.max_bulk_payload": "1048576",
+  "scim2.documentation_uri": "https://docs.wso2.com/display/IS570/apidocs/SCIM2-endpoints/index.html",
+  "scim2.primary_authentication_scheme": "oauthbearertoken",
+  "scim2.basic_auth_documentation_uri": "$ref{scim2.documentation_uri}",
+  "scim2.oauth_bearer_auth_documentation_uri": "$ref{scim2.documentation_uri}",
 
 
   "identity.auth_framework.endpoint.tenant_list_enabled" : false,
@@ -359,7 +359,7 @@
 
 
 
-  "deployment.clock_skew": "5m",
+  "server.clock_skew": "5m",
   "jdbc.persistence_manager.skip_db_schema_creation": false,
   "session_data.persist.enable": true,
   "session_data.persist.temp_data": true,
@@ -389,7 +389,7 @@
   "oauth.app_token.validity_time": "1h",
   "oauth.user_token.validity_time": "1h",
   "oauth.refresh_token.validity_time": "1410m",
-  "oauth.timestamp_skew": "$ref{deployment.clock_skew}",
+  "oauth.timestamp_skew": "$ref{server.clock_skew}",
   "oauth.renew_refresh_token_for_refresh_grant": true,
   "oauth.renew_token_per_request": false,
   "oauth.token.partitioning.enable": false,
@@ -415,25 +415,25 @@
   "oauth.token.persistence.pool_size": "0",
   "oauth.token.persistence.retry_count_on_failure": "5",
 
-  "oauth.endpoints.oauth1.request_token": "$ref{deployment.base_path}/oauth/request-token",
-  "oauth.endpoints.oath1.authorize": "$ref{deployment.base_path}/oauth/authorize-url",
-  "oauth.endpoints.oauth1.access_token": "$ref{deployment.base_path}/oauth/access-token",
-  "oauth.endpoints.oauth2.authorize": "$ref{deployment.base_path}/oauth2/authorize",
-  "oauth.endpoints.oauth2.token": "$ref{deployment.base_path}/oauth2/token",
-  "oauth.endpoints.oauth2.revoke": "$ref{deployment.base_path}/oauth2/revoke",
-  "oauth.endpoints.oauth2.introspect": "$ref{deployment.base_path}/oauth2/introspect",
-  "oauth.endpoints.oauth2.userinfo": "$ref{deployment.base_path}/oauth2/userinfo",
-  "oauth.endpoints.oauth2.consent": "$ref{deployment.base_path}/authenticationendpoint/oauth2_authz.do",
-  "oauth.endpoints.oauth2.error": "$ref{deployment.base_path}/authenticationendpoint/oauth2_error.do",
-  "oauth.endpoints.oauth2.dcr": "$ref{deployment.base_path}/api/identity/oauth2/dcr/v1.1/register",
-  "oauth.endpoints.oauth2.jwks": "$ref{deployment.base_path}/oauth2/jwks",
-  "oauth.endpoints.oidc.check_session": "$ref{deployment.base_path}/oidc/checksession",
-  "oauth.endpoints.oidc.logout": "$ref{deployment.base_path}/oidc/logout",
-  "oauth.endpoints.oidc.consent": "$ref{deployment.base_path}/authenticationendpoint/oauth2_consent.do",
-  "oauth.endpoints.oidc.logout_consent":"$ref{deployment.base_path}/authenticationendpoint/oauth2_logout_consent.do",
-  "oauth.endpoints.oidc.logout_page": "$ref{deployment.base_path}/authenticationendpoint/oauth2_logout.do",
-  "oauth.endpoints.oidc.web_finger": "$ref{deployment.base_path}/.well-known/webfinger",
-  "oauth.endpoints.oidc.discovery": "$ref{deployment.base_path}/oauth2/oidcdiscovery",
+  "oauth.endpoints.oauth1.request_token": "$ref{server.base_path}/oauth/request-token",
+  "oauth.endpoints.oath1.authorize": "$ref{server.base_path}/oauth/authorize-url",
+  "oauth.endpoints.oauth1.access_token": "$ref{server.base_path}/oauth/access-token",
+  "oauth.endpoints.oauth2.authorize": "$ref{server.base_path}/oauth2/authorize",
+  "oauth.endpoints.oauth2.token": "$ref{server.base_path}/oauth2/token",
+  "oauth.endpoints.oauth2.revoke": "$ref{server.base_path}/oauth2/revoke",
+  "oauth.endpoints.oauth2.introspect": "$ref{server.base_path}/oauth2/introspect",
+  "oauth.endpoints.oauth2.userinfo": "$ref{server.base_path}/oauth2/userinfo",
+  "oauth.endpoints.oauth2.consent": "$ref{server.base_path}/authenticationendpoint/oauth2_authz.do",
+  "oauth.endpoints.oauth2.error": "$ref{server.base_path}/authenticationendpoint/oauth2_error.do",
+  "oauth.endpoints.oauth2.dcr": "$ref{server.base_path}/api/identity/oauth2/dcr/v1.1/register",
+  "oauth.endpoints.oauth2.jwks": "$ref{server.base_path}/oauth2/jwks",
+  "oauth.endpoints.oidc.check_session": "$ref{server.base_path}/oidc/checksession",
+  "oauth.endpoints.oidc.logout": "$ref{server.base_path}/oidc/logout",
+  "oauth.endpoints.oidc.consent": "$ref{server.base_path}/authenticationendpoint/oauth2_consent.do",
+  "oauth.endpoints.oidc.logout_consent":"$ref{server.base_path}/authenticationendpoint/oauth2_logout_consent.do",
+  "oauth.endpoints.oidc.logout_page": "$ref{server.base_path}/authenticationendpoint/oauth2_logout.do",
+  "oauth.endpoints.oidc.web_finger": "$ref{server.base_path}/.well-known/webfinger",
+  "oauth.endpoints.oidc.discovery": "$ref{server.base_path}/oauth2/oidcdiscovery",
 
   "oauth.default_response_types": ["token","code","id_token","id_token token"],
   "oauth.default_response_type.token.handler_class": "org.wso2.carbon.identity.oauth2.authz.handlers.AccessTokenResponseTypeHandler",
@@ -500,7 +500,7 @@
   "oauth.oidc.id_token.builder": "org.wso2.carbon.identity.openidconnect.DefaultIDTokenBuilder",
   "oauth.oidc.id_token.signature_alg": "SHA256withRSA",
   "oauth.oidc.id_token.enable_audiences": true,
-  "oauth.oidc.id_token.issuer_id": "$ref{deployment.base_path}/oauth2/token",
+  "oauth.oidc.id_token.issuer_id": "$ref{server.base_path}/oauth2/token",
   "oauth.oidc.id_token.claim_callback_hander": "org.wso2.carbon.identity.openidconnect.SAMLAssertionClaimsCallback",
   "oauth.oidc.id_token.validity_time": "1h",
   "oauth.oidc.id_token.supported_encryption_algorithms": [
@@ -542,11 +542,11 @@
   "saml.assertion_entryption_alg": "http://www.w3.org/2001/04/xmlenc#aes256-cbc",
   "saml.key_encryption_alg": "http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p",
 
-  "saml.endpoints.idp_url": "$ref{deployment.base_path}/samlsso",
-  "saml.endpoints.logout": "$ref{deployment.base_path}/authenticationendpoint/samlsso_logout.do",
-  "saml.endpoints.notification": "$ref{deployment.base_path}/authenticationendpoint/samlsso_notification.do",
-  "saml.endpoints.artifact_resolution": "$ref{deployment.base_path}/samlartresolve",
-  "saml.endpoints.ecp": "$ref{deployment.base_path}/samlecp",
+  "saml.endpoints.idp_url": "$ref{server.base_path}/samlsso",
+  "saml.endpoints.logout": "$ref{server.base_path}/authenticationendpoint/samlsso_logout.do",
+  "saml.endpoints.notification": "$ref{server.base_path}/authenticationendpoint/samlsso_notification.do",
+  "saml.endpoints.artifact_resolution": "$ref{server.base_path}/samlartresolve",
+  "saml.endpoints.ecp": "$ref{server.base_path}/samlecp",
 
   "saml.extensions.assertion_builder": "org.wso2.carbon.identity.sso.saml.builders.assertion.DefaultSAMLAssertionBuilder",
   "saml.extensions.response_builder": "org.wso2.carbon.identity.sso.saml.builders.DefaultResponseBuilder",
@@ -554,13 +554,13 @@
   "saml.extensions.signer": "org.wso2.carbon.identity.sso.saml.builders.signature.DefaultSSOSigner",
   "saml.extensions.redirect_signature_validator": "org.wso2.carbon.identity.sso.saml.validators.SAML2HTTPRedirectDeflateSignatureValidator",
 
-  "sts.endpoint.idp": "$ref{deployment.base_path}/services/wso2carbon-sts",
+  "sts.endpoint.idp": "$ref{server.base_path}/services/wso2carbon-sts",
 
   "passive_sts.token_store_class": "org.wso2.carbon.identity.sts.passive.utils.NoPersistenceTokenStore",
   "passive_sts.slo.host_name_verification": true,
 
-  "passive_sts.endpoints.idp": "$ref{deployment.base_path}/passivests",
-  "passive_sts.endpoints.retry": "$ref{deployment.base_path}/authenticationendpoint/retry.do",
+  "passive_sts.endpoints.idp": "$ref{server.base_path}/passivests",
+  "passive_sts.endpoints.retry": "$ref{server.base_path}/authenticationendpoint/retry.do",
 
   "entitlement.thrift.enable": false,
   "entitlement.thrift.receiver_port": "${Ports.ThriftEntitlementReceivePort}",
@@ -569,24 +569,15 @@
   "entitlement.thrift.key_store.password": "$ref{keystore.tls.password}",
   "entitlement.thrift.hostname": "${carbon.host}",
 
-  "scim.user.endpoint": "$ref{deployment.base_path}/wso2/scim/Users",
-  "scim.group.endpoint": "$ref{deployment.base_path}/wso2/scim/Groups",
-  "scim.user.show_all_details": false,
-  "scim.default_authenticator.basic_auth_handler.class": "org.wso2.carbon.identity.scim.provider.auth.BasicAuthHandler",
-  "scim.default_authenticator.basic_auth_handler.priority": "5",
-  "scim.default_authenticator.oauth_handler.class": "org.wso2.carbon.identity.scim.provider.auth.OAuthHandler",
-  "scim.default_authenticator.oauth_handler.priority": "10",
-  "scim.default_authenticator.oauth_handler.properties": {
-    "AuthorizationServer": "local://services",
-    "UserName": "admin",
-    "Password": "admin"
-  },
-  "scim.support_complex_multivalued": false,
-
-  "scim2.user.endpoint": "$ref{deployment.base_path}/scim2/Users",
-  "scim2.group.endpoint": "$ref{deployment.base_path}/scim2/Groups",
-  "scim2.support_complex_multivalued": true,
-  "scim2.filtering_enhancements_enable": true,
+  "scim.endpoints.users_endpoint": "$ref{server.base_path}/wso2/scim/Users",
+  "scim.endpoints.groups_endpoint": "$ref{server.base_path}/wso2/scim/Groups",
+  "scim.authentication_handler.basic.properties.Priority": "5",
+  "scim.authentication_handler.oauth.properties.Priority": "10",
+  "scim.authentication_handler.oauth.properties.AuthorizationServer": "local://services",
+  "scim.enable_complex_multivalued_attribute_support": false,
+  "scim2.endpoints.users_endpoint": "$ref{server.base_path}/wso2/scim2/Users",
+  "scim2.endpoints.groups_endpoint": "$ref{server.base_path}/wso2/scim2/Groups",
+  "scim2.enable_complex_multivalued_attribute_support": false,
 
   "identity_mgt.email_sender": "internal",
   "identity_mgt.default_mail_validity_period": "1d",
@@ -776,6 +767,12 @@
 
   "federated.idp.role_claim_value_attribute_separator": ",",
 
-  "configuration.store.query_length.max": "4194304"
+  "configuration.store.query_length.max": "4194304",
+
+
+
+  "scim.passthrough_outbound_provisioning": false,
+  "scim.enable_schema_extension": true,
+  "scim.extensions.provisioning_handler": "org.wso2.carbon.identity.scim.common.impl.DefaultSCIMProvisioningHandler"
 
 }

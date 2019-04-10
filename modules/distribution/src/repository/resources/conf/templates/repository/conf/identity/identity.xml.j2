@@ -588,19 +588,17 @@
             https://<HostName>:<MgtTrpProxyPort except 443>/<ProxyContextPath>/<context>/<path>
             If that doesn't satisfy uncomment the following config and explicitly configure the value
         -->
-        <UserEPUrl>{{scim.user.endpoint}}</UserEPUrl>
-        <GroupEPUrl>{{scim.group.endpoint}}</GroupEPUrl>
-        <ShowAllUserDetails>{{scim.user.show_all_details}}</ShowAllUserDetails>
+        <UserEPUrl>{{scim.endpoints.users_endpoint}}</UserEPUrl>
+        <GroupEPUrl>{{scim.endpoints.groups_endpoint}}</GroupEPUrl>
+        <ShowAllUserDetails>false</ShowAllUserDetails>
         <SCIMAuthenticators>
-            <Authenticator class="{{scim.default_authenticator.basic_auth_handler.class}}">
-                <Property name="Priority">{{scim.default_authenticator.basic_auth_handler.priority}}</Property>
-                {% for key,value in scim.default_authenticator.basic_auth_handler.properties.items() %}
+            <Authenticator class="org.wso2.carbon.identity.scim.provider.auth.BasicAuthHandler">
+                {% for key,value in scim.authentication_handler.basic.properties.items() %}
                 <Property name="{{key}}">{{value}}</Property>
                 {% endfor %}
             </Authenticator>
-            <Authenticator class="{{scim.default_authenticator.oauth_handler.class}}">
-                <Property name="Priority">{{scim.default_authenticator.oauth_handler.priority}}</Property>
-                {% for key,value in scim.default_authenticator.oauth_handler.properties.items() %}
+            <Authenticator class="org.wso2.carbon.identity.scim.provider.auth.OAuthHandler">
+                {% for key,value in scim.authentication_handler.oauth.properties.items() %}
                 <Property name="{{key}}">{{value}}</Property>
                 {% endfor %}
             </Authenticator>
@@ -617,7 +615,7 @@
             Default value : false
             Supported versions: IS 5.5.0 beta onwards
             -->
-            <ComplexMultiValuedAttributeSupportEnabled>{{scim.support_complex_multivalued}}</ComplexMultiValuedAttributeSupportEnabled>
+            <ComplexMultiValuedAttributeSupportEnabled>{{scim.enable_complex_multivalued_attribute_support}}</ComplexMultiValuedAttributeSupportEnabled>
         </SCIMAuthenticators>
     </SCIM>
 
@@ -627,10 +625,10 @@
             https://<HostName>:<MgtTrpProxyPort except 443>/<ProxyContextPath>/<context>/<path>
             If that doesn't satisfy uncomment the following config and explicitly configure the value
         -->
-        <UserEPUrl>{{scim2.user.endpoint}}</UserEPUrl>
-        <GroupEPUrl>{{scim2.group.endpoint}}</GroupEPUrl>
-        <ComplexMultiValuedAttributeSupportEnabled>{{scim2.support_complex_multivalued}}</ComplexMultiValuedAttributeSupportEnabled>
-        <EnableFilteringEnhancements>{{scim2.filtering_enhancements_enable}}</EnableFilteringEnhancements>
+        <UserEPUrl>{{scim2.endpoints.users_endpoint}}</UserEPUrl>
+        <GroupEPUrl>{{scim2.endpoints.groups_endpoint}}</GroupEPUrl>
+        <ComplexMultiValuedAttributeSupportEnabled>{{scim2.enable_complex_multivalued_attribute_support}}</ComplexMultiValuedAttributeSupportEnabled>
+        <EnableFilteringEnhancements>false</EnableFilteringEnhancements>
     </SCIM2>
 
       <Recovery>
@@ -1189,7 +1187,7 @@
     </TenantContextsToRewrite>
 
     <!-- Server Synchronization Tolerance Configuration in seconds -->
-    <ClockSkew>{{deployment.clock_skew}}</ClockSkew>
+    <ClockSkew>{{server.clock_skew}}</ClockSkew>
 
     <!-- JWT validator configurations -->
     <JWTValidatorConfigs>
