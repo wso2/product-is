@@ -18,10 +18,10 @@
   -->
 
 <provisioning-config>
-    <Property name="user-schema-extension-enabled">{{charon.properties.user_schema_extension.enabled}}</Property>
-    <Property name="bulk-maxOperations">{{charon.properties.bulk_operations.max}}</Property>
-    <Property name="bulk-maxPayloadSize">{{charon.properties.bulk_payload_size.max}}</Property>
-    <Property name="documentationUri">{{charon.properties.documentation_uri}}</Property>
+    <Property name="user-schema-extension-enabled">{{scim2.enable_schema_extension}}</Property>
+    <Property name="bulk-maxOperations">{{scim2.max_bulk_operations}}</Property>
+    <Property name="bulk-maxPayloadSize">{{scim2.max_bulk_payload}}</Property>
+    <Property name="documentationUri">{{scim2.documentation_uri}}</Property>
     <Property name="patch-supported">true</Property>
     <Property name="bulk-supported">true</Property>
     <Property name="filter-supported">true</Property>
@@ -34,17 +34,17 @@
             <Property name="name">OAuth Bearer Token</Property>
             <Property name="description">Authentication scheme using the OAuth Bearer Token Standard</Property>
             <Property name="specUri">http://www.rfc-editor.org/info/rfc6750</Property>
-            <Property name="documentationUri">{{charon.authentication_schemes.oauth_bearer.documentationUri}}</Property>
+            <Property name="documentationUri">{{scim2.basic_auth_documentation_uri}}</Property>
             <Property name="type">oauthbearertoken</Property>
-            <Property name="primary">{{charon.authentication_schemes.oauth_bearer.primary}}</Property>
+            <Property name="primary">{{scim2.oauth_bearer.primary}}</Property>
         </schema>
         <schema id="2">
             <Property name="name">HTTP Basic</Property>
             <Property name="description">Authentication scheme using the HTTP Basic Standard</Property>
             <Property name="specUri">http://www.rfc-editor.org/info/rfc2617</Property>
-            <Property name="documentationUri">{{charon.authentication_schemes.http_basic.documentationUri}}</Property>
+            <Property name="documentationUri">{{scim2.oauth_bearer_auth_documentation_uri}}</Property>
             <Property name="type">httpbasic</Property>
-            <Property name="primary">{{charon.authentication_schemes.http_basic.primary}}</Property>
+            <Property name="primary">{{scim2.http_basic.primary}}</Property>
         </schema>
     </authenticationSchemes>
 </provisioning-config>
