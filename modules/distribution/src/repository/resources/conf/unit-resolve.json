@@ -1,7 +1,7 @@
 {
   "time": {
 
-    "deployment.clock_skew": "s",
+    "server.clock_skew": "s",
 
     "session_data.cleanup.expired_data.expiry_time": "m",
     "session_data.cleanup.expired_data.frequency": "m",
