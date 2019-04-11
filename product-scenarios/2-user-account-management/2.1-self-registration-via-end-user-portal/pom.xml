@@ -27,7 +27,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>2.1-self-registration-via-end-user-portal</artifactId>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
     <name>User self registration via end user portal</name>
 
     <build>

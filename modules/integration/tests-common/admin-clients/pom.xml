@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-integration-tests</artifactId>
-        <version>5.8.0-m26-SNAPSHOT</version>
+        <version>5.8.0-alpha7-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -252,7 +252,7 @@
 
     <properties>
         <java-support.version>7.2.0</java-support.version>
-        <opensaml3.version>3.2.0</opensaml3.version>
+        <opensaml3.version>3.3.0</opensaml3.version>
     </properties>
 
 </project>

@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>5.8.0-m26-SNAPSHOT</version>
+        <version>5.8.0-alpha7-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -124,6 +124,28 @@
                                     <groupId>org.wso2.carbon.identity.application.auth.basic</groupId>
                                     <artifactId>org.wso2.carbon.identity.application.authentication.handler.identifier</artifactId>
                                     <version>${identity.local.auth.basicauth.version}</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${basedir}/target/localauthenticatorCopied/jar
+                                    </outputDirectory>
+                                    <includes>**/*.jar</includes>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    <!-- Download MutualTLS with client auth jar from nexus and copy to the localauthenticator/jar folder-->
+                    <execution>
+                        <id>download_clientauth_mutualtls_jar</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.carbon.extension.identity.oauth.addons</groupId>
+                                    <artifactId>org.wso2.carbon.identity.oauth2.token.handler.clientauth.mutualtls</artifactId>
+                                    <version>${identity.local.auth.clientauth.mutualtls.version}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${basedir}/target/localauthenticatorCopied/jar
