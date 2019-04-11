@@ -8,6 +8,8 @@
   },
   "server.pattern":{
     "DEV" : {
+      "server.hostname" : "localhost",
+      "server.base_path" : "https://localhost:9443",
       "database.shared_db.driver": "org.h2.Driver",
       "database.shared_db.url": "jdbc:h2:./repository/database/WSO2SHARED_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000",
       "database.shared_db.validationQuery": "SELECT 1",
@@ -18,8 +20,10 @@
       "database.identity_db.validationQuery": "SELECT 1",
       "database.identity_db.username": "wso2carbon",
       "database.identity_db.password": "wso2carbon",
-      "keystore.tls.name": "wso2carbon.jks",
-      "keystore.tls.password": "wso2carbon"
+      "keystore.tls.file_name": "wso2carbon.jks",
+      "keystore.tls.password": "wso2carbon",
+      "truststore.file_name" :"client-truststore.jks",
+      "truststore.password" :"wso2carbon"
     }
   },
   "tenant_mgt.tenant_manager.type": {
@@ -113,6 +117,23 @@
       "authentication.adaptive.event_publisher.authentication.basic.enable": true,
       "authentication.adaptive.event_publisher.authentication.basic.username": "admin",
       "authentication.adaptive.event_publisher.authentication.basic.password": "admin"
+    }
+  },
+
+  "authentication.sign_auth_response_with_tenant_of": {
+    "sp": {
+      "oauth.oidc.id_token.sign_with_sp_key" : true,
+      "oauth.access_token.generate_with_sp_tenant_domain" : true
+    },
+    "user": {
+      "oauth.oidc.id_token.sign_with_sp_key" : false,
+      "oauth.access_token.generate_with_sp_tenant_domain" : false
+    }
+  },
+
+  "session_data.cleanup.clean_pre_session_data_at": {
+    "invalidation": {
+      "session_data.cleanup.pre_session_data_cleanup_thread_pool_size" : 0
     }
   },
 
