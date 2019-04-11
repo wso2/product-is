@@ -18,7 +18,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-integration-tests</artifactId>
-        <version>5.8.0-m26-SNAPSHOT</version>
+        <version>5.8.0-alpha7-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -32,7 +32,7 @@
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <inherited>false</inherited>
-                <version>2.12.4</version>
+                <version>2.22.1</version>
                 <configuration>
                     <!--<argLine>-Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006</argLine>-->
                     <argLine>-Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m -Dorg.apache.jasper.compiler.disablejsr199=true</argLine>
