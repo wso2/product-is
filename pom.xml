@@ -1795,7 +1795,7 @@
         <identity.carbon.auth.saml2.version>5.2.15</identity.carbon.auth.saml2.version>
         <identity.inbound.auth.saml.version>5.4.41</identity.inbound.auth.saml.version>
         <identity.agent.sso.version>5.1.14</identity.agent.sso.version>
-        <identity.inbound.auth.oauth.version>6.0.146</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.0.147</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.2.13</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.2.20</identity.inbound.auth.sts.version>
         <identity.outbound.auth.requestpath.basicauth.version>5.1.5</identity.outbound.auth.requestpath.basicauth.version>
