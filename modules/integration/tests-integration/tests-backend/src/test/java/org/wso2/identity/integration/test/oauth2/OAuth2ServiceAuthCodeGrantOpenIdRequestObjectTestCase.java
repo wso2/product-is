@@ -102,13 +102,13 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
     private static final String CUSTOM_CLAIM1 = "customVal1";
     private static final String CUSTOM_CLAIM2 = "customVal2";
 
-    private static final String REQUEST = "eyJhbGciOiJub25lIn0.eyJzdWIiOiJLUjFwS0x1Z2RSUTlCbmNsTTV0YUMzVjNHZjBhIiwiY" +
-            "XVkIjpbImh0dHBzOi8vbG9jYWxob3N0Ojk0NDMvb2F1dGgyL3Rva2VuIl0sImNsYWltcyI6eyJ1c2VyaW5mbyI6eyJnaXZlbl9uYW1l" +
-            "Ijp7ImVzc2VudGlhbCI6dHJ1ZX0sIm5pY2tuYW1lIjpudWxsLCJlbWFpbCI6eyJlc3NlbnRpYWwiOnRydWV9LCJleHRlcm5hbENsYWl" +
-            "tMSI6eyJlc3NlbnRpYWwiOnRydWV9LCJwaWN0dXJlIjpudWxsfSwiaWRfdG9rZW4iOnsiZ2VuZGVyIjpudWxsLCJiaXJ0aGRhdGUiOn" +
-            "siZXNzZW50aWFsIjp0cnVlfSwiY3VzdG9tQ2xhaW0xIjp7ImVzc2VudGlhbCI6dHJ1ZX0sImFjciI6eyJ2YWx1ZXMiOlsidXJuOm1hY" +
-            "2U6aW5jb21tb246aWFwOnNpbHZlciJdfX19LCJpc3MiOiJLUjFwS0x1Z2RSUTlCbmNsTTV0YUMzVjNHZjBhIiwiZXhwIjoxNTE2Nzg2" +
-            "ODc4LCJpYXQiOjE1MTY3ODMyNzgsImp0aSI6IjEwMDMifQ.";
+    private static final String REQUEST = "eyJhbGciOiJub25lIn0.eyJzdWIiOiJLUjFwS0x1Z2RSUTlCbmNsTTV0YUMzVjNHZjBhIiwi" +
+            "YXVkIjpbImh0dHBzOi8vbG9jYWxob3N0Ojk0NDMvb2F1dGgyL3Rva2VuIl0sImNsYWltcyI6eyJ1c2VyaW5mbyI6eyJnaXZlbl9uYW" +
+            "1lIjp7ImVzc2VudGlhbCI6dHJ1ZX0sIm5pY2tuYW1lIjpudWxsLCJlbWFpbCI6eyJlc3NlbnRpYWwiOnRydWV9LCJleHRlcm5hbENs" +
+            "YWltMSI6eyJlc3NlbnRpYWwiOnRydWV9LCJwaWN0dXJlIjpudWxsfSwiaWRfdG9rZW4iOnsiZ2VuZGVyIjpudWxsLCJiaXJ0aGRhdGU" +
+            "iOnsiZXNzZW50aWFsIjp0cnVlfSwiY3VzdG9tQ2xhaW0xIjp7ImVzc2VudGlhbCI6dHJ1ZX0sImFjciI6eyJ2YWx1ZXMiOlsidXJuOm1" +
+            "hY2U6aW5jb21tb246aWFwOnNpbHZlciJdfX19LCJpc3MiOiJLUjFwS0x1Z2RSUTlCbmNsTTV0YUMzVjNHZjBhIiwiaWF0IjoxNTE2Nzg" +
+            "zMjc4LCJqdGkiOiIxMDAzIn0=.";
 
     @BeforeTest(alwaysRun = true)
     public void initConfiguration() throws Exception {
