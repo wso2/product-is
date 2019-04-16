@@ -84,11 +84,13 @@
   "authentication.sign_auth_response_with_tenant_of": {
     "sp": {
       "oauth.oidc.id_token.sign_with_sp_key": true,
-      "oauth.access_token.generate_with_sp_tenant_domain": true
+      "oauth.access_token.generate_with_sp_tenant_domain": true,
+      "saml.enable_user_domain_crpto": false
     },
     "user": {
       "oauth.oidc.id_token.sign_with_sp_key": false,
-      "oauth.access_token.generate_with_sp_tenant_domain": false
+      "oauth.access_token.generate_with_sp_tenant_domain": false,
+      "saml.enable_user_domain_crpto": true
     }
   },
 
@@ -147,20 +149,9 @@
     }
   },
 
-  "authentication.sign_auth_response_with_tenant_of": {
-    "sp": {
-      "oauth.oidc.id_token.sign_with_sp_key" : true,
-      "oauth.access_token.generate_with_sp_tenant_domain" : true
-    },
-    "user": {
-      "oauth.oidc.id_token.sign_with_sp_key" : false,
-      "oauth.access_token.generate_with_sp_tenant_domain" : false
-    }
-  },
-
   "session_data.cleanup.clean_pre_session_data_at": {
     "invalidation": {
-      "session_data.cleanup.pre_session_data_cleanup_thread_pool_size" : 0
+      "session_data.cleanup.pre_session_data_cleanup_thread_pool_size" : "0"
     }
   },
 

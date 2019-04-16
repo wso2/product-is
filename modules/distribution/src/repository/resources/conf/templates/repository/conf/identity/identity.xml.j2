@@ -150,7 +150,7 @@
              Default: true.
              Applicable values: true,false
         -->
-        <!--TODO: Move to the interface of token generator -->
+        <!--This will be moved to the interface of token generator -->
         <PersistAccessTokenAlias>true</PersistAccessTokenAlias>
 
         <!-- This configuration is used to specify the access token value generator.
@@ -375,6 +375,8 @@
 
         <!-- Scope handlers list. The handlers registered here will be executed at the scope validation phase while
              issuing access tokens. -->
+        <!-- ScopeHandler is used decide whether a grant type can issue id_tokens or not this can also achieve by grant
+        handler class. Therefor not supporting additional scope handlers. -->
         <ScopeHandlers>
             <ScopeHandler class="org.wso2.carbon.identity.oauth2.validators.OIDCScopeHandler" />
         </ScopeHandlers>
@@ -505,7 +507,7 @@
                 Expiry period of the logout token used in OIDC Back Channel Logout in seconds.
                 Supported versions: IS 5.5.0 onwards
             -->
-            <LogoutTokenExpiration>{{ oauth.oidc.token_validation.logout_token_validity}}</LogoutTokenExpiration>
+            <LogoutTokenExpiration>{{oauth.oidc.token_validation.logout_token_validity}}</LogoutTokenExpiration>
 
             <!--
                 OIDC Request Object builder implementation.

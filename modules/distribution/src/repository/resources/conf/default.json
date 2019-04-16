@@ -11,7 +11,6 @@
 
   "authentication.consent.purposes_search_limit": "100",
   "authentication.map_federated_users_to_local": false,
-  "authentication.sign_auth_response_with_tenant_of": "user",
   "authentication.proxy_mode": "smart",
   "authentication.consent.prompt": true,
   "authentication.endpoints.login_url": "/authenticationendpoint/login.do",
@@ -251,8 +250,6 @@
   "identity.entitlement.entitlement_engine_caching_interval": "100000",
   "identity.entitlement.JSON_shorten_form_enabled": false,
 
-
-
   "identity_mgt.events.thread_pool_size": "10",
   "identity_mgt.events.schemes.'account.lock.handler'.module_index": "1",
   "identity_mgt.events.schemes.'account.lock.handler'.subscriptions": [
@@ -294,6 +291,7 @@
     "POST_SET_USER_CLAIMS"
   ],
   "identity_mgt.events.schemes.'account.disable.handler'.properties.enable": false,
+  "identity_mgt.events.schemes.'account.disable.handler'.properties.'notification.manageInternally'": true,
   "identity_mgt.events.schemes.userSelfRegistration.module_index": "6",
   "identity_mgt.events.schemes.userSelfRegistration.subscriptions": [
     "POST_ADD_USER"
@@ -378,14 +376,14 @@
 
   "server.clock_skew": "5m",
   "session_data.persistence.enable_persistance": true,
-  "session_data.persistence.persistance_pool_size": 0,
+  "session_data.persistence.persistance_pool_size": "0",
   "session_data.persistence.persist_temporary_data": true,
   "session_data.cleanup.enable_expired_data_cleanup": true,
   "session_data.cleanup.expire_session_data_after": "$ref{session.timeout.remember_me_session_timeout}",
   "session_data.cleanup.expire_pre_session_data_after": "40m",
   "session_data.cleanup.clean_expired_session_data_every": "1d",
   "session_data.cleanup.clean_expired_session_data_in_chunks_of": "8192",
-  "session_data.cleanup.clean_logged_out_sessions_at_immediate_cycle": false,
+  "session_data.cleanup.clean_logged_out_sessions_at_immediate_cycle": true,
   "session_data.cleanup.enable_pre_session_data_cleanup": true,
   "session_data.cleanup.pre_session_data_cleanup_thread_pool_size": "20",
   "session.timeout.idle_session_timeout": "15m",
@@ -403,7 +401,7 @@
   "oauth.token_validation.authorization_code_validity": "5m",
   "oauth.token_validation.app_access_token_validity": "1h",
   "oauth.token_validation.user_access_token_validity": "1h",
-  "oauth.token_validation.refresh_token_validity": "1410m",
+  "oauth.token_validation.refresh_token_validity": "1d",
   "oauth.timestamp_skew": "$ref{server.clock_skew}",
   "oauth.token_renewal.renew_refresh_token": true,
   "oauth.token_renewal.renew_access_token_per_request": false,
@@ -562,7 +560,9 @@
   "scim2.endpoints.groups_endpoint": "$ref{server.base_path}/wso2/scim2/Groups",
   "scim2.enable_complex_multivalued_attribute_support": false,
 
-  "identity_mgt.email_sender": "internal",
+  "identity_mgt.recovery.notification.manage_internally": true,
+  "identity_mgt.user_onboarding.notification.manage_internally": true,
+  "identity_mgt.user_self_registration.notification.manage_internally": true,
   "identity_mgt.default_mail_validity_period": "1d",
   "identity_mgt.endpoint.enable_recovery_endpoint": true,
   "identity_mgt.endpoint.enable_self_signup_endpoint": true,
