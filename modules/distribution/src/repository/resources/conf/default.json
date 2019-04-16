@@ -578,6 +578,7 @@
   "scim2.endpoints.users_endpoint": "$ref{server.base_path}/wso2/scim2/Users",
   "scim2.endpoints.groups_endpoint": "$ref{server.base_path}/wso2/scim2/Groups",
   "scim2.enable_complex_multivalued_attribute_support": false,
+  "scim2.enable_enhance_filtering" : false,
 
   "identity_mgt.email_sender": "internal",
   "identity_mgt.default_mail_validity_period": "1d",
