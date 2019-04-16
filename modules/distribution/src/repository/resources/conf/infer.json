@@ -81,7 +81,7 @@
     }
   },
 
-  "token.sign_with_tenant_of": {
+  "authentication.sign_auth_response_with_tenant_of": {
     "sp": {
       "oauth.oidc.id_token.sign_with_sp_key": true,
       "oauth.access_token.generate_with_sp_tenant_domain": true
@@ -92,22 +92,49 @@
     }
   },
 
-  "oauth.token.generator": {
-    "default": {
-      "oauth.token.token_generator_class": "org.wso2.carbon.identity.oauth2.token.OauthTokenIssuerImpl",
-      "oauth.token.value_generator_class": "org.apache.oltu.oauth2.as.issuer.UUIDValueGenerator"
-    },
-    "jwt": {
-      "oauth.token.token_generator_class": "org.wso2.carbon.identity.oauth2.token.JWTTokenIssuer"
-    },
+  "oauth.token_generation.access_token_type": {
+    "self_contained": {
+      "oauth.extension.token_generator": "org.wso2.carbon.identity.oauth2.token.JWTTokenIssuer"
+    }
+  },
+
+  "oauth.token_generation.access_token_value_type": {
     "md5": {
-      "oauth.token.value_generator_class": "org.apache.oltu.oauth2.as.issuer.MD5Generator"
+      "oauth.extension.token_value_generator": "org.apache.oltu.oauth2.as.issuer.MD5Generator"
     },
     "sha256": {
-      "oauth.token.value_generator_class": "org.wso2.carbon.identity.oauth.tokenvaluegenerator.SHA256Generator"
+      "oauth.extension.token_value_generator": "org.wso2.carbon.identity.oauth.tokenvaluegenerator.SHA256Generator"
     },
     "uuid": {
-      "oauth.token.value_generator_class": "org.apache.oltu.oauth2.as.issuer.UUIDValueGenerator"
+      "oauth.extension.token_value_generator": "org.apache.oltu.oauth2.as.issuer.UUIDValueGenerator"
+    }
+  },
+
+  "oauth.oidc.user_info.response_type": {
+    "json": {
+      "oauth.oidc.extensions.user_info_response_builder": "org.wso2.carbon.identity.oauth.endpoint.user.impl.UserInfoJSONResponseBuilder"
+    },
+    "jwt": {
+      "oauth.oidc.extensions.user_info_response_builder": "org.wso2.carbon.identity.oauth.endpoint.user.impl.UserInfoJWTResponse"
+
+    }
+  },
+
+  "oauth.hash_tokens_and_secrets": {
+    "true": {
+      "oauth.extensions.token_persistance_processor": "org.wso2.carbon.identity.oauth.tokenprocessor.EncryptionDecryptionPersistenceProcessor"
+    },
+    "false": {
+      "oauth.extensions.token_persistance_processor": "org.wso2.carbon.identity.oauth.tokenprocessor.PlainTextPersistenceProcessor"
+    }
+  },
+
+  "oauth..validation_response_subject_identifier_format": {
+    "fqn": {
+      "oauth.build_subject_identifier_from_sp_config": false
+    },
+    "app_configured": {
+      "oauth.build_subject_identifier_from_sp_config": true
     }
   },
 

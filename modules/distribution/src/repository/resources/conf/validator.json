@@ -89,5 +89,24 @@
       "match_regex": ".+",
       "error_message": "Encryption key required for symmetric encryption"
     }
+  ],
+
+
+
+  "oauth.oidc.user_info.response_type": [
+    {
+      "if": {
+        "oauth.oidc.extensions.user_info_response_builder": "org.wso2.carbon.identity.oauth.endpoint.user.impl.UserInfoJWTResponse"
+      },
+      "regex": "jwt",
+      "error_message": "OIDC userinfo response type should be jwt"
+    },
+    {
+      "if": {
+        "oauth.oidc.extensions.user_info_response_builder": "org.wso2.carbon.identity.oauth.endpoint.user.impl.UserInfoJSONResponseBuilder"
+      },
+      "regex": "json",
+      "error_message": "OIDC userinfo response type should be json"
+    }
   ]
 }
