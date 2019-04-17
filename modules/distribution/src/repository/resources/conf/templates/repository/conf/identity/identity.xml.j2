@@ -28,49 +28,34 @@
             following property to "true". -->
         <SkipDBSchemaCreation>{{jdbc.persistence_manager.skip_db_schema_creation}}</SkipDBSchemaCreation>
         <SessionDataPersist>
-            <Enable>{{session_data.persist.enable}}</Enable>
-            <Temporary>{{session_data.persist.temp_data}}</Temporary>
-            <PoolSize>{{session_data.persist.db_pool_size}}</PoolSize>
+            <Enable>{{session_data.persistence.enable_persistance}}</Enable>
+            <Temporary>{{session_data.persistence.persist_temporary_data}}</Temporary>
+            <PoolSize>{{session_data.persistence.persistance_pool_size}}</PoolSize>
             <SessionDataCleanUp>
-                {% if "expired_data" in session_data.cleanup.enable_for %}
-                <Enable>true</Enable>
-                {% else %}
-                <Enable>false</Enable>
-                {% endif %}
-                <CleanUpTimeout>{{session_data.cleanup.expired_data.expiry_time}}</CleanUpTimeout>
-                <CleanUpPeriod>{{session_data.cleanup.expired_data.frequency}}</CleanUpPeriod>
-                <!--Instead of deleting all the records at once, we are deleting the records in chunks to prevent the -->
-                <!--possible deadlock and lock scenarios. The following property defines the chunk size.-->
-                <DeleteChunkSize>{{session_data.cleanup.expired_data.in_chunks_of}}</DeleteChunkSize>
+                <Enable>{{session_data.cleanup.enable_expired_data_cleanup}}</Enable>
+                <CleanUpTimeout>{{session_data.cleanup.expire_session_data_after}}</CleanUpTimeout>
+                <CleanUpPeriod>{{session_data.cleanup.clean_expired_session_data_every}}</CleanUpPeriod>
+                <DeleteChunkSize>{{session_data.cleanup.clean_expired_session_data_in_chunks_of}}</DeleteChunkSize>
             </SessionDataCleanUp>
             <OperationDataCleanUp>
-                {% if "invalidated_data" in session_data.cleanup.enable_for %}
-                <Enable>true</Enable>
-                {% else %}
-                <Enable>false</Enable>
-                {% endif %}
+                <Enable>{{session_data.cleanup.clean_logged_out_sessions_at_immediate_cycle}}</Enable>
             </OperationDataCleanUp>
             <TempDataCleanup>
-                <!-- Enabling separated cleanup for temporary authentication context data -->
-                {% if "temp_data" in session_data.cleanup.enable_for %}
-                <Enable>true</Enable>
-                {% else %}
-                <Enable>false</Enable>
-                {% endif %}
+                <Enable>{{session_data.cleanup.enable_pre_session_data_cleanup}}</Enable>
                 <!-- When PoolZize > 0, temporary data which have no usage after the authentication flow will be deleted immediately
                  When PoolZise = 0, data will be deleted only by the scheduled cleanup task-->
-                <PoolSize>{{session.data.cleanup.temp_data.db_pool_size}}</PoolSize>
+                <PoolSize>{{session_data.cleanup.pre_session_data_cleanup_thread_pool_size}}</PoolSize>
                 <!-- All temporary authentication context data older than CleanUpTimeout value are considered as expired
                 and would be deleted during cleanup task -->
-                <CleanUpTimeout>{{session.data.cleanup.temp_data.expiry_time_mins}}</CleanUpTimeout>
+                <CleanUpTimeout>{{session_data.cleanup.expire_pre_session_data_after}}</CleanUpTimeout>
             </TempDataCleanup>
         </SessionDataPersist>
     </JDBCPersistenceManager>
 
     <!-- Time configurations are in minutes -->
     <TimeConfig>
-        <SessionIdleTimeout>{{session.timeout.idle_session_timeout_mins}}</SessionIdleTimeout>
-        <RememberMeTimeout>{{session.timeout.remember_me_session_timeout_mins}}</RememberMeTimeout>
+        <SessionIdleTimeout>{{session.timeout.idle_session_timeout}}</SessionIdleTimeout>
+        <RememberMeTimeout>{{session.timeout.remember_me_session_timeout}}</RememberMeTimeout>
     </TimeConfig>
 
     <!-- Security configurations -->
@@ -531,7 +516,7 @@
 
         <!-- SAML Token validity period in minutes -->
         <SAMLResponseValidityPeriod>{{saml.response.validity}}</SAMLResponseValidityPeriod>
-        <UseAuthenticatedUserDomainCrypto>false</UseAuthenticatedUserDomainCrypto>
+        <UseAuthenticatedUserDomainCrypto>{{authentication.sign_auth_response_with_tenant_of}}</UseAuthenticatedUserDomainCrypto>
         <SAMLDefaultSigningAlgorithmURI>{{saml.signing_alg}}</SAMLDefaultSigningAlgorithmURI>
         <SAMLDefaultDigestAlgorithmURI>{{saml.digest_alg}}</SAMLDefaultDigestAlgorithmURI>
         <SAMLDefaultAssertionEncryptionAlgorithmURI>{{saml.assertion_entryption_alg}}</SAMLDefaultAssertionEncryptionAlgorithmURI>
@@ -544,7 +529,7 @@
 
     <Consent>
         <!--Specify whether consent management should be enable during SSO.-->
-        <EnableSSOConsentManagement>true</EnableSSOConsentManagement>
+        <EnableSSOConsentManagement>{{authentication.consent.prompt}}</EnableSSOConsentManagement>
     </Consent>
 
     <SecurityTokenService>
@@ -721,8 +706,8 @@
     </AuthenticationPolicy>
 
     <JITProvisioning>
-        <UserNameProvisioningUI>{{jit_provisioning.username.page}}</UserNameProvisioningUI>
-        <PasswordProvisioningUI>{{jit_provisioning.password.page}}</PasswordProvisioningUI>
+        <UserNameProvisioningUI>{{authentication.jit_provisioning.username_provisioning_url}}</UserNameProvisioningUI>
+        <PasswordProvisioningUI>{{authentication.jit_provisioning.password_provisioning_url}}</PasswordProvisioningUI>
     </JITProvisioning>
 
     <EventListeners>

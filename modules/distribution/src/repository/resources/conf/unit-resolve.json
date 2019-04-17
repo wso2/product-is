@@ -3,9 +3,9 @@
 
     "server.clock_skew": "s",
 
-    "session_data.cleanup.expired_data.expiry_time": "m",
-    "session_data.cleanup.expired_data.frequency": "m",
-    "session_data.cleanup.temp_data.expiry_time": "m",
+    "session_data.cleanup.expire_session_data_after" : "m",
+    "session_data.cleanup.expire_pre_session_data_after" : "m",
+    "session_data.cleanup.clean_expired_session_data_every" : "m",
 
     "session.timeout.idle_session_timeout": "m",
     "session.timeout.remember_me_session_timeout": "m",

@@ -39,4 +39,32 @@
   "scim.authentication_handler.oauth.properties.authorization_server": "scim.authentication_handler.oauth.properties.AuthorizationServer",
   "scim.authentication_handler.oauth.properties.username": "scim.authentication_handler.oauth.properties.UserName",
   "scim.authentication_handler.oauth.properties.password": "scim.authentication_handler.oauth.properties.Password"
+
+  "authentication.authenticator.basic_request_path.parameters.auth_mechanism": "authentication.authenticator.basic_request_path.parameters.AuthMechanism",
+  "authentication.authenticator.basic.parameters.auth_mechanism": "authentication.authenticator.basic.parameters.AuthMechanism",
+  "authentication.authenticator.user_identifier.parameters.validate_username": "authentication.authenticator.user_identifier.parameters.ValidateUsername",
+
+  "authentication.authenticator.google.parameters.token_endpoint" : "authentication.authenticator.google.parameters.GoogleTokenEndpoint",
+  "authentication.authenticator.google.parameters.authz_endpoint" : "authentication.authenticator.google.parameters.GoogleAuthzEndpoint",
+  "authentication.authenticator.google.parameters.user_info_endpoint" : "authentication.authenticator.google.parameters.GoogleUserInfoEndpoint",
+
+  "authentication.authenticator.facebook.parameters.token_endpoint" : "authentication.authenticator.facebook.parameters.AuthTokenEndpoint",
+  "authentication.authenticator.facebook.parameters.authz_endpoint" : "authentication.authenticator.facebook.parameters.AuthnEndpoint",
+  "authentication.authenticator.facebook.parameters.user_info_endpoint" : "authentication.authenticator.facebook.parameters.UserInfoEndpoint",
+
+  "authentication.authenticator.yahoo.parameters.token_endpoint" : "authentication.authenticator.facebook.parameters.YahooTokenEndpoint",
+  "authentication.authenticator.yahoo.parameters.authz_endpoint" : "authentication.authenticator.facebook.parameters.YahooOAuthzEndpoint",
+  "authentication.authenticator.yahoo.parameters.user_info_endpoint" : "authentication.authenticator.facebook.parameters.YahooUserInfoEndpoint",
+
+  "authentication.authenticator.microsoft_live.parameters.token_endpoint" : "authentication.authenticator.microsoft_live.parameters.AuthTokenEndpoint",
+  "authentication.authenticator.microsoft_live.parameters.authz_endpoint" : "authentication.authenticator.microsoft_live.parameters.AuthnEndpoint",
+  "authentication.authenticator.microsoft_live.parameters.user_info_endpoint" : "authentication.authenticator.microsoft_live.parameters.UserInfoEndpoint",
+
+  "authentication.authenticator.mobile_connect.parameters.authentication_page_url":"authentication.authenticator.mobile_connect.parameters.MCAuthenticationEndpointURL",
+  "authentication.authenticator.mobile_connect.parameters.discovery_api_url": "authentication.authenticator.mobile_connect.parameters.MCDiscoveryAPIURL",
+  "authentication.authenticator.mobile_connect.parameters.redirect_to_multi_option_page_on_failure": "authentication.authenticator.mobile_connect.parameters.redirectToMultiOptionPageOnFailure",
+
+  "authentication.authenticator.fido.parameters.authentication_page_url": "authentication.authenticator.fido.parameters.FidoAuth",
+  "authentication.authenticator.x509_certificate.parameters.authentication_endpoint": "authentication.authenticator.x509_certificate.parameters.AuthenticationEndpoint"
+
 }

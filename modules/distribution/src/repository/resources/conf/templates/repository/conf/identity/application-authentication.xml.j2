@@ -26,15 +26,15 @@
         smart = both local and federated authentication is supported
         dumb = only federated authentication is supported
     -->
-    <ProxyMode>{{identity.auth_framework.proxy_mode}}</ProxyMode>
+    <ProxyMode>{{authentication.proxy_mode}}</ProxyMode>
 
     <!--
         AuthenticationEndpointURL is location of the web app containing
         the authentication related pages
     -->
-    <AuthenticationEndpointURL>{{identity.auth_framework.login_page_url}}</AuthenticationEndpointURL>
-    <AuthenticationEndpointRetryURL>{{identity.auth_framework.retry_page_url}}</AuthenticationEndpointRetryURL>
-    <AuthenticationEndpointMissingClaimsURL>{{identity.auth_framework.request_claim_page_url}}
+    <AuthenticationEndpointURL>{{authentication.endpoints.login_url}}</AuthenticationEndpointURL>
+    <AuthenticationEndpointRetryURL>{{authentication.endpoints.retry_url}}</AuthenticationEndpointRetryURL>
+    <AuthenticationEndpointMissingClaimsURL>{{authentication.endpoints.request_missing_claims_url}}
     </AuthenticationEndpointMissingClaimsURL>
 
     <!--
@@ -42,16 +42,16 @@
         process.
     -->
     <Extensions>
-        <RequestCoordinator>{{identity.auth_framework.request_coordinator}}</RequestCoordinator>
-        <AuthenticationRequestHandler>{{identity.auth_framework.auth_request_handler}}</AuthenticationRequestHandler>
-        <LogoutRequestHandler>{{identity.auth_framework.logout_request_handler}}</LogoutRequestHandler>
-        <StepBasedSequenceHandler>{{identity.auth_framework.step_based_sequence_handler}}</StepBasedSequenceHandler>
-        <RequestPathBasedSequenceHandler>{{identity.auth_framework.request_path_based_sequence_handler}}
+        <RequestCoordinator>{{authentication.framework.extensions.request_coordinator}}</RequestCoordinator>
+        <AuthenticationRequestHandler>{{authentication.framework.extensions.authentication_request_handler}}</AuthenticationRequestHandler>
+        <LogoutRequestHandler>{{authentication.framework.extensions.logout_request_handler}}</LogoutRequestHandler>
+        <StepBasedSequenceHandler>{{authentication.framework.extensions.step_based_sequence_handler}}</StepBasedSequenceHandler>
+        <RequestPathBasedSequenceHandler>{{authentication.framework.extensions.request_path_sequence_handler}}
         </RequestPathBasedSequenceHandler>
-        <StepHandler>{{identity.auth_framework.step_handler}}</StepHandler>
-        <HomeRealmDiscoverer>{{identity.auth_framework.home_realm_discoverer}}</HomeRealmDiscoverer>
-        <ClaimHandler>{{identity.auth_framework.claim_handler}}</ClaimHandler>
-        <ProvisioningHandler>{{identity.auth_framework.provisioning_handler}}</ProvisioningHandler>
+        <StepHandler>{{authentication.framework.extensions.step_handler}}</StepHandler>
+        <HomeRealmDiscoverer>{{authentication.framework.extensions.home_realm_discoverer}}</HomeRealmDiscoverer>
+        <ClaimHandler>{{authentication.framework.extensions.claim_handler}}</ClaimHandler>
+        <ProvisioningHandler>{{authentication.framework.extensions.provisioning_handler}}</ProvisioningHandler>
     </Extensions>
 
     <!--
@@ -62,14 +62,21 @@
         distribution.
     -->
     <AuthenticatorNameMappings>
-        {% for authenticator in identity.auth_framework.authenticators %}
+        <AuthenticatorNameMapping name="BasicAuthenticator" alias="basic" />
+        <AuthenticatorNameMapping name="OAuthRequestPathAuthenticator" alias="oauth-bearer" />
+        <AuthenticatorNameMapping name="BasicAuthRequestPathAuthenticator" alias="basic-auth" />
+        <AuthenticatorNameMapping name="IWAAuthenticator" alias="iwa" />
+        <AuthenticatorNameMapping name="SAMLSSOAuthenticator" alias="samlsso" />
+        <AuthenticatorNameMapping name="OpenIDConnectAuthenticator" alias="openidconnect" />
+        <AuthenticatorNameMapping name="PassiveSTSAuthenticator" alias="passive-sts" />
+        {% for authenticator in authentication.custom_authenticator %}
         {% if authenticator.alias is defined %}
-        <AuthenticatorNameMapping name="{{authenticator.name}}" alias="{{authenticator.alias}}"/>
+        <AuthenticatorNameMapping name="{{authenticator.name}}" alias="{{authenticator.alias}}" />
         {% endif %}
         {% endfor %}
     </AuthenticatorNameMappings>
 
-    <!-- 
+    <!--
         AuthenticatorConfigs allow specifying various configurations needed
         by the authenticators by using any number of \'Parameter\' elements
         E.g.
@@ -79,7 +86,14 @@
         </AuthenticatorConfig>
     -->
     <AuthenticatorConfigs>
-        {% for authenticator in identity.auth_framework.authenticators %}
+        {% for name,authenticator in authentication.authenticator.items() %}
+        <AuthenticatorConfig name="{{name}}" enabled="{{authenticator.enable}}">
+            {% for parameter,value in authenticator.parameters.items() %}
+            <Parameter name="{{parameter}}">{{value}}</Parameter>
+            {% endfor %}
+        </AuthenticatorConfig>
+        {% endfor %}
+        {% for authenticator in authentication.custom_authenticator %}
         <AuthenticatorConfig name="{{authenticator.name}}" enabled="true">
             {% for parameter,value in authenticator.parameters.items() %}
             <Parameter name="{{parameter}}">{{value}}</Parameter>
@@ -115,8 +129,8 @@
             'sessionDataKey', 'type', 'relyingParty', 'sp' and 'authenticators'
             parameters will be always sent. They should not be specified here.
         -->
-    <AuthenticationEndpointQueryParams action="{{identity.auth_framework.outbound_query_parameter_filter_policy}}">
-        {% for parameter in identity.auth_framework.filtered_outbound_query_parameters %}
+    <AuthenticationEndpointQueryParams action="{{authentication.endpoint.query_params.filter_policy}}">
+        {% for parameter in authentication.endpoint.query_params.filter_parameters %}
         <AuthenticationEndpointQueryParam name="{{parameter}}"/>
         {% endfor %}
     </AuthenticationEndpointQueryParams>
@@ -129,9 +143,9 @@
     parameters unavailable from the API on the first consumption.
     -->
     <AuthenticationEndpointRedirectParams
-            action="{{identity.auth_framework.redirect_parameter_filter_policy}}"
-            removeOnConsumeFromAPI="{{identity.auth_framework.redirect_parameter_remove_on_consume}}">
-        {% for parameter in identity.auth_framework.filtered_redirect_parameters %}
+            action="{{authentication.endpoint.redirect_params.filter_policy}}"
+            removeOnConsumeFromAPI="{{authentication.endpoint.redirect_params.remove_on_consume_from_api}}">
+        {% for parameter in authentication.endpoint.redirect_params.parameters %}
         <AuthenticationEndpointRedirectParam name="{{parameter}}"/>
         {% endfor %}
     </AuthenticationEndpointRedirectParams>
