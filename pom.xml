@@ -1788,7 +1788,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.12.354</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.12.357</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.11.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
@@ -1851,7 +1851,7 @@
         <identity.local.auth.clientauth.mutualtls.version>2.0.5</identity.local.auth.clientauth.mutualtls.version>
 
         <!-- Local Authentication API Connector Properties -->
-        <identity.local.auth.api.version>2.1.3</identity.local.auth.api.version>
+        <identity.local.auth.api.version>2.1.4</identity.local.auth.api.version>
 
         <!-- OAuth2 Grant Type extensions -->
         <identity.oauth2.jwt.bearer.grant.version>1.0.18</identity.oauth2.jwt.bearer.grant.version>
@@ -1999,7 +1999,7 @@
         <snakeyaml.version.range>[1.16.0, 1.17.0)</snakeyaml.version.range>
         <msf4j.version>2.6.2</msf4j.version>
         <commons-lang.wso2.osgi.version.range>[2.6.0,3.0.0)</commons-lang.wso2.osgi.version.range>
-        <carbon.healthcheck.version>1.0.1</carbon.healthcheck.version>
+        <carbon.healthcheck.version>1.0.3</carbon.healthcheck.version>
         <carbon.logging.admin.stub.version>4.6.60</carbon.logging.admin.stub.version>
     </properties>
 
