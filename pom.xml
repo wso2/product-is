@@ -1920,7 +1920,7 @@
         <jibx.wso2.version>1.2.1.wso2v1</jibx.wso2.version>
         <jaxb.wso2.version>2.2.5.wso2v1</jaxb.wso2.version>
         <kaptcha.wso2.version>2.3.0.wso2v1</kaptcha.wso2.version>
-        <version.commons.logging>1.1.1</version.commons.logging>
+        <version.commons.logging>99.0-does-not-exist</version.commons.logging>
         <commons.lang.version>2.6</commons.lang.version>
         <emma.version>2.1.5320</emma.version>
         <jaggeryjs.version>0.12.6</jaggeryjs.version>
