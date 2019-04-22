@@ -246,6 +246,8 @@
 
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml" token="&lt;Property name=&quot;isCascadeDeleteEnabled&quot;&gt;true&lt;/Property&gt;" value="&lt;Property name=&quot;isCascadeDeleteEnabled&quot;&gt;true&lt;/Property&gt;${line.separator} &lt;Property name=&quot;initializeNewClaimManager&quot;&gt;true&lt;/Property&gt;" />
 
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.sh" token="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot; \" value="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot; \${line.separator}    -Dorg.apache.xml.security.ignoreLineBreaks=false \" />
+
                                 <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml" token="${sso-idp-config-default}" value="${sso-idp-config-replace}" />
 
                                 <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/authenticators.xml" token="&lt;!--Authenticator name=&quot;MutualSSLAuthenticator&quot; disabled=&quot;false&quot;&gt;" value="&lt;Authenticator name=&quot;MutualSSLAuthenticator&quot;&gt;" />
