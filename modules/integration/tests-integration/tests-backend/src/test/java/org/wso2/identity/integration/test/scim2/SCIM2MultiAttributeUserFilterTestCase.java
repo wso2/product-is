@@ -284,10 +284,18 @@ public class SCIM2MultiAttributeUserFilterTestCase extends ISIntegrationTest {
         request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
 
         HttpResponse response = client.execute(request);
+
+        String responseString = EntityUtils.toString(response.getEntity());
+        Object responseObj = JSONValue.parse(responseString);
+
+        if (response.getStatusLine().getStatusCode() != 200) {
+            log.error("Incorrect response code received. Received error code: "
+                    + response.getStatusLine().getStatusCode() + " . Error message: " + responseString);
+        }
+
         assertEquals(response.getStatusLine().getStatusCode(), 200, "User " +
                 "has not been retrieved successfully");
 
-        Object responseObj = JSONValue.parse(EntityUtils.toString(response.getEntity()));
         EntityUtils.consume(response.getEntity());
 
         int resultCount = (((JSONArray) ((JSONObject) responseObj).get("Resources")).size());
