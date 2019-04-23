@@ -28,7 +28,7 @@
     <artifactId>identity-server-parent</artifactId>
     <packaging>pom</packaging>
     <description>WSO2 Identity Server</description>
-    <version>5.8.0-beta3-SNAPSHOT</version>
+    <version>5.8.0-beta4-SNAPSHOT</version>
     <name>WSO2 Identity Server</name>
     <url>http://wso2.org/projects/identity</url>
 
@@ -1788,7 +1788,8 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.12.362</carbon.identity.framework.version>
+
+        <carbon.identity.framework.version>5.12.365</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.11.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
@@ -1893,7 +1894,7 @@
         <charon.version>3.1.15</charon.version>
         <xalan.version>2.7.1</xalan.version>
         <xalan.wso2.version>2.7.0.wso2v1</xalan.wso2.version>
-        <rampart.wso2.version>1.6.1-wso2v31</rampart.wso2.version>
+        <rampart.wso2.version>1.6.1-wso2v34</rampart.wso2.version>
         <orbit.version.commons.httpclient>4.2.5.wso2v1</orbit.version.commons.httpclient>
         <commons.httpclient.version>3.1</commons.httpclient.version>
         <httpcore.wso2.version>4.3.3.wso2v1</httpcore.wso2.version>
