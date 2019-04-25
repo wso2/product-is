@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.wso2.is</groupId>
 		<artifactId>identity-features</artifactId>
-		<version>5.8.0-m27-SNAPSHOT</version>
+		<version>5.8.0-beta5-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -44,8 +44,8 @@
 				<artifactId>bcel</artifactId>
 			</dependency>
 			<dependency>
-				<groupId>asm.wso2</groupId>
-				<artifactId>asm</artifactId>
+				<groupId>org.ow2.asm</groupId>
+				<artifactId>asm-all</artifactId>
 			</dependency>
 			<dependency>
 				<groupId>cglib.wso2</groupId>
@@ -94,7 +94,7 @@
 								<bundleDef>org.hibernate.wso2:hibernate</bundleDef>
 								<bundleDef>net.sf.ehcache.wso2:ehcache</bundleDef>
 								<bundleDef>org.apache.bcel.wso2:bcel</bundleDef>
-								<bundleDef>asm.wso2:asm</bundleDef>
+								<bundleDef>org.ow2.asm:asm-all</bundleDef>
 								<bundleDef>cglib.wso2:cglib</bundleDef>
 								<bundleDef>cglib.wso2:cglib</bundleDef>
 								<bundleDef>org.apache.axis2.wso2:axis2-jibx</bundleDef>

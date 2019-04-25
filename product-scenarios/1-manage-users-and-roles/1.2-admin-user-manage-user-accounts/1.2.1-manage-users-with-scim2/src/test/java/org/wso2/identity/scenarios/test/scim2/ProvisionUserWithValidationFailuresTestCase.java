@@ -69,7 +69,7 @@ public class ProvisionUserWithValidationFailuresTestCase extends ScenarioTestBas
         response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, rootObject, Constants.SCIMEndpoints.SCIM2_ENDPOINT,
                 Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
 
-        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_INTERNAL_SERVER_ERROR,
+        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_BAD_REQUEST,
                 "Password validation failed at user creation hence server should have returned a bad request");
 
         Object responseObj = JSONValue.parse(EntityUtils.toString(response.getEntity()));

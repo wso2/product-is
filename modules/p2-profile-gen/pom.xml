@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>5.8.0-m27-SNAPSHOT</version>
+        <version>5.8.0-beta5-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -124,7 +124,7 @@
 
                                 <!--Carbon features-->
                                 <featureArtifactDef>
-                                    org.wso2.carbon.deployment:org.wso2.carbon.as.runtimes.cxf.feature:${carbon.deployment.version}
+                                    org.wso2.carbon.deployment:org.wso2.carbon.as.runtimes.cxf3.feature:${carbon.deployment.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.deployment:org.wso2.carbon.webapp.mgt.server.feature:${carbon.deployment.version}
@@ -450,6 +450,11 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.healthcheck:org.wso2.carbon.healthcheck.server.feature:${carbon.healthcheck.version}
                                 </featureArtifactDef>
+
+                                <!-- Configuration Management feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.configuration.mgt.server.feature:${carbon.identity.framework.version}
+                                </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -528,7 +533,7 @@
                                 <!--end of store features-->
 
                                 <feature>
-                                    <id>org.wso2.carbon.as.runtimes.cxf.feature.group</id>
+                                    <id>org.wso2.carbon.as.runtimes.cxf3.feature.group</id>
                                     <version>${carbon.deployment.version}</version>
                                 </feature>
                                 <feature>
@@ -748,6 +753,13 @@
                                     </id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>
+                                        org.wso2.carbon.identity.configuration.mgt.server.feature.group
+                                    </id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+
                                 <feature>
                                     <id>
                                         org.wso2.carbon.identity.application.authz.xacml.server.feature.group
@@ -1039,7 +1051,7 @@
                                 <!--end of store features-->
 
                                 <feature>
-                                    <id>org.wso2.carbon.as.runtimes.cxf.feature.group</id>
+                                    <id>org.wso2.carbon.as.runtimes.cxf3.feature.group</id>
                                     <version>${carbon.deployment.version}</version>
                                 </feature>
                                 <feature>
@@ -1263,6 +1275,13 @@
                                     </id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>
+                                        org.wso2.carbon.identity.configuration.mgt.server.feature.group
+                                    </id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+
                                 <feature>
                                     <id>
                                         org.wso2.carbon.identity.application.authz.xacml.server.feature.group
@@ -1501,7 +1520,7 @@
                                 <!--end of store features-->
 
                                 <feature>
-                                    <id>org.wso2.carbon.as.runtimes.cxf.feature.group</id>
+                                    <id>org.wso2.carbon.as.runtimes.cxf3.feature.group</id>
                                     <version>${carbon.deployment.version}</version>
                                 </feature>
                                 <feature>
@@ -1701,6 +1720,13 @@
                                     </id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>
+                                        org.wso2.carbon.identity.configuration.mgt.server.feature.group
+                                    </id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+
                                 <feature>
                                     <id>
                                         org.wso2.carbon.identity.application.authz.xacml.server.feature.group
