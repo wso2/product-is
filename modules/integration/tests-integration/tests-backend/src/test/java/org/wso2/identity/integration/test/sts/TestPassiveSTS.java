@@ -30,6 +30,7 @@ import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -138,11 +139,16 @@ public class TestPassiveSTS extends ISIntegrationTest {
         ServiceProvider updatedServiceProvider = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
         ClaimConfig updatedClaimConfig = updatedServiceProvider.getClaimConfig();
 
-        Assert.assertEquals(updatedClaimConfig.getClaimMappings()[0].getLocalClaim().getClaimUri(),
-                            GIVEN_NAME_CLAIM_URI, "Failed update given name claim uri");
+        int arraySize = updatedClaimConfig.getClaimMappings().length;
+        String[] claimsUris = new String[arraySize];
+        for (int index = 0; index < arraySize; index++) {
+            claimsUris[index] = updatedClaimConfig.getClaimMappings()[index].getLocalClaim().getClaimUri();
+        }
 
-        Assert.assertEquals(updatedClaimConfig.getClaimMappings()[1].getLocalClaim().getClaimUri(),
-                            EMAIL_CLAIM_URI, "Failed update email claim uri");
+        List claimsList = Arrays.asList(claimsUris);
+        Assert.assertTrue(claimsList.contains(GIVEN_NAME_CLAIM_URI), "Failed update given name claim uri");
+        Assert.assertTrue(claimsList.contains(EMAIL_CLAIM_URI), "Failed update email claim uri");
+
     }
 
     @Test(alwaysRun = true, description = "Invoke PassiveSTSSampleApp",
