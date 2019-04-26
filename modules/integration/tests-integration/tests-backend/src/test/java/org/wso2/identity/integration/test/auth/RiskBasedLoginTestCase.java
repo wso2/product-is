@@ -85,7 +85,7 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
     private ServerConfigurationManager serverConfigurationManager;
     private IdentityProvider superTenantResidentIDP;
 
-    Map<String, Integer> userRiskScores = new HashMap<>();
+    private Map<String, Integer> userRiskScores = new HashMap<>();
 
     MicroserviceServer microserviceServer;
 
@@ -110,6 +110,7 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
         File jarDestFile = new File(authenticatorPathString);
         FileOutputStream jarDest = new FileOutputStream(jarDestFile);
         copyFileUsingStream(jarUrl, jarDest);
+        log.info("Copied the demo authenticator jar file to " + authenticatorPathString);
         Assert.assertTrue(Files.exists(Paths.get(authenticatorPathString)), "Demo Authenticator is not copied " +
                 "successfully. File path: " + authenticatorPathString);
 
@@ -120,11 +121,14 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
         File warDestFile = new File(authenticatorWarPathString);
         FileOutputStream warDest = new FileOutputStream(warDestFile);
         copyFileUsingStream(webappUrl, warDest);
+        log.info("Copied the demo authenticator war file to " + authenticatorWarPathString);
         Assert.assertTrue(Files.exists(Paths.get(authenticatorWarPathString)), "Demo Authenticator war is not copied " +
                 "successfully. File path: " + authenticatorWarPathString);
 
+        log.info("Restarting the server at: " + isServer.getContextUrls().getBackEndUrl());
         serverConfigurationManager = new ServerConfigurationManager(isServer);
         serverConfigurationManager.restartGracefully();
+        log.info("Restarting the server at: " + isServer.getContextUrls().getBackEndUrl() + " is successful");
 
         super.init();
         logManger = new AuthenticatorClient(backendURL);
