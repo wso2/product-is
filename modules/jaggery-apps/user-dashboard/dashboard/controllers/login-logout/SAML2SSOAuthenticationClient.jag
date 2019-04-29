@@ -45,7 +45,12 @@ function getBPSSessions(request){
     var profileOutputJson = "\"list\" : [";
     for(var i=0;i<hostArray.length();i++){
         var webService2 = new ws.WSRequest();
-        var host = hostArray[i].*::workerHostURL[0].text();
+        var host = '';
+        if (getServiceOrigin() == undefined || getServicePath() == undefined) {
+           host = hostArray[i].*::workerHostURL[0].text();
+        } else {
+           host = getServiceOrigin()+ getServicePath();
+        }
         var profileName = hostArray[i].*::profileName[0].text();
         if (identityServerUrl.equals(host + "/SAML2SSOAuthenticationService") || identityServerUrl.equals
                 (host + "SAML2SSOAuthenticationService")) {
@@ -146,5 +151,15 @@ function getServicePath() {
     var jsonConf = parse(json);
     return jsonConf.proxy.servicePath;
 };
+function getServiceOrigin() {
+    var path = "/conf/site.json";
+    var file = new File(path);
+    file.open("r");
+    var json = "";
 
+    json = file.readAll();
+    file.close();
+    var jsonConf = parse(json);
+    return jsonConf.service.serviceOrigin;
+};
 %>
