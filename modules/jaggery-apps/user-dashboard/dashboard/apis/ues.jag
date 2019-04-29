@@ -3,22 +3,18 @@ response.addHeader("Access-Control-Allow-Origin", "*");
 response.addHeader("Content-Type", "application/json");
 
 //set server url infomation
-var path = "/conf/site.json";
-var file = new File(path);
-file.open("r");
-var json = "";
-json = file.readAll();
-file.close();
-var serviceUrl = parse(json);
+var util = require("../util/utility.jag");
 var proxyOrigin = application.get(PROXY_ORIGIN);
 var proxyContextPath = application.get(PROXY_CONTEXT_PATH);
-var serverHttpsUrl='';
-if (serviceUrl.service == undefined) {
+var serverHttpsUrl = '';
+if (util.getProxyService().service == undefined) {
    serverHttpsUrl = proxyOrigin + proxyContextPath;
-} else if (serviceUrl.service.serviceOrigin == undefined) {
+   log.info("serverHttpsUrl : " + serverHttpsUrl);
+} else if (util.getProxyService().service.serviceOrigin == undefined) {
    serverHttpsUrl = proxyOrigin + proxyContextPath;
+   log.info(serverHttpsUrl);
 } else {
-   serverHttpsUrl = serviceUrl.service.serviceOrigin;
+   serverHttpsUrl = util.getProxyService().service.serviceOrigin;
 }
 
 (function () {

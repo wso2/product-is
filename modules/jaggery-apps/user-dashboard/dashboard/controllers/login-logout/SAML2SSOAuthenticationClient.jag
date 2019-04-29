@@ -46,10 +46,13 @@ function getBPSSessions(request){
     for(var i=0;i<hostArray.length();i++){
         var webService2 = new ws.WSRequest();
         var host = '';
-        if (getServiceOrigin() == undefined || getServicePath() == undefined) {
+        if (util.getProxyService().service == undefined || util.getProxyService().proxy == undefined) {
+           host = hostArray[i].*::workerHostURL[0].text();
+        } else if (util.getProxyService().service.serviceOrigin == undefined || util.getProxyService().proxy.servicePath
+         == undefined) {
            host = hostArray[i].*::workerHostURL[0].text();
         } else {
-           host = getServiceOrigin()+ getServicePath();
+           host = util.getProxyService().service.serviceOrigin + util.getProxyService().proxy.servicePath;
         }
         var profileName = hostArray[i].*::profileName[0].text();
         if (identityServerUrl.equals(host + "/SAML2SSOAuthenticationService") || identityServerUrl.equals
@@ -138,28 +141,5 @@ var checkAuthorizationForUser = function (userName, permission, tenantDomain) {
     }
     return isUserAuthorized;
 
-};
-
-function getServicePath() {
-    var path = "/conf/site.json";
-    var file = new File(path);
-    file.open("r");
-    var json = "";
-
-    json = file.readAll();
-    file.close();
-    var jsonConf = parse(json);
-    return jsonConf.proxy.servicePath;
-};
-function getServiceOrigin() {
-    var path = "/conf/site.json";
-    var file = new File(path);
-    file.open("r");
-    var json = "";
-
-    json = file.readAll();
-    file.close();
-    var jsonConf = parse(json);
-    return jsonConf.service.serviceOrigin;
 };
 %>
