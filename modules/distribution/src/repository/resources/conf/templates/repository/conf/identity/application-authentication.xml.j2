@@ -87,7 +87,7 @@
     -->
     <AuthenticatorConfigs>
         {% for name,authenticator in authentication.authenticator.items() %}
-        <AuthenticatorConfig name="{{name}}" enabled="{{authenticator.enable}}">
+        <AuthenticatorConfig name="{{authenticator.name}}" enabled="{{authenticator.enable}}">
             {% for parameter,value in authenticator.parameters.items() %}
             <Parameter name="{{parameter}}">{{value}}</Parameter>
             {% endfor %}

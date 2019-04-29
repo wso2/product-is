@@ -10,13 +10,13 @@
     "session.timeout.idle_session_timeout": "m",
     "session.timeout.remember_me_session_timeout": "m",
 
-    "oauth.authz_code.validity_time": "s",
-    "oauth.app_token.validity_time": "s",
-    "oauth.user_token.validity_time": "s",
-    "oauth.refresh_token.validity_time": "s",
-    "oauth.jwt.iat_validity_period": "m",
-    "oauth.oidc.id_token.validity_time": "s",
-    "oauth.oidc.logout_token.validity_time": "s",
+    "oauth.token_validation.authorization_code_validity": "s",
+    "oauth.token_validation.app_access_token_validity": "s",
+    "oauth.token_validation.user_access_token_validity": "s",
+    "oauth.token_validation.refresh_token_validity": "s",
+    "oauth.token_validation.validation_response_jwt_validity": "m",
+    "oauth.oidc.token_validation.id_token_validity": "s",
+    "oauth.oidc.token_validation.logout_token_validity": "s",
     "oauth.timestamp_skew": "s",
 
     "saml.slo.retry_interval": "ms",
@@ -53,9 +53,9 @@
     "cache.idp_cache_by_hri.timeout": "ms",
     "cache.idp_cache_by_name.timeout": "ms",
 
-    "jwt_validator.jwks_endpoint.http_default_timeout": "ms",
-    "jwt_validator.jwks_endpoint.http_connection_timeout": "ms",
-    "jwt_validator.jwks_endpoint.http_read_timeout": "ms",
+    "oauth.jwks_endpoint.connection_timeout": "ms",
+    "oauth.jwks_endpoint.read_timeout": "ms",
+    "oauth.token.validation.validation_response_jwt_validity": "m",
 
     "authentication.adaptive.http_connections.default_timeout": "ms",
     "authentication.adaptive.http_connections.connection_timeout": "ms",

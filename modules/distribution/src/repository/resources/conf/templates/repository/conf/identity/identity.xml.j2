@@ -131,16 +131,18 @@
         <!-- Token cleanup feature config to clean IDN_OAUTH2_ACCESS_TOKEN table-->
         <TokenCleanup>
             <!--If true old access token cleaning feature is enabled -->
-            <EnableTokenCleanup>{{oauth.token.cleanup.enable}}</EnableTokenCleanup>
+            <EnableTokenCleanup>{{oauth.token_cleanup.enable}}</EnableTokenCleanup>
             <!--If true  old access token retained in audit table  -->
-            <RetainOldAccessToken>{{oauth.token.cleanup.backup_for_auditing}}</RetainOldAccessToken>
+            <RetainOldAccessToken>{{oauth.token_cleanup.retain_access_tokens_for_auditing}}</RetainOldAccessToken>
         </TokenCleanup>
         <!-- Specify the Token issuer class to be used.
              Default: org.wso2.carbon.identity.oauth2.token.OauthTokenIssuerImpl.
              Applicable values: org.wso2.carbon.identity.oauth2.token.JWTTokenIssuer
         -->
-        {% if oauth.token.token_generator_class is defined%}
-        <IdentityOAuthTokenGenerator>{{oauth.token.token_generator_class}}</IdentityOAuthTokenGenerator>
+        {% if oauth.extension.token_generator is defined%}
+        <IdentityOAuthTokenGenerator>{{oauth.extension.token_generator}}</IdentityOAuthTokenGenerator>
+        {% else %}
+        <IdentityOAuthTokenGenerator>org.wso2.carbon.identity.oauth2.token.OauthTokenIssuerImpl</IdentityOAuthTokenGenerator>
         {% endif %}
         <!-- True, if access token alias is stored in the database instead of access token.
              Eg. token alias and token is same when default AccessTokenValueGenerator is used.
@@ -148,19 +150,24 @@
              Default: true.
              Applicable values: true,false
         -->
-        <PersistAccessTokenAlias>{{oauth.token.persist_access_token_alias}}</PersistAccessTokenAlias>
+        <!--This will be moved to the interface of token generator -->
+        <PersistAccessTokenAlias>true</PersistAccessTokenAlias>
 
         <!-- This configuration is used to specify the access token value generator.
              Default: org.apache.oltu.oauth2.as.issuer.UUIDValueGenerator
              Applicable values: org.apache.oltu.oauth2.as.issuer.UUIDValueGenerator,
                                 org.apache.oltu.oauth2.as.issuer.MD5Generator,
                                 org.wso2.carbon.identity.oauth.tokenvaluegenerator.SHA256Generator-->
-        {% if oauth.token.value_generator_class is defined %}
-        <AccessTokenValueGenerator>{{oauth.token.value_generator_class}}</AccessTokenValueGenerator>
+        {% if oauth.extension.token_value_generator is defined %}
+        <AccessTokenValueGenerator>{{oauth.extension.token_value_generator}}</AccessTokenValueGenerator>
+        {% else %}
+        <AccessTokenValueGenerator>org.apache.oltu.oauth2.as.issuer.UUIDValueGenerator</AccessTokenValueGenerator>
         {% endif %}
         <!-- This configuration is used to specify whether the Service Provider tenant domain should be used when generating
              access token. Otherwise user domain will be used. Currently this value is only supported by the JWTTokenIssuer.-->
+        {% if oauth.access_token.generate_with_sp_tenant_domain is defined %}
         <UseSPTenantDomain>{{oauth.access_token.generate_with_sp_tenant_domain}}</UseSPTenantDomain>
+        {% endif %}
 
         <!--
             Default values for OAuth1RequestTokenUrl, OAuth1AccessTokenUrl, OAuth1AuthorizeUrl
@@ -168,80 +175,146 @@
             https://<HostName>:<MgtTrpProxyPort except 443>/<ProxyContextPath>/<context>/<path>
             If above format doesn't satisfy uncomment the following configs and explicitly configure the values
          -->
-        <OAuth1RequestTokenUrl>{{oauth.endpoints.oauth1.request_token}}</OAuth1RequestTokenUrl>
-        <OAuth1AuthorizeUrl>{{oauth.endpoints.oath1.authorize}}</OAuth1AuthorizeUrl>
-        <OAuth1AccessTokenUrl>{{oauth.endpoints.oauth1.access_token}}</OAuth1AccessTokenUrl>
-        <OAuth2AuthzEPUrl>{{oauth.endpoints.oauth2.authorize}}</OAuth2AuthzEPUrl>
-        <OAuth2TokenEPUrl>{{oauth.endpoints.oauth2.token}}</OAuth2TokenEPUrl>
-        <OAuth2RevokeEPUrl>{{oauth.endpoints.oauth2.revoke}}</OAuth2RevokeEPUrl>
-        <OAuth2IntrospectEPUrl>{{oauth.endpoints.oauth2.introspect}}</OAuth2IntrospectEPUrl>
-        <OAuth2UserInfoEPUrl>{{oauth.endpoints.oauth2.userinfo}}</OAuth2UserInfoEPUrl>
-        <OIDCCheckSessionEPUrl>{{oauth.endpoints.oidc.check_session}}</OIDCCheckSessionEPUrl>
-        <OIDCLogoutEPUrl>{{oauth.endpoints.oidc.logout}}</OIDCLogoutEPUrl>
-        <OAuth2ConsentPage>{{oauth.endpoints.oauth2.consent}}</OAuth2ConsentPage>
-        <OAuth2ErrorPage>{{oauth.endpoints.oauth2.error}}</OAuth2ErrorPage>
-        <OIDCConsentPage>{{oauth.endpoints.oidc.consent}}</OIDCConsentPage>
-        <OIDCLogoutConsentPage>{{oauth.endpoints.oidc.logout_consent}}</OIDCLogoutConsentPage>
-        <OIDCLogoutPage>{{oauth.endpoints.oidc.logout_page}}</OIDCLogoutPage>
+        <OAuth1RequestTokenUrl>{{oauth.endpoints.oauth1_request_token_url}}</OAuth1RequestTokenUrl>
+        <OAuth1AuthorizeUrl>{{oauth.endpoints.oauth1_authorize_url}}</OAuth1AuthorizeUrl>
+        <OAuth1AccessTokenUrl>{{oauth.endpoints.oauth1_access_token_url}}</OAuth1AccessTokenUrl>
+        <OAuth2AuthzEPUrl>{{oauth.endpoints.oauth2_authz_url}}</OAuth2AuthzEPUrl>
+        <OAuth2TokenEPUrl>{{oauth.endpoints.oauth2_token_url}}</OAuth2TokenEPUrl>
+        <OAuth2RevokeEPUrl>{{oauth.endpoints.oauth2_revoke_url}}</OAuth2RevokeEPUrl>
+        <OAuth2IntrospectEPUrl>{{oauth.endpoints.oauth2_introspect_url}}</OAuth2IntrospectEPUrl>
+        <OAuth2UserInfoEPUrl>{{oauth.endpoints.oauth2_user_info_url}}</OAuth2UserInfoEPUrl>
+        <OIDCCheckSessionEPUrl>{{oauth.endpoints.oidc_check_session_url}}</OIDCCheckSessionEPUrl>
+        <OIDCLogoutEPUrl>{{oauth.endpoints.oidc_logout_url}}</OIDCLogoutEPUrl>
+        <OAuth2ConsentPage>{{oauth.endpoints.oauth2_consent_page}}</OAuth2ConsentPage>
+        <OAuth2ErrorPage>{{oauth.endpoints.oauth2_error_page}}</OAuth2ErrorPage>
+        <OIDCConsentPage>{{oauth.endpoints.oidc_consent_page}}</OIDCConsentPage>
+        <OIDCLogoutConsentPage>{{oauth.endpoints.oidc_logout_consent_page}}</OIDCLogoutConsentPage>
+        <OIDCLogoutPage>{{oauth.endpoints.oidc_logout_page}}</OIDCLogoutPage>
 
-        <OIDCWebFingerEPUrl>{{oauth.endpoints.oidc.web_finger}}</OIDCWebFingerEPUrl>
+        <OIDCWebFingerEPUrl>{{oauth.endpoints.oidc_web_finger_url}}</OIDCWebFingerEPUrl>
 
         <!-- For tenants below urls will be modified as https://<hostname>:<port>/t/<tenant domain>/<path>-->
-        <OAuth2DCREPUrl>{{oauth.endpoints.oauth2.dcr}}</OAuth2DCREPUrl>
-        <OAuth2JWKSPage>{{oauth.endpoints.oauth2.jwks}}</OAuth2JWKSPage>
-        <OIDCDiscoveryEPUrl>{{oauth.endpoints.oidc.discovery}}</OIDCDiscoveryEPUrl>
+        <OAuth2DCREPUrl>{{oauth.endpoints.oauth2_dcr_url}}</OAuth2DCREPUrl>
+        <OAuth2JWKSPage>{{oauth.endpoints.oauth2_jwks_url}}</OAuth2JWKSPage>
+        <OIDCDiscoveryEPUrl>{{oauth.endpoints.oidc_discovery_url}}</OIDCDiscoveryEPUrl>
 
         <!-- If enabled, resident Idp entity id will be honoured as the issuer location in OpenId Connect Discovery -->
         <UseEntityIdAsIssuerInOidcDiscovery>{{oauth.use_entityid_as_issuer_in_oidc_discovery}}</UseEntityIdAsIssuerInOidcDiscovery>
 
         <!-- Default validity period for Authorization Code in seconds -->
-        <AuthorizationCodeDefaultValidityPeriod>{{oauth.authz_code.validity_time}}</AuthorizationCodeDefaultValidityPeriod>
+        <AuthorizationCodeDefaultValidityPeriod>{{oauth.token_validation.authorization_code_validity}}</AuthorizationCodeDefaultValidityPeriod>
         <!-- Default validity period for application access tokens in seconds -->
-        <AccessTokenDefaultValidityPeriod>{{oauth.app_token.validity_time}}</AccessTokenDefaultValidityPeriod>
+        <AccessTokenDefaultValidityPeriod>{{oauth.token_validation.app_access_token_validity}}</AccessTokenDefaultValidityPeriod>
         <!-- Default validity period for user access tokens in seconds -->
-        <UserAccessTokenDefaultValidityPeriod>{{oauth.user_token.validity_time}}</UserAccessTokenDefaultValidityPeriod>
+        <UserAccessTokenDefaultValidityPeriod>{{oauth.token_validation.user_access_token_validity}}</UserAccessTokenDefaultValidityPeriod>
         <!-- Validity period for refresh token -->
-        <RefreshTokenValidityPeriod>{{oauth.refresh_token.validity_time}}</RefreshTokenValidityPeriod>
+        <RefreshTokenValidityPeriod>{{oauth.token_validation.refresh_token_validity}}</RefreshTokenValidityPeriod>
         <!-- Timestamp skew in seconds -->
         <TimestampSkew>{{oauth.timestamp_skew}}</TimestampSkew>
         <!-- Enable renewal of refresh token for refresh_token grant -->
-        <RenewRefreshTokenForRefreshGrant>{{oauth.renew_refresh_token_for_refresh_grant}}</RenewRefreshTokenForRefreshGrant>
+        <RenewRefreshTokenForRefreshGrant>{{oauth.token_renewal.renew_refresh_token}}</RenewRefreshTokenForRefreshGrant>
         <!-- Process the token before storing it in database, e.g. encrypting -->
+        {% if oauth.token.persistence.processor is defined %}
         <TokenPersistenceProcessor>{{oauth.token.persistence.processor}}</TokenPersistenceProcessor>
+        {% elif %}
+        <TokenPersistenceProcessor>org.wso2.carbon.identity.oauth.tokenprocessor.PlainTextPersistenceProcessor</TokenPersistenceProcessor>
+        {% endif %}
         <!-- This should be true if the oauth keys (consumer secret, access token, refresh token and authorization code) need to be hashed,
              before storing them in the database. If the value is false, the oauth keys will be saved in a plain text format.
              By default : false.
              Supported versions: IS 5.6.0 onwards.
         -->
-        <EnableClientSecretHash>{{oauth.hash_client_secret}}</EnableClientSecretHash>
+        <EnableClientSecretHash>{{oauth.hash_tokens_and_secrets}}</EnableClientSecretHash>
         <!-- If the user is a federated, user will not be able to access claims from local userstore even if the username matches -->
         <MapFederatedUsersToLocal>{{oauth.map_federated_users_to_local}}</MapFederatedUsersToLocal>
         <!-- Supported Response Types -->
         <SupportedResponseTypes>
-            {% for response_type in oauth.default_response_types %}
+            {% if oauth.response_type.token.enable is sameas true %}
             <SupportedResponseType>
-                <ResponseTypeName>{{response_type}}</ResponseTypeName>
-                <ResponseTypeHandlerImplClass>{{oauth.default_response_type[response_type].handler_class}}</ResponseTypeHandlerImplClass>
+                <ResponseTypeName>token</ResponseTypeName>
+                <ResponseTypeHandlerImplClass>{{oauth.response_type.token.class}}</ResponseTypeHandlerImplClass>
             </SupportedResponseType>
-            {% endfor %}
-            {% for response_type in oauth.response_type %}
+            {% endif %}
+            {% if oauth.response_type.code.enable is sameas true %}
+            <SupportedResponseType>
+                <ResponseTypeName>code</ResponseTypeName>
+                <ResponseTypeHandlerImplClass>{{oauth.response_type.code.class}}</ResponseTypeHandlerImplClass>
+            </SupportedResponseType>
+            {% endif %}
+            {% if oauth.response_type.id_token.enable is sameas true %}
+            <SupportedResponseType>
+                <ResponseTypeName>id_token</ResponseTypeName>
+                <ResponseTypeHandlerImplClass>{{oauth.response_type.id_token.class}}</ResponseTypeHandlerImplClass>
+            </SupportedResponseType>
+            {% endif %}
+            {% if oauth.response_type.id_token_token.enable is sameas true %}
+            <SupportedResponseType>
+                <ResponseTypeName>id_token token</ResponseTypeName>
+                <ResponseTypeHandlerImplClass>{{oauth.response_type.id_token_token.class}}</ResponseTypeHandlerImplClass>
+            </SupportedResponseType>
+            {% endif %}
+            {% for response_type in oauth.custom_response_type %}
             <SupportedResponseType>
                 <ResponseTypeName>{{response_type.name}}</ResponseTypeName>
-                <ResponseTypeHandlerImplClass>{{response_type.handler_class}}</ResponseTypeHandlerImplClass>
+                <ResponseTypeHandlerImplClass>{{response_type.class}}</ResponseTypeHandlerImplClass>
             </SupportedResponseType>
             {% endfor %}
         </SupportedResponseTypes>
         <!-- Supported Grant Types -->
         <SupportedGrantTypes>
-            {% for grant_type in oauth.default_grant_types %}
+            {% if oauth.grant_type.authorization_code.enable is sameas true %}
             <SupportedGrantType>
-                <GrantTypeName>{{grant_type}}</GrantTypeName>
-                {% for key,value in oauth.default_grant_type[grant_type].items() %}
-                <{{key}}>{{value}}</{{key}}>
-                {% endfor %}
+                <GrantTypeName>authorization_code</GrantTypeName>
+                <GrantTypeHandlerImplClass>{{oauth.grant_type.authorization_code.grant_handler}}</GrantTypeHandlerImplClass>
             </SupportedGrantType>
-            {% endfor %}
-            {% for grant_type in oauth.grant_type %}
+            {% endif %}
+            {% if oauth.grant_type.password.enable is sameas true %}
+            <SupportedGrantType>
+                <GrantTypeName>password</GrantTypeName>
+                <GrantTypeHandlerImplClass>{{oauth.grant_type.password.grant_handler}}</GrantTypeHandlerImplClass>
+            </SupportedGrantType>
+            {% endif %}
+            {% if oauth.grant_type.refresh_token.enable is sameas true %}
+            <SupportedGrantType>
+                <GrantTypeName>refresh_token</GrantTypeName>
+                <GrantTypeHandlerImplClass>{{oauth.grant_type.refresh_token.grant_handler}}</GrantTypeHandlerImplClass>
+            </SupportedGrantType>
+            {% endif %}
+            {% if oauth.grant_type.client_credentials.enable is sameas true %}
+            <SupportedGrantType>
+                <GrantTypeName>client_credentials</GrantTypeName>
+                <GrantTypeHandlerImplClass>{{oauth.grant_type.client_credentials.grant_handler}}</GrantTypeHandlerImplClass>
+                <IsRefreshTokenAllowed>{{oauth.grant_type.client_credentials.allow_refresh_tokens}}</IsRefreshTokenAllowed>
+                <IdTokenAllowed>{{oauth.grant_type.client_credentials.allow_id_token}}</IdTokenAllowed>
+            </SupportedGrantType>
+            {% endif %}
+            {% if oauth.grant_type.saml_bearer.enable is sameas true %}
+            <SupportedGrantType>
+                <GrantTypeName>urn:ietf:params:oauth:grant-type:saml2-bearer</GrantTypeName>
+                <GrantTypeHandlerImplClass>{{oauth.grant_type.saml_bearer.grant_handler}}</GrantTypeHandlerImplClass>
+            </SupportedGrantType>
+            {% endif %}
+            {% if oauth.grant_type.iwa_ntlm.enable is sameas true %}
+            <SupportedGrantType>
+                <GrantTypeName>iwa:ntlm</GrantTypeName>
+                <GrantTypeHandlerImplClass>{{oauth.grant_type.iwa_ntlm.grant_handler}}</GrantTypeHandlerImplClass>
+            </SupportedGrantType>
+            {% endif %}
+            {% if oauth.grant_type.jwt_bearer.enable is sameas true %}
+            <SupportedGrantType>
+                <GrantTypeName>urn:ietf:params:oauth:grant-type:jwt-bearer</GrantTypeName>
+                <GrantTypeHandlerImplClass>{{oauth.grant_type.jwt_bearer.grant_handler}}</GrantTypeHandlerImplClass>
+                <GrantTypeValidatorImplClass>{{oauth.grant_type.jwt_bearer.grant_validator}}</GrantTypeValidatorImplClass>
+            </SupportedGrantType>
+            {% endif %}
+            {% if oauth.grant_type.uma_ticket.enable is sameas true %}
+            <SupportedGrantType>
+                <GrantTypeName>urn:ietf:params:oauth:grant-type:uma-ticket</GrantTypeName>
+                <GrantTypeHandlerImplClass>{{oauth.grant_type.uma_ticket.grant_handler}}</GrantTypeHandlerImplClass>
+                <GrantTypeValidatorImplClass>{{oauth.grant_type.uma_ticket.grant_validator}}</GrantTypeValidatorImplClass>
+            </SupportedGrantType>
+            {% endif %}
+            {% for grant_type in oauth.custom_grant_type %}
             <SupportedGrantType>
                 <GrantTypeName>{{grant_type.name}}</GrantTypeName>
                 <GrantTypeHandlerImplClass>{{grant_type.handler_class}}</GrantTypeHandlerImplClass>
@@ -261,63 +334,57 @@
             Supported versions: IS 5.5.0 onwards.
         -->
         <UserConsentEnabledGrantTypes>
-        {% for grant_type in oauth.default_consent.enabled_grant_types %}
             <UserConsentEnabledGrantType>
-                <GrantTypeName>{{grant_type}}</GrantTypeName>
+                <GrantTypeName>authorization_code</GrantTypeName>
             </UserConsentEnabledGrantType>
-        {% endfor %}
-        {% for grant_type in oauth.consent_enabled_grant_types %}
             <UserConsentEnabledGrantType>
-                <GrantTypeName>{{grant_type}}</GrantTypeName>
+                <GrantTypeName>implicit</GrantTypeName>
             </UserConsentEnabledGrantType>
-        {% endfor %}
         </UserConsentEnabledGrantTypes>
 
         <OAuthCallbackHandlers>
-        {% for callback_handler in oauth.callback_handler %}
+        {% for callback_handler in oauth.extensions.callback_handlers %}
             <OAuthCallbackHandler Class="{{callback_handler}}"/>
         {% endfor %}
         </OAuthCallbackHandlers>
 
         <TokenValidators>
-        {% for token_validator in oauth.default_token_validator %}
-            <TokenValidator type="{{token_validator.name}}" class="{{token_validator.class}}" />
-        {% endfor %}
-        {% for token_validator in oauth.token_validator %}
+        {% if oauth.token_validator.bearer.enable is sameas true %}
+            <TokenValidator type="bearer" class="{{oauth.token_validator.bearer.class}}"/>
+        {% endif %}
+        {% if oauth.token_validator.jwt.enable is sameas true %}
+            <TokenValidator type="jwt" class="{{oauth.token_validator.jwt.class}}"/>
+        {% endif %}
+        {% for token_validator in oauth.custom_token_validator %}
             <TokenValidator type="{{token_validator.type}}" class="{{token_validator.class}}" />
         {% endfor %}
         </TokenValidators>
 
         <!-- Scope validators list. The validators registered here wil be executed during token validation. -->
         <ScopeValidators>
-        {% for scope_validator in oauth.default_scope_validator %}
+        {% if oauth.scope_validator.jdbc.enable is sameas true %}
+            <ScopeValidator class="{{oauth.scope_validator.jdbc.class}}" />
+        {% endif %}
+        {% if oauth.scope_validator.xacml.enable is sameas true %}
+            <ScopeValidator class="{{oauth.scope_validator.xacml.class}}"/>
+        {% endif %}
+        {% for scope_validator in oauth.custom_scope_validator %}
             <ScopeValidator class="{{scope_validator.class}}" />
-        {% endfor %}
-        {% for scope_validator in oauth.scope_validators %}
-            <ScopeValidator class="{{scope_validator}}" />
         {% endfor %}
         </ScopeValidators>
 
         <!-- Scope handlers list. The handlers registered here will be executed at the scope validation phase while
              issuing access tokens. -->
+        <!-- ScopeHandler is used decide whether a grant type can issue id_tokens or not this can also achieve by grant
+        handler class. Therefor not supporting additional scope handlers. -->
         <ScopeHandlers>
-        {% for scope_handler in oauth.default_scope_handler %}
-            <ScopeHandler class="{{scope_handler}}"/>
-        {% endfor %}
-        {% for scope_handler in oauth.scope_handlers %}
-            <ScopeHandler class="{{scope_handler}}"/>
-        {% endfor %}
+            <ScopeHandler class="org.wso2.carbon.identity.oauth2.validators.OIDCScopeHandler" />
         </ScopeHandlers>
 
         <!-- Assertions can be used to embedd parameters into access token. -->
-        {% if oauth.assertions.enable_for|length %}
         <EnableAssertions>
-        {% for assertion in oauth.assertions.enable_for %}
-            <{{assertion}}>{{true}}</{{assertion}}>
-        {% endfor %}
+            <UserName>{{oauth.token_generation.include_username_in_access_token}}</UserName>
         </EnableAssertions>
-        {% endif %}
-
 
         <!-- This should be true if subject identifier in the token validation response needs to adhere to the
         following SP configuration.
@@ -331,39 +398,42 @@
 
         Supported versions: IS 5.4.0 beta onwards
         -->
+        {% if oauth.build_subject_identifier_from_sp_config is defined %}
         <BuildSubjectIdentifierFromSPConfig>{{oauth.build_subject_identifier_from_sp_config}}</BuildSubjectIdentifierFromSPConfig>
+        {% else %}
+        <BuildSubjectIdentifierFromSPConfig>false</BuildSubjectIdentifierFromSPConfig>
+        {% endif %}
 
         <!-- This should be set to true when using multiple user stores and keys
             should saved into different tables according to the user store. By default
             all the application keys are saved in to the same table. UserName Assertion
             should be 'true' to use this. -->
-        <EnableAccessTokenPartitioning>{{oauth.token.partitioning.enable}}</EnableAccessTokenPartitioning>
+        <EnableAccessTokenPartitioning>false</EnableAccessTokenPartitioning>
         <!-- user store domain names and mapping to new table name. eg: if you
             provide 'A:foo.com', foo.com should be the user store domain name and 'A'
             represent the relavant mapping of token store table, i.e. tokens will be
             added to a table called IDN_OAUTH2_ACCESS_TOKEN_A. -->
-        <AccessTokenPartitioningDomains>{{oauth.token.partitioning.domains}}</AccessTokenPartitioningDomains>
+        <AccessTokenPartitioningDomains><!-- A:foo.com, B:bar.com --></AccessTokenPartitioningDomains>
         <AuthorizationContextTokenGeneration>
-            <Enabled>{{oauth.token.validation.context.enable}}</Enabled>
-            <TokenGeneratorImplClass>{{oauth.token.validation.context.token_generator}}</TokenGeneratorImplClass>
-            <ClaimsRetrieverImplClass>{{oauth.token.validation.context.claim_retriever}}</ClaimsRetrieverImplClass>
-            <ConsumerDialectURI>{{oauth.token.validation.context.consumer_dialect}}</ConsumerDialectURI>
-            <SignatureAlgorithm>{{oauth.token.validation.context.signature_alg}}</SignatureAlgorithm>
-            <AuthorizationContextTTL>{{oauth.token.validation.context.ttl}}</AuthorizationContextTTL>
+            <Enabled>{{oauth.token.validation.include_validation_context_as_jwt_in_reponse}}</Enabled>
+            <TokenGeneratorImplClass>{{oauth.extensions.token_context_generator}}</TokenGeneratorImplClass>
+            <ClaimsRetrieverImplClass>{{oauth.extensions.token_context_claim_retriever}}</ClaimsRetrieverImplClass>
+            <ConsumerDialectURI>{{oauth.extensions.token_context_dialect_uri}}</ConsumerDialectURI>
+            <SignatureAlgorithm>{{oauth.token_validation.validation_response_signing_algorithm}}</SignatureAlgorithm>
+            <AuthorizationContextTTL>{{oauth.token.validation.validation_response_jwt_validity}}</AuthorizationContextTTL>
         </AuthorizationContextTokenGeneration>
 
         <!-- Configurations for JWT bearer grant. Supported versions: IS 5.8.0 onwards. -->
         <JWTGrant>
             <!-- Validate issued at time (iat) of JWT token. The validity can be set using 'IATValidity' configuration.
-            Default value is 'true'.
-            -->
-            <EnableIATValidation>{{oauth.jwt.iat_validation}}</EnableIATValidation>
-
-            <!-- Reject the JWT if the iat of JWT is pass a certain time period. Time period is in minutes.
-            'EnableIATValidation' configuration should be set to 'true' in order to make use of the validity period.
-            Default value is '30' minutes.
+             Default value is 'true'.
              -->
-            <IATValidityPeriod>{{oauth.jwt.iat_validity_period}}</IATValidityPeriod>
+            <EnableIATValidation>true</EnableIATValidation>
+            <!-- Reject the JWT if the iat of JWT is pass a certain time period. Time period is in minutes.
+             'EnableIATValidation' configuration should be set to 'true' in order to make use of the validity period.
+             Default value is '30' minutes.
+             -->
+            <IATValidityPeriod>30</IATValidityPeriod>
         </JWTGrant>
 
 
@@ -373,12 +443,12 @@
             Only Local Users can access claims from local userstore. LEGACY users will have to have tenant domain appended username.
             They will not be able to access claims from local userstore. To get claims by mapping users with exact same username from local
             userstore (for non LOCAL scenarios) use mapFederatedUsersToLocal config -->
-            <UserType>{{oauth.saml2.grant.user_type}}</UserType>
+            <UserType>{{oauth.grant_type.saml_bearer.user_type}}</UserType>
         </SAML2Grant>
 
         <OpenIDConnect>
-            <IDTokenBuilder>{{oauth.oidc.id_token.builder}}</IDTokenBuilder>
-            <SignatureAlgorithm>{{oauth.oidc.id_token.signature_alg}}</SignatureAlgorithm>
+            <IDTokenBuilder>{{oauth.oidc.extensions.id_token_builder}}</IDTokenBuilder>
+            <SignatureAlgorithm>{{oauth.oidc.id_token.signature_algorithm}}</SignatureAlgorithm>
 
             <!-- Default asymmetric encryption algorithm that used to encrypt CEK. -->
             <IDTokenEncryptionAlgorithm>{{oauth.oidc.id_token.supported_encryption_algorithms[0]}}</IDTokenEncryptionAlgorithm>
@@ -397,8 +467,7 @@
                 {% endfor %}
             </SupportedIDTokenEncryptionMethods>
 
-            <EnableAudiences>{{oauth.oidc.id_token.enable_audiences}}</EnableAudiences>
-
+            <EnableAudiences>true</EnableAudiences>
             {% if oauth.oidc.id_token.audiences|length %}
             <Audiences>
                 {% for audience in oauth.oidc.id_token.audiences %}
@@ -411,39 +480,47 @@
                 Default value for IDTokenIssuerID, is OAuth2TokenEPUrl.
                 If that doesn't satisfy uncomment the following config and explicitly configure the value
             -->
-            <IDTokenIssuerID>{{oauth.oidc.id_token.issuer_id}}</IDTokenIssuerID>
-            <IDTokenCustomClaimsCallBackHandler>{{oauth.oidc.id_token.claim_callback_hander}}</IDTokenCustomClaimsCallBackHandler>
-            <IDTokenExpiration>{{oauth.oidc.id_token.validity_time}}</IDTokenExpiration>
-            <UserInfoJWTSignatureAlgorithm>{{oauth.oidc.user_info.jwt_signature_alg}}</UserInfoJWTSignatureAlgorithm>
-            <UserInfoEndpointClaimRetriever>{{oauth.oidc.user_info.endpoint.claim_retriever}}</UserInfoEndpointClaimRetriever>
-            <UserInfoEndpointRequestValidator>{{oauth.oidc.user_info.endpoint.request_validator}}</UserInfoEndpointRequestValidator>
-            <UserInfoEndpointAccessTokenValidator>{{oauth.oidc.user_info.endpoint.token_validator}}</UserInfoEndpointAccessTokenValidator>
-            <UserInfoEndpointResponseBuilder>{{oauth.oidc.user_info.endpoint.response_builder}}</UserInfoEndpointResponseBuilder>
+            <IDTokenIssuerID>{{oauth.oidc.id_token.issuer}}</IDTokenIssuerID>
+            <IDTokenCustomClaimsCallBackHandler>{{oauth.oidc.extensions.claim_callback_handler}}</IDTokenCustomClaimsCallBackHandler>
+            <IDTokenExpiration>{{oauth.oidc.token_validation.id_token_validity}}</IDTokenExpiration>
+            <UserInfoJWTSignatureAlgorithm>{{oauth.oidc.user_info.jwt_signature_algorithm}}</UserInfoJWTSignatureAlgorithm>
+            <UserInfoEndpointClaimRetriever>{{oauth.oidc.extensions.user_info_claim_retriever}}</UserInfoEndpointClaimRetriever>
+            <UserInfoEndpointRequestValidator>{{oauth.oidc.extensions.user_info_request_validator}}</UserInfoEndpointRequestValidator>
+            <UserInfoEndpointAccessTokenValidator>{{oauth.oidc.extensions.user_info_access_token_validator}}</UserInfoEndpointAccessTokenValidator>
+            {% if oauth.oidc.extensions.user_info_response_builder is defined %}
+            <UserInfoEndpointResponseBuilder>{{oauth.oidc.extensions.user_info_response_builder}}</UserInfoEndpointResponseBuilder>
+            {% else %}
+            <UserInfoEndpointResponseBuilder>org.wso2.carbon.identity.oauth.endpoint.user.impl.UserInfoJSONResponseBuilder</UserInfoEndpointResponseBuilder>
+            {% endif %}
             {% if oauth.oidc.prompt_user_consent is sameas true %}
             <SkipUserConsent>false</SkipUserConsent>
             {% else %}
             <SkipUserConsent>true</SkipUserConsent>
             {% endif %}
             <!-- Sign the ID Token with Service Provider Tenant Private Key-->
+            {% if oauth.oidc.id_token.sign_with_sp_key is defined %}
             <SignJWTWithSPKey>{{oauth.oidc.id_token.sign_with_sp_key}}</SignJWTWithSPKey>
+            {% else %}
+            <SignJWTWithSPKey>false</SignJWTWithSPKey>
+            {% endif %}
             <!--
                 Expiry period of the logout token used in OIDC Back Channel Logout in seconds.
                 Supported versions: IS 5.5.0 onwards
             -->
-            <LogoutTokenExpiration>{{oauth.oidc.logout_token.validity_time}}</LogoutTokenExpiration>
+            <LogoutTokenExpiration>{{oauth.oidc.token_validation.logout_token_validity}}</LogoutTokenExpiration>
 
             <!--
                 OIDC Request Object builder implementation.
                 Supported versions: IS 5.4.0 onwards
             -->
             <RequestObjectBuilders>
-            {% for builder in oauth.oidc.default_request_object_builder %}
+            {% if oauth.oidc.request_object_builder.request_param_value_builder.enabled is sameas true %}
                 <RequestObjectBuilder>
-                    <Type>{{builder.type}}</Type>
-                    <ClassName>{{builder.class}}</ClassName>
+                    <Type>request_param_value_builder</Type>
+                    <ClassName>{{oauth.oidc.request_object_builder.request_param_value_builder.class}}</ClassName>
                 </RequestObjectBuilder>
-            {% endfor %}
-            {% for builder in oauth.oidc.request_object_builder %}
+            {% endif %}
+            {% for builder in oauth.oidc.custom_request_object_builder %}
                 <RequestObjectBuilder>
                     <Type>{{builder.type}}</Type>
                     <ClassName>{{builder.class}}</ClassName>
@@ -455,14 +532,14 @@
                 OIDC Request Object validator implementation.
                 Supported versions: IS 5.4.0 onwards
             -->
-            <RequestObjectValidator>{{oauth.oidc.request_object.validator}}</RequestObjectValidator>
+            <RequestObjectValidator>{{oauth.oidc.extensions.request_object_validator}}</RequestObjectValidator>
         </OpenIDConnect>
 
         <!-- Configs related to OAuth2 token persistence -->
         <TokenPersistence>
-            <Enable>{{oauth.token.persistence.enable}}</Enable>
-            <PoolSize>{{oauth.token.persistence.pool_size}}</PoolSize>
-            <RetryCount>{{oauth.token.persistence.retry_count_on_failure}}</RetryCount>
+            <Enable>true</Enable>
+            <PoolSize>0</PoolSize>
+            <RetryCount>{{oauth.token_generation.retry_count_on_persistance_failures}}</RetryCount>
         </TokenPersistence>
 
         <!--
@@ -474,7 +551,7 @@
             Default value : false
             Supported versions : IS 5.8.0 onwards
          -->
-        <RenewTokenPerRequest>{{oauth.renew_token_per_request}}</RenewTokenPerRequest>
+        <RenewTokenPerRequest>{{oauth.token_renewal.renew_access_token_per_request}}</RenewTokenPerRequest>
     </OAuth>
 
     <MultifactorAuthentication>
@@ -1176,11 +1253,11 @@
 
     <!-- JWT validator configurations -->
     <JWTValidatorConfigs>
-        <Enable>{{jwt_validator.enable}}</Enable>
+        <Enable>{{oauth.jwks_endpoint.enable}}</Enable>
         <JWKSEndpoint>
-            <HTTPConnectionTimeout>{{jwt_validator.jwks_endpoint.http_connection_timeout}}</HTTPConnectionTimeout>
-            <HTTPReadTimeout>{{jwt_validator.jwks_endpoint.http_read_timeout}}</HTTPReadTimeout>
-            <HTTPSizeLimit>{{jwt_validator.jwks_endpoint.http_size_limit}}</HTTPSizeLimit>
+            <HTTPConnectionTimeout>{{oauth.jwks_endpoint.connection_timeout}}</HTTPConnectionTimeout>
+            <HTTPReadTimeout>{{oauth.jwks_endpoint.read_timeout}}</HTTPReadTimeout>
+            <HTTPSizeLimit>{{oauth.jwks_endpoint.size_limit_bytes}}</HTTPSizeLimit>
         </JWKSEndpoint>
     </JWTValidatorConfigs>
 
