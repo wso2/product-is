@@ -12,6 +12,23 @@ CREATE TABLE IDN_AUTH_USER (
 )
 /
 
+CREATE OR REPLACE PROCEDURE skip_index_if_exists (query IN VARCHAR2)
+IS
+BEGIN
+declare
+  already_exists  exception;
+  columns_indexed exception;
+  pragma exception_init( already_exists, -955 );
+  pragma exception_init(columns_indexed, -1408);
+begin
+  execute immediate query;
+  dbms_output.put_line( 'created' );
+exception
+  when already_exists or columns_indexed then
+  dbms_output.put_line( 'skipped' );
+end;
+END;
+
 CREATE TABLE IDN_AUTH_USER_SESSION_MAPPING (
 	USER_ID VARCHAR(255) NOT NULL,
 	SESSION_ID VARCHAR(255) NOT NULL,
@@ -24,3 +41,11 @@ CREATE INDEX IDX_USER_ID ON IDN_AUTH_USER_SESSION_MAPPING (USER_ID)
 
 CREATE INDEX IDX_SESSION_ID ON IDN_AUTH_USER_SESSION_MAPPING (SESSION_ID)
 /
+
+BEGIN
+skip_index_if_exists('CREATE INDEX IDX_OCA_UM_TID_UD_APN ON IDN_OAUTH_CONSUMER_APPS(USERNAME,TENANT_ID,USER_DOMAIN, APP_NAME)');
+
+skip_index_if_exists('CREATE INDEX IDX_SPI_APP ON SP_INBOUND_AUTH(APP_ID)');
+
+skip_index_if_exists('CREATE INDEX IDX_IOP_TID_CK ON IDN_OIDC_PROPERTY(TENANT_ID,CONSUMER_KEY)');
+END;
