@@ -2,6 +2,7 @@
 pattern = "DEV"  #possible values, DEV,HA,HA_WITH_ANALYTICS
 hostname = "localhost"
 node_ip = "127.0.0.1"
+base_path = "https://localhost:9853"
 
 [super_admin]
 username = "admin"
@@ -24,3 +25,6 @@ base_dn = "dc=wso2,dc=org"      #refers the base dn on which the user and group 
 [keystore.tls]
 name = "wso2carbon.jks"
 password = "wso2carbon"
+
+[oauth]
+hash_token_algorithm = "SHA-512"

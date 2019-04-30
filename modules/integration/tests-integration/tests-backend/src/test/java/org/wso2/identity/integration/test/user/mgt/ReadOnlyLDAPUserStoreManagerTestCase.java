@@ -39,7 +39,7 @@ import java.rmi.RemoteException;
 public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
 
     private ServerConfigurationManager scm;
-    private File userMgtServerFile;
+    private File defaultConfigFile;
 
     private UserManagementClient userMgtClient;
     private AuthenticatorClient authenticatorClient;
@@ -73,12 +73,10 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
         authenticatorClient.logOut();
 
         String carbonHome = ServerConfigurationManager.getCarbonHome();
-        userMgtServerFile = new File(carbonHome + File.separator + "repository" + File.separator
-                + "conf" + File.separator + "user-mgt.xml");
+        defaultConfigFile = getDeploymentTomlFile(carbonHome);
         File userMgtConfigFile = new File(getISResourceLocation() + File.separator + "userMgt"
-                + File.separator + "readOnlyLdapUserMgtConfig.xml");
-
-        scm.applyConfiguration(userMgtConfigFile, userMgtServerFile, true, true);
+                + File.separator + "readOnlyLdapUserMgtConfig.toml");
+        scm.applyConfiguration(userMgtConfigFile, defaultConfigFile, true, true);
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         userMgtClient = new UserManagementClient(backendURL, getSessionCookie());
     }

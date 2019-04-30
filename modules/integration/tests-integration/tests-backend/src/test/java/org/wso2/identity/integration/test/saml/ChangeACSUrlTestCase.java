@@ -33,7 +33,6 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.FederatedAuthenticatorConfig;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.Property;
@@ -78,24 +77,20 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
     private String usrName = "admin";
     private String usrPwd = "admin";
 
-    private File applicationAuthenticationXml;
     private ServerConfigurationManager serverConfigurationManager;
 
     @BeforeClass(alwaysRun = true)
     public void initTest() throws Exception {
 
         super.initTest();
-        applicationAuthenticationXml = new File(Utils.getResidentCarbonHome() + File.separator
-                + "repository" + File.separator + "conf" + File.separator
-                + "identity" + File.separator + "application-authentication.xml");
-        File applicationAuthenticationXmlToCopy = new File(FrameworkPathUtil.getSystemResourceLocation() +
-                "artifacts" + File.separator + "IS" + File.separator + "saml" + File.separator
-                + "application-authentication-changed-acs.xml");
+
+        String carbonHome = Utils.getResidentCarbonHome();
+        File defaultTomlFile = getDeploymentTomlFile(carbonHome);
+        File configuredTomlFile = new File(getISResourceLocation() + File.separator + "saml" + File.separator
+                + "application_authentication_changed_acs.toml");
 
         serverConfigurationManager = new ServerConfigurationManager(isServer);
-        serverConfigurationManager.applyConfigurationWithoutRestart(applicationAuthenticationXmlToCopy,
-                applicationAuthenticationXml, true);
-
+        serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartGracefully();
 
         super.initTest();
@@ -184,7 +179,7 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
 
         super.deleteSAML2WebSSOConfiguration(PORT_OFFSET_1, SECONDARY_IS_SAML_ISSUER_NAME);
         super.deleteServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
-        serverConfigurationManager.restoreToLastConfiguration(true);
+        serverConfigurationManager.restoreToLastConfiguration(false);
     }
 
     private String sendSAMLRequestToPrimaryIS(HttpClient client) throws Exception {

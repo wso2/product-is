@@ -72,7 +72,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
     private AuthenticatorClient logManger;
     private ClaimMetadataManagementServiceClient claimMetadataManagementServiceClient;
 
-    private File identityXML;
+    private File defaultConfigFile;
     private String adminUsername;
     private String adminPassword;
     private String accessToken;
@@ -393,17 +393,13 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
 
     private void changeISConfiguration() throws Exception {
 
-        log.info("Replacing identity.xml changing the entity id of SSOService");
-
+        log.info("Adding entity id of SSOService to deployment.toml file");
         String carbonHome = Utils.getResidentCarbonHome();
-        identityXML = new File(carbonHome + File.separator
-                + "repository" + File.separator + "conf" + File.separator + "identity" + File
-                .separator + "identity.xml");
-        File configuredIdentityXML = new File(getISResourceLocation()
-                + File.separator + "oauth" + File.separator
-                + "jwt-token-gen-enabled-identity.xml");
+        defaultConfigFile = getDeploymentTomlFile(carbonHome);
+        File configuredIdentityXML = new File(getISResourceLocation() + File.separator + "oauth"
+                + File.separator + "jwt-token-gen-enabled-identity.toml");
         serverConfigurationManager = new ServerConfigurationManager(isServer);
-        serverConfigurationManager.applyConfigurationWithoutRestart(configuredIdentityXML, identityXML, true);
+        serverConfigurationManager.applyConfigurationWithoutRestart(configuredIdentityXML, defaultConfigFile, true);
         serverConfigurationManager.restartGracefully();
     }
 

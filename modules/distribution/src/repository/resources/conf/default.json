@@ -9,10 +9,13 @@
   "keystore.tls.type" : "JKS",
   "truststore.type" : "JKS",
 
+  "transport.https.clientAuth": "want",
+
   "authentication.consent.purposes_search_limit": "100",
   "authentication.map_federated_users_to_local": false,
   "authentication.proxy_mode": "smart",
   "authentication.consent.prompt": true,
+  "authentication.consent.data_source": "jdbc/WSO2IdentityDB",
   "authentication.endpoints.login_url": "/authenticationendpoint/login.do",
   "authentication.endpoints.retry_url": "/authenticationendpoint/retry.do",
   "authentication.endpoints.request_missing_claims_url": "/authenticationendpoint/claims.do",
@@ -57,136 +60,96 @@
     "loggedInUser"
   ],
 
-  "authentication.authenticator.basic": {
-    "name" : "BasicAuthenticator",
-    "enable" : true,
-    "parameters": {
-      "AuthMechanism": "basic"
-    }
-  },
-  "authentication.authenticator.basic_request_path": {
-    "name": "BasicAuthRequestPathAuthenticator",
-    "enable" : true,
-    "parameters": {
-      "AuthMechanism": "basic"
-    }
-  },
-  "authentication.authenticator.user_identifier": {
-    "name" : "IdentifierExecutor",
-    "enable" : true,
-    "parameters": {
-      "ValidateUsername": "false"
-    }
-  },
-  "authentication.authenticator.oauth_request_path": {
-    "name": "OAuthRequestPathAuthenticator",
-    "enable" : true
-  },
-  "authentication.authenticator.saml": {
-    "name": "SAMLSSOAuthenticator",
-    "enable" : true
-  },
-  "authentication.authenticator.oidc": {
-    "name": "OpenIDConnectAuthenticator",
-    "enable" : true
-  },
-  "authentication.authenticator.google": {
-    "name": "GoogleOIDCAuthenticator",
-    "enable" : true,
-    "parameters": {
-      "GoogleTokenEndpoint": "https://accounts.google.com/o/oauth2/token",
-      "GoogleAuthzEndpoint": "https://accounts.google.com/o/oauth2/auth",
-      "GoogleUserInfoEndpoint": "https://www.googleapis.com/oauth2/v3/userinfo"
-    }
-  },
-  "authentication.authenticator.microsoft_live": {
-    "name": "MicrosoftWindowsLive",
-    "enable" : true,
-    "parameters": {
-      "AuthTokenEndpoint": "https://login.live.com/oauth20_token.srf",
-      "AuthnEndpoint": "https://login.live.com/oauth20_authorize.srf",
-      "UserInfoEndpoint": "https://apis.live.net/v5.0/me?access_token="
-    }
-  },
-  "authentication.authenticator.facebook": {
-    "name": "FacebookAuthenticator",
-    "enable" : true,
-    "parameters": {
-      "AuthTokenEndpoint": "https://graph.facebook.com/oauth/access_token",
-      "AuthnEndpoint": "http://www.facebook.com/dialog/oauth",
-      "UserInfoEndpoint": "https://graph.facebook.com/me"
-    }
-  },
-  "authentication.authenticator.yahoo": {
-    "name": "YahooOAuth2Authenticator",
-    "enable" : true,
-    "parameters": {
-      "YahooTokenEndpoint": "https://api.login.yahoo.com/oauth2/get_token",
-      "YahooOAuthzEndpoint": "https://api.login.yahoo.com/oauth2/request_auth",
-      "YahooUserInfoEndpoint": "https://social.yahooapis.com/v1/user/"
-    }
-  },
-  "authentication.authenticator.fido": {
-    "name": "FIDOAuthenticator",
-    "enable" : true,
-    "parameters": {
-      "FidoAuth": "/authenticationendpoint/fido-auth.jsp"
-    }
-  },
-  "authentication.authenticator.mobile_connect": {
-    "name": "MobileConnectAuthenticator",
-    "enable" : true,
-    "parameters": {
-      "MCAuthenticationEndpointURL": "mobileconnectauthenticationendpoint/mobileconnect.jsp",
-      "MCDiscoveryAPIURL": "https://discover.mobileconnect.io/gsma/v2/discovery/",
-      "redirectToMultiOptionPageOnFailure": "false"
-    }
-  },
-  "authentication.authenticator.email_otp": {
-    "name": "EmailOTP",
-    "enable" : true,
-    "parameters": {
-      "GmailClientId": "gmailClientIdValue",
-      "GmailClientSecret": "gmailClientSecretValue",
-      "SendgridAPIKey": "sendgridAPIKeyValue",
-      "GmailRefreshToken": "gmailRefreshTokenValue",
-      "GmailEmailEndpoint": "https://www.googleapis.com/gmail/v1/users/[userId]/messages/send",
-      "SendgridEmailEndpoint": "https://api.sendgrid.com/api/mail.send.json",
-      "accessTokenRequiredAPIs": "Gmail",
-      "apiKeyHeaderRequiredAPIs": "Sendgrid",
-      "SendgridFormData": "sendgridFormDataValue",
-      "SendgridURLParams": "sendgridURLParamsValue",
-      "GmailAuthTokenType": "Bearer",
-      "GmailTokenEndpoint": "https://www.googleapis.com/oauth2/v3/token",
-      "SendgridAuthTokenType": "Bearer",
-      "redirectToMultiOptionPageOnFailure": false
-    }
-  },
-  "authentication.authenticator.sms_otp": {
-    "name": "SMSOTP",
-    "enable" : true,
-    "parameters": {
-      "SMSOTPAuthenticationEndpointURL": "smsotpauthenticationendpoint/smsotp.jsp",
-      "SMSOTPAuthenticationEndpointErrorPage": "smsotpauthenticationendpoint/smsotpError.jsp",
-      "MobileNumberRegPage": "smsotpauthenticationendpoint/mobile.jsp",
-      "RetryEnable": true,
-      "ResendEnable": true,
-      "BackupCode": true,
-      "SMSOTPEnableByUserClaim": true,
-      "SMSOTPMandatory": false,
-      "CaptureAndUpdateMobileNumber": true,
-      "SendOTPDirectlyToMobile": false,
-      "redirectToMultiOptionPageOnFailure": false
-    }
-  },
-  "authentication.authenticator.x509_certificate": {
-    "name": "x509CertificateAuthenticator",
-    "enable" : true,
-    "parameters": {
-      "AuthenticationEndpoint": "https://localhost:8443/x509-certificate-servlet",
-      "username": "CN"
-    }
-  },
+  "authentication.authenticator.basic.name": "BasicAuthenticator",
+  "authentication.authenticator.basic.enable": true,
+  "authentication.authenticator.basic.parameters.AuthMechanism": "basic",
+
+  "authentication.authenticator.basic_request_path.name": "BasicAuthRequestPathAuthenticator",
+  "authentication.authenticator.basic_request_path.enable": true,
+  "authentication.authenticator.basic_request_path.parameters.AuthMechanism": "basic",
+
+  "authentication.authenticator.user_identifier.name": "IdentifierExecutor",
+  "authentication.authenticator.user_identifier.enable": true,
+  "authentication.authenticator.user_identifier.parameters.ValidateUsername": "false",
+
+  "authentication.authenticator.oauth_request_path.name": "OAuthRequestPathAuthenticator",
+  "authentication.authenticator.oauth_request_path.enable": true,
+
+  "authentication.authenticator.saml.name": "SAMLSSOAuthenticator",
+  "authentication.authenticator.saml.enable": true,
+
+  "authentication.authenticator.oidc.name": "OpenIDConnectAuthenticator",
+  "authentication.authenticator.oidc.enable": true,
+
+  "authentication.authenticator.google.name": "GoogleOIDCAuthenticator",
+  "authentication.authenticator.google.enable": true,
+  "authentication.authenticator.google.parameters.GoogleTokenEndpoint": "https://accounts.google.com/o/oauth2/token",
+  "authentication.authenticator.google.parameters.GoogleAuthzEndpoint": "https://accounts.google.com/o/oauth2/auth",
+  "authentication.authenticator.google.parameters.GoogleUserInfoEndpoint": "https://www.googleapis.com/oauth2/v3/userinfo",
+
+  "authentication.authenticator.microsoft_live.name": "MicrosoftWindowsLive",
+  "authentication.authenticator.microsoft_live.enable": true,
+  "authentication.authenticator.microsoft_live.parameters.AuthTokenEndpoint": "https://login.live.com/oauth20_token.srf",
+  "authentication.authenticator.microsoft_live.parameters.AuthnEndpoint": "https://login.live.com/oauth20_authorize.srf",
+  "authentication.authenticator.microsoft_live.parameters.UserInfoEndpoint": "https://apis.live.net/v5.0/me?access_token=",
+
+  "authentication.authenticator.facebook.name": "FacebookAuthenticator",
+  "authentication.authenticator.facebook.enable": true,
+  "authentication.authenticator.facebook.parameters.AuthTokenEndpoint": "https://graph.facebook.com/oauth/access_token",
+  "authentication.authenticator.facebook.parameters.AuthnEndpoint": "http://www.facebook.com/dialog/oauth",
+  "authentication.authenticator.facebook.parameters.UserInfoEndpoint": "https://graph.facebook.com/me",
+
+  "authentication.authenticator.yahoo.name": "YahooOAuth2Authenticator",
+  "authentication.authenticator.yahoo.enable": true,
+  "authentication.authenticator.yahoo.parameters.YahooTokenEndpoint": "https://api.login.yahoo.com/oauth2/get_token",
+  "authentication.authenticator.yahoo.parameters.YahooOAuthzEndpoint": "https://api.login.yahoo.com/oauth2/request_auth",
+  "authentication.authenticator.yahoo.parameters.YahooUserInfoEndpoint": "https://social.yahooapis.com/v1/user/",
+
+  "authentication.authenticator.fido.name": "FIDOAuthenticator",
+  "authentication.authenticator.fido.enable": true,
+  "authentication.authenticator.fido.parameters.FidoAuth": "/authenticationendpoint/fido-auth.jsp",
+
+  "authentication.authenticator.mobile_connect.name": "MobileConnectAuthenticator",
+  "authentication.authenticator.mobile_connect.enable": true,
+  "authentication.authenticator.mobile_connect.parameters.MCAuthenticationEndpointURL": "mobileconnectauthenticationendpoint/mobileconnect.jsp",
+  "authentication.authenticator.mobile_connect.parameters.MCDiscoveryAPIURL": "https://discover.mobileconnect.io/gsma/v2/discovery/",
+  "authentication.authenticator.mobile_connect.parameters.redirectToMultiOptionPageOnFailure": "false",
+
+  "authentication.authenticator.email_otp.name": "EmailOTP",
+  "authentication.authenticator.email_otp.enable": true,
+  "authentication.authenticator.email_otp.parameters.GmailClientId": "gmailClientIdValue",
+  "authentication.authenticator.email_otp.parameters.GmailClientSecret": "gmailClientSecretValue",
+  "authentication.authenticator.email_otp.parameters.SendgridAPIKey": "sendgridAPIKeyValue",
+  "authentication.authenticator.email_otp.parameters.GmailRefreshToken": "gmailRefreshTokenValue",
+  "authentication.authenticator.email_otp.parameters.GmailEmailEndpoint": "https://www.googleapis.com/gmail/v1/users/[userId]/messages/send",
+  "authentication.authenticator.email_otp.parameters.SendgridEmailEndpoint": "https://api.sendgrid.com/api/mail.send.json",
+  "authentication.authenticator.email_otp.parameters.accessTokenRequiredAPIs": "Gmail",
+  "authentication.authenticator.email_otp.parameters.apiKeyHeaderRequiredAPIs": "Sendgrid",
+  "authentication.authenticator.email_otp.parameters.SendgridFormData": "sendgridFormDataValue",
+  "authentication.authenticator.email_otp.parameters.SendgridURLParams": "sendgridURLParamsValue",
+  "authentication.authenticator.email_otp.parameters.GmailAuthTokenType": "Bearer",
+  "authentication.authenticator.email_otp.parameters.GmailTokenEndpoint": "https://www.googleapis.com/oauth2/v3/token",
+  "authentication.authenticator.email_otp.parameters.SendgridAuthTokenType": "Bearer",
+  "authentication.authenticator.email_otp.parameters.redirectToMultiOptionPageOnFailure": false,
+
+  "authentication.authenticator.sms_otp.name": "SMSOTP",
+  "authentication.authenticator.sms_otp.enable": true,
+  "authentication.authenticator.sms_otp.parameters.SMSOTPAuthenticationEndpointURL": "smsotpauthenticationendpoint/smsotp.jsp",
+  "authentication.authenticator.sms_otp.parameters.SMSOTPAuthenticationEndpointErrorPage": "smsotpauthenticationendpoint/smsotpError.jsp",
+  "authentication.authenticator.sms_otp.parameters.MobileNumberRegPage": "smsotpauthenticationendpoint/mobile.jsp",
+  "authentication.authenticator.sms_otp.parameters.RetryEnable": true,
+  "authentication.authenticator.sms_otp.parameters.ResendEnable": true,
+  "authentication.authenticator.sms_otp.parameters.BackupCode": true,
+  "authentication.authenticator.sms_otp.parameters.SMSOTPEnableByUserClaim": true,
+  "authentication.authenticator.sms_otp.parameters.SMSOTPMandatory": false,
+  "authentication.authenticator.sms_otp.parameters.CaptureAndUpdateMobileNumber": true,
+  "authentication.authenticator.sms_otp.parameters.SendOTPDirectlyToMobile": false,
+  "authentication.authenticator.sms_otp.parameters.redirectToMultiOptionPageOnFailure": false,
+
+  "authentication.authenticator.x509_certificate.name": "x509CertificateAuthenticator",
+  "authentication.authenticator.x509_certificate.enable": true,
+  "authentication.authenticator.x509_certificate.parameters.AuthenticationEndpoint": "https://localhost:8443/x509-certificate-servlet",
+  "authentication.authenticator.x509_certificate.parameters.username": "CN",
 
 
   "identity.recaptcha.enabled": false,
@@ -205,9 +168,19 @@
 
   "identity.auth_framework.endpoint.tenant_list_enabled": false,
   "identity.auth_framework.endpoint.mutual_ssl_manager_enabled": true,
+  "identity.auth_framework.endpoint.hostname_verification_enabled" : true,
+  "identity.auth_framework.endpoint.mutual_ssl_username" : "admin",
+  "identity.auth_framework.endpoint.client_keystore" : "$ref{keystore.tls.file_name}",
+  "identity.auth_framework.endpoint.carbon_security_keystore_password" : "$ref{keystore.tls.password}",
+  "identity.auth_framework.endpoint.client_truststore" : "$ref{truststore.file_name}",
+  "identity.auth_framework.endpoint.carbon_security_truststore_password" : "$ref{truststore.password}",
+  "identity.auth_framework.endpoint.username_header" : "UserName",
+  "identity.auth_framework.endpoint.key_manager_type" : "$ref{keystore.tls.type}",
+  "identity.auth_framework.endpoint.trust_manager_type" : "$ref{truststore.type}",
+  "identity.auth_framework.endpoint.tls_protocol" : "TLSv1.2",
 
 
-  "identity.entitlement.policy_point.pdp.enabled": false,
+  "identity.entitlement.policy_point.pdp.enabled": true,
   "identity.entitlement.policy_point.pdp.default_caching_interval": "300",
   "identity.entitlement.policy_point.pdp.caching.decision_caching.enabled": true,
   "identity.entitlement.policy_point.pdp.caching.decision_caching.caching_interval": "$ref{identity.entitlement.policy_point.pdp.default_caching_interval}",
@@ -374,6 +347,8 @@
 
 
 
+  "identity.data_source": "jdbc/WSO2IdentityDB",
+  "data_source.skip_db_schema_creation": false,
   "server.clock_skew": "5m",
   "session_data.persistence.enable_persistance": true,
   "session_data.persistence.persistance_pool_size": "0",
@@ -405,8 +380,8 @@
   "oauth.timestamp_skew": "$ref{server.clock_skew}",
   "oauth.token_renewal.renew_refresh_token": true,
   "oauth.token_renewal.renew_access_token_per_request": false,
-  "oauth.token.persistence.processor": "org.wso2.carbon.identity.oauth.tokenprocessor.PlainTextPersistenceProcessor",
   "oauth.hash_tokens_and_secrets": false,
+  "oauth.hash_token_algorithm": "SHA-256",
   "oauth.map_federated_users_to_local": "$ref{authentication.map_federated_users_to_local}",
   "oauth.token_generation.include_username_in_access_token": false,
 
@@ -481,8 +456,10 @@
   "oauth.scope_validator.xacml.class": "org.wso2.carbon.identity.oauth2.validators.xacml.XACMLScopeValidator",
   "oauth.grant_type.saml_bearer.user_type": "FEDERATED",
 
-  "oauth.oidc.prompt_user_consent": "$ref{authentication.consent.prompt}",
+  "oauth.consent_prompt": "$ref{authentication.consent.prompt}",
   "oauth.oidc.extensions.id_token_builder": "org.wso2.carbon.identity.openidconnect.DefaultIDTokenBuilder",
+  "oauth.oidc.claims.enable_oidc_dialect": false,
+  "oauth.oidc.claims.enable_unmapped_user_attributes": false,
 
   "oauth.oidc.id_token.signature_algorithm": "SHA256withRSA",
   "oauth.oidc.id_token.issuer": "$ref{oauth.endpoints.oauth2_token_url}",
@@ -522,6 +499,7 @@
   "saml.digest_alg": "http://www.w3.org/2000/09/xmldsig#sha1",
   "saml.assertion_entryption_alg": "http://www.w3.org/2001/04/xmlenc#aes256-cbc",
   "saml.key_encryption_alg": "http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p",
+  "saml.enable_user_domain_crpto": false,
 
   "saml.endpoints.idp_url": "$ref{server.base_path}/samlsso",
   "saml.endpoints.logout": "$ref{server.base_path}/authenticationendpoint/samlsso_logout.do",
@@ -591,10 +569,13 @@
   "identity_mgt.user_self_registration.lock_on_creation": true,
   "identity_mgt.user_self_registration.enable_recaptcha": true,
   "identity_mgt.user_self_registration.verification_email_validity": "$ref{identity_mgt.default_mail_validity_period}",
+
   "sp_role_management.return_only_mapped_local_roles": false,
+
   "authentication_policy.check_account_exist": true,
   "authentication.jit_provisioning.username_provisioning_url": "/accountrecoveryendpoint/register.do",
   "authentication.jit_provisioning.password_provisioning_url": "/accountrecoveryendpoint/signup.do",
+
   "event.default_listener.workflow.priority": "10",
   "event.default_listener.workflow.enable": true,
   "event.default_listener.identity_mgt.priority": "50",
@@ -607,6 +588,7 @@
   "event.default_listener.governance_identity_mgt.enable": true,
   "event.default_listener.governance_identity_store.priority": "97",
   "event.default_listener.governance_identity_store.enable": true,
+  "event.default_listener.governance_identity_store.data_store": "org.wso2.carbon.identity.governance.store.JDBCIdentityDataStore",
   "event.default_listener.application_authentication.priority": "11",
   "event.default_listener.application_authentication.enable": true,
   "event.default_listener.oauth_listener.priority": "12",
@@ -632,6 +614,7 @@
   "event.default_recorder.user_delete_event.name": "org.wso2.carbon.user.mgt.recorder.DefaultUserDeletionEventRecorder",
   "event.default_recorder.user_delete_event.enable": false,
   "event.default_recorder.user_delete_event.write_to_separate_csv.enable": false,
+
   "cache.default_timeout": "300ms",
   "cache.default_capacity": "5000",
   "cache.framework_session_context_cache.enable": true,
@@ -694,6 +677,23 @@
   "cache.idp_cache_by_name.enable": true,
   "cache.idp_cache_by_name.timeout": "900ms",
   "cache.idp_cache_by_name.capacity": "$ref{cache.default_capacity}",
+
+  "resource_access_control.scim2_me_get_method.secured": true,
+  "resource_access_control.scim2_me_get_method.permission": "/permission/admin/login",
+  "resource_access_control.scim2_me_get_method.keep_resource": true,
+  "resource_access_control.scim2_me_delete_method.secured": true,
+  "resource_access_control.scim2_me_delete_method.permission": "/permission/admin/manage/identity/usermgt/delete",
+  "resource_access_control.scim2_me_delete_method.keep_resource": true,
+  "resource_access_control.scim2_me_put_method.secured": true,
+  "resource_access_control.scim2_me_put_method.permission": "/permission/admin/login",
+  "resource_access_control.scim2_me_put_method.keep_resource": true,
+  "resource_access_control.scim2_me_patch_method.secured": true,
+  "resource_access_control.scim2_me_patch_method.permission": "/permission/admin/login",
+  "resource_access_control.scim2_me_patch_method.keep_resource": true,
+  "resource_access_control.scim2_me_post_method.secured": true,
+  "resource_access_control.scim2_me_post_method.permission": "/permission/admin/manage/identity/usermgt/create",
+  "resource_access_control.scim2_me_post_method.keep_resource": true,
+
   "user.association.enable_for_federated_users": false,
   "tenant_context.rewrite.webapps": [
     "/api/identity/user/v1.0/",

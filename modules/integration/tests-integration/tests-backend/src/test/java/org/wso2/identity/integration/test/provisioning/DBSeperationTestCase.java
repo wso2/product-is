@@ -22,7 +22,6 @@ import junit.framework.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.Property;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.ProvisioningConnectorConfig;
@@ -41,53 +40,24 @@ public class DBSeperationTestCase extends ISIntegrationTest {
 
     private static final String TENANT_IDP = "tenantIdp";
     private static final String TENANT_ADMIN = "admin";
-    private File masterDatasourceXml;
-    private File consentMgtXml;
-    private File identityXml;
-    private File userMgtXml;
-    private File registryXml;
     private ServerConfigurationManager serverConfigurationManager;
     private IdentityProviderMgtServiceClient identityProviderMgtServiceClient;
     private static final String TENANT_DOMAIN = "tenant.com";
-    private String artifactsDir;
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
 
-        String serverConfDir = Utils.getResidentCarbonHome() + File.separator + "repository" + File.separator + "conf";
-        artifactsDir = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator + "IS" + File
-                .separator + "provisioning";
-
-        masterDatasourceXml = new File(serverConfDir + File.separator + "datasources" + File.separator +
-                "master-datasources.xml");
-        File masterDatasourcesXmlToCopy = new File(artifactsDir + File.separator + "master-datasources-dbseperated" +
-                ".xml");
-
-        consentMgtXml = new File(serverConfDir + File.separator + "consent-mgt-config.xml");
-        File consentMgtXmlToCopy = new File(artifactsDir + File.separator + "consent-mgt-config-dbseperated.xml");
-
-        identityXml = new File(serverConfDir + File.separator + "identity" + File.separator + "identity.xml");
-        File identityXmlToCopy = new File(artifactsDir + File.separator + "identity-dbseperated.xml");
-
-        userMgtXml = new File(serverConfDir + File.separator + "user-mgt.xml");
-        File userMgtXmlToCopy = new File(artifactsDir + File.separator + "user-mgt-dbseperated.xml");
-
-        registryXml = new File(serverConfDir + File.separator + "registry.xml");
-        File registryXmlToCopy = new File(artifactsDir + File.separator + "registry-dbseperated.xml");
-
+        String carbonHome = Utils.getResidentCarbonHome();
+        File defaultTomlFile = getDeploymentTomlFile(carbonHome);
+        File configuredTomlFile = new File(getISResourceLocation() + File.separator + File.separator +
+                "provisioning" +File.separator+ "db_separation_config.toml");
 
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(isServer);
-        serverConfigurationManager.applyConfigurationWithoutRestart(masterDatasourcesXmlToCopy, masterDatasourceXml,
-                true);
-        serverConfigurationManager.applyConfigurationWithoutRestart(consentMgtXmlToCopy, consentMgtXml, true);
-        serverConfigurationManager.applyConfigurationWithoutRestart(identityXmlToCopy, identityXml, true);
-        serverConfigurationManager.applyConfigurationWithoutRestart(userMgtXmlToCopy, userMgtXml, true);
-        serverConfigurationManager.applyConfigurationWithoutRestart(registryXmlToCopy, registryXml, true);
+        serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartGracefully();
 
         super.init();
-
         TenantManagementServiceClient tenantServiceClient = new TenantManagementServiceClient(backendURL, sessionCookie);
         tenantServiceClient.addTenant(TENANT_DOMAIN, TENANT_ADMIN, "password", TENANT_ADMIN + "@" + TENANT_DOMAIN,
                 TENANT_ADMIN, "User");
