@@ -104,7 +104,7 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
                         "org.wso2.carbon.identity.sample.extension.authenticators.jar");
 
         String authenticatorPathString = Utils.getResidentCarbonHome()
-                + File.separator + File.separator + "repository"
+                + File.separator + "repository"
                 + File.separator + "components" + File.separator
                 + "dropins" + File.separator + "org.wso2.carbon.identity.sample.extension.authenticators.jar";
         File jarDestFile = new File(authenticatorPathString);
