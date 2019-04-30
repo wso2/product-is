@@ -21,12 +21,12 @@
         <DataSource>
             <!-- Include a data source name (jndiConfigName) from the set of data
                 sources defined in master-datasources.xml -->
-            <Name>jdbc/WSO2IdentityDB</Name>
+            <Name>{{identity.data_source}}</Name>
         </DataSource>
         <!-- If the identity database is created from another place and if it is
             required to skip schema initialization during the server start up, set the
             following property to "true". -->
-        <SkipDBSchemaCreation>{{jdbc.persistence_manager.skip_db_schema_creation}}</SkipDBSchemaCreation>
+        <SkipDBSchemaCreation>{{data_source.skip_db_schema_creation}}</SkipDBSchemaCreation>
         <SessionDataPersist>
             <Enable>{{session_data.persistence.enable_persistance}}</Enable>
             <Temporary>{{session_data.persistence.persist_temporary_data}}</Temporary>
@@ -214,11 +214,13 @@
         <!-- Enable renewal of refresh token for refresh_token grant -->
         <RenewRefreshTokenForRefreshGrant>{{oauth.token_renewal.renew_refresh_token}}</RenewRefreshTokenForRefreshGrant>
         <!-- Process the token before storing it in database, e.g. encrypting -->
-        {% if oauth.token.persistence.processor is defined %}
-        <TokenPersistenceProcessor>{{oauth.token.persistence.processor}}</TokenPersistenceProcessor>
-        {% elif %}
+        {% if oauth.extensions.token_persistance_processor is defined %}
+        <TokenPersistenceProcessor>{{oauth.extensions.token_persistance_processor}}</TokenPersistenceProcessor>
+        {% else %}
         <TokenPersistenceProcessor>org.wso2.carbon.identity.oauth.tokenprocessor.PlainTextPersistenceProcessor</TokenPersistenceProcessor>
         {% endif %}
+
+        <HashAlgorithm>{{oauth.hash_token_algorithm}}</HashAlgorithm>
         <!-- This should be true if the oauth keys (consumer secret, access token, refresh token and authorization code) need to be hashed,
              before storing them in the database. If the value is false, the oauth keys will be saved in a plain text format.
              By default : false.
@@ -447,6 +449,8 @@
         </SAML2Grant>
 
         <OpenIDConnect>
+            <ConvertOriginalClaimsFromAssertionsToOIDCDialect>{{oauth.oidc.claims.enable_oidc_dialect}}</ConvertOriginalClaimsFromAssertionsToOIDCDialect>
+            <AddUnmappedUserAttributes>{{oauth.oidc.claims.enable_unmapped_user_attributes}}</AddUnmappedUserAttributes>
             <IDTokenBuilder>{{oauth.oidc.extensions.id_token_builder}}</IDTokenBuilder>
             <SignatureAlgorithm>{{oauth.oidc.id_token.signature_algorithm}}</SignatureAlgorithm>
 
@@ -492,7 +496,7 @@
             {% else %}
             <UserInfoEndpointResponseBuilder>org.wso2.carbon.identity.oauth.endpoint.user.impl.UserInfoJSONResponseBuilder</UserInfoEndpointResponseBuilder>
             {% endif %}
-            {% if oauth.oidc.prompt_user_consent is sameas true %}
+            {% if oauth.consent_prompt is sameas true %}
             <SkipUserConsent>false</SkipUserConsent>
             {% else %}
             <SkipUserConsent>true</SkipUserConsent>
@@ -593,7 +597,7 @@
 
         <!-- SAML Token validity period in minutes -->
         <SAMLResponseValidityPeriod>{{saml.response.validity}}</SAMLResponseValidityPeriod>
-        <UseAuthenticatedUserDomainCrypto>{{authentication.sign_auth_response_with_tenant_of}}</UseAuthenticatedUserDomainCrypto>
+        <UseAuthenticatedUserDomainCrypto>{{saml.enable_user_domain_crpto}}</UseAuthenticatedUserDomainCrypto>
         <SAMLDefaultSigningAlgorithmURI>{{saml.signing_alg}}</SAMLDefaultSigningAlgorithmURI>
         <SAMLDefaultDigestAlgorithmURI>{{saml.digest_alg}}</SAMLDefaultDigestAlgorithmURI>
         <SAMLDefaultAssertionEncryptionAlgorithmURI>{{saml.assertion_entryption_alg}}</SAMLDefaultAssertionEncryptionAlgorithmURI>
@@ -820,7 +824,7 @@
                        name="org.wso2.carbon.identity.governance.listener.IdentityStoreEventListener"
                        orderId="{{event.default_listener.governance_identity_store.priority}}"
                        enable="{{event.default_listener.governance_identity_store.enable}}">
-            <Property name="Data.Store">org.wso2.carbon.identity.governance.store.JDBCIdentityDataStore</Property>
+            <Property name="Data.Store">{{event.default_listener.governance_identity_store.data_store}}</Property>
         </EventListener>
         <EventListener id="application_authentication"
                        type="org.wso2.carbon.identity.core.handler.AbstractIdentityMessageHandler"
@@ -1001,7 +1005,7 @@
                    isDistributed="false"/>
             <Cache id="service_provider_cache" name="ServiceProviderCache"
                    enable="{{cache.service_provider_cache.enable}}"
-                   timeout="{{cache.service_provider_cache.timeouts}}"
+                   timeout="{{cache.service_provider_cache.timeout}}"
                    capacity="{{cache.service_provider_cache.capacity}}"
                    isDistributed="false"/>
             <Cache id="provisioning_connector_cache" name="ProvisioningConnectorCache"
@@ -1184,21 +1188,42 @@
         <Resource context="(.*)/scim2/Groups/(.*)" secured="true" http-method="DELETE">
             <Permissions>/permission/admin/manage/identity/rolemgt/delete</Permissions>
         </Resource>
-        <Resource context="(.*)/scim2/Me" secured="true"    http-method="GET">
-            <Permissions>/permission/admin/login</Permissions>
+        {% if resource_access_control.scim2_me_get_method.keep_resource is sameas true %}
+        <Resource
+                context="(.*)/scim2/Me"
+                secured="{{resource_access_control.scim2_me_get_method.secured}}"
+                http-method="GET">
+            <Permissions>{{resource_access_control.scim2_me_get_method.permission}}</Permissions>
         </Resource>
-        <Resource context="(.*)/scim2/Me" secured="true" http-method="DELETE">
-            <Permissions>/permission/admin/manage/identity/usermgt/delete</Permissions>
+        {% endif %}
+        {% if resource_access_control.scim2_me_delete_method.keep_resource is sameas true %}
+        <Resource context="(.*)/scim2/Me"
+                  secured="{{resource_access_control.scim2_me_delete_method.secured}}"
+                  http-method="DELETE">
+            <Permissions>{{resource_access_control.scim2_me_delete_method.permission}}</Permissions>
         </Resource>
-        <Resource context="(.*)/scim2/Me" secured="true"    http-method="PUT">
-            <Permissions>/permission/admin/login</Permissions>
+        {% endif %}
+        {% if resource_access_control.scim2_me_put_method.keep_resource is sameas true %}
+        <Resource context="(.*)/scim2/Me"
+                  secured="{{resource_access_control.scim2_me_put_method.secured}}"
+                  http-method="PUT">
+            <Permissions>{{resource_access_control.scim2_me_put_method.permission}}</Permissions>
         </Resource>
-        <Resource context="(.*)/scim2/Me" secured="true"   http-method="PATCH">
-            <Permissions>/permission/admin/login</Permissions>
+        {% endif %}
+        {% if resource_access_control.scim2_me_patch_method.keep_resource is sameas true %}
+        <Resource context="(.*)/scim2/Me"
+                  secured="{{resource_access_control.scim2_me_patch_method.secured}}"
+                  http-method="PATCH">
+            <Permissions>{{resource_access_control.scim2_me_patch_method.permission}}</Permissions>
         </Resource>
-        <Resource context="(.*)/scim2/Me" secured="true" http-method="POST">
-            <Permissions>/permission/admin/manage/identity/usermgt/create</Permissions>
+        {% endif %}
+        {% if resource_access_control.scim2_me_post_method.keep_resource is sameas true %}
+        <Resource context="(.*)/scim2/Me"
+                  secured="{{resource_access_control.scim2_me_post_method.secured}}"
+                  http-method="POST">
+            <Permissions>{{resource_access_control.scim2_me_post_method.permission}}</Permissions>
         </Resource>
+        {% endif %}
         <Resource context="/scim2/ServiceProviderConfig" secured="false" http-method="all">
             <Permissions></Permissions>
         </Resource>
