@@ -209,11 +209,21 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
         ServiceProvider updatedServiceProvider = getServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SERVICE_PROVIDER_NAME);
         ClaimConfig updatedClaimConfig = updatedServiceProvider.getClaimConfig();
 
-        Assert.assertTrue(Arrays.asList(updatedClaimConfig.getClaimMappings()).contains(givenNameClaimURI)
+        Assert.assertTrue(getLocalClaimUris(updatedClaimConfig).contains(givenNameClaimURI)
                 , "Failed update given name claim uri.");
-        Assert.assertTrue(Arrays.asList(updatedClaimConfig.getClaimMappings()).contains(emailClaimURI)
+        Assert.assertTrue(getLocalClaimUris(updatedClaimConfig).contains(emailClaimURI)
                 , "Failed update email claim uri.");
 
+    }
+
+    private List<String> getLocalClaimUris(ClaimConfig updatedClaimConfig) {
+
+        ClaimMapping[] claimMappings = updatedClaimConfig.getClaimMappings();
+        List<String> localClaimUris = new ArrayList<>();
+        for (ClaimMapping claimMapping : claimMappings) {
+            localClaimUris.add(claimMapping.getLocalClaim().getClaimUri());
+        }
+        return localClaimUris;
     }
 
     @Test(alwaysRun = true, description = "Invoke PassiveSTSSampleApp",
