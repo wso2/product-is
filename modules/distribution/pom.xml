@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>5.8.0-beta3-SNAPSHOT</version>
+        <version>5.8.0-beta5-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -245,6 +245,8 @@
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml" token="&lt;Property name=&quot;CaseInsensitiveUsername&quot;&gt;true&lt;/Property&gt;" value="&lt;Property name=&quot;CaseInsensitiveUsername&quot;&gt;false&lt;/Property&gt;" />
 
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml" token="&lt;Property name=&quot;isCascadeDeleteEnabled&quot;&gt;true&lt;/Property&gt;" value="&lt;Property name=&quot;isCascadeDeleteEnabled&quot;&gt;true&lt;/Property&gt;${line.separator} &lt;Property name=&quot;initializeNewClaimManager&quot;&gt;true&lt;/Property&gt;" />
+
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.sh" token="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot; \" value="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot; \${line.separator} -Dorg.apache.xml.security.ignoreLineBreaks=false \" />
 
                                 <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml" token="${sso-idp-config-default}" value="${sso-idp-config-replace}" />
 

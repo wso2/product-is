@@ -55,6 +55,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -83,7 +85,7 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
     private ServerConfigurationManager serverConfigurationManager;
     private IdentityProvider superTenantResidentIDP;
 
-    Map<String, Integer> userRiskScores = new HashMap<>();
+    private Map<String, Integer> userRiskScores = new HashMap<>();
 
     MicroserviceServer microserviceServer;
 
@@ -101,22 +103,32 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
                         "authenticators" + ISIntegrationTest.URL_SEPARATOR +
                         "org.wso2.carbon.identity.sample.extension.authenticators.jar");
 
-        File jarDestFile = new File(Utils.getResidentCarbonHome()
-                + File.separator + File.separator + "repository"
+        String authenticatorPathString = Utils.getResidentCarbonHome()
+                + File.separator + "repository"
                 + File.separator + "components" + File.separator
-                + "dropins" + File.separator + "org.wso2.carbon.identity.sample.extension.authenticators.jar");
+                + "dropins" + File.separator + "org.wso2.carbon.identity.sample.extension.authenticators.jar";
+        File jarDestFile = new File(authenticatorPathString);
         FileOutputStream jarDest = new FileOutputStream(jarDestFile);
         copyFileUsingStream(jarUrl, jarDest);
+        log.info("Copied the demo authenticator jar file to " + authenticatorPathString);
+        Assert.assertTrue(Files.exists(Paths.get(authenticatorPathString)), "Demo Authenticator is not copied " +
+                "successfully. File path: " + authenticatorPathString);
 
-        File warDestFile = new File(Utils.getResidentCarbonHome()
+        String authenticatorWarPathString = Utils.getResidentCarbonHome()
                 + File.separator + File.separator + "repository"
                 + File.separator + "deployment" + File.separator
-                + "server" + File.separator + "webapps" + File.separator + "sample-auth.war");
+                + "server" + File.separator + "webapps" + File.separator + "sample-auth.war";
+        File warDestFile = new File(authenticatorWarPathString);
         FileOutputStream warDest = new FileOutputStream(warDestFile);
         copyFileUsingStream(webappUrl, warDest);
+        log.info("Copied the demo authenticator war file to " + authenticatorWarPathString);
+        Assert.assertTrue(Files.exists(Paths.get(authenticatorWarPathString)), "Demo Authenticator war is not copied " +
+                "successfully. File path: " + authenticatorWarPathString);
 
+        log.info("Restarting the server at: " + isServer.getContextUrls().getBackEndUrl());
         serverConfigurationManager = new ServerConfigurationManager(isServer);
         serverConfigurationManager.restartGracefully();
+        log.info("Restarting the server at: " + isServer.getContextUrls().getBackEndUrl() + " is successful");
 
         super.init();
         logManger = new AuthenticatorClient(backendURL);
