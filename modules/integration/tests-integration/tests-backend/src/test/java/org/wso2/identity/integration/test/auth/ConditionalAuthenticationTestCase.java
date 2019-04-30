@@ -146,6 +146,7 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
         response = loginWithOIDC(PRIMARY_IS_APPLICATION_NAME, consumerKey, client);
         /* Here if the client is redirected to the secondary IS, it indicates that the conditional authentication steps
          has been successfully completed. */
+        log.info("The location header value of the response: " + response.getFirstHeader("location").getValue());
         assertTrue(response.getFirstHeader("location").getValue().contains(SECONDARY_IS_SAMLSSO_URL),
                 "Failed to follow the conditional authentication steps.");
         EntityUtils.consume(response.getEntity());
@@ -181,11 +182,18 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
     public void testConditionalAuthenticationClaimAssignment() throws Exception {
 
         // Update authentication script to handle authentication based on HTTP context.
-        updateAuthScript("ConditionalAuthenticationClaimAssignTestCase.js");
-        response = loginWithOIDC(PRIMARY_IS_APPLICATION_NAME, consumerKey, client);
+        try {
+            updateAuthScript("ConditionalAuthenticationClaimAssignTestCase.js");
+            response = loginWithOIDC(PRIMARY_IS_APPLICATION_NAME, consumerKey, client);
 
-        EntityUtils.consume(response.getEntity());
-        cookieStore.clear();
+            EntityUtils.consume(response.getEntity());
+            cookieStore.clear();
+        } catch (Exception e) {
+            //Temporary added the catch part for the debugging purpose.
+            log.error("Failed to execute the testConditionalAuthenticationClaimAssignment: " + e.getMessage(), e);
+            throw e;
+        }
+
     }
 
     /**
