@@ -9,10 +9,8 @@ var proxyContextPath = application.get(PROXY_CONTEXT_PATH);
 var serverHttpsUrl = '';
 if (util.getProxyService().service == undefined) {
    serverHttpsUrl = proxyOrigin + proxyContextPath;
-   log.info("serverHttpsUrl : " + serverHttpsUrl);
 } else if (util.getProxyService().service.serviceOrigin == undefined) {
    serverHttpsUrl = proxyOrigin + proxyContextPath;
-   log.info(serverHttpsUrl);
 } else {
    serverHttpsUrl = util.getProxyService().service.serviceOrigin;
 }
