@@ -105,7 +105,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
     public void setup() throws Exception {
 
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
-        changeISConfiguration("jwt-token-issuer-enabled-identity.xml");
+        changeISConfiguration("jwt_token_issuer_enabled.toml");
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         OAuthConsumerAppDTO appDto = createApplication(createApplicationWithJWTGrantType());
         consumerKey = appDto.getOauthConsumerKey();
@@ -207,7 +207,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
 
         resetISConfiguration();
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
-        changeISConfiguration("jwt-token-issuer-convertToOIDC.xml");
+        changeISConfiguration("jwt_token_issuer_convertToOIDC.toml");
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         identityProviderMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
         addFederatedIdentityProvider();
@@ -302,7 +302,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
         appMgtclient.updateApplicationData(serviceProvider);
         resetISConfiguration();
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
-        changeISConfiguration("jwt-token-issuer-addremaininguserattribute.xml");
+        changeISConfiguration("jwt_token_issuer_addremaininguserattribute.toml");
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
 
         OIDCTokens oidcTokens = makeJWTBearerGrantRequest();
@@ -509,13 +509,11 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
 
         log.info("Replacing identity.xml to use the JWT Token Generator instead of default token generator");
         String carbonHome = Utils.getResidentCarbonHome();
-        File identityXML = new File(
-                carbonHome + File.separator + "repository" + File.separator + "conf" + File.separator + "identity"
-                        + File.separator + "identity.xml");
-        File configuredIdentityXML = new File(
-                getISResourceLocation() + File.separator + "oauth" + File.separator + fileName);
+        File defaultTomlFile = getDeploymentTomlFile(carbonHome);
+        File configuredTomlFile = new File
+                (getISResourceLocation() + File.separator + "oauth" + File.separator + fileName);
         serverConfigurationManager = new ServerConfigurationManager(isServer);
-        serverConfigurationManager.applyConfigurationWithoutRestart(configuredIdentityXML, identityXML, true);
+        serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartForcefully();
     }
 

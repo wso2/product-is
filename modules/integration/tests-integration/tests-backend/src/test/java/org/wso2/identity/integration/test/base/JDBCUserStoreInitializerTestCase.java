@@ -29,21 +29,18 @@ import java.io.File;
 public class JDBCUserStoreInitializerTestCase extends ISIntegrationTest {
 
     private ServerConfigurationManager scm;
-    private File userMgtServerFile;
+    private File defaultConfigFile;
 
     @BeforeTest(alwaysRun = true)
     public void initUserStoreConfig() throws Exception {
 
         super.init();
-
         String carbonHome = CarbonUtils.getCarbonHome();
-        userMgtServerFile = new File(carbonHome + File.separator + "repository" + File.separator
-                + "conf" + File.separator + "user-mgt.xml");
+        defaultConfigFile = getDeploymentTomlFile(carbonHome);
         File userMgtConfigFile = new File(getISResourceLocation() + File.separator + "userMgt"
-                + File.separator + "JdbcUserMgtConfig.xml");
-
+                + File.separator + "JdbcUserMgtConfig.toml");
         scm = new ServerConfigurationManager(isServer);
-        scm.applyConfiguration(userMgtConfigFile, userMgtServerFile, true, true);
+        scm.applyConfiguration(userMgtConfigFile, defaultConfigFile, true, true);
     }
 
     @AfterTest(alwaysRun = true)

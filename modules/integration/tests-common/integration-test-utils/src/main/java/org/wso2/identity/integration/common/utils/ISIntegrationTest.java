@@ -29,10 +29,10 @@ import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.automation.test.utils.common.TestConfigurationProvider;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
+import org.wso2.carbon.utils.CarbonUtils;
 
 import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
-import java.net.URL;
 
 public class ISIntegrationTest {
 
@@ -100,9 +100,11 @@ public class ISIntegrationTest {
         return FrameworkPathUtil.getSystemResourceLocation();
     }
 
-
-
-
+    protected File getDeploymentTomlFile(String carbonHome) {
+        File deploymentToml = new File(carbonHome + File.separator + "repository" + File.separator
+                + "conf" + File.separator + "deployment.toml");
+        return deploymentToml;
+    }
 //
 //    protected boolean isRunningOnStratos() {
 //        return FrameworkFactory.getFrameworkProperties(ProductConstant.IS_SERVER_NAME)

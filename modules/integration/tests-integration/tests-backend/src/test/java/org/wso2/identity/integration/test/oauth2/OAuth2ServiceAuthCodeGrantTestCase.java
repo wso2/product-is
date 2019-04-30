@@ -36,14 +36,12 @@ import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
-import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -69,21 +67,10 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
     private static final String PLAYGROUND_RESET_PAGE = "http://localhost:" + CommonConstants.DEFAULT_TOMCAT_PORT +
             "/playground2/oauth2.jsp?reset=true";
     private DefaultHttpClient client;
-    private ServerConfigurationManager serverConfigurationManager;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
-        super.init(TestUserMode.SUPER_TENANT_USER);
-        String carbonHome = Utils.getResidentCarbonHome();
-        String identityXMLFile = getISResourceLocation() + File.separator + "identity-original-530-cache-enabled.xml";
-        File defaultIdentityXml = new File(carbonHome + File.separator
-                + "repository" + File.separator + "conf" + File.separator + "identity" + File.separator
-                + "identity.xml");
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
-        File srcFile = new File(identityXMLFile);
-        serverConfigurationManager.applyConfigurationWithoutRestart(srcFile, defaultIdentityXml, true);
-        serverConfigurationManager.restartGracefully();
         super.init(TestUserMode.SUPER_TENANT_USER);
         logManger = new AuthenticatorClient(backendURL);
         adminUsername = userInfo.getUserName();
@@ -102,7 +89,6 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
         deleteApplication();
         removeOAuthApplicationData();
 
-        serverConfigurationManager.restoreToLastConfiguration(false);
     }
 
     @Test(groups = "wso2.is", description = "Check Oauth2 application registration")
