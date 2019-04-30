@@ -33,6 +33,7 @@ import org.wso2.identity.integration.test.utils.IdentityConstants;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -208,11 +209,11 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
         ServiceProvider updatedServiceProvider = getServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SERVICE_PROVIDER_NAME);
         ClaimConfig updatedClaimConfig = updatedServiceProvider.getClaimConfig();
 
-        Assert.assertEquals(updatedClaimConfig.getClaimMappings()[0].getLocalClaim().getClaimUri(),
-                givenNameClaimURI, "Failed update given name claim uri");
+        Assert.assertTrue(Arrays.asList(updatedClaimConfig.getClaimMappings()).contains(givenNameClaimURI)
+                , "Failed update given name claim uri.");
+        Assert.assertTrue(Arrays.asList(updatedClaimConfig.getClaimMappings()).contains(emailClaimURI)
+                , "Failed update email claim uri.");
 
-        Assert.assertEquals(updatedClaimConfig.getClaimMappings()[1].getLocalClaim().getClaimUri(),
-                emailClaimURI, "Failed update email claim uri");
     }
 
     @Test(alwaysRun = true, description = "Invoke PassiveSTSSampleApp",
