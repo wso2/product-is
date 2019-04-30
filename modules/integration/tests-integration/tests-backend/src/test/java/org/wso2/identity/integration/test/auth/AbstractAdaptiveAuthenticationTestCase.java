@@ -81,8 +81,8 @@ public class AbstractAdaptiveAuthenticationTestCase extends OAuth2ServiceAbstrac
 
     protected String getConditionalAuthScript(String filename) throws IOException {
 
-        try (InputStream resourceAsStream = this.getClass().getResourceAsStream(filename)) {
-            BufferedInputStream bufferedInputStream = new BufferedInputStream(resourceAsStream);
+        try (InputStream resourceAsStream = this.getClass().getResourceAsStream(filename);
+             BufferedInputStream bufferedInputStream = new BufferedInputStream(resourceAsStream)) {
             StringBuilder resourceFile = new StringBuilder();
 
             int character;
