@@ -269,19 +269,7 @@ function setServerURL(isWebContextRootAvailable) {
         var serverConfigService = carbon.server.osgiService('org.wso2.carbon.base.api.ServerConfigurationService');
         var configContextService = carbon.server.osgiService('org.wso2.carbon.utils.ConfigurationContextService');
         var configContext = configContextService.getServerConfigContext();
-
-
-
-        var path = "/conf/site.json";
-        var file = new File(path);
-        file.open("r");
-        var json = "";
-
-        json = file.readAll();
-        file.close();
-        var jsonConf = parse(json);
-
-
+        var jsonConf = getProxyService();
 
         //retrieving site configuration for overiding ui urls
         var proxyConfHost = jsonConf.proxy.proxyHost;
@@ -381,4 +369,24 @@ function setServerURL(isWebContextRootAvailable) {
         }
     }
 }
+/*
+ * Function to get the server url information
+ */
+function getProxyService() {
+    try {
+        var path = "/conf/site.json";
+        var file = new File(path);
+        file.open("r");
+        var json = "";
+
+        json = file.readAll();
+        file.close();
+        var jsonConf = parse(json);
+        return jsonConf;
+    }
+    catch (e) {
+        log.error(e);
+        throw e;
+    }
+};
 %>
