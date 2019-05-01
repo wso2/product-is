@@ -20,6 +20,8 @@ package org.wso2.identity.integration.common.clients.oauth;
 import java.rmi.RemoteException;
 
 import org.apache.axis2.AxisFault;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.identity.oauth.stub.OAuthAdminServiceIdentityOAuthAdminException;
 import org.wso2.carbon.identity.oauth.stub.OAuthAdminServiceStub;
@@ -29,10 +31,12 @@ public class OauthAdminClient {
 
 	OAuthAdminServiceStub oauthAdminStub;
 	private final String serviceName = "OAuthAdminService";
+    private static Log log = LogFactory.getLog(OauthAdminClient.class);
 	
 	public OauthAdminClient(String backendURL, String sessionCookie) throws AxisFault {
 
         String endPoint = backendURL + serviceName;
+        log.info("The endpoint : " + endPoint);
         oauthAdminStub = new OAuthAdminServiceStub(endPoint);
         AuthenticateStub.authenticateStub(sessionCookie, oauthAdminStub);
 	}

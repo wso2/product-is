@@ -147,6 +147,11 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
 
     public void deleteServiceProvider(int portOffset, String applicationName) throws Exception {
 
+        if (applicationManagementServiceClients != null) {
+            log.info("Deleting the application :" + applicationName + " where the offset is: " + portOffset);
+        } else {
+            log.info("applicationManagementServiceClients is null");
+        }
         applicationManagementServiceClients.get(portOffset).deleteApplication(applicationName);
     }
 

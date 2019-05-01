@@ -65,15 +65,19 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
-        super.init();
-        ConfigurationContext configContext = ConfigurationContextFactory
-                .createConfigurationContextFromFileSystem(null
-                        , null);
-        startOtherCarbonServers();
-        client = new WorkflowAdminClient(sessionCookie2, servicesUrl, configContext);
-        usmClient = new RemoteUserStoreManagerServiceClient(servicesUrl, sessionCookie2);
-        for (String role : rolesToAdd) {
-            usmClient.addRole(role, new String[0], new PermissionDTO[0]);
+        try {
+            super.init();
+            ConfigurationContext configContext = ConfigurationContextFactory
+                    .createConfigurationContextFromFileSystem(null
+                            , null);
+            startOtherCarbonServers();
+            client = new WorkflowAdminClient(sessionCookie2, servicesUrl, configContext);
+            usmClient = new RemoteUserStoreManagerServiceClient(servicesUrl, sessionCookie2);
+            for (String role : rolesToAdd) {
+                usmClient.addRole(role, new String[0], new PermissionDTO[0]);
+            }
+        } catch (Exception e) {
+            log.error("WorkflowManagementTestCase.testInit failed to execute: " + e.getMessage(), e);
         }
     }
 
@@ -85,17 +89,24 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
     private void startOtherCarbonServers() throws Exception {
 
         AuthenticatorClient authenticatorClient = new AuthenticatorClient(servicesUrl);
+        log.info("ServicesUrl: " + servicesUrl);
         sessionCookie2 = authenticatorClient.login("admin", "admin", "localhost");
+        log.info("sessionCookie2: " + sessionCookie2);
     }
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
-        for (String role : rolesToAdd) {
-            usmClient.deleteRole(role);
+        try {
+            for (String role : rolesToAdd) {
+                usmClient.deleteRole(role);
+            }
+            client = null;
+            usmClient = null;
+        } catch (Exception e) {
+            log.error("WorkflowManagementTestCase.atEnd failed to execute: " + e.getMessage(), e);
+            throw e;
         }
-        client = null;
-        usmClient = null;
     }
 
     @Test(alwaysRun = true, description = "Testing adding a BPS Profile")
