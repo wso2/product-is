@@ -17,11 +17,13 @@ try {
     var header = {"cookie" : cookie};
     var userInfoJSON = get(url, {}, header ,"json");
     validateResponse(userInfoJSON);
+
+    response.contentType = 'application/json';
     print(userInfoJSON.data);
 
     } catch(e) {
-        print(e);
         log.error(e.message);
+        response.sendRedirect("/portal/error_pages/error.jag");
     }
 
 %>
