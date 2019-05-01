@@ -62,7 +62,7 @@ $(function() {
                             });
 
 
-                             if((((i+1)%3)==0)&&(i!=0)){
+                             if (((((i + 1) % 3) == 0) && (i != 0)) || (i + 1) == userWidgets.length) {
 
                                elements.append(el);
 
