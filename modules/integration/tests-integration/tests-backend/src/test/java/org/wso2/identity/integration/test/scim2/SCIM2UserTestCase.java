@@ -38,6 +38,7 @@ import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.LIST_SC
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.NAME_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.PASSWORD_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.RESOURCE_TYPE_SCHEMA;
+import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.ROLE_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SCHEMAS_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SCIM2_USERS_ENDPOINT;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SCIM_RESOURCE_TYPES_ENDPOINT;
@@ -141,6 +142,12 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
 
         userId = ((JSONObject) responseObj).get(ID_ATTRIBUTE).toString();
         assertNotNull(userId);
+
+        String name = ((JSONObject) responseObj).get(NAME_ATTRIBUTE).toString();
+        assertNotNull(name);
+
+        String role = ((JSONObject) responseObj).get(ROLE_ATTRIBUTE).toString();
+        assertNotNull(role);
     }
 
     @Test
