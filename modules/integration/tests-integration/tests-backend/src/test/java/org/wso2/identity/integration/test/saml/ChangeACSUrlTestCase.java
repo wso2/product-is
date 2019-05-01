@@ -178,13 +178,19 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
     @AfterClass(alwaysRun = true)
     public void endTest() throws Exception {
 
-        super.deleteSAML2WebSSOConfiguration(PORT_OFFSET_0, PRIMARY_IS_SAML_ISSUER_NAME);
-        super.deleteServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SERVICE_PROVIDER_NAME);
-        super.deleteIdentityProvider(PORT_OFFSET_0, IDENTITY_PROVIDER_NAME);
+        try {
+            super.deleteSAML2WebSSOConfiguration(PORT_OFFSET_0, PRIMARY_IS_SAML_ISSUER_NAME);
+            super.deleteServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SERVICE_PROVIDER_NAME);
+            super.deleteIdentityProvider(PORT_OFFSET_0, IDENTITY_PROVIDER_NAME);
 
-        super.deleteSAML2WebSSOConfiguration(PORT_OFFSET_1, SECONDARY_IS_SAML_ISSUER_NAME);
-        super.deleteServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
-        serverConfigurationManager.restoreToLastConfiguration(true);
+            super.deleteSAML2WebSSOConfiguration(PORT_OFFSET_1, SECONDARY_IS_SAML_ISSUER_NAME);
+            super.deleteServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
+            serverConfigurationManager.restoreToLastConfiguration(true);
+        } catch (Exception e) {
+            //Temporary added the catch block for the debugging purpose.
+            log.error("This test case failed to execute: " + e.getMessage(), e);
+            throw e;
+        }
     }
 
     private String sendSAMLRequestToPrimaryIS(HttpClient client) throws Exception {
