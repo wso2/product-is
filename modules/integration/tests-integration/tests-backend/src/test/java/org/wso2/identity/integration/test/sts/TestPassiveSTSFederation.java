@@ -33,7 +33,6 @@ import org.wso2.identity.integration.test.utils.IdentityConstants;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -235,15 +234,15 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
         Assert.assertNotNull(response, "PassiveSTSSampleApp invoke response is null");
         int responseCode = response.getStatusLine().getStatusCode();
         Assert.assertEquals(responseCode, 200, "Invalid Response");
-
         Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
         keyPositionMap.put("name=\"sessionDataKey\"", 1);
         List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil.extractDataFromResponse(response,
                 keyPositionMap);
+        EntityUtils.consume(response.getEntity());
         Assert.assertNotNull(keyValues, "sessionDataKey key value is null");
         sessionDataKey = keyValues.get(0).getValue();
         Assert.assertNotNull(sessionDataKey, "Session data key is null.");
-        EntityUtils.consume(response.getEntity());
+
     }
 
     @Test(alwaysRun = true, description = "Send login post request", dependsOnMethods =

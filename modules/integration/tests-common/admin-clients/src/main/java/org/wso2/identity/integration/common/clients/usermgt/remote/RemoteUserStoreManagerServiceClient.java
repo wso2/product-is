@@ -21,8 +21,6 @@ import java.rmi.RemoteException;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.um.ws.api.stub.ArrayOfString;
 import org.wso2.carbon.um.ws.api.stub.ClaimDTO;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
@@ -36,12 +34,10 @@ public class RemoteUserStoreManagerServiceClient {
 
     private final String serviceName = "RemoteUserStoreManagerService";
     private RemoteUserStoreManagerServiceStub remoteUserStoreManagerServiceStub;
-    private static final Log log = LogFactory.getLog(RemoteUserStoreManagerServiceClient.class);
 
     public RemoteUserStoreManagerServiceClient(String backEndUrl, String sessionCookie)
             throws AxisFault {
         String endPoint = backEndUrl + serviceName;
-        log.info("endpoint in ReomteUserStoreManagerServiceClient: " + endPoint);
         remoteUserStoreManagerServiceStub = new RemoteUserStoreManagerServiceStub(endPoint);
         AuthenticateStub.authenticateStub(sessionCookie, remoteUserStoreManagerServiceStub);
     }

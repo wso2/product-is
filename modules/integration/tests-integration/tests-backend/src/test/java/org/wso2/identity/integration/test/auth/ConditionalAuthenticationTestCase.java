@@ -99,11 +99,8 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
                 isServer.getSuperTenant().getTenantAdmin().getPassword(),
                 isServer.getInstance().getHosts().get("default"));
         // Added temporary log files for the debugging.
-        log.info("The backend url :" + backendURL);
-        log.info("The cookie value : " + cookie);
         oauthAdminClient = new OauthAdminClient(backendURL, cookie);
         // Added temporary log files for the debugging.
-        log.info("The oauthAdminClient is :" + oauthAdminClient);
 
         ConfigurationContext configContext = ConfigurationContextFactory
                 .createConfigurationContextFromFileSystem(null, null);
@@ -133,34 +130,33 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
-        try {
-            oauthAdminClient.removeOAuthApplicationData(consumerKey);
-            samlSSOConfigServiceClient.removeServiceProvider(SECONDARY_IS_APPLICATION_NAME);
-            applicationManagementServiceClient.deleteApplication(PRIMARY_IS_APPLICATION_NAME);
-            applicationManagementServiceClient2.deleteApplication(SECONDARY_IS_APPLICATION_NAME);
-            identityProviderMgtServiceClient.deleteIdP(IDP_NAME);
-            client.getConnectionManager().shutdown();
+        oauthAdminClient.removeOAuthApplicationData(consumerKey);
+        samlSSOConfigServiceClient.removeServiceProvider(SECONDARY_IS_APPLICATION_NAME);
+        applicationManagementServiceClient.deleteApplication(PRIMARY_IS_APPLICATION_NAME);
+        applicationManagementServiceClient2.deleteApplication(SECONDARY_IS_APPLICATION_NAME);
+        identityProviderMgtServiceClient.deleteIdP(IDP_NAME);
+        client.getConnectionManager().shutdown();
 
-            this.logManger.logOut();
-            logManger = null;
-            //Restore carbon.home system property to initial value
-            System.setProperty("carbon.home", initialCarbonHome);
-        } catch (Exception e) {
-            log.error("ConditionalAuthenticationTestCase.atEnd failed to execute: " + e.getMessage(), e);
-            throw e;
-        }
+        this.logManger.logOut();
+        logManger = null;
+        //Restore carbon.home system property to initial value
+        System.setProperty("carbon.home", initialCarbonHome);
+
     }
 
     @Test(groups = "wso2.is", description = "Check conditional authentication flow.")
     public void testConditionalAuthentication() throws Exception {
 
+        updateAuthScript("ConditionalAuthenticationTestCase.js");
         response = loginWithOIDC(PRIMARY_IS_APPLICATION_NAME, consumerKey, client);
         /* Here if the client is redirected to the secondary IS, it indicates that the conditional authentication steps
          has been successfully completed. */
-        log.info("The location header value of the response: " + response.getFirstHeader("location").getValue());
-        assertTrue(response.getFirstHeader("location").getValue().contains(SECONDARY_IS_SAMLSSO_URL),
-                "Failed to follow the conditional authentication steps.");
+        String locationHeader = response.getFirstHeader("location").getValue();
         EntityUtils.consume(response.getEntity());
+        log.info("The location header value of the response: " + locationHeader);
+        assertTrue(locationHeader.contains(SECONDARY_IS_SAMLSSO_URL),
+                "Failed to follow the conditional authentication steps.");
+
         cookieStore.clear();
     }
 

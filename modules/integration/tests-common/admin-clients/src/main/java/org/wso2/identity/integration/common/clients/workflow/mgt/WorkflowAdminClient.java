@@ -59,7 +59,6 @@ public class WorkflowAdminClient {
         String serviceURL = backendServerURL + "WorkflowAdminService";
         stub = new WorkflowAdminServiceStub(configCtx, serviceURL);
         serviceURL = backendServerURL + "WorkflowImplAdminService";
-        log.info("serviceURL: " + serviceURL);
         stubImpl = new WorkflowImplAdminServiceStub(configCtx, serviceURL);
 
         ServiceClient client = stub._getServiceClient();
