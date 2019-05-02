@@ -143,13 +143,16 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
     @Test(groups = "wso2.is", description = "Check conditional authentication flow.")
     public void testConditionalAuthentication() throws Exception {
 
+        updateAuthScript("ConditionalAuthenticationTestCase.js");
         response = loginWithOIDC(PRIMARY_IS_APPLICATION_NAME, consumerKey, client);
         /* Here if the client is redirected to the secondary IS, it indicates that the conditional authentication steps
          has been successfully completed. */
-        log.info("The location header value of the response: " + response.getFirstHeader("location").getValue());
-        assertTrue(response.getFirstHeader("location").getValue().contains(SECONDARY_IS_SAMLSSO_URL),
-                "Failed to follow the conditional authentication steps.");
+        String locationHeader = response.getFirstHeader("location").getValue();
         EntityUtils.consume(response.getEntity());
+        log.info("The location header value of the response: " + locationHeader);
+        assertTrue(locationHeader.contains(SECONDARY_IS_SAMLSSO_URL),
+                "Failed to follow the conditional authentication steps.");
+
         cookieStore.clear();
     }
 
