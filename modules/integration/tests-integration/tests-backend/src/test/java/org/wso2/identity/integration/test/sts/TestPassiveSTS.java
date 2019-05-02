@@ -165,10 +165,10 @@ public class TestPassiveSTS extends ISIntegrationTest {
         keyPositionMap.put("name=\"sessionDataKey\"", 1);
         List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil.extractDataFromResponse(response,
                 keyPositionMap);
+        EntityUtils.consume(response.getEntity());
         Assert.assertNotNull(keyValues, "sessionDataKey key value is null");
         sessionDataKey = keyValues.get(0).getValue();
         Assert.assertNotNull(sessionDataKey, "Session data key is null.");
-        EntityUtils.consume(response.getEntity());
     }
 
     @Test(alwaysRun = true, description = "Send login post request", dependsOnMethods =
@@ -277,13 +277,15 @@ public class TestPassiveSTS extends ISIntegrationTest {
                 "Cannot find soap fault for invalid WReply URL");
     }
 
-    @Test(alwaysRun = true, description = "Test Session Hijacking", dependsOnMethods = { "testPassiveSAML2Assertion" })
+    @Test(alwaysRun = true, description = "Test Session Hijacking", dependsOnMethods = {"testPassiveSAML2Assertion"})
     public void testSessionHijacking() throws Exception {
+
         HttpGet getRequest = new HttpGet(locationHeader.getValue());
         HttpResponse response = client.execute(getRequest);
         String resultPage2 = DataExtractUtil.getContentData(response);
-        Assert.assertTrue(resultPage2.contains("Authentication Error!"), "Session hijacking is possible.");
         EntityUtils.consume(response.getEntity());
+        Assert.assertTrue(resultPage2.contains("Authentication Error!"), "Session hijacking is possible.");
+
     }
 
     private void setSystemProperties() {

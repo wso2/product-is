@@ -240,10 +240,11 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
         keyPositionMap.put("name=\"sessionDataKey\"", 1);
         List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil.extractDataFromResponse(response,
                 keyPositionMap);
+        EntityUtils.consume(response.getEntity());
         Assert.assertNotNull(keyValues, "sessionDataKey key value is null");
         sessionDataKey = keyValues.get(0).getValue();
         Assert.assertNotNull(sessionDataKey, "Session data key is null.");
-        EntityUtils.consume(response.getEntity());
+
     }
 
     @Test(alwaysRun = true, description = "Send login post request", dependsOnMethods =
