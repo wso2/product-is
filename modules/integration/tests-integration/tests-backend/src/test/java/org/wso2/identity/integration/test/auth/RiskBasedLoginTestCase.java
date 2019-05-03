@@ -115,12 +115,18 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
                 "successfully. File path: " + authenticatorPathString);
 
         String authenticatorWarPathString = Utils.getResidentCarbonHome()
-                + File.separator + File.separator + "repository"
-                + File.separator + "deployment" + File.separator
+                + File.separator + "repository" + File.separator + "deployment" + File.separator
                 + "server" + File.separator + "webapps" + File.separator + "sample-auth.war";
         File warDestFile = new File(authenticatorWarPathString);
         FileOutputStream warDest = new FileOutputStream(warDestFile);
         copyFileUsingStream(webappUrl, warDest);
+
+        // Waiting for the war file to deploy.
+        String authenticatorWebappPathString = Utils.getResidentCarbonHome()
+                + File.separator + "repository" + File.separator + "deployment" + File.separator
+                + "server" + File.separator + "webapps" + File.separator + "sample-auth";
+        waitForWebappToDeploy(authenticatorWebappPathString, 60000L);
+
         log.info("Copied the demo authenticator war file to " + authenticatorWarPathString);
         Assert.assertTrue(Files.exists(Paths.get(authenticatorWarPathString)), "Demo Authenticator war is not copied " +
                 "successfully. File path: " + authenticatorWarPathString);
@@ -164,6 +170,22 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
         userRiskScores.put(userInfo.getUserName(), 0);
     }
 
+    private void waitForWebappToDeploy(String authenticatorWebappPathString, long timeout) {
+
+        long startTime = System.currentTimeMillis();
+
+        while (System.currentTimeMillis() - startTime < timeout) {
+            if (Files.exists(Paths.get(authenticatorWebappPathString))) {
+                break;
+            }
+            try {
+                Thread.sleep(1000L);
+            } catch (InterruptedException e) {
+                // ignore
+            }
+        }
+    }
+
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
@@ -188,7 +210,7 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
 
     /**
      * Deletes a webapp from the is server.
-     *
+     * <p>
      * This first tries to delete the webapp via the webapp admin service.
      * Failing that, it tries to delete the war and exploded dir manually.
      *
@@ -197,6 +219,7 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
      * @throws Exception for any unhandled exceptions in this test utility
      */
     private boolean deleteWebApp(String webappName) throws Exception {
+
         List<String> webAppList = new ArrayList<>();
         webAppList.add(webappName);
         webAppAdminClient.deleteWebAppList(webAppList, isServer.getDefaultInstance().getHosts().get("default"));
@@ -298,7 +321,8 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
 
     protected LocalAndOutboundAuthenticationConfig createLocalAndOutboundAuthenticationConfig() throws Exception {
 
-        LocalAndOutboundAuthenticationConfig localAndOutboundAuthenticationConfig = super.createLocalAndOutboundAuthenticationConfig();
+        LocalAndOutboundAuthenticationConfig localAndOutboundAuthenticationConfig =
+                super.createLocalAndOutboundAuthenticationConfig();
 
         AuthenticationStep authenticationStep2 = new AuthenticationStep();
         authenticationStep2.setStepOrder(2);
