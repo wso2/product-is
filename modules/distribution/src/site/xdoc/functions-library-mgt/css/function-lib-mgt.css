@@ -1,0 +1,523 @@
+/*
+ * Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+.functionLibraryName {
+    text-decoration: none;
+    display: inline-table;
+}
+
+#functionlib_list {
+    height: 280px;
+    overflow-y: scroll;
+}
+
+#functionlib_list .name {
+    padding: 4px;
+    border: 1px solid #ccc;
+    border-top: 0;
+    height: 20px;
+}
+
+#functionlib_list .name:after {
+    content: ' ';
+    clear: both;
+}
+
+#functionlib_list .functionLibraryName span {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100px;
+}
+
+#functionlib_list .type {
+    margin-bottom: 4px;
+}
+
+#functionlib_list .name a span {
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 5px;
+}
+
+#functionlib_list .name a {
+    margin-top: 2px;
+    float: left;
+}
+
+#functionlib_list .name span {
+    float: right;
+}
+
+#functionlib_list li h2 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-left: 20px;
+    -webkit-box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0);
+    -moz-box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0);
+    box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0);
+    border-radius: 0px 0px 0px 0px;
+    -moz-border-radius: 0px 0px 0px 0px;
+    -webkit-border-radius: 0px 0px 0px 0px;
+}
+
+#functionlib_list .helpLink {
+    display: inline-table;
+    margin-top: 4px;
+
+}
+
+.helpLink {
+    display: inline-block;
+    float: right;
+}
+
+#lamda_func_dropdown {
+    padding-top: 20px;
+}
+
+#codeMirror {
+    padding: 0;
+    border: 1px solid #afafaf;
+    margin-right: 26px;
+}
+
+#codeMirrorTemplate {
+    position: absolute;
+    overflow: hidden;
+    top: 0px;
+    right: 0px;
+    background: #ffffff;
+    font-size: 12px;
+    z-index: 999;
+    border: 1px solid #afafaf;
+    border-left: 0px;
+    -webkit-box-shadow: -4px 0 4px 0 rgba(90, 90, 90, 0.2);
+    box-shadow: -4px 0 4px 0 rgba(90, 90, 90, 0.2);
+    transition: width 0.5s, opacity 0.5s ease;
+}
+
+#codeMirrorTemplate h2 {
+    white-space: nowrap;
+}
+
+.templateHeading {
+    padding: 0 0 2px 0;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #afafaf;
+}
+
+.cm-s-disabled {
+    background: #f7f7f7;
+}
+
+.cm-s-disabled span {
+    color: #ccc !important;
+}
+
+.highlight1 {
+    animation: colorchange1 2000ms;
+    -webkit-animation: colorchange1 2000ms;
+    animation-iteration-count: 1;
+    -webkit-animation-iteration-count: 1;
+    animation-fill-mode: none;
+    -webkit-animation-fill-mode: none;
+}
+
+.highlight2 {
+    animation: colorchange1 2000ms;
+    -webkit-animation: colorchange1 2000ms;
+    animation-iteration-count: 1;
+    -webkit-animation-iteration-count: 1;
+    animation-fill-mode: none;
+    -webkit-animation-fill-mode: none;
+}
+
+@keyframes colorchange1 {
+    0% {
+        background: rgba(255, 255, 0, 0.8);
+    }
+    100% {
+        background: rgba(255, 255, 255, 0);
+    }
+}
+
+@-webkit-keyframes colorchange1 {
+    0% {
+        background: rgba(255, 255, 0, 0.8);
+    }
+    100% {
+        background: rgba(255, 255, 255, 0);
+    }
+}
+
+@keyframes colorchange2 {
+    0% {
+        background: rgba(255, 180, 0, 0.6);
+    }
+    100% {
+        background: rgba(255, 255, 255, 0);
+    }
+}
+
+@-webkit-keyframes colorchange2 {
+    0% {
+        background: rgba(255, 180, 0, 0.6);
+    }
+    100% {
+        background: rgba(255, 255, 255, 0);
+    }
+}
+
+@keyframes maximizeCodeWindow {
+    0% {
+        transform: translate(0, 0);
+    }
+    100% {
+        transform: translate(20px, 50px);
+    }
+}
+
+.conditional-auth {
+    position: relative;
+    font-size: 13px;
+}
+
+.maximizeIcon {
+    background: url(../images/maximize.png) 50% 50%;
+}
+
+.minimizeIcon {
+    background: url(../images/minimize.png) 50% 50%;
+}
+
+.remove-panel {
+    cursor: pointer;
+}
+
+.remove-panel {
+    float: right;
+    font-size: 10px;
+    line-height: 13px;
+}
+
+.remove-panel img {
+    height: 8px;
+    width: 8px;
+}
+
+.panel {
+    background: #ffffff;
+    padding: 4px 8px;
+    font-size: 10px;
+    position: absolute;
+    width: 150px;
+    right: 10px;
+    z-index: 999;
+    top: 5px;
+}
+
+.panel.top, .panel.after-top {
+    border-bottom: 1px solid #ddd;
+}
+
+.panel.bottom, .panel.before-bottom {
+    border-top: 1px solid #ddd;
+}
+
+#conditional_script table tbody tr td {
+    border: none !important;
+}
+
+#conditional_script label {
+    cursor: pointer;
+}
+
+.scriptEditorInfo {
+    padding: 12px;
+}
+
+/*theme customizations*/
+.cm-s-mdn-like .CodeMirror-linenumber {
+    padding-left: 0;
+}
+
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none;
+}
+
+.editor-header {
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid #afafaf;
+    background: #f8f8f8;
+}
+
+.editor-header > * {
+    display: flex;
+}
+
+.editor-header ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.editor-header ul li {
+    display: flex;
+}
+
+.editor-header ul li a {
+    align-self: center;
+}
+
+.editor-header .title {
+    color: #333;
+    align-self: center;
+    padding: 2px 10px;
+}
+
+#toggleEditorSize {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 9px;
+    height: 9px;
+    margin: 0px;
+    padding: 8px;
+    text-align: center;
+    z-index: 999;
+    background-color: rgba(204, 204, 204, 0.4);
+    background-repeat: no-repeat;
+    border-left: 1px solid #afafaf;
+    border-bottom: 1px solid #afafaf;
+    cursor: pointer;
+}
+
+#addFunctionlib:hover, #toggleEditorSize:hover {
+    background-color: rgba(204, 204, 204, 0.9);
+}
+
+#addFunctionlib {
+    background: url('../images/templates.png') 5px 50% no-repeat;
+    background-color: rgba(204, 204, 204, 0.4);
+    height: auto;
+    width: 260px;
+    line-height: inherit;
+    margin: 0px;
+    padding: 5px 10px;
+    padding-left: 30px;
+    color: #333;
+}
+
+.script-select-container {
+    padding-top: 20px;
+    padding-bottom: 10px;
+}
+
+.add-functionlib-container {
+    position: absolute;
+    left: 25px;
+}
+
+.vertical-text {
+    float: left;
+    transform: rotate(90deg);
+    transform-origin: left top 0;
+}
+
+.cm-template-collapsed {
+    height: 300px;
+    width: 25px;
+}
+
+.functionlib-list-container {
+    margin: 10px;
+    margin-left: 35px;
+}
+
+.messagebox-error-custom {
+    background-image: url(../../dialog/img/error.gif);
+    background-position: 15px 15px;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    padding: 15px 15px 15px 90px;
+    width: auto;
+    height: auto;
+    overflow: auto;
+    min-height: 50px;
+}
+
+.messagebox-warning-custom {
+    background-image: url(../../dialog/img/warning.gif);
+    background-position: 15px 15px;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    padding: 15px 15px 15px 90px;
+    width: auto;
+    height: auto;
+    overflow: auto;
+    min-height: 50px;
+}
+
+.messagebox-warning-custom p, .messagebox-error-custom p {
+    text-align: justify;
+}
+
+.messagebox-warning-custom table, .messagebox-error-custom table {
+    border-spacing: 0px;
+}
+
+.messagebox-warning-custom table td, .messagebox-error-custom table td {
+    border: solid 1px #cccccc;
+    height: 25px;
+    padding: 2px 8px;
+    vertical-align: middle;
+}
+
+.messagebox-warning-custom p, .messagebox-warning-custom ul li, .messagebox-warning-custom table td, .messagebox-warning-custom a,
+.messagebox-error-custom p, .messagebox-error-custom ul li, .messagebox-error-custom table td, .messagebox-error-custom a {
+    font-size: 12.65px;
+    margin: 0px;
+}
+
+.editor-warning-content li, .editor-error-content li {
+    list-style-type: disc;
+}
+
+.editor-error-content, .editor-warning-content {
+    display: none;
+}
+
+.messagebox-warning-custom .error-msg, .messagebox-error-custom .error-msg {
+    margin: 10px 0px;
+    margin-top: 20px;
+    padding: 12px;
+    color: #D8000C;
+    background-color: #FFD2D2;
+}
+
+.messagebox-warning-custom .stepErrorListContainer {
+    padding-bottom: 10px;
+}
+
+.messagebox-warning-custom .stepErrorListContainer span,
+.messagebox-warning-custom .stepWarningListContainer span {
+    font-weight: bold;
+}
+
+.editor-error-warn-container {
+    display: none;
+}
+
+.err_warn_container {
+    display: none;
+}
+
+.disable_text {
+    font-weight: 700;
+    color: #c51e1e;
+    padding-left: 4px;
+}
+
+.disable_status {
+    padding-bottom: 12px;
+}
+
+.err_warn_content li {
+    list-style-type: disc;
+}
+
+.editor_err_img, .editor_warn_img {
+    height: 18px;
+    float: left;
+}
+
+.err_head {
+    font-weight: 600;
+    padding-left: 12px;
+}
+
+.err_list, .warn_list {
+    padding-left: 47px;
+}
+
+.warn_container {
+    padding: 10px 0;
+}
+
+.err_warn_content {
+    padding: 10px;
+    border: 1px solid #cecece;
+    margin-bottom: 10px;
+    color: #444;
+    display: none;
+}
+
+.instruction {
+    padding-bottom: 10px;
+    font-weight: 600;
+    color: #333;
+}
+
+.err_container, .warn_container {
+    display: none;
+}
+
+.show_errors_toggle_buttons a:hover {
+    color: #2F7ABD;
+}
+
+.err_warn_text {
+    padding: 20px 0 0 16px;
+    font-size: 12.65px;
+}
+
+#editorRow .CodeMirror {
+    height: 345px;
+}
+
+.template-list-container h2.trigger {
+    background-color: #f5f5f5;
+    border: 1px solid #cccccc !important;
+}
+
+.categoryImg {
+    float: right;
+    padding: 4px;
+    margin-left: 0 !important;
+    height: 18px;
+}
+
+.truncate-content {
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
+}
+
+.category-title {
+    width: 120px;
+}

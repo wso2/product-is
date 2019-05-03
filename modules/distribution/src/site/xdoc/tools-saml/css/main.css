@@ -1,0 +1,95 @@
+/* ---------------- template styles ------------------------- */
+table#main-table{
+	width:100%;
+}
+table#main-table td#header {
+	background-image: url( ../images/is-header-region-bg.gif);
+    	background-repeat: repeat-x;
+    	background-position: left top;
+	height: 100px;
+	
+}
+
+table#main-table td#menu-panel {
+	border-right: solid 1px #EE8C4E;
+	background-color: #fff;
+	padding-bottom: 20px;
+	width: 225px;
+	font-size: 100%;
+}
+
+/* ------------- menu styles ---------------------- */
+body {
+    	background-color: white;
+    	padding: 0px;
+    	margin: 0px;
+    	font-family: "Lucida Grande","Lucida Sans","Microsoft Sans Serif", "Lucida Sans Unicode","Verdana","Sans-serif","trebuchet ms" !important;
+    	color: #111;
+	font-size:12px;
+	font-size-adjust:none;
+	font-stretch:normal;
+	font-style:normal;
+	font-variant:normal;
+	font-weight:normal;
+	line-height:1.25em;
+}
+
+/* ---------------- template styles ------------------------- */
+
+
+.content{
+	padding:10px;
+	font-size:12px;
+	text-align:center;
+}
+
+
+
+td#footer {
+	color:#fff;
+	font-size:10px;
+	height: 25px;
+	padding-top:5px;
+	padding-left:5px;
+	background-color: #bfbfbf;
+}	
+
+/* ---------------- header styles ------------------ */
+
+div#header-div {
+    background-image: url( ../images/is-header-bg.gif);
+    background-repeat: no-repeat;
+    background-position: left top;
+    height: 100px;
+    min-width: 985px;
+}
+
+div#header-div div.left-logo {
+	background-image: url(../images/is-header-logo.gif );
+    background-repeat: no-repeat;
+    background-position: left top;
+	height: 32px;
+	/*width: 332px;*/
+	width: 332px;
+	margin-top: 23px;
+	margin-left: 20px;
+	float: left;
+}
+
+div#header-div div.right-logo {
+	background-image: url( ../images/is-mgt-logo.gif);
+	color: #E86C1F;
+	border:none;
+	line-height: 18px;
+	height: 22px;
+	float: right;
+	width: 220px;
+	margin-top: 28px;
+	margin-right: 20px;
+	font-size: 18px;
+	font-weight: normal;
+	text-align: right;
+}
+
+
+

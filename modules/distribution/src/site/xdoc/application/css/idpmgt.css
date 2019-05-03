@@ -1,0 +1,59 @@
+.styledLeft input[type=text],.styledLeft input[type=password] {
+/* webkit */
+    background-image: -webkit-gradient( linear, left top, left bottom, from( #f7f7f7 ), to( #ffffff ) ); /* mozilla - FF3.6+ */
+    background-image: -moz-linear-gradient( top, #f7f7f7 0%, #ffffff 100% ); /* IE 5.5 - 7 */
+    filter: progid:DXImageTransform.Microsoft.gradient( gradientType = 0, startColorStr = #f7f7f7ff, endColorStr = #ffffffff ); /* IE8 */
+    -ms-filter: progid: DXImageTransform . Microsoft . gradient( gradientType = 0, startColorStr = #f7f7f7ff, endColoStr = #ffffffff );
+
+    background-repeat: repeat-x;
+    border: 1px solid #58697d;
+    min-width: 230px;
+    height: 20px;
+    color: #333333;
+    padding: 3px;
+    margin-right: 4px;
+    margin-bottom: 2px; /*font-family:tahoma, arial, sans-serif;*/
+}
+.styledLeft input[disabled=disabled]{
+    background-image: -webkit-gradient( linear, left top, left bottom, from( #dddddd ), to( #eeeeee ) ); /* mozilla - FF3.6+ */
+      background-image: -moz-linear-gradient( top, #dddddd 0%, #eeeeee 100% ); /* IE 5.5 - 7 */
+      filter: progid:DXImageTransform.Microsoft.gradient( gradientType = 0, startColorStr = #ddddddff, endColorStr = #eeeeeeff ); /* IE8 */
+      -ms-filter: progid: DXImageTransform . Microsoft . gradient( gradientType = 0, startColorStr = #ddddddff, endColoStr = #eeeeeeff );
+
+}
+div#middle div#workArea h4{
+	font-size: 11px;
+font-weight: bold;
+color: #888;
+}
+
+.showHideBtn {
+	background-color:#599bb3;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border-radius:5px;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:arial;
+	font-size:12px;
+	font-weight:bold;
+	padding:2px 5px;
+	text-decoration:none;
+}
+.showHideBtn:hover {
+	background-color:#408c99;
+	color:#ffffff;
+	
+}
+.showHideBtn:active {
+	position:relative;
+	top:1px;
+}
+
+.enablelogo {
+	float: right;
+	padding-right: 5px;
+	padding-top: 5px;
+	display: block;
+}

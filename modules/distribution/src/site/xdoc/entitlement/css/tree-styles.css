@@ -1,0 +1,86 @@
+.treeControl{
+    height: 300px;
+    overflow: auto;
+    width: 500px;
+}
+.treeControl ul{
+    padding:0px;
+    margin:0px;
+}
+
+.treeControl ul li{
+    list-style:none;
+    padding-left:15px;
+    padding-top:5px;
+    white-space:nowrap;
+}
+.treeControl ul li a.plus{
+    background-image:url(../images/plus.gif);
+    background-repeat:no-repeat;
+    background-position:0px 2px;
+    padding-left:15px;
+    cursor:pointer;
+}
+.treeControl ul li a.minus{
+    background-image:url(../images/minus.gif);
+    background-repeat:no-repeat;
+    background-position:0px 2px;
+    padding-left:15px;
+    cursor:pointer;
+}
+.treeControl ul li a.nodata{
+    background-image:url(../images/nodata.gif);
+    background-repeat:no-repeat;
+    background-position:0px 2px;
+    padding-left:15px;
+    cursor:pointer;
+}
+.treeControl ul li a.treeNode{
+    cursor:pointer;
+    color:#4c99c3;
+    padding:3px;
+}
+.treeControl ul li a.selected{
+    background-color: #666666;
+    color:#fff;
+}
+.button-dif, .button-dif:visited {
+    width:30px;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#eeeeee), to(#ffffff)); /* mozilla - FF3.6+ */
+    background-image: -moz-linear-gradient(top, #eeeeee 0%, #ffffff 100%); /* IE 5.5 - 7 */
+    filter: progid:DXImageTransform.Microsoft.gradient(gradientType = 0, startColorStr = #eeeeee, endColorStr = #ffffff); /* IE8 */
+    -ms-filter: progid: DXImageTransform.Microsoft.gradient(gradientType = 0, startColorStr = #eeeeee, endColoStr = #ffffff);
+	display: inline-block;
+	padding: 5px 5px 6px;
+	color: #000;
+	text-decoration: none;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	-moz-box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+	-webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+	text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
+	border-bottom: 1px solid rgba(0,0,0,0.25);
+	position: relative;
+	cursor: pointer
+}
+.treeTable td{
+    padding:10px;
+    vertical-align:top;
+    border:solid 1px #ccc;
+}
+.listViewItem{
+    width:auto;
+}
+
+.listViewItemDel {
+    cursor: pointer;
+    float: left;
+    display: block;
+    width: 15%;
+    padding-top: 5px;
+}
+
+.listViewItemContent {
+    float: left;
+    width: 85%
+}

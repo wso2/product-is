@@ -1,0 +1,134 @@
+<!--
+  ~ Copyright 2005-2007 WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+        <title>Welcome to WSO2 Identity Server v3.2.0!</title>
+        <link href="css/is-docs.css" rel="stylesheet"/>
+    </head>
+    <body>
+        <p>[<a href="http://wso2.org/downloads/identity">Download</a>] | [<a href="index_docs.html">
+            Documentation Home</a>] | [<a href="release-notes.html">Release Note</a>]
+        </p>
+        <h1>WSO2 Identity Server, v3.2.0 - Deploying in Production</h1>
+
+        <p>Following changes should be applied on a fresh Identity Server instance. (i.e. Do not
+            start the Identity Server until the configurations are finalized)
+        </p>
+
+        <h2>Step 1: Changing the default key store</h2>
+
+        <p>Open wso2is-3.2.0/repository/conf/carbon.xml file</p>
+
+        <p>This private key is used for the HTTPS channel and for the token issuer to sign the
+            issued tokens.
+            This information has to be changed in two files.
+        </p>
+
+        <p>Following section of the carbon.xml should be updated to match your private key
+            information. The private key must be available in a keystore of type
+            "JKS" or "PKCS12". For more information on key stores please see <a
+                    href="http://java.sun.com/j2se/1.4.2/docs/tooldocs/windows/keytool.html">here
+            </a>.
+        </p>
+        <pre><![CDATA[
+
+    <!--
+      Security configurations
+     -->
+    <Security>
+        <!--
+            KeyStore which will be used for encrypting/decrypting passwords
+            and other sensitive information.
+        -->
+        <KeyStore>
+            <!-- Keystore file location-->
+            <Location>${carbon.home}/repository/resources/security/wso2carbon.jks</Location>
+            <!-- Keystore type (JKS/PKCS12 etc.)-->
+            <Type>JKS</Type>
+            <!-- Keystore password-->
+            <Password>wso2carbon</Password>
+            <!-- Private Key alias-->
+            <KeyAlias>wso2carbon</KeyAlias>
+            <!-- Private Key password-->
+            <KeyPassword>wso2carbon</KeyPassword>
+        </KeyStore>
+
+        <!--
+           The directory under which all other KeyStore files will be stored
+        -->
+        <KeyStoresDir>${carbon.home}/conf/keystores</KeyStoresDir>
+    </Security>
+
+]]></pre>
+
+        <h2>Step 2: Changing the host name</h2>
+
+        <p>Open wso2is-3.2.0/repository/conf/carbon.xml file</p>
+
+        <p>The host name of the Identity Provider must be changed to match the "Common Name" of the
+            certificate of the private key.
+        </p>
+        <pre><![CDATA[
+
+    <!--
+       Host name of the machine hosting this server
+       e.g. www.wso2.org
+    -->
+
+    <HostName>localhost</HostName>
+
+    <ServerURL>https://localhost:${carbon.https.port}${carbon.context}/services/</ServerURL>
+
+]]></pre>
+
+        <h2>Step 3: Changing the HTTP/HTTPS ports</h2>
+
+        <p>Open wso2is-3.2.0/repository/conf/transports.xml file</p>
+
+        <p>The HTTP and HTTPS port also can be changed by changing the following configuration
+            elements.
+        </p>
+        <pre><![CDATA[
+
+    <transport name="http" class="org.wso2.carbon.server.transports.http.HttpTransport">
+        <parameter name="port">9763</parameter>
+    </transport>
+
+    <transport name="https" class="org.wso2.carbon.server.transports.http.HttpsTransport">
+        <parameter name="port">9443</parameter>
+    </transport>
+]]></pre>
+
+        <h2>Step 4: Changing the OpenID Provider configurations</h2>
+
+        <p>Open wso2is-3.2.0/repository/conf/identity.xml file</p>
+
+        <p>OpenID provider server url can be changed by changing the following configuration
+            element.
+            Once this is set, OpenIDs will be generated in the following format
+            [OpenIDUserPattern]/[User Name].
+        </p>
+        <p>e.g: https://localhost:9443/openid/bob</p>
+        <p>Note: Both the configuration must have the HTTPS port</p>
+        <pre><![CDATA[
+    <OpenIDServerUrl>https://localhost:9443/openidserver</OpenIDServerUrl>
+    <OpenIDUserPattern>https://localhost:9443/openid/</OpenIDUserPattern>
+]]></pre>
+    </body>
+</html>
