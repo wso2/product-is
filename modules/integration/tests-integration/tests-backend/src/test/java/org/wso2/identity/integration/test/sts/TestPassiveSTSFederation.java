@@ -93,13 +93,18 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
     @AfterClass(alwaysRun = true)
     public void endTest() throws Exception {
 
-        deleteSAML2WebSSOConfiguration(PORT_OFFSET_0, PRIMARY_IS_SAML_ISSUER_NAME);
-        deleteServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SERVICE_PROVIDER_NAME);
-        deleteIdentityProvider(PORT_OFFSET_0, IDENTITY_PROVIDER_NAME);
+        try {
+            deleteSAML2WebSSOConfiguration(PORT_OFFSET_0, PRIMARY_IS_SAML_ISSUER_NAME);
+            deleteServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SERVICE_PROVIDER_NAME);
+            deleteIdentityProvider(PORT_OFFSET_0, IDENTITY_PROVIDER_NAME);
 
-        deleteSAML2WebSSOConfiguration(PORT_OFFSET_1, SECONDARY_IS_SAML_ISSUER_NAME);
-        deleteServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
-        client.close();
+            deleteSAML2WebSSOConfiguration(PORT_OFFSET_1, SECONDARY_IS_SAML_ISSUER_NAME);
+            deleteServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
+            client.close();
+        } catch (Exception e) {
+            log.error("Failure occured due to :" + e.getMessage(), e);
+            throw e;
+        }
     }
 
     @Test(groups = "wso2.is", description = "Check create identity provider in primary IS")
