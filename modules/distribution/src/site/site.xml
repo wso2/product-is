@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<project name="WSO2 Identity Server">
+    <!-- TODO deal with banners-->
+    <!--<bannerLeft>
+      <name>Apache Axis2</name>
+      <src>http://www.apache.org/images/asf_logo_wide.png</src>
+      <href>http://ws.apache.org/axis2/</href>
+    </bannerLeft>
+    <bannerRight>
+      <src>http://ws.apache.org/axis2/images/axis.jpg</src>
+    </bannerRight>-->
+    <body>
+        <links>              
+              <item name="WSO2 Carbon" href="http://wso2.org/projects/carbon" />
+              <item name="Apache Rampart/Java" href="http://ws.apache.org/rampart" />
+              <item name="Apache WS" href="http://ws.apache.org" />
+              <item name="Apache" href="http://www.apache.org" />
+          </links>
+
+        <menu name="WSO2 Identity Server">
+            <item name="Content" href="index_docs.html"/>
+            <item name="Home" href="index.html"/>
+        </menu>
+        <menu name="Downloads">
+           <item name="Releases" href="http://wso2.org/downloads/identity"/>
+        </menu>
+        <menu name="Documentation" ref="index_docs.html">
+          <item name="Installation Guide" href="installation_guide.html"/>
+          <item name="Adminstrator Guide" href="administratorguide.html"/>
+          <item name="Configuring User Stores" href="user-core/admin_guide.html"/>
+	  <item name="Identity Server in Production Environment" href="production.html"/>
+	  <item name="User Guide" href="userguide.html"/>
+	  <item name="External References" href="external.html"/>
+            <!--<item name="Extending IS" href="extending.xml"/>
+            <item name="API Documentation" href="api_doc.xml"/>-->
+        </menu>
+        <menu name="Samples">
+            <item name="Remote-User-Management" href="remote_usermgt_guide.html"/>
+            <!--<item name="Custom UserStoreManager" href="custom_userstoremanager.xml"/>
+            <item name="STS client" href="STS_client.xml"/>
+            <item name="OAuth Sample" href="oauth_sample.xml"/>-->
+        </menu>
+        <menu name="Get Involved" ref="overview.html">
+            <item name="Mailing Lists" href="mailinglists.html"/>
+        </menu>
+        <menu name="Project Information">
+            <item name="Project Team" href="teamlist.html"/>
+            <item name="Issue Tracking" href="issuetracking.html"/>
+            <item name="License"
+                  href="http://www.apache.org/licenses/LICENSE-2.0.html"/>
+        </menu>
+    </body>
+</project>

@@ -1,0 +1,57 @@
+<!--
+ ~ Copyright (c) 2005-2011, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Governance Registry Service Metadata Management - User Guide</title>
+  <link href="../../admin/css/documentation.css" rel="stylesheet" type="text/css" media="all" />
+</head>
+
+<body>
+<h1>Governance Registry Profiles</h1>
+<h2>Add profiles to Governance Registry</h2>
+<p>
+WSO2 Governance Registry is providing each user to have their own user profile. User can go to 'My Profile' link
+in the main left panel and can fill the default profiles and add some more profiles with different profile names. 
+After filling profiles information user can import those profiles as a resource in Governance Registry. User can 
+import User profiles as a normal resource in Registry by selecting import custom content media type application/vnd.wso2-profiles+.
+This will load a custom UI as follows. 
+</p>
+<p><img src="images/image1.png" width="492px"/></p>
+<p>Figure 1: Custom UI for Profiles</p>
+<p>
+You have to give the user name of the profiles owner and obviously this user name is the user name of the account owner.
+For the future purposes, we are not taking the user name from the session configuration. Once user name submitted all the
+profiles information will import to registry as a resource in to "/system/users". This will create a collection inside "/system/users" 
+directory with the given user name and inside that there will be a resource called Profiles which contains all the information of 
+the profiles of that user.
+</p>
+<p><img src="images/image2.png" width="492px"/></p>
+<p>Figure 2: Updating the Profile</p>
+<p>
+Successful profile import will direct user to the newly added resource location which will be "/system/users". 
+</p> 
+
+<h3> Creating a Custom User Interface</h3>
+
+<p>
+In Governance Registry, creating a custom ui is a way for the user to implement his own UI implementatons according to his own wish. It is mainly 
+assosiciated with Media types. A detailed sample is available on "How to create a Custom User Interface" under samples folder.
+</p>
+</body>
+</html>

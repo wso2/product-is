@@ -1,0 +1,91 @@
+.arrowUp {
+    background-image: url(../images/up.gif) !important;
+}
+
+.arrowDown {
+    background-image: url(../images/down.gif) !important;
+}
+
+#middle {
+    line-height: 30px;
+}
+
+.noRuleBox {
+    color: #999;
+    border: solid 1px #ccc;
+    padding: 5px;
+    font-style: italic;
+}
+
+.text-box-big {
+    width: 320px !important;
+}
+
+.defaultText {
+    color: #666666;
+    font-style: italic;
+}
+
+.goToAdvance {
+    border: solid 1px #ccc;
+    background-color: #e3f2db;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+.formTableTabed{
+    margin:10px;
+}
+
+.formTableTabed td{
+    padding:10px;
+}
+
+table#main-table table.oneline-listing td {
+    padding: 0 5px !important;
+    line-height: 15px;
+}
+table#main-table table.oneline-listing {
+    border-left: 1px solid #CCCCCC;
+    border-right: 1px solid #CCCCCC;
+    border-bottom: 1px solid #CCCCCC;
+    border-top: 5px solid #CCCCCC;
+    margin-top: 3px;
+    padding: 8px;
+}
+
+
+table#main-table table.oneline-listing-alt td {
+    padding: 0 5px !important;
+    line-height: 15px;
+}
+table#main-table table.oneline-listing-alt {
+    margin-top: 3px;
+    padding: 8px;
+}
+
+#middle div.sectionSeperator, #middle div.sectionHelp{
+    line-height:10px;
+}
+#middle div.sectionHelp{
+    margin-top:10px;
+}
+.sectionSubShifter{
+    margin-top:-25px;
+}
+.leftCol-vsmall{
+    width:50px;
+}
+div#workArea table.styledLeft tbody tr td table.ob-table{
+    line-height:20px;
+}
+div#workArea table.styledLeft tbody tr td table.ob-table td{
+    height:auto;
+    padding:0 !important;
+}
+#obligationRuleTable,#obligationTable{
+    margin-top:-10px;
+}
+.heading_A{
+    padding-top:20px;
+}

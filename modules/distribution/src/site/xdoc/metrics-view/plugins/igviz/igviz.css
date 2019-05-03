@@ -1,0 +1,165 @@
+
+.buttonContainer {
+    margin: 10px;
+}
+
+svg {
+    background-color: white;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    shape-rendering: crispEdges;
+    stroke: grey;
+    stroke-width: 2;
+}
+
+.axis text {
+    font-family: sans-serif;
+    font-size: 11px;
+}
+
+.bar {
+    /*fill: orange;*/
+    fill: steelblue;
+}
+
+
+
+.area {
+    fill: steelblue;
+}
+
+
+.bar:hover {
+    fill: orange;
+}
+
+.d3-tip {
+    line-height: 1;
+    font-weight: bold;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border-radius: 2px;
+}
+
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+    box-sizing: border-box;
+    display: inline;
+    font-size: 10px;
+    width: 100%;
+    line-height: 1;
+    color: rgba(0, 0, 0, 0.8);
+    content: "\25BC";
+    position: absolute;
+    text-align: center;
+}
+
+/* Style northward tooltips differently */
+.d3-tip.n:after {
+    margin: -1px 0 0 0;
+    top: 100%;
+    left: 0;
+}
+
+.graph-svg-component {
+    background-color: AliceBlue;
+}
+
+#normalizationCurve path {
+    stroke: steelblue;
+    stroke-width: 2;
+    fill: none;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: black;
+    /*stroke-width: 1;*/
+    shape-rendering: crispEdges;
+}
+
+.line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+}
+
+.top-buffer {
+    margin-top: 50px;
+}
+
+.control-label {
+    text-align: left !important;
+}
+
+/*.table-bordered {
+  border: 1px solid #000;
+}
+.table-bordered > thead > tr > th,
+.table-bordered > tbody > tr > th,
+.table-bordered > tfoot > tr > th,
+.table-bordered > thead > tr > td,
+.table-bordered > tbody > tr > td,
+.table-bordered > tfoot > tr > td {
+  border: 1px solid #000;
+}*/
+
+#rect{
+    fill:none;
+   stroke-width:3;
+   stroke:rgb(0,0,0);
+}
+
+
+
+/* arc tween shit*/
+.background {
+    fill: #FFFFFF;
+    fill-opacity: 0.01;
+}
+
+.component {
+    fill: #e1e1e1;
+}
+
+.component .label {
+    font-family: Myriad, "Helvetic Neue", Helvetica, Arial;
+    text-anchor: middle;
+    fill: #0000FF;
+}
+
+.arc {
+    stroke-weight:0.1;
+    fill: #4e8fff;
+}
+
+
+.arc2 {
+    stroke-weight:0.1;
+    fill: #3660b0;
+}
+
+
+.label {
+    font-family:  Myriad, "Helvetic Neue", Helvetica, Arial;
+    text-anchor: middle;
+}
+
+.radial-svg {
+    display: block;
+    margin: 0 auto;
+}
+
+/* Line chart grid*/
+.tick line{
+    stroke: lightgrey;
+    opacity: 0.7;
+    shape-rendering: crispEdges;
+    stroke-width:1;
+  }
+
