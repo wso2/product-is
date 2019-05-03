@@ -34,12 +34,14 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.identity.application.common.model.idp.xsd.FederatedAuthenticatorConfig;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.application.common.model.xsd.AuthenticationStep;
 import org.wso2.carbon.identity.application.common.model.xsd.LocalAndOutboundAuthenticationConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.LocalAuthenticatorConfig;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.common.clients.webappmgt.WebAppAdminClient;
@@ -135,6 +137,21 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
         serverConfigurationManager = new ServerConfigurationManager(isServer);
         serverConfigurationManager.restartGracefully();
         log.info("Restarting the server at: " + isServer.getContextUrls().getBackEndUrl() + " is successful");
+        IdentityProviderMgtServiceClient identityProviderMgtServiceClient = new IdentityProviderMgtServiceClient
+                (getBackendURL(), getSessionCookie());
+        ApplicationManagementServiceClient applicationManagementServiceClient = new ApplicationManagementServiceClient
+                (getBackendURL(), getSessionCookie(),null);
+        Map<String, FederatedAuthenticatorConfig> allFederatedAuthenticators = identityProviderMgtServiceClient.getAllFederatedAuthenticators();
+        LocalAuthenticatorConfig[] allLocalAuthenticators = applicationManagementServiceClient.getAllLocalAuthenticators();
+
+        for (String key : allFederatedAuthenticators.keySet()) {
+            log.info("Federated Authenricator : " + key);
+        }
+        for (LocalAuthenticatorConfig localAuthenticatorConfig : allLocalAuthenticators) {
+            log.info("Local Authenticator Name: " + localAuthenticatorConfig.getName() + " Display Name: " +
+                    localAuthenticatorConfig.getDisplayName());
+        }
+
 
         super.init();
         logManger = new AuthenticatorClient(backendURL);
