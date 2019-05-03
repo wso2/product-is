@@ -58,12 +58,18 @@ public class JustInTimeProvisioningTestCase extends SAMLIdentityFederationTestCa
     @BeforeClass(alwaysRun = true)
     public void initTest() throws Exception {
 
-        super.initTest();
-        userMgtClient = new UserManagementClient(backendURL, getSessionCookie());
-        userStoreClient = new RemoteUserStoreManagerServiceClient(getBackendURL(), getSessionCookie());
-        userStoreConfigAdminServiceClient = new UserStoreConfigAdminServiceClient(getBackendURL(), sessionCookie);
-        userMgtClient.addInternalRole("loginJIT", null, new String[] { "/permission/admin/login" });
-        addSecondaryUserStore();
+        try {
+            super.initTest();
+            userMgtClient = new UserManagementClient(backendURL, getSessionCookie());
+            userStoreClient = new RemoteUserStoreManagerServiceClient(getBackendURL(), getSessionCookie());
+            userStoreConfigAdminServiceClient = new UserStoreConfigAdminServiceClient(getBackendURL(), sessionCookie);
+            userMgtClient.addInternalRole("loginJIT", null, new String[]{"/permission/admin/login"});
+            addSecondaryUserStore();
+
+        } catch (Exception e) {
+            log.error("Failure occured due to :" + e.getMessage(), e);
+            throw e;
+        }
     }
 
     @AfterClass(alwaysRun = true)
