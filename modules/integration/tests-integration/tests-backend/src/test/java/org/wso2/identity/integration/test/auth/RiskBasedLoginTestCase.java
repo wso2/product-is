@@ -140,7 +140,7 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
         IdentityProviderMgtServiceClient identityProviderMgtServiceClient = new IdentityProviderMgtServiceClient
                 (getBackendURL(), getSessionCookie());
         ApplicationManagementServiceClient applicationManagementServiceClient = new ApplicationManagementServiceClient
-                (getBackendURL(), getSessionCookie(),null);
+                (getBackendURL(), getSessionCookie(), null);
         Map<String, FederatedAuthenticatorConfig> allFederatedAuthenticators = identityProviderMgtServiceClient.getAllFederatedAuthenticators();
         LocalAuthenticatorConfig[] allLocalAuthenticators = applicationManagementServiceClient.getAllLocalAuthenticators();
 
