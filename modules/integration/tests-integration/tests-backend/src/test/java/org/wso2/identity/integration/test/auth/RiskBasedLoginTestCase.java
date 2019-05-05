@@ -137,21 +137,6 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
         serverConfigurationManager = new ServerConfigurationManager(isServer);
         serverConfigurationManager.restartGracefully();
         log.info("Restarting the server at: " + isServer.getContextUrls().getBackEndUrl() + " is successful");
-        IdentityProviderMgtServiceClient identityProviderMgtServiceClient = new IdentityProviderMgtServiceClient
-                (getBackendURL(), getSessionCookie());
-        ApplicationManagementServiceClient applicationManagementServiceClient = new ApplicationManagementServiceClient
-                (getBackendURL(), getSessionCookie(), null);
-        Map<String, FederatedAuthenticatorConfig> allFederatedAuthenticators = identityProviderMgtServiceClient.getAllFederatedAuthenticators();
-        LocalAuthenticatorConfig[] allLocalAuthenticators = applicationManagementServiceClient.getAllLocalAuthenticators();
-
-        for (String key : allFederatedAuthenticators.keySet()) {
-            log.info("Federated Authenricator : " + key);
-        }
-        for (LocalAuthenticatorConfig localAuthenticatorConfig : allLocalAuthenticators) {
-            log.info("Local Authenticator Name: " + localAuthenticatorConfig.getName() + " Display Name: " +
-                    localAuthenticatorConfig.getDisplayName());
-        }
-
 
         super.init();
         logManger = new AuthenticatorClient(backendURL);
