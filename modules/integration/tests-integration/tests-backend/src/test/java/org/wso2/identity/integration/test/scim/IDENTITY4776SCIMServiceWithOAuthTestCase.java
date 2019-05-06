@@ -69,7 +69,7 @@ import java.util.ArrayList;
  */
 public class IDENTITY4776SCIMServiceWithOAuthTestCase extends OAuth2ServiceAbstractIntegrationTest {
     private static final String PERMISSION_LOGIN = "/permission/admin/login";
-    private static final String DOMAIN_ID = "WSO2TEST.COM";
+    private static final String DOMAIN_ID = "IDENTITY4776.COM";
     private static final String USER_STORE_DB_NAME = "JDBC_USER_STORE_DB";
     private static final String DB_USER_NAME = "wso2automation";
     private static final String DB_USER_PASSWORD = "wso2automation";

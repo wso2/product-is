@@ -49,7 +49,7 @@ public class JustInTimeProvisioningTestCase extends SAMLIdentityFederationTestCa
     private UserManagementClient userMgtClient;
     private RemoteUserStoreManagerServiceClient userStoreClient;
     private final String INTERNAL_LOGIN_ROLE = "Internal/loginJIT";
-    public static final String DOMAIN_ID = "WSO2TEST.COM";
+    public static final String DOMAIN_ID = "JustInTimeProvisioningTestCase.COM";
     private static final String USER_STORE_DB_NAME = "JDBC_USER_STORE_DB";
     private static final String DB_USER_NAME = "wso2automation";
     private static final String DB_USER_PASSWORD = "wso2automation";

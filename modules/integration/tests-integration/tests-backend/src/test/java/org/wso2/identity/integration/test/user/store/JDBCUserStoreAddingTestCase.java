@@ -50,14 +50,14 @@ public class JDBCUserStoreAddingTestCase extends ISIntegrationTest{
     private final String rwLDAPClass = "org.wso2.carbon.user.core.ldap.ReadWriteLDAPUserStoreManager";
     private final String roLDAPClass = "org.wso2.carbon.user.core.ldap.ReadOnlyLDAPUserStoreManager";
     private final String adLDAPClass = "org.wso2.carbon.user.core.ldap.ActiveDirectoryUserStoreManager";
-    private final String domainId = "WSO2TEST.COM";
+    private final String DOMAIN_ID = "JDBCUserStoreAddingTestCase.COM";
     private final String userStoreDBName = "JDBC_USER_STORE_DB";
     private final String dbUserName = "wso2automation";
     private final String dbUserPassword = "wso2automation";
     private UserManagementClient userMgtClient;
     private AuthenticatorClient authenticatorClient;
-    private String newUserName = "WSO2TEST.COM/userStoreUser";
-    private String newUserRole = "WSO2TEST.COM/jdsbUserStoreRole";
+    private String newUserName = DOMAIN_ID + "/userStoreUser";
+    private String newUserRole = DOMAIN_ID + "/jdsbUserStoreRole";
     private String  newUserPassword = "password";
     private PropertyDTO[] propertyDTOs;
 
@@ -71,7 +71,7 @@ public class JDBCUserStoreAddingTestCase extends ISIntegrationTest{
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
-        userStoreConfigAdminServiceClient.deleteUserStore(domainId);
+        userStoreConfigAdminServiceClient.deleteUserStore(DOMAIN_ID);
     }
 
     @Test(groups = "wso2.is", description = "Check user store manager implementations")
@@ -133,10 +133,10 @@ public class JDBCUserStoreAddingTestCase extends ISIntegrationTest{
         propertyDTOs[9].setValue("org.wso2.carbon.identity.user.store.count.jdbc.JDBCUserStoreCountRetriever");
 
 
-        UserStoreDTO userStoreDTO = userStoreConfigAdminServiceClient.createUserStoreDTO(jdbcClass, domainId, propertyDTOs);
+        UserStoreDTO userStoreDTO = userStoreConfigAdminServiceClient.createUserStoreDTO(jdbcClass, DOMAIN_ID, propertyDTOs);
         userStoreConfigAdminServiceClient.addUserStore(userStoreDTO);
         Thread.sleep(5000);
-        Assert.assertTrue(userStoreConfigUtils.waitForUserStoreDeployment(userStoreConfigAdminServiceClient, domainId)
+        Assert.assertTrue(userStoreConfigUtils.waitForUserStoreDeployment(userStoreConfigAdminServiceClient, DOMAIN_ID)
                 , "Domain addition via DTO has failed.");
 
     }
@@ -164,7 +164,7 @@ public class JDBCUserStoreAddingTestCase extends ISIntegrationTest{
     public void testUserRoleCacheWithSecondary() throws Exception {
 
         String loginRole = "login";
-        String secondaryUsername = "WSO2TEST.COM/user4219";
+        String secondaryUsername = DOMAIN_ID + "/user4219";
         String secondaryUserPassword = "password2";
         String primaryUsername = "user4219";
         String primaryUserPassword = "password1";
@@ -197,30 +197,30 @@ public class JDBCUserStoreAddingTestCase extends ISIntegrationTest{
 
     @Test(groups = "wso2.is", dependsOnMethods = "addUserIntoJDBCUserStore")
     public void getCountEnabledUserStores() throws Exception {
-        Assert.assertTrue(userStoreCountServiceClient.getCountableUserStores().contains(domainId), "no count enabled " +
+        Assert.assertTrue(userStoreCountServiceClient.getCountableUserStores().contains(DOMAIN_ID), "no count enabled " +
                 "user stores");
     }
 
     @Test(groups = "wso2.is", dependsOnMethods = "addUserIntoJDBCUserStore")
     public void countUsersInDomain() throws Exception {
-        Assert.assertEquals(1, userStoreCountServiceClient.countUsersInDomain("%",domainId), "user count failed");
+        Assert.assertEquals(1, userStoreCountServiceClient.countUsersInDomain("%", DOMAIN_ID), "user count failed");
     }
 
     @Test(groups = "wso2.is", dependsOnMethods = "addUserIntoJDBCUserStore")
     public void countRolesInDomain() throws Exception {
-        Assert.assertEquals(1, userStoreCountServiceClient.countRolesInDomain("%", domainId), "role count failed");
+        Assert.assertEquals(1, userStoreCountServiceClient.countRolesInDomain("%", DOMAIN_ID), "role count failed");
     }
 
     @Test(groups = "wso2.is", dependsOnMethods = "addUserIntoJDBCUserStore")
     public void countUsers() throws Exception {
         Map<String, String> users =  userStoreCountServiceClient.countUsers("%");
-        Assert.assertEquals(Long.valueOf(1), Long.valueOf(users.get(domainId)));
+        Assert.assertEquals(Long.valueOf(1), Long.valueOf(users.get(DOMAIN_ID)));
     }
 
     @Test(groups = "wso2.is", dependsOnMethods = "addUserIntoJDBCUserStore")
     public void countRoles() throws Exception {
         Map<String, String> roles =  userStoreCountServiceClient.countRoles("%");
-        Assert.assertEquals(Long.valueOf(1), Long.valueOf(roles.get(domainId)));
+        Assert.assertEquals(Long.valueOf(1), Long.valueOf(roles.get(DOMAIN_ID)));
         Assert.assertNull(roles.get(UserCoreConstants.PRIMARY_DEFAULT_DOMAIN_NAME));
     }
 
