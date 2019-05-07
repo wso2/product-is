@@ -33,6 +33,7 @@ import org.wso2.identity.integration.test.utils.IdentityConstants;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,13 +93,18 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
     @AfterClass(alwaysRun = true)
     public void endTest() throws Exception {
 
-        deleteSAML2WebSSOConfiguration(PORT_OFFSET_0, PRIMARY_IS_SAML_ISSUER_NAME);
-        deleteServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SERVICE_PROVIDER_NAME);
-        deleteIdentityProvider(PORT_OFFSET_0, IDENTITY_PROVIDER_NAME);
+        try {
+            deleteSAML2WebSSOConfiguration(PORT_OFFSET_0, PRIMARY_IS_SAML_ISSUER_NAME);
+            deleteServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SERVICE_PROVIDER_NAME);
+            deleteIdentityProvider(PORT_OFFSET_0, IDENTITY_PROVIDER_NAME);
 
-        deleteSAML2WebSSOConfiguration(PORT_OFFSET_1, SECONDARY_IS_SAML_ISSUER_NAME);
-        deleteServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
-        client.close();
+            deleteSAML2WebSSOConfiguration(PORT_OFFSET_1, SECONDARY_IS_SAML_ISSUER_NAME);
+            deleteServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
+            client.close();
+        } catch (Exception e) {
+            log.error("Failure occured due to :" + e.getMessage(), e);
+            throw e;
+        }
     }
 
     @Test(groups = "wso2.is", description = "Check create identity provider in primary IS")
@@ -208,11 +214,21 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
         ServiceProvider updatedServiceProvider = getServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SERVICE_PROVIDER_NAME);
         ClaimConfig updatedClaimConfig = updatedServiceProvider.getClaimConfig();
 
-        Assert.assertEquals(updatedClaimConfig.getClaimMappings()[0].getLocalClaim().getClaimUri(),
-                givenNameClaimURI, "Failed update given name claim uri");
+        Assert.assertTrue(getLocalClaimUris(updatedClaimConfig).contains(givenNameClaimURI)
+                , "Failed update given name claim uri.");
+        Assert.assertTrue(getLocalClaimUris(updatedClaimConfig).contains(emailClaimURI)
+                , "Failed update email claim uri.");
 
-        Assert.assertEquals(updatedClaimConfig.getClaimMappings()[1].getLocalClaim().getClaimUri(),
-                emailClaimURI, "Failed update email claim uri");
+    }
+
+    private List<String> getLocalClaimUris(ClaimConfig updatedClaimConfig) {
+
+        ClaimMapping[] claimMappings = updatedClaimConfig.getClaimMappings();
+        List<String> localClaimUris = new ArrayList<>();
+        for (ClaimMapping claimMapping : claimMappings) {
+            localClaimUris.add(claimMapping.getLocalClaim().getClaimUri());
+        }
+        return localClaimUris;
     }
 
     @Test(alwaysRun = true, description = "Invoke PassiveSTSSampleApp",
@@ -229,10 +245,11 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
         keyPositionMap.put("name=\"sessionDataKey\"", 1);
         List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil.extractDataFromResponse(response,
                 keyPositionMap);
+        EntityUtils.consume(response.getEntity());
         Assert.assertNotNull(keyValues, "sessionDataKey key value is null");
         sessionDataKey = keyValues.get(0).getValue();
         Assert.assertNotNull(sessionDataKey, "Session data key is null.");
-        EntityUtils.consume(response.getEntity());
+
     }
 
     @Test(alwaysRun = true, description = "Send login post request", dependsOnMethods =
