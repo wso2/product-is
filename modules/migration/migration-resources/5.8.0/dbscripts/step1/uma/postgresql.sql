@@ -10,3 +10,5 @@ CREATE OR REPLACE FUNCTION skip_index_if_exists(indexName varchar(64),tableName 
 $$ LANGUAGE plpgsql;
 
 SELECT skip_index_if_exists('IDX_USER_RID', 'IDN_UMA_RESOURCE', '(RESOURCE_ID, RESOURCE_OWNER_NAME, USER_DOMAIN, CLIENT_ID)');
+
+DROP FUNCTION skip_index_if_exists;
