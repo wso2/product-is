@@ -57,3 +57,7 @@ skip_index_if_exists('CREATE INDEX IDX_SPI_APP ON SP_INBOUND_AUTH(APP_ID)');
 
 skip_index_if_exists('CREATE INDEX IDX_IOP_TID_CK ON IDN_OIDC_PROPERTY(TENANT_ID,CONSUMER_KEY)');
 END;
+/
+
+DROP PROCEDURE skip_index_if_exists
+/
