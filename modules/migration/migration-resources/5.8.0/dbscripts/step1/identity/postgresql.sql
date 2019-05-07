@@ -34,3 +34,5 @@ SELECT skip_index_if_exists('IDX_OCA_UM_TID_UD_APN','IDN_OAUTH_CONSUMER_APPS','(
 SELECT skip_index_if_exists('IDX_SPI_APP','SP_INBOUND_AUTH','(APP_ID)');
 
 SELECT skip_index_if_exists('IDX_IOP_TID_CK','IDN_OIDC_PROPERTY','(TENANT_ID,CONSUMER_KEY)');
+
+DROP FUNCTION skip_index_if_exists;
