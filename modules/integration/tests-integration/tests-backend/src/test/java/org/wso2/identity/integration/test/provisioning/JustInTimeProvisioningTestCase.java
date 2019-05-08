@@ -42,6 +42,7 @@ import org.wso2.identity.integration.test.util.Utils;
 
 import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
+import java.io.IOException;
 import java.rmi.RemoteException;
 
 public class JustInTimeProvisioningTestCase extends SAMLIdentityFederationTestCase {
@@ -96,8 +97,13 @@ public class JustInTimeProvisioningTestCase extends SAMLIdentityFederationTestCa
     @AfterClass(alwaysRun = true)
     public void endTest() throws Exception {
 
-        super.endTest();
-        userStoreConfigAdminServiceClient.deleteUserStore(DOMAIN_ID);
+        try {
+            super.endTest();
+            userStoreConfigAdminServiceClient.deleteUserStore(DOMAIN_ID);
+        } catch (IOException e) {
+            log.error("Error while shutting down the server. ");
+        }
+
     }
 
     @Override

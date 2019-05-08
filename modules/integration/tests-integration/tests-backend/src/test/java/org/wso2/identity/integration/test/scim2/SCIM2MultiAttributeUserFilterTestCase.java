@@ -243,8 +243,13 @@ public class SCIM2MultiAttributeUserFilterTestCase extends ISIntegrationTest {
                 append(NAME_ATTRIBUTE).append(".").append(FAMILY_NAME_ATTRIBUTE).append(EQUAL).
                 append(FAMILY_NAME_CLAIM_VALUES.get(2));
 
-        validateMultiAttributeFilteredUser(query.toString(), Arrays.asList(userIds.get(2)),
-                Arrays.asList(USERNAMES.get(2)));
+        try {
+            validateMultiAttributeFilteredUser(query.toString(), Arrays.asList(userIds.get(2)),
+                    Arrays.asList(USERNAMES.get(2)));
+        } catch (Exception e) {
+            log.error("Error while filtering the attributes of the user: " + e.getMessage(), e);
+            throw e;
+        }
 
         //Validate username, claim and group filter
         query = new StringBuilder(USER_NAME_ATTRIBUTE).append(ENDWITH).
