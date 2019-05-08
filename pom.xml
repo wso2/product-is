@@ -1959,7 +1959,7 @@
         <slf4j.version>1.7.0</slf4j.version>
         <apache.openejb.version>4.5.2</apache.openejb.version>
         <axis2.client.version>1.6.2.wso2v13</axis2.client.version>
-        <axis2.wso2.version>1.6.1-wso2v28</axis2.wso2.version>
+        <axis2.wso2.version>1.6.1-wso2v35</axis2.wso2.version>
         <axis2-transports.version>2.0.0-wso2v34</axis2-transports.version>
         <json-smart.version>1.3</json-smart.version>
         <nimbusds.version>5.8.0.wso2v1</nimbusds.version>
@@ -1976,7 +1976,7 @@
         <cipher-tool.version>1.0.0-wso2v8</cipher-tool.version>
         <jacoco.agent.version>0.7.5.201505241946</jacoco.agent.version>
         <project.scm.id>my-scm-server</project.scm.id>
-        <carbon.business-process.version>4.4.94</carbon.business-process.version>
+        <carbon.business-process.version>4.4.101</carbon.business-process.version>
         <carbon.analytics-common.version>5.1.57</carbon.analytics-common.version>
         <osgi.framework.imp.pkg.version.range>[1.7.0, 2.0.0)</osgi.framework.imp.pkg.version.range>
         <osgi.service.component.imp.pkg.version.range>[1.2.0, 2.0.0)</osgi.service.component.imp.pkg.version.range>
