@@ -24,6 +24,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
+import org.wso2.carbon.automation.engine.exceptions.AutomationFrameworkException;
 import org.wso2.carbon.automation.test.utils.dbutils.H2DataBaseManager;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.JustInTimeProvisioningConfig;
@@ -100,8 +101,8 @@ public class JustInTimeProvisioningTestCase extends SAMLIdentityFederationTestCa
         try {
             super.endTest();
             userStoreConfigAdminServiceClient.deleteUserStore(DOMAIN_ID);
-        } catch (IOException e) {
-            log.error("Error while shutting down the server. ");
+        } catch (AutomationFrameworkException e) {
+            log.error("Error while shutting down the server. ", e);
         }
 
     }
