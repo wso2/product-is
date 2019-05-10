@@ -1729,6 +1729,13 @@
                 <artifactId>org.wso2.carbon.logging.admin.stub</artifactId>
                 <version>${carbon.logging.admin.stub.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.wso2.org.apache.shindig</groupId>
+                <artifactId>wso2-extensions</artifactId>
+                <version>${wso2.shindig.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -2002,6 +2009,7 @@
         <commons-lang.wso2.osgi.version.range>[2.6.0,3.0.0)</commons-lang.wso2.osgi.version.range>
         <carbon.healthcheck.version>1.0.3</carbon.healthcheck.version>
         <carbon.logging.admin.stub.version>4.6.60</carbon.logging.admin.stub.version>
+        <wso2.shindig.version>2.5.2-wso2v11</wso2.shindig.version>
     </properties>
 
     <repositories>
