@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>4.1-sso-for-web-app</artifactId>
-        <version>5.7.0</version>
+        <version>5.8.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
