@@ -41,6 +41,16 @@
         <dependency>
             <groupId>org.wso2.carbon.automation</groupId>
             <artifactId>org.wso2.carbon.automation.extensions</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.saucelabs.selenium</groupId> <!-- Exclude Project-E from Project-B -->
+                    <artifactId>sauce-ondemand-driver</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.saucelabs.selenium</groupId> <!-- Exclude Project-E from Project-B -->
+                    <artifactId>selenium-client-factory</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.automation</groupId>
