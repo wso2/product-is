@@ -24,6 +24,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
+import org.wso2.carbon.automation.engine.exceptions.AutomationFrameworkException;
 import org.wso2.carbon.automation.test.utils.dbutils.H2DataBaseManager;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.JustInTimeProvisioningConfig;
@@ -42,6 +43,7 @@ import org.wso2.identity.integration.test.util.Utils;
 
 import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
+import java.io.IOException;
 import java.rmi.RemoteException;
 
 public class JustInTimeProvisioningTestCase extends SAMLIdentityFederationTestCase {
@@ -96,8 +98,13 @@ public class JustInTimeProvisioningTestCase extends SAMLIdentityFederationTestCa
     @AfterClass(alwaysRun = true)
     public void endTest() throws Exception {
 
-        super.endTest();
-        userStoreConfigAdminServiceClient.deleteUserStore(DOMAIN_ID);
+        try {
+            super.endTest();
+            userStoreConfigAdminServiceClient.deleteUserStore(DOMAIN_ID);
+        } catch (AutomationFrameworkException e) {
+            log.error("Error while shutting down the server. ", e);
+        }
+
     }
 
     @Override
