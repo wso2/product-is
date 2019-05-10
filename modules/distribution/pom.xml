@@ -62,6 +62,10 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.org.apache.shindig</groupId>
+            <artifactId>wso2-extensions</artifactId>
+        </dependency>
         <!--
               dependency> <groupId>org.wso2.carbon</groupId>
               <artifactId>com.wso2.carbon.multitenancy.tenant.mgt</artifactId>
@@ -277,6 +281,11 @@
                                     <fileset dir="conf/shindig">
                                         <include name="web.xml" />
                                     </fileset>
+                                </copy>
+
+                                <dependencyfilesets prefix="shindigDeps."/>
+                                <copy todir="${tempdir}/shindig/WEB-INF/lib">
+                                    <fileset refid="shindigDeps.org.wso2.org.apache.shindig:wso2-extensions:jar"/>
                                 </copy>
 
                                 <zip destfile="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/shindig.war" basedir="${tempdir}/shindig" />
