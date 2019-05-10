@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>product-scenarios</artifactId>
-        <version>5.7.0</version>
+        <version>5.8.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 

@@ -19,7 +19,7 @@
         <artifactId>1.2-admin-user-manage-user-accounts</artifactId>
         <groupId>org.wso2.is</groupId>
         <relativePath>../pom.xml</relativePath>
-        <version>5.7.0</version>
+        <version>5.8.0</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>

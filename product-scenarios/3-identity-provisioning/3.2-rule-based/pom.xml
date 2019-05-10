@@ -21,7 +21,7 @@
     <parent>
         <artifactId>3-identity-provisioning</artifactId>
         <groupId>org.wso2.is</groupId>
-        <version>5.7.0</version>
+        <version>5.8.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
