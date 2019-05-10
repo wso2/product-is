@@ -18,7 +18,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>4.4-application-management</artifactId>
-        <version>5.7.0</version>
+        <version>5.8.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
