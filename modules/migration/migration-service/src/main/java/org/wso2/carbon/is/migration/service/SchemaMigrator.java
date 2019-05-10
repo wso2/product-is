@@ -24,6 +24,7 @@ import org.wso2.carbon.is.migration.util.Utility;
 import org.wso2.carbon.utils.dbcreator.DatabaseCreator;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -122,7 +123,12 @@ public class SchemaMigrator extends Migrator {
         BufferedReader reader = null;
 
         try {
-            InputStream is = new FileInputStream(dbscriptName);
+            File dbScript = new File(dbscriptName);
+            if (!dbScript.exists()) {
+                log.info("DB script: " + dbscriptName + " is not available for this migration");
+                return;
+            }
+            InputStream is = new FileInputStream(dbScript);
             reader = new BufferedReader(new InputStreamReader(is));
             String line;
             while ((line = reader.readLine()) != null) {

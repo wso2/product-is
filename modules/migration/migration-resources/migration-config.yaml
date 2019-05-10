@@ -282,3 +282,15 @@ versions:
       parameters:
         location: "step2"
         schema: "uma"
+    -
+      name: "SchemaMigrator"
+      order: 3
+      parameters:
+        location: "step3"
+        schema: "identity"
+    -
+      name: "OAuthDataMigrator"
+      order: 4
+      parameters:
+        schema: "identity"
+

@@ -7,9 +7,11 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.automation.engine.exceptions.AutomationFrameworkException;
 import org.wso2.identity.integration.test.application.mgt.AbstractIdentityFederationTestCase;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,6 +62,8 @@ public class SecondaryCarbonServerInitializerTestCase extends AbstractIdentityFe
         try {
             super.stopCarbonServer(PORT_OFFSET_1);
             LOG.info("Secondary carbon server stopped.");
+        } catch (AutomationFrameworkException e1) {
+            LOG.error("Error occured while shutting down the server. ", e1);
         } catch (Exception e) {
             LOG.error("Error while stopping secondary carbon server.", e);
             Assert.fail("Error while stopping secondary carbon server.");

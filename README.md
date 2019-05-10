@@ -120,7 +120,7 @@ WSO2 Identity Server Distribution Directory Structure
       In addition to this other custom deployers such as
       dataservices and axis1services are also stored.
 
-    	- components
+        - components
           Contains all OSGi related libraries and configurations.
 
         - conf
@@ -220,4 +220,4 @@ For further details, see the WSO2 Carbon documentation at
 https://docs.wso2.com/display/Carbon4411/WSO2+Carbon+Documentation
 
 ---------------------------------------------------------------------------
-(c) Copyright 2018 WSO2 Inc.
+(c) Copyright 2019 WSO2 Inc.
