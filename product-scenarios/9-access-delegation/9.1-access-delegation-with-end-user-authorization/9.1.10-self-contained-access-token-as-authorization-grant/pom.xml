@@ -19,7 +19,7 @@
     <parent>
         <artifactId>9.1-access-delegation-with-end-user-authorization</artifactId>
         <groupId>org.wso2.is</groupId>
-        <version>5.7.0</version>
+        <version>5.8.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 

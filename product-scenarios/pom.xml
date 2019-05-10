@@ -29,7 +29,7 @@
     <name>Product Scenarios</name>
     <packaging>pom</packaging>
     <groupId>org.wso2.is</groupId>
-    <version>5.7.0</version>
+    <version>5.8.0</version>
     <url>http://wso2.org/projects/identity</url>
 
     <modules>
