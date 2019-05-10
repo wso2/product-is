@@ -41,6 +41,7 @@
             org.apache.shindig.sample.container.SampleContainerGuiceModule:
             org.apache.shindig.extras.ShindigExtrasGuiceModule:
             org.apache.shindig.gadgets.admin.GadgetAdminModule:
+            org.apache.shindig.wso2.ext.OverridingModule:
             org.wso2.carbon.dashboard.shindig.features.WSO2ShindigFeaturesModule
         </param-value>
     </context-param>
