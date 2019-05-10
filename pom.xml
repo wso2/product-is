@@ -1121,6 +1121,16 @@
                 <groupId>org.wso2.carbon.automation</groupId>
                 <artifactId>org.wso2.carbon.automation.extensions</artifactId>
                 <version>${carbon.automation.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.saucelabs.selenium</groupId> <!-- Exclude Project-E from Project-B -->
+                        <artifactId>sauce-ondemand-driver</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.saucelabs.selenium</groupId> <!-- Exclude Project-E from Project-B -->
+                        <artifactId>selenium-client-factory</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.automationutils</groupId>
@@ -1796,7 +1806,7 @@
         <identity.carbon.auth.saml2.version>5.2.15</identity.carbon.auth.saml2.version>
         <identity.inbound.auth.saml.version>5.4.43</identity.inbound.auth.saml.version>
         <identity.agent.sso.version>5.1.14</identity.agent.sso.version>
-        <identity.inbound.auth.oauth.version>6.0.160</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.0.167</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.2.13</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.2.20</identity.inbound.auth.sts.version>
         <identity.outbound.auth.requestpath.basicauth.version>5.1.5</identity.outbound.auth.requestpath.basicauth.version>
@@ -1976,7 +1986,7 @@
         <cipher-tool.version>1.0.0-wso2v8</cipher-tool.version>
         <jacoco.agent.version>0.7.5.201505241946</jacoco.agent.version>
         <project.scm.id>my-scm-server</project.scm.id>
-        <carbon.business-process.version>4.4.101</carbon.business-process.version>
+        <carbon.business-process.version>4.4.104</carbon.business-process.version>
         <carbon.analytics-common.version>5.1.57</carbon.analytics-common.version>
         <osgi.framework.imp.pkg.version.range>[1.7.0, 2.0.0)</osgi.framework.imp.pkg.version.range>
         <osgi.service.component.imp.pkg.version.range>[1.2.0, 2.0.0)</osgi.service.component.imp.pkg.version.range>
