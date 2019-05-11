@@ -199,9 +199,6 @@
 
                                 <replaceregexp file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" match="^(\s)*&lt;\!--(\s)*&lt;HSMBasedCryptoProviderConfig&gt;[\s\S]*?&lt;\/HSMBasedCryptoProviderConfig&gt;(\s)*--&gt;" replace=" " flags="m" />
 
-                                <!--Enable BuildSubjectIdentifierFromSPConfig and make the default value to 'True' -->
-                                <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/identity.xml" token="&lt;!--&lt;BuildSubjectIdentifierFromSPConfig&gt;false&lt;/BuildSubjectIdentifierFromSPConfig&gt;--&gt;" value="&lt;BuildSubjectIdentifierFromSPConfig&gt;true&lt;/BuildSubjectIdentifierFromSPConfig&gt;" />
-
                                 <!-- Enable AskPassword Admin UI in product-is -->
                                 <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/identity.xml" token="&lt;EnableAskPasswordAdminUI&gt;false&lt;/EnableAskPasswordAdminUI&gt;" value="&lt;EnableAskPasswordAdminUI&gt;true&lt;/EnableAskPasswordAdminUI&gt;" />
 
