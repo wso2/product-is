@@ -65,7 +65,7 @@ public class SchemaMigrator extends Migrator {
             String databaseType = DatabaseCreator.getDatabaseType(this.conn);
             if ("mysql".equals(databaseType)) {
                 Utility.setMySQLDBName(conn);
-                if (this.conn.getMetaData().getDatabaseProductVersion().startsWith("5.7")) {
+                if (getDatabaseProductVersion() > Float.parseFloat("5.7")) {
                     databaseType = "mysql5.7";
                 }
             }
@@ -96,6 +96,16 @@ public class SchemaMigrator extends Migrator {
             } catch (SQLException e) {
                 log.error("Failed to close database connection.", e);
             }
+        }
+    }
+
+    private Float getDatabaseProductVersion() throws SQLException {
+
+        String[] splittedVersion = this.conn.getMetaData().getDatabaseProductVersion().split("\\.",2);
+        if (splittedVersion.length > 1) {
+            return Float.parseFloat(splittedVersion[0] + "." + splittedVersion[1].replaceAll("\\.",""));
+        } else {
+            return Float.parseFloat(splittedVersion[0]);
         }
     }
 

@@ -38,7 +38,7 @@ public abstract class VersionMigration {
         for (Migrator migrator : migrators) {
             log.info(Constant.MIGRATION_LOG + "Version : " + getCurrentVersion() +", Migration Step : " +
                      migrator.getClass().getSimpleName() + " of order : " + migrator.getMigratorConfig().getOrder() +
-                    "starting........................... ");
+                    " is starting........................... ");
             migrator.migrate();
         }
     }
