@@ -65,7 +65,7 @@ public class SchemaMigrator extends Migrator {
             String databaseType = DatabaseCreator.getDatabaseType(this.conn);
             if ("mysql".equals(databaseType)) {
                 Utility.setMySQLDBName(conn);
-                if (getDatabaseProductVersion() > Float.parseFloat("5.7")) {
+                if (getDatabaseProductVersion() > 5.7) {
                     databaseType = "mysql5.7";
                 }
             }
