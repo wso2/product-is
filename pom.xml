@@ -607,11 +607,6 @@
                 <version>${apache.derby.wso2.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.hibernate.wso2</groupId>
-                <artifactId>hibernate</artifactId>
-                <version>${hibernate.wso2.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>net.sf.ehcache.wso2</groupId>
                 <artifactId>ehcache</artifactId>
                 <version>${ehcache.version}</version>
@@ -1930,7 +1925,6 @@
         <stratos.version.221>2.2.1</stratos.version.221>
         <stratos.version.220>2.2.0</stratos.version.220>
         <apache.derby.wso2.version>10.3.2.1wso2v1</apache.derby.wso2.version>
-        <hibernate.wso2.version>3.2.5.ga-wso2v1</hibernate.wso2.version>
         <ehcache.version>1.5.0.wso2v3</ehcache.version>
         <bcel.wso2.version>5.2.0.wso2v1</bcel.wso2.version>
         <asm-all.version>5.2</asm-all.version>
