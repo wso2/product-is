@@ -203,9 +203,11 @@
             "        <table class=\"table table-bordered\">\n" +
             "            <thead>\n" +
             "                <tr>\n" +
-            "                    <th class='txtAlnCen width30p'>IP Address</th>\n" +
+            "                    <th class='txtAlnCen width30p'>Application</th>\n" +
             "                    <th class='txtAlnCen width30p'>User Agent</th>\n" +
+            "                    <th class='txtAlnCen width30p'>IP Address</th>\n" +
             "                    <th class='txtAlnCen width30p'>Started Time</th>\n" +
+            "                    <th class='txtAlnCen width30p'>Last Access Time</th>\n" +
             "                    <th class='txtAlnCen'>Actions</th>\n" +
             "                </tr>\n" +
             "            </thead>\n" +
@@ -216,9 +218,11 @@
             var middle = "";
             for (var i = 0; i < jsonData.length; i++){
                 middle = middle + "<tr>\n" +
-                         "<td>" + jsonData[i].IP + "</td>\n" +
+                         "<td>" + jsonData[i].app + "</td>\n" +
                          "<td>" + jsonData[i].userAgent + "</td>\n" +
-                         "<td>" + jsonData[i].startTimestamp + "</td>\n" +
+                         "<td>" + jsonData[i].ip + "</td>\n" +
+                         "<td>" + jsonData[i].loginTime + "</td>\n" +
+                         "<td>" + jsonData[i].lastAccessTime + "</td>\n" +
                          "<td>" + ' <input class="btn btn-primary" type="button" value="Terminate" onclick="terminate(\''+ jsonData[i].sessionId +'\')"> '  + "</td>\n" +
                          "</tr>";
             }

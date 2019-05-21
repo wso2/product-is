@@ -23,19 +23,36 @@ var util = require("../util/utility.jag");
 
 var log = new Log();
 var serverUrl = util.getServerUrl();
-serverUrl = serverUrl + "/SessionManagementService";
+serverSessionManagementUrl = serverUrl + "/SessionManagementService";
+serverUserSessionUrl = serverUrl + "/SessionManagementService";
+var connectorStub = Packages.org.wso2.carbon.identity.user.session.stub.UserSessionServiceStub;
+var HTTPConstants = Packages.org.apache.axis2.transport.http.HTTPConstants;
 
 var ws = require('ws');
 var webService = new ws.WSRequest();
 
 function removeSession(sessionId) {
     try {
-        var result = callWSReturnJSON(webService, serverUrl, "ser:removeMySession", sessionId);
+        var result = callWSReturnJSON(webService, serverSessionManagementUrl, "ser:removeMySession", sessionId);
     } catch (e) {
         log.error("Unable to terminate the session.");
         result = null;
     }
     return result;
+}
+
+function viewUserSession(userName,tenantDomain,userStoreDomain){
+    try {
+         var serviceStub = new connectorStub(serverUserSessionUrl);
+         var serviceClient = serviceStub._getServiceClient();
+         var option = serviceClient.getOptions();
+         option.setManageSession(true);
+         var cookie = session.get("auth-cookie");
+         option.setProperty(HTTPConstants.COOKIE_STRING, cookie);
+         return serviceStub.viewUserSession(userName,tenantDomain,userStoreDomain);
+    } catch (e) {
+        log.error("Unable to view sessions.");
+    }
 }
 
 %>

@@ -52,38 +52,34 @@ function fetchData(){
     session.put('auth-cookie', cookie);
   }
 
+  var tableRows = new Array();
+  var sessionMgtAdminClient = require('controllers/sessionMgtAdminClient.jag');
+  var userSession = sessionMgtAdminClient.viewUserSession(username,tenantDomain,userStoreDomain);
 
-
-
-  var Base64 = Packages.org.apache.commons.codec.binary.Base64;
-
-  var str = new Packages.java.lang.String(USERNAME + ':' + PASSWORD);
-  var base64 = Base64.encodeBase64(str.getBytes());
-
-  var base64Str = new java.lang.String(base64);
-
-  var headers = {"Authorization":"Basic " + base64Str, "Content-Type":"application/json"};
-
-  data = {"tableName":"ORG_WSO2_IS_ANALYTICS_STREAM_ACTIVESESSIONS", "query":"tenantDomain:" + tenantDomain + " AND username:" + username + " AND userstoreDomain:" + userStoreDomain ,"start":0, "count":3};
-
-  var jsonResult = post(DAS_SERVER_URL, stringify(data), headers,"json");
-  var dataResult = jsonResult.data;
-
-  var tableRows = new Array ();
-
-   if(dataResult != null) {
-      for (i = 0; i < dataResult.length; i++) {
-
-        var obj = {};
-        obj.IP = dataResult[i].values.remoteIp;
-        obj.userAgent = dataResult[i].values.userAgent;
-        obj.startTimestamp = new Date(dataResult[i].values.startTimestamp).toString("MMM dd");
-        obj.sessionId = dataResult[i].values.sessionId;
-
-        tableRows [i] = obj;
+  if(userSession !== null){
+    if (userSession != null && userSession.length > 0) {
+      k=0;
+      for (i = 0; i < userSession.length; i++) {
+        if(userSession[i] != null){
+          for (j = 0; j < userSession[i].applications.length; j++) {
+            if(userSession[i].applications[j] != null){
+              var obj = {};
+              obj.app = userSession[i].applications[j].appName;
+              obj.userAgent = userSession[i].userAgent;
+              obj.ip=userSession[i].ip;
+              obj.loginTime = new Date(+userSession[i].loginTime).toString("MMM dd");
+              obj.lastAccessTime = new Date(+userSession[i].lastAccessTime).toString("MMM dd");
+              obj.sessionId = userSession[i].sessionId;
+              tableRows[k] = obj;
+              k++;
+            }
+          }
+        }
       }
-   }
-  print(tableRows);
+    }
+  }
+
+print(tableRows);
 }
 
 %>
