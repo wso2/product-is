@@ -49,6 +49,7 @@ public class SchemaUtil {
 
         if (connection != null) {
             try {
+                connection.setAutoCommit(false);
                 String sql;
                 if (connection.getMetaData().getDriverName().contains("MySQL")
                     || connection.getMetaData().getDriverName().contains("H2")
@@ -74,6 +75,8 @@ public class SchemaUtil {
                     }
                 } catch (SQLException ignore) {
                     //Ignore. Exception can be thrown when the table does not exist.
+                } finally {
+                    connection.commit();
                 }
             } catch (SQLException e) {
                 log.error("Error while retrieving table metadata for table: " + tableName + " for checking existence " +

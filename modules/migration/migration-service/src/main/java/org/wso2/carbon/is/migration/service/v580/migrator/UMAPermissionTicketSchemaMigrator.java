@@ -49,14 +49,6 @@ public class UMAPermissionTicketSchemaMigrator extends SchemaMigrator {
                 log.info(COLUMN_NAME_TOKEN_ID + " column already exist in the table " +
                          TABLE_NAME_IDN_UMA_PERMISSION_TICKET + ". Hence skipping.");
             }
-
-            if (!connection.getAutoCommit()) {
-                try {
-                    connection.commit();
-                } catch (SQLException e) {
-                    log.error("Error while committing transaction.", e);
-                }
-            }
         } catch (SQLException e) {
             log.error("Error while obtaining connection from identity data source.", e);
         }
