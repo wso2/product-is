@@ -318,6 +318,28 @@
                             </artifactItems>
                         </configuration>
                     </execution>
+                    <!-- Download authenticator util module copied to authenticatorCopied/jar folder-->
+                    <execution>
+                        <id>download_authenticator_utils</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.carbon.extension.identity.authenticator.utils</groupId>
+                                    <artifactId>org.wso2.carbon.extension.identity.helper</artifactId>
+                                    <version>${identity.extension.utils}</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${basedir}/target/authenticatorCopied/jar
+                                    </outputDirectory>
+                                    <includes>**/*.jar</includes>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>

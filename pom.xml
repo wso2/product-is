@@ -1884,6 +1884,7 @@
         <authenticator.emailotp.version>2.0.17</authenticator.emailotp.version>
         <authenticator.twitter.version>1.0.10</authenticator.twitter.version>
         <authenticator.x509.version>2.0.8</authenticator.x509.version>
+        <identity.extension.utils>1.0.8</identity.extension.utils>
 
         <conditional.authentication.functions.version>0.1.30</conditional.authentication.functions.version>
 
