@@ -32,10 +32,6 @@
 
 	<dependencies>
 			<dependency>
-				<groupId>org.hibernate.wso2</groupId>
-				<artifactId>hibernate</artifactId>
-			</dependency>
-			<dependency>
 				<groupId>net.sf.ehcache.wso2</groupId>
 				<artifactId>ehcache</artifactId>
 			</dependency>
@@ -91,7 +87,6 @@
 								</properties>
 						    	</adviceFile>
 							<bundles>
-								<bundleDef>org.hibernate.wso2:hibernate</bundleDef>
 								<bundleDef>net.sf.ehcache.wso2:ehcache</bundleDef>
 								<bundleDef>org.apache.bcel.wso2:bcel</bundleDef>
 								<bundleDef>org.ow2.asm:asm-all</bundleDef>
