@@ -1873,12 +1873,13 @@
         <identity.metadata.saml.version>1.0.11</identity.metadata.saml.version>
 
         <!-- Connectors -->
-        <authenticator.totp.version>2.0.14</authenticator.totp.version>
+        <authenticator.totp.version>2.0.15</authenticator.totp.version>
         <authenticator.office365.version>1.0.6</authenticator.office365.version>
-        <authenticator.smsotp.version>2.0.19</authenticator.smsotp.version>
-        <authenticator.emailotp.version>2.0.17</authenticator.emailotp.version>
+        <authenticator.smsotp.version>2.0.20</authenticator.smsotp.version>
+        <authenticator.emailotp.version>2.0.18</authenticator.emailotp.version>
         <authenticator.twitter.version>1.0.10</authenticator.twitter.version>
         <authenticator.x509.version>2.0.8</authenticator.x509.version>
+        <identity.extension.utils>1.0.8</identity.extension.utils>
 
         <conditional.authentication.functions.version>0.1.34</conditional.authentication.functions.version>
 
