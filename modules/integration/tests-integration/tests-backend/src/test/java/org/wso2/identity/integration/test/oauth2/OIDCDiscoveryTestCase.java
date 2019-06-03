@@ -99,7 +99,11 @@ public class OIDCDiscoveryTestCase extends ISIntegrationTest {
 
         ClientConfig clientConfig = new ClientConfig();
         BasicAuthSecurityHandler basicAuth = new BasicAuthSecurityHandler();
-        basicAuth.setUserName(userInfo.getUserName());
+        if (StringUtils.isNotBlank(config.getTenant())) {
+            basicAuth.setUserName(userInfo.getUserName() + "@" + config.getTenant());
+        } else {
+            basicAuth.setUserName(userInfo.getUserName());
+        }
         basicAuth.setPassword(userInfo.getPassword());
         clientConfig.handlers(basicAuth);
 
