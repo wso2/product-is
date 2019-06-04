@@ -1,0 +1,6 @@
+{
+  "client_name": "9.1.7-dcr-app-client-credentials-grant",
+  "grant_types": [
+    "client_credentials"
+  ]
+}

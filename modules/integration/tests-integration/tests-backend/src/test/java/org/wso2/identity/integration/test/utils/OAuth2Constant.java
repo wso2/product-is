@@ -33,6 +33,7 @@ public final class OAuth2Constant {
     public static final String AUTHORIZATION_HEADER = "Authorization";
 
     public final static String ACCESS_TOKEN = "access_token";
+    public static final String REFRESH_TOKEN = "refresh_token";
     public static final String ID_TOKEN = "id_token";
     public final static String ACCESS_TOKEN_TYPE = "bearer";
     public final static String OAUTH_VERSION_2 = "OAuth-2.0";
