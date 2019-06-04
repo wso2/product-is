@@ -1800,14 +1800,14 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>5.12.387</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.12.397</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.11.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
         <identity.carbon.auth.saml2.version>5.2.15</identity.carbon.auth.saml2.version>
-        <identity.inbound.auth.saml.version>5.4.43</identity.inbound.auth.saml.version>
-        <identity.agent.sso.version>5.1.14</identity.agent.sso.version>
-        <identity.inbound.auth.oauth.version>6.0.168</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.saml.version>5.4.48</identity.inbound.auth.saml.version>
+        <identity.agent.sso.version>5.1.23</identity.agent.sso.version>
+        <identity.inbound.auth.oauth.version>6.0.173</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.2.13</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.2.20</identity.inbound.auth.sts.version>
         <identity.outbound.auth.requestpath.basicauth.version>5.1.5</identity.outbound.auth.requestpath.basicauth.version>
@@ -1827,8 +1827,8 @@
         <identity.data.publisher.authentication.version>5.1.12</identity.data.publisher.authentication.version>
         <identity.data.publisher.oauth.version>1.0.13</identity.data.publisher.oauth.version>
         <identity.data.publisher.audit.version>1.0.4</identity.data.publisher.audit.version>
-        <identity.governance.version>1.1.66</identity.governance.version>
-        <carbon.identity.auth.version>1.1.26</carbon.identity.auth.version>
+        <identity.governance.version>1.1.67</identity.governance.version>
+        <carbon.identity.auth.version>1.1.27</carbon.identity.auth.version>
         <identity.event.handler.account.lock.version>1.1.15</identity.event.handler.account.lock.version>
         <identity.event.handler.notification.version>1.0.24</identity.event.handler.notification.version>
         <identity.app.authz.xacml.version>2.0.2</identity.app.authz.xacml.version>
@@ -1840,9 +1840,9 @@
         <!--<identity.agent-entitlement-filter.version>5.1.1</identity.agent-entitlement-filter.version>-->
 
         <!-- Authenticator Properties -->
-        <identity.outbound.auth.oidc.version>5.1.21</identity.outbound.auth.oidc.version>
+        <identity.outbound.auth.oidc.version>5.2.0</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.passive.sts.version>5.2.3</identity.outbound.auth.passive.sts.version>
-        <identity.outbound.auth.samlsso.version>5.1.22</identity.outbound.auth.samlsso.version>
+        <identity.outbound.auth.samlsso.version>5.1.23</identity.outbound.auth.samlsso.version>
 
         <!-- Social Authenticator Properties -->
         <social.authenticator.facebook.version>5.1.14</social.authenticator.facebook.version>
@@ -1877,7 +1877,7 @@
         <authenticator.smsotp.version>2.0.20</authenticator.smsotp.version>
         <authenticator.emailotp.version>2.0.18</authenticator.emailotp.version>
         <authenticator.twitter.version>1.0.10</authenticator.twitter.version>
-        <authenticator.x509.version>2.0.8</authenticator.x509.version>
+        <authenticator.x509.version>2.0.9</authenticator.x509.version>
         <identity.extension.utils>1.0.8</identity.extension.utils>
 
         <conditional.authentication.functions.version>0.1.34</conditional.authentication.functions.version>
