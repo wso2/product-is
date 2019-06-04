@@ -107,12 +107,17 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
     @AfterClass(alwaysRun = true)
     public void endTest() throws Exception {
 
-        super.deleteServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
-        deleteUserInSecondaryIS();
+        try {
+            super.deleteServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
+            deleteUserInSecondaryIS();
 
-        remoteUSMServiceClient = null;
+            remoteUSMServiceClient = null;
 
-        removeConfigurationsFromPrimaryIS();
+            removeConfigurationsFromPrimaryIS();
+        } catch (Exception e) {
+            log.error("Failure occured due to :" + e.getMessage(), e);
+            throw e;
+        }
     }
 
     @Test(priority = 1, groups = "wso2.is", description = "Check create service provider in secondary IS")

@@ -1,0 +1,8 @@
+{
+  "client_name": "dcr-app-1",
+  "grant_types": [
+    "password"
+  ],
+  "ext_param_client_id": "dcr_app_1_client_id",
+  "ext_param_client_secret": "dcr_app_1_client_secret"
+}

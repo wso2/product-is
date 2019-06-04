@@ -127,28 +127,37 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
-        oauthAdminClient.removeOAuthApplicationData(consumerKey);
-        samlSSOConfigServiceClient.removeServiceProvider(SECONDARY_IS_APPLICATION_NAME);
-        applicationManagementServiceClient.deleteApplication(PRIMARY_IS_APPLICATION_NAME);
-        applicationManagementServiceClient2.deleteApplication(SECONDARY_IS_APPLICATION_NAME);
-        identityProviderMgtServiceClient.deleteIdP(IDP_NAME);
-        client.getConnectionManager().shutdown();
+        try {
+            oauthAdminClient.removeOAuthApplicationData(consumerKey);
+            samlSSOConfigServiceClient.removeServiceProvider(SECONDARY_IS_APPLICATION_NAME);
+            applicationManagementServiceClient.deleteApplication(PRIMARY_IS_APPLICATION_NAME);
+            applicationManagementServiceClient2.deleteApplication(SECONDARY_IS_APPLICATION_NAME);
+            identityProviderMgtServiceClient.deleteIdP(IDP_NAME);
+            client.getConnectionManager().shutdown();
 
-        this.logManger.logOut();
-        logManger = null;
-        //Restore carbon.home system property to initial value
-        System.setProperty("carbon.home", initialCarbonHome);
+            this.logManger.logOut();
+            logManger = null;
+            //Restore carbon.home system property to initial value
+            System.setProperty("carbon.home", initialCarbonHome);
+        } catch (Exception e) {
+            log.error("Failure occured due to :" + e.getMessage(), e);
+            throw e;
+        }
     }
 
     @Test(groups = "wso2.is", description = "Check conditional authentication flow.")
     public void testConditionalAuthentication() throws Exception {
 
+        updateAuthScript("ConditionalAuthenticationTestCase.js");
         response = loginWithOIDC(PRIMARY_IS_APPLICATION_NAME, consumerKey, client);
         /* Here if the client is redirected to the secondary IS, it indicates that the conditional authentication steps
          has been successfully completed. */
-        assertTrue(response.getFirstHeader("location").getValue().contains(SECONDARY_IS_SAMLSSO_URL),
-                "Failed to follow the conditional authentication steps.");
+        String locationHeader = response.getFirstHeader("location").getValue();
         EntityUtils.consume(response.getEntity());
+        log.info("The location header value of the response: " + locationHeader);
+        assertTrue(locationHeader.contains(SECONDARY_IS_SAMLSSO_URL),
+                "Failed to follow the conditional authentication steps.");
+
         cookieStore.clear();
     }
 
@@ -181,11 +190,18 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
     public void testConditionalAuthenticationClaimAssignment() throws Exception {
 
         // Update authentication script to handle authentication based on HTTP context.
-        updateAuthScript("ConditionalAuthenticationClaimAssignTestCase.js");
-        response = loginWithOIDC(PRIMARY_IS_APPLICATION_NAME, consumerKey, client);
+        try {
+            updateAuthScript("ConditionalAuthenticationClaimAssignTestCase.js");
+            response = loginWithOIDC(PRIMARY_IS_APPLICATION_NAME, consumerKey, client);
 
-        EntityUtils.consume(response.getEntity());
-        cookieStore.clear();
+            EntityUtils.consume(response.getEntity());
+            cookieStore.clear();
+        } catch (Exception e) {
+            //Temporary added the catch part for the debugging purpose.
+            log.error("Failed to execute the testConditionalAuthenticationClaimAssignment: " + e.getMessage(), e);
+            throw e;
+        }
+
     }
 
     /**
