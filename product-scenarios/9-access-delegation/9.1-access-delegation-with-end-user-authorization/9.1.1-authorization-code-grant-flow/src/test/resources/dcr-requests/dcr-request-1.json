@@ -1,0 +1,9 @@
+{
+  "client_name": "9.1.1-dcr-app-code-grant",
+  "grant_types": [
+    "authorization_code"
+  ],
+  "redirect_uris": [
+    "https://dcr-app-code-grant.com/callback"
+  ]
+}

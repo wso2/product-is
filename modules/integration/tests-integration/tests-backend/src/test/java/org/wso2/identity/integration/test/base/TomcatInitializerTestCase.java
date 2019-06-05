@@ -75,8 +75,7 @@ public class TomcatInitializerTestCase extends ISIntegrationTest {
 
         tomcat = Utils.getTomcat(getClass());
         for (String application : APPLICATIONS) {
-            URL resourceUrl = getClass()
-                    .getResource(File.separator + "samples" + File.separator + application + ".war");
+            URL resourceUrl = getClass().getResource("/samples/" + application + ".war");
             tomcat.addWebapp(tomcat.getHost(), "/" + application, resourceUrl.getPath());
             LOG.info("Deployed tomcat application " + application);
         }

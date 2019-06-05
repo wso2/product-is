@@ -111,39 +111,51 @@ public class IDENTITY4776SCIMServiceWithOAuthTestCase extends OAuth2ServiceAbstr
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
-        deleteApplication();
-        removeOAuthApplicationData();
-        userMgtClient.deleteUser(SCIM_USER_NAME);
-        userMgtClient.deleteUser(SECONDARY_STORE_USER_NAME);
-        userMgtClient.deleteRole(SECONDARY_STORE_USER_ROLE);
-        userStoreConfigAdminServiceClient.deleteUserStore(DOMAIN_ID);
-        serverConfigurationManager.restoreToLastConfiguration(false);
+
+        try {
+            deleteApplication();
+            removeOAuthApplicationData();
+            userMgtClient.deleteUser(SCIM_USER_NAME);
+            userMgtClient.deleteUser(SECONDARY_STORE_USER_NAME);
+            userMgtClient.deleteRole(SECONDARY_STORE_USER_ROLE);
+            userStoreConfigAdminServiceClient.deleteUserStore(DOMAIN_ID);
+            serverConfigurationManager.restoreToLastConfiguration(false);
+        } catch (Exception e) {
+            log.error("Error occured while executing the test case: " + e.getMessage(), e);
+            throw e;
+        }
     }
 
     @Test(groups = "wso2.is", description = "loginUsingSecondaryUserStoreUser")
     public void addUsersUsingOAuthandSCIM() throws Exception {
-        addSecondaryUserStore();
-        addUserIntoSecondaryUserStore();
-        registerOAuthApplication();
-        loginUsingSecondaryUserStoreUser();
 
-        //create SCIM client
-        SCIMClient scimClient = new SCIMClient();
-        String postData = SCIMUtils.getEncodedSCIMUser(scimClient, SCIM_USER_NAME, "test",
-                new String[]{"scimUser@gmail.com", "scimUser@wso2.com"}, "SCIMUser", "password1",
-                "Sinhala", "0711234567");
+        try {
+            addSecondaryUserStore();
+            addUserIntoSecondaryUserStore();
+            registerOAuthApplication();
+            loginUsingSecondaryUserStoreUser();
 
-        //create a apache wink ClientHandler to intercept and identify response messages
-        Resource userResource = SCIMUtils.getUserResource(scimClient, scimUrl);
-        String response = userResource.
-                header(SCIMConstants.AUTHORIZATION_HEADER, "Bearer " + accessToken).
-                contentType(SCIMConstants.APPLICATION_JSON).accept(SCIMConstants.APPLICATION_JSON).
-                post(String.class, postData);
+            //create SCIM client
+            SCIMClient scimClient = new SCIMClient();
+            String postData = SCIMUtils.getEncodedSCIMUser(scimClient, SCIM_USER_NAME, "test",
+                    new String[]{"scimUser@gmail.com", "scimUser@wso2.com"}, "SCIMUser", "password1",
+                    "Sinhala", "0711234567");
 
-        Object obj = JSONValue.parse(response);
-        String scimUserId = ((JSONObject) obj).get("id").toString();
-        Assert.assertTrue(isUserExists());
-        Assert.assertNotNull(scimUserId);
+            //create a apache wink ClientHandler to intercept and identify response messages
+            Resource userResource = SCIMUtils.getUserResource(scimClient, scimUrl);
+            String response = userResource.
+                    header(SCIMConstants.AUTHORIZATION_HEADER, "Bearer " + accessToken).
+                    contentType(SCIMConstants.APPLICATION_JSON).accept(SCIMConstants.APPLICATION_JSON).
+                    post(String.class, postData);
+
+            Object obj = JSONValue.parse(response);
+            String scimUserId = ((JSONObject) obj).get("id").toString();
+            Assert.assertTrue(isUserExists());
+            Assert.assertNotNull(scimUserId);
+        } catch (Exception e) {
+            log.error("Error occured while executing the test case: " + e.getMessage(), e);
+            throw e;
+        }
     }
 
     private void addSecondaryUserStore() throws Exception {
