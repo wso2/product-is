@@ -91,11 +91,16 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
-        for (String role : rolesToAdd) {
-            usmClient.deleteRole(role);
+        try {
+            for (String role : rolesToAdd) {
+                usmClient.deleteRole(role);
+            }
+            client = null;
+            usmClient = null;
+        } catch (Exception e) {
+            log.error("Failure occured due to :" + e.getMessage(), e);
+            throw e;
         }
-        client = null;
-        usmClient = null;
     }
 
     @Test(alwaysRun = true, description = "Testing adding a BPS Profile")

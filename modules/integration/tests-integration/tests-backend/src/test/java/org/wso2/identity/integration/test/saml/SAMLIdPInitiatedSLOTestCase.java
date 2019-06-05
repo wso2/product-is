@@ -194,6 +194,8 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
         try {
             logAdmin.updateLoggerData("org.wso2.carbon.identity.sso.saml.logout.LogoutRequestSender",
                     LoggingAdminClient.LogLevel.DEBUG.name(), true, false);
+            logAdmin.updateLoggerData("org.wso2.carbon.identity.sso.saml.util.SAMLSSOUtil",
+                    LoggingAdminClient.LogLevel.DEBUG.name(), true, false);
             logViewer.clearLogs();
 
             HttpResponse response = Utils.sendGetRequest(SAML_IDP_SLO_URL, USER_AGENT, httpClient);

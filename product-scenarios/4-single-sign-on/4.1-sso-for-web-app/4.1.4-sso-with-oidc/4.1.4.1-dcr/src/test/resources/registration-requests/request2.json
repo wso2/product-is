@@ -1,0 +1,12 @@
+{
+  "client_name": "dcr-app-2",
+  "grant_types": [
+    "authorization_code",
+    "implicit"
+  ],
+  "ext_param_client_id": "dcr_app_2_client_id",
+  "ext_param_client_secret": "dcr_app_2_client_secret",
+  "redirect_uris": [
+    "https://dcr-app-2.com/callback"
+  ]
+}
