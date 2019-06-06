@@ -45,6 +45,7 @@ import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -129,7 +130,8 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
                 .replace("services/", "oauth2/authorize");
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters, authorizeEndpoint);
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
-        Assert.assertTrue(locationHeader.getValue().startsWith(OAuth2Constant.CALLBACK_URL),
+        String urlDecodedLocationHeader = URLDecoder.decode(locationHeader.getValue(), "UTF-8");
+        Assert.assertTrue(urlDecodedLocationHeader.contains("redirect_uri=" + OAuth2Constant.CALLBACK_URL),
                 "Error response is not redirected to the redirect_uri given in the request");
         EntityUtils.consume(response.getEntity());
     }
