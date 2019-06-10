@@ -5,6 +5,7 @@ import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -20,13 +21,16 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+import org.wso2.identity.integration.common.clients.claim.metadata.mgt.ClaimMetadataManagementServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 import java.io.IOException;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.EMAILS_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.EMAIL_TYPE_HOME_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.EMAIL_TYPE_WORK_ATTRIBUTE;
@@ -55,6 +59,10 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
     private static final String EMAIL_TYPE_HOME_CLAIM_VALUE = "scim2user@gmail.com";
     public static final String USERNAME = "scim2user";
     public static final String PASSWORD = "testPassword";
+    private ClaimMetadataManagementServiceClient claimMetadataManagementServiceClient = null;
+    private String backendURL;
+    private String sessionCookie;
+    private TestUserMode testUserMode;
 
     private CloseableHttpClient client;
 
@@ -83,6 +91,7 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
         this.adminUsername = context.getContextTenant().getTenantAdmin().getUserName();
         this.adminPassword = context.getContextTenant().getTenantAdmin().getPassword();
         this.tenant = context.getContextTenant().getDomain();
+        testUserMode = userMode;
     }
 
     @DataProvider(name = "SCIM2UserConfigProvider")
@@ -285,6 +294,75 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
         Assert.assertEquals(resourceSchemas.size(), 1);
         Assert.assertEquals(resourceSchemas.get(0).toString(), RESOURCE_TYPE_SCHEMA);
 
+    }
+
+    @Test
+    public void testUpdateUserWhenExternalClaimDeleted() throws Exception {
+
+        AutomationContext context = new AutomationContext("IDENTITY", testUserMode);
+        backendURL = context.getContextUrls().getBackEndUrl();
+        loginLogoutClient = new LoginLogoutClient(context);
+        sessionCookie = loginLogoutClient.login();
+        HttpPost postRequest = new HttpPost(getPath());
+        postRequest.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+        postRequest.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+
+        JSONObject rootObject = new JSONObject();
+
+        JSONArray schemas = new JSONArray();
+        rootObject.put(SCHEMAS_ATTRIBUTE, schemas);
+
+        JSONObject names = new JSONObject();
+        names.put(FAMILY_NAME_ATTRIBUTE, "udaranga");
+        names.put(GIVEN_NAME_ATTRIBUTE, "buddhima");
+
+        rootObject.put(NAME_ATTRIBUTE, names);
+        rootObject.put(USER_NAME_ATTRIBUTE, "wso2is");
+
+        JSONObject emailWork = new JSONObject();
+        emailWork.put(TYPE_PARAM, EMAIL_TYPE_WORK_ATTRIBUTE);
+        emailWork.put(VALUE_PARAM, EMAIL_TYPE_WORK_CLAIM_VALUE);
+
+        JSONObject emailHome = new JSONObject();
+        emailHome.put(TYPE_PARAM, EMAIL_TYPE_HOME_ATTRIBUTE);
+        emailHome.put(VALUE_PARAM, EMAIL_TYPE_HOME_CLAIM_VALUE);
+
+        JSONArray emails = new JSONArray();
+        emails.add(emailWork);
+        emails.add(emailHome);
+
+        rootObject.put(EMAILS_ATTRIBUTE, emails);
+
+        rootObject.put(PASSWORD_ATTRIBUTE, PASSWORD);
+
+        StringEntity entity = new StringEntity(rootObject.toString());
+        postRequest.setEntity(entity);
+        HttpResponse postResponse = client.execute(postRequest);
+        assertEquals(postResponse.getStatusLine().getStatusCode(), 201,
+                "User " + "has not been created in patch process successfully");
+        Object responseObj = JSONValue.parse(EntityUtils.toString(postResponse.getEntity()));
+        EntityUtils.consume(postResponse.getEntity());
+        userId = ((JSONObject) responseObj).get(ID_ATTRIBUTE).toString();
+        assertNotNull(userId);
+        String userResourcePath = getPath() + "/" + userId;
+
+        claimMetadataManagementServiceClient = new ClaimMetadataManagementServiceClient(backendURL, sessionCookie);
+        claimMetadataManagementServiceClient.removeExternalClaim("urn:ietf:params:scim:schemas:core:2.0:User",
+                "urn:ietf:params:scim:schemas:core:2.0:User:name.honorificSuffix");
+        HttpPatch request = new HttpPatch(userResourcePath);
+        StringEntity params = new StringEntity("{\"schemas\":[\"urn:ietf:params:scim:api:messages:2.0:PatchOp\"],"
+                + "\"Operations\":[{\"op\":\"replace\",\"path\":\"name\",\"value\":{\"givenName\":\"mahela\","
+                + "\"familyName\":\"jayaxxxx\"}}]}");
+
+        request.setEntity(params);
+        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+        request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+        HttpResponse response = client.execute(request);
+        assertEquals(response.getStatusLine().getStatusCode(), 200, "User " + "has not been updated successfully");
+        Object responseObjAfterPatch = JSONValue.parse(EntityUtils.toString(response.getEntity()));
+        EntityUtils.consume(response.getEntity());
+        String updatedGivenName = ((JSONObject) responseObjAfterPatch).get(NAME_ATTRIBUTE).toString();
+        assertTrue(updatedGivenName.contains("mahela"));
     }
 
     private String getPath() {
