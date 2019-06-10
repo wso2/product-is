@@ -41,7 +41,6 @@ import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticati
 import org.wso2.carbon.identity.application.common.model.xsd.OutboundProvisioningConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.Property;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
-import org.wso2.carbon.identity.claim.metadata.mgt.stub.dto.ExternalClaimDTO;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
@@ -57,8 +56,7 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
 
     private static final String OAUTH_ROLE = "oauthRole";
     private static final String ROLE_CLAIM_URI = "http://wso2.org/claims/role";
-    private static final String OIDC_DIALECT_URI = "http://wso2.org/oidc/claim";
-    private static final String OIDC_ROLE_CLAIM_URI = "role";
+    private static final String OIDC_GROUP_CLAIM_URI = "groups";
     private static final String FIRST_NAME_VALUE = "FirstName";
     private static final String LAST_NAME_VALUE = "LastName";
     private static final String EMAIL_VALUE = "email@wso2.com";
@@ -76,13 +74,6 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
     private static final String USERNAME = "oauthuser";
     private static final String PASSWORD = "oauthuser";
 
-    private ClaimMetadataManagementServiceClient claimMetadataManagementServiceClient;
-    private OauthAdminClient oauthAdminClient;
-
-    private String openidScope = "sub,email,email_verified,name,family_name,given_name,middle_name,nickname," +
-            "preferred_username,profile,picture,website,gender,birthdate,zoneinfo,locale,updated_at,phone_number," +
-            "phone_number_verified,address,street_address,country,formatted,postal_code,locality,region";
-
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
@@ -92,19 +83,8 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
         client = new DefaultHttpClient();
 
         remoteUSMServiceClient.addRole(OAUTH_ROLE, null, null);
-        remoteUSMServiceClient.addUser(USERNAME, PASSWORD,
-                null, getUserClaims(),
-                "default", false);
-        oauthAdminClient = new OauthAdminClient(backendURL, sessionCookie);
-        String[] claim = {OIDC_ROLE_CLAIM_URI};
-        claimMetadataManagementServiceClient = new ClaimMetadataManagementServiceClient(backendURL, sessionCookie);
-
-        ExternalClaimDTO externalClaimDTO = new ExternalClaimDTO();
-        externalClaimDTO.setExternalClaimDialectURI(OIDC_DIALECT_URI);
-        externalClaimDTO.setExternalClaimURI(OIDC_ROLE_CLAIM_URI);
-        externalClaimDTO.setMappedLocalClaimURI(ROLE_CLAIM_URI);
-        claimMetadataManagementServiceClient.addExternalClaim(externalClaimDTO);
-        oauthAdminClient.updateScope(OPENID_SCOPE_PROPERTY, claim, null);
+        remoteUSMServiceClient.addUser(USERNAME, PASSWORD, null, getUserClaims(), "default",
+                false);
     }
 
     @AfterClass(alwaysRun = true)
@@ -113,8 +93,6 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
         deleteApplication();
         remoteUSMServiceClient.deleteRole(OAUTH_ROLE);
         remoteUSMServiceClient.deleteUser(USERNAME);
-        claimMetadataManagementServiceClient.removeExternalClaim(OIDC_DIALECT_URI, OIDC_ROLE_CLAIM_URI);
-
         consumerKey = null;
     }
 
@@ -157,7 +135,8 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
 
         String encodedIdToken = ((JSONObject) obj).get("id_token").toString().split("\\.")[1];
         Object idToken = JSONValue.parse(new String(Base64.decodeBase64(encodedIdToken)));
-        Object roles = ((JSONObject) idToken).get(OIDC_ROLE_CLAIM_URI);
+        Object roles = ((JSONObject) idToken).get(OIDC_GROUP_CLAIM_URI);
+        Assert.assertNotNull(roles, "Id token should contain at least one role");
         if (!(roles instanceof String)) {
             Assert.fail("Id token should contain Internal/everyone role only");
         }
@@ -192,7 +171,7 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
 
         String encodedIdToken = ((JSONObject) obj).get("id_token").toString().split("\\.")[1];
         Object idToken = JSONValue.parse(new String(Base64.decodeBase64(encodedIdToken)));
-        Object roles = ((JSONObject) idToken).get(OIDC_ROLE_CLAIM_URI);
+        Object roles = ((JSONObject) idToken).get(OIDC_GROUP_CLAIM_URI);
         ArrayList<String> roleList = new ArrayList<>();
         for (int i = 0; i < ((JSONArray) roles).size(); i++) {
             roleList.add(((JSONArray) roles).get(i).toString());
