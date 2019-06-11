@@ -82,11 +82,7 @@ public class UserProfileAdminTestCase extends ISIntegrationTest {
         logManger = null;
         log.info("Replacing identity.xml with default configurations");
 
-        File defaultIdentityXML = Paths.get(getISResourceLocation() + File.separator + "default-identity.xml").toFile();
-
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
-        serverConfigurationManager.applyConfigurationWithoutRestart(defaultIdentityXML, identityXml, true);
-        serverConfigurationManager.restartGracefully();
+        serverConfigurationManager.restoreToLastConfiguration(false);
 
     }
     

@@ -18,8 +18,6 @@
 
 package org.wso2.identity.integration.test.oidc;
 
-import org.apache.catalina.LifecycleException;
-import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -52,35 +50,11 @@ public class OIDCAbstractIntegrationTest extends OAuth2ServiceAbstractIntegratio
 
     private static final Log log = LogFactory.getLog(OIDCAbstractIntegrationTest.class);
 
-    protected Tomcat tomcat;
-
     @Override
     protected void init(TestUserMode userMode) throws Exception {
 
         super.init(userMode);
         setSystemproperties();
-    }
-
-    /**
-     * Starts a tomcat server instance
-     *
-     * @throws LifecycleException
-     */
-    public void startTomcat() throws LifecycleException {
-
-        tomcat = getTomcat();
-        tomcat.start();
-    }
-
-    /**
-     * Stops tomcat server instance
-     *
-     * @throws LifecycleException
-     */
-    public void stopTomcat() throws LifecycleException {
-
-        tomcat.stop();
-        tomcat.destroy();
     }
 
     /**

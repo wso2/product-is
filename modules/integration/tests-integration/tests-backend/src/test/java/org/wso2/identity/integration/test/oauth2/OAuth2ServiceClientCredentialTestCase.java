@@ -17,10 +17,10 @@
 */
 package org.wso2.identity.integration.test.oauth2;
 
-import org.apache.catalina.startup.Tomcat;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
@@ -29,13 +29,10 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
-import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
-import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 
-import java.io.File;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,8 +48,7 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
 	private String consumerKey;
 	private String consumerSecret;
 
-	private DefaultHttpClient client;
-	private Tomcat tomcat;
+	private CloseableHttpClient client;
 
 	@BeforeClass(alwaysRun = true)
 	public void testInit() throws Exception {
@@ -66,35 +62,20 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
 				isServer.getInstance().getHosts().get("default"));
 
 		setSystemproperties();
-		client = new DefaultHttpClient();
+		client = HttpClientBuilder.create().build();
 	}
 
 	@AfterClass(alwaysRun = true)
 	public void atEnd() throws Exception {
 		deleteApplication();
 		removeOAuthApplicationData();
-		stopTomcat(tomcat);
-
+		client.close();
 		logManger = null;
 		consumerKey = null;
 		accessToken = null;
 	}
 
-	@Test(alwaysRun = true, description = "Deploy playground application")
-	public void testDeployPlaygroundApp() {
-		try {
-			tomcat = getTomcat();
-			URL resourceUrl =
-			                  getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR +
-			                                                 "playground2.war");
-			startTomcat(tomcat, OAuth2Constant.PLAYGROUND_APP_CONTEXT_ROOT, resourceUrl.getPath());
-
-		} catch (Exception e) {
-			Assert.fail("Playground application deployment failed.", e);
-		}
-	}
-
-	@Test(groups = "wso2.is", description = "Check Oauth2 application registration", dependsOnMethods = "testDeployPlaygroundApp")
+	@Test(groups = "wso2.is", description = "Check Oauth2 application registration")
 	public void testRegisterApplication() throws Exception {
 
 		OAuthConsumerAppDTO appDto = createApplication();
@@ -157,5 +138,4 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
 		Assert.assertEquals(valid, "true", "Token Validation failed");
 		EntityUtils.consume(response.getEntity());
 	}
-
 }

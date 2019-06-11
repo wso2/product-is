@@ -27,9 +27,9 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
-import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
 import java.util.Arrays;
@@ -48,7 +48,7 @@ public class CARBON15502ReadWriteLDAPUserStoreManagerTestCase extends ISIntegrat
     public void testInit() throws Exception {
 
         start();
-        String carbonHome = CarbonUtils.getCarbonHome();
+        String carbonHome = Utils.getResidentCarbonHome();
         userMgtServerFile = new File(carbonHome + File.separator + "repository" + File.separator
                                      + "conf" + File.separator + "user-mgt.xml");
 

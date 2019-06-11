@@ -67,7 +67,13 @@ public class UserStoreDeployerTestCase extends ISIntegrationTest {
 
     @Test(groups = "wso2.is", description = "Test multiple user stores", dependsOnMethods = "testDroppingFile")
     public void testMultipleUserStores() throws RemoteException, UserAdminUserAdminException {
-        Assert.assertTrue("Multiple user stores not detected.",userMgtClient.hasMultipleUserStores());
+
+        try {
+            Assert.assertTrue("Multiple user stores not detected.", userMgtClient.hasMultipleUserStores());
+        } catch (RemoteException | UserAdminUserAdminException e) {
+            log.error("Failed to execute the test, " + e.getMessage(), e);
+            throw e;
+        }
     }
 
     @Test(groups = "wso2.is", description = "Test user store add user", dependsOnMethods = "testMultipleUserStores")

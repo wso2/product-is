@@ -17,7 +17,6 @@
  */
 package org.wso2.identity.integration.test.saml;
 
-import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -32,14 +31,12 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
-import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,7 +57,6 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
     private static final String emailClaimURI = "http://wso2.org/claims/emailaddress";
 
     private SAMLConfig config;
-    private Tomcat tomcatServer;
 
     private String resultPage;
 
@@ -79,15 +75,6 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
         super.testInit();
         super.createUser(config);
         super.createApplication(config, APPLICATION_NAME);
-
-        //Starting tomcat
-        log.info("Starting Tomcat");
-        tomcatServer = Utils.getTomcat(getClass());
-
-        URL resourceUrl = getClass()
-                .getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR + config.getApp().getArtifact() + ".war");
-        Utils.startTomcat(tomcatServer, "/" + config.getApp().getArtifact(), resourceUrl.getPath());
-
     }
 
     @AfterClass(alwaysRun = true)
@@ -97,11 +84,6 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
         super.deleteApplication(APPLICATION_NAME);
 
         super.testClear();
-
-        //Stopping tomcat
-        tomcatServer.stop();
-        tomcatServer.destroy();
-        Thread.sleep(10000);
     }
 
     @Test(description = "Add service provider", groups = "wso2.is", priority = 1)

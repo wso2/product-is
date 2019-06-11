@@ -55,7 +55,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.rmi.RemoteException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -65,7 +66,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.xml.xpath.XPathExpressionException;
 
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.CALLBACK_URL;
 
@@ -85,7 +85,7 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
     private ServerConfigurationManager serverConfigurationManager;
     private IdentityProvider superTenantResidentIDP;
 
-    Map<String, Integer> userRiskScores = new HashMap<>();
+    private Map<String, Integer> userRiskScores = new HashMap<>();
 
     MicroserviceServer microserviceServer;
 
@@ -103,22 +103,38 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
                         "authenticators" + ISIntegrationTest.URL_SEPARATOR +
                         "org.wso2.carbon.identity.sample.extension.authenticators.jar");
 
-        File jarDestFile = new File(Utils.getResidentCarbonHome()
-                + File.separator + File.separator + "repository"
+        String authenticatorPathString = Utils.getResidentCarbonHome()
+                + File.separator + "repository"
                 + File.separator + "components" + File.separator
-                + "dropins" + File.separator + "org.wso2.carbon.identity.sample.extension.authenticators.jar");
+                + "dropins" + File.separator + "org.wso2.carbon.identity.sample.extension.authenticators.jar";
+        File jarDestFile = new File(authenticatorPathString);
         FileOutputStream jarDest = new FileOutputStream(jarDestFile);
         copyFileUsingStream(jarUrl, jarDest);
+        log.info("Copied the demo authenticator jar file to " + authenticatorPathString);
+        Assert.assertTrue(Files.exists(Paths.get(authenticatorPathString)), "Demo Authenticator is not copied " +
+                "successfully. File path: " + authenticatorPathString);
 
-        File warDestFile = new File(Utils.getResidentCarbonHome()
-                + File.separator + File.separator + "repository"
-                + File.separator + "deployment" + File.separator
-                + "server" + File.separator + "webapps" + File.separator + "sample-auth.war");
+        String authenticatorWarPathString = Utils.getResidentCarbonHome()
+                + File.separator + "repository" + File.separator + "deployment" + File.separator
+                + "server" + File.separator + "webapps" + File.separator + "sample-auth.war";
+        File warDestFile = new File(authenticatorWarPathString);
         FileOutputStream warDest = new FileOutputStream(warDestFile);
         copyFileUsingStream(webappUrl, warDest);
 
+        // Waiting for the war file to deploy.
+        String authenticatorWebappPathString = Utils.getResidentCarbonHome()
+                + File.separator + "repository" + File.separator + "deployment" + File.separator
+                + "server" + File.separator + "webapps" + File.separator + "sample-auth";
+        waitForWebappToDeploy(authenticatorWebappPathString, 120000L);
+
+        log.info("Copied the demo authenticator war file to " + authenticatorWarPathString);
+        Assert.assertTrue(Files.exists(Paths.get(authenticatorWarPathString)), "Demo Authenticator war is not copied " +
+                "successfully. File path: " + authenticatorWarPathString);
+
+        log.info("Restarting the server at: " + isServer.getContextUrls().getBackEndUrl());
         serverConfigurationManager = new ServerConfigurationManager(isServer);
-        serverConfigurationManager.restartGracefully();
+        serverConfigurationManager.restartForcefully();
+        log.info("Restarting the server at: " + isServer.getContextUrls().getBackEndUrl() + " is successful");
 
         super.init();
         logManger = new AuthenticatorClient(backendURL);
@@ -154,6 +170,23 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
         userRiskScores.put(userInfo.getUserName(), 0);
     }
 
+    private void waitForWebappToDeploy(String authenticatorWebappPathString, long timeout) {
+
+        long startTime = System.currentTimeMillis();
+
+        while (System.currentTimeMillis() - startTime < timeout) {
+            if (Files.exists(Paths.get(authenticatorWebappPathString))) {
+                log.info(authenticatorWebappPathString + " deployed successfully.");
+                break;
+            }
+            try {
+                Thread.sleep(1000L);
+            } catch (InterruptedException e) {
+                // ignore
+            }
+        }
+    }
+
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
@@ -172,17 +205,13 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
                 + "dropins" + File.separator + "org.wso2.carbon.identity.sample.extension.authenticators.jar");
         jarDestFile.delete();
         boolean deleted = deleteWebApp("sample-auth");
-
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
-        serverConfigurationManager.restartGracefully();
-
         deleted = deleted || deleteWebApp("sample-auth");
         Assert.assertTrue(deleted, "sample-auth webapp deletion failed.");
     }
 
     /**
      * Deletes a webapp from the is server.
-     *
+     * <p>
      * This first tries to delete the webapp via the webapp admin service.
      * Failing that, it tries to delete the war and exploded dir manually.
      *
@@ -191,6 +220,7 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
      * @throws Exception for any unhandled exceptions in this test utility
      */
     private boolean deleteWebApp(String webappName) throws Exception {
+
         List<String> webAppList = new ArrayList<>();
         webAppList.add(webappName);
         webAppAdminClient.deleteWebAppList(webAppList, isServer.getDefaultInstance().getHosts().get("default"));
@@ -292,7 +322,8 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
 
     protected LocalAndOutboundAuthenticationConfig createLocalAndOutboundAuthenticationConfig() throws Exception {
 
-        LocalAndOutboundAuthenticationConfig localAndOutboundAuthenticationConfig = super.createLocalAndOutboundAuthenticationConfig();
+        LocalAndOutboundAuthenticationConfig localAndOutboundAuthenticationConfig =
+                super.createLocalAndOutboundAuthenticationConfig();
 
         AuthenticationStep authenticationStep2 = new AuthenticationStep();
         authenticationStep2.setStepOrder(2);

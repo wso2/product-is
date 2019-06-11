@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>5.8.0-m14-SNAPSHOT</version>
+        <version>5.8.1-m3-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -61,6 +61,10 @@
                     <artifactId>woden-impl-dom</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.org.apache.shindig</groupId>
+            <artifactId>wso2-extensions</artifactId>
         </dependency>
         <!--
               dependency> <groupId>org.wso2.carbon</groupId>
@@ -189,6 +193,12 @@
 
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;/Security&gt;" value="${hideMenu}" />
 
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;ForceLocalCache&gt;false&lt;/ForceLocalCache&gt;" value="&lt;ForceLocalCache&gt;true&lt;/ForceLocalCache&gt;" />
+
+                                <replaceregexp file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" match="^(\s)*&lt;\!--(\s)*Uncomment the following configuration to use hardware security module for cryptographic operations.\n(\s)*Provide configurations as detailed in each tag.\n(\s)*--&gt;" replace=" " flags="m" />
+
+                                <replaceregexp file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" match="^(\s)*&lt;\!--(\s)*&lt;HSMBasedCryptoProviderConfig&gt;[\s\S]*?&lt;\/HSMBasedCryptoProviderConfig&gt;(\s)*--&gt;" replace=" " flags="m" />
+
                                 <!-- Enable AskPassword Admin UI in product-is -->
                                 <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/identity.xml" token="&lt;EnableAskPasswordAdminUI&gt;false&lt;/EnableAskPasswordAdminUI&gt;" value="&lt;EnableAskPasswordAdminUI&gt;true&lt;/EnableAskPasswordAdminUI&gt;" />
 
@@ -240,6 +250,8 @@
 
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml" token="&lt;Property name=&quot;isCascadeDeleteEnabled&quot;&gt;true&lt;/Property&gt;" value="&lt;Property name=&quot;isCascadeDeleteEnabled&quot;&gt;true&lt;/Property&gt;${line.separator} &lt;Property name=&quot;initializeNewClaimManager&quot;&gt;true&lt;/Property&gt;" />
 
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.sh" token="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot; \" value="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot; \${line.separator} -Dorg.apache.xml.security.ignoreLineBreaks=false \" />
+
                                 <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml" token="${sso-idp-config-default}" value="${sso-idp-config-replace}" />
 
                                 <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/authenticators.xml" token="&lt;!--Authenticator name=&quot;MutualSSLAuthenticator&quot; disabled=&quot;false&quot;&gt;" value="&lt;Authenticator name=&quot;MutualSSLAuthenticator&quot;&gt;" />
@@ -269,6 +281,11 @@
                                     <fileset dir="conf/shindig">
                                         <include name="web.xml" />
                                     </fileset>
+                                </copy>
+
+                                <dependencyfilesets prefix="shindigDeps." />
+                                <copy todir="${tempdir}/shindig/WEB-INF/lib">
+                                    <fileset refid="shindigDeps.org.wso2.org.apache.shindig:wso2-extensions:jar" />
                                 </copy>
 
                                 <zip destfile="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/shindig.war" basedir="${tempdir}/shindig" />

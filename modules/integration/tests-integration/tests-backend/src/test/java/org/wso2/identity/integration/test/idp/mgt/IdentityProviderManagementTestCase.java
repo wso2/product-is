@@ -66,6 +66,7 @@ public class IdentityProviderManagementTestCase extends ISIntegrationTest {
     public void atEnd() throws Exception {
         identityProviderMgtServiceClient = null;
         userMgtClient.deleteRole("umRole1");
+        userStoreConfigurationClient.deleteUserStore("indu.com");
         logManger = null;
     }
 

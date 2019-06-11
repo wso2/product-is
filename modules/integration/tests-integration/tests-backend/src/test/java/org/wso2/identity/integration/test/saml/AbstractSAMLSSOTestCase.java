@@ -426,7 +426,7 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
         samlssoServiceProviderDTO.setDoSignResponse(config.getApp().isSigningEnabled());
         samlssoServiceProviderDTO.setDoSingleLogout(true);
         samlssoServiceProviderDTO.setLoginPageURL(LOGIN_URL);
-        samlssoServiceProviderDTO.setSamlECP(true);
+
         if (config.getClaimType() != AbstractSAMLSSOTestCase.ClaimType.NONE) {
             samlssoServiceProviderDTO.setEnableAttributeProfile(true);
             samlssoServiceProviderDTO.setEnableAttributesByDefault(true);
