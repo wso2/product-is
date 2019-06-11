@@ -286,8 +286,8 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
     }
 
     public void testSAMLToSAMLFederation() throws Exception {
-        testSAMLToSAMLFederation(true);
 
+        testSAMLToSAMLFederation(true);
     }
 
 
