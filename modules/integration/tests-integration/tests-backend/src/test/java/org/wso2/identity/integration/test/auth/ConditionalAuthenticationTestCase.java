@@ -47,6 +47,7 @@ import org.wso2.identity.integration.common.clients.application.mgt.ApplicationM
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
 import org.wso2.identity.integration.common.utils.CarbonTestServerManager;
+import org.wso2.identity.integration.test.base.TestDataHolder;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
 
@@ -82,6 +83,7 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
     private ServiceProvider serviceProvider;
     private HttpResponse response;
     private CookieStore cookieStore;
+    private TestDataHolder testDataHolder;
 
     private String initialCarbonHome;
 
@@ -90,6 +92,7 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
     public void testInit() throws Exception {
 
         super.init();
+        testDataHolder = TestDataHolder.getInstance();
         initialCarbonHome = System.getProperty("carbon.home");
         logManger = new AuthenticatorClient(backendURL);
         String cookie = this.logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
@@ -101,7 +104,7 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
         applicationManagementServiceClient = new ApplicationManagementServiceClient(sessionCookie, backendURL,
                 configContext);
         identityProviderMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
-        manager = new MultipleServersManager();
+        manager = testDataHolder.getManager();
 
         client = new DefaultHttpClient();
         cookieStore = new BasicCookieStore();
@@ -124,29 +127,37 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
-        oauthAdminClient.removeOAuthApplicationData(consumerKey);
-        samlSSOConfigServiceClient.removeServiceProvider(SECONDARY_IS_APPLICATION_NAME);
-        applicationManagementServiceClient.deleteApplication(PRIMARY_IS_APPLICATION_NAME);
-        applicationManagementServiceClient2.deleteApplication(SECONDARY_IS_APPLICATION_NAME);
-        identityProviderMgtServiceClient.deleteIdP(IDP_NAME);
-        client.getConnectionManager().shutdown();
+        try {
+            oauthAdminClient.removeOAuthApplicationData(consumerKey);
+            samlSSOConfigServiceClient.removeServiceProvider(SECONDARY_IS_APPLICATION_NAME);
+            applicationManagementServiceClient.deleteApplication(PRIMARY_IS_APPLICATION_NAME);
+            applicationManagementServiceClient2.deleteApplication(SECONDARY_IS_APPLICATION_NAME);
+            identityProviderMgtServiceClient.deleteIdP(IDP_NAME);
+            client.getConnectionManager().shutdown();
 
-        this.logManger.logOut();
-        logManger = null;
-        manager.stopAllServers();
-        //Restore carbon.home system property to initial value
-        System.setProperty("carbon.home", initialCarbonHome);
+            this.logManger.logOut();
+            logManger = null;
+            //Restore carbon.home system property to initial value
+            System.setProperty("carbon.home", initialCarbonHome);
+        } catch (Exception e) {
+            log.error("Failure occured due to :" + e.getMessage(), e);
+            throw e;
+        }
     }
 
     @Test(groups = "wso2.is", description = "Check conditional authentication flow.")
     public void testConditionalAuthentication() throws Exception {
 
+        updateAuthScript("ConditionalAuthenticationTestCase.js");
         response = loginWithOIDC(PRIMARY_IS_APPLICATION_NAME, consumerKey, client);
         /* Here if the client is redirected to the secondary IS, it indicates that the conditional authentication steps
          has been successfully completed. */
-        assertTrue(response.getFirstHeader("location").getValue().contains(SECONDARY_IS_SAMLSSO_URL),
-                "Failed to follow the conditional authentication steps.");
+        String locationHeader = response.getFirstHeader("location").getValue();
         EntityUtils.consume(response.getEntity());
+        log.info("The location header value of the response: " + locationHeader);
+        assertTrue(locationHeader.contains(SECONDARY_IS_SAMLSSO_URL),
+                "Failed to follow the conditional authentication steps.");
+
         cookieStore.clear();
     }
 
@@ -179,11 +190,18 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
     public void testConditionalAuthenticationClaimAssignment() throws Exception {
 
         // Update authentication script to handle authentication based on HTTP context.
-        updateAuthScript("ConditionalAuthenticationClaimAssignTestCase.js");
-        response = loginWithOIDC(PRIMARY_IS_APPLICATION_NAME, consumerKey, client);
+        try {
+            updateAuthScript("ConditionalAuthenticationClaimAssignTestCase.js");
+            response = loginWithOIDC(PRIMARY_IS_APPLICATION_NAME, consumerKey, client);
 
-        EntityUtils.consume(response.getEntity());
-        cookieStore.clear();
+            EntityUtils.consume(response.getEntity());
+            cookieStore.clear();
+        } catch (Exception e) {
+            //Temporary added the catch part for the debugging purpose.
+            log.error("Failed to execute the testConditionalAuthenticationClaimAssignment: " + e.getMessage(), e);
+            throw e;
+        }
+
     }
 
     /**
@@ -377,11 +395,7 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
 
     private void startSecondaryIS() throws Exception {
 
-        Map<String, String> startupParameters = new HashMap<>();
-        startupParameters.put("-DportOffset", String.valueOf(PORT_OFFSET_1 + CommonConstants.IS_DEFAULT_OFFSET));
-        AutomationContext context = new AutomationContext("IDENTITY", "identity002", TestUserMode.SUPER_TENANT_ADMIN);
-
-        startCarbonServer(context, startupParameters);
+        AutomationContext context = testDataHolder.getAutomationContext();
         String serviceUrl = (context.getContextUrls().getSecureServiceUrl())
                 .replace("9853", String.valueOf(IS_DEFAULT_HTTPS_PORT + PORT_OFFSET_1)) + "/";
 
@@ -398,13 +412,6 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
                     configContext);
             samlSSOConfigServiceClient = new SAMLSSOConfigServiceClient(serviceUrl, sessionCookie);
         }
-    }
-
-    private void startCarbonServer(AutomationContext context, Map<String, String> startupParameters) throws Exception {
-
-        CarbonTestServerManager server = new CarbonTestServerManager(context, System.getProperty("carbon.zip"),
-                startupParameters);
-        manager.startServers(server);
     }
 
     private void createServiceProviderInSecondaryIS() throws Exception {

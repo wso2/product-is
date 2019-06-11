@@ -57,7 +57,7 @@ public class ThriftServer implements Runnable {
     private AtomicLong msgCount = new AtomicLong(0);
     private String testCaseResourceFolderName;
     private int listeningPort;
-    private List<Event> preservedEventList = null;
+    private List<Event> preservedEventList = new ArrayList<>();
     private boolean isPreservingEvents;
 
     public ThriftServer(String testCaseResourceFolderName, int listeningPort, boolean isPreservingEvents) {
@@ -135,9 +135,6 @@ public class ThriftServer implements Runnable {
                 eventReceived = true;
                 msgCount.addAndGet(eventList.size());
                 if (isPreservingEvents) {
-                    if (preservedEventList == null) {
-                        preservedEventList = new ArrayList<>();
-                    }
                     preservedEventList.addAll(eventList);
                 }
             }

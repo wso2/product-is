@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 
 package org.wso2.identity.integration.test.user.mgt;
 
@@ -28,19 +28,20 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.user.profile.stub.types.UserFieldDTO;
 import org.wso2.carbon.identity.user.profile.stub.types.UserProfileDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
-import org.wso2.identity.integration.common.clients.UserManagementClient;
-import org.wso2.identity.integration.common.clients.UserProfileMgtServiceClient;
 import org.wso2.carbon.user.mgt.stub.types.carbon.ClaimValue;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
 import org.wso2.carbon.user.mgt.stub.types.carbon.UIPermissionNode;
 import org.wso2.carbon.user.mgt.stub.types.carbon.UserRealmInfo;
+import org.wso2.identity.integration.common.clients.UserManagementClient;
+import org.wso2.identity.integration.common.clients.UserProfileMgtServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
+import java.io.File;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
-import java.io.File;
 
 public abstract class UserManagementServiceAbstractTest extends ISIntegrationTest {
+
     private static final Log log = LogFactory.getLog(UserManagementServiceAbstractTest.class);
     protected static final String EVERYONE_ROLE = "Internal/everyone";
     protected UserManagementClient userMgtClient;
@@ -64,6 +65,7 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
     }
 
     public void clean() throws Exception {
+
         if (nameExists(userMgtClient.listAllUsers(newUserName, 10), newUserName)) {
             userMgtClient.deleteUser(newUserName);
         }
@@ -81,6 +83,7 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
     @Test(groups = "wso2.is", description = "Get all the role names")
     public void testGetAllRoleNames() throws Exception {
+
         Assert.assertTrue(userMgtClient.getAllRolesNames("*", 100).length > 1
                 , "Getting all user role names return empty list");
     }
@@ -88,6 +91,7 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
     @Test(groups = "wso2.is", description = "Check role addition", dependsOnMethods = "testGetAllRoleNames")
     public void testAddRole() throws Exception {
+
         Assert.assertFalse(nameExists(userMgtClient.getAllRolesNames(newUserRole, 100), newUserRole), "User Role already exist");
         userMgtClient.addRole(newUserRole, null, new String[]{"login"}, false);
         Assert.assertTrue(nameExists(userMgtClient.getAllRolesNames(newUserRole, 100), newUserRole), "Added user role name not found");
@@ -96,6 +100,7 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
     @Test(groups = "wso2.is", description = "Check delete role", dependsOnMethods = "testAddRole")
     public void testDeleteRole() throws Exception {
+
         userMgtClient.deleteRole(newUserRole);
         Assert.assertFalse(nameExists(userMgtClient.getAllRolesNames(newUserRole, 100), newUserRole), "User Role still exist");
 
@@ -104,7 +109,8 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
     @Test(groups = "wso2.is", dependsOnMethods = "testDeleteRole")
     public void addNewUser() throws Exception {
-        userMgtClient.addRole(newUserRole, null, new String[]{"/permission/admin/login","/permission/admin/manage/identity/rolemgt/view"});
+
+        userMgtClient.addRole(newUserRole, null, new String[]{"/permission/admin/login", "/permission/admin/manage/identity/rolemgt/view"});
         userMgtClient.addUser(newUserName, newUserPassword, new String[]{newUserRole}, null);
         Assert.assertTrue(userMgtClient.roleNameExists(newUserRole), "Role name doesn't exists");
         Assert.assertTrue(userMgtClient.userNameExists(newUserRole, newUserName), "User name doesn't exists");
@@ -118,12 +124,14 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
     @Test(groups = "wso2.is", description = "Check delete role", dependsOnMethods = "addNewUser")
     public void testListAllUsers() throws Exception {
+
         Assert.assertTrue(userMgtClient.listAllUsers("*", 100).length > 0, "List all users return empty list");
     }
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
     @Test(groups = "wso2.is", description = "Check delete role", dependsOnMethods = "testListAllUsers")
     public void testListUsers() throws Exception {
+
         String[] usersList = userMgtClient.listUsers("*", 100);
         Assert.assertNotNull(usersList, "UserList null");
         Assert.assertTrue(usersList.length > 0, "List users return empty list");
@@ -162,6 +170,7 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
     @Test(groups = "wso2.is", description = "Check add remove users of role ", dependsOnMethods = "testAddDeleteInternalRoleOperations")
     public void testAddRemoveUsersOfRole() throws Exception {
+
         String newUserTmp = newUserName + "tmp123";
         userRoleTmp = newUserRole + "tmp";
 
@@ -254,12 +263,12 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
                 , "UserRole updating failed. User Does not belongs to " + userRoleTmp);
         Assert.assertTrue(nameExists(userMgtClient.getUsersOfRole(newUserRole, newUserName, 0), newUserName), "User Role updating failed. Previous role deleted");
 
-
     }
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
     @Test(groups = "wso2.is", description = "Check change user password", dependsOnMethods = "testUpdateRolesOfUser")
     public void testChangePasswordOfUser() throws Exception {
+
         Assert.assertTrue(nameExists(userMgtClient.getUsersOfRole(newUserRole, newUserName, 0), newUserName)
                 , "user Does not belongs to user role " + newUserRole);
         Assert.assertTrue(authenticatorClient.login(newUserName, newUserPassword, isServer
@@ -290,6 +299,7 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
     @Test(groups = "wso2.is", description = "Check list users by claim value", dependsOnMethods = "testGetRolesOfCurrentUser")
     public void testListUserByClaim() throws Exception {
+
         UserProfileMgtServiceClient userProfileMgtServiceClient
                 = new UserProfileMgtServiceClient(backendURL, getSessionCookie());
         UserProfileDTO profile
@@ -322,11 +332,9 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
         newProfile.setProfileConifuration(profileConfigs);
         userProfileMgtServiceClient.setUserProfile(newUserName, newProfile);
 
-
         ClaimValue claimValue = new ClaimValue();
         claimValue.setClaimURI("http://wso2.org/claims/lastname");
         claimValue.setValue(newUserName + "LastName");
-
 
         FlaggedName[] allNames = userMgtClient.listUserByClaim(claimValue, newUserName, 10);
 
@@ -381,7 +389,7 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
         //ToDo:get userStoreDomain properly
         String userStoreDomain = "PRIMARY";
         File bulkUserFile = new File(getISResourceLocation() + File.separator + "userMgt"
-                                     + File.separator + "bulkUserImport.csv");
+                + File.separator + "bulkUserImport.csv");
 
         DataHandler handler = new DataHandler(new FileDataSource(bulkUserFile));
         userMgtClient.bulkImportUsers(userStoreDomain, "bulkUserImport.csv", handler, "PassWord1@");
@@ -406,6 +414,7 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
      * @return
      */
     protected boolean nameExists(FlaggedName[] allNames, String inputName) {
+
         boolean exists = false;
 
         for (FlaggedName flaggedName : allNames) {

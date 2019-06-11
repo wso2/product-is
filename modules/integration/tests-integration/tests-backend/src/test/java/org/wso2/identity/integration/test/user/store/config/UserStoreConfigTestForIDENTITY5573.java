@@ -70,7 +70,7 @@ public class UserStoreConfigTestForIDENTITY5573 extends ISIntegrationTest {
                 "SELECT UM_USER_NAME FROM UM_USER WHERE UM_USER_NAME LIKE ? AND UM_TENANT_ID>? ORDER BY UM_USER_NAME");
         propertyDTOList.add(dummySqlProperty);
         UserStoreDTO userStoreDTO = userStoreConfigurationClient.createUserStoreDTO(JDBC_USM_CLASS, USER_STORE_NAME,
-                propertyDTOList.toArray(new PropertyDTO[propertyDTOList.size()]));
+                propertyDTOList.toArray(new PropertyDTO[0]));
         userStoreConfigurationClient.addUserStore(userStoreDTO);
         Assert.assertTrue("Domain addition via DTO has failed.", userStoreConfigUtils.waitForUserStoreDeployment
                 (userStoreConfigurationClient, USER_STORE_NAME));

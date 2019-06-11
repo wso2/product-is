@@ -23,12 +23,11 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
-import org.wso2.carbon.utils.CarbonUtils;
-import org.wso2.identity.integration.common.clients.entitlement.EntitlementPolicyServiceClient;
+import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -83,7 +82,7 @@ public class NotificationOnUserOperationTestCase extends ISIntegrationTest {
     private void changeNotificationMgtPropertyConfig() throws Exception {
         log.info("Changing msg-mgt.properties to add EntitlementNotificationExtension");
 
-        String carbonHome = CarbonUtils.getCarbonHome();
+        String carbonHome = Utils.getResidentCarbonHome();
         String templateLocation = getISResourceLocation()
                 + File.separator + "notification-mgt" + File.separator + "templates" + File.separator
                 + "userOperation";

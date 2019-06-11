@@ -41,7 +41,7 @@ import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.TYPE_PA
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.USER_NAME_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.VALUE_PARAM;
 
-public class SCIM2MeTestCase extends SCIM2BaseTestCase {
+public class SCIM2MeTestCase extends ISIntegrationTest {
 
     private static final String FAMILY_NAME_CLAIM_VALUE = "scim";
     private static final String GIVEN_NAME_CLAIM_VALUE = "user";
@@ -50,7 +50,7 @@ public class SCIM2MeTestCase extends SCIM2BaseTestCase {
     private static final String EMAIL_TYPE_HOME_CLAIM_URI = "home";
     private static final String EMAIL_TYPE_HOME_CLAIM_VALUE = "scim2user@gmail.com";
     private static final String USERNAME = "scim2user";
-    private static final String PASSWORD = "testPassword";
+    private static final String PASSWORD = "password:123";
 
     private CloseableHttpClient client;
 

@@ -58,7 +58,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
     private String associationId = null;
     private String[] rolesToAdd = {"wfRole1", "wfRole2", "wfRole3"};
     private String sessionCookie2;
-    private String servicesUrl = "https://localhost:9844/services/";
+    private String servicesUrl = "https://localhost:9854/services/";
     private String templateId = "MultiStepApprovalTemplate";
     private String workflowImplId = "ApprovalWorkflow";
 
@@ -75,7 +75,6 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         for (String role : rolesToAdd) {
             usmClient.addRole(role, new String[0], new PermissionDTO[0]);
         }
-
     }
 
     /**
@@ -85,28 +84,23 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
      */
     private void startOtherCarbonServers() throws Exception {
 
-        Map<String, String> startupParameterMap1 = new HashMap<String, String>();
-        startupParameterMap1.put("-DportOffset", "401");
-
-        AutomationContext context1 = new AutomationContext("IDENTITY", "identity002", TestUserMode.SUPER_TENANT_ADMIN);
-        CarbonTestServerManager server1 = new CarbonTestServerManager(context1, System.getProperty("carbon.zip"),
-                startupParameterMap1);
-        manager.startServers(server1);
         AuthenticatorClient authenticatorClient = new AuthenticatorClient(servicesUrl);
-        Thread.sleep(2500);
-
         sessionCookie2 = authenticatorClient.login("admin", "admin", "localhost");
     }
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
-        for (String role : rolesToAdd) {
-            usmClient.deleteRole(role);
+        try {
+            for (String role : rolesToAdd) {
+                usmClient.deleteRole(role);
+            }
+            client = null;
+            usmClient = null;
+        } catch (Exception e) {
+            log.error("Failure occured due to :" + e.getMessage(), e);
+            throw e;
         }
-        client = null;
-        usmClient = null;
-        manager.stopAllServers();
     }
 
     @Test(alwaysRun = true, description = "Testing adding a BPS Profile")

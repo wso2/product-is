@@ -15,8 +15,6 @@
  */
 package org.wso2.identity.integration.test.oauth2;
 
-import org.apache.catalina.LifecycleException;
-import org.apache.catalina.startup.Tomcat;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -31,13 +29,11 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
-import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.File;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -60,7 +56,6 @@ public class Oauth2HashAlgorithmTestCase extends OAuth2ServiceAbstractIntegratio
     private String consumerKey;
     private String consumerSecret;
     private DefaultHttpClient client;
-    private Tomcat tomcat;
     private ServerConfigurationManager serverConfigurationManager;
 
     @BeforeClass(alwaysRun = true)
@@ -69,16 +64,14 @@ public class Oauth2HashAlgorithmTestCase extends OAuth2ServiceAbstractIntegratio
         super.init(TestUserMode.SUPER_TENANT_USER);
         String carbonHome = Utils.getResidentCarbonHome();
         //apply SHA-512 hashing for oauth2 in identity xml
-        String identityXMLFile = getISResourceLocation() + File.separator  + "identity-hash-enabled.xml";
+        String identityXMLFile = getISResourceLocation() + File.separator + "identity-hash-enabled.xml";
         File defaultIdentityXml = new File(carbonHome + File.separator
                 + "repository" + File.separator + "conf" + File.separator + "identity" + File.separator
                 + "identity.xml");
         serverConfigurationManager = new ServerConfigurationManager(isServer);
         File srcFile = new File(identityXMLFile);
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
-        serverConfigurationManager.applyConfigurationWithoutRestart(srcFile,
-                defaultIdentityXml, true);
-        serverConfigurationManager.restartForcefully();
+        serverConfigurationManager.applyConfigurationWithoutRestart(srcFile, defaultIdentityXml, true);
+        serverConfigurationManager.restartGracefully();
         super.init(TestUserMode.SUPER_TENANT_USER);
         logManger = new AuthenticatorClient(backendURL);
         logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
@@ -92,23 +85,13 @@ public class Oauth2HashAlgorithmTestCase extends OAuth2ServiceAbstractIntegratio
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
+
         deleteApplication();
         removeOAuthApplicationData();
-        stopTomcat(tomcat);
-
         logManger = null;
         consumerKey = null;
         accessToken = null;
-
-        File defaultIdentityXML = new File(getISResourceLocation() + File.separator + "default-identity.xml");
-
-        String carbonHome = Utils.getResidentCarbonHome();
-        File identityXml = new File(carbonHome + File.separator
-                + "repository" + File.separator + "conf" + File.separator + "identity" + File.separator
-                + "identity.xml");
-        serverConfigurationManager.applyConfigurationWithoutRestart(defaultIdentityXML, identityXml, true);
-        serverConfigurationManager.restartGracefully();
-        serverConfigurationManager = null;
+        serverConfigurationManager.restoreToLastConfiguration(false);
     }
 
     @Test(groups = "wso2.is", description = "Send authorize user request")
@@ -148,6 +131,7 @@ public class Oauth2HashAlgorithmTestCase extends OAuth2ServiceAbstractIntegratio
 
     @Test(groups = "wso2.is", description = "Send login post request", dependsOnMethods = "testSendAuthorozedPost")
     public void testSendLoginPost() throws Exception {
+
         HttpResponse response = sendLoginPost(client, sessionDataKey);
         Assert.assertNotNull(response, "Login request failed. Login response is null.");
         if (Utils.requestMissingClaims(response)) {
@@ -155,7 +139,7 @@ public class Oauth2HashAlgorithmTestCase extends OAuth2ServiceAbstractIntegratio
             Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
             EntityUtils.consume(response.getEntity());
 
-            response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT , Utils.getRedirectUrl
+            response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT, Utils.getRedirectUrl
                     (response), client, pastrCookie);
             EntityUtils.consume(response.getEntity());
         }
@@ -179,6 +163,7 @@ public class Oauth2HashAlgorithmTestCase extends OAuth2ServiceAbstractIntegratio
 
     @Test(groups = "wso2.is", description = "Send approval post request", dependsOnMethods = "testSendLoginPost")
     public void testSendApprovalPost() throws Exception {
+
         HttpResponse response = sendApprovalPost(client, sessionDataKeyConsent);
         Assert.assertNotNull(response, "Approval response is invalid.");
 
@@ -204,6 +189,7 @@ public class Oauth2HashAlgorithmTestCase extends OAuth2ServiceAbstractIntegratio
 
     @Test(groups = "wso2.is", description = "Get access token", dependsOnMethods = "testSendApprovalPost")
     public void testGetAccessToken() throws Exception {
+
         HttpResponse response = sendGetAccessTokenPost(client, consumerSecret);
         Assert.assertNotNull(response, "Error occured while getting access token.");
         EntityUtils.consume(response.getEntity());
@@ -242,13 +228,7 @@ public class Oauth2HashAlgorithmTestCase extends OAuth2ServiceAbstractIntegratio
     }
 
     private void registerAndDeployApplication() throws Exception {
-        tomcat = getTomcat();
-        URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR + "playground2.war");
-        try {
-            startTomcat(tomcat, OAuth2Constant.PLAYGROUND_APP_CONTEXT_ROOT, resourceUrl.getPath());
-        } catch (LifecycleException e) {
-            throw new Exception("Error while registering service provider application", e);
-        }
+
         OAuthConsumerAppDTO appDto = createApplication();
         consumerKey = appDto.getOauthConsumerKey();
         consumerSecret = appDto.getOauthConsumerSecret();

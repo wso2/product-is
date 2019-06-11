@@ -15,8 +15,6 @@
  */
 package org.wso2.identity.integration.test.oauth2;
 
-import org.apache.catalina.startup.Tomcat;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -34,7 +32,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
-import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -56,7 +54,6 @@ public class IDENTITY6777OAuth2TokenExpiryTestCase extends OAuth2ServiceAbstract
     private String consumerSecret;
 
     private DefaultHttpClient client;
-    private Tomcat tomcat;
 
     private static final String emailClaimURI = "http://wso2.org/claims/emailaddress";
 
@@ -246,7 +243,7 @@ public class IDENTITY6777OAuth2TokenExpiryTestCase extends OAuth2ServiceAbstract
     private void changeISConfiguration() throws Exception {
         log.info("Replacing repository/conf/identity/identity.xml to configure expiry time");
 
-        String carbonHome = CarbonUtils.getCarbonHome();
+        String carbonHome = Utils.getResidentCarbonHome();
         identityXML = new File(carbonHome + File.separator
                 + "repository" + File.separator + "conf" + File.separator + "identity" + File
                 .separator + "identity.xml");

@@ -22,7 +22,8 @@ if (action != null) {
             var fieldValues = userAccountAssociationClient.getAccountAssociationsOfUser();
             print('{"success":true, "data":' + getAssociatedAccounts(fieldValues) + '}');
         } catch (e) {
-            print(getErrorMessage(e.message));
+            log.error(e);
+            response.sendRedirect("/portal/error_pages/error.jag");
         }
     } else if (action == 'connect') {
         var userName = request.getParameter('userName');
@@ -32,7 +33,8 @@ if (action != null) {
             userAccountAssociationClient.createUserAccountAssociation(userName, password);
             print('{"success":true}');
         } catch (e) {
-            print(getErrorMessage(e.message));
+            log.error(e);
+            response.sendRedirect("/portal/error_pages/error.jag");
         }
     } else if (action == 'delete') {
 
@@ -41,7 +43,8 @@ if (action != null) {
             userAccountAssociationClient.deleteUserAccountAssociation(userName);
             print('{"success":true}');
         } catch (e) {
-            print(getErrorMessage(e.message));
+            log.error(e);
+            response.sendRedirect("/portal/error_pages/error.jag");
         }
     } else if (action == 'idPList') {
 
@@ -49,7 +52,8 @@ if (action != null) {
             var idPList = identityProviderMgtClient.getAllIdPs();
             print('{"success":true, "data":' + stringify(getIdPNameList(idPList)) + '}');
         } catch (e) {
-            print(getErrorMessage(e.message));
+            log.error(e);
+            response.sendRedirect("/portal/error_pages/error.jag");
         }
     } else if (action == 'fedConnect') {
 
@@ -63,7 +67,8 @@ if (action != null) {
                 userProfileMgtClient.associateID(idPId, username);
                 print('{"success":true}');
             } catch (e) {
-                print(getErrorMessage(e.message));
+                log.error(e);
+                response.sendRedirect("/portal/error_pages/error.jag");
             }
         } else {
             print(getErrorMessage('Error:Federated user association is not allowed in the server'));
@@ -76,7 +81,8 @@ if (action != null) {
             var fieldValues = userProfileMgtClient.getAssociatedIDs();
             print('{"success":true, "data":{ "primaryOpenID": "' + primaryOpenId.return + '", "list":' + getAssociatedFedAccounts(fieldValues) + '}}');
         } catch (e) {
-            print(getErrorMessage(e.message));
+            log.error(e);
+            response.sendRedirect("/portal/error_pages/error.jag");
         }
     } else if (action == 'fedDelete') {
         var idPId = request.getParameter('idPId');
@@ -86,7 +92,8 @@ if (action != null) {
             userProfileMgtClient.removeAssociateID(idPId, username);
             print('{"success":true}');
         } catch (e) {
-            print(getErrorMessage(e.message));
+            log.error(e);
+            response.sendRedirect("/portal/error_pages/error.jag");
         }
     }
 }

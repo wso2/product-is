@@ -50,8 +50,8 @@ try {
     print(responseJSON);
 
 } catch (e) {
-    print(e);
     log.error(e);
+    response.sendRedirect("/portal/error_pages/error.jag");
 }
 
 function loadResidentIDPInformation(tenantDomain) {

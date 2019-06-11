@@ -243,8 +243,13 @@ public class SCIM2MultiAttributeUserFilterTestCase extends ISIntegrationTest {
                 append(NAME_ATTRIBUTE).append(".").append(FAMILY_NAME_ATTRIBUTE).append(EQUAL).
                 append(FAMILY_NAME_CLAIM_VALUES.get(2));
 
-        validateMultiAttributeFilteredUser(query.toString(), Arrays.asList(userIds.get(2)),
-                Arrays.asList(USERNAMES.get(2)));
+        try {
+            validateMultiAttributeFilteredUser(query.toString(), Arrays.asList(userIds.get(2)),
+                    Arrays.asList(USERNAMES.get(2)));
+        } catch (Exception e) {
+            log.error("Error while filtering the attributes of the user: " + e.getMessage(), e);
+            throw e;
+        }
 
         //Validate username, claim and group filter
         query = new StringBuilder(USER_NAME_ATTRIBUTE).append(ENDWITH).
@@ -284,10 +289,18 @@ public class SCIM2MultiAttributeUserFilterTestCase extends ISIntegrationTest {
         request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
 
         HttpResponse response = client.execute(request);
+
+        String responseString = EntityUtils.toString(response.getEntity());
+        Object responseObj = JSONValue.parse(responseString);
+
+        if (response.getStatusLine().getStatusCode() != 200) {
+            log.error("Incorrect response code received. Received error code: "
+                    + response.getStatusLine().getStatusCode() + " . Error message: " + responseString);
+        }
+
         assertEquals(response.getStatusLine().getStatusCode(), 200, "User " +
                 "has not been retrieved successfully");
 
-        Object responseObj = JSONValue.parse(EntityUtils.toString(response.getEntity()));
         EntityUtils.consume(response.getEntity());
 
         int resultCount = (((JSONArray) ((JSONObject) responseObj).get("Resources")).size());
