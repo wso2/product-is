@@ -9,7 +9,8 @@
 
 `mvn versions:update-properties -DgenerateBackupPoms=false -Dincludes=org.wso2.carbon.identity.*,org.wso2.carbon.extension.identity.*,org.wso2.charon,org.apache.rampart.wso2,org.apache.ws.security.wso2,org.wso2.carbon.consent.*,org.wso2.carbon.database.utils -U`
 
-* Need to update charon , balana, rampart and wss4j seperately.
+* Need to update charon , balana, rampart, wss4j and sso-agent seperately.
+* Also double check CEP, BPS updates as well.
 
 ## How to release in github?
 * Create a new release draft on the tag created by a successful Jenkins release.
