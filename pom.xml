@@ -1800,14 +1800,14 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>5.12.401</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.12.402</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.11.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
         <identity.carbon.auth.saml2.version>5.2.15</identity.carbon.auth.saml2.version>
         <identity.inbound.auth.saml.version>5.4.48</identity.inbound.auth.saml.version>
         <identity.agent.sso.version>5.1.14</identity.agent.sso.version>
-        <identity.inbound.auth.oauth.version>6.0.178</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.0.179</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.2.13</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.2.20</identity.inbound.auth.sts.version>
         <identity.outbound.auth.requestpath.basicauth.version>5.1.5</identity.outbound.auth.requestpath.basicauth.version>
@@ -1875,7 +1875,7 @@
         <authenticator.totp.version>2.0.15</authenticator.totp.version>
         <authenticator.office365.version>1.0.6</authenticator.office365.version>
         <authenticator.smsotp.version>2.0.20</authenticator.smsotp.version>
-        <authenticator.emailotp.version>2.0.20</authenticator.emailotp.version>
+        <authenticator.emailotp.version>2.0.21</authenticator.emailotp.version>
         <authenticator.twitter.version>1.0.10</authenticator.twitter.version>
         <authenticator.x509.version>2.0.9</authenticator.x509.version>
         <identity.extension.utils>1.0.8</identity.extension.utils>
