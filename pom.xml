@@ -1879,7 +1879,7 @@
         <!-- Connectors -->
         <authenticator.totp.version>2.0.15</authenticator.totp.version>
         <authenticator.office365.version>1.0.6</authenticator.office365.version>
-        <authenticator.smsotp.version>2.0.20</authenticator.smsotp.version>
+        <authenticator.smsotp.version>2.0.21</authenticator.smsotp.version>
         <authenticator.emailotp.version>2.0.22</authenticator.emailotp.version>
         <authenticator.twitter.version>1.0.10</authenticator.twitter.version>
         <authenticator.x509.version>2.0.9</authenticator.x509.version>
@@ -1958,7 +1958,7 @@
         <operadriver.version>0.8.1</operadriver.version>
         <selenium.version>2.40.0</selenium.version>
         <testng.version>6.1.1</testng.version>
-        <carbon.deployment.version>4.8.5</carbon.deployment.version>
+        <carbon.deployment.version>4.8.6</carbon.deployment.version>
         <carbon.registry.version>4.6.46</carbon.registry.version>
         <carbon.multitenancy.version>4.6.24</carbon.multitenancy.version>
         <jaggery.extensions.version>1.5.5</jaggery.extensions.version>
