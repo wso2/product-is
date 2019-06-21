@@ -50,7 +50,7 @@ public class DBSeperationTestCase extends ISIntegrationTest {
         String carbonHome = Utils.getResidentCarbonHome();
         File defaultTomlFile = getDeploymentTomlFile(carbonHome);
         File configuredTomlFile = new File(getISResourceLocation() + File.separator + File.separator +
-                "provisioning" +File.separator+ "db_separation_config.toml");
+                "provisioning" + File.separator + "db_separation_config.toml");
 
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(isServer);
