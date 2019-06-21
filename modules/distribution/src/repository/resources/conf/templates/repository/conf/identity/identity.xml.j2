@@ -26,7 +26,7 @@
         <!-- If the identity database is created from another place and if it is
             required to skip schema initialization during the server start up, set the
             following property to "true". -->
-        <SkipDBSchemaCreation>{{data_source.skip_db_schema_creation}}</SkipDBSchemaCreation>
+        <SkipDBSchemaCreation>{{identity_data_source.skip_db_schema_creation}}</SkipDBSchemaCreation>
         <SessionDataPersist>
             <Enable>{{session_data.persistence.enable_persistance}}</Enable>
             <Temporary>{{session_data.persistence.persist_temporary_data}}</Temporary>
@@ -496,7 +496,7 @@
             {% else %}
             <UserInfoEndpointResponseBuilder>org.wso2.carbon.identity.oauth.endpoint.user.impl.UserInfoJSONResponseBuilder</UserInfoEndpointResponseBuilder>
             {% endif %}
-            {% if oauth.consent_prompt is sameas true %}
+            {% if oauth.prompt_consent is sameas true %}
             <SkipUserConsent>false</SkipUserConsent>
             {% else %}
             <SkipUserConsent>true</SkipUserConsent>
