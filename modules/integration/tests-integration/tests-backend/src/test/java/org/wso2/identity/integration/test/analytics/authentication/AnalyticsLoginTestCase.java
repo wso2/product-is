@@ -53,7 +53,7 @@ public class AnalyticsLoginTestCase extends AbstractAnalyticsLoginTestCase {
         super.testClear();
     }
 
-    @Test(description = "Add service provider", groups = "wso2.is", priority = 1)
+    @Test(description = "Add service provider", groups = "wso2.is")
     public void testAddSP() throws Exception {
 
         super.testAddSP();
