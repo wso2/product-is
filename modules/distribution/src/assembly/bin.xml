@@ -52,6 +52,8 @@
                 <exclude>**/tcpmon-1.0.jar</exclude>
                 <exclude>**/tcpmon.sh</exclude>
                 <exclude>**/tcpmon.bat</exclude>
+                <exclude>**/deployment.toml</exclude>
+                <exclude>**/datasources/master-datasources.xml</exclude>
             </excludes>
         </fileSet>
 
