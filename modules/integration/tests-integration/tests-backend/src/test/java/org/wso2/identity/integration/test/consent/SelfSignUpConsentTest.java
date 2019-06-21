@@ -101,12 +101,7 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
         secondaryTenantDomain = isServer.getTenantList().get(1);
         tenantAdminUserName = ADMIN + "@" + secondaryTenantDomain;
         this.logManager = new AuthenticatorClient(backendURL);
-        String tenantCookie = this.logManager.login(ADMIN + "@" + secondaryTenantDomain,
-                ADMIN, isServer.getInstance().getHosts().get("default"));
-
-        superTenantIDPMgtClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
-        tenantIDPMgtClient = new IdentityProviderMgtServiceClient(tenantCookie, backendURL);
-        tenantUserMgtClient = new UserManagementClient(backendURL, tenantCookie);
+        initializeClients();
         isServerBackendUrl = isServer.getContextUrls().getWebAppURLHttps();
         consentEndpoint = isServerBackendUrl + "/t/" + secondaryTenantDomain + CONSNT_ENDPOINT_SUFFIX;
         selfRegisterDoEndpoint = isServerBackendUrl + "/accountrecoveryendpoint/register.do";
@@ -262,6 +257,10 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
                                 authenticatorConfig);
             }
         }
+
+        // Re authenticate the client since server restart of other test cases may cause some issue.
+        initializeClients();
+
         residentIdentityProvider.setFederatedAuthenticatorConfigs(federatedAuthenticatorConfigs);
         if (isSuperTenant) {
             superTenantIDPMgtClient.updateResidentIdP(residentIdentityProvider);
@@ -455,5 +454,14 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
         String response = user.contentType(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON)
                 .get(String.class);
         return response;
+    }
+
+    private void initializeClients() throws Exception {
+
+        String tenantCookie = this.logManager.login(ADMIN + "@" + secondaryTenantDomain,
+                ADMIN, isServer.getInstance().getHosts().get("default"));
+        superTenantIDPMgtClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
+        tenantIDPMgtClient = new IdentityProviderMgtServiceClient(tenantCookie, backendURL);
+        tenantUserMgtClient = new UserManagementClient(backendURL, tenantCookie);
     }
 }
