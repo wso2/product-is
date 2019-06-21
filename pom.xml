@@ -1727,19 +1727,21 @@
                 <artifactId>msf4j-microservice</artifactId>
                 <version>${msf4j.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.wso2.carbon.commons</groupId>
                 <artifactId>org.wso2.carbon.logging.admin.stub</artifactId>
                 <version>${carbon.logging.admin.stub.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.wso2.org.apache.shindig</groupId>
                 <artifactId>wso2-extensions</artifactId>
                 <version>${wso2.shindig.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>org.wso2.orbit.javax.transaction</groupId>
+                <artifactId>jta</artifactId>
+                <version>${version.org.wso2.orbit.javax.jta}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -2013,6 +2015,7 @@
         <carbon.healthcheck.version>1.1.0</carbon.healthcheck.version>
         <carbon.logging.admin.stub.version>4.6.60</carbon.logging.admin.stub.version>
         <wso2.shindig.version>2.5.2-wso2v11</wso2.shindig.version>
+        <version.org.wso2.orbit.javax.jta>1.1.0.wso2v1</version.org.wso2.orbit.javax.jta>
     </properties>
 
     <repositories>
