@@ -179,7 +179,7 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
 
         super.deleteSAML2WebSSOConfiguration(PORT_OFFSET_1, SECONDARY_IS_SAML_ISSUER_NAME);
         super.deleteServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
-        serverConfigurationManager.restoreToLastConfiguration(false);
+        serverConfigurationManager.restoreToLastConfiguration(true);
     }
 
     private String sendSAMLRequestToPrimaryIS(HttpClient client) throws Exception {

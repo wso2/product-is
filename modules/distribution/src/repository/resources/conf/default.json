@@ -348,7 +348,7 @@
 
 
   "identity.data_source": "jdbc/WSO2IdentityDB",
-  "data_source.skip_db_schema_creation": false,
+  "identity_data_source.skip_db_schema_creation": false,
   "server.clock_skew": "5m",
   "session_data.persistence.enable_persistance": true,
   "session_data.persistence.persistance_pool_size": "0",
@@ -456,7 +456,7 @@
   "oauth.scope_validator.xacml.class": "org.wso2.carbon.identity.oauth2.validators.xacml.XACMLScopeValidator",
   "oauth.grant_type.saml_bearer.user_type": "FEDERATED",
 
-  "oauth.consent_prompt": "$ref{authentication.consent.prompt}",
+  "oauth.prompt_consent": "$ref{authentication.consent.prompt}",
   "oauth.oidc.extensions.id_token_builder": "org.wso2.carbon.identity.openidconnect.DefaultIDTokenBuilder",
   "oauth.oidc.claims.enable_oidc_dialect": false,
   "oauth.oidc.claims.enable_unmapped_user_attributes": false,
