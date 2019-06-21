@@ -58,10 +58,10 @@
 			<dependency>
                 <groupId>org.apache.axis2.wso2</groupId>
                 <artifactId>axis2-jaxbri</artifactId>
-            </dependency>
+			</dependency>
             <dependency>
-                <groupId>com.sun.xml.bind.wso2</groupId>
-                <artifactId>jaxb</artifactId>
+                <groupId>org.wso2.orbit.javax.transaction</groupId>
+                <artifactId>jta</artifactId>
             </dependency>
 	</dependencies>
 
@@ -95,7 +95,7 @@
 								<bundleDef>org.apache.axis2.wso2:axis2-jibx</bundleDef>
 								<bundleDef>org.jibx.wso2:jibx</bundleDef>
 								<bundleDef>org.apache.axis2.wso2:axis2-jaxbri</bundleDef>
-								<bundleDef>com.sun.xml.bind.wso2:jaxb</bundleDef>
+								<bundleDef>org.wso2.orbit.javax.transaction:jta</bundleDef>
 							</bundles>
 							<importFeatures>
 								<importFeatureDef>org.wso2.carbon.core.server:${carbon.kernel.version}</importFeatureDef>
