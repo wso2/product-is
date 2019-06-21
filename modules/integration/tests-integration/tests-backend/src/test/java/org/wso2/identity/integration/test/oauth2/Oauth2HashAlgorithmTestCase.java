@@ -64,13 +64,12 @@ public class Oauth2HashAlgorithmTestCase extends OAuth2ServiceAbstractIntegratio
         super.init(TestUserMode.SUPER_TENANT_USER);
         String carbonHome = Utils.getResidentCarbonHome();
         //apply SHA-512 hashing for oauth2 in identity xml
-        String identityXMLFile = getISResourceLocation() + File.separator + "identity-hash-enabled.xml";
-        File defaultIdentityXml = new File(carbonHome + File.separator
-                + "repository" + File.separator + "conf" + File.separator + "identity" + File.separator
-                + "identity.xml");
+        File defaultTomlFile = getDeploymentTomlFile(carbonHome);
+        File configuredTomlFile = new File(getISResourceLocation() + File.separator
+                + "identity_hash_enabled.toml");
+
         serverConfigurationManager = new ServerConfigurationManager(isServer);
-        File srcFile = new File(identityXMLFile);
-        serverConfigurationManager.applyConfigurationWithoutRestart(srcFile, defaultIdentityXml, true);
+        serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartGracefully();
         super.init(TestUserMode.SUPER_TENANT_USER);
         logManger = new AuthenticatorClient(backendURL);

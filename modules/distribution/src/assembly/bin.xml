@@ -145,6 +145,9 @@
             <includes>
                 <include>**/**</include>
             </includes>
+            <excludes>
+                <exclude>**/catalina-server.xml.j2</exclude>
+            </excludes>
         </fileSet>
 
         <!--<fileSet>

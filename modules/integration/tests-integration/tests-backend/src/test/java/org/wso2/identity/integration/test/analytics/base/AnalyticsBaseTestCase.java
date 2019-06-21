@@ -55,13 +55,11 @@ public class AnalyticsBaseTestCase extends ISIntegrationTest {
     private void changeConfiguration() {
 
         log.info("Changing identity.xml file to enable analytics");
-
         String carbonHome = Utils.getResidentCarbonHome();
 
-        String analyticsEnabledIdentityXml = getISResourceLocation() + File.separator + "analytics" + File.separator
-                + "config" + File.separator + "identit_analytics_enabled.xml";
-        File defaultIdentityXml = new File(carbonHome + File.separator
-                + "repository" + File.separator + "conf" + File.separator + "identity" + File.separator + "identity.xml");
+        File defaultConfigFile = getDeploymentTomlFile(carbonHome);
+        File analyticsEnabledConfigFile = new File(getISResourceLocation() + File.separator + "analytics"
+                + File.separator + "config" + File.separator + "analytics_enabled.toml");
 
         String authnDataPublisherWithOffset = getISResourceLocation() + File.separator + "analytics" + File.separator
                 + "config" + File.separator + "IsAnalytics-Publisher-wso2event-AuthenticationData.xml";
@@ -81,10 +79,7 @@ public class AnalyticsBaseTestCase extends ISIntegrationTest {
                 + "repository" + File.separator + "deployment" + File.separator + "server" + File.separator +
                 "eventpublishers" + File.separator + "IsAnalytics-Publisher-wso2event-OauthTokenIssueRefresh.xml");
 
-
-
         try {
-            File configuredNotificationProperties = new File(analyticsEnabledIdentityXml);
             File configuredAuthnPublisherFile = new File(authnDataPublisherWithOffset);
             File configuredSessionPublisherFile = new File(sessionDataPublisherWithOffset);
             File configuredTokenPublisherFile = new File(tokenDataPublisherWithOffset);
@@ -92,8 +87,8 @@ public class AnalyticsBaseTestCase extends ISIntegrationTest {
             serverConfigurationManager = new ServerConfigurationManager(isServer);
             serverConfigurationManager.applyConfigurationWithoutRestart(configuredTokenPublisherFile,
                     defaultTokenDataPublisher, true);
-            serverConfigurationManager.applyConfigurationWithoutRestart(configuredNotificationProperties,
-                    defaultIdentityXml, true);
+            serverConfigurationManager.applyConfigurationWithoutRestart(analyticsEnabledConfigFile,
+                    defaultConfigFile, true);
             serverConfigurationManager.applyConfigurationWithoutRestart(configuredAuthnPublisherFile,
                     defaultAuthenticationDataPublisher, true);
             serverConfigurationManager.applyConfigurationWithoutRestart(configuredSessionPublisherFile,

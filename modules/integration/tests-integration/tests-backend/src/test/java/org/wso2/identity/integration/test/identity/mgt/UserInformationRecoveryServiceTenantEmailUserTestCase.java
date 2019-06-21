@@ -55,7 +55,6 @@ public class UserInformationRecoveryServiceTenantEmailUserTestCase extends ISInt
     private AuthenticatorClient loginManger;
     private ServerConfigurationManager scm;
     private File identityMgtServerFile;
-    private File userMgtXml;
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     @BeforeClass(alwaysRun = true)
@@ -68,14 +67,13 @@ public class UserInformationRecoveryServiceTenantEmailUserTestCase extends ISInt
         File identityMgtConfigFile = new File(getISResourceLocation() + File.separator + "identityMgt" +
                 File.separator + "identity-mgt-enabled.properties");
 
-        userMgtXml = new File(carbonHome + File.separator + "repository" + File.separator + "conf" + File.separator +
-                "user-mgt.xml");
-        File userMgtConfig = new File(getISResourceLocation() + File.separator + "identityMgt" + File.separator +
-                "user-mgt-regex-changed.xml");
+        File defaultTomlFile = getDeploymentTomlFile(carbonHome);
+        File configuredTomlFile = new File(getISResourceLocation() + File.separator + "identityMgt"
+                + File.separator + "user_mgt_regex_changed.toml");
 
         scm = new ServerConfigurationManager(isServer);
         scm.applyConfigurationWithoutRestart(identityMgtConfigFile, identityMgtServerFile, true);
-        scm.applyConfigurationWithoutRestart(userMgtConfig, userMgtXml, true);
+        scm.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         scm.restartGracefully();
 
         super.init();

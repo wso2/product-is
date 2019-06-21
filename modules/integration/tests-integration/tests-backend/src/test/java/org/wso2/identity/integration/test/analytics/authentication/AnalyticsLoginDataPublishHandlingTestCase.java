@@ -78,9 +78,8 @@ public class AnalyticsLoginDataPublishHandlingTestCase extends AbstractAnalytics
         String carbonHome = Utils.getResidentCarbonHome();
 
         String analyticsEnabledIdentityEventProperties = getISResourceLocation() + File.separator + "analytics" +
-                File.separator + "config" + File.separator + "identity-event_analytics_enabled.properties";
-        File defaultIdentityEventProperties = new File(carbonHome + File.separator + "repository" +
-                File.separator + "conf" + File.separator + "identity" + File.separator + "identity-event.properties");
+                File.separator + "config" + File.separator + "identity_event_analytics_enabled.toml";
+        File defaultIdentityEventProperties = getDeploymentTomlFile(carbonHome);
 
         String authnDataPublisherWithOffset = getISResourceLocation() + File.separator + "analytics" + File.separator
                 + "config" + File.separator + "IsAnalytics-Publisher-wso2event-AuthenticationData.xml";
@@ -113,7 +112,7 @@ public class AnalyticsLoginDataPublishHandlingTestCase extends AbstractAnalytics
 
     public void replaceIdentityXml() throws IOException, AutomationUtilException {
 
-        log.info("Replacing default identity-event.properties file.");
+        log.info("Replacing default deployment.toml file.");
         serverConfigurationManager.restoreToLastConfiguration(false);
     }
 
