@@ -105,7 +105,7 @@ function drawPage() {
     var endString ="<tr>\n" +
         "               <td colspan=\"2\">" +
         "                   <div style=\"margin: auto;\">" +
-        "                    <button id=\"connectFedBtn\" class=\"btn btn-default mgL14px\" onclick=\"drawFIDORegistration(this);\" type=\"button\" >Manage U2F Authentication</button>" +
+        "                    <button id=\"connectFedBtn\" class=\"btn btn-default mgL14px\" onclick=\"drawFIDO2Registration(this);\" type=\"button\" >Manage U2F Authentication</button>" +
         "                    </td></div></tr>"+
         "<tr><td colspan=\"2\">" +
         "                        <input type=\"button\" onclick=\"validate();\" class=\"btn btn-primary\" value=\"Update\"/>\n" +
@@ -440,3 +440,270 @@ function removeQRCode(){
     $('#totpQRCode').css("visibility","hidden");
     $('#totpQRCode').show();
 }
+
+////////////////////////////////// FIDO2 START ############### /////////////////////////////////////
+function drawFIDO2Registration() {
+
+    $.ajax({
+        url: PROXY_CONTEXT_PATH + "/portal/gadgets/user_profile/controllers/my-profile/fido2-meta.jag",
+        type: "POST",
+        data: {cookie : cookie, action : "idPList", user: userName},
+        success: function (data) {drawFIDO2Callback(data)},
+        error: function (e) {
+            message({content: 'Error occurred while loading identity providers.', type: 'error', cbk: function () {} });
+        }
+    });
+}
+
+function removeFIDO2(deviceRemarks) {
+
+    var regTime = deviceRemarks.split(",")[0];
+    var credential = deviceRemarks.split(",")[1];
+
+    var element = "<div class=\"modal fade\" id=\"messageModal\">\n" +
+        "  <div class=\"modal-dialog\">\n" +
+        "    <div class=\"modal-content\">\n" +
+        "      <div class=\"modal-header\">\n" +
+        "        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>\n" +
+        "        <h3 class=\"modal-title\">Modal title</h4>\n" +
+        "      </div>\n" +
+        "      <div class=\"modal-body\">\n" +
+        "        <p>One fine body&hellip;</p>\n" +
+        "      </div>\n" +
+        "      <div class=\"modal-footer\">\n" +
+        "      </div>\n" +
+        "    </div>\n" +
+        "  </div>\n" +
+        "</div>";
+
+    $("#message").append(element);
+    var msg = "You are about to remove device registered on '" + regTime + "'. Do you want to proceed?";
+
+    message({content: msg, type: 'confirm', okCallback: function () {
+
+            var str = PROXY_CONTEXT_PATH + "/portal/gadgets/user_profile/controllers/my-profile/fido-remove.jag";
+            $.ajax({
+                url: str,
+                type: "POST",
+                data: "profileConfiguration=default" + "&cookie=" + cookie + "&user=" + userName + "&deviceRemarks=" + credential
+            })
+                .done(function (data) {
+                    drawFIDO2Registration();
+                })
+                .fail(function () {message({content: 'Error while updating Profile', type: 'error', cbk: function () {} });
+                })
+                .always(function () {
+                    console.log('completed');
+                });
+        },
+        cancelCallback: function () {} });
+}
+
+function drawFIDO2Callback(data) {
+
+    var deviceMetadata = null;
+    if (data != null && "" !== data) {
+        deviceMetadata = $.parseJSON(data).data;
+    }
+
+    var top =
+        "    <div class=\"container content-section-wrapper\">\n" +
+        "        <div class=\"row\">\n" +
+        "            <div class=\"col-lg-12 content-section\">\n" +
+        "                <legend>Manage FIDO U2F Device </legend>\n" +
+        "                <form method=\"post\" class=\"form-horizontal\" id=\"associateForm\" name=\"selfReg\"  >\n";
+
+    var middle = "";
+
+    if (deviceMetadata != null && deviceMetadata.length > 0) {
+        var middle =
+            "    <div class=\"control-group\">\n" +
+            "        <table class=\"table table-bordered\">\n" +
+            "            <thead>\n" +
+            "                <tr>\n" +
+            "                    <th class='txtAlnCen width80p'>Device Remarks</th>\n" +
+            "                    <th class='txtAlnCen'>Action</th>\n" +
+            "                </tr>\n" +
+            "            </thead>\n";
+
+
+        if (isArray(deviceMetadata)) {
+            for (var i in deviceMetadata) {
+                middle = middle +
+                    "                <tr>\n" +
+                    "                    <td > Registration Time : " + deviceMetadata[i].registrationTime + "</td>\n" +
+                    "                    <td class='txtAlnCen'>\n" +
+                    "                        <a title=\"\" onclick=\"removeFIDO2('" + deviceMetadata[i].registrationTime + "," + deviceMetadata[i].credential.credentialId + "');\" href=\"javascript:void(0)\"><i class=\"icon-trash\"></i> Remove</a>\n" +
+                    "                    </td>\n" +
+                    "                </tr>\n";
+            }
+        }
+        else {
+
+            middle = middle +
+                "                <tr>\n" +
+                "                    <td > Registration Time : "  + deviceMetadata.registrationTime + "</td>\n" +
+                "                    <td class='txtAlnCen'>\n" +
+                "                        <a title=\"\" onclick=\"removeFIDO2('" + deviceMetadata.registrationTime + "," + deviceMetadata.credential.credentialId + "');\" href=\"javascript:void(0)\"><i class=\"icon-trash\"></i> Remove</a>\n" +
+                "                    </td>\n" +
+                "                </tr>\n";
+
+        }
+
+        var middle = middle + "            </tbody>\n" +
+            "        </table>\n" +
+            "    </div>";
+    }
+
+    else {
+        middle = middle + "<label > Device not registered yet please register your device ! </label>";
+    }
+
+
+    var end =
+        "                    <div class=\"control-group\">\n" +
+        "                        <div class=\"controls\">\n" +
+        "                            <input type=\"button\" onclick=\"startFIDO2();\" class=\"btn btn-primary\" style=\"margin-right: 5px;\" value=\"Attach FIDO Token\"/>\n" +
+        "                            <input type=\"button\" onclick=\"drawPage();\" class=\"btn btn-default btn-cancel\" value=\"Done\"/>\n" +
+        "                        </div>\n" +
+        "                    </div></div>\n" +
+        "                </form>\n" +
+        "            </div>\n" +
+        "        </div>\n" +
+        "    </div>   ";
+
+    var output = top + middle + end;
+
+    $("#gadgetBody").empty();
+    $("#gadgetBody").append(output);
+}
+
+function extend(obj, more) {
+
+    return Object.assign({}, obj, more);
+}
+
+function decodePublicKeyCredentialCreationOptions(request) {
+
+    const excludeCredentials = request.excludeCredentials.map(credential => extend(
+        credential, {
+            id: base64url.toByteArray(credential.id),
+        }));
+
+    return extend(
+        request, {
+            attestation: 'direct',
+            user: extend(
+                request.user, {
+                    id: base64url.toByteArray(request.user.id),
+                }),
+            challenge: base64url.toByteArray(request.challenge),
+            excludeCredentials,
+        });
+}
+
+function startFIDO2() {
+
+    var element = "<div class=\"modal fade\" id=\"messageModal\">\n" +
+        "  <div class=\"modal-dialog\">\n" +
+        "    <div class=\"modal-content\">\n" +
+        "      <div class=\"modal-header\">\n" +
+        "        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>\n" +
+        "        <h3 class=\"modal-title\">Modal title</h4>\n" +
+        "      </div>\n" +
+        "      <div class=\"modal-body\">\n" +
+        "        <p>One fine body&hellip;</p>\n" +
+        "      </div>\n" +
+        "      <div class=\"modal-footer\">\n" +
+        "      </div>\n" +
+        "    </div>\n" +
+        "  </div>\n" +
+        "</div>";
+    $("#message").append(element);
+
+    if (cookie != null) {
+        var str = PROXY_CONTEXT_PATH + "/portal/gadgets/user_profile/controllers/my-profile/fido2-start.jag";
+        $.ajax({
+            type: "POST",
+            url: str,
+            data: {cookie: cookie, user: userName}
+        })
+            .done(function (request) {
+                request = JSON.parse(request).data;
+                connectToDevice(request.requestId, decodePublicKeyCredentialCreationOptions(request.publicKeyCredentialCreationOptions));
+            })
+            .fail(function (error) {
+                console.log(error);
+            })
+            .always(function () {
+                console.log('completed');
+            });
+    }
+}
+
+/** Turn a PublicKeyCredential object into a plain object with base64url encoded binary values */
+function responseToObject(response) {
+
+    if (response.u2fResponse) {
+        return response;
+    } else {
+        var clientExtensionResults = {};
+
+        try {
+            clientExtensionResults = response.getClientExtensionResults();
+        } catch (e) {
+            console.error('getClientExtensionResults failed', e);
+        }
+
+        if (response.response.attestationObject) {
+            return {
+                id: response.id,
+                response: {
+                    attestationObject: base64url.fromByteArray(response.response.attestationObject),
+                    clientDataJSON: base64url.fromByteArray(response.response.clientDataJSON)
+                },
+                clientExtensionResults,
+                type: response.type
+            };
+        } else {
+            return {
+                id: response.id,
+                response: {
+                    authenticatorData: base64url.fromByteArray(response.response.authenticatorData),
+                    clientDataJSON: base64url.fromByteArray(response.response.clientDataJSON),
+                    signature: base64url.fromByteArray(response.response.signature),
+                    userHandle: response.response.userHandle && base64url.fromByteArray(response.response.userHandle)
+                },
+                clientExtensionResults,
+                type: response.type
+            };
+        }
+    }
+}
+
+function connectToDevice(requestId, credentialCreationOptions) {
+
+    navigator.credentials.create({ publicKey: credentialCreationOptions})
+        .then(function(credential) {
+            var payload = {};
+            payload.requestId = requestId;
+            payload.credential = responseToObject(credential);
+            console.log(payload);
+            var str = PROXY_CONTEXT_PATH + "/portal/gadgets/user_profile/controllers/my-profile/fido2-finish.jag";
+            $.ajax({
+                url: str,
+                type: "POST",
+                data: {payload: JSON.stringify(payload), cookie: cookie, user: userName}
+            }).done(function (data) {
+                message({content: 'Device registered successfully ', type: 'info', cbk: function () {} });
+                drawFIDO2Registration();
+            }).fail(function (err) {
+                console.log(err);
+            });
+        })
+        .catch(function(err) {
+            console.log(err);
+        });
+}
+
+
