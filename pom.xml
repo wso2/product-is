@@ -1463,6 +1463,16 @@
                 <version>${identity.local.auth.fido.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.identity.local.auth.fido</groupId>
+                <artifactId>org.wso2.carbon.identity.application.authenticator.fido2</artifactId>
+                <version>${identity.local.auth.fido.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.local.auth.fido</groupId>
+                <artifactId>org.wso2.carbon.identity.application.authenticator.fido2.server.feature</artifactId>
+                <version>${identity.local.auth.fido.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.identity.application.auth.basic</groupId>
                 <artifactId>org.wso2.carbon.identity.application.authenticator.basicauth.jwt</artifactId>
                 <version>${identity.local.auth.basicauth.version}</version>
@@ -1866,7 +1876,7 @@
 
         <!-- Local Authenticator Properties -->
         <identity.local.auth.basicauth.version>6.0.8</identity.local.auth.basicauth.version>
-        <identity.local.auth.fido.version>5.1.14</identity.local.auth.fido.version>
+        <identity.local.auth.fido.version>5.1.15-SNAPSHOT</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.3.11</identity.local.auth.iwa.version>
         <identity.local.auth.clientauth.mutualtls.version>2.0.5</identity.local.auth.clientauth.mutualtls.version>
 

@@ -455,6 +455,12 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.configuration.mgt.server.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
+
+                                <!-- FIDO2/WebAuthn feature -->
+                                <featureArtifactDef>
+                                   org.wso2.carbon.identity.local.auth.fido:org.wso2.carbon.identity.application.authenticator.fido2.server.feature:${identity.local.auth.fido.version}
+                                </featureArtifactDef>
+
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -939,6 +945,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.template.mgt.server.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.application.authenticator.fido2.server.feature.group</id>
+                                    <version>${identity.local.auth.fido.version}</version>
                                 </feature>
                             </features>
                         </configuration>
