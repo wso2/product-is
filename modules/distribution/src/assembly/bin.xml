@@ -52,6 +52,8 @@
                 <exclude>**/tcpmon-1.0.jar</exclude>
                 <exclude>**/tcpmon.sh</exclude>
                 <exclude>**/tcpmon.bat</exclude>
+                <exclude>**/deployment.toml</exclude>
+                <exclude>**/datasources/master-datasources.xml</exclude>
             </excludes>
         </fileSet>
 
@@ -622,6 +624,12 @@
         <file>
             <source>target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml</source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
+            <filtered>true</filtered>
+        </file>
+        <file>
+            <source>src/repository/resources/conf/master-datasources.xml</source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/datasources/</outputDirectory>
+            <destName>master-datasources.xml</destName>
             <filtered>true</filtered>
         </file>
         <file>
