@@ -35,7 +35,7 @@ public class ReadOnlyLdapBasedUserMgtTestCase extends UserMgtServiceAbstractTest
 
     private static final Log log = LogFactory.getLog(ReadOnlyLdapBasedUserMgtTestCase.class);
     private ServerConfigurationManager scm;
-    private File userMgtServerFile;
+    private File defaultConfigFile;
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
     @BeforeClass(alwaysRun = true)
@@ -44,13 +44,12 @@ public class ReadOnlyLdapBasedUserMgtTestCase extends UserMgtServiceAbstractTest
         super.testInit();
 
         String carbonHome = Utils.getResidentCarbonHome();
-        userMgtServerFile = new File(carbonHome + File.separator + "repository" + File.separator
-                + "conf" + File.separator + "user-mgt.xml");
+        defaultConfigFile = getDeploymentTomlFile(carbonHome);
         File userMgtConfigFile = new File(getISResourceLocation() + File.separator + "userMgt"
-                + File.separator + "readOnlyLdapUserMgtConfig.xml");
+                + File.separator + "readOnlyLdapUserMgtConfig.toml");
 
         scm = new ServerConfigurationManager(isServer);
-        scm.applyConfigurationWithoutRestart(userMgtConfigFile, userMgtServerFile, true);
+        scm.applyConfigurationWithoutRestart(userMgtConfigFile, defaultConfigFile, true);
         scm.restartGracefully();
         super.testInit();
 
@@ -73,11 +72,7 @@ public class ReadOnlyLdapBasedUserMgtTestCase extends UserMgtServiceAbstractTest
         }
 
         // Reset the user-mgt.xml configuration.
-        File userMgtDefaultFile = new File(getISResourceLocation() + File.separator + "userMgt"
-                + File.separator + "default-user-mgt.xml");
-        scm.applyConfigurationWithoutRestart(userMgtDefaultFile, userMgtServerFile, true);
-        scm.restartGracefully();
-
+        scm.restoreToLastConfiguration(true);
     }
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
