@@ -81,7 +81,7 @@ public class Oauth2TokenRenewalPerRequestTestCase extends OAuth2ServiceAbstractI
         deleteApplication();
         removeOAuthApplicationData();
 
-        log.info("Replacing identity.xml with default configurations.");
+        log.info("Replacing deployment.toml with default configurations.");
         serverConfigurationManager.restoreToLastConfiguration(false);
     }
 
@@ -299,16 +299,13 @@ public class Oauth2TokenRenewalPerRequestTestCase extends OAuth2ServiceAbstractI
 
     private void changeISConfiguration() throws Exception {
 
-        log.info("Replacing identity.xml to enable token renewal per request.");
+        log.info("Replacing deployment.toml to enable token renewal per request.");
         String carbonHome = Utils.getResidentCarbonHome();
-        File identityXML = new File(
-                carbonHome + File.separator + "repository" + File.separator + "conf" + File.separator + "identity"
-                        + File.separator + "identity.xml");
-        File configuredIdentityXML = new File(
-                getISResourceLocation() + File.separator + "oauth" + File.separator
-                        + "token-renewal-per-request-enabled-identity.xml");
+        File defaultTomlFile = getDeploymentTomlFile(carbonHome);
+        File configuredTomlFile = new File(getISResourceLocation() + File.separator + "oauth" +
+                File.separator + "token_renewal_per_request_enabled.toml");
         serverConfigurationManager = new ServerConfigurationManager(isServer);
-        serverConfigurationManager.applyConfigurationWithoutRestart(configuredIdentityXML, identityXML, true);
+        serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartGracefully();
     }
 }
