@@ -296,7 +296,7 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
 
     }
 
-    @Test
+    @Test(dependsOnMethods = "testGetUser")
     public void testUpdateUserWhenExternalClaimDeleted() throws Exception {
 
         AutomationContext context = new AutomationContext("IDENTITY", testUserMode);
@@ -342,7 +342,7 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
                 "User " + "has not been created in patch process successfully");
         Object responseObj = JSONValue.parse(EntityUtils.toString(postResponse.getEntity()));
         EntityUtils.consume(postResponse.getEntity());
-        userId = ((JSONObject) responseObj).get(ID_ATTRIBUTE).toString();
+        String userId = ((JSONObject) responseObj).get(ID_ATTRIBUTE).toString();
         assertNotNull(userId);
         String userResourcePath = getPath() + "/" + userId;
 

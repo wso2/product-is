@@ -1,0 +1,51 @@
+#
+# Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+#
+# WSO2 Inc. licenses this file to you under the Apache License,
+# Version 2.0 (the "License"); you may not use this file except
+# in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+
+threadPool.size={{identity_mgt.events.thread_pool_size}}
+
+# Example Configuration Pattern for an event.
+#      module.name.1=event1
+#      event1.subscription.1=subscription1
+#      event1.enable=true
+
+# count array is used to identify the number of events. This number is used to configure custom events.
+{% set count = [] %}
+{% for event_name, event_value in identity_mgt.events.schemes.items() %}
+module.name.{{event_value.module_index}}={{event_name}}
+{% for subscription in event_value.subscriptions%}
+{{event_name}}.subscription.{{loop.index}}={{subscription}}
+{% endfor %}
+{% for property_name,property_value in event_value.properties.items()%}
+{{event_name}}.{{property_name}}={{property_value}}
+{% endfor %}
+{% if count.append(1) %}{% endif %}
+{% endfor %}
+
+# Custom event configuration.
+
+{% set custom_count = count|length %}
+{% for custom_event in event_handler %}
+{% set index = custom_count + loop.index %}
+module.name.{{index}}={{custom_event.name}}
+{% for subscription in custom_event.subscriptions.toList()%}
+{{custom_event.name}}.subscription.{{loop.index}}={{subscription}}
+{% endfor %}
+{% for property_name,property_value in custom_event.properties.items()%}
+{{custom_event.name}}.{{property_name}}={{property_value}}
+{% endfor %}
+{% endfor %}

@@ -1,0 +1,50 @@
+
+<!--
+  ~ Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~  WSO2 Inc. licenses this file to you under the Apache License,
+  ~  Version 2.0 (the "License"); you may not use this file except
+  ~  in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~  http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing,
+  ~  software distributed under the License is distributed on an
+  ~  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~  KIND, either express or implied.  See the License for the
+  ~  specific language governing permissions and limitations
+  ~  under the License.
+  -->
+
+<provisioning-config xmlns:svns="http://org.wso2.securevault/configuration">
+    <Property name="user-schema-extension-enabled">{{scim2.enable_schema_extension}}</Property>
+    <Property name="bulk-maxOperations">{{scim2.max_bulk_operations}}</Property>
+    <Property name="bulk-maxPayloadSize">{{scim2.max_bulk_payload}}</Property>
+    <Property name="documentationUri">{{scim2.documentation_uri}}</Property>
+    <Property name="patch-supported">true</Property>
+    <Property name="bulk-supported">true</Property>
+    <Property name="filter-supported">true</Property>
+    <Property name="filter-maxResults">200</Property>
+    <Property name="changePassword">true</Property>
+    <Property name="sort-supported">false</Property>
+    <Property name="etag-supported">false</Property>
+    <authenticationSchemes>
+        <schema id="1">
+            <Property name="name">OAuth Bearer Token</Property>
+            <Property name="description">Authentication scheme using the OAuth Bearer Token Standard</Property>
+            <Property name="specUri">http://www.rfc-editor.org/info/rfc6750</Property>
+            <Property name="documentationUri">{{scim2.basic_auth_documentation_uri}}</Property>
+            <Property name="type">oauthbearertoken</Property>
+            <Property name="primary">{{scim2.oauth_bearer.primary}}</Property>
+        </schema>
+        <schema id="2">
+            <Property name="name">HTTP Basic</Property>
+            <Property name="description">Authentication scheme using the HTTP Basic Standard</Property>
+            <Property name="specUri">http://www.rfc-editor.org/info/rfc2617</Property>
+            <Property name="documentationUri">{{scim2.oauth_bearer_auth_documentation_uri}}</Property>
+            <Property name="type">httpbasic</Property>
+            <Property name="primary">{{scim2.http_basic.primary}}</Property>
+        </schema>
+    </authenticationSchemes>
+</provisioning-config>

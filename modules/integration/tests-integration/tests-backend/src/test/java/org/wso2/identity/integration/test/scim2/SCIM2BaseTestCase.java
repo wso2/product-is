@@ -53,16 +53,13 @@ public class SCIM2BaseTestCase extends ISIntegrationTest {
     }
 
     private void changeISConfiguration() throws Exception {
-
         String carbonHome = Utils.getResidentCarbonHome();
-        File identityXML = new File(carbonHome + File.separator
-                + "repository" + File.separator + "conf" + File.separator + "identity" + File.separator + "identity" +
-                ".xml");
-        File configuredIdentityXML = new File(getISResourceLocation() + File.separator + "scim2" + File.separator +
-                "me-unsecured-identity.xml");
+        File defaultTomlFile = getDeploymentTomlFile(carbonHome);
+        File scimConfiguredTomlFile = new File(getISResourceLocation() + File.separator + "scim2" + File.separator +
+                "me_unsecured_identity.toml");
 
         serverConfigurationManager = new ServerConfigurationManager(isServer);
-        serverConfigurationManager.applyConfigurationWithoutRestart(configuredIdentityXML, identityXML, true);
+        serverConfigurationManager.applyConfigurationWithoutRestart(scimConfiguredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartForcefully();
     }
 

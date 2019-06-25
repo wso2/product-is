@@ -44,9 +44,6 @@ public class UserProfileAdminTestCase extends ISIntegrationTest {
     private UserManagementClient userMgtClient;
     private AuthenticatorClient logManger;
     private String userId1 = "UserProfileAdminTestUser1";
-
-
-    private File identityXml;
     private ServerConfigurationManager serverConfigurationManager;
     private IdentityProviderMgtServiceClient idpMgtClient;
     
@@ -54,17 +51,13 @@ public class UserProfileAdminTestCase extends ISIntegrationTest {
     public void testInit() throws Exception {
         super.init();
 
-        identityXml =  Paths.get(Utils.getResidentCarbonHome() + File.separator
-                + "repository" + File.separator + "conf" + File.separator
-                + "identity" + File.separator + "identity.xml").toFile();
-        File identityXmlToCopy =  Paths.get(FrameworkPathUtil.getSystemResourceLocation() +
-                "artifacts" + File.separator + "IS" + File.separator + "user" + File.separator
-                + "enable-federated-association.xml").toFile();
+        String carbonHome = Utils.getResidentCarbonHome();
+        File defaultTomlFile = getDeploymentTomlFile(carbonHome);
+        File configuredTomlFile = new File(getISResourceLocation() + File.separator + "user" + File.separator
+                        + "enable_federated_association.toml");
 
         serverConfigurationManager = new ServerConfigurationManager(isServer);
-        serverConfigurationManager.applyConfigurationWithoutRestart(identityXmlToCopy,
-                identityXml, true);
-
+        serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartGracefully();
 
         super.init();

@@ -1,0 +1,160 @@
+{
+  "database.shared_db.type": {
+    "mysql": {
+      "database.shared_db.driver": "com.mysql.jdbc.Driver",
+      "database.shared_db.url": "jdbc:mysql://$ref{database.shared_db.hostname}:$ref{database.shared_db.port}/$ref{database.shared_db.name}",
+      "database.shared_db.validationQuery": "SELECT 1"
+    }
+  },
+  "server.pattern":{
+    "DEV" : {
+      "server.hostname" : "localhost",
+      "server.base_path" : "${carbon.protocol}://${carbon.host}:${carbon.management.port}",
+      "database.shared_db.driver": "org.h2.Driver",
+      "database.shared_db.url": "jdbc:h2:./repository/database/WSO2SHARED_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000",
+      "database.shared_db.validationQuery": "SELECT 1",
+      "database.shared_db.username": "wso2carbon",
+      "database.shared_db.password": "wso2carbon",
+      "database.identity_db.driver": "org.h2.Driver",
+      "database.identity_db.url": "jdbc:h2:./repository/database/WSO2IDENTITY_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000",
+      "database.identity_db.validationQuery": "SELECT 1",
+      "database.identity_db.username": "wso2carbon",
+      "database.identity_db.password": "wso2carbon",
+      "keystore.tls.file_name": "wso2carbon.jks",
+      "keystore.tls.password": "wso2carbon",
+      "truststore.file_name" :"client-truststore.jks",
+      "truststore.password" :"wso2carbon"
+    }
+  },
+
+  "user_store.type": {
+    "read_write_ldap": {
+      "user_store.properties.IsBulkImportSupported": false
+    }
+  },
+
+  "tenant_mgt.tenant_manager.type": {
+    "jdbc": {
+      "tenant_mgt.tenant_manager.config_builder": "org.wso2.carbon.user.core.config.multitenancy.SimpleRealmConfigBuilder",
+      "tenant_mgt.tenant_manager.class": "org.wso2.carbon.user.core.tenant.JDBCTenantManager"
+    }
+
+  },
+  "encryption.type": {
+    "asymmetric": {
+      "encryption.internal_crypto_provider": "org.wso2.carbon.crypto.provider.KeyStoreBasedInternalCryptoProvider"
+    },
+    "symmetric": {
+      "encryption.internal_crypto_provider": "org.wso2.carbon.crypto.provider.SymmetricKeyInternalCryptoProvider"
+    }
+  },
+
+  "scim2.primary_authentication_scheme": {
+    "oauthbearertoken": {
+      "scim2.oauth_bearer.primary": true,
+      "scim2.http_basic.primary": false
+    },
+    "httpbasic": {
+      "scim2.oauth_bearer.primary": false,
+      "scim2.http_basic.primary": true
+    }
+  },
+
+  "authentication.sign_auth_response_with_tenant_of": {
+    "sp": {
+      "oauth.oidc.id_token.sign_with_sp_key": true,
+      "oauth.access_token.generate_with_sp_tenant_domain": true,
+      "saml.enable_user_domain_crpto": false
+    },
+    "user": {
+      "oauth.oidc.id_token.sign_with_sp_key": false,
+      "oauth.access_token.generate_with_sp_tenant_domain": false,
+      "saml.enable_user_domain_crpto": true
+    }
+  },
+
+  "oauth.token_generation.access_token_type": {
+    "self_contained": {
+      "oauth.extension.token_generator": "org.wso2.carbon.identity.oauth2.token.JWTTokenIssuer"
+    }
+  },
+
+  "oauth.token_generation.access_token_value_type": {
+    "md5": {
+      "oauth.extension.token_value_generator": "org.apache.oltu.oauth2.as.issuer.MD5Generator"
+    },
+    "sha256": {
+      "oauth.extension.token_value_generator": "org.wso2.carbon.identity.oauth.tokenvaluegenerator.SHA256Generator"
+    },
+    "uuid": {
+      "oauth.extension.token_value_generator": "org.apache.oltu.oauth2.as.issuer.UUIDValueGenerator"
+    }
+  },
+
+  "oauth.oidc.user_info.response_type": {
+    "json": {
+      "oauth.oidc.extensions.user_info_response_builder": "org.wso2.carbon.identity.oauth.endpoint.user.impl.UserInfoJSONResponseBuilder"
+    },
+    "jwt": {
+      "oauth.oidc.extensions.user_info_response_builder": "org.wso2.carbon.identity.oauth.endpoint.user.impl.UserInfoJWTResponse"
+
+    }
+  },
+
+  "oauth.hash_tokens_and_secrets": {
+    "true": {
+      "oauth.extensions.token_persistance_processor": "org.wso2.carbon.identity.oauth.tokenprocessor.EncryptionDecryptionPersistenceProcessor"
+    },
+    "false": {
+      "oauth.extensions.token_persistance_processor": "org.wso2.carbon.identity.oauth.tokenprocessor.PlainTextPersistenceProcessor"
+    }
+  },
+
+  "oauth..validation_response_subject_identifier_format": {
+    "fqn": {
+      "oauth.build_subject_identifier_from_sp_config": false
+    },
+    "app_configured": {
+      "oauth.build_subject_identifier_from_sp_config": true
+    }
+  },
+
+  "authentication.adaptive.event_publisher.authentication_type": {
+    "basic": {
+      "authentication.adaptive.event_publisher.url": "https://localhost:8280/",
+      "authentication.adaptive.event_publisher.authentication.basic.enable": true,
+      "authentication.adaptive.event_publisher.authentication.basic.username": "admin",
+      "authentication.adaptive.event_publisher.authentication.basic.password": "admin"
+    }
+  },
+
+  "session_data.cleanup.clean_pre_session_data_at": {
+    "invalidation": {
+      "session_data.cleanup.pre_session_data_cleanup_thread_pool_size" : 0
+    }
+  },
+
+  "event.default_recorder.user_delete_event.write_to_separate_csv.enable": {
+    "true": {
+      "event.default_recorder.user_delete_event.write_to_separate_csv.path": "${carbon.home}/repository/logs/delete-records.csv"
+    }
+  },
+
+  "identity_mgt.email_sender": {
+    "internal": {
+      "identity_mgt.recovery.notification.manage_internally": true,
+      "identity_mgt.user_onboarding.notification.manage_internally": true,
+      "identity_mgt.user_self_registration.notification.manage_internally": true,
+      "identity_mgt.events.schemes.'account.lock.handler'.properties.'notification.manageInternally'": true,
+      "identity_mgt.events.schemes.'account.disable.handler'.properties.'notification.manageInternally'": true
+    },
+    "external": {
+      "identity_mgt.recovery.notification.manage_internally": false,
+      "identity_mgt.user_onboarding.notification.manage_internally": false,
+      "identity_mgt.user_self_registration.notification.manage_internally": false,
+      "identity_mgt.events.schemes.'account.lock.handler'.properties.'notification.manageInternally'": false,
+      "identity_mgt.events.schemes.'account.disable.handler'.properties.'notification.manageInternally'": false
+    }
+  }
+
+}
