@@ -1830,7 +1830,7 @@
         <identity.data.publisher.oauth.version>1.0.13</identity.data.publisher.oauth.version>
         <identity.data.publisher.audit.version>1.0.4</identity.data.publisher.audit.version>
         <identity.governance.version>1.2.0</identity.governance.version>
-        <carbon.identity.auth.version>1.2.0</carbon.identity.auth.version>
+        <carbon.identity.auth.version>1.1.27</carbon.identity.auth.version>
         <identity.event.handler.account.lock.version>1.1.15</identity.event.handler.account.lock.version>
         <identity.event.handler.notification.version>1.1.0</identity.event.handler.notification.version>
         <identity.app.authz.xacml.version>2.0.2</identity.app.authz.xacml.version>
@@ -1942,7 +1942,7 @@
         <oauth.module.version>${jaggery.extensions.version}</oauth.module.version>
         <email.module.version>${jaggery.extensions.version}</email.module.version>
         <uuid.module.version>${jaggery.extensions.version}</uuid.module.version>
-        <securevault.wso2.version>1.1.2</securevault.wso2.version>
+        <securevault.wso2.version>1.0.0</securevault.wso2.version>
         <process.module.version>${jaggery.extensions.version}</process.module.version>
         <caramel.module.version>${jaggery.extensions.version}</caramel.module.version>
         <carbon.module.version>${jaggery.extensions.version}</carbon.module.version>

@@ -105,7 +105,6 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
 
         Map<String, String> startupParameters = new HashMap<String, String>();
         startupParameters.put("-DportOffset", String.valueOf(PORT_OFFSET_1 + CommonConstants.IS_DEFAULT_OFFSET));
-        startupParameters.put("-Dsetup", "true");
         AutomationContext context = new AutomationContext("IDENTITY", "identity002", TestUserMode.SUPER_TENANT_ADMIN);
 
         startCarbonServer(PORT_OFFSET_1, context, startupParameters);
