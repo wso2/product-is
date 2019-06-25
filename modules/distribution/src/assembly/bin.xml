@@ -1075,10 +1075,9 @@
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/consent-mgt-config.xml
-            </source>
+            <source>src/repository/resources/conf/consent-mgt-config.xml</source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
+            <destName>consent-mgt-config.xml</destName>
             <fileMode>644</fileMode>
         </file>
         <file>
