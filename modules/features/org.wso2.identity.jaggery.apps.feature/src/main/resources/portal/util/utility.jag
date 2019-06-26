@@ -25,6 +25,7 @@ function setServerURL() {
 
         var mgtTransport = "https";
         var fidoAppId = jsonConf.fido.appId;
+        var enableWebAuthn = jsonConf.fido.enableWebAuthn;
         //retrieving site configuration for overiding ui urls
         var proxyConfHost = jsonConf.proxy.proxyHost;
         var proxyConfPort = jsonConf.proxy.proxyHTTPSPort;
@@ -91,12 +92,14 @@ function setServerURL() {
         application.put(FIDO_APP_ID, fidoAppId);
         application.put(PROXY_CONTEXT_PATH, proxyContextPath);
         application.put(PROXY_ORIGIN, proxyOrigin);
+        application.put(ENABLE_WEBAUTHN, enableWebAuthn);
 
         if (log.isDebugEnabled()) {
             log.debug("Proxy Origin      :" + proxyOrigin);
             log.debug("Server Url      :" + serverUrl);
             log.debug("Server Core Url :" + serverCoreUrl);
             log.debug("Proxy Context Path :" + proxyContextPath);
+            log.debug("WebAuthn Enabled   :" + enableWebAuthn);
         }
     }
 }
