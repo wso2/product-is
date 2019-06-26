@@ -14,9 +14,9 @@ session.put('user', user);
 
 try {
     var serverCoreUrl = application.get(SERVER_CORE_URL);
-    var url  = serverCoreUrl + "/t/" + tenantUser.domain + '/api/identity/fido/v1.0/metadata/' + user;
+    var url  = serverCoreUrl + "/t/" + tenantUser.domain + '/api/users/v1.0/metadata';
     var header = {"cookie" : cookie};
-    var result = get(url, {}, header, "json");
+    var result = get(url, {username: user}, header, "json");
     print(result);
 } catch(e) {
     log.error(e);
