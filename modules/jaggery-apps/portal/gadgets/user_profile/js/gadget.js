@@ -105,7 +105,7 @@ function drawPage() {
     var endString ="<tr>\n" +
         "               <td colspan=\"2\">" +
         "                   <div style=\"margin: auto;\">" +
-        "                    <button id=\"connectFedBtn\" class=\"btn btn-default mgL14px\" onclick=\"drawFIDO2Registration(this);\" type=\"button\" >Manage U2F Authentication</button>" +
+        "                    <button id=\"connectFedBtn\" class=\"btn btn-default mgL14px\" onclick=\"chooseFIDOMethod(this);\" type=\"button\" >Manage U2F Authentication</button>" +
         "                    </td></div></tr>"+
         "<tr><td colspan=\"2\">" +
         "                        <input type=\"button\" onclick=\"validate();\" class=\"btn btn-primary\" value=\"Update\"/>\n" +
@@ -442,6 +442,14 @@ function removeQRCode(){
 }
 
 ////////////////////////////////// FIDO2 START ############### /////////////////////////////////////
+function chooseFIDOMethod() {
+
+    if(ENABLE_WEBAUTHN === "true") {
+        drawFIDO2Registration()
+    } else {
+        drawFIDORegistration()
+    }
+}
 function drawFIDO2Registration() {
 
     $.ajax({
@@ -481,7 +489,7 @@ function removeFIDO2(deviceRemarks) {
 
     message({content: msg, type: 'confirm', okCallback: function () {
 
-            var str = PROXY_CONTEXT_PATH + "/portal/gadgets/user_profile/controllers/my-profile/fido-remove.jag";
+            var str = PROXY_CONTEXT_PATH + "/portal/gadgets/user_profile/controllers/my-profile/fido2-remove.jag";
             $.ajax({
                 url: str,
                 type: "POST",
@@ -528,6 +536,7 @@ function drawFIDO2Callback(data) {
 
 
         if (isArray(deviceMetadata)) {
+            console.log(deviceMetadata);
             for (var i in deviceMetadata) {
                 middle = middle +
                     "                <tr>\n" +
@@ -626,7 +635,7 @@ function startFIDO2() {
         $.ajax({
             type: "POST",
             url: str,
-            data: {cookie: cookie, user: userName}
+            data: {cookie: cookie, user: userName, appId: location.origin}
         })
             .done(function (request) {
                 request = JSON.parse(request).data;
