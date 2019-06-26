@@ -8,6 +8,7 @@
         "proxyContextPath" : ""
     },
     "fido" : {
-        "appId" : ""
+        "appId" : "",
+        "enableWebAuthn": "true"
     }
 }
