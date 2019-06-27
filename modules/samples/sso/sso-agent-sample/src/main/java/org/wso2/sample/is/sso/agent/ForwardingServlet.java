@@ -18,8 +18,6 @@
 
 package org.wso2.sample.is.sso.agent;
 
-import org.wso2.carbon.identity.sso.agent.SSOAgentConstants;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
