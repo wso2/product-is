@@ -1119,6 +1119,14 @@
         </file>
         <file>
             <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/identity/policies/xacml/default/scope_based_token_issuance_policy_template.xml
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/resources/identity/policies/xacml/default
+            </outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/certificate-validation.xml
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/security</outputDirectory>
