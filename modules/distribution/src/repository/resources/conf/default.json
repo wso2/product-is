@@ -450,6 +450,7 @@
     "org.wso2.carbon.identity.oauth.callback.DefaultCallbackHandler"
   ],
   "oauth.token_validator.bearer.enable": true,
+  "oauth.scope_validator.authz_implicit.enable": true,
   "oauth.token_validator.bearer.class": "org.wso2.carbon.identity.oauth2.validators.DefaultOAuth2TokenValidator",
   "oauth.token_validator.jwt.enable": true,
   "oauth.token_validator.jwt.class": "org.wso2.carbon.identity.oauth2.validators.OAuth2JWTTokenValidator",
