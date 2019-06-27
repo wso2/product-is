@@ -74,11 +74,11 @@
         <listener-class>org.wso2.sample.is.sso.agent.SampleContextEventListener</listener-class>
     </listener>
     <listener>
-        <listener-class>org.wso2.carbon.identity.sso.agent.saml.SSOAgentHttpSessionListener</listener-class>
+        <listener-class>org.wso2.carbon.identity.sso.agent.session.management.SSOAgentHttpSessionListener</listener-class>
     </listener>
 
     <error-page>
-        <exception-type>org.wso2.carbon.identity.sso.agent.SSOAgentException</exception-type>
+        <exception-type>org.wso2.carbon.identity.sso.agent.exception.SSOAgentException</exception-type>
         <location>/errors.jsp</location>
     </error-page>
 
