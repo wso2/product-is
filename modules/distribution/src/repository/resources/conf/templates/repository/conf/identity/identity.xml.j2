@@ -375,6 +375,9 @@
         {% endfor %}
         </ScopeValidators>
 
+        <!-- enable or disable scope validation for implicit grant and authorization code grant. -->
+        <ScopeValidationEnabledForAuthzCodeAndImplicitGrant>{{oauth.scope_validator.authz_implicit.enable}}</ScopeValidationEnabledForAuthzCodeAndImplicitGrant>
+
         <!-- Scope handlers list. The handlers registered here will be executed at the scope validation phase while
              issuing access tokens. -->
         <!-- ScopeHandler is used decide whether a grant type can issue id_tokens or not this can also achieve by grant
