@@ -1901,7 +1901,7 @@
         <jsp.api.version>2.0</jsp.api.version>
         <neethi.wso2.version>2.0.4.wso2v5</neethi.wso2.version>
         <axiom.impl.version>1.2.12</axiom.impl.version>
-        <axiom.version>1.2.11-wso2v6</axiom.version>
+        <axiom.version>1.2.22</axiom.version>
         <gdata.core.wso2.version>1.47.0.wso2v1</gdata.core.wso2.version>
         <json.simple.version>1.1.1</json.simple.version>
         <openid4java.consumer.version>1.0.0</openid4java.consumer.version>
