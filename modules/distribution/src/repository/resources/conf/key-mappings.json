@@ -1,0 +1,82 @@
+{
+  "tenant_mgt.tenant_manager.config_builder": "tenant_mgt.tenant_manager.properties.MultiTenantRealmConfigBuilder",
+  "database.shared_db.pool_options.max_active": "database.shared_db.pool_options.maxActive",
+  "database.shared_db.pool_options.max_wait": "database.shared_db.pool_options.maxWait",
+  "database.shared_db.pool_options.test_on_borrow": "database.shared_db.pool_options.testOnBorrow",
+  "database.shared_db.pool_options.validation_interval": "database.shared_db.pool_options.validationInterval",
+  "database.shared_db.pool_options.default_auto_commit": "database.shared_db.pool_options.defaultAutoCommit",
+
+  "user_store.connection_url":"user_store.properties.ConnectionURL",
+  "user_store.connection_name":"user_store.properties.ConnectionName",
+  "user_store.connection_password":"user_store.properties.ConnectionPassword",
+
+  "identity_mgt.account_locking.enable_account_locking": "identity_mgt.events.schemes.'account.lock.handler'.properties.enable",
+  "identity_mgt.account_locking.allowed_failed_attempts": "identity_mgt.events.schemes.'account.lock.handler'.properties.'On.Failure.Max.Attempts'",
+  "identity_mgt.account_locking.auto_unlock_after": "identity_mgt.events.schemes.'account.lock.handler'.properties.Time",
+  "identity_mgt.account_locking.auto_unlock_time_increment_ratio": "identity_mgt.events.schemes.'account.lock.handler'.properties.'login.fail.timeout.ratio'",
+
+  "identity_mgt.account_disabling.enable_account_disabling": "identity_mgt.events.schemes.'account.disable.handler'.properties.enable",
+
+  "identity_mgt.password_policy.enable_password_policy": "identity_mgt.events.schemes.passwordPolicy.properties.enable",
+  "identity_mgt.password_policy.min_characters": "identity_mgt.events.schemes.passwordPolicy.properties.'min.length'",
+  "identity_mgt.password_policy.max_characters": "identity_mgt.events.schemes.passwordPolicy.properties.'max.length'",
+  "identity_mgt.password_policy.allow_username_inside_password": "",
+  "identity_mgt.password_policy.no_of_previous_passwords_to_disallow": "identity_mgt.events.schemes.passwordHistory.properties.count",
+  "identity_mgt.password_policy.match_pattern": "identity_mgt.events.schemes.passwordPolicy.properties.pattern",
+  "identity_mgt.password_policy.error_message_on_pattern_validation_failure": "identity_mgt.events.schemes.passwordPolicy.properties.errorMsg",
+  "identity_mgt.password_policy.pattern_validator": "identity_mgt.events.schemes.passwordPolicy.properties.'class.PasswordPatternPolicy'",
+  "identity_mgt.password_policy.enable_password_history": "identity_mgt.events.schemes.passwordHistory.properties.enable",
+  "identity_mgt.password_policy.password_history_store_hash_algorithm": "identity_mgt.events.schemes.passwordHistory.properties.hashingAlgorithm",
+  "identity_mgt.password_policy.password_history_datasource_class": "identity_mgt.events.schemes.passwordHistory.properties.dataStore",
+
+  "identity_mgt.inactive_account_suspention.enable_account_suspension": "identity_mgt.events.schemes.'suspension.notification'.properties.enable",
+  "identity_mgt.inactive_account_suspension.suspend_when_inactive_for": "identity_mgt.events.schemes.'suspension.notification'.properties.'account.disable.delay'",
+  "identity_mgt.inactive_account_suspension.notify_when_inactive_for": "identity_mgt.events.schemes.'suspension.notification'.properties.delays",
+  "identity_mgt.inactive_account_suspension.trigger_notifications_at": "identity_mgt.events.schemes.'suspension.notification'.properties.'trigger.time'",
+
+  "identity_mgt.analytics_login_data_publisher.subscriptions": "identity_mgt.events.schemes.analyticsLoginDataPublisher.subscriptions",
+  "identity_mgt.analytics_login_data_publisher.enable": "identity_mgt.events.schemes.analyticsLoginDataPublisher.properties.enable",
+
+  "identity_mgt.analytics_session_data_publisher.subscriptions": "identity_mgt.events.schemes.analyticsSessionDataPublisher.subscriptions",
+  "identity_mgt.analytics_session_data_publisher.enable": "identity_mgt.events.schemes.analyticsSessionDataPublisher.properties.enable",
+
+  "identity_mgt.fail_login_attempt_validator.subscriptions": "identity_mgt.events.schemes.failLoginAttemptValidator.subscriptions",
+  "identity_mgt.fail_login_attempt_validator.enable": "identity_mgt.events.schemes.failLoginAttemptValidator.properties.enable",
+
+  "identity_mgt.saml_logout_handler.subscriptions": "identity_mgt.events.schemes.SAMLLogoutHandler.subscriptions",
+  "identity_mgt.saml_logout_handler.enable": "identity_mgt.events.schemes.SAMLLogoutHandler.properties.enable",
+
+  "scim.authentication_handler.basic.properties.priority" : "scim.authentication_handler.basic.properties.Priority",
+  "scim.authentication_handler.oauth.properties.priority": "scim.authentication_handler.oauth.properties.Priority",
+  "scim.authentication_handler.oauth.properties.authorization_server": "scim.authentication_handler.oauth.properties.AuthorizationServer",
+  "scim.authentication_handler.oauth.properties.username": "scim.authentication_handler.oauth.properties.UserName",
+  "scim.authentication_handler.oauth.properties.password": "scim.authentication_handler.oauth.properties.Password",
+
+  "authentication.authenticator.basic_request_path.parameters.auth_mechanism": "authentication.authenticator.basic_request_path.parameters.AuthMechanism",
+  "authentication.authenticator.basic.parameters.auth_mechanism": "authentication.authenticator.basic.parameters.AuthMechanism",
+  "authentication.authenticator.user_identifier.parameters.validate_username": "authentication.authenticator.user_identifier.parameters.ValidateUsername",
+
+  "authentication.authenticator.google.parameters.token_endpoint" : "authentication.authenticator.google.parameters.GoogleTokenEndpoint",
+  "authentication.authenticator.google.parameters.authz_endpoint" : "authentication.authenticator.google.parameters.GoogleAuthzEndpoint",
+  "authentication.authenticator.google.parameters.user_info_endpoint" : "authentication.authenticator.google.parameters.GoogleUserInfoEndpoint",
+
+  "authentication.authenticator.facebook.parameters.token_endpoint" : "authentication.authenticator.facebook.parameters.AuthTokenEndpoint",
+  "authentication.authenticator.facebook.parameters.authz_endpoint" : "authentication.authenticator.facebook.parameters.AuthnEndpoint",
+  "authentication.authenticator.facebook.parameters.user_info_endpoint" : "authentication.authenticator.facebook.parameters.UserInfoEndpoint",
+
+  "authentication.authenticator.yahoo.parameters.token_endpoint" : "authentication.authenticator.facebook.parameters.YahooTokenEndpoint",
+  "authentication.authenticator.yahoo.parameters.authz_endpoint" : "authentication.authenticator.facebook.parameters.YahooOAuthzEndpoint",
+  "authentication.authenticator.yahoo.parameters.user_info_endpoint" : "authentication.authenticator.facebook.parameters.YahooUserInfoEndpoint",
+
+  "authentication.authenticator.microsoft_live.parameters.token_endpoint" : "authentication.authenticator.microsoft_live.parameters.AuthTokenEndpoint",
+  "authentication.authenticator.microsoft_live.parameters.authz_endpoint" : "authentication.authenticator.microsoft_live.parameters.AuthnEndpoint",
+  "authentication.authenticator.microsoft_live.parameters.user_info_endpoint" : "authentication.authenticator.microsoft_live.parameters.UserInfoEndpoint",
+
+  "authentication.authenticator.mobile_connect.parameters.authentication_page_url":"authentication.authenticator.mobile_connect.parameters.MCAuthenticationEndpointURL",
+  "authentication.authenticator.mobile_connect.parameters.discovery_api_url": "authentication.authenticator.mobile_connect.parameters.MCDiscoveryAPIURL",
+  "authentication.authenticator.mobile_connect.parameters.redirect_to_multi_option_page_on_failure": "authentication.authenticator.mobile_connect.parameters.redirectToMultiOptionPageOnFailure",
+
+  "authentication.authenticator.fido.parameters.authentication_page_url": "authentication.authenticator.fido.parameters.FidoAuth",
+  "authentication.authenticator.x509_certificate.parameters.authentication_endpoint": "authentication.authenticator.x509_certificate.parameters.AuthenticationEndpoint"
+
+}

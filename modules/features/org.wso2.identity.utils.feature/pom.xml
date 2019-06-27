@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.wso2.is</groupId>
 		<artifactId>identity-features</artifactId>
-		<version>5.9.1-SNAPSHOT</version>
+		<version>5.8.1-m5-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -31,10 +31,6 @@
 	<url>http://wso2.org</url>
 
 	<dependencies>
-			<dependency>
-				<groupId>org.hibernate.wso2</groupId>
-				<artifactId>hibernate</artifactId>
-			</dependency>
 			<dependency>
 				<groupId>net.sf.ehcache.wso2</groupId>
 				<artifactId>ehcache</artifactId>
@@ -62,10 +58,10 @@
 			<dependency>
                 <groupId>org.apache.axis2.wso2</groupId>
                 <artifactId>axis2-jaxbri</artifactId>
-            </dependency>
+			</dependency>
             <dependency>
-                <groupId>com.sun.xml.bind.wso2</groupId>
-                <artifactId>jaxb</artifactId>
+                <groupId>org.wso2.orbit.javax.transaction</groupId>
+                <artifactId>jta</artifactId>
             </dependency>
 	</dependencies>
 
@@ -91,7 +87,6 @@
 								</properties>
 						    	</adviceFile>
 							<bundles>
-								<bundleDef>org.hibernate.wso2:hibernate</bundleDef>
 								<bundleDef>net.sf.ehcache.wso2:ehcache</bundleDef>
 								<bundleDef>org.apache.bcel.wso2:bcel</bundleDef>
 								<bundleDef>org.ow2.asm:asm-all</bundleDef>
@@ -100,7 +95,7 @@
 								<bundleDef>org.apache.axis2.wso2:axis2-jibx</bundleDef>
 								<bundleDef>org.jibx.wso2:jibx</bundleDef>
 								<bundleDef>org.apache.axis2.wso2:axis2-jaxbri</bundleDef>
-								<bundleDef>com.sun.xml.bind.wso2:jaxb</bundleDef>
+								<bundleDef>org.wso2.orbit.javax.transaction:jta</bundleDef>
 							</bundles>
 							<importFeatures>
 								<importFeatureDef>org.wso2.carbon.core.server:${carbon.kernel.version}</importFeatureDef>

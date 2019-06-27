@@ -36,7 +36,6 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.identity.application.common.model.xsd.Claim;
 import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationConfig;
@@ -53,7 +52,6 @@ import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -100,8 +98,6 @@ public class RegistryMountTestCase extends ISIntegrationTest {
 
     private HttpClient httpClient;
 
-    private File registryXml;
-
     private String resultPage;
 
     ConfigurationContext configContext;
@@ -111,16 +107,6 @@ public class RegistryMountTestCase extends ISIntegrationTest {
         super.init();
         logManger = new AuthenticatorClient(backendURL);
         serverConfigurationManager = new ServerConfigurationManager(isServer);
-        registryXml = new File(Utils.getResidentCarbonHome() + File.separator
-                + "repository" + File.separator + "conf" + File.separator + "registry.xml");
-        File registryXmlToCopy = new File(FrameworkPathUtil.getSystemResourceLocation() +
-                "artifacts" + File.separator + "IS" + File.separator + "saml" + File.separator
-                + "registry.xml");
-
-        serverConfigurationManager.applyConfigurationWithoutRestart(registryXmlToCopy,
-                registryXml, true);
-        serverConfigurationManager.restartGracefully();
-        super.init();
         tenantServiceClient = new TenantManagementServiceClient( isServer.getContextUrls().getBackEndUrl(),
                 sessionCookie);
         tenantServiceClient.addTenant(TENANT_DOMAIN, TENANT_ADMIN_TENANT_AWARE_USERNAME, TENANT_ADMIN_PASSWORD,

@@ -1,0 +1,36 @@
+#
+# Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+#
+# WSO2 Inc. licenses this file to you under the Apache License,
+# Version 2.0 (the "License"); you may not use this file except
+# in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+
+tenantListEnabled={{identity.auth_framework.endpoint.tenant_list_enabled}}
+mutualSSLManagerEnabled={{identity.auth_framework.endpoint.mutual_ssl_manager_enabled}}
+hostname.verification.enabled={{identity.auth_framework.endpoint.hostname_verification_enabled}}
+mutual.ssl.username={{identity.auth_framework.endpoint.mutual_ssl_username}}
+client.keyStore=./repository/resources/security/{{identity.auth_framework.endpoint.client_keystore}}
+Carbon.Security.KeyStore.Password={{identity.auth_framework.endpoint.carbon_security_keystore_password}}
+client.trustStore=./repository/resources/security/{{identity.auth_framework.endpoint.client_truststore}}
+Carbon.Security.TrustStore.Password={{identity.auth_framework.endpoint.carbon_security_truststore_password}}
+{% if identity.auth_framework.endpoint.identity_server_service_url is defined %}
+identity.server.serviceURL={{identity.auth_framework.endpoint.identity_server_service_url}}
+{% endif %}
+username.header={{identity.auth_framework.endpoint.username_header}}
+key.manager.type={{identity.auth_framework.endpoint.key_manager_type}}
+trust.manager.type={{identity.auth_framework.endpoint.trust_manager_type}}
+tls.protocol={{identity.auth_framework.endpoint.tls_protocol}}
+app.name={{identity.auth_framework.endpoint.app_name}}
+app.password={{identity.auth_framework.endpoint.app_password}}
+identity.server.origin={{identity.auth_framework.identity_server_origin}}

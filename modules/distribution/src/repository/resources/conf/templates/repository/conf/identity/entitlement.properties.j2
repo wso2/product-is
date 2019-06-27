@@ -1,0 +1,130 @@
+#
+# Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+#
+# WSO2 Inc. licenses this file to you under the Apache License,
+# Version 2.0 (the "License"); you may not use this file except
+# in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+
+PDP.Enable={{identity.entitlement.policy_point.pdp.enabled}}
+PAP.Enable={{identity.entitlement.policy_point.pap.enabled}}
+PDP.DecisionCaching.Enable={{identity.entitlement.policy_point.pdp.caching.decision_caching.enabled}}
+#cache intervals are in seconds
+PDP.DecisionCaching.CachingInterval={{identity.entitlement.policy_point.pdp.caching.decision_caching.caching_interval}}
+PDP.AttributeCaching.Enable={{identity.entitlement.policy_point.pdp.caching.attribute_caching.enabled}} 
+PDP.AttributeCaching.CachingInterval={{identity.entitlement.policy_point.pdp.caching.attribute_caching.caching_interval}}
+PDP.ResourceCaching.Enable={{identity.entitlement.policy_point.pdp.caching.resource_caching.enabled}} 
+PDP.ResourceCaching.CachingInterval={{identity.entitlement.policy_point.pdp.caching.resource_caching.caching_interval}}
+PDP.SchemaValidation.Enable={{identity.entitlement.policy_point.pdp.schema_validation_enabled}}
+PDP.Balana.Config.Enable={{identity.entitlement.policy_point.pdp.balana_config_enabled}}
+PDP.Multiple.Decision.Profile.Enable={{identity.entitlement.policy_point.pdp.multiple_decision_profile_enabled}}
+PDP.Global.Policy.Combining.Algorithm={{identity.entitlement.policy_point.pdp.global_policy_combining_algorithm}}
+PAP.Policy.Add.Start.Enable={{identity.entitlement.policy_point.pap.policy_add_start_enable}}
+#PAP.Policy.Add.Start.Policy.File.Path=
+PAP.Items.Per.Page={{identity.entitlement.policy_point.pap.items_per_page}}
+PDP.Registry.Level.Policy.Cache.Clear={{identity.entitlement.policy_point.pdp.registry_level_policy_cache_clear}}
+PDP.PolicyCaching.CachingInterval={{identity.entitlement.policy_point.pdp.caching.policy_caching.caching_interval}}
+Entitlement.Engine.CachingInterval={{identity.entitlement.entitlement_engine_caching_interval}}
+PDP.References.MaxPolicyEntries={{identity.entitlement.policy_point.pdp.reference_max_policy_entries}}
+
+#Enable JSON shorten form support by default
+JSON.Shorten.Form.Enabled={{identity.entitlement.JSON_shorten_form_enabled}}
+
+
+#PDP.Extensions.Extension.1=your.extension.class.name
+
+
+#PDP.Policy.Store=org.wso2.carbon.identity.entitlement.policy.store.CarbonRegistryPolicyStore
+
+# list type is used to identify the number of iterations in the for loop as jinja2 does not support global variables.
+# {% if list.append(1) %}{% endif %} command is used to add values to the list
+{% set designator_count = [] %}
+{% for designator in identity.entitlement.policy_point.pip.attribute_designators %}
+PIP.AttributeDesignators.Designator.{{loop.index}}={{designator}}
+{% if designator_count.append(1) %}{% endif %}
+{% endfor %}
+{% set custom_designator_count = designator_count|length %}
+{% for custom_designator in pip.attribute_designators %}
+{% set index = custom_designator_count + loop.index%}
+PIP.AttributeDesignators.Designator.{{index}}={{custom_designator}}
+{% endfor %}
+
+{% set finder_count = [] %}
+{% for resource_finder in identity.entitlement.policy_point.pip.resource_finders %}
+PIP.ResourceFinders.Finder.{{loop.index}}={{resource_finder}}
+{% if finder_count.append(1) %}{% endif %}
+{% endfor %}
+{% set custom_finder_count = finder_count|length %}
+{% for custom_finder in pip.resource_finders %}
+{% set index = custom_finder_count + loop.index%}
+PIP.ResourceFinders.Finder.{{index}}={{custom_finder}}
+{% endfor %}
+
+{% set data_finder_count = [] %}
+{% for data_finder in identity.entitlement.policy_point.pap.entitlement_data_finders %}
+PAP.Entitlement.Data.Finder.{{loop.index}}={{data_finder}}
+{% if data_finder_count.append(1) %}{% endif %}
+{% endfor %}
+{% set custom_data_finder_count = data_finder_count|length %}
+{% for custom_data_finder in pap.entitlement_data_finders %}
+{% set index = custom_data_finder_count + loop.index%}
+PAP.Entitlement.Data.Finder.{{index}}={{custom_data_finder}}
+{% endfor %}
+
+{% set policy_publisher_count = [] %}
+{% for policy_publisher_module in identity.entitlement.policy_point.pap.policy_publisher_modules %}
+PAP.Policy.Publisher.Module.{{loop.index}}={{policy_publisher_module}}
+{% if policy_publisher_count.append(1) %}{% endif %}
+{% endfor %}
+{% set custom_policy_publisher_count = policy_publisher_count|length %}
+{% for custom_policy_publisher in pap.policy_publishers %}
+{% set index = custom_policy_publisher_count + loop.index%}
+PAP.Policy.Publisher.Module.{{index}}={{custom_policy_publisher}}
+{% endfor %}
+
+#PAP.Policy.Post.Publisher.Module.1=
+#PAP.Policy.Publisher.Verification.Handler=
+PAP.Policy.Version.Module={{identity.entitlement.policy_point.pap.policy_version_module}}
+{% set status_data_handler_count = [] %}
+{% for status_data_handler in identity.entitlement.policy_point.pap.status_data_handlers %}
+PAP.Status.Data.Handler.{{loop.index}}={{status_data_handler}}
+{% if status_data_handler_count.append(1) %}{% endif %}
+{% endfor %}
+{% set custom_status_data_handler_count = status_data_handler_count|length %}
+{% for custom_status_data_handler in pap.status_data_handlers %}
+{% set index = custom_status_data_handler_count + loop.index%}
+PAP.Status.Data.Handler.{{index}}={{custom_status_data_handler}}
+{% endfor %}
+
+{% set policy_finder_count = [] %}
+{% for policy_finder in identity.entitlement.policy_point.pdp.policy_finders %}
+PDP.Policy.Finder.{{loop.index}}={{policy_finder}}
+{% if policy_finder_count.append(1) %}{% endif %}
+{% endfor %}
+{% set custom_policy_finder_count = policy_finder_count|length %}
+{% for custom_policy_finder in pdp.policy_finder %}
+{% set index = custom_policy_finder_count + loop.index%}
+PDP.Policy.Finder.{{index}}={{custom_policy_finder}}
+{% endfor %}
+
+#PDP.Policy.Collection
+PDP.Policy.Store.Module={{identity.entitlement.policy_point.pdp.policy_store_module}}
+PDP.Policy.Data.Store.Module={{identity.entitlement.policy_point.pdp.policy_data_store_module}}
+
+# Properties needed for each extension.
+# org.wso2.carbon.identity.entitlement.pip.DefaultAttributeFinder.1=name,value
+# org.wso2.carbon.identity.entitlement.pip.DefaultAttributeFinder.2=name,value
+# org.wso2.carbon.identity.entitlement.pip.DefaultResourceFinder.1=name.value
+# org.wso2.carbon.identity.entitlement.pip.DefaultResourceFinder.2=name,value
+# org.wso2.carbon.identity.entitlement.policy.CarbonPolicyMetaDataFinder.1=name,value
+# org.wso2.carbon.identity.entitlement.policy.CarbonPolicyMetaDataFinder.2=name,value

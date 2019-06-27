@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-integration-tests</artifactId>
-        <version>5.9.1-SNAPSHOT</version>
+        <version>5.8.1-m5-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -33,9 +33,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.wso2.carbon.identity</groupId>
+            <groupId>org.wso2.carbon.identity.framework</groupId>
             <artifactId>org.wso2.carbon.identity.entitlement</artifactId>
-            <version>5.2.0</version>
         </dependency>
     </dependencies>
 </project>

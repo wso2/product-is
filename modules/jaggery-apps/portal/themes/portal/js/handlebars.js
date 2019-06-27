@@ -1,7 +1,7 @@
 // lib/handlebars/base.js
 var Handlebars = {};
 
-Handlebars.VERSION = "1.0.beta.6";
+Handlebars.VERSION = "4.1.2";
 
 Handlebars.helpers  = {};
 Handlebars.partials = {};

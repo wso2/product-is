@@ -52,6 +52,9 @@
                 <exclude>**/tcpmon-1.0.jar</exclude>
                 <exclude>**/tcpmon.sh</exclude>
                 <exclude>**/tcpmon.bat</exclude>
+                <exclude>**/datasources/master-datasources.xml</exclude>
+                <exclude>**/repository/resources/conf/**</exclude>
+                <exclude>**/deployment.toml</exclude>
             </excludes>
         </fileSet>
 
@@ -134,6 +137,18 @@
                 <include>**/**</include>
             </includes>
         </fileSet>
+        <fileSet>
+            <directory>
+                target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf
+            </directory>
+            <outputDirectory>wso2is-${pom.version}/repository/resources/conf</outputDirectory>
+            <includes>
+                <include>**/**</include>
+            </includes>
+            <excludes>
+                <exclude>**/catalina-server.xml.j2</exclude>
+            </excludes>
+        </fileSet>
 
         <!--<fileSet>
             <directory>
@@ -163,6 +178,20 @@
             <outputDirectory>wso2is-${pom.version}/repository/resources/identity/authntemplates</outputDirectory>
             <includes>
                 <include>**/*.json</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>src/repository/resources/conf/templates</directory>
+            <outputDirectory>wso2is-${pom.version}/repository/resources/conf/templates</outputDirectory>
+            <includes>
+                <include>**/*.j2</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>src/repository/resources/conf</directory>
+            <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
+            <includes>
+                <include>**/*.toml</include>
             </includes>
         </fileSet>
 
@@ -569,12 +598,15 @@
             <fileMode>644</fileMode>
         </fileSet>
         <fileSet>
-            <directory>target/forget-me/identity-anonymization-tool-${forgetme.tool.version}/conf/sql/identity/</directory>
-            <outputDirectory>wso2is-${pom.version}/repository/components/tools/forget-me/conf/sql/identity</outputDirectory>
+            <directory>target/forget-me/identity-anonymization-tool-${forgetme.tool.version}/conf/sql/identity/
+            </directory>
+            <outputDirectory>wso2is-${pom.version}/repository/components/tools/forget-me/conf/sql/identity
+            </outputDirectory>
             <fileMode>644</fileMode>
         </fileSet>
         <fileSet>
-            <directory>target/forget-me/identity-anonymization-tool-${forgetme.tool.version}/conf/extensions/identity/</directory>
+            <directory>target/forget-me/identity-anonymization-tool-${forgetme.tool.version}/conf/extensions/identity/
+            </directory>
             <outputDirectory>wso2is-${pom.version}/repository/components/tools/forget-me/extensions/</outputDirectory>
             <fileMode>644</fileMode>
         </fileSet>
@@ -582,7 +614,8 @@
         <!--Copy scope validator to dropins dropins.-->
         <fileSet>
             <directory>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/resources/components/dropins/</directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/resources/components/dropins/
+            </directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
             <fileMode>644</fileMode>
         </fileSet>
@@ -622,6 +655,12 @@
         <file>
             <source>target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml</source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
+            <filtered>true</filtered>
+        </file>
+        <file>
+            <source>src/repository/resources/conf/master-datasources.xml</source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/datasources/</outputDirectory>
+            <destName>master-datasources.xml</destName>
             <filtered>true</filtered>
         </file>
         <file>
@@ -840,7 +879,7 @@
             <destName>secret-conf.properties</destName>
             <filtered>true</filtered>
         </file>
-	<file>
+        <file>
             <source>src/repository/resources/conf/catalina-server.xml</source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/tomcat</outputDirectory>
             <destName>catalina-server.xml</destName>
@@ -970,14 +1009,16 @@
             <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
             <fileMode>644</fileMode>
         </file>
-	<file>
-            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/output-event-adapters.xml
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/output-event-adapters.xml
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
             <fileMode>644</fileMode>
         </file>
-	<file>
-            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/attachment-management.xml
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/attachment-management.xml
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
             <fileMode>644</fileMode>
@@ -991,39 +1032,52 @@
         </file>
 
         <file>
-            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/metrics.properties</source>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/metrics.properties
+            </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
             <filtered>false</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/metrics.xml</source>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/metrics.xml
+            </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
             <filtered>false</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/datasources/metrics-datasources.xml</source>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/datasources/metrics-datasources.xml
+            </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/datasources/</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/database/WSO2METRICS_DB.h2.db</source>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/database/WSO2METRICS_DB.h2.db
+            </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/database/</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/oidc-scope-config.xml</source>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/oidc-scope-config.xml
+            </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/identity</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/mex/metadata.xml</source>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/mex/metadata.xml
+            </source>
             <outputDirectory>wso2is-${pom.version}/repository/deployment/server/webapps/mex/</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/consent-mgt-config.xml</source>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/consent-mgt-config.xml
+            </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
             <fileMode>644</fileMode>
         </file>
@@ -1048,7 +1102,9 @@
             <fileMode>744</fileMode>
         </file>
         <file>
-            <source>target/forget-me/identity-anonymization-tool-${forgetme.tool.version}/conf/product-config/config-identity.json</source>
+            <source>
+                target/forget-me/identity-anonymization-tool-${forgetme.tool.version}/conf/product-config/config-identity.json
+            </source>
             <outputDirectory>wso2is-${pom.version}/repository/components/tools/forget-me/conf/</outputDirectory>
             <destName>config.json</destName>
             <fileMode>644</fileMode>
@@ -1063,13 +1119,23 @@
         </file>
         <file>
             <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/identity/policies/xacml/default/scope_based_token_issuance_policy_template.xml
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/resources/identity/policies/xacml/default
+            </outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/certificate-validation.xml
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/security</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/health-check-config.xml</source>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/health-check-config.xml
+            </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
             <fileMode>644</fileMode>
         </file>
