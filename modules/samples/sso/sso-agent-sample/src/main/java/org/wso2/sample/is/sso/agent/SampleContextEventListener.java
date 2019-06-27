@@ -17,7 +17,7 @@
  */
 package org.wso2.sample.is.sso.agent;
 
-import org.wso2.carbon.identity.sso.agent.SSOAgentConstants;
+import org.wso2.carbon.identity.sso.agent.util.SSOAgentConstants;
 import org.wso2.carbon.identity.sso.agent.bean.SSOAgentConfig;
 import org.wso2.carbon.identity.sso.agent.exception.SSOAgentException;
 import org.wso2.carbon.identity.sso.agent.security.SSOAgentX509Credential;
@@ -63,12 +63,12 @@ public class SampleContextEventListener implements ServletContextListener {
                             properties.getProperty("IdPPublicCertAlias"),
                             properties.getProperty("PrivateKeyAlias"),
                             properties.getProperty("PrivateKeyPassword").toCharArray());
+
             SSOAgentConfig config = new SSOAgentConfig();
             config.initConfig(properties);
             config.getSAML2().setSSOAgentX509Credential(credential);
             config.getOpenId().setAttributesRequestor(new SampleAttributesRequestor());
-            servletContextEvent.getServletContext().
-                    setAttribute(SSOAgentConstants.CONFIG_BEAN_NAME, config);
+            servletContextEvent.getServletContext().setAttribute(SSOAgentConstants.CONFIG_BEAN_NAME, config);
         } catch (IOException | SSOAgentException e){
             LOGGER.log(Level.SEVERE, e.getMessage(), e);
         }
