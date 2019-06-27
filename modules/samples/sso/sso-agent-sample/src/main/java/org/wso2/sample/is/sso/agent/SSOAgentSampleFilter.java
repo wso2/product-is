@@ -21,7 +21,7 @@ package org.wso2.sample.is.sso.agent;
 import org.apache.axiom.om.util.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.wso2.carbon.identity.sso.agent.SAML2SSOAgentFilter;
-import org.wso2.carbon.identity.sso.agent.SSOAgentConstants;
+import org.wso2.carbon.identity.sso.agent.util.SSOAgentConstants;
 import org.wso2.carbon.identity.sso.agent.bean.SSOAgentConfig;
 
 import javax.servlet.FilterChain;
@@ -42,15 +42,9 @@ public class SSOAgentSampleFilter extends SAML2SSOAgentFilter {
     private static final String PASSWORD = "password";
     private static final String CHARACTER_ENCODING = "UTF-8";
     private static Properties properties;
-    protected FilterConfig filterConfig = null;
 
     static{
         properties = SampleContextEventListener.getProperties();
-    }
-
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-        this.filterConfig = filterConfig;
     }
 
     @Override
@@ -72,8 +66,7 @@ public class SSOAgentSampleFilter extends SAML2SSOAgentFilter {
             LOGGER.log(Level.INFO, "SAML2 HTTP Binding not found in request. Defaulting to HTTP-POST");
             httpBinding = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST";
         }
-        SSOAgentConfig config = (SSOAgentConfig)filterConfig.getServletContext().
-                getAttribute(SSOAgentConstants.CONFIG_BEAN_NAME);
+        SSOAgentConfig config = (SSOAgentConfig)filterConfig.getServletContext().getAttribute(SSOAgentConstants.CONFIG_BEAN_NAME);
         config.getSAML2().setHttpBinding(httpBinding);
         config.getOpenId().setClaimedId(servletRequest.getParameter(
                 SSOAgentConstants.SSOAgentConfig.OpenID.CLAIMED_ID));
@@ -109,10 +102,5 @@ public class SSOAgentSampleFilter extends SAML2SSOAgentFilter {
         }
         servletRequest.setAttribute(SSOAgentConstants.CONFIG_BEAN_NAME,config);
         super.doFilter(servletRequest, servletResponse, filterChain);
-    }
-
-    @Override
-    public void destroy() {
-
     }
 }
