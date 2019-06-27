@@ -375,7 +375,10 @@
         {% endfor %}
         </ScopeValidators>
 
-        <!-- enable or disable scope validation for implicit grant and authorization code grant. -->
+        <!-- Flag to enable or disable scope validation for implicit grant and authorization code grant.
+        Default value : true
+        Supported versions: IS 5.8.1  onwards
+        -->
         <ScopeValidationEnabledForAuthzCodeAndImplicitGrant>{{oauth.scope_validator.authz_implicit.enable}}</ScopeValidationEnabledForAuthzCodeAndImplicitGrant>
 
         <!-- Scope handlers list. The handlers registered here will be executed at the scope validation phase while
