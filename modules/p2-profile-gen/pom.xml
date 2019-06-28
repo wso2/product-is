@@ -455,6 +455,11 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.configuration.mgt.server.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
+
+                                <!-- RESR APIs -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.api:org.wso2.carbon.identity.rest.api.dispatcher.feature:${identity.api.dispatcher.version}
+                                </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -931,6 +936,11 @@
                                 <feature>
                                     <id>org.wso2.carbon.healthcheck.server.feature.group</id>
                                     <version>${carbon.healthcheck.version}</version>
+                                </feature>
+                                <!--REST API feature-->
+                                <feature>
+                                    <id>org.wso2.carbon.identity.rest.api.dispatcher.feature.group</id>
+                                    <version>${identity.api.dispatcher.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.template.mgt.feature.group</id>
@@ -1421,6 +1431,11 @@
                                     <id>org.wso2.carbon.healthcheck.server.feature.group</id>
                                     <version>${carbon.healthcheck.version}</version>
                                 </feature>
+                                <!--REST API feature-->
+                                <feature>
+                                    <id>org.wso2.carbon.identity.rest.api.dispatcher.feature.group</id>
+                                    <version>${identity.api.dispatcher.version}</version>
+                                </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.template.mgt.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
@@ -1868,6 +1883,11 @@
                                     <id>org.wso2.carbon.healthcheck.server.feature.group</id>
                                     <version>${carbon.healthcheck.version}</version>
                                 </feature>
+                                <!--REST API feature-->
+                                <feature>
+                                    <id>org.wso2.carbon.identity.rest.api.dispatcher.feature.group</id>
+                                    <version>${identity.api.dispatcher.version}</version>
+                                </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.template.mgt.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
@@ -2096,6 +2116,11 @@
                                 <feature>
                                     <id>org.wso2.carbon.healthcheck.server.feature.group</id>
                                     <version>${carbon.healthcheck.version}</version>
+                                </feature>
+                                <!--REST API feature-->
+                                <feature>
+                                    <id>org.wso2.carbon.identity.rest.api.dispatcher.feature.group</id>
+                                    <version>${identity.api.dispatcher.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.template.mgt.feature.group</id>
