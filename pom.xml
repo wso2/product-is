@@ -560,6 +560,11 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>org.wso2.carbon.identity.api</groupId>
+                <artifactId>org.wso2.carbon.identity.rest.api.dispatcher.feature</artifactId>
+                <version>${identity.api.dispatcher.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.ui</artifactId>
                 <version>${carbon.kernel.version}</version>
@@ -1834,7 +1839,7 @@
         <identity.data.publisher.authentication.version>5.2.0</identity.data.publisher.authentication.version>
         <identity.data.publisher.oauth.version>1.1.0</identity.data.publisher.oauth.version>
         <identity.data.publisher.audit.version>1.1.0</identity.data.publisher.audit.version>
-        <identity.governance.version>1.2.0</identity.governance.version>
+        <identity.governance.version>1.2.1-SNAPSHOT</identity.governance.version>
         <carbon.identity.auth.version>1.2.0</carbon.identity.auth.version>
         <identity.event.handler.account.lock.version>1.2.0</identity.event.handler.account.lock.version>
         <identity.event.handler.notification.version>1.1.0</identity.event.handler.notification.version>
@@ -2022,6 +2027,9 @@
         <carbon.logging.admin.stub.version>4.7.1</carbon.logging.admin.stub.version>
         <wso2.shindig.version>2.5.2-wso2v11</wso2.shindig.version>
         <version.org.wso2.orbit.javax.jta>1.1.0.wso2v1</version.org.wso2.orbit.javax.jta>
+
+        <!-- REST API feature -->
+        <identity.api.dispatcher.version>1.0.0-SNAPSHOT</identity.api.dispatcher.version>
     </properties>
 
     <repositories>
