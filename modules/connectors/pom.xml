@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>5.8.0-beta6-SNAPSHOT</version>
+        <version>5.8.1-m5-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -314,6 +314,28 @@
                                     <outputDirectory>${basedir}/target/authenticatorCopied/war
                                     </outputDirectory>
                                     <includes>**/*.war</includes>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    <!-- Download authenticator util module copied to authenticatorCopied/jar folder-->
+                    <execution>
+                        <id>download_authenticator_utils</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.carbon.extension.identity.authenticator.utils</groupId>
+                                    <artifactId>org.wso2.carbon.extension.identity.helper</artifactId>
+                                    <version>${identity.extension.utils}</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${basedir}/target/authenticatorCopied/jar
+                                    </outputDirectory>
+                                    <includes>**/*.jar</includes>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>

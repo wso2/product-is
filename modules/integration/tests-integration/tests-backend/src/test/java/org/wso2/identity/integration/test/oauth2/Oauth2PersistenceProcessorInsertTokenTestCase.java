@@ -63,14 +63,11 @@ public class Oauth2PersistenceProcessorInsertTokenTestCase extends OAuth2Service
         super.init(TestUserMode.SUPER_TENANT_USER);
         String carbonHome = Utils.getResidentCarbonHome();
         //apply encryption enabled identity xml
-        String identityXMLFile = getISResourceLocation() + File.separator + "identity-encryption-enabled.xml";
-        File defaultIdentityXml = new File(carbonHome + File.separator
-                + "repository" + File.separator + "conf" + File.separator + "identity" + File.separator
-                + "identity.xml");
+        File defaultTomlFile = getDeploymentTomlFile(carbonHome);
+        File configuredTomlFile = new File(getISResourceLocation() + File.separator
+                + "identity_encryption_enabled.toml");
         serverConfigurationManager = new ServerConfigurationManager(isServer);
-        File srcFile = new File(identityXMLFile);
-        serverConfigurationManager.applyConfigurationWithoutRestart(srcFile,
-                defaultIdentityXml, true);
+        serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartForcefully();
         super.init(TestUserMode.SUPER_TENANT_USER);
         logManger = new AuthenticatorClient(backendURL);

@@ -30,6 +30,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.identity.sso.saml.stub.IdentitySAMLSSOConfigServiceIdentityException;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
 import org.wso2.carbon.logging.view.stub.LogViewerLogViewerException;
@@ -59,7 +60,7 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
     private SAMLConfig samlConfigOne;
     private SAMLConfig samlConfigTwo;
     private String resultPage;
-    private SAMLSSOServiceProviderDTO[] samlssoServiceProviderDTOs;
+    private SAMLSSOServiceProviderDTO samlssoServiceProviderDTO;
 
     private LogViewerClient logViewer;
     private LoggingAdminClient logAdmin;
@@ -119,16 +120,14 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
         isAddSuccess = ssoConfigServiceClient.addServiceProvider(super.createSsoServiceProviderDTO(samlConfigOne));
         Assert.assertTrue(isAddSuccess, "Adding a service provider has failed for " + samlConfigOne);
 
-        samlssoServiceProviderDTOs = ssoConfigServiceClient.getServiceProviders().getServiceProviders();
-        Assert.assertEquals(samlssoServiceProviderDTOs[0].getIssuer(), samlConfigOne.getApp().getArtifact(),
-                "Adding a service provider has failed for " + samlConfigOne);
+        samlssoServiceProviderDTO = getServiceProvider(samlConfigOne);
+        Assert.assertNotNull(samlssoServiceProviderDTO, "Adding a service provider has failed for " + samlConfigOne);
 
         isAddSuccess = ssoConfigServiceClient.addServiceProvider(super.createSsoServiceProviderDTO(samlConfigTwo));
         Assert.assertTrue(isAddSuccess, "Adding a service provider has failed for " + samlConfigTwo);
 
-        samlssoServiceProviderDTOs = ssoConfigServiceClient.getServiceProviders().getServiceProviders();
-        Assert.assertEquals(samlssoServiceProviderDTOs[1].getIssuer(), samlConfigTwo.getApp().getArtifact(),
-                "Adding a service provider has failed for " + samlConfigTwo);
+        samlssoServiceProviderDTO = getServiceProvider(samlConfigTwo);
+        Assert.assertNotNull(samlssoServiceProviderDTO, "Adding a service provider has failed for " + samlConfigTwo);
     }
 
     @Test(alwaysRun = true, description = "Testing SAML SSO login", groups = "wso2.is",
@@ -303,5 +302,16 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
             }
         }
         return matchFound;
+    }
+
+    private SAMLSSOServiceProviderDTO getServiceProvider(SAMLConfig samlConfig) throws RemoteException, IdentitySAMLSSOConfigServiceIdentityException {
+
+        SAMLSSOServiceProviderDTO[] samlssoServiceProviderDTOs = ssoConfigServiceClient.getServiceProviders().getServiceProviders();
+        for (SAMLSSOServiceProviderDTO spDTO : samlssoServiceProviderDTOs) {
+            if (spDTO.getIssuer().equals(samlConfig.getApp().getArtifact())) {
+                return spDTO;
+            }
+        }
+        return null;
     }
 }

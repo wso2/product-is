@@ -91,13 +91,12 @@ public class IDENTITY4776SCIMServiceWithOAuthTestCase extends OAuth2ServiceAbstr
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
+        String carbonHome = Utils.getResidentCarbonHome();
+        File defaultTomlFile = getDeploymentTomlFile(carbonHome);
+        File scimConfiguredTomlFile = new File(getISResourceLocation() + File.separator + "scim"
+                + File.separator + "IDENTITY4776" + File.separator + "catalina_server_config.toml");
         serverConfigurationManager = new ServerConfigurationManager(isServer);
-        String pathToCatalinaXML = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator + "IS"
-                + File.separator + "scim" + File.separator + "IDENTITY4776" + File.separator + "catalina-server.xml";
-        String targetCatalinaXML = Utils.getResidentCarbonHome() + File.separator + "repository" + File.separator
-                + "conf" + File.separator + "tomcat" + File.separator + "catalina-server.xml";
-        serverConfigurationManager.applyConfigurationWithoutRestart(new File(pathToCatalinaXML),
-                new File(targetCatalinaXML), true);
+        serverConfigurationManager.applyConfigurationWithoutRestart(scimConfiguredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartGracefully();
 
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
@@ -160,10 +159,10 @@ public class IDENTITY4776SCIMServiceWithOAuthTestCase extends OAuth2ServiceAbstr
 
     private void addSecondaryUserStore() throws Exception {
         String jdbcClass = "org.wso2.carbon.user.core.jdbc.JDBCUserStoreManager";
-        H2DataBaseManager dbmanager = new H2DataBaseManager("jdbc:h2:" + ServerConfigurationManager.getCarbonHome()
+        H2DataBaseManager dbmanager = new H2DataBaseManager("jdbc:h2:" + Utils.getResidentCarbonHome()
                 + "/repository/database/" + USER_STORE_DB_NAME,
                 DB_USER_NAME, DB_USER_PASSWORD);
-        dbmanager.executeUpdate(new File(ServerConfigurationManager.getCarbonHome() + "/dbscripts/h2.sql"));
+        dbmanager.executeUpdate(new File(Utils.getResidentCarbonHome() + "/dbscripts/h2.sql"));
         dbmanager.disconnect();
 
         PropertyDTO[] propertyDTOs = new PropertyDTO[10];

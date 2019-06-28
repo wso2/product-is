@@ -50,22 +50,13 @@ public class CARBON15051EmailLoginTestCase extends ISIntegrationTest {
     public void testInit() throws Exception {
 
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
-        String pathToCarbonXML = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator + "IS" + File.separator +
-                "userMgt" + File.separator + "carbon15051" + File.separator + "carbon.xml";
-        String targetCarbonXML =
-                Utils.getResidentCarbonHome() + File.separator + "repository" + File.separator + "conf" + File.separator + "carbon.xml";
-
-        String pathToUserMgtXML = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator + "IS" +
-                File.separator +
-                "userMgt" + File.separator + "carbon15051" + File.separator + "user-mgt.xml";
-        String targetUserMgtXML = Utils.getResidentCarbonHome() + File.separator + "repository" + File.separator + "conf" + File.separator +
-                "user-mgt.xml";
+        String carbonHome = Utils.getResidentCarbonHome();
+        File defaultTomlFile = getDeploymentTomlFile(carbonHome);
+        File emailLoginConfigFile = new File (getISResourceLocation() + File.separator +  "userMgt"
+                + File.separator + "carbon15051" + File.separator + "email_login_config.toml");
 
         serverConfigurationManager = new ServerConfigurationManager(isServer);
-        serverConfigurationManager.applyConfigurationWithoutRestart(new File(pathToCarbonXML),
-                new File(targetCarbonXML), true);
-        serverConfigurationManager.applyConfigurationWithoutRestart(new File(pathToUserMgtXML),
-                new File(targetUserMgtXML), true);
+        serverConfigurationManager.applyConfigurationWithoutRestart(emailLoginConfigFile, defaultTomlFile, true);
         serverConfigurationManager.restartGracefully();
 
         super.init(TestUserMode.SUPER_TENANT_ADMIN);

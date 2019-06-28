@@ -20,12 +20,12 @@
     <parent>
         <artifactId>product-scenarios</artifactId>
         <groupId>org.wso2.is</groupId>
-        <version>5.7.0</version>
+        <version>5.8.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <version>5.7.0</version>
+    <version>5.8.0</version>
     <name>WSO2 Identity Server - Code Coverage POM</name>
     <artifactId>code-coverage</artifactId>
     <packaging>pom</packaging>

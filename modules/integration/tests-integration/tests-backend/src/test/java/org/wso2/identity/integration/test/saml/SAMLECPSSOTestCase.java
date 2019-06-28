@@ -46,7 +46,6 @@ public class SAMLECPSSOTestCase extends AbstractSAMLSSOTestCase {
     private SAMLConfig config;
     private static final Log log = LogFactory.getLog(SAMLECPSSOTestCase.class);
     private static final String APPLICATION_NAME = "SAML-ECP-TestApplication";
-    private File identityXML;
     private ServerConfigurationManager serverConfigurationManager;
     private static final String SAML_ECP_ISSUER = "https://localhost/ecp-sp";
 
@@ -174,19 +173,16 @@ public class SAMLECPSSOTestCase extends AbstractSAMLSSOTestCase {
     private void changeISConfiguration() throws Exception {
         log.info("Replacing identity.xml disabling the consent Management");
         String carbonHome = Utils.getResidentCarbonHome();
-        identityXML = new File(carbonHome + File.separator
-                + "repository" + File.separator + "conf" + File.separator + "identity" + File
-                .separator + "identity.xml");
-        File configuredIdentityXML = new File(getISResourceLocation()
-                + File.separator + "saml" + File.separator
-                + "saml-ecp-consent-management-disabled-identity.xml");
+        File defaultTomlFile = getDeploymentTomlFile(carbonHome);
+        File configuredTomlFile = new File(getISResourceLocation() + File.separator + "saml" + File.separator
+                        + "saml_ecp_consent_management_disabled.toml");
         serverConfigurationManager = new ServerConfigurationManager(isServer);
-        serverConfigurationManager.applyConfigurationWithoutRestart(configuredIdentityXML, identityXML, true);
+        serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartGracefully();
     }
 
     private void resetISConfiguration() throws Exception {
-        log.info("Replacing identity.xml with default configurations");
+        log.info("Replacing deployment.toml with default configurations");
         serverConfigurationManager.restoreToLastConfiguration(false);
     }
 
