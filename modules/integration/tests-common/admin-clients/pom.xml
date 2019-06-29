@@ -251,7 +251,7 @@
     </dependencies>
 
     <properties>
-        <java-support.version>7.2.0</java-support.version>
+        <java-support.version>7.3.0</java-support.version>
         <opensaml3.version>3.3.0</opensaml3.version>
     </properties>
 
