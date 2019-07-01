@@ -1839,7 +1839,7 @@
         <identity.data.publisher.authentication.version>5.2.0</identity.data.publisher.authentication.version>
         <identity.data.publisher.oauth.version>1.1.0</identity.data.publisher.oauth.version>
         <identity.data.publisher.audit.version>1.1.0</identity.data.publisher.audit.version>
-        <identity.governance.version>1.2.1-SNAPSHOT</identity.governance.version>
+        <identity.governance.version>1.2.3</identity.governance.version>
         <carbon.identity.auth.version>1.2.0</carbon.identity.auth.version>
         <identity.event.handler.account.lock.version>1.2.0</identity.event.handler.account.lock.version>
         <identity.event.handler.notification.version>1.1.0</identity.event.handler.notification.version>
