@@ -481,6 +481,15 @@
                                     </fileset>
                                 </copy>
                                 <delete dir="${tempdir}" />
+
+                                <!-- Explode the api.war -->
+                                <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api">
+                                    <fileset
+                                            dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
+                                        <include name="api.war"/>
+                                    </fileset>
+                                </unzip>
+                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api.war" />
                             </tasks>
                         </configuration>
                     </execution>
