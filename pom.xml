@@ -559,6 +559,12 @@
 
     <dependencyManagement>
         <dependencies>
+
+            <dependency>
+                <groupId>org.wso2.carbon.identity.rest.dispatcher</groupId>
+                <artifactId>org.wso2.carbon.identity.rest.api.dispatcher.feature</artifactId>
+                <version>${identity.api.dispatcher.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.ui</artifactId>
@@ -2022,6 +2028,9 @@
         <carbon.logging.admin.stub.version>4.7.1</carbon.logging.admin.stub.version>
         <wso2.shindig.version>2.5.2-wso2v11</wso2.shindig.version>
         <version.org.wso2.orbit.javax.jta>1.1.0.wso2v1</version.org.wso2.orbit.javax.jta>
+
+        <!-- REST API feature -->
+        <identity.api.dispatcher.version>0.1.1</identity.api.dispatcher.version>
     </properties>
 
     <repositories>
