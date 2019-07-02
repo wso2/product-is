@@ -205,9 +205,8 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
             response = super.sendSAMLMessage(String.format(ACS_URL, config.getApp().getArtifact()), CommonConstants
                     .SAML_RESPONSE_PARAM, samlResponse, config);
             String resultPage = extractDataFromResponse(response);
-
             Assert.assertTrue(resultPage.contains("index.jsp") && !resultPage.contains("error"),
-                              "SAML SSO Logout failed for " + config);
+                    "SAML SSO Logout failed for " + config);
         } catch (Exception e) {
             Assert.fail("SAML SSO Logout test failed for " + config, e);
         }

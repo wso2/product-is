@@ -1823,7 +1823,7 @@
         <!--Identity Repo Versions-->
         <identity.carbon.auth.saml2.version>5.3.1</identity.carbon.auth.saml2.version>
         <identity.inbound.auth.saml.version>5.5.2</identity.inbound.auth.saml.version>
-        <identity.agent.sso.version>5.2.2</identity.agent.sso.version>
+        <identity.agent.sso.version>5.2.3</identity.agent.sso.version>
         <identity.inbound.auth.oauth.version>6.1.4</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.3.1</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.3.1</identity.inbound.auth.sts.version>

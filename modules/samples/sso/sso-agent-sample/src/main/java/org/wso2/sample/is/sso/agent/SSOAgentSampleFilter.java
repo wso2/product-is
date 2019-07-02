@@ -21,11 +21,10 @@ package org.wso2.sample.is.sso.agent;
 import org.apache.axiom.om.util.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.wso2.carbon.identity.sso.agent.SAML2SSOAgentFilter;
-import org.wso2.carbon.identity.sso.agent.util.SSOAgentConstants;
 import org.wso2.carbon.identity.sso.agent.bean.SSOAgentConfig;
+import org.wso2.carbon.identity.sso.agent.util.SSOAgentConstants;
 
 import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -78,7 +77,7 @@ public class SSOAgentSampleFilter extends SAML2SSOAgentFilter {
 
             String authorization = servletRequest.getParameter(USERNAME) + ":" + servletRequest.getParameter(PASSWORD);
             // Base64 encoded username:password value
-            authorization = new String(Base64.encode(authorization.getBytes(CHARACTER_ENCODING)));
+            authorization = Base64.encode(authorization.getBytes(CHARACTER_ENCODING));
             String htmlPayload = "<html>\n" +
                     "<body>\n" +
                     "<p>You are now redirected back to " + properties.getProperty("SAML2.IdPURL") + " \n" +
