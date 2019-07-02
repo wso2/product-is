@@ -458,7 +458,7 @@
 
                                 <!-- RESR APIs -->
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity.api:org.wso2.carbon.identity.rest.api.dispatcher.feature:${identity.api.dispatcher.version}
+                                    org.wso2.carbon.identity.rest.dispatcher:org.wso2.carbon.identity.rest.api.dispatcher.feature:${identity.api.dispatcher.version}
                                 </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
