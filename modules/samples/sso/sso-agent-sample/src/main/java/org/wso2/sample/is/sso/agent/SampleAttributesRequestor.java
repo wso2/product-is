@@ -20,7 +20,10 @@ package org.wso2.sample.is.sso.agent;
 
 import org.wso2.carbon.identity.sso.agent.openid.AttributesRequestor;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SampleAttributesRequestor implements AttributesRequestor {
 
