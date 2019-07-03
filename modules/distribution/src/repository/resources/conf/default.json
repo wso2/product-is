@@ -713,7 +713,8 @@
     "/scim2/",
     "/api/identity/entitlement/",
     "/api/identity/oauth2/dcr/v1.1/",
-    "/api/identity/template/mgt/v1.0.0/"
+    "/api/identity/template/mgt/v1.0.0/",
+    "/api/"
   ],
   "tenant_context.rewrite.servlets": [
     "/identity/(.*)"
