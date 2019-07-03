@@ -1254,6 +1254,16 @@
         <Resource context="(.*)/api/identity/user/v1.0/update-username(.*)" secured="true" http-method="PUT">
             <Permissions>/permission/admin/manage/identity/usermgt/update</Permissions>
         </Resource>
+
+        <Resource context="(.*)/api/users/v1/(.*)" secured="true" http-method="all">
+           <Permissions>/permission/admin/manage/identity/usermgt</Permissions>
+        </Resource>
+        <Resource context="(.*)/api/users/v1/me(.*)" secured="true" http-method="all">
+                   <Permissions>/permission/admin/login</Permissions>
+        </Resource>
+        <Resource context="(.*)/api/server/v1/(.*)" secured="true" http-method="all">
+            <Permissions>/permission/admin/manage/identity/</Permissions>
+        </Resource>
     </ResourceAccessControl>
 
     <ClientAppAuthentication>
