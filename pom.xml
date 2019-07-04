@@ -1817,14 +1817,14 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>5.13.20</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.13.24</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.13.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
         <identity.carbon.auth.saml2.version>5.3.1</identity.carbon.auth.saml2.version>
         <identity.inbound.auth.saml.version>5.5.2</identity.inbound.auth.saml.version>
         <identity.agent.sso.version>5.2.3</identity.agent.sso.version>
-        <identity.inbound.auth.oauth.version>6.1.4</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.1.5</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.3.1</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.3.1</identity.inbound.auth.sts.version>
         <identity.outbound.auth.requestpath.basicauth.version>5.2.0</identity.outbound.auth.requestpath.basicauth.version>
@@ -1844,7 +1844,7 @@
         <identity.data.publisher.authentication.version>5.2.0</identity.data.publisher.authentication.version>
         <identity.data.publisher.oauth.version>1.1.0</identity.data.publisher.oauth.version>
         <identity.data.publisher.audit.version>1.1.0</identity.data.publisher.audit.version>
-        <identity.governance.version>1.2.5</identity.governance.version>
+        <identity.governance.version>1.2.6</identity.governance.version>
         <carbon.identity.auth.version>1.2.0</carbon.identity.auth.version>
         <identity.event.handler.account.lock.version>1.2.0</identity.event.handler.account.lock.version>
         <identity.event.handler.notification.version>1.1.1</identity.event.handler.notification.version>
@@ -1970,7 +1970,7 @@
         <operadriver.version>0.8.1</operadriver.version>
         <selenium.version>2.40.0</selenium.version>
         <testng.version>6.1.1</testng.version>
-        <carbon.deployment.version>4.9.2</carbon.deployment.version>
+        <carbon.deployment.version>4.9.4</carbon.deployment.version>
         <carbon.registry.version>4.7.0</carbon.registry.version>
         <carbon.multitenancy.version>4.7.2</carbon.multitenancy.version>
         <jaggery.extensions.version>1.6.0</jaggery.extensions.version>
@@ -2034,7 +2034,7 @@
         <version.org.wso2.orbit.javax.jta>1.1.0.wso2v1</version.org.wso2.orbit.javax.jta>
 
         <!-- REST API feature -->
-        <identity.api.dispatcher.version>0.1.5</identity.api.dispatcher.version>
+        <identity.api.dispatcher.version>0.1.7</identity.api.dispatcher.version>
     </properties>
 
     <repositories>
