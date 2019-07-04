@@ -138,56 +138,70 @@
                 <artifactId>wso2-maven-json-merge-plugin</artifactId>
                 <executions>
                     <execution>
-                        <phase>package</phase>
+                        <phase>prepare-package</phase>
                         <goals>
                             <goal>merge</goal>
                         </goals>
                         <configuration>
                             <tasks>
                                 <task>
-                                    <input>
-                                        ${basedir}/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/default.json
-                                    </input>
-                                    <output>
-                                        ${basedir}/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/default.json
-                                    </output>
-                                    <config>${basedir}/src/repository/resources/conf/default.json</config>
+                                    <base>${basedir}/src/repository/resources/conf/default.json</base>
+                                    <include>
+                                        <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/default.json</param>
+                                        <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.core.server.feature.default.json</param>
+                                        <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.databridge.agent.default.json</param>
+                                        <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.event.output.adapter.default.json</param>
+                                        <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.event.processor.manager.core.default.json</param>
+                                        <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.application.authentication.framework.server.feature.default.json</param>
+                                        <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.event.server.feature.default.json</param>
+                                        <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.xacml.server.feature.default.json</param>
+                                        <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.captcha.server.feature.default.json</param>
+                                        <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.scim2.common.feature.default.json</param>
+                                        <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.scim.common.feature.default.json</param>
+                                        <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.consent.mgt.server.feature.default.json</param>
+                                    </include>
+                                    <target>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/default.json</target>
+                                    <mergeChildren>true</mergeChildren>
                                 </task>
                                 <task>
-                                    <input>
-                                        ${basedir}/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/infer.json
-                                    </input>
-                                    <output>
-                                        ${basedir}/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/infer.json
-                                    </output>
-                                    <config>${basedir}/src/repository/resources/conf/infer.json</config>
+                                    <base>${basedir}/src/repository/resources/conf/infer.json</base>
+                                    <include>
+                                        <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/infer.json</param>
+                                        <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.core.server.feature.infer.json</param>
+                                        <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.event.server.feature.infer.json</param>
+                                        <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.scim2.common.feature.infer.json</param>
+                                    </include>
+                                    <target>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/infer.json</target>
+                                    <mergeChildren>true</mergeChildren>
                                 </task>
                                 <task>
-                                    <input>
-                                        ${basedir}/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/key-mappings.json
-                                    </input>
-                                    <output>
-                                        ${basedir}/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/key-mappings.json
-                                    </output>
-                                    <config>${basedir}/src/repository/resources/conf/key-mappings.json</config>
+                                    <base>${basedir}/src/repository/resources/conf/key-mappings.json</base>
+                                    <include>
+                                        <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/key-mappings.json</param>
+                                        <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.core.server.feature.key-mappings.json</param>
+                                        <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.application.authentication.framework.server.feature.key-mappings.json</param>
+                                        <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.event.server.feature.key-mapping.json</param>
+                                    </include>
+                                    <target>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/key-mappings.json</target>
                                 </task>
                                 <task>
-                                    <input>
-                                        ${basedir}/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/validator.json
-                                    </input>
-                                    <output>
-                                        ${basedir}/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/validator.json
-                                    </output>
-                                    <config>${basedir}/src/repository/resources/conf/validator.json</config>
+                                    <base>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/validator.json</base>
+                                    <include>
+                                        <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.core.server.feature.validator.json</param>
+                                        <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.captcha.server.feature.validator.json</param>
+                                    </include>
+                                    <target>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/validator.json</target>
                                 </task>
                                 <task>
-                                    <input>
-                                        ${basedir}/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/unit-resolve.json
-                                    </input>
-                                    <output>
-                                        ${basedir}/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/unit-resolve.json
-                                    </output>
-                                    <config>${basedir}/src/repository/resources/conf/unit-resolve.json</config>
+                                    <base>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/unit-resolve.json</base>
+                                    <include>
+                                        <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.core.server.feature.unit-resolve.json</param>
+                                        <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.event.output.adapter.unit-resolve.json</param>
+                                        <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.event.server.feature.unit-resolve.json</param>
+                                        <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.xacml.server.feature.unit-resolve.json</param>
+                                    </include>
+                                    <target>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/unit-resolve.json</target>
+                                    <mergeChildren>true</mergeChildren>
                                 </task>
                             </tasks>
                         </configuration>
@@ -237,23 +251,26 @@
                                 <!--unzip src="wso2is-${project.version}.zip" dest="${tempdir}">
                                 </unzip-->
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="${product.name}" value="WSO2 Identity Server" />
-                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/carbon.xml.j2" token="${product.name}" value="WSO2 Identity Server" />
+                                <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/carbon.xml.j2" token="${product.name}" value="WSO2 Identity Server" />
 
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="${product.version}" value="${project.version}" />
-                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/carbon.xml.j2" token="${product.version}" value="${project.version}" />
+                                <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/carbon.xml.j2" token="${product.version}" value="${project.version}" />
+
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="${product.key}" value="IS" />
+                                <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/carbon.xml.j2" token="${product.key}" value="IS" />
 
                                 <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/context.xml" token="&lt;Context crossContext=&quot;true&quot;&gt;" value="&lt;Context crossContext=&quot;true&quot; useHttpOnly=&quot;true&quot;&gt;" />
                                 <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/catalina-server.xml" token="clientAuth=&quot;false&quot;" value="clientAuth=&quot;want&quot;" />
 
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;ServerURL&gt;https://${carbon.local.ip}" value="&lt;ServerURL&gt;https://localhost" />
-                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/carbon.xml.j2" token="&lt;ServerURL&gt;https://${carbon.local.ip}" value="&lt;ServerURL&gt;https://localhost" />
+                                <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/carbon.xml.j2" token="&lt;ServerURL&gt;https://${carbon.local.ip}" value="&lt;ServerURL&gt;https://localhost" />
 
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;!--MgtHostName&gt;mgt.wso2.org&lt;/MgtHostName--&gt;" value="&lt;MgtHostName&gt;localhost&lt;/MgtHostName&gt;" />
 
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;!--HostName&gt;www.wso2.org&lt;/HostName--&gt;" value="&lt;HostName&gt;localhost&lt;/HostName&gt;" />
 
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;!--LdapServer&gt;" value="&lt;LdapServer&gt;" />
-                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/carbon.xml.j2" token="&lt;!--LdapServer&gt;" value="&lt;LdapServer&gt;" />
+                                <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/carbon.xml.j2" token="&lt;!--LdapServer&gt;" value="&lt;LdapServer&gt;" />
 
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;/LdapServer--&gt;" value="&lt;/LdapServer&gt;" />
 
@@ -267,8 +284,8 @@
 
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;/Security&gt;" value="${hideMenu}" />
 
-                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/datasources/master-datasources.xml" token="&lt;/datasources&gt;" value="${identity-db}" />
-                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/datasources/master-datasources.xml.j2" token="&lt;/datasources&gt;" value="${identity-db-template}" />
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/datasources/master-datasources.xml" token="&lt;/datasources&gt;" value="${identity-db}"/>
+                                <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/datasources/master-datasources.xml.j2" token="&lt;/datasources&gt;" value="${identity-db-template}"/>
 
                                 <replaceregexp file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" match="^(\s)*&lt;\!--(\s)*Uncomment the following configuration to use hardware security module for cryptographic operations.\n(\s)*Provide configurations as detailed in each tag.\n(\s)*--&gt;" replace=" " flags="m" />
 
