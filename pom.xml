@@ -1817,14 +1817,14 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>5.13.26</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.13.29</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.13.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
         <identity.carbon.auth.saml2.version>5.3.1</identity.carbon.auth.saml2.version>
-        <identity.inbound.auth.saml.version>5.5.2</identity.inbound.auth.saml.version>
+        <identity.inbound.auth.saml.version>5.5.3</identity.inbound.auth.saml.version>
         <identity.agent.sso.version>5.2.3</identity.agent.sso.version>
-        <identity.inbound.auth.oauth.version>6.1.5</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.1.6</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.3.1</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.3.1</identity.inbound.auth.sts.version>
         <identity.outbound.auth.requestpath.basicauth.version>5.2.0</identity.outbound.auth.requestpath.basicauth.version>
@@ -1847,7 +1847,7 @@
         <identity.governance.version>1.2.6</identity.governance.version>
         <carbon.identity.auth.version>1.2.0</carbon.identity.auth.version>
         <identity.event.handler.account.lock.version>1.2.0</identity.event.handler.account.lock.version>
-        <identity.event.handler.notification.version>1.1.1</identity.event.handler.notification.version>
+        <identity.event.handler.notification.version>1.1.2</identity.event.handler.notification.version>
         <identity.app.authz.xacml.version>2.1.0</identity.app.authz.xacml.version>
         <identity.oauth2.validators.xacml.version>2.1.1</identity.oauth2.validators.xacml.version>
         <org.wso2.carbon.extension.identity.x509certificate.version>1.0.4</org.wso2.carbon.extension.identity.x509certificate.version>
@@ -2034,7 +2034,7 @@
         <version.org.wso2.orbit.javax.jta>1.1.0.wso2v1</version.org.wso2.orbit.javax.jta>
 
         <!-- REST API feature -->
-        <identity.api.dispatcher.version>0.1.9</identity.api.dispatcher.version>
+        <identity.api.dispatcher.version>0.1.11</identity.api.dispatcher.version>
     </properties>
 
     <repositories>
