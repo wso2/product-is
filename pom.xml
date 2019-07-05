@@ -1757,6 +1757,12 @@
                 <artifactId>jta</artifactId>
                 <version>${version.org.wso2.orbit.javax.jta}</version>
             </dependency>
+            <dependency>
+                <groupId>io.rest-assured</groupId>
+                <artifactId>rest-assured</artifactId>
+                <version>${rest-assured.version}</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -2032,6 +2038,8 @@
         <carbon.logging.admin.stub.version>4.7.1</carbon.logging.admin.stub.version>
         <wso2.shindig.version>2.5.2-wso2v11</wso2.shindig.version>
         <version.org.wso2.orbit.javax.jta>1.1.0.wso2v1</version.org.wso2.orbit.javax.jta>
+        <rest-assured.version>3.0.0</rest-assured.version>
+
 
         <!-- REST API feature -->
         <identity.api.dispatcher.version>0.1.9</identity.api.dispatcher.version>
