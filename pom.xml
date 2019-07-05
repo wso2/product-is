@@ -1817,7 +1817,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>5.13.25</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.13.26</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.13.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
@@ -1829,7 +1829,7 @@
         <identity.inbound.auth.sts.version>5.3.1</identity.inbound.auth.sts.version>
         <identity.outbound.auth.requestpath.basicauth.version>5.2.0</identity.outbound.auth.requestpath.basicauth.version>
         <identity.carbon.auth.mutual.ssl.version>5.2.0</identity.carbon.auth.mutual.ssl.version>
-        <identity.user.account.association.version>5.2.0</identity.user.account.association.version>
+        <identity.user.account.association.version>5.2.2</identity.user.account.association.version>
         <identity.user.workflow.version>5.2.0</identity.user.workflow.version>
         <identity.user.ws.version>5.2.0</identity.user.ws.version>
         <identity.userstore.ldap.version>6.0.0</identity.userstore.ldap.version>
@@ -1870,7 +1870,7 @@
 
         <!-- Provisioning connector Properties -->
         <provisioning.connector.spml.version>5.1.2</provisioning.connector.spml.version>
-        <provisioning.connector.google.version>5.1.5</provisioning.connector.google.version>
+        <provisioning.connector.google.version>5.1.6</provisioning.connector.google.version>
         <provisioning.connector.salesforce.version>5.1.4</provisioning.connector.salesforce.version>
         <provisioning.connector.scim.version>5.1.12</provisioning.connector.scim.version>
 
