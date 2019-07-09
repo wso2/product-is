@@ -118,7 +118,7 @@
                 userName = obj.user;
                 profileList = obj.list;
                 if (cookie != null) {
-                    var str = PROXY_CONTEXT_PATH + "/portal/gadgets/approvals/index.jag?profileList=" + profileList;
+                    var str = PROXY_CONTEXT_PATH + "/portal/gadgets/approvals/index.jag";
                     $.ajax({
                         type: "GET",
                         url: str
