@@ -1760,7 +1760,7 @@
             <dependency>
                 <groupId>io.rest-assured</groupId>
                 <artifactId>rest-assured</artifactId>
-                <version>${rest-assured.version}</version>
+                <version>${rest.assured.version}</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
@@ -2043,7 +2043,7 @@
         <!-- REST API feature -->
         <identity.api.dispatcher.version>0.1.14</identity.api.dispatcher.version>
         <!--Rest API test -->
-        <rest-assured.version>3.0.0</rest-assured.version>
+        <rest.assured.version>3.0.0</rest.assured.version>
     </properties>
 
     <repositories>

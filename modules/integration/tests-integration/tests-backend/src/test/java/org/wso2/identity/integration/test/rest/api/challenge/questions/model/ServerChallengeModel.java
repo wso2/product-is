@@ -1,5 +1,5 @@
 /*
- *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *WSO2 Inc. licenses this file to you under the Apache License,
  *Version 2.0 (the "License"); you may not use this file except
@@ -29,6 +29,7 @@ import java.util.List;
  * This is mapped to the request body.
  */
 public class ServerChallengeModel {
+
     @Expose
     @SerializedName("questionSetId")
     private String questionSetId;
@@ -38,19 +39,21 @@ public class ServerChallengeModel {
 
     @Override
     public String toString() {
+
         return "{" +
                 "questionSetId='" + questionSetId + '\'' +
                 ", questions=" + questions +
                 '}';
     }
 
-    public ServerChallengeModel(String questionSetId,
-            List<Questions> questions) {
+    public ServerChallengeModel(String questionSetId, List<Questions> questions) {
+
         this.questionSetId = questionSetId;
         this.questions = questions;
     }
 
     public static class Questions {
+
         @Expose
         @SerializedName("locale")
         private String locale;
@@ -62,6 +65,7 @@ public class ServerChallengeModel {
         private String questionId;
 
         public Questions(String locale, String question, String questionId) {
+
             this.locale = locale;
             this.question = question;
             this.questionId = questionId;
@@ -69,6 +73,7 @@ public class ServerChallengeModel {
 
         @Override
         public String toString() {
+
             return "{" +
                     "locale='" + locale + '\'' +
                     ", question='" + question + '\'' +
@@ -86,8 +91,8 @@ public class ServerChallengeModel {
         @SerializedName("operation")
         private String operation;
 
-        public ChallengeQuestionOperation(
-                Questions challengeQuestion, String operation) {
+        public ChallengeQuestionOperation(Questions challengeQuestion, String operation) {
+
             this.challengeQuestion = challengeQuestion;
             this.operation = operation;
         }
