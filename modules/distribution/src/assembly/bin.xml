@@ -1018,7 +1018,7 @@
             <outputDirectory>wso2is-${pom.version}/repository/conf/identity</outputDirectory>
         </file>
         <file>
-            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/database/jpadb.h2.db
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/database/jpadb.mv.db
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/database/</outputDirectory>
             <fileMode>644</fileMode>
@@ -1090,7 +1090,7 @@
         </file>
         <file>
             <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/database/WSO2METRICS_DB.h2.db
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/database/WSO2METRICS_DB.mv.db
             </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/database/</outputDirectory>
             <fileMode>644</fileMode>

@@ -958,8 +958,8 @@
                 <version>${emma.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.h2database.wso2</groupId>
-                <artifactId>h2-database-engine</artifactId>
+                <groupId>org.wso2.orbit.com.h2database</groupId>
+                <artifactId>h2</artifactId>
                 <version>${h2database.wso2.version}</version>
             </dependency>
             <dependency>
@@ -1994,7 +1994,7 @@
         <nimbusds.version>7.3.0.wso2v1</nimbusds.version>
         <nimbus.oidc.sdk.version>6.13</nimbus.oidc.sdk.version>
         <commons-codec.version>1.4.0.wso2v1</commons-codec.version>
-        <h2database.wso2.version>1.2.140.wso2v3</h2database.wso2.version>
+        <h2database.wso2.version>1.4.199.wso2v1</h2database.wso2.version>
         <felix.framework.version>1.0.3</felix.framework.version>
         <osgi.compendium.version>1.4.0</osgi.compendium.version>
         <equinox.http.servlet.version>2.2.2</equinox.http.servlet.version>
@@ -2078,7 +2078,11 @@
                 <enabled>false</enabled>
             </releases>
         </repository>
-
+        <repository>
+            <id>wso2.staging</id>
+            <name>Staging</name>
+            <url>https://maven.wso2.org/nexus/content/repositories/orgwso2carbon-1374</url>
+        </repository>
     </repositories>
 
     <scm>
