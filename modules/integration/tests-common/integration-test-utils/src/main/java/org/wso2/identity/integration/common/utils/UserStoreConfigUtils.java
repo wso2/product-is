@@ -31,10 +31,12 @@ public class UserStoreConfigUtils {
         long waitTime = System.currentTimeMillis() + 30000; //wait for 45 seconds
         while (System.currentTimeMillis() < waitTime) {
             UserStoreDTO[] userStoreDTOs = userStoreConfigAdminServiceClient.getActiveDomains();
-            for (UserStoreDTO userStoreDTO : userStoreDTOs) {
-                if (userStoreDTO != null) {
-                    if (userStoreDTO.getDomainId().equalsIgnoreCase(domain)) {
-                        return true;
+            if (userStoreDTOs != null) {
+                for (UserStoreDTO userStoreDTO : userStoreDTOs) {
+                    if (userStoreDTO != null) {
+                        if (userStoreDTO.getDomainId().equalsIgnoreCase(domain)) {
+                            return true;
+                        }
                     }
                 }
             }
@@ -50,10 +52,12 @@ public class UserStoreConfigUtils {
         while (System.currentTimeMillis() < waitTime) {
             UserStoreDTO[] userStoreDTOs = userStoreConfigAdminServiceClient.getActiveDomains();
             userStoreConfigAdminServiceClient.getActiveDomains();
-            for (UserStoreDTO userStoreDTO : userStoreDTOs) {
-                if (userStoreDTO != null) {
-                    if (userStoreDTO.getDomainId().equalsIgnoreCase(domain)) {
-                        Thread.sleep(500);
+            if (userStoreDTOs != null) {
+                for (UserStoreDTO userStoreDTO : userStoreDTOs) {
+                    if (userStoreDTO != null && userStoreDTO.getDomainId() != null) {
+                        if (userStoreDTO.getDomainId().equalsIgnoreCase(domain)) {
+                            Thread.sleep(500);
+                        }
                     }
                 }
             }
