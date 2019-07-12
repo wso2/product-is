@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>5.9.0-m2</version>
+        <version>5.9.0-m3-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
