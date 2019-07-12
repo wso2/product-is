@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>wso2is-identity-samples-scim</artifactId>
-        <version>5.9.0-m2-SNAPSHOT</version>
+        <version>5.9.0-m2</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
