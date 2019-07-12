@@ -365,7 +365,7 @@
             </directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
             <includes>
-                <include>user-portal.war</include>
+                <include>user-portal/</include>
             </includes>
         </fileSet>
 
