@@ -508,6 +508,14 @@
                                     </fileset>
                                 </unzip>
                                 <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api.war" />
+
+                                <!-- Explode the user-portal.war -->
+                                <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/user-portal">
+                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
+                                        <include name="user-portal.war" />
+                                    </fileset>
+                                </unzip>
+                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/user-portal.war" />
                             </tasks>
                         </configuration>
                     </execution>
