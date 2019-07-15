@@ -458,6 +458,9 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
 
     private void initializeClients() throws Exception {
 
+        String sessionCookie = this.logManager.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
+                isServer.getSuperTenant().getTenantAdmin().getPassword(), isServer.getInstance().getHosts().get
+                        ("default"));
         String tenantCookie = this.logManager.login(ADMIN + "@" + secondaryTenantDomain,
                 ADMIN, isServer.getInstance().getHosts().get("default"));
         superTenantIDPMgtClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
