@@ -1935,7 +1935,7 @@
         <taglibs.version>1.1.2</taglibs.version>
         <google.collect.wso2.version>1.0.0.wso2v2</google.collect.wso2.version>
         <junit.version>4.12</junit.version>
-        <carbon.kernel.version>4.5.0-m1</carbon.kernel.version>
+        <carbon.kernel.version>4.5.0-m2</carbon.kernel.version>
         <carbon.commons.version>4.7.1</carbon.commons.version>
         <carbon.dashboards.version>2.0.23</carbon.dashboards.version>
         <carbon.p2.plugin.version>5.1.2</carbon.p2.plugin.version>
@@ -2005,14 +2005,14 @@
         <cipher-tool.version>1.0.0-wso2v8</cipher-tool.version>
         <jacoco.agent.version>0.8.4</jacoco.agent.version>
         <project.scm.id>my-scm-server</project.scm.id>
-        <carbon.business-process.version>4.5.2</carbon.business-process.version>
+        <carbon.business-process.version>4.5.7</carbon.business-process.version>
         <carbon.analytics-common.version>5.2.1</carbon.analytics-common.version>
         <osgi.framework.imp.pkg.version.range>[1.7.0, 2.0.0)</osgi.framework.imp.pkg.version.range>
         <osgi.service.component.imp.pkg.version.range>[1.2.0, 2.0.0)</osgi.service.component.imp.pkg.version.range>
         <org.apache.tomcat.wso2.version>7.0.52.wso2v5</org.apache.tomcat.wso2.version>
         <xmlsec.version>2.1.3</xmlsec.version>
         <xmltooling.version>1.3.1</xmltooling.version>
-        <carbon.metrics.version>1.3.0</carbon.metrics.version>
+        <carbon.metrics.version>1.3.1</carbon.metrics.version>
         <xercesImpl.version>2.12.0</xercesImpl.version>
         <commons.codec.version>1.8</commons.codec.version>
         <XmlSchema.version>1.4.7-wso2v5</XmlSchema.version>
