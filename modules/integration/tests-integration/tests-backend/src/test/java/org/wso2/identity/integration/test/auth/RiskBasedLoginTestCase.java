@@ -84,6 +84,8 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
     private List<NameValuePair> consentParameters = new ArrayList<>();
     private ServerConfigurationManager serverConfigurationManager;
     private IdentityProvider superTenantResidentIDP;
+    private File identityServerFile;
+    private File identityJ2ServerFile;
 
     private Map<String, Integer> userRiskScores = new HashMap<>();
 
@@ -133,6 +135,21 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
 
         log.info("Restarting the server at: " + isServer.getContextUrls().getBackEndUrl());
         serverConfigurationManager = new ServerConfigurationManager(isServer);
+        String carbonHome = Utils.getResidentCarbonHome();
+        identityServerFile = new File(carbonHome + File.separator
+                + "repository" + File.separator + "conf" + File.separator
+                + "identity" + File.separator + "identity.xml");
+        identityJ2ServerFile = new File(carbonHome + File.separator
+                + "repository" + File.separator + "resources" + File.separator + "conf" + File.separator
+                + "templates" + File.separator + "repository" + File.separator + "conf" + File.separator + "identity" +
+                File.separator + "identity.xml.j2");
+
+        File identityConfigFile = new File(getISResourceLocation()
+                + File.separator + "identityMgt" + File.separator + "identity-permissions.xml");
+        File identityJ2ConfigFile = new File(getISResourceLocation()
+                + File.separator + "identityMgt" + File.separator + "identity-permissions.xml.j2");
+        serverConfigurationManager.applyConfigurationWithoutRestart(identityConfigFile, identityServerFile, true);
+        serverConfigurationManager.applyConfigurationWithoutRestart(identityJ2ConfigFile, identityJ2ServerFile, true);
         serverConfigurationManager.restartForcefully();
         log.info("Restarting the server at: " + isServer.getContextUrls().getBackEndUrl() + " is successful");
 
