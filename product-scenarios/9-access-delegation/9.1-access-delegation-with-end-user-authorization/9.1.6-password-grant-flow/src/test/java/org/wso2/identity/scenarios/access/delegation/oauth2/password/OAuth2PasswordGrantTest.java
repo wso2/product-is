@@ -124,7 +124,7 @@ public class OAuth2PasswordGrantTest extends ScenarioTestBase {
         HttpResponse response = oAuth2CommonClient
                 .sendPasswordGrantTokenRequest(username, password, clientId, clientSecret, null);
         JSONObject responseJSON = httpCommonClient.getJSONFromResponse(response);
-        oAuth2CommonClient.validateAccessToken(responseJSON, true);
+        oAuth2CommonClient.validateAccessToken(responseJSON, false);
         accessToken = responseJSON.get(OAuth2Constants.TokenResponseElements.ACCESS_TOKEN).toString();
 
         httpCommonClient.consume(response);
