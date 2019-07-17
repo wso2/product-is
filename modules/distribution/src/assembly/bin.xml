@@ -55,6 +55,7 @@
                 <exclude>**/datasources/master-datasources.xml</exclude>
                 <exclude>**/repository/resources/conf/**</exclude>
                 <exclude>**/deployment.toml</exclude>
+                <exclude>**/metrics.xml</exclude>
             </excludes>
         </fileSet>
 
@@ -689,6 +690,12 @@
                 target/wso2carbon-core-${carbon.kernel.version}/repository/conf/datasources/master-datasources.xml
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/datasources/</outputDirectory>
+            <filtered>true</filtered>
+        </file>
+        <file>
+            <source>src/repository/resources/conf/metrics.xml</source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
+            <destName>metrics.xml</destName>
             <filtered>true</filtered>
         </file>
         <file>
