@@ -27,6 +27,7 @@ public class SCIM2BaseTestCase extends ISIntegrationTest {
     public static final String NAME_ATTRIBUTE = "name";
     public static final String SCHEMAS_ATTRIBUTE = "schemas";
     public static final String ROLE_ATTRIBUTE = "roles";
+    public static final String ADMIN_ROLE = "admin";
     public static final String TYPE_PARAM = "type";
     public static final String VALUE_PARAM = "value";
     public static final String DISPLAY_NAME_ATTRIBUTE = "displayName";
