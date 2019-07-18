@@ -189,7 +189,7 @@ public class OAuth2AuthorizationCodeGrantTest extends ScenarioTestBase {
         HttpResponse response = oAuth2CommonClient
                 .sendCodeGrantTokenRequest(authorizeCode, redirectUri, clientId, clientSecret, null);
         JSONObject responseJSON = httpCommonClient.getJSONFromResponse(response);
-        oAuth2CommonClient.validateAccessToken(responseJSON, true);
+        oAuth2CommonClient.validateAccessToken(responseJSON, false);
         accessToken = responseJSON.get(OAuth2Constants.TokenResponseElements.ACCESS_TOKEN).toString();
 
         httpCommonClient.consume(response);
