@@ -120,7 +120,6 @@ public class SCIM2MeTestCase extends ISIntegrationTest {
     @Test
     public void testCreateMe() throws Exception {
         HttpPost request = new HttpPost(getPath());
-        request.addHeader(HttpHeaders.AUTHORIZATION, getAdminAuthzHeader());
         request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
 
         JSONObject rootObject = new JSONObject();
@@ -166,7 +165,6 @@ public class SCIM2MeTestCase extends ISIntegrationTest {
 
         userId = ((JSONObject) responseObj).get(ID_ATTRIBUTE).toString();
         assertNotNull(userId);
-        assignUserToGroup();
     }
 
     @Test(dependsOnMethods = "testCreateMe")
@@ -223,22 +221,5 @@ public class SCIM2MeTestCase extends ISIntegrationTest {
 
     private String getAdminAuthzHeader() {
         return "Basic " + Base64.encodeBase64String((adminUsername + ":" + admiPassword).getBytes()).trim();
-    }
-
-    private void assignUserToGroup() throws Exception {
-
-        AutomationContext automationContext;
-        if (tenant.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
-            automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
-        } else {
-            automationContext = new AutomationContext("IDENTITY", TestUserMode.TENANT_ADMIN);
-        }
-
-        String backendUrl = automationContext.getContextUrls().getBackEndUrl();
-        sessionCookie = new LoginLogoutClient(automationContext).login();
-        UserManagementClient userMgtClient = new UserManagementClient(backendUrl, sessionCookie);
-
-        String[] roles = {ADMIN_ROLE};
-        userMgtClient.addRemoveRolesOfUser(USERNAME, roles, null);
     }
 }

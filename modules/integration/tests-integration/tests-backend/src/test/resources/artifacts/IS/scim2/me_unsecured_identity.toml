@@ -21,7 +21,8 @@ name = "wso2carbon.jks"
 password = "wso2carbon"
 
 [resource_access_control.scim2_me_post_method]
-keep_resource = false
+secured = false
+permission = ""
 
 [resource_access_control.scim2_me_get_method]
 permission = ""
