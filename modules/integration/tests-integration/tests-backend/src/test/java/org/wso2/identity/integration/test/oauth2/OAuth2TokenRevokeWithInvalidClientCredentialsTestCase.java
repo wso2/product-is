@@ -92,7 +92,7 @@ public class OAuth2TokenRevokeWithInvalidClientCredentialsTestCase extends OAuth
 
         String errorMessage = ((JSONObject) obj).get("error").toString();
         EntityUtils.consume(response.getEntity());
-        Assert.assertEquals("invalid_request", errorMessage,
+        Assert.assertEquals("invalid_client", errorMessage,
                 "Invalid format in sending client credentials, should have produced : " + OAuth2Constant.INVALID_CLIENT
                         + "error code");
 
