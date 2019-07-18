@@ -685,9 +685,10 @@
             <filtered>true</filtered>
         </file>
         <file>
-            <source>src/repository/resources/conf/master-datasources.xml</source>
+            <source>
+                target/wso2carbon-core-${carbon.kernel.version}/repository/conf/datasources/master-datasources.xml
+            </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/datasources/</outputDirectory>
-            <destName>master-datasources.xml</destName>
             <filtered>true</filtered>
         </file>
         <file>
