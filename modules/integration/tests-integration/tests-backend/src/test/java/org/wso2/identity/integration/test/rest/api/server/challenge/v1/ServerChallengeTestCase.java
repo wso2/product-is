@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.identity.integration.test.rest.api.challenge.questions;
+package org.wso2.identity.integration.test.rest.api.server.challenge.v1;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -29,7 +29,7 @@ import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-import org.wso2.identity.integration.test.rest.api.challenge.questions.model.ServerChallengeModel;
+import org.wso2.identity.integration.test.rest.api.server.challenge.v1.model.ServerChallengeModel;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.identity.integration.test.rest.api.challenge.questions.model;
+package org.wso2.identity.integration.test.rest.api.server.challenge.v1.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
