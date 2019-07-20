@@ -174,7 +174,7 @@ public class IDENTITY4776SCIMServiceWithOAuthTestCase extends OAuth2ServiceAbstr
         propertyDTOs[0].setValue("org.h2.Driver");
 
         propertyDTOs[1].setName("url");
-        propertyDTOs[1].setValue("jdbc:h2:repository/database/" + USER_STORE_DB_NAME);
+        propertyDTOs[1].setValue("jdbc:h2:./repository/database/" + USER_STORE_DB_NAME);
 
         propertyDTOs[2].setName("userName");
         propertyDTOs[2].setValue(DB_USER_NAME);

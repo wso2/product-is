@@ -94,7 +94,7 @@
         <targetPath>/_system/nodes</targetPath>
     </mount-->
     <dbConfig name="h2-mount">
-        <url>jdbc:h2:repository/database/CARBON_MOUNT</url>
+        <url>jdbc:h2:./repository/database/CARBON_MOUNT</url>
         <!--userName>sa</userName>
         <password>sa</password-->
         <driverName>org.h2.Driver</driverName>
