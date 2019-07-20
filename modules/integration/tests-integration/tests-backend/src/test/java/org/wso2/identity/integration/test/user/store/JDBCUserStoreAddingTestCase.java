@@ -103,7 +103,7 @@ public class JDBCUserStoreAddingTestCase extends ISIntegrationTest{
         propertyDTOs[0].setValue("org.h2.Driver");
 
         propertyDTOs[1].setName("url");
-        propertyDTOs[1].setValue("jdbc:h2:repository/database/" + userStoreDBName);
+        propertyDTOs[1].setValue("jdbc:h2:./repository/database/" + userStoreDBName);
 
         propertyDTOs[2].setName("userName");
         propertyDTOs[2].setValue(dbUserName);
