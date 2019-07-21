@@ -2078,11 +2078,6 @@
                 <enabled>false</enabled>
             </releases>
         </repository>
-        <repository>
-            <id>wso2.staging</id>
-            <name>Staging</name>
-            <url>https://maven.wso2.org/nexus/content/repositories/orgwso2carbon-1374</url>
-        </repository>
     </repositories>
 
     <scm>
