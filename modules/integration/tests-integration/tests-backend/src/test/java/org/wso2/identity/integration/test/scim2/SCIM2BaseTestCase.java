@@ -1,7 +1,5 @@
 package org.wso2.identity.integration.test.scim2;
 
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
@@ -41,13 +39,11 @@ public class SCIM2BaseTestCase extends ISIntegrationTest {
 
     private ServerConfigurationManager serverConfigurationManager;
 
-    @BeforeTest(alwaysRun = true)
     public void initTest() throws Exception {
         super.init();
         changeISConfiguration();
     }
 
-    @AfterTest(alwaysRun = true)
     public void tearDownTest() throws Exception {
         super.init();
         resetISConfiguration();
