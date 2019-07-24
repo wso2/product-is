@@ -114,6 +114,7 @@
     <test name="is-test-rest-api" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
             <class name="org.wso2.identity.integration.test.rest.api.server.challenge.v1.ServerChallengeTestCase"/>
+            <class name="org.wso2.identity.integration.test.rest.api.user.challenge.v1.UserChallengeTest"/>
         </classes>
     </test>
 
