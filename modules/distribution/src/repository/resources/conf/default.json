@@ -13,9 +13,6 @@
 
   "authentication.consent.data_source": "jdbc/WSO2IdentityDB",
 
-  "message_builder.from_urlencoded": "org.apache.axis2.builder.XFormURLEncodedBuilder",
-  "message_builder.text_javascrip": "org.apache.axis2.json.gson.JsonBuilder",
-
   "claim_management.hide_menu_items": [
     "claim_mgt_menu",
     "identity_mgt_emailtemplate_menu",
