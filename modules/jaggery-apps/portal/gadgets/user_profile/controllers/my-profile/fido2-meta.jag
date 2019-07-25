@@ -2,21 +2,18 @@
 include("../../../../util/constants.jag");
 include("../../util/constants.jag");
 include("../../util/utility.jag");
+include("../../../../util/utility.jag");
 
 var log = new Log();
 var cookie = request.getParameter("cookie");
 var user = request.getParameter("user");
-var carbon = require("carbon");
-var tenantUser = carbon.server.tenantUser(user);
 
 session.put('auth-cookie', cookie);
 session.put('user', user);
 
 try {
-    var serverCoreUrl = application.get(SERVER_CORE_URL);
-    var url  = serverCoreUrl + "/t/" + tenantUser.domain + '/api/users/v1.0/metadata';
     var header = {"cookie" : cookie};
-    var result = get(url, {username: user}, header, "json");
+    var result = get(getFIDOMetaDataUrl(), {username: user}, header, "json");
     print(result);
 } catch(e) {
     log.error(e);

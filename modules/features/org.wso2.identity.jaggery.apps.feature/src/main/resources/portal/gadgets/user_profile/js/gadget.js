@@ -20,13 +20,13 @@ function drawPage() {
             continue;
         }
 
-    if (json.return.totpAuthenticatorActive && json.return.fieldValues[i].displayName == "Secret Key") {
-    	            totpEnabled = json.return.fieldValues[i].fieldValue;
-    	            continue;
-    	        }
+        if (json.return.totpAuthenticatorActive && json.return.fieldValues[i].displayName == "Secret Key") {
+            totpEnabled = json.return.fieldValues[i].fieldValue;
+            continue;
+        }
         body = body + "          <tr>\n" +
-        "                           <td>" +
-        "<label class=\"control-label\">" + json.return.fieldValues[i].displayName;
+            "                           <td>" +
+            "<label class=\"control-label\">" + json.return.fieldValues[i].displayName;
         if (json.return.fieldValues[i].required == "true") {
             body = body + " <span class=\"required\">*</span>";
         }
@@ -48,57 +48,57 @@ function drawPage() {
 
     }
     if (json.return.totpAuthenticatorActive) {
-                    body = body + "<tr><td><label class=\"control-label\">Refresh Secret Key</label>\n</td><td><div class=\"controls\">";
-                    body = body + "<a class=\"control-label\" onclick=\"validateRefreshSecret();\">Click</a></div>\n<br></div></td></tr>";
-                    body = body + "<tr><td><label class=\"control-label\">Enable TOTP</label>\n</td><td><div class=\"controls\">";
-                    if (totpEnabled != ""){
-                            body += "<input type=\"checkbox\" checked name=\"totpenable\" onclick=\"validateCheckBox();\"/>\n<br><br>"+
-                            "<div class=\"container\" style=\"padding-left:0px; padding-right:0px;\" id=\"qrContainer\">"+
-                            "<div class=\"panel-group\">"+
-                                    "<div class=\"panel panel-default\">"+
-                                        "<div class=\"panel-heading\" style=\"padding: 5px 5px 25px 5px;\">"+
-                                            "<h4 class=\"panel-title\">"+
-                                                "<a data-toggle=\"collapse\" onclick=\"initiateTOTP()\" style=\"display:inline-block; float:left; text-decoration: none;\">"+
-                                                "<div id=\"scanQR\" style=\"overflow:inherit; float:left; padding-right:2px;\"><span class=\"glyphicon glyphicon-collapse-down\"></span></div>"+
-                                                "Scan QR Code</a>"+
-                                            "</h4>"+
-                                        "</div>"+
-                                        "<div id=\"qrcanvdiv\" class=\"panel-collapse collapse\" style=\"display:none\">"+
-                                            "<div id=\"qrdiv\">"+
-                                                "<form name=\"qrinp\">"+
-                                                    "<input type=\"numeric\" name=\"ECC\" value=\"1\" size=\"1\" style=\"display:none\">"+
-                                                    "<canvas id=\"qrcanv\" style=\"display:inline-block; float:right;\">"+
-                                                "</form>"+
-                                            "</div>"+
-                                        "</div>"+
-                                    "</div>"+
-                                "</div>"+
-                                "</div>";
-                            } else {
-                            body += "<input type=\"checkbox\" name=\"totpenable\" onclick=\"validateCheckBox();\"/>\n<br><br>"+
-                            "<div class=\"container\" style=\"display:none; padding-left:0px; padding-right:0px;\" id=\"qrContainer\">"+
-                            "<div class=\"panel-group\">"+
-                                    "<div class=\"panel panel-default\">"+
-                                        "<div class=\"panel-heading\" style=\"padding: 5px 5px 25px 5px;\">"+
-                                            "<h4 class=\"panel-title\">"+
-                                                "<a data-toggle=\"collapse\" onclick=\"initiateTOTP()\" style=\"display:inline-block; float:left; text-decoration: none;\">"+
-                                                "<div id=\"scanQR\" style=\"overflow:inherit; float:left; padding-right:2px;\"><span class=\"glyphicon glyphicon-collapse-down\"></span></div>"+
-                                                "Scan QR Code</a>"+
-                                            "</h4>"+
-                                        "</div>"+
-                                        "<div id=\"qrcanvdiv\" class=\"panel-collapse collapse\" style=\"display:none\">"+
-                                            "<div id=\"qrdiv\">"+
-                                                "<form name=\"qrinp\">"+
-                                                    "<input type=\"numeric\" name=\"ECC\" value=\"1\" size=\"1\" style=\"display:none\">"+
-                                                    "<canvas id=\"qrcanv\" style=\"display:inline-block; float:right;\">"+
-                                                "</form>"+
-                                            "</div>"+
-                                        "</div>"+
-                                    "</div>"+
-                                "</div>"+
-                                "</div>";
-         }
-     }
+        body = body + "<tr><td><label class=\"control-label\">Refresh Secret Key</label>\n</td><td><div class=\"controls\">";
+        body = body + "<a class=\"control-label\" onclick=\"validateRefreshSecret();\">Click</a></div>\n<br></div></td></tr>";
+        body = body + "<tr><td><label class=\"control-label\">Enable TOTP</label>\n</td><td><div class=\"controls\">";
+        if (totpEnabled != ""){
+            body += "<input type=\"checkbox\" checked name=\"totpenable\" onclick=\"validateCheckBox();\"/>\n<br><br>"+
+                "<div class=\"container\" style=\"padding-left:0px; padding-right:0px;\" id=\"qrContainer\">"+
+                "<div class=\"panel-group\">"+
+                "<div class=\"panel panel-default\">"+
+                "<div class=\"panel-heading\" style=\"padding: 5px 5px 25px 5px;\">"+
+                "<h4 class=\"panel-title\">"+
+                "<a data-toggle=\"collapse\" onclick=\"initiateTOTP()\" style=\"display:inline-block; float:left; text-decoration: none;\">"+
+                "<div id=\"scanQR\" style=\"overflow:inherit; float:left; padding-right:2px;\"><span class=\"glyphicon glyphicon-collapse-down\"></span></div>"+
+                "Scan QR Code</a>"+
+                "</h4>"+
+                "</div>"+
+                "<div id=\"qrcanvdiv\" class=\"panel-collapse collapse\" style=\"display:none\">"+
+                "<div id=\"qrdiv\">"+
+                "<form name=\"qrinp\">"+
+                "<input type=\"numeric\" name=\"ECC\" value=\"1\" size=\"1\" style=\"display:none\">"+
+                "<canvas id=\"qrcanv\" style=\"display:inline-block; float:right;\">"+
+                "</form>"+
+                "</div>"+
+                "</div>"+
+                "</div>"+
+                "</div>"+
+                "</div>";
+        } else {
+            body += "<input type=\"checkbox\" name=\"totpenable\" onclick=\"validateCheckBox();\"/>\n<br><br>"+
+                "<div class=\"container\" style=\"display:none; padding-left:0px; padding-right:0px;\" id=\"qrContainer\">"+
+                "<div class=\"panel-group\">"+
+                "<div class=\"panel panel-default\">"+
+                "<div class=\"panel-heading\" style=\"padding: 5px 5px 25px 5px;\">"+
+                "<h4 class=\"panel-title\">"+
+                "<a data-toggle=\"collapse\" onclick=\"initiateTOTP()\" style=\"display:inline-block; float:left; text-decoration: none;\">"+
+                "<div id=\"scanQR\" style=\"overflow:inherit; float:left; padding-right:2px;\"><span class=\"glyphicon glyphicon-collapse-down\"></span></div>"+
+                "Scan QR Code</a>"+
+                "</h4>"+
+                "</div>"+
+                "<div id=\"qrcanvdiv\" class=\"panel-collapse collapse\" style=\"display:none\">"+
+                "<div id=\"qrdiv\">"+
+                "<form name=\"qrinp\">"+
+                "<input type=\"numeric\" name=\"ECC\" value=\"1\" size=\"1\" style=\"display:none\">"+
+                "<canvas id=\"qrcanv\" style=\"display:inline-block; float:right;\">"+
+                "</form>"+
+                "</div>"+
+                "</div>"+
+                "</div>"+
+                "</div>"+
+                "</div>";
+        }
+    }
     body = body + "</div></td></tr>";
 
 
@@ -204,7 +204,7 @@ function validate() {
             if (validateEmpty(fldname).length > 0) {
                 message({title:"Missing Required Field Warning", content:displayName + ' is required',
                     type:'warning', cbk:function () {
-                } });
+                    } });
                 return false;
             }
         }
@@ -216,7 +216,7 @@ function validate() {
             if (value != '' && !valid) {
                 message({title:"Invalid Input Field Warning", content:displayName + ' is not valid',
                     type:'warning', cbk:function () {
-                } });
+                    } });
                 return false;
             }
 
@@ -231,7 +231,7 @@ function validate() {
             elements[i].value != null && elements[i].value.match(unsafeCharPattern) != null) {
             message({title:"Invalid Input Field Warning", content:'Unauthorized characters are specified' ,
                 type:'warning', cbk:function () {
-            } });
+                } });
             return false;
         }
     }
@@ -256,146 +256,146 @@ function validateEmpty(fldname) {
 
 function reloadGrid() {
     $.ajax({
-               url: "/portal/gadgets/user_profile/index.jag",
-               type: "POST",
-               data: {cookie : cookie, user : userName},
-               success: function (data) {
-json = $.parseJSON(data);
-drawPage();
+        url: "/portal/gadgets/user_profile/index.jag",
+        type: "POST",
+        data: {cookie : cookie, user : userName},
+        success: function (data) {
+            json = $.parseJSON(data);
+            drawPage();
 
 
-               },
-               error: function (e) {
-                   message({content: 'Error occurred while loading values for the grid.', type: 'error', cbk: function () {
-                   }});
-               }
-           });
+        },
+        error: function (e) {
+            message({content: 'Error occurred while loading values for the grid.', type: 'error', cbk: function () {
+                }});
+        }
+    });
 }
 
 function deleteFIDOToken(deviceRemarks){
 
- var msg = "You are about to remove Id '" + username + "' From IDP '" + idPId + "'. Do you want to proceed?";
+    var msg = "You are about to remove Id '" + username + "' From IDP '" + idPId + "'. Do you want to proceed?";
     message({content: msg, type: 'confirm', okCallback: function () {
-        $.ajax({
-                   url: "/portal/gadgets/connected_accounts/index.jag",
-                   type: "POST",
-                   data: {cookie : cookie, username : username, idPId : idPId, action : "fedDelete"},
-                   success: function (data) {
-                       var resp = $.parseJSON(data);
-                       if (resp.success == true) {
-                           reloadFedGrid();
-                       } else {
-                           if (typeof resp.reLogin != 'undefined' && resp.reLogin == true) {
-                               window.top.location.href = window.location.protocol + '//' + serverUrl + '/dashboard/logout.jag';
-                           } else {
-                               if (resp.message != null && resp.message.length > 0) {
-                                   message({content: resp.message, type: 'error', cbk: function () {
-                                   }});
-                               } else {
-                                   message({content: 'Error occurred while deleting user account.', type: 'error', cbk: function () {
-                                   }});
-                               }
-                           }
-                       }
-                   },
-                   error: function (e) {
-                       message({content: 'Error occurred while deleting user account.', type: 'error', cbk: function () {
-                       }});
-                   }
-               });
-    }, cancelCallback: function () {
-    }});
+            $.ajax({
+                url: "/portal/gadgets/connected_accounts/index.jag",
+                type: "POST",
+                data: {cookie : cookie, username : username, idPId : idPId, action : "fedDelete"},
+                success: function (data) {
+                    var resp = $.parseJSON(data);
+                    if (resp.success == true) {
+                        reloadFedGrid();
+                    } else {
+                        if (typeof resp.reLogin != 'undefined' && resp.reLogin == true) {
+                            window.top.location.href = window.location.protocol + '//' + serverUrl + '/dashboard/logout.jag';
+                        } else {
+                            if (resp.message != null && resp.message.length > 0) {
+                                message({content: resp.message, type: 'error', cbk: function () {
+                                    }});
+                            } else {
+                                message({content: 'Error occurred while deleting user account.', type: 'error', cbk: function () {
+                                    }});
+                            }
+                        }
+                    }
+                },
+                error: function (e) {
+                    message({content: 'Error occurred while deleting user account.', type: 'error', cbk: function () {
+                        }});
+                }
+            });
+        }, cancelCallback: function () {
+        }});
 }
 
 function drawFIDORegistration() {
 
-$.ajax({
-           url: "/portal/gadgets/user_profile/controllers/my-profile/fido-metadata.jag",
-           type: "POST",
-           data: {cookie : cookie, action : "idPList"},
-           success: function (data) {
+    $.ajax({
+        url: "/portal/gadgets/user_profile/controllers/my-profile/fido-metadata.jag",
+        type: "POST",
+        data: {cookie : cookie, action : "idPList"},
+        success: function (data) {
 
-var deviceMetadata = null;
-if(data != null && "" != data){
-               var resp = $.parseJSON(data);
-	       deviceMetadata = resp.return;
-}
+            var deviceMetadata = null;
+            if(data != null && "" != data){
+                var resp = $.parseJSON(data);
+                deviceMetadata = resp.return;
+            }
 
-                       var top =
-                               "    <div class=\"container content-section-wrapper\">\n" +
-                               "        <div class=\"row\">\n" +
-                               "            <div class=\"col-lg-12 content-section\">\n" +
-       			       "                <legend>Manage FIDO U2F Device </legend>\n" +
-                               "                <form method=\"post\" class=\"form-horizontal\" id=\"associateForm\" name=\"selfReg\"  >\n";
-                       var middle = "";
-                   if (deviceMetadata != null && deviceMetadata.length > 0) {
-                       var middle =
-                               "    <div class=\"control-group\">\n" +
-                               "        <table class=\"table table-bordered\">\n" +
-                               "            <thead>\n" +
-                               "                <tr>\n" +
-                               "                    <th class='txtAlnCen width80p'>Device Remarks</th>\n" +
-                               "                    <th class='txtAlnCen'>Action</th>\n" +
-                               "                </tr>\n" +
-                               "            </thead>\n";
-
-
-                       if (isArray(deviceMetadata)) {
-                           for (var i in deviceMetadata) {
-                               middle = middle +
-                                         "                <tr>\n" +
-                                         "                    <td > Registration Time : " + deviceMetadata[i] + "</td>\n" +
-                                         "                    <td class='txtAlnCen'>\n" +
-                                         "                        <a title=\"\" onclick=\"removeFIDO('" + deviceMetadata[i] + "');\" href=\"javascript:void(0)\"><i class=\"icon-trash\"></i> Remove</a>\n" +
-                                         "                    </td>\n" +
-                                         "                </tr>\n";
-                           }
-                       }
-                       else {
-
-                           middle = middle +
-                                     "                <tr>\n" +
-                                     "                    <td > Registration Time : "  + deviceMetadata + "</td>\n" +
-                                     "                    <td class='txtAlnCen'>\n" +
-                                     "                        <a title=\"\" onclick=\"removeFIDO('" + deviceMetadata + "');\" href=\"javascript:void(0)\"><i class=\"icon-trash\"></i> Remove</a>\n" +
-                                     "                    </td>\n" +
-                                     "                </tr>\n";
-
-                       }
-
-                       var middle = middle + "            </tbody>\n" +
-                                  "        </table>\n" +
-                                  "    </div>";
- }
-else {
-middle = middle + "<label > Device not registered yet please register your device ! </label>";
-}
+            var top =
+                "    <div class=\"container content-section-wrapper\">\n" +
+                "        <div class=\"row\">\n" +
+                "            <div class=\"col-lg-12 content-section\">\n" +
+                "                <legend>Manage FIDO U2F Device </legend>\n" +
+                "                <form method=\"post\" class=\"form-horizontal\" id=\"associateForm\" name=\"selfReg\"  >\n";
+            var middle = "";
+            if (deviceMetadata != null && deviceMetadata.length > 0) {
+                var middle =
+                    "    <div class=\"control-group\">\n" +
+                    "        <table class=\"table table-bordered\">\n" +
+                    "            <thead>\n" +
+                    "                <tr>\n" +
+                    "                    <th class='txtAlnCen width80p'>Device Remarks</th>\n" +
+                    "                    <th class='txtAlnCen'>Action</th>\n" +
+                    "                </tr>\n" +
+                    "            </thead>\n";
 
 
-                       var end =
-                               "                    <div class=\"control-group\">\n" +
-                               "                        <div class=\"controls\">\n" +
-                               "                            <input type=\"button\" onclick=\"startFIDO();\" class=\"btn btn-primary\" style=\"margin-right: 5px;\" value=\"Attach FIDO Token\"/>\n" +
-                               "                            <input type=\"button\" onclick=\"drawPage();\" class=\"btn btn-default btn-cancel\" value=\"Done\"/>\n" +
-                               "                        </div>\n" +
-                               "                    </div></div>\n" +
-                               "                </form>\n" +
-                               "            </div>\n" +
-                               "        </div>\n" +
-                               "    </div>   ";
+                if (isArray(deviceMetadata)) {
+                    for (var i in deviceMetadata) {
+                        middle = middle +
+                            "                <tr>\n" +
+                            "                    <td > Registration Time : " + deviceMetadata[i] + "</td>\n" +
+                            "                    <td class='txtAlnCen'>\n" +
+                            "                        <a title=\"\" onclick=\"removeFIDO('" + deviceMetadata[i] + "');\" href=\"javascript:void(0)\"><i class=\"icon-trash\"></i> Remove</a>\n" +
+                            "                    </td>\n" +
+                            "                </tr>\n";
+                    }
+                }
+                else {
 
-                       var output = top + middle + end;
+                    middle = middle +
+                        "                <tr>\n" +
+                        "                    <td > Registration Time : "  + deviceMetadata + "</td>\n" +
+                        "                    <td class='txtAlnCen'>\n" +
+                        "                        <a title=\"\" onclick=\"removeFIDO('" + deviceMetadata + "');\" href=\"javascript:void(0)\"><i class=\"icon-trash\"></i> Remove</a>\n" +
+                        "                    </td>\n" +
+                        "                </tr>\n";
 
-                       $("#gadgetBody").empty();
-                       $("#gadgetBody").append(output);
+                }
+
+                var middle = middle + "            </tbody>\n" +
+                    "        </table>\n" +
+                    "    </div>";
+            }
+            else {
+                middle = middle + "<label > Device not registered yet please register your device ! </label>";
+            }
 
 
-           },
-           error: function (e) {
-               message({content: 'Error occurred while loading identity providers.', type: 'error', cbk: function () {
-               }});
-           }
-       });
+            var end =
+                "                    <div class=\"control-group\">\n" +
+                "                        <div class=\"controls\">\n" +
+                "                            <input type=\"button\" onclick=\"startFIDO();\" class=\"btn btn-primary\" style=\"margin-right: 5px;\" value=\"Attach FIDO Token\"/>\n" +
+                "                            <input type=\"button\" onclick=\"drawPage();\" class=\"btn btn-default btn-cancel\" value=\"Done\"/>\n" +
+                "                        </div>\n" +
+                "                    </div></div>\n" +
+                "                </form>\n" +
+                "            </div>\n" +
+                "        </div>\n" +
+                "    </div>   ";
+
+            var output = top + middle + end;
+
+            $("#gadgetBody").empty();
+            $("#gadgetBody").append(output);
+
+
+        },
+        error: function (e) {
+            message({content: 'Error occurred while loading identity providers.', type: 'error', cbk: function () {
+                }});
+        }
+    });
 }
 
 function isArray(element) {
@@ -441,7 +441,6 @@ function removeQRCode(){
     $('#totpQRCode').show();
 }
 
-////////////////////////////////// FIDO2 START ############### /////////////////////////////////////
 function chooseFIDOMethod() {
 
     if(ENABLE_WEBAUTHN === "true") {
@@ -536,7 +535,6 @@ function drawFIDO2Callback(data) {
 
 
         if (isArray(deviceMetadata)) {
-            console.log(deviceMetadata);
             for (var i in deviceMetadata) {
                 middle = middle +
                     "                <tr>\n" +
@@ -697,7 +695,6 @@ function connectToDevice(requestId, credentialCreationOptions) {
             var payload = {};
             payload.requestId = requestId;
             payload.credential = responseToObject(credential);
-            console.log(payload);
             var str = PROXY_CONTEXT_PATH + "/portal/gadgets/user_profile/controllers/my-profile/fido2-finish.jag";
             $.ajax({
                 url: str,
@@ -714,5 +711,3 @@ function connectToDevice(requestId, credentialCreationOptions) {
             console.log(err);
         });
 }
-
-

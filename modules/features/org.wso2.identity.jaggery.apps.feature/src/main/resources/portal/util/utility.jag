@@ -92,14 +92,14 @@ function setServerURL() {
         application.put(FIDO_APP_ID, fidoAppId);
         application.put(PROXY_CONTEXT_PATH, proxyContextPath);
         application.put(PROXY_ORIGIN, proxyOrigin);
-        application.put(ENABLE_WEBAUTHN, enableWebAuthn);
+        application.put(ENABLE_WEBAUTHN, identityServerURL.getProperty("FIDO.WebAuthn.Enable"));
 
         if (log.isDebugEnabled()) {
             log.debug("Proxy Origin      :" + proxyOrigin);
             log.debug("Server Url      :" + serverUrl);
             log.debug("Server Core Url :" + serverCoreUrl);
             log.debug("Proxy Context Path :" + proxyContextPath);
-            log.debug("WebAuthn Enabled   :" + enableWebAuthn);
+            application.put(ENABLE_WEBAUTHN, identityServerURL.getProperty("FIDO.WebAuthn.Enable"));
         }
     }
 }
@@ -107,6 +107,33 @@ function setServerURL() {
 function getFidoAppId(){
     setServerURL();
     return application.get(FIDO_APP_ID);
+}
+
+function getFIDOMetaDataUrl() {
+
+    return getFIDOContext() + FIDO_METADATA_URI;
+}
+
+function getFIDOStartRegUrl() {
+
+    return getFIDOContext() + FIDO_START_REGISTRATION_URI;
+}
+
+function getFIDOFinishRegUrl() {
+
+    return getFIDOContext() + FIDO_FINISH_REGISTRATION_URI;
+}
+
+function getFIDORemoveUrl() {
+
+    return getFIDOContext() + FIDO_DEVICE_REMOVE_URI;
+}
+
+function getFIDOContext() {
+    var carbon = require('carbon');
+    var tenantUser = carbon.server.tenantUser(user);
+
+    return application.get(SERVER_CORE_URL) + "/t/" + tenantUser.domain;
 }
 
 %>
