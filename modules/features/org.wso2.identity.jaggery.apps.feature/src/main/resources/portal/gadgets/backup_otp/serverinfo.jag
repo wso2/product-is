@@ -6,7 +6,6 @@ var log = new Log();
 util.setServerURL();
 
 var ProxyContextPath = application.get('ProxyContextPath');
-var enableWebAuthn = application.get(ENABLE_WEBAUTHN);
 if(ProxyContextPath == null || ProxyContextPath === 'null' || ProxyContextPath.length <= 0){
     ProxyContextPath = '';
 }
@@ -17,7 +16,7 @@ if (log.isDebugEnabled()) {
 
 //create javascript content
 var jsStr = 'var PROXY_CONTEXT_PATH = \"' + ProxyContextPath + '\"' + ';\n';
-jsStr = jsStr + 'var ENABLE_WEBAUTHN = \"' + enableWebAuthn + '\"' + ';\n';
+jsStr = jsStr + 'var ENABLE_WEBAUTHN = \"' + application.get("enableWebAuthn") + '\"' + ';\n';
 
 
 response.contentType = 'text/javascript';
