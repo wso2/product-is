@@ -1,0 +1,20 @@
+[
+  {
+    "questionSetId": "challengeQuestion1",
+    "challengeQuestion": {
+      "locale": "en_US",
+      "question": "Father's middle name ?",
+      "questionId": "question2"
+    },
+    "answer": "John"
+  },
+  {
+    "questionSetId": "challengeQuestion2",
+    "challengeQuestion": {
+      "locale": "en_US",
+      "question": "Name of your first pet ?",
+      "questionId": "question4"
+    },
+    "answer": "Bib"
+  }
+]

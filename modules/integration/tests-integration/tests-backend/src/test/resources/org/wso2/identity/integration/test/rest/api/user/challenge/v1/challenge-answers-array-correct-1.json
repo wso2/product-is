@@ -1,0 +1,11 @@
+[
+  {
+    "questionSetId": "challengeQuestion1",
+    "challengeQuestion": {
+      "locale": "en_US",
+      "question": "City where you were born ?",
+      "questionId": "question1"
+    },
+    "answer": "Colombo"
+  }
+]
