@@ -8,6 +8,7 @@ var MGT_TRANSPORT = "mgtTransport";
 var HTTPS_PORT = "httpsPort";
 var PROXY_CONTEXT_PATH = "ProxyContextPath";
 var FIDO_APP_ID = "FidoAppId";
+var PROXY_ORIGIN = "ProxyOrigin";
 var ENABLE_WEBAUTHN = "enableWebAuthn";
 
 var FIDO_START_REGISTRATION_URI = '/api/users/v1/me/webauthn/start-registration';

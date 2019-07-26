@@ -14,7 +14,7 @@ session.put('user', user);
 
 try {
     var header = {"cookie" : cookie};
-    var result = post(getFIDOStartRegUrl(), {appId: appId}, header, "json");
+    var result = get(getFIDOStartRegUrl(), {appId: appId}, header, "json");
     print(result);
 } catch(e) {
     log.error(e);
