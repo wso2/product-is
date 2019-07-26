@@ -26,8 +26,9 @@ import javax.xml.xpath.XPathExpressionException;
  * ex: /t/{tenant-domain}/api/users/{version}
  */
 public class RESTAPIUserTestBase extends RESTTestBase {
-    public static final String API_USERS_BASE_PATH = "/api/users/%s";
-    public static final String API_USERS_BASE_PATH_WITH_TENANT_CONTEXT = "/t/%s" + API_USERS_BASE_PATH;
+
+    protected static final String API_USERS_BASE_PATH = "/api/users/%s";
+    protected static final String API_USERS_BASE_PATH_WITH_TENANT_CONTEXT = TENANT_CONTEXT_IN_URL + API_USERS_BASE_PATH;
 
     protected void testInit(String apiVersion, String apiPackageName, String apiDefinitionName, String tenantDomain)
             throws IOException, XPathExpressionException {
@@ -36,6 +37,5 @@ public class RESTAPIUserTestBase extends RESTTestBase {
         String basePath = String.format(API_USERS_BASE_PATH_WITH_TENANT_CONTEXT,
                 tenantDomain, apiVersion);
         super.init(apiPackageName, apiDefinitionName, basePathInSwagger, basePath);
-
     }
 }

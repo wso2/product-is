@@ -16,53 +16,37 @@
 
 package org.wso2.identity.integration.test.rest.api.user.challenge.v1;
 
-import io.restassured.http.ContentType;
-import org.apache.http.HttpHeaders;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
-import org.testng.annotations.Test;
-import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.identity.integration.test.rest.api.user.common.RESTAPIUserTestBase;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import java.io.IOException;
+import java.util.Base64;
 import javax.xml.xpath.XPathExpressionException;
 
-import static io.restassured.RestAssured.given;
-
 /**
- * Test REST API for managing user's challenge questions
+ * Test REST API for managing an specific user's challenge question answers
  */
-public class UserChallengeTest extends RESTAPIUserTestBase {
-
-    private static final String API_DEFINITION_NAME = "challenge.yaml";
-    private static final String API_VERSION = "v1";
-    private static String API_PACKAGE_NAME = "org.wso2.carbon.identity.rest.api.user.challenge.v1";
-
-    @BeforeClass(alwaysRun = true)
-    public void testInit() throws IOException, XPathExpressionException {
-
-        super.testInit(API_VERSION, API_PACKAGE_NAME, API_DEFINITION_NAME, tenant);
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void testConclude() {
-        super.conclude();
-    }
-
-    private String adminUsername;
-    private String adminPassword;
-    private String tenant;
+public class UserChallengeTest extends UserMeChallengeTest {
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public UserChallengeTest(TestUserMode userMode) throws Exception {
+        super(userMode);
+    }
 
-        context = new AutomationContext("IDENTITY", userMode);
-        this.adminUsername = context.getContextTenant().getTenantAdmin().getUserName();
-        this.adminPassword = context.getContextTenant().getTenantAdmin().getPassword();
-        this.tenant = context.getContextTenant().getDomain();
+    @BeforeClass(alwaysRun = true)
+    @Override
+    public void
+
+    init() throws IOException, XPathExpressionException {
+
+        super.testInit(API_VERSION, API_PACKAGE_NAME, API_DEFINITION_NAME, tenant);
+        String user = MultitenantUtils.getTenantAwareUsername(context.getContextTenant().getTenantUserList().get(0)
+                .getUserName());
+        String userID = Base64.getEncoder().encodeToString(user.getBytes());
+        initUrls(userID);
     }
 
     @DataProvider(name = "restAPIUserConfigProvider")
@@ -72,22 +56,4 @@ public class UserChallengeTest extends RESTAPIUserTestBase {
                 {TestUserMode.TENANT_ADMIN}
         };
     }
-
-    @Test
-    public void testGetAvailableChallenges() {
-
-        given().auth().preemptive().basic(adminUsername, adminPassword)
-                .contentType(ContentType.JSON)
-                .header(HttpHeaders.ACCEPT, ContentType.JSON)
-                .log().all()
-                .when()
-                .filter(validationFilter)
-                .when()
-                .get("/me/challenges")
-                .then()
-                .assertThat()
-                .statusCode(200);
-    }
-
-
 }
