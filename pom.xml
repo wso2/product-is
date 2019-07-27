@@ -1823,14 +1823,14 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>5.13.53</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.13.62</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.13.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
         <identity.carbon.auth.saml2.version>5.3.1</identity.carbon.auth.saml2.version>
         <identity.inbound.auth.saml.version>5.5.8</identity.inbound.auth.saml.version>
         <identity.agent.sso.version>5.2.3</identity.agent.sso.version>
-        <identity.inbound.auth.oauth.version>6.1.12</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.1.13</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.3.1</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.3.1</identity.inbound.auth.sts.version>
         <identity.outbound.auth.requestpath.basicauth.version>5.2.0</identity.outbound.auth.requestpath.basicauth.version>
