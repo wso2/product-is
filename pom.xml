@@ -1994,7 +1994,7 @@
         <operadriver.version>0.8.1</operadriver.version>
         <selenium.version>2.40.0</selenium.version>
         <testng.version>6.1.1</testng.version>
-        <carbon.deployment.version>4.9.4</carbon.deployment.version>
+        <carbon.deployment.version>4.9.5-SNAPSHOT</carbon.deployment.version>
         <carbon.registry.version>4.7.0</carbon.registry.version>
         <carbon.multitenancy.version>4.7.2</carbon.multitenancy.version>
         <jaggery.extensions.version>1.6.0</jaggery.extensions.version>
