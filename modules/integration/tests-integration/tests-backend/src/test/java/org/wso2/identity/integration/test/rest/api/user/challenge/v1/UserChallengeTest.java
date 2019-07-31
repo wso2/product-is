@@ -1,59 +1,133 @@
 /*
  * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *                                                                         
- * Licensed under the Apache License, Version 2.0 (the "License");         
- * you may not use this file except in compliance with the License.        
- * You may obtain a copy of the License at                                 
- *                                                                         
- * http://www.apache.org/licenses/LICENSE-2.0                              
- *                                                                         
- * Unless required by applicable law or agreed to in writing, software     
- * distributed under the License is distributed on an "AS IS" BASIS,       
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and     
+ * See the License for the specific language governing permissions and
  * limitations under the License.
  */
 
 package org.wso2.identity.integration.test.rest.api.user.challenge.v1;
 
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Factory;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import io.restassured.response.Response;
+import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpHeaders;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.wso2.identity.integration.test.rest.api.user.common.RESTAPIUserTestBase;
 
 import java.io.IOException;
-import java.util.Base64;
-import javax.xml.xpath.XPathExpressionException;
 
-/**
- * Test REST API for managing an specific user's challenge question answers
- */
-public class UserChallengeTest extends UserMeChallengeTest {
+import static io.restassured.RestAssured.given;
 
-    @Factory(dataProvider = "restAPIUserConfigProvider")
-    public UserChallengeTest(TestUserMode userMode) throws Exception {
-        super(userMode);
+public class UserChallengeTest extends RESTAPIUserTestBase {
+
+    static final String API_DEFINITION_NAME = "challenge.yaml";
+    static final String API_VERSION = "v1";
+    static String API_PACKAGE_NAME = "org.wso2.carbon.identity.rest.api.user.challenge.v1";
+
+    public static final String CHALLENGES_ENDPOINT_URI = "/%s/challenges";
+    public static final String CHALLENGE_ANSWERS_ENDPOINT_URI = "/%s/challenge-answers";
+
+    protected String userChallengesEndpointURI;
+    protected String userChallengeAnswerEndpointURI;
+    protected String userChallengeAnswersEndpointURI;
+
+    protected static String swaggerDefinition;
+
+    static {
+        try {
+            swaggerDefinition = getAPISwaggerDefinition(API_PACKAGE_NAME, API_DEFINITION_NAME);
+        } catch (IOException e) {
+            Assert.fail(String.format("Unable to read the swagger definition %s from %s", API_DEFINITION_NAME,
+                    API_PACKAGE_NAME), e);
+        }
     }
 
-    @BeforeClass(alwaysRun = true)
-    @Override
-    public void
+    void initUrls(String pathParam) {
 
-    init() throws IOException, XPathExpressionException {
-
-        super.testInit(API_VERSION, API_PACKAGE_NAME, API_DEFINITION_NAME, tenant);
-        String user = MultitenantUtils.getTenantAwareUsername(context.getContextTenant().getTenantUserList().get(0)
-                .getUserName());
-        String userID = Base64.getEncoder().encodeToString(user.getBytes());
-        initUrls(userID);
+        this.userChallengesEndpointURI = String.format(CHALLENGES_ENDPOINT_URI, pathParam);
+        this.userChallengeAnswersEndpointURI = String.format(CHALLENGE_ANSWERS_ENDPOINT_URI, pathParam);
+        this.userChallengeAnswerEndpointURI = this.userChallengeAnswersEndpointURI + "/%s";
     }
 
-    @DataProvider(name = "restAPIUserConfigProvider")
-    public static Object[][] restAPIUserConfigProvider() {
-        return new Object[][]{
-                {TestUserMode.SUPER_TENANT_ADMIN},
-                {TestUserMode.TENANT_ADMIN}
-        };
+    @AfterClass(alwaysRun = true)
+    public void testConclude() throws Exception {
+
+        super.conclude();
+    }
+
+    @BeforeMethod(alwaysRun = true)
+    public void testInit() {
+
+        RestAssured.basePath = basePath;
+    }
+
+    @AfterMethod(alwaysRun = true)
+    public void testFinish() {
+
+        RestAssured.basePath = StringUtils.EMPTY;
+    }
+
+    protected Response getResponseOfGet(String endpointUri) {
+        return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.ACCEPT, ContentType.JSON)
+                .log().ifValidationFails()
+                .filter(validationFilter)
+                .when()
+                .get(endpointUri);
+    }
+
+    protected Response getResponseOfPost(String endpointUri, String body) {
+
+        return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.ACCEPT, ContentType.JSON)
+                .body(body)
+                .log().ifValidationFails()
+                .filter(validationFilter)
+                .log().ifValidationFails()
+                .when()
+                .log().ifValidationFails()
+                .post(endpointUri);
+    }
+
+    protected Response getResponseOfPut(String endpointURI, String body) {
+
+        return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.ACCEPT, ContentType.JSON)
+                .body(body)
+                .log().ifValidationFails()
+                .filter(validationFilter)
+                .log().ifValidationFails()
+                .when()
+                .log().ifValidationFails()
+                .put(endpointURI);
+    }
+
+    protected Response getResponseOfDelete(String endpointURI) {
+
+        return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.ACCEPT, ContentType.JSON)
+                .log().ifValidationFails()
+                .filter(validationFilter)
+                .log().ifValidationFails()
+                .when()
+                .log().ifValidationFails()
+                .delete(endpointURI);
     }
 }
