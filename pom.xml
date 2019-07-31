@@ -1823,7 +1823,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>5.13.63</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.13.64</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.13.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
@@ -2041,7 +2041,7 @@
         <version.org.wso2.orbit.javax.jta>1.1.0.wso2v1</version.org.wso2.orbit.javax.jta>
 
         <!-- REST API feature -->
-        <identity.api.dispatcher.version>0.1.18</identity.api.dispatcher.version>
+        <identity.api.dispatcher.version>0.1.19</identity.api.dispatcher.version>
         <!--Rest API test -->
         <rest.assured.version>3.0.0</rest.assured.version>
     </properties>
