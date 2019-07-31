@@ -458,7 +458,7 @@
 
                                 <!-- User portal feature -->
                                 <featureArtifactDef>
-                                    org.wso2.identity.apps:org.wso2.identity.apps.user.portal.server.feature:${identity.apps.version}
+                                    org.wso2.identity.apps:org.wso2.identity.apps.feature:${identity.apps.version}
                                 </featureArtifactDef>
 
                                 <!-- RESR APIs -->
@@ -772,7 +772,7 @@
 
                                 <feature>
                                     <id>
-                                        org.wso2.identity.apps.user.portal.server.feature.group
+                                        org.wso2.identity.apps.feature.group
                                     </id>
                                     <version>${identity.apps.version}</version>
                                 </feature>
@@ -1305,9 +1305,17 @@
                                 </feature>
 
                                 <feature>
-                                    <id>
-                                        org.wso2.identity.apps.user.portal.server.feature.group
-                                    </id>
+                                    <id>org.wso2.identity.apps.common.server.feature.group</id>
+                                    <version>${identity.apps.version}</version>
+                                </feature>
+
+                                <feature>
+                                    <id>org.wso2.identity.apps.user.portal.server.feature.group</id>
+                                    <version>${identity.apps.version}</version>
+                                </feature>
+
+                                <feature>
+                                    <id>org.wso2.identity.apps.feature.group</id>
                                     <version>${identity.apps.version}</version>
                                 </feature>
 
@@ -1763,7 +1771,7 @@
 
                                 <feature>
                                     <id>
-                                        org.wso2.identity.apps.user.portal.server.feature.group
+                                        org.wso2.identity.apps.feature.group
                                     </id>
                                     <version>${identity.apps.version}</version>
                                 </feature>

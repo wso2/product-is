@@ -1830,7 +1830,7 @@
         <identity.carbon.auth.saml2.version>5.3.1</identity.carbon.auth.saml2.version>
         <identity.inbound.auth.saml.version>5.5.8</identity.inbound.auth.saml.version>
         <identity.agent.sso.version>5.2.3</identity.agent.sso.version>
-        <identity.inbound.auth.oauth.version>6.1.14</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.1.15</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.3.1</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.3.1</identity.inbound.auth.sts.version>
         <identity.outbound.auth.requestpath.basicauth.version>5.2.0</identity.outbound.auth.requestpath.basicauth.version>
@@ -1858,7 +1858,7 @@
         <identity.oauth2.validators.xacml.version>2.1.2</identity.oauth2.validators.xacml.version>
         <org.wso2.carbon.extension.identity.x509certificate.version>1.0.4</org.wso2.carbon.extension.identity.x509certificate.version>
         <wso2.json.merge.plugin.version>5.2.5</wso2.json.merge.plugin.version>
-        <identity.apps.version>0.1.11</identity.apps.version>
+        <identity.apps.version>0.1.13</identity.apps.version>
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
         <!--<identity.userstore.cassandra.version>5.1.1</identity.userstore.cassandra.version>-->
