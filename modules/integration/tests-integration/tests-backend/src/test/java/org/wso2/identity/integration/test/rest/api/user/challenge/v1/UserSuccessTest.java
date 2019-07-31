@@ -29,10 +29,10 @@ import javax.xml.xpath.XPathExpressionException;
 /**
  * Test REST API for managing an specific user's challenge question answers
  */
-public class UserChallengeSuccessTest extends UserMeChallengeSuccessTest {
+public class UserSuccessTest extends UserMeSuccessTest {
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
-    public UserChallengeSuccessTest(TestUserMode userMode) throws Exception {
+    public UserSuccessTest(TestUserMode userMode) throws Exception {
         super(userMode);
     }
 

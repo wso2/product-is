@@ -37,8 +37,8 @@ import java.io.IOException;
 import javax.xml.xpath.XPathExpressionException;
 
 public class UserMeNegativeTest extends UserChallengeTest {
-    private String user;
-    private String role;
+    protected String user;
+    protected String role;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public UserMeNegativeTest(TestUserMode userMode, String userName, String password, String role, String permission,
@@ -96,9 +96,9 @@ public class UserMeNegativeTest extends UserChallengeTest {
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
         return new Object[][]{
-                {TestUserMode.SUPER_TENANT_USER, "restApiUser1", "pass123", "testLoginRole",
+                {TestUserMode.SUPER_TENANT_USER, "restApiMeUser1", "pass123", "testLoginRole",
                         "/permission/admin/login", true},
-                {TestUserMode.TENANT_USER, "restApiUser1", "pass123", "testLoginRole",
+                {TestUserMode.TENANT_USER, "restApiMeUser1", "pass123", "testLoginRole",
                         "/permission/admin/login", true}
         };
     }
