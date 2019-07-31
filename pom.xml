@@ -1763,6 +1763,11 @@
                 <version>${rest.assured.version}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.is</groupId>
+                <artifactId>org.wso2.identity.jaggery.apps.feature</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
