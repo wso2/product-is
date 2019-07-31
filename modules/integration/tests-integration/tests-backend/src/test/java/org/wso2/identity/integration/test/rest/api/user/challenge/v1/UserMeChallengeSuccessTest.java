@@ -17,10 +17,8 @@
 package org.wso2.identity.integration.test.rest.api.user.challenge.v1;
 
 import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
-import io.restassured.response.Response;
+import org.apache.axis2.AxisFault;
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
@@ -29,59 +27,33 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.identity.integration.test.rest.api.user.common.RESTAPIUserTestBase;
 
 import java.io.IOException;
-
 import javax.xml.xpath.XPathExpressionException;
 
-import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.core.Is.is;
 
 /**
  * Test REST API for managing logged in user's challenge question answers
  */
-public class UserMeChallengeTest extends RESTAPIUserTestBase {
-
-    static final String API_DEFINITION_NAME = "challenge.yaml";
-    static final String API_VERSION = "v1";
-    static String API_PACKAGE_NAME = "org.wso2.carbon.identity.rest.api.user.challenge.v1";
-
-    public static final String CHALLENGES_ENDPOINT_URI = "/%s/challenges";
-    public static final String CHALLENGE_ANSWERS_ENDPOINT_URI = "/%s/challenge-answers";
-    public static final String CHALLENGE_ANSWER_ENDPOINT_URI = CHALLENGE_ANSWERS_ENDPOINT_URI + "/%s";
-
-    protected String adminUsername;
-    protected String adminPassword;
-    protected String tenant;
-
-    private String userChallengesEndpointURI;
-    private String userChallengeAnswerEndpointURI;
-    private String userChallengeAnswersEndpointURI;
+public class UserMeChallengeSuccessTest extends UserChallengeTest {
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
-    public UserMeChallengeTest(TestUserMode userMode) throws Exception {
-
-        context = new AutomationContext("IDENTITY", userMode);
-        this.adminUsername = context.getContextTenant().getTenantAdmin().getUserName();
-        this.adminPassword = context.getContextTenant().getTenantAdmin().getPassword();
+    public UserMeChallengeSuccessTest(TestUserMode userMode) throws Exception {
+        super.init(userMode);
+        this.context = isServer;
+        this.authenticatingUserName = context.getContextTenant().getTenantAdmin().getUserName();
+        this.authenticatingCredential = context.getContextTenant().getTenantAdmin().getPassword();
         this.tenant = context.getContextTenant().getDomain();
     }
 
     @BeforeClass(alwaysRun = true)
-    public void init() throws IOException, XPathExpressionException {
+    public void init() throws XPathExpressionException, AxisFault {
 
-        super.testInit(API_VERSION, API_PACKAGE_NAME, API_DEFINITION_NAME, tenant);
+        super.testInit(API_VERSION, swaggerDefinition, tenant);
         initUrls("me");
-    }
-
-    void initUrls(String pathParam) {
-        this.userChallengesEndpointURI = String.format(CHALLENGES_ENDPOINT_URI, pathParam);
-        this.userChallengeAnswersEndpointURI = String.format(CHALLENGE_ANSWERS_ENDPOINT_URI, pathParam);
-        this.userChallengeAnswerEndpointURI = this.userChallengeAnswersEndpointURI + "/%s";
     }
 
     @AfterClass(alwaysRun = true)
@@ -249,50 +221,4 @@ public class UserMeChallengeTest extends RESTAPIUserTestBase {
                 .statusCode(HttpStatus.SC_OK)
                 .body("size()", is(0));
     }
-
-    private Response getResponseOfGet(String endpointUri) {
-        return given().auth().preemptive().basic(adminUsername, adminPassword)
-                .contentType(ContentType.JSON)
-                .header(HttpHeaders.ACCEPT, ContentType.JSON)
-                .log().ifValidationFails()
-                .filter(validationFilter)
-                .when()
-                .get(endpointUri);
-    }
-
-    private Response getResponseOfPost(String endpointUri, String body) {
-
-        return given().auth().preemptive().basic(adminUsername, adminPassword)
-                .contentType(ContentType.JSON)
-                .header(HttpHeaders.ACCEPT, ContentType.JSON)
-                .log().ifValidationFails()
-                .body(body)
-                .filter(validationFilter)
-                .when()
-                .post(endpointUri);
-    }
-
-    private Response getResponseOfPut(String endpointURI, String body) {
-
-        return given().auth().preemptive().basic(adminUsername, adminPassword)
-                .contentType(ContentType.JSON)
-                .header(HttpHeaders.ACCEPT, ContentType.JSON)
-                .log().ifValidationFails()
-                .body(body)
-                .filter(validationFilter)
-                .when()
-                .put(endpointURI);
-    }
-
-    private Response getResponseOfDelete(String endpointURI) {
-
-        return given().auth().preemptive().basic(adminUsername, adminPassword)
-                .contentType(ContentType.JSON)
-                .header(HttpHeaders.ACCEPT, ContentType.JSON)
-                .log().ifValidationFails()
-                .filter(validationFilter)
-                .when()
-                .delete(endpointURI);
-    }
-
 }
