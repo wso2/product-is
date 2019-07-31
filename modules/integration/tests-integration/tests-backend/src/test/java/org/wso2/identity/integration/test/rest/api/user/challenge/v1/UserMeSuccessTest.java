@@ -38,10 +38,10 @@ import static org.hamcrest.core.Is.is;
 /**
  * Test REST API for managing logged in user's challenge question answers
  */
-public class UserMeChallengeSuccessTest extends UserChallengeTest {
+public class UserMeSuccessTest extends UserChallengeTest {
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
-    public UserMeChallengeSuccessTest(TestUserMode userMode) throws Exception {
+    public UserMeSuccessTest(TestUserMode userMode) throws Exception {
         super.init(userMode);
         this.context = isServer;
         this.authenticatingUserName = context.getContextTenant().getTenantAdmin().getUserName();
