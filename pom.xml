@@ -1764,6 +1764,17 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>${swagger-core-version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.atlassian.oai</groupId>
+                <artifactId>swagger-request-validator-restassured</artifactId>
+                <version>${swagger-request-validator.version}</version>
+                <scope>test</scope>
+            <dependency>
                 <groupId>org.wso2.is</groupId>
                 <artifactId>org.wso2.identity.jaggery.apps.feature</artifactId>
                 <version>${project.version}</version>
@@ -2048,7 +2059,9 @@
         <!-- REST API feature -->
         <identity.api.dispatcher.version>0.1.19</identity.api.dispatcher.version>
         <!--Rest API test -->
-        <rest.assured.version>3.0.0</rest.assured.version>
+        <rest.assured.version>3.1.0</rest.assured.version>
+        <swagger-core-version>1.5.22</swagger-core-version>
+        <swagger-request-validator.version>1.5.1</swagger-request-validator.version>
     </properties>
 
     <repositories>
