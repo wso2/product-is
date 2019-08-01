@@ -1840,7 +1840,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>5.13.69</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.13.72</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.13.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
