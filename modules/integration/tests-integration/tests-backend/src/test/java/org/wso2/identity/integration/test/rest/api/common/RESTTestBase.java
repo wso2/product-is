@@ -235,7 +235,7 @@ public class RESTTestBase extends ISIntegrationTest {
             placeHolderValues) {
         String expected = StringUtils.EMPTY;
         try {
-            errorProperties.getString(String.format("%s.%s", errorCode, element));
+            expected = errorProperties.getString(String.format("%s.%s", errorCode, element));
         } catch (Throwable e) {
             //Ignore if error properties are not defined
         }
