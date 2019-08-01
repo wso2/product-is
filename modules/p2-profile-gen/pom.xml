@@ -458,12 +458,17 @@
 
                                 <!-- User portal feature -->
                                 <featureArtifactDef>
-                                    org.wso2.identity.apps:org.wso2.identity.apps.user.portal.server.feature:${identity.apps.version}
+                                    org.wso2.identity.apps:org.wso2.identity.apps.feature:${identity.apps.version}
                                 </featureArtifactDef>
 
-                                <!-- RESR APIs -->
+                                <!-- REST APIs -->
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.rest.dispatcher:org.wso2.carbon.identity.rest.api.dispatcher.feature:${identity.api.dispatcher.version}
+                                </featureArtifactDef>
+
+                                <!-- Jaggery Apps-->
+                                <featureArtifactDef>
+                                    org.wso2.is:org.wso2.identity.jaggery.apps.feature:${project.version}
                                 </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
@@ -772,7 +777,7 @@
 
                                 <feature>
                                     <id>
-                                        org.wso2.identity.apps.user.portal.server.feature.group
+                                        org.wso2.identity.apps.feature.group
                                     </id>
                                     <version>${identity.apps.version}</version>
                                 </feature>
@@ -961,6 +966,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.template.mgt.server.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.identity.jaggery.apps.feature.group</id>
+                                    <version>${project.version}</version>
                                 </feature>
                             </features>
                         </configuration>
@@ -1305,9 +1314,17 @@
                                 </feature>
 
                                 <feature>
-                                    <id>
-                                        org.wso2.identity.apps.user.portal.server.feature.group
-                                    </id>
+                                    <id>org.wso2.identity.apps.common.server.feature.group</id>
+                                    <version>${identity.apps.version}</version>
+                                </feature>
+
+                                <feature>
+                                    <id>org.wso2.identity.apps.user.portal.server.feature.group</id>
+                                    <version>${identity.apps.version}</version>
+                                </feature>
+
+                                <feature>
+                                    <id>org.wso2.identity.apps.feature.group</id>
                                     <version>${identity.apps.version}</version>
                                 </feature>
 
@@ -1458,6 +1475,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.template.mgt.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.identity.jaggery.apps.feature.group</id>
+                                    <version>${project.version}</version>
                                 </feature>
                             </features>
                         </configuration>
@@ -1763,7 +1784,7 @@
 
                                 <feature>
                                     <id>
-                                        org.wso2.identity.apps.user.portal.server.feature.group
+                                        org.wso2.identity.apps.feature.group
                                     </id>
                                     <version>${identity.apps.version}</version>
                                 </feature>
@@ -1917,6 +1938,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.template.mgt.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.identity.jaggery.apps.feature.group</id>
+                                    <version>${project.version}</version>
                                 </feature>
                             </features>
                         </configuration>
@@ -2151,6 +2176,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.template.mgt.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.identity.jaggery.apps.feature.group</id>
+                                    <version>${project.version}</version>
                                 </feature>
                             </features>
                         </configuration>

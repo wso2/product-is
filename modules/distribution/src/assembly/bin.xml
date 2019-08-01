@@ -82,17 +82,21 @@
             </includes>
         </fileSet>
 
+        <!-- Bundle the jaggery apps-->
         <fileSet>
-            <directory>../jaggery-apps/user-dashboard/dashboard</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/dashboard
-            </outputDirectory>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/jaggeryapps
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps</outputDirectory>
             <includes>
                 <include>**/**</include>
             </includes>
         </fileSet>
 
         <fileSet>
-            <directory>../jaggery-apps/portal</directory>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/jaggeryapps
+            </directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/portal
             </outputDirectory>
             <includes>
@@ -980,8 +984,11 @@
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
         </file>
+
         <file>
-            <source>../jaggery-apps/user-dashboard/sp_dashboard.xml</source>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/service-providers/sp_dashboard.xml
+            </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/identity/service-providers/
             </outputDirectory>
             <filtered>true</filtered>
