@@ -38,6 +38,7 @@
 		<module>org.wso2.identity.styles.feature</module>
 		<module>org.wso2.identity.utils.feature</module>
 		<module>org.wso2.identity.ui.feature</module>
+		<module>org.wso2.identity.jaggery.apps.feature</module>
 	</modules>
 
 </project>
