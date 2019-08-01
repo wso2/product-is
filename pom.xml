@@ -1774,6 +1774,7 @@
                 <artifactId>swagger-request-validator-restassured</artifactId>
                 <version>${swagger-request-validator.version}</version>
                 <scope>test</scope>
+            </dependency>
             <dependency>
                 <groupId>org.wso2.is</groupId>
                 <artifactId>org.wso2.identity.jaggery.apps.feature</artifactId>
