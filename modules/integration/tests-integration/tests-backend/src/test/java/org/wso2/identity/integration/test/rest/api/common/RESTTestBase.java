@@ -233,6 +233,7 @@ public class RESTTestBase extends ISIntegrationTest {
 
     private void validateElementAgainstErrorProperties(Response response, String errorCode, String element, String...
             placeHolderValues) {
+
         String expected = StringUtils.EMPTY;
         try {
             expected = errorProperties.getString(String.format("%s.%s", errorCode, element));
