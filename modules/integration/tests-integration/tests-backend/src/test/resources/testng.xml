@@ -93,8 +93,6 @@
             <class name="org.wso2.identity.integration.test.user.mgt.ReadWriteLdapBasedUserMgtTestCase"/>
             <class name="org.wso2.identity.integration.test.user.mgt.ReadWriteLDAPUserStoreManagerTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.dcrm.api.OAuthDCRMTestCase"/>
-            <!-- TODO this test has a restart-->
-            <class name="org.wso2.identity.integration.test.auth.RiskBasedLoginTestCase" />
             <!--<class name="org.wso2.identity.integration.test.functions.library.mgt.FunctionLibraryManagementTestCase"/>-->
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenRevocationWithRevokedAccessToken" />
             <class name="org.wso2.identity.integration.test.CrossProtocolLogoutTestCase"/>
@@ -195,6 +193,8 @@
             <class name="org.wso2.identity.integration.test.saml.RegistryMountTestCase"/>
             <!--<class name="org.wso2.identity.integration.test.saml.SAMLECPSSOTestCase"/>-->
             <class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileAdminTestCase"/>
+            <!-- TODO this test has a restart-->
+            <class name="org.wso2.identity.integration.test.auth.RiskBasedLoginTestCase" />
         </classes>
     </test>
 </suite>
