@@ -46,16 +46,16 @@ public class UserMeNegativeTest extends UserChallengeTest {
             throws Exception {
         super.init(userMode);
         this.context = isServer;
-        remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
+        this.remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
 
         if (isAddUser) {
-            if (!remoteUSMServiceClient.isExistingRole(role)) {
+            if (!this.remoteUSMServiceClient.isExistingRole(role)) {
                 PermissionDTO perm = new PermissionDTO();
                 perm.setResourceId(permission);
                 perm.setAction(CarbonConstants.UI_PERMISSION_ACTION);
                 remoteUSMServiceClient.addRole(role, new String[]{}, new PermissionDTO[]{perm});
             }
-            remoteUSMServiceClient.addUser(userName, password, new
+            this.remoteUSMServiceClient.addUser(userName, password, new
                             String[]{role}, null, "default", false);
         }
         this.user = userName;
@@ -74,11 +74,12 @@ public class UserMeNegativeTest extends UserChallengeTest {
     }
 
     @AfterClass(alwaysRun = true)
+    @Override
     public void testConclude() throws Exception {
 
         super.conclude();
-        remoteUSMServiceClient.deleteUser(this.user);
-        remoteUSMServiceClient.deleteRole(this.role);
+        this.remoteUSMServiceClient.deleteUser(this.user);
+        this.remoteUSMServiceClient.deleteRole(this.role);
     }
 
     @BeforeMethod(alwaysRun = true)
