@@ -224,6 +224,9 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
         boolean deleted = deleteWebApp("sample-auth");
         deleted = deleted || deleteWebApp("sample-auth");
         Assert.assertTrue(deleted, "sample-auth webapp deletion failed.");
+
+        log.info("Replacing with default configurations.");
+        serverConfigurationManager.restoreToLastConfiguration(false);
     }
 
     /**

@@ -1336,11 +1336,14 @@
 
         <Resource context="(.*)/api/identity/oauth2/v1.0/(.*)" secured="true" http-method="all"/>
 
-        <Resource context="(.*)/api/users/v1/(.*)" secured="true" http-method="all">
-            <Permissions>/permission/admin/manage/identity/usermgt</Permissions>
+        <Resource context="(.*)/api/users/v1/me/approval-tasks(.*)" secured="true" http-method="all">
+                    <Permissions>/permission/admin/manage/humantask/viewtasks</Permissions>
         </Resource>
         <Resource context="(.*)/api/users/v1/me(.*)" secured="true" http-method="all">
             <Permissions>/permission/admin/login</Permissions>
+        </Resource>
+        <Resource context="(.*)/api/users/v1/(.*)" secured="true" http-method="all">
+            <Permissions>/permission/admin/manage/identity/usermgt</Permissions>
         </Resource>
         <Resource context="(.*)/api/server/v1/(.*)" secured="true" http-method="all">
             <Permissions>/permission/admin/manage/identity/</Permissions>
