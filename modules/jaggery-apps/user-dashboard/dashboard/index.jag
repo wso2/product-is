@@ -86,8 +86,10 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li>
-
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-user"></i>
+                    <a id="user-name" value=<%=session.get(LOGGED_IN_USER) %> type="hidden" />
+                    <a class="dropdown-toggle"
+                    data-toggle="dropdown" href="#"><i
+                    class="icon-user"></i>
                         <%=session.get(LOGGED_IN_USER) %> <b class="caret"></b></a>
                     <ul class="dropdown-menu dropdown-account" role="menu"
                         aria-labelledby="dLabel">
@@ -185,7 +187,9 @@
 
     function checkAuthentication(element) {
 
-        var str = "authenticationHandler.jag";
+        var LoggedUserName = document.getElementById("user-name").getAttribute("value");
+        var str = "authenticationHandler.jag?currentLoggedUser="+ LoggedUserName;
+
         $.ajax({
             type:"GET",
             url:str
@@ -201,7 +205,6 @@
             .always(function () {
 
             });
-
 
     }
 </script>
