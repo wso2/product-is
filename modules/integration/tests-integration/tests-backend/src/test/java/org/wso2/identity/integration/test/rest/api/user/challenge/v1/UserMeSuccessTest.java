@@ -17,6 +17,7 @@
 package org.wso2.identity.integration.test.rest.api.user.challenge.v1;
 
 import io.restassured.RestAssured;
+import io.restassured.response.Response;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpStatus;
