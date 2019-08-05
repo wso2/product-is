@@ -21,11 +21,13 @@ import com.atlassian.oai.validator.restassured.SwaggerValidationFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpHeaders;
 import org.hamcrest.Matcher;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
@@ -45,6 +47,7 @@ import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 import javax.xml.xpath.XPathExpressionException;
 
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.core.StringContains.containsString;
@@ -202,6 +205,102 @@ public class RESTTestBase extends ISIntegrationTest {
         }
     }
 
+    /**
+     * Invoke given endpointUri for GET with Basic authentication, authentication credential being the
+     * authenticatingUserName and authenticatingCredential
+     *
+     * @param endpointUri endpoint to be invoked
+     * @return response
+     */
+    protected Response getResponseOfGet(String endpointUri) {
+        return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.ACCEPT, ContentType.JSON)
+                .log().ifValidationFails()
+                .filter(validationFilter)
+                .when()
+                .get(endpointUri);
+    }
+
+    /**
+     * Invoke given endpointUri for POST with given body and Basic authentication, authentication credential being the
+     * authenticatingUserName and authenticatingCredential
+     *
+     * @param endpointUri endpoint to be invoked
+     * @param body        payload
+     * @return response
+     */
+    protected Response getResponseOfPost(String endpointUri, String body) {
+
+        return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.ACCEPT, ContentType.JSON)
+                .body(body)
+                .log().ifValidationFails()
+                .filter(validationFilter)
+                .log().ifValidationFails()
+                .when()
+                .log().ifValidationFails()
+                .post(endpointUri);
+    }
+
+    /**
+     * Invoke given endpointUri for PUT with given body and Basic authentication, authentication credential being the
+     * authenticatingUserName and authenticatingCredential
+     *
+     * @param endpointUri endpoint to be invoked
+     * @param body        payload
+     * @return response
+     */
+    protected Response getResponseOfPut(String endpointUri, String body) {
+
+        return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.ACCEPT, ContentType.JSON)
+                .body(body)
+                .log().ifValidationFails()
+                .filter(validationFilter)
+                .log().ifValidationFails()
+                .when()
+                .log().ifValidationFails()
+                .put(endpointUri);
+    }
+
+    /**
+     * Invoke given endpointUri for DELETE with given body and Basic authentication, authentication credential being
+     * the authenticatingUserName and authenticatingCredential
+     *
+     * @return response
+     */
+    protected Response getResponseOfDelete(String endpointURI) {
+
+        return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.ACCEPT, ContentType.JSON)
+                .log().ifValidationFails()
+                .filter(validationFilter)
+                .log().ifValidationFails()
+                .when()
+                .log().ifValidationFails()
+                .delete(endpointURI);
+    }
+
+
+    /**
+     * Validate the response to be in the following desired format of Error Response
+     *  {
+     *      "code": "some_error_code",
+     *      "message": "Some Error Message",
+     *      "description": "Some Error Description",
+     *      "traceId"" : "corelation-id",
+     *  }
+     *
+     * @param response             API error response
+     * @param httpStatusCode       http status code
+     * @param errorCode            error code
+     * @param errorDescriptionArgs placeholder values if, error decryption in RESTAPIErrors.properties contains,
+     *                             dynamic values
+     */
     protected void validateErrorResponse(Response response, int httpStatusCode, String errorCode, String...
             errorDescriptionArgs) {
 
@@ -212,6 +311,10 @@ public class RESTTestBase extends ISIntegrationTest {
         validateErrorDescription(response, errorCode, errorDescriptionArgs);
     }
 
+    /** Validate http status code of the response
+     * @param response response
+     * @param httpStatusCode expected status code
+     */
     private void validateHttpStatusCode(Response response, int httpStatusCode) {
 
         response
@@ -221,16 +324,35 @@ public class RESTTestBase extends ISIntegrationTest {
                 .statusCode(httpStatusCode);
     }
 
+    /** Validate error description of the response, if an entry is available in RESTAPIErrors.properties
+     * @param response response
+     * @param errorCode error code
+     * @param placeHolders values to be replaced in the error description in the corresponding entry in RESTAPIErrors
+     *                     .properties
+     */
     private void validateErrorDescription(Response response, String errorCode, String... placeHolders) {
 
         validateElementAgainstErrorProperties(response, errorCode, "description", placeHolders);
     }
 
+    /** Validate error message of the response, if an entry is available in RESTAPIErrors.properties
+     * @param response response
+     * @param errorCode error code
+     */
     private void validateErrorMessage(Response response, String errorCode) {
 
         validateElementAgainstErrorProperties(response, errorCode, "message");
     }
 
+    /**
+     * Validate elements in error response against entries in RESTAPIErrors.properties
+     * @param response response
+     * @param errorCode API error code
+     * @param element element
+     * @param placeHolderValues placeholder values
+     *                          arg[0], key element in the RESTAPIErrors.properties (error-code.arg[0])
+     *                          arg[1-n] place holder values to replace in value in the RESTAPIErrors.properties
+     */
     private void validateElementAgainstErrorProperties(Response response, String errorCode, String element, String...
             placeHolderValues) {
 
@@ -238,7 +360,7 @@ public class RESTTestBase extends ISIntegrationTest {
         try {
             expected = errorProperties.getString(String.format("%s.%s", errorCode, element));
         } catch (Throwable e) {
-            //Ignore if error properties are not defined
+            //Ignore if error properties are not defined as keys in RESTAPIErrors.properties
         }
         if (StringUtils.isNotEmpty(expected)) {
             expected = String.format(expected, placeHolderValues);
@@ -246,6 +368,12 @@ public class RESTTestBase extends ISIntegrationTest {
         }
     }
 
+    /**
+     * Validate a response element against a matcher
+     * @param response response
+     * @param element JSON path element to match
+     * @param responseAwareMatcher expected matcher
+     */
     protected void validateResponseElement(Response response, String element, Matcher
             responseAwareMatcher) {
 
