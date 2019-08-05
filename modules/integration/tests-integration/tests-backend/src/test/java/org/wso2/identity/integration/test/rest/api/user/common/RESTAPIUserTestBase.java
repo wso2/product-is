@@ -38,4 +38,5 @@ public class RESTAPIUserTestBase extends RESTTestBase {
                 tenantDomain, apiVersion);
         super.init(apiDefinition, basePathInSwagger, basePath);
     }
+
 }
