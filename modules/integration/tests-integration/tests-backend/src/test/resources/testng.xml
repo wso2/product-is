@@ -106,6 +106,7 @@
             <class name="org.wso2.identity.integration.test.rest.api.user.challenge.v1.UserSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.challenge.v1.UserMeNegativeTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.challenge.v1.UserNegativeTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.claim.management.v1.ClaimManagementSuccessTest"/>
         </classes>
     </test>
 
