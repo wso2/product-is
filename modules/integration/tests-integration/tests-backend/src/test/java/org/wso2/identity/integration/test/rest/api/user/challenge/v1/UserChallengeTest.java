@@ -25,6 +25,7 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.user.common.RESTAPIUserTestBase;
 
 import java.io.IOException;
@@ -80,54 +81,4 @@ public class UserChallengeTest extends RESTAPIUserTestBase {
         RestAssured.basePath = StringUtils.EMPTY;
     }
 
-    protected Response getResponseOfGet(String endpointUri) {
-        return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
-                .contentType(ContentType.JSON)
-                .header(HttpHeaders.ACCEPT, ContentType.JSON)
-                .log().ifValidationFails()
-                .filter(validationFilter)
-                .when()
-                .get(endpointUri);
-    }
-
-    protected Response getResponseOfPost(String endpointUri, String body) {
-
-        return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
-                .contentType(ContentType.JSON)
-                .header(HttpHeaders.ACCEPT, ContentType.JSON)
-                .body(body)
-                .log().ifValidationFails()
-                .filter(validationFilter)
-                .log().ifValidationFails()
-                .when()
-                .log().ifValidationFails()
-                .post(endpointUri);
-    }
-
-    protected Response getResponseOfPut(String endpointURI, String body) {
-
-        return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
-                .contentType(ContentType.JSON)
-                .header(HttpHeaders.ACCEPT, ContentType.JSON)
-                .body(body)
-                .log().ifValidationFails()
-                .filter(validationFilter)
-                .log().ifValidationFails()
-                .when()
-                .log().ifValidationFails()
-                .put(endpointURI);
-    }
-
-    protected Response getResponseOfDelete(String endpointURI) {
-
-        return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
-                .contentType(ContentType.JSON)
-                .header(HttpHeaders.ACCEPT, ContentType.JSON)
-                .log().ifValidationFails()
-                .filter(validationFilter)
-                .log().ifValidationFails()
-                .when()
-                .log().ifValidationFails()
-                .delete(endpointURI);
-    }
 }
