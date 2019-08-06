@@ -28,12 +28,13 @@ import javax.xml.xpath.XPathExpressionException;
 public class RESTAPIUserTestBase extends RESTTestBase {
 
     protected static final String API_USERS_BASE_PATH = "/api/users/%s";
+    protected static final String API_USERS_BASE_PATH_IN_SWAGGER = "/t/\\{tenant-domain\\}" + API_USERS_BASE_PATH;
     protected static final String API_USERS_BASE_PATH_WITH_TENANT_CONTEXT = TENANT_CONTEXT_IN_URL + API_USERS_BASE_PATH;
 
     protected void testInit(String apiVersion, String apiDefinition, String tenantDomain)
             throws XPathExpressionException, AxisFault {
 
-        String basePathInSwagger = String.format(API_USERS_BASE_PATH, apiVersion);
+        String basePathInSwagger = String.format(API_USERS_BASE_PATH_IN_SWAGGER, apiVersion);
         String basePath = String.format(API_USERS_BASE_PATH_WITH_TENANT_CONTEXT,
                 tenantDomain, apiVersion);
         super.init(apiDefinition, basePathInSwagger, basePath);
