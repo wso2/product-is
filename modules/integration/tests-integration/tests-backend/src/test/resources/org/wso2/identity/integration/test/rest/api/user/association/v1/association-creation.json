@@ -1,0 +1,10 @@
+{
+  "userId": "TestUser",
+  "password": "Test123",
+  "properties": [
+    {
+      "key": "string",
+      "value": "string"
+    }
+  ]
+}

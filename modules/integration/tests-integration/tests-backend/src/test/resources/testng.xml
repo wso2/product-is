@@ -115,6 +115,8 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.challenge.v1.ServerChallengeTestCase"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.challenge.v1.UserMeSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.challenge.v1.UserSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.user.association.v1.UserMeSuccessTestBase"/>
+            <class name="org.wso2.identity.integration.test.rest.api.user.association.v1.UserMeNegativeTestBase"/>
             <!--<class name="org.wso2.identity.integration.test.rest.api.user.challenge.v1.UserMeNegativeTest"/>-->
             <!--<class name="org.wso2.identity.integration.test.rest.api.user.challenge.v1.UserNegativeTest"/>-->
         </classes>
