@@ -17,22 +17,16 @@
 package org.wso2.identity.integration.test.rest.api.user.challenge.v1;
 
 import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
-import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.HttpHeaders;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.user.common.RESTAPIUserTestBase;
 
 import java.io.IOException;
 
-import static io.restassured.RestAssured.given;
-
-public class UserChallengeTest extends RESTAPIUserTestBase {
+public class UserChallengeTestBase extends RESTAPIUserTestBase {
 
     static final String API_DEFINITION_NAME = "challenge.yaml";
     static final String API_VERSION = "v1";
