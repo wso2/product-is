@@ -3,8 +3,8 @@
   "password": "Test123",
   "properties": [
     {
-      "key": "string",
-      "value": "string"
+      "key": "key",
+      "value": "value"
     }
   ]
 }
