@@ -17,7 +17,6 @@
 package org.wso2.identity.integration.test.rest.api.user.challenge.v1;
 
 import io.restassured.RestAssured;
-import io.restassured.response.Response;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpStatus;
@@ -39,7 +38,7 @@ import static org.hamcrest.core.Is.is;
 /**
  * Test REST API for managing logged in user's challenge question answers
  */
-public class UserMeSuccessTest extends UserChallengeTest {
+public class UserMeSuccessTest extends UserChallengeTestBase {
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public UserMeSuccessTest(TestUserMode userMode) throws Exception {
