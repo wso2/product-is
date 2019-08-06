@@ -1,0 +1,67 @@
+<!--
+  ~ Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<processor>
+    <!-- Add the indexing config element -->
+    <add>
+        <after>//wso2registry/staticConfiguration</after>
+        <value>
+            <![CDATA[
+                <indexingConfiguration>
+                        <startIndexing>false</startIndexing>
+                        <startingDelayInSeconds>35</startingDelayInSeconds>
+                        <indexingFrequencyInSeconds>5</indexingFrequencyInSeconds>
+                        <!--number of resources submit for given indexing thread -->
+                        <batchSize>40</batchSize>
+                        <!--number of worker threads for indexing -->
+                        <indexerPoolSize>40</indexerPoolSize>
+                        <!-- location storing the time the indexing took place-->
+                        <lastAccessTimeLocation>/_system/local/repository/components/org.wso2.carbon.registry/indexing/lastaccesstime</lastAccessTimeLocation>
+                        <!-- the indexers that implement the indexer interface for a relevant media type/(s) -->
+                        <indexers>
+                            <indexer class="org.wso2.carbon.registry.indexing.indexer.MSExcelIndexer" mediaTypeRegEx="application/vnd.ms-excel"/>
+                            <indexer class="org.wso2.carbon.registry.indexing.indexer.MSPowerpointIndexer" mediaTypeRegEx="application/vnd.ms-powerpoint"/>
+                            <indexer class="org.wso2.carbon.registry.indexing.indexer.MSWordIndexer" mediaTypeRegEx="application/msword"/>
+                            <indexer class="org.wso2.carbon.registry.indexing.indexer.PDFIndexer" mediaTypeRegEx="application/pdf"/>
+                            <indexer class="org.wso2.carbon.registry.indexing.indexer.XMLIndexer" mediaTypeRegEx="application/xml"/>
+                            <indexer class="org.wso2.carbon.registry.indexing.indexer.XMLIndexer" mediaTypeRegEx="application/(.)+\+xml"/>
+                            <indexer class="org.wso2.carbon.registry.indexing.indexer.PlainTextIndexer" mediaTypeRegEx="application/swagger\+json"/>
+                            <indexer class="org.wso2.carbon.registry.indexing.indexer.PlainTextIndexer" mediaTypeRegEx="application/(.)+\+json"/>
+                            <indexer class="org.wso2.carbon.registry.indexing.indexer.PlainTextIndexer" mediaTypeRegEx="text/(.)+"/>
+                            <indexer class="org.wso2.carbon.registry.indexing.indexer.PlainTextIndexer" mediaTypeRegEx="application/x-javascript"/>
+                        </indexers>
+                        <exclusions>
+                            <exclusion pathRegEx="/_system/config/repository/dashboards/gadgets/swfobject1-5/.*[.]html"/>
+                            <exclusion pathRegEx="/_system/local/repository/components/org[.]wso2[.]carbon[.]registry/mount/.*"/>
+                        </exclusions>
+                </indexingConfiguration>
+                ]]>
+        </value>
+    </add>
+     <!-- Add the RegistryPolicyHandler -->
+        <add>
+            <before>//wso2registry/staticConfiguration</before>
+            <value>
+                <![CDATA[
+                   <handler class="org.wso2.carbon.identity.entitlement.policy.finder.registry.RegistryPolicyHandler">
+                        <filter class="org.wso2.carbon.identity.entitlement.policy.finder.registry.RegistryPolicyMediaTypeMatcher">
+                            <property name="mediaType">application/xacml-policy+xml</property>
+                        </filter>
+                   </handler>
+                   ]]>
+            </value>
+        </add>
+</processor>
