@@ -41,6 +41,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -57,7 +58,7 @@ import static org.hamcrest.core.StringContains.containsString;
  */
 public class RESTTestBase extends ISIntegrationTest {
 
-    private static final Log log = LogFactory.getLog(RESTTestBase.class);
+    protected static final Log log = LogFactory.getLog(RESTTestBase.class);
 
     private static final String API_WEB_APP_ROOT = File.separator + "repository"
             + File.separator + "deployment" + File.separator + "server" + File.separator + "webapps" + File
@@ -216,6 +217,25 @@ public class RESTTestBase extends ISIntegrationTest {
         return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
                 .contentType(ContentType.JSON)
                 .header(HttpHeaders.ACCEPT, ContentType.JSON)
+                .log().ifValidationFails()
+                .filter(validationFilter)
+                .when()
+                .get(endpointUri);
+    }
+
+    /**
+     * Invoke given endpointUri for GET with Basic authentication, authentication credential being the
+     * authenticatingUserName and authenticatingCredential
+     *
+     * @param endpointUri endpoint to be invoked
+     * @param params request Parameters
+     * @return response
+     */
+    protected Response getResponseOfGet(String endpointUri, Map<String,Object> params) {
+        return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.ACCEPT, ContentType.JSON)
+                .params(params)
                 .log().ifValidationFails()
                 .filter(validationFilter)
                 .when()
