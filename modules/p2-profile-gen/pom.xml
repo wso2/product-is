@@ -974,13 +974,12 @@
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
-<<<<<<< HEAD
                                     <id>org.wso2.identity.jaggery.apps.feature.group</id>
                                     <version>${project.version}</version>
-=======
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.identity.application.authenticator.fido2.server.feature.group</id>
                                     <version>${identity.local.auth.fido.version}</version>
->>>>>>> add client side fido2 implementation
                                 </feature>
                             </features>
                         </configuration>
