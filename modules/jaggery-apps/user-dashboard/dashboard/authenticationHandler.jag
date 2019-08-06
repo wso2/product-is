@@ -10,7 +10,7 @@ function authenticate(){
             throw 'InvalidLogin';
        }
  if(session.get('user') != request.getParameter("currentLoggedUser")){
-             throw 'InvalidUserInTheSession';
+     print('{"success":false, "message":"Invalid user in the session."}');
         }
 }
 
