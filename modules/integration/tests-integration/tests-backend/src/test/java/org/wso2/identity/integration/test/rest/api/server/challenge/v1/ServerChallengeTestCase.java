@@ -88,7 +88,7 @@ public class ServerChallengeTestCase {
                 .contentType(ContentType.JSON)
                 .header(HttpHeaders.ACCEPT, ContentType.JSON)
                 .body(jsonRequrst)
-                .log().all()
+                .log().ifValidationFails()
                 .when()
                 .post(RESOURCE_PATH).
                 then().assertThat().statusCode(HttpStatus.SC_CREATED).log().ifValidationFails();
@@ -118,11 +118,11 @@ public class ServerChallengeTestCase {
         given().auth().preemptive().basic(USER_NAME, PASSWORD).contentType(ContentType.JSON)
                 .header(HttpHeaders.ACCEPT, ContentType.JSON)
                 .body(request)
-                .log().all()
+                .log().ifValidationFails()
                 .when()
                 .put(RESOURCE_PATH + "/{challenge-set-id}", QUESTION_SET_ID)
                 .then()
-                .log().all()
+                .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK).log().ifValidationFails();
         getsChallengeQuestionTest(QUESTION_SET_ID, challengeQuestion, questionID);
@@ -151,11 +151,11 @@ public class ServerChallengeTestCase {
         given().auth().preemptive().basic(USER_NAME, PASSWORD).contentType(ContentType.JSON)
                 .header(HttpHeaders.ACCEPT, ContentType.JSON)
                 .body(json)
-                .log().all()
+                .log().ifValidationFails()
                 .when()
                 .patch(RESOURCE_PATH + "/{challenge-set-id}", QUESTION_SET_ID)
                 .then()
-                .log().all()
+                .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED).log().ifValidationFails();
 
@@ -171,11 +171,11 @@ public class ServerChallengeTestCase {
 
         given().auth().preemptive().basic(USER_NAME, PASSWORD).contentType(ContentType.JSON)
                 .header(HttpHeaders.ACCEPT, ContentType.JSON)
-                .log().all()
+                .log().ifValidationFails()
                 .when()
                 .delete(RESOURCE_PATH + "/{challenge-set-id}", QUESTION_SET_ID)
                 .then()
-                .log().all()
+                .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_NO_CONTENT)
                 .log().ifValidationFails()
@@ -193,11 +193,11 @@ public class ServerChallengeTestCase {
         addsNewChallengeQuestionSetTest();
         given().auth().preemptive().basic(USER_NAME, PASSWORD).contentType(ContentType.JSON)
                 .header(HttpHeaders.ACCEPT, ContentType.JSON)
-                .log().all()
+                .log().ifValidationFails()
                 .when()
                 .delete(RESOURCE_PATH + "/{challenge-set-id}/questions/{question-id}", QUESTION_SET_ID, QUESTION_ID)
                 .then()
-                .log().all()
+                .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_NO_CONTENT)
                 .log().ifValidationFails()
@@ -213,9 +213,9 @@ public class ServerChallengeTestCase {
     public void getsChallengeQuestionByIdTest() throws JSONException {
 
         Response response = given().auth().preemptive().basic(USER_NAME, PASSWORD).contentType(ContentType.JSON)
-                .header(HttpHeaders.ACCEPT, ContentType.JSON).log().all().when().get(RESOURCE_PATH
+                .header(HttpHeaders.ACCEPT, ContentType.JSON).log().ifValidationFails().when().get(RESOURCE_PATH
                         + "/{challenge-set-id}", QUESTION_SET_ID).then()
-                .log().all()
+                .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .and()
@@ -238,8 +238,8 @@ public class ServerChallengeTestCase {
             throws JSONException {
 
         Response response = given().auth().preemptive().basic(USER_NAME, PASSWORD).contentType(ContentType.JSON)
-                .header(HttpHeaders.ACCEPT, ContentType.JSON).log().all().when().get(RESOURCE_PATH).then()
-                .log().all()
+                .header(HttpHeaders.ACCEPT, ContentType.JSON).log().ifValidationFails().when().get(RESOURCE_PATH).then()
+                .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .and()
