@@ -196,7 +196,13 @@
 
         })
             .done(function (data) {
-                $(element).click();
+                if (data) {
+                    if (JSON.parse(data).success === false) {
+                        window.location=('index.jag');
+                    }
+                } else {
+                    $(element).click();
+                }
             })
             .fail(function () {
                 window.location=('index.jag');
