@@ -50,7 +50,11 @@
                         <!--<emma.home>${basedir}/target/emma</emma.home>-->
                         <samples.dir>${basedir}/../samples/product</samples.dir>
                         <extracted.dir>wso2is-${project.version}</extracted.dir>
+                            <java.util.logging.manager>org.apache.logging.log4j.jul.LogManager</java.util.logging.manager>
                     </systemProperties>
+                    <classpathDependencyExcludes>
+                        <classpathDependencyExclude>org.ops4j.pax.logging:pax-logging-api</classpathDependencyExclude>
+                    </classpathDependencyExcludes>
                     <workingDirectory>${basedir}/target</workingDirectory>
                 </configuration>
             </plugin>

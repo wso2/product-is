@@ -98,6 +98,7 @@
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenRevocationWithRevokedAccessToken" />
             <class name="org.wso2.identity.integration.test.CrossProtocolLogoutTestCase"/>
         </classes>
+
     </test>
     <test name="is-test-rest-api" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
