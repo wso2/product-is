@@ -265,6 +265,48 @@ public class RESTTestBase extends ISIntegrationTest {
     }
 
     /**
+     * Invoke given endpointUri for JSON POST request with given body, headers and Basic authentication, authentication
+     * credential being the authenticatingUserName and authenticatingCredential.
+     *
+     * @param endpointUri endpoint to be invoked
+     * @param body        payload
+     * @param headers     list of headers to be added to the request
+     * @return response
+     */
+    protected Response getResponseOfJSONPost(String endpointUri, String body, Map<String, String> headers) {
+
+        return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
+                      .contentType(ContentType.JSON)
+                      .headers(headers)
+                      .body(body)
+                      .when()
+                      .post(endpointUri);
+    }
+
+
+    /**
+     * Invoke given endpointUri for Form POST request with given body, headers and Basic authentication credentials
+     *
+     * @param endpointUri endpoint to be invoked
+     * @param params      map of parameters to be added to the request
+     * @param headers     map of headers to be added to the request
+     * @param username    basic auth username
+     * @param password    basic auth password
+     * @return response
+     */
+    protected Response getResponseOfFormPostWithAuth(String endpointUri, Map<String, String> params, Map<String, String>
+            headers, String username, String password) {
+
+        return given().auth().preemptive().basic(username, password)
+                      .headers(headers)
+                      .params(params)
+                      .when()
+                      .post(endpointUri);
+    }
+
+
+
+    /**
      * Invoke given endpointUri for PUT with given body and Basic authentication, authentication credential being the
      * authenticatingUserName and authenticatingCredential
      *
@@ -303,6 +345,24 @@ public class RESTTestBase extends ISIntegrationTest {
                 .when()
                 .log().ifValidationFails()
                 .delete(endpointURI);
+    }
+
+    /**
+     *
+     * Invoke given endpointUri for DELETE with given body and Basic authentication, authentication credential being
+     * the authenticatingUserName and authenticatingCredential
+     *
+     * @param endpointURI
+     * @param headers
+     * @return response
+     */
+    protected Response getResponseOfDelete(String endpointURI, Map<String, String> headers) {
+
+        return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
+                      .contentType(ContentType.JSON)
+                      .headers(headers)
+                      .when()
+                      .delete(endpointURI);
     }
 
 
