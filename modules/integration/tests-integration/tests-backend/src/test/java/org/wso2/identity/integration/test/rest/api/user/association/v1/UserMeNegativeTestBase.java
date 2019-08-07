@@ -38,7 +38,7 @@ import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.core.Is.is;
 
 /**
- * Test REST API for managing logged in user's challenge question answers
+ * Test REST API for managing user associations.
  */
 public class UserMeNegativeTestBase extends UserAssociationTestBase {
 
