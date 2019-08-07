@@ -21,35 +21,35 @@ package org.wso2.identity.integration.common.clients;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.logging.admin.stub.LoggingAdminStub;
+//import org.wso2.carbon.logging.admin.stub.LoggingAdminStub;
 
 public class LoggingAdminClient {
 
     private static final Log log = LogFactory.getLog(LoggingAdminClient.class);
     private final String serviceName = "LoggingAdmin";
     private String endpoint = null;
-    private LoggingAdminStub loggingAdminStub;
+//    private LoggingAdminStub loggingAdminStub;
 
     public static enum LogLevel {OFF, TRACE, DEBUG, INFO, WARN, ERROR, FATAL}
 
     public LoggingAdminClient(String backEndUrl, String sessionCookie) throws AxisFault {
 
         this.endpoint = backEndUrl + serviceName;
-        loggingAdminStub = new LoggingAdminStub(this.endpoint);
-        AuthenticateStub.authenticateStub(sessionCookie, loggingAdminStub);
+//        loggingAdminStub = new LoggingAdminStub(this.endpoint);
+//        AuthenticateStub.authenticateStub(sessionCookie, loggingAdminStub);
     }
 
     public LoggingAdminClient(String backEndURL, String userName, String password) throws AxisFault {
 
         this.endpoint = backEndURL + serviceName;
-        loggingAdminStub = new LoggingAdminStub(this.endpoint);
-        AuthenticateStub.authenticateStub(userName, password, loggingAdminStub);
+//        loggingAdminStub = new LoggingAdminStub(this.endpoint);
+//        AuthenticateStub.authenticateStub(userName, password, loggingAdminStub);
     }
 
     public boolean updateLoggerData(String loggerName, String logLevel, boolean additivity, boolean persist)
             throws Exception {
 
-        loggingAdminStub.updateLoggerData(loggerName, logLevel, additivity, persist);
+//        loggingAdminStub.updateLoggerData(loggerName, logLevel, additivity, persist);
         return true;
     }
 }
