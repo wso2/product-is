@@ -56,6 +56,7 @@
                 <exclude>**/repository/resources/conf/**</exclude>
                 <exclude>**/deployment.toml</exclude>
                 <exclude>**/metrics.xml</exclude>
+                <exclude>**/log4j2.properties</exclude>
             </excludes>
         </fileSet>
 
@@ -703,6 +704,12 @@
             <filtered>true</filtered>
         </file>
         <file>
+            <source>src/repository/resources/conf/log4j2.properties</source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
+            <destName>log4j2.properties</destName>
+            <filtered>true</filtered>
+        </file>
+        <file>
             <source>target/wso2carbon-core-${carbon.kernel.version}/repository/conf/axis2/axis2.xml
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/axis2/</outputDirectory>
@@ -943,13 +950,13 @@
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/identity</outputDirectory>
         </file>
-        <file>
-            <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/etc/logging-config.xml
-            </source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/etc/
-            </outputDirectory>
-        </file>
+        <!--<file>-->
+            <!--<source>-->
+                <!--../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/etc/logging-config.xml-->
+            <!--</source>-->
+            <!--<outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/etc/-->
+            <!--</outputDirectory>-->
+        <!--</file>-->
         <file>
             <source>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/event-processor.xml
