@@ -1,8 +1,7 @@
 [server]
-pattern = "DEV"  #possible values, DEV,HA,HA_WITH_ANALYTICS
 hostname = "localhost"
 node_ip = "127.0.0.1"
-base_path = "https://localhost:9853"
+base_path = "https://$ref{server.hostname}:${carbon.management.port}"
 
 [super_admin]
 username = "admin"
@@ -28,8 +27,26 @@ connection_name = "uid=admin,ou=system"
 connection_password = "admin"
 base_dn = "dc=wso2,dc=org"      #refers the base dn on which the user and group search bases will be generated
 
+[database.identity_db]
+driver = "org.h2.Driver"
+url = "jdbc:h2:./repository/database/WSO2IDENTITY_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000"
+validation_query = "SELECT 1"
+username = "wso2carbon"
+password = "wso2carbon"
+
+[database.shared_db]
+driver = "org.h2.Driver"
+url = "jdbc:h2:./repository/database/WSO2SHARED_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000"
+validation_query = "SELECT 1"
+username = "wso2carbon"
+password = "wso2carbon"
+
 [keystore.tls]
 name = "wso2carbon.jks"
+password = "wso2carbon"
+
+[truststore]
+name = "client-truststore.jks"
 password = "wso2carbon"
 
 [resource_access_control.scim2_me_post_method]
