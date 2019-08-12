@@ -1847,7 +1847,7 @@
         <identity.carbon.auth.saml2.version>5.3.1</identity.carbon.auth.saml2.version>
         <identity.inbound.auth.saml.version>5.5.9</identity.inbound.auth.saml.version>
         <identity.agent.sso.version>5.2.3</identity.agent.sso.version>
-        <identity.inbound.auth.oauth.version>6.1.18</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.1.14-SNAPSHOT</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.3.1</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.3.1</identity.inbound.auth.sts.version>
         <identity.outbound.auth.requestpath.basicauth.version>5.2.0</identity.outbound.auth.requestpath.basicauth.version>
@@ -1958,7 +1958,7 @@
         <taglibs.version>1.1.2</taglibs.version>
         <google.collect.wso2.version>1.0.0.wso2v2</google.collect.wso2.version>
         <junit.version>4.12</junit.version>
-        <carbon.kernel.version>4.5.0-m2</carbon.kernel.version>
+        <carbon.kernel.version>4.5.0-alpha</carbon.kernel.version>
         <carbon.commons.version>4.7.1</carbon.commons.version>
         <carbon.dashboards.version>2.0.23</carbon.dashboards.version>
         <carbon.p2.plugin.version>5.1.2</carbon.p2.plugin.version>
@@ -1976,7 +1976,7 @@
         <version.commons.logging>1.1.1</version.commons.logging>
         <commons.lang.version>2.6</commons.lang.version>
         <emma.version>2.1.5320</emma.version>
-        <jaggeryjs.version>0.14.2</jaggeryjs.version>
+        <jaggeryjs.version>0.14.3-SNAPSHOT</jaggeryjs.version>
         <stratos.version>2.2.0</stratos.version>
         <ws.module.version>${jaggery.extensions.version}</ws.module.version>
         <oauth.module.version>${jaggery.extensions.version}</oauth.module.version>

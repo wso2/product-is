@@ -515,6 +515,10 @@
                     <groupId>org.eclipse.equinox</groupId>
                     <artifactId>javax.servlet.jsp</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.wso2.carbon</groupId>
+                    <artifactId>org.wso2.carbon.ui</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
