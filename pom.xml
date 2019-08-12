@@ -493,21 +493,8 @@
             <plugins>
                 <plugin>
                     <groupId>org.apache.felix</groupId>
-                    <artifactId>maven-scr-plugin</artifactId>
-                    <version>1.7.2</version>
-                    <executions>
-                        <execution>
-                            <id>generate-scr-scrdescriptor</id>
-                            <goals>
-                                <goal>scr</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
-                    <version>2.3.7</version>
+                    <version>3.2.0</version>
                     <extensions>true</extensions>
                     <configuration>
                         <obrRepository>NONE</obrRepository>
@@ -2042,7 +2029,7 @@
         <jacoco.agent.version>0.8.4</jacoco.agent.version>
         <project.scm.id>my-scm-server</project.scm.id>
         <carbon.business-process.version>4.5.10</carbon.business-process.version>
-        <carbon.analytics-common.version>5.2.2</carbon.analytics-common.version>
+        <carbon.analytics-common.version>5.2.3</carbon.analytics-common.version>
         <osgi.framework.imp.pkg.version.range>[1.7.0, 2.0.0)</osgi.framework.imp.pkg.version.range>
         <osgi.service.component.imp.pkg.version.range>[1.2.0, 2.0.0)</osgi.service.component.imp.pkg.version.range>
         <org.apache.tomcat.wso2.version>7.0.52.wso2v5</org.apache.tomcat.wso2.version>
@@ -2058,7 +2045,7 @@
         <snakeyaml.version>1.16.0.wso2v1</snakeyaml.version>
         <json.version>3.0.0.wso2v1</json.version>
         <carbon.consent.mgt.version>2.2.0</carbon.consent.mgt.version>
-        <carbon.database.utils.version>2.0.9</carbon.database.utils.version>
+        <carbon.database.utils.version>2.0.10</carbon.database.utils.version>
         <carbon.identity.oauth.uma.version>1.1.3</carbon.identity.oauth.uma.version>
         <liberty.maven.plugin.version>2.2</liberty.maven.plugin.version>
         <maven.war.plugin.version>3.2.0</maven.war.plugin.version>
@@ -2069,6 +2056,7 @@
         <!--<carbon.logging.admin.stub.version>4.7.1</carbon.logging.admin.stub.version>-->
         <wso2.shindig.version>2.5.2-wso2v11</wso2.shindig.version>
         <version.org.wso2.orbit.javax.jta>1.1.0.wso2v1</version.org.wso2.orbit.javax.jta>
+        <commons.logging.version.range>[1.2.0,2.0.0)</commons.logging.version.range>
 
         <!-- REST API feature -->
         <identity.api.dispatcher.version>0.1.25</identity.api.dispatcher.version>
