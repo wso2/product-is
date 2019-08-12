@@ -43,13 +43,14 @@
             <groupId>org.wso2.carbon.identity.framework</groupId>
             <artifactId>org.wso2.carbon.identity.application.authentication.framework</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.scr.ds-annotations</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-scr-plugin</artifactId>
-            </plugin>
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
@@ -67,7 +68,7 @@
                             org.osgi.service.component; version="${osgi.service.component.imp.pkg.version.range}",
                             org.wso2.carbon.identity.base; version="${carbon.identity.framework.version.range}",
                             org.wso2.carbon.identity.core.*; version="${carbon.identity.framework.version.range}",
-                            org.apache.commons.logging; version="${version.commons.logging}",
+                            org.apache.commons.logging; version="${commons.logging.version.range}",
                             org.apache.commons.lang; version="${commons.lang.version}",
                             javax.servlet.http.*; version="${sevlet.api.version}",
                             org.wso2.carbon.base,
