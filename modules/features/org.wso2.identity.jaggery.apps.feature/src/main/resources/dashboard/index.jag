@@ -45,7 +45,7 @@
         var isProxyContextPath = "<%=proxyContextPath%>";
     </script>
 
-    <script src="js/jquery-2.1.0.min.js"></script>
+    <script src="js/jquery-3.4.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="<%=proxyContextPath%>/portal/themes/portal/js/shindig.js"></script>
     <script src="js/UESContainer.js"></script>
