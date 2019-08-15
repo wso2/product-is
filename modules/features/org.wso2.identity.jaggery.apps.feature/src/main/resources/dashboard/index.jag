@@ -86,7 +86,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a id="user-name" value=<%=session.get(LOGGED_IN_USER) %> type="hidden" />
+                    <a id="user-name" value=<%=session.get(LOGGED_IN_USER) %> style="display:none;" />
                     <a class="dropdown-toggle"
                     data-toggle="dropdown" href="#"><i
                     class="icon-user"></i>
