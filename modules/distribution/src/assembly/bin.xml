@@ -57,6 +57,8 @@
                 <exclude>**/deployment.toml</exclude>
                 <exclude>**/metrics.xml</exclude>
                 <exclude>**/log4j2.properties</exclude>
+                <exclude>**/catalina.properties</exclude>
+                <exclude>**/repository/components/plugins/org.wso2.carbon.tenant.redirector.servlet*.jar</exclude>
             </excludes>
         </fileSet>
 
@@ -707,6 +709,12 @@
             <source>src/repository/resources/conf/log4j2.properties</source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
             <destName>log4j2.properties</destName>
+            <filtered>true</filtered>
+        </file>
+        <file>
+            <source>src/repository/resources/conf/catalina.properties</source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/tomcat</outputDirectory>
+            <destName>catalina.properties</destName>
             <filtered>true</filtered>
         </file>
         <file>
