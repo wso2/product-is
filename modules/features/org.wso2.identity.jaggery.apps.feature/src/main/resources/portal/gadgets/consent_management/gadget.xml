@@ -23,7 +23,7 @@
     <Content type="html" view="default">
         <![CDATA[
             <link rel="stylesheet" type="text/css" href="js/ui/css/main.css">
-            <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jquery-ui-1.10.3.custom.min.css">
+            <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jquery-ui-1.12.1.custom.min.css">
             <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jqueryui-themeroller.css">
             <link rel="stylesheet" type="text/css" href="js/ui/css/dialog.css">
             <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap.css">
@@ -60,8 +60,8 @@
     <Content type="html" view="home">
         <![CDATA[
             <script type="text/javascript" src="/portal/csrf.js"></script>
-            <script type="text/javascript" src="js/ui/js/vendor/jquery-ui-1.10.4.custom/js/jquery-1.10.2.js"></script>
-            <script type="text/javascript" src="js/ui/js/vendor/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.js"></script>
+            <script type="text/javascript" src="js/ui/js/vendor/jquery-ui-1.12.1.custom/js/jquery-3.4.1.js"></script>
+            <script type="text/javascript" src="js/ui/js/vendor/jquery-ui-1.12.1.custom/js/jquery-ui-1.12.1.custom.js"></script>
             <script type="text/javascript" src="js/ui/js/vendor/bootstrap.min.js"></script>
             <script type="text/javascript" src="js/ui/js/vendor/handlebars-v4.0.11.js"></script>
             <script type="text/javascript" src="js/ui/js/vendor/jstree/dist/jstree.min.js"></script>
@@ -80,7 +80,7 @@
             <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-missing.css">
             <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-theme.min.css">
             <link rel="stylesheet" type="text/css" href="js/ui/css/dialog.css">
-            <link rel="stylesheet" type="text/css" href="js/ui/js/vendor/jquery-ui-1.10.4.custom/css/base/jquery-ui-1.10.4.custom.css">
+            <link rel="stylesheet" type="text/css" href="js/ui/js/vendor/jquery-ui-1.12.1.custom/css/base/jquery-ui-1.12.1.custom.css">
             <link rel="stylesheet" type="text/css" href="js/ui/js/vendor/jstree/dist/themes/default/style.min.css" />
             <link rel="stylesheet" type="text/css" href="js/ui/css/localstyles.css">
 
