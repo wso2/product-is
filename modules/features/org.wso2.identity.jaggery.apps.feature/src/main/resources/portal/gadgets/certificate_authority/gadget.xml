@@ -17,7 +17,7 @@
         <link rel="stylesheet" href="/portal/gadgets/certificate_authority/js/ui/css/bootstrap-theme.min.css">
         <link rel="stylesheet" href="/portal/gadgets/certificate_authority/js/ui/css/dialog.css">
         <link rel="stylesheet" href="/portal/gadgets/certificate_authority/js/ui/font-awesome/css/font-awesome.min.css">
-        <link rel="stylesheet" href="/portal/gadgets/certificate_authority/js/ui/css/smoothness/jquery-ui-1.10.3.custom.min.css">
+        <link rel="stylesheet" href="/portal/gadgets/certificate_authority/js/ui/css/smoothness/jquery-ui-1.12.1.custom.min.css">
         <link rel="stylesheet" href="/portal/gadgets/certificate_authority/js/ui/css/smoothness/jqueryui-themeroller.css">
           <link rel="stylesheet" href="/portal/gadgets/certificate_authority/js/ui/css/dataTables.bootstrap.css">
         <script src="/portal/gadgets/certificate_authority/js/jquery.min.js" type="text/javascript"></script>
@@ -60,7 +60,7 @@
         <link rel="stylesheet" href="/portal/gadgets/certificate_authority/js/ui/css/bootstrap-theme.min.css">
         <link rel="stylesheet" href="/portal/gadgets/certificate_authority/js/ui/css/dialog.css">
         <link rel="stylesheet" href="/portal/gadgets/certificate_authority/js/ui/font-awesome/css/font-awesome.min.css">
-        <link rel="stylesheet" href="/portal/gadgets/certificate_authority/js/ui/css/smoothness/jquery-ui-1.10.3.custom.min.css">
+        <link rel="stylesheet" href="/portal/gadgets/certificate_authority/js/ui/css/smoothness/jquery-ui-1.12.1.custom.min.css">
         <link rel="stylesheet" href="/portal/gadgets/certificate_authority/js/ui/css/smoothness/jqueryui-themeroller.css">
 
 
