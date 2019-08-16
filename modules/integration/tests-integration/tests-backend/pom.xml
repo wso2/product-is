@@ -494,7 +494,7 @@
             <type>aar</type>
             <exclusions>
                 <exclusion>
-                    <groupId>org.apache.tomcat.wso2</groupId>
+                    <groupId>org.wso2.orbit.org.apache.tomcat</groupId>
                     <artifactId>jdbc-pool</artifactId>
                 </exclusion>
                 <exclusion>
@@ -550,6 +550,12 @@
         <dependency>
             <groupId>org.wso2.carbon.identity.framework</groupId>
             <artifactId>org.wso2.carbon.identity.template.mgt</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.ops4j.pax.logging</groupId>
+                    <artifactId>pax-logging-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.automation</groupId>
@@ -653,6 +659,10 @@
                     <groupId>org.wso2.orbit.org.bouncycastle</groupId>
                     <artifactId>bcprov-jdk15on</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.ops4j.pax.logging</groupId>
+                    <artifactId>pax-logging-log4j2</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -692,7 +702,7 @@
             <artifactId>org.wso2.carbon.user.core</artifactId>
             <exclusions>
                 <exclusion>
-                    <groupId>org.apache.tomcat.wso2</groupId>
+                    <groupId>org.wso2.orbit.org.apache.tomcat</groupId>
                     <artifactId>jdbc-pool</artifactId>
                 </exclusion>
                 <exclusion>
