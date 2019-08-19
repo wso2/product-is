@@ -168,7 +168,7 @@ function publishErrorAndShrink(error) {
 }
 
 function downloadData(data, fileName){
-    var blob = new Blob([data]);
+    var blob = new Blob([JSON.stringify(data, null, 2)],{type : 'application/json'});
     var a = document.createElement('a' );
     a.href = window.URL.createObjectURL(blob);
     a.download = fileName; // Set the file name.
