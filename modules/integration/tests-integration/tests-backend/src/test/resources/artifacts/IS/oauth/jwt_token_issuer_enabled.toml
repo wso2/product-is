@@ -45,9 +45,5 @@ password = "wso2carbon"
 name = "wso2carbon.jks"
 password = "wso2carbon"
 
-[truststore]
-name = "client-truststore.jks"
-password = "wso2carbon"
-
 [oauth.token_generation]
 access_token_type = "self_contained"

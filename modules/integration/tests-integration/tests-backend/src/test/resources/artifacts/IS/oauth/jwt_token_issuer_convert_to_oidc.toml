@@ -45,10 +45,6 @@ password = "wso2carbon"
 name = "wso2carbon.jks"
 password = "wso2carbon"
 
-[truststore]
-name = "client-truststore.jks"
-password = "wso2carbon"
-
 [oauth.oidc.claims]
 enable_oidc_dialect = true
 enable_unmapped_user_attributes = false
