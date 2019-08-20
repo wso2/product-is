@@ -45,9 +45,5 @@ password = "wso2carbon"
 name = "wso2carbon.jks"
 password = "wso2carbon"
 
-[truststore]
-name = "client-truststore.jks"
-password = "wso2carbon"
-
 [identity_mgt.user_onboarding]
 ask_password_from_user = false

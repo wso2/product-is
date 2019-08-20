@@ -45,10 +45,6 @@ password = "wso2carbon"
 name = "wso2carbon.jks"
 password = "wso2carbon"
 
-[truststore]
-name = "client-truststore.jks"
-password = "wso2carbon"
-
 [resource_access_control.scim2_me_post_method]
 secured = false
 permission = ""

@@ -32,7 +32,3 @@ password = "wso2carbon"
 [keystore.tls]
 name = "wso2carbon.jks"
 password = "wso2carbon"
-
-[truststore]
-name = "client-truststore.jks"
-password = "wso2carbon"
