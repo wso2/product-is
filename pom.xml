@@ -2041,7 +2041,7 @@
         <version.org.wso2.orbit.javax.jta>1.1.0.wso2v1</version.org.wso2.orbit.javax.jta>
 
         <!-- REST API feature -->
-        <identity.api.dispatcher.version>0.1.18</identity.api.dispatcher.version>
+        <identity.api.dispatcher.version>0.1.29</identity.api.dispatcher.version>
         <!--Rest API test -->
         <rest.assured.version>3.0.0</rest.assured.version>
     </properties>
