@@ -21,15 +21,21 @@ package org.wso2.carbon.identity.sample.extension.auth.internal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.wso2.carbon.identity.application.authentication.framework.ApplicationAuthenticator;
 import org.wso2.carbon.identity.sample.extension.auth.DemoFaceIdAuthenticator;
 import org.wso2.carbon.identity.sample.extension.auth.DemoFingerprintAuthenticator;
 import org.wso2.carbon.identity.sample.extension.auth.DemoHardwareKeyAuthenticator;
 import org.wso2.carbon.identity.sample.extension.auth.RequestAttributeExtractor;
 
-/**
- * @scr.component name="identity.sample.auth.extension.component" immediate="true"
- */
+
+@Component(
+        name = "identity.sample.auth.extension.component",
+        immediate = true
+
+)
 public class SampleExtensionComponent {
 
     private static Log log = LogFactory.getLog(SampleExtensionComponent.class);
@@ -37,6 +43,7 @@ public class SampleExtensionComponent {
     /**
      * @param componentContext Bundle component context.
      */
+    @Activate
     protected void activate(ComponentContext componentContext) {
 
         try {
@@ -63,6 +70,7 @@ public class SampleExtensionComponent {
     /**
      * @param componentContext Bundle component context.
      */
+    @Deactivate
     protected void deactivate(ComponentContext componentContext) {
 
         log.info("The Sample Authenticator extension is de-activated.");

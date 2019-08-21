@@ -18,7 +18,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>wso2is-workflow-samples</artifactId>
-        <version>5.9.0-m4-SNAPSHOT</version>
+        <version>5.9.0-m8-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -49,11 +49,6 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-scr-plugin</artifactId>
-                <version>1.22.0</version>
-            </plugin>
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>

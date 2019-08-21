@@ -1,0 +1,400 @@
+@media screen {
+    @font-face {
+        font-family: 'Lato';
+        font-style: normal;
+        font-weight: normal;
+        src: url('../font/Lato-Reg-webfont.eot');
+        src: url('../font/Lato-Reg-webfont.eot?#iefix') format('embedded-opentype'), url('../font/Lato-Reg-webfont.woff') format('woff'), url('../font/Lato-Reg-webfont.ttf') format('truetype'), url('../font/Lato-Reg-webfont.svg#cherokee') format('svg');
+    }
+
+    @font-face {
+        font-family: 'Lato';
+        font-style: normal;
+        font-weight: bold;
+        src: url('../font/Lato-Bol-webfont.eot');
+        src: url('../font/Lato-Bol-webfont.eot?#iefix') format('embedded-opentype'), url('../font/Lato-Bol-webfont.woff') format('woff'), url('../font/Lato-Bol-webfont.ttf') format('truetype'), url('../font/Lato-Bol-webfont.svg#cherokee') format('svg');
+    }
+}
+
+a, a:visited, a:active {
+    color:#16a085;
+}
+.alert{
+    display:none;
+    clear:both;
+}
+.alert-info {
+    position:relative;
+}
+    .alert-info .close {
+        position:absolute;
+        right:15px;
+        top:10px;
+    }
+    .alert-info span {
+        display:block;
+        margin:0 auto;
+        text-align:center;
+        width:300px;
+    }
+body {
+    font:15px/1.531 'Lato', sans-serif;
+    color:#34495E;
+    height:100%;
+    background-color:#ecf0f1 !important;
+    /*padding-left: 25px;*/
+}
+.border-radius-4 {
+    border-radius:4px;
+    -moz-border-radius:4px;
+    -webkit-border-radius:4px;
+}
+#btn-follow {
+    border:1px solid #ccc;
+    color:#979797;
+    background:#ffffff;
+}
+    #btn-follow a {
+        padding:0 5px;
+    }
+.btn-footer {
+    font-weight:600;
+    padding:5px;
+}
+    .btn-footer  i {
+        font-size:22px;
+        line-height:22px;
+        vertical-align:middle;
+    }
+    .btn-footer:hover {
+        text-decoration:none;
+        opacity:.8;
+    }
+#btn-github {
+    background:#16a085;
+    margin-right:20px;
+    color:#ffffff;
+}
+#btn-github {
+    background:#31B2FD;
+    margin-right:20px;
+    color:#ffffff;
+}
+.modal {
+    border-radius:0;
+    /*z-index: 9005;*/
+
+}
+.modal-backdrop{
+    /*z-index: 9004;*/
+}
+
+.navbar-fixed-top, .navbar-fixed-bottom{
+    z-index: 90;
+}
+.btn{
+    border-radius:3px !important;
+     background-image: none;
+}
+.btn-primary {
+    background:none repeat scroll 0 0 #16a085;
+    color:#FFFFFF;
+    text-shadow:none;
+}
+
+.btn-primary:hover, .btn-primary:active, .btn-primary.active, .btn-primary.disabled, .btn-primary[disabled]{
+   background:#07BFAC;
+}
+
+
+footer {
+    border-top:1px solid #16a085;
+    padding-top:30px;
+    width:100%;
+    margin-left:auto;
+    margin-right:auto;
+    margin-bottom:50px;
+}
+    footer.container {
+        width:100%;
+    }
+    footer.row {
+        margin:0 auto;
+    }
+
+h1, h2, h3, h4 {
+    margin-bottom:20px;
+}
+html {
+    height:100%;
+}
+iframe {
+    border:none;
+}
+
+li {
+    list-style:none;
+}
+
+.layout {
+    padding:50px;
+    font-family:Georgia, serif;
+}
+.layout-slider {
+    margin-bottom:60px;
+    width:80%;
+    margin-left:auto;
+    margin-right:auto;
+}
+.layout-slider-settings {
+    font-size:12px;
+    padding-bottom:10px;
+}
+    .layout-slider-settings pre {
+        font-family:Courier;
+    }
+
+select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {
+    border-radius:0;
+}
+
+.txt-center {
+    text-align:center;
+}
+.txt-right {
+    text-align:right;
+}
+ul {
+    margin:0;
+}
+    ul li {
+        list-style:none;
+    }
+
+.error {
+    background: none repeat scroll 0 0 #FFF0C4;
+    border-top: 1px solid #F2C976;
+    color: #333333;
+    font-size: 13px;
+    padding: 0 6px;
+    margin-top:0;
+}
+.elfinder .container-fluid{
+    padding:0;
+}
+
+/** if apply these jaggery editor styles will broke */
+/*.nav-tabs {
+    border-bottom: 1px solid #009E92;
+}
+.nav-tabs li {
+    margin-bottom: -2px;
+}
+
+.nav-tabs > li > a {
+    font-weight: 600;
+    border-radius: 0 0 0 0;
+    font-size: 18px;
+    color: #009E92;
+    border-color: #FFFFFF;
+    padding: 20px 25px;
+}
+.nav-tabs > li > a:hover {
+    background: none;
+    color: #07BFAC;
+    border-color: #FFF;
+}
+.nav-tabs > li.active > a:hover {
+    color: #07BFAC;
+}
+
+.nav-tabs > li > a:first-child {
+    margin-left: -15px;
+    margin-right: 15px;
+}
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover {
+    border-color: #009E92;
+    border-image: none;
+    border-style: none none solid;
+    border-width: medium medium 4px;
+    color: #009E92;
+}*/
+
+
+#logo-wso2{
+      background: url("../img/wso2-logo-small.png") no-repeat scroll left top transparent;
+    display: inline-block;
+    height: 17px;
+    width: 41px;
+    margin-top:4px;
+}
+#logo-wso2:hover{
+    background-position:left -18px;
+}
+.row-white{
+    background: #FFFFFF;
+     border: 1px solid #DDDDDD;
+}
+.row-footer{
+  border-bottom:1px solid #ddd !important;
+    border-top:0;
+    padding:15px 0;
+    color:#7f8c8d;
+    background:#FFFFFF;
+       margin-bottom: 20px;
+}
+.row-footer ul{
+margin-right: 18px;
+}
+.row-footer li{
+    display: inline-block;
+    margin-left:20px;
+}
+.row-footer li:last-child{
+        float: right;
+}
+.row-footer li a{
+    color:#7f8c8d;
+}
+.row-footer li a:hover{
+    color:#16a085;
+    text-decoration: none;
+}
+.autosave-wrapper{
+    font-size: 9px;
+    left: 1px;
+    top: 5px;
+    position: absolute;
+}
+.autosave{
+    color : #aaa;
+}
+
+button.close{
+    position:absolute;
+    right:8px;
+    top:5px;
+}
+
+label.error{
+	display:inline-block;
+	background: none repeat scroll 0 0 #F2DEDE;
+    	border-top: 1px solid #EED3D7;
+	color:#B94A48;
+	border-radius:0 0 4px 4px;
+	padding:0 10px 2px;
+}
+
+
+#modal-add-gadget .gadget .gadget-header {
+    display: none;
+}
+#modal-add-gadget .gadgetArea {
+    border: none;
+    margin: 0;
+    height: 100%;
+}
+#modal-add-gadget .gadgetArea:hover {
+    background: none;
+}
+
+#modal-add-gadget .gadget {
+    background: none;
+    box-shadow: none;
+    margin: 0;
+}
+
+#modal-add-gadget .gadget, #modal-add-gadget .gadget-content {
+    height: 100% !important;
+    padding: 0;
+}
+
+#store-gadget-div {
+     position: absolute;
+     width: 100%;
+     height: 100%;
+ }
+
+#modal-add-gadget {
+    left: 50%;
+    margin: auto auto auto -33%;
+    width: 65%;
+    max-height:599px;
+}
+
+#modal-add-gadget h3 {
+
+    line-height: 62px;
+}
+#modal-add-gadget .modal-header {
+    background: #16a085;
+}
+#modal-add-gadget .modal-header h3 {
+    color: #FFFFFF;
+}
+#modal-add-gadget.modal.fade.in {
+    top: 5%; /* fade in to correct spot */
+    bottom: 5%;
+}
+#modal-add-gadget button {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    opacity: 1;
+    color: #ffffff;
+    text-shadow: none;
+    z-index: 1;
+}
+
+
+@media all and (max-width: 1225px) {
+    #modal-add-gadget {
+        left: 2%;
+        margin: auto;
+        width: 96%;
+    }
+
+}
+
+.mandatory {
+    color: #FE3D0D;
+    font-size: 18px;
+    left: 2px;
+    position: relative;
+    top: 0;
+}
+.modal-body{
+	position:relative;
+}
+.info-mandatory{
+	position:absolute;
+	bottom:0;
+	right:10px;
+	font-size:11px;
+}
+.info-mandatory > .mandatory{
+	top: 4px;
+}
+.success-msg-icon{
+	margin-right:8px;
+}
+/*
+@media all and (min-height: 780px){
+    #modal-add-gadget.modal.fade.in {
+        height: 615px !important;
+        bottom:0;
+    }
+    
+    #modal-add-gadget {
+        margin: auto auto auto -40%;
+        width: 79%;
+    }
+}
+*/
+
+/* fixing the book icon in the footer */
+.icon-book {
+    padding-right: 5px;
+}
+
+
