@@ -86,7 +86,7 @@
                 <version>2.2</version>
                 <configuration>
                     <warName>sample-auth</warName>
-                    <packagingExcludes>WEB-INF/lib/commons-logging*.jar</packagingExcludes>
+                    <packagingExcludes>WEB-INF/lib/*.jar</packagingExcludes>
                 </configuration>
             </plugin>
         </plugins>

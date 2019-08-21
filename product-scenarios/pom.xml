@@ -95,7 +95,6 @@
         <axis2.wso2.version>1.6.1-wso2v28</axis2.wso2.version>
         <rampart.wso2.version>1.6.1-wso2v28</rampart.wso2.version>
         <slf4j.version>1.7.25</slf4j.version>
-        <version.commons.logging>1.1.1</version.commons.logging>
         <identity.inbound.auth.saml.version>5.4.31</identity.inbound.auth.saml.version>
         <identity.user.ws.version>5.1.11</identity.user.ws.version>
         <identity.inbound.auth.oauth.version>6.1.18</identity.inbound.auth.oauth.version>
