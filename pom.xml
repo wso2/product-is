@@ -1841,7 +1841,7 @@
 
         <!--Identity Repo Versions-->
         <identity.carbon.auth.saml2.version>5.4.3</identity.carbon.auth.saml2.version>
-        <identity.inbound.auth.saml.version>5.6.6</identity.inbound.auth.saml.version>
+        <identity.inbound.auth.saml.version>5.6.8</identity.inbound.auth.saml.version>
         <identity.agent.sso.version>5.3.0</identity.agent.sso.version>
         <identity.inbound.auth.oauth.version>6.2.7</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.4.1</identity.inbound.auth.openid.version>
