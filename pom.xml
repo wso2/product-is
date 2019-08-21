@@ -1719,11 +1719,6 @@
                 <artifactId>msf4j-microservice</artifactId>
                 <version>${msf4j.version}</version>
             </dependency>
-            <!--<dependency>-->
-                <!--<groupId>org.wso2.carbon.commons</groupId>-->
-                <!--<artifactId>org.wso2.carbon.logging.admin.stub</artifactId>-->
-                <!--<version>${carbon.logging.admin.stub.version}</version>-->
-            <!--</dependency>-->
             <dependency>
                 <groupId>org.wso2.org.apache.shindig</groupId>
                 <artifactId>wso2-extensions</artifactId>
