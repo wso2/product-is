@@ -41,6 +41,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -57,7 +58,7 @@ import static org.hamcrest.core.StringContains.containsString;
  */
 public class RESTTestBase extends ISIntegrationTest {
 
-    private static final Log log = LogFactory.getLog(RESTTestBase.class);
+    protected static final Log log = LogFactory.getLog(RESTTestBase.class);
 
     private static final String API_WEB_APP_ROOT = File.separator + "repository"
             + File.separator + "deployment" + File.separator + "server" + File.separator + "webapps" + File
@@ -223,6 +224,25 @@ public class RESTTestBase extends ISIntegrationTest {
     }
 
     /**
+     * Invoke given endpointUri for GET with Basic authentication, authentication credential being the
+     * authenticatingUserName and authenticatingCredential
+     *
+     * @param endpointUri endpoint to be invoked
+     * @param params request Parameters
+     * @return response
+     */
+    protected Response getResponseOfGet(String endpointUri, Map<String,Object> params) {
+        return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.ACCEPT, ContentType.JSON)
+                .params(params)
+                .log().ifValidationFails()
+                .filter(validationFilter)
+                .when()
+                .get(endpointUri);
+    }
+
+    /**
      * Invoke given endpointUri for POST with given body and Basic authentication, authentication credential being the
      * authenticatingUserName and authenticatingCredential
      *
@@ -243,6 +263,48 @@ public class RESTTestBase extends ISIntegrationTest {
                 .log().ifValidationFails()
                 .post(endpointUri);
     }
+
+    /**
+     * Invoke given endpointUri for JSON POST request with given body, headers and Basic authentication, authentication
+     * credential being the authenticatingUserName and authenticatingCredential.
+     *
+     * @param endpointUri endpoint to be invoked
+     * @param body        payload
+     * @param headers     list of headers to be added to the request
+     * @return response
+     */
+    protected Response getResponseOfJSONPost(String endpointUri, String body, Map<String, String> headers) {
+
+        return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
+                      .contentType(ContentType.JSON)
+                      .headers(headers)
+                      .body(body)
+                      .when()
+                      .post(endpointUri);
+    }
+
+
+    /**
+     * Invoke given endpointUri for Form POST request with given body, headers and Basic authentication credentials
+     *
+     * @param endpointUri endpoint to be invoked
+     * @param params      map of parameters to be added to the request
+     * @param headers     map of headers to be added to the request
+     * @param username    basic auth username
+     * @param password    basic auth password
+     * @return response
+     */
+    protected Response getResponseOfFormPostWithAuth(String endpointUri, Map<String, String> params, Map<String, String>
+            headers, String username, String password) {
+
+        return given().auth().preemptive().basic(username, password)
+                      .headers(headers)
+                      .params(params)
+                      .when()
+                      .post(endpointUri);
+    }
+
+
 
     /**
      * Invoke given endpointUri for PUT with given body and Basic authentication, authentication credential being the
@@ -283,6 +345,24 @@ public class RESTTestBase extends ISIntegrationTest {
                 .when()
                 .log().ifValidationFails()
                 .delete(endpointURI);
+    }
+
+    /**
+     *
+     * Invoke given endpointUri for DELETE with given body and Basic authentication, authentication credential being
+     * the authenticatingUserName and authenticatingCredential
+     *
+     * @param endpointURI
+     * @param headers
+     * @return response
+     */
+    protected Response getResponseOfDelete(String endpointURI, Map<String, String> headers) {
+
+        return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
+                      .contentType(ContentType.JSON)
+                      .headers(headers)
+                      .when()
+                      .delete(endpointURI);
     }
 
 

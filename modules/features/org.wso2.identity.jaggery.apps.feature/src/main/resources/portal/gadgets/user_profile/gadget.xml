@@ -13,7 +13,7 @@
     <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-missing.css">
     <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-theme.min.css">
     <link rel="stylesheet" type="text/css" href="js/ui/css/dialog.css">
-    <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jquery-ui-1.10.3.custom.min.css">
+    <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jquery-ui-1.12.1.custom.min.css">
     <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jqueryui-themeroller.css">
 
     <script type="text/javascript" src="js/jquery.min.js"></script>
@@ -68,7 +68,7 @@
     <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-missing.css">
     <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-theme.min.css">
     <link rel="stylesheet" type="text/css" href="js/ui/css/dialog.css">
-    <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jquery-ui-1.10.3.custom.min.css">
+    <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jquery-ui-1.12.1.custom.min.css">
     <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jqueryui-themeroller.css">
 
     <script>

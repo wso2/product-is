@@ -36,7 +36,7 @@ import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserSto
 import java.io.IOException;
 import javax.xml.xpath.XPathExpressionException;
 
-public class UserMeNegativeTest extends UserChallengeTest {
+public class UserMeNegativeTest extends UserChallengeTestBase {
     protected String user;
     protected String role;
 
