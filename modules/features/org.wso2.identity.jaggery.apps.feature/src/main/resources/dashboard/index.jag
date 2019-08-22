@@ -45,7 +45,7 @@
         var isProxyContextPath = "<%=proxyContextPath%>";
     </script>
 
-    <script src="js/jquery-2.1.0.min.js"></script>
+    <script src="js/jquery-3.4.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="<%=proxyContextPath%>/portal/themes/portal/js/shindig.js"></script>
     <script src="js/UESContainer.js"></script>
@@ -86,7 +86,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a id="user-name" value=<%=session.get(LOGGED_IN_USER) %> type="hidden" />
+                    <a id="user-name" value=<%=session.get(LOGGED_IN_USER) %> style="display:none;" />
                     <a class="dropdown-toggle"
                     data-toggle="dropdown" href="#"><i
                     class="icon-user"></i>

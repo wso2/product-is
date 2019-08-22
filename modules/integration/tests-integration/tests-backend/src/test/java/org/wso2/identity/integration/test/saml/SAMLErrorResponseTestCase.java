@@ -35,6 +35,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.opensaml.xml.util.Base64;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -47,18 +48,23 @@ import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
-import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.BufferedReader;
-import java.io.File;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.DataFormatException;
+import java.util.zip.Inflater;
+import java.util.zip.InflaterInputStream;
 
 import static org.testng.Assert.assertTrue;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.COMMON_AUTH_URL;
@@ -86,6 +92,10 @@ public class SAMLErrorResponseTestCase extends ISIntegrationTest {
     private static final String JAVAX_NET_SSL_TRUSTORE = "javax.net.ssl.trustStore";
     private static final String JAVAX_NET_SSL_TRUSTORE_PASSWORD = "javax.net.ssl.trustStorePassword";
     private static final String JAVAX_NET_SSL_TRUSTORE_TYPE = "javax.net.ssl.trustStoreType";
+    private static final String ERROR_MSG_SAML = "<saml2p:StatusMessage>ALERT: Invalid Assertion Consumer URL value" +
+            " \'http://localhost:8490/travelocity.com/home.jsp\' in the AuthnRequest message from  the issuer" +
+            " \'travelocity.com\'. Possibly an attempt for a spoofing attack</saml2p:StatusMessage>";
+    protected static final String DEFAULT_CHARSET = "UTF-8";
 
     private ApplicationManagementServiceClient applicationManagementServiceClient;
     private SAMLSSOConfigServiceClient ssoConfigServiceClient;
@@ -139,30 +149,19 @@ public class SAMLErrorResponseTestCase extends ISIntegrationTest {
         paramters.put("RelayState", RELAY_STATE);
         response = sendSAMLMessage(SAML_SSO_URL, paramters);
         EntityUtils.consume(response.getEntity());
-        response = sendRedirectRequest(response);
-
-        String sessionKey = extractDataFromResponse(response, "name=\"sessionDataKey\"", 1);
-        response = sendPOSTMessage(sessionKey);
-        EntityUtils.consume(response.getEntity());
-
-        if (Utils.requestMissingClaims(response)) {
-            String pastrCookie = Utils.getPastreCookie(response);
-            Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
-            EntityUtils.consume(response.getEntity());
-
-            response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT,
-                                                    String.format(ACS_URL, ARTIFACT_ID),
-                                                    httpClient, pastrCookie);
-            EntityUtils.consume(response.getEntity());
-        }
-
-        response = sendGetWithoutRedirect(response);
         String location = response.getFirstHeader("Location").getValue();
         assertTrue(location.contains("RelayState=" + RELAY_STATE), "Redirection header to notification.do" +
                 " page should contain RelayState query param sent with the request");
-        assertTrue(location.contains("ACSUrl=" + URLEncoder.encode(String.format(ACS_URL,
-                ARTIFACT_ID), "UTF-8")), "Redirection header to notification.do" +
-                " page should contain ACS query param");
+        String[] array = location.split("&");
+        String samlResponse = null;
+        for (int i=0; i< array.length; i++) {
+            if (array[i].contains("SAMLResponse=")) {
+                samlResponse = array[i].split("SAMLResponse=")[1];
+            }
+        }
+        String decordedSAMLResponse = decode(URLDecoder.decode(samlResponse, DEFAULT_CHARSET));
+        Assert.assertTrue(decordedSAMLResponse.contains(ERROR_MSG_SAML), "SAML response did not contained" +
+                " error message");
     }
 
     private HttpResponse sendGetWithoutRedirect(HttpResponse response) throws IOException {
@@ -294,5 +293,44 @@ public class SAMLErrorResponseTestCase extends ISIntegrationTest {
     private void deleteApplication() throws Exception {
 
         applicationManagementServiceClient.deleteApplication(APPLICATION_NAME);
+    }
+
+    private static String decode(String encodedStr) {
+        try {
+            org.apache.commons.codec.binary.Base64 base64Decoder = new org.apache.commons.codec.binary.Base64();
+            byte[] xmlBytes = encodedStr.getBytes(DEFAULT_CHARSET);
+            byte[] base64DecodedByteArray = base64Decoder.decode(xmlBytes);
+
+            try {
+                Inflater inflater = new Inflater(true);
+                inflater.setInput(base64DecodedByteArray);
+                byte[] xmlMessageBytes = new byte[5000];
+                int resultLength = inflater.inflate(xmlMessageBytes);
+
+                if (!inflater.finished()) {
+                    throw new RuntimeException("End of the compressed data stream has NOT been reached");
+                }
+
+                inflater.end();
+                return new String(xmlMessageBytes, 0, resultLength, (DEFAULT_CHARSET));
+
+            } catch (DataFormatException e) {
+                ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(base64DecodedByteArray);
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                InflaterInputStream iis = new InflaterInputStream(byteArrayInputStream);
+                byte[] buf = new byte[1024];
+                int count = iis.read(buf);
+                while (count != -1) {
+                    byteArrayOutputStream.write(buf, 0, count);
+                    count = iis.read(buf);
+                }
+                iis.close();
+
+                return new String(byteArrayOutputStream.toByteArray(), StandardCharsets.UTF_8);
+            }
+        } catch (IOException e) {
+            Assert.fail("Error while decoding SAML response", e);
+            return "";
+        }
     }
 }
