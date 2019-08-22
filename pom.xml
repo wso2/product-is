@@ -1735,11 +1735,6 @@
                 <version>${wso2.shindig.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.orbit.javax.transaction</groupId>
-                <artifactId>jta</artifactId>
-                <version>${version.org.wso2.orbit.javax.jta}</version>
-            </dependency>
-            <dependency>
                 <groupId>io.rest-assured</groupId>
                 <artifactId>rest-assured</artifactId>
                 <version>${rest.assured.version}</version>
@@ -2060,7 +2055,6 @@
         <carbon.healthcheck.version>1.1.0</carbon.healthcheck.version>
         <!--<carbon.logging.admin.stub.version>4.7.1</carbon.logging.admin.stub.version>-->
         <wso2.shindig.version>2.5.2-wso2v11</wso2.shindig.version>
-        <version.org.wso2.orbit.javax.jta>1.1.0.wso2v1</version.org.wso2.orbit.javax.jta>
         <commons.logging.version.range>[1.2.0,2.0.0)</commons.logging.version.range>
 
         <!-- REST API feature -->
