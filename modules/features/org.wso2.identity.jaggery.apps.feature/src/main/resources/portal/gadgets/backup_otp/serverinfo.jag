@@ -16,6 +16,7 @@ if (log.isDebugEnabled()) {
 
 //create javascript content
 var jsStr = 'var PROXY_CONTEXT_PATH = \"' + ProxyContextPath + '\"' + ';\n';
+jsStr = jsStr + 'var ENABLE_WEBAUTHN = \"' + application.get("enableWebAuthn") + '\"' + ';\n';
 
 
 response.contentType = 'text/javascript';
