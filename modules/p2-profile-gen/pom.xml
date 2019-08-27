@@ -133,6 +133,9 @@
                                     org.wso2.carbon.commons:org.wso2.carbon.logging.updater.feature:${carbon.commons.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
+                                    org.wso2.carbon.commons:org.wso2.carbon.logging.viewer.feature:${carbon.commons.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon.commons:org.wso2.carbon.system.statistics.feature:${carbon.commons.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -563,6 +566,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.logging.updater.feature.group</id>
+                                    <version>${carbon.commons.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.logging.view.feature.group</id>
                                     <version>${carbon.commons.version}</version>
                                 </feature>
                                 <feature>
@@ -1104,6 +1111,10 @@
                                     <version>${carbon.commons.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.logging.view.feature.group</id>
+                                    <version>${carbon.commons.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.databridge.datapublisher.feature.group</id>
                                     <version>${carbon.analytics-common.version}</version>
                                 </feature>
@@ -1597,6 +1608,10 @@
                                     <version>${carbon.commons.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.logging.view.feature.group</id>
+                                    <version>${carbon.commons.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.databridge.datapublisher.feature.group</id>
                                     <version>${carbon.analytics-common.version}</version>
                                 </feature>
@@ -2077,6 +2092,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.logging.updater.feature.group</id>
+                                    <version>${carbon.commons.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.logging.view.feature.group</id>
                                     <version>${carbon.commons.version}</version>
                                 </feature>
                                 <feature>
