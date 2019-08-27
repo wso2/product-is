@@ -58,7 +58,6 @@
                 <exclude>**/metrics.xml</exclude>
                 <exclude>**/log4j2.properties</exclude>
                 <exclude>**/catalina.properties</exclude>
-                <exclude>**/repository/components/plugins/org.wso2.carbon.tenant.redirector.servlet*.jar</exclude>
             </excludes>
         </fileSet>
 
