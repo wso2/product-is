@@ -31,4 +31,8 @@ var CONNECTED_ACCOUNTS="connected-accounts";
 var AUTHZ_FAILURE="authzFailure";
 var PROXY_ORIGIN = "ProxyOrigin";
 
+var LOGGED_IN_USER_ID = "userId";
+var LOGGED_IN_USER_STORE_DOMAIN = "LoggedUserStoreDomain";
+var PRIMARY_DEFAULT_DOMAIN_NAME = "PRIMARY";
+
 %>

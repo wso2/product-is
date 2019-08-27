@@ -353,4 +353,14 @@ function setServerURL(isWebContextRootAvailable) {
     }
 }
 
+function getUserId(username, tenantDomain, userStoreDomain) {
+
+    var carbon = require('carbon');
+    var options = {};
+    options.domain = tenantDomain;
+    var tenantId = carbon.server.tenantId(options);
+    var userSessionStore = Packages.org.wso2.carbon.identity.application.authentication.framework.store.UserSessionStore;
+    return userSessionStore.getInstance().getUserId(username, tenantId, userStoreDomain);
+}
+
 %>
