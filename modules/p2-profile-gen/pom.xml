@@ -470,6 +470,12 @@
                                 <featureArtifactDef>
                                     org.wso2.is:org.wso2.identity.jaggery.apps.feature:${project.version}
                                 </featureArtifactDef>
+
+                                <!-- FIDO2/WebAuthn feature -->
+                                <featureArtifactDef>
+                                   org.wso2.carbon.identity.local.auth.fido:org.wso2.carbon.identity.application.authenticator.fido2.server.feature:${identity.local.auth.fido.version}
+                                </featureArtifactDef>
+
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -970,6 +976,10 @@
                                 <feature>
                                     <id>org.wso2.identity.jaggery.apps.feature.group</id>
                                     <version>${project.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.application.authenticator.fido2.server.feature.group</id>
+                                    <version>${identity.local.auth.fido.version}</version>
                                 </feature>
                             </features>
                         </configuration>

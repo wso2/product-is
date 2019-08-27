@@ -10,10 +10,15 @@ session.put('auth-cookie', cookie);
  try{
 
 var profileClient = require('controllers/my-profile/profileClient.jag');
-var fidoClient = require('controllers/my-profile/fido-check.jag'); 
+var fidoClient = require('controllers/my-profile/fido-check.jag');
 var fieldValues = profileClient.getUserProfile(user, 'default');
-var isEnabled = fidoClient.isDeviceRegistered();
-fieldValues.return.fidoEnabled = isEnabled.return;
+
+var identityUtil = Packages.org.wso2.carbon.identity.core.util.IdentityUtil;
+var isWebAuthnEnabled = identityUtil.getProperty("FIDO.WebAuthn.Enable");
+if( isWebAuthnEnabled == "false") {
+    var isEnabled = fidoClient.isDeviceRegistered();
+    fieldValues.return.fidoEnabled = isEnabled.return;
+}
 
 var totpName = "totp";
 var FrameworkUtils = Packages.org.wso2.carbon.identity.application.authentication.framework.util.FrameworkUtils;

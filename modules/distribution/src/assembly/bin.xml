@@ -333,7 +333,6 @@
             </includes>
         </fileSet>
 
-
         <!--copy  web app for UMA 2.0 permission endpoint feature-->
         <fileSet>
             <directory>
