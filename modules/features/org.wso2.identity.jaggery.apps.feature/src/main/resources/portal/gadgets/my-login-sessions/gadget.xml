@@ -88,7 +88,7 @@
             function terminate(sessionId) {
                 $.ajax({
                     type:"GET",
-                    url:PROXY_CONTEXT_PATH + "/portal/gadgets/my-login-sessions/server.jag?sessionId=" + sessionId
+                    url:PROXY_CONTEXT_PATH + "/portal/gadgets/my-login-sessions/server-new.jag?sessionId=" + sessionId
 
                 }).done(function (data) {
                     var options = {"title" : "Terminate Session", "content":data,buttons:[{
@@ -174,7 +174,7 @@
                     cookie = obj.cookie;
                     userName = obj.user;
                     if (cookie != null) {
-                        var str = PROXY_CONTEXT_PATH + "/portal/gadgets/my-login-sessions/index.jag";
+                        var str = PROXY_CONTEXT_PATH + "/portal/gadgets/my-login-sessions/index-new.jag";
 
                         $.ajax({
                             type:"POST",
