@@ -1846,7 +1846,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>5.14.28</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.14.32</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
@@ -1894,7 +1894,7 @@
 
         <!-- Social Authenticator Properties -->
         <social.authenticator.facebook.version>5.1.14</social.authenticator.facebook.version>
-        <social.authenticator.google.version>5.1.7</social.authenticator.google.version>
+        <social.authenticator.google.version>5.1.8</social.authenticator.google.version>
         <social.authenticator.windowslive.version>5.1.4</social.authenticator.windowslive.version>
         <social.authenticator.yahoo.version>5.1.6</social.authenticator.yahoo.version>
 
@@ -1906,7 +1906,7 @@
 
         <!-- Local Authenticator Properties -->
         <identity.local.auth.basicauth.version>6.2.2</identity.local.auth.basicauth.version>
-        <identity.local.auth.fido.version>5.1.17</identity.local.auth.fido.version>
+        <identity.local.auth.fido.version>5.1.18</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.3.13</identity.local.auth.iwa.version>
         <identity.local.auth.clientauth.mutualtls.version>2.1.6</identity.local.auth.clientauth.mutualtls.version>
 
@@ -1920,12 +1920,12 @@
         <identity.metadata.saml.version>1.2.2</identity.metadata.saml.version>
 
         <!-- Connectors -->
-        <authenticator.totp.version>2.1.1</authenticator.totp.version>
+        <authenticator.totp.version>2.1.2</authenticator.totp.version>
         <authenticator.office365.version>1.0.6</authenticator.office365.version>
         <authenticator.smsotp.version>2.0.28</authenticator.smsotp.version>
-        <authenticator.emailotp.version>2.0.26</authenticator.emailotp.version>
+        <authenticator.emailotp.version>2.0.27</authenticator.emailotp.version>
         <authenticator.twitter.version>1.0.10</authenticator.twitter.version>
-        <authenticator.x509.version>2.0.11</authenticator.x509.version>
+        <authenticator.x509.version>2.0.12</authenticator.x509.version>
         <identity.extension.utils>1.0.8</identity.extension.utils>
 
         <conditional.authentication.functions.version>0.1.34</conditional.authentication.functions.version>
@@ -2064,7 +2064,7 @@
         <commons.logging.version.range>[1.2.0,2.0.0)</commons.logging.version.range>
 
         <!-- REST API feature -->
-        <identity.api.dispatcher.version>0.1.31</identity.api.dispatcher.version>
+        <identity.api.dispatcher.version>1.0.1</identity.api.dispatcher.version>
         <!--Rest API test -->
         <rest.assured.version>3.1.0</rest.assured.version>
         <swagger-core-version>1.5.22</swagger-core-version>
