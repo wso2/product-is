@@ -26,23 +26,24 @@
         proxyPort="80"
         -->
         <Connector protocol="org.apache.coyote.http11.Http11NioProtocol"
-                   port="9763"
-                   redirectPort="9443"
-                   bindOnInit="false"
-                   maxHttpHeaderSize="8192"
-                   acceptorThreadCount="2"
-                   maxThreads="250"
-                   minSpareThreads="50"
+                   URIEncoding="UTF-8"
                    disableUploadTimeout="false"
-                   connectionUploadTimeout="120000"
-                   maxKeepAliveRequests="200"
                    acceptCount="200"
                    server="WSO2 Carbon Server"
-                   compression="on"
-                   compressionMinSize="2048"
+                   port="9763"
                    noCompressionUserAgents="gozilla, traviata"
-                   compressableMimeType="text/html,text/javascript,application/x-javascript,application/javascript,application/xml,text/css,application/xslt+xml,text/xsl,image/gif,image/jpg,image/jpeg"
-                   URIEncoding="UTF-8"/>
+                   compressionMinSize="2048"
+                   maxHttpHeaderSize="8192"
+                   maxKeepAliveRequests="200"
+                   connectionUploadTimeout="120000"
+                   compression="on"
+                   redirectPort="9443"
+                   minSpareThreads="50"
+                   maxThreads="250"
+                   acceptorThreadCount="2"
+                   bindOnInit="false"
+                   compressibleMimeType="text/html,text/javascript,application/x-javascript,application/javascript,application/xml,text/css,application/xslt+xml,text/xsl,image/gif,image/jpg,image/jpeg"
+        />
 
         <!--
         optional attributes:
@@ -51,32 +52,32 @@
         Added sslEnabledProtocols="TLSv1,TLSv1.1,TLSv1.2" for poodle vulnerability fix
         -->
         <Connector protocol="org.apache.coyote.http11.Http11NioProtocol"
-                   port="9443"
-                   bindOnInit="false"
-                   sslProtocol="TLS"
-                   sslEnabledProtocols="TLSv1,TLSv1.1,TLSv1.2"
-                   maxHttpHeaderSize="8192"
                    acceptorThreadCount="2"
-                   maxThreads="250"
-                   minSpareThreads="50"
-                   disableUploadTimeout="false"
+                   compressibleMimeType="text/html,text/javascript,application/x-javascript,application/javascript,application/xml,text/css,application/xslt+xml,text/xsl,image/gif,image/jpg,image/jpeg"
                    enableLookups="false"
-                   connectionUploadTimeout="120000"
-                   maxKeepAliveRequests="200"
-                   acceptCount="200"
-                   server="WSO2 Carbon Server"
-                   clientAuth="want"
                    compression="on"
-                   scheme="https"
-                   secure="true"
+                   connectionUploadTimeout="120000"
+                   minSpareThreads="50"
+                   URIEncoding="UTF-8"
+                   server="WSO2 Carbon Server"
+                   maxHttpHeaderSize="8192"
                    SSLEnabled="true"
-                   compressionMinSize="2048"
+                   scheme="https"
                    noCompressionUserAgents="gozilla, traviata"
-                   compressableMimeType="text/html,text/javascript,application/x-javascript,application/javascript,application/xml,text/css,application/xslt+xml,text/xsl,image/gif,image/jpg,image/jpeg"
-                   keystoreFile="${carbon.home}/repository/resources/security/wso2carbon.jks"
+                   sslProtocol="TLS"
+                   maxKeepAliveRequests="200"
+                   sslEnabledProtocols="+TLSv1,+TLSv1.1,+TLSv1.2"
+                   clientAuth="want"
+                   port="9443"
+                   compressionMinSize="2048"
+                   disableUploadTimeout="false"
+                   secure="true"
                    keystorePass="wso2carbon"
-                   URIEncoding="UTF-8"/>
-
+                   keystoreFile="${carbon.home}/repository/resources/security/wso2carbon.jks"
+                   maxThreads="250"
+                   acceptCount="200"
+                   bindOnInit="false"
+        />
 
         <Engine name="Catalina" defaultHost="localhost">
 
@@ -86,15 +87,16 @@
 
             <Host name="localhost" unpackWARs="true" deployOnStartup="false" autoDeploy="false"
                   appBase="${carbon.home}/repository/deployment/server/webapps/">
-
+                <Valve className="org.wso2.carbon.tomcat.ext.valves.RequestEncodingValve" encoding="UTF-8"/>
+                <Valve className="org.wso2.carbon.tomcat.ext.valves.RequestCorrelationIdValve"
+                       headerToCorrelationIdMapping="{'activityid':'Correlation-ID'}" queryToCorrelationIdMapping="{'RelayState':'Correlation-ID'}"/>
                 <Valve className="org.wso2.carbon.tomcat.ext.valves.CarbonContextCreatorValve"/>
                 <Valve className="org.apache.catalina.valves.AccessLogValve" directory="${carbon.home}/repository/logs"
-                       prefix="http_access_" suffix=".log"
-                       pattern="combined"/>
+                       prefix="http_access_" suffix=".log" pattern="%h %l %u %t %r %s %b %{Referer}i %{User-Agent}i %T"/>
                 <Valve className="org.wso2.carbon.tomcat.ext.valves.CarbonStuckThreadDetectionValve" threshold="600"/>
                 <Valve className="org.wso2.carbon.tomcat.ext.valves.CompositeValve"/>
-		
-		<!-- Authentication and Authorization valve for the rest apis and we can configure context for this in identity.xml  -->
+
+                <!-- Authentication and Authorization valve for the rest apis and we can configure context for this in identity.xml.j2  -->
                 <Valve className="org.wso2.carbon.identity.auth.valve.AuthenticationValve"/>
                 <Valve className="org.wso2.carbon.identity.authz.valve.AuthorizationValve"/>
                 <Valve className="org.wso2.carbon.identity.context.rewrite.valve.TenantContextRewriteValve"/>
