@@ -28,7 +28,7 @@
     <artifactId>identity-server-parent</artifactId>
     <packaging>pom</packaging>
     <description>WSO2 Identity Server</description>
-    <version>5.9.0-alpha</version>
+    <version>5.9.0-alpha2-SNAPSHOT</version>
     <name>WSO2 Identity Server</name>
     <url>http://wso2.org/projects/identity</url>
 
@@ -2120,7 +2120,7 @@
         <url>https://github.com/wso2/product-is.git</url>
         <developerConnection>scm:git:https://github.com/wso2/product-is.git</developerConnection>
         <connection>scm:git:https://github.com/wso2/product-is.git</connection>
-        <tag>v5.9.0-alpha</tag>
+        <tag>HEAD</tag>
     </scm>
 
 
