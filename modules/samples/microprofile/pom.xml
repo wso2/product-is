@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>wso2is-identity-samples</artifactId>
-        <version>5.9.0-m8-SNAPSHOT</version>
+        <version>5.9.0-alpha</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
