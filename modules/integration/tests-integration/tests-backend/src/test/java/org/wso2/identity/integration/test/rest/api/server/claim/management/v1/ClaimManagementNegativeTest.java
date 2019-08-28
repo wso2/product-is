@@ -240,7 +240,8 @@ public class ClaimManagementNegativeTest extends ClaimManagementTestBase {
         String dialectId = createDialect();
 
         String body = readResource("claim-management-add-external-claim-invalid-mapped-claim.json");
-        Response response = getResponseOfPost(CLAIM_DIALECTS_ENDPOINT_URI + "/" + dialectId, body);
+        Response response = getResponseOfPost(CLAIM_DIALECTS_ENDPOINT_URI + "/" + dialectId + CLAIMS_ENDPOINT_URI,
+                body);
         validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "CMT-50036");
 
         removeDialect(dialectId);
