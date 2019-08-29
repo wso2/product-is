@@ -1207,13 +1207,4 @@
             <fileMode>644</fileMode>
         </file>
     </files>
-
-    <dependencySets>
-        <dependencySet>
-            <outputDirectory>${pom.artifactId}-${pom.version}/lib/</outputDirectory>
-            <includes>
-                <include>org.wso2.orbit.sun.xml.bind:jaxb</include>
-            </includes>
-        </dependencySet>
-    </dependencySets>
 </assembly>
