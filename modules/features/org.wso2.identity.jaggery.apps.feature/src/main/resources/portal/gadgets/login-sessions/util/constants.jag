@@ -32,4 +32,7 @@ var DAS_SERVER_URL = "https://localhost:9444/analytics/search";
 
 var USERNAME = "admin";
 var PASSWORD = "admin";
+
+var PRIMARY_DEFAULT_DOMAIN_NAME = "PRIMARY"
+
 %>

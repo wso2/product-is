@@ -1,0 +1,89 @@
+<%
+/*
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *                                                                         
+ * Licensed under the Apache License, Version 2.0 (the "License");         
+ * you may not use this file except in compliance with the License.        
+ * You may obtain a copy of the License at                                 
+ *                                                                         
+ * http://www.apache.org/licenses/LICENSE-2.0                              
+ *                                                                         
+ * Unless required by applicable law or agreed to in writing, software     
+ * distributed under the License is distributed on an "AS IS" BASIS,       
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and     
+ * limitations under the License.
+ */
+
+include("util/constants.jag");
+var log = new Log();
+var multitenantUtils = Packages.org.wso2.carbon.utils.multitenancy.MultitenantUtils;
+
+var cookie = request.getParameter("cookie");
+
+var user = request.getParameter(LOGGED_IN_USER);
+var userName = request.getParameter("username");
+
+fetchData();
+
+function fetchData() {
+    try {
+
+        if (cookie != null) {
+            session.put('auth-cookie', cookie);
+        }
+
+        if (user != null) {
+            session.put(LOGGED_IN_USER, user);
+        } else {
+            user = session.get(LOGGED_IN_USER);
+        }
+
+        if (!userName) {
+            print(new Array());
+        } else {
+            var userStoreDomain = PRIMARY_DEFAULT_DOMAIN_NAME;
+            var incomingUserName = userName;
+            var tenantDomain = multitenantUtils.getTenantDomain(user);
+
+            // Extract the user store domain from the username, if there is one.
+            var usernameTokens = userName.split('/');
+            if (usernameTokens.length > 1) {
+                userStoreDomain = usernameTokens[0];
+                userName = usernameTokens[1];
+            }
+
+            var carbon = require('carbon');
+            var userSessionManagementService = carbon.server.osgiService('org.wso2.carbon.identity.application.authentication.framework.UserSessionManagementService');
+
+            var userObj = new Packages.org.wso2.carbon.identity.application.common.model.User();
+            userObj.setUserName(userName);
+            userObj.setTenantDomain(tenantDomain);
+            userObj.setUserStoreDomain(userStoreDomain);
+
+            //Get sessions of user in local idp.
+            log.debug("Fetching session data for the user: " + userName + " in userstore: " + userStoreDomain);
+            var userSessions = userSessionManagementService.getSessionsByUser(userObj, -1);
+
+            var tableRows = new Array();
+            for (var i = 0; i < userSessions.size(); i++) {
+                var mySession = userSessions.get(i);
+                var obj = {};
+                obj.userName = incomingUserName;
+                obj.IP = mySession.getIp();
+                obj.userAgent = mySession.getUserAgent();
+                obj.startTimestamp = new Date(Number(mySession.getLoginTime())).toString();
+                obj.sessionId = mySession.getSessionId();
+
+                tableRows [i] = obj;
+            }
+            print(tableRows);
+        }
+    } catch (e) {
+        log.error(e);
+        response.sendError(500);
+    }
+
+}
+
+%>
