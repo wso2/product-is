@@ -9,6 +9,18 @@ username = "admin"
 password = "admin"
 create_admin_account = true
 
+[database.identity_db]
+driver = "$env{IDENTITY_DATABASE_DRIVER}"
+url = "$env{IDENTITY_DATABASE_URL}"
+username = "$env{IDENTITY_DATABASE_USERNAME}"
+password = "$env{IDENTITY_DATABASE_PASSWORD}"
+
+[database.shared_db]
+driver = "$env{SHARED_DATABASE_DRIVER}"
+url = "$env{SHARED_DATABASE_URL}"
+username = "$env{SHARED_DATABASE_USERNAME}"
+password = "$env{SHARED_DATABASE_PASSWORD}"
+
 [user_store]
 type = "database"
 connection_url = "ldap://localhost:${Ports.EmbeddedLDAP.LDAPServerPort}"

@@ -79,7 +79,12 @@ public class TomcatInitializerTestCase extends ISIntegrationTest {
             tomcat.addWebapp(tomcat.getHost(), "/" + application, resourceUrl.getPath());
             LOG.info("Deployed tomcat application " + application);
         }
-        tomcat.start();
+        try {
+            tomcat.start();
+        } catch (LifecycleException e) {
+            LOG.error("Error while starting tomcat server ", e);
+            throw e;
+        }
         LOG.info("Tomcat server started.");
     }
 

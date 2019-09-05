@@ -56,6 +56,8 @@
                 <exclude>**/repository/resources/conf/**</exclude>
                 <exclude>**/deployment.toml</exclude>
                 <exclude>**/metrics.xml</exclude>
+                <exclude>**/log4j2.properties</exclude>
+                <exclude>**/catalina.properties</exclude>
             </excludes>
         </fileSet>
 
@@ -85,9 +87,9 @@
         <!-- Bundle the jaggery apps-->
         <fileSet>
             <directory>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/jaggeryapps
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/jaggeryapps/dashboard
             </directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/dashboard</outputDirectory>
             <includes>
                 <include>**/**</include>
             </includes>
@@ -95,7 +97,7 @@
 
         <fileSet>
             <directory>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/jaggeryapps
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/jaggeryapps/portal
             </directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/portal
             </outputDirectory>
@@ -330,7 +332,6 @@
             </includes>
         </fileSet>
 
-
         <!--copy  web app for UMA 2.0 permission endpoint feature-->
         <fileSet>
             <directory>
@@ -527,6 +528,10 @@
                 <include>*/httpcore-nio*</include>
             </includes>
         </fileSet>
+        <fileSet>
+            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/lib/</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/lib/</outputDirectory>
+        </fileSet>
 
         <fileSet>
             <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/dbscripts/bps</directory>
@@ -700,6 +705,18 @@
             <source>src/repository/resources/conf/metrics.xml</source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
             <destName>metrics.xml</destName>
+            <filtered>true</filtered>
+        </file>
+        <file>
+            <source>src/repository/resources/conf/log4j2.properties</source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
+            <destName>log4j2.properties</destName>
+            <filtered>true</filtered>
+        </file>
+        <file>
+            <source>src/repository/resources/conf/catalina.properties</source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/tomcat</outputDirectory>
+            <destName>catalina.properties</destName>
             <filtered>true</filtered>
         </file>
         <file>
@@ -942,13 +959,6 @@
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/embedded-ldap.xml
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/identity</outputDirectory>
-        </file>
-        <file>
-            <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/etc/logging-config.xml
-            </source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/etc/
-            </outputDirectory>
         </file>
         <file>
             <source>
@@ -1197,4 +1207,13 @@
             <fileMode>644</fileMode>
         </file>
     </files>
+
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>${pom.artifactId}-${pom.version}/lib/</outputDirectory>
+            <includes>
+                <include>org.wso2.orbit.sun.xml.bind:jaxb</include>
+            </includes>
+        </dependencySet>
+    </dependencySets>
 </assembly>

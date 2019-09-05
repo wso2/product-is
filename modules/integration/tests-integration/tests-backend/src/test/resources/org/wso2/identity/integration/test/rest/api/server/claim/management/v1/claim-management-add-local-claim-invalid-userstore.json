@@ -1,0 +1,22 @@
+{
+  "claimURI": "http://wso2.org/claims/dummyemailaddress",
+  "description": "Dummy Email Address",
+  "displayOrder": 6,
+  "displayName": "Dummy Email",
+  "readOnly": false,
+  "regEx": "^\\S+@\\S+$",
+  "required": true,
+  "supportedByDefault": true,
+  "attributeMapping": [
+    {
+      "mappedAttribute": "dummymail",
+      "userstore": "DUMMY"
+    }
+  ],
+  "properties": [
+    {
+      "key": "isVerifiable",
+      "value": "true"
+    }
+  ]
+}

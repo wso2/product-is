@@ -20,7 +20,6 @@ package org.wso2.sample.identity.oauth2;
 import com.nimbusds.jwt.SignedJWT;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.BasicConfigurator;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -40,7 +39,6 @@ public class OIDCBackchannelLogoutServlet extends HttpServlet {
 
     public void init(ServletConfig config) throws SecurityException {
 
-        BasicConfigurator.configure();
     }
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
