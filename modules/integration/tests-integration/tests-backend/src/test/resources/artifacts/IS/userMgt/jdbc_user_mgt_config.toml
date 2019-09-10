@@ -27,6 +27,6 @@ connection_name = "uid=admin,ou=system"
 connection_password = "admin"
 base_dn = "dc=wso2,dc=org"      #refers the base dn on which the user and group search bases will be generated
 
-[keystore.tls]
+[keystore.primary]
 name = "wso2carbon.jks"
 password = "wso2carbon"

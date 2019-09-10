@@ -85,6 +85,7 @@
                              certificateKeystorePassword="wso2carbon"
                              certificateKeystoreType="JKS"
                              certificateKeyAlias="wso2carbon"
+                             certificateKeyPassword="wso2carbon"
                 />
             </SSLHostConfig>
         </Connector>
