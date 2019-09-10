@@ -29,7 +29,7 @@ url = "$env{SHARED_DATABASE_URL}"
 username = "$env{SHARED_DATABASE_USERNAME}"
 password = "$env{SHARED_DATABASE_PASSWORD}"
 
-[keystore.tls]
+[keystore.primary]
 name = "wso2carbon.jks"
 password = "wso2carbon"
 
