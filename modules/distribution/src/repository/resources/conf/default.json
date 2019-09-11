@@ -9,7 +9,7 @@
   "keystore.tls.type" : "JKS",
   "truststore.type" : "JKS",
 
-  "transport.https.clientAuth": "want",
+  "transport.https.sslHostConfig.properties.certificateVerification": "want",
 
   "authentication.consent.data_source": "jdbc/WSO2IdentityDB",
 
