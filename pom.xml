@@ -2058,7 +2058,7 @@
         <commons.logging.version.range>[1.2.0,2.0.0)</commons.logging.version.range>
 
         <!-- REST API feature -->
-        <identity.api.dispatcher.version>1.0.5</identity.api.dispatcher.version>
+        <identity.api.dispatcher.version>1.0.6</identity.api.dispatcher.version>
         <!--Rest API test -->
         <rest.assured.version>3.1.0</rest.assured.version>
         <swagger-core-version>1.5.22</swagger-core-version>
