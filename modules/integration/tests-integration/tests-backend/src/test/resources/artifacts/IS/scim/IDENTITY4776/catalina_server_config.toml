@@ -33,7 +33,7 @@ name = "wso2carbon.jks"
 password = "wso2carbon"
 
 [transport.https]
-maxThreads = "1"
+properties.maxThreads = "1"
 
 [transport.http]
-maxThreads = "1"
+properties.maxThreads = "1"
