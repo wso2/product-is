@@ -22,33 +22,31 @@ var util = require("util/utility.jag");
 var log = new Log();
 var multitenantUtils = Packages.org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
-var cookie = request.getParameter("cookie");
-
-var userStoreDomain = PRIMARY_DEFAULT_DOMAIN_NAME;
-
-var username = request.getParameter("user");
-if (username != null) {
-    session.put('user', username);
-} else {
-    username = session.get('user');
-}
-
-var tenantDomain = multitenantUtils.getTenantDomain(username);
-
-// Remove tenant domain from the username.
-username = multitenantUtils.getTenantAwareUsername(username);
-
-// Extract the user store domain from the username, if there is one.
-var usernameTokens = username.split('/');
-if (usernameTokens.length > 1) {
-    userStoreDomain = usernameTokens[0];
-    username = usernameTokens[1];
-}
 
 var userId = session.get(LOGGED_IN_USER_ID);
 if (!userId) {
+    var userStoreDomain = PRIMARY_DEFAULT_DOMAIN_NAME;
+    var username = session.get(LOGGED_IN_USER);
+    if (!username) {
+        response.sendError(401);
+    }
+
+    var tenantDomain = multitenantUtils.getTenantDomain(username);
+
+// Remove tenant domain from the username.
+    username = multitenantUtils.getTenantAwareUsername(username);
+
+// Extract the user store domain from the username, if there is one.
+    var usernameTokens = username.split('/');
+    if (usernameTokens.length > 1) {
+        userStoreDomain = usernameTokens[0];
+        username = usernameTokens[1];
+    }
+
     userId = util.getUserId(username, tenantDomain, userStoreDomain);
+
 }
+
 var log = new Log();
 var carbon = require('carbon');
 var userSessionManagementService = carbon.server.osgiService('org.wso2.carbon.identity.application.authentication.framework.UserSessionManagementService');

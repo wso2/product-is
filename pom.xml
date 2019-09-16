@@ -28,7 +28,7 @@
     <artifactId>identity-server-parent</artifactId>
     <packaging>pom</packaging>
     <description>WSO2 Identity Server</description>
-    <version>5.9.0-alpha3-SNAPSHOT</version>
+    <version>5.9.0-alpha4-SNAPSHOT</version>
     <name>WSO2 Identity Server</name>
     <url>http://wso2.org/projects/identity</url>
 
@@ -1841,14 +1841,14 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>5.14.59</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.14.62</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.0, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Identity Repo Versions-->
         <identity.carbon.auth.saml2.version>5.4.3</identity.carbon.auth.saml2.version>
         <identity.inbound.auth.saml.version>5.6.10</identity.inbound.auth.saml.version>
         <identity.agent.sso.version>5.3.2</identity.agent.sso.version>
-        <identity.inbound.auth.oauth.version>6.2.16</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.2.17</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.4.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.4.2</identity.inbound.auth.sts.version>
         <identity.outbound.auth.requestpath.basicauth.version>5.3.2</identity.outbound.auth.requestpath.basicauth.version>
@@ -1901,7 +1901,7 @@
 
         <!-- Local Authenticator Properties -->
         <identity.local.auth.basicauth.version>6.2.2</identity.local.auth.basicauth.version>
-        <identity.local.auth.fido.version>5.1.19</identity.local.auth.fido.version>
+        <identity.local.auth.fido.version>5.1.20</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.3.13</identity.local.auth.iwa.version>
         <identity.local.auth.clientauth.mutualtls.version>2.1.6</identity.local.auth.clientauth.mutualtls.version>
 
