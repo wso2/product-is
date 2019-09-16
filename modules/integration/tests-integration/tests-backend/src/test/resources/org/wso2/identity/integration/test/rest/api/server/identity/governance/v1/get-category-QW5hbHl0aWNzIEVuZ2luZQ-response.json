@@ -1,0 +1,63 @@
+{
+  "name": "Analytics Engine",
+  "connectors": [
+    {
+      "id": "YW5hbHl0aWNzLWVuZ2luZQ",
+      "name": "analytics-engine",
+      "category": "Analytics Engine",
+      "friendlyName": "Analytics Engine Configuration",
+      "order": 10,
+      "subCategory": "DEFAULT",
+      "properties": [
+        {
+          "name": "adaptive_authentication.analytics.receiver",
+          "value": "http://localhost:8280/",
+          "displayName": "Target Host",
+          "description": "Target Host"
+        },
+        {
+          "name": "adaptive_authentication.analytics.basicAuth.enabled",
+          "value": "true",
+          "displayName": "Enable Basic Authentication",
+          "description": "Enable Basic Authentication"
+        },
+        {
+          "name": "adaptive_authentication.analytics.basicAuth.username",
+          "value": "change-me",
+          "displayName": "User ID",
+          "description": "Target Host Secured User ID"
+        },
+        {
+          "name": "__secret__adaptive_authentication.analytics.basicAuth.password",
+          "value": "change-me",
+          "displayName": "Secret",
+          "description": "Target Host Secured Secret"
+        },
+        {
+          "name": "adaptive_authentication.analytics.HTTPConnectionTimeout",
+          "value": "5000",
+          "displayName": "HTTP Connection Timeout",
+          "description": "HTTP Connection Timeout in milliseconds"
+        },
+        {
+          "name": "adaptive_authentication.analytics.HTTPReadTimeout",
+          "value": "5000",
+          "displayName": "HTTP Read Timeout",
+          "description": "HTTP Read Timeout in milliseconds"
+        },
+        {
+          "name": "adaptive_authentication.analytics.HTTPConnectionRequestTimeout",
+          "value": "5000",
+          "displayName": "HTTP Connection Request Timeout",
+          "description": "HTTP Connection Request Timeout in milliseconds"
+        },
+        {
+          "name": "adaptive_authentication.analytics.hostnameVerfier",
+          "value": "STRICT",
+          "displayName": "Hostname verification",
+          "description": "Hostname verification. (STRICT, ALLOW_ALL)"
+        }
+      ]
+    }
+  ]
+}

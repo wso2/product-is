@@ -1,0 +1,87 @@
+{
+  "name": "Consent Management",
+  "connectors": [
+    {
+      "id": "cGlpLWNvbnRyb2xsZXI",
+      "name": "pii-controller",
+      "category": "Consent Management",
+      "friendlyName": "Consent Information Controller",
+      "order": 4,
+      "subCategory": "DEFAULT",
+      "properties": [
+        {
+          "name": "piiController",
+          "value": "change-me",
+          "displayName": "Controller Name",
+          "description": "Name of the first Controller who collects the data"
+        },
+        {
+          "name": "contact",
+          "value": "change-me",
+          "displayName": "Contact Name",
+          "description": "Contact name of the Controller"
+        },
+        {
+          "name": "email",
+          "value": "change-me",
+          "displayName": "Email Address",
+          "description": "Contact email address of the Controller"
+        },
+        {
+          "name": "phone",
+          "value": "change-me",
+          "displayName": "Phone Number",
+          "description": "Contact phone number of the Controller"
+        },
+        {
+          "name": "onBehalf",
+          "value": "change-me",
+          "displayName": "On Behalf",
+          "description": "A user information (PII) Processor acting on behalf of a Controller or PII Processor"
+        },
+        {
+          "name": "piiControllerUrl",
+          "value": "change-me",
+          "displayName": "Url",
+          "description": "A URL for contacting the Controller"
+        },
+        {
+          "name": "addressCountry",
+          "value": "change-me",
+          "displayName": "Country",
+          "description": "Country of the Controller"
+        },
+        {
+          "name": "addressLocality",
+          "value": "change-me",
+          "displayName": "Locality",
+          "description": "Locality of the Controller"
+        },
+        {
+          "name": "addressRegion",
+          "value": "change-me",
+          "displayName": "Region",
+          "description": "Region of the Controller"
+        },
+        {
+          "name": "postOfficeBoxNumber",
+          "value": "change-me",
+          "displayName": "Post Office Box Number",
+          "description": "Post Office Box Number of the Controller"
+        },
+        {
+          "name": "postalCode",
+          "value": "change-me",
+          "displayName": "Postal Code",
+          "description": "Postal Code of the Controller"
+        },
+        {
+          "name": "streetAddress",
+          "value": "change-me",
+          "displayName": "Street Address",
+          "description": "Street Address of the Controller"
+        }
+      ]
+    }
+  ]
+}

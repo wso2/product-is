@@ -1,0 +1,9 @@
+{
+  "operation": "UPDATE",
+  "properties": [
+    {
+      "name": "suspension.notification.account.disable.delay",
+      "value": "91"
+    }
+  ]
+}

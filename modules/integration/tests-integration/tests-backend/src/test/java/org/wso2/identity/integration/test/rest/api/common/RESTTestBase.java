@@ -445,6 +445,31 @@ public class RESTTestBase extends ISIntegrationTest {
     }
 
     /**
+     * Invoke given endpointUri for  PATCH request with given body, headers and Basic authentication, authentication
+     * credential being the authenticatingUserName and authenticatingCredential.
+     *
+     * @param endpointURI endpoint to be invoked
+     * @param body payload
+     * @return reponse
+     */
+    protected Response getResponseOfPatch(String endpointURI, String body) {
+
+        return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
+                .config(RestAssured.config().encoderConfig(encoderconfig
+                        .appendDefaultContentCharsetToContentTypeIfUndefined(false)))
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.ACCEPT, ContentType.JSON)
+                .body(body)
+                .log().ifValidationFails()
+                .filter(validationFilter)
+                .log().ifValidationFails()
+                .when()
+                .log().ifValidationFails()
+                .patch(endpointURI);
+
+    }
+
+    /**
      * Invoke given endpointUri for DELETE with given body and Basic authentication, authentication credential being
      * the authenticatingUserName and authenticatingCredential
      *
