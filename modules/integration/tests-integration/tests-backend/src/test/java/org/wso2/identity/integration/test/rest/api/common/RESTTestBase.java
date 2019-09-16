@@ -41,6 +41,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.jar.JarEntry;
@@ -124,6 +126,19 @@ public class RESTTestBase extends ISIntegrationTest {
         InputStream input = jarFile.getInputStream(entry);
         String content = getString(input);
         jarFile.close();
+        return convertYamlToJson(content);
+    }
+
+    /**
+     * Read the Swagger Definition from the filePath.
+     *
+     * @param filePath
+     * @return
+     * @throws IOException
+     */
+    protected static String getAPISwaggerDefinition(String filePath) throws IOException {
+
+        String content = new String(Files.readAllBytes(Paths.get(filePath)));
         return convertYamlToJson(content);
     }
 
