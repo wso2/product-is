@@ -75,7 +75,7 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
         String carbonHome = ServerConfigurationManager.getCarbonHome();
         defaultConfigFile = getDeploymentTomlFile(carbonHome);
         File userMgtConfigFile = new File(getISResourceLocation() + File.separator + "userMgt"
-                + File.separator + "readOnlyLdapUserMgtConfig.toml");
+                + File.separator + "read_only_ldap_user_mgt_config.toml");
         scm.applyConfiguration(userMgtConfigFile, defaultConfigFile, true, true);
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         userMgtClient = new UserManagementClient(backendURL, getSessionCookie());
