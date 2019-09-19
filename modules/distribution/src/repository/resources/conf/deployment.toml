@@ -1,7 +1,7 @@
 [server]
-pattern = "DEV"  #possible values, DEV,HA,HA_WITH_ANALYTICS
 hostname = "localhost"
 node_ip = "127.0.0.1"
+base_path = "https://$ref{server.hostname}:${carbon.management.port}"
 
 [super_admin]
 username = "admin"
@@ -16,10 +16,16 @@ connection_password = "admin"
 base_dn = "dc=wso2,dc=org"      #refers the base dn on which the user and group search bases will be generated
 
 [database.identity_db]
-#type = "h2"         # Infers the local H2 DB connection details for 'DEV' pattern. SHOULD BE CHANGED TO PRODUCTION READY DB FOR PRODUCTION
+type = "h2"
+url = "jdbc:h2:./repository/database/WSO2IDENTITY_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000"
+username = "wso2carbon"
+password = "wso2carbon"
 
 [database.shared_db]
-#type = "h2"         # Infers the local DB connection details. SHOULD BE CHANGED TO PRODUCTION READY DB FOR PRODUCTION
+type = "h2"
+url = "jdbc:h2:./repository/database/WSO2SHARED_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000"
+username = "wso2carbon"
+password = "wso2carbon"
 
 [keystore.tls]
 name = "wso2carbon.jks"
