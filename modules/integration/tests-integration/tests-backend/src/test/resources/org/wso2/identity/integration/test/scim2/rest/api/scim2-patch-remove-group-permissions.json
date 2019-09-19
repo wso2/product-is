@@ -1,0 +1,14 @@
+{
+  "schemas": [
+    "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+  ],
+  "Operations": [
+    {
+      "op": "remove",
+      "value":
+      [
+        "/permission/admin/configure/security/usermgt"
+      ]
+    }
+  ]
+}

@@ -16,32 +16,32 @@
 
 package org.wso2.identity.integration.test.scim2.rest.api;
 
+import io.restassured.RestAssured;
 import org.apache.axis2.AxisFault;
-import org.apache.axis2.context.ConfigurationContext;
-import org.apache.axis2.context.ConfigurationContextFactory;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.lang.StringUtils;
 import org.testng.Assert;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.wso2.identity.integration.test.rest.api.common.RESTTestBase;
 
-
-import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
 import java.io.IOException;
 
+import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SCIM2_ENDPOINT;
+
 public class SCIM2BaseTest extends RESTTestBase {
 
-    private static final Log log = LogFactory.getLog(SCIM2BaseTest.class);
+    private static final String API_DEFINITION_FILE_NAME = "scim2.yaml";
+
+    protected static String swaggerDefinition;
+    protected static final String SCIM2_BASE_PATH_IN_SWAGGER = "/t/\\{tenant-domain\\}" + SCIM2_ENDPOINT ;
+    protected static final String SCIM2_BASE_PATH_WITH_TENANT_CONTEXT = TENANT_CONTEXT_IN_URL + SCIM2_ENDPOINT ;
     public static final String FILE_BASE_PATH = (System.getProperty("basedir", "."))
             + File.separator + "src" + File.separator + "test"
             + File.separator + "resources" + File.separator;
-    private static final String API_DEFINITION_FILE_NAME = "scim2.yaml";
-    protected static String swaggerDefinition;
-    protected static final String SCIM2_BASE_PATH = "/scim2/%s";
-    protected static final String SCIM2_BASE_PATH_IN_SWAGGER = "/t/\\{tenant-domain\\}" + SCIM2_BASE_PATH;
-    protected static final String SCIM2_BASE_PATH_WITH_TENANT_CONTEXT = TENANT_CONTEXT_IN_URL + SCIM2_BASE_PATH;
-    protected String END_POINT_URL;
+
 
     static {
         try {
@@ -52,36 +52,13 @@ public class SCIM2BaseTest extends RESTTestBase {
         }
     }
 
-    public SCIM2BaseTest(TestUserMode userMode) throws Exception {
-
-        super.init(userMode);
-        this.context = isServer;
-        this.authenticatingUserName = tenantInfo.getContextUser().getUserName();
-        this.authenticatingCredential = tenantInfo.getContextUser().getPassword();
-        this.tenant = context.getContextTenant().getDomain();
-
-        ConfigurationContext configContext = ConfigurationContextFactory
-                .createConfigurationContextFromFileSystem(null
-                        , null);
-
-    }
-
-    public void initUrls(String pathParam, String tenantDomain) {
-        if ("carbon.super".equals(tenantDomain)) {
-            this.END_POINT_URL = "/" + pathParam;
-        } else {
-            this.END_POINT_URL = "/t/" + tenantDomain + "/" + pathParam;
-        }
-
-    }
-
-    public void testInit(String apiVersion, String apiDefinition, String tenantDomain)
-            throws XPathExpressionException, AxisFault {
+    public void testInit( String apiDefinition, String tenantDomain)
+            throws AxisFault {
 
         String basePath;
-        String basePathInSwagger = String.format(SCIM2_BASE_PATH_IN_SWAGGER, apiVersion);
+        String basePathInSwagger = SCIM2_BASE_PATH_IN_SWAGGER;
         if ("carbon.super".equals(tenantDomain)) {
-            basePath = String.format(SCIM2_BASE_PATH);
+            basePath = String.format(SCIM2_ENDPOINT );
         } else {
             basePath = String.format(SCIM2_BASE_PATH_WITH_TENANT_CONTEXT,
                     tenantDomain);
@@ -89,4 +66,23 @@ public class SCIM2BaseTest extends RESTTestBase {
         super.init(apiDefinition, basePathInSwagger, basePath);
     }
 
+
+
+    @AfterClass(alwaysRun = true)
+    public void testConclude() throws Exception {
+
+        super.conclude();
+    }
+
+    @BeforeMethod(alwaysRun = true)
+    public void testInit() {
+
+        RestAssured.basePath = basePath;
+    }
+
+    @AfterMethod(alwaysRun = true)
+    public void testFinish() {
+
+        RestAssured.basePath = StringUtils.EMPTY;
+    }
 }
