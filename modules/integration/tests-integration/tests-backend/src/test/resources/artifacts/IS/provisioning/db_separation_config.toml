@@ -37,6 +37,7 @@ url = "jdbc:h2:./repository/database/CONSENT_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIME
 username = "wso2carbon"
 password = "wso2carbon"
 driver = "org.h2.Driver"
+
 [datasource.pool_options]
 maxActive = "50"
 maxWait = "60000"
