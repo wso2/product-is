@@ -1920,7 +1920,7 @@
         <identity.metadata.saml.version>1.2.2</identity.metadata.saml.version>
 
         <!-- Connectors -->
-        <authenticator.totp.version>2.1.3</authenticator.totp.version>
+        <authenticator.totp.version>2.1.4</authenticator.totp.version>
         <authenticator.office365.version>1.0.6</authenticator.office365.version>
         <authenticator.smsotp.version>2.0.28</authenticator.smsotp.version>
         <authenticator.emailotp.version>2.0.28</authenticator.emailotp.version>
@@ -2063,7 +2063,7 @@
         <commons.logging.version.range>[1.2.0,2.0.0)</commons.logging.version.range>
 
         <!-- REST API feature -->
-        <identity.api.dispatcher.version>1.0.6</identity.api.dispatcher.version>
+        <identity.api.dispatcher.version>1.0.7</identity.api.dispatcher.version>
         <!--Rest API test -->
         <rest.assured.version>3.1.0</rest.assured.version>
         <swagger-core-version>1.5.22</swagger-core-version>
