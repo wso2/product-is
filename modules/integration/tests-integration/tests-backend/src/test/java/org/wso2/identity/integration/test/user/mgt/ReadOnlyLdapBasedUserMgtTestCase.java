@@ -46,7 +46,7 @@ public class ReadOnlyLdapBasedUserMgtTestCase extends UserMgtServiceAbstractTest
         String carbonHome = Utils.getResidentCarbonHome();
         defaultConfigFile = getDeploymentTomlFile(carbonHome);
         File userMgtConfigFile = new File(getISResourceLocation() + File.separator + "userMgt"
-                + File.separator + "readOnlyLdapUserMgtConfig.toml");
+                + File.separator + "read_only_ldap_user_mgt_config.toml");
 
         scm = new ServerConfigurationManager(isServer);
         scm.applyConfigurationWithoutRestart(userMgtConfigFile, defaultConfigFile, true);
