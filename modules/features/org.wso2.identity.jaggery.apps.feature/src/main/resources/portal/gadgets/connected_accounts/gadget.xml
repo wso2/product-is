@@ -7,7 +7,7 @@
         <![CDATA[
 
         <link rel="stylesheet" type="text/css" href="js/ui/css/main.css">
-        <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jquery-ui-1.10.3.custom.min.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jquery-ui-1.12.1.custom.min.css">
         <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jqueryui-themeroller.css">
         <link rel="stylesheet" type="text/css" href="js/ui/css/dialog.css">
         <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap.css">
@@ -63,7 +63,7 @@
         <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-missing.css">
         <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-theme.min.css">
         <link rel="stylesheet" type="text/css" href="js/ui/css/dialog.css">
-        <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jquery-ui-1.10.3.custom.min.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jquery-ui-1.12.1.custom.min.css">
         <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jqueryui-themeroller.css">
         <link rel="stylesheet" href="/portal/gadgets/connected_accounts/js/ui/css/localstyles.css">
 

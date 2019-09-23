@@ -1,8 +1,7 @@
 [server]
-pattern = "DEV"  #possible values, DEV,HA,HA_WITH_ANALYTICS
 hostname = "localhost"
 node_ip = "127.0.0.1"
-base_path = "https://localhost:9853"
+base_path = "https://$ref{server.hostname}:${carbon.management.port}"
 
 [super_admin]
 username = "admin"
@@ -17,12 +16,18 @@ connection_password = "admin"
 base_dn = "dc=wso2,dc=org"      #refers the base dn on which the user and group search bases will be generated
 
 [database.identity_db]
-#type = "h2"         # Infers the local H2 DB connection details for 'DEV' pattern. SHOULD BE CHANGED TO PRODUCTION READY DB FOR PRODUCTION
+driver = "$env{IDENTITY_DATABASE_DRIVER}"
+url = "$env{IDENTITY_DATABASE_URL}"
+username = "$env{IDENTITY_DATABASE_USERNAME}"
+password = "$env{IDENTITY_DATABASE_PASSWORD}"
 
 [database.shared_db]
-#type = "h2"         # Infers the local DB connection details. SHOULD BE CHANGED TO PRODUCTION READY DB FOR PRODUCTION
+driver = "$env{SHARED_DATABASE_DRIVER}"
+url = "$env{SHARED_DATABASE_URL}"
+username = "$env{SHARED_DATABASE_USERNAME}"
+password = "$env{SHARED_DATABASE_PASSWORD}"
 
-[keystore.tls]
+[keystore.primary]
 name = "wso2carbon.jks"
 password = "wso2carbon"
 
@@ -32,6 +37,7 @@ url = "jdbc:h2:./repository/database/CONSENT_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIME
 username = "wso2carbon"
 password = "wso2carbon"
 driver = "org.h2.Driver"
+
 [datasource.pool_options]
 maxActive = "50"
 maxWait = "60000"

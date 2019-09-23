@@ -6,10 +6,10 @@
     }
   },
   "user_store.type": "read_write_ldap",
-  "keystore.tls.type" : "JKS",
+  "keystore.primary.type" : "JKS",
   "truststore.type" : "JKS",
 
-  "transport.https.clientAuth": "want",
+  "transport.https.sslHostConfig.properties.certificateVerification": "want",
 
   "authentication.consent.data_source": "jdbc/WSO2IdentityDB",
 
