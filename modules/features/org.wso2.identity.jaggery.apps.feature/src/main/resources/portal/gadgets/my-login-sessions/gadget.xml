@@ -23,7 +23,7 @@
     <Content type="html" view="default">
         <![CDATA[
         <link rel="stylesheet" type="text/css" href="js/ui/css/main.css">
-        <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jquery-ui-1.10.3.custom.min.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jquery-ui-1.12.1.custom.min.css">
         <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jqueryui-themeroller.css">
         <link rel="stylesheet" type="text/css" href="js/ui/css/dialog.css">
         <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap.css">
@@ -74,7 +74,7 @@
         <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-missing.css">
         <link rel="stylesheet" type="text/css" href="js/ui/css/bootstrap-theme.min.css">
         <link rel="stylesheet" type="text/css" href="js/ui/css/dialog.css">
-        <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jquery-ui-1.10.3.custom.min.css">
+        <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jquery-ui-1.12.1.custom.min.css">
         <link rel="stylesheet" type="text/css" href="js/ui/css/smoothness/jqueryui-themeroller.css">
 
         <script>
@@ -85,22 +85,65 @@
             cssNode.href = PROXY_CONTEXT_PATH + '/portal/gadgets/my-login-sessions/js/ui/font-awesome/css/font-awesome.min.css';
             headID.appendChild(cssNode);
 
+            function terminateSession(sessionId) {
+
+                var confirmationDialog = "<div class=\"modal fade\" id=\"messageModal\">\n" +
+		        "  <div class=\"modal-dialog\">\n" +
+		        "    <div class=\"modal-content\">\n" +
+		        "      <div class=\"modal-header\">\n" +
+		        "        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>\n" +
+		        "        <h3 class=\"modal-title\">Modal title</h4>\n" +
+		        "      </div>\n" +
+		        "      <div class=\"modal-body\">\n" +
+		        "        <p>One fine body&hellip;</p>\n" +
+		        "      </div>\n" +
+		        "      <div class=\"modal-footer\">\n" +
+		        "      </div>\n" +
+		        "    </div>\n" +
+		        "  </div>\n" +
+		        "</div>";
+
+                $("#message").html(confirmationDialog);
+                    message({
+                        title: "Confirm Session Termination.",
+                        content: 'Are you sure you want to terminate this session? This operation is not reversible.',
+                        type: 'confirm',
+                        okCallback: function () {
+                            terminate(sessionId);
+                        }
+                });
+            }
+
             function terminate(sessionId) {
                 $.ajax({
-                    type:"GET",
-                    url:PROXY_CONTEXT_PATH + "/portal/gadgets/my-login-sessions/server.jag?sessionId=" + sessionId
+                    type:"POST",
+                    url:PROXY_CONTEXT_PATH + "/portal/gadgets/my-login-sessions/server-new.jag",
+                    data: { sessionId : sessionId }
 
                 }).done(function (data) {
-                    var options = {"title" : "Terminate Session", "content":data,buttons:[{
-                                        name:"OK",cssClass:"btn btn-primary",cbk:function() {
+                    var options = {
+                        "title" : "Terminate Session.",
+                        "type" : "info",
+                        "content": "Successfully terminated the session.",
+                        "cbk": function() {
                                             $('#messageModal').modal('hide');
                                             location.reload();
-                                        }}]
-                                  }
+                                        }
+                      };
                     validate(options);
                     return data;
                 }).fail(function () {
                     console.log('error');
+                    var options = {
+                            "title" : "Terminate Session.",
+                            "content": "Error while terminating the requested session.",
+                            "type" : "error",
+                            "cbk": function() {
+                                            $('#messageModal').modal('hide');
+                                            location.reload();
+                                        }
+                            };
+                    validate(options);
                 }).always(function () {
                     console.log('completed');
                 });
@@ -124,32 +167,9 @@
 		        "  </div>\n" +
 		        "</div>";
 	    	    $("#message").append(element);
-                messageDisplay(params);
+                message(params);
 
 	        }
-
-	        var messageDisplay = function (params) {
-                $('#messageModal').html($('#confirmation-data').html());
-                if(params.title == undefined){
-                   $('#messageModal h3.modal-title').html('Dashboard');
-                }else{
-                   $('#messageModal h3.modal-title').html(params.title);
-                }
-                $('#messageModal div.modal-body').html(params.content);
-                if(params.buttons != undefined){
-                   //$('#messageModal a.btn-primary').hide();
-                   $('#messageModal div.modal-footer').html('');
-                   for(var i=0;i<params.buttons.length;i++){
-                       $('#messageModal div.modal-footer').append($('<a class="btn '+params.buttons[i].cssClass+'">'+params.buttons[i].name+'</a>').click(params.buttons[i].cbk));
-                   }
-                }else{
-                   $('#messageModal a.btn-primary').html('OK').click(function() {
-                       $('#messageModal').modal('hide');
-                   });
-                }
-                $('#messageModal a.btn-other').hide();
-                $('#messageModal').modal();
-            };
 
         </script>
 
@@ -174,7 +194,7 @@
                     cookie = obj.cookie;
                     userName = obj.user;
                     if (cookie != null) {
-                        var str = PROXY_CONTEXT_PATH + "/portal/gadgets/my-login-sessions/index.jag";
+                        var str = PROXY_CONTEXT_PATH + "/portal/gadgets/my-login-sessions/index-new.jag";
 
                         $.ajax({
                             type:"POST",
@@ -219,7 +239,7 @@
                          "<td>" + jsonData[i].IP + "</td>\n" +
                          "<td>" + jsonData[i].userAgent + "</td>\n" +
                          "<td>" + jsonData[i].startTimestamp + "</td>\n" +
-                         "<td>" + ' <input class="btn btn-primary" type="button" value="Terminate" onclick="terminate(\''+ jsonData[i].sessionId +'\')"> '  + "</td>\n" +
+                         "<td>" + ' <input class="btn btn-primary" type="button" value="Terminate" onclick="terminateSession(\''+ jsonData[i].sessionId +'\')"> '  + "</td>\n" +
                          "</tr>";
             }
                 $("#gadgetBody").empty();

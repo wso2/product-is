@@ -16,7 +16,7 @@ var log = new Log();
 
 //var samlResponse = session.get(SAML_RESPONSE);
 //var success = loginClient.login(samlResponse);
-
+var multitenantUtils = Packages.org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 var samlConfig = application.get(SAML_PROPERTIES);
 
@@ -95,7 +95,25 @@ if (samlResponse != null) {
                             log.error(e);
                         }
 
-					    response.sendRedirect("index.jag");
+                        // Extract tenant Domain.
+                        var tenantDomain = multitenantUtils.getTenantDomain(sessionObj.loggedInUser);
+
+                        // Remove tenant domain from the username.
+                        var username = multitenantUtils.getTenantAwareUsername(sessionObj.loggedInUser);
+
+                        var userStoreDomain = PRIMARY_DEFAULT_DOMAIN_NAME;
+                        // Extract the user store domain from the username, if there is one.
+                        var usernameTokens = username.split('/');
+                        if (usernameTokens.length > 1) {
+                            userStoreDomain = usernameTokens[0];
+                            username = usernameTokens[1];
+                        }
+                        
+                        var userId = util.getUserId(username, tenantDomain, userStoreDomain)
+                        session.put(LOGGED_IN_USER_ID, userId);
+                        session.put(LOGGED_IN_USER_STORE_DOMAIN, userStoreDomain);
+                       
+                        response.sendRedirect("index.jag");
 					}else{
 					    response.sendRedirect("/dashboard/samlsso.jag?logout=true&authz_failure=true");
 					}
