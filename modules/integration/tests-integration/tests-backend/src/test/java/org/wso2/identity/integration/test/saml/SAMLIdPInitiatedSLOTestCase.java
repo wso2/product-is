@@ -98,8 +98,8 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
         super.createApplication(samlConfigOne, APPLICATION_ONE);
         super.createApplication(samlConfigTwo, APPLICATION_TWO);
 
-        changeISConfiguration();
         logViewer = new LogViewerClient(backendURL, sessionCookie);
+        changeISConfiguration();
     }
 
     @AfterClass(alwaysRun = true)
@@ -123,15 +123,13 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
         serverConfigurationManager = new ServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredLo4j2File, defaultLog4j2File, true);
         // Waiting to apply the log4j2 changes
-        Thread.sleep(10000);
+        checkForLog(logViewer, "Logging configuration applied successfully");
     }
 
     private void resetISConfiguration() throws Exception {
 
         log.info("Replacing log4j2.properties with default configurations");
         serverConfigurationManager.restoreToLastConfiguration(false);
-        // Waiting to apply the log4j2 changes
-        Thread.sleep(10000);
     }
 
     @Test(description = "Add service providers", groups = "wso2.is", priority = 1)
