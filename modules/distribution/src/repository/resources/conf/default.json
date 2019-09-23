@@ -1,4 +1,7 @@
 {
+  "system.parameter": {
+    "nashorn.args": "--no-deprecation-warning"
+  },
   "realm_manager": {
     "properties": {
       "isCascadeDeleteEnabled": true,

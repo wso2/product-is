@@ -390,6 +390,7 @@
 
                                 <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/registry.xml" token="&lt;versioningRatings&gt;true&lt;/versioningRatings&gt;" value="&lt;versioningRatings&gt;false&lt;/versioningRatings&gt;" />
 
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.properties" token="org.wso2.CipherTransformation=RSA/ECB/OAEPwithSHA1andMGF1Padding" value="org.wso2.CipherTransformation=RSA/ECB/OAEPwithSHA1andMGF1Padding${line.separator}nashorn.args=--no-deprecation-warning" />
 
                                 <unzip dest="${tempdir}/shindig">
                                     <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
