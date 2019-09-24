@@ -36,7 +36,6 @@ import java.util.List;
 import javax.xml.xpath.XPathExpressionException;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.core.Is.is;
 
 /**
@@ -60,7 +59,6 @@ public class UserSessionMeSuccessTest extends UserSessionTest {
     public static Object[][] restAPIUserConfigProvider() {
         return new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN, "sessionTestUser1", "sessionTestUser2"}
-//                {TestUserMode.TENANT_ADMIN, "sessionTestUser1", "sessionTestUser2"}
         };
     }
 
@@ -102,11 +100,11 @@ public class UserSessionMeSuccessTest extends UserSessionTest {
                 .body("sessions", notNullValue())
                 .body("sessions.applications", notNullValue())
                 .body("sessions.applications.subject", notNullValue())
-                .body("sessions.applications.appName[0]", hasItems(SERVICE_PROVIDER_NAME_TRAVELOCITY, SERVICE_PROVIDER_NAME_AVIS))
-                .body("sessions.applications.appName[1]", hasItems(SERVICE_PROVIDER_NAME_TRAVELOCITY))
+                .body("sessions.applications.appName[0]", notNullValue())
+                .body("sessions.applications.appName[1]", notNullValue())
                 .body("sessions.applications.appId", notNullValue())
-                .body("sessions.userAgent", hasItems("Apache-HttpClient/4.3.6 (java 1.5)"))
-                .body("sessions.ip", hasItems("127.0.0.1"))
+                .body("sessions.userAgent", notNullValue())
+                .body("sessions.ip", notNullValue())
                 .body("sessions.loginTime", notNullValue())
                 .body("sessions.lastAccessTime", notNullValue())
                 .body("sessions.id", notNullValue());
@@ -147,14 +145,5 @@ public class UserSessionMeSuccessTest extends UserSessionTest {
                 .body("size()", is(2))
                 .body("userId", notNullValue())
                 .body("sessions.size()", is(0));
-    }
-
-    public void testDeleteNonExistingSession() {
-
-        String endpointURI = String.format(this.sessionEndpointURI, "some-random-session-id");
-        getResponseOfDelete(endpointURI).then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_NO_CONTENT);
     }
 }
