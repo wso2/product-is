@@ -532,6 +532,10 @@
             <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/lib/</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/lib/</outputDirectory>
         </fileSet>
+        <fileSet>
+            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/lib/</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/lib/</outputDirectory>
+        </fileSet>
 
         <fileSet>
             <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/dbscripts/bps</directory>
@@ -1214,4 +1218,13 @@
             <fileMode>644</fileMode>
         </file>
     </files>
+
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>${pom.artifactId}-${pom.version}/lib/</outputDirectory>
+            <includes>
+                <include>org.slf4j:slf4j-simple</include>
+            </includes>
+        </dependencySet>
+    </dependencySets>
 </assembly>
