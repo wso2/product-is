@@ -1,8 +1,7 @@
 [server]
-pattern = "DEV"  #possible values, DEV,HA,HA_WITH_ANALYTICS
 hostname = "localhost"
 node_ip = "127.0.0.1"
-base_path = "https://localhost:9853"
+base_path = "https://$ref{server.hostname}:${carbon.management.port}"
 offset = "410"
 
 [super_admin]
@@ -31,6 +30,6 @@ url = "$env{SHARED_DATABASE_URL}"
 username = "$env{SHARED_DATABASE_USERNAME}"
 password = "$env{SHARED_DATABASE_PASSWORD}"
 
-[keystore.tls]
+[keystore.primary]
 name = "wso2carbon.jks"
 password = "wso2carbon"
