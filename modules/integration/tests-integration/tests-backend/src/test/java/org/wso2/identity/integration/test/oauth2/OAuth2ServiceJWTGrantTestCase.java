@@ -207,7 +207,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
 
         resetISConfiguration();
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
-        changeISConfiguration("jwt_token_issuer_convertToOIDC.toml");
+        changeISConfiguration("jwt_token_issuer_convert_to_oidc.toml");
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         identityProviderMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
         addFederatedIdentityProvider();
@@ -302,7 +302,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
         appMgtclient.updateApplicationData(serviceProvider);
         resetISConfiguration();
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
-        changeISConfiguration("jwt_token_issuer_addremaininguserattribute.toml");
+        changeISConfiguration("jwt_token_issuer_add_remaining_user_attribute.toml");
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
 
         OIDCTokens oidcTokens = makeJWTBearerGrantRequest();
