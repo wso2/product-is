@@ -35,6 +35,9 @@ import static org.testng.Assert.assertNotNull;
 import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJSONFromResponse;
 
+/**
+ * This class tests rename exixiting role to an another existing role name via SCIM2.
+ */
 public class RenameExistingRoleToNameOfAnExistingRoleSCIM2TestCase extends ScenarioTestBase {
 
     public static final String ID_ATTRIBUTE = "id";
