@@ -33,6 +33,9 @@ import org.wso2.identity.scenarios.commons.ScenarioTestBase;
 import static org.testng.Assert.assertEquals;
 import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
 
+/**
+ * This claass tests the role naming violation when creating roles via SCIM2.
+ */
 public class RoleNamingViolationSCIM2TestCase extends ScenarioTestBase {
 
     private CloseableHttpClient client;

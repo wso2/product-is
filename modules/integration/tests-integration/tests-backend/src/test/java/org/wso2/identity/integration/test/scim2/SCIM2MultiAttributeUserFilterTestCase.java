@@ -64,6 +64,9 @@ import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.TYPE_PA
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.USER_NAME_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.VALUE_PARAM;
 
+/**
+ * This class tests multi attribute filtering using different search query filter in SCIM2.
+ */
 public class SCIM2MultiAttributeUserFilterTestCase extends ISIntegrationTest {
 
     private static final List<String> GROUPNAMES = new ArrayList<>(Arrays.asList("scim2Group1", "scim2Group2"));
@@ -170,7 +173,7 @@ public class SCIM2MultiAttributeUserFilterTestCase extends ISIntegrationTest {
         request.setEntity(entity);
 
         HttpResponse response = client.execute(request);
-        assertEquals(response.getStatusLine().getStatusCode(), 201, "User " + "has not been created successfully");
+        assertEquals(response.getStatusLine().getStatusCode(), 201, "User has not been created successfully");
 
         Object responseObj = JSONValue.parse(EntityUtils.toString(response.getEntity()));
         EntityUtils.consume(response.getEntity());
@@ -216,7 +219,7 @@ public class SCIM2MultiAttributeUserFilterTestCase extends ISIntegrationTest {
 
         HttpResponse response = client.execute(request);
 
-        assertEquals(response.getStatusLine().getStatusCode(), 201, "User " + "has not been created successfully");
+        assertEquals(response.getStatusLine().getStatusCode(), 201, "User has not been created successfully");
 
         Object responseObj = JSONValue.parse(EntityUtils.toString(response.getEntity()));
         EntityUtils.consume(response.getEntity());
@@ -234,7 +237,7 @@ public class SCIM2MultiAttributeUserFilterTestCase extends ISIntegrationTest {
     @Test(dependsOnMethods = "testCreateGroup")
     public void testMultiAttributeFilterUser() throws Exception {
 
-        //Validate username and claim filter
+        // Validate username and claim filter.
         StringBuilder query = new StringBuilder(USER_NAME_ATTRIBUTE).append(ENDWITH).
                 append(USERNAMES.get(2).substring(4, USERNAMES.get(2).length())).append(AND_OPERATION).
                 append(NAME_ATTRIBUTE).append(".").append(FAMILY_NAME_ATTRIBUTE).append(EQUAL).
@@ -248,7 +251,7 @@ public class SCIM2MultiAttributeUserFilterTestCase extends ISIntegrationTest {
             throw e;
         }
 
-        //Validate username, claim and group filter
+        // Validate username, claim and group filter.
         query = new StringBuilder(USER_NAME_ATTRIBUTE).append(ENDWITH).
                 append(USERNAMES.get(1).substring(4, USERNAMES.get(1).length())).append(AND_OPERATION).append(GROUPS).
                 append(EQUAL).append(GROUPNAMES.get(0)).append(AND_OPERATION).append(NAME_ATTRIBUTE).append(".").
@@ -257,7 +260,7 @@ public class SCIM2MultiAttributeUserFilterTestCase extends ISIntegrationTest {
         validateMultiAttributeFilteredUser(query.toString(), Arrays.asList(userIds.get(1)),
                 Arrays.asList(USERNAMES.get(1)));
 
-        //Validate groups filter
+        // Validate groups filter.
         query = new StringBuilder(GROUPS).append(EQUAL).append(GROUPNAMES.get(0)).append(AND_OPERATION).
                 append(GROUPS).append(EQUAL).append(GROUPNAMES.get(1));
 
@@ -272,7 +275,7 @@ public class SCIM2MultiAttributeUserFilterTestCase extends ISIntegrationTest {
 
         validateMultiAttributeFilteredUser(query.toString(), userIds, USERNAMES);
 
-        //Validate pagination
+        // Validate pagination.
         query.append("&count=3&startIndex=2");
         validateMultiAttributeFilteredUser(query.toString(), userIds.subList(1, 4), USERNAMES.subList(1, 4));
     }
@@ -296,7 +299,7 @@ public class SCIM2MultiAttributeUserFilterTestCase extends ISIntegrationTest {
                             + " . Error message: " + responseString);
         }
 
-        assertEquals(response.getStatusLine().getStatusCode(), 200, "User " + "has not been retrieved successfully");
+        assertEquals(response.getStatusLine().getStatusCode(), 200, "User has not been retrieved successfully");
 
         EntityUtils.consume(response.getEntity());
 
@@ -332,7 +335,7 @@ public class SCIM2MultiAttributeUserFilterTestCase extends ISIntegrationTest {
         request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
 
         HttpResponse response = client.execute(request);
-        assertEquals(response.getStatusLine().getStatusCode(), 204, "User " + "has not been retrieved successfully");
+        assertEquals(response.getStatusLine().getStatusCode(), 204, "User has not been retrieved successfully");
 
         EntityUtils.consume(response.getEntity());
 
@@ -342,7 +345,7 @@ public class SCIM2MultiAttributeUserFilterTestCase extends ISIntegrationTest {
         getRequest.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
 
         response = client.execute(request);
-        assertEquals(response.getStatusLine().getStatusCode(), 404, "User " + "has not been deleted successfully");
+        assertEquals(response.getStatusLine().getStatusCode(), 404, "User has not been deleted successfully");
         EntityUtils.consume(response.getEntity());
     }
 
@@ -362,7 +365,7 @@ public class SCIM2MultiAttributeUserFilterTestCase extends ISIntegrationTest {
         request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
 
         HttpResponse response = client.execute(request);
-        assertEquals(response.getStatusLine().getStatusCode(), 204, "User " + "has not been retrieved successfully");
+        assertEquals(response.getStatusLine().getStatusCode(), 204, "User has not been retrieved successfully");
 
         EntityUtils.consume(response.getEntity());
 
@@ -372,7 +375,7 @@ public class SCIM2MultiAttributeUserFilterTestCase extends ISIntegrationTest {
         getRequest.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
 
         response = client.execute(getRequest);
-        assertEquals(response.getStatusLine().getStatusCode(), 404, "User " + "has not been deleted successfully");
+        assertEquals(response.getStatusLine().getStatusCode(), 404, "User has not been deleted successfully");
         EntityUtils.consume(response.getEntity());
     }
 
