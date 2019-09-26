@@ -164,9 +164,9 @@
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.scim.common.feature.default.json</param>
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.consent.mgt.server.feature.default.json</param>
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.data.publisher.application.authentication.server.feature.default.json</param>
-
+                                        <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.humantask.server.feature.default.json</param>
                                     </include>
-                                    <target>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/default.json</target>
+                                    
                                     <mergeChildren>true</mergeChildren>
                                 </task>
                                 <task>
@@ -239,8 +239,8 @@
                                 <property name="security-header-filter-is-token" value="&lt;filter&gt;${line.separator} &lt;filter-name&gt;HttpHeaderSecurityFilter&lt;/filter-name&gt;${line.separator} &lt;filter-class&gt;org.apache.catalina.filters.HttpHeaderSecurityFilter&lt;/filter-class&gt;${line.separator} &lt;init-param&gt;${line.separator} &lt;param-name&gt;hstsEnabled&lt;/param-name&gt;${line.separator} &lt;param-value&gt;false&lt;/param-value&gt;${line.separator} &lt;/init-param&gt;${line.separator} &lt;init-param&gt;${line.separator} &lt;param-name&gt;antiClickJackingEnabled&lt;/param-name&gt;${line.separator} &lt;param-value&gt;false&lt;/param-value&gt;${line.separator} &lt;/init-param&gt;${line.separator} &lt;/filter&gt;${line.separator}${line.separator} &lt;filter&gt;${line.separator} &lt;filter-name&gt;HttpHeaderSecurityFilter_EnableAntiClickJacking&lt;/filter-name&gt;${line.separator} &lt;filter-class&gt;org.apache.catalina.filters.HttpHeaderSecurityFilter&lt;/filter-class&gt;${line.separator} &lt;init-param&gt;${line.separator} &lt;param-name&gt;hstsEnabled&lt;/param-name&gt;${line.separator} &lt;param-value&gt;false&lt;/param-value&gt;${line.separator} &lt;/init-param&gt;${line.separator} &lt;init-param&gt;${line.separator} &lt;param-name&gt;blockContentTypeSniffingEnabled&lt;/param-name&gt;${line.separator} &lt;param-value&gt;false&lt;/param-value&gt;${line.separator}&lt;/init-param&gt;${line.separator}&lt;init-param&gt;${line.separator}&lt;param-name&gt;xssProtectionEnabled&lt;/param-name&gt;${line.separator}&lt;param-value&gt;false&lt;/param-value&gt;${line.separator}&lt;/init-param&gt;${line.separator}&lt;/filter&gt;" />
 
                                 <property name="security-header-filter-mapping-is-token" value="&lt;filter-mapping&gt;${line.separator} &lt;filter-name&gt;HttpHeaderSecurityFilter&lt;/filter-name&gt;${line.separator} &lt;url-pattern&gt;*&lt;/url-pattern&gt;${line.separator} &lt;/filter-mapping&gt;${line.separator}${line.separator} &lt;filter-mapping&gt;${line.separator} &lt;filter-name&gt;CharsetFilter&lt;/filter-name&gt;${line.separator} &lt;url-pattern&gt;/*&lt;/url-pattern&gt;${line.separator} &lt;/filter-mapping&gt;${line.separator}${line.separator} &lt;filter-mapping&gt;${line.separator} &lt;filter-name&gt;HttpHeaderSecurityFilter_EnableAntiClickJacking&lt;/filter-name&gt;${line.separator} &lt;url-pattern&gt;/carbon/*&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/services/*&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/samlsso/*&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/openid/*&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/openidserver/*&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/passivests/*&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/acs/*&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/iwa/*&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/identity/*&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/thriftAuthenticator/*&lt;/url-pattern&gt;${line.separator} &lt;/filter-mapping&gt;${line.separator}${line.separator} &lt;filter-mapping&gt;${line.separator} &lt;filter-name&gt;CSRFGuard&lt;/filter-name&gt;${line.separator} &lt;url-pattern&gt;/*&lt;/url-pattern&gt;${line.separator} &lt;/filter-mapping&gt;${line.separator}" />
-                                <property name="hideMenu" value="&lt;/Security&gt;${line.separator}&lt;HideMenuItemIds&gt;${line.separator}&lt;HideMenuItemId&gt;claim_mgt_menu&lt;/HideMenuItemId&gt;${line.separator}&lt;HideMenuItemId&gt;identity_mgt_emailtemplate_menu&lt;/HideMenuItemId&gt;${line.separator}&lt;HideMenuItemId&gt;identity_security_questions_menu&lt;/HideMenuItemId&gt;${line.separator}&lt;/HideMenuItemIds&gt;" />
-                                <property name="hideMenuTemplate" value="&lt;/Security&gt;${line.separator}&lt;HideMenuItemIds&gt;${line.separator}{% for item in claim_management.hide_menu_items %}${line.separator}&lt;HideMenuItemId&gt;{{item}}&lt;/HideMenuItemId&gt;${line.separator}{% endfor %}${line.separator}&lt;/HideMenuItemIds&gt;" />
+                                <property name="hideMenu" value="&lt;/Security&gt;${line.separator}&lt;HideMenuItemIds&gt;${line.separator}&lt;HideMenuItemId&gt;claim_mgt_menu&lt;/HideMenuItemId&gt;${line.separator}&lt;HideMenuItemId&gt;identity_mgt_emailtemplate_menu&lt;/HideMenuItemId&gt;${line.separator}&lt;HideMenuItemId&gt;identity_security_questions_menu&lt;/HideMenuItemId&gt;${line.separator}&lt;HideMenuItemId&gt;metrics_menu&lt;/HideMenuItemId&gt;${line.separator}&lt;/HideMenuItemIds&gt;" />
+                                <property name="hideMenuTemplate" value="&lt;/Security&gt;${line.separator}&lt;HideMenuItemIds&gt;${line.separator}{% for item in server.hide_menu_items %}${line.separator}&lt;HideMenuItemId&gt;{{item}}&lt;/HideMenuItemId&gt;${line.separator}{% endfor %}${line.separator}&lt;/HideMenuItemIds&gt;" />
 
                                 <property name="identity-db" value=" &lt;datasource&gt;${line.separator} &lt;name&gt;WSO2_IDENTITY_DB&lt;/name&gt;${line.separator} &lt;description&gt;The datasource used for identity data&lt;/description&gt;${line.separator} &lt;jndiConfig&gt;${line.separator} &lt;name&gt;jdbc/WSO2IdentityDB&lt;/name&gt;${line.separator} &lt;/jndiConfig&gt;${line.separator} &lt;definition type=&quot;RDBMS&quot;&gt;${line.separator} &lt;configuration&gt;${line.separator} &lt;url&gt;jdbc:h2:./repository/database/WSO2IDENTITY_DB;DB_CLOSE_ON_EXIT=FALSE&lt;/url&gt;${line.separator} &lt;username&gt;wso2carbon&lt;/username&gt;${line.separator} &lt;password&gt;wso2carbon&lt;/password&gt;${line.separator} &lt;driverClassName&gt;org.h2.Driver&lt;/driverClassName&gt;${line.separator} &lt;maxActive&gt;50&lt;/maxActive&gt;${line.separator} &lt;maxWait&gt;60000&lt;/maxWait&gt;${line.separator} &lt;testOnBorrow&gt;true&lt;/testOnBorrow&gt;${line.separator} &lt;validationQuery&gt;SELECT 1&lt;/validationQuery&gt;${line.separator} &lt;validationInterval&gt;30000&lt;/validationInterval&gt;${line.separator} &lt;defaultAutoCommit&gt;true&lt;/defaultAutoCommit&gt;${line.separator} &lt;/configuration&gt;${line.separator} &lt;/definition&gt;${line.separator} &lt;/datasource&gt;${line.separator} &lt;/datasources&gt;" />
                                 <property name="identity-db-template" value=" &lt;datasource&gt;${line.separator} &lt;name&gt;WSO2_IDENTITY_DB&lt;/name&gt;${line.separator} &lt;description&gt;Shared database for identity data&lt;/description&gt;${line.separator} &lt;jndiConfig&gt;${line.separator} &lt;name&gt;jdbc/WSO2IdentityDB&lt;/name&gt;${line.separator} &lt;/jndiConfig&gt;${line.separator} &lt;definition type=&quot;RDBMS&quot;&gt;${line.separator} &lt;configuration&gt;${line.separator} &lt;url&gt;{{database.identity_db.url}}&lt;/url&gt;${line.separator} &lt;username&gt;{{database.identity_db.username}}&lt;/username&gt;${line.separator} &lt;password&gt;{{database.identity_db.password}}&lt;/password&gt;${line.separator} &lt;driverClassName&gt;{{database.identity_db.driver}}&lt;/driverClassName&gt;${line.separator} {% for property_name,property_value in database.identity_db.pool_options.items() %}${line.separator} &lt;{{property_name}}&gt;{{property_value}}&lt;/{{property_name}}&gt;${line.separator} {% endfor %}${line.separator} &lt;/configuration&gt;${line.separator} &lt;/definition&gt;${line.separator} &lt;/datasource&gt;${line.separator} &lt;/datasources&gt;" />
@@ -358,7 +358,13 @@
 
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml" token="&lt;Property name=&quot;isCascadeDeleteEnabled&quot;&gt;true&lt;/Property&gt;" value="&lt;Property name=&quot;isCascadeDeleteEnabled&quot;&gt;true&lt;/Property&gt;${line.separator} &lt;Property name=&quot;initializeNewClaimManager&quot;&gt;true&lt;/Property&gt;" />
 
-                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.sh" token="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot; \" value="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot; \${line.separator} -Dorg.apache.xml.security.ignoreLineBreaks=false \" />
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.sh" token="if [ $java_version_formatted -ge 1100 ]; then" value="NASHRON_ARGS=&quot;&quot; ${line.separator} ${line.separator}if [ $java_version_formatted -ge 1100 ]; then${line.separator}  NASHRON_ARGS=&quot;--no-deprecation-warning&quot;" />
+
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.bat" token="set CARBON_CLASSPATH=.\lib\*;%CARBON_CLASSPATH%" value="set CARBON_CLASSPATH=.\lib\*;%CARBON_CLASSPATH% ${line.separator}if %JAVA_VERSION% GEQ 110 set NASHRON_ARGS=--no-deprecation-warning" />
+
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.sh" token="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot; \" value="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot; \${line.separator}   -Dorg.apache.xml.security.ignoreLineBreaks=false \${line.separator}   -Dnashorn.args=&quot;$NASHRON_ARGS&quot; \" />
+
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.bat" token="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot;" value="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot; -Dnashorn.args=&quot;%NASHRON_ARGS%&quot;" />
 
                                 <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/sso-idp-config.xml" token="${sso-idp-config-default}" value="${sso-idp-config-replace}" />
 
@@ -622,6 +628,37 @@
                                         ../../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/registry.xml.j2
                                     </output>
                                     <config>registry_config_change.xml.j2</config>
+                                </transformation>
+                            </transformations>
+                            <namespaceContexts>
+                                <sv>http://org.wso2.securevault/configuration</sv>
+                            </namespaceContexts>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.google.code.maven-config-processor-plugin</groupId>
+                <artifactId>config-processor-maven-plugin</artifactId>
+                <version>2.6</version>
+                <executions>
+                    <execution>
+                        <id>add-missing-axis2-configs</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>process</goal>
+                        </goals>
+                        <configuration>
+                            <failOnMissingXpath>false</failOnMissingXpath>
+                            <transformations>
+                                <transformation>
+                                    <input>
+                                        ${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/axis2/axis2.xml.j2
+                                    </input>
+                                    <output>
+                                        ../../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/axis2/axis2.xml.j2
+                                    </output>
+                                    <config>axis2_config_change.xml.j2</config>
                                 </transformation>
                             </transformations>
                             <namespaceContexts>
