@@ -1953,7 +1953,7 @@
         <asm-all.version>5.2</asm-all.version>
         <cglib.wso2.version>2.2.wso2v1</cglib.wso2.version>
         <jibx.wso2.version>1.2.1.wso2v1</jibx.wso2.version>
-        <axis2.jibx.wso2.version>${axis2.wso2.version}</axis2.jibx.wso2.version>
+        <axis2.jibx.wso2.version>1.6.1.wso2v11</axis2.jibx.wso2.version>
         <axis2.jaxb.wso2.version>${axis2.wso2.version}</axis2.jaxb.wso2.version>
         <axis2-transports.version>2.0.0-wso2v38</axis2-transports.version>
         <h2database.wso2.version>1.4.199.wso2v1</h2database.wso2.version>
