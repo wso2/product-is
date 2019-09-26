@@ -35,6 +35,9 @@ import static org.testng.Assert.assertNotNull;
 import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJSONFromResponse;
 
+/**
+ * This class tests manage roles creation, recreation with SCIM2.
+ */
 public class ManageRolesSCIM2TestCase extends ScenarioTestBase {
 
     public static final String ID_ATTRIBUTE = "id";

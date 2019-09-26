@@ -33,13 +33,13 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.sso.saml.stub.IdentitySAMLSSOConfigServiceIdentityException;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.LogViewerLogViewerException;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
-import org.wso2.identity.integration.common.clients.LoggingAdminClient;
+import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.carbon.logging.view.data.xsd.LogEvent;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 
+import java.io.File;
 import java.rmi.RemoteException;
 
 /**
@@ -61,9 +61,9 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
     private SAMLConfig samlConfigTwo;
     private String resultPage;
     private SAMLSSOServiceProviderDTO samlssoServiceProviderDTO;
+    private ServerConfigurationManager serverConfigurationManager;
 
     private LogViewerClient logViewer;
-    private LoggingAdminClient logAdmin;
 
     private static final Long WAIT_TIME = 10000L;
 
@@ -98,18 +98,38 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
         super.createApplication(samlConfigOne, APPLICATION_ONE);
         super.createApplication(samlConfigTwo, APPLICATION_TWO);
 
-        logAdmin = new LoggingAdminClient(backendURL, sessionCookie);
         logViewer = new LogViewerClient(backendURL, sessionCookie);
+        changeISConfiguration();
     }
 
     @AfterClass(alwaysRun = true)
     public void testClear() throws Exception {
 
+        resetISConfiguration();
         super.deleteUser(samlConfigOne);
         super.deleteApplication(APPLICATION_ONE);
         super.deleteApplication(APPLICATION_TWO);
-
         super.testClear();
+    }
+
+    private void changeISConfiguration() throws Exception {
+
+        log.info("Replacing log4j2.properties enabling saml debug logs");
+        String carbonHome = Utils.getResidentCarbonHome();
+        File defaultLog4j2File = new File(carbonHome + File.separator + "repository" + File.separator
+                + "conf" + File.separator + "log4j2.properties");
+        File configuredLo4j2File = new File(getISResourceLocation() + File.separator + "saml" + File.separator
+                + "log4j2_saml_enabled.properties");
+        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager.applyConfigurationWithoutRestart(configuredLo4j2File, defaultLog4j2File, true);
+        // Waiting to apply the log4j2 changes
+        checkForLog(logViewer, "Logging configuration applied successfully");
+    }
+
+    private void resetISConfiguration() throws Exception {
+
+        log.info("Replacing log4j2.properties with default configurations");
+        serverConfigurationManager.restoreToLastConfiguration(false);
     }
 
     @Test(description = "Add service providers", groups = "wso2.is", priority = 1)
@@ -191,10 +211,6 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
     public void testSAMLIdpInitiatedSLO() throws Exception {
 
         try {
-            logAdmin.updateLoggerData("org.wso2.carbon.identity.sso.saml.logout.LogoutRequestSender",
-                    LoggingAdminClient.LogLevel.DEBUG.name(), true, false);
-            logAdmin.updateLoggerData("org.wso2.carbon.identity.sso.saml.util.SAMLSSOUtil",
-                    LoggingAdminClient.LogLevel.DEBUG.name(), true, false);
             logViewer.clearLogs();
 
             HttpResponse response = Utils.sendGetRequest(SAML_IDP_SLO_URL, USER_AGENT, httpClient);
@@ -271,7 +287,7 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
     }
 
     protected static boolean checkForLog(LogViewerClient logViewerClient, String expected) throws
-            InterruptedException, RemoteException, LogViewerLogViewerException {
+            InterruptedException, RemoteException {
 
         boolean logExists = false;
         long terminationTime = System.currentTimeMillis() + WAIT_TIME;
@@ -285,7 +301,7 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
     }
 
     protected static boolean assertIfLogExists(LogViewerClient logViewerClient, String expected)
-            throws RemoteException, LogViewerLogViewerException {
+            throws RemoteException {
 
         LogEvent[] systemLogs;
         systemLogs = logViewerClient.getAllRemoteSystemLogs();

@@ -5,6 +5,8 @@
   "database.shared_db.pool_options.test_on_borrow": "database.shared_db.pool_options.testOnBorrow",
   "database.shared_db.pool_options.validation_interval": "database.shared_db.pool_options.validationInterval",
   "database.shared_db.pool_options.default_auto_commit": "database.shared_db.pool_options.defaultAutoCommit",
+  "database.shared_db.validation_query": "database.shared_db.validationQuery",
+  "database.identity_db.validation_query": "database.identity_db.validationQuery",
 
   "user_store.connection_url":"user_store.properties.ConnectionURL",
   "user_store.connection_name":"user_store.properties.ConnectionName",
