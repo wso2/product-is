@@ -325,7 +325,7 @@ function drawFIDORegistration() {
                 "    <div class=\"container content-section-wrapper\">\n" +
                 "        <div class=\"row\">\n" +
                 "            <div class=\"col-lg-12 content-section\">\n" +
-                "                <legend>Manage FIDO U2F Device </legend>\n" +
+                "                <legend>Manage FIDO Devices </legend>\n" +
                 "                <form method=\"post\" class=\"form-horizontal\" id=\"associateForm\" name=\"selfReg\"  >\n";
             var middle = "";
             if (deviceMetadata != null && deviceMetadata.length > 0) {
@@ -517,7 +517,7 @@ function drawFIDO2Callback(data) {
         "    <div class=\"container content-section-wrapper\">\n" +
         "        <div class=\"row\">\n" +
         "            <div class=\"col-lg-12 content-section\">\n" +
-        "                <legend>Manage FIDO U2F Device </legend>\n" +
+        "                <legend>Manage FIDO Devices </legend>\n" +
         "                <form method=\"post\" class=\"form-horizontal\" id=\"associateForm\" name=\"selfReg\"  >\n";
 
     var middle = "";
