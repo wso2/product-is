@@ -1916,10 +1916,10 @@
         <!-- Carbon Repo Versions -->
         <carbon.commons.version>4.7.11</carbon.commons.version>
         <carbon.deployment.version>4.9.11</carbon.deployment.version>
-        <carbon.registry.version>4.7.12</carbon.registry.version>
+        <carbon.registry.version>4.7.13</carbon.registry.version>
         <carbon.multitenancy.version>4.7.11</carbon.multitenancy.version>
         <carbon.metrics.version>1.3.3</carbon.metrics.version>
-        <carbon.business-process.version>4.5.17</carbon.business-process.version>
+        <carbon.business-process.version>4.5.18</carbon.business-process.version>
         <carbon.analytics-common.version>5.2.10</carbon.analytics-common.version>
         <carbon.dashboards.version>2.0.26</carbon.dashboards.version>
         <carbon.database.utils.version>2.0.10</carbon.database.utils.version>
@@ -1953,9 +1953,9 @@
         <asm-all.version>5.2</asm-all.version>
         <cglib.wso2.version>2.2.wso2v1</cglib.wso2.version>
         <jibx.wso2.version>1.2.1.wso2v1</jibx.wso2.version>
-        <axis2.jibx.wso2.version>1.6.1.wso2v11</axis2.jibx.wso2.version>
-        <axis2.jaxb.wso2.version>1.6.1-wso2v31</axis2.jaxb.wso2.version>
-        <axis2-transports.version>2.0.0-wso2v35</axis2-transports.version>
+        <axis2.jibx.wso2.version>${axis2.wso2.version}</axis2.jibx.wso2.version>
+        <axis2.jaxb.wso2.version>${axis2.wso2.version}</axis2.jaxb.wso2.version>
+        <axis2-transports.version>2.0.0-wso2v38</axis2-transports.version>
         <h2database.wso2.version>1.4.199.wso2v1</h2database.wso2.version>
         <wso2.shindig.version>2.5.2-wso2v11</wso2.shindig.version>
         <slf4j.version>1.7.28</slf4j.version>
@@ -2003,7 +2003,7 @@
         <commons.lang.version>2.6</commons.lang.version>
         <charon.orbit.version>2.1.6</charon.orbit.version>
         <commons-collections.version>3.2.2</commons-collections.version>
-        <axis2.client.version>1.6.1-wso2v38</axis2.client.version>
+        <axis2.client.version>${axis2.wso2.version}</axis2.client.version>
         <axis2.wso2.version>1.6.1-wso2v38</axis2.wso2.version>
         <json-smart.version>1.3</json-smart.version>
         <nimbusds.version>7.3.0.wso2v1</nimbusds.version>
