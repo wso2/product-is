@@ -38,7 +38,7 @@ public class JDBCUserStoreInitializerTestCase extends ISIntegrationTest {
         String carbonHome = CarbonUtils.getCarbonHome();
         defaultConfigFile = getDeploymentTomlFile(carbonHome);
         File userMgtConfigFile = new File(getISResourceLocation() + File.separator + "userMgt"
-                + File.separator + "JdbcUserMgtConfig.toml");
+                + File.separator + "jdbc_user_mgt_config.toml");
         scm = new ServerConfigurationManager(isServer);
         scm.applyConfiguration(userMgtConfigFile, defaultConfigFile, true, true);
     }

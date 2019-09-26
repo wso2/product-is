@@ -9,13 +9,11 @@ All WSO2 products are based on a common platform called WSO2 Carbon. It is there
 3.	Build the WSO2 identity server code.
 
 > **Note**: This was tested with the following versions of the products:
->  * carbon-identity-framework – v5.12.153
->  * carbon-kernel – v 4.4.35
->  * product-is – v5.8.0
+>  * carbon-identity-framework – v5.14.76
+>  * carbon-kernel – v4.5.1
+>  * product-is – v5.9.0
 
 ###	Import source code in Eclipse IDE
-
-Contributing to IS does not require Developer Studio plugin, however all WSO2 products can use the Developer Studio plugin in Eclipse. The Eclipse version (Luna Service Release 2 (4.4.2)) already contains this plugin from the following link: https://wso2.com/products/developer-studio/.
 
 1. Import source code of carbon-kernel from GitHub: You need to import carbon-kernel code into the Eclipse IDE from GitHub. Follow the steps below to achieve this:
    *	Open Eclipse.
