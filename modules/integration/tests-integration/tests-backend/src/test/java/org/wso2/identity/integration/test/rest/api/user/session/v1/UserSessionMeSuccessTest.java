@@ -70,9 +70,13 @@ public class UserSessionMeSuccessTest extends UserSessionTest {
     }
 
     @AfterClass(alwaysRun = true)
-    public void testConclude() {
+    public void testConclude() throws Exception {
 
         super.conclude();
+        appMgtclient.deleteApplication(serviceProviderTravelocity.getApplicationName());
+        appMgtclient.deleteApplication(serviceProviderAvis.getApplicationName());
+        userMgtClient.deleteUser(session_test_user1);
+        userMgtClient.deleteUser(session_test_user2);
     }
 
     @BeforeMethod(alwaysRun = true)

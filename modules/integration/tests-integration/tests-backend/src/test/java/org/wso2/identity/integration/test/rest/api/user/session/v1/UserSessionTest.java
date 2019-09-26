@@ -97,12 +97,12 @@ public class UserSessionTest extends RESTAPIUserTestBase {
     protected CloseableHttpClient client;
     private String ADMIN_ROLE = "admin";
     private String DEFAULT_PROFILE = "default";
-    private UserManagementClient userMgtClient;
+    protected UserManagementClient userMgtClient;
     private String isURL;
-    private ApplicationManagementServiceClient appMgtclient;
+    protected ApplicationManagementServiceClient appMgtclient;
     private SAMLSSOConfigServiceClient ssoConfigServiceClient;
-    private ServiceProvider serviceProviderTravelocity;
-    private ServiceProvider serviceProviderAvis;
+    protected ServiceProvider serviceProviderTravelocity;
+    protected ServiceProvider serviceProviderAvis;
 
     void initUrls(String pathParam) {
 
@@ -142,10 +142,6 @@ public class UserSessionTest extends RESTAPIUserTestBase {
     public void testConclude() throws Exception {
 
         super.conclude();
-        appMgtclient.deleteApplication(serviceProviderTravelocity.getApplicationName());
-        appMgtclient.deleteApplication(serviceProviderAvis.getApplicationName());
-        userMgtClient.deleteUser(session_test_user1);
-        userMgtClient.deleteUser(session_test_user2);
     }
 
     private SAMLSSOServiceProviderDTO createSAMLServiceProviderDTO(String issuer) {
