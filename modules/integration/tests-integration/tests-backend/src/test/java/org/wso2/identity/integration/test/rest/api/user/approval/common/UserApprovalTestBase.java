@@ -20,6 +20,10 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.openqa.selenium.remote.internal.HttpClientFactory;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.extensions.servers.carbonserver.MultipleServersManager;
 import org.wso2.carbon.identity.workflow.mgt.stub.WorkflowAdminServiceWorkflowException;
@@ -35,6 +39,8 @@ import org.wso2.identity.integration.common.clients.workflow.mgt.WorkflowAdminCl
 import org.wso2.identity.integration.test.rest.api.user.common.RESTAPIUserTestBase;
 import org.wso2.identity.integration.test.utils.WorkflowConstants;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.rmi.RemoteException;
 
 public class UserApprovalTestBase extends RESTAPIUserTestBase {
@@ -181,13 +187,56 @@ public class UserApprovalTestBase extends RESTAPIUserTestBase {
         String userName1 = userToAdd[0];
         String userName2 = userToAdd[1];
         String userName3 = userToAdd[2];
-        log.info("Adding users matching the workflow engagement : " + addUserWorkflowName + " to tenant:" + this
-                .tenant);
-        this.usmClient.addUser(userName1, "test12345", new String[]{"wfRestRole1"}, new ClaimValue[0], null, false);
-        this.usmClient.addUser(userName2, "test12345", new String[]{"wfRestRole1", "wfRestRole2"}, new
-                ClaimValue[0], null, false);
-        this.usmClient.addUser(userName3, "test12345", new String[]{"wfRestRole1", "wfRestRole2", "wfRestRole3"}, new
-                ClaimValue[0], null, false);
+        log.info("Adding users matching the workflow engagement : " + addUserWorkflowName + " to tenant:" +
+                this.tenant);
+
+        // Wait till the workflow is deployed.
+        boolean runLoop = true;
+        int count = 0;
+
+        // We have to check whether the service is up and running by calling the generated endpoint.
+        String url = super.getBackendURL() + addUserWorkflowName + "Service";
+        HttpClient client = new HttpClientFactory().getHttpClient();
+        HttpGet request = new HttpGet(url);
+
+        while (runLoop) {
+
+            runLoop = false;
+            HttpResponse httpResponse = client.execute(request);
+            BufferedReader bufferedReader =
+                    new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
+
+            // If the server response contains "service not available" text, then we have to assume that the service is
+            // still not available. So we have to recheck after brief time period.
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                if (line.contains("The service cannot be found for the endpoint reference")) {
+                    runLoop = true;
+                    Thread.sleep(100);
+                    break;
+                }
+            }
+
+            count++;
+            // After 10 attempts, inform and re-try for 50 seconds. This is for server based test runners like Jenkins.
+            if (count > 10) {
+                log.info("Still no luck :(. So going to wait 5 seconds and try " + (21 - count) + " more times.");
+                Thread.sleep(4900);
+            }
+
+            // Give up after 50 seconds or this will be a forever loop.
+            if (count > 20) {
+                log.info("No luck. Going to give up. Test will most probably fail.");
+                runLoop = false;
+            }
+        }
+
+        this.usmClient.addUser(userName1, "test12345", new String[]{"wfRestRole1"}, new ClaimValue[0], null,
+                false);
+        this.usmClient.addUser(userName2, "test12345", new String[]{"wfRestRole1", "wfRestRole2"},
+                new ClaimValue[0], null, false);
+        this.usmClient.addUser(userName3, "test12345", new String[]{"wfRestRole1", "wfRestRole2",
+                "wfRestRole3"}, new ClaimValue[0], null, false);
     }
 
     protected void setUpWorkFlowAssociation() throws Exception {
@@ -200,12 +249,14 @@ public class UserApprovalTestBase extends RESTAPIUserTestBase {
     }
 
     protected void cleanUPWorkFlows() throws Exception {
+
         this.client.deleteAssociation(associationId);
         this.client.deleteWorkflow(workflowId);
         cleanUpUsersAndRoles();
     }
 
     private void cleanUpUsersAndRoles() throws Exception {
+
         try {
             // Remove Users
             for (String user : userToAdd) {
