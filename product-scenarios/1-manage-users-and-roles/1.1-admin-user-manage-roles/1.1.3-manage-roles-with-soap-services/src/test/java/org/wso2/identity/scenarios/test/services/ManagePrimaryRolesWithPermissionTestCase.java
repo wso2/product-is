@@ -28,6 +28,9 @@ import org.wso2.identity.scenarios.commons.clients.UserManagementClient;
 
 import static org.testng.Assert.assertEquals;
 
+/**
+ * This class tests manage primary roles with permission using SOAP service.
+ */
 public class ManagePrimaryRolesWithPermissionTestCase extends ScenarioTestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(ManagePrimaryRolesWithPermissionTestCase.class);

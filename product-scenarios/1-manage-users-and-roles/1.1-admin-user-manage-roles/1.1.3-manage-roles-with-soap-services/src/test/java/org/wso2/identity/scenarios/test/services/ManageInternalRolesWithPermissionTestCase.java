@@ -28,6 +28,9 @@ import org.wso2.identity.scenarios.commons.clients.UserManagementClient;
 
 import static org.testng.Assert.assertEquals;
 
+/**
+ * This class tests manage internal roles with permission via SOAP service.
+ */
 public class ManageInternalRolesWithPermissionTestCase extends ScenarioTestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(ManageInternalRolesWithPermissionTestCase.class);
