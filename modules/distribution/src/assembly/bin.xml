@@ -36,6 +36,7 @@
                 <exclude>**/version.txt</exclude>
                 <exclude>**/README*</exclude>
                 <exclude>**/carbon.xml</exclude>
+                <exclude>**/carbon.xml.j2</exclude>
                 <exclude>**/axis2/*</exclude>
                 <exclude>**/LICENSE.txt</exclude>
                 <exclude>**/release-notes.html</exclude>
@@ -703,6 +704,11 @@
         <file>
             <source>target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml</source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
+            <filtered>true</filtered>
+        </file>
+        <file>
+            <source>target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/carbon.xml.j2</source>
+            <outputDirectory>wso2is-${pom.version}/repository/resources/conf/templates/repository/conf</outputDirectory>
             <filtered>true</filtered>
         </file>
         <file>
