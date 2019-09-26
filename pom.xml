@@ -1911,7 +1911,7 @@
         <charon.version>3.1.21</charon.version>
 
         <!-- Carbon Kernel -->
-        <carbon.kernel.version>4.5.0</carbon.kernel.version>
+        <carbon.kernel.version>4.5.1</carbon.kernel.version>
 
         <!-- Carbon Repo Versions -->
         <carbon.commons.version>4.7.11</carbon.commons.version>
