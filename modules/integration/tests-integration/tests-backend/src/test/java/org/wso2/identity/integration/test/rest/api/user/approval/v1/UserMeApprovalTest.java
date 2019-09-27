@@ -270,14 +270,14 @@ public class UserMeApprovalTest extends UserApprovalTestBase {
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .log().ifValidationFails()
-                .body("approvalStatus", is(APPROVAL_STATE.APPROVE.name()));
+                .body("approvalStatus", is(APPROVAL_STATE.APPROVED.name()));
 
         response = getResponseOfGet(String.format(ME_APPROVAL_TASK_ENDPOINT_URI, taskIdToDeny));
         response.then()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .log().ifValidationFails()
-                .body("approvalStatus", is(APPROVAL_STATE.REJECT.name()));
+                .body("approvalStatus", is(APPROVAL_STATE.REJECTED.name()));
     }
 
     @Test(dependsOnMethods = {"testDenyTask"})

@@ -71,8 +71,8 @@ public class UserApprovalTestBase extends RESTAPIUserTestBase {
     public enum APPROVAL_STATE {
 
         PENDING,
-        APPROVE,
-        REJECT
+        APPROVED,
+        REJECTED
     }
 
     public enum APPROVAL_ACTION {
