@@ -497,43 +497,6 @@
                                     </fileset>
                                     <mapper type="glob" from="*.html" to="*.xml" />
                                 </move>
-                                <copy todir="src/site/xdoc" overwrite="false" includeemptydirs="false">
-                                    <fileset dir="${tempdir}/web">
-                                        <exclude name="**/yui/**" />
-                                        <exclude name="**/ajax/**" />
-                                        <exclude name="**/codemirror/**" />
-                                        <exclude name="**/WEB-INF/**" />
-                                        <exclude name="**/gadget/**" />
-                                        <exclude name="**/*.html" />
-                                        <exclude name="**/*.js" />
-                                        <exclude name="**/*.jsp" />
-                                        <exclude name="**/*.xsl" />
-                                        <exclude name="*.*" />
-                                        <exclude name="**/template.xml" />
-                                        <exclude name="**/codepress.xml" />
-                                    </fileset>
-                                </copy>
-                                <copy todir="src/site" overwrite="false" includeemptydirs="false">
-                                    <fileset dir="../documentation/src/site">
-                                    </fileset>
-                                </copy>
-                                <copy todir="src/site" overwrite="true" includeemptydirs="false">
-                                    <fileset dir="../documentation/src/site">
-                                        <exclude name="**/images/*.*" />
-                                        <exclude name="**/user-mgt-actdir.xml" />
-                                        <exclude name="**/user-mgt-jdbc.xml" />
-                                        <exclude name="**/user-mgt-ldap.xml" />
-                                        <exclude name="**/user-mgt-ldap-read-write.xml" />
-                                    </fileset>
-                                    <filterset>
-                                        <filter token="buildNumber" value="${buildNumber}" />
-                                    </filterset>
-                                </copy>
-                                <copy todir="target/site/" overwrite="false" includeemptydirs="false">
-                                    <fileset dir="src/site/xdoc/">
-                                        <include name="**/images/*.*" />
-                                    </fileset>
-                                </copy>
                                 <delete dir="${tempdir}" />
 
                                 <!-- Explode the api.war -->
@@ -716,7 +679,6 @@
                             </filters>
                             <descriptors>
                                 <descriptor>src/assembly/src.xml</descriptor>
-                                <descriptor>src/assembly/docs.xml</descriptor>
                             </descriptors>
                         </configuration>
                     </execution>
