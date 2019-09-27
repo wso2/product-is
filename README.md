@@ -43,7 +43,7 @@ System Requirements
 
 For more details see
    http://docs.wso2.com/display/IS580/Installation+Prerequisites (For latest released version)
-   http://docs.wso2.com/display/IS590/Installation+Prerequisites (For current development version)
+   https://is.docs.wso2.com/en/5.9.0 (For current development version)
 
 
 Project Resources
@@ -52,8 +52,8 @@ Project Resources
 * Home page          : http://wso2.com/products/identity-server
 * Library            : http://wso2.org/library/identity
 * Wiki 
-    * Latest released version     : http://docs.wso2.org/wiki/display/IS580/WSO2+Identity+Server+Documentation
-    * Current development version : http://docs.wso2.org/wiki/display/IS590/WSO2+Identity+Server+Documentation
+    * Latest released version     : https://docs.wso2.com/display/IS580/WSO2+Identity+Server+Documentation
+    * Current development version : https://is.docs.wso2.com/en/5.9.0
 * Issue Tracker      : https://github.com/wso2/product-is/issues      
 * Forums             : http://stackoverflow.com/questions/tagged/wso2is/
 * WSO2 Developer List: dev@wso2.org
@@ -201,7 +201,7 @@ By default mode, it would ask you to enter the master password
 > ciphertool -Dchange  (in UNIX)
 
 For more details see
-https://docs.wso2.com/display/ADMIN44x/Carbon+Secure+Vault+Implementation
+https://is.docs.wso2.com/en/5.9.0/administer/carbon-secure-vault-implementation
 
 Support
 =======
