@@ -129,7 +129,6 @@ public class RegistryMountTestCase extends ISIntegrationTest {
 
         ssoConfigServiceClient
                 .addServiceProvider(createSsoServiceProviderDTO());
-        serverConfigurationManager.restartGracefully();
     }
 
     @AfterClass(alwaysRun = true)
