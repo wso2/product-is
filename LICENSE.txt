@@ -454,11 +454,11 @@ org.wso2.carbon.identity.account.suspension.notification.task_1.3.15.jar        
 org.wso2.carbon.identity.api.server.challenge.common-1.0.25.jar                 bundle         apache2   22228
 org.wso2.carbon.identity.api.server.claim.management.common-1.0.25.jar          bundle         apache2   22224
 org.wso2.carbon.identity.api.server.common-1.0.25.jar                           bundle         apache2   22227
-org.wso2.carbon.identity.api.user.approval.common-1.0.49.jar                    bundle         apache2   22480
-org.wso2.carbon.identity.api.user.challenge.common-1.0.49.jar                   bundle         apache2   22481
-org.wso2.carbon.identity.api.user.common-1.0.49.jar                             bundle         apache2   22488
-org.wso2.carbon.identity.api.user.fido2.common-1.0.49.jar                       bundle         apache2   22483
-org.wso2.carbon.identity.api.user.session.common-1.0.49.jar                     bundle         apache2   22484
+org.wso2.carbon.identity.api.user.approval.common-1.0.50.jar                    bundle         apache2   22480
+org.wso2.carbon.identity.api.user.challenge.common-1.0.50.jar                   bundle         apache2   22481
+org.wso2.carbon.identity.api.user.common-1.0.50.jar                             bundle         apache2   22488
+org.wso2.carbon.identity.api.user.fido2.common-1.0.50.jar                       bundle         apache2   22483
+org.wso2.carbon.identity.api.user.session.common-1.0.50.jar                     bundle         apache2   22484
 org.wso2.carbon.identity.application.authentication.endpoint.util_5.14.94.jar   bundle         apache2   22398
 org.wso2.carbon.identity.application.authentication.framework.stub_5.14.94.jar  bundle         apache2   22355
 org.wso2.carbon.identity.application.authentication.framework_5.14.94.jar       bundle         apache2   22403
@@ -511,11 +511,11 @@ org.wso2.carbon.identity.consent.mgt_5.14.94.jar                                
 org.wso2.carbon.identity.context.rewrite.valve_1.3.6.jar                        bundle         apache2   21944
 org.wso2.carbon.identity.core.ui_5.14.94.jar                                    bundle         apache2   22389
 org.wso2.carbon.identity.core_5.14.94.jar                                       bundle         apache2   22429
-org.wso2.carbon.identity.data.publisher.application.authentication_5.3.6.jar    bundle         apache2   22465
+org.wso2.carbon.identity.data.publisher.application.authentication_5.3.7.jar    bundle         apache2   22465
 org.wso2.carbon.identity.data.publisher.audit.common_1.2.4.jar                  bundle         apache2   22116
 org.wso2.carbon.identity.data.publisher.audit.user.operation_1.2.4.jar          bundle         apache2   22006
-org.wso2.carbon.identity.data.publisher.authentication.analytics.login_5.3.6.jarbundle         apache2   22430
-org.wso2.carbon.identity.data.publisher.authentication.audit_5.3.6.jar          bundle         apache2   22388
+org.wso2.carbon.identity.data.publisher.authentication.analytics.login_5.3.7.jarbundle         apache2   22430
+org.wso2.carbon.identity.data.publisher.authentication.audit_5.3.7.jar          bundle         apache2   22388
 org.wso2.carbon.identity.data.publisher.oauth_1.2.5.jar                         bundle         apache2   22452
 org.wso2.carbon.identity.discovery_6.2.25.jar                                   bundle         apache2   22432
 org.wso2.carbon.identity.entitlement.common_5.14.94.jar                         bundle         apache2   22475
@@ -568,14 +568,14 @@ org.wso2.carbon.identity.recovery_1.3.15.jar                                    
 org.wso2.carbon.identity.rest.api.server.challenge.v1-1.0.25.jar                bundle         apache2   22217
 org.wso2.carbon.identity.rest.api.server.claim.management.v1-1.0.25.jar         bundle         apache2   22226
 org.wso2.carbon.identity.rest.api.server.workflow.engine.v1-1.0.25.jar          bundle         apache2   22220
-org.wso2.carbon.identity.rest.api.user.approval.v1-1.0.49.jar                   bundle         apache2   22491
-org.wso2.carbon.identity.rest.api.user.association.v1-1.0.49.jar                bundle         apache2   22486
-org.wso2.carbon.identity.rest.api.user.authorized.apps.v1-1.0.49.jar            bundle         apache2   22485
-org.wso2.carbon.identity.rest.api.user.challenge.v1-1.0.49.jar                  bundle         apache2   22487
-org.wso2.carbon.identity.rest.api.user.fido2.v1-1.0.49.jar                      bundle         apache2   22489
-org.wso2.carbon.identity.rest.api.user.session.v1-1.0.49.jar                    bundle         apache2   22482
-org.wso2.carbon.identity.rest.api.user.totp.common-1.0.49.jar                   bundle         apache2   22492
-org.wso2.carbon.identity.rest.api.user.totp.v1-1.0.49.jar                       bundle         apache2   22490
+org.wso2.carbon.identity.rest.api.user.approval.v1-1.0.50.jar                   bundle         apache2   22491
+org.wso2.carbon.identity.rest.api.user.association.v1-1.0.50.jar                bundle         apache2   22486
+org.wso2.carbon.identity.rest.api.user.authorized.apps.v1-1.0.50.jar            bundle         apache2   22485
+org.wso2.carbon.identity.rest.api.user.challenge.v1-1.0.50.jar                  bundle         apache2   22487
+org.wso2.carbon.identity.rest.api.user.fido2.v1-1.0.50.jar                      bundle         apache2   22489
+org.wso2.carbon.identity.rest.api.user.session.v1-1.0.50.jar                    bundle         apache2   22482
+org.wso2.carbon.identity.rest.api.user.totp.common-1.0.50.jar                   bundle         apache2   22492
+org.wso2.carbon.identity.rest.api.user.totp.v1-1.0.50.jar                       bundle         apache2   22490
 org.wso2.carbon.identity.scim.common_5.5.3.jar                                  bundle         apache2   22101
 org.wso2.carbon.identity.scim2.common_1.4.9.jar                                 bundle         apache2   22374
 org.wso2.carbon.identity.sp.metadata.saml2_1.2.3.jar                            bundle         apache2   22068
