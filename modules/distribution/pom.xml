@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>5.9.0</version>
+        <version>5.10.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -364,7 +364,7 @@
 
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.bat" token="set CARBON_CLASSPATH=.\lib\*;%CARBON_CLASSPATH%" value="set CARBON_CLASSPATH=.\lib\*;%CARBON_CLASSPATH% ${line.separator}if %JAVA_VERSION% GEQ 110 set NASHRON_ARGS=--no-deprecation-warning" />
 
-                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.sh" token="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot; \" value="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot; \${line.separator} -Dorg.apache.xml.security.ignoreLineBreaks=false \${line.separator}   -Dnashorn.args=&quot;$NASHRON_ARGS&quot; \" />
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.sh" token="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot; \" value="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot; \${line.separator} -Dorg.apache.xml.security.ignoreLineBreaks=false \${line.separator} -Dnashorn.args=&quot;$NASHRON_ARGS&quot; \" />
 
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.bat" token="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot;" value="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot; -Dnashorn.args=&quot;%NASHRON_ARGS%&quot;" />
 
