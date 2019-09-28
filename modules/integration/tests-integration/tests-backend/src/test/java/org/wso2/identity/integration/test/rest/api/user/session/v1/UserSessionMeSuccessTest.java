@@ -146,8 +146,6 @@ public class UserSessionMeSuccessTest extends UserSessionTest {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("size()", is(2))
-                .body("userId", notNullValue())
-                .body("sessions.size()", is(0));
+                .body("size()", is(0));
     }
 }
