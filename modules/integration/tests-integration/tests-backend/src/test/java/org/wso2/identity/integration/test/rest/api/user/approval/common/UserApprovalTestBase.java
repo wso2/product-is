@@ -187,33 +187,37 @@ public class UserApprovalTestBase extends RESTAPIUserTestBase {
         String userName1 = userToAdd[0];
         String userName2 = userToAdd[1];
         String userName3 = userToAdd[2];
-        log.info("Adding users matching the workflow engagement : " + addUserWorkflowName + " to tenant:" +
-                this.tenant);
 
-        // Wait till the workflow is deployed.
-        boolean runLoop = true;
-        int count = 0;
+        log.info("Adding users matching the workflow engagement " + addUserWorkflowName + " to tenant " + this.tenant);
 
         // We have to check whether the service is up and running by calling the generated endpoint.
         String url = super.getBackendURL() + addUserWorkflowName + "Service";
         HttpClient client = new HttpClientFactory().getHttpClient();
         HttpGet request = new HttpGet(url);
 
-        while (runLoop) {
+        boolean runLoop = false;
+        int count = 0;
 
-            runLoop = false;
+        do {
             HttpResponse httpResponse = client.execute(request);
-            BufferedReader bufferedReader =
-                    new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
 
-            // If the server response contains "service not available" text, then we have to assume that the service is
-            // still not available. So we have to recheck after brief time period.
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                if (line.contains("The service cannot be found for the endpoint reference")) {
-                    runLoop = true;
-                    Thread.sleep(100);
-                    break;
+            // If the server response is 500 or it contains "service not available" text or "Operation not found" text,
+            // then we have to assume that the service is still not available. So we have to recheck after
+            // brief time period.
+            if (httpResponse.getStatusLine().getStatusCode() == 500) {
+                runLoop = true;
+                Thread.sleep(100);
+            } else {
+                BufferedReader bufferedReader =
+                        new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
+                String line;
+                while ((line = bufferedReader.readLine()) != null) {
+                    if (line.contains("The service cannot be found for the endpoint reference") ||
+                            line.contains("The endpoint reference (EPR) for the Operation not found")) {
+                        runLoop = true;
+                        Thread.sleep(100);
+                        break;
+                    }
                 }
             }
 
@@ -229,7 +233,7 @@ public class UserApprovalTestBase extends RESTAPIUserTestBase {
                 log.info("No luck. Going to give up. Test will most probably fail.");
                 runLoop = false;
             }
-        }
+        } while (runLoop);
 
         this.usmClient.addUser(userName1, "test12345", new String[]{"wfRestRole1"}, new ClaimValue[0], null,
                 false);
