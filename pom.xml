@@ -1847,7 +1847,6 @@
         <identity.event.handler.account.lock.version>1.3.3</identity.event.handler.account.lock.version>
         <identity.event.handler.notification.version>1.2.8</identity.event.handler.notification.version>
 
-        <!--<identity.apps.version>0.1.24</identity.apps.version>-->
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
         <!--<identity.userstore.cassandra.version>5.1.1</identity.userstore.cassandra.version>-->
@@ -1906,6 +1905,9 @@
         <org.wso2.carbon.extension.identity.x509certificate.version>1.0.5</org.wso2.carbon.extension.identity.x509certificate.version>
         <conditional.authentication.functions.version>0.1.40</conditional.authentication.functions.version>
         <carbon.identity.oauth.uma.version>1.1.6</carbon.identity.oauth.uma.version>
+
+        <!-- Identity Portal Versions -->
+        <identity.apps.version>0.1.57</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.1.21</charon.version>
