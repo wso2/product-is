@@ -460,9 +460,9 @@
                                 </featureArtifactDef>
 
                                 <!-- User portal feature -->
-                                <!--<featureArtifactDef>-->
-                                    <!--org.wso2.identity.apps:org.wso2.identity.apps.feature:${identity.apps.version}-->
-                                <!--</featureArtifactDef>-->
+                                <featureArtifactDef>
+                                    org.wso2.identity.apps:org.wso2.identity.apps.feature:${identity.apps.version}
+                                </featureArtifactDef>
 
                                 <!-- REST APIs -->
                                 <featureArtifactDef>
@@ -788,12 +788,12 @@
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
 
-                                <!--<feature>-->
-                                    <!--<id>-->
-                                        <!--org.wso2.identity.apps.feature.group-->
-                                    <!--</id>-->
-                                    <!--<version>${identity.apps.version}</version>-->
-                                <!--</feature>-->
+                                <feature>
+                                    <id>
+                                        org.wso2.identity.apps.feature.group
+                                    </id>
+                                    <version>${identity.apps.version}</version>
+                                </feature>
 
                                 <feature>
                                     <id>
@@ -1334,20 +1334,20 @@
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
 
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.identity.apps.common.server.feature.group</id>-->
-                                    <!--<version>${identity.apps.version}</version>-->
-                                <!--</feature>-->
+                                <feature>
+                                    <id>org.wso2.identity.apps.common.server.feature.group</id>
+                                    <version>${identity.apps.version}</version>
+                                </feature>
 
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.identity.apps.user.portal.server.feature.group</id>-->
-                                    <!--<version>${identity.apps.version}</version>-->
-                                <!--</feature>-->
+                                <feature>
+                                    <id>org.wso2.identity.apps.user.portal.server.feature.group</id>
+                                    <version>${identity.apps.version}</version>
+                                </feature>
 
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.identity.apps.feature.group</id>-->
-                                    <!--<version>${identity.apps.version}</version>-->
-                                <!--</feature>-->
+                                <feature>
+                                    <id>org.wso2.identity.apps.feature.group</id>
+                                    <version>${identity.apps.version}</version>
+                                </feature>
 
                                 <feature>
                                     <id>
@@ -1807,12 +1807,12 @@
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
 
-                                <!--<feature>-->
-                                    <!--<id>-->
-                                        <!--org.wso2.identity.apps.feature.group-->
-                                    <!--</id>-->
-                                    <!--<version>${identity.apps.version}</version>-->
-                                <!--</feature>-->
+                                <feature>
+                                    <id>
+                                        org.wso2.identity.apps.feature.group
+                                    </id>
+                                    <version>${identity.apps.version}</version>
+                                </feature>
 
                                 <feature>
                                     <id>
