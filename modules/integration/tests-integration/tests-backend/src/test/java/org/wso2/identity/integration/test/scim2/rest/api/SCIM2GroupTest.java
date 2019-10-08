@@ -104,11 +104,10 @@ public class SCIM2GroupTest extends SCIM2BaseTest {
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED)
                 .header(HttpHeaders.LOCATION, notNullValue());
-        String location =response.getHeader(HttpHeaders.LOCATION);
+        String location = response.getHeader(HttpHeaders.LOCATION);
         this.GROUP_ID = location.split(GROUPS_ENDPOINT)[1];
         log.info("Group_id :" + GROUP_ID);
         Assert.assertNotNull(GROUP_ID, "The Group is not registered.");
-
     }
 
     @Test(dependsOnMethods = "testCreateGroup")
@@ -118,17 +117,14 @@ public class SCIM2GroupTest extends SCIM2BaseTest {
         END_POINT_URL = GROUPS_ENDPOINT + this.GROUP_ID + PERMISSIONS_ENDPOINT;
         Response response = getResponseOfPut(END_POINT_URL, body, SCIM_CONTENT_TYPE);
         String responseString = response.then()
-                                        .log().ifValidationFails()
-                                        .assertThat()
-                                        .statusCode(HttpStatus.SC_OK)
-                                        .extract()
-                                        .asString();
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .extract()
+                .asString();
         Assert.assertNotNull(responseString);
         // PUT operation should return the same response as the requested.
         Assert.assertEquals(responseString, body, "The response for the PUT operation is incorrect.");
-
-
-
     }
 
     @Test(dependsOnMethods = "putAndGetPermissionToGroup")
@@ -170,7 +166,6 @@ public class SCIM2GroupTest extends SCIM2BaseTest {
                 .asString();
         Assert.assertNotNull(responseString2);
         Assert.assertFalse(responseString2.contains("permission/admin/configure/security/usermgt"));
-
     }
 
     @Test(dependsOnMethods = "patchAndGetPermissionsToGroup")
@@ -192,6 +187,5 @@ public class SCIM2GroupTest extends SCIM2BaseTest {
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.SC_NOT_FOUND);
-
     }
 }
