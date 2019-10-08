@@ -46,7 +46,6 @@ public class SCIM2GroupTest extends SCIM2BaseTest {
     private static final String SCIM_CONTENT_TYPE = "application/scim+json";
     private static final String USER_MGT_PERMISSION = "permission/admin/configure/security/usermgt";
 
-
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public SCIM2GroupTest(TestUserMode userMode) throws Exception {
 
