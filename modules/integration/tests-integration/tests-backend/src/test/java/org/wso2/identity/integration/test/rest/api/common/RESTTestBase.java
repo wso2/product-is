@@ -33,8 +33,6 @@ import org.hamcrest.Matcher;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
-import org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase;
-import org.wso2.identity.integration.test.scim2.rest.api.SCIM2BaseTest;
 import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.BufferedInputStream;

@@ -688,6 +688,14 @@ paths:
           description: Valid group is not found
           schema:
             $ref: '#/definitions/ErrorNoGroupAvailable'
+        406:
+          description: Not Acceptable
+          schema:
+            $ref: '#/definitions/ErrorNotAcceptable'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorInternalServerError'
     patch:
       tags:
         - Groups Endpoint
@@ -737,6 +745,14 @@ paths:
           description: Valid group is not found
           schema:
             $ref: '#/definitions/ErrorNoGroupAvailable'
+        406:
+          description: Not Acceptable
+          schema:
+            $ref: '#/definitions/ErrorNotAcceptable'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorInternalServerError'
 
   /Users:
     get:
@@ -2121,25 +2137,42 @@ definitions:
       scimType:
         type: string
         example: "Unauthorized"
-
+  #-----------------------------------------------------
+  # The Error NotAcceptable
+  #-----------------------------------------------------
+  ErrorNotAcceptable:
+    type: object
+    required:
+      - status
+      - schema
+    properties:
+      status:
+        type: string
+        example: "406"
+      schemas:
+        type: string
+        example: "urn:ietf:params:scim:api:messages:2.0:Error"
+      scimType:
+        type: string
+        example: "Not Acceptable"
     #-----------------------------------------------------
     # The Error Forbidden
     #-----------------------------------------------------
-    ErrorForbidden:
-      type: object
-      required:
-        - status
-        - schema
-      properties:
-        status:
-          type: string
-          example: "403"
-        schemas:
-          type: string
-          example: "urn:ietf:params:scim:api:messages:2.0:Error"
-        scimType:
-          type: string
-          example: "Forbidden"
+  ErrorForbidden:
+    type: object
+    required:
+      - status
+      - schema
+    properties:
+      status:
+        type: string
+        example: "403"
+      schemas:
+        type: string
+        example: "urn:ietf:params:scim:api:messages:2.0:Error"
+      scimType:
+        type: string
+        example: "Forbidden"
 
   #-----------------------------------------------------
   # The Error User Not Available

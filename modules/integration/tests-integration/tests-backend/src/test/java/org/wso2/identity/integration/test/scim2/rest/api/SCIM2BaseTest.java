@@ -40,7 +40,6 @@ public class SCIM2BaseTest extends RESTTestBase {
     public static final String FILE_BASE_PATH = (System.getProperty("basedir", "."))
             + File.separator + "src" + File.separator + "test"
             + File.separator + "resources" + File.separator;
-    private static final String basePathInSwagger = SCIM2_BASE_PATH_IN_SWAGGER;
 
     static {
         try {
@@ -61,7 +60,7 @@ public class SCIM2BaseTest extends RESTTestBase {
             basePath = String.format(SCIM2_BASE_PATH_WITH_TENANT_CONTEXT,
                     tenantDomain);
         }
-        super.init(apiDefinition, basePathInSwagger, basePath);
+        super.init(apiDefinition, SCIM2_BASE_PATH_IN_SWAGGER, basePath);
     }
 
     @AfterClass(alwaysRun = true)

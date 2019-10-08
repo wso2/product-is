@@ -41,9 +41,10 @@ public class SCIM2GroupTest extends SCIM2BaseTest {
 
     private static final Log log = LogFactory.getLog(SCIM2GroupTest.class);
 
-    protected String END_POINT_URL;
-    protected String GROUP_ID = null;
+    protected String endpointURL;
+    protected String groupId = null;
     private static final String SCIM_CONTENT_TYPE = "application/scim+json";
+    private static final String USER_MGT_PERMISSION = "permission/admin/configure/security/usermgt";
 
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
@@ -86,8 +87,8 @@ public class SCIM2GroupTest extends SCIM2BaseTest {
     @Test
     public void testGETGroupDetails() {
 
-        END_POINT_URL = GROUPS_ENDPOINT;
-        getResponseOfGet(END_POINT_URL, SCIM_CONTENT_TYPE)
+        endpointURL = GROUPS_ENDPOINT;
+        getResponseOfGet(endpointURL, SCIM_CONTENT_TYPE)
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
@@ -105,17 +106,17 @@ public class SCIM2GroupTest extends SCIM2BaseTest {
                 .statusCode(HttpStatus.SC_CREATED)
                 .header(HttpHeaders.LOCATION, notNullValue());
         String location = response.getHeader(HttpHeaders.LOCATION);
-        this.GROUP_ID = location.split(GROUPS_ENDPOINT)[1];
-        log.info("Group_id :" + GROUP_ID);
-        Assert.assertNotNull(GROUP_ID, "The Group is not registered.");
+        this.groupId = location.split(GROUPS_ENDPOINT)[1];
+        log.info("groupId :" + groupId);
+        Assert.assertNotNull(groupId, "The Group is not registered.");
     }
 
     @Test(dependsOnMethods = "testCreateGroup")
     public void putAndGetPermissionToGroup() throws IOException {
 
         String body = readResource("scim2-put-group-permissions.json");
-        END_POINT_URL = GROUPS_ENDPOINT + this.GROUP_ID + PERMISSIONS_ENDPOINT;
-        Response response = getResponseOfPut(END_POINT_URL, body, SCIM_CONTENT_TYPE);
+        endpointURL = GROUPS_ENDPOINT + this.groupId + PERMISSIONS_ENDPOINT;
+        Response response = getResponseOfPut(endpointURL, body, SCIM_CONTENT_TYPE);
         String responseString = response.then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -124,14 +125,14 @@ public class SCIM2GroupTest extends SCIM2BaseTest {
                 .asString();
         Assert.assertNotNull(responseString);
         // PUT operation should return the same response as the requested.
-        Assert.assertEquals(responseString, body, "The response for the PUT operation is incorrect.");
+        Assert.assertEquals(responseString.trim(), body.trim(), "The response for the PUT operation is incorrect.");
     }
 
     @Test(dependsOnMethods = "putAndGetPermissionToGroup")
     public void getPermissionsOfGroup() {
 
-        END_POINT_URL = GROUPS_ENDPOINT + this.GROUP_ID + PERMISSIONS_ENDPOINT;
-        getResponseOfGet(END_POINT_URL, SCIM_CONTENT_TYPE)
+        endpointURL = GROUPS_ENDPOINT + this.groupId + PERMISSIONS_ENDPOINT;
+        getResponseOfGet(endpointURL, SCIM_CONTENT_TYPE)
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK);
@@ -140,10 +141,10 @@ public class SCIM2GroupTest extends SCIM2BaseTest {
     @Test(dependsOnMethods = "getPermissionsOfGroup")
     public void patchAndGetPermissionsToGroup() throws IOException {
 
-        END_POINT_URL = GROUPS_ENDPOINT + this.GROUP_ID + PERMISSIONS_ENDPOINT;
+        endpointURL = GROUPS_ENDPOINT + this.groupId + PERMISSIONS_ENDPOINT;
         // Patch - add permissions.
         String body1 = readResource("scim2-patch-add-group-permissions.json");
-        Response response1 = getResponseOfPatch(END_POINT_URL, body1, SCIM_CONTENT_TYPE);
+        Response response1 = getResponseOfPatch(endpointURL, body1, SCIM_CONTENT_TYPE);
 
         String responseString1 = response1.then()
                 .log().ifValidationFails()
@@ -152,11 +153,11 @@ public class SCIM2GroupTest extends SCIM2BaseTest {
                 .extract()
                 .asString();
         Assert.assertNotNull(responseString1);
-        Assert.assertTrue(responseString1.contains("permission/admin/configure/security/usermgt"));
+        Assert.assertTrue(responseString1.contains(USER_MGT_PERMISSION));
 
         // Patch remove permissions
         String body2 = readResource("scim2-patch-remove-group-permissions.json");
-        Response response2 = getResponseOfPatch(END_POINT_URL, body2, SCIM_CONTENT_TYPE);
+        Response response2 = getResponseOfPatch(endpointURL, body2, SCIM_CONTENT_TYPE);
 
         String responseString2 = response2.then()
                 .log().ifValidationFails()
@@ -165,25 +166,25 @@ public class SCIM2GroupTest extends SCIM2BaseTest {
                 .extract()
                 .asString();
         Assert.assertNotNull(responseString2);
-        Assert.assertFalse(responseString2.contains("permission/admin/configure/security/usermgt"));
+        Assert.assertFalse(responseString2.contains(USER_MGT_PERMISSION));
     }
 
     @Test(dependsOnMethods = "patchAndGetPermissionsToGroup")
     public void getErrorGroupIdPermissions() throws IOException {
 
         String errorGroupId = "/a43fe003-d90d-43ca-ae38-d2332ecc0f36";
-        END_POINT_URL = GROUPS_ENDPOINT + errorGroupId + PERMISSIONS_ENDPOINT;
-        getResponseOfGet(END_POINT_URL, "application/scim+json")
+        endpointURL = GROUPS_ENDPOINT + errorGroupId + PERMISSIONS_ENDPOINT;
+        getResponseOfGet(endpointURL, "application/scim+json")
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.SC_NOT_FOUND);
 
-        getResponseOfPut(END_POINT_URL, readResource("scim2-put-group-permissions.json"), SCIM_CONTENT_TYPE)
+        getResponseOfPut(endpointURL, readResource("scim2-put-group-permissions.json"), SCIM_CONTENT_TYPE)
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.SC_NOT_FOUND);
 
-        getResponseOfPut(END_POINT_URL, readResource("scim2-patch-add-group-permissions.json"), SCIM_CONTENT_TYPE)
+        getResponseOfPut(endpointURL, readResource("scim2-patch-add-group-permissions.json"), SCIM_CONTENT_TYPE)
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.SC_NOT_FOUND);
