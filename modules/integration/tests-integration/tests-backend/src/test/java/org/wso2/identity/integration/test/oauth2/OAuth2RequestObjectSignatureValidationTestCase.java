@@ -186,14 +186,14 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
 
         String locationValue = getLocationHeaderValue(response);
         Assert.assertTrue(locationValue.contains("sessionDataKey="));
-        Assert.assertFalse(locationValue.contains("oauthErrorCode=invalid_request"));
+        Assert.assertFalse(locationValue.contains("error=invalid_request"));
     }
 
     private void assertForErrorPage(HttpResponse response) {
 
         String locationValue = getLocationHeaderValue(response);
         Assert.assertFalse(locationValue.contains("sessionDataKey="));
-        Assert.assertTrue(locationValue.contains("oauthErrorCode=invalid_request"));
+        Assert.assertTrue(locationValue.contains("error=invalid_request"));
     }
 
     private String getLocationHeaderValue(HttpResponse response) {

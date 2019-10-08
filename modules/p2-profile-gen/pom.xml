@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>5.9.0-alpha4-SNAPSHOT</version>
+        <version>5.10.0-m1-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -421,14 +421,14 @@
 
                                 <!--Auth/Authz for Rest API-->
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity.auth.rest:org.wso2.carbon.identity.auth.server.feature:${carbon.identity.auth.version}
+                                    org.wso2.carbon.identity.auth.rest:org.wso2.carbon.identity.auth.server.feature:${identity.carbon.auth.rest.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity.auth.rest:org.wso2.carbon.identity.authz.server.feature:${carbon.identity.auth.version}
+                                    org.wso2.carbon.identity.auth.rest:org.wso2.carbon.identity.authz.server.feature:${identity.carbon.auth.rest.version}
                                 </featureArtifactDef>
 
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity.auth.rest:org.wso2.carbon.identity.context.rewrite.server.feature:${carbon.identity.auth.version}
+                                    org.wso2.carbon.identity.auth.rest:org.wso2.carbon.identity.context.rewrite.server.feature:${identity.carbon.auth.rest.version}
                                 </featureArtifactDef>
 
                                 <featureArtifactDef>
@@ -460,9 +460,9 @@
                                 </featureArtifactDef>
 
                                 <!-- User portal feature -->
-                                <!--<featureArtifactDef>-->
-                                    <!--org.wso2.identity.apps:org.wso2.identity.apps.feature:${identity.apps.version}-->
-                                <!--</featureArtifactDef>-->
+                                <featureArtifactDef>
+                                    org.wso2.identity.apps:org.wso2.identity.apps.feature:${identity.apps.version}
+                                </featureArtifactDef>
 
                                 <!-- REST APIs -->
                                 <featureArtifactDef>
@@ -788,12 +788,12 @@
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
 
-                                <!--<feature>-->
-                                    <!--<id>-->
-                                        <!--org.wso2.identity.apps.feature.group-->
-                                    <!--</id>-->
-                                    <!--<version>${identity.apps.version}</version>-->
-                                <!--</feature>-->
+                                <feature>
+                                    <id>
+                                        org.wso2.identity.apps.feature.group
+                                    </id>
+                                    <version>${identity.apps.version}</version>
+                                </feature>
 
                                 <feature>
                                     <id>
@@ -929,15 +929,15 @@
                                 <!-- Auth/Authz for Rest API  -->
                                 <feature>
                                     <id>org.wso2.carbon.identity.auth.server.feature.group</id>
-                                    <version>${carbon.identity.auth.version}</version>
+                                    <version>${identity.carbon.auth.rest.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.authz.server.feature.group</id>
-                                    <version>${carbon.identity.auth.version}</version>
+                                    <version>${identity.carbon.auth.rest.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.context.rewrite.server.feature.group</id>
-                                    <version>${carbon.identity.auth.version}</version>
+                                    <version>${identity.carbon.auth.rest.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.consent.mgt.server.feature.group</id>
@@ -1334,20 +1334,20 @@
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
 
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.identity.apps.common.server.feature.group</id>-->
-                                    <!--<version>${identity.apps.version}</version>-->
-                                <!--</feature>-->
+                                <feature>
+                                    <id>org.wso2.identity.apps.common.server.feature.group</id>
+                                    <version>${identity.apps.version}</version>
+                                </feature>
 
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.identity.apps.user.portal.server.feature.group</id>-->
-                                    <!--<version>${identity.apps.version}</version>-->
-                                <!--</feature>-->
+                                <feature>
+                                    <id>org.wso2.identity.apps.user.portal.server.feature.group</id>
+                                    <version>${identity.apps.version}</version>
+                                </feature>
 
-                                <!--<feature>-->
-                                    <!--<id>org.wso2.identity.apps.feature.group</id>-->
-                                    <!--<version>${identity.apps.version}</version>-->
-                                <!--</feature>-->
+                                <feature>
+                                    <id>org.wso2.identity.apps.feature.group</id>
+                                    <version>${identity.apps.version}</version>
+                                </feature>
 
                                 <feature>
                                     <id>
@@ -1448,15 +1448,15 @@
                                 <!-- Auth/Authz for Rest API  -->
                                 <feature>
                                     <id>org.wso2.carbon.identity.auth.server.feature.group</id>
-                                    <version>${carbon.identity.auth.version}</version>
+                                    <version>${identity.carbon.auth.rest.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.authz.server.feature.group</id>
-                                    <version>${carbon.identity.auth.version}</version>
+                                    <version>${identity.carbon.auth.rest.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.context.rewrite.server.feature.group</id>
-                                    <version>${carbon.identity.auth.version}</version>
+                                    <version>${identity.carbon.auth.rest.version}</version>
                                 </feature>
 
                                 <feature>
@@ -1807,12 +1807,12 @@
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
 
-                                <!--<feature>-->
-                                    <!--<id>-->
-                                        <!--org.wso2.identity.apps.feature.group-->
-                                    <!--</id>-->
-                                    <!--<version>${identity.apps.version}</version>-->
-                                <!--</feature>-->
+                                <feature>
+                                    <id>
+                                        org.wso2.identity.apps.feature.group
+                                    </id>
+                                    <version>${identity.apps.version}</version>
+                                </feature>
 
                                 <feature>
                                     <id>
@@ -1910,16 +1910,16 @@
                                 <!-- Auth/Authz for Rest API  -->
                                 <feature>
                                     <id>org.wso2.carbon.identity.auth.server.feature.group</id>
-                                    <version>${carbon.identity.auth.version}</version>
+                                    <version>${identity.carbon.auth.rest.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.authz.server.feature.group</id>
-                                    <version>${carbon.identity.auth.version}</version>
+                                    <version>${identity.carbon.auth.rest.version}</version>
                                 </feature>
 
                                 <feature>
                                     <id>org.wso2.carbon.identity.context.rewrite.server.feature.group</id>
-                                    <version>${carbon.identity.auth.version}</version>
+                                    <version>${identity.carbon.auth.rest.version}</version>
                                 </feature>
 
                                 <!-- captcha for tomcat filter  -->
