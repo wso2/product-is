@@ -142,6 +142,8 @@
             <class name="org.wso2.identity.integration.test.scim2.SCIM2GroupTestCase"/>
             <class name="org.wso2.identity.integration.test.scim2.SCIM2MeTestCase"/>
             <class name="org.wso2.identity.integration.test.scim2.SCIM2MultiAttributeUserFilterTestCase"/>
+            <class name="org.wso2.identity.integration.test.scim2.rest.api.SCIM2GroupTest"/>
+
         </classes>
     </test>
     <test name="is-tests-federation" preserve-order="true" parallel="false" group-by-instances="true">
