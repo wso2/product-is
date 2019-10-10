@@ -21,12 +21,18 @@
 ## TODO’s before performing Alpha release
 * All the major features shipped with the target release should be completed by alpha release.
 
+## TODO’s after performing the Alpha release
+* Inform the installation experiance team about the installers. 
+
 ## TODO’s before performing Beta release
 * Make sure there are no issues affecting the target release with type: bug and priority: highest/high states (All L1/L2 issues should be resolved).
 
 ## TODO’s before performing RC release
 * Complete the security scan reports (Veracode and Qualys) and get the approval from security team.
 * Update the release_note.html, README.txt and other files inside the product distribution to the latest versions.
+
+## TODO's after performing the RC release (Vote period) 
+* Inform marketing team to get ready on carry out public announcements and other post release tasks on the release.
 
 ## How to perform Release Candidate (RC) releases in Jenkins?
 * Release version should be the final GA release version
@@ -45,12 +51,12 @@
 * Close it and release the product
 
 ## Post release tasks to be done by product team
-* Inform marketing team to carry out public announcements and other post release tasks on the release.
 * Add product to product-dist > inform marketing teams.
 * Sync product to atuwa > inform infra team.
 * Add the features to feature-repo (P2-profile).
 * Update the development versions to next iteration version.
 * Cloud-formation scripts.
+* Create a new git tag with the released version removing the RC part from the RC tag. (Ex v5.9.0-rc2 -> v5.9.0)
 
 ## Post release tasks to be done by marketing team
 * Public announcement
