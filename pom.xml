@@ -1813,7 +1813,7 @@
         <identity.carbon.auth.saml2.version>5.4.4</identity.carbon.auth.saml2.version>
         <identity.carbon.auth.mutual.ssl.version>5.3.3</identity.carbon.auth.mutual.ssl.version>
         <identity.carbon.auth.iwa.version>5.3.4</identity.carbon.auth.iwa.version>
-        <identity.carbon.auth.rest.version>1.3.6</identity.carbon.auth.rest.version>
+        <identity.carbon.auth.rest.version>1.3.7</identity.carbon.auth.rest.version>
 
 
         <!-- Identity Inbound Versions   -->
