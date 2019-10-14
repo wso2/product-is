@@ -21,14 +21,13 @@ package org.wso2.identity.integration.test.consent;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.wink.client.ClientConfig;
 import org.apache.wink.client.Resource;
 import org.apache.wink.client.RestClient;
-import org.apache.wink.client.handlers.BasicAuthSecurityHandler;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,6 +36,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.context.beans.User;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.FederatedAuthenticatorConfig;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProviderProperty;
@@ -52,6 +52,8 @@ import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import javax.ws.rs.core.MediaType;
+
+import static org.wso2.identity.integration.test.util.Utils.getBasicAuthHeader;
 
 /**
  * Self sign up tests - with consents.
@@ -308,38 +310,40 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
 
     private void addPIICategory(String name, String description) {
 
-        ClientConfig clientConfig = new ClientConfig();
-        BasicAuthSecurityHandler basicAuth = new BasicAuthSecurityHandler();
-        basicAuth.setUserName(tenantAdminUserName);
-        basicAuth.setPassword(ADMIN);
-        clientConfig.handlers(basicAuth);
-
-        RestClient restClient = new RestClient(clientConfig);
+        RestClient restClient = new RestClient();
         Resource piiCatResource = restClient.resource(consentEndpoint + "/" + "pii-categories");
 
         String addPIICatString = "{\"piiCategory\": " + "\"" + name + "\"" + ", \"description\": " + "\"" +
                 description + "\" , \"sensitive\": \"" + true + "\"}";
 
-        piiCatResource.contentType(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON)
-                .post(String.class, addPIICatString);
+        User user = new User();
+        user.setUserName(tenantAdminUserName);
+        user.setPassword(ADMIN);
+
+        piiCatResource.
+                contentType(MediaType.APPLICATION_JSON_TYPE).
+                accept(MediaType.APPLICATION_JSON).
+                header(HttpHeaders.AUTHORIZATION, getBasicAuthHeader(user)).
+                post(String.class, addPIICatString);
     }
 
     private String addPurposeCategory(String name, String description) throws JSONException {
 
-        ClientConfig clientConfig = new ClientConfig();
-        BasicAuthSecurityHandler basicAuth = new BasicAuthSecurityHandler();
-        basicAuth.setUserName(tenantAdminUserName);
-        basicAuth.setPassword(ADMIN);
-        clientConfig.handlers(basicAuth);
-
-        RestClient restClient = new RestClient(clientConfig);
+        RestClient restClient = new RestClient();
         Resource piiCatResource = restClient.resource(consentEndpoint + "/" + "purpose-categories");
 
         String addPurposeCatString = "{\"purposeCategory\": " + "\"" + name + "\"" + ", \"description\": " + "\"" +
                 description + "\"}";
 
-        String content = piiCatResource.contentType(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON)
-                .post(String.class, addPurposeCatString);
+        User user = new User();
+        user.setUserName(tenantAdminUserName);
+        user.setPassword(ADMIN);
+
+        String content = piiCatResource.
+                contentType(MediaType.APPLICATION_JSON_TYPE).
+                accept(MediaType.APPLICATION_JSON).
+                header(HttpHeaders.AUTHORIZATION, getBasicAuthHeader(user)).
+                post(String.class, addPurposeCatString);
         JSONObject purpose = new JSONObject(content);
         return purpose.getString("purposeCategoryId");
     }
@@ -357,13 +361,7 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
     private String addPurpose(String name, String description, String group, String groupType)
             throws JSONException {
 
-        ClientConfig clientConfig = new ClientConfig();
-        BasicAuthSecurityHandler basicAuth = new BasicAuthSecurityHandler();
-        basicAuth.setUserName(tenantAdminUserName);
-        basicAuth.setPassword(ADMIN);
-        clientConfig.handlers(basicAuth);
-
-        RestClient restClient = new RestClient(clientConfig);
+        RestClient restClient = new RestClient();
         Resource piiCatResource = restClient.resource(consentEndpoint + "/" + "purposes");
 
         String addPurposeString = "{" +
@@ -379,8 +377,15 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
                                   "  ]" +
                                   "}";
 
-        String response = piiCatResource.contentType(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON)
-                .post(String.class, addPurposeString);
+        User user = new User();
+        user.setUserName(tenantAdminUserName);
+        user.setPassword(ADMIN);
+
+        String response = piiCatResource.
+                contentType(MediaType.APPLICATION_JSON_TYPE).
+                accept(MediaType.APPLICATION_JSON).
+                header(HttpHeaders.AUTHORIZATION, getBasicAuthHeader(user)).
+                post(String.class, addPurposeString);
         JSONObject purpose = new JSONObject(response);
         return purpose.getString("purposeId");
     }
@@ -407,18 +412,17 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
                 "{\"uri\": \"http://wso2.org/claims/mobile\",\"value\": \"" + mobile + "\"} ] }," +
                 "\"properties\": [{\"key\": \"consent\", \"value\": \"" + consent + "\"}]}";
 
-        ClientConfig clientConfig = new ClientConfig();
-        BasicAuthSecurityHandler basicAuth = new BasicAuthSecurityHandler();
-        basicAuth.setUserName(tenantAdminUserName);
-        basicAuth.setPassword(ADMIN);
-        clientConfig.handlers(basicAuth);
+        RestClient restClient = new RestClient();
+        Resource selfRegistrationResource = restClient.resource(selfRegistrationMeEndpoint);
 
-        RestClient restClient = new RestClient(clientConfig);
-        Resource user = restClient.resource(selfRegistrationMeEndpoint);
+        User user = new User();
+        user.setUserName(tenantAdminUserName);
+        user.setPassword(ADMIN);
 
-        user.contentType(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON)
-                .post(String.class, selfRegisterReqBody);
-
+        selfRegistrationResource.contentType(MediaType.APPLICATION_JSON_TYPE).
+                accept(MediaType.APPLICATION_JSON).
+                header(HttpHeaders.AUTHORIZATION, getBasicAuthHeader(user)).
+                post(String.class, selfRegisterReqBody);
     }
 
     private String getConsentReqBody(String purposeId, int piiCategoryId, String username) {
@@ -437,36 +441,39 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
 
     private String getConsents(String username, String password) {
 
-        ClientConfig clientConfig = new ClientConfig();
-        BasicAuthSecurityHandler basicAuth = new BasicAuthSecurityHandler();
-        basicAuth.setUserName(username);
-        basicAuth.setPassword(password);
-        clientConfig.handlers(basicAuth);
-
-        RestClient restClient = new RestClient(clientConfig);
-        Resource user = restClient.resource(consentEndpoint + "?piiPrincipalId=" + MultitenantUtils
+        RestClient restClient = new RestClient();
+        Resource resource = restClient.resource(consentEndpoint + "?piiPrincipalId=" + MultitenantUtils
                 .getTenantAwareUsername(username));
 
-        String response = user.contentType(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON)
-                .get(String.class);
+        User user = new User();
+        user.setUserName(username);
+        user.setPassword(password);
+
+        String response = resource.
+                contentType(MediaType.APPLICATION_JSON_TYPE).
+                accept(MediaType.APPLICATION_JSON).
+                header(HttpHeaders.AUTHORIZATION, getBasicAuthHeader(user)).
+                get(String.class);
         return response;
     }
 
     private String getConsent(String username, String password, String receiptId) {
 
         log.info("Retrieving consent for username " + username + ". reciptId : " + receiptId);
-        ClientConfig clientConfig = new ClientConfig();
-        BasicAuthSecurityHandler basicAuth = new BasicAuthSecurityHandler();
-        basicAuth.setUserName(username);
-        basicAuth.setPassword(password);
-        clientConfig.handlers(basicAuth);
 
-        RestClient restClient = new RestClient(clientConfig);
-        Resource user = restClient.resource(consentEndpoint + "/receipts/" + receiptId);
+        RestClient restClient = new RestClient();
+        Resource resource = restClient.resource(consentEndpoint + "/receipts/" + receiptId);
         log.info("Calling to receipt endpoint :" + consentEndpoint + "/receipts/" + receiptId);
 
-        String response = user.contentType(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON)
-                .get(String.class);
+        User user = new User();
+        user.setUserName(username);
+        user.setPassword(password);
+
+        String response = resource.
+                contentType(MediaType.APPLICATION_JSON_TYPE).
+                accept(MediaType.APPLICATION_JSON).
+                header(HttpHeaders.AUTHORIZATION, getBasicAuthHeader(user)).
+                get(String.class);
         return response;
     }
 }

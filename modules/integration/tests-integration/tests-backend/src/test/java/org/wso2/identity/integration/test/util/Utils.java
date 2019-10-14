@@ -36,12 +36,15 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicNameValuePair;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.automation.engine.context.beans.User;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.h2.osgi.utils.CarbonUtils;
 import org.wso2.carbon.user.core.UserCoreConstants;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.provisioning.JustInTimeProvisioningTestCase;
+import org.wso2.identity.integration.test.utils.BasicAuthHandler;
+import org.wso2.identity.integration.test.utils.BasicAuthInfo;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 
 import java.io.BufferedReader;
@@ -485,5 +488,19 @@ public class Utils {
             }
         }
         return results;
+    }
+
+    /**
+     * Construct and return basic authentication information of the user.
+     */
+    public static String getBasicAuthHeader(User userInfo) {
+
+        BasicAuthInfo basicAuthInfo = new BasicAuthInfo();
+        basicAuthInfo.setUserName(userInfo.getUserName());
+        basicAuthInfo.setPassword(userInfo.getPassword());
+
+        BasicAuthHandler basicAuthHandler = new BasicAuthHandler();
+        BasicAuthInfo encodedBasicAuthInfo = (BasicAuthInfo) basicAuthHandler.getAuthenticationToken(basicAuthInfo);
+        return encodedBasicAuthInfo.getAuthorizationHeader();
     }
 }
