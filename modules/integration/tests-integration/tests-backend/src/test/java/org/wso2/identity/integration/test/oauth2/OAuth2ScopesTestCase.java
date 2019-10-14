@@ -19,11 +19,10 @@
 package org.wso2.identity.integration.test.oauth2;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.wink.client.ClientConfig;
-import org.apache.wink.client.Resource;
+import org.apache.http.HttpHeaders;
 import org.apache.wink.client.ClientResponse;
+import org.apache.wink.client.Resource;
 import org.apache.wink.client.RestClient;
-import org.apache.wink.client.handlers.BasicAuthSecurityHandler;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -33,9 +32,11 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
+import java.io.IOException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
+
+import static org.wso2.identity.integration.test.util.Utils.getBasicAuthHeader;
 
 public class OAuth2ScopesTestCase extends ISIntegrationTest {
 
@@ -210,20 +211,14 @@ public class OAuth2ScopesTestCase extends ISIntegrationTest {
     }
 
     private Resource getUserResource(String scopeEndpointAppender) {
-        ClientConfig clientConfig = new ClientConfig();
-        BasicAuthSecurityHandler basicAuth = new BasicAuthSecurityHandler();
-        basicAuth.setUserName(userInfo.getUserName());
-        basicAuth.setPassword(userInfo.getPassword());
-        clientConfig.handlers(basicAuth);
 
-        RestClient restClient = new RestClient(clientConfig);
+        RestClient restClient = new RestClient();
         Resource userResource;
         if(StringUtils.isNotBlank(scopeEndpointAppender)) {
             userResource = restClient.resource(scopeEndpoint + scopeEndpointAppender);
         } else {
             userResource = restClient.resource(scopeEndpoint);
         }
-        return userResource;
+        return userResource.header(HttpHeaders.AUTHORIZATION, getBasicAuthHeader(userInfo));
     }
-
 }
