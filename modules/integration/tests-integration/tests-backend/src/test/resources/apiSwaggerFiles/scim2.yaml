@@ -63,11 +63,10 @@ paths:
           description: Unauthorized
           schema:
             $ref: '#/definitions/ErrorUnauthorized'
-
-          404:
-            description: Valid User is not found
-            schema:
-              $ref: '#/definitions/ErrorUserNotAvailable'
+        404:
+          description: Valid User is not found
+          schema:
+            $ref: '#/definitions/ErrorUserNotAvailable'
 
     post:
       tags:
@@ -318,8 +317,8 @@ paths:
             $ref: '#/definitions/ErrorUnauthorized'
         403:
           description: Forbidden
-          scheme:
-            $ref: '#/definition/ErrorForbidden'
+          schema:
+            $ref: '#/definitions/ErrorForbidden'
         404:
           description: No Group found
           schema:
@@ -366,8 +365,8 @@ paths:
             $ref: '#/definitions/ErrorUnauthorized'
         403:
           description: Forbidden
-          scheme:
-            $ref: '#/definition/ErrorForbidden'
+          schema:
+            $ref: '#/definitions/ErrorForbidden'
         404:
           description: Group is not found
           schema:
@@ -409,8 +408,8 @@ paths:
             $ref: '#/definitions/ErrorUnauthorized'
         403:
           description: Forbidden
-          scheme:
-            $ref: '#/definition/ErrorForbidden'
+          schema:
+            $ref: '#/definitions/ErrorForbidden'
         404:
           description: Valid groups are not found
           schema:
@@ -456,8 +455,8 @@ paths:
             $ref: '#/definitions/ErrorUnauthorized'
         403:
           description: Forbidden
-          scheme:
-            $ref: '#/definition/ErrorForbidden'
+          schema:
+            $ref: '#/definitions/ErrorForbidden'
         404:
           description: Valid group is not found
           schema:
@@ -510,8 +509,8 @@ paths:
             $ref: '#/definitions/ErrorUnauthorized'
         403:
           description: Forbidden
-          scheme:
-            $ref: '#/definition/ErrorForbidden'
+          schema:
+            $ref: '#/definitions/ErrorForbidden'
         404:
           description: Valid group is not found
           schema:
@@ -544,8 +543,8 @@ paths:
             $ref: '#/definitions/ErrorUnauthorized'
         403:
           description: Forbidden
-          scheme:
-            $ref: '#/definition/ErrorForbidden'
+          schema:
+            $ref: '#/definitions/ErrorForbidden'
         404:
           description: Valid group is not found
           schema:
@@ -598,8 +597,8 @@ paths:
             $ref: '#/definitions/ErrorUnauthorized'
         403:
           description: Forbidden
-          scheme:
-            $ref: '#/definition/ErrorForbidden'
+          schema:
+            $ref: '#/definitions/ErrorForbidden'
         404:
           description: Valid group is not found
           schema:
@@ -638,8 +637,8 @@ paths:
             $ref: '#/definitions/ErrorUnauthorized'
         403:
           description: Forbidden
-          scheme:
-            $ref: '#/definition/ErrorForbidden'
+          schema:
+            $ref: '#/definitions/ErrorForbidden'
         404:
           description: Valid group is not found
           schema:
@@ -682,8 +681,8 @@ paths:
             $ref: '#/definitions/ErrorUnauthorized'
         403:
           description: Forbidden
-          scheme:
-            $ref: '#/definition/ErrorForbidden'
+          schema:
+            $ref: '#/definitions/ErrorForbidden'
         404:
           description: Valid group is not found
           schema:
@@ -739,8 +738,8 @@ paths:
             $ref: '#/definitions/ErrorUnauthorized'
         403:
           description: Forbidden
-          scheme:
-            $ref: '#/definition/ErrorForbidden'
+          schema:
+            $ref: '#/definitions/ErrorForbidden'
         404:
           description: Valid group is not found
           schema:
@@ -825,8 +824,8 @@ paths:
             $ref: '#/definitions/ErrorUnauthorized'
         403:
           description: Forbidden
-          scheme:
-            $ref: '#/definition/ErrorForbidden'
+          schema:
+            $ref: '#/definitions/ErrorForbidden'
         404:
           description: Valid users are not found
           schema:
@@ -878,8 +877,8 @@ paths:
 
         403:
           description: Forbidden
-          scheme:
-            $ref: '#/definition/ErrorForbidden'
+          schema:
+            $ref: '#/definitions/ErrorForbidden'
 
         404:
           description: Valid User is not found
@@ -923,8 +922,8 @@ paths:
             $ref: '#/definitions/ErrorUnauthorized'
         403:
           description: Forbidden
-          scheme:
-            $ref: '#/definition/ErrorForbidden'
+          schema:
+            $ref: '#/definitions/ErrorForbidden'
         404:
           description: Valid users are not found
           schema:
@@ -971,8 +970,8 @@ paths:
             $ref: '#/definitions/ErrorUnauthorized'
         403:
           description: Forbidden
-          scheme:
-            $ref: '#/definition/ErrorForbidden'
+          schema:
+            $ref: '#/definitions/ErrorForbidden'
         404:
           description: Valid user is not found
           schema:
@@ -1024,8 +1023,8 @@ paths:
             $ref: '#/definitions/ErrorUnauthorized'
         403:
           description: Forbidden
-          scheme:
-            $ref: '#/definition/ErrorForbidden'
+          schema:
+            $ref: '#/definitions/ErrorForbidden'
         404:
           description: Valid user is not found
           schema:
@@ -1059,8 +1058,8 @@ paths:
             $ref: '#/definitions/ErrorUnauthorized'
         403:
           description: Forbidden
-          scheme:
-            $ref: '#/definition/ErrorForbidden'
+          schema:
+            $ref: '#/definitions/ErrorForbidden'
         404:
           description: Valid user is not found
           schema:
@@ -1119,8 +1118,8 @@ paths:
             $ref: '#/definitions/ErrorUnauthorized'
         403:
           description: Forbidden
-          scheme:
-            $ref: '#/definition/ErrorForbidden'
+          schema:
+            $ref: '#/definitions/ErrorForbidden'
         404:
           description: Valid user is not found
           schema:
@@ -1158,8 +1157,8 @@ paths:
             $ref: '#/definitions/ErrorUnauthorized'
         403:
           description: Forbidden
-          scheme:
-            $ref: '#/definition/ErrorForbidden'
+          schema:
+            $ref: '#/definitions/ErrorForbidden'
         409:
           description: Users already exists
 
@@ -1573,9 +1572,16 @@ definitions:
         type: array
         items:
           type: object
-          example:
-            display: "kim"
-            value: "008bba85-451d-414b-87de-c03b5a1f4217"
+          properties:
+            $ref:
+              type: string
+              example: "https://localhost:9443/scim2/Users/3a12bae9-4386-44be-befd-caf349297f45"
+            display:
+              type: string
+              example: 'kim'
+            value:
+              type: string
+              example: '008bba85-451d-414b-87de-c03b5a1f4217'
   #-----------------------------------------------------
   # The Groups List Response Object
   #-----------------------------------------------------
@@ -1665,9 +1671,16 @@ definitions:
         type: array
         items:
           type: object
-          example:
-            - display: 'kim'
-              value: '008bba85-451d-414b-87de-c03b5a1f4217'
+          properties:
+            $ref:
+              type: string
+              example: "https://localhost:9443/scim2/Users/3a12bae9-4386-44be-befd-caf349297f45"
+            display:
+              type: string
+              example: 'kim'
+            value:
+              type: string
+              example: '008bba85-451d-414b-87de-c03b5a1f4217'
       id:
         type: string
         example: '7bac6a86-1f21-4937-9fb1-5be4a93ef469'
@@ -2247,8 +2260,10 @@ definitions:
         type: string
         example: "404"
       schemas:
-        type: string
-        example: "urn:ietf:params:scim:api:messages:2.0:Error"
+        type: array
+        items:
+          type: string
+          example: "urn:ietf:params:scim:api:messages:2.0:Error"
       detail:
         type: string
         example: "Group not found in the user store."

@@ -1896,7 +1896,7 @@
         <identity.extension.utils>1.0.8</identity.extension.utils>
 
         <!-- Identity REST API feature -->
-        <identity.api.dispatcher.version>1.0.14</identity.api.dispatcher.version>
+        <identity.api.dispatcher.version>1.0.17</identity.api.dispatcher.version>
 
         <identity.agent.sso.version>5.3.3</identity.agent.sso.version>
         <identity.tool.samlsso.validator.version>5.3.3</identity.tool.samlsso.validator.version>
@@ -2043,7 +2043,7 @@
         <!--Rest API test -->
         <rest.assured.version>3.1.0</rest.assured.version>
         <swagger-core-version>1.5.22</swagger-core-version>
-        <swagger-request-validator.version>1.5.1</swagger-request-validator.version>
+        <swagger-request-validator.version>2.6.0</swagger-request-validator.version>
 
         <project.scm.id>my-scm-server</project.scm.id>
 

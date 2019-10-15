@@ -156,7 +156,7 @@ public class ClaimManagementSuccessTest extends ClaimManagementTestBase {
                 .body(baseIdentifier + "displayOrder", equalTo(7))
                 .body(baseIdentifier + "displayName", equalTo("Dummy Email update"))
                 .body(baseIdentifier + "readOnly", equalTo(false))
-                .body(baseIdentifier + "regEx", nullValue())
+                .body(baseIdentifier + "regEx", equalTo(""))
                 .body(baseIdentifier + "required", equalTo(true))
                 .body(baseIdentifier + "supportedByDefault", equalTo(true))
                 .body(baseIdentifier + "attributeMapping", notNullValue())
