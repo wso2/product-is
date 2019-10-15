@@ -4,7 +4,7 @@
   "displayOrder": 7,
   "displayName": "Dummy Email update",
   "readOnly": false,
-  "regEx": null,
+  "regEx": "",
   "required": true,
   "supportedByDefault": true,
   "attributeMapping": [
