@@ -183,7 +183,7 @@ public class SCIM2GroupTest extends SCIM2BaseTest {
                 .assertThat()
                 .statusCode(HttpStatus.SC_NOT_FOUND);
 
-        getResponseOfPut(endpointURL, readResource("scim2-patch-add-group-permissions.json"), SCIM_CONTENT_TYPE)
+        getResponseOfPatch(endpointURL, readResource("scim2-patch-add-group-permissions.json"), SCIM_CONTENT_TYPE)
                 .then()
                 .assertThat()
                 .statusCode(HttpStatus.SC_NOT_FOUND);

@@ -16,8 +16,8 @@
 
 package org.wso2.identity.integration.test.rest.api.common;
 
-import com.atlassian.oai.validator.SwaggerRequestResponseValidator;
-import com.atlassian.oai.validator.restassured.SwaggerValidationFilter;
+import com.atlassian.oai.validator.OpenApiInteractionValidator;
+import com.atlassian.oai.validator.restassured.OpenApiValidationFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.restassured.RestAssured;
@@ -71,7 +71,7 @@ public class RESTTestBase extends ISIntegrationTest {
     private static final String JAR_EXTENSION = ".jar";
     private static final String SERVICES = "/services";
 
-    static final String BUNDLE = "RESTAPIErrors";
+    private static final String BUNDLE = "RESTAPIErrors";
     private static ResourceBundle errorProperties = ResourceBundle.getBundle(BUNDLE);
 
     protected String authenticatingUserName;
@@ -84,9 +84,8 @@ public class RESTTestBase extends ISIntegrationTest {
 
     protected String basePath = StringUtils.EMPTY;
 
-    private SwaggerRequestResponseValidator swaggerRequestResponseValidator;
-    protected SwaggerValidationFilter validationFilter;
-    EncoderConfig encoderconfig = new EncoderConfig();
+    private OpenApiValidationFilter validationFilter;
+    private EncoderConfig encoderconfig = new EncoderConfig();
 
     /**
      * Initialize the RestAssured environment and create SwaggerRequestResponseValidator with the swagger definition
@@ -104,8 +103,8 @@ public class RESTTestBase extends ISIntegrationTest {
         this.swaggerDefinition = swaggerDefinition;
         RestAssured.baseURI = backendURL.replace(SERVICES, "");
         String swagger = replaceInSwaggerDefinition(swaggerDefinition, basePathInSwagger, basePath);
-        swaggerRequestResponseValidator = SwaggerRequestResponseValidator.createFor(swagger).build();
-        validationFilter = new SwaggerValidationFilter(swaggerRequestResponseValidator);
+        OpenApiInteractionValidator openAPIValidator = OpenApiInteractionValidator.createFor(swagger).build();
+        validationFilter = new OpenApiValidationFilter(openAPIValidator);
         remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
     }
 
