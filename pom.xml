@@ -1959,7 +1959,7 @@
         <axis2.jaxb.wso2.version>${axis2.wso2.version}</axis2.jaxb.wso2.version>
         <axis2-transports.version>2.0.0-wso2v38</axis2-transports.version>
         <h2database.wso2.version>1.4.199.wso2v1</h2database.wso2.version>
-        <wso2.shindig.version>2.5.2-wso2v11</wso2.shindig.version>
+        <wso2.shindig.version>2.5.2-wso2v14</wso2.shindig.version>
         <slf4j.version>1.7.28</slf4j.version>
 
         <!-- UI styles dependency versions -->
