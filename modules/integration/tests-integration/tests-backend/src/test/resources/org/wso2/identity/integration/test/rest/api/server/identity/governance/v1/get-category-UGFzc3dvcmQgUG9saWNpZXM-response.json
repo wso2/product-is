@@ -1,0 +1,67 @@
+{
+  "name": "Password Policies",
+  "connectors": [
+    {
+      "id": "cGFzc3dvcmRIaXN0b3J5",
+      "name": "passwordHistory",
+      "category": "Password Policies",
+      "friendlyName": "Password History",
+      "order": 0,
+      "subCategory": "DEFAULT",
+      "properties": [
+        {
+          "name": "passwordHistory.enable",
+          "value": "false",
+          "displayName": "Enable Password History Feature",
+          "description": "Enable to disallow previously used passwords"
+        },
+        {
+          "name": "passwordHistory.count",
+          "value": "5",
+          "displayName": "Password History validation count",
+          "description": "Restrict reusing last x number of password during password update"
+        }
+      ]
+    },
+    {
+      "id": "cGFzc3dvcmRQb2xpY3k",
+      "name": "passwordPolicy",
+      "category": "Password Policies",
+      "friendlyName": "Password Patterns",
+      "order": 0,
+      "subCategory": "DEFAULT",
+      "properties": [
+        {
+          "name": "passwordPolicy.enable",
+          "value": "false",
+          "displayName": "Enable Password Policy Feature",
+          "description": "Enable password pattern policy"
+        },
+        {
+          "name": "passwordPolicy.min.length",
+          "value": "6",
+          "displayName": "Password Policy Min Length",
+          "description": ""
+        },
+        {
+          "name": "passwordPolicy.max.length",
+          "value": "12",
+          "displayName": "Password Policy Max Length",
+          "description": ""
+        },
+        {
+          "name": "passwordPolicy.pattern",
+          "value": "^((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*])).{0,100}$",
+          "displayName": "Password Policy Pattern",
+          "description": "Allowed password regex pattern"
+        },
+        {
+          "name": "passwordPolicy.errorMsg",
+          "value": "'Password pattern policy violated. Password should contain a digit[0-9], a lower case letter[a-z], an upper case letter[A-Z], one of !@#$%&* characters'",
+          "displayName": "Password Policy Error Message",
+          "description": "Error message for invalid password patterns"
+        }
+      ]
+    }
+  ]
+}
