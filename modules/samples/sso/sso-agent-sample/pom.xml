@@ -128,8 +128,6 @@
         <dependency>
             <artifactId>guava</artifactId>
             <groupId>com.google.guava</groupId>
-            <type>jar</type>
-            <version>${google.guava.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.orbit.joda-time</groupId>
@@ -183,9 +181,5 @@
             </releases>
         </repository>
     </repositories>
-
-    <properties>
-        <google.guava.version>15.0</google.guava.version>
-    </properties>
 
 </project>
