@@ -97,8 +97,8 @@
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenRevocationWithRevokedAccessToken" />
             <class name="org.wso2.identity.integration.test.CrossProtocolLogoutTestCase"/>
         </classes>
-
     </test>
+
     <test name="is-test-rest-api" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
             <class name="org.wso2.identity.integration.test.rest.api.user.challenge.v1.UserMeSuccessTest"/>
@@ -113,6 +113,7 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.challenge.v1.ServerChallengeTestCase"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.claim.management.v1.ClaimManagementSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.claim.management.v1.ClaimManagementNegativeTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.email.template.v1.EmailTemplatesSuccessTest"/>
             <!-- Disabling /user/{user-id}/* type of API tests as they will not be exposed in 5.9.0 -->
             <!--<class name="org.wso2.identity.integration.test.rest.api.user.challenge.v1.UserSuccessTest"/>-->
             <!--<class name="org.wso2.identity.integration.test.rest.api.user.challenge.v1.UserNegativeTest"/>-->
@@ -120,7 +121,6 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.IdentityGovernanceFailureTest"/>
         </classes>
     </test>
-
 
     <!--
     ====================================================================================================================

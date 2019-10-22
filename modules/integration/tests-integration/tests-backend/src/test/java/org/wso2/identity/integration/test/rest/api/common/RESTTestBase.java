@@ -17,6 +17,7 @@
 package org.wso2.identity.integration.test.rest.api.common;
 
 import com.atlassian.oai.validator.OpenApiInteractionValidator;
+import com.atlassian.oai.validator.report.LevelResolverFactory;
 import com.atlassian.oai.validator.restassured.OpenApiValidationFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -103,7 +104,10 @@ public class RESTTestBase extends ISIntegrationTest {
         this.swaggerDefinition = swaggerDefinition;
         RestAssured.baseURI = backendURL.replace(SERVICES, "");
         String swagger = replaceInSwaggerDefinition(swaggerDefinition, basePathInSwagger, basePath);
-        OpenApiInteractionValidator openAPIValidator = OpenApiInteractionValidator.createFor(swagger).build();
+        OpenApiInteractionValidator openAPIValidator = OpenApiInteractionValidator
+                .createFor(swagger)
+                .withLevelResolver(LevelResolverFactory.withAdditionalPropertiesIgnored())
+                .build();
         validationFilter = new OpenApiValidationFilter(openAPIValidator);
         remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
     }
