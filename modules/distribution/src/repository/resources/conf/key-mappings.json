@@ -10,6 +10,7 @@
 
   "user_store.connection_url":"user_store.properties.ConnectionURL",
   "user_store.connection_name":"user_store.properties.ConnectionName",
-  "user_store.connection_password":"user_store.properties.ConnectionPassword"
+  "user_store.connection_password":"user_store.properties.ConnectionPassword",
 
+  "catalina.valves.multiple_header_config": "catalina_valves.request_correlation_id_valve.header_to_correlation_id_mapping"
 }
