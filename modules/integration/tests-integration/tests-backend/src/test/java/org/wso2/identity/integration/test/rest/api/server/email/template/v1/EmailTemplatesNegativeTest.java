@@ -86,11 +86,11 @@ public class EmailTemplatesNegativeTest extends EmailTemplatesTestBase {
     }
 
     @Test
-    public void testGetEmailTemplateTypeWithPagination() {
+    public void testGetEmailTemplateTypeWithUndecodableTemplateTypeId() {
 
         Response response = getResponseOfGet(EMAIL_TEMPLATES_API_BASE_PATH + EMAIL_TEMPLATE_TYPES_PATH +
-                PATH_SEPARATOR + SAMPLE_TEMPLATE_TYPE_ID + "?limit=10");
-        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "ETM-55011");
+                PATH_SEPARATOR + UNDECODABLE_TEMPLATE_TYPE_ID);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "ETM-50001");
     }
 
     @Test
