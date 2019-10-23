@@ -42,6 +42,8 @@ public class EmailTemplatesTestBase extends RESTAPIServerTestBase {
     public static final String EMAIL_TEMPLATES_PATH = "/templates";
     public static final String PATH_SEPARATOR = "/";
 
+    public static final String SAMPLE_TEMPLATE_TYPE_ID = "QWNjb3VudEVuYWJsZQ";
+
     protected static String swaggerDefinition;
 
     static {

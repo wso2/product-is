@@ -105,7 +105,7 @@ public class RESTTestBase extends ISIntegrationTest {
         RestAssured.baseURI = backendURL.replace(SERVICES, "");
         String swagger = replaceInSwaggerDefinition(swaggerDefinition, basePathInSwagger, basePath);
         OpenApiInteractionValidator openAPIValidator = OpenApiInteractionValidator
-                .createFor(swagger)
+                .createForInlineApiSpecification(swagger)
                 .withLevelResolver(LevelResolverFactory.withAdditionalPropertiesIgnored())
                 .build();
         validationFilter = new OpenApiValidationFilter(openAPIValidator);

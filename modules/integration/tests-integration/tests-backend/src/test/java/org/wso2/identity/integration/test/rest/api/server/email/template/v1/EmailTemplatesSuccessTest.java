@@ -54,7 +54,6 @@ public class EmailTemplatesSuccessTest extends EmailTemplatesTestBase {
     private List<SimpleEmailTemplate> getTemplatesListOfEmailTemplateTypeResponse;
     private EmailTemplateWithID getSpecificEmailTemplateResponse;
 
-    private static final String SAMPLE_TEMPLATE_TYPE_ID = "QWNjb3VudEVuYWJsZQ";
     private String templateTypeId = "";
     private String templateId = "";
 
