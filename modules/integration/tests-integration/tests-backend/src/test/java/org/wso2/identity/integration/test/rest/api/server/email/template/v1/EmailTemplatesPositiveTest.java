@@ -47,7 +47,7 @@ import static org.hamcrest.core.IsNull.nullValue;
 /**
  * Test class for the Email Templates REST API success path.
  */
-public class EmailTemplatesSuccessTest extends EmailTemplatesTestBase {
+public class EmailTemplatesPositiveTest extends EmailTemplatesTestBase {
 
     private List<EmailTemplateTypeWithoutTemplates> getAllEmailTemplateTypesResponse;
     private EmailTemplateTypeWithID getEmailTemplateTypeResponse;
@@ -58,7 +58,7 @@ public class EmailTemplatesSuccessTest extends EmailTemplatesTestBase {
     private String templateId = "";
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
-    public EmailTemplatesSuccessTest(TestUserMode userMode) throws Exception {
+    public EmailTemplatesPositiveTest(TestUserMode userMode) throws Exception {
 
         super.init(userMode);
         this.context = isServer;
