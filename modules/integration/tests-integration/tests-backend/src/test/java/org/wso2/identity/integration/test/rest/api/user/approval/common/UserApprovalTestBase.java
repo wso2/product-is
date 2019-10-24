@@ -223,14 +223,14 @@ public class UserApprovalTestBase extends RESTAPIUserTestBase {
             }
 
             count++;
-            // After 10 attempts, inform and re-try for 50 seconds. This is for server based test runners like Jenkins.
+            // After 10 attempts, inform and re-try for 5 minutes. This is for server based test runners like Jenkins.
             if (count > 10) {
-                log.info("Still no luck :(. So going to wait 5 seconds and try " + (21 - count) + " more times.");
+                log.info("Still no luck :(. So going to wait 5 seconds and try " + (71 - count) + " more times.");
                 Thread.sleep(4900);
             }
 
-            // Give up after 50 seconds or this will be a forever loop.
-            if (count > 20) {
+            // Give up after 5 minutes or this will be a forever loop.
+            if (count > 70) {
                 log.info("No luck. Going to give up. Test will most probably fail.");
                 runLoop = false;
             }
