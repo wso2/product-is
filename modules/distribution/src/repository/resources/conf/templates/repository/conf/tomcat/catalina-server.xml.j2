@@ -65,7 +65,7 @@
             <Host name="localhost" unpackWARs="true" deployOnStartup="false" autoDeploy="false"
                   appBase="${carbon.home}/repository/deployment/server/webapps/">
                 <Valve className="org.wso2.carbon.tomcat.ext.valves.RequestCorrelationIdValve"
-                       headerToCorrelationIdMapping="{{catalina_valves.request_correlation_id_valve.header_to_correlation_id_mapping}}"
+                       headerToCorrelationIdMapping="{{catalina.valves.multiple_header_config}}"
                        queryToCorrelationIdMapping="{'RelayState':'Correlation-ID'}"/>
                 <Valve className="org.wso2.carbon.tomcat.ext.valves.RequestEncodingValve" encoding="UTF-8"/>
                 <Valve className="org.wso2.carbon.tomcat.ext.valves.CarbonContextCreatorValve"/>
