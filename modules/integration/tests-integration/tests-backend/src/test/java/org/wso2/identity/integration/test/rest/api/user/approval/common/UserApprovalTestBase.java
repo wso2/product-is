@@ -195,10 +195,11 @@ public class UserApprovalTestBase extends RESTAPIUserTestBase {
         HttpClient client = new HttpClientFactory().getHttpClient();
         HttpGet request = new HttpGet(url);
 
-        boolean runLoop = false;
+        boolean runLoop;
         int count = 0;
 
         do {
+            runLoop = false;
             HttpResponse httpResponse = client.execute(request);
 
             // If the server response is 500 or it contains "service not available" text or "Operation not found" text,
