@@ -18,6 +18,107 @@
 * Publish the release draft.
 * Make the public announcement (@architecture + dev).
 
+### Public announcement guidelines for milestone releases
+
+The following Email template is used to announce Identity Server milestone releases to the following groups.
+
+*   [dev@wso2.org](mailto:dev@wso2.org)
+*   [architecture@wso2.org](mailto:architecture@wso2.org)
+
+And a blind carbon copy of the same announcement email is sent to the following group.
+
+*   [iam-group@wso2.com](mailto:iam-group@wso2.com)
+
+#### Placeholders
+
+<table>
+  <tr>
+   <td><strong>Placeholder</strong>
+   </td>
+   <td><strong>Replaced With</strong>
+   </td>
+   <td><strong>Example</strong>
+   </td>
+  </tr>
+  <tr>
+   <td><i>RELEASED_VERSION</i>
+   </td>
+   <td><i>digit-1</i>.<i>digit-2</i>.<i>digit-3</i> M <i>milestone</i>
+   </td>
+   <td>5.10.0 M3
+   </td>
+  </tr>
+  <tr>
+   <td><i>IS_ARTIFACT_LOCATION</i>
+   </td>
+   <td>The download location of the released IS pack for the milestone
+   </td>
+   <td><a href="https://github.com/wso2/product-is/releases/download/v5.10.0-m2/wso2is-5.10.0-m2.zip">https://github.com/wso2/product-is/releases/download/v5.10.0-m2/wso2is-5.10.0-m2.zip</a>
+   </td>
+  </tr>
+  <tr>
+   </td>
+  </tr>
+  <tr>
+   <td><i>GITHUB_MILESTONE<i>
+   </td>
+   <td>The URL to the closed milestone in the GitHub
+   </td>
+   <td><a href="https://github.com/wso2/product-is/milestone/96?closed=1">https://github.com/wso2/product-is/milestone/96?closed=1</a>
+   </td>
+  </tr>
+</table>
+
+The following email template uses the above placeholders, and they should be populated according to the milestone 
+release.
+
+---
+
+WSO2 Identity and Access Management team is pleased to announce the release of Identity Server <code><em><RELEASED_VERSION></em></code>!
+
+## **Download**
+
+You can download WSO2 Identity Server <code><em><RELEASED_VERSION> </em></code>from[ ](https://github.com/wso2/product-is/releases/download/v5.10.0-m2/wso2is-5.10.0-m2.zip)<code><em><IS_ARTIFACT_LOCATION></em></code>.
+
+You can download WSO2 Identity Server Analytics <code><em><RELEASED_VERSION></em></code> from[ ](https://github.com/wso2/analytics-is/releases/download/v5.10.0-m2/wso2is-analytics-5.10.0-m2.zip)<code><em><IS_ANALYTICS_ARTIFACT_LOCATION></em></code>.</del>
+
+## **How to run**
+
+1. Extract the downloaded zip file.
+2. Go to the _bin_ directory in the extracted folder.
+3. Run the _wso2server.sh_ file if you are on a Linux/Mac OS or run the _wso2server.bat_ file if you are on a Windows OS.
+4. Optionally, if you need to start the OSGi console with the server, use the _-DosgiConsole_ property when starting the server.
+
+## What's new in WSO2 Identity Server <code><em><RELEASED_VERSION></em></code></strong>
+
+A list of all the new features and bug fixes shipped with this release can be found[ ](https://github.com/wso2/product-is/milestone/96?closed=1)<code><em><GITHUB_MILESTONE></em></code>
+
+## **Known Issues**
+
+All the open issues pertaining to WSO2 Identity Server are reported at the following location:
+
+*   [IS Runtime](https://github.com/wso2/product-is/issues)
+
+## **Contribute to WSO2 Identity Server**
+
+### **Mailing Lists**
+
+Join our mailing lists and correspond with the developers directly. We also encourage you to take part in discussions related to the product in the architecture mailing list. If you have any questions regarding the product you can use our StackOverflow forum to raise them as well.
+
+*   Developer List: dev@wso2.org
+*   Architecture List: architecture@wso2.org
+*   User Forum:[ StackOverflow](http://stackoverflow.com/questions/tagged/wso2is)
+
+### **Reporting Issues**
+
+We encourage you to report issues, improvements, and feature requests regarding WSO2 Identity Server through our public[ WSO2 Identity Server GIT Issues](https://github.com/wso2/product-is/issues).
+
+For more information about WSO2 Identity Server, please see[ https://wso2.com/identity-and-access-management](https://wso2.com/identity-and-access-management) or visit the[ WSO2 Oxygen Tank](http://wso2.com/library/) developer portal for additional resources.
+
+`~` The WSO2 Identity and Access Management Team `~`
+
+---
+
 ## TODO’s before performing Alpha release
 * All the major features shipped with the target release should be completed by alpha release.
 
