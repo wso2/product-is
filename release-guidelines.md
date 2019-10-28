@@ -80,8 +80,6 @@ WSO2 Identity and Access Management team is pleased to announce the release of I
 
 You can download WSO2 Identity Server <code><em><RELEASED_VERSION> </em></code>from[ ](https://github.com/wso2/product-is/releases/download/v5.10.0-m2/wso2is-5.10.0-m2.zip)<code><em><IS_ARTIFACT_LOCATION></em></code>.
 
-You can download WSO2 Identity Server Analytics <code><em><RELEASED_VERSION></em></code> from[ ](https://github.com/wso2/analytics-is/releases/download/v5.10.0-m2/wso2is-analytics-5.10.0-m2.zip)<code><em><IS_ANALYTICS_ARTIFACT_LOCATION></em></code>.</del>
-
 ## **How to run**
 
 1. Extract the downloaded zip file.
