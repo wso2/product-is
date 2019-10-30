@@ -1799,7 +1799,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.14.107</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.14.110</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Carbon Consent Version-->
@@ -1831,7 +1831,7 @@
 
 
         <!-- Identity User Versions -->
-        <identity.user.account.association.version>5.3.3</identity.user.account.association.version>
+        <identity.user.account.association.version>5.3.4</identity.user.account.association.version>
         <identity.user.ws.version>5.3.3</identity.user.ws.version>
 
         <!-- Identity Userstore Versions -->
