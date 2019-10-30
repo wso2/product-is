@@ -1939,7 +1939,7 @@
 
 
         <!-- Identity User Versions -->
-        <identity.user.account.association.version>5.3.3</identity.user.account.association.version>
+        <identity.user.account.association.version>5.3.4</identity.user.account.association.version>
         <identity.user.ws.version>5.3.3</identity.user.ws.version>
 
         <!-- Identity Userstore Versions -->
