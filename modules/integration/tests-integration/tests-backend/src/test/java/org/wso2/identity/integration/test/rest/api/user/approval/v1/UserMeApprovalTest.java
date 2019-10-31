@@ -48,14 +48,14 @@ public class UserMeApprovalTest extends UserApprovalTestBase {
     private static final String ME_APPROVAL_TASKS_FILTER_ENDPOINT_URI = "/me/approval-tasks?status=%s";
     private static final String ME_APPROVAL_TASK_ENDPOINT_URI = ME_APPROVAL_TASKS_ENDPOINT_URI + "/%s";
     private static final String ME_APPROVAL_TASK_STATE_ENDPOINT_URI = ME_APPROVAL_TASKS_ENDPOINT_URI + "/%s/state";
-    public static final String TEST_WORKFLOW_ADD_USER_FOR_REST_TASK = addUserWorkflowName + "Task";
-    public static final String JSON_PATH_MATCHING_REST_API_TEST_APPROVAL_TASK = "findAll{ it.presentationName == '"
+    private static final String TEST_WORKFLOW_ADD_USER_FOR_REST_TASK = addUserWorkflowName + "Task";
+    private static final String JSON_PATH_MATCHING_REST_API_TEST_APPROVAL_TASK = "findAll{ it.presentationName == '"
             + TEST_WORKFLOW_ADD_USER_FOR_REST_TASK + "' }";
 
     private static String swaggerDefinition;
-    String taskIdToApprove;
-    String taskIdToDeny;
-    String taskIdToKeep;
+    private String taskIdToApprove;
+    private String taskIdToDeny;
+    private String taskIdToKeep;
 
     static {
         try {
@@ -71,6 +71,7 @@ public class UserMeApprovalTest extends UserApprovalTestBase {
 
         super(userMode);
         setUpWorkFlowAssociation();
+        waitForWorkflowToDeploy();
     }
 
     @DataProvider(name = "restAPIUserConfigProvider")
