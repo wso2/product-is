@@ -190,13 +190,23 @@ public class UserApprovalTestBase extends RESTAPIUserTestBase {
 
         log.info("Adding users matching the workflow engagement " + addUserWorkflowName + " to tenant " + this.tenant);
 
+        this.usmClient.addUser(userName1, "test12345", new String[]{"wfRestRole1"}, new ClaimValue[0], null,
+                false);
+        this.usmClient.addUser(userName2, "test12345", new String[]{"wfRestRole1", "wfRestRole2"},
+                new ClaimValue[0], null, false);
+        this.usmClient.addUser(userName3, "test12345", new String[]{"wfRestRole1", "wfRestRole2",
+                "wfRestRole3"}, new ClaimValue[0], null, false);
+    }
+
+    protected void waitForWorkflowToDeploy() throws Exception {
+
         // We have to check whether the service is up and running by calling the generated endpoint.
         String url = super.getBackendURL() + addUserWorkflowName + "Service";
         HttpClient client = new HttpClientFactory().getHttpClient();
         HttpGet request = new HttpGet(url);
 
         boolean runLoop;
-        int count = 0;
+        int count = 1;
 
         do {
             runLoop = false;
@@ -207,7 +217,6 @@ public class UserApprovalTestBase extends RESTAPIUserTestBase {
             // brief time period.
             if (httpResponse.getStatusLine().getStatusCode() == 500) {
                 runLoop = true;
-                Thread.sleep(100);
             } else {
                 BufferedReader bufferedReader =
                         new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
@@ -216,32 +225,25 @@ public class UserApprovalTestBase extends RESTAPIUserTestBase {
                     if (line.contains("The service cannot be found for the endpoint reference") ||
                             line.contains("The endpoint reference (EPR) for the Operation not found")) {
                         runLoop = true;
-                        Thread.sleep(100);
                         break;
                     }
                 }
             }
 
-            count++;
-            // After 10 attempts, inform and re-try for 50 seconds. This is for server based test runners like Jenkins.
-            if (count > 10) {
-                log.info("Still no luck :(. So going to wait 5 seconds and try " + (21 - count) + " more times.");
-                Thread.sleep(4900);
+            // Wait 20 times for 5 seconds intervals until the workflow is properly deployed. This is for server based
+            // test runners like Jenkins.
+            if (count < 20) {
+                log.info("Still no luck :(. So going to wait 5 seconds and try " + (20 - count) + " more time(s).");
+                Thread.sleep(5000);
             }
 
-            // Give up after 50 seconds or this will be a forever loop.
-            if (count > 20) {
+            // Give up after 100 seconds or this will be a forever loop.
+            if (count >= 20) {
                 log.info("No luck. Going to give up. Test will most probably fail.");
                 runLoop = false;
             }
+            count++;
         } while (runLoop);
-
-        this.usmClient.addUser(userName1, "test12345", new String[]{"wfRestRole1"}, new ClaimValue[0], null,
-                false);
-        this.usmClient.addUser(userName2, "test12345", new String[]{"wfRestRole1", "wfRestRole2"},
-                new ClaimValue[0], null, false);
-        this.usmClient.addUser(userName3, "test12345", new String[]{"wfRestRole1", "wfRestRole2",
-                "wfRestRole3"}, new ClaimValue[0], null, false);
     }
 
     protected void setUpWorkFlowAssociation() throws Exception {
