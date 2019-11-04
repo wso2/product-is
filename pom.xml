@@ -1799,14 +1799,14 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.14.119</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.14.121</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Carbon Consent Version-->
         <carbon.consent.mgt.version>2.2.4</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.3.19</identity.governance.version>
+        <identity.governance.version>1.3.20</identity.governance.version>
 
 
         <!--Identity Carbon Versions-->
@@ -1818,7 +1818,7 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.6.19</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.2.35</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.2.36</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.4.3</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.4.3</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.5.3</identity.inbound.provisioning.scim.version>
@@ -1835,7 +1835,7 @@
         <identity.user.ws.version>5.3.3</identity.user.ws.version>
 
         <!-- Identity Userstore Versions -->
-        <identity.userstore.ldap.version>6.1.6</identity.userstore.ldap.version>
+        <identity.userstore.ldap.version>6.1.7</identity.userstore.ldap.version>
         <identity.userstore.remote.version>5.2.5</identity.userstore.remote.version>
 
         <!-- Identity Data Publisher Versions -->
