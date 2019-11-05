@@ -1799,14 +1799,14 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.14.119</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.14.121</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--Carbon Consent Version-->
         <carbon.consent.mgt.version>2.2.4</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.3.19</identity.governance.version>
+        <identity.governance.version>1.3.20</identity.governance.version>
 
 
         <!--Identity Carbon Versions-->
@@ -1835,7 +1835,7 @@
         <identity.user.ws.version>5.3.3</identity.user.ws.version>
 
         <!-- Identity Userstore Versions -->
-        <identity.userstore.ldap.version>6.1.6</identity.userstore.ldap.version>
+        <identity.userstore.ldap.version>6.1.7</identity.userstore.ldap.version>
         <identity.userstore.remote.version>5.2.5</identity.userstore.remote.version>
 
         <!-- Identity Data Publisher Versions -->
