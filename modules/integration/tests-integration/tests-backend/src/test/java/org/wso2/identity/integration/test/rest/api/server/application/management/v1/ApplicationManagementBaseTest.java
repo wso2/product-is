@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,8 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package org.wso2.identity.integration.test.rest.api.server.identity.governance.v1;
+package org.wso2.identity.integration.test.rest.api.server.application.management.v1;
 
 import io.restassured.RestAssured;
 import org.apache.commons.lang.StringUtils;
@@ -27,19 +26,20 @@ import org.wso2.identity.integration.test.rest.api.server.common.RESTAPIServerTe
 import java.io.IOException;
 
 /**
- * Base test class for Identity Governance REST APIs.
+ * Base test class for Application Management REST APIs.
  */
-public class IdentityGovernanceTestBase extends RESTAPIServerTestBase {
+public class ApplicationManagementBaseTest extends RESTAPIServerTestBase {
 
-    private static final String API_DEFINITION_NAME = "identity-governance.yaml";
+    private static final String API_DEFINITION_NAME = "applications.yaml";
     static final String API_VERSION = "v1";
-    private static final String API_PACKAGE_NAME = "org.wso2.carbon.identity.api.server.identity.governance.v1";
 
-    public static final String IDENTITY_GOVERNANCE_ENDPOINT_URI = "/identity-governance";
+    static final String APPLICATION_MANAGEMENT_API_BASE_PATH = "/applications";
+    static final String PATH_SEPARATOR = "/";
 
     protected static String swaggerDefinition;
 
     static {
+        String API_PACKAGE_NAME = "org.wso2.carbon.identity.api.server.application.management.v1";
         try {
             swaggerDefinition = getAPISwaggerDefinition(API_PACKAGE_NAME, API_DEFINITION_NAME);
         } catch (IOException e) {

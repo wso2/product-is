@@ -120,6 +120,8 @@
             <!--<class name="org.wso2.identity.integration.test.rest.api.user.challenge.v1.UserNegativeTest"/>-->
             <class name="org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.IdentityGovernanceSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.IdentityGovernanceFailureTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementFailureTest"/>
         </classes>
     </test>
 
