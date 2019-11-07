@@ -37,9 +37,6 @@ public class ApplicationManagementFailureTest extends ApplicationManagementBaseT
 
     private static final String INVALID_APPLICATION_ID = "xxx";
 
-    private static final String SORT_ORDER_QUERY_PARAM = "sortOrder";
-    private static final String SORT_BY_QUERY_PARAM = "sortBy";
-
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public ApplicationManagementFailureTest(TestUserMode userMode) throws Exception {
 
