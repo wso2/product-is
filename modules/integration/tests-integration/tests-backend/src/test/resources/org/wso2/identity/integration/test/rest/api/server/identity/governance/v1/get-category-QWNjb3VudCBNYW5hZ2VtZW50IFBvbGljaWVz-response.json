@@ -1,0 +1,259 @@
+{
+  "name": "Account Management Policies",
+  "connectors": [
+    {
+      "id": "c3VzcGVuc2lvbi5ub3RpZmljYXRpb24",
+      "name": "suspension.notification",
+      "category": "Account Management Policies",
+      "friendlyName": "Lock Idle Accounts",
+      "order": 0,
+      "subCategory": "DEFAULT",
+      "properties": [
+        {
+          "name": "suspension.notification.enable",
+          "value": "false",
+          "displayName": "Enable",
+          "description": ""
+        },
+        {
+          "name": "suspension.notification.account.disable.delay",
+          "value": "90",
+          "displayName": "Lock Account After (days)",
+          "description": ""
+        },
+        {
+          "name": "suspension.notification.delays",
+          "value": "30,45,60,75",
+          "displayName": "Alert Users before account locking in days (comma-separated list)",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "id": "YWNjb3VudC1yZWNvdmVyeQ",
+      "name": "account-recovery",
+      "category": "Account Management Policies",
+      "friendlyName": "Account Recovery",
+      "order": 0,
+      "subCategory": "DEFAULT",
+      "properties": [
+        {
+          "name": "Recovery.Notification.Password.Enable",
+          "value": "false",
+          "displayName": "Enable Notification Based Password Recovery",
+          "description": ""
+        },
+        {
+          "name": "Recovery.ReCaptcha.Password.Enable",
+          "value": "false",
+          "displayName": "Enable reCaptcha for Password Recovery",
+          "description": ""
+        },
+        {
+          "name": "Recovery.Question.Password.Enable",
+          "value": "false",
+          "displayName": "Enable Security Question Based Password Recovery",
+          "description": ""
+        },
+        {
+          "name": "Recovery.Question.Password.MinAnswers",
+          "value": "2",
+          "displayName": "Number Of Questions Required For Password Recovery",
+          "description": ""
+        },
+        {
+          "name": "Recovery.Question.Password.ReCaptcha.Enable",
+          "value": "true",
+          "displayName": "Enable reCaptcha for Security Questions Based Password Recovery",
+          "description": "Show captcha for challenge question based password recovery"
+        },
+        {
+          "name": "Recovery.Question.Password.ReCaptcha.MaxFailedAttempts",
+          "value": "2",
+          "displayName": "Max Failed Attempts for ReCaptcha",
+          "description": ""
+        },
+        {
+          "name": "Recovery.Notification.Username.Enable",
+          "value": "false",
+          "displayName": "Enable Username Recovery",
+          "description": ""
+        },
+        {
+          "name": "Recovery.ReCaptcha.Username.Enable",
+          "value": "false",
+          "displayName": "Enable reCaptcha for Username Recovery",
+          "description": ""
+        },
+        {
+          "name": "Recovery.Notification.InternallyManage",
+          "value": "true",
+          "displayName": "Enable Internal Notification Management",
+          "description": "Set false if the client application handles notification sending"
+        },
+        {
+          "name": "Recovery.NotifySuccess",
+          "value": "false",
+          "displayName": "Notify when Recovery Success",
+          "description": ""
+        },
+        {
+          "name": "Recovery.Question.Password.NotifyStart",
+          "value": "false",
+          "displayName": "Notify when Questions Based Recovery Starts",
+          "description": ""
+        },
+        {
+          "name": "Recovery.ExpiryTime",
+          "value": "1440",
+          "displayName": "Notification Expiry Time",
+          "description": ""
+        },
+        {
+          "name": "Recovery.Question.Password.Forced.Enable",
+          "value": "false",
+          "displayName": "Enable forced challenge questions",
+          "description": "Force users to provide answers to challenge questions during sign in"
+        },
+        {
+          "name": "Recovery.CallbackRegex",
+          "value": "https://localhost:9443/authenticationendpoint/login.do",
+          "displayName": "Recovery callback URL regex",
+          "description": "Recovery callback URL regex"
+        }
+      ]
+    },
+    {
+      "id": "c2VsZi1zaWduLXVw",
+      "name": "self-sign-up",
+      "category": "Account Management Policies",
+      "friendlyName": "User Self Registration",
+      "order": 0,
+      "subCategory": "DEFAULT",
+      "properties": [
+        {
+          "name": "SelfRegistration.Enable",
+          "value": "false",
+          "displayName": "Enable Self User Registration",
+          "description": "Enable self user registration"
+        },
+        {
+          "name": "SelfRegistration.LockOnCreation",
+          "value": "true",
+          "displayName": "Enable Account Lock On Creation",
+          "description": "Lock user account during user registration"
+        },
+        {
+          "name": "SelfRegistration.Notification.InternallyManage",
+          "value": "true",
+          "displayName": "Internal Notification Management",
+          "description": "Set false if the client application handles notification sending"
+        },
+        {
+          "name": "SelfRegistration.ReCaptcha",
+          "value": "true",
+          "displayName": "Enable reCaptcha",
+          "description": "Enable captcha verification during self registration"
+        },
+        {
+          "name": "SelfRegistration.VerificationCode.ExpiryTime",
+          "value": "1440",
+          "displayName": "User self registration code expiry time",
+          "description": "Set the number of minutes the user self registration verification mail would be valid.(Negative value for infinite validity)"
+        },
+        {
+          "name": "SelfRegistration.CallbackRegex",
+          "value": "https://localhost:9443/authenticationendpoint/login.do",
+          "displayName": "User self registration callback URL regex",
+          "description": "User self registration callback URL regex"
+        },
+        {
+          "name": "_url_listPurposeSelfSignUp",
+          "value": "/carbon/consent/list-purposes.jsp?purposeGroup=SELF-SIGNUP&purposeGroupType=SYSTEM&callback=%2Fcarbon%2Fidpmgt%2Fidp-mgt-edit-local.jsp%3Fcategory%3DAccount+Management+Policies%26subCategory%3DUser+Self+Registration",
+          "displayName": "Manage Self-Sign-Up purposes",
+          "description": "Click here to manage Self-Sign-Up purposes"
+        }
+      ]
+    },
+    {
+      "id": "dXNlci1lbWFpbC12ZXJpZmljYXRpb24",
+      "name": "user-email-verification",
+      "category": "Account Management Policies",
+      "friendlyName": "User Onboarding",
+      "order": 0,
+      "subCategory": "DEFAULT",
+      "properties": [
+        {
+          "name": "EmailVerification.Enable",
+          "value": "false",
+          "displayName": "Enable User Email Verification",
+          "description": "Enable to trigger a verification notification during user creation"
+        },
+        {
+          "name": "EmailVerification.LockOnCreation",
+          "value": "true",
+          "displayName": "Enable Account Lock On Creation",
+          "description": "Lock user account during user creation"
+        },
+        {
+          "name": "EmailVerification.Notification.InternallyManage",
+          "value": "true",
+          "displayName": "Internal Notification Management",
+          "description": "Set false if the client application handles notification sending"
+        },
+        {
+          "name": "EmailVerification.ExpiryTime",
+          "value": "1440",
+          "displayName": "Email verification code expiry time",
+          "description": "Set the number of minutes the email verification mail would be valid.(Negative value for infinite validity)"
+        },
+        {
+          "name": "EmailVerification.AskPassword.ExpiryTime",
+          "value": "1440",
+          "displayName": "Ask password code expiry time",
+          "description": "Set the number of minutes the ask password mail would be valid. (Negative value for infinite validity)"
+        },
+        {
+          "name": "EmailVerification.AskPassword.PasswordGenerator",
+          "value": "org.wso2.carbon.user.mgt.common.DefaultPasswordGenerator",
+          "displayName": "Temporary password generation extension class",
+          "description": "Temporary password generation extension point in ask password feature)"
+        },
+        {
+          "name": "_url_listPurposeJITProvisioning",
+          "value": "/carbon/consent/list-purposes.jsp?purposeGroup=JIT&purposeGroupType=SYSTEM&callback=%2Fcarbon%2Fidpmgt%2Fidp-mgt-edit-local.jsp%3Fcategory%3DAccount+Management+Policies%26subCategory%3DUser+Onboarding",
+          "displayName": "Manage Just In Time Provisioning purposes",
+          "description": "Click here to manage JIT purposes"
+        }
+      ]
+    },
+    {
+      "id": "YWRtaW4tZm9yY2VkLXBhc3N3b3JkLXJlc2V0",
+      "name": "admin-forced-password-reset",
+      "category": "Account Management Policies",
+      "friendlyName": "Password Reset",
+      "order": 0,
+      "subCategory": "DEFAULT",
+      "properties": [
+        {
+          "name": "Recovery.AdminPasswordReset.RecoveryLink",
+          "value": "false",
+          "displayName": "Enable Password Reset via Recovery Email",
+          "description": "User gets notified with a link to reset password"
+        },
+        {
+          "name": "Recovery.AdminPasswordReset.OTP",
+          "value": "false",
+          "displayName": "Enable Password Reset via OTP",
+          "description": "User gets notified with a one time password to try with SSO login"
+        },
+        {
+          "name": "Recovery.AdminPasswordReset.Offline",
+          "value": "false",
+          "displayName": "Enable Password Reset Offline",
+          "description": "An OTP generated and stored in users claims"
+        }
+      ]
+    }
+  ]
+}

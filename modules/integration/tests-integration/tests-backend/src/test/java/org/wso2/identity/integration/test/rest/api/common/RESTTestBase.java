@@ -16,11 +16,13 @@
 
 package org.wso2.identity.integration.test.rest.api.common;
 
-import com.atlassian.oai.validator.SwaggerRequestResponseValidator;
-import com.atlassian.oai.validator.restassured.SwaggerValidationFilter;
+import com.atlassian.oai.validator.OpenApiInteractionValidator;
+import com.atlassian.oai.validator.report.LevelResolverFactory;
+import com.atlassian.oai.validator.restassured.OpenApiValidationFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.restassured.RestAssured;
+import io.restassured.config.EncoderConfig;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.apache.axis2.AxisFault;
@@ -41,6 +43,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.jar.JarEntry;
@@ -68,7 +72,7 @@ public class RESTTestBase extends ISIntegrationTest {
     private static final String JAR_EXTENSION = ".jar";
     private static final String SERVICES = "/services";
 
-    static final String BUNDLE = "RESTAPIErrors";
+    private static final String BUNDLE = "RESTAPIErrors";
     private static ResourceBundle errorProperties = ResourceBundle.getBundle(BUNDLE);
 
     protected String authenticatingUserName;
@@ -77,11 +81,12 @@ public class RESTTestBase extends ISIntegrationTest {
     protected AutomationContext context;
 
     protected RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
+    protected String swaggerDefinition;
 
     protected String basePath = StringUtils.EMPTY;
 
-    private SwaggerRequestResponseValidator swaggerRequestResponseValidator;
-    protected SwaggerValidationFilter validationFilter;
+    private OpenApiValidationFilter validationFilter;
+    private EncoderConfig encoderconfig = new EncoderConfig();
 
     /**
      * Initialize the RestAssured environment and create SwaggerRequestResponseValidator with the swagger definition
@@ -96,10 +101,14 @@ public class RESTTestBase extends ISIntegrationTest {
             throws AxisFault {
 
         this.basePath = basePath;
+        this.swaggerDefinition = swaggerDefinition;
         RestAssured.baseURI = backendURL.replace(SERVICES, "");
         String swagger = replaceInSwaggerDefinition(swaggerDefinition, basePathInSwagger, basePath);
-        swaggerRequestResponseValidator = SwaggerRequestResponseValidator.createFor(swagger).build();
-        validationFilter = new SwaggerValidationFilter(swaggerRequestResponseValidator);
+        OpenApiInteractionValidator openAPIValidator = OpenApiInteractionValidator
+                .createForInlineApiSpecification(swagger)
+                .withLevelResolver(LevelResolverFactory.withAdditionalPropertiesIgnored())
+                .build();
+        validationFilter = new OpenApiValidationFilter(openAPIValidator);
         remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
     }
 
@@ -124,6 +133,19 @@ public class RESTTestBase extends ISIntegrationTest {
         InputStream input = jarFile.getInputStream(entry);
         String content = getString(input);
         jarFile.close();
+        return convertYamlToJson(content);
+    }
+
+    /**
+     * Read the Swagger Definition from the filePath.
+     *
+     * @param filePath
+     * @return
+     * @throws IOException
+     */
+    protected static String getAPISwaggerDefinition(String filePath) throws IOException {
+
+        String content = new String(Files.readAllBytes(Paths.get(filePath)));
         return convertYamlToJson(content);
     }
 
@@ -224,6 +246,27 @@ public class RESTTestBase extends ISIntegrationTest {
     }
 
     /**
+     *
+     * Invoke given endpointUri for GET with Basic authentication, authentication credential being the
+     * authenticatingUserName and authenticatingCredential
+     * @param endpointUri endpoint to be invoked
+     * @param contentType content type to be passed
+     * @return
+     */
+    protected Response getResponseOfGet(String endpointUri, String contentType) {
+
+        return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
+                .config(RestAssured.config().encoderConfig(encoderconfig
+                        .appendDefaultContentCharsetToContentTypeIfUndefined(false)))
+                .contentType(contentType)
+                .header(HttpHeaders.ACCEPT, contentType)
+                .log().ifValidationFails()
+                .filter(validationFilter)
+                .when()
+                .get(endpointUri);
+    }
+
+    /**
      * Invoke given endpointUri for GET with Basic authentication, authentication credential being the
      * authenticatingUserName and authenticatingCredential
      *
@@ -255,6 +298,31 @@ public class RESTTestBase extends ISIntegrationTest {
         return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
                 .contentType(ContentType.JSON)
                 .header(HttpHeaders.ACCEPT, ContentType.JSON)
+                .body(body)
+                .log().ifValidationFails()
+                .filter(validationFilter)
+                .log().ifValidationFails()
+                .when()
+                .log().ifValidationFails()
+                .post(endpointUri);
+    }
+
+    /**
+     * Invoke given endpointUri for POST with given body and Basic authentication, authentication credential being the
+     * authenticatingUserName and authenticatingCredential
+     *
+     * @param endpointUri endpoint to be invoked
+     * @param body        payload
+     * @param contentType content Type
+     * @return response
+     */
+    protected Response getResponseOfPost(String endpointUri, String body, String contentType) {
+
+        return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
+                .config(RestAssured.config().encoderConfig(encoderconfig
+                        .appendDefaultContentCharsetToContentTypeIfUndefined(false)))
+                .contentType(contentType)
+                .header(HttpHeaders.ACCEPT, contentType)
                 .body(body)
                 .log().ifValidationFails()
                 .filter(validationFilter)
@@ -326,6 +394,83 @@ public class RESTTestBase extends ISIntegrationTest {
                 .when()
                 .log().ifValidationFails()
                 .put(endpointUri);
+    }
+
+
+    /**
+     * Invoke given endpointUri for PUT with given body and Basic authentication, authentication credential being the
+     * authenticatingUserName and authenticatingCredential
+     *
+     * @param endpointUri ndpoint to be invoked
+     * @param body payload
+     * @param contentType content type
+     * @return response
+     */
+    protected Response getResponseOfPut(String endpointUri, String body, String contentType) {
+
+        return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
+                .config(RestAssured.config().encoderConfig(encoderconfig
+                        .appendDefaultContentCharsetToContentTypeIfUndefined(false)))
+                .contentType(contentType)
+                .header(HttpHeaders.ACCEPT, contentType)
+                .body(body)
+                .log().ifValidationFails()
+                .filter(validationFilter)
+                .log().ifValidationFails()
+                .when()
+                .log().ifValidationFails()
+                .put(endpointUri);
+    }
+
+    /**
+     * Invoke given endpointUri for  PATCH request with given body, headers and Basic authentication, authentication
+     * credential being the authenticatingUserName and authenticatingCredential.
+     *
+     * @param endpointURI endpoint to be invoked
+     * @param body payload
+     * @param contentType content Type
+     * @return reponse
+     */
+    protected Response getResponseOfPatch(String endpointURI, String body, String contentType) {
+
+        return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
+                .config(RestAssured.config().encoderConfig(encoderconfig
+                        .appendDefaultContentCharsetToContentTypeIfUndefined(false)))
+                .contentType(contentType)
+                .header(HttpHeaders.ACCEPT, contentType)
+                .body(body)
+                .log().ifValidationFails()
+                .filter(validationFilter)
+                .log().ifValidationFails()
+                .when()
+                .log().ifValidationFails()
+                .patch(endpointURI);
+
+    }
+
+    /**
+     * Invoke given endpointUri for  PATCH request with given body, headers and Basic authentication, authentication
+     * credential being the authenticatingUserName and authenticatingCredential.
+     *
+     * @param endpointURI endpoint to be invoked
+     * @param body payload
+     * @return reponse
+     */
+    protected Response getResponseOfPatch(String endpointURI, String body) {
+
+        return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
+                .config(RestAssured.config().encoderConfig(encoderconfig
+                        .appendDefaultContentCharsetToContentTypeIfUndefined(false)))
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.ACCEPT, ContentType.JSON)
+                .body(body)
+                .log().ifValidationFails()
+                .filter(validationFilter)
+                .log().ifValidationFails()
+                .when()
+                .log().ifValidationFails()
+                .patch(endpointURI);
+
     }
 
     /**

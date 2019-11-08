@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>5.10.0-m1-SNAPSHOT</version>
+        <version>5.10.0-m6-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -216,6 +216,24 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
+                    <execution>
+                        <id>add-in-place-tool</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <!-- download file -->
+                                <get src="https://product-dist.wso2.com/downloads/in-place/release/update.zip"
+                                     dest="${project.build.directory}/update.zip"
+                                     verbose="false"
+                                     usetimestamp="true"/>
+                                <unzip src="${project.build.directory}/update.zip"
+                                       dest="${project.build.directory}" />
+                            </target>
+                        </configuration>
+                    </execution>
                     <execution>
                         <id>extract-docs-from-components</id>
                         <phase>package</phase>
