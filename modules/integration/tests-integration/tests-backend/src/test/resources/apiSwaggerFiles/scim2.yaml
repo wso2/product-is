@@ -1,0 +1,2367 @@
+swagger: '2.0'
+info:
+  version: "1.0.0"
+  title: SCIM 2.0 Endpoint Swagger Definition
+  description: |
+    SCIM 2.0 endpoints
+    It is written with [swagger 2](http://swagger.io/).
+  contact:
+    name: WSO2 Identity Server Team
+    url: 'http://wso2.com'
+    email: "architecture@wso2.org"
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0'
+
+# The base path of the SCIM2 API.
+# If the tenant domain is carbon.super then basepath can be /scim2.
+basePath: /t/{tenant-domain}/scim2
+
+schemes:
+  - https
+
+produces:
+  - application/scim+json
+
+# Applicable authentication mechanisms.
+security:
+  - OAuth2: []
+  - BasicAuth: []
+
+paths:
+  /Me:
+    get:
+      tags:
+        - Me Endpoint
+      summary: Get Me
+      description: |
+        This API returns the user details of the currently authenticated user.
+
+
+          <b>Permission required:</b>
+
+            * /permission/admin/login
+
+      parameters:
+        - name: attributes
+          in: query
+          description: SCIM defined attributes parameter.
+          required: false
+          type: string
+        - name: excludedAttributes
+          in: query
+          description: SCIM defined excludedAttribute parameter.
+          required: false
+          type: string
+
+      responses:
+        200:
+          description: Valid user is found
+          schema:
+            $ref: '#/definitions/UserResponseObject'
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorUnauthorized'
+        404:
+          description: Valid User is not found
+          schema:
+            $ref: '#/definitions/ErrorUserNotAvailable'
+
+    post:
+      tags:
+        - Me Endpoint
+      summary: Create Me
+      description: |
+        This API is used to register a user anonymously.
+
+         <b>Permission required:</b>
+
+            * /permission/admin/manage/identity/usermgt/create
+      operationId: createUserMe
+      consumes:
+        - application/scim+json
+      produces:
+        - application/scim+json
+      parameters:
+        - name: attributes
+          in: query
+          description: SCIM defined attributes parameter.
+          required: false
+          type: string
+        - name: excludedAttributes
+          in: query
+          description: SCIM defined excludedAttribute parameter.
+          required: false
+          type: string
+        - in: body
+          name: body
+          required: true
+          description: User details to add.
+          schema:
+            $ref: '#/definitions/UserObject'
+      responses:
+        201:
+          description: User is created.
+          schema:
+            $ref: '#/definitions/UserResponseObject'
+
+        400:
+          description: Invalid Input
+          schema:
+            $ref: '#/definitions/ErrorIvalidInput'
+
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorUnauthorized'
+
+        404:
+          description: Valid User is not found
+          schema:
+            $ref: '#/definitions/ErrorUserNotAvailable'
+
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorInternalServerError'
+
+    put:
+      tags:
+        - Me Endpoint
+      summary: Update Me
+      description: |
+        This API uses a PUT operation to update user details.
+
+          <b>Permission required:</b>
+
+            * /permission/admin/login
+
+      operationId: updateUserMe
+      consumes:
+        - application/scim+json
+      produces:
+        - application/scim+json
+      parameters:
+        - name: attributes
+          in: query
+          description: SCIM defined attributes parameter.
+          required: false
+          type: string
+        - name: excludedAttributes
+          in: query
+          description: SCIM defined excludedAttribute parameter.
+          required: false
+          type: string
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/UserUpdateObject'
+      responses:
+        200:
+          description: User is updated
+          schema:
+            $ref: '#/definitions/UserResponseObject'
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorUnauthorized'
+        404:
+          description: Valid user is not found
+          schema:
+            $ref: '#/definitions/ErrorUserNotAvailable'
+    delete:
+      tags:
+        - Me Endpoint
+      summary: Delete Me
+      description: |
+        This API is used to delete the currently authenticated user.
+
+          <b>Permission required:</b>
+
+            * /permission/admin/manage/identity/usermgt/delete
+
+      operationId: deleteUserMe
+      produces:
+        - application/scim+json
+      parameters: []
+      responses:
+        204:
+          description: User is deleted
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorUnauthorized'
+        404:
+          description: Valid user is not found
+          schema:
+            $ref: '#/definitions/ErrorUserNotAvailable'
+        501:
+          description: Self delete is not suported
+          schema:
+            $ref: '#/definitions/ErrorNotimplemented'
+    patch:
+      tags:
+        - Me Endpoint
+      summary: Update Me - PATCH
+      description: |
+        This API uses a PATCH operation to update user details.
+
+          <b>Permission required:</b>
+
+            * /permission/admin/login
+
+      operationId: patchUserMe
+      consumes:
+        - application/scim+json
+      produces:
+        - application/scim+json
+      parameters:
+        - name: attributes
+          in: query
+          description: SCIM defined attributes parameter.
+          required: false
+          type: string
+        - name: excludedAttributes
+          in: query
+          description: SCIM defined excludedAttribute parameter.
+          required: false
+          type: string
+        - in: body
+          name: body
+          required: false
+          schema:
+            $ref: '#/definitions/PatchOpperationInput'
+      responses:
+        200:
+          description: User is updated
+          schema:
+            $ref: '#/definitions/PatchOperationResponseOutput'
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorUnauthorized'
+        404:
+          description: Valid user is not found
+          schema:
+            $ref: '#/definitions/ErrorUserNotAvailable'
+  /Groups:
+    get:
+      tags:
+        - Groups Endpoint
+      summary: Filter Groups
+      description: |
+        This API returns groups according to the specified filter, sort and pagination parameters.
+
+          <b>Permission required:</b>
+
+            * / permission/admin/manage/identity/rolemgt/view
+
+      operationId: getGroup
+      produces:
+        - application/scim+json
+      parameters:
+        - name: attributes
+          in: query
+          description: SCIM defined attributes parameter.
+          required: false
+          type: string
+        - name: excludedAttributes
+          in: query
+          description: SCIM defined excludedAttribute parameter.
+          required: false
+          type: string
+        - name: filter
+          in: query
+          description: Filter expression for filtering
+          required: false
+          type: string
+        - name: startIndex
+          in: query
+          description: The 1-based index of the first query result
+          required: false
+          type: integer
+          format: int32
+        - name: count
+          in: query
+          description: Specifies the desired maximum number of query results per page.
+          required: false
+          type: integer
+          format: int32
+        - name: sortBy
+          in: query
+          description: |-
+            Specifies the attribute whose value
+            SHALL be used to order the returned responses
+          required: false
+          type: string
+        - name: sortOder
+          in: query
+          description: The order in which the "sortBy" parameter is applied.
+          required: false
+          type: string
+        - name: domain
+          in: query
+          description: The name of the user store where filtering needs to be applied.
+          required: false
+          type: string
+      responses:
+        200:
+          description: Valid groups are found
+          schema:
+            $ref: '#/definitions/GroupsListResponseObject'
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorUnauthorized'
+        403:
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorForbidden'
+        404:
+          description: No Group found
+          schema:
+            $ref: '#/definitions/ErrorNoGroupAvailable'
+    post:
+      tags:
+        - Groups Endpoint
+      summary: Create Group
+      description: |
+        This API creates a group and returns the details of the created group including its unique ID.
+
+        <b>Permission required:</b>
+
+            * /permission/admin/manage/identity/rolemgt/create
+      operationId: createGroup
+      consumes:
+        - application/scim+json
+      produces:
+        - application/scim+json
+      parameters:
+        - name: attributes
+          in: query
+          description: SCIM defined attributes parameter.
+          required: false
+          type: string
+        - name: excludedAttributes
+          in: query
+          description: SCIM defined excludedAttribute parameter.
+          required: false
+          type: string
+        - in: body
+          name: body
+          required: false
+          schema:
+            $ref: '#/definitions/GroupRequestObject'
+      responses:
+        201:
+          description: Valid group is created
+          schema:
+            $ref: '#/definitions/GroupResponseObject'
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorUnauthorized'
+        403:
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorForbidden'
+        404:
+          description: Group is not found
+          schema:
+            $ref: '#/definitions/ErrorGroupNotAvailable'
+        409:
+          description: Group already exist
+          schema:
+            $ref: '#/definitions/ErroGroupAlreadyAvailable'
+  /Groups/.search:
+    post:
+      tags:
+        - Groups Endpoint
+      summary: Search Groups
+      description: |
+        This API returns groups according to the specified filter, sort and pagination parameters.
+
+        <b>Permission required:</b>
+
+            * /permission/admin/manage/identity/rolemgt/create
+      operationId: getGroupsByPost
+      consumes:
+        - application/scim+json
+      produces:
+        - application/scim+json
+      parameters:
+        - in: body
+          name: body
+          required: false
+          schema:
+            $ref: '#/definitions/GroupSearchRequestObject'
+      responses:
+        200:
+          description: Valid groups are found
+          schema:
+            $ref: '#/definitions/GroupSearchResponseObject'
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorUnauthorized'
+        403:
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorForbidden'
+        404:
+          description: Valid groups are not found
+          schema:
+            $ref: '#/definitions/GroupSearchErrorResponseObject'
+  '/Groups/{id}':
+    get:
+      tags:
+        - Groups Endpoint
+      summary: Get Group by ID
+      description: |
+        This API returns the group details of a particular group using its unique ID.
+
+        <b>Permission required:</b>
+
+            * /permission/admin/manage/identity/rolemgt/view
+      operationId: getGroup by id
+      produces:
+        - application/scim+json
+      parameters:
+        - name: id
+          in: path
+          description: Unique ID of the resource type.
+          required: true
+          type: string
+        - name: attributes
+          in: query
+          description: SCIM defined attributes parameter.
+          required: false
+          type: string
+        - name: excludedAttributes
+          in: query
+          description: SCIM defined excludedAttribute parameter.
+          required: false
+          type: string
+      responses:
+        200:
+          description: Valid group is found
+          schema:
+            $ref: '#/definitions/GroupResponseObject'
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorUnauthorized'
+        403:
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorForbidden'
+        404:
+          description: Valid group is not found
+          schema:
+            $ref: '#/definitions/ErrorNoGroupAvailable'
+
+    put:
+      tags:
+        - Groups Endpoint
+      summary: Update Group - PUT
+      description: |
+        This API updates the group details and returns the updated group details using a PUT operation.
+
+        <b>Permission required:</b>
+
+            * /permission/admin/manage/identity/rolemgt/update
+      operationId: updateGroup
+      consumes:
+        - application/scim+json
+      produces:
+        - application/scim+json
+      parameters:
+        - name: id
+          in: path
+          description: Unique ID of the resource type.
+          required: true
+          type: string
+        - name: attributes
+          in: query
+          description: SCIM defined attributes parameter.
+          required: false
+          type: string
+        - name: excludedAttributes
+          in: query
+          description: SCIM defined excludedAttribute parameter.
+          required: false
+          type: string
+        - in: body
+          name: body
+          required: false
+          schema:
+            $ref: '#/definitions/GroupPutRequestObject'
+      responses:
+        200:
+          description: Group is updated
+          schema:
+            $ref: '#/definitions/GroupPutResponseObject'
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorUnauthorized'
+        403:
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorForbidden'
+        404:
+          description: Valid group is not found
+          schema:
+            $ref: '#/definitions/ErrorNoGroupAvailable'
+    delete:
+      tags:
+        - Groups Endpoint
+      summary: Delete Group
+      description: |
+        This API deletes a particular group using its unique ID.
+
+        <b>Permission required:</b>
+
+            * /permission/admin/manage/identity/rolemgt/delete
+      operationId: deleteGroup
+      produces:
+        - application/scim+json
+      parameters:
+        - name: id
+          in: path
+          description: Unique ID of the resource type.
+          required: true
+          type: string
+      responses:
+        204:
+          description: Group is deleted
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorUnauthorized'
+        403:
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorForbidden'
+        404:
+          description: Valid group is not found
+          schema:
+            $ref: '#/definitions/ErrorNoGroupAvailable'
+    patch:
+      tags:
+        - Groups Endpoint
+      summary: Update Group - PATCH
+      description: |
+        This API updates the group details and returns the updated group details using a PATCH operation.
+
+        <b>Permission required:</b>
+
+            * /permission/admin/manage/identity/rolemgt/update
+
+      operationId: patchGroup
+      consumes:
+        - application/scim+json
+      produces:
+        - application/scim+json
+      parameters:
+        - name: id
+          in: path
+          description: Unique id of the resource type.
+          required: true
+          type: string
+        - name: attributes
+          in: query
+          description: SCIM defined attributes parameter.
+          required: false
+          type: string
+        - name: excludedAttributes
+          in: query
+          description: SCIM defined excludedAttribute parameter.
+          required: false
+          type: string
+        - in: body
+          name: body
+          required: false
+          schema:
+            $ref: '#/definitions/PatchGroupOperationRequestObject'
+      responses:
+        200:
+          description: Group is updated
+          schema:
+            $ref: '#/definitions/PatchGroupOperationResponseObject'
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorUnauthorized'
+        403:
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorForbidden'
+        404:
+          description: Valid group is not found
+          schema:
+            $ref: '#/definitions/ErrorNoGroupAvailable'
+
+  '/Groups/{id}/permissions':
+    get:
+      tags:
+        - Groups Endpoint
+      summary: Get permissions of a group by its id
+      description: |
+        This API returns the permission list of a particular group using its unique ID.
+
+        <b>Permission required:</b>
+
+            * /permission/admin/manage/identity/rolemgt/view
+      operationId: getPermissionbyGroup
+      consumes:
+        - application/scim+json
+      produces:
+        - application/scim+json
+      parameters:
+        - name: id
+          in: path
+          description: Unique ID of the resource type.
+          required: true
+          type: string
+      responses:
+        200:
+          description: Valid group and permissions found
+          schema:
+            $ref: '#/definitions/GroupPermissionResponseObject'
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorUnauthorized'
+        403:
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorForbidden'
+        404:
+          description: Valid group is not found
+          schema:
+            $ref: '#/definitions/ErrorNoGroupAvailable'
+    put:
+      tags:
+        - Groups Endpoint
+      summary: Update permissions of a group by its id
+      description: |
+        This API returns the permission list of a particular group after updating the permissions.
+
+        <b>Permission required:</b>
+
+            * /permission/admin/manage/identity/rolemgt/update
+      operationId: updatePermissions
+      consumes:
+        - application/scim+json
+      produces:
+        - application/scim+json
+      parameters:
+        - name: id
+          in: path
+          description: Unique ID of the resource type.
+          required: true
+          type: string
+        - in: body
+          name: body
+          required: false
+          schema:
+            $ref: '#/definitions/PermissionPutRequestObject'
+
+      responses:
+        200:
+          description: Valid group is found
+          schema:
+            $ref: '#/definitions/PermissionPutResponseObject'
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorUnauthorized'
+        403:
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorForbidden'
+        404:
+          description: Valid group is not found
+          schema:
+            $ref: '#/definitions/ErrorNoGroupAvailable'
+        406:
+          description: Not Acceptable
+          schema:
+            $ref: '#/definitions/ErrorNotAcceptable'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorInternalServerError'
+    patch:
+      tags:
+        - Groups Endpoint
+      summary: Patch permissions of a group by its id
+      description: |
+        This API returns the permission list of a particular group after patching the permissions.
+
+        <b>Permission required:</b>
+
+            * /permission/admin/manage/identity/rolemgt/update
+
+      operationId: patchPermissions
+      consumes:
+        - application/scim+json
+      produces:
+        - application/scim+json
+      parameters:
+        - name: id
+          in: path
+          description: Unique ID of the resource type.
+          required: true
+          type: string
+        - in: body
+          name: body
+          required: false
+          schema:
+            $ref: '#/definitions/PermissionPatchOpperationRequestObject'
+
+      responses:
+        200:
+          description: Valid group is found.
+          schema:
+            $ref: '#/definitions/PermissionPatchResponseObject'
+        400:
+          description: Invalid Input
+          schema:
+            $ref: '#/definitions/ErrorIvalidInput'
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorUnauthorized'
+        403:
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorForbidden'
+        404:
+          description: Valid group is not found
+          schema:
+            $ref: '#/definitions/ErrorNoGroupAvailable'
+        406:
+          description: Not Acceptable
+          schema:
+            $ref: '#/definitions/ErrorNotAcceptable'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorInternalServerError'
+
+  /Users:
+    get:
+      tags:
+        - Users Endpoint
+      summary: Filter Users
+      description: |
+        This API returns users according to the filter, sort and pagination parameters. Pagination is not supported across user stores and LDAP multi-attribute group filtering. However, filtering is supported across multiple user stores.
+
+        <b>Permission required:</b>
+
+            * /permission/admin/manage/identity/usermgt/view
+      operationId: getUser
+      produces:
+        - application/scim+json
+      parameters:
+        - name: attributes
+          in: query
+          description: SCIM defined attributes parameter.
+          required: false
+          type: string
+        - name: excludedAttributes
+          in: query
+          description: SCIM defined excludedAttribute parameter.
+          required: false
+          type: string
+        - name: filter
+          in: query
+          description: |
+            Filter expression for filtering. Supported filters are ‘Ew’, ‘Eq’, ‘Co’, ‘Sw’, ‘and’.
+          required: false
+          type: string
+        - name: startIndex
+          in: query
+          description: The 1-based index of the first query result
+          required: false
+          type: integer
+          format: int32
+        - name: count
+          in: query
+          description: Specifies the desired maximum number of query results per page.
+          required: false
+          type: integer
+          format: int32
+        - name: sortBy
+          in: query
+          description: |-
+            Specifies the attribute whose value
+            SHALL be used to order the returned responses.
+          required: false
+          type: string
+        - name: sortOder
+          in: query
+          description: The order in which the "sortBy" parameter is applied.
+          required: false
+          type: string
+        - name: domain
+          in: query
+          description: The name of the user store where filtering needs to be applied.
+          required: false
+          type: string
+      responses:
+        200:
+          description: Valid users are found
+          schema:
+            $ref: '#/definitions/UserObjectListResponseObject'
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorUnauthorized'
+        403:
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorForbidden'
+        404:
+          description: Valid users are not found
+          schema:
+            $ref: '#/definitions/GroupSearchErrorResponseObject'
+    post:
+      tags:
+        - Users Endpoint
+      summary: Create User
+      description: |
+        This API creates a user and returns the user details along with the user's unique ID.
+
+        <b>Permission required:</b>
+
+            * /permission/admin/manage/identity/usermgt/view
+      operationId: createUser
+      consumes:
+        - application/scim+json
+      parameters:
+        - name: attributes
+          in: query
+          description: SCIM defined attributes parameter.
+          required: false
+          type: string
+        - name: excludedAttributes
+          in: query
+          description: SCIM defined excludedAttribute parameter.
+          required: false
+          type: string
+        - in: body
+          name: body
+          required: false
+          schema:
+            $ref: '#/definitions/UserObject'
+      responses:
+        201:
+          description: User is created.
+          schema:
+            $ref: '#/definitions/UserResponseObject'
+
+        400:
+          description: Invalid Input
+          schema:
+            $ref: '#/definitions/ErrorIvalidInput'
+
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorUnauthorized'
+
+        403:
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorForbidden'
+
+        404:
+          description: Valid User is not found
+          schema:
+            $ref: '#/definitions/ErrorUserNotAvailable'
+
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorInternalServerError'
+  /Users/.search:
+    post:
+      tags:
+        - Users Endpoint
+      summary: Search Users
+      description: |
+        This API returns users according to the filter, sort and pagination parameters.
+
+         <b>Permission required:</b>
+
+            * /permission/admin/manage/identity/usermgt/create
+      operationId: getUsersByPost
+      consumes:
+        - application/scim+json
+      produces:
+        - application/scim+json
+      parameters:
+        - in: body
+          name: body
+          required: false
+          schema:
+            $ref: '#/definitions/UserSearchRequestObject'
+      responses:
+        200:
+          description: Valid users are found
+          schema:
+            $ref: '#/definitions/UserObjectListResponseObject'
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorUnauthorized'
+        403:
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorForbidden'
+        404:
+          description: Valid users are not found
+          schema:
+            $ref: '#/definitions/GroupSearchErrorResponseObject'
+
+  '/Users/{id}':
+    get:
+      tags:
+        - Users Endpoint
+      summary: Get User by ID
+      description: |
+        Return user details if a user found.
+        <b>Permission required:</b>
+
+           * /permission/admin/manage/identity/usermgt/view
+      operationId: getUser by id
+      produces:
+        - application/scim+json
+      parameters:
+        - name: id
+          in: path
+          description: Unique ID of the resource type.
+          required: true
+          type: string
+        - name: attributes
+          in: query
+          description: SCIM defined attributes parameter.
+          required: false
+          type: string
+        - name: excludedAttributes
+          in: query
+          description: SCIM defined excludedAttribute parameter.
+          required: false
+          type: string
+      responses:
+        200:
+          description: Valid user is found
+          schema:
+            $ref: '#/definitions/UserResponseObject'
+
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorUnauthorized'
+        403:
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorForbidden'
+        404:
+          description: Valid user is not found
+          schema:
+            $ref: '#/definitions/ErrorUserNotAvailable'
+    put:
+      tags:
+        - Users Endpoint
+      summary: Update User - PUT
+      description: |
+        This API updates user details and returns the updated user details using a PUT operation.
+         <b>Permission required:</b>
+
+            * /permission/admin/manage/identity/usermgt/update
+      operationId: updateUser
+      consumes:
+        - application/scim+json
+      produces:
+        - application/scim+json
+      parameters:
+        - name: id
+          in: path
+          description: Unique ID of the resource type.
+          required: true
+          type: string
+        - name: attributes
+          in: query
+          description: SCIM defined attributes parameter.
+          required: false
+          type: string
+        - name: excludedAttributes
+          in: query
+          description: SCIM defined excludedAttribute parameter.
+          required: false
+          type: string
+        - in: body
+          name: body
+          required: false
+          schema:
+            $ref: '#/definitions/UserUpdateObject'
+      responses:
+        200:
+          description: Valid user is found
+          schema:
+            $ref: '#/definitions/UserResponseObject'
+
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorUnauthorized'
+        403:
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorForbidden'
+        404:
+          description: Valid user is not found
+          schema:
+            $ref: '#/definitions/ErrorUserNotAvailable'
+    delete:
+      tags:
+        - Users Endpoint
+      summary: Delete User by ID
+      description: |
+        This API deletes a user using the user's unique ID.
+
+         <b>Permission required:</b>
+
+            * /permission/admin/manage/identity/usermgt/delete
+
+      operationId: deleteUser
+      produces:
+        - application/scim+json
+      parameters:
+        - name: id
+          in: path
+          description: Unique ID of the resource type.
+          required: true
+          type: string
+      responses:
+        204:
+          description: User is deleted
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorUnauthorized'
+        403:
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorForbidden'
+        404:
+          description: Valid user is not found
+          schema:
+            $ref: '#/definitions/ErrorUserNotAvailable'
+    patch:
+      tags:
+        - Users Endpoint
+      summary: Update User - PATCH
+      description: |
+        This API updates user details and returns the updated user details using a PATCH operation.
+
+         <b>Permission required:</b>
+
+            * /permission/admin/manage/identity/usermgt/update
+
+        <b>Supported Operations:</b>
+
+            * add
+            * replace
+            * remove
+      operationId: patchUser
+      consumes:
+        - application/scim+json
+      produces:
+        - application/scim+json
+      parameters:
+        - name: id
+          in: path
+          description: Unique id of the resource type.
+          required: true
+          type: string
+        - name: attributes
+          in: query
+          description: SCIM defined attributes parameter.
+          required: false
+          type: string
+        - name: excludedAttributes
+          in: query
+          description: SCIM defined excludedAttribute parameter.
+          required: false
+          type: string
+        - in: body
+          name: body
+          required: false
+          schema:
+            $ref: '#/definitions/PatchOpperationInput'
+      responses:
+        200:
+          description: Valid user is found
+          schema:
+            $ref: '#/definitions/UserResponseObject'
+
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorUnauthorized'
+        403:
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorForbidden'
+        404:
+          description: Valid user is not found
+          schema:
+            $ref: '#/definitions/ErrorUserNotAvailable'
+  /Bulk:
+    post:
+      tags:
+        - Bulk Endpoint
+      summary: Create Users in Bulk
+      description: |
+        This API is used to create multiple users at once.
+         <b>Permission required:</b>
+
+            * /permission/admin/manage/identity/usermgt
+
+      operationId: createBulkUsers
+      consumes:
+        - application/scim+json
+      produces:
+        - application/scim+json
+      parameters:
+        - in: body
+          name: body
+          required: false
+          schema:
+            $ref: '#/definitions/BulkUserRequestObject'
+      responses:
+        201:
+          description: Valid user is created
+          schema:
+            $ref: '#/definitions/BulkUserResponseObject'
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorUnauthorized'
+        403:
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/ErrorForbidden'
+        409:
+          description: Users already exists
+
+  /ResourceTypes:
+    get:
+      tags:
+        - ResourceType Endpoint
+      summary: Get Resource Types
+      description: |
+        This API lists and returns metadata about resource types.
+
+      operationId: getResourceType
+      produces:
+        - application/scim+json
+      parameters: []
+      responses:
+        200:
+          description: Schema is found
+          schema:
+            $ref: '#/definitions/ResourceTypeResponse'
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorUnauthorized'
+        404:
+          description: Schema not found
+          schema:
+            $ref: '#/definitions/ErrorSchemaNotFound'
+
+  /ServiceProviderConfig:
+    get:
+      tags:
+        - ServiceProviderConfig Endpoint
+      summary: Get Service Provider Config
+      description: |
+        This API returns the service provider's configuration details.
+
+        <b>Permission required:</b>
+
+            * No permissions required
+      operationId: getServiceProviderConfig
+      produces:
+        - application/scim+json
+      parameters: []
+      responses:
+        200:
+          description: Schema is found
+          schema:
+            $ref: '#/definitions/SPConfigResponse'
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/ErrorUnauthorized'
+        404:
+          description: Schema not found
+          schema:
+            $ref: '#/definitions/ErrorSchemaNotFound'
+
+
+
+#-----------------------------------------------------
+# Security Definitions
+#-----------------------------------------------------
+securityDefinitions:
+  BasicAuth:
+    type: basic
+  OAuth2:
+    type: oauth2
+    flow: accessCode
+    authorizationUrl: https://localhost:9443/oauth/authorize
+    tokenUrl: https://localhost:9443/oauth/token
+    scopes:
+      read: Grants read access
+      write: Grants write access
+      admin: Grants read and write access to administrative information
+
+#-----------------------------------------------------
+# Definitions
+#-----------------------------------------------------
+definitions:
+  #-----------------------------------------------------
+  # The User object
+  #-----------------------------------------------------
+  UserObject:
+    type: object
+    required:
+      - username
+      - password
+    properties:
+      schemas:
+        type: object
+        example: []
+      name:
+        type: object
+        properties:
+          firstName:
+            type: string
+            example: "Kim"
+          lastName:
+            type: string
+            example: "Berry"
+      userName:
+        type: string
+        example: "kim"
+      password:
+        type: string
+        example: "abc123"
+      emails:
+        type: array
+        items:
+          type: object
+          example:
+            - type: "home"
+              value: "kim@gmail.com"
+              primary: true
+            - type: "work"
+              value: "kim@wso2,com"
+      EnterpriseUser:
+        type: object
+        properties:
+          employeeNumber:
+            type: string
+            example: "1234A"
+          manager:
+            type: object
+            properties:
+              value:
+                type: string
+                example: "Taylor"
+
+  #-----------------------------------------------------
+  # The User Response object
+  #-----------------------------------------------------
+  UserResponseObject:
+    type: object
+    required:
+      - meta
+    properties:
+      meta:
+        type: object
+        properties:
+          created:
+            type: string
+            example: "2018-08-17T10:34:29Z"
+          location:
+            type: string
+            example: "https://localhost:9443/scim2/Users/008bba85-451d-414b-87de-c03b5a1f4217"
+          lastModified:
+            type: string
+            example: "2018-08-17T10:34:29Z"
+          resourceType:
+            type: string
+            example: User
+      schemas:
+        type: object
+        example:
+          - urn:ietf:params:scim:schemas:core:2.0:User
+          - urn:ietf:params:scim:schemas:extension:enterprise:2.0:User
+      username:
+        type: string
+        example: "PRIMARY/kim"
+      id:
+        type: string
+        example: "008bba85-451d-414b-87de-c03b5a1f4217"
+      name:
+        type: object
+        properties:
+          firstName:
+            type: string
+            example: "Kim"
+          lastName:
+            type: string
+            example: "Berry"
+      emails:
+        type: array
+        items:
+          type: object
+          example:
+            - type: "home"
+              value: "kim@gmail.com"
+              primary: true
+            - type: "work"
+              value: "kim@wso2,com"
+      EnterpriseUser:
+        type: object
+        properties:
+          employeeNumber:
+            type: string
+            example: "1234A"
+          manager:
+            type: object
+            properties:
+              value:
+                type: string
+                example: "Taylor"
+      roles:
+        type: object
+        example:
+          - type: "default"
+            value: "Internal/everyone"
+
+  #-----------------------------------------------------
+  # The User Update Object
+  #-----------------------------------------------------
+  UserUpdateObject:
+    type: object
+    required:
+      - username
+    properties:
+      schemas:
+        type: object
+        example: []
+      name:
+        type: object
+        properties:
+          firstName:
+            type: string
+            example: "Kim"
+          lastName:
+            type: string
+            example: "Berry"
+      userName:
+        type: string
+        example: "kim"
+      emails:
+        type: array
+        items:
+          type: object
+          example:
+            - type: "home"
+              value: "kim@gmail.com"
+              primary: true
+            - type: "work"
+              value: "kim@wso2,com"
+      EnterpriseUser:
+        type: object
+        properties:
+          employeeNumber:
+            type: string
+            example: "1234A"
+          manager:
+            type: object
+            properties:
+              value:
+                type: string
+                example: "Taylor"
+
+  #-----------------------------------------------------
+  # The Patch Operation Input - Me
+  #-----------------------------------------------------
+  PatchOpperationInput:
+    type: object
+    properties:
+      schemas:
+        type: array
+        items:
+          example: "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+      Operations:
+        type: array
+        items:
+          $ref: "#/definitions/OperationMeItem"
+
+
+  OperationMeItem:
+    type: object
+    properties:
+      op:
+        type: string
+        enum: ["add", "remove", "replace"]
+      value:
+        type: object
+        properties:
+          nickName:
+            type: string
+            example: "shaggy"
+  #-----------------------------------------------------
+  # The Patch Operation Response Output
+  #-----------------------------------------------------
+  PatchOperationResponseOutput:
+    type: object
+    required:
+      - meta
+    properties:
+      meta:
+        type: object
+        properties:
+          created:
+            type: string
+            example: "2018-08-17T10:34:29Z"
+          location:
+            type: string
+            example: "https://localhost:9443/scim2/Users/008bba85-451d-414b-87de-c03b5a1f4217"
+          lastModified:
+            type: string
+            example: "2018-08-17T10:34:29Z"
+          resourceType:
+            type: string
+            example: User
+      schemas:
+        type: array
+        items:
+          type: string
+          example:
+            - urn:ietf:params:scim:schemas:core:2.0:User
+            - urn:ietf:params:scim:schemas:extension:enterprise:2.0:User
+      username:
+        type: string
+        example: "kim"
+      id:
+        type: string
+        example: "008bba85-451d-414b-87de-c03b5a1f4217"
+      name:
+        type: object
+        properties:
+          firstName:
+            type: string
+            example: "Kim"
+          lastName:
+            type: string
+            example: "Berry"
+      emails:
+        type: array
+        items:
+          type: object
+          example:
+            - type: "home"
+              value: "kim@gmail.com"
+              primary: true
+            - type: "work"
+              value: "kim@wso2,com"
+      EnterpriseUser:
+        type: object
+        properties:
+          employeeNumber:
+            type: string
+            example: "1234A"
+          manager:
+            type: object
+            properties:
+              value:
+                type: string
+                example: "Taylor"
+      roles:
+        type: array
+        items:
+          type: object
+          example:
+            type: "default"
+            value: "Internal/everyone"
+      nickName:
+        type: string
+        example: "shaggy"
+
+  #-----------------------------------------------------
+  # The Group Request Object
+  #-----------------------------------------------------
+  GroupRequestObject:
+    type: object
+    required:
+      - displayName
+      - schemas
+    properties:
+      schemas:
+        type: array
+        items:
+          type: string
+          example: "urn:ietf:params:scim:schemas:core:2.0:Group"
+      displayName:
+        type: string
+        example: "manager"
+      members:
+        type: array
+        items:
+          type: object
+          example:
+            value: "008bba85-451d-414b-87de-c03b5a1f4217"
+            display: "kim"
+  #-----------------------------------------------------
+  # The Group Response Object
+  #-----------------------------------------------------
+  GroupResponseObject:
+    type: object
+    properties:
+      displayName:
+        type: string
+        example: 'PRIMARY/manager'
+      meta:
+        type: object
+        properties:
+          created:
+            type: string
+            example: "2019-08-26T14:27:36"
+          location:
+            type: string
+            example: "https://localhost:9443/scim2/Groups/7bac6a86-1f21-4937-9fb1-5be4a93ef469"
+          lastModified:
+            type: string
+            example: "2019-08-26T14:27:36"
+          resourceType:
+            type: string
+            example: Group
+      schemas:
+        type: array
+        items:
+          type: string
+          example: "urn:ietf:params:scim:schemas:core:2.0:Group"
+      id:
+        type: string
+        example: "7bac6a86-1f21-4937-9fb1-5be4a93ef469"
+      members:
+        type: array
+        items:
+          type: object
+          properties:
+            $ref:
+              type: string
+              example: "https://localhost:9443/scim2/Users/3a12bae9-4386-44be-befd-caf349297f45"
+            display:
+              type: string
+              example: 'kim'
+            value:
+              type: string
+              example: '008bba85-451d-414b-87de-c03b5a1f4217'
+  #-----------------------------------------------------
+  # The Groups List Response Object
+  #-----------------------------------------------------
+  GroupsListResponseObject:
+    type: object
+    properties:
+      totalResults:
+        type: integer
+        example: 3
+      startIndex:
+        type: integer
+        example: 1
+      itemsPerPage:
+        type: integer
+        example: 3
+      schemas:
+        type: array
+        items:
+          type: string
+          example: "urn:ietf:params:scim:api:messages:2.0:ListResponse"
+      Resources:
+        type: array
+        items:
+          $ref: "#/definitions/groupOb"
+  #-----------------------------------------------------
+  # The Groups Search Request Object
+  #-----------------------------------------------------
+  GroupSearchRequestObject:
+    type: object
+    properties:
+      schemas:
+        type: object
+        example:
+          - urn:ietf:params:scim:api:messages:2.0:SearchRequest
+      startIndex:
+        type: integer
+        example: 1
+      filter:
+        type: string
+        example: 'displayName eq manager'
+
+  #-----------------------------------------------------
+  # The Groups Search Response Object
+  #-----------------------------------------------------
+  GroupSearchResponseObject:
+    type: object
+    properties:
+      totalResults:
+        type: integer
+        example: 1
+      startIndex:
+        type: integer
+        example: 1
+      itemsPerPage:
+        type: integer
+        example: 3
+      schemas:
+        type: array
+        items:
+          type: string
+          example: "urn:ietf:params:scim:api:messages:2.0:ListResponse"
+      Resources:
+        type: array
+        items:
+          $ref: "#/definitions/groupOb"
+
+
+  groupOb:
+    type: object
+    properties:
+      displayName:
+        type: string
+        example: "PRIMARY/manager"
+      meta:
+        type: object
+        properties:
+          created:
+            type: string
+            example: '2019-08-26T14:27:36'
+          location:
+            type: string
+            example: 'https://localhost:9443/scim2/Groups/7bac6a86-1f21-4937-9fb1-5be4a93ef469'
+          lastModified:
+            type: string
+            example: '2019-08-26T14:27:36'
+      members:
+        type: array
+        items:
+          type: object
+          properties:
+            $ref:
+              type: string
+              example: "https://localhost:9443/scim2/Users/3a12bae9-4386-44be-befd-caf349297f45"
+            display:
+              type: string
+              example: 'kim'
+            value:
+              type: string
+              example: '008bba85-451d-414b-87de-c03b5a1f4217'
+      id:
+        type: string
+        example: '7bac6a86-1f21-4937-9fb1-5be4a93ef469'
+  #-----------------------------------------------------
+  # The Group PUT request object
+  #-----------------------------------------------------
+  GroupPutRequestObject:
+    type: object
+    properties:
+      displayName:
+        type: string
+        example: "manager"
+      members:
+        type: array
+        items:
+          type: object
+          example:
+            value: "409ca90b-2ba6-4474-9a45-2cf7376e6e43"
+            display: "kris"
+
+  #-----------------------------------------------------
+  # The Group PUT response object
+  #-----------------------------------------------------
+  GroupPutResponseObject:
+    type: object
+    properties:
+      displayName:
+        type: string
+        example: 'PRIMARY/manager'
+      meta:
+        type: object
+        properties:
+          created:
+            type: string
+            example: "2019-08-26T14:27:36"
+          location:
+            type: string
+            example: "https://localhost:9443/scim2/Groups/7bac6a86-1f21-4937-9fb1-5be4a93ef469"
+          lastModified:
+            type: string
+            example: "2019-08-26T14:27:36"
+          resourceType:
+            type: string
+            example: Group
+      schemas:
+        type: array
+        items:
+          type: string
+          example: "urn:ietf:params:scim:schemas:core:2.0:Group"
+      id:
+        type: string
+        example: "7bac6a86-1f21-4937-9fb1-5be4a93ef469"
+      members:
+        type: array
+        items:
+          type: object
+          example:
+            display: "kris"
+            value: "409ca90b-2ba6-4474-9a45-2cf7376e6e43"
+
+  #-----------------------------------------------------
+  # The Patch Group Operation Input - Group
+  #-----------------------------------------------------
+  PatchGroupOperationRequestObject:
+    type: object
+    properties:
+      schemas:
+        type: array
+        items:
+          type: string
+          example: "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+      Operations:
+        type: array
+        items:
+          $ref: "#/definitions/GroupItemObj"
+
+  GroupItemObj:
+    type: object
+    properties:
+      op:
+        type: string
+        enum: ["add", "remove", "replace"]
+      value:
+        type: object
+        properties:
+          members:
+            type: array
+            items:
+              type: object
+              example:
+                display: "kris"
+                value: "409ca90b-2ba6-4474-9a45-2cf7376e6e43"
+
+
+
+  #-----------------------------------------------------
+  # The Patch Group Operation Output - Group
+  #-----------------------------------------------------
+  PatchGroupOperationResponseObject:
+    type: object
+    properties:
+      displayName:
+        type: string
+        example: 'PRIMARY/manager'
+      meta:
+        type: object
+        properties:
+          created:
+            type: string
+            example: "2019-08-26T14:27:36"
+          location:
+            type: string
+            example: "https://localhost:9443/scim2/Groups/7bac6a86-1f21-4937-9fb1-5be4a93ef469"
+          lastModified:
+            type: string
+            example: "2019-08-26T14:27:36"
+          resourceType:
+            type: string
+            example: Group
+      schemas:
+        type: object
+        example:
+          - urn:ietf:params:scim:schemas:core:2.0:Group
+      id:
+        type: string
+        example: "7bac6a86-1f21-4937-9fb1-5be4a93ef469"
+      members:
+        type: array
+        items:
+          type: object
+          example:
+            - display: "kris"
+              value: "409ca90b-2ba6-4474-9a45-2cf7376e6e43"
+            - display: "kim"
+              value: "007bfc66-e4f0-4d53-9dfd-0c4a77b33257"
+  #-----------------------------------------------------
+  # The User List Response Object
+  #-----------------------------------------------------
+  UserObjectListResponseObject:
+    type: object
+    properties:
+      totalResults:
+        type: integer
+        example: 1
+      startIndex:
+        type: integer
+        example: 1
+      itemsPerPage:
+        type: integer
+        example: 1
+      schemas:
+        type: object
+        example:
+          - urn:ietf:params:scim:api:messages:2.0:ListResponse
+      Resources:
+        type: array
+        items:
+          $ref: "#/definitions/UserResponseObject"
+
+  #-----------------------------------------------------
+  # Search Request Object- User
+  #-----------------------------------------------------
+  UserSearchRequestObject:
+    type: object
+    example:
+      schemas:
+        - urn:ietf:params:scim:api:messages:2.0:SearchRequest
+      attributes:
+        - name.familyName
+        - userName
+      filter: "userName sw ki and name.familyName co err"
+      domain: 'PRIMARY'
+      startIndex: 1
+      count: 10
+  #-----------------------------------------------------
+  # Bulk User Request Object
+  #-----------------------------------------------------
+  BulkUserRequestObject:
+    type: object
+    properties:
+      failOnErrors:
+        type: integer
+        example: 1
+      schemas:
+        type: array
+        items:
+          type: string
+          example: "urn:ietf:params:scim:api:messages:2.0:BulkRequest"
+      Operations:
+        type: array
+        items:
+          $ref: '#/definitions/BulkUserOb'
+
+
+
+  BulkUserOb:
+    type: object
+    properties:
+      method:
+        type: string
+        example: "POST"
+      path:
+        type: string
+        example: "/Users"
+      bulkId:
+        type: string
+        example: "ytrewq"
+      data:
+        type: object
+        properties:
+          schemas:
+            type: array
+            items:
+              type: string
+              example:
+                "urn:ietf:params:scim:schemas:core:2.0:User"
+          username:
+            type: string
+            example: "jesse"
+          password:
+            type: string
+            example: "jesspass"
+
+  #-----------------------------------------------------
+  # Bulk User Response Object
+  #-----------------------------------------------------
+  BulkUserResponseObject:
+    type: object
+    properties:
+      schemas:
+        type: array
+        items:
+          type: string
+          example: "urn:ietf:params:scim:api:messages:2.0:BulkResponse"
+      Operations:
+        $ref: '#/definitions/OperationObBulk'
+
+  OperationObBulk:
+    type: object
+    properties:
+      bulkId:
+        type: string
+        example: "qwerty"
+      method:
+        type: string
+        example: "POST"
+      location:
+        type: string
+        example: "https://localhost:9443/scim2/Users/81cbba1b-c259-485d-8ba4-79afb03e5bd1"
+      status:
+        type: object
+        properties:
+          code:
+            type: string
+            example: "201"
+
+  #-----------------------------------------------------
+  # Resource Type response
+  #-----------------------------------------------------
+  ResourceTypeResponse:
+    type: object
+    properties:
+      schemas:
+        type: array
+        items:
+          type: string
+          example: "urn:ietf:params:scim:schemas:core:2.0:ResourceType"
+      resourceType:
+        type: array
+        items:
+          $ref: '#/definitions/UserObResourceType'
+
+
+  UserObResourceType:
+    type: object
+    properties:
+      schema:
+        type: string
+        example: "urn:ietf:params:scim:schemas:core:2.0:User"
+      endpoint:
+        type: string
+        example:  "/Users"
+      meta:
+        type: object
+        properties:
+          location:
+            type: string
+            example: "https://localhost:9443/scim2/ResourceType/User"
+          resourceType:
+            type: string
+            example: "ResourceType"
+      name:
+        type: string
+        example: "User"
+      description:
+        type: string
+        example: "User Account"
+      schemaExtensions:
+        type: object
+        properties:
+          schema:
+            type: string
+            example: "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"
+          required:
+            type: boolean
+            example: false
+      id:
+        type: string
+        example: "User"
+
+  #-----------------------------------------------------
+  # SP Config Response Object
+  #-----------------------------------------------------
+  SPConfigResponse:
+    type: object
+    example:
+      patch:
+        supported: true
+      filter:
+        maxResults: 200
+        supported: true
+      documentationUri: http://example.com/help/scim.html
+      authenticationSchemes:
+        - name: OAuth Bearer Token
+          description: Authentication scheme using the OAuth Bearer Token Standard
+          specUri: http://www.rfc-editor.org/info/rfc6750
+          type: oauthbearertoken
+          primary: true
+        - name: HTTP Basic
+          description: Authentication scheme using the HTTP Basic Standard
+          specUri: http://www.rfc-editor.org/info/rfc2617
+          type: httpbasic
+          primary: false
+      schemas:
+        - urn:ietf:params:scim:schemas:core:2.0:ServiceProviderConfig
+      etag:
+        supported: false
+      sort:
+        supported: false
+      bulk:
+        maxPayloadSize: 1048576
+        maxOperations: 1000
+        supported: true
+      changePassword:
+        supported: false
+  #-----------------------------------------------------
+  # The permission response Object
+  #-----------------------------------------------------
+  GroupPermissionResponseObject:
+    type: array
+    items:
+      type: string
+      example:
+        - "/permission/admin/login"
+        - "/permission/admin/manage/search"
+        - "/permission/admin/manage/search/advanced-search"
+        - "/permission/admin/manage/search/resources"
+        - "/permission/admin/manage/add"
+        - "/permission/admin/manage/add/module"
+        - "/permission/admin/manage/add/service"
+        - "/permission/admin/manage/add/webapp"
+
+  #-----------------------------------------------------
+  # The permission patch request Object
+  #-----------------------------------------------------
+  PermissionPatchOpperationRequestObject:
+    type: object
+    properties:
+      schemas:
+        type: array
+        items:
+          type: string
+          example: "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+      Operations:
+        type: array
+        items:
+          $ref: '#/definitions/OperationItem'
+
+
+
+
+  #-----------------------------------------------------
+  # The permission patch response Object
+  #-----------------------------------------------------
+  PermissionPatchResponseObject:
+    type: array
+    items:
+      type: string
+      example:
+        - "/permission/admin/configure/security/usermgt"
+        - "/permission/admin/configure/security/usermgt/passwords"
+        - "/permission/admin/configure/security/usermgt/profiles"
+        - "/permission/admin/configure/security/usermgt/users"
+        - "/permission/admin/configure/security/usermgt/provisioning"
+        - "/permission/admin/login"
+        - "/permission/admin/manage/search"
+        - "/permission/admin/manage/search/advanced-search"
+        - "/permission/admin/manage/search/resources"
+        - "/permission/admin/manage/add"
+        - "/permission/admin/manage/add/module"
+        - "/permission/admin/manage/add/service"
+        - "/permission/admin/manage/add/webapp"
+
+  #-----------------------------------------------------
+  # The permission patch request Object
+  #-----------------------------------------------------
+  PermissionPutRequestObject:
+    type: array
+    items:
+      type: string
+      example:
+        - "/permission/admin/configure/security/usermgt"
+
+
+  #-----------------------------------------------------
+  # The permission patch response Object
+  #-----------------------------------------------------
+  PermissionPutResponseObject:
+    type: array
+    items:
+      type: string
+      example:
+        - "/permission/admin/configure/security/usermgt"
+        - "/permission/admin/configure/security/usermgt/passwords"
+        - "/permission/admin/configure/security/usermgt/profiles"
+        - "/permission/admin/configure/security/usermgt/users"
+        - "/permission/admin/configure/security/usermgt/provisioning"
+
+
+  #-----------------------------------------------------
+  # The Error Invalid Input
+  #-----------------------------------------------------
+  ErrorIvalidInput:
+    type : object
+    required:
+      - status
+      - schema
+      - detail
+    properties:
+      status:
+        type: string
+        example: "400"
+      schemas:
+        type: string
+        example: "urn:ietf:params:scim:api:messages:2.0:Error"
+      scimType:
+        type: string
+        example: "invalidSyntax"
+      detail:
+        type: string
+        example: "Request is unparsable, syntactically incorrect, or violates schema."
+  #-----------------------------------------------------
+  # The Error Unauthorized
+  #-----------------------------------------------------
+  ErrorUnauthorized:
+    type : object
+    required:
+      - status
+      - schema
+    properties:
+      status:
+        type: string
+        example: "401"
+      schemas:
+        type: string
+        example: "urn:ietf:params:scim:api:messages:2.0:Error"
+      scimType:
+        type: string
+        example: "Unauthorized"
+  #-----------------------------------------------------
+  # The Error NotAcceptable
+  #-----------------------------------------------------
+  ErrorNotAcceptable:
+    type: object
+    required:
+      - status
+      - schema
+    properties:
+      status:
+        type: string
+        example: "406"
+      schemas:
+        type: string
+        example: "urn:ietf:params:scim:api:messages:2.0:Error"
+      scimType:
+        type: string
+        example: "Not Acceptable"
+    #-----------------------------------------------------
+    # The Error Forbidden
+    #-----------------------------------------------------
+  ErrorForbidden:
+    type: object
+    required:
+      - status
+      - schema
+    properties:
+      status:
+        type: string
+        example: "403"
+      schemas:
+        type: string
+        example: "urn:ietf:params:scim:api:messages:2.0:Error"
+      scimType:
+        type: string
+        example: "Forbidden"
+
+  #-----------------------------------------------------
+  # The Error User Not Available
+  #-----------------------------------------------------
+  ErrorUserNotAvailable:
+    type : object
+    required:
+      - status
+      - schema
+      - detail
+    properties:
+      status:
+        type: string
+        example: "404"
+      schemas:
+        type: string
+        example: "urn:ietf:params:scim:api:messages:2.0:Error"
+      detail:
+        type: string
+        example: "No user with the id : 008bba85-451d-414b-87de-c03b5a1f4217 in the user store."
+
+  #-----------------------------------------------------
+  # The Error Group Not Available
+  #-----------------------------------------------------
+  ErrorGroupNotAvailable:
+    type : object
+    required:
+      - status
+      - schema
+      - detail
+    properties:
+      status:
+        type: string
+        example: "404"
+      schemas:
+        type: string
+        example: "urn:ietf:params:scim:api:messages:2.0:Error"
+      detail:
+        type: string
+        example: "No Group with the id : 89a2a363-c90f-47e9-afae-949d026dad16 in the user store."
+  #-----------------------------------------------------
+  # The Error Schema Not Found
+  #-----------------------------------------------------
+  ErrorSchemaNotFound:
+    type : object
+    required:
+      - status
+      - schema
+      - detail
+    properties:
+      status:
+        type: string
+        example: "404"
+      schemas:
+        type: string
+        example: "urn:ietf:params:scim:api:messages:2.0:Error"
+      detail:
+        type: string
+        example: "Schema not found."
+
+  #-----------------------------------------------------
+  # The Error No groups found
+  #-----------------------------------------------------
+  ErrorNoGroupAvailable:
+    type : object
+    required:
+      - status
+      - schema
+      - detail
+    properties:
+      status:
+        type: string
+        example: "404"
+      schemas:
+        type: array
+        items:
+          type: string
+          example: "urn:ietf:params:scim:api:messages:2.0:Error"
+      detail:
+        type: string
+        example: "Group not found in the user store."
+
+  #-----------------------------------------------------
+  # The Error No groups found from search
+  #-----------------------------------------------------
+  GroupSearchErrorResponseObject:
+    type: object
+    required:
+      - totalResults
+      - startIndex
+      - itemsPerPage
+      - schemas
+    properties:
+      totalResults:
+        type: integer
+        example: 0
+      startIndex:
+        type: integer
+        example: 1
+      itemsPerPage:
+        type: integer
+        example: 0
+      schemas:
+        type: array
+        items:
+          example: "urn:ietf:params:scim:api:messages:2.0:ListResponse"
+
+  #-----------------------------------------------------
+  # The Error User Not Available
+  #-----------------------------------------------------
+  ErroGroupAlreadyAvailable:
+    type : object
+    required:
+      - status
+      - schema
+      - detail
+    properties:
+      status:
+        type: string
+        example: "409"
+      schemas:
+        type: string
+        example: "urn:ietf:params:scim:api:messages:2.0:Error"
+      detail:
+        type: string
+        example: "Group with name: PRIMARY/manager already exists in the system."
+
+  #-----------------------------------------------------
+  # The Error Internal Server Error
+  #-----------------------------------------------------
+  ErrorInternalServerError:
+    type : object
+    required:
+      - status
+      - schema
+      - detail
+    properties:
+      status:
+        type: string
+        example: "500"
+      schemas:
+        type: string
+        example: "urn:ietf:params:scim:api:messages:2.0:Error"
+      detail:
+        type: string
+        example: "Internal Server Error."
+
+  #-----------------------------------------------------
+  # The Error Not Implemented
+  #-----------------------------------------------------
+  ErrorNotimplemented:
+    type : object
+    required:
+      - status
+      - schema
+      - detail
+    properties:
+      status:
+        type: string
+        example: "501"
+      schemas:
+        type: string
+        example: "urn:ietf:params:scim:api:messages:2.0:Error"
+      detail:
+        type: string
+        example: "Self delete is not supported."
+
+
+  OperationItem:
+    type: object
+    properties:
+      op:
+        type: string
+        enum: ["add", "remove"]
+      value:
+        type: array
+        items:
+          type: string
+          example: "/permission/admin/configure/security/usermgt"

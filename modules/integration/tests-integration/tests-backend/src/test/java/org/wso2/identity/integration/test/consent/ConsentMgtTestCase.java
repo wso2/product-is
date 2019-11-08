@@ -18,10 +18,9 @@
 
 package org.wso2.identity.integration.test.consent;
 
-import org.apache.wink.client.ClientConfig;
+import org.apache.http.HttpHeaders;
 import org.apache.wink.client.Resource;
 import org.apache.wink.client.RestClient;
-import org.apache.wink.client.handlers.BasicAuthSecurityHandler;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.testng.Assert;
@@ -32,9 +31,11 @@ import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 import javax.ws.rs.core.MediaType;
 
+import static org.wso2.identity.integration.test.util.Utils.getBasicAuthHeader;
+
 public class ConsentMgtTestCase extends ISIntegrationTest {
 
-    public static final String CONSNT_ENDPOINT_SUFFIX = "/api/identity/consent-mgt/v1.0/consents";
+    public static final String CONSENT_ENDPOINT_SUFFIX = "/api/identity/consent-mgt/v1.0/consents";
     private String isServerBackendUrl;
     private String consentEndpoint;
 
@@ -43,7 +44,7 @@ public class ConsentMgtTestCase extends ISIntegrationTest {
 
         super.init();
         isServerBackendUrl = isServer.getContextUrls().getWebAppURLHttps();
-        consentEndpoint = isServerBackendUrl + CONSNT_ENDPOINT_SUFFIX;
+        consentEndpoint = isServerBackendUrl + CONSENT_ENDPOINT_SUFFIX;
     }
 
     @AfterClass(alwaysRun = true)
@@ -112,53 +113,43 @@ public class ConsentMgtTestCase extends ISIntegrationTest {
 
     private JSONObject addPIICategory(String name, String description) {
 
-        ClientConfig clientConfig = new ClientConfig();
-        BasicAuthSecurityHandler basicAuth = new BasicAuthSecurityHandler();
-        basicAuth.setUserName(userInfo.getUserName());
-        basicAuth.setPassword(userInfo.getPassword());
-        clientConfig.handlers(basicAuth);
-
-        RestClient restClient = new RestClient(clientConfig);
+        RestClient restClient = new RestClient();
         Resource piiCatResource = restClient.resource(consentEndpoint + "/" + "pii-categories");
 
-        String addPIICatString = "{\"piiCategory\": " + "\"" + name + "\"" + ", \"description\": " + "\"" +
-                description + "\" , \"sensitive\": \"" + true + "\"}";
+        String addPIICatString =
+                "{\"piiCategory\": " + "\"" + name + "\"" + ", \"description\": " + "\"" + description + "\" , " +
+                        "\"sensitive\": \"" + true + "\"}";
 
-        String response = piiCatResource.contentType(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON)
-                .post(String.class, addPIICatString);
+        String response = piiCatResource.
+                contentType(MediaType.APPLICATION_JSON_TYPE).
+                accept(MediaType.APPLICATION_JSON).
+                header(HttpHeaders.AUTHORIZATION, getBasicAuthHeader(userInfo)).
+                post(String.class,
+                addPIICatString);
 
         return (JSONObject) JSONValue.parse(response);
     }
 
     private JSONObject addPurposeCategory(String name, String description) {
 
-        ClientConfig clientConfig = new ClientConfig();
-        BasicAuthSecurityHandler basicAuth = new BasicAuthSecurityHandler();
-        basicAuth.setUserName(userInfo.getUserName());
-        basicAuth.setPassword(userInfo.getPassword());
-        clientConfig.handlers(basicAuth);
-
-        RestClient restClient = new RestClient(clientConfig);
+        RestClient restClient = new RestClient();
         Resource piiCatResource = restClient.resource(consentEndpoint + "/" + "purpose-categories");
 
         String addPurposeCatString = "{\"purposeCategory\": " + "\"" + name + "\"" + ", \"description\": " + "\"" +
                 description + "\"}";
 
-        String response = piiCatResource.contentType(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON)
-                .post(String.class, addPurposeCatString);
+        String response = piiCatResource.
+                contentType(MediaType.APPLICATION_JSON_TYPE).
+                accept(MediaType.APPLICATION_JSON).
+                header(HttpHeaders.AUTHORIZATION, getBasicAuthHeader(userInfo)).
+                post(String.class, addPurposeCatString);
 
         return (JSONObject) JSONValue.parse(response);
     }
 
     private JSONObject addPurpose(String name, String description, String group, String groupType) {
 
-        ClientConfig clientConfig = new ClientConfig();
-        BasicAuthSecurityHandler basicAuth = new BasicAuthSecurityHandler();
-        basicAuth.setUserName(userInfo.getUserName());
-        basicAuth.setPassword(userInfo.getPassword());
-        clientConfig.handlers(basicAuth);
-
-        RestClient restClient = new RestClient(clientConfig);
+        RestClient restClient = new RestClient();
         Resource piiCatResource = restClient.resource(consentEndpoint + "/" + "purposes");
 
         String addPurposeString = "{" +
@@ -174,8 +165,11 @@ public class ConsentMgtTestCase extends ISIntegrationTest {
                                   "  ]" +
                                   "}";
 
-        String response = piiCatResource.contentType(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON)
-                .post(String.class, addPurposeString);
+        String response = piiCatResource.
+                contentType(MediaType.APPLICATION_JSON_TYPE).
+                accept(MediaType.APPLICATION_JSON).
+                header(HttpHeaders.AUTHORIZATION, getBasicAuthHeader(userInfo)).
+                post(String.class, addPurposeString);
 
         return (JSONObject) JSONValue.parse(response);
     }
@@ -184,13 +178,7 @@ public class ConsentMgtTestCase extends ISIntegrationTest {
             serviceDescription, String consentType, String collectionMethod, String jurisdiction, String language,
                                   String policyURL) {
 
-        ClientConfig clientConfig = new ClientConfig();
-        BasicAuthSecurityHandler basicAuth = new BasicAuthSecurityHandler();
-        basicAuth.setUserName(userInfo.getUserName());
-        basicAuth.setPassword(userInfo.getPassword());
-        clientConfig.handlers(basicAuth);
-
-        RestClient restClient = new RestClient(clientConfig);
+        RestClient restClient = new RestClient();
         Resource piiCatResource = restClient.resource(consentEndpoint);
 
         String addReceiptString = "{" +
@@ -226,8 +214,11 @@ public class ConsentMgtTestCase extends ISIntegrationTest {
                 "  \"policyURL\": \"" + policyURL + "\"" +
                 "}";
 
-        String response = piiCatResource.contentType(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON)
-                .post(String.class, addReceiptString);
+        String response = piiCatResource.
+                contentType(MediaType.APPLICATION_JSON_TYPE).
+                accept(MediaType.APPLICATION_JSON).
+                header(HttpHeaders.AUTHORIZATION, getBasicAuthHeader(userInfo)).
+                post(String.class, addReceiptString);
 
         return (JSONObject) JSONValue.parse(response);
     }
