@@ -116,17 +116,15 @@
 
 
 
-      if(data == ""){
-	        $("#message").append(element);
-            message({content:'No authorized applications found !', type:'info', cbk:function () {
+    if(data == ""){
+        $("#message").append(element);
+        message({content:'No authorized applications found !', type:'info', cbk:function () {
             cancel();
-            } });
-            
-}
-else {
-    json = $.parseJSON(data);
-                                    drawPage();
-}
+        } });
+    }else {
+        json = $.parseJSON(data);
+        drawPage();
+    }
 
                                 })
                                 .fail(function () {

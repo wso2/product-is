@@ -21,5 +21,7 @@
   ],
   "http_access_log.pattern": "%h %l %u %t %r %s %b %{Referer}i %{User-Agent}i %T",
 
-  "log_correlation.header_config": "{'activityid':'Correlation-ID'}"
+  "log_correlation.header_config": "{'activityid':'Correlation-ID'}",
+
+  "monitoring.jmx.rmi_server_start": false
 }
