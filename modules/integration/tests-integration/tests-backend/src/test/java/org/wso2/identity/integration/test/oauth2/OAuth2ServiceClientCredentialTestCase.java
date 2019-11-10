@@ -129,9 +129,7 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
 		Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
 		keyPositionMap.put("name=\"valid\"", 1);
 
-		List<KeyValue> keyValues =
-		                           DataExtractUtil.extractInputValueFromResponse(response,
-		                                                                         keyPositionMap);
+		List<KeyValue> keyValues = DataExtractUtil.extractInputValueFromResponse(response, keyPositionMap);
 		Assert.assertNotNull(keyValues, "Access token Key value is null.");
 		String valid = keyValues.get(0).getValue();
 		EntityUtils.consume(response.getEntity());

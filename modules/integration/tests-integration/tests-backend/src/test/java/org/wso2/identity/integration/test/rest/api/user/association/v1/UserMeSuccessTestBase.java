@@ -32,6 +32,8 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import javax.xml.xpath.XPathExpressionException;
 
 import static org.hamcrest.CoreMatchers.hasItems;
@@ -128,7 +130,8 @@ public class UserMeSuccessTestBase extends UserAssociationTestBase {
                 .statusCode(HttpStatus.SC_OK)
                 .log().ifValidationFails()
                 .body("size()", is(1))
-                .body("userId", hasItems(TEST_USER));
+                .body("userId", hasItems(Base64.getUrlEncoder().encodeToString(("PRIMARY/" + TEST_USER).getBytes(
+                        StandardCharsets.UTF_8))));
     }
 
     @Test(dependsOnMethods = {"testGetAssociations"})

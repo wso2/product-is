@@ -41,8 +41,8 @@ import java.io.IOException;
 public class PermissionManagementTest extends RESTAPIServerTestBase {
 
     private static final String API_DEFINITION_NAME = "permission-management.yaml";
-    static final String API_VERSION = "v1";
-    private static String API_PACKAGE_NAME = "org.wso2.carbon.identity.api.server.permission.management.v1";
+    private static final String API_VERSION = "v1";
+    private static final String API_PACKAGE_NAME = "org.wso2.carbon.identity.api.server.permission.management.v1";
     public static final String PERMISSION_MANAGEMENT_ENDPOINT = "/permission-management";
     public static final String PERMISSIONS_ENDPOINT = "/permissions";
 
@@ -101,7 +101,7 @@ public class PermissionManagementTest extends RESTAPIServerTestBase {
     }
 
     @Test
-    public void testGetPermissions() throws JSONException {
+    public void testGetPermissions() {
 
         getResponseOfGet(PERMISSION_MANAGEMENT_ENDPOINT + PERMISSIONS_ENDPOINT)
                 .then()
