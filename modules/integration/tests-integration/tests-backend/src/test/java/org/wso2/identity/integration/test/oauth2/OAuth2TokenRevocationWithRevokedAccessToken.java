@@ -21,6 +21,7 @@ package org.wso2.identity.integration.test.oauth2;
 import com.nimbusds.oauth2.sdk.AccessTokenResponse;
 import com.nimbusds.oauth2.sdk.AuthorizationGrant;
 import com.nimbusds.oauth2.sdk.ResourceOwnerPasswordCredentialsGrant;
+import com.nimbusds.oauth2.sdk.Scope;
 import com.nimbusds.oauth2.sdk.TokenIntrospectionRequest;
 import com.nimbusds.oauth2.sdk.TokenIntrospectionResponse;
 import com.nimbusds.oauth2.sdk.TokenRequest;
@@ -94,19 +95,20 @@ public class OAuth2TokenRevocationWithRevokedAccessToken extends OAuth2ServiceAb
 
         // Request an access token
         AccessToken accessToken = requestAccessToken();
+        AccessToken privilegedAccessToken = requestPrivilegedAccessToken();
 
         // Introspect the returned access token to verify the validity before revoking
-        TokenIntrospectionResponse activeTokenIntrospectionResponse = introspectAccessToken(accessToken);
+        TokenIntrospectionResponse activeTokenIntrospectionResponse = introspectAccessToken(accessToken, privilegedAccessToken);
         Assert.assertTrue(activeTokenIntrospectionResponse.indicatesSuccess(), "Introspection response of an " +
                 "active access token is unsuccessful.");
 
         // Revoke the access token returned above
-        HTTPResponse activeTokenRovocationRespose = revokeAccessToken(accessToken);
-        Assert.assertEquals(activeTokenRovocationRespose.getStatusCode(), 200, "Revocation request with " +
+        HTTPResponse activeTokenRevocationResponse = revokeAccessToken(accessToken);
+        Assert.assertEquals(activeTokenRevocationResponse.getStatusCode(), 200, "Revocation request with " +
                 "an active access token has been failed.");
 
         // Introspect the revoked access token to verify the token has been revoked
-        TokenIntrospectionResponse revokedTokenIntrospectionResponse = introspectAccessToken(accessToken);
+        TokenIntrospectionResponse revokedTokenIntrospectionResponse = introspectAccessToken(accessToken, privilegedAccessToken);
         Assert.assertFalse(revokedTokenIntrospectionResponse.indicatesSuccess(), "Introspection response of a revoked" +
                 " access token is successful.");
 
@@ -130,6 +132,22 @@ public class OAuth2TokenRevocationWithRevokedAccessToken extends OAuth2ServiceAb
         return accessTokenResponse.getTokens().getAccessToken();
     }
 
+    private AccessToken requestPrivilegedAccessToken() throws Exception {
+
+        ClientAuthentication clientAuth = new ClientSecretBasic(consumerKey, consumerSecret);
+        URI tokenEndpoint = new URI(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
+        AuthorizationGrant authorizationGrant = new ResourceOwnerPasswordCredentialsGrant("admin",
+                new Secret("admin"));
+
+        Scope scope = new Scope("internal_application_mgt_view");
+
+        TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, authorizationGrant, scope);
+        HTTPResponse tokenHTTPResp = request.toHTTPRequest().send();
+
+        AccessTokenResponse accessTokenResponse = AccessTokenResponse.parse(tokenHTTPResp);
+        return accessTokenResponse.getTokens().getAccessToken();
+    }
+
     private HTTPResponse revokeAccessToken(AccessToken accessToken) throws Exception {
 
         ClientAuthentication clientAuth = new ClientSecretBasic(consumerKey, consumerSecret);
@@ -140,10 +158,10 @@ public class OAuth2TokenRevocationWithRevokedAccessToken extends OAuth2ServiceAb
         return revocationRequest.toHTTPRequest().send();
     }
 
-    private TokenIntrospectionResponse introspectAccessToken(AccessToken accessToken) throws Exception {
+    private TokenIntrospectionResponse introspectAccessToken(AccessToken accessToken, AccessToken privilegedAccessToken) throws Exception {
 
         URI introSpecEndpoint = new URI(OAuth2Constant.INTRO_SPEC_ENDPOINT);
-        BearerAccessToken bearerAccessToken = new BearerAccessToken(accessToken.getValue());
+        BearerAccessToken bearerAccessToken = new BearerAccessToken(privilegedAccessToken.getValue());
         TokenIntrospectionRequest TokenIntroRequest = new TokenIntrospectionRequest(introSpecEndpoint,
                 bearerAccessToken,
                 accessToken);
