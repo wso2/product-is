@@ -164,7 +164,7 @@ public class UserProfileAdminTestCase extends ISIntegrationTest {
 
         // create a user
         userMgtClient.addUser(username, password, new String[]{"admin"}, "default");
-        Assert.assertEquals(userMgtClient.getUserList().contains(username), true);
+        Assert.assertTrue(userMgtClient.getUserList().contains(username));
 
         idpMgtClient = new IdentityProviderMgtServiceClient(username, password, backendURL);
         userProfileMgtClient = new UserProfileMgtServiceClient(backendURL, username, password);

@@ -58,7 +58,7 @@ public class OAuth2ServiceClient {
 	 */
 	public OAuth2TokenValidationResponseDTO validateAuthenticationRequest(OAuth2TokenValidationRequestDTO params)
 			throws Exception {
-		OAuth2TokenValidationResponseDTO resp = stub.validate(params);
-		return resp;
+
+		return stub.validate(params);
 	}
 }
