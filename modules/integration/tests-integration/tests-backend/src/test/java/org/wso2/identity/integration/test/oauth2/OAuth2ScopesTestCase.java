@@ -33,6 +33,10 @@ import org.testng.annotations.Test;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -83,16 +87,14 @@ public class OAuth2ScopesTestCase extends ISIntegrationTest {
 
         addScope(name2, displayName, description, bindings);
 
-        JSONArray response = getAllScope();
+        JSONArray response = getAllScopes();
 
-        // validate the scopes set size
-        Assert.assertEquals(2, response.size());
+        Map<String, JSONObject> responseItems = IntStream.range(0, response.size())
+                .mapToObj(i -> (JSONObject) JSONValue.parse(response.get(i).toString()))
+                .collect(Collectors.toMap(item -> (String) item.get("name"), item -> item, (a, b) -> b));
 
-        JSONObject firstScope = (JSONObject) JSONValue.parse(response.get(0).toString());
-        JSONObject secondScope = (JSONObject) JSONValue.parse(response.get(1).toString());
-
-        Assert.assertTrue(name1.equals(firstScope.get("name")) || name1.equals(secondScope.get("name")));
-        Assert.assertTrue(name2.equals(firstScope.get("name")) || name2.equals(secondScope.get("name")));
+        Assert.assertNotNull(responseItems.get(name1));
+        Assert.assertNotNull(responseItems.get(name2));
     }
 
 
@@ -162,7 +164,7 @@ public class OAuth2ScopesTestCase extends ISIntegrationTest {
         return (JSONObject) JSONValue.parse(response);
     }
 
-    private JSONArray getAllScope() {
+    private JSONArray getAllScopes() {
 
         Resource userResource = getUserResource(null);
 
