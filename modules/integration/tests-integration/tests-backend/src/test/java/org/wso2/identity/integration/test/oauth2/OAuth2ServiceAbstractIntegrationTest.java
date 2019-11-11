@@ -254,8 +254,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
 		request.setEntity(new UrlEncodedFormEntity(urlParameters));
 
-		HttpResponse response = client.execute(request);
-		return response;
+		return client.execute(request);
 	}
 
 	/**
@@ -425,12 +424,10 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	public HttpResponse sendValidateAccessTokenPost(HttpClient client, String accessToken)
 	                                                                                    throws ClientProtocolException,
 	                                                                                    IOException {
-		List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+		List<NameValuePair> urlParameters = new ArrayList<>();
 		urlParameters.add(new BasicNameValuePair("accessToken", accessToken));
 
-		HttpResponse response = sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.ACCESS_RESOURCES_URL);
-
-		return response;
+		return sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.ACCESS_RESOURCES_URL);
 	}
 
 	/**
