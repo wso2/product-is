@@ -34,6 +34,7 @@ public class ApplicationManagementBaseTest extends RESTAPIServerTestBase {
     static final String API_VERSION = "v1";
 
     static final String APPLICATION_MANAGEMENT_API_BASE_PATH = "/applications";
+    static final String METADATA_API_BASE_PATH = APPLICATION_MANAGEMENT_API_BASE_PATH + "/meta";
     static final String PATH_SEPARATOR = "/";
 
     protected static String swaggerDefinition;
