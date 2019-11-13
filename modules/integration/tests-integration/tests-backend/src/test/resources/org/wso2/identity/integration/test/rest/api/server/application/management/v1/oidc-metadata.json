@@ -1,0 +1,50 @@
+{
+  "allowedGrantTypes": {
+    "options": [
+      "Code",
+      "Implicit",
+      "Password",
+      "Client Credential",
+      "Refresh Token",
+      "SAML2",
+      "IWA-NTLM",
+      "urn:ietf:params:oauth:grant-type:uma-ticket",
+      "account_switch",
+      "urn:ietf:params:oauth:grant-type:jwt-bearer"
+    ]
+  },
+  "defaultUserAccessTokenExpiryTime": "3600",
+  "defaultApplicationAccessTokenExpiryTime": "3600",
+  "defaultRefreshTokenExpiryTime": "86400",
+  "defaultIdTokenExpiryTime": "3600",
+  "idTokenEncryptionAlgorithm": {
+    "options": [
+      "RSA-OAEP",
+      "RSA1_5"
+    ],
+    "defaultValue": "RSA-OAEP"
+  },
+  "idTokenEncryptionMethod": {
+    "options": [
+      "A128GCM",
+      "A192GCM",
+      "A256GCM",
+      "A128CBC-HS256",
+      "A128CBC+HS256"
+    ],
+    "defaultValue": "A128GCM"
+  },
+  "scopeValidators": {
+    "options": [
+      "Role based scope validator",
+      "XACML Scope Validator"
+    ]
+  },
+  "accessTokenType": {
+    "options": [
+      "JWT",
+      "Default"
+    ],
+    "defaultValue": "Default"
+  }
+}
