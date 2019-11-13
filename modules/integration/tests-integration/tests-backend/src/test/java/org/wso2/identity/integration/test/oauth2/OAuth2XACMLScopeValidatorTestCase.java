@@ -55,6 +55,7 @@ public class OAuth2XACMLScopeValidatorTestCase extends OAuth2ServiceAbstractInte
 
     private static final String VALIDATE_SCOPE_BASED_POLICY_ID = "validate_scope_based_policy_template";
     private static final String VALID_SCOPE = "SCOPE1";
+    private static final String INTROSPECT_SCOPE = "internal_application_mgt_view";
     private static final String SCOPE_VALIDATOR_NAME = "XACML Scope Validator";
     private static final String CALLBACK_URL = "https://localhost/callback";
     private static final String SCOPE_POLICY = "<Policy xmlns=\"urn:oasis:names:tc:xacml:3.0:core:schema:wd-17\" " +
@@ -162,7 +163,7 @@ public class OAuth2XACMLScopeValidatorTestCase extends OAuth2ServiceAbstractInte
             dependsOnMethods = "testValidateTokenWithInValidScope")
     public void testValidateTokenWithValidScope() throws Exception {
 
-        boolean result = getTokenAndValidate(new Scope(VALID_SCOPE));
+        boolean result = getTokenAndValidate(new Scope(VALID_SCOPE, INTROSPECT_SCOPE));
         Assert.assertTrue(result, "Introspection is false.");
     }
 
@@ -170,7 +171,7 @@ public class OAuth2XACMLScopeValidatorTestCase extends OAuth2ServiceAbstractInte
             dependsOnMethods = "testValidateTokenWithValidScope")
     public void testValidateTokenWithMultipleScope() throws Exception {
 
-        boolean result = getTokenAndValidate(new Scope(VALID_SCOPE, OAuth2Constant.OAUTH2_SCOPE_EMAIL));
+        boolean result = getTokenAndValidate(new Scope(VALID_SCOPE, OAuth2Constant.OAUTH2_SCOPE_EMAIL, INTROSPECT_SCOPE));
         Assert.assertTrue(result, "Introspection is false.");
     }
 

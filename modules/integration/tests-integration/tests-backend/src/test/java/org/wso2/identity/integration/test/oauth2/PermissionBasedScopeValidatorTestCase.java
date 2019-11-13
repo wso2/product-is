@@ -153,6 +153,7 @@ public class PermissionBasedScopeValidatorTestCase extends OAuth2ServiceAbstract
     }
 
     private void createOauthApplication() throws Exception {
+
         OAuthConsumerAppDTO oAuthConsumerAppDTO = getBasicOAuthApp(CALLBACK_URL);
         ServiceProvider serviceProvider = registerServiceProviderWithOAuthInboundConfigs(oAuthConsumerAppDTO);
         Assert.assertNotNull(serviceProvider, "OAuth App creation failed.");
