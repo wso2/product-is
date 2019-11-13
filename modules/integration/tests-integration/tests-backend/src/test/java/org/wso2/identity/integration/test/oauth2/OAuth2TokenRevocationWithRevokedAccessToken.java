@@ -99,8 +99,9 @@ public class OAuth2TokenRevocationWithRevokedAccessToken extends OAuth2ServiceAb
 
         // Introspect the returned access token to verify the validity before revoking
         TokenIntrospectionResponse activeTokenIntrospectionResponse = introspectAccessToken(accessToken, privilegedAccessToken);
-        Assert.assertTrue(activeTokenIntrospectionResponse.indicatesSuccess(), "Introspection response of an " +
-                "active access token is unsuccessful.");
+        Assert.assertTrue(activeTokenIntrospectionResponse.indicatesSuccess(), "Failed to receive a success response.");
+        Assert.assertTrue(activeTokenIntrospectionResponse.toSuccessResponse().isActive(),
+                "Introspection response of an active access token is unsuccessful.");
 
         // Revoke the access token returned above
         HTTPResponse activeTokenRevocationResponse = revokeAccessToken(accessToken);
@@ -109,8 +110,11 @@ public class OAuth2TokenRevocationWithRevokedAccessToken extends OAuth2ServiceAb
 
         // Introspect the revoked access token to verify the token has been revoked
         TokenIntrospectionResponse revokedTokenIntrospectionResponse = introspectAccessToken(accessToken, privilegedAccessToken);
-        Assert.assertFalse(revokedTokenIntrospectionResponse.indicatesSuccess(), "Introspection response of a revoked" +
-                " access token is successful.");
+        Assert.assertTrue(activeTokenIntrospectionResponse.indicatesSuccess(), "Failed to receive a success response.");
+        // According to the spec 200 status code will be returned when when token is has been revoked or is otherwise
+        // invalid. Need to check token active status here.
+        Assert.assertFalse(revokedTokenIntrospectionResponse.toSuccessResponse().isActive(),
+                "Introspection response of a revoked access token is successful.");
 
         // Make a revocation request with the same access token which has been revoked already
         HTTPResponse revokedTokenRevocationResponse = revokeAccessToken(accessToken);
