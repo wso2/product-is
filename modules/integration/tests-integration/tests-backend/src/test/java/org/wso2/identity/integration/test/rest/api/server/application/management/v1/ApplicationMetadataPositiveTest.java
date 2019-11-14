@@ -32,7 +32,6 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.base.MultitenantConstants;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AdaptiveAuthTemplates;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthProtocolMetadata;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OIDCMetaData;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAMLMetaData;
@@ -60,7 +59,6 @@ public class ApplicationMetadataPositiveTest extends ApplicationManagementBaseTe
     private SAMLMetaData samlMetaDataTenant;
     private WSTrustMetaData wsTrustMetaDataSuperTenant;
     private WSTrustMetaData wsTrustMetaDataTenant;
-    private AdaptiveAuthTemplates adaptiveAuthTemplates;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public ApplicationMetadataPositiveTest(TestUserMode userMode) throws Exception {
@@ -98,10 +96,6 @@ public class ApplicationMetadataPositiveTest extends ApplicationManagementBaseTe
         wsTrustMetaDataSuperTenant = jsonWriter.readValue(expectedResponse, WSTrustMetaData.class);
         expectedResponse = readResource("ws-trust-metadata-tenant.json");
         wsTrustMetaDataTenant = jsonWriter.readValue(expectedResponse, WSTrustMetaData.class);
-
-        // Init adaptive authentication templates
-        expectedResponse = readResource("adaptive-metadata.json");
-        adaptiveAuthTemplates = jsonWriter.readValue(expectedResponse, AdaptiveAuthTemplates.class);
     }
 
     @AfterClass(alwaysRun = true)
@@ -224,9 +218,9 @@ public class ApplicationMetadataPositiveTest extends ApplicationManagementBaseTe
                 .ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK);
-        ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
-        AdaptiveAuthTemplates responseFound = jsonWriter.readValue(response.asString(), AdaptiveAuthTemplates.class);
-        Assert.assertEquals(responseFound, adaptiveAuthTemplates,
-                "Adaptive auth templates returned from the API doesn't match.");
+
+        ObjectMapper mapper = new ObjectMapper(new JsonFactory());
+        Assert.assertEquals(mapper.readTree(readResource("adaptive-metadata.json")),
+                mapper.readTree(response.asString()), "Adaptive auth templates returned from the API doesn't match.");
     }
 }
