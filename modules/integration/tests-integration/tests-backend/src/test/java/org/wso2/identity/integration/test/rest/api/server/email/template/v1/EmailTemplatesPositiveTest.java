@@ -42,7 +42,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.core.IsNull.notNullValue;
-import static org.hamcrest.core.IsNull.nullValue;
 
 /**
  * Test class for the Email Templates REST API success path.
