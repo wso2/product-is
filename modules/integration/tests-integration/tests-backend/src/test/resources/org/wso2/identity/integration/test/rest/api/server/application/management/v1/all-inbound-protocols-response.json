@@ -1,0 +1,18 @@
+[
+  {
+    "name": "saml",
+    "displayName": "SAML2 Web SSO Configuration"
+  },
+  {
+    "name": "oidc",
+    "displayName": "OAuth/OpenID Connect Configuration"
+  },
+  {
+    "name": "ws-federation",
+    "displayName": "WS-Federation (Passive) Configuration"
+  },
+  {
+    "name": "ws-trust",
+    "displayName": "WS-Trust Security Token Service Configuration"
+  }
+]
