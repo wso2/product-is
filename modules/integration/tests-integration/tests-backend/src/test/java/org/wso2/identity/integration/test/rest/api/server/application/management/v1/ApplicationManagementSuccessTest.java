@@ -150,6 +150,7 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
             Assert.assertEquals(applicationModel.getName(), APPLICATION_IMPORT_APP_NAME_TENANT);
         }
 
+        Assert.assertNotNull(applicationModel.getId());
         // Extract app id using a regex
         importedAppId = applicationModel.getId();
     }
