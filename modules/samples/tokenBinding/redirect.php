@@ -12,4 +12,3 @@ header("Include-Referred-Token-Binding-ID: true");
 exit();
 
 ?>
-
