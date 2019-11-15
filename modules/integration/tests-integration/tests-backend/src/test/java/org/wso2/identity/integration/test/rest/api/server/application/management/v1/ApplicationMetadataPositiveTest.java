@@ -22,6 +22,9 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpStatus;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
@@ -32,7 +35,6 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.base.MultitenantConstants;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AdaptiveAuthTemplates;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthProtocolMetadata;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OIDCMetaData;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAMLMetaData;
@@ -41,7 +43,10 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Tests for happy paths of the Application Metadata REST API.
@@ -53,6 +58,8 @@ public class ApplicationMetadataPositiveTest extends ApplicationManagementBaseTe
     private static final String SAML_PATH = "saml";
     private static final String WS_TRUST_PATH = "ws-trust";
     private static final String ADAPTIVE_AUTH_PATH = "adaptive-auth-templates";
+    public static final String JSON_KEY_TEMPLATES_JSON = "templatesJSON";
+    public static final String JSON_KEY_TEMPLATES = "templates";
 
     private List<AuthProtocolMetadata> allInboundProtocolsResponse;
     private OIDCMetaData oidcMetaData;
@@ -60,7 +67,6 @@ public class ApplicationMetadataPositiveTest extends ApplicationManagementBaseTe
     private SAMLMetaData samlMetaDataTenant;
     private WSTrustMetaData wsTrustMetaDataSuperTenant;
     private WSTrustMetaData wsTrustMetaDataTenant;
-    private AdaptiveAuthTemplates adaptiveAuthTemplates;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public ApplicationMetadataPositiveTest(TestUserMode userMode) throws Exception {
@@ -98,10 +104,6 @@ public class ApplicationMetadataPositiveTest extends ApplicationManagementBaseTe
         wsTrustMetaDataSuperTenant = jsonWriter.readValue(expectedResponse, WSTrustMetaData.class);
         expectedResponse = readResource("ws-trust-metadata-tenant.json");
         wsTrustMetaDataTenant = jsonWriter.readValue(expectedResponse, WSTrustMetaData.class);
-
-        // Init adaptive authentication templates
-        expectedResponse = readResource("adaptive-metadata.json");
-        adaptiveAuthTemplates = jsonWriter.readValue(expectedResponse, AdaptiveAuthTemplates.class);
     }
 
     @AfterClass(alwaysRun = true)
@@ -216,7 +218,7 @@ public class ApplicationMetadataPositiveTest extends ApplicationManagementBaseTe
     }
 
     @Test
-    public void testGetAdaptiveAuthTemplates() throws IOException {
+    public void testGetAdaptiveAuthTemplates() throws IOException, JSONException {
 
         Response response = getResponseOfGet(METADATA_API_BASE_PATH + PATH_SEPARATOR + ADAPTIVE_AUTH_PATH);
         response.then()
@@ -224,9 +226,69 @@ public class ApplicationMetadataPositiveTest extends ApplicationManagementBaseTe
                 .ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK);
-        ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
-        AdaptiveAuthTemplates responseFound = jsonWriter.readValue(response.asString(), AdaptiveAuthTemplates.class);
-        Assert.assertEquals(responseFound, adaptiveAuthTemplates,
-                "Adaptive auth templates returned from the API doesn't match.");
+
+        JSONObject expected = new JSONObject(new JSONObject(readResource("adaptive-metadata.json")).get(
+                JSON_KEY_TEMPLATES_JSON).toString());
+        JSONObject received = new JSONObject(new JSONObject(response.asString()).get(
+                JSON_KEY_TEMPLATES_JSON).toString());
+        Iterator<String> iterator = expected.keys();
+
+        while (iterator.hasNext()) {
+            String result = iterator.next();
+            if (!"uncategorized".equals(result)) {
+                JSONArray expectedTemplates = expected.getJSONObject(result).getJSONArray(JSON_KEY_TEMPLATES);
+                JSONArray receivedTemplates = received.getJSONObject(result).getJSONArray(JSON_KEY_TEMPLATES);
+
+                Assert.assertTrue(equalSets(expectedTemplates, receivedTemplates),
+                        "Adaptive auth templates returned from the API doesn't match.");
+            }
+        }
+    }
+
+    private boolean equalSets(JSONArray ja1, JSONArray ja2) throws JSONException {
+
+        if (ja1 == ja2) {
+            return true;
+        } else if (ja1 != null && ja2 != null && ja1.length() == ja2.length()) {
+            Set<Object> s1 = new JSONSet();
+            Set<Object> s2 = new JSONSet();
+
+            for (int i = 0; i < ja1.length(); ++i) {
+                s1.add(ja1.get(i));
+                s2.add(ja2.get(i));
+            }
+
+            return s1.equals(s2);
+        } else {
+            return false;
+        }
+    }
+
+    class JSONSet<E> extends HashSet {
+
+        public boolean contains(Object o) {
+
+            Iterator it = iterator();
+            if (o == null) {
+                while (it.hasNext()) {
+                    if (it.next() == null) {
+                        return true;
+                    }
+                }
+            } else {
+                ObjectMapper mapper = new ObjectMapper();
+                while (it.hasNext()) {
+                    try {
+                        if (mapper.readTree(o.toString())
+                                .equals(mapper.readTree(it.next().toString()))) {
+                            return true;
+                        }
+                    } catch (IOException e) {
+                        return false;
+                    }
+                }
+            }
+            return false;
+        }
     }
 }
