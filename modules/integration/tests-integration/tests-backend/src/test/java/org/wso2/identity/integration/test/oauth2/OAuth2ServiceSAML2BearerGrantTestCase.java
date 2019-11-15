@@ -54,6 +54,7 @@ import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -82,9 +83,6 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
 
     private SAMLSSOConfigServiceClient ssoConfigServiceClient;
 
-    private SAMLSSOServiceProviderDTO samlApp;
-    private OAuthConsumerAppDTO oauthApp;
-
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
@@ -92,8 +90,8 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
 
         ssoConfigServiceClient = new SAMLSSOConfigServiceClient(backendURL, sessionCookie);
 
-        oauthApp = createDefaultOAuthApplication();
-        samlApp = createDefaultSAMLApplication();
+        OAuthConsumerAppDTO oauthApp = createDefaultOAuthApplication();
+        createDefaultSAMLApplication();
 
         consumerKey = oauthApp.getOauthConsumerKey();
         consumerSecret = oauthApp.getOauthConsumerSecret();
@@ -151,7 +149,7 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
             }
 
             Assert.assertNotNull(serviceProvider, "No service provider exists for issuer travelocity.com");
-            serviceProvider.setRequestedAudiences(new String [] {});
+            serviceProvider.setRequestedAudiences(new String[]{});
             ssoConfigServiceClient.removeServiceProvider("travelocity.com");
             ssoConfigServiceClient.addServiceProvider(serviceProvider);
             appMgtclient.updateApplicationData(application);
@@ -185,6 +183,7 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
 
     /**
      * Create and attache the default OAUTH application to a service provider for testing.
+     *
      * @return OAuth app DTO.
      * @throws Exception
      */
@@ -200,10 +199,10 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
 
     /**
      * Create and attach the SAML application to a service provider for testing.
-     * @return SAML app DTO.
+     *
      * @throws Exception
      */
-    private SAMLSSOServiceProviderDTO createDefaultSAMLApplication() throws Exception {
+    private void createDefaultSAMLApplication() throws Exception {
 
         ServiceProvider serviceProvider = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
 
@@ -212,9 +211,15 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
         inboundAuthenticationRequestConfig.setInboundAuthType("samlsso");
         inboundAuthenticationRequestConfig.setInboundAuthKey("travelocity.com");
 
+        InboundAuthenticationRequestConfig[] inboundAuthenticationRequestConfigs =
+                serviceProvider.getInboundAuthenticationConfig().getInboundAuthenticationRequestConfigs();
+        List<InboundAuthenticationRequestConfig> inboundAuthenticationRequestConfigsList =
+                new ArrayList<>(Arrays.asList(inboundAuthenticationRequestConfigs));
+        inboundAuthenticationRequestConfigsList.add(inboundAuthenticationRequestConfig);
+
         InboundAuthenticationConfig inboundAuthenticationConfig = new InboundAuthenticationConfig();
-        inboundAuthenticationConfig.setInboundAuthenticationRequestConfigs(new InboundAuthenticationRequestConfig []
-                { inboundAuthenticationRequestConfig });
+        inboundAuthenticationConfig.setInboundAuthenticationRequestConfigs(
+                inboundAuthenticationRequestConfigsList.toArray(new InboundAuthenticationRequestConfig[0]));
 
         serviceProvider.setInboundAuthenticationConfig(inboundAuthenticationConfig);
 
@@ -225,11 +230,11 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
         }
 
         appMgtclient.updateApplicationData(serviceProvider);
-        return samlssoServiceProviderDTO;
     }
 
     /**
      * Create the SAML SSO DTO.
+     *
      * @return SAML SSO DTO.
      */
     private SAMLSSOServiceProviderDTO createDefaultSSOServiceProviderDTO() {
@@ -237,7 +242,7 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
         SAMLSSOServiceProviderDTO samlssoServiceProviderDTO = new SAMLSSOServiceProviderDTO();
         samlssoServiceProviderDTO.setIssuer("travelocity.com");
         samlssoServiceProviderDTO.setAssertionConsumerUrls(
-                new String[] { String.format("http://localhost:8490/%s/home.jsp", "travelocity.com")});
+                new String[]{String.format("http://localhost:8490/%s/home.jsp", "travelocity.com")});
         samlssoServiceProviderDTO.setDefaultAssertionConsumerUrl(
                 String.format("http://localhost:8490/%s/home.jsp", "travelocity.com"));
         samlssoServiceProviderDTO.setAttributeConsumingServiceIndex("1239245949");
@@ -256,6 +261,7 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
 
     /**
      * Get the SAML response by calling the default SAML endpoint.
+     *
      * @return SAML response.
      * @throws Exception
      */
@@ -314,6 +320,7 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
 
     /**
      * Extract the SAML assertion from SAML response.
+     *
      * @param samlResponse SAML response.
      * @return Extracted SAML assertion.
      * @throws ParserConfigurationException
@@ -343,8 +350,9 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
 
     /**
      * Send SAML request to the SAML endpoint.
-     * @param url URL of the endpoint.
-     * @param samlMsgKey Message key.
+     *
+     * @param url          URL of the endpoint.
+     * @param samlMsgKey   Message key.
      * @param samlMsgValue Message value.
      * @return HTTP Response object that we get from calling the SAML endpoint.
      * @throws IOException
@@ -366,6 +374,7 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
 
     /**
      * Send the SAML assertion to the token endpoint.
+     *
      * @param samlAssertion SAML assertion.
      * @return HTTP Response object that we get from calling the token endpoint.
      * @throws IOException
