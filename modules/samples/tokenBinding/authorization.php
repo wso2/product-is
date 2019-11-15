@@ -33,7 +33,7 @@ if ($_REQUEST['work'] == "sent"){
         echo $response;
     }
 }
-else{
+else {
 ?>
 <body>
 <!--this is sending curl request so it won't support Token binding-->

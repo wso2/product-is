@@ -1,6 +1,5 @@
 <?php include "/opt/lampp/htdocs/password/layout/header.php"; ?>
 
-
 <h2 class="col-md-offset-3 col-md-5">GRANT TYPE</h2>
 
 <div class="container  col-md-offset-3 col-md-5">
@@ -45,6 +44,5 @@
     });
 
 </script>
-
 
 <?php include "/opt/lampp/htdocs/password/layout/footer.php"; ?>
