@@ -25,11 +25,11 @@ import io.restassured.RestAssured;
 import io.restassured.config.EncoderConfig;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import org.apache.axis2.AxisFault;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpHeaders;
+import org.apache.http.ParseException;
 import org.hamcrest.Matcher;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
@@ -40,14 +40,19 @@ import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.rmi.RemoteException;
+import java.util.Base64;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.jar.JarEntry;
@@ -357,6 +362,98 @@ public class RESTTestBase extends ISIntegrationTest {
                 .when()
                 .log().ifValidationFails()
                 .post(endpointUri);
+    }
+
+    /**
+     * Invoke an Http POST request to the given endpoint with a file.
+     *
+     * @param endpointUri URI to invoke.
+     * @param filePath    Path of the file to upload.
+     * @param fileField   Field of the file should be uploaded with.
+     * @return Http Response body as a string.
+     */
+    protected String getResponseOfPostWithFile(String endpointUri, String filePath, String fileField)
+            throws ParseException, IOException {
+
+        String twoHyphens = "--";
+        String boundary = "*****" + System.currentTimeMillis() + "*****";
+        String lineEnd = "\r\n";
+
+        String result = "";
+
+        int bytesRead, bytesAvailable, bufferSize;
+        byte[] buffer;
+        int maxBufferSize = 1024 * 1024;
+
+        String[] q = filePath.split("/");
+        int idx = q.length - 1;
+
+        File file = new File(filePath);
+        FileInputStream fileInputStream = new FileInputStream(file);
+
+        String completeUri = RestAssured.baseURI.substring(0, RestAssured.baseURI.length() - 1) + this.basePath +
+                endpointUri;
+        URL url = new URL(completeUri);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+        connection.setDoInput(true);
+        connection.setDoOutput(true);
+        connection.setUseCaches(false);
+
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Connection", "Keep-Alive");
+        connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
+
+        String userCredentials = authenticatingUserName + ":" + authenticatingCredential;
+        String basicAuth = "Basic " + new String(Base64.getEncoder().encode(userCredentials.getBytes()));
+        connection.setRequestProperty ("Authorization", basicAuth);
+
+        DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
+        outputStream.writeBytes(twoHyphens + boundary + lineEnd);
+        outputStream.writeBytes(
+                "Content-Disposition: form-data; name=\"" + fileField + "\"; filename=\"" + q[idx] + "\"" + lineEnd);
+        outputStream.writeBytes("Content-Type: image/jpeg" + lineEnd);
+        outputStream.writeBytes("Content-Transfer-Encoding: binary" + lineEnd);
+        outputStream.writeBytes(lineEnd);
+
+        bytesAvailable = fileInputStream.available();
+        bufferSize = Math.min(bytesAvailable, maxBufferSize);
+        buffer = new byte[bufferSize];
+
+        bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+        while (bytesRead > 0) {
+            outputStream.write(buffer, 0, bufferSize);
+            bytesAvailable = fileInputStream.available();
+            bufferSize = Math.min(bytesAvailable, maxBufferSize);
+            bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+        }
+
+        outputStream.writeBytes(lineEnd);
+        outputStream.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+
+        InputStream inputStream = connection.getInputStream();
+        result = this.convertStreamToString(inputStream);
+
+        fileInputStream.close();
+        inputStream.close();
+        outputStream.flush();
+        outputStream.close();
+
+        return result;
+    }
+
+    private String convertStreamToString(InputStream inputStream) throws IOException {
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        StringBuilder stringBuilder = new StringBuilder();
+
+        String line;
+        while ((line = reader.readLine()) != null) {
+            stringBuilder.append(line);
+        }
+        inputStream.close();
+
+        return stringBuilder.toString();
     }
 
     /**
