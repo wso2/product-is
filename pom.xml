@@ -1939,7 +1939,7 @@
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.saml.version>5.6.20-SNAPSHOT</identity.inbound.auth.saml.version>
+        <identity.inbound.auth.saml.version>5.6.21-SNAPSHOT</identity.inbound.auth.saml.version>
         <identity.inbound.auth.oauth.version>6.2.50-SNAPSHOT</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.4.3</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.4.3</identity.inbound.auth.sts.version>
