@@ -1917,7 +1917,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.14.147-SNAPSHOT</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.15.0</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
