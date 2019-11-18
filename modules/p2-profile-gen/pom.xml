@@ -230,7 +230,7 @@
                                     org.wso2.carbon.identity.metadata.saml2:org.wso2.carbon.identity.sp.metadata.saml2.server.feature:${identity.metadata.saml.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity.saml.common:org.wso2.carbon.identity.saml.common.util.server.feature:${saml.common.util.version}
+                                    org.wso2.carbon.identity.saml.common:org.wso2.carbon.identity.saml.common.util.feature:${saml.common.util.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.application.mgt.feature:${carbon.identity.framework.version}
@@ -684,7 +684,7 @@
                                     <version>${identity.metadata.saml.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.identity.saml.common.util.server.feature.group</id>
+                                    <id>org.wso2.carbon.identity.saml.common.util.feature.group</id>
                                     <version>${saml.common.util.version}</version>
                                 </feature>
                                 <feature>
@@ -1238,7 +1238,7 @@
                                     <version>${identity.metadata.saml.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.identity.saml.common.util.server.feature.group</id>
+                                    <id>org.wso2.carbon.identity.saml.common.util.feature.group</id>
                                     <version>${saml.common.util.version}</version>
                                 </feature>
                                 <feature>
@@ -1727,7 +1727,7 @@
                                     <version>${identity.metadata.saml.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.identity.saml.common.util.server.feature.group</id>
+                                    <id>org.wso2.carbon.identity.saml.common.util.feature.group</id>
                                     <version>${saml.common.util.version}</version>
                                 </feature>
                                 <feature>
