@@ -353,7 +353,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
     }
 
     @Test(description = "This test case tests refresh token revocation flow of JWTBearerGrant.", dependsOnMethods =
-            "testRefreshTokenFlow")
+            "testAccessTokenRevokeFlow")
     public void testRefreshTokenRevokeFlow() throws Exception {
 
         OIDCTokens firstTokenSet = makeJWTBearerGrantRequest();
