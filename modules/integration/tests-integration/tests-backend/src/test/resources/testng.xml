@@ -127,6 +127,8 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.permission.management.v1.PermissionManagementTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.keystore.management.v1.KeystoreManagementSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.keystore.management.v1.KeystoreManagementFailureTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.idp.v1.IdPSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.idp.v1.IdPFailureTest"/>
         </classes>
     </test>
 

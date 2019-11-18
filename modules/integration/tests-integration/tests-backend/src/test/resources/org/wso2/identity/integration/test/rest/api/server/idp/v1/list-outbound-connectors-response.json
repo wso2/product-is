@@ -1,0 +1,11 @@
+{
+  "defaultConnectorId": "c2NpbQ",
+  "connectors": [
+    {
+      "connectorId": "c2NpbQ",
+      "name": "scim",
+      "isEnabled": true,
+      "self": "/t/carbon.super/api/server/v1/identity-providers/895a5e57-7e76-4a13-91ce-9fa54660f6fb/provisioning/outbound-connectors/c2NpbQ"
+    }
+  ]
+}

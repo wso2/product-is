@@ -1,0 +1,34 @@
+{
+  "userIdClaim": {
+    "uri": "country"
+  },
+  "roleClaim": {
+    "uri": "role"
+  },
+  "mappings": [
+    {
+      "idpClaim": "country",
+      "localClaim": {
+        "id": "aHR0cDovL3dzbzIub3JnL2NsYWltcy91c2VybmFtZQ",
+        "uri": "http://wso2.org/claims/username",
+        "displayName": "Username"
+      }
+    },
+    {
+      "idpClaim": "role",
+      "localClaim": {
+        "id": "aHR0cDovL3dzbzIub3JnL2NsYWltcy9yb2xl",
+        "uri": "http://wso2.org/claims/role",
+        "displayName": "Role"
+      }
+    }
+  ],
+  "provisioningClaims": [
+    {
+      "claim": {
+        "uri": "country"
+      },
+      "defaultValue": "sathya"
+    }
+  ]
+}
