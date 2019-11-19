@@ -1,6 +1,5 @@
 <?php include "/opt/lampp/htdocs/password/layout/header.php"; ?>
 
-
 <h2 class="col-md-offset-3 col-md-5">Authorization Code TB</h2>
 <form name="myForm" action="redirect.php" method="POST" enctype="application/x-www-form-urlencoded"
       class="col-md-offset-3 col-md-5">
@@ -23,5 +22,3 @@
 
 </form>
 <?php include "/opt/lampp/htdocs/password/layout/footer.php"; ?>
-
-
