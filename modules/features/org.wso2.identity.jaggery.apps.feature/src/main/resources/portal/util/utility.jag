@@ -30,7 +30,7 @@ function setServerURL() {
         var proxyConfHost = jsonConf.proxy.proxyHost;
         var proxyConfPort = jsonConf.proxy.proxyHTTPSPort;
         var proxyOrigin = '';
-        var proxyContextPath = ''
+        var proxyContextPath = '';
 
         if ((proxyConfHost == null || proxyConfHost === '' || proxyConfHost === 'null' || proxyConfHost.length <= 0)
             || (proxyConfPort == null || proxyConfPort === '' || proxyConfPort === 'null' || proxyConfPort.length <=
