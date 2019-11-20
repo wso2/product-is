@@ -2016,6 +2016,7 @@
         <authenticator.twitter.version>1.0.10</authenticator.twitter.version>
         <authenticator.x509.version>2.0.13</authenticator.x509.version>
         <identity.extension.utils>1.0.8</identity.extension.utils>
+        <identity.tenant.resource.manager.version>1.3.22</identity.tenant.resource.manager.version>
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>1.0.32</identity.api.dispatcher.version>
