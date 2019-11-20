@@ -60,6 +60,9 @@ import static org.wso2.identity.scenarios.commons.util.DataExtractUtil.isConsent
 import static org.wso2.identity.scenarios.commons.util.SSOUtil.sendPOSTConsentMessage;
 import static org.wso2.identity.scenarios.commons.util.SSOUtil.sendRedirectRequest;
 
+/**
+ * SAML SSO tests using SP configuration file.
+ */
 public class SAMLSSOBySPConfigTestCase extends ScenarioTestBase {
 
     private static final Log log = LogFactory.getLog(SAMLSSOBySPConfigTestCase.class);
@@ -90,7 +93,7 @@ public class SAMLSSOBySPConfigTestCase extends ScenarioTestBase {
         this.spConfigFile = spConfigFile;
         this.testScenarioIdentifier = testScenarioIdentifier;
         if (log.isDebugEnabled()) {
-            log.info("SAML SSO Test initialized for " + config + " with SP: " + spName);
+            log.debug("SAML SSO Test initialized for " + config + " with SP: " + spName);
         }
     }
 
