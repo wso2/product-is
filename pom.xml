@@ -1917,7 +1917,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.15.5</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.15.7</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -1940,7 +1940,7 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.7.0</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.2.51</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.2.54</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.4.3</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.4.3</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.5.3</identity.inbound.provisioning.scim.version>
@@ -1953,7 +1953,7 @@
 
 
         <!-- Identity User Versions -->
-        <identity.user.account.association.version>5.3.5</identity.user.account.association.version>
+        <identity.user.account.association.version>5.3.6</identity.user.account.association.version>
         <identity.user.ws.version>5.3.3</identity.user.ws.version>
 
         <!-- Identity Userstore Versions -->
@@ -1962,7 +1962,7 @@
 
         <!-- Identity Data Publisher Versions -->
         <identity.data.publisher.authentication.version>5.3.8</identity.data.publisher.authentication.version>
-        <identity.data.publisher.oauth.version>1.2.6</identity.data.publisher.oauth.version>
+        <identity.data.publisher.oauth.version>1.2.7</identity.data.publisher.oauth.version>
         <identity.data.publisher.audit.version>1.2.4</identity.data.publisher.audit.version>
 
         <!-- Identity Event Handler Versions -->
