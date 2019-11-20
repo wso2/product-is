@@ -20,8 +20,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
-import org.apache.cxf.phase.PhaseInterceptorChain;
 import org.apache.http.HttpStatus;
+import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
@@ -32,18 +32,21 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+import org.wso2.identity.integration.test.rest.api.server.keystore.management.v1.model.CertificateRequest;
 import org.wso2.identity.integration.test.rest.api.server.keystore.management.v1.model.CertificateResponse;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 /**
- *
+ * Tests for successful cases of the Keystore Management REST API.
  */
 public class KeystoreManagementSuccessTest extends KeystoreManagementBaseTest {
+
+    private static final String SUPER_TENANT_PUBLIC_CERT_ALIAS = "wso2carbon";
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public KeystoreManagementSuccessTest(TestUserMode userMode) throws Exception {
@@ -89,63 +92,108 @@ public class KeystoreManagementSuccessTest extends KeystoreManagementBaseTest {
     }
 
     @Test
-    public void getAllCertificateAliases() throws IOException, URISyntaxException {
+    public void testGetAllCertificateAliases() throws IOException, URISyntaxException {
 
         Response response = getResponseOfGet(KEYSTORE_MANAGEMENT_API_BASE_PATH +
                 KEYSTORE_MANAGEMENT_API_CERTIFICATE_PATH);
-        response.then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK);
+        validateHttpStatusCode(response, HttpStatus.SC_OK);
+
         ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
         List<CertificateResponse> responseFound =
                 Arrays.asList(jsonWriter.readValue(response.asString(), CertificateResponse[].class));
         Assert.assertNotNull(responseFound);
         if (StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
             Assert.assertTrue(responseFound.stream().anyMatch(certificateResponse -> certificateResponse.getAlias()
-                    .equals("wso2carbon")), "message");
+                    .equals(SUPER_TENANT_PUBLIC_CERT_ALIAS)), "Public certificate alias " +
+                    SUPER_TENANT_PUBLIC_CERT_ALIAS + " is not returned in the response.");
         } else {
             Assert.assertTrue(responseFound.stream().anyMatch(certificateResponse -> certificateResponse.getAlias()
-                    .equals(tenant)), "message");
+                    .equals(tenant)), "Public certificate alias " + tenant +
+                    " is not returned in the response.");
         }
     }
 
     @Test
-    public void getCertificate() {
+    public void testGetCertificate() {
 
-        String alias = "wso2carbon";
+        String alias;
+        if (StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
+            alias = SUPER_TENANT_PUBLIC_CERT_ALIAS;
+        } else {
+            alias = tenant;
+        }
+
         Response response = getResponseOfGet(KEYSTORE_MANAGEMENT_API_BASE_PATH +
-                KEYSTORE_MANAGEMENT_API_CERTIFICATE_PATH + PATH_SEPARATOR + alias);
-        response.then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK);
+                KEYSTORE_MANAGEMENT_API_CERTIFICATE_PATH + PATH_SEPARATOR + alias, "application/pkix-cert");
+        validateHttpStatusCode(response, HttpStatus.SC_OK);
+        Assert.assertNotNull(response.asString());
+    }
+
+    @Test
+    public void testGetAllClientCertificateAliases() throws IOException {
+
+        if (StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
+            Response response = getResponseOfGet(KEYSTORE_MANAGEMENT_API_BASE_PATH +
+                    KEYSTORE_MANAGEMENT_API_CLIENT_CERTIFICATE_PATH);
+            validateHttpStatusCode(response, HttpStatus.SC_OK);
+            ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+            List<CertificateResponse> responseFound =
+                    Arrays.asList(jsonWriter.readValue(response.asString(), CertificateResponse[].class));
+            Assert.assertNotNull(responseFound);
+            Assert.assertTrue(responseFound.stream().anyMatch(certificateResponse -> certificateResponse.getAlias()
+                    .equals(SUPER_TENANT_PUBLIC_CERT_ALIAS)), "Public certificate alias " +
+                    SUPER_TENANT_PUBLIC_CERT_ALIAS + " is not returned in the response.");
+        }
 
     }
 
     @Test
-    public void getClientCertificateAliases() {
+    public void testGetClientCertificate() {
 
-
+        if (StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
+            Response response = getResponseOfGet(KEYSTORE_MANAGEMENT_API_BASE_PATH +
+                            KEYSTORE_MANAGEMENT_API_CERTIFICATE_PATH + PATH_SEPARATOR + SUPER_TENANT_PUBLIC_CERT_ALIAS,
+                    "application/pkix-cert");
+            validateHttpStatusCode(response, HttpStatus.SC_OK);
+            Assert.assertNotNull(response.asString());
+        }
     }
 
     @Test
-    public void getClientCertificate() {
+    public void testGetPublicCertificate() {
 
+        Response response =
+                getResponseOfGetWithoutAuthentication(KEYSTORE_MANAGEMENT_API_BASE_PATH +
+                                KEYSTORE_MANAGEMENT_API_CERTIFICATE_PATH + KEYSTORE_MANAGEMENT_API_PUBLIC_CERTIFICATE_PATH,
+                        "application/pkix-cert");
+        validateHttpStatusCode(response, HttpStatus.SC_OK);
+        Assert.assertNotNull(response.asString());
     }
 
     @Test
-    public void getPublicCertificate() {
+    public void testAddCertificate() {
 
+        if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
+            CertificateRequest certificateRequest = new CertificateRequest();
+            certificateRequest.setAlias("newcert");
+            certificateRequest.setCertificate(CERTIFICATE);
+
+            Response response = getResponseOfJSONPost(KEYSTORE_MANAGEMENT_API_BASE_PATH +
+                            KEYSTORE_MANAGEMENT_API_CERTIFICATE_PATH, new JSONObject(certificateRequest).toString(),
+                    new HashMap<>());
+            validateHttpStatusCode(response, HttpStatus.SC_CREATED);
+            Assert.assertNotNull(response.getCookie("Certificate"));
+        }
     }
 
-    @Test
-    public void addCertificate() {
+    @Test(dependsOnMethods = "testAddCertificate")
+    public void testDeleteCertificate() {
 
-    }
-
-    @Test
-    public void deleteCertificate() {
-
+        if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
+            Response response =
+                    getResponseOfDelete(KEYSTORE_MANAGEMENT_API_BASE_PATH +
+                            KEYSTORE_MANAGEMENT_API_CERTIFICATE_PATH + PATH_SEPARATOR + "newcert");
+            validateHttpStatusCode(response, HttpStatus.SC_NO_CONTENT);
+        }
     }
 }
