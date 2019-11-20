@@ -42,11 +42,9 @@ import static org.hamcrest.core.IsNull.notNullValue;
 
 public class UserStoreSuccessTest extends UserStoreTestBase {
 
-
     private static String domainId;
     private UserStoreConfigAdminServiceClient userStoreConfigAdminServiceClient;
     private UserStoreConfigUtils userStoreConfigUtils;
-
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public UserStoreSuccessTest(TestUserMode userMode) throws Exception {
@@ -65,7 +63,6 @@ public class UserStoreSuccessTest extends UserStoreTestBase {
         userStoreConfigAdminServiceClient = new UserStoreConfigAdminServiceClient(backendURL, sessionCookie);
         userStoreConfigUtils = new UserStoreConfigUtils();
     }
-
 
     @AfterClass(alwaysRun = true)
     public void testConclude() {
@@ -99,7 +96,6 @@ public class UserStoreSuccessTest extends UserStoreTestBase {
 
         String body = readResource("user-store-add-secondary-user-store.json");
         Response response = getResponseOfPost(USER_STORE_PATH_COMPONENT, body);
-        System.out.println(" *********** " + response);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -205,7 +201,6 @@ public class UserStoreSuccessTest extends UserStoreTestBase {
                 .body("description", equalTo(response.jsonPath().getList("description")))
                 .body("find { it.typeId == 'SkRCQ1VzZXJTdG9yZU1hbmFnZXI' }.properties", notNullValue());
     }
-
 
     @Test(dependsOnMethods = {"testGetUserStoreTypeMeta"})
     public void testUpdateUserStoreByDomainId() throws IOException {
