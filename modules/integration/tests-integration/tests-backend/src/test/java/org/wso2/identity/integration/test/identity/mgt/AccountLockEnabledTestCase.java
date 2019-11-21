@@ -43,16 +43,21 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
 
     private String defaultLocalityClaimUri = "http://wso2.org/claims/locality";
     private String accountLockClaimUri = "http://wso2.org/claims/identity/accountLocked";
-    private String defaultLocalityClaimValue = "en_US";
-    private String registryResourcePath = "/_system/config/identity/Email/accountlock/";
+    private String defaultLocalityClaimValue = "en_us";
+    private String registryResourcePath = "/_system/config/identity/email/";
 
     private String testLockUser1 = "TestLockUser1";
     private String testLockUser1Password = "TestLockUser1Password";
     private String testLockUser1WrongPassword = "TestLockUser1WrongPassword";
     private String testLockUser2 = "TestLockUser2";
     private String testLockUser2Password = "TestLockUser2Password";
+    private String testLockUser3 = "TestLockUser3";
+    private String testLockUser3Password = "TestLockUser3Password";
 
-    private String accountLockTemplate = "accountlock";
+    private String accountLockTemplateWhenUserExceedsFailedAttempts = "accountlockfailedattempt";
+    private String accountLockTemplateWhenAdminTriggered = "accountlockadmin";
+    private String accountUnlockTemplateAdminTriggered = "accountunlockadmin";
+    private String accountUnlockTemplateTimeBased = "accountunlocktimebased";
 
     private AuthenticatorClient authenticatorClient;
     private ResourceAdminServiceClient resourceAdminServiceClient;
@@ -105,30 +110,61 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
         }
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
-    @Test(groups = "wso2.is", description = "Check whether the user account lock email " +
-            "template successfully retrieved ", dependsOnMethods = "testSuccessfulLockedInitially")
-    public void testSuccessfulEmailRetrieval() {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
+    @Test(groups = "wso2.is",
+          description = "Check whether the user account lock email "
+                  + "template successfully retrieved when admin triggered account lock.",
+          dependsOnMethods = "testSuccessfulLockedInitially")
+    public void testSuccessfulEmailTemplateRetrieval() throws Exception {
 
-        try {
+        ClaimValue claimValue = new ClaimValue();
+        claimValue.setClaimURI(defaultLocalityClaimUri);
+        claimValue.setValue(defaultLocalityClaimValue);
+        ClaimValue[] claimvalues = { claimValue };
+        usmClient.addUser(testLockUser2, testLockUser2Password, new String[] { "admin" }, claimvalues, null, false);
+
+        String userLocale = usmClient.
+                getUserClaimValue(testLockUser2, defaultLocalityClaimUri, "default");
+
+        String emailTemplateResourceName = accountLockTemplateWhenUserExceedsFailedAttempts + "/" + userLocale;
+        String emailTemplateResourceContent = resourceAdminServiceClient.
+                getTextContent(registryResourcePath + emailTemplateResourceName);
+        Assert.assertTrue("Test Failure : Email Content applicable for account lock is not available.",
+                StringUtils.isNotEmpty(emailTemplateResourceContent));
+
+        String emailTemplateResourceNameAdminTriggered = accountLockTemplateWhenAdminTriggered + "/" + userLocale;
+        String emailTemplateResourceContentAdminTriggered = resourceAdminServiceClient.
+                getTextContent(registryResourcePath + emailTemplateResourceNameAdminTriggered);
+        Assert.assertTrue("Test Failure : Email Content applicable for account lock is not available.",
+                StringUtils.isNotEmpty(emailTemplateResourceContentAdminTriggered));
+    }
+
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
+    @Test(groups = "wso2.is",
+          description = "Check whether the user account unlocklock email "
+                  + "template successfully retrieved when admin triggered account lock.")
+    public void testSuccessfulEmailTemplateRetrievalAccountUnLock() throws Exception {
+
             ClaimValue claimValue = new ClaimValue();
             claimValue.setClaimURI(defaultLocalityClaimUri);
             claimValue.setValue(defaultLocalityClaimValue);
-            ClaimValue[] claimvalues = {claimValue};
-            usmClient.addUser(testLockUser2, testLockUser2Password, new String[]{"admin"}, claimvalues, null, false);
+            ClaimValue[] claimvalues = { claimValue };
+            usmClient.addUser(testLockUser3, testLockUser3Password, new String[] { "admin" }, claimvalues, null, false);
 
             String userLocale = usmClient.
                     getUserClaimValue(testLockUser2, defaultLocalityClaimUri, "default");
 
-            String emailTemplateResourceName = accountLockTemplate + "." + userLocale;
+            String emailTemplateResourceName = accountUnlockTemplateTimeBased + "/" + userLocale;
             String emailTemplateResourceContent = resourceAdminServiceClient.
                     getTextContent(registryResourcePath + emailTemplateResourceName);
-            Assert.assertTrue("Test Failure : Email Content applicable for " +
-                    "Account lock is not available ", StringUtils.isNotEmpty(emailTemplateResourceContent));
+            Assert.assertTrue("Test Failure : Email Content applicable for account unlock is not available.",
+                    StringUtils.isNotEmpty(emailTemplateResourceContent));
 
-        } catch (Exception e) {
-            log.error("Error occurred when retrieving the Account lock email template.", e);
-        }
+            String emailTemplateResourceNameAdminTriggered = accountUnlockTemplateAdminTriggered + "/" + userLocale;
+            String emailTemplateResourceContentAdminTriggered = resourceAdminServiceClient.
+                    getTextContent(registryResourcePath + emailTemplateResourceNameAdminTriggered);
+            Assert.assertTrue("Test Failure : Email Content applicable for account unlock is not available.",
+                    StringUtils.isNotEmpty(emailTemplateResourceContentAdminTriggered));
     }
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
