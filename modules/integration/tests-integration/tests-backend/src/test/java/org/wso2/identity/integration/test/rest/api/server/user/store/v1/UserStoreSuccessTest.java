@@ -24,11 +24,19 @@ import io.restassured.response.ValidatableResponse;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
+import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.common.clients.user.store.config.UserStoreConfigAdminServiceClient;
 import org.wso2.identity.integration.common.utils.UserStoreConfigUtils;
-import org.wso2.identity.integration.test.rest.api.server.user.store.v1.model.*;
+import org.wso2.identity.integration.test.rest.api.server.user.store.v1.model.AvailableUserStoreClassesRes;
+import org.wso2.identity.integration.test.rest.api.server.user.store.v1.model.UserStoreConfigurationsRes;
+import org.wso2.identity.integration.test.rest.api.server.user.store.v1.model.UserStoreListResponse;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -116,7 +124,6 @@ public class UserStoreSuccessTest extends UserStoreTestBase {
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .body("connection", equalTo(true));
-
     }
 
     @Test(dependsOnMethods = {"testAddSecondaryUserStore"})

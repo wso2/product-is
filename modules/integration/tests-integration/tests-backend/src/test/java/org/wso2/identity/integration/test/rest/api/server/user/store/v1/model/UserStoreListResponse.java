@@ -89,7 +89,6 @@ public class UserStoreListResponse {
         this.self = self;
     }
 
-
     @Override
     public boolean equals(Object o) {
 

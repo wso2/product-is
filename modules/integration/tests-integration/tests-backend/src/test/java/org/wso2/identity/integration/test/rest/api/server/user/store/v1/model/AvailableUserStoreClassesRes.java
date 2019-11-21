@@ -70,7 +70,6 @@ public class AvailableUserStoreClassesRes {
         this.className = className;
     }
 
-
     @Override
     public boolean equals(Object o) {
 

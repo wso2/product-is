@@ -51,10 +51,12 @@ public class UserStoreConfigurationsRes {
     }
 
     public String getTypeId() {
+
         return typeId;
     }
 
     public void setTypeId(String typeId) {
+
         this.typeId = typeId;
     }
 
@@ -154,6 +156,7 @@ public class UserStoreConfigurationsRes {
 
     @Override
     public int hashCode() {
+
         return Objects.hash(typeName, typeId, name, description, className, properties);
     }
 
