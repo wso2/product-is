@@ -171,16 +171,11 @@ public class IdentityProviderMgtServiceClient {
      */
     public List<IdentityProvider> getPaginatedIdPsInfo(String filter, int pageNumber) throws Exception {
 
-        try {
-            IdentityProvider[] identityProviders = idPMgtStub.getPaginatedIdpInfo(filter, pageNumber);
-            if (identityProviders != null && identityProviders.length > 0) {
-                return Arrays.asList(identityProviders);
-            } else {
-                return new ArrayList<>();
-            }
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            throw new Exception("Error occurred while retrieving list of filtered Identity Providers");
+        IdentityProvider[] identityProviders = idPMgtStub.getPaginatedIdpInfo(filter, pageNumber);
+        if (identityProviders != null && identityProviders.length > 0) {
+            return Arrays.asList(identityProviders);
+        } else {
+            return new ArrayList<>();
         }
     }
 
@@ -194,16 +189,11 @@ public class IdentityProviderMgtServiceClient {
      */
     public List<IdentityProvider> getAllPaginatedIdPsInfo(int pageNumber) throws Exception {
 
-        try {
-            IdentityProvider[] identityProviders = idPMgtStub.getAllPaginatedIdpInfo(pageNumber);
-            if (identityProviders != null && identityProviders.length > 0) {
-                return Arrays.asList(identityProviders);
-            } else {
-                return new ArrayList<>();
-            }
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            throw new Exception("Error occurred while retrieving list of paginated Identity Providers");
+        IdentityProvider[] identityProviders = idPMgtStub.getAllPaginatedIdpInfo(pageNumber);
+        if (identityProviders != null && identityProviders.length > 0) {
+            return Arrays.asList(identityProviders);
+        } else {
+            return new ArrayList<>();
         }
     }
 
@@ -216,12 +206,7 @@ public class IdentityProviderMgtServiceClient {
      */
     public int getFilteredIdpCount(String filter) throws Exception {
 
-        try {
-            return idPMgtStub.getFilteredIdpCount(filter);
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            throw new Exception("Error occurred while retrieving filtered count of Identity Providers");
-        }
+        return idPMgtStub.getFilteredIdpCount(filter);
     }
 
     /**
@@ -232,12 +217,7 @@ public class IdentityProviderMgtServiceClient {
      */
     public int getAllIdpCount() throws Exception {
 
-        try {
-            return idPMgtStub.getAllIdpCount();
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            throw new Exception("Error occurred while retrieving total count of Identity Providers");
-        }
+        return idPMgtStub.getAllIdpCount();
     }
 
     /**
