@@ -361,8 +361,7 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
         }
     }
 
-    @Test(priority = 4, groups = "wso2.is", description = "Add Idp for testing filter")
-    public void addIdpForPagination() throws Exception {
+    private void addIdpForPagination() throws Exception {
 
         String testIdpDescription = "This is second identity provider ";
         String testIdpRealmId = "localhost";
@@ -389,9 +388,10 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
 
     }
 
-    @Test(priority = 5, groups = "wso2.is", description = "test getAllPaginatedIdPsInfo operation")
-    public void testGetAllPaginatedPaIdPs() throws Exception {
+    @Test(priority = 4, groups = "wso2.is", description = "test getAllPaginatedIdPsInfo operation")
+    public void testGetPaginatedIdPs() throws Exception {
 
+        addIdpForPagination();
         int pageNumber = 1;
         List<IdentityProvider> idpList = idpMgtServiceClient.getAllPaginatedIdPsInfo(pageNumber);
         Assert.assertNotNull(idpList);
@@ -410,8 +410,8 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
         }
     }
 
-    @Test(priority = 6, groups = "wso2.is", description = "test getPaginatedIdPsInfo operation")
-    public void testGetPaginatedPaIdPs() throws Exception {
+    @Test(priority = 5, groups = "wso2.is", description = "test getPaginatedIdPsInfo operation")
+    public void testGetAllPaginatedIdPsWithFilter() throws Exception {
 
         String filter = "name sw \"Search\" and name ew \"Test\"";
         int pageNumber = 1;
@@ -435,32 +435,32 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
         }
     }
 
-    @Test(priority = 7, groups = "wso2.is", description = "test getAllIdpCount operation")
+    @Test(priority = 6, groups = "wso2.is", description = "test getAllIdpCount operation")
     public void testGetAllIdPsCount() throws Exception {
 
-        Integer idpCount = idpMgtServiceClient.getAllIdpCount();
+        int idpCount = idpMgtServiceClient.getAllIdpCount();
         log.info("All idp paginated filtered count : " + idpCount);
-        Assert.assertNotNull(idpCount, "Added new test idp not found in the idp list");
+        Assert.assertEquals(idpCount, 2, "Total Idp Count not found ");
     }
 
-    @Test(priority = 8, groups = "wso2.is", description = "test getFilteredIdpCount operation")
+    @Test(priority = 7, groups = "wso2.is", description = "test getFilteredIdpCount operation")
     public void testGetAllFilteredIdPsCount() throws Exception {
 
         String filter = "name sw \"Search\" and name ew \"Test\"";
-        Integer idpCount = idpMgtServiceClient.getFilteredIdpCount(filter);
+        int idpCount = idpMgtServiceClient.getFilteredIdpCount(filter);
         log.info("Idp paginated filtered count : " + idpCount);
-        Assert.assertNotNull(idpCount, "Added new test idp not found in the idp list");
+        testDeleteIdPFilter();
+        Assert.assertEquals(idpCount, 1, "Filtered Idp Count not found");
     }
 
-    @Test(priority = 9, groups = "wso2.is", description = "delete the Idp which is created for Idp pagination test")
-    public void testDeleteIdPFilter() throws Exception {
+    private void testDeleteIdPFilter() throws Exception {
 
         idpMgtServiceClient.deleteIdP(testIdpNameSearch);
         IdentityProvider idp = idpMgtServiceClient.getIdPByName(testIdpNameSearch);
         Assert.assertNull(idp, "Deleting idp failed");
     }
 
-    @Test(priority = 10, groups = "wso2.is", description = "test getEnabledAllIdPs operation")
+    @Test(priority = 8, groups = "wso2.is", description = "test getEnabledAllIdPs operation")
     public void testGetEnabledAllIdPs() throws Exception {
         List<IdentityProvider> idpList = idpMgtServiceClient.getEnabledIdPs();
 
@@ -480,7 +480,7 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
     }
 
 
-    @Test(priority = 11, groups = "wso2.is", description = "test UpdateIdP operation")
+    @Test(priority = 9, groups = "wso2.is", description = "test UpdateIdP operation")
     public void testUpdateIdP() throws Exception {
 
         String updatedTestIdpDescription = "This is Updated test identity provider";
@@ -519,7 +519,7 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
     }
 
 
-    @Test(priority = 12, groups = "wso2.is", description = "test getAllProvisioningConnectors operation")
+    @Test(priority = 10, groups = "wso2.is", description = "test getAllProvisioningConnectors operation")
     public void testGetAllProvisioningConnectors() throws Exception {
         Map<String, ProvisioningConnectorConfig> provisioningCons = idpMgtServiceClient.getAllProvisioningConnectors();
         Assert.assertNotNull(provisioningCons, "getAllProvisioningConnectors retrieval failed");
@@ -536,7 +536,7 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
     }
 
 
-    @Test(priority = 13, groups = "wso2.is", description = "test getAllFederatedAuthenticators operation")
+    @Test(priority = 11, groups = "wso2.is", description = "test getAllFederatedAuthenticators operation")
     public void testGetAllFederatedAuthenticators() throws Exception {
         Map<String, FederatedAuthenticatorConfig> allFedAuthenticators = idpMgtServiceClient.getAllAvailableFederatedAuthenticators();
         Assert.assertNotNull(allFedAuthenticators, "getAllFederatedAuthenticators retrieval failed");
@@ -558,7 +558,7 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
                             "Default federated authenticator GoogleOIDCAuthenticator     not found");
     }
 
-    @Test(priority = 14, groups = "wso2.is", description = "test getAllLocalClaimUris operation")
+    @Test(priority = 12, groups = "wso2.is", description = "test getAllLocalClaimUris operation")
     public void testGetAllLocalClaimUris() throws Exception {
         String[] claimUris = idpMgtServiceClient.getAllLocalClaimUris();
         Assert.assertNotNull(claimUris, "claim uri retrieval failed");
@@ -572,7 +572,7 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
     }
 
 
-    @Test(priority = 15, groups = "wso2.is", description = "test updateResidentIdP operation")
+    @Test(priority = 13, groups = "wso2.is", description = "test updateResidentIdP operation")
     public void testUpdateResidentIdP() throws Exception {
 
         String samlEntityId = "samlssoIdp";
@@ -634,7 +634,7 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
     }
 
 
-    @Test(priority = 16, groups = "wso2.is", description = "test deleteIdP operation")
+    @Test(priority = 14, groups = "wso2.is", description = "test deleteIdP operation")
     public void testDeleteIdP() throws Exception {
         idpMgtServiceClient.deleteIdP(updatedTestIdpName);
 
