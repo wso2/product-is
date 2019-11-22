@@ -45,6 +45,7 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
     private IdentityProviderMgtServiceClient idpMgtServiceClient;
     private String sampleCertificate;
     private String testIdpName = "TestIDPProvider";
+    private String testIdpNameSearch = "SearchTestIDPProviderTest";
     private String updatedTestIdpName = "UpdatedTestIDPProvider";
     private String testFedAuthName = "OpenIDAuthenticator";
 
@@ -360,7 +361,106 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
         }
     }
 
-    @Test(priority = 4, groups = "wso2.is", description = "test getEnabledAllIdPs operation")
+    @Test(priority = 4, groups = "wso2.is", description = "Add Idp for testing filter")
+    public void addIdpForPagination() throws Exception {
+
+        String testIdpDescription = "This is second identity provider ";
+        String testIdpRealmId = "localhost";
+        String testFedAuthDispName = "openid";
+        IdentityProvider idProvider = new IdentityProvider();
+        //set idp information
+        idProvider.setHomeRealmId(testIdpRealmId);
+        idProvider.setEnable(true);
+        idProvider.setIdentityProviderDescription(testIdpDescription);
+        idProvider.setIdentityProviderName(testIdpNameSearch);
+        idProvider.setCertificate(sampleCertificate);
+        idProvider.setFederationHub(false);
+        idProvider.setPrimary(false);
+        //Add federated authentication configuration
+        FederatedAuthenticatorConfig authConfig = new FederatedAuthenticatorConfig();
+        authConfig.setDisplayName(testFedAuthDispName);
+        authConfig.setEnabled(true);
+        authConfig.setName(testFedAuthName);
+        //add new identity provider
+        idpMgtServiceClient.addIdP(idProvider);
+        //check adding idp success
+        IdentityProvider addedIdp = idpMgtServiceClient.getIdPByName(testIdpName);
+        Assert.assertNotNull(addedIdp, "addIdP or getIdPByName failed");
+
+    }
+
+    @Test(priority = 5, groups = "wso2.is", description = "test getAllPaginatedIdPsInfo operation")
+    public void testGetAllPaginatedPaIdPs() throws Exception {
+
+        int pageNumber = 1;
+        List<IdentityProvider> idpList = idpMgtServiceClient.getAllPaginatedIdPsInfo(pageNumber);
+        Assert.assertNotNull(idpList);
+        log.info("All idp paginated list size : " + idpList.size());
+        if (idpList.size() > 0) {
+            IdentityProvider filteredIdp = null;
+            for (IdentityProvider idp : idpList) {
+                if (idp.getIdentityProviderName().equals(testIdpName) || idp.getIdentityProviderName()
+                        .equals(testIdpNameSearch)) {
+                    filteredIdp = idp;
+                }
+            }
+            Assert.assertNotNull(filteredIdp, "Added new idps not found in the idp list");
+        } else {
+            Assert.fail("Unable to find added identity provider");
+        }
+    }
+
+    @Test(priority = 6, groups = "wso2.is", description = "test getPaginatedIdPsInfo operation")
+    public void testGetPaginatedPaIdPs() throws Exception {
+
+        String filter = "name sw \"Search\" and name ew \"Test\"";
+        int pageNumber = 1;
+        List<IdentityProvider> idpList = idpMgtServiceClient.getPaginatedIdPsInfo(filter, pageNumber);
+        Assert.assertNotNull(idpList);
+        log.info("All filtered paginated idp list size : " + idpList.size());
+        if (idpList.size() > 0) {
+            IdentityProvider filteredIdp = null;
+            IdentityProvider notFilteredIdp = null;
+            for (IdentityProvider idp : idpList) {
+                if (idp.getIdentityProviderName().equals(testIdpNameSearch)) {
+                    filteredIdp = idp;
+                } else if (idp.getIdentityProviderName().equals(testIdpName)) {
+                    notFilteredIdp = idp;
+                }
+            }
+            Assert.assertNotNull(filteredIdp, "Searched Idp not found");
+            Assert.assertNull(notFilteredIdp, "Searched Incorrect Idp");
+        } else {
+            Assert.fail("Unable to find filtered identity provider");
+        }
+    }
+
+    @Test(priority = 7, groups = "wso2.is", description = "test getAllIdpCount operation")
+    public void testGetAllIdPsCount() throws Exception {
+
+        Integer idpCount = idpMgtServiceClient.getAllIdpCount();
+        log.info("All idp paginated filtered count : " + idpCount);
+        Assert.assertNotNull(idpCount, "Added new test idp not found in the idp list");
+    }
+
+    @Test(priority = 8, groups = "wso2.is", description = "test getFilteredIdpCount operation")
+    public void testGetAllFilteredIdPsCount() throws Exception {
+
+        String filter = "name sw \"Search\" and name ew \"Test\"";
+        Integer idpCount = idpMgtServiceClient.getFilteredIdpCount(filter);
+        log.info("Idp paginated filtered count : " + idpCount);
+        Assert.assertNotNull(idpCount, "Added new test idp not found in the idp list");
+    }
+
+    @Test(priority = 9, groups = "wso2.is", description = "delete the Idp which is created for Idp pagination test")
+    public void testDeleteIdPFilter() throws Exception {
+
+        idpMgtServiceClient.deleteIdP(testIdpNameSearch);
+        IdentityProvider idp = idpMgtServiceClient.getIdPByName(testIdpNameSearch);
+        Assert.assertNull(idp, "Deleting idp failed");
+    }
+
+    @Test(priority = 10, groups = "wso2.is", description = "test getEnabledAllIdPs operation")
     public void testGetEnabledAllIdPs() throws Exception {
         List<IdentityProvider> idpList = idpMgtServiceClient.getEnabledIdPs();
 
@@ -380,7 +480,7 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
     }
 
 
-    @Test(priority = 5, groups = "wso2.is", description = "test UpdateIdP operation")
+    @Test(priority = 11, groups = "wso2.is", description = "test UpdateIdP operation")
     public void testUpdateIdP() throws Exception {
 
         String updatedTestIdpDescription = "This is Updated test identity provider";
@@ -419,7 +519,7 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
     }
 
 
-    @Test(priority = 6, groups = "wso2.is", description = "test getAllProvisioningConnectors operation")
+    @Test(priority = 12, groups = "wso2.is", description = "test getAllProvisioningConnectors operation")
     public void testGetAllProvisioningConnectors() throws Exception {
         Map<String, ProvisioningConnectorConfig> provisioningCons = idpMgtServiceClient.getAllProvisioningConnectors();
         Assert.assertNotNull(provisioningCons, "getAllProvisioningConnectors retrieval failed");
@@ -436,7 +536,7 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
     }
 
 
-    @Test(priority = 7, groups = "wso2.is", description = "test getAllFederatedAuthenticators operation")
+    @Test(priority = 13, groups = "wso2.is", description = "test getAllFederatedAuthenticators operation")
     public void testGetAllFederatedAuthenticators() throws Exception {
         Map<String, FederatedAuthenticatorConfig> allFedAuthenticators = idpMgtServiceClient.getAllAvailableFederatedAuthenticators();
         Assert.assertNotNull(allFedAuthenticators, "getAllFederatedAuthenticators retrieval failed");
@@ -458,7 +558,7 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
                             "Default federated authenticator GoogleOIDCAuthenticator     not found");
     }
 
-    @Test(priority = 7, groups = "wso2.is", description = "test getAllLocalClaimUris operation")
+    @Test(priority = 14, groups = "wso2.is", description = "test getAllLocalClaimUris operation")
     public void testGetAllLocalClaimUris() throws Exception {
         String[] claimUris = idpMgtServiceClient.getAllLocalClaimUris();
         Assert.assertNotNull(claimUris, "claim uri retrieval failed");
@@ -472,7 +572,7 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
     }
 
 
-    @Test(priority = 7, groups = "wso2.is", description = "test updateResidentIdP operation")
+    @Test(priority = 15, groups = "wso2.is", description = "test updateResidentIdP operation")
     public void testUpdateResidentIdP() throws Exception {
 
         String samlEntityId = "samlssoIdp";
@@ -534,7 +634,7 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
     }
 
 
-    @Test(priority = 8, groups = "wso2.is", description = "test deleteIdP operation")
+    @Test(priority = 16, groups = "wso2.is", description = "test deleteIdP operation")
     public void testDeleteIdP() throws Exception {
         idpMgtServiceClient.deleteIdP(updatedTestIdpName);
 
