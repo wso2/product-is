@@ -19,6 +19,7 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpStatus;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
@@ -29,7 +30,6 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
-import org.wso2.identity.integration.test.rest.api.server.keystore.management.v1.model.CertificateRequest;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -39,7 +39,7 @@ import java.util.HashMap;
  */
 public class KeystoreManagementFailureTest extends KeystoreManagementBaseTest {
 
-    private static final String INVALID_ALIAS = "xxxx";
+    private static final String INVALID_ALIAS = "test-alias";
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public KeystoreManagementFailureTest(TestUserMode userMode) throws Exception {
@@ -95,16 +95,11 @@ public class KeystoreManagementFailureTest extends KeystoreManagementBaseTest {
     }
 
     @Test
-    public void testAddCertificateForSuperTenant() {
+    public void testAddCertificateForSuperTenant() throws IOException {
 
         if (StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-
-            CertificateRequest certificateRequest = new CertificateRequest();
-            certificateRequest.setAlias("newcert");
-            certificateRequest.setCertificate(CERTIFICATE);
-
             Response response = getResponseOfJSONPost(KEYSTORE_MANAGEMENT_API_BASE_PATH +
-                            KEYSTORE_MANAGEMENT_API_CERTIFICATE_PATH, new JSONObject(certificateRequest).toString(),
+                            KEYSTORE_MANAGEMENT_API_CERTIFICATE_PATH, readResource("newcert.json"),
                     new HashMap<>());
             validateHttpStatusCode(response, HttpStatus.SC_NOT_FOUND);
         }
@@ -130,7 +125,7 @@ public class KeystoreManagementFailureTest extends KeystoreManagementBaseTest {
     }
 
     @Test
-    public void testAddExistingCertificate() {
+    public void testAddExistingCertificate() throws JSONException {
 
         if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
             Response response = getResponseOfGet(KEYSTORE_MANAGEMENT_API_BASE_PATH +
@@ -138,32 +133,27 @@ public class KeystoreManagementFailureTest extends KeystoreManagementBaseTest {
                     ENCODE_CERT_QUERY_PARAMETER + "true", "application/pkix-cert");
             validateHttpStatusCode(response, HttpStatus.SC_OK);
 
-            CertificateRequest certificateRequest = new CertificateRequest();
-            certificateRequest.setAlias("newcert");
-            certificateRequest.setCertificate(response.asString());
+            JSONObject certificateRequest = new JSONObject();
+            certificateRequest.put(REQUEST_KEY_ALIAS, INVALID_ALIAS);
+            certificateRequest.put(REQUEST_KEY_CERTIFICATE, response.asString());
+
             response = getResponseOfJSONPost(KEYSTORE_MANAGEMENT_API_BASE_PATH +
-                            KEYSTORE_MANAGEMENT_API_CERTIFICATE_PATH, new JSONObject(certificateRequest).toString(),
+                            KEYSTORE_MANAGEMENT_API_CERTIFICATE_PATH, certificateRequest.toString(),
                     new HashMap<>());
             validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "KSS-60001");
-
         }
     }
 
     @Test
-    public void testAddCertificateWithExistingAlias() {
+    public void testAddCertificateWithExistingAlias() throws JSONException, IOException {
 
         if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            Response response = getResponseOfGet(KEYSTORE_MANAGEMENT_API_BASE_PATH +
-                    KEYSTORE_MANAGEMENT_API_CERTIFICATE_PATH + PATH_SEPARATOR + tenant +
-                    ENCODE_CERT_QUERY_PARAMETER + "true", "application/pkix-cert");
-            validateHttpStatusCode(response, HttpStatus.SC_OK);
+            JSONObject certificateRequest = new JSONObject();
+            certificateRequest.put(REQUEST_KEY_ALIAS, tenant);
+            certificateRequest.put(REQUEST_KEY_CERTIFICATE, readResource("certificate.txt"));
 
-            CertificateRequest certificateRequest = new CertificateRequest();
-            certificateRequest.setAlias(tenant);
-            certificateRequest.setCertificate(response.asString());
-
-            response = getResponseOfJSONPost(KEYSTORE_MANAGEMENT_API_BASE_PATH +
-                            KEYSTORE_MANAGEMENT_API_CERTIFICATE_PATH, new JSONObject(certificateRequest).toString(),
+            Response response = getResponseOfJSONPost(KEYSTORE_MANAGEMENT_API_BASE_PATH +
+                            KEYSTORE_MANAGEMENT_API_CERTIFICATE_PATH, certificateRequest.toString(),
                     new HashMap<>());
             validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "KSS-60002");
         }
