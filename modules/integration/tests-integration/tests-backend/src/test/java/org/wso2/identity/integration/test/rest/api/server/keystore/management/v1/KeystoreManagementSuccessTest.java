@@ -21,7 +21,6 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpStatus;
-import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
@@ -32,7 +31,6 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
-import org.wso2.identity.integration.test.rest.api.server.keystore.management.v1.model.CertificateRequest;
 import org.wso2.identity.integration.test.rest.api.server.keystore.management.v1.model.CertificateResponse;
 
 import java.io.IOException;
@@ -162,24 +160,19 @@ public class KeystoreManagementSuccessTest extends KeystoreManagementBaseTest {
     @Test
     public void testGetPublicCertificate() {
 
-        Response response =
-                getResponseOfGetWithoutAuthentication(KEYSTORE_MANAGEMENT_API_BASE_PATH +
-                                KEYSTORE_MANAGEMENT_API_CERTIFICATE_PATH + KEYSTORE_MANAGEMENT_API_PUBLIC_CERTIFICATE_PATH,
-                        "application/pkix-cert");
+        Response response = getResponseOfGetWithoutAuthentication(KEYSTORE_MANAGEMENT_API_BASE_PATH +
+                KEYSTORE_MANAGEMENT_API_CERTIFICATE_PATH +
+                KEYSTORE_MANAGEMENT_API_PUBLIC_CERTIFICATE_PATH, "application/pkix-cert");
         validateHttpStatusCode(response, HttpStatus.SC_OK);
         Assert.assertNotNull(response.asString());
     }
 
     @Test
-    public void testAddCertificate() {
+    public void testAddCertificate() throws IOException {
 
         if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            CertificateRequest certificateRequest = new CertificateRequest();
-            certificateRequest.setAlias("newcert");
-            certificateRequest.setCertificate(CERTIFICATE);
-
             Response response = getResponseOfJSONPost(KEYSTORE_MANAGEMENT_API_BASE_PATH +
-                            KEYSTORE_MANAGEMENT_API_CERTIFICATE_PATH, new JSONObject(certificateRequest).toString(),
+                            KEYSTORE_MANAGEMENT_API_CERTIFICATE_PATH, readResource("newcert.json"),
                     new HashMap<>());
             validateHttpStatusCode(response, HttpStatus.SC_CREATED);
             Assert.assertNotNull(response.getCookie("Certificate"));
