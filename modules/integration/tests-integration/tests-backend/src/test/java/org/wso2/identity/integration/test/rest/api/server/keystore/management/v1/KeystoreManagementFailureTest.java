@@ -20,7 +20,6 @@ import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpStatus;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
@@ -99,7 +98,7 @@ public class KeystoreManagementFailureTest extends KeystoreManagementBaseTest {
 
         if (StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
             Response response = getResponseOfJSONPost(KEYSTORE_MANAGEMENT_API_BASE_PATH +
-                            KEYSTORE_MANAGEMENT_API_CERTIFICATE_PATH, readResource("newcert.json"),
+                            KEYSTORE_MANAGEMENT_API_CERTIFICATE_PATH, readResource("cert-request-body1.json"),
                     new HashMap<>());
             validateHttpStatusCode(response, HttpStatus.SC_NOT_FOUND);
         }
@@ -125,7 +124,7 @@ public class KeystoreManagementFailureTest extends KeystoreManagementBaseTest {
     }
 
     @Test
-    public void testAddExistingCertificate() throws JSONException {
+    public void testAddExistingCertificate() throws IOException {
 
         if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
             Response response = getResponseOfGet(KEYSTORE_MANAGEMENT_API_BASE_PATH +
@@ -133,13 +132,10 @@ public class KeystoreManagementFailureTest extends KeystoreManagementBaseTest {
                     ENCODE_CERT_QUERY_PARAMETER + "true", "application/pkix-cert");
             validateHttpStatusCode(response, HttpStatus.SC_OK);
 
-            JSONObject certificateRequest = new JSONObject();
-            certificateRequest.put(REQUEST_KEY_ALIAS, INVALID_ALIAS);
-            certificateRequest.put(REQUEST_KEY_CERTIFICATE, response.asString());
-
+            String certificateRequest = String.format(readResource("cert-request-body2.json"),
+                    response.asString());
             response = getResponseOfJSONPost(KEYSTORE_MANAGEMENT_API_BASE_PATH +
-                            KEYSTORE_MANAGEMENT_API_CERTIFICATE_PATH, certificateRequest.toString(),
-                    new HashMap<>());
+                    KEYSTORE_MANAGEMENT_API_CERTIFICATE_PATH, certificateRequest, new HashMap<>());
             validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "KSS-60001");
         }
     }
@@ -148,13 +144,9 @@ public class KeystoreManagementFailureTest extends KeystoreManagementBaseTest {
     public void testAddCertificateWithExistingAlias() throws JSONException, IOException {
 
         if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            JSONObject certificateRequest = new JSONObject();
-            certificateRequest.put(REQUEST_KEY_ALIAS, tenant);
-            certificateRequest.put(REQUEST_KEY_CERTIFICATE, readResource("certificate.txt"));
-
+            String certificateRequest = String.format(readResource("cert-request-body3.json"), tenant);
             Response response = getResponseOfJSONPost(KEYSTORE_MANAGEMENT_API_BASE_PATH +
-                            KEYSTORE_MANAGEMENT_API_CERTIFICATE_PATH, certificateRequest.toString(),
-                    new HashMap<>());
+                    KEYSTORE_MANAGEMENT_API_CERTIFICATE_PATH, certificateRequest, new HashMap<>());
             validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "KSS-60002");
         }
     }
