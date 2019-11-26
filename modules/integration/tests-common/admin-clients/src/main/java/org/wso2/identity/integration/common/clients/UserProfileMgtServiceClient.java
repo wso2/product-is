@@ -150,11 +150,6 @@ public class UserProfileMgtServiceClient {
         userProfileMgtServiceStub.removeAssociateID(idpName, idpAssociatedId);
     }
 
-//    public void addFedIdpAccountAssociation(String username, String idpName, String idpAssociatedId) throws Exception {
-//
-//        userProfileMgtServiceStub.associateIDForUser(username, idpName, idpAssociatedId);
-//    }
-
     public AssociatedAccountDTO[] getAssociatedFedUserAccountIds() throws Exception {
 
         return userProfileMgtServiceStub.getAssociatedIDs();
