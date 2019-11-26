@@ -293,6 +293,26 @@ public class RESTTestBase extends ISIntegrationTest {
     }
 
     /**
+     * Invoke given endpointUri for GET without authentication.
+     *
+     * @param endpointUri endpoint to be invoked
+     * @param contentType request Parameters
+     * @return response
+     */
+    protected Response getResponseOfGetWithoutAuthentication(String endpointUri, String contentType) {
+
+        return given()
+                .config(RestAssured.config().encoderConfig(encoderconfig
+                        .appendDefaultContentCharsetToContentTypeIfUndefined(false)))
+                .contentType(contentType)
+                .header(HttpHeaders.ACCEPT, contentType)
+                .log().ifValidationFails()
+                .filter(validationFilter)
+                .when()
+                .get(endpointUri);
+    }
+
+    /**
      * Invoke given endpointUri for POST with given body and Basic authentication, authentication credential being the
      * authenticatingUserName and authenticatingCredential
      *
@@ -547,7 +567,7 @@ public class RESTTestBase extends ISIntegrationTest {
      * @param response response
      * @param httpStatusCode expected status code
      */
-    private void validateHttpStatusCode(Response response, int httpStatusCode) {
+    protected void validateHttpStatusCode(Response response, int httpStatusCode) {
 
         response
                 .then()
