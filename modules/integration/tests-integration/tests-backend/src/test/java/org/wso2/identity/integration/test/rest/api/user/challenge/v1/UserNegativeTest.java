@@ -22,6 +22,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 
+import java.rmi.RemoteException;
 import java.util.Base64;
 import javax.xml.xpath.XPathExpressionException;
 
@@ -46,7 +47,7 @@ public class UserNegativeTest extends UserMeNegativeTest {
 
     @BeforeClass(alwaysRun = true)
     @Override
-    public void init() throws XPathExpressionException, AxisFault {
+    public void init() throws XPathExpressionException, RemoteException {
 
         super.testInit(API_VERSION, swaggerDefinition, tenant);
         String user = this.user;

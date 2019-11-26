@@ -23,6 +23,7 @@ import org.testng.annotations.Factory;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
+import java.rmi.RemoteException;
 import java.util.Base64;
 import javax.xml.xpath.XPathExpressionException;
 
@@ -38,7 +39,7 @@ public class UserSuccessTest extends UserMeSuccessTest {
 
     @BeforeClass(alwaysRun = true)
     @Override
-    public void init() throws XPathExpressionException, AxisFault {
+    public void init() throws XPathExpressionException, RemoteException {
 
         super.testInit(API_VERSION, swaggerDefinition, tenant);
         String user = MultitenantUtils.getTenantAwareUsername(context.getContextTenant().getTenantUserList().get(0)

@@ -29,6 +29,7 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 
+import java.rmi.RemoteException;
 import javax.xml.xpath.XPathExpressionException;
 
 public class MeAuthorizedAppsNegativeTest extends UserAuthorizedAppsBaseTest {
@@ -36,7 +37,7 @@ public class MeAuthorizedAppsNegativeTest extends UserAuthorizedAppsBaseTest {
     private static final String INVALID_APP = "invalid-app";
 
     @BeforeClass(alwaysRun = true)
-    public void init() throws XPathExpressionException, AxisFault {
+    public void init() throws XPathExpressionException, RemoteException {
 
         super.testInit(API_VERSION, swaggerDefinition, tenant);
         initUrls("me");
