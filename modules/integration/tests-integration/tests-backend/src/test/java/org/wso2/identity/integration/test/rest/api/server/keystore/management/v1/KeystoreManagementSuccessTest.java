@@ -15,8 +15,6 @@
  */
 package org.wso2.identity.integration.test.rest.api.server.keystore.management.v1;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
@@ -31,11 +29,9 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
-import org.wso2.identity.integration.test.rest.api.server.keystore.management.v1.model.CertificateResponse;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -96,17 +92,12 @@ public class KeystoreManagementSuccessTest extends KeystoreManagementBaseTest {
                 KEYSTORE_MANAGEMENT_API_CERTIFICATE_PATH);
         validateHttpStatusCode(response, HttpStatus.SC_OK);
 
-        ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
-        List<CertificateResponse> responseFound =
-                Arrays.asList(jsonWriter.readValue(response.asString(), CertificateResponse[].class));
-        Assert.assertNotNull(responseFound);
+        List<String> aliasList = response.jsonPath().getList("alias");
         if (StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            Assert.assertTrue(responseFound.stream().anyMatch(certificateResponse -> certificateResponse.getAlias()
-                    .equals(SUPER_TENANT_PUBLIC_CERT_ALIAS)), "Public certificate alias " +
+            Assert.assertTrue(aliasList.contains(SUPER_TENANT_PUBLIC_CERT_ALIAS), "Public certificate alias " +
                     SUPER_TENANT_PUBLIC_CERT_ALIAS + " is not returned in the response.");
         } else {
-            Assert.assertTrue(responseFound.stream().anyMatch(certificateResponse -> certificateResponse.getAlias()
-                    .equals(tenant)), "Public certificate alias " + tenant +
+            Assert.assertTrue(aliasList.contains(tenant), "Public certificate alias " + tenant +
                     " is not returned in the response.");
         }
     }
@@ -134,12 +125,9 @@ public class KeystoreManagementSuccessTest extends KeystoreManagementBaseTest {
             Response response = getResponseOfGet(KEYSTORE_MANAGEMENT_API_BASE_PATH +
                     KEYSTORE_MANAGEMENT_API_CLIENT_CERTIFICATE_PATH);
             validateHttpStatusCode(response, HttpStatus.SC_OK);
-            ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
-            List<CertificateResponse> responseFound =
-                    Arrays.asList(jsonWriter.readValue(response.asString(), CertificateResponse[].class));
-            Assert.assertNotNull(responseFound);
-            Assert.assertTrue(responseFound.stream().anyMatch(certificateResponse -> certificateResponse.getAlias()
-                    .equals(SUPER_TENANT_PUBLIC_CERT_ALIAS)), "Public certificate alias " +
+
+            List<String> aliasList = response.jsonPath().getList("alias");
+            Assert.assertTrue(aliasList.contains(SUPER_TENANT_PUBLIC_CERT_ALIAS), "Public certificate alias " +
                     SUPER_TENANT_PUBLIC_CERT_ALIAS + " is not returned in the response.");
         }
 
@@ -172,7 +160,7 @@ public class KeystoreManagementSuccessTest extends KeystoreManagementBaseTest {
 
         if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
             Response response = getResponseOfJSONPost(KEYSTORE_MANAGEMENT_API_BASE_PATH +
-                            KEYSTORE_MANAGEMENT_API_CERTIFICATE_PATH, readResource("newcert.json"),
+                            KEYSTORE_MANAGEMENT_API_CERTIFICATE_PATH, readResource("cert-request-body1.json"),
                     new HashMap<>());
             validateHttpStatusCode(response, HttpStatus.SC_CREATED);
             Assert.assertNotNull(response.getCookie("Certificate"));
