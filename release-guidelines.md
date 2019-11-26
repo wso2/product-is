@@ -74,7 +74,7 @@ release.
 
 ---
 
-WSO2 Identity and Access Management team is pleased to announce the release of Identity Server <code><em><RELEASED_VERSION></em></code>!
+## WSO2 Identity and Access Management Team Is Pleased To Announce The Release Of Identity Server <code><em><RELEASED_VERSION></em></code>!
 
 ## **Download**
 
@@ -106,11 +106,23 @@ Join our mailing lists and correspond with the developers directly. We also enco
 
 *   Developer List: dev@wso2.org
 *   Architecture List: architecture@wso2.org
-*   User Forum:[ StackOverflow](http://stackoverflow.com/questions/tagged/wso2is)
+*   User Forum: [StackOverflow](http://stackoverflow.com/questions/tagged/wso2is)
+
+## **Slack Channels**
+
+Join with us via our [slack channel](https://wso2is.slack.com) for even better communication. You can 
+talk to our developers directly regarding any issues, concerns about the product. We encourage you to start 
+discussions, or join any on going discussions with the team, via our slack channels.
+
+* Discussions about developments: [Dev Channel](https://wso2is.slack.com/messages/dev)
+* New releases: [Release Announcement Channel](https://wso2is.slack.com/messages/releases)
 
 ### **Reporting Issues**
 
 We encourage you to report issues, improvements, and feature requests regarding WSO2 Identity Server through our public[ WSO2 Identity Server GIT Issues](https://github.com/wso2/product-is/issues).
+
+<b>Important</b>: Please be advised that security issues must be reported to security@wso2.com, not as GitHub issues,in order to reach the proper audience. We strongly advise following the [WSO2 Security Vulnerability Reporting 
+ Guidelines](https://docs.wso2.com/display/Security/WSO2+Security+Vulnerability+Reporting+Guidelines) when reporting the security issues.
 
 For more information about WSO2 Identity Server, please see[ https://wso2.com/identity-and-access-management](https://wso2.com/identity-and-access-management) or visit the[ WSO2 Oxygen Tank](http://wso2.com/library/) developer portal for additional resources.
 
