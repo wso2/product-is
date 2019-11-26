@@ -32,6 +32,8 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpHeaders;
 import org.hamcrest.Matcher;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
+import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
+import org.wso2.identity.integration.common.clients.UserProfileMgtServiceClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
@@ -45,6 +47,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.rmi.RemoteException;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.jar.JarEntry;
@@ -81,6 +84,8 @@ public class RESTTestBase extends ISIntegrationTest {
     protected AutomationContext context;
 
     protected RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
+    protected UserProfileMgtServiceClient userProfileMgtServiceClient;
+    protected IdentityProviderMgtServiceClient identityProviderMgtServiceClient;
     protected String swaggerDefinition;
 
     protected String basePath = StringUtils.EMPTY;
@@ -98,7 +103,7 @@ public class RESTTestBase extends ISIntegrationTest {
      * @throws XPathExpressionException
      */
     protected void init(String swaggerDefinition, String basePathInSwagger, String basePath)
-            throws AxisFault {
+            throws RemoteException {
 
         this.basePath = basePath;
         this.swaggerDefinition = swaggerDefinition;
@@ -110,6 +115,8 @@ public class RESTTestBase extends ISIntegrationTest {
                 .build();
         validationFilter = new OpenApiValidationFilter(openAPIValidator);
         remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
+        userProfileMgtServiceClient = new UserProfileMgtServiceClient(backendURL, sessionCookie);
+        identityProviderMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
     }
 
     protected void conclude() {

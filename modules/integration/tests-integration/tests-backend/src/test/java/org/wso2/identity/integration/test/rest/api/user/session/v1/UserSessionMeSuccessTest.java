@@ -32,6 +32,7 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 
+import java.rmi.RemoteException;
 import java.util.List;
 import javax.xml.xpath.XPathExpressionException;
 
@@ -63,7 +64,7 @@ public class UserSessionMeSuccessTest extends UserSessionTest {
     }
 
     @BeforeClass(alwaysRun = true)
-    public void init() throws XPathExpressionException, AxisFault {
+    public void init() throws XPathExpressionException, RemoteException {
 
         super.testInit(API_VERSION, swaggerDefinition, tenant);
         initUrls("me");
