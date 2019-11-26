@@ -29,6 +29,7 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 
+import java.rmi.RemoteException;
 import javax.xml.xpath.XPathExpressionException;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -48,7 +49,7 @@ public class MeAuthorizedAppsSuccessTest extends UserAuthorizedAppsBaseTest {
 
 
     @BeforeClass(alwaysRun = true)
-    public void init() throws XPathExpressionException, AxisFault {
+    public void init() throws XPathExpressionException, RemoteException {
 
         super.testInit(API_VERSION, swaggerDefinition, tenant);
         initUrls("me");

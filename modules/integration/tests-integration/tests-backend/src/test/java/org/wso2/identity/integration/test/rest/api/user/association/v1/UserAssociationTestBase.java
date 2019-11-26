@@ -38,8 +38,10 @@ public class UserAssociationTestBase extends RESTAPIUserTestBase {
     static String API_PACKAGE_NAME = "org.wso2.carbon.identity.rest.api.user.association.v1";
 
     public static final String ASSOCIATION_ENDPOINT_URI = "/%s/associations";
+    public static final String FEDERATED_ASSOCIATION_ENDPOINT_URI = "/%s/federated-associations";
 
     protected String userAssociationEndpointURI;
+    protected String federatedUserAssociationEndpointURI;
 
     protected static String swaggerDefinition;
 
@@ -55,6 +57,7 @@ public class UserAssociationTestBase extends RESTAPIUserTestBase {
     void initUrls(String pathParam) {
 
         this.userAssociationEndpointURI = String.format(ASSOCIATION_ENDPOINT_URI, pathParam);
+        this.federatedUserAssociationEndpointURI = String.format(FEDERATED_ASSOCIATION_ENDPOINT_URI, pathParam);
     }
 
     @AfterClass(alwaysRun = true)

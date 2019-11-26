@@ -32,6 +32,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
 import javax.xml.xpath.XPathExpressionException;
 
 import static org.hamcrest.CoreMatchers.hasItems;
@@ -58,7 +59,7 @@ public class UserMeNegativeTestBase extends UserAssociationTestBase {
     }
 
     @BeforeClass(alwaysRun = true)
-    public void init() throws XPathExpressionException, AxisFault {
+    public void init() throws XPathExpressionException, RemoteException {
 
         super.testInit(API_VERSION, swaggerDefinition, tenant);
         initUrls("me");
@@ -123,16 +124,16 @@ public class UserMeNegativeTestBase extends UserAssociationTestBase {
     public void testCreateExitingAssociationAgain() throws IOException {
         String body;
         if (TestUserMode.SUPER_TENANT_ADMIN.equals(userMode)) {
-            body = readResource("association-creation.json");
+            body = readResource("association-creation-1.json");
         } else {
-            body = readResource("association-creation-tenant.json").replace("TENANT", tenant);
+            body = readResource("association-creation-tenant-1.json").replace("TENANT", tenant);
         }
         getResponseOfPost(this.userAssociationEndpointURI, body);
 
         if (TestUserMode.SUPER_TENANT_ADMIN.equals(userMode)) {
-            body = readResource("association-creation.json");
+            body = readResource("association-creation-1.json");
         } else {
-            body = readResource("association-creation-tenant.json").replace("TENANT", tenant);
+            body = readResource("association-creation-tenant-1.json").replace("TENANT", tenant);
         }
         getResponseOfPost(this.userAssociationEndpointURI, body)
                 .then()

@@ -34,6 +34,7 @@ import org.wso2.carbon.um.ws.api.stub.PermissionDTO;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
 import javax.xml.xpath.XPathExpressionException;
 
 public class UserMeNegativeTest extends UserChallengeTestBase {
@@ -67,7 +68,7 @@ public class UserMeNegativeTest extends UserChallengeTestBase {
     }
 
     @BeforeClass(alwaysRun = true)
-    public void init() throws XPathExpressionException, AxisFault {
+    public void init() throws XPathExpressionException, RemoteException {
 
         super.testInit(API_VERSION, swaggerDefinition, tenant);
         initUrls("me");
