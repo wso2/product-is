@@ -19,6 +19,8 @@ package org.wso2.identity.integration.test.rest.api.server.common;
 import org.apache.axis2.AxisFault;
 import org.wso2.identity.integration.test.rest.api.common.RESTTestBase;
 
+import java.rmi.RemoteException;
+
 /**
  * Base Test Class for server based REST API test cases.
  * ex: /t/{tenant-domain}/api/server/{version}
@@ -31,7 +33,7 @@ public class RESTAPIServerTestBase extends RESTTestBase {
             TENANT_CONTEXT_IN_URL + API_SERVER_BASE_PATH;
 
     protected void testInit(String apiVersion, String apiDefinition, String tenantDomain)
-            throws AxisFault {
+            throws RemoteException {
 
         String basePathInSwagger = String.format(API_SERVER_BASE_PATH_IN_SWAGGER, apiVersion);
         String basePath = String.format(API_SERVER_BASE_PATH_WITH_TENANT_CONTEXT,
