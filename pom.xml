@@ -28,7 +28,7 @@
     <artifactId>identity-server-parent</artifactId>
     <packaging>pom</packaging>
     <description>WSO2 Identity Server</description>
-    <version>5.10.0-m7-SNAPSHOT</version>
+    <version>5.10.0-m8-SNAPSHOT</version>
     <name>WSO2 Identity Server</name>
     <url>http://wso2.org/projects/identity</url>
 
@@ -1917,7 +1917,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.15.8</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.15.11</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -1939,8 +1939,8 @@
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.saml.version>5.7.1</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.2.54</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.saml.version>5.7.4</identity.inbound.auth.saml.version>
+        <identity.inbound.auth.oauth.version>6.2.60</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.4.3</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.4.3</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.5.3</identity.inbound.provisioning.scim.version>
@@ -1953,7 +1953,7 @@
 
 
         <!-- Identity User Versions -->
-        <identity.user.account.association.version>5.3.6</identity.user.account.association.version>
+        <identity.user.account.association.version>5.3.7</identity.user.account.association.version>
         <identity.user.ws.version>5.3.3</identity.user.ws.version>
 
         <!-- Identity Userstore Versions -->
@@ -2018,7 +2018,7 @@
         <identity.extension.utils>1.0.8</identity.extension.utils>
 
         <!-- Identity REST API feature -->
-        <identity.api.dispatcher.version>1.0.32</identity.api.dispatcher.version>
+        <identity.api.dispatcher.version>1.0.34</identity.api.dispatcher.version>
 
         <identity.agent.sso.version>5.3.4</identity.agent.sso.version>
         <identity.tool.samlsso.validator.version>5.3.3</identity.tool.samlsso.validator.version>
@@ -2029,7 +2029,7 @@
         <carbon.identity.oauth.uma.version>1.1.6</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>0.1.85</identity.apps.version>
+        <identity.apps.version>0.1.102</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.3.0</charon.version>

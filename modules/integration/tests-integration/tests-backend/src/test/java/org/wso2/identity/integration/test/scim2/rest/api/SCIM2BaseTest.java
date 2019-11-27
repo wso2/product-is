@@ -27,6 +27,7 @@ import org.wso2.identity.integration.test.rest.api.common.RESTTestBase;
 
 import java.io.File;
 import java.io.IOException;
+import java.rmi.RemoteException;
 
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SCIM2_ENDPOINT;
 
@@ -51,7 +52,7 @@ public class SCIM2BaseTest extends RESTTestBase {
     }
 
     public void testInit(String apiDefinition, String tenantDomain)
-            throws AxisFault {
+            throws RemoteException {
 
         final String basePath;
         if ("carbon.super".equals(tenantDomain)) {
