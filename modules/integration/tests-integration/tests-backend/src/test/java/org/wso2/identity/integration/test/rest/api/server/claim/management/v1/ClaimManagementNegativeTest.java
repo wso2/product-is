@@ -32,6 +32,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
 
 import static org.hamcrest.core.IsNull.notNullValue;
 
@@ -54,7 +55,7 @@ public class ClaimManagementNegativeTest extends ClaimManagementTestBase {
     }
 
     @BeforeClass(alwaysRun = true)
-    public void init() throws AxisFault {
+    public void init() throws RemoteException {
 
         super.testInit(API_VERSION, swaggerDefinition, tenant);
     }

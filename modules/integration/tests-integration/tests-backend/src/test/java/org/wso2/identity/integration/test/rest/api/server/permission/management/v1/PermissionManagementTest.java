@@ -34,6 +34,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.common.RESTAPIServerTestBase;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
 
 /**
  * The main test class for permission management.
@@ -74,7 +75,7 @@ public class PermissionManagementTest extends RESTAPIServerTestBase {
     }
 
     @BeforeClass(alwaysRun = true)
-    public void init() throws AxisFault {
+    public void init() throws RemoteException {
 
         super.testInit(API_VERSION, swaggerDefinition, tenant);
     }

@@ -19,6 +19,7 @@ package org.wso2.identity.integration.test.rest.api.user.common;
 import org.apache.axis2.AxisFault;
 import org.wso2.identity.integration.test.rest.api.common.RESTTestBase;
 
+import java.rmi.RemoteException;
 import javax.xml.xpath.XPathExpressionException;
 
 /**
@@ -32,7 +33,7 @@ public class RESTAPIUserTestBase extends RESTTestBase {
     protected static final String API_USERS_BASE_PATH_WITH_TENANT_CONTEXT = TENANT_CONTEXT_IN_URL + API_USERS_BASE_PATH;
 
     protected void testInit(String apiVersion, String apiDefinition, String tenantDomain)
-            throws XPathExpressionException, AxisFault {
+            throws XPathExpressionException, RemoteException {
 
         String basePathInSwagger = String.format(API_USERS_BASE_PATH_IN_SWAGGER, apiVersion);
         String basePath = String.format(API_USERS_BASE_PATH_WITH_TENANT_CONTEXT,
