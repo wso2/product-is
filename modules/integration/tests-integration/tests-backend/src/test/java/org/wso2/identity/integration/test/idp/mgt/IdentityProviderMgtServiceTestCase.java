@@ -78,9 +78,7 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
     public void atEnd() throws Exception {
 
         // Delete the Idp tested.
-        deleteIDP();
-        IdentityProvider idp = idpMgtServiceClient.getIdPByName(testIdpNameSearch);
-        Assert.assertNull(idp, "Deleting idp failed");
+        idpMgtServiceClient.deleteIdP(testIdpNameSearch);
 
         //Restore default values for changes made to resident IDP
         IdentityProvider residentProvider = idpMgtServiceClient.getResidentIdP();
@@ -445,14 +443,7 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
         List<IdentityProvider> idpList = idpMgtServiceClient.getPaginatedIdPsInfo(filter, pageNumber);
         Assert.assertNotNull(idpList);
         if (idpList.size() > 0) {
-            int filteredIdpSize = 0;
-            for (IdentityProvider idp : idpList) {
-                if (testIdpName.equals(idp.getIdentityProviderName()) ||
-                        testIdpNameSearch.equals(idp.getIdentityProviderName())) {
-                    filteredIdpSize++;
-                }
-            }
-            Assert.assertEquals(filteredIdpSize, 2, "filtered identity provider size not matched" +
+            Assert.assertEquals(idpList.size(), 2, "filtered identity provider size not matched" +
                     " with the expected while testing getPaginatedIdPsInfo() with empty filter");
         } else {
             Assert.fail("Unable to find filtered identity provider while testing getPaginatedIdPsInfo(). Paginated " +
@@ -754,10 +745,5 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
         authConfig.setName(testFedAuthName);
         // Add new identity provider.
         idpMgtServiceClient.addIdP(idProvider);
-    }
-
-    private void deleteIDP() throws Exception {
-
-        idpMgtServiceClient.deleteIdP(testIdpNameSearch);
     }
 }
