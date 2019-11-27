@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -46,6 +47,9 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.core.IsNull.notNullValue;
+
 /**
  * Tests for happy paths of the Application Management REST API.
  */
@@ -57,16 +61,14 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
     private static final String APPLICATION_IMPORT_APP_NAME_SUPER_TENANT = "SampleApp";
     private static final String APPLICATION_IMPORT_APP_NAME_TENANT = "SampleAppTenant";
 
+    private static final String CREATED_APP_NAME = "My SAMPLE APP";
+    private String createdAppId;
     private String importedAppId = null;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public ApplicationManagementSuccessTest(TestUserMode userMode) throws Exception {
 
-        super.init(userMode);
-        this.context = isServer;
-        this.authenticatingUserName = context.getContextTenant().getTenantAdmin().getUserName();
-        this.authenticatingCredential = context.getContextTenant().getTenantAdmin().getPassword();
-        this.tenant = context.getContextTenant().getDomain();
+        super(userMode);
     }
 
     @BeforeClass(alwaysRun = true)
@@ -177,5 +179,50 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
             Assert.assertEquals(appName, APPLICATION_IMPORT_APP_NAME_TENANT,
                     "Application export response doesn't match.");
         }
+    }
+
+    @Test
+    public void createApplication() throws Exception {
+
+        String body = readResource("create-basic-application.json");
+        Response responseOfPost = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, body);
+        responseOfPost.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .header(HttpHeaders.LOCATION, notNullValue())
+                .body(notNullValue())
+                .body("name", equalTo(CREATED_APP_NAME));
+
+        String location = responseOfPost.getHeader(HttpHeaders.LOCATION);
+        createdAppId = location.substring(location.lastIndexOf("/") + 1);
+    }
+
+    @Test(dependsOnMethods = {"createApplication"})
+    public void testGetApplicationById() throws Exception {
+
+        getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("name", equalTo(CREATED_APP_NAME));
+    }
+
+    @Test(dependsOnMethods = {"testGetApplicationById"})
+    public void testDeleteApplicationById() throws Exception {
+
+        getResponseOfDelete(APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
+
+        // Verify that the application is not available.
+        getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NOT_FOUND);
     }
 }

@@ -1,0 +1,10 @@
+{
+  "name": "My_WSTrust_App",
+  "description": "WS Trust Application",
+  "inboundProtocolConfiguration": {
+    "wsTrust": {
+      "audience": "https://trusterservice.wso2.com",
+      "certificateAlias": "wso2carbon"
+    }
+  }
+}

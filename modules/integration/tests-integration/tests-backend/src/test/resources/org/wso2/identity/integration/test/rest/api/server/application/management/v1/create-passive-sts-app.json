@@ -1,0 +1,10 @@
+{
+  "name": "my-passive-sts-app",
+  "description": "Passive STS Application",
+  "inboundProtocolConfiguration": {
+    "passiveSts": {
+      "realm": "https://myrealm.passivests.com",
+      "replyTo": "https://myrealm.passivests.com/replyTo"
+    }
+  }
+}
