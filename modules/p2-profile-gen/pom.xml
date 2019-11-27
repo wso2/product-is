@@ -467,6 +467,16 @@
                                     org.wso2.identity.apps:org.wso2.identity.apps.feature:${identity.apps.version}
                                 </featureArtifactDef>
 
+                                <!-- Authentication portal feature -->
+                                <featureArtifactDef>
+                                    org.wso2.identity.apps:org.wso2.identity.apps.authentication.portal.server.feature:${identity.apps.version}
+                                </featureArtifactDef>
+
+                                <!-- Recovery portal feature -->
+                                <featureArtifactDef>
+                                    org.wso2.identity.apps:org.wso2.identity.apps.recovery.portal.server.feature:${identity.apps.version}
+                                </featureArtifactDef>
+
                                 <!-- REST APIs -->
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.rest.dispatcher:org.wso2.carbon.identity.rest.api.dispatcher.feature:${identity.api.dispatcher.version}
@@ -798,6 +808,20 @@
                                 <feature>
                                     <id>
                                         org.wso2.identity.apps.feature.group
+                                    </id>
+                                    <version>${identity.apps.version}</version>
+                                </feature>
+
+                                <feature>
+                                    <id>
+                                        org.wso2.identity.apps.authentication.portal.server.feature.group
+                                    </id>
+                                    <version>${identity.apps.version}</version>
+                                </feature>
+
+                                <feature>
+                                    <id>
+                                        org.wso2.identity.apps.recovery.portal.server.feature.group
                                     </id>
                                     <version>${identity.apps.version}</version>
                                 </feature>
@@ -1357,6 +1381,16 @@
 
                                 <feature>
                                     <id>org.wso2.identity.apps.feature.group</id>
+                                    <version>${identity.apps.version}</version>
+                                </feature>
+
+                                <feature>
+                                    <id>org.wso2.identity.apps.authentication.portal.server.feature.group</id>
+                                    <version>${identity.apps.version}</version>
+                                </feature>
+
+                                <feature>
+                                    <id>org.wso2.identity.apps.recovery.portal.server.feature.group</id>
                                     <version>${identity.apps.version}</version>
                                 </feature>
 
