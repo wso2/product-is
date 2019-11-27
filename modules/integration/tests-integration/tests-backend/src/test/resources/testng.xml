@@ -129,6 +129,10 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.keystore.management.v1.KeystoreManagementFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.idp.v1.IdPSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.idp.v1.IdPFailureTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementSAMLSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementOAuthSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementPassiveStsSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementWSTrustTest"/>
         </classes>
     </test>
 
@@ -163,7 +167,7 @@
             <class name="org.wso2.identity.integration.test.sts.TestPassiveSTSFederation"/>
             <class name="org.wso2.identity.integration.test.auth.ConditionalAuthenticationTestCase" />
             <class name="org.wso2.identity.integration.test.provisioning.ProvisioningTestCase"/>
-            <class name="org.wso2.identity.integration.test.saml.ChangeACSUrlTestCase"/>
+<!--            <class name="org.wso2.identity.integration.test.saml.ChangeACSUrlTestCase"/>-->
             <class name="org.wso2.identity.integration.test.saml.SAMLFederationWithFileBasedSPAndIDPTestCase"/>
             <class name="org.wso2.identity.integration.test.workflow.mgt.WorkflowManagementTestCase"/>
         </classes>

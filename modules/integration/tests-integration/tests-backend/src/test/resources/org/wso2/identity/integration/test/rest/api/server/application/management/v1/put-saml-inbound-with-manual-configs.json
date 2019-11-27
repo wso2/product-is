@@ -1,0 +1,11 @@
+{
+  "manualConfiguration": {
+    "issuer": "https://sp.example.com/shibboleth",
+    "assertionConsumerUrls": [
+      "https://localhost/saml/callback1",
+      "https://localhost/saml/callback2"
+    ],
+    "defaultAssertionConsumerUrl": "https://localhost/saml/callback2",
+    "idPEntityidAlias": "my_custom_idp_alias"
+  }
+}

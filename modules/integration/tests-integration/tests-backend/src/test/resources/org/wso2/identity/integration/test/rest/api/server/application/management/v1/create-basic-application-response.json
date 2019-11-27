@@ -1,0 +1,53 @@
+{
+  "id": "2e71fe53-88d7-48c7-b5ac-12ad6d3ab997",
+  "name": "My sample application",
+  "description": "this is a sample application",
+  "imageUrl": "https://localhost/imageUrl",
+  "accessUrl": "https://localhost/accessUrl",
+  "claimConfiguration": {
+    "dialect": "LOCAL",
+    "claimMappings": [],
+    "requestedClaims": [],
+    "subject": {
+      "claim": {
+        "uri": "http://wso2.org/claims/username"
+      },
+      "includeUserDomain": false,
+      "includeTenantDomain": false,
+      "useMappedLocalSubject": false
+    },
+    "role": {
+      "includeUserDomain": true,
+      "claim": {
+        "uri": "http://wso2.org/claims/role"
+      }
+    }
+  },
+  "inboundProtocols": [],
+  "authenticationSequence": {
+    "type": "DEFAULT",
+    "steps": [
+      {
+        "id": 1,
+        "options": [
+          {
+            "idp": "LOCAL",
+            "authenticator": "BasicAuthenticator"
+          }
+        ]
+      }
+    ],
+    "subjectStepId": 1,
+    "attributeStepId": 1
+  },
+  "advancedConfigurations": {
+    "saas": false,
+    "discoverableByEndUsers": false,
+    "skipConsent": false,
+    "returnAuthenticatedIdpList": false,
+    "enableAuthorization": false
+  },
+  "provisioningConfigurations": {
+    "outboundProvisioningIdps": []
+  }
+}
