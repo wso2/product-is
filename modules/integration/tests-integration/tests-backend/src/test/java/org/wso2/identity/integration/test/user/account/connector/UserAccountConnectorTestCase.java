@@ -23,7 +23,6 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.identity.user.account.association.stub.UserAccountAssociationServiceStub;
 import org.wso2.carbon.identity.user.account.association.stub.types.UserAccountAssociationDTO;
 import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.identity.integration.common.clients.user.account.connector.UserAccountConnectorServiceClient;
@@ -61,7 +60,7 @@ public class UserAccountConnectorTestCase extends ISIntegrationTest {
 
         // Create associations
         serviceClient.createUserAccountAssociation(USER_1, USER_PASSWORD_1.split("(?!^)"));
-        serviceClient.createUserAccountAssociation(USER_2, USER_PASSWORD_2.split("(?!^)"));
+        createCrossTenantAssociation(USER_2, USER_PASSWORD_2);
 
         // Retrieve associations
         UserAccountAssociationDTO[] associations = serviceClient.getAccountAssociationsOfUser();
@@ -70,8 +69,8 @@ public class UserAccountConnectorTestCase extends ISIntegrationTest {
                                                                            " for user" );
         Assert.assertTrue(isAssociationAvailable(associations, USER_1), "Unable to create user association with a " +
                                                                         "super tenant user");
-        Assert.assertTrue(isAssociationAvailable(associations, USER_2), "Unable to create user association with a " +
-                                                                        "tenant user");
+        Assert.assertFalse(isAssociationAvailable(associations, USER_2), "Should not be able to create " +
+                "cross-tenant user associations");
 
     }
 
@@ -122,13 +121,6 @@ public class UserAccountConnectorTestCase extends ISIntegrationTest {
 
         Assert.assertTrue(isAccountSwitched(associations, USER_1), "Unable to switch user to a super tenant " +
                                                                          "user");
-
-        serviceClient.switchLoggedInUser(USER_2);
-
-        associations = serviceClient.getAccountAssociationsOfUser();
-
-        Assert.assertTrue(isAccountSwitched(associations, USER_2), "Unable to switch user to a tenant user");
-
         serviceClient.switchLoggedInUser(ADMIN_USER);
     }
 
@@ -142,14 +134,6 @@ public class UserAccountConnectorTestCase extends ISIntegrationTest {
 
         Assert.assertFalse(isAssociationAvailable(associations, USER_1), "Unable to delete user association of a " +
                                                                          "super tenant user");
-
-        serviceClient.deleteUserAccountAssociation(USER_2);
-
-        associations = serviceClient.getAccountAssociationsOfUser();
-
-        Assert.assertFalse(isAssociationAvailable(associations, USER_2),  "Unable to delete user association of a " +
-                                                                          "tenant user");
-
     }
 
     private boolean isAssociationAvailable(UserAccountAssociationDTO [] associations, String userName){
@@ -189,4 +173,16 @@ public class UserAccountConnectorTestCase extends ISIntegrationTest {
         return false;
     }
 
+
+    private void createCrossTenantAssociation(String userName, String password) throws Exception {
+
+        try {
+            serviceClient.createUserAccountAssociation(userName, password.split("(?!^)"));
+        } catch (org.wso2.carbon.identity.user.account.association.stub
+                .UserAccountAssociationServiceUserAccountAssociationClientExceptionException e) {
+            // A client exception can occur since we are trying to create a cross-tenant association. That is
+            // silently ignored, since asserting cross-tenant association should be done by verifying
+            // existing associated users, once above API call is made.
+        }
+    }
 }

@@ -9,7 +9,7 @@
 
 `mvn versions:update-properties -DgenerateBackupPoms=false -Dincludes=org.wso2.carbon.identity.*,org.wso2.carbon.extension.identity.*,org.wso2.charon,org.apache.rampart.wso2,org.apache.ws.security.wso2,org.wso2.carbon.consent.*,org.wso2.carbon.database.utils -U`
 
-* Need to update charon , balana, rampart, wss4j and sso-agent seperately.
+* Need to update charon , balana, rampart, wss4j and sso-agent separately.
 * Also double check CEP, BPS updates as well.
 
 ## How to release in github?
@@ -74,7 +74,7 @@ release.
 
 ---
 
-WSO2 Identity and Access Management team is pleased to announce the release of Identity Server <code><em><RELEASED_VERSION></em></code>!
+## WSO2 Identity and Access Management team is pleased to announce the release of Identity Server <code><em><RELEASED_VERSION></em></code>!
 
 ## **Download**
 
@@ -106,11 +106,23 @@ Join our mailing lists and correspond with the developers directly. We also enco
 
 *   Developer List: dev@wso2.org
 *   Architecture List: architecture@wso2.org
-*   User Forum:[ StackOverflow](http://stackoverflow.com/questions/tagged/wso2is)
+*   User Forum: [StackOverflow](http://stackoverflow.com/questions/tagged/wso2is)
+
+## **Slack Channels**
+
+Join with us via our [wso2is.slack.com](https://join.slack.com/t/wso2is/shared_invite/enQtNzk0MTI1OTg5NjM1LTllODZiMTYzMmY0YzljYjdhZGExZWVkZDUxOWVjZDJkZGIzNTE1NDllYWFhM2MyOGFjMDlkYzJjODJhOWQ4YjE) for even better communication. You can 
+talk to our developers directly regarding any issues, concerns about the product. We encourage you to start 
+discussions, or join any on going discussions with the team, via our slack channels.
+
+* Discussions about developments: [Dev Channel](https://wso2is.slack.com/messages/dev)
+* New releases: [Release Announcement Channel](https://wso2is.slack.com/messages/releases)
 
 ### **Reporting Issues**
 
 We encourage you to report issues, improvements, and feature requests regarding WSO2 Identity Server through our public[ WSO2 Identity Server GIT Issues](https://github.com/wso2/product-is/issues).
+
+<b>Important</b>: Please be advised that security issues must be reported to security@wso2.com, not as GitHub issues,in order to reach the proper audience. We strongly advise following the [WSO2 Security Vulnerability Reporting 
+ Guidelines](https://docs.wso2.com/display/Security/WSO2+Security+Vulnerability+Reporting+Guidelines) when reporting the security issues.
 
 For more information about WSO2 Identity Server, please see[ https://wso2.com/identity-and-access-management](https://wso2.com/identity-and-access-management) or visit the[ WSO2 Oxygen Tank](http://wso2.com/library/) developer portal for additional resources.
 
@@ -122,7 +134,7 @@ For more information about WSO2 Identity Server, please see[ https://wso2.com/id
 * All the major features shipped with the target release should be completed by alpha release.
 
 ## TODO’s after performing the Alpha release
-* Inform the installation experiance team about the installers. 
+* Inform the installation experience team about the installers. 
 
 ## TODO’s before performing Beta release
 * Make sure there are no issues affecting the target release with type: bug and priority: highest/high states (All L1/L2 issues should be resolved).
@@ -138,7 +150,7 @@ For more information about WSO2 Identity Server, please see[ https://wso2.com/id
 * Release version should be the final GA release version
 * Development version should be the same as earlier releases
 * Custom SCM tag should include the relevant candidate version. E.g. rc1
-* Make sure to untick the ‘close Nexus Staging Repository’ option
+* Make sure to un-tick the ‘close Nexus Staging Repository’ option
 * If the vote passes for the candidate we can manually close and release the product in Nexus. Else we can drop the candidate.
 * Follow the same procedure to publish release of RC on github as other releases.
 * Make sure to rename the downloaded pack to rc before uploading to github. E.g. for RC1 release pack should be renamed to <product-name><version>-rc1.zip.

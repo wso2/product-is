@@ -144,6 +144,12 @@ public class UserProfileMgtServiceClient {
         userProfileMgtServiceStub.associateID(idpName, idpAssociatedId);
     }
 
+    public void deleteFedIdpAccountAssociation(String idpName,
+                                            String idpAssociatedId) throws Exception{
+
+        userProfileMgtServiceStub.removeAssociateID(idpName, idpAssociatedId);
+    }
+
     public AssociatedAccountDTO[] getAssociatedFedUserAccountIds() throws Exception {
 
         return userProfileMgtServiceStub.getAssociatedIDs();
