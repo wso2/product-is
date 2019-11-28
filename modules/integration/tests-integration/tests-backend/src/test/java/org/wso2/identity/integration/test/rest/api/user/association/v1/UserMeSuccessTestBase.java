@@ -17,11 +17,13 @@
 package org.wso2.identity.integration.test.rest.api.user.association.v1;
 
 import io.restassured.RestAssured;
-import org.apache.axis2.AxisFault;
+import io.restassured.path.json.JsonPath;
+import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpStatus;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
@@ -30,9 +32,11 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.rmi.RemoteException;
 import java.util.Base64;
 import javax.xml.xpath.XPathExpressionException;
 
@@ -45,8 +49,13 @@ import static org.hamcrest.core.Is.is;
 public class UserMeSuccessTestBase extends UserAssociationTestBase {
 
     private static final Log log = LogFactory.getLog(UserMeSuccessTestBase.class);
-    private static final String TEST_USER = "TestUser";
+    private static final String TEST_USER_1 = "TestUser01";
+    private static final String TEST_USER_2 = "TestUser02";
     private static final String TEST_USER_PW = "Test123";
+    private static final String EXTERNAL_IDP_NAME = "ExternalIDP";
+    private static final String EXTERNAL_USER_ID_1 = "ExternalUser1";
+    private static final String EXTERNAL_USER_ID_2 = "ExternalUser2";
+    private String federatedAssociationIdHolder;
     private TestUserMode userMode;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
@@ -60,15 +69,20 @@ public class UserMeSuccessTestBase extends UserAssociationTestBase {
     }
 
     @BeforeClass(alwaysRun = true)
-    public void init() throws XPathExpressionException, AxisFault {
+    public void init() throws XPathExpressionException, RemoteException {
 
         super.testInit(API_VERSION, swaggerDefinition, tenant);
         initUrls("me");
 
         try {
-            createUser(TEST_USER, TEST_USER_PW, null);
+            createUser(TEST_USER_1, TEST_USER_PW, null);
+            createUser(TEST_USER_2, TEST_USER_PW, null);
+
+            createIdP(EXTERNAL_IDP_NAME);
+            createMyFederatedAssociation(EXTERNAL_IDP_NAME, EXTERNAL_USER_ID_1);
+            createMyFederatedAssociation(EXTERNAL_IDP_NAME, EXTERNAL_USER_ID_2);
         } catch (Exception e) {
-            log.error("Error while creating the user :" + TEST_USER, e);
+            log.error("Error while creating the users :" + TEST_USER_1 + ", and " + TEST_USER_2, e);
         }
     }
 
@@ -78,9 +92,17 @@ public class UserMeSuccessTestBase extends UserAssociationTestBase {
         super.conclude();
 
         try {
-            deleteUser(TEST_USER);
+            deleteUser(TEST_USER_1);
+            deleteUser(TEST_USER_2);
+
+            deleteIdP(EXTERNAL_IDP_NAME);
+
+            // Clear up any possible associations that may have created while running tests. The following delete
+            // operations are expected to silently ignore any non-existing federated associations.
+            deleteFederatedAssociation(EXTERNAL_IDP_NAME, EXTERNAL_USER_ID_1);
+            deleteFederatedAssociation(EXTERNAL_IDP_NAME, EXTERNAL_USER_ID_2);
         } catch (Exception e) {
-            log.error("Error while deleting the user :" + TEST_USER, e);
+            log.error("Error while deleting the users :" + TEST_USER_1 + ", and " + TEST_USER_2, e);
         }
     }
 
@@ -108,17 +130,19 @@ public class UserMeSuccessTestBase extends UserAssociationTestBase {
     @Test
     public void testCreateAssociation() throws IOException {
 
-        String body;
+        String associationBody01;
+        String associationBody02;
         if (TestUserMode.SUPER_TENANT_ADMIN.equals(userMode)) {
-            body = readResource("association-creation.json");
+            associationBody01 = readResource("association-creation-1.json");
+            associationBody02 = readResource("association-creation-2.json");
         } else {
-            body = readResource("association-creation-tenant.json").replace("TENANT", tenant);
+            associationBody01 = readResource("association-creation-tenant-1.json").replace("TENANT",
+                    tenant);
+            associationBody02 = readResource("association-creation-tenant-2.json").replace("TENANT",
+                    tenant);
         }
-        getResponseOfPost(this.userAssociationEndpointURI, body)
-                .then()
-                .assertThat()
-                .statusCode(HttpStatus.SC_CREATED)
-                .log().ifValidationFails();
+        createLocalAssociation(associationBody01);
+        createLocalAssociation(associationBody02);
     }
 
     @Test(dependsOnMethods = {"testCreateAssociation"})
@@ -129,15 +153,61 @@ public class UserMeSuccessTestBase extends UserAssociationTestBase {
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .log().ifValidationFails()
-                .body("size()", is(1))
-                .body("userId", hasItems(Base64.getUrlEncoder().encodeToString(("PRIMARY/" + TEST_USER).getBytes(
-                        StandardCharsets.UTF_8))));
+                .body("size()", is(2))
+                .body("userId", hasItems(getEncodedUserId("PRIMARY/" + TEST_USER_1),
+                        getEncodedUserId("PRIMARY/" + TEST_USER_2)));
     }
 
     @Test(dependsOnMethods = {"testGetAssociations"})
+    public void testRemoveAssociationById() {
+
+        getResponseOfDelete(this.userAssociationEndpointURI + "/" + getEncodedUserId("PRIMARY/"
+                + TEST_USER_1))
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
+    }
+
+    @Test(dependsOnMethods = {"testRemoveAssociationById"})
     public void testRemoveAssociations() {
 
         getResponseOfDelete(this.userAssociationEndpointURI)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
+    }
+
+    @Test
+    public void testGetFederatedAssociations() {
+
+        Response response = getResponseOfGet(this.federatedUserAssociationEndpointURI);
+        response.then()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .log().ifValidationFails()
+                .body("size()", is(2))
+                .body("federatedUserId", hasItems(EXTERNAL_USER_ID_1, EXTERNAL_USER_ID_2));
+        JsonPath jsonPath = response.jsonPath();
+        federatedAssociationIdHolder = jsonPath.getList("findAll{it.federatedUserId=='" + EXTERNAL_USER_ID_1
+                + "'}.id").get(0).toString();
+    }
+
+    @Test(dependsOnMethods = {"testGetFederatedAssociations"})
+    public void testRemoveFederatedAssociationById() {
+
+        getResponseOfDelete(this.federatedUserAssociationEndpointURI + "/"
+                + federatedAssociationIdHolder)
+                .then().log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
+    }
+
+    @Test(dependsOnMethods = {"testRemoveFederatedAssociationById"})
+    public void testRemoveFederatedAssociation() {
+
+        getResponseOfDelete(this.federatedUserAssociationEndpointURI)
                 .then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -150,9 +220,57 @@ public class UserMeSuccessTestBase extends UserAssociationTestBase {
         remoteUSMServiceClient.addUser(username, password, roles, null, null, true);
     }
 
+    protected void createMyFederatedAssociation(String idpName, String associatedUserId) throws Exception {
+
+        log.info("Creating federated association with the idp: " + idpName + ", and associated user: "
+                + associatedUserId);
+        userProfileMgtServiceClient.addFedIdpAccountAssociation(idpName, associatedUserId);
+    }
+
     protected void deleteUser(String username) throws Exception {
 
         log.info("Deleting User " + username);
         remoteUSMServiceClient.deleteUser(username);
+    }
+
+    protected void deleteFederatedAssociation(String idpName, String associatedUserId) throws Exception {
+
+        log.info("Deleting Federated Association with the idp: " + idpName + ", and associated user: "
+                + associatedUserId);
+        userProfileMgtServiceClient.deleteFedIdpAccountAssociation(idpName, associatedUserId);
+    }
+
+    private void createLocalAssociation(String body) {
+
+        getResponseOfPost(this.userAssociationEndpointURI, body)
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .log().ifValidationFails();
+    }
+
+    private String getEncodedUserId(String username) {
+
+        return Base64.getUrlEncoder().encodeToString(username.getBytes(StandardCharsets.UTF_8));
+    }
+
+    private void createIdP(String idpName) {
+
+        try {
+            IdentityProvider identityProvider = new IdentityProvider();
+            identityProvider.setIdentityProviderName(idpName);
+            identityProviderMgtServiceClient.addIdP(identityProvider);
+        } catch (Exception e) {
+            Assert.fail("Error while trying to create Identity Provider", e);
+        }
+    }
+
+    private void deleteIdP(String idpName) {
+
+        try {
+            identityProviderMgtServiceClient.deleteIdP(idpName);
+        } catch (Exception e) {
+            Assert.fail("Error while trying to delete Identity Provider", e);
+        }
     }
 }
