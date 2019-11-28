@@ -1,17 +1,17 @@
 /*
- *  Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package org.wso2.identity.integration.test.rest.api.server.idp.v1;
@@ -34,35 +34,23 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Claims;
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.JustInTimeProvisioning;
-import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.MetaFederatedAuthenticator;
-import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.MetaFederatedAuthenticatorListItem;
-import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.MetaOutboundConnector;
-import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.MetaOutboundConnectorListItem;
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Roles;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static org.testng.Assert.assertNotNull;
 
 /**
  * Test class for Identity Provider Management REST APIs success paths.
  */
 public class IdPSuccessTest extends IdPTestBase {
 
-    private static final String SUPER_TENANT = "carbon.super";
-
     private String idPId;
     private Claims claimsResponse;
     private Roles rolesResponse;
     private JustInTimeProvisioning justInTimeProvisioningResponse;
-    private List<MetaFederatedAuthenticatorListItem> metaFederatedAuthenticatorListResponse;
-    private MetaFederatedAuthenticator metaFederatedAuthenticatorResponse;
-    private List<MetaOutboundConnectorListItem> metaOutboundConnectorListResponse;
-    private MetaOutboundConnector metaOutboundConnectorResponse;
-
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public IdPSuccessTest(TestUserMode userMode) throws Exception {
@@ -81,38 +69,6 @@ public class IdPSuccessTest extends IdPTestBase {
 
         String expectedResponse;
         ObjectMapper jsonWriter;
-
-        if (SUPER_TENANT.equals(tenant)) {
-            expectedResponse = readResource("list-meta-federated-authenticators-response.json");
-            jsonWriter = new ObjectMapper(new JsonFactory());
-            metaFederatedAuthenticatorListResponse = Arrays.asList(jsonWriter.readValue(expectedResponse,
-                    MetaFederatedAuthenticatorListItem[].class));
-        } else {
-            expectedResponse = readResource("list-meta-federated-authenticators-tenant-response.json");
-            jsonWriter = new ObjectMapper(new JsonFactory());
-            metaFederatedAuthenticatorListResponse = Arrays.asList(jsonWriter.readValue(expectedResponse,
-                    MetaFederatedAuthenticatorListItem[].class));
-        }
-
-        expectedResponse = readResource("get-meta-federated-authenticator-response.json");
-        jsonWriter = new ObjectMapper(new JsonFactory());
-        metaFederatedAuthenticatorResponse = jsonWriter.readValue(expectedResponse, MetaFederatedAuthenticator.class);
-
-        if (SUPER_TENANT.equals(tenant)) {
-            expectedResponse = readResource("list-meta-outbound-connectors-response.json");
-            jsonWriter = new ObjectMapper(new JsonFactory());
-            metaOutboundConnectorListResponse = Arrays.asList(jsonWriter.readValue(expectedResponse,
-                    MetaOutboundConnectorListItem[].class));
-        } else {
-            expectedResponse = readResource("list-meta-outbound-connectors-tenant-response.json");
-            jsonWriter = new ObjectMapper(new JsonFactory());
-            metaOutboundConnectorListResponse = Arrays.asList(jsonWriter.readValue(expectedResponse,
-                    MetaOutboundConnectorListItem[].class));
-        }
-
-        expectedResponse = readResource("get-meta-outbound-connector-response.json");
-        jsonWriter = new ObjectMapper(new JsonFactory());
-        metaOutboundConnectorResponse = jsonWriter.readValue(expectedResponse, MetaOutboundConnector.class);
 
         expectedResponse = readResource("get-claims-response.json");
         jsonWriter = new ObjectMapper(new JsonFactory());
@@ -155,52 +111,161 @@ public class IdPSuccessTest extends IdPTestBase {
     }
 
     @Test
-    public void testListMetaFederatedAuthenticators() throws IOException {
+    public void testListMetaFederatedAuthenticators() throws Exception {
+
+        String key1Identifier = "find{ it.authenticatorId == 'T2ZmaWNlMzY1QXV0aGVudGljYXRvcg' }.";
+        String key2Identifier = "find{ it.authenticatorId == 'VHdpdHRlckF1dGhlbnRpY2F0b3I' }.";
+        String key3Identifier = "find{ it.authenticatorId == 'RmFjZWJvb2tBdXRoZW50aWNhdG9y' }.";
+
+        String key4Identifier = "find{ it.authenticatorId == 'R29vZ2xlT0lEQ0F1dGhlbnRpY2F0b3I' }.";
+        String key5Identifier = "find{ it.authenticatorId == 'TWljcm9zb2Z0V2luZG93c0xpdmVBdXRoZW50aWNhdG9y' }.";
+        String key6Identifier = "find{ it.authenticatorId == 'UGFzc2l2ZVNUU0F1dGhlbnRpY2F0b3I' }.";
+        String key7Identifier = "find{ it.authenticatorId == 'WWFob29PQXV0aDJBdXRoZW50aWNhdG9y' }.";
+        String key8Identifier = "find{ it.authenticatorId == 'SVdBS2VyYmVyb3NBdXRoZW50aWNhdG9y' }.";
+        String key9Identifier = "find{ it.authenticatorId == 'U0FNTFNTT0F1dGhlbnRpY2F0b3I' }.";
+        String key10Identifier = "find{ it.authenticatorId == 'T3BlbklEQ29ubmVjdEF1dGhlbnRpY2F0b3I' }.";
+        String key11Identifier = "find{ it.authenticatorId == 'RW1haWxPVFA' }.";
+        String key12Identifier = "find{ it.authenticatorId == 'U01TT1RQ' }.";
 
         Response response = getResponseOfGet(IDP_API_BASE_PATH + PATH_SEPARATOR + META_FEDERATED_AUTHENTICATORS_PATH);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
-                .statusCode(HttpStatus.SC_OK);
-
-        ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
-        List<MetaFederatedAuthenticatorListItem> responseFound =
-                Arrays.asList(jsonWriter.readValue(response.asString(), MetaFederatedAuthenticatorListItem[].class));
-        Assert.assertEquals(responseFound, metaFederatedAuthenticatorListResponse,
-                "Response of the get all meta information of federated authenticators doesn't match.");
+                .statusCode(HttpStatus.SC_OK)
+                .body(key1Identifier + "name", equalTo("Office365Authenticator"))
+                .body(key1Identifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                        "/api/server/v1/identity-providers/meta/federated-authenticators" +
+                        "/T2ZmaWNlMzY1QXV0aGVudGljYXRvcg"))
+                .body(key2Identifier + "name", equalTo("TwitterAuthenticator"))
+                .body(key2Identifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                        "/api/server/v1/identity-providers/meta/federated-authenticators" +
+                        "/VHdpdHRlckF1dGhlbnRpY2F0b3I"))
+                .body(key3Identifier + "name", equalTo("FacebookAuthenticator"))
+                .body(key3Identifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                        "/api/server/v1/identity-providers/meta/federated-authenticators" +
+                        "/RmFjZWJvb2tBdXRoZW50aWNhdG9y"))
+                .body(key4Identifier + "name", equalTo("GoogleOIDCAuthenticator"))
+                .body(key4Identifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                        "/api/server/v1/identity-providers/meta/federated-authenticators" +
+                        "/R29vZ2xlT0lEQ0F1dGhlbnRpY2F0b3I"))
+                .body(key5Identifier + "name", equalTo("MicrosoftWindowsLiveAuthenticator"))
+                .body(key5Identifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                        "/api/server/v1/identity-providers/meta/federated-authenticators" +
+                        "/TWljcm9zb2Z0V2luZG93c0xpdmVBdXRoZW50aWNhdG9y"))
+                .body(key6Identifier + "name", equalTo("PassiveSTSAuthenticator"))
+                .body(key6Identifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                        "/api/server/v1/identity-providers/meta/federated-authenticators" +
+                        "/UGFzc2l2ZVNUU0F1dGhlbnRpY2F0b3I"))
+                .body(key7Identifier + "name", equalTo("YahooOAuth2Authenticator"))
+                .body(key7Identifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                        "/api/server/v1/identity-providers/meta/federated-authenticators" +
+                        "/WWFob29PQXV0aDJBdXRoZW50aWNhdG9y"))
+                .body(key8Identifier + "name", equalTo("IWAKerberosAuthenticator"))
+                .body(key8Identifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                        "/api/server/v1/identity-providers/meta/federated-authenticators" +
+                        "/SVdBS2VyYmVyb3NBdXRoZW50aWNhdG9y"))
+                .body(key9Identifier + "name", equalTo("SAMLSSOAuthenticator"))
+                .body(key9Identifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                        "/api/server/v1/identity-providers/meta/federated-authenticators" +
+                        "/U0FNTFNTT0F1dGhlbnRpY2F0b3I"))
+                .body(key10Identifier + "name", equalTo("OpenIDConnectAuthenticator"))
+                .body(key10Identifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                        "/api/server/v1/identity-providers/meta/federated-authenticators" +
+                        "/T3BlbklEQ29ubmVjdEF1dGhlbnRpY2F0b3I"))
+                .body(key11Identifier + "name", equalTo("EmailOTP"))
+                .body(key11Identifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                        "/api/server/v1/identity-providers/meta/federated-authenticators" +
+                        "/RW1haWxPVFA"))
+                .body(key12Identifier + "name", equalTo("SMSOTP"))
+                .body(key12Identifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                        "/api/server/v1/identity-providers/meta/federated-authenticators" +
+                        "/U01TT1RQ"));
     }
 
     @Test(dependsOnMethods = {"testListMetaFederatedAuthenticators"})
     public void testGetMetaFederatedAuthenticator() throws IOException {
+
+        String key1Identifier = "properties.find{ it.key == 'AdditionalQueryParameters' }.";
+        String key2Identifier = "properties.find{ it.key == 'callbackUrl' }.";
+        String key3Identifier = "properties.find{ it.key == 'ClientId' }.";
+        String key4Identifier = "properties.find{ it.key == 'ClientSecret' }.";
 
         Response response = getResponseOfGet(IDP_API_BASE_PATH + PATH_SEPARATOR + META_FEDERATED_AUTHENTICATORS_PATH
                 + PATH_SEPARATOR + SAMPLE_FEDERATED_AUTHENTICATOR_ID);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
-                .statusCode(HttpStatus.SC_OK);
+                .statusCode(HttpStatus.SC_OK)
+                .body("authenticatorId", equalTo(SAMPLE_FEDERATED_AUTHENTICATOR_ID))
+                .body("name", equalTo("GoogleOIDCAuthenticator"))
+                .body("displayName", equalTo("Google"))
+                .body("properties", notNullValue())
+                .body(key1Identifier + "displayName", equalTo("Additional Query Parameters"))
+                .body(key1Identifier + "description", equalTo("Additional query parameters. e.g: paramName1=value1"))
+                .body(key1Identifier + "type", equalTo("STRING"))
+                .body(key1Identifier + "displayOrder", equalTo(4))
+                .body(key1Identifier + "regex", equalTo(".*"))
+                .body(key1Identifier + "isMandatory", equalTo(false))
+                .body(key1Identifier + "isConfidential", equalTo(false))
+                .body(key1Identifier + "defaultValue", equalTo(""))
 
-        ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
-        MetaFederatedAuthenticator responseFound = jsonWriter.readValue(response.asString(),
-                MetaFederatedAuthenticator.class);
-        Assert.assertEquals(responseFound, metaFederatedAuthenticatorResponse,
-                "Response of the get meta federated authenticator doesn't match.");
+                .body(key2Identifier + "displayName", equalTo("Callback Url"))
+                .body(key2Identifier + "description", equalTo("Enter value corresponding to callback url."))
+                .body(key2Identifier + "type", equalTo("STRING"))
+                .body(key2Identifier + "displayOrder", equalTo(3))
+                .body(key2Identifier + "regex", equalTo(".*"))
+                .body(key2Identifier + "isMandatory", equalTo(false))
+                .body(key2Identifier + "isConfidential", equalTo(false))
+                .body(key2Identifier + "defaultValue", equalTo(""))
+
+                .body(key3Identifier + "displayName", equalTo("Client Id"))
+                .body(key3Identifier + "description", equalTo("Enter Google IDP client identifier value"))
+                .body(key3Identifier + "type", equalTo("STRING"))
+                .body(key3Identifier + "displayOrder", equalTo(1))
+                .body(key3Identifier + "regex", equalTo(".*"))
+                .body(key3Identifier + "isMandatory", equalTo(true))
+                .body(key3Identifier + "isConfidential", equalTo(false))
+                .body(key3Identifier + "defaultValue", equalTo(""))
+
+                .body(key4Identifier + "displayName", equalTo("Client Secret"))
+                .body(key4Identifier + "description", equalTo("Enter Google IDP client secret value"))
+                .body(key4Identifier + "type", equalTo("STRING"))
+                .body(key4Identifier + "displayOrder", equalTo(2))
+                .body(key4Identifier + "regex", equalTo(".*"))
+                .body(key4Identifier + "isMandatory", equalTo(true))
+                .body(key4Identifier + "isConfidential", equalTo(true))
+                .body(key4Identifier + "defaultValue", equalTo(""));
     }
 
     @Test(dependsOnMethods = {"testGetMetaFederatedAuthenticator"})
-    public void testListMetaOutboundConnectors() throws IOException {
+    public void testListMetaOutboundConnectors() throws Exception {
+
+        String key1Identifier = "find{ it.connectorId == 'Z29vZ2xlYXBwcw' }.";
+        String key2Identifier = "find{ it.connectorId == 'c2FsZXNmb3JjZQ' }.";
+        String key3Identifier = "find{ it.connectorId == 'c2NpbQ' }.";
+        String key4Identifier = "find{ it.connectorId == 'c3BtbA' }.";
 
         Response response = getResponseOfGet(IDP_API_BASE_PATH + PATH_SEPARATOR + META_OUTBOUND_CONNECTORS_PATH);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
-                .statusCode(HttpStatus.SC_OK);
-
-        ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
-        List<MetaOutboundConnectorListItem> responseFound =
-                Arrays.asList(jsonWriter.readValue(response.asString(), MetaOutboundConnectorListItem[].class));
-        Assert.assertEquals(responseFound, metaOutboundConnectorListResponse,
-                "Response of the get all meta information of outbound provisioning connectors doesn't match.");
+                .statusCode(HttpStatus.SC_OK)
+                .body(key1Identifier + "name", equalTo("googleapps"))
+                .body(key1Identifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                        "/api/server/v1/identity-providers/meta/outbound-provisioning-connectors" +
+                        "/Z29vZ2xlYXBwcw"))
+                .body(key2Identifier + "name", equalTo("salesforce"))
+                .body(key2Identifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                        "/api/server/v1/identity-providers/meta/outbound-provisioning-connectors" +
+                        "/c2FsZXNmb3JjZQ"))
+                .body(key3Identifier + "name", equalTo("scim"))
+                .body(key3Identifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                        "/api/server/v1/identity-providers/meta/outbound-provisioning-connectors" +
+                        "/c2NpbQ"))
+                .body(key4Identifier + "name", equalTo("spml"))
+                .body(key4Identifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                        "/api/server/v1/identity-providers/meta/outbound-provisioning-connectors" +
+                        "/c3BtbA"));
     }
 
     @Test(dependsOnMethods = {"testListMetaOutboundConnectors"})
@@ -211,13 +276,12 @@ public class IdPSuccessTest extends IdPTestBase {
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
-                .statusCode(HttpStatus.SC_OK);
-
-        ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
-        MetaOutboundConnector responseFound = jsonWriter.readValue(response.asString(),
-                MetaOutboundConnector.class);
-        Assert.assertEquals(responseFound, metaOutboundConnectorResponse,
-                "Response of the get meta outbound provisioning connector doesn't match.");
+                .statusCode(HttpStatus.SC_OK)
+                .body("connectorId", equalTo(SAMPLE_OUTBOUND_CONNECTOR_ID))
+                .body("name", equalTo("scim"))
+                .body("displayName", equalTo("scim"))
+                .body("blockingEnabled", equalTo(false))
+                .body("rulesEnabled", equalTo(false));
     }
 
     @Test(dependsOnMethods = {"testGetMetaOutboundConnector"})
@@ -232,7 +296,9 @@ public class IdPSuccessTest extends IdPTestBase {
                 .header(HttpHeaders.LOCATION, notNullValue());
 
         String location = response.getHeader(HttpHeaders.LOCATION);
+        assertNotNull(location);
         idPId = location.substring(location.lastIndexOf("/") + 1);
+        assertNotNull(idPId);
     }
 
     @Test(dependsOnMethods = {"testAddIdP"})
@@ -255,7 +321,7 @@ public class IdPSuccessTest extends IdPTestBase {
     }
 
     @Test(dependsOnMethods = {"testGetIdP"})
-    public void testGetIdPs() throws IOException {
+    public void testGetIdPs() throws Exception {
 
         String baseIdentifier = "identityProviders.find{ it.id == '" + idPId + "' }.";
         Response response = getResponseOfGet(IDP_API_BASE_PATH);
@@ -266,11 +332,13 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body(baseIdentifier + "name", equalTo("Google"))
                 .body(baseIdentifier + "description", equalTo("IDP for Google Federation"))
                 .body(baseIdentifier + "isEnabled", equalTo(true))
-                .body(baseIdentifier + "image", equalTo("google-logo-url"));
+                .body(baseIdentifier + "image", equalTo("google-logo-url"))
+                .body(baseIdentifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                        "/api/server/v1/identity-providers/" + idPId));
     }
 
     @Test(dependsOnMethods = {"testGetIdPs"})
-    public void testGetIdPFederatedAuthenticators() throws IOException {
+    public void testGetIdPFederatedAuthenticators() throws Exception {
 
         String baseIdentifier =
                 "authenticators.find{ it.authenticatorId == '" + SAMPLE_FEDERATED_AUTHENTICATOR_ID + "' }.";
@@ -281,7 +349,10 @@ public class IdPSuccessTest extends IdPTestBase {
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .body(baseIdentifier + "name", equalTo("GoogleOIDCAuthenticator"))
-                .body(baseIdentifier + "isEnabled", equalTo(true));
+                .body(baseIdentifier + "isEnabled", equalTo(true))
+                .body(baseIdentifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                        "/api/server/v1/identity-providers/" + idPId + "/federated-authenticators/" +
+                        SAMPLE_FEDERATED_AUTHENTICATOR_ID));
     }
 
     @Test(dependsOnMethods = {"testGetIdPFederatedAuthenticators"})
@@ -328,7 +399,7 @@ public class IdPSuccessTest extends IdPTestBase {
     }
 
     @Test(dependsOnMethods = {"testGetIdPFederatedAuthenticator"})
-    public void testGetIdPOutboundConnectors() throws IOException {
+    public void testGetIdPOutboundConnectors() throws Exception {
 
         String baseIdentifier = "connectors.find{ it.connectorId == '" + SAMPLE_OUTBOUND_CONNECTOR_ID + "' }.";
         Response response = getResponseOfGet(IDP_API_BASE_PATH + PATH_SEPARATOR + idPId + PATH_SEPARATOR +
@@ -338,7 +409,10 @@ public class IdPSuccessTest extends IdPTestBase {
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .body(baseIdentifier + "name", equalTo("scim"))
-                .body(baseIdentifier + "isEnabled", equalTo(true));
+                .body(baseIdentifier + "isEnabled", equalTo(true))
+                .body(baseIdentifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                        "/api/server/v1/identity-providers/" + idPId + "/provisioning/outbound-connectors/" +
+                        SAMPLE_OUTBOUND_CONNECTOR_ID));
     }
 
     @Test(dependsOnMethods = {"testGetIdPOutboundConnectors"})
@@ -394,7 +468,9 @@ public class IdPSuccessTest extends IdPTestBase {
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
-                .statusCode(HttpStatus.SC_OK);
+                .statusCode(HttpStatus.SC_OK)
+                .body("userIdClaim.uri", equalTo("country"))
+                .body("roleClaim.uri", equalTo("role"));
     }
 
     @Test(dependsOnMethods = {"testUpdateIdPClaims"})
@@ -423,7 +499,8 @@ public class IdPSuccessTest extends IdPTestBase {
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
-                .statusCode(HttpStatus.SC_OK);
+                .statusCode(HttpStatus.SC_OK)
+                .body("mappings[0].idpRole", equalTo("google-admin"));
     }
 
     @Test(dependsOnMethods = {"testUpdateIdPRoles"})
@@ -452,7 +529,8 @@ public class IdPSuccessTest extends IdPTestBase {
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
-                .statusCode(HttpStatus.SC_OK);
+                .statusCode(HttpStatus.SC_OK)
+                .body("isEnabled", equalTo(false));
     }
 
     @Test(dependsOnMethods = {"testUpdateIdPJIT"})
