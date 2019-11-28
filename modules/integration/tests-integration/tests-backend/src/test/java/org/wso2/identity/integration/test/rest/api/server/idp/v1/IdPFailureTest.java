@@ -1,17 +1,17 @@
 /*
- *  Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package org.wso2.identity.integration.test.rest.api.server.idp.v1;
@@ -95,8 +95,7 @@ public class IdPFailureTest extends IdPTestBase {
     @Test(dependsOnMethods = {"testGetIdPWithInvalidId"})
     public void addIdPConflict() throws IOException {
 
-        String body = readResource("add-idp2.json");
-        Response response = getResponseOfPost(IDP_API_BASE_PATH, body);
+        Response response = getResponseOfPost(IDP_API_BASE_PATH, readResource("add-idp2.json"));
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -106,8 +105,7 @@ public class IdPFailureTest extends IdPTestBase {
         String location = response.getHeader(HttpHeaders.LOCATION);
         idPId = location.substring(location.lastIndexOf("/") + 1);
 
-        body = readResource("add-idp-conflict.json");
-        response = getResponseOfPost(IDP_API_BASE_PATH, body);
+        response = getResponseOfPost(IDP_API_BASE_PATH, readResource("add-idp-conflict.json"));
         validateErrorResponse(response, HttpStatus.SC_CONFLICT, "IDP-60001", "Google-2");
     }
 
