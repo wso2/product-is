@@ -53,6 +53,7 @@ public class UserStoreSuccessTest extends UserStoreTestBase {
     private static String domainId;
     private UserStoreConfigAdminServiceClient userStoreConfigAdminServiceClient;
     private UserStoreConfigUtils userStoreConfigUtils;
+    private static final String USER_STORE_TYPE_ID = "SkRCQ1VzZXJTdG9yZU1hbmFnZXI";
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public UserStoreSuccessTest(TestUserMode userMode) throws Exception {
@@ -100,7 +101,7 @@ public class UserStoreSuccessTest extends UserStoreTestBase {
     }
 
     @Test
-    public void testAddSecondaryUserStore() throws IOException {
+    public void testAddSecondaryUserStore() throws Exception {
 
         String body = readResource("user-store-add-secondary-user-store.json");
         Response response = getResponseOfPost(USER_STORE_PATH_COMPONENT, body);
@@ -109,7 +110,7 @@ public class UserStoreSuccessTest extends UserStoreTestBase {
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED)
                 .header(HttpHeaders.LOCATION, notNullValue());
-
+        userStoreConfigUtils.waitForUserStoreDeployment(userStoreConfigAdminServiceClient, domainId);
         String location = response.getHeader(HttpHeaders.LOCATION);
         domainId = location.substring(location.lastIndexOf("/") + 1);
     }
@@ -150,12 +151,11 @@ public class UserStoreSuccessTest extends UserStoreTestBase {
     @Test(dependsOnMethods = {"testGetAvailableUserStoreClasses"})
     public void testGetSecondaryUserStoreByDomainId() throws Exception {
 
-        if (userStoreConfigUtils.waitForUserStoreDeployment(userStoreConfigAdminServiceClient, domainId)) {
             String expectedResponse = readResource("get-user-store_by_domain_id-response.json");
             ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
-            List<UserStoreConfigurationsRes> availableUserStoreMetaList =
+            List<UserStoreConfigurationsRes> availableUserStoreList =
                     Collections.singletonList(jsonWriter.readValue(expectedResponse, UserStoreConfigurationsRes.class));
-            Map<String, UserStoreConfigurationsRes> userStoreMetaResMap = availableUserStoreMetaList.stream().
+            Map<String, UserStoreConfigurationsRes> userStoreMetaResMap = availableUserStoreList.stream().
                     collect(Collectors.toMap(UserStoreConfigurationsRes::getTypeId, c -> c));
             Response response = getResponseOfGet(USER_STORE_PATH_COMPONENT + PATH_SEPARATOR + domainId);
             ValidatableResponse validatableResponse = response.then().log().ifValidationFails().assertThat().
@@ -167,7 +167,6 @@ public class UserStoreSuccessTest extends UserStoreTestBase {
                         .body("name", equalTo(resEntry.getValue().getName()))
                         .body("description", equalTo(resEntry.getValue().getDescription()));
             }
-        }
     }
 
     @Test(dependsOnMethods = {"testGetSecondaryUserStoreByDomainId"})
@@ -196,9 +195,8 @@ public class UserStoreSuccessTest extends UserStoreTestBase {
     @Test(dependsOnMethods = {"testGetUserStore"})
     public void testGetUserStoreTypeMeta() {
 
-        String typeId = "SkRCQ1VzZXJTdG9yZU1hbmFnZXI";
         Response response = getResponseOfGet(USER_STORE_PATH_COMPONENT + USER_STORE_META_COMPONENT
-                + PATH_SEPARATOR + typeId);
+                + PATH_SEPARATOR + USER_STORE_TYPE_ID);
         response.then().log().ifValidationFails().assertThat().
                 statusCode(HttpStatus.SC_OK)
                 .body("name", equalTo(response.jsonPath().getList("name")))

@@ -85,7 +85,7 @@ public class UserStoreFailureTest extends UserStoreTestBase {
 
         String body = readResource("add-secondary-user-store-negative.json");
         Response response = getResponseOfPost(USER_STORE_PATH_COMPONENT, body);
-        validateErrorResponse(response, HttpStatus.SC_INTERNAL_SERVER_ERROR, "SUS-50001");
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "SUS-65001");
     }
 
     @Test
@@ -93,16 +93,16 @@ public class UserStoreFailureTest extends UserStoreTestBase {
 
         Response response = getResponseOfGet(USER_STORE_PATH_COMPONENT + PATH_SEPARATOR +
                 INCORRECT_DOMAIN_ID);
-        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "SUS-50012");
+        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "SUS-60003");
     }
 
     @Test
     public void testUpdateUserStoreByIdNegativeCase() throws IOException {
 
-        String body = readResource("add-secondary-user-store-negative.json");
+        String body = readResource("user-store-add-secondary-user-store.json");
         Response response = getResponseOfPut(USER_STORE_PATH_COMPONENT + PATH_SEPARATOR +
                 INCORRECT_DOMAIN_ID, body);
-        validateErrorResponse(response, HttpStatus.SC_INTERNAL_SERVER_ERROR, "SUS-50004");
+        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "SUS-60001");
     }
 
     @Test
@@ -118,7 +118,7 @@ public class UserStoreFailureTest extends UserStoreTestBase {
     public void testDeleteUserStoreByIdNegativeCase() {
 
         Response response = getResponseOfDelete(USER_STORE_PATH_COMPONENT + PATH_SEPARATOR
-                + "SkRCQy0DRETYUI");
-        validateErrorResponse(response, HttpStatus.SC_INTERNAL_SERVER_ERROR, "SUS-50002");
+                + INCORRECT_DOMAIN_ID);
+        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "SUS-60001");
     }
 }

@@ -159,32 +159,4 @@ public class UserStoreConfigurationsRes {
 
         return Objects.hash(typeName, typeId, name, description, className, properties);
     }
-
-    @Override
-    public String toString() {
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("class UserStoreConfigurationsRes {\n");
-
-        sb.append("    typeName: ").append(toIndentedString(typeName)).append("\n");
-        sb.append("    typeId: ").append(toIndentedString(typeId)).append("\n");
-        sb.append("    name: ").append(toIndentedString(name)).append("\n");
-        sb.append("    description: ").append(toIndentedString(description)).append("\n");
-        sb.append("    className: ").append(toIndentedString(className)).append("\n");
-        sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
-        sb.append("}");
-        return sb.toString();
-    }
-
-    /**
-     * Convert the given object to string with each line indented by 4 spaces
-     * (except the first line).
-     */
-    private String toIndentedString(Object o) {
-
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n");
-    }
 }
