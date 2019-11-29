@@ -1823,11 +1823,6 @@
                 <version>${swagger-request-validator.version}</version>
                 <scope>test</scope>
             </dependency>
-            <dependency>
-                <groupId>org.wso2.is</groupId>
-                <artifactId>org.wso2.identity.jaggery.apps.feature</artifactId>
-                <version>${project.version}</version>
-            </dependency>
             <!-- Pax Logging -->
             <dependency>
                 <groupId>org.ops4j.pax.logging</groupId>
@@ -1917,7 +1912,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.15.17</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.15.20</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -1947,7 +1942,7 @@
         <identity.inbound.provisioning.scim2.version>1.4.18</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity workflow Versions -->
-        <identity.user.workflow.version>5.3.3</identity.user.workflow.version>
+        <identity.user.workflow.version>5.3.4</identity.user.workflow.version>
         <identity.workflow.impl.bps.version>5.3.5</identity.workflow.impl.bps.version>
         <identity.workflow.template.multisteps.version>5.3.4</identity.workflow.template.multisteps.version>
 
@@ -2029,7 +2024,7 @@
         <carbon.identity.oauth.uma.version>1.1.6</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>0.1.106</identity.apps.version>
+        <identity.apps.version>0.1.111</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.3.0</charon.version>
@@ -2053,22 +2048,6 @@
         <cipher-tool.version>1.1.5</cipher-tool.version>
         <securevault.wso2.version>1.1.3</securevault.wso2.version>
         <forgetme.tool.version>1.2.1</forgetme.tool.version>
-
-
-        <!-- Jaggeryjs Repo Versions -->
-        <jaggeryjs.version>0.14.11</jaggeryjs.version>
-        <jaggery.extensions.version>1.6.2</jaggery.extensions.version>
-        <ws.module.version>${jaggery.extensions.version}</ws.module.version>
-        <oauth.module.version>${jaggery.extensions.version}</oauth.module.version>
-        <email.module.version>${jaggery.extensions.version}</email.module.version>
-        <uuid.module.version>${jaggery.extensions.version}</uuid.module.version>
-        <process.module.version>${jaggery.extensions.version}</process.module.version>
-        <caramel.module.version>${jaggery.extensions.version}</caramel.module.version>
-        <carbon.module.version>${jaggery.extensions.version}</carbon.module.version>
-        <handlebars.module.version>${jaggery.extensions.version}</handlebars.module.version>
-        <markdown.module.verion>${jaggery.extensions.version}</markdown.module.verion>
-        <gadget.module.version>${jaggery.extensions.version}</gadget.module.version>
-        <i18n.module.version>${jaggery.extensions.version}</i18n.module.version>
 
         <!-- Feature dependency Versions -->
         <stratos.version.221>2.2.1</stratos.version.221>
