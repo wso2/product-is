@@ -41,7 +41,7 @@ import java.io.IOException;
  */
 public class ApplicationManagementSuccessTest extends ApplicationManagementBaseTest {
 
-    private static final String USER_PORTAL = "USER_PORTAL";
+    private static final String USER_PORTAL = "User Portal";
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public ApplicationManagementSuccessTest(TestUserMode userMode) throws Exception {
