@@ -110,8 +110,7 @@ public class UserStoreFailureTest extends UserStoreTestBase {
 
         Response response = getResponseOfGet(USER_STORE_PATH_COMPONENT + USER_STORE_META_COMPONENT
                 + PATH_SEPARATOR + INCORRECT_TYPE_ID);
-        response.then().log().ifValidationFails().assertThat().statusCode(HttpStatus.SC_OK)
-                .body("", Matchers.hasSize(0));
+        response.then().log().ifValidationFails().assertThat().statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
     @Test
