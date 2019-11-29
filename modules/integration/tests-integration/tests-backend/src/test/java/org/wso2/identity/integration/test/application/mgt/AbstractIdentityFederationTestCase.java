@@ -29,11 +29,13 @@ import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.automation.extensions.servers.carbonserver.MultipleServersManager;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
+import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderInfoDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
+import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
 import org.wso2.identity.integration.common.utils.CarbonTestServerManager;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
@@ -54,6 +56,7 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
     private Map<Integer, ApplicationManagementServiceClient> applicationManagementServiceClients;
     private Map<Integer, IdentityProviderMgtServiceClient> identityProviderMgtServiceClients;
     private Map<Integer, SAMLSSOConfigServiceClient> samlSSOConfigServiceClients;
+    private Map<Integer, OauthAdminClient> oauthAdminClients;
     protected Map<Integer, AutomationContext> automationContextMap;
     private MultipleServersManager manager;
     protected static final int DEFAULT_PORT = CommonConstants.IS_DEFAULT_HTTPS_PORT;
@@ -65,6 +68,7 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
         applicationManagementServiceClients = new HashMap<>();
         identityProviderMgtServiceClients = new HashMap<>();
         samlSSOConfigServiceClients = new HashMap<>();
+        oauthAdminClients = new HashMap<>();
         automationContextMap = testDataHolder.getAutomationContextMap();
         manager = testDataHolder.getManager();
 
@@ -120,6 +124,8 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
                             serviceUrl));
                 } else if (IdentityConstants.ServiceClientType.SAML_SSO_CONFIG.equals(clientType)) {
                     samlSSOConfigServiceClients.put(portOffset, new SAMLSSOConfigServiceClient(serviceUrl, sessionCookie));
+                } else if (IdentityConstants.ServiceClientType.OAUTH_ADMIN.equals(clientType)) {
+                    oauthAdminClients.put(portOffset, new OauthAdminClient(serviceUrl, sessionCookie));
                 }
             }
         }
@@ -188,9 +194,22 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
         return null;
     }
 
+     public OAuthConsumerAppDTO[] createOIDCConfiguration(int portOffset,
+                                                 OAuthConsumerAppDTO oAuthConsumerAppDTO)
+            throws Exception {
+
+        oauthAdminClients.get(portOffset).registerOAuthApplicationData(oAuthConsumerAppDTO);
+        return oauthAdminClients.get(portOffset).getAllOAuthApplicationData();
+    }
+
     public void deleteSAML2WebSSOConfiguration(int portOffset, String issuer) throws Exception {
 
         samlSSOConfigServiceClients.get(portOffset).removeServiceProvider(issuer);
+    }
+
+    public void deleteOIDCConfiguration(int portOffset, String consumerKey) throws Exception {
+
+        oauthAdminClients.get(portOffset).removeOAuthApplicationData(consumerKey);
     }
 
     public String extractValueFromResponse(HttpResponse response, String key, int token)
