@@ -2150,6 +2150,7 @@
         <swagger-request-validator.version>2.6.0</swagger-request-validator.version>
 
         <project.scm.id>my-scm-server</project.scm.id>
+        <identity.content.repository.version>1.0.0-SNAPSHOT</identity.content.repository.version>
 
     </properties>
 
