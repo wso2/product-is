@@ -104,21 +104,21 @@ public class SAMLQueryProfileTestCase extends AbstractSAMLSSOTestCase {
 
         return new SAMLConfig[][]{
                 {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_REDIRECT,
-                        ClaimType.NONE, App.SUPER_TENANT_APP_WITH_SIGNING, true)},
+                        ClaimType.NONE, App.SUPER_TENANT_APP_WITH_SIGNING)},
                 {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_REDIRECT,
-                        ClaimType.LOCAL, App.SUPER_TENANT_APP_WITH_SIGNING, true)},
+                        ClaimType.LOCAL, App.SUPER_TENANT_APP_WITH_SIGNING)},
                 {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_POST,
-                        ClaimType.NONE, App.SUPER_TENANT_APP_WITH_SIGNING, true)},
+                        ClaimType.NONE, App.SUPER_TENANT_APP_WITH_SIGNING)},
                 {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_POST,
-                        ClaimType.LOCAL, App.SUPER_TENANT_APP_WITH_SIGNING, true)},
+                        ClaimType.LOCAL, App.SUPER_TENANT_APP_WITH_SIGNING)},
                 {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_REDIRECT,
-                        ClaimType.NONE, App.TENANT_APP_WITHOUT_SIGNING, true)},
+                        ClaimType.NONE, App.TENANT_APP_WITHOUT_SIGNING)},
                 {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_REDIRECT,
-                        ClaimType.LOCAL, App.TENANT_APP_WITHOUT_SIGNING, true)},
+                        ClaimType.LOCAL, App.TENANT_APP_WITHOUT_SIGNING)},
                 {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_POST,
-                        ClaimType.NONE, App.TENANT_APP_WITHOUT_SIGNING, true)},
+                        ClaimType.NONE, App.TENANT_APP_WITHOUT_SIGNING)},
                 {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_POST,
-                        ClaimType.LOCAL, App.TENANT_APP_WITHOUT_SIGNING, true)},
+                        ClaimType.LOCAL, App.TENANT_APP_WITHOUT_SIGNING)},
         };
     }
 
@@ -338,6 +338,7 @@ public class SAMLQueryProfileTestCase extends AbstractSAMLSSOTestCase {
     public SAMLSSOServiceProviderDTO createSsoServiceProviderDTO(SAMLConfig config) {
 
         SAMLSSOServiceProviderDTO ssoServiceProviderDTO = super.createSsoServiceProviderDTO(config);
+        ssoServiceProviderDTO.setAssertionQueryRequestProfileEnabled(true);
         ssoServiceProviderDTO.setCertAlias("wso2carbon");
         return ssoServiceProviderDTO;
     }
