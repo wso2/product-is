@@ -1,18 +1,18 @@
 /*
-* Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package org.wso2.identity.integration.test.oidc;
 
@@ -97,7 +97,6 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
 
     CookieStore cookieStore = new BasicCookieStore();
 
-
     @BeforeClass(alwaysRun = true)
     public void initTest() throws Exception {
 
@@ -124,6 +123,7 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
     }
 
     private boolean addUserToSecondaryIS() throws Exception {
+
         UserManagementClient usrMgtClient = new UserManagementClient(getSecondaryISURI(), "admin", "admin");
         if (usrMgtClient == null) {
             return false;
@@ -260,7 +260,6 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
                 getAuthenticationType()), "Failed to update local and out bound configs in primary IS");
     }
 
-
     /**
      * Send post request with parameters
      *
@@ -272,8 +271,8 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
      * @throws java.io.IOException
      */
     public HttpResponse sendPostRequestWithParameters(HttpClient client, List<NameValuePair> urlParameters, String url)
-            throws ClientProtocolException,
-            IOException {
+            throws ClientProtocolException, IOException {
+
         HttpPost request = new HttpPost(url);
         request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
         request.setEntity(new UrlEncodedFormEntity(urlParameters));
@@ -291,10 +290,9 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
      * @throws ClientProtocolException
      * @throws java.io.IOException
      */
-    public HttpResponse sendGetRequest(HttpClient client, String locationURL)
-            throws
-            ClientProtocolException,
+    public HttpResponse sendGetRequest(HttpClient client, String locationURL) throws ClientProtocolException,
             IOException {
+
         HttpGet getRequest = new HttpGet(locationURL);
         getRequest.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
         HttpResponse response = client.execute(getRequest);
@@ -331,9 +329,19 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
         return response;
     }
 
+    public HttpResponse sendLogoutApprovalPostWithConsent(HttpClient client) throws IOException {
+
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair("consent", "approve"));
+
+
+        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, "https://localhost:9854/oidc" +
+                "/logout");
+        return response;
+    }
+
     /**
-     * Send Post request
-     * testfederationtestfederation
+     * Send Post request to a given locationURL
      *
      * @param client      - http Client
      * @param locationURL - Post url location
@@ -341,9 +349,9 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
      * @throws ClientProtocolException
      * @throws java.io.IOException
      */
-    public HttpResponse sendPostRequest(HttpClient client, String locationURL)
-            throws ClientProtocolException,
+    public HttpResponse sendPostRequest(HttpClient client, String locationURL) throws ClientProtocolException,
             IOException {
+
         HttpPost postRequest = new HttpPost(locationURL);
         postRequest.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
         HttpResponse response = client.execute(postRequest);
@@ -363,7 +371,6 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
 
         return response;
     }
-
 
     private String testAuthentication(HttpClient client, String sessionDataKey) throws Exception {
 
@@ -388,7 +395,6 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
         return sessionDataKeyConsent;
     }
 
-
     private String testConsentApproval(HttpClient client, String sessionDataKeyConsent) throws Exception {
 
         List<NameValuePair> consentParameters = new ArrayList<>();
@@ -403,6 +409,17 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
         return locationHeader.getValue();
     }
 
+    private String testLogoutConsentApproval(HttpClient client) throws Exception {
+
+        HttpResponse response = sendLogoutApprovalPostWithConsent(client);
+        Assert.assertNotNull(response, "Approval request failed.");
+
+        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        Assert.assertNotNull(locationHeader, "Approval request failed for.");
+        EntityUtils.consume(response.getEntity());
+
+        return locationHeader.getValue();
+    }
 
     private String handleMissingClaims(HttpResponse response, String locationHeader, HttpClient client, String
             pastrCookie) throws Exception {
@@ -415,7 +432,6 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
 
         return getHeaderValue(response, "Location");
     }
-
 
     private String testAuthzCode(HttpClient client, String authzResponseURL) throws Exception {
 
@@ -439,6 +455,7 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
 
     @Test(priority = 4, groups = "wso2.is", description = "Check login flow of primary IS service provider")
     public void testFederation() throws Exception {
+
         HttpClient client = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
 
         String sessionId = sendSAMLRequestToPrimaryIS(client);
@@ -462,6 +479,18 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
         boolean validResponse = sendSAMLResponseToWebApp(samlResponse);
         Assert.assertTrue(validResponse, "Invalid SAML response received by travelocity app");
 
+        testLogout(client);
+        String logoutResponseToPrimaryIS = testLogoutConsentApproval(client);
+        response = sendGetRequest(client, logoutResponseToPrimaryIS);
+        Assert.assertNotNull(response);
+
+    }
+
+    private void testLogout(HttpClient client) throws IOException {
+
+        HttpGet request = new HttpGet(SAML_SSO_LOGOUT_URL);
+        HttpResponse response = client.execute(request);
+        Assert.assertNotNull(response);
     }
 
     private boolean sendSAMLResponseToWebApp(String samlResponse)
@@ -478,6 +507,7 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
     }
 
     protected String getSecondaryISURI() {
+
         return String.format("https://localhost:%s/services/", DEFAULT_PORT + PORT_OFFSET_1);
     }
 
@@ -489,8 +519,8 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
         return extractValueFromResponse(response, "name=\"sessionDataKey\"", 1);
     }
 
-
     private void deleteAddedUsers() throws RemoteException, UserAdminUserAdminException {
+
         UserManagementClient usrMgtClient = new UserManagementClient(getSecondaryISURI(), "admin", "admin");
         usrMgtClient.deleteUser(usrName);
     }
@@ -535,10 +565,8 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
         return properties;
     }
 
-    private void updateServiceProviderWithSAMLConfigs(int portOffset, String issuerName,
-                                                      String acsUrl,
-                                                      ServiceProvider serviceProvider)
-            throws Exception {
+    private void updateServiceProviderWithSAMLConfigs(int portOffset, String issuerName, String acsUrl,
+                                                      ServiceProvider serviceProvider) throws Exception {
 
         String attributeConsumingServiceIndex = super.createSAML2WebSSOConfiguration(portOffset,
                 getSAMLSSOServiceProviderDTO(issuerName, acsUrl));
@@ -617,8 +645,7 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
         super.updateServiceProvider(PORT_OFFSET_1, serviceProvider);
     }
 
-    private SAMLSSOServiceProviderDTO getSAMLSSOServiceProviderDTO(String issuerName,
-                                                                   String acsUrl) {
+    private SAMLSSOServiceProviderDTO getSAMLSSOServiceProviderDTO(String issuerName, String acsUrl) {
 
         SAMLSSOServiceProviderDTO samlssoServiceProviderDTO = new SAMLSSOServiceProviderDTO();
         samlssoServiceProviderDTO.setIssuer(issuerName);
@@ -628,6 +655,7 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
         samlssoServiceProviderDTO.setDoSignAssertions(true);
         samlssoServiceProviderDTO.setDoSignResponse(true);
         samlssoServiceProviderDTO.setDoSingleLogout(true);
+        samlssoServiceProviderDTO.setDoFrontChannelLogout(true);
         samlssoServiceProviderDTO.setEnableAttributeProfile(true);
         samlssoServiceProviderDTO.setEnableAttributesByDefault(true);
 
