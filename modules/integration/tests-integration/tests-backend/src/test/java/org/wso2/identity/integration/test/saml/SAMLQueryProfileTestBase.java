@@ -35,12 +35,14 @@ public class SAMLQueryProfileTestBase extends ISIntegrationTest {
 
     @BeforeTest(alwaysRun = true)
     public void initTest() throws Exception {
+
         super.init();
         changeISConfiguration();
     }
 
     @AfterTest(alwaysRun = true)
     public void tearDownTest() throws Exception {
+
         super.init();
         resetISConfiguration();
     }
