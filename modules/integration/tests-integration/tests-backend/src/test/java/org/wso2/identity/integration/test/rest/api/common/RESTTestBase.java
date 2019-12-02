@@ -28,8 +28,10 @@ import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.cxf.helpers.HttpHeaderHelper;
 import org.apache.http.HttpHeaders;
 import org.apache.http.ParseException;
+import org.apache.jmeter.protocol.http.util.HTTPConstants;
 import org.hamcrest.Matcher;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
@@ -400,20 +402,21 @@ public class RESTTestBase extends ISIntegrationTest {
         connection.setDoOutput(true);
         connection.setUseCaches(false);
 
-        connection.setRequestMethod("POST");
-        connection.setRequestProperty("Connection", "Keep-Alive");
-        connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
+        connection.setRequestMethod(HTTPConstants.POST);
+        connection.setRequestProperty(HTTPConstants.HEADER_CONNECTION, HTTPConstants.KEEP_ALIVE);
+        connection.setRequestProperty(HTTPConstants.HEADER_CONTENT_TYPE, HTTPConstants.MULTIPART_FORM_DATA +
+                "; boundary=" + boundary);
 
         String userCredentials = authenticatingUserName + ":" + authenticatingCredential;
         String basicAuth = "Basic " + new String(Base64.getEncoder().encode(userCredentials.getBytes()));
-        connection.setRequestProperty ("Authorization", basicAuth);
+        connection.setRequestProperty( HttpHeaders.AUTHORIZATION, basicAuth);
 
         DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
         outputStream.writeBytes(twoHyphens + boundary + lineEnd);
-        outputStream.writeBytes(
-                "Content-Disposition: form-data; name=\"" + fileField + "\"; filename=\"" + q[idx] + "\"" + lineEnd);
-        outputStream.writeBytes("Content-Type: image/jpeg" + lineEnd);
-        outputStream.writeBytes("Content-Transfer-Encoding: binary" + lineEnd);
+        outputStream.writeBytes(HTTPConstants.HEADER_CONTENT_DISPOSITION + ": form-data; name=\"" +
+                fileField + "\"; filename=\"" + q[idx] + "\"" + lineEnd);
+        outputStream.writeBytes(HTTPConstants.HEADER_CONTENT_TYPE + ": image/jpeg" + lineEnd);
+        outputStream.writeBytes(HttpHeaderHelper.CONTENT_TRANSFER_ENCODING + ": binary" + lineEnd);
         outputStream.writeBytes(lineEnd);
 
         bytesAvailable = fileInputStream.available();
