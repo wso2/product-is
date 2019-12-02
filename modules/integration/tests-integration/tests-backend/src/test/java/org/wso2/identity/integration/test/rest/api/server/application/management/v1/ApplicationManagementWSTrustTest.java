@@ -43,7 +43,6 @@ public class ApplicationManagementWSTrustTest extends ApplicationManagementBaseT
     @Test
     public void testCreateWSTrustApp() throws Exception {
 
-        final String WS_TRUST_APP_NAME = "My_WSTrust_App";
         String body = readResource("create-ws-trust-app.json");
 
         Response response = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, body);
@@ -51,9 +50,7 @@ public class ApplicationManagementWSTrustTest extends ApplicationManagementBaseT
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED)
-                .header(HttpHeaders.LOCATION, notNullValue())
-                .body(notNullValue())
-                .body("name", equalTo(WS_TRUST_APP_NAME));
+                .header(HttpHeaders.LOCATION, notNullValue());
 
         String location = response.getHeader(HttpHeaders.LOCATION);
         createdAppId = location.substring(location.lastIndexOf("/") + 1);
@@ -91,13 +88,13 @@ public class ApplicationManagementWSTrustTest extends ApplicationManagementBaseT
         String certAlias = "wso2carbon";
 
         // Create WSTrust Inbound with a PUT.
-        doPutWsTrustInboundAndAssert(audience, certAlias, getWSTrustInboundPayload(audience, certAlias));
+        doPutWsTrustInboundAndAssert(getWSTrustInboundPayload(audience, certAlias));
         // Validate the GET response for inbound details.
         doGetWsTrustInboundAndAssert(audience, certAlias);
 
         // Now we update the cert alias with a PUT.
         String updatedCertAlias = "globalsignca";
-        doPutWsTrustInboundAndAssert(audience, updatedCertAlias, getWSTrustInboundPayload(audience, updatedCertAlias));
+        doPutWsTrustInboundAndAssert(getWSTrustInboundPayload(audience, updatedCertAlias));
         // Validate with an additional GET
         doGetWsTrustInboundAndAssert(audience, updatedCertAlias);
     }
@@ -118,7 +115,7 @@ public class ApplicationManagementWSTrustTest extends ApplicationManagementBaseT
         createdAppId = null;
     }
 
-    private void doPutWsTrustInboundAndAssert(String audience, String certAlias, String wsTrustPutPayload) {
+    private void doPutWsTrustInboundAndAssert(String wsTrustPutPayload) {
 
         String path = APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId + INBOUND_PROTOCOLS_WS_TRUST_CONTEXT;
         Response responseOfPut = getResponseOfPut(path, wsTrustPutPayload);
@@ -127,9 +124,7 @@ public class ApplicationManagementWSTrustTest extends ApplicationManagementBaseT
         responseOfPut.then()
                 .log().ifValidationFails()
                 .assertThat()
-                .statusCode(HttpStatus.SC_OK)
-                .body(AUDIENCE_PARAM_NAME, equalTo(audience))
-                .body(CERTIFICATE_ALIAS_PARAM_NAME, equalTo(certAlias));
+                .statusCode(HttpStatus.SC_OK);
     }
 
     private void doGetWsTrustInboundAndAssert(String audience, String certAlias) {

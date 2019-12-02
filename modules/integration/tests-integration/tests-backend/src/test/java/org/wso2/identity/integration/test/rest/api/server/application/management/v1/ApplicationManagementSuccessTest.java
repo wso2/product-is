@@ -122,7 +122,7 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
                 "Default resident service provider '" + ApplicationConstants.LOCAL_SP + "' is not listed by the API");
 
         if (StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            // Check whether the User Portal app exists.
+            // Check whether the default "User Portal" app exists.
             Assert.assertTrue(listResponse.getApplications()
                             .stream()
                             .anyMatch(appBasicInfo -> appBasicInfo.getName().equals(USER_PORTAL)),
@@ -190,9 +190,7 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED)
-                .header(HttpHeaders.LOCATION, notNullValue())
-                .body(notNullValue())
-                .body("name", equalTo(CREATED_APP_NAME));
+                .header(HttpHeaders.LOCATION, notNullValue());
 
         String location = responseOfPost.getHeader(HttpHeaders.LOCATION);
         createdAppId = location.substring(location.lastIndexOf("/") + 1);
