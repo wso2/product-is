@@ -219,4 +219,10 @@
             <class name="org.wso2.identity.integration.test.auth.RiskBasedLoginTestCase" />
         </classes>
     </test>
+    <test name="is-tests-saml-query-profile" preserve-order="true" parallel="false" group-by-instances="true">
+        <classes>
+            <class name="org.wso2.identity.integration.test.saml.SAMLQueryProfileBase"/>
+            <class name="org.wso2.identity.integration.test.saml.SAMLQueryProfileTestCase"/>
+        </classes>
+    </test>
 </suite>
