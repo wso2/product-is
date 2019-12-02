@@ -200,7 +200,6 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
         private HttpBinding httpBinding;
         private ClaimType claimType;
         private App app;
-        private Boolean assertionQueryProfileEnabled;
 
         protected SAMLConfig(TestUserMode userMode, User user, HttpBinding httpBinding, ClaimType claimType, App app) {
 
@@ -209,17 +208,6 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
             this.httpBinding = httpBinding;
             this.claimType = claimType;
             this.app = app;
-        }
-
-        protected SAMLConfig(TestUserMode userMode, User user, HttpBinding httpBinding, ClaimType claimType, App app,
-                             Boolean assertionQueryProfileEnabled) {
-
-            this.userMode = userMode;
-            this.user = user;
-            this.httpBinding = httpBinding;
-            this.claimType = claimType;
-            this.app = app;
-            this.assertionQueryProfileEnabled = assertionQueryProfileEnabled;
         }
 
         public TestUserMode getUserMode() {
@@ -247,11 +235,6 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
             return httpBinding;
         }
 
-        public Boolean isAssertionQueryProfileEnabled() {
-
-            return assertionQueryProfileEnabled;
-        }
-
         @Override
         public String toString() {
 
@@ -261,7 +244,6 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
                     ", httpBinding=" + httpBinding +
                     ", claimType=" + claimType +
                     ", app=" + app.getArtifact() +
-                    ", assertionQueryProfileEnabled=" + isAssertionQueryProfileEnabled() +
                     ']';
         }
     }
@@ -427,9 +409,6 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
         if (config.getClaimType() != AbstractSAMLSSOTestCase.ClaimType.NONE) {
             samlssoServiceProviderDTO.setEnableAttributeProfile(true);
             samlssoServiceProviderDTO.setEnableAttributesByDefault(true);
-        }
-        if (config.isAssertionQueryProfileEnabled()) {
-            samlssoServiceProviderDTO.setAssertionQueryRequestProfileEnabled(true);
         }
 
         return samlssoServiceProviderDTO;
