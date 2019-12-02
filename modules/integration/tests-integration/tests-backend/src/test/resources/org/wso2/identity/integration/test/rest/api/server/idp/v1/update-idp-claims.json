@@ -1,0 +1,30 @@
+{
+  "userIdClaim": {
+    "uri": "country"
+  },
+  "roleClaim": {
+    "uri": "role"
+  },
+  "mappings": [
+    {
+      "idpClaim": "country",
+      "localClaim": {
+        "uri": "http://wso2.org/claims/username"
+      }
+    },
+    {
+      "idpClaim": "role",
+      "localClaim": {
+        "uri": "http://wso2.org/claims/role"
+      }
+    }
+  ],
+  "provisioningClaims": [
+    {
+      "claim": {
+        "uri": "country"
+      },
+      "defaultValue": "sathya"
+    }
+  ]
+}

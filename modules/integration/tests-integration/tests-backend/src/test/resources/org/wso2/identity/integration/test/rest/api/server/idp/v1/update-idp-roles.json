@@ -1,0 +1,11 @@
+{
+  "mappings": [
+    {
+      "idpRole": "google-admin",
+      "localRole": "admin"
+    }
+  ],
+  "outboundProvisioningRoles": [
+    "admin"
+  ]
+}
