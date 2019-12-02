@@ -62,9 +62,7 @@ public class ApplicationManagementSAMLSuccessTest extends ApplicationManagementB
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED)
-                .header(HttpHeaders.LOCATION, notNullValue())
-                .body(notNullValue())
-                .body("name", equalTo(SAML_APP_NAME));
+                .header(HttpHeaders.LOCATION, notNullValue());
 
         String location = responseOfPost.getHeader(HttpHeaders.LOCATION);
         createdAppId = location.substring(location.lastIndexOf("/") + 1);

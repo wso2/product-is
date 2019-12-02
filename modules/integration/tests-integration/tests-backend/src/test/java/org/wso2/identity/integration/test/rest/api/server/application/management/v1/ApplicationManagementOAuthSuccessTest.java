@@ -39,17 +39,13 @@ public class ApplicationManagementOAuthSuccessTest extends ApplicationManagement
     @Test
     public void testCreateOAuthApp() throws Exception {
 
-        final String OAUTH_APP_NAME = "OAuth Application";
-
         String body = readResource("create-oauth-app.json");
         Response responseOfPost = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, body);
         responseOfPost.then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED)
-                .header(HttpHeaders.LOCATION, notNullValue())
-                .body(notNullValue())
-                .body("name", equalTo(OAUTH_APP_NAME));
+                .header(HttpHeaders.LOCATION, notNullValue());
 
         String location = responseOfPost.getHeader(HttpHeaders.LOCATION);
         createdAppId = location.substring(location.lastIndexOf("/") + 1);
@@ -112,9 +108,7 @@ public class ApplicationManagementOAuthSuccessTest extends ApplicationManagement
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED)
-                .header(HttpHeaders.LOCATION, notNullValue())
-                .body(notNullValue())
-                .body("name", equalTo(OAUTH_APP_NAME));
+                .header(HttpHeaders.LOCATION, notNullValue());
 
         String location = responseOfPost.getHeader(HttpHeaders.LOCATION);
         createdAppId = location.substring(location.lastIndexOf("/") + 1);

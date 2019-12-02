@@ -43,17 +43,13 @@ public class ApplicationManagementPassiveStsSuccessTest extends ApplicationManag
     @Test
     public void testCreatePassiveSTSApp() throws Exception {
 
-        final String OAUTH_APP_NAME = "my-passive-sts-app";
-
         String body = readResource("create-passive-sts-app.json");
         Response responseOfPost = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, body);
         responseOfPost.then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED)
-                .header(HttpHeaders.LOCATION, notNullValue())
-                .body(notNullValue())
-                .body("name", equalTo(OAUTH_APP_NAME));
+                .header(HttpHeaders.LOCATION, notNullValue());
 
         String location = responseOfPost.getHeader(HttpHeaders.LOCATION);
         createdAppId = location.substring(location.lastIndexOf("/") + 1);
@@ -99,7 +95,7 @@ public class ApplicationManagementPassiveStsSuccessTest extends ApplicationManag
 
         String passiveSTSPutPayload = getPassiveSTSPayload(realm, replyTo);
         // Create Passive STS inbound with a PUT.
-        doPutPassiveSTSInboundAndAssert(realm, replyTo, passiveSTSPutPayload);
+        doPutPassiveSTSInboundAndAssert(passiveSTSPutPayload);
         doGetPassiveSTSInboundAndAssert(realm, replyTo);
 
         // Now we update the replyTo with a PUT.
@@ -107,7 +103,7 @@ public class ApplicationManagementPassiveStsSuccessTest extends ApplicationManag
         String updatedPutPayload = getPassiveSTSPayload(realm, updatedReplyTo);
 
         // Update with a PUT
-        doPutPassiveSTSInboundAndAssert(realm, updatedReplyTo, updatedPutPayload);
+        doPutPassiveSTSInboundAndAssert(updatedPutPayload);
         doGetPassiveSTSInboundAndAssert(realm, updatedReplyTo);
     }
 
@@ -127,7 +123,7 @@ public class ApplicationManagementPassiveStsSuccessTest extends ApplicationManag
         createdAppId = null;
     }
 
-    private void doPutPassiveSTSInboundAndAssert(String realm, String replyTo, String passiveStsPayload) {
+    private void doPutPassiveSTSInboundAndAssert(String passiveStsPayload) {
 
         String path = APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId + INBOUND_PROTOCOLS_PASSIVE_STS_CONTEXT;
         Response responseOfPut = getResponseOfPut(path, passiveStsPayload);
@@ -136,9 +132,7 @@ public class ApplicationManagementPassiveStsSuccessTest extends ApplicationManag
         responseOfPut.then()
                 .log().ifValidationFails()
                 .assertThat()
-                .statusCode(HttpStatus.SC_OK)
-                .body(PASSIVE_STS_RELAM, equalTo(realm))
-                .body(PASSIVE_STS_REPLY_TO, equalTo(replyTo));
+                .statusCode(HttpStatus.SC_OK);
     }
 
     private void doGetPassiveSTSInboundAndAssert(String realm, String replyTo) {
