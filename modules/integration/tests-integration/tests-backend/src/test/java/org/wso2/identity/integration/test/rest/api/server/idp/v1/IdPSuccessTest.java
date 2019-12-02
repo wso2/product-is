@@ -16,14 +16,11 @@
 
 package org.wso2.identity.integration.test.rest.api.server.idp.v1;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
-import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
@@ -32,9 +29,6 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Claims;
-import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.JustInTimeProvisioning;
-import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Roles;
 
 import java.io.IOException;
 
@@ -48,9 +42,6 @@ import static org.testng.Assert.assertNotNull;
 public class IdPSuccessTest extends IdPTestBase {
 
     private String idPId;
-    private Claims claimsResponse;
-    private Roles rolesResponse;
-    private JustInTimeProvisioning justInTimeProvisioningResponse;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public IdPSuccessTest(TestUserMode userMode) throws Exception {
@@ -66,21 +57,6 @@ public class IdPSuccessTest extends IdPTestBase {
     public void init() throws IOException {
 
         super.testInit(API_VERSION, swaggerDefinition, tenant);
-
-        String expectedResponse;
-        ObjectMapper jsonWriter;
-
-        expectedResponse = readResource("get-claims-response.json");
-        jsonWriter = new ObjectMapper(new JsonFactory());
-        claimsResponse = jsonWriter.readValue(expectedResponse, Claims.class);
-
-        expectedResponse = readResource("get-roles-response.json");
-        jsonWriter = new ObjectMapper(new JsonFactory());
-        rolesResponse = jsonWriter.readValue(expectedResponse, Roles.class);
-
-        expectedResponse = readResource("get-jit-response.json");
-        jsonWriter = new ObjectMapper(new JsonFactory());
-        justInTimeProvisioningResponse = jsonWriter.readValue(expectedResponse, JustInTimeProvisioning.class);
     }
 
     @AfterClass(alwaysRun = true)
@@ -113,82 +89,81 @@ public class IdPSuccessTest extends IdPTestBase {
     @Test
     public void testListMetaFederatedAuthenticators() throws Exception {
 
-        String key1Identifier = "find{ it.authenticatorId == 'T2ZmaWNlMzY1QXV0aGVudGljYXRvcg' }.";
-        String key2Identifier = "find{ it.authenticatorId == 'VHdpdHRlckF1dGhlbnRpY2F0b3I' }.";
-        String key3Identifier = "find{ it.authenticatorId == 'RmFjZWJvb2tBdXRoZW50aWNhdG9y' }.";
-
-        String key4Identifier = "find{ it.authenticatorId == 'R29vZ2xlT0lEQ0F1dGhlbnRpY2F0b3I' }.";
-        String key5Identifier = "find{ it.authenticatorId == 'TWljcm9zb2Z0V2luZG93c0xpdmVBdXRoZW50aWNhdG9y' }.";
-        String key6Identifier = "find{ it.authenticatorId == 'UGFzc2l2ZVNUU0F1dGhlbnRpY2F0b3I' }.";
-        String key7Identifier = "find{ it.authenticatorId == 'WWFob29PQXV0aDJBdXRoZW50aWNhdG9y' }.";
-        String key8Identifier = "find{ it.authenticatorId == 'SVdBS2VyYmVyb3NBdXRoZW50aWNhdG9y' }.";
-        String key9Identifier = "find{ it.authenticatorId == 'U0FNTFNTT0F1dGhlbnRpY2F0b3I' }.";
-        String key10Identifier = "find{ it.authenticatorId == 'T3BlbklEQ29ubmVjdEF1dGhlbnRpY2F0b3I' }.";
-        String key11Identifier = "find{ it.authenticatorId == 'RW1haWxPVFA' }.";
-        String key12Identifier = "find{ it.authenticatorId == 'U01TT1RQ' }.";
-
         Response response = getResponseOfGet(IDP_API_BASE_PATH + PATH_SEPARATOR + META_FEDERATED_AUTHENTICATORS_PATH);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body(key1Identifier + "name", equalTo("Office365Authenticator"))
-                .body(key1Identifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                .body("find{ it.authenticatorId == 'T2ZmaWNlMzY1QXV0aGVudGljYXRvcg' }.name", equalTo
+                        ("Office365Authenticator"))
+                .body("find{ it.authenticatorId == 'T2ZmaWNlMzY1QXV0aGVudGljYXRvcg' }.self", equalTo("/t/" +
+                        context.getContextTenant().getDomain() +
                         "/api/server/v1/identity-providers/meta/federated-authenticators" +
                         "/T2ZmaWNlMzY1QXV0aGVudGljYXRvcg"))
-                .body(key2Identifier + "name", equalTo("TwitterAuthenticator"))
-                .body(key2Identifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                .body("find{ it.authenticatorId == 'VHdpdHRlckF1dGhlbnRpY2F0b3I' }.name", equalTo
+                        ("TwitterAuthenticator"))
+                .body("find{ it.authenticatorId == 'VHdpdHRlckF1dGhlbnRpY2F0b3I' }.self", equalTo("/t/" + context
+                        .getContextTenant().getDomain() +
                         "/api/server/v1/identity-providers/meta/federated-authenticators" +
                         "/VHdpdHRlckF1dGhlbnRpY2F0b3I"))
-                .body(key3Identifier + "name", equalTo("FacebookAuthenticator"))
-                .body(key3Identifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                .body("find{ it.authenticatorId == 'RmFjZWJvb2tBdXRoZW50aWNhdG9y' }.name", equalTo
+                        ("FacebookAuthenticator"))
+                .body("find{ it.authenticatorId == 'RmFjZWJvb2tBdXRoZW50aWNhdG9y' }.self", equalTo("/t/" + context
+                        .getContextTenant().getDomain() +
                         "/api/server/v1/identity-providers/meta/federated-authenticators" +
                         "/RmFjZWJvb2tBdXRoZW50aWNhdG9y"))
-                .body(key4Identifier + "name", equalTo("GoogleOIDCAuthenticator"))
-                .body(key4Identifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                .body("find{ it.authenticatorId == 'R29vZ2xlT0lEQ0F1dGhlbnRpY2F0b3I' }.name", equalTo
+                        ("GoogleOIDCAuthenticator"))
+                .body("find{ it.authenticatorId == 'R29vZ2xlT0lEQ0F1dGhlbnRpY2F0b3I' }.self", equalTo("/t/" +
+                        context.getContextTenant().getDomain() +
                         "/api/server/v1/identity-providers/meta/federated-authenticators" +
                         "/R29vZ2xlT0lEQ0F1dGhlbnRpY2F0b3I"))
-                .body(key5Identifier + "name", equalTo("MicrosoftWindowsLiveAuthenticator"))
-                .body(key5Identifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
-                        "/api/server/v1/identity-providers/meta/federated-authenticators" +
-                        "/TWljcm9zb2Z0V2luZG93c0xpdmVBdXRoZW50aWNhdG9y"))
-                .body(key6Identifier + "name", equalTo("PassiveSTSAuthenticator"))
-                .body(key6Identifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                .body("find{ it.authenticatorId == 'TWljcm9zb2Z0V2luZG93c0xpdmVBdXRoZW50aWNhdG9y' }.name", equalTo
+                        ("MicrosoftWindowsLiveAuthenticator"))
+                .body("find{ it.authenticatorId == 'TWljcm9zb2Z0V2luZG93c0xpdmVBdXRoZW50aWNhdG9y' }.self", equalTo
+                        ("/t/" + context.getContextTenant().getDomain() +
+                                "/api/server/v1/identity-providers/meta/federated-authenticators" +
+                                "/TWljcm9zb2Z0V2luZG93c0xpdmVBdXRoZW50aWNhdG9y"))
+                .body("find{ it.authenticatorId == 'UGFzc2l2ZVNUU0F1dGhlbnRpY2F0b3I' }.name", equalTo
+                        ("PassiveSTSAuthenticator"))
+                .body("find{ it.authenticatorId == 'UGFzc2l2ZVNUU0F1dGhlbnRpY2F0b3I' }.self", equalTo("/t/" +
+                        context.getContextTenant().getDomain() +
                         "/api/server/v1/identity-providers/meta/federated-authenticators" +
                         "/UGFzc2l2ZVNUU0F1dGhlbnRpY2F0b3I"))
-                .body(key7Identifier + "name", equalTo("YahooOAuth2Authenticator"))
-                .body(key7Identifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                .body("find{ it.authenticatorId == 'WWFob29PQXV0aDJBdXRoZW50aWNhdG9y' }.name", equalTo
+                        ("YahooOAuth2Authenticator"))
+                .body("find{ it.authenticatorId == 'WWFob29PQXV0aDJBdXRoZW50aWNhdG9y' }.self", equalTo("/t/" +
+                        context.getContextTenant().getDomain() +
                         "/api/server/v1/identity-providers/meta/federated-authenticators" +
                         "/WWFob29PQXV0aDJBdXRoZW50aWNhdG9y"))
-                .body(key8Identifier + "name", equalTo("IWAKerberosAuthenticator"))
-                .body(key8Identifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                .body("find{ it.authenticatorId == 'SVdBS2VyYmVyb3NBdXRoZW50aWNhdG9y' }.name", equalTo
+                        ("IWAKerberosAuthenticator"))
+                .body("find{ it.authenticatorId == 'SVdBS2VyYmVyb3NBdXRoZW50aWNhdG9y' }.self", equalTo("/t/" +
+                        context.getContextTenant().getDomain() +
                         "/api/server/v1/identity-providers/meta/federated-authenticators" +
                         "/SVdBS2VyYmVyb3NBdXRoZW50aWNhdG9y"))
-                .body(key9Identifier + "name", equalTo("SAMLSSOAuthenticator"))
-                .body(key9Identifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
-                        "/api/server/v1/identity-providers/meta/federated-authenticators" +
-                        "/U0FNTFNTT0F1dGhlbnRpY2F0b3I"))
-                .body(key10Identifier + "name", equalTo("OpenIDConnectAuthenticator"))
-                .body(key10Identifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                .body("find{ it.authenticatorId == 'U0FNTFNTT0F1dGhlbnRpY2F0b3I' }.name", equalTo
+                        ("SAMLSSOAuthenticator"))
+                .body("find{ it.authenticatorId == 'U0FNTFNTT0F1dGhlbnRpY2F0b3I' }.self", equalTo("/t/" + context
+                        .getContextTenant().getDomain() +
+                        "/api/server/v1/identity-providers/meta/federated-authenticators/U0FNTFNTT0F1dGhlbnRpY2F0b3I"))
+                .body("find{ it.authenticatorId == 'T3BlbklEQ29ubmVjdEF1dGhlbnRpY2F0b3I' }.name", equalTo
+                        ("OpenIDConnectAuthenticator"))
+                .body("find{ it.authenticatorId == 'T3BlbklEQ29ubmVjdEF1dGhlbnRpY2F0b3I' }.self", equalTo("/t/" +
+                        context.getContextTenant().getDomain() +
                         "/api/server/v1/identity-providers/meta/federated-authenticators" +
                         "/T3BlbklEQ29ubmVjdEF1dGhlbnRpY2F0b3I"))
-                .body(key11Identifier + "name", equalTo("EmailOTP"))
-                .body(key11Identifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
-                        "/api/server/v1/identity-providers/meta/federated-authenticators" +
-                        "/RW1haWxPVFA"))
-                .body(key12Identifier + "name", equalTo("SMSOTP"))
-                .body(key12Identifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
-                        "/api/server/v1/identity-providers/meta/federated-authenticators" +
-                        "/U01TT1RQ"));
+                .body("find{ it.authenticatorId == 'RW1haWxPVFA' }.name", equalTo("EmailOTP"))
+                .body("find{ it.authenticatorId == 'RW1haWxPVFA' }.self", equalTo("/t/" + context.getContextTenant
+                        ().getDomain() +
+                        "/api/server/v1/identity-providers/meta/federated-authenticators/RW1haWxPVFA"))
+                .body("find{ it.authenticatorId == 'U01TT1RQ' }.name", equalTo("SMSOTP"))
+                .body("find{ it.authenticatorId == 'U01TT1RQ' }.self", equalTo("/t/" + context.getContextTenant()
+                        .getDomain() + "/api/server/v1/identity-providers/meta/federated-authenticators/U01TT1RQ"));
     }
 
     @Test(dependsOnMethods = {"testListMetaFederatedAuthenticators"})
     public void testGetMetaFederatedAuthenticator() throws IOException {
-
-        String key1Identifier = "properties.find{ it.key == 'AdditionalQueryParameters' }.";
-        String key2Identifier = "properties.find{ it.key == 'callbackUrl' }.";
-        String key3Identifier = "properties.find{ it.key == 'ClientId' }.";
-        String key4Identifier = "properties.find{ it.key == 'ClientSecret' }.";
 
         Response response = getResponseOfGet(IDP_API_BASE_PATH + PATH_SEPARATOR + META_FEDERATED_AUTHENTICATORS_PATH
                 + PATH_SEPARATOR + SAMPLE_FEDERATED_AUTHENTICATOR_ID);
@@ -200,71 +175,74 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body("name", equalTo("GoogleOIDCAuthenticator"))
                 .body("displayName", equalTo("Google"))
                 .body("properties", notNullValue())
-                .body(key1Identifier + "displayName", equalTo("Additional Query Parameters"))
-                .body(key1Identifier + "description", equalTo("Additional query parameters. e.g: paramName1=value1"))
-                .body(key1Identifier + "type", equalTo("STRING"))
-                .body(key1Identifier + "displayOrder", equalTo(4))
-                .body(key1Identifier + "regex", equalTo(".*"))
-                .body(key1Identifier + "isMandatory", equalTo(false))
-                .body(key1Identifier + "isConfidential", equalTo(false))
-                .body(key1Identifier + "defaultValue", equalTo(""))
+                .body("properties.find{ it.key == 'AdditionalQueryParameters' }.displayName", equalTo("Additional " +
+                        "Query Parameters"))
+                .body("properties.find{ it.key == 'AdditionalQueryParameters' }.description", equalTo("Additional " +
+                        "query parameters. e.g: paramName1=value1"))
+                .body("properties.find{ it.key == 'AdditionalQueryParameters' }.type", equalTo("STRING"))
+                .body("properties.find{ it.key == 'AdditionalQueryParameters' }.displayOrder", equalTo(4))
+                .body("properties.find{ it.key == 'AdditionalQueryParameters' }.regex", equalTo(".*"))
+                .body("properties.find{ it.key == 'AdditionalQueryParameters' }.isMandatory", equalTo(false))
+                .body("properties.find{ it.key == 'AdditionalQueryParameters' }.isConfidential", equalTo(false))
+                .body("properties.find{ it.key == 'AdditionalQueryParameters' }.defaultValue", equalTo(""))
 
-                .body(key2Identifier + "displayName", equalTo("Callback Url"))
-                .body(key2Identifier + "description", equalTo("Enter value corresponding to callback url."))
-                .body(key2Identifier + "type", equalTo("STRING"))
-                .body(key2Identifier + "displayOrder", equalTo(3))
-                .body(key2Identifier + "regex", equalTo(".*"))
-                .body(key2Identifier + "isMandatory", equalTo(false))
-                .body(key2Identifier + "isConfidential", equalTo(false))
-                .body(key2Identifier + "defaultValue", equalTo(""))
+                .body("properties.find{ it.key == 'callbackUrl' }.displayName", equalTo("Callback Url"))
+                .body("properties.find{ it.key == 'callbackUrl' }.description", equalTo("Enter value corresponding " +
+                        "to callback url."))
+                .body("properties.find{ it.key == 'callbackUrl' }.type", equalTo("STRING"))
+                .body("properties.find{ it.key == 'callbackUrl' }.displayOrder", equalTo(3))
+                .body("properties.find{ it.key == 'callbackUrl' }.regex", equalTo(".*"))
+                .body("properties.find{ it.key == 'callbackUrl' }.isMandatory", equalTo(false))
+                .body("properties.find{ it.key == 'callbackUrl' }.isConfidential", equalTo(false))
+                .body("properties.find{ it.key == 'callbackUrl' }.defaultValue", equalTo(""))
 
-                .body(key3Identifier + "displayName", equalTo("Client Id"))
-                .body(key3Identifier + "description", equalTo("Enter Google IDP client identifier value"))
-                .body(key3Identifier + "type", equalTo("STRING"))
-                .body(key3Identifier + "displayOrder", equalTo(1))
-                .body(key3Identifier + "regex", equalTo(".*"))
-                .body(key3Identifier + "isMandatory", equalTo(true))
-                .body(key3Identifier + "isConfidential", equalTo(false))
-                .body(key3Identifier + "defaultValue", equalTo(""))
+                .body("properties.find{ it.key == 'ClientId' }.displayName", equalTo("Client Id"))
+                .body("properties.find{ it.key == 'ClientId' }.description", equalTo("Enter Google IDP client " +
+                        "identifier value"))
+                .body("properties.find{ it.key == 'ClientId' }.type", equalTo("STRING"))
+                .body("properties.find{ it.key == 'ClientId' }.displayOrder", equalTo(1))
+                .body("properties.find{ it.key == 'ClientId' }.regex", equalTo(".*"))
+                .body("properties.find{ it.key == 'ClientId' }.isMandatory", equalTo(true))
+                .body("properties.find{ it.key == 'ClientId' }.isConfidential", equalTo(false))
+                .body("properties.find{ it.key == 'ClientId' }.defaultValue", equalTo(""))
 
-                .body(key4Identifier + "displayName", equalTo("Client Secret"))
-                .body(key4Identifier + "description", equalTo("Enter Google IDP client secret value"))
-                .body(key4Identifier + "type", equalTo("STRING"))
-                .body(key4Identifier + "displayOrder", equalTo(2))
-                .body(key4Identifier + "regex", equalTo(".*"))
-                .body(key4Identifier + "isMandatory", equalTo(true))
-                .body(key4Identifier + "isConfidential", equalTo(true))
-                .body(key4Identifier + "defaultValue", equalTo(""));
+                .body("properties.find{ it.key == 'ClientSecret' }.displayName", equalTo("Client Secret"))
+                .body("properties.find{ it.key == 'ClientSecret' }.description", equalTo("Enter Google IDP client " +
+                        "secret value"))
+                .body("properties.find{ it.key == 'ClientSecret' }.type", equalTo("STRING"))
+                .body("properties.find{ it.key == 'ClientSecret' }.displayOrder", equalTo(2))
+                .body("properties.find{ it.key == 'ClientSecret' }.regex", equalTo(".*"))
+                .body("properties.find{ it.key == 'ClientSecret' }.isMandatory", equalTo(true))
+                .body("properties.find{ it.key == 'ClientSecret' }.isConfidential", equalTo(true))
+                .body("properties.find{ it.key == 'ClientSecret' }.defaultValue", equalTo(""));
     }
 
     @Test(dependsOnMethods = {"testGetMetaFederatedAuthenticator"})
     public void testListMetaOutboundConnectors() throws Exception {
-
-        String key1Identifier = "find{ it.connectorId == 'Z29vZ2xlYXBwcw' }.";
-        String key2Identifier = "find{ it.connectorId == 'c2FsZXNmb3JjZQ' }.";
-        String key3Identifier = "find{ it.connectorId == 'c2NpbQ' }.";
-        String key4Identifier = "find{ it.connectorId == 'c3BtbA' }.";
 
         Response response = getResponseOfGet(IDP_API_BASE_PATH + PATH_SEPARATOR + META_OUTBOUND_CONNECTORS_PATH);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body(key1Identifier + "name", equalTo("googleapps"))
-                .body(key1Identifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                .body("find{ it.connectorId == 'Z29vZ2xlYXBwcw' }.name", equalTo("googleapps"))
+                .body("find{ it.connectorId == 'Z29vZ2xlYXBwcw' }.self", equalTo("/t/" + context.getContextTenant()
+                        .getDomain() +
                         "/api/server/v1/identity-providers/meta/outbound-provisioning-connectors" +
                         "/Z29vZ2xlYXBwcw"))
-                .body(key2Identifier + "name", equalTo("salesforce"))
-                .body(key2Identifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                .body("find{ it.connectorId == 'c2FsZXNmb3JjZQ' }.name", equalTo("salesforce"))
+                .body("find{ it.connectorId == 'c2FsZXNmb3JjZQ' }.self", equalTo("/t/" + context.getContextTenant()
+                        .getDomain() +
                         "/api/server/v1/identity-providers/meta/outbound-provisioning-connectors" +
                         "/c2FsZXNmb3JjZQ"))
-                .body(key3Identifier + "name", equalTo("scim"))
-                .body(key3Identifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                .body("find{ it.connectorId == 'c2NpbQ' }.name", equalTo("scim"))
+                .body("find{ it.connectorId == 'c2NpbQ' }.self", equalTo("/t/" + context.getContextTenant()
+                        .getDomain() +
                         "/api/server/v1/identity-providers/meta/outbound-provisioning-connectors" +
                         "/c2NpbQ"))
-                .body(key4Identifier + "name", equalTo("spml"))
-                .body(key4Identifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
-                        "/api/server/v1/identity-providers/meta/outbound-provisioning-connectors" +
+                .body("find{ it.connectorId == 'c3BtbA' }.name", equalTo("spml"))
+                .body("find{ it.connectorId == 'c3BtbA' }.self", equalTo("/t/" + context.getContextTenant()
+                        .getDomain() + "/api/server/v1/identity-providers/meta/outbound-provisioning-connectors" +
                         "/c3BtbA"));
     }
 
@@ -371,15 +349,6 @@ public class IdPSuccessTest extends IdPTestBase {
     @Test(dependsOnMethods = {"testUpdateIdPFederatedAuthenticator"})
     public void testGetIdPFederatedAuthenticator() throws IOException {
 
-        String propertyKey1Identifier = "properties.find{ it.key == '" +
-                "ClientId" + "' }.";
-        String propertyKey2Identifier = "properties.find{ it.key == '" +
-                "ClientSecret" + "' }.";
-        String propertyKey3Identifier = "properties.find{ it.key == '" +
-                "callbackUrl" + "' }.";
-        String propertyKey4Identifier = "properties.find{ it.key == '" +
-                "AdditionalQueryParameters" + "' }.";
-
         Response response = getResponseOfGet(
                 IDP_API_BASE_PATH + PATH_SEPARATOR + idPId + PATH_SEPARATOR + IDP_FEDERATED_AUTHENTICATORS_PATH +
                         PATH_SEPARATOR + SAMPLE_FEDERATED_AUTHENTICATOR_ID);
@@ -391,11 +360,13 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body("isEnabled", equalTo(true))
                 .body("isDefault", equalTo(true))
                 .body("properties", notNullValue())
-                .body(propertyKey1Identifier + "value", equalTo("165474950684-7mvqd8m6hieb8mdnffcarnku2aua0tpl.apps" +
-                        ".googleusercontent.com"))
-                .body(propertyKey2Identifier + "value", equalTo("testclientsecret"))
-                .body(propertyKey3Identifier + "value", equalTo("https://mydomain1.com:9443/commonauth"))
-                .body(propertyKey4Identifier + "value", equalTo("scope=openid email profile"));
+                .body("properties.find{ it.key == 'ClientId' }.value", equalTo
+                        ("165474950684-7mvqd8m6hieb8mdnffcarnku2aua0tpl.apps.googleusercontent.com"))
+                .body("properties.find{ it.key == 'ClientSecret' }.value", equalTo("testclientsecret"))
+                .body("properties.find{ it.key == 'callbackUrl' }.value", equalTo
+                        ("https://mydomain1.com:9443/commonauth"))
+                .body("properties.find{ it.key == 'AdditionalQueryParameters' }.value", equalTo("scope=openid email" +
+                        " profile"));
     }
 
     @Test(dependsOnMethods = {"testGetIdPFederatedAuthenticator"})
@@ -431,15 +402,6 @@ public class IdPSuccessTest extends IdPTestBase {
     @Test(dependsOnMethods = {"testUpdateIdPOutboundConnector"})
     public void testGetIdPOutboundConnector() throws IOException {
 
-        String propertyKey1Identifier = "properties.find{ it.key == '" +
-                "scim-enable-pwd-provisioning" + "' }.";
-        String propertyKey2Identifier = "properties.find{ it.key == '" +
-                "scim-password" + "' }.";
-        String propertyKey3Identifier = "properties.find{ it.key == '" +
-                "scim-user-ep" + "' }.";
-        String propertyKey4Identifier = "properties.find{ it.key == '" +
-                "scim-username" + "' }.";
-
         Response response = getResponseOfGet(IDP_API_BASE_PATH + PATH_SEPARATOR + idPId + PATH_SEPARATOR +
                 IDP_PROVISIONING_PATH + PATH_SEPARATOR + IDP_OUTBOUND_CONNECTORS_PATH + PATH_SEPARATOR +
                 SAMPLE_OUTBOUND_CONNECTOR_ID);
@@ -453,10 +415,10 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body("blockingEnabled", equalTo(false))
                 .body("rulesEnabled", equalTo(false))
                 .body("properties", notNullValue())
-                .body(propertyKey1Identifier + "value", equalTo("true"))
-                .body(propertyKey2Identifier + "value", equalTo("admin"))
-                .body(propertyKey3Identifier + "value", equalTo("https://localhost:9445/userinfo"))
-                .body(propertyKey4Identifier + "value", equalTo("admin"));
+                .body("properties.find{ it.key == 'scim-enable-pwd-provisioning' }.value", equalTo("true"))
+                .body("properties.find{ it.key == 'scim-password' }.value", equalTo("admin"))
+                .body("properties.find{ it.key == 'scim-user-ep' }.value", equalTo("https://localhost:9445/userinfo"))
+                .body("properties.find{ it.key == 'scim-username' }.value", equalTo("admin"));
     }
 
     @Test(dependsOnMethods = {"testGetIdPOutboundConnector"})
@@ -469,6 +431,7 @@ public class IdPSuccessTest extends IdPTestBase {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
+                .body("userIdClaim", notNullValue())
                 .body("userIdClaim.uri", equalTo("country"))
                 .body("roleClaim.uri", equalTo("role"));
     }
@@ -481,13 +444,23 @@ public class IdPSuccessTest extends IdPTestBase {
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
-                .statusCode(HttpStatus.SC_OK);
-
-        ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
-        Claims responseFound =
-                jsonWriter.readValue(response.asString(), Claims.class);
-        Assert.assertEquals(responseFound, claimsResponse,
-                "Response of get IDP claims doesn't match.");
+                .statusCode(HttpStatus.SC_OK)
+                .body("userIdClaim", notNullValue())
+                .body("userIdClaim.uri", equalTo("country"))
+                .body("roleClaim", notNullValue())
+                .body("roleClaim.uri", equalTo("role"))
+                .body("mappings", notNullValue())
+                .body("mappings[0].idpClaim", equalTo("country"))
+                .body("mappings[0].localClaim.id", equalTo("aHR0cDovL3dzbzIub3JnL2NsYWltcy91c2VybmFtZQ"))
+                .body("mappings[0].localClaim.uri", equalTo("http://wso2.org/claims/username"))
+                .body("mappings[0].localClaim.displayName", equalTo("Username"))
+                .body("mappings[1].idpClaim", equalTo("role"))
+                .body("mappings[1].localClaim.id", equalTo("aHR0cDovL3dzbzIub3JnL2NsYWltcy9yb2xl"))
+                .body("mappings[1].localClaim.uri", equalTo("http://wso2.org/claims/role"))
+                .body("mappings[1].localClaim.displayName", equalTo("Role"))
+                .body("provisioningClaims", notNullValue())
+                .body("provisioningClaims[0].claim.uri", equalTo("country"))
+                .body("provisioningClaims[0].defaultValue", equalTo("sathya"));
     }
 
     @Test(dependsOnMethods = {"testGetIdPClaims"})
@@ -500,6 +473,7 @@ public class IdPSuccessTest extends IdPTestBase {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
+                .body("mappings", notNullValue())
                 .body("mappings[0].idpRole", equalTo("google-admin"));
     }
 
@@ -511,12 +485,12 @@ public class IdPSuccessTest extends IdPTestBase {
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
-                .statusCode(HttpStatus.SC_OK);
-
-        ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
-        Roles responseFound = jsonWriter.readValue(response.asString(), Roles.class);
-        Assert.assertEquals(responseFound, rolesResponse,
-                "Response of the get IDP roles doesn't match.");
+                .statusCode(HttpStatus.SC_OK)
+                .body("mappings", notNullValue())
+                .body("mappings[0].idpRole", equalTo("google-admin"))
+                .body("mappings[0].localRole", equalTo("admin"))
+                .body("outboundProvisioningRoles", notNullValue())
+                .body("outboundProvisioningRoles[0]", equalTo("admin"));
     }
 
     @Test(dependsOnMethods = {"testGetIdPRoles"})
@@ -541,13 +515,10 @@ public class IdPSuccessTest extends IdPTestBase {
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
-                .statusCode(HttpStatus.SC_OK);
-
-        ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
-        JustInTimeProvisioning responseFound =
-                jsonWriter.readValue(response.asString(), JustInTimeProvisioning.class);
-        Assert.assertEquals(responseFound, justInTimeProvisioningResponse,
-                "Response of the get IDP Just-In-Time provisioning config doesn't match.");
+                .statusCode(HttpStatus.SC_OK)
+                .body("isEnabled", equalTo(false))
+                .body("scheme", equalTo("PROVISION_SILENTLY"))
+                .body("userstore", equalTo("PRIMARY"));
     }
 
     @Test(dependsOnMethods = {"testGetIdPJIT"})
