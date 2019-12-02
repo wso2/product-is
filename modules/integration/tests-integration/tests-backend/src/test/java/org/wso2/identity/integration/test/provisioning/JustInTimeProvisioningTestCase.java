@@ -245,7 +245,7 @@ public class JustInTimeProvisioningTestCase extends SAMLIdentityFederationTestCa
      */
     private void addSecondaryUserStore() throws Exception {
 
-        String jdbcClass = "org.wso2.carbon.user.core.jdbc.JDBCUserStoreManager";
+        String jdbcClass = "org.wso2.carbon.user.core.jdbc.UniqueIDJDBCUserStoreManager";
         H2DataBaseManager dbmanager = new H2DataBaseManager(
                 "jdbc:h2:" + ServerConfigurationManager.getCarbonHome() + "/repository/database/" + USER_STORE_DB_NAME,
                 DB_USER_NAME, DB_USER_PASSWORD);
@@ -269,6 +269,9 @@ public class JustInTimeProvisioningTestCase extends SAMLIdentityFederationTestCa
 
         propertyDTOs[3].setName("password");
         propertyDTOs[3].setValue(DB_USER_PASSWORD);
+
+        propertyDTOs[4].setName("UserIDEnabled");
+        propertyDTOs[4].setValue("true");
 
         UserStoreDTO userStoreDTO = userStoreConfigAdminServiceClient
                 .createUserStoreDTO(jdbcClass, DOMAIN_ID, propertyDTOs);
