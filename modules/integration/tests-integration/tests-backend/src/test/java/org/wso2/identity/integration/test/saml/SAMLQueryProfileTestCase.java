@@ -33,8 +33,6 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
-import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
-import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.clients.KeyStoreAdminClient;
 import org.wso2.identity.integration.common.clients.sso.saml.query.ClientSignKeyDataHolder;
 import org.wso2.identity.integration.common.clients.sso.saml.query.QueryClientUtils;
@@ -54,7 +52,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.xml.xpath.XPathExpressionException;
 
 import static org.wso2.identity.integration.test.util.Utils.requestMissingClaims;
 
@@ -78,7 +75,6 @@ public class SAMLQueryProfileTestCase extends AbstractSAMLSSOTestCase {
     private static final String lastNameClaimURI = "http://wso2.org/claims/lastname";
     private static final String emailClaimURI = "http://wso2.org/claims/emailaddress";
 
-    private ServerConfigurationManager serverConfigurationManager;
     private SAMLConfig config;
     private String resultPage;
     private String samlResponse;
@@ -130,7 +126,6 @@ public class SAMLQueryProfileTestCase extends AbstractSAMLSSOTestCase {
     public void testInit() throws Exception {
 
         super.init();
-        changeISConfiguration();
 
         super.init(config.getUserMode());
 
@@ -146,7 +141,6 @@ public class SAMLQueryProfileTestCase extends AbstractSAMLSSOTestCase {
         super.deleteApplication(APPLICATION_NAME);
 
         super.testClear();
-        resetISConfiguration();
     }
 
     @Test(description = "Add service provider", groups = "wso2.is", priority = 1)
@@ -339,25 +333,6 @@ public class SAMLQueryProfileTestCase extends AbstractSAMLSSOTestCase {
         }
 
         return attributeMap;
-    }
-
-    public void changeISConfiguration() throws AutomationUtilException, IOException, XPathExpressionException {
-
-        log.info("Changing deployment.toml file to enable assertion query profile");
-
-        String carbonHome = Utils.getResidentCarbonHome();
-        File defaultConfigFile = getDeploymentTomlFile(carbonHome);
-        File configuredIdentityXML = new File(getISResourceLocation() + File.separator + "saml"
-                + File.separator + "saml-assertion-query-enabled-deployment.toml");
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
-        serverConfigurationManager.applyConfigurationWithoutRestart(configuredIdentityXML, defaultConfigFile, true);
-        serverConfigurationManager.restartGracefully();
-    }
-
-    public void resetISConfiguration() throws AutomationUtilException, IOException {
-
-        log.info("Reverting back to original deployment.toml");
-        serverConfigurationManager.restoreToLastConfiguration(false);
     }
 
     public SAMLSSOServiceProviderDTO createSsoServiceProviderDTO(SAMLConfig config) {
