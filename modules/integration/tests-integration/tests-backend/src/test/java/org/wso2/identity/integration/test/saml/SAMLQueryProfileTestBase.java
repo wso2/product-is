@@ -29,7 +29,7 @@ import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
 import java.io.IOException;
 
-public class SAMLQueryProfileBase extends ISIntegrationTest {
+public class SAMLQueryProfileTestBase extends ISIntegrationTest {
 
     private ServerConfigurationManager serverConfigurationManager;
 
