@@ -51,7 +51,7 @@ import javax.xml.parsers.ParserConfigurationException;
  */
 public class ApplicationManagementSuccessTest extends ApplicationManagementBaseTest {
 
-    private static final String USER_PORTAL = "USER_PORTAL";
+    private static final String USER_PORTAL = "User Portal";
     private static final String APPLICATION_IMPORT_PATH = "/import";
     private static final String APPLICATION_EXPORT_PATH = "/export";
     private static final String APPLICATION_IMPORT_APP_NAME_SUPER_TENANT = "SampleApp";
@@ -120,11 +120,11 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
                 "Default resident service provider '" + ApplicationConstants.LOCAL_SP + "' is not listed by the API");
 
         if (StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            // Check whether the USER_PORTAL app exists.
+            // Check whether the User Portal app exists.
             Assert.assertTrue(listResponse.getApplications()
                             .stream()
                             .anyMatch(appBasicInfo -> appBasicInfo.getName().equals(USER_PORTAL)),
-                    "Default application 'USER_PORTAL' is not listed by the API.");
+                    "Default application 'User Portal' is not listed by the API.");
         }
     }
 
