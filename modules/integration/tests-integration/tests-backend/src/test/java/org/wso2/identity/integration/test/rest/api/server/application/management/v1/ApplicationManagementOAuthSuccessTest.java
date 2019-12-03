@@ -25,6 +25,9 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
+/**
+ * Tests for happy paths of the managing OAuth2/OIDC applications using Application Management REST API.
+ */
 public class ApplicationManagementOAuthSuccessTest extends ApplicationManagementBaseTest {
 
     private static final String INBOUND_PROTOCOLS_OIDC_CONTEXT_PATH = "/inbound-protocols/oidc";
