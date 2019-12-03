@@ -27,11 +27,14 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
+/**
+ * Tests for happy paths of the managing Passive STS applications using Application Management REST API.
+ */
 public class ApplicationManagementPassiveStsSuccessTest extends ApplicationManagementBaseTest {
 
     private static final String INBOUND_PROTOCOLS_PASSIVE_STS_CONTEXT = "/inbound-protocols/passive-sts";
-    public static final String PASSIVE_STS_RELAM = "realm";
-    public static final String PASSIVE_STS_REPLY_TO = "replyTo";
+    private static final String PASSIVE_STS_RELAM = "realm";
+    private static final String PASSIVE_STS_REPLY_TO = "replyTo";
     private String createdAppId;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
@@ -102,7 +105,7 @@ public class ApplicationManagementPassiveStsSuccessTest extends ApplicationManag
         final String updatedReplyTo = "https://myrealm.passivests.com/replyToUpdated";
         String updatedPutPayload = getPassiveSTSPayload(realm, updatedReplyTo);
 
-        // Update with a PUT
+        // Update with a PUT.
         doPutPassiveSTSInboundAndAssert(updatedPutPayload);
         doGetPassiveSTSInboundAndAssert(realm, updatedReplyTo);
     }

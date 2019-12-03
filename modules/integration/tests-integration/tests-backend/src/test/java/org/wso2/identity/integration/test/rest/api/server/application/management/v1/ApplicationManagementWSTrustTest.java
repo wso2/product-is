@@ -27,6 +27,9 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
+/**
+ * Tests for happy paths of the managing WSTrust applications using Application Management REST API.
+ */
 public class ApplicationManagementWSTrustTest extends ApplicationManagementBaseTest {
 
     private static final String INBOUND_PROTOCOLS_WS_TRUST_CONTEXT = "/inbound-protocols/ws-trust";

@@ -26,30 +26,36 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
 
+/**
+ * Tests for happy paths of the managing SAML applications using Application Management REST API.
+ */
 public class ApplicationManagementSAMLSuccessTest extends ApplicationManagementBaseTest {
 
-    private static final String SAML_APP_NAME = "My SAML App";
-    private static final String ISSUER = "https://sp.example.com/shibboleth";
+    private static final String META_DATA_FILE_ISSUER = "https://saml.wso2.com";
+    private static final String MANUAL_CONFIG_ISSUER = "https://sp.wso2.com";
 
     private String samlAppPostRequest;
     private String createdAppId;
+    private String expectedIssuer;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
-    public ApplicationManagementSAMLSuccessTest(TestUserMode userMode, String samlAppPostRequest) throws Exception {
+    public ApplicationManagementSAMLSuccessTest(TestUserMode userMode, String samlAppPostRequest,
+                                                String expectedIssuer) throws Exception {
 
         super(userMode);
         this.samlAppPostRequest = samlAppPostRequest;
+        this.expectedIssuer = expectedIssuer;
     }
 
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
         return new Object[][]{
-                {TestUserMode.SUPER_TENANT_ADMIN, "create-saml-app-with-metadata-file.json"},
-                {TestUserMode.TENANT_ADMIN, "create-saml-app-with-metadata-file.json"},
+                {TestUserMode.SUPER_TENANT_ADMIN, "create-saml-app-with-metadata-file.json", META_DATA_FILE_ISSUER},
+                {TestUserMode.SUPER_TENANT_ADMIN, "create-saml-app-with-manual-config.json", MANUAL_CONFIG_ISSUER},
 
-                {TestUserMode.SUPER_TENANT_ADMIN, "create-saml-app-with-manual-config.json"},
-                {TestUserMode.TENANT_ADMIN, "create-saml-app-with-manual-config.json"}
+                {TestUserMode.TENANT_ADMIN, "create-saml-app-with-metadata-file.json", META_DATA_FILE_ISSUER},
+                {TestUserMode.TENANT_ADMIN, "create-saml-app-with-manual-config.json", MANUAL_CONFIG_ISSUER}
         };
     }
 
@@ -78,7 +84,7 @@ public class ApplicationManagementSAMLSuccessTest extends ApplicationManagementB
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("issuer", equalTo(ISSUER));
+                .body("issuer", equalTo(expectedIssuer));
     }
 
     @Test(dependsOnMethods = "testGetSAMLInboundDetails")
@@ -98,17 +104,6 @@ public class ApplicationManagementSAMLSuccessTest extends ApplicationManagementB
     }
 
     @Test(dependsOnMethods = "testDeleteSAMLInbound")
-    public void testPutSAMLInbound() throws Exception {
-
-        // Create SAML Inbound with a PUT
-        // GET and assert inbound details exists
-
-        // Update SAML Inbound with a PUT
-        // GET and assert inbound details exists.
-
-    }
-
-    @Test(dependsOnMethods = "testPutSAMLInbound")
     public void testDeleteApplication() throws Exception {
 
         String path = APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId;
@@ -120,7 +115,7 @@ public class ApplicationManagementSAMLSuccessTest extends ApplicationManagementB
                 .assertThat()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
 
-        // Make sure we don't have the SAML inbound details.
+        // Make sure we don't have deleted application details.
         getResponseOfGet(path).then().assertThat().statusCode(HttpStatus.SC_NOT_FOUND);
     }
 }
