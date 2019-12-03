@@ -30,22 +30,12 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.application.mgt.ApplicationConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationListResponse;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
-import org.xml.sax.SAXException;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
@@ -130,56 +120,57 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
         }
     }
 
-    @Test
-    public void testImportApplications() throws IOException, URISyntaxException {
-
-        String importFilePath;
-        if (StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            importFilePath = this.getClass().getResource("sample-sp-import-super-tenant.xml").getPath();
-        } else {
-            importFilePath = this.getClass().getResource("sample-sp-import-tenant.xml").getPath();
-        }
-        String response = getResponseOfPostWithFile(APPLICATION_MANAGEMENT_API_BASE_PATH + APPLICATION_IMPORT_PATH,
-               importFilePath , "file");
-
-        ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
-        ApplicationModel applicationModel = jsonWriter.readValue(response, ApplicationModel.class);
-        // Assert created application name
-        Assert.assertNotNull(applicationModel);
-        if (StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            Assert.assertEquals(applicationModel.getName(), APPLICATION_IMPORT_APP_NAME_SUPER_TENANT);
-        } else {
-            Assert.assertEquals(applicationModel.getName(), APPLICATION_IMPORT_APP_NAME_TENANT);
-        }
-
-        Assert.assertNotNull(applicationModel.getId());
-        // Extract app id using a regex
-        importedAppId = applicationModel.getId();
-    }
-
-    @Test(dependsOnMethods = {"testImportApplications"})
-    public void testExportApplications() throws IOException, SAXException, ParserConfigurationException {
-
-        Response response = getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH +
-                PATH_SEPARATOR + importedAppId + APPLICATION_EXPORT_PATH, "application/octet-stream");
-
-        // Extract application name from the response XML
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        ByteArrayInputStream input = new ByteArrayInputStream(response.asString().getBytes(StandardCharsets.UTF_8));
-        Document doc = builder.parse(input);
-        doc.getDocumentElement().normalize();
-        Element eElement = (Element) doc.getDocumentElement().getChildNodes();
-        String appName = eElement.getElementsByTagName("ApplicationName").item(0).getTextContent();
-
-        if (StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            Assert.assertEquals(appName, APPLICATION_IMPORT_APP_NAME_SUPER_TENANT,
-                    "Application export response doesn't match.");
-        } else {
-            Assert.assertEquals(appName, APPLICATION_IMPORT_APP_NAME_TENANT,
-                    "Application export response doesn't match.");
-        }
-    }
+    // TODO: Import and export tests need to be rewritten to use the REST Assured APIs to do a multi-part upload.
+//    @Test
+//    public void testImportApplications() throws IOException, URISyntaxException {
+//
+//        String importFilePath;
+//        if (StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
+//            importFilePath = this.getClass().getResource("sample-sp-import-super-tenant.xml").getPath();
+//        } else {
+//            importFilePath = this.getClass().getResource("sample-sp-import-tenant.xml").getPath();
+//        }
+//        String response = getResponseOfPostWithFile(APPLICATION_MANAGEMENT_API_BASE_PATH + APPLICATION_IMPORT_PATH,
+//               importFilePath , "file");
+//
+//        ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+//        ApplicationModel applicationModel = jsonWriter.readValue(response, ApplicationModel.class);
+//        // Assert created application name
+//        Assert.assertNotNull(applicationModel);
+//        if (StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
+//            Assert.assertEquals(applicationModel.getName(), APPLICATION_IMPORT_APP_NAME_SUPER_TENANT);
+//        } else {
+//            Assert.assertEquals(applicationModel.getName(), APPLICATION_IMPORT_APP_NAME_TENANT);
+//        }
+//
+//        Assert.assertNotNull(applicationModel.getId());
+//        // Extract app id using a regex
+//        importedAppId = applicationModel.getId();
+//    }
+//
+//    @Test(dependsOnMethods = {"testImportApplications"})
+//    public void testExportApplications() throws IOException, SAXException, ParserConfigurationException {
+//
+//        Response response = getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH +
+//                PATH_SEPARATOR + importedAppId + APPLICATION_EXPORT_PATH, "application/octet-stream");
+//
+//        // Extract application name from the response XML
+//        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+//        DocumentBuilder builder = factory.newDocumentBuilder();
+//        ByteArrayInputStream input = new ByteArrayInputStream(response.asString().getBytes(StandardCharsets.UTF_8));
+//        Document doc = builder.parse(input);
+//        doc.getDocumentElement().normalize();
+//        Element eElement = (Element) doc.getDocumentElement().getChildNodes();
+//        String appName = eElement.getElementsByTagName("ApplicationName").item(0).getTextContent();
+//
+//        if (StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
+//            Assert.assertEquals(appName, APPLICATION_IMPORT_APP_NAME_SUPER_TENANT,
+//                    "Application export response doesn't match.");
+//        } else {
+//            Assert.assertEquals(appName, APPLICATION_IMPORT_APP_NAME_TENANT,
+//                    "Application export response doesn't match.");
+//        }
+//    }
 
     @Test
     public void createApplication() throws Exception {
