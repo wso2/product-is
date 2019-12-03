@@ -173,6 +173,9 @@
                                     org.wso2.carbon.identity.governance:org.wso2.carbon.identity.governance.feature:${identity.governance.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
+                                    org.wso2.carbon.identity.governance:org.wso2.carbon.identity.tenant.resource.manager.feature:${identity.governance.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon.identity.event.handler.accountlock:org.wso2.carbon.identity.handler.event.account.lock.feature:${identity.event.handler.account.lock.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -560,6 +563,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.governance.feature.group</id>
+                                    <version>${identity.governance.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.tenant.resource.manager</id>
                                     <version>${identity.governance.version}</version>
                                 </feature>
                                 <feature>
