@@ -25,6 +25,8 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static org.wso2.identity.integration.test.rest.api.server.application.management.v1.Utils.assertNotBlank;
+import static org.wso2.identity.integration.test.rest.api.server.application.management.v1.Utils.extractApplicationIdFromLocationHeader;
 
 /**
  * Tests for happy paths of the managing SAML applications using Application Management REST API.
@@ -71,7 +73,8 @@ public class ApplicationManagementSAMLSuccessTest extends ApplicationManagementB
                 .header(HttpHeaders.LOCATION, notNullValue());
 
         String location = responseOfPost.getHeader(HttpHeaders.LOCATION);
-        createdAppId = location.substring(location.lastIndexOf("/") + 1);
+        createdAppId = extractApplicationIdFromLocationHeader(location);
+        assertNotBlank(createdAppId);
     }
 
     @Test(dependsOnMethods = "testCreateSAMLAppWithMetadataFile")

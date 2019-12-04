@@ -17,28 +17,34 @@ package org.wso2.identity.integration.test.rest.api.server.application.managemen
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.application.mgt.ApplicationConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationListResponse;
+import org.xml.sax.SAXException;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static org.testng.Assert.assertNotNull;
+import static org.wso2.identity.integration.test.rest.api.server.application.management.v1.Utils.assertNotBlank;
+import static org.wso2.identity.integration.test.rest.api.server.application.management.v1.Utils.extractApplicationIdFromLocationHeader;
 
 /**
  * Tests for happy paths of the Application Management REST API.
@@ -55,43 +61,21 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
     private String createdAppId;
     private String importedAppId = null;
 
+    private String importFilePath;
+    private String importedApplicationName;
+
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public ApplicationManagementSuccessTest(TestUserMode userMode) throws Exception {
 
         super(userMode);
-    }
 
-    @BeforeClass(alwaysRun = true)
-    public void init() throws IOException {
-
-        super.testInit(API_VERSION, swaggerDefinition, tenant);
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void testConclude() {
-
-        super.conclude();
-    }
-
-    @BeforeMethod(alwaysRun = true)
-    public void testInit() {
-
-        RestAssured.basePath = basePath;
-    }
-
-    @AfterMethod(alwaysRun = true)
-    public void testFinish() {
-
-        RestAssured.basePath = StringUtils.EMPTY;
-    }
-
-    @DataProvider(name = "restAPIUserConfigProvider")
-    public static Object[][] restAPIUserConfigProvider() {
-
-        return new Object[][]{
-                {TestUserMode.SUPER_TENANT_ADMIN},
-                {TestUserMode.TENANT_ADMIN}
-        };
+        if (StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
+            importFilePath = this.getClass().getResource("sample-sp-import-super-tenant.xml").getPath();
+            importedApplicationName = APPLICATION_IMPORT_APP_NAME_SUPER_TENANT;
+        } else {
+            importFilePath = this.getClass().getResource("sample-sp-import-tenant.xml").getPath();
+            importedApplicationName = APPLICATION_IMPORT_APP_NAME_TENANT;
+        }
     }
 
     @Test
@@ -105,7 +89,7 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
         ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
         ApplicationListResponse listResponse = jsonWriter.readValue(response.asString(), ApplicationListResponse.class);
 
-        Assert.assertNotNull(listResponse);
+        assertNotNull(listResponse);
         Assert.assertTrue(listResponse.getApplications()
                         .stream()
                         .anyMatch(appBasicInfo -> appBasicInfo.getName().equals(ApplicationConstants.LOCAL_SP)),
@@ -120,57 +104,39 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
         }
     }
 
-    // TODO: Import and export tests need to be rewritten to use the REST Assured APIs to do a multi-part upload.
-//    @Test
-//    public void testImportApplications() throws IOException, URISyntaxException {
-//
-//        String importFilePath;
-//        if (StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-//            importFilePath = this.getClass().getResource("sample-sp-import-super-tenant.xml").getPath();
-//        } else {
-//            importFilePath = this.getClass().getResource("sample-sp-import-tenant.xml").getPath();
-//        }
-//        String response = getResponseOfPostWithFile(APPLICATION_MANAGEMENT_API_BASE_PATH + APPLICATION_IMPORT_PATH,
-//               importFilePath , "file");
-//
-//        ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
-//        ApplicationModel applicationModel = jsonWriter.readValue(response, ApplicationModel.class);
-//        // Assert created application name
-//        Assert.assertNotNull(applicationModel);
-//        if (StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-//            Assert.assertEquals(applicationModel.getName(), APPLICATION_IMPORT_APP_NAME_SUPER_TENANT);
-//        } else {
-//            Assert.assertEquals(applicationModel.getName(), APPLICATION_IMPORT_APP_NAME_TENANT);
-//        }
-//
-//        Assert.assertNotNull(applicationModel.getId());
-//        // Extract app id using a regex
-//        importedAppId = applicationModel.getId();
-//    }
-//
-//    @Test(dependsOnMethods = {"testImportApplications"})
-//    public void testExportApplications() throws IOException, SAXException, ParserConfigurationException {
-//
-//        Response response = getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH +
-//                PATH_SEPARATOR + importedAppId + APPLICATION_EXPORT_PATH, "application/octet-stream");
-//
-//        // Extract application name from the response XML
-//        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-//        DocumentBuilder builder = factory.newDocumentBuilder();
-//        ByteArrayInputStream input = new ByteArrayInputStream(response.asString().getBytes(StandardCharsets.UTF_8));
-//        Document doc = builder.parse(input);
-//        doc.getDocumentElement().normalize();
-//        Element eElement = (Element) doc.getDocumentElement().getChildNodes();
-//        String appName = eElement.getElementsByTagName("ApplicationName").item(0).getTextContent();
-//
-//        if (StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-//            Assert.assertEquals(appName, APPLICATION_IMPORT_APP_NAME_SUPER_TENANT,
-//                    "Application export response doesn't match.");
-//        } else {
-//            Assert.assertEquals(appName, APPLICATION_IMPORT_APP_NAME_TENANT,
-//                    "Application export response doesn't match.");
-//        }
-//    }
+    @Test
+    public void testImportApplications() throws IOException, URISyntaxException {
+
+        String endpoint = APPLICATION_MANAGEMENT_API_BASE_PATH + APPLICATION_IMPORT_PATH;
+        Response responseOfUpload = getResponseOfMultipartFilePost(endpoint, importFilePath);
+        responseOfUpload.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .header(HttpHeaders.LOCATION, notNullValue());
+
+        String location = responseOfUpload.getHeader(HttpHeaders.LOCATION);
+        importedAppId = extractApplicationIdFromLocationHeader(location);
+        assertNotBlank(importedAppId);
+    }
+
+    @Test(dependsOnMethods = {"testImportApplications"})
+    public void testExportApplications() throws IOException, ParserConfigurationException, SAXException {
+
+        Response response = getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH +
+                PATH_SEPARATOR + importedAppId + APPLICATION_EXPORT_PATH, "application/octet-stream");
+
+        // Extract application name from the response XML
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        ByteArrayInputStream input = new ByteArrayInputStream(response.asString().getBytes(StandardCharsets.UTF_8));
+        Document doc = builder.parse(input);
+        doc.getDocumentElement().normalize();
+        Element eElement = (Element) doc.getDocumentElement().getChildNodes();
+        String appName = eElement.getElementsByTagName("ApplicationName").item(0).getTextContent();
+
+        Assert.assertEquals(appName, importedApplicationName, "Application export response doesn't match.");
+    }
 
     @Test
     public void createApplication() throws Exception {
@@ -184,7 +150,8 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
                 .header(HttpHeaders.LOCATION, notNullValue());
 
         String location = responseOfPost.getHeader(HttpHeaders.LOCATION);
-        createdAppId = location.substring(location.lastIndexOf("/") + 1);
+        createdAppId = extractApplicationIdFromLocationHeader(location);
+        assertNotBlank(createdAppId);
     }
 
     @Test(dependsOnMethods = {"createApplication"})
