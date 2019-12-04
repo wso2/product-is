@@ -1,0 +1,24 @@
+{
+  "isEnabled": true,
+  "isDefault": true,
+  "blockingEnabled": false,
+  "rulesEnabled": false,
+  "properties": [
+    {
+      "key": "scim-user-ep",
+      "value": "https://localhost:9445/userinfo"
+    },
+    {
+      "key": "scim-username",
+      "value": "admin"
+    },
+    {
+      "key": "scim-enable-pwd-provisioning",
+      "value": "true"
+    },
+    {
+      "key": "scim-password",
+      "value": "admin"
+    }
+  ]
+}

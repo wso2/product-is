@@ -64,6 +64,8 @@ public class IdentityProviderManagementTestCase extends ISIntegrationTest {
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
+        identityProviderMgtServiceClient.deleteIdP("TestIdentityProvider1_new");
+        identityProviderMgtServiceClient.deleteIdP("TestIdentityProvider2");
         identityProviderMgtServiceClient = null;
         userMgtClient.deleteRole("umRole1");
         userStoreConfigurationClient.deleteUserStore("indu.com");

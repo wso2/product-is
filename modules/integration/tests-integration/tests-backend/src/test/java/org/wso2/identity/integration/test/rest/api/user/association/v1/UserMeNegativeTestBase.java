@@ -17,7 +17,6 @@
 package org.wso2.identity.integration.test.rest.api.user.association.v1;
 
 import io.restassured.RestAssured;
-import org.apache.axis2.AxisFault;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -44,7 +43,7 @@ import static org.hamcrest.core.Is.is;
 public class UserMeNegativeTestBase extends UserAssociationTestBase {
 
     private static final Log log = LogFactory.getLog(UserMeNegativeTestBase.class);
-    private static final String TEST_USER = "TestUser";
+    private static final String TEST_USER_1 = "TestUser01";
     private static final String TEST_USER_PW = "Test123";
     private TestUserMode userMode;
 
@@ -65,9 +64,9 @@ public class UserMeNegativeTestBase extends UserAssociationTestBase {
         initUrls("me");
 
         try {
-            createUser(TEST_USER, TEST_USER_PW, null);
+            createUser(TEST_USER_1, TEST_USER_PW, null);
         } catch (Exception e) {
-            log.error("Error while creating the user :" + TEST_USER, e);
+            log.error("Error while creating the user :" + TEST_USER_1, e);
         }
     }
 
@@ -77,9 +76,9 @@ public class UserMeNegativeTestBase extends UserAssociationTestBase {
         super.conclude();
 
         try {
-            deleteUser(TEST_USER);
+            deleteUser(TEST_USER_1);
         } catch (Exception e) {
-            log.error("Error while deleting the user :" + TEST_USER, e);
+            log.error("Error while deleting the user :" + TEST_USER_1, e);
         }
     }
 
@@ -109,9 +108,9 @@ public class UserMeNegativeTestBase extends UserAssociationTestBase {
 
         String body;
         if (TestUserMode.SUPER_TENANT_ADMIN.equals(userMode)) {
-            body = readResource("association-creation-ic.json");
+            body = readResource("association-creation-1-ic.json");
         } else {
-            body = readResource("association-creation-tenant-ic.json").replace("TENANT", tenant);
+            body = readResource("association-creation-tenant-1-ic.json").replace("TENANT", tenant);
         }
         getResponseOfPost(this.userAssociationEndpointURI, body)
                 .then()
