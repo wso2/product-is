@@ -1913,8 +1913,8 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.15.28</carbon.identity.framework.version>
-        <carbon.identity.framework.version.range>[5.15.22, 6.0.0]</carbon.identity.framework.version.range>
+        <carbon.identity.framework.version>5.15.25</carbon.identity.framework.version>
+        <carbon.identity.framework.version.range>[5.15.25, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
         <saml.common.util.version>1.0.3</saml.common.util.version>
