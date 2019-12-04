@@ -71,11 +71,7 @@ public class ApplicationMetadataPositiveTest extends ApplicationManagementBaseTe
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public ApplicationMetadataPositiveTest(TestUserMode userMode) throws Exception {
 
-        super.init(userMode);
-        this.context = isServer;
-        this.authenticatingUserName = context.getContextTenant().getTenantAdmin().getUserName();
-        this.authenticatingCredential = context.getContextTenant().getTenantAdmin().getPassword();
-        this.tenant = context.getContextTenant().getDomain();
+        super(userMode);
     }
 
     @BeforeClass(alwaysRun = true)
