@@ -276,6 +276,18 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
         return buffer.toString().contains("You are logged in as " + userName);
     }
 
+    public boolean validateSAMLLogoutResponse(HttpResponse response) throws IOException {
+
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+        StringBuffer buffer = new StringBuffer();
+        String line = "";
+        while ((line = bufferedReader.readLine()) != null) {
+            buffer.append(line);
+        }
+        bufferedReader.close();
+        return buffer.toString().contains("index.jsp");
+    }
+
     public void closeHttpConnection(HttpResponse response) throws IOException {
 
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
