@@ -127,6 +127,7 @@ public class RESTTestBase extends ISIntegrationTest {
     }
 
     protected void conclude() {
+
         RestAssured.basePath = StringUtils.EMPTY;
     }
 
@@ -162,7 +163,6 @@ public class RESTTestBase extends ISIntegrationTest {
         String content = new String(Files.readAllBytes(Paths.get(filePath)));
         return convertYamlToJson(content);
     }
-
 
     /**
      * Override all the occurrences of "find" values in content with "replace"
@@ -250,6 +250,7 @@ public class RESTTestBase extends ISIntegrationTest {
      * @return response
      */
     protected Response getResponseOfGet(String endpointUri) {
+
         return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
                 .contentType(ContentType.JSON)
                 .header(HttpHeaders.ACCEPT, ContentType.JSON)
@@ -260,9 +261,9 @@ public class RESTTestBase extends ISIntegrationTest {
     }
 
     /**
-     *
      * Invoke given endpointUri for GET with Basic authentication, authentication credential being the
      * authenticatingUserName and authenticatingCredential
+     *
      * @param endpointUri endpoint to be invoked
      * @param contentType content type to be passed
      * @return
@@ -285,10 +286,11 @@ public class RESTTestBase extends ISIntegrationTest {
      * authenticatingUserName and authenticatingCredential
      *
      * @param endpointUri endpoint to be invoked
-     * @param params request Parameters
+     * @param params      request Parameters
      * @return response
      */
-    protected Response getResponseOfGet(String endpointUri, Map<String,Object> params) {
+    protected Response getResponseOfGet(String endpointUri, Map<String, Object> params) {
+
         return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
                 .contentType(ContentType.JSON)
                 .header(HttpHeaders.ACCEPT, ContentType.JSON)
@@ -364,6 +366,92 @@ public class RESTTestBase extends ISIntegrationTest {
                 .when()
                 .log().ifValidationFails()
                 .post(endpointUri);
+    }
+
+    /**
+     * Uploads a file to a given endpointUri with a POST request.
+     *
+     * @param endpointUri endpoint to upload the file
+     * @param fileField   control name to be used in form
+     * @param filePath    file path of the file
+     * @return response
+     */
+    protected Response getResponseOfMultipartFilePost(String endpointUri, String fileField, String filePath) {
+
+        return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
+                .config(RestAssured.config().encoderConfig(encoderconfig
+                        .appendDefaultContentCharsetToContentTypeIfUndefined(false)))
+                .multiPart(fileField, new File(filePath))
+                .log().ifValidationFails()
+                .filter(validationFilter)
+                .log().ifValidationFails()
+                .when()
+                .log().ifValidationFails()
+                .post(endpointUri);
+    }
+
+    /**
+     * Uploads a file to a given endpointUri with a POST request.
+     *
+     * @param endpointUri endpoint to upload the file
+     * @param filePath    file path of the file
+     * @return response
+     */
+    protected Response getResponseOfMultipartFilePost(String endpointUri, String filePath) {
+
+        return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
+                .config(RestAssured.config().encoderConfig(encoderconfig
+                        .appendDefaultContentCharsetToContentTypeIfUndefined(false)))
+                .multiPart(new File(filePath))
+                .log().ifValidationFails()
+                .filter(validationFilter)
+                .log().ifValidationFails()
+                .when()
+                .log().ifValidationFails()
+                .post(endpointUri);
+    }
+
+    /**
+     * Uploads a file to a given endpointUri with a PUT request.
+     *
+     * @param endpointUri endpoint to upload the file
+     * @param filePath    file path of the file
+     * @return response
+     */
+    protected Response getResponseOfMultipartFilePut(String endpointUri, String filePath) {
+
+        return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
+                .config(RestAssured.config().encoderConfig(encoderconfig
+                        .appendDefaultContentCharsetToContentTypeIfUndefined(false)))
+                .multiPart(new File(filePath))
+                .log().ifValidationFails()
+                .filter(validationFilter)
+                .log().ifValidationFails()
+                .when()
+                .log().ifValidationFails()
+                .put(endpointUri);
+    }
+
+    /**
+     * Uploads a file to a given endpointUri with a PUT request.
+     *
+     * @param endpointUri endpoint to upload the file
+     * @param fileField   control name to be used in form
+     * @param filePath    file path of the file
+     * @return response
+     */
+    protected Response getResponseOfMultipartFilePut(String endpointUri, String fileField, String filePath) {
+
+        return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
+                .config(RestAssured.config().encoderConfig(encoderconfig
+                        .appendDefaultContentCharsetToContentTypeIfUndefined(false)))
+                .multiPart(fileField, new File(filePath))
+                .log().ifValidationFails()
+                .filter(validationFilter)
+                .log().ifValidationFails()
+                .when()
+                .log().ifValidationFails()
+                .put(endpointUri);
     }
 
     /**
@@ -478,7 +566,6 @@ public class RESTTestBase extends ISIntegrationTest {
                       .post(endpointUri);
     }
 
-
     /**
      * Invoke given endpointUri for Form POST request with given body, headers and Basic authentication credentials
      *
@@ -498,8 +585,6 @@ public class RESTTestBase extends ISIntegrationTest {
                       .when()
                       .post(endpointUri);
     }
-
-
 
     /**
      * Invoke given endpointUri for PUT with given body and Basic authentication, authentication credential being the
@@ -523,13 +608,12 @@ public class RESTTestBase extends ISIntegrationTest {
                 .put(endpointUri);
     }
 
-
     /**
      * Invoke given endpointUri for PUT with given body and Basic authentication, authentication credential being the
      * authenticatingUserName and authenticatingCredential
      *
      * @param endpointUri ndpoint to be invoked
-     * @param body payload
+     * @param body        payload
      * @param contentType content type
      * @return response
      */
@@ -554,7 +638,7 @@ public class RESTTestBase extends ISIntegrationTest {
      * credential being the authenticatingUserName and authenticatingCredential.
      *
      * @param endpointURI endpoint to be invoked
-     * @param body payload
+     * @param body        payload
      * @param contentType content Type
      * @return reponse
      */
@@ -580,7 +664,7 @@ public class RESTTestBase extends ISIntegrationTest {
      * credential being the authenticatingUserName and authenticatingCredential.
      *
      * @param endpointURI endpoint to be invoked
-     * @param body payload
+     * @param body        payload
      * @return reponse
      */
     protected Response getResponseOfPatch(String endpointURI, String body) {
@@ -620,7 +704,6 @@ public class RESTTestBase extends ISIntegrationTest {
     }
 
     /**
-     *
      * Invoke given endpointUri for DELETE with given body and Basic authentication, authentication credential being
      * the authenticatingUserName and authenticatingCredential
      *
@@ -631,21 +714,20 @@ public class RESTTestBase extends ISIntegrationTest {
     protected Response getResponseOfDelete(String endpointURI, Map<String, String> headers) {
 
         return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
-                      .contentType(ContentType.JSON)
-                      .headers(headers)
-                      .when()
-                      .delete(endpointURI);
+                .contentType(ContentType.JSON)
+                .headers(headers)
+                .when()
+                .delete(endpointURI);
     }
-
 
     /**
      * Validate the response to be in the following desired format of Error Response
-     *  {
-     *      "code": "some_error_code",
-     *      "message": "Some Error Message",
-     *      "description": "Some Error Description",
-     *      "traceId"" : "corelation-id",
-     *  }
+     * {
+     * "code": "some_error_code",
+     * "message": "Some Error Message",
+     * "description": "Some Error Description",
+     * "traceId"" : "corelation-id",
+     * }
      *
      * @param response             API error response
      * @param httpStatusCode       http status code
@@ -663,8 +745,10 @@ public class RESTTestBase extends ISIntegrationTest {
         validateErrorDescription(response, errorCode, errorDescriptionArgs);
     }
 
-    /** Validate http status code of the response
-     * @param response response
+    /**
+     * Validate http status code of the response
+     *
+     * @param response       response
      * @param httpStatusCode expected status code
      */
     protected void validateHttpStatusCode(Response response, int httpStatusCode) {
@@ -676,9 +760,11 @@ public class RESTTestBase extends ISIntegrationTest {
                 .statusCode(httpStatusCode);
     }
 
-    /** Validate error description of the response, if an entry is available in RESTAPIErrors.properties
-     * @param response response
-     * @param errorCode error code
+    /**
+     * Validate error description of the response, if an entry is available in RESTAPIErrors.properties
+     *
+     * @param response     response
+     * @param errorCode    error code
      * @param placeHolders values to be replaced in the error description in the corresponding entry in RESTAPIErrors
      *                     .properties
      */
@@ -687,8 +773,10 @@ public class RESTTestBase extends ISIntegrationTest {
         validateElementAgainstErrorProperties(response, errorCode, "description", placeHolders);
     }
 
-    /** Validate error message of the response, if an entry is available in RESTAPIErrors.properties
-     * @param response response
+    /**
+     * Validate error message of the response, if an entry is available in RESTAPIErrors.properties
+     *
+     * @param response  response
      * @param errorCode error code
      */
     private void validateErrorMessage(Response response, String errorCode) {
@@ -698,9 +786,10 @@ public class RESTTestBase extends ISIntegrationTest {
 
     /**
      * Validate elements in error response against entries in RESTAPIErrors.properties
-     * @param response response
-     * @param errorCode API error code
-     * @param element element
+     *
+     * @param response          response
+     * @param errorCode         API error code
+     * @param element           element
      * @param placeHolderValues placeholder values
      *                          arg[0], key element in the RESTAPIErrors.properties (error-code.arg[0])
      *                          arg[1-n] place holder values to replace in value in the RESTAPIErrors.properties
@@ -722,8 +811,9 @@ public class RESTTestBase extends ISIntegrationTest {
 
     /**
      * Validate a response element against a matcher
-     * @param response response
-     * @param element JSON path element to match
+     *
+     * @param response             response
+     * @param element              JSON path element to match
      * @param responseAwareMatcher expected matcher
      */
     protected void validateResponseElement(Response response, String element, Matcher
