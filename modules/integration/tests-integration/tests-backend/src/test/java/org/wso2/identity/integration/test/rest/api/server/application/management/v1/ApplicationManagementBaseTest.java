@@ -20,7 +20,10 @@ import org.apache.commons.lang.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.common.RESTAPIServerTestBase;
 
 import java.io.IOException;
@@ -49,6 +52,21 @@ public class ApplicationManagementBaseTest extends RESTAPIServerTestBase {
         }
     }
 
+    public ApplicationManagementBaseTest(TestUserMode userMode) throws Exception {
+
+        super.init(userMode);
+        this.context = isServer;
+        this.authenticatingUserName = context.getContextTenant().getTenantAdmin().getUserName();
+        this.authenticatingCredential = context.getContextTenant().getTenantAdmin().getPassword();
+        this.tenant = context.getContextTenant().getDomain();
+    }
+
+    @BeforeClass(alwaysRun = true)
+    public void init() throws IOException {
+
+        super.testInit(API_VERSION, swaggerDefinition, tenant);
+    }
+
     @AfterClass(alwaysRun = true)
     public void testConclude() throws Exception {
 
@@ -65,5 +83,14 @@ public class ApplicationManagementBaseTest extends RESTAPIServerTestBase {
     public void testFinish() {
 
         RestAssured.basePath = StringUtils.EMPTY;
+    }
+
+    @DataProvider(name = "restAPIUserConfigProvider")
+    public static Object[][] restAPIUserConfigProvider() {
+
+        return new Object[][]{
+                {TestUserMode.SUPER_TENANT_ADMIN},
+                {TestUserMode.TENANT_ADMIN}
+        };
     }
 }
