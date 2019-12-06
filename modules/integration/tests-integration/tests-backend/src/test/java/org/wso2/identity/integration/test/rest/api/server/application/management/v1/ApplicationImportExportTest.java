@@ -30,7 +30,6 @@ import org.xml.sax.SAXException;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -116,20 +115,16 @@ public class ApplicationImportExportTest extends ApplicationManagementBaseTest {
     @Test(dependsOnMethods = {"testExportApplication"})
     public void testUpdateApplicationWithImport() throws Exception {
 
-        try {
-            String endpoint = APPLICATION_MANAGEMENT_API_BASE_PATH + APPLICATION_IMPORT_PATH;
-            Response responseOfUpload = getResponseOfMultipartFilePut(endpoint, importUpdateFilePath);
-            responseOfUpload.then()
-                    .log().ifValidationFails()
-                    .assertThat()
-                    .statusCode(HttpStatus.SC_OK)
-                    .header(HttpHeaders.LOCATION, notNullValue());
-            String location = responseOfUpload.getHeader(HttpHeaders.LOCATION);
-            importedAppId = extractApplicationIdFromLocationHeader(location);
-            assertNotBlank(importedAppId);
-        } catch (Throwable ex) {
-            log.info(ex);
-        }
+        String endpoint = APPLICATION_MANAGEMENT_API_BASE_PATH + APPLICATION_IMPORT_PATH;
+        Response responseOfUpload = getResponseOfMultipartFilePut(endpoint, importUpdateFilePath);
+        responseOfUpload.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .header(HttpHeaders.LOCATION, notNullValue());
+        String location = responseOfUpload.getHeader(HttpHeaders.LOCATION);
+        importedAppId = extractApplicationIdFromLocationHeader(location);
+        assertNotBlank(importedAppId);
     }
 
     @Test(dependsOnMethods = {"testUpdateApplicationWithImport"})
