@@ -422,10 +422,7 @@ public class RESTTestBase extends ISIntegrationTest {
                 .config(RestAssured.config().encoderConfig(encoderconfig
                         .appendDefaultContentCharsetToContentTypeIfUndefined(false)))
                 .multiPart(new File(filePath))
-                .filter(validationFilter)
-                .log().ifValidationFails()
                 .when()
-                .log().ifValidationFails()
                 .put(endpointUri);
     }
 
@@ -443,10 +440,7 @@ public class RESTTestBase extends ISIntegrationTest {
                 .config(RestAssured.config().encoderConfig(encoderconfig
                         .appendDefaultContentCharsetToContentTypeIfUndefined(false)))
                 .multiPart(fileField, new File(filePath))
-                .filter(validationFilter)
-                .log().ifValidationFails()
                 .when()
-                .log().ifValidationFails()
                 .put(endpointUri);
     }
 
