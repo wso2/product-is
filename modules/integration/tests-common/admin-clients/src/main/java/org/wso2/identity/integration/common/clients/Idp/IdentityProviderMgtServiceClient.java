@@ -161,6 +161,66 @@ public class IdentityProviderMgtServiceClient {
     }
 
     /**
+     * Retrieves registered Identity providers for a given filter, pageNumber and tenant.
+     *
+     * @param filter     filter value.
+     * @param pageNumber page number.
+     * @return List of <code>FederatedIdentityProvider</code>. IdP names, primary IdP and home realm
+     * identifiers of each IdP.
+     * @throws Exception Error when getting list of Identity Providers.
+     */
+    public List<IdentityProvider> getPaginatedIdPsInfo(String filter, int pageNumber) throws Exception {
+
+        IdentityProvider[] identityProviders = idPMgtStub.getPaginatedIdpInfo(filter, pageNumber);
+        if (identityProviders != null && identityProviders.length > 0) {
+            return Arrays.asList(identityProviders);
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
+    /**
+     * Retrieves registered Identity providers for a given tenant and pageNumber.
+     *
+     * @param pageNumber page number.
+     * @return List of <code>FederatedIdentityProvider</code>. IdP names, primary IdP and home realm
+     * identifiers of each IdP.
+     * @throws Exception Error when getting list of Identity Providers.
+     */
+    public List<IdentityProvider> getAllPaginatedIdPsInfo(int pageNumber) throws Exception {
+
+        IdentityProvider[] identityProviders = idPMgtStub.getAllPaginatedIdpInfo(pageNumber);
+        if (identityProviders != null && identityProviders.length > 0) {
+            return Arrays.asList(identityProviders);
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
+    /**
+     * Retrieves filtered registered Identity providers count for a given tenant
+     *
+     * @param filter filter value.
+     * @return filtered identity provider count.
+     * @throws Exception Error when getting count of Identity Providers.
+     */
+    public int getFilteredIdpCount(String filter) throws Exception {
+
+        return idPMgtStub.getFilteredIdpCount(filter);
+    }
+
+    /**
+     * Retrieves all registered Identity providers count for a given tenant
+     *
+     * @return identity provider count.
+     * @throws Exception Error when getting count of Identity Providers.
+     */
+    public int getAllIdpCount() throws Exception {
+
+        return idPMgtStub.getAllIdpCount();
+    }
+
+    /**
      * Retrieves Enabled registered Identity providers for a given tenant
      * 
      * @return List of <code>FederatedIdentityProvider</code>. IdP names, primary IdP and home realm

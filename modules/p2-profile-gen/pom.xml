@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>5.10.0-m8-SNAPSHOT</version>
+        <version>5.10.0-m9-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -341,9 +341,6 @@
                                 <featureArtifactDef>
                                     org.wso2.ciphertool:org.wso2.ciphertool.feature:${cipher-tool.version}
                                 </featureArtifactDef>
-                                <feaureArtifactDef>
-                                    org.wso2.carbon.dashboards:org.wso2.carbon.dashboards.shindig.feature:${carbon.dashboards.version}
-                                </feaureArtifactDef>
 
                                 <!-- Workflow mgt Feature -->
                                 <featureArtifactDef>
@@ -818,10 +815,6 @@
                                     <version>${identity.workflow.template.multisteps.version}</version>
                                 </feature>
 
-                                <feature>
-                                    <id>org.wso2.carbon.dashboards.shindig.feature.group</id>
-                                    <version>${carbon.dashboards.version}</version>
-                                </feature>
                                 <feature>
                                     <id>org.wso2.carbon.user.mgt.workflow.feature.group</id>
                                     <version>${identity.user.workflow.version}</version>
@@ -1335,10 +1328,6 @@
                                     <version>${cipher-tool.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.dashboards.shindig.feature.group</id>
-                                    <version>${carbon.dashboards.version}</version>
-                                </feature>
-                                <feature>
                                     <id>org.wso2.carbon.user.mgt.workflow.feature.group</id>
                                     <version>${identity.user.workflow.version}</version>
                                 </feature>
@@ -1742,11 +1731,6 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.workflow.template.server.feature.group</id>
                                     <version>${identity.workflow.template.multisteps.version}</version>
-                                </feature>
-
-                                <feature>
-                                    <id>org.wso2.carbon.dashboards.shindig.feature.group</id>
-                                    <version>${carbon.dashboards.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.user.mgt.workflow.server.feature.group</id>
