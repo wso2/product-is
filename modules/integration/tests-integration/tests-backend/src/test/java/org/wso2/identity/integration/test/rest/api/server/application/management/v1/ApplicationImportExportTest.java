@@ -95,7 +95,7 @@ public class ApplicationImportExportTest extends ApplicationManagementBaseTest {
     }
 
     @Test(dependsOnMethods = {"testCreateWithImport"})
-    public void testExportApplication() throws IOException, ParserConfigurationException, SAXException {
+    public void testExportApplication() throws Exception {
 
         Response response = getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH +
                 PATH_SEPARATOR + importedAppId + APPLICATION_EXPORT_PATH, "application/octet-stream");
@@ -128,7 +128,7 @@ public class ApplicationImportExportTest extends ApplicationManagementBaseTest {
     }
 
     @Test(dependsOnMethods = {"testUpdateApplicationWithImport"})
-    public void testExportUpdatedApplication() throws IOException, ParserConfigurationException, SAXException {
+    public void testExportUpdatedApplication() throws Exception {
 
         Response response = getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH +
                 PATH_SEPARATOR + importedAppId + APPLICATION_EXPORT_PATH, "application/octet-stream");
