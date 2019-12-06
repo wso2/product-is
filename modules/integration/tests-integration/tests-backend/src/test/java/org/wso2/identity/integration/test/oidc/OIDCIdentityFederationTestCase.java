@@ -27,7 +27,6 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -56,7 +55,9 @@ import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -97,6 +98,8 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
 
     CookieStore cookieStore = new BasicCookieStore();
 
+    HttpClient client = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
+
     @BeforeClass(alwaysRun = true)
     public void initTest() throws Exception {
 
@@ -120,22 +123,6 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
         //add new test user to secondary IS
         boolean userCreated = addUserToSecondaryIS();
         Assert.assertTrue(userCreated, "User creation failed.");
-    }
-
-    private boolean addUserToSecondaryIS() throws Exception {
-
-        UserManagementClient usrMgtClient = new UserManagementClient(getSecondaryISURI(), "admin", "admin");
-        if (usrMgtClient == null) {
-            return false;
-        } else {
-            String[] roles = {usrRole};
-            usrMgtClient.addUser(usrName, usrPwd, roles, null);
-            if (usrMgtClient.userNameExists(usrRole, usrName)) {
-                return true;
-            } else {
-                return false;
-            }
-        }
     }
 
     @AfterClass(alwaysRun = true)
@@ -260,273 +247,65 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
                 getAuthenticationType()), "Failed to update local and out bound configs in primary IS");
     }
 
-    /**
-     * Send post request with parameters
-     *
-     * @param client
-     * @param urlParameters
-     * @param url
-     * @return
-     * @throws ClientProtocolException
-     * @throws java.io.IOException
-     */
-    public HttpResponse sendPostRequestWithParameters(HttpClient client, List<NameValuePair> urlParameters, String url)
-            throws ClientProtocolException, IOException {
-
-        HttpPost request = new HttpPost(url);
-        request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
-        request.setEntity(new UrlEncodedFormEntity(urlParameters));
-
-        HttpResponse response = client.execute(request);
-        return response;
-    }
-
-    /**
-     * Send Get request
-     *
-     * @param client      - http Client
-     * @param locationURL - Get url location
-     * @return http response
-     * @throws ClientProtocolException
-     * @throws java.io.IOException
-     */
-    public HttpResponse sendGetRequest(HttpClient client, String locationURL) throws ClientProtocolException,
-            IOException {
-
-        HttpGet getRequest = new HttpGet(locationURL);
-        getRequest.addHeader("User-Agent", OAuth2Constant.USER_AGENT);
-        HttpResponse response = client.execute(getRequest);
-
-        return response;
-    }
-
-    /**
-     * Send approval post request with consent
-     *
-     * @param client                http client
-     * @param sessionDataKeyConsent session consent data
-     * @param consentClaims         claims requiring user consent
-     * @return http response
-     * @throws java.io.IOException
-     */
-    public HttpResponse sendApprovalPostWithConsent(HttpClient client, String sessionDataKeyConsent,
-                                                    List<NameValuePair> consentClaims) throws IOException {
-
-        List<NameValuePair> urlParameters = new ArrayList<>();
-        urlParameters.add(new BasicNameValuePair("sessionDataKeyConsent", sessionDataKeyConsent));
-        urlParameters.add(new BasicNameValuePair("scope-approval", "approve"));
-        urlParameters.add(new BasicNameValuePair("user_claims_consent", "true"));
-        urlParameters.add(new BasicNameValuePair("consent_select_all", "on"));
-        urlParameters.add(new BasicNameValuePair("consent_0", "on"));
-        urlParameters.add(new BasicNameValuePair("consent", "approve"));
-
-        if (consentClaims != null) {
-            urlParameters.addAll(consentClaims);
-        }
-
-        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, "https://localhost:9854/oauth2" +
-                "/authorize");
-        return response;
-    }
-
-    public HttpResponse sendLogoutApprovalPostWithConsent(HttpClient client) throws IOException {
-
-        List<NameValuePair> urlParameters = new ArrayList<>();
-        urlParameters.add(new BasicNameValuePair("consent", "approve"));
-
-
-        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, "https://localhost:9854/oidc" +
-                "/logout");
-        return response;
-    }
-
-    /**
-     * Send Post request to a given locationURL
-     *
-     * @param client      - http Client
-     * @param locationURL - Post url location
-     * @return http response
-     * @throws ClientProtocolException
-     * @throws java.io.IOException
-     */
-    public HttpResponse sendPostRequest(HttpClient client, String locationURL) throws ClientProtocolException,
-            IOException {
-
-        HttpPost postRequest = new HttpPost(locationURL);
-        postRequest.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
-        HttpResponse response = client.execute(postRequest);
-
-        return response;
-    }
-
-    public HttpResponse sendLoginPost(HttpClient client, String sessionDataKey) throws IOException {
-
-        List<NameValuePair> urlParameters = new ArrayList<>();
-        urlParameters.add(new BasicNameValuePair("username", usrName));
-        urlParameters.add(new BasicNameValuePair("password", usrPwd));
-        urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
-
-        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, "https://localhost:9854" +
-                "/commonauth");
-
-        return response;
-    }
-
-    private String testAuthentication(HttpClient client, String sessionDataKey) throws Exception {
-
-        HttpResponse response = sendLoginPost(client, sessionDataKey);
-        Assert.assertNotNull(response, "Login request failed. response is null.");
-
-        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
-        Assert.assertNotNull(locationHeader, "Login response header is null.");
-        EntityUtils.consume(response.getEntity());
-
-        response = sendGetRequest(client, locationHeader.getValue());
-        Map<String, Integer> keyPositionMap = new HashMap<>(1);
-        keyPositionMap.put("name=\"sessionDataKeyConsent\"", 1);
-        List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil.extractSessionConsentDataFromResponse(response,
-                keyPositionMap);
-        Assert.assertNotNull(keyValues, "SessionDataKeyConsent key value is null.");
-
-        String sessionDataKeyConsent = keyValues.get(0).getValue();
-        Assert.assertNotNull(sessionDataKeyConsent, "Invalid sessionDataKeyConsent.");
-        EntityUtils.consume(response.getEntity());
-
-        return sessionDataKeyConsent;
-    }
-
-    private String testConsentApproval(HttpClient client, String sessionDataKeyConsent) throws Exception {
-
-        List<NameValuePair> consentParameters = new ArrayList<>();
-
-        HttpResponse response = sendApprovalPostWithConsent(client, sessionDataKeyConsent, consentParameters);
-        Assert.assertNotNull(response, "Approval request failed.");
-
-        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
-        Assert.assertNotNull(locationHeader, "Approval request failed for.");
-        EntityUtils.consume(response.getEntity());
-
-        return locationHeader.getValue();
-    }
-
-    private String testLogoutConsentApproval(HttpClient client) throws Exception {
-
-        HttpResponse response = sendLogoutApprovalPostWithConsent(client);
-        Assert.assertNotNull(response, "Approval request failed.");
-
-        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
-        Assert.assertNotNull(locationHeader, "Approval request failed for.");
-        EntityUtils.consume(response.getEntity());
-
-        return locationHeader.getValue();
-    }
-
-    private String handleMissingClaims(HttpResponse response, String locationHeader, HttpClient client, String
-            pastrCookie) throws Exception {
-
-        EntityUtils.consume(response.getEntity());
-
-        response = Utils.sendPOSTConsentMessage(response, String.format(COMMON_AUTH_URL, DEFAULT_PORT + PORT_OFFSET_0),
-                USER_AGENT, locationHeader, client, pastrCookie);
-        EntityUtils.consume(response.getEntity());
-
-        return getHeaderValue(response, "Location");
-    }
-
-    private String testAuthzCode(HttpClient client, String authzResponseURL) throws Exception {
-
-
-        HttpClient httpClientWithoutAutoRedirections = HttpClientBuilder.create().disableRedirectHandling()
-                .setDefaultCookieStore(cookieStore).build();
-        HttpResponse response = sendGetRequest(httpClientWithoutAutoRedirections, authzResponseURL);
-        Assert.assertNotNull(response, "Authorization code response to primary IS is invalid.");
-
-        String locationHeader = getHeaderValue(response, "Location");
-        Assert.assertNotNull(locationHeader, "locationHeader not found in response.");
-        String pastrCookie = Utils.getPastreCookie(response);
-        Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
-
-        if (Utils.requestMissingClaims(response)) {
-            locationHeader = handleMissingClaims(response, locationHeader, client, pastrCookie);
-            Assert.assertNotNull(locationHeader, "locationHeader not found in response.");
-        }
-
-        return locationHeader;
-    }
-
     @Test(priority = 4, groups = "wso2.is", description = "Check login flow of primary IS service provider")
     public void testFederation() throws Exception {
 
-        HttpClient client = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
+        String sessionDataKeyOfSecondaryISLogin = sendSAMLRequestToPrimaryIS();
+        Assert.assertNotNull(sessionDataKeyOfSecondaryISLogin, "Unable to acquire 'sessionDataKey' value in secondary IS");
 
-        String sessionId = sendSAMLRequestToPrimaryIS(client);
-        Assert.assertNotNull(sessionId, "Unable to acquire 'sessionDataKey' value in secondary IS");
+        String sessionDataKeyConsentOfSecondaryIS = doAuthenticationInSecondaryIS(sessionDataKeyOfSecondaryISLogin);
+        Assert.assertNotNull(sessionDataKeyConsentOfSecondaryIS, "Invalid sessionDataKeyConsent.");
 
-        String sessionDataKeyConsent = testAuthentication(client, sessionId);
-        String authzResponseURL = testConsentApproval(client, sessionDataKeyConsent);
+        String callbackURLOfPrimaryIS = doConsentApprovalInSecondaryIS(sessionDataKeyConsentOfSecondaryIS);
+        Assert.assertNotNull(callbackURLOfPrimaryIS, "Unable to acquire authorizeCallbackURL in primary IS");
 
-        String authorizeURL = testAuthzCode(client, authzResponseURL);
-        Assert.assertNotNull(authorizeURL, "Unable to acquire authorizeURL in primary IS");
-
-        HttpResponse response = sendGetRequest(client, authorizeURL);
-        String samlResponse = extractValueFromResponse(response, "SAMLResponse", 5);
-
+        String samlResponse = getSAMLResponseFromPrimaryIS(callbackURLOfPrimaryIS);
         Assert.assertNotNull(samlResponse, "Unable to acquire SAML response from primary IS");
 
         String decodedSAMLResponse = new String(Base64.decode(samlResponse));
-        Assert.assertTrue(decodedSAMLResponse.contains("AuthnContextClassRef"), "AuthnContextClassRef is not received" +
-                ".");
+        Assert.assertTrue(decodedSAMLResponse.contains("AuthnContextClassRef"), "AuthnContextClassRef is not received.");
 
-        boolean validResponse = sendSAMLResponseToWebApp(client, samlResponse);
-        Assert.assertTrue(validResponse, "Invalid SAML response received by travelocity app");
-
-        testLogout(client);
-
+        String homepageContent = sendSAMLResponseToWebApp(samlResponse);
+        boolean isValidLogin = validateLoginHomePageContent(homepageContent);
+        Assert.assertTrue(isValidLogin, "Invalid SAML login response received by travelocity app");
     }
 
-    private void testLogout(HttpClient client) throws Exception {
+    @Test(priority = 5, groups = "wso2.is", description = "Check logout flow of primary IS service provider")
+    public void testLogout() throws Exception {
 
-        HttpResponse response = sendGetRequest(client, SAML_SSO_LOGOUT_URL);
-        extractValueFromResponse(response, "name=\"sessionDataKey\"", 1);
-        Assert.assertNotNull(response);
+        sendLogoutRequestToPrimaryIS();
 
-        String logoutResponseToPrimaryIS = testLogoutConsentApproval(client);
-        response = sendGetRequest(client, logoutResponseToPrimaryIS);
-        String samlLogoutResponse = extractValueFromResponse(response, "SAMLResponse", 5);
+        String samlLogoutResponseToWebapp = doLogoutConsentApprovalInSecondaryIS();
+        Assert.assertNotNull(samlLogoutResponseToWebapp, "Unable to acquire SAML Logout response from travelocity app");
 
-        Assert.assertNotNull(samlLogoutResponse, "Unable to acquire SAML Logout response from primary IS");
-
-        String decodedSAMLResponse = new String(Base64.decode(samlLogoutResponse));
+        String decodedSAMLResponse = new String(Base64.decode(samlLogoutResponseToWebapp));
         Assert.assertNotNull(decodedSAMLResponse);
 
-        boolean validResponse = sendSAMLLogoutResponseToWebApp(client, samlLogoutResponse);
-        Assert.assertTrue(validResponse, "Invalid SAML Logout response received by travelocity app");
+        String logoutPageContent = sendSAMLResponseToWebApp(samlLogoutResponseToWebapp);
+        boolean isValidLogout = validateLogoutPageContent(logoutPageContent);
+        Assert.assertTrue(isValidLogout, "Invalid SAML Logout response received by travelocity app");
     }
 
-    private boolean sendSAMLResponseToWebApp(HttpClient client, String samlResponse)
-            throws Exception {
+    private boolean addUserToSecondaryIS() throws Exception {
 
-        HttpPost request = new HttpPost(PRIMARY_IS_SAML_ACS_URL);
-        request.setHeader("User-Agent", USER_AGENT);
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-        urlParameters.add(new BasicNameValuePair("SAMLResponse", samlResponse));
-        request.setEntity(new UrlEncodedFormEntity(urlParameters));
-        HttpResponse response = client.execute(request);
-
-        return validateSAMLResponse(response, usrName);
+        UserManagementClient usrMgtClient = new UserManagementClient(getSecondaryISURI(), "admin", "admin");
+        if (usrMgtClient == null) {
+            return false;
+        } else {
+            String[] roles = {usrRole};
+            usrMgtClient.addUser(usrName, usrPwd, roles, null);
+            if (usrMgtClient.userNameExists(usrRole, usrName)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 
-    private boolean sendSAMLLogoutResponseToWebApp(HttpClient client, String samlResponse)
-            throws Exception {
+    private void deleteAddedUsers() throws RemoteException, UserAdminUserAdminException {
 
-        HttpPost request = new HttpPost(PRIMARY_IS_SAML_ACS_URL);
-        request.setHeader("User-Agent", USER_AGENT);
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-        urlParameters.add(new BasicNameValuePair("SAMLResponse", samlResponse));
-        request.setEntity(new UrlEncodedFormEntity(urlParameters));
-        HttpResponse response = client.execute(request);
-
-        return validateSAMLLogoutResponse(response);
+        UserManagementClient usrMgtClient = new UserManagementClient(getSecondaryISURI(), "admin", "admin");
+        usrMgtClient.deleteUser(usrName);
     }
 
     protected String getSecondaryISURI() {
@@ -534,18 +313,74 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
         return String.format("https://localhost:%s/services/", DEFAULT_PORT + PORT_OFFSET_1);
     }
 
-    private String sendSAMLRequestToPrimaryIS(HttpClient client) throws Exception {
+    private void updateServiceProviderWithOIDCConfigs(int portOffset, String applicationName, String callbackUrl,
+                                                      ServiceProvider serviceProvider) throws Exception {
 
-        HttpGet request = new HttpGet(SAML_SSO_URL);
-        request.setHeader("User-Agent", USER_AGENT);
-        HttpResponse response = client.execute(request);
-        return extractValueFromResponse(response, "name=\"sessionDataKey\"", 1);
+        OIDCApplication application = new OIDCApplication(applicationName, OAuth2Constant.TRAVELOCITY_APP_CONTEXT_ROOT,
+                callbackUrl);
+
+        OAuthConsumerAppDTO appDTO = getOAuthConsumerAppDTO(application);
+
+        OAuthConsumerAppDTO[] appDtos = createOIDCConfiguration(portOffset, appDTO);
+
+        for (OAuthConsumerAppDTO appDto : appDtos) {
+            if (appDto.getApplicationName().equals(application.getApplicationName())) {
+                application.setClientId(appDto.getOauthConsumerKey());
+                application.setClientSecret(appDto.getOauthConsumerSecret());
+            }
+        }
+
+        ClaimConfig claimConfig = null;
+        if (!application.getRequiredClaims().isEmpty()) {
+            claimConfig = new ClaimConfig();
+            for (String claimUri : application.getRequiredClaims()) {
+                Claim claim = new Claim();
+                claim.setClaimUri(claimUri);
+                ClaimMapping claimMapping = new ClaimMapping();
+                claimMapping.setRequested(true);
+                claimMapping.setLocalClaim(claim);
+                claimMapping.setRemoteClaim(claim);
+                claimConfig.addClaimMappings(claimMapping);
+            }
+        }
+
+        serviceProvider.setClaimConfig(claimConfig);
+        serviceProvider.setOutboundProvisioningConfig(new OutboundProvisioningConfig());
+        List<InboundAuthenticationRequestConfig> authRequestList = new ArrayList<>();
+
+        if (application.getClientId() != null) {
+            InboundAuthenticationRequestConfig inboundAuthenticationRequestConfig = new
+                    InboundAuthenticationRequestConfig();
+            inboundAuthenticationRequestConfig.setInboundAuthKey(application.getClientId());
+            consumerKeyForPrimaryIS = application.getClientId();
+            inboundAuthenticationRequestConfig.setInboundAuthType(OAuth2Constant.OAUTH_2);
+            if (StringUtils.isNotBlank(application.getClientSecret())) {
+                org.wso2.carbon.identity.application.common.model.xsd.Property property = new org.wso2.carbon.identity.
+                        application.common.model.xsd.Property();
+                property.setName(OAuth2Constant.OAUTH_CONSUMER_SECRET);
+                property.setValue(application.getClientSecret());
+                consumerSecretForPrimaryIS = application.getClientSecret();
+                org.wso2.carbon.identity.application.common.model.xsd.Property[] properties = {property};
+                inboundAuthenticationRequestConfig.setProperties(properties);
+            }
+            serviceProvider.getInboundAuthenticationConfig().setInboundAuthenticationRequestConfigs(new
+                    InboundAuthenticationRequestConfig[]{inboundAuthenticationRequestConfig});
+            authRequestList.add(inboundAuthenticationRequestConfig);
+        }
+
+        super.updateServiceProvider(PORT_OFFSET_1, serviceProvider);
     }
 
-    private void deleteAddedUsers() throws RemoteException, UserAdminUserAdminException {
+    private OAuthConsumerAppDTO getOAuthConsumerAppDTO(OIDCApplication application) {
 
-        UserManagementClient usrMgtClient = new UserManagementClient(getSecondaryISURI(), "admin", "admin");
-        usrMgtClient.deleteUser(usrName);
+        OAuthConsumerAppDTO appDTO = new OAuthConsumerAppDTO();
+        appDTO.setApplicationName(application.getApplicationName());
+        appDTO.setCallbackUrl(application.getCallBackURL());
+        appDTO.setOAuthVersion(OAuth2Constant.OAUTH_VERSION_2);
+        appDTO.setGrantTypes("authorization_code implicit password client_credentials refresh_token " +
+                "urn:ietf:params:oauth:grant-type:saml2-bearer iwa:ntlm");
+
+        return appDTO;
     }
 
     private Property[] getOIDCAuthnConfigProperties() {
@@ -610,64 +445,6 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
                 InboundAuthenticationRequestConfig[]{samlAuthenticationRequestConfig});
     }
 
-    private void updateServiceProviderWithOIDCConfigs(int portOffset, String applicationName, String callbackUrl,
-                                                      ServiceProvider serviceProvider) throws Exception {
-
-        OIDCApplication application = new OIDCApplication(applicationName, OAuth2Constant.TRAVELOCITY_APP_CONTEXT_ROOT,
-                callbackUrl);
-
-        OAuthConsumerAppDTO appDTO = getOAuthConsumerAppDTO(application);
-
-        OAuthConsumerAppDTO[] appDtos = createOIDCConfiguration(portOffset, appDTO);
-
-        for (OAuthConsumerAppDTO appDto : appDtos) {
-            if (appDto.getApplicationName().equals(application.getApplicationName())) {
-                application.setClientId(appDto.getOauthConsumerKey());
-                application.setClientSecret(appDto.getOauthConsumerSecret());
-            }
-        }
-
-        ClaimConfig claimConfig = null;
-        if (!application.getRequiredClaims().isEmpty()) {
-            claimConfig = new ClaimConfig();
-            for (String claimUri : application.getRequiredClaims()) {
-                Claim claim = new Claim();
-                claim.setClaimUri(claimUri);
-                ClaimMapping claimMapping = new ClaimMapping();
-                claimMapping.setRequested(true);
-                claimMapping.setLocalClaim(claim);
-                claimMapping.setRemoteClaim(claim);
-                claimConfig.addClaimMappings(claimMapping);
-            }
-        }
-
-        serviceProvider.setClaimConfig(claimConfig);
-        serviceProvider.setOutboundProvisioningConfig(new OutboundProvisioningConfig());
-        List<InboundAuthenticationRequestConfig> authRequestList = new ArrayList<>();
-
-        if (application.getClientId() != null) {
-            InboundAuthenticationRequestConfig inboundAuthenticationRequestConfig = new
-                    InboundAuthenticationRequestConfig();
-            inboundAuthenticationRequestConfig.setInboundAuthKey(application.getClientId());
-            consumerKeyForPrimaryIS = application.getClientId();
-            inboundAuthenticationRequestConfig.setInboundAuthType(OAuth2Constant.OAUTH_2);
-            if (StringUtils.isNotBlank(application.getClientSecret())) {
-                org.wso2.carbon.identity.application.common.model.xsd.Property property = new org.wso2.carbon.identity.
-                        application.common.model.xsd.Property();
-                property.setName(OAuth2Constant.OAUTH_CONSUMER_SECRET);
-                property.setValue(application.getClientSecret());
-                consumerSecretForPrimaryIS = application.getClientSecret();
-                org.wso2.carbon.identity.application.common.model.xsd.Property[] properties = {property};
-                inboundAuthenticationRequestConfig.setProperties(properties);
-            }
-            serviceProvider.getInboundAuthenticationConfig().setInboundAuthenticationRequestConfigs(new
-                    InboundAuthenticationRequestConfig[]{inboundAuthenticationRequestConfig});
-            authRequestList.add(inboundAuthenticationRequestConfig);
-        }
-
-        super.updateServiceProvider(PORT_OFFSET_1, serviceProvider);
-    }
-
     private SAMLSSOServiceProviderDTO getSAMLSSOServiceProviderDTO(String issuerName, String acsUrl) {
 
         SAMLSSOServiceProviderDTO samlssoServiceProviderDTO = new SAMLSSOServiceProviderDTO();
@@ -684,15 +461,258 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
         return samlssoServiceProviderDTO;
     }
 
-    private OAuthConsumerAppDTO getOAuthConsumerAppDTO(OIDCApplication application) {
+    private String sendSAMLRequestToPrimaryIS() throws Exception {
 
-        OAuthConsumerAppDTO appDTO = new OAuthConsumerAppDTO();
-        appDTO.setApplicationName(application.getApplicationName());
-        appDTO.setCallbackUrl(application.getCallBackURL());
-        appDTO.setOAuthVersion(OAuth2Constant.OAUTH_VERSION_2);
-        appDTO.setGrantTypes("authorization_code implicit password client_credentials refresh_token " +
-                "urn:ietf:params:oauth:grant-type:saml2-bearer iwa:ntlm");
+        HttpGet request = new HttpGet(SAML_SSO_URL);
+        request.setHeader("User-Agent", USER_AGENT);
+        HttpResponse response = client.execute(request);
+        return extractValueFromResponse(response, "name=\"sessionDataKey\"", 1);
+    }
 
-        return appDTO;
+    private String doAuthenticationInSecondaryIS(String sessionDataKey) throws Exception {
+
+        HttpResponse response = sendLoginPost(client, sessionDataKey);
+        Assert.assertNotNull(response, "Login request failed. response is null.");
+
+        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        Assert.assertNotNull(locationHeader, "Login response header is null.");
+        EntityUtils.consume(response.getEntity());
+
+        response = sendGetRequest(client, locationHeader.getValue());
+        Map<String, Integer> keyPositionMap = new HashMap<>(1);
+        keyPositionMap.put("name=\"sessionDataKeyConsent\"", 1);
+        List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil.extractSessionConsentDataFromResponse(response,
+                keyPositionMap);
+        Assert.assertNotNull(keyValues, "SessionDataKeyConsent key value is null.");
+
+        String sessionDataKeyConsent = keyValues.get(0).getValue();
+        EntityUtils.consume(response.getEntity());
+
+        return sessionDataKeyConsent;
+    }
+
+    public HttpResponse sendLoginPost(HttpClient client, String sessionDataKey) throws IOException {
+
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair("username", usrName));
+        urlParameters.add(new BasicNameValuePair("password", usrPwd));
+        urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
+
+        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, "https://localhost:9854" +
+                "/commonauth");
+
+        return response;
+    }
+
+    private String doConsentApprovalInSecondaryIS(String sessionDataKeyConsent) throws Exception {
+
+        List<NameValuePair> consentParameters = new ArrayList<>();
+
+        HttpResponse response = sendApprovalPostWithConsent(client, sessionDataKeyConsent, consentParameters);
+        Assert.assertNotNull(response, "Approval request failed.");
+
+        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        EntityUtils.consume(response.getEntity());
+
+        String authzResponseURL = locationHeader.getValue();
+        Assert.assertNotNull(authzResponseURL, "Approval request failed for.");
+
+        String authorizeURL = testAuthzCode(authzResponseURL);
+        return authorizeURL;
+    }
+
+    /**
+     * Send approval post request with consent
+     *
+     * @param client                http client
+     * @param sessionDataKeyConsent session consent data
+     * @param consentClaims         claims requiring user consent
+     * @return http response
+     * @throws java.io.IOException
+     */
+    public HttpResponse sendApprovalPostWithConsent(HttpClient client, String sessionDataKeyConsent,
+                                                    List<NameValuePair> consentClaims) throws IOException {
+
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair("sessionDataKeyConsent", sessionDataKeyConsent));
+        urlParameters.add(new BasicNameValuePair("scope-approval", "approve"));
+        urlParameters.add(new BasicNameValuePair("user_claims_consent", "true"));
+        urlParameters.add(new BasicNameValuePair("consent_select_all", "on"));
+        urlParameters.add(new BasicNameValuePair("consent_0", "on"));
+        urlParameters.add(new BasicNameValuePair("consent", "approve"));
+
+        if (consentClaims != null) {
+            urlParameters.addAll(consentClaims);
+        }
+
+        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, "https://localhost:9854/oauth2" +
+                "/authorize");
+        return response;
+    }
+
+    private String testAuthzCode(String authzResponseURL) throws Exception {
+
+
+        HttpClient httpClientWithoutAutoRedirections = HttpClientBuilder.create().disableRedirectHandling()
+                .setDefaultCookieStore(cookieStore).build();
+        HttpResponse response = sendGetRequest(httpClientWithoutAutoRedirections, authzResponseURL);
+        Assert.assertNotNull(response, "Authorization code response to primary IS is invalid.");
+
+        String locationHeader = getHeaderValue(response, "Location");
+        Assert.assertNotNull(locationHeader, "locationHeader not found in response.");
+        String pastrCookie = Utils.getPastreCookie(response);
+        Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
+
+        if (Utils.requestMissingClaims(response)) {
+            locationHeader = handleMissingClaims(response, locationHeader, client, pastrCookie);
+            Assert.assertNotNull(locationHeader, "locationHeader not found in response.");
+        }
+
+        return locationHeader;
+    }
+
+    private String handleMissingClaims(HttpResponse response, String locationHeader, HttpClient client, String
+            pastrCookie) throws Exception {
+
+        EntityUtils.consume(response.getEntity());
+
+        response = Utils.sendPOSTConsentMessage(response, String.format(COMMON_AUTH_URL, DEFAULT_PORT + PORT_OFFSET_0),
+                USER_AGENT, locationHeader, client, pastrCookie);
+        EntityUtils.consume(response.getEntity());
+
+        return getHeaderValue(response, "Location");
+    }
+
+    private String getSAMLResponseFromPrimaryIS(String callbackURL) throws IOException {
+
+        HttpResponse response = sendGetRequest(client, callbackURL);
+        return extractValueFromResponse(response, "SAMLResponse", 5);
+    }
+
+    private String sendSAMLResponseToWebApp(String samlResponse)
+            throws Exception {
+
+        HttpResponse response = getHttpResponseWebApp(samlResponse);
+
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+        StringBuffer buffer = new StringBuffer();
+        String line = "";
+        while ((line = bufferedReader.readLine()) != null) {
+            buffer.append(line);
+        }
+        bufferedReader.close();
+
+        return buffer.toString();
+    }
+
+    private HttpResponse getHttpResponseWebApp(String samlResponse) throws IOException {
+
+        HttpPost request = new HttpPost(PRIMARY_IS_SAML_ACS_URL);
+        request.setHeader("User-Agent", USER_AGENT);
+        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        urlParameters.add(new BasicNameValuePair("SAMLResponse", samlResponse));
+        request.setEntity(new UrlEncodedFormEntity(urlParameters));
+        return client.execute(request);
+    }
+
+    public boolean validateLoginHomePageContent(String homepageContent) {
+
+        return homepageContent.contains("You are logged in as " + usrName);
+    }
+
+    private void sendLogoutRequestToPrimaryIS() throws IOException {
+
+        HttpResponse response = sendGetRequest(client, SAML_SSO_LOGOUT_URL);
+        Assert.assertNotNull(response);
+    }
+
+    private String doLogoutConsentApprovalInSecondaryIS() throws Exception {
+
+        HttpResponse response = sendLogoutApprovalPostWithConsent(client);
+        Assert.assertNotNull(response, "Approval request failed.");
+
+        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        Assert.assertNotNull(locationHeader, "Approval request failed for.");
+        EntityUtils.consume(response.getEntity());
+
+        String logoutResponseToPrimaryIS = locationHeader.getValue();
+
+        response = sendGetRequest(client, logoutResponseToPrimaryIS);
+        return extractValueFromResponse(response, "SAMLResponse", 5);
+    }
+
+    private boolean validateLogoutPageContent(String logoutPageContent) {
+
+        return logoutPageContent.contains("location.href = \"index.jsp\"");
+    }
+
+    /**
+     * Send post request with parameters
+     *
+     * @param client
+     * @param urlParameters
+     * @param url
+     * @return
+     * @throws ClientProtocolException
+     * @throws java.io.IOException
+     */
+    public HttpResponse sendPostRequestWithParameters(HttpClient client, List<NameValuePair> urlParameters, String url)
+            throws ClientProtocolException, IOException {
+
+        HttpPost request = new HttpPost(url);
+        request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
+        request.setEntity(new UrlEncodedFormEntity(urlParameters));
+
+        HttpResponse response = client.execute(request);
+        return response;
+    }
+
+    /**
+     * Send Get request
+     *
+     * @param client      - http Client
+     * @param locationURL - Get url location
+     * @return http response
+     * @throws ClientProtocolException
+     * @throws java.io.IOException
+     */
+    public HttpResponse sendGetRequest(HttpClient client, String locationURL) throws ClientProtocolException,
+            IOException {
+
+        HttpGet getRequest = new HttpGet(locationURL);
+        getRequest.addHeader("User-Agent", OAuth2Constant.USER_AGENT);
+        HttpResponse response = client.execute(getRequest);
+
+        return response;
+    }
+
+    public HttpResponse sendLogoutApprovalPostWithConsent(HttpClient client) throws IOException {
+
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair("consent", "approve"));
+
+
+        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, "https://localhost:9854/oidc" +
+                "/logout");
+        return response;
+    }
+
+    /**
+     * Send Post request to a given locationURL
+     *
+     * @param client      - http Client
+     * @param locationURL - Post url location
+     * @return http response
+     * @throws ClientProtocolException
+     * @throws java.io.IOException
+     */
+    public HttpResponse sendPostRequest(HttpClient client, String locationURL) throws ClientProtocolException,
+            IOException {
+
+        HttpPost postRequest = new HttpPost(locationURL);
+        postRequest.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
+        HttpResponse response = client.execute(postRequest);
+
+        return response;
     }
 }
