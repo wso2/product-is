@@ -34,8 +34,6 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.engine.context.AutomationContext;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.FederatedAuthenticatorConfig;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.JustInTimeProvisioningConfig;
@@ -46,19 +44,15 @@ import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
-import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.carbon.user.mgt.stub.UserAdminUserAdminException;
-import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.identity.integration.test.application.mgt.AbstractIdentityFederationTestCase;
 import org.wso2.identity.integration.test.util.Utils;
-import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,8 +61,8 @@ import java.util.Map;
 
 public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTestCase {
 
-    private static final String PRIMARY_IS_SERVICE_PROVIDER_NAME = "travelocity";
-    private static final String SECONDARY_IS_SERVICE_PROVIDER_NAME = "secondarySP";
+    protected static final String PRIMARY_IS_SERVICE_PROVIDER_NAME = "travelocity";
+    protected static final String SECONDARY_IS_SERVICE_PROVIDER_NAME = "secondarySP";
     protected static final String IDENTITY_PROVIDER_NAME = "trustedIdP";
     private static final String PRIMARY_IS_SAML_ISSUER_NAME = "travelocity.com";
     private static final String PRIMARY_IS_SAML_ACS_URL = "http://localhost:8490/travelocity.com/home.jsp";
@@ -84,7 +78,7 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
     private static final String INBOUND_AUTH_TYPE = "samlsso";
     private static final int TOMCAT_8490 = 8490;
     protected static final int PORT_OFFSET_0 = 0;
-    private static final int PORT_OFFSET_1 = 1;
+    protected static final int PORT_OFFSET_1 = 1;
     private static final String SAMLSSOAUTHENTICATOR = "SAMLSSOAuthenticator";
     private String COMMON_AUTH_URL = "https://localhost:%s/commonauth";
 
@@ -103,15 +97,13 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
 
         super.initTest();
 
-        Map<String, String> startupParameters = new HashMap<String, String>();
-        startupParameters.put("-DportOffset", String.valueOf(PORT_OFFSET_1 + CommonConstants.IS_DEFAULT_OFFSET));
-        AutomationContext context = new AutomationContext("IDENTITY", "identity002", TestUserMode.SUPER_TENANT_ADMIN);
-
-        startCarbonServer(PORT_OFFSET_1, context, startupParameters);
-
         super.createServiceClients(PORT_OFFSET_0, sessionCookie, new IdentityConstants
-                .ServiceClientType[]{IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT, IdentityConstants.ServiceClientType.IDENTITY_PROVIDER_MGT, IdentityConstants.ServiceClientType.SAML_SSO_CONFIG});
-        super.createServiceClients(PORT_OFFSET_1, null, new IdentityConstants.ServiceClientType[]{IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT, IdentityConstants.ServiceClientType.SAML_SSO_CONFIG});
+                .ServiceClientType[]{IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT,
+                IdentityConstants.ServiceClientType.IDENTITY_PROVIDER_MGT,
+                IdentityConstants.ServiceClientType.SAML_SSO_CONFIG});
+        super.createServiceClients(PORT_OFFSET_1, null,
+                new IdentityConstants.ServiceClientType[]{IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT,
+                        IdentityConstants.ServiceClientType.SAML_SSO_CONFIG});
         //add new test user to secondary IS
         boolean userCreated = addUserToSecondaryIS();
         Assert.assertTrue(userCreated, "User creation failed");
@@ -120,17 +112,13 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
     @AfterClass(alwaysRun = true)
     public void endTest() throws Exception {
 
-        super.deleteSAML2WebSSOConfiguration(PORT_OFFSET_0, PRIMARY_IS_SAML_ISSUER_NAME);
         super.deleteServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SERVICE_PROVIDER_NAME);
         super.deleteIdentityProvider(PORT_OFFSET_0, IDENTITY_PROVIDER_NAME);
 
-        super.deleteSAML2WebSSOConfiguration(PORT_OFFSET_1, SECONDARY_IS_SAML_ISSUER_NAME);
         super.deleteServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
 
         //delete added users to secondary IS
         deleteAddedUsers();
-
-        super.stopCarbonServer(PORT_OFFSET_1);
     }
 
     @Test(priority = 1, groups = "wso2.is", description = "Check create identity provider in primary IS")
@@ -193,7 +181,8 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         }
 
         Assert.assertTrue(success, "Failed to update service provider with inbound SAML2 configs in primary IS");
-        Assert.assertTrue(AUTHENTICATION_TYPE.equals(serviceProvider.getLocalAndOutBoundAuthenticationConfig().getAuthenticationType()), "Failed to update local and out bound configs in primary IS");
+        Assert.assertEquals(serviceProvider.getLocalAndOutBoundAuthenticationConfig().getAuthenticationType(),
+                AUTHENTICATION_TYPE, "Failed to update local and out bound configs in primary IS");
     }
 
     @Test(priority = 3, groups = "wso2.is", description = "Check create service provider in secondary IS")
