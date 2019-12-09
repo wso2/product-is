@@ -115,12 +115,12 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
 
             removeConfigurationsFromPrimaryIS();
         } catch (Exception e) {
-            log.error("Failure occured due to :" + e.getMessage(), e);
+            log.error("Failure occurred due to :" + e.getMessage(), e);
             throw e;
         }
     }
 
-    @Test(priority = 1, groups = "wso2.is", description = "Check create service provider in secondary IS")
+    @Test(groups = "wso2.is", description = "Check create service provider in secondary IS")
     public void testCreateServiceProviderInSecondaryIS() throws Exception {
 
         super.addServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
@@ -153,7 +153,7 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
         Assert.assertTrue(success, "Failed to update service provider with inbound SAML2 configs in secondary IS");
     }
 
-    @Test(priority = 5, groups = "wso2.is", description = "Check SAML To SAML fedaration flow")
+    @Test(groups = "wso2.is", dependsOnMethods = {"testCreateServiceProviderInSecondaryIS"}, description = "Check SAML To SAML fedaration flow")
     public void testSAMLToSAMLFederation() throws Exception {
 
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
@@ -388,7 +388,8 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
                 .separator + "IS" + File.separator + "saml" + File.separator + "filebasedspidpconfigs" + File
                 .separator + "original-sso-idp-config.xml");
 
-        serverConfigurationManager.applyConfiguration(ssoIdPConfigXmlToCopy, ssoIdPConfigXml, false, true);
+        // Not restarting since the next test will restart the server.
+        serverConfigurationManager.applyConfiguration(ssoIdPConfigXmlToCopy, ssoIdPConfigXml, false, false);
     }
 
     protected void copyToIdentity(File sourceFile, String targetDirectory) throws IOException {
