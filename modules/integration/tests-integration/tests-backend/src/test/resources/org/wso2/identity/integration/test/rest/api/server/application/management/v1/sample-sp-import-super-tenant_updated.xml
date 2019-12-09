@@ -2,7 +2,7 @@
 <ServiceProvider>
     <ApplicationName>SampleApp</ApplicationName>
     <Description/>
-    <JwksUri/>
+    <JwksUri>https://sampleapp.wso2.com/jwks</JwksUri>
     <InboundAuthenticationConfig>
         <InboundAuthenticationRequestConfigs>
             <InboundAuthenticationRequestConfig>
