@@ -86,6 +86,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
+        appMgtclient.deleteApplication(SERVICE_PROVIDER_NAME);
     }
 
     @Test(alwaysRun = true, description = "Add service provider")
@@ -105,17 +106,15 @@ public class TestPassiveSTS extends ISIntegrationTest {
 
         serviceProvider.setOutboundProvisioningConfig(new OutboundProvisioningConfig());
         List<InboundAuthenticationRequestConfig> authRequestList = new ArrayList<InboundAuthenticationRequestConfig>();
-        String passiveSTSRealm = SERVICE_PROVIDER_NAME;
-        if (passiveSTSRealm != null) {
-            InboundAuthenticationRequestConfig opicAuthenticationRequest = new InboundAuthenticationRequestConfig();
-            opicAuthenticationRequest.setInboundAuthKey(passiveSTSRealm);
-            opicAuthenticationRequest.setInboundAuthType("passivests");
-            Property property = new Property();
-            property.setName("passiveSTSWReply");
-            property.setValue(PASSIVE_STS_SAMPLE_APP_URL);
-            opicAuthenticationRequest.setProperties(new Property[]{property});
-            authRequestList.add(opicAuthenticationRequest);
-        }
+        InboundAuthenticationRequestConfig opicAuthenticationRequest = new InboundAuthenticationRequestConfig();
+        opicAuthenticationRequest.setInboundAuthKey(SERVICE_PROVIDER_NAME);
+        opicAuthenticationRequest.setInboundAuthType("passivests");
+        Property property = new Property();
+        property.setName("passiveSTSWReply");
+        property.setValue(PASSIVE_STS_SAMPLE_APP_URL);
+        opicAuthenticationRequest.setProperties(new Property[]{property});
+        authRequestList.add(opicAuthenticationRequest);
+
         if (authRequestList.size() > 0) {
             serviceProvider.getInboundAuthenticationConfig()
                     .setInboundAuthenticationRequestConfigs(
