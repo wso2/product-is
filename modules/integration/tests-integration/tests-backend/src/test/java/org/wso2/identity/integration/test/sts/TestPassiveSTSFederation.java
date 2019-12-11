@@ -33,7 +33,6 @@ import org.wso2.identity.integration.test.utils.IdentityConstants;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -173,13 +172,11 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
         Assert.assertNotNull(serviceProvider, "Service provider in Primary IS not Exists");
         serviceProvider.setOutboundProvisioningConfig(new OutboundProvisioningConfig());
         List<InboundAuthenticationRequestConfig> authRequestList = new ArrayList<InboundAuthenticationRequestConfig>();
-        String passiveSTSRealm = PASSIVESTS_REALM;
-        if (passiveSTSRealm != null) {
-            InboundAuthenticationRequestConfig opicAuthenticationRequest = new InboundAuthenticationRequestConfig();
-            opicAuthenticationRequest.setInboundAuthKey(passiveSTSRealm);
-            opicAuthenticationRequest.setInboundAuthType("passivests");
-            authRequestList.add(opicAuthenticationRequest);
-        }
+        InboundAuthenticationRequestConfig opicAuthenticationRequest = new InboundAuthenticationRequestConfig();
+        opicAuthenticationRequest.setInboundAuthKey(PASSIVESTS_REALM);
+        opicAuthenticationRequest.setInboundAuthType("passivests");
+        authRequestList.add(opicAuthenticationRequest);
+
         if (authRequestList.size() > 0) {
             serviceProvider.getInboundAuthenticationConfig().setInboundAuthenticationRequestConfigs(authRequestList.
                     toArray(new InboundAuthenticationRequestConfig[0]));

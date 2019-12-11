@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ServiceProvider>
+    <ApplicationName>SampleAppTenant</ApplicationName>
+    <Description/>
+    <JwksUri/>
+    <InboundAuthenticationConfig>
+        <InboundAuthenticationRequestConfigs>
+            <InboundAuthenticationRequestConfig>
+                <InboundAuthKey>poDtAkOE87tXnQkasSHKxH94vrAa</InboundAuthKey>
+                <InboundAuthType>oauth2</InboundAuthType>
+                <InboundConfigType>standardAPP</InboundConfigType>
+                <inboundConfiguration><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<oAuthAppDO>
+    <oauthConsumerKey>poDtAkOE87tXnQkasSHKxH94vrAa</oauthConsumerKey>
+    <applicationName>SampleAppTenant</applicationName>
+    <callbackUrl>http://localhost.com:8080/pickup-dispatch/oauth2client</callbackUrl>
+    <oauthVersion>OAuth-2.0</oauthVersion>
+    <grantTypes>refresh_token urn:ietf:params:oauth:grant-type:saml2-bearer implicit password client_credentials iwa:ntlm authorization_code urn:ietf:params:oauth:grant-type:uma-ticket account_switch urn:ietf:params:oauth:grant-type:jwt-bearer </grantTypes>
+    <scopeValidators/>
+    <pkceSupportPlain>true</pkceSupportPlain>
+    <pkceMandatory>false</pkceMandatory>
+    <userAccessTokenExpiryTime>3600</userAccessTokenExpiryTime>
+    <applicationAccessTokenExpiryTime>3600</applicationAccessTokenExpiryTime>
+    <refreshTokenExpiryTime>86400</refreshTokenExpiryTime>
+    <idTokenExpiryTime>3600</idTokenExpiryTime>
+    <audiences/>
+    <bypassClientCredentials>false</bypassClientCredentials>
+    <renewRefreshTokenEnabled>true</renewRefreshTokenEnabled>
+    <requestObjectSignatureValidationEnabled>false</requestObjectSignatureValidationEnabled>
+    <idTokenEncryptionEnabled>false</idTokenEncryptionEnabled>
+    <idTokenEncryptionAlgorithm>null</idTokenEncryptionAlgorithm>
+    <idTokenEncryptionMethod>null</idTokenEncryptionMethod>
+    <tokenType>Default</tokenType>
+</oAuthAppDO>
+]]></inboundConfiguration>
+                <Properties/>
+            </InboundAuthenticationRequestConfig>
+            <InboundAuthenticationRequestConfig>
+                <InboundAuthKey>SampleAppTenant</InboundAuthKey>
+                <InboundAuthType>passivests</InboundAuthType>
+                <InboundConfigType>standardAPP</InboundConfigType>
+                <Properties/>
+            </InboundAuthenticationRequestConfig>
+            <InboundAuthenticationRequestConfig>
+                <InboundAuthKey>SampleAppTenant</InboundAuthKey>
+                <InboundAuthType>openid</InboundAuthType>
+                <InboundConfigType>standardAPP</InboundConfigType>
+                <Properties/>
+            </InboundAuthenticationRequestConfig>
+        </InboundAuthenticationRequestConfigs>
+    </InboundAuthenticationConfig>
+    <LocalAndOutBoundAuthenticationConfig>
+        <AuthenticationSteps/>
+        <AuthenticationType>default</AuthenticationType>
+        <alwaysSendBackAuthenticatedListOfIdPs>false</alwaysSendBackAuthenticatedListOfIdPs>
+        <UseTenantDomainInUsername>false</UseTenantDomainInUsername>
+        <UseUserstoreDomainInRoles>true</UseUserstoreDomainInRoles>
+        <UseUserstoreDomainInUsername>false</UseUserstoreDomainInUsername>
+        <SkipConsent>false</SkipConsent>
+        <EnableAuthorization>false</EnableAuthorization>
+    </LocalAndOutBoundAuthenticationConfig>
+    <RequestPathAuthenticatorConfigs/>
+    <InboundProvisioningConfig>
+        <ProvisioningUserStore/>
+        <IsProvisioningEnabled>false</IsProvisioningEnabled>
+        <IsDumbModeEnabled>false</IsDumbModeEnabled>
+    </InboundProvisioningConfig>
+    <OutboundProvisioningConfig>
+        <ProvisioningIdentityProviders/>
+    </OutboundProvisioningConfig>
+    <ClaimConfig>
+        <RoleClaimURI/>
+        <LocalClaimDialect>true</LocalClaimDialect>
+        <IdpClaim/>
+        <ClaimMappings/>
+        <AlwaysSendMappedLocalSubjectId>false</AlwaysSendMappedLocalSubjectId>
+        <SPClaimDialects/>
+    </ClaimConfig>
+    <PermissionAndRoleConfig>
+        <Permissions/>
+        <RoleMappings/>
+        <IdpRoles/>
+    </PermissionAndRoleConfig>
+    <IsSaaSApp>false</IsSaaSApp>
+    <IsDiscoverable>false</IsDiscoverable>
+</ServiceProvider>

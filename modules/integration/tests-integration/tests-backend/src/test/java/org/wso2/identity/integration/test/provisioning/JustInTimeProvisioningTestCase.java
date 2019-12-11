@@ -41,10 +41,10 @@ import org.wso2.identity.integration.common.utils.UserStoreConfigUtils;
 import org.wso2.identity.integration.test.saml.SAMLIdentityFederationTestCase;
 import org.wso2.identity.integration.test.util.Utils;
 
-import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
-import java.io.IOException;
 import java.rmi.RemoteException;
+
+import javax.xml.xpath.XPathExpressionException;
 
 public class JustInTimeProvisioningTestCase extends SAMLIdentityFederationTestCase {
 
@@ -101,6 +101,7 @@ public class JustInTimeProvisioningTestCase extends SAMLIdentityFederationTestCa
         try {
             super.endTest();
             userStoreConfigAdminServiceClient.deleteUserStore(DOMAIN_ID);
+
         } catch (AutomationFrameworkException e) {
             log.error("Error while shutting down the server. ", e);
         }
@@ -108,38 +109,38 @@ public class JustInTimeProvisioningTestCase extends SAMLIdentityFederationTestCa
     }
 
     @Override
-    @Test(priority = 1, groups = "wso2.is", description = "test testCreateIdentityProviderInPrimaryIS")
+    @Test(groups = "wso2.is", description = "test testCreateIdentityProviderInPrimaryIS")
     public void testCreateIdentityProviderInPrimaryIS() throws Exception {
         super.testCreateIdentityProviderInPrimaryIS();
     }
 
     @Override
-    @Test(priority = 2, groups = "wso2.is", description = "test testCreateServiceProviderInPrimaryIS")
+    @Test(dependsOnMethods = {"testCreateIdentityProviderInPrimaryIS"}, groups = "wso2.is", description = "test testCreateServiceProviderInPrimaryIS")
     public void testCreateServiceProviderInPrimaryIS() throws Exception {
         super.testCreateServiceProviderInPrimaryIS();
     }
 
     @Override
-    @Test(priority = 3, groups = "wso2.is", description = "test testCreateServiceProviderInSecondaryIS")
+    @Test(dependsOnMethods = {"testCreateServiceProviderInPrimaryIS"}, groups = "wso2.is", description = "test testCreateServiceProviderInSecondaryIS")
     public void testCreateServiceProviderInSecondaryIS() throws Exception {
         super.testCreateServiceProviderInSecondaryIS();
     }
 
     @Override
-    @Test(priority = 4, groups = "wso2.is", description = "Check functionality of attribute consumer index")
+    @Test(dependsOnMethods = {"testCreateServiceProviderInSecondaryIS"}, groups = "wso2.is", description = "Check functionality of attribute consumer index")
     public void testAttributeConsumerIndex() throws Exception {
         super.testAttributeConsumerIndex();
     }
 
     @Override
-    @Test(priority = 5, groups = "wso2.is", description = "test testSAMLToSAMLFederation")
+    @Test(dependsOnMethods = {"testAttributeConsumerIndex"}, groups = "wso2.is", description = "test testSAMLToSAMLFederation")
     public void testSAMLToSAMLFederation() throws Exception {
 
         updateIdentityProviderJitConfiguration(false, false, false, UserCoreConstants.PRIMARY_DEFAULT_DOMAIN_NAME);
         super.testSAMLToSAMLFederation();
     }
 
-    @Test(priority = 6, groups = "wso2.is", description = "test Just in time provisioning")
+    @Test(dependsOnMethods = {"testSAMLToSAMLFederation"}, groups = "wso2.is", description = "test Just in time provisioning")
     public void testJustInTimeProvisioning()
             throws RemoteException, RemoteUserStoreManagerServiceUserStoreExceptionException {
 
@@ -147,7 +148,7 @@ public class JustInTimeProvisioningTestCase extends SAMLIdentityFederationTestCa
         userStoreClient.deleteUser(getFederatedTestUser());
     }
 
-    @Test(priority = 7, groups = "wso2.is", description = "Test Just in time provisioning with password provisioning")
+    @Test(dependsOnMethods = {"testJustInTimeProvisioning"}, groups = "wso2.is", description = "Test Just in time provisioning with password provisioning")
     public void testSAMLToSAMLFederationWithPasswordProvisioning() throws Exception {
 
         try {
@@ -161,7 +162,7 @@ public class JustInTimeProvisioningTestCase extends SAMLIdentityFederationTestCa
 
     }
 
-    @Test(priority = 7, groups = "wso2.is", description = "test Just in time provisioning with username "
+    @Test(dependsOnMethods = {"testSAMLToSAMLFederationWithPasswordProvisioning"}, groups = "wso2.is", description = "test Just in time provisioning with username "
             + "and password provisioning")
     public void testSAMLToSAMLFederationWithUserNameAndPasswordProvisioning() throws Exception {
 
@@ -175,7 +176,7 @@ public class JustInTimeProvisioningTestCase extends SAMLIdentityFederationTestCa
         }
     }
 
-    @Test(priority = 7, groups = "wso2.is", description = "test just in time provisioning with only prompt consent")
+    @Test(dependsOnMethods = {"testSAMLToSAMLFederationWithUserNameAndPasswordProvisioning"}, groups = "wso2.is", description = "test just in time provisioning with only prompt consent")
     public void testSAMLToSAMLFederationWithPromptConsent() throws Exception {
 
         try {
@@ -188,7 +189,7 @@ public class JustInTimeProvisioningTestCase extends SAMLIdentityFederationTestCa
         }
     }
 
-    @Test(priority = 7, groups = "wso2.is", description = "test just in time provisioning with as in username")
+    @Test(dependsOnMethods = {"testSAMLToSAMLFederationWithPromptConsent"}, groups = "wso2.is", description = "test just in time provisioning with as in username")
     public void testSAMLToSAMLFederationWithAsIsUserNameUserStore() throws Exception {
 
         String userName = DOMAIN_ID + UserCoreConstants.DOMAIN_SEPARATOR + Utils.MODIFIED_USER_NAME;
