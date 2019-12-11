@@ -54,7 +54,7 @@ public class AnalyticsBaseTestCase extends ISIntegrationTest {
 
     private void changeConfiguration() {
 
-        log.info("Changing identity.xml file to enable analytics");
+        log.info("Changing deployment.toml file to enable analytics");
         String carbonHome = Utils.getResidentCarbonHome();
 
         File defaultConfigFile = getDeploymentTomlFile(carbonHome);
