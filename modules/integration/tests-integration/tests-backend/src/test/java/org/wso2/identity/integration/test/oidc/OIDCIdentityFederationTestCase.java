@@ -64,6 +64,12 @@ import java.util.Map;
 
 public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTestCase {
 
+    private static final String SAML_SSO_URL = "http://localhost:8490/travelocity.com/samlsso?SAML2" +
+            ".HTTPBinding=HTTP-Redirect";
+    private static final String SAML_SSO_LOGOUT_URL = "http://localhost:8490/travelocity.com/logout?SAML2" +
+            ".HTTPBinding=HTTP-Redirect";
+    private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
+
     private static final String PRIMARY_IS_SP_NAME = "travelocity";
     private static final String PRIMARY_IS_SP_INBOUND_AUTH_TYPE_SAMLSSO = "samlsso";
     private static final String PRIMARY_IS_SP_AUTHENTICATION_TYPE = "federated";
@@ -88,13 +94,8 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
     private static final int PORT_OFFSET_0 = 0;
     private static final int PORT_OFFSET_1 = 1;
 
-    private static final String SAML_SSO_URL = "http://localhost:8490/travelocity.com/samlsso?SAML2" +
-            ".HTTPBinding=HTTP-Redirect";
-    private static final String SAML_SSO_LOGOUT_URL = "http://localhost:8490/travelocity.com/logout?SAML2" +
-            ".HTTPBinding=HTTP-Redirect";
-    private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
     CookieStore cookieStore = new BasicCookieStore();
-    private CloseableHttpClient client = HttpClientBuilder.create().build();
+    private CloseableHttpClient client;
 //private static final String HTTP_RESPONSE_HEADER_LOCATION = "location";
 
     @BeforeClass(alwaysRun = true)
@@ -107,12 +108,18 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
                         IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT,
                         IdentityConstants.ServiceClientType.IDENTITY_PROVIDER_MGT,
                         IdentityConstants.ServiceClientType.SAML_SSO_CONFIG});
+
         super.createServiceClients(PORT_OFFSET_1, null,
                 new IdentityConstants.ServiceClientType[]{
                         IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT,
                         IdentityConstants.ServiceClientType.OAUTH_ADMIN});
 
-        //add new test user to secondary IS
+        createServiceProviderInSecondaryIS();
+        createIdentityProviderInPrimaryIS();
+        createServiceProviderInPrimaryIS();
+
+        client = HttpClientBuilder.create().build();
+
         boolean userCreated = addUserToSecondaryIS();
         Assert.assertTrue(userCreated, "User creation failed in secondary IS.");
     }
@@ -127,8 +134,7 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
             super.deleteOIDCConfiguration(PORT_OFFSET_1, secondaryISClientID);
             super.deleteServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SP_NAME);
 
-            //delete added users to secondary IS
-            deleteAddedUsers();
+            deleteAddedUsersInSecondaryIS();
 
             client.close();
         } catch (Exception e) {
@@ -137,64 +143,74 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
         }
     }
 
-    @Test(priority = 1, groups = "wso2.is", description = "Check create service provider in secondary IS")
-    public void testCreateServiceProviderInSecondaryIS() throws Exception {
+    @Test(groups = "wso2.is", description = "Check SAML-to-OIDC federated login")
+    public void testFederatedLogin() throws Exception {
 
-        super.addServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SP_NAME);
+        String sessionDataKeyOfSecondaryISLogin = sendSAMLRequestToPrimaryIS();
+        Assert.assertNotNull(sessionDataKeyOfSecondaryISLogin, "Unable to acquire 'sessionDataKey' value in secondary IS");
 
-        ServiceProvider serviceProvider = getServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SP_NAME);
-        Assert.assertNotNull(serviceProvider, "Failed to create service provider 'secondarySP' in secondary IS");
+        String sessionDataKeyConsentOfSecondaryIS = doAuthenticationInSecondaryIS(sessionDataKeyOfSecondaryISLogin);
+        Assert.assertNotNull(sessionDataKeyConsentOfSecondaryIS, "Invalid sessionDataKeyConsent.");
 
-        updateServiceProviderWithOIDCConfigs(PORT_OFFSET_1, SECONDARY_IS_SP_NAME, PRIMARY_IS_IDP_CALLBACK_URL,
-                serviceProvider);
+        String callbackURLOfPrimaryIS = doConsentApprovalInSecondaryIS(sessionDataKeyConsentOfSecondaryIS);
+        Assert.assertNotNull(callbackURLOfPrimaryIS, "Unable to acquire authorizeCallbackURL in primary IS");
 
-        super.updateServiceProvider(PORT_OFFSET_1, serviceProvider);
+        String samlResponse = getSAMLResponseFromPrimaryIS(callbackURLOfPrimaryIS);
+        Assert.assertNotNull(samlResponse, "Unable to acquire SAML response from primary IS");
 
-        serviceProvider = getServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SP_NAME);
+        String decodedSAMLResponse = new String(Base64.decode(samlResponse));
+        Assert.assertTrue(decodedSAMLResponse.contains("AuthnContextClassRef"), "AuthnContextClassRef is not received.");
 
-        InboundAuthenticationRequestConfig[] configs = serviceProvider.getInboundAuthenticationConfig().
-                getInboundAuthenticationRequestConfigs();
-        boolean success = false;
-        if (configs != null) {
-            for (InboundAuthenticationRequestConfig config : configs) {
-                if (secondaryISClientID.equals(config.getInboundAuthKey()) && OAuth2Constant.OAUTH_2.equals(
-                        config.getInboundAuthType())) {
-                    success = true;
-                    break;
-                }
+        String homepageContent = sendSAMLResponseToWebApp(samlResponse);
+        boolean isValidLogin = validateLoginHomePageContent(homepageContent);
+        Assert.assertTrue(isValidLogin, "Invalid SAML login response received by travelocity app");
+    }
+
+    @Test(groups = "wso2.is", description = "Check SAML-to-OIDC federated logout", dependsOnMethods = {
+            "testFederatedLogin"})
+    public void testLogout() throws Exception {
+
+        sendLogoutRequestToPrimaryIS();
+
+        String samlLogoutResponseToWebapp = doLogoutConsentApprovalInSecondaryIS();
+        Assert.assertNotNull(samlLogoutResponseToWebapp, "Unable to acquire SAML Logout response from travelocity app");
+
+        String decodedSAMLResponse = new String(Base64.decode(samlLogoutResponseToWebapp));
+        Assert.assertNotNull(decodedSAMLResponse);
+
+        String logoutPageContent = sendSAMLResponseToWebApp(samlLogoutResponseToWebapp);
+        boolean isValidLogout = validateLogoutPageContent(logoutPageContent);
+        Assert.assertTrue(isValidLogout, "Invalid SAML Logout response received by travelocity app");
+    }
+
+    private boolean addUserToSecondaryIS() throws Exception {
+
+        UserManagementClient usrMgtClient = new UserManagementClient(getSecondaryISURI(), "admin", "admin");
+        if (usrMgtClient == null) {
+            return false;
+        } else {
+            String[] roles = {SECONDARY_IS_TEST_USER_ROLES};
+            usrMgtClient.addUser(SECONDARY_IS_TEST_USERNAME, SECONDARY_IS_TEST_PASSWORD, roles, null);
+            if (usrMgtClient.userNameExists(SECONDARY_IS_TEST_USER_ROLES, SECONDARY_IS_TEST_USERNAME)) {
+                return true;
+            } else {
+                return false;
             }
         }
-
-        Assert.assertTrue(success, "Failed to update service provider with inbound OIDC configs in secondary IS");
     }
 
-    @Test(priority = 2, groups = "wso2.is", description = "Check create identity provider in primary IS")
-    public void testCreateIdentityProviderInPrimaryIS() throws Exception {
+    private void deleteAddedUsersInSecondaryIS() throws RemoteException, UserAdminUserAdminException {
 
-        IdentityProvider identityProvider = new IdentityProvider();
-        identityProvider.setIdentityProviderName(PRIMARY_IS_IDP_NAME);
-
-        FederatedAuthenticatorConfig oidcAuthnConfig = new FederatedAuthenticatorConfig();
-        oidcAuthnConfig.setName(PRIMARY_IS_IDP_AUTHENTICATOR_NAME_OIDC);
-        oidcAuthnConfig.setDisplayName("openidconnect");
-        oidcAuthnConfig.setEnabled(true);
-        oidcAuthnConfig.setProperties(getOIDCAuthnConfigProperties());
-        identityProvider.setDefaultAuthenticatorConfig(oidcAuthnConfig);
-        identityProvider.setFederatedAuthenticatorConfigs(new FederatedAuthenticatorConfig[]{oidcAuthnConfig});
-
-        JustInTimeProvisioningConfig jitConfig = new JustInTimeProvisioningConfig();
-        jitConfig.setProvisioningEnabled(true);
-        jitConfig.setProvisioningUserStore("PRIMARY");
-        identityProvider.setJustInTimeProvisioningConfig(jitConfig);
-
-        super.addIdentityProvider(PORT_OFFSET_0, identityProvider);
-
-        Assert.assertNotNull(getIdentityProvider(PORT_OFFSET_0, PRIMARY_IS_IDP_NAME), "Failed to create " +
-                "Identity Provider 'trustedIdP' in primary IS");
+        UserManagementClient usrMgtClient = new UserManagementClient(getSecondaryISURI(), "admin", "admin");
+        usrMgtClient.deleteUser(SECONDARY_IS_TEST_USERNAME);
     }
 
-    @Test(priority = 3, groups = "wso2.is", description = "Check create service provider in primary IS")
-    public void testCreateServiceProviderInPrimaryIS() throws Exception {
+    protected String getSecondaryISURI() {
+
+        return String.format("https://localhost:%s/services/", DEFAULT_PORT + PORT_OFFSET_1);
+    }
+
+    public void createServiceProviderInPrimaryIS() throws Exception {
 
         super.addServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SP_NAME);
 
@@ -243,70 +259,58 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
                 getAuthenticationType()), "Failed to update local and out bound configs in primary IS");
     }
 
-    @Test(priority = 4, groups = "wso2.is", description = "Check login flow of primary IS service provider")
-    public void testFederation() throws Exception {
+    public void createServiceProviderInSecondaryIS() throws Exception {
 
-        String sessionDataKeyOfSecondaryISLogin = sendSAMLRequestToPrimaryIS();
-        Assert.assertNotNull(sessionDataKeyOfSecondaryISLogin, "Unable to acquire 'sessionDataKey' value in secondary IS");
+        super.addServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SP_NAME);
 
-        String sessionDataKeyConsentOfSecondaryIS = doAuthenticationInSecondaryIS(sessionDataKeyOfSecondaryISLogin);
-        Assert.assertNotNull(sessionDataKeyConsentOfSecondaryIS, "Invalid sessionDataKeyConsent.");
+        ServiceProvider serviceProvider = getServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SP_NAME);
+        Assert.assertNotNull(serviceProvider, "Failed to create service provider 'secondarySP' in secondary IS");
 
-        String callbackURLOfPrimaryIS = doConsentApprovalInSecondaryIS(sessionDataKeyConsentOfSecondaryIS);
-        Assert.assertNotNull(callbackURLOfPrimaryIS, "Unable to acquire authorizeCallbackURL in primary IS");
+        updateServiceProviderWithOIDCConfigs(PORT_OFFSET_1, SECONDARY_IS_SP_NAME, PRIMARY_IS_IDP_CALLBACK_URL,
+                serviceProvider);
 
-        String samlResponse = getSAMLResponseFromPrimaryIS(callbackURLOfPrimaryIS);
-        Assert.assertNotNull(samlResponse, "Unable to acquire SAML response from primary IS");
+        super.updateServiceProvider(PORT_OFFSET_1, serviceProvider);
 
-        String decodedSAMLResponse = new String(Base64.decode(samlResponse));
-        Assert.assertTrue(decodedSAMLResponse.contains("AuthnContextClassRef"), "AuthnContextClassRef is not received.");
+        serviceProvider = getServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SP_NAME);
 
-        String homepageContent = sendSAMLResponseToWebApp(samlResponse);
-        boolean isValidLogin = validateLoginHomePageContent(homepageContent);
-        Assert.assertTrue(isValidLogin, "Invalid SAML login response received by travelocity app");
-    }
-
-    @Test(priority = 5, groups = "wso2.is", description = "Check logout flow of primary IS service provider")
-    public void testLogout() throws Exception {
-
-        sendLogoutRequestToPrimaryIS();
-
-        String samlLogoutResponseToWebapp = doLogoutConsentApprovalInSecondaryIS();
-        Assert.assertNotNull(samlLogoutResponseToWebapp, "Unable to acquire SAML Logout response from travelocity app");
-
-        String decodedSAMLResponse = new String(Base64.decode(samlLogoutResponseToWebapp));
-        Assert.assertNotNull(decodedSAMLResponse);
-
-        String logoutPageContent = sendSAMLResponseToWebApp(samlLogoutResponseToWebapp);
-        boolean isValidLogout = validateLogoutPageContent(logoutPageContent);
-        Assert.assertTrue(isValidLogout, "Invalid SAML Logout response received by travelocity app");
-    }
-
-    private boolean addUserToSecondaryIS() throws Exception {
-
-        UserManagementClient usrMgtClient = new UserManagementClient(getSecondaryISURI(), "admin", "admin");
-        if (usrMgtClient == null) {
-            return false;
-        } else {
-            String[] roles = {SECONDARY_IS_TEST_USER_ROLES};
-            usrMgtClient.addUser(SECONDARY_IS_TEST_USERNAME, SECONDARY_IS_TEST_PASSWORD, roles, null);
-            if (usrMgtClient.userNameExists(SECONDARY_IS_TEST_USER_ROLES, SECONDARY_IS_TEST_USERNAME)) {
-                return true;
-            } else {
-                return false;
+        InboundAuthenticationRequestConfig[] configs = serviceProvider.getInboundAuthenticationConfig().
+                getInboundAuthenticationRequestConfigs();
+        boolean success = false;
+        if (configs != null) {
+            for (InboundAuthenticationRequestConfig config : configs) {
+                if (secondaryISClientID.equals(config.getInboundAuthKey()) && OAuth2Constant.OAUTH_2.equals(
+                        config.getInboundAuthType())) {
+                    success = true;
+                    break;
+                }
             }
         }
+
+        Assert.assertTrue(success, "Failed to update service provider with inbound OIDC configs in secondary IS");
     }
 
-    private void deleteAddedUsers() throws RemoteException, UserAdminUserAdminException {
+    public void createIdentityProviderInPrimaryIS() throws Exception {
 
-        UserManagementClient usrMgtClient = new UserManagementClient(getSecondaryISURI(), "admin", "admin");
-        usrMgtClient.deleteUser(SECONDARY_IS_TEST_USERNAME);
-    }
+        IdentityProvider identityProvider = new IdentityProvider();
+        identityProvider.setIdentityProviderName(PRIMARY_IS_IDP_NAME);
 
-    protected String getSecondaryISURI() {
+        FederatedAuthenticatorConfig oidcAuthnConfig = new FederatedAuthenticatorConfig();
+        oidcAuthnConfig.setName(PRIMARY_IS_IDP_AUTHENTICATOR_NAME_OIDC);
+        oidcAuthnConfig.setDisplayName("openidconnect");
+        oidcAuthnConfig.setEnabled(true);
+        oidcAuthnConfig.setProperties(getOIDCAuthnConfigProperties());
+        identityProvider.setDefaultAuthenticatorConfig(oidcAuthnConfig);
+        identityProvider.setFederatedAuthenticatorConfigs(new FederatedAuthenticatorConfig[]{oidcAuthnConfig});
 
-        return String.format("https://localhost:%s/services/", DEFAULT_PORT + PORT_OFFSET_1);
+        JustInTimeProvisioningConfig jitConfig = new JustInTimeProvisioningConfig();
+        jitConfig.setProvisioningEnabled(true);
+        jitConfig.setProvisioningUserStore("PRIMARY");
+        identityProvider.setJustInTimeProvisioningConfig(jitConfig);
+
+        super.addIdentityProvider(PORT_OFFSET_0, identityProvider);
+
+        Assert.assertNotNull(getIdentityProvider(PORT_OFFSET_0, PRIMARY_IS_IDP_NAME), "Failed to create " +
+                "Identity Provider 'trustedIdP' in primary IS");
     }
 
     private void updateServiceProviderWithOIDCConfigs(int portOffset, String applicationName, String callbackUrl,
