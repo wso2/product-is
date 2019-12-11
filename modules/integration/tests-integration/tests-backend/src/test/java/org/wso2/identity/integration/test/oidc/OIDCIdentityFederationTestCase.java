@@ -27,6 +27,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -35,8 +36,6 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.engine.context.AutomationContext;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.FederatedAuthenticatorConfig;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.JustInTimeProvisioningConfig;
@@ -50,7 +49,6 @@ import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.test.application.mgt.AbstractIdentityFederationTestCase;
 import org.wso2.identity.integration.test.oidc.bean.OIDCApplication;
 import org.wso2.identity.integration.test.util.Utils;
-import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
@@ -66,102 +64,100 @@ import java.util.Map;
 
 public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTestCase {
 
-    private static final String PRIMARY_IS_SERVICE_PROVIDER_NAME = "travelocity";
-    private static final String SECONDARY_IS_SERVICE_PROVIDER_NAME = "secondarySP";
-    protected static final String IDENTITY_PROVIDER_NAME = "trustedIdP";
+    private static final String PRIMARY_IS_SP_NAME = "travelocity";
+    private static final String PRIMARY_IS_SP_INBOUND_AUTH_TYPE_SAMLSSO = "samlsso";
+    private static final String PRIMARY_IS_SP_AUTHENTICATION_TYPE = "federated";
+
     private static final String PRIMARY_IS_SAML_ISSUER_NAME = "travelocity.com";
     private static final String PRIMARY_IS_SAML_ACS_URL = "http://localhost:8490/travelocity.com/home.jsp";
-    private static final String SAML_NAME_ID_FORMAT = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
+    private static final String PRIMARY_IS_SAML_NAME_ID_FORMAT = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
+
+    private static final String PRIMARY_IS_IDP_NAME = "trustedIdP";
+    private static final String PRIMARY_IS_IDP_AUTHENTICATOR_NAME_OIDC = "OpenIDConnectAuthenticator";
+    private static final String PRIMARY_IS_IDP_CALLBACK_URL = "https://localhost:9853/commonauth";
+
+    private static final String SECONDARY_IS_TEST_USERNAME = "testFederatedUser";
+    private static final String SECONDARY_IS_TEST_PASSWORD = "testFederatePassword";
+    private static final String SECONDARY_IS_TEST_USER_ROLES = "admin";
+
+    private static final String SECONDARY_IS_SP_NAME = "secondarySP";
+    protected OauthAdminClient adminClient;
+    private String secondaryISClientID;
+    private String secondaryISClientSecret;
+
+    private static final int PORT_OFFSET_0 = 0;
+    private static final int PORT_OFFSET_1 = 1;
+
     private static final String SAML_SSO_URL = "http://localhost:8490/travelocity.com/samlsso?SAML2" +
             ".HTTPBinding=HTTP-Redirect";
     private static final String SAML_SSO_LOGOUT_URL = "http://localhost:8490/travelocity.com/logout?SAML2" +
             ".HTTPBinding=HTTP-Redirect";
-    private static final String CALLBACK_URL = "https://localhost:9853/commonauth";
-
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
-    private static final String AUTHENTICATION_TYPE = "federated";
-    private static final String INBOUND_AUTH_TYPE = "samlsso";
-    private static final int TOMCAT_8490 = 8490;
-    protected static final int PORT_OFFSET_0 = 0;
-    private static final int PORT_OFFSET_1 = 1;
-    private static final String OIDCAUTHENTICATOR = "OpenIDConnectAuthenticator";
-    private String COMMON_AUTH_URL = "https://localhost:%s/commonauth";
-
-    private String consumerKeyForPrimaryIS;
-    private String consumerSecretForPrimaryIS;
-
-    private String usrName = "testFederatedUser";
-    private String usrPwd = "testFederatePassword";
-    private String usrRole = "admin";
-
-    protected OauthAdminClient adminClient;
-
     CookieStore cookieStore = new BasicCookieStore();
-
-    HttpClient client = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
+    private CloseableHttpClient client = HttpClientBuilder.create().build();
+//private static final String HTTP_RESPONSE_HEADER_LOCATION = "location";
 
     @BeforeClass(alwaysRun = true)
     public void initTest() throws Exception {
 
         super.initTest();
-        adminClient = new OauthAdminClient(backendURL, sessionCookie);
 
-        Map<String, String> startupParameters = new HashMap<String, String>();
-        startupParameters.put("-DportOffset", String.valueOf(PORT_OFFSET_1 + CommonConstants.IS_DEFAULT_OFFSET));
-        AutomationContext context = new AutomationContext("IDENTITY", "identity002",
-                TestUserMode.SUPER_TENANT_ADMIN);
-
-        startCarbonServer(PORT_OFFSET_1, context, startupParameters);
-
-        super.createServiceClients(PORT_OFFSET_0, sessionCookie, new IdentityConstants
-                .ServiceClientType[]{IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT, IdentityConstants.
-                ServiceClientType.IDENTITY_PROVIDER_MGT, IdentityConstants.ServiceClientType.SAML_SSO_CONFIG});
-        super.createServiceClients(PORT_OFFSET_1, null, new IdentityConstants.ServiceClientType[]{
-                IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT, IdentityConstants.ServiceClientType.
-                OAUTH_ADMIN});
+        super.createServiceClients(PORT_OFFSET_0, sessionCookie,
+                new IdentityConstants.ServiceClientType[]{
+                        IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT,
+                        IdentityConstants.ServiceClientType.IDENTITY_PROVIDER_MGT,
+                        IdentityConstants.ServiceClientType.SAML_SSO_CONFIG});
+        super.createServiceClients(PORT_OFFSET_1, null,
+                new IdentityConstants.ServiceClientType[]{
+                        IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT,
+                        IdentityConstants.ServiceClientType.OAUTH_ADMIN});
 
         //add new test user to secondary IS
         boolean userCreated = addUserToSecondaryIS();
-        Assert.assertTrue(userCreated, "User creation failed.");
+        Assert.assertTrue(userCreated, "User creation failed in secondary IS.");
     }
 
     @AfterClass(alwaysRun = true)
     public void endTest() throws Exception {
+        try {
+            super.deleteSAML2WebSSOConfiguration(PORT_OFFSET_0, PRIMARY_IS_SAML_ISSUER_NAME);
+            super.deleteServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SP_NAME);
+            super.deleteIdentityProvider(PORT_OFFSET_0, PRIMARY_IS_IDP_NAME);
 
-        super.deleteSAML2WebSSOConfiguration(PORT_OFFSET_0, PRIMARY_IS_SAML_ISSUER_NAME);
-        super.deleteServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SERVICE_PROVIDER_NAME);
-        super.deleteIdentityProvider(PORT_OFFSET_0, IDENTITY_PROVIDER_NAME);
+            super.deleteOIDCConfiguration(PORT_OFFSET_1, secondaryISClientID);
+            super.deleteServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SP_NAME);
 
-        super.deleteOIDCConfiguration(PORT_OFFSET_1, consumerKeyForPrimaryIS);
-        super.deleteServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
+            //delete added users to secondary IS
+            deleteAddedUsers();
 
-        //delete added users to secondary IS
-        deleteAddedUsers();
-
-        super.stopCarbonServer(PORT_OFFSET_1);
+            client.close();
+        } catch (Exception e) {
+            log.error("Failure occured due to :" + e.getMessage(), e);
+            throw e;
+        }
     }
 
     @Test(priority = 1, groups = "wso2.is", description = "Check create service provider in secondary IS")
     public void testCreateServiceProviderInSecondaryIS() throws Exception {
 
-        super.addServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
+        super.addServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SP_NAME);
 
-        ServiceProvider serviceProvider = getServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
+        ServiceProvider serviceProvider = getServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SP_NAME);
         Assert.assertNotNull(serviceProvider, "Failed to create service provider 'secondarySP' in secondary IS");
 
-        updateServiceProviderWithOIDCConfigs(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME, CALLBACK_URL,
+        updateServiceProviderWithOIDCConfigs(PORT_OFFSET_1, SECONDARY_IS_SP_NAME, PRIMARY_IS_IDP_CALLBACK_URL,
                 serviceProvider);
 
         super.updateServiceProvider(PORT_OFFSET_1, serviceProvider);
 
-        serviceProvider = getServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
+        serviceProvider = getServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SP_NAME);
 
         InboundAuthenticationRequestConfig[] configs = serviceProvider.getInboundAuthenticationConfig().
                 getInboundAuthenticationRequestConfigs();
         boolean success = false;
         if (configs != null) {
             for (InboundAuthenticationRequestConfig config : configs) {
-                if (consumerKeyForPrimaryIS.equals(config.getInboundAuthKey()) && OAuth2Constant.OAUTH_2.equals(
+                if (secondaryISClientID.equals(config.getInboundAuthKey()) && OAuth2Constant.OAUTH_2.equals(
                         config.getInboundAuthType())) {
                     success = true;
                     break;
@@ -176,10 +172,10 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
     public void testCreateIdentityProviderInPrimaryIS() throws Exception {
 
         IdentityProvider identityProvider = new IdentityProvider();
-        identityProvider.setIdentityProviderName(IDENTITY_PROVIDER_NAME);
+        identityProvider.setIdentityProviderName(PRIMARY_IS_IDP_NAME);
 
         FederatedAuthenticatorConfig oidcAuthnConfig = new FederatedAuthenticatorConfig();
-        oidcAuthnConfig.setName(OIDCAUTHENTICATOR);
+        oidcAuthnConfig.setName(PRIMARY_IS_IDP_AUTHENTICATOR_NAME_OIDC);
         oidcAuthnConfig.setDisplayName("openidconnect");
         oidcAuthnConfig.setEnabled(true);
         oidcAuthnConfig.setProperties(getOIDCAuthnConfigProperties());
@@ -193,16 +189,16 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
 
         super.addIdentityProvider(PORT_OFFSET_0, identityProvider);
 
-        Assert.assertNotNull(getIdentityProvider(PORT_OFFSET_0, IDENTITY_PROVIDER_NAME), "Failed to create " +
+        Assert.assertNotNull(getIdentityProvider(PORT_OFFSET_0, PRIMARY_IS_IDP_NAME), "Failed to create " +
                 "Identity Provider 'trustedIdP' in primary IS");
     }
 
     @Test(priority = 3, groups = "wso2.is", description = "Check create service provider in primary IS")
     public void testCreateServiceProviderInPrimaryIS() throws Exception {
 
-        super.addServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SERVICE_PROVIDER_NAME);
+        super.addServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SP_NAME);
 
-        ServiceProvider serviceProvider = getServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SERVICE_PROVIDER_NAME);
+        ServiceProvider serviceProvider = getServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SP_NAME);
         Assert.assertNotNull(serviceProvider, "Failed to create service provider 'travelocity' in primary IS");
 
         updateServiceProviderWithSAMLConfigs(PORT_OFFSET_0, PRIMARY_IS_SAML_ISSUER_NAME, PRIMARY_IS_SAML_ACS_URL,
@@ -211,10 +207,10 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
         AuthenticationStep authStep = new AuthenticationStep();
         org.wso2.carbon.identity.application.common.model.xsd.IdentityProvider idP = new org.wso2.carbon.identity.
                 application.common.model.xsd.IdentityProvider();
-        idP.setIdentityProviderName(IDENTITY_PROVIDER_NAME);
+        idP.setIdentityProviderName(PRIMARY_IS_IDP_NAME);
         org.wso2.carbon.identity.application.common.model.xsd.FederatedAuthenticatorConfig oidcAuthnConfig = new
                 org.wso2.carbon.identity.application.common.model.xsd.FederatedAuthenticatorConfig();
-        oidcAuthnConfig.setName(OIDCAUTHENTICATOR);
+        oidcAuthnConfig.setName(PRIMARY_IS_IDP_AUTHENTICATOR_NAME_OIDC);
         oidcAuthnConfig.setDisplayName("openidconnect");
         idP.setFederatedAuthenticatorConfigs(new org.wso2.carbon.identity.application.common.model.xsd.
                 FederatedAuthenticatorConfig[]{oidcAuthnConfig});
@@ -224,18 +220,18 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
 
         serviceProvider.getLocalAndOutBoundAuthenticationConfig().setAuthenticationSteps(new AuthenticationStep[]{
                 authStep});
-        serviceProvider.getLocalAndOutBoundAuthenticationConfig().setAuthenticationType(AUTHENTICATION_TYPE);
+        serviceProvider.getLocalAndOutBoundAuthenticationConfig().setAuthenticationType(PRIMARY_IS_SP_AUTHENTICATION_TYPE);
 
         updateServiceProvider(PORT_OFFSET_0, serviceProvider);
 
-        serviceProvider = getServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SERVICE_PROVIDER_NAME);
+        serviceProvider = getServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SP_NAME);
 
         InboundAuthenticationRequestConfig[] configs = serviceProvider.getInboundAuthenticationConfig().
                 getInboundAuthenticationRequestConfigs();
         boolean success = false;
         if (configs != null) {
             for (InboundAuthenticationRequestConfig config : configs) {
-                if (INBOUND_AUTH_TYPE.equals(config.getInboundAuthType())) {
+                if (PRIMARY_IS_SP_INBOUND_AUTH_TYPE_SAMLSSO.equals(config.getInboundAuthType())) {
                     success = true;
                     break;
                 }
@@ -243,7 +239,7 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
         }
 
         Assert.assertTrue(success, "Failed to update service provider with inbound SAML2 configs in primary IS");
-        Assert.assertTrue(AUTHENTICATION_TYPE.equals(serviceProvider.getLocalAndOutBoundAuthenticationConfig().
+        Assert.assertTrue(PRIMARY_IS_SP_AUTHENTICATION_TYPE.equals(serviceProvider.getLocalAndOutBoundAuthenticationConfig().
                 getAuthenticationType()), "Failed to update local and out bound configs in primary IS");
     }
 
@@ -292,9 +288,9 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
         if (usrMgtClient == null) {
             return false;
         } else {
-            String[] roles = {usrRole};
-            usrMgtClient.addUser(usrName, usrPwd, roles, null);
-            if (usrMgtClient.userNameExists(usrRole, usrName)) {
+            String[] roles = {SECONDARY_IS_TEST_USER_ROLES};
+            usrMgtClient.addUser(SECONDARY_IS_TEST_USERNAME, SECONDARY_IS_TEST_PASSWORD, roles, null);
+            if (usrMgtClient.userNameExists(SECONDARY_IS_TEST_USER_ROLES, SECONDARY_IS_TEST_USERNAME)) {
                 return true;
             } else {
                 return false;
@@ -305,7 +301,7 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
     private void deleteAddedUsers() throws RemoteException, UserAdminUserAdminException {
 
         UserManagementClient usrMgtClient = new UserManagementClient(getSecondaryISURI(), "admin", "admin");
-        usrMgtClient.deleteUser(usrName);
+        usrMgtClient.deleteUser(SECONDARY_IS_TEST_USERNAME);
     }
 
     protected String getSecondaryISURI() {
@@ -352,14 +348,14 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
             InboundAuthenticationRequestConfig inboundAuthenticationRequestConfig = new
                     InboundAuthenticationRequestConfig();
             inboundAuthenticationRequestConfig.setInboundAuthKey(application.getClientId());
-            consumerKeyForPrimaryIS = application.getClientId();
+            secondaryISClientID = application.getClientId();
             inboundAuthenticationRequestConfig.setInboundAuthType(OAuth2Constant.OAUTH_2);
             if (StringUtils.isNotBlank(application.getClientSecret())) {
                 org.wso2.carbon.identity.application.common.model.xsd.Property property = new org.wso2.carbon.identity.
                         application.common.model.xsd.Property();
                 property.setName(OAuth2Constant.OAUTH_CONSUMER_SECRET);
                 property.setValue(application.getClientSecret());
-                consumerSecretForPrimaryIS = application.getClientSecret();
+                secondaryISClientSecret = application.getClientSecret();
                 org.wso2.carbon.identity.application.common.model.xsd.Property[] properties = {property};
                 inboundAuthenticationRequestConfig.setProperties(properties);
             }
@@ -393,12 +389,12 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
 
         property = new Property();
         property.setName(IdentityConstants.Authenticator.OIDC.CLIENT_ID);
-        property.setValue(consumerKeyForPrimaryIS);
+        property.setValue(secondaryISClientID);
         properties[1] = property;
 
         property = new Property();
         property.setName(IdentityConstants.Authenticator.OIDC.CLIENT_SECRET);
-        property.setValue(consumerSecretForPrimaryIS);
+        property.setValue(secondaryISClientSecret);
         properties[2] = property;
 
         property = new Property();
@@ -413,7 +409,7 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
 
         property = new Property();
         property.setName(IdentityConstants.Authenticator.OIDC.CALLBACK_URL);
-        property.setValue(CALLBACK_URL);
+        property.setValue(PRIMARY_IS_IDP_CALLBACK_URL);
         properties[5] = property;
 
         property = new Property();
@@ -433,7 +429,7 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
 
         InboundAuthenticationRequestConfig samlAuthenticationRequestConfig = new InboundAuthenticationRequestConfig();
         samlAuthenticationRequestConfig.setInboundAuthKey(issuerName);
-        samlAuthenticationRequestConfig.setInboundAuthType(INBOUND_AUTH_TYPE);
+        samlAuthenticationRequestConfig.setInboundAuthType(PRIMARY_IS_SP_INBOUND_AUTH_TYPE_SAMLSSO);
         org.wso2.carbon.identity.application.common.model.xsd.Property property = new org.wso2.carbon.identity.
                 application.common.model.xsd.Property();
         property.setName("attrConsumServiceIndex");
@@ -451,7 +447,7 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
         samlssoServiceProviderDTO.setIssuer(issuerName);
         samlssoServiceProviderDTO.setAssertionConsumerUrls(new String[]{acsUrl});
         samlssoServiceProviderDTO.setDefaultAssertionConsumerUrl(acsUrl);
-        samlssoServiceProviderDTO.setNameIDFormat(SAML_NAME_ID_FORMAT);
+        samlssoServiceProviderDTO.setNameIDFormat(PRIMARY_IS_SAML_NAME_ID_FORMAT);
         samlssoServiceProviderDTO.setDoSignAssertions(true);
         samlssoServiceProviderDTO.setDoSignResponse(true);
         samlssoServiceProviderDTO.setDoSingleLogout(true);
@@ -494,8 +490,8 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
     public HttpResponse sendLoginPost(HttpClient client, String sessionDataKey) throws IOException {
 
         List<NameValuePair> urlParameters = new ArrayList<>();
-        urlParameters.add(new BasicNameValuePair("username", usrName));
-        urlParameters.add(new BasicNameValuePair("password", usrPwd));
+        urlParameters.add(new BasicNameValuePair("username", SECONDARY_IS_TEST_USERNAME));
+        urlParameters.add(new BasicNameValuePair("password", SECONDARY_IS_TEST_PASSWORD));
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
 
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters, "https://localhost:9854" +
@@ -576,8 +572,8 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
 
         EntityUtils.consume(response.getEntity());
 
-        response = Utils.sendPOSTConsentMessage(response, String.format(COMMON_AUTH_URL, DEFAULT_PORT + PORT_OFFSET_0),
-                USER_AGENT, locationHeader, client, pastrCookie);
+        response = Utils.sendPOSTConsentMessage(response, PRIMARY_IS_IDP_CALLBACK_URL, USER_AGENT, locationHeader,
+                client, pastrCookie);
         EntityUtils.consume(response.getEntity());
 
         return getHeaderValue(response, "Location");
@@ -617,7 +613,7 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
 
     public boolean validateLoginHomePageContent(String homepageContent) {
 
-        return homepageContent.contains("You are logged in as " + usrName);
+        return homepageContent.contains("You are logged in as " + SECONDARY_IS_TEST_USERNAME);
     }
 
     private void sendLogoutRequestToPrimaryIS() throws IOException {
