@@ -1953,7 +1953,7 @@
         <identity.user.ws.version>5.3.3</identity.user.ws.version>
 
         <!-- Identity Userstore Versions -->
-        <identity.userstore.ldap.version>6.1.7</identity.userstore.ldap.version>
+        <identity.userstore.ldap.version>6.1.9</identity.userstore.ldap.version>
         <identity.userstore.remote.version>5.2.5</identity.userstore.remote.version>
 
         <!-- Identity Data Publisher Versions -->
