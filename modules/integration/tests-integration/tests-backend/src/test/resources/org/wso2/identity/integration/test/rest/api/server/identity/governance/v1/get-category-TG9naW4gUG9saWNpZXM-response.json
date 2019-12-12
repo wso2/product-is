@@ -72,10 +72,16 @@
       "subCategory": "DEFAULT",
       "properties": [
         {
+          "name": "sso.login.recaptcha.enable.always",
+          "value": "false",
+          "displayName": "Enable captcha always",
+          "description": "Enable captcha verification always during SSO login"
+        },
+        {
           "name": "sso.login.recaptcha.enable",
           "value": "false",
-          "displayName": "Enable",
-          "description": "Enable captcha verification during SSO login"
+          "displayName": "Enable captcha after the Max failed attempts",
+          "description": "Enable captcha verification during SSO login after allowed number of failed attempts"
         },
         {
           "name": "sso.login.recaptcha.on.max.failed.attempts",
