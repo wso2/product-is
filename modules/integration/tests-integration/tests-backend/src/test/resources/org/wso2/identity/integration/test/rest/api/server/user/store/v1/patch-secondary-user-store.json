@@ -1,0 +1,7 @@
+[
+  {
+    "operation": "REPLACE",
+    "path": "/properties/disabled",
+    "value": "true"
+  }
+]
