@@ -453,6 +453,9 @@
                                    org.wso2.carbon.identity.local.auth.fido:org.wso2.carbon.identity.application.authenticator.fido2.server.feature:${identity.local.auth.fido.version}
                                 </featureArtifactDef>
 
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.content.repository:org.wso2.carbon.identity.content.repository.feature:${identity.content.repository.version}
+                                </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -916,6 +919,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.application.authenticator.fido2.server.feature.group</id>
                                     <version>${identity.local.auth.fido.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.content.repository.feature.group</id>
+                                    <version>${identity.content.repository.version}</version>
                                 </feature>
                             </features>
                         </configuration>
@@ -1381,6 +1388,10 @@
                                     <id>org.wso2.carbon.identity.template.mgt.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.content.repository.feature.group</id>
+                                    <version>${identity.content.repository.version}</version>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>
@@ -1786,6 +1797,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.template.mgt.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.image.server.feature.group</id>
+                                    <version>${identity.content.repository.version}</version>
                                 </feature>
                             </features>
                         </configuration>

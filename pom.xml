@@ -1913,7 +1913,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.15.47</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.15.52-SNAPSHOT</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2014,7 +2014,7 @@
         <identity.extension.utils>1.0.8</identity.extension.utils>
 
         <!-- Identity REST API feature -->
-        <identity.api.dispatcher.version>1.0.45</identity.api.dispatcher.version>
+        <identity.api.dispatcher.version>1.0.47-SNAPSHOT</identity.api.dispatcher.version>
 
         <identity.agent.sso.version>5.3.4</identity.agent.sso.version>
         <identity.tool.samlsso.validator.version>5.3.3</identity.tool.samlsso.validator.version>
@@ -2149,6 +2149,7 @@
         <swagger-request-validator.version>2.6.0</swagger-request-validator.version>
 
         <project.scm.id>my-scm-server</project.scm.id>
+        <identity.content.repository.version>1.0.1</identity.content.repository.version>
 
     </properties>
 
