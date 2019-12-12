@@ -1950,7 +1950,7 @@
 
         <!-- Identity User Versions -->
         <identity.user.account.association.version>5.3.7</identity.user.account.association.version>
-        <identity.user.ws.version>5.3.3</identity.user.ws.version>
+        <identity.user.ws.version>5.3.5</identity.user.ws.version>
 
         <!-- Identity Userstore Versions -->
         <identity.userstore.ldap.version>6.1.9</identity.userstore.ldap.version>
@@ -2025,7 +2025,7 @@
         <carbon.identity.oauth.uma.version>1.1.6</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>0.1.111</identity.apps.version>
+        <identity.apps.version>0.1.139</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.3.0</charon.version>

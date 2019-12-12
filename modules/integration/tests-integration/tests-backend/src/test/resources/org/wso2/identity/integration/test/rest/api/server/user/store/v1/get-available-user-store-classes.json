@@ -1,0 +1,27 @@
+[
+  {
+    "typeId": "QWN0aXZlRGlyZWN0b3J5VXNlclN0b3JlTWFuYWdlcg",
+    "typeName": "ActiveDirectoryUserStoreManager",
+    "className": "org.wso2.carbon.user.core.ldap.ActiveDirectoryUserStoreManager"
+  },
+  {
+    "typeId": "UmVhZE9ubHlMREFQVXNlclN0b3JlTWFuYWdlcg",
+    "typeName": "ReadOnlyLDAPUserStoreManager",
+    "className": "org.wso2.carbon.user.core.ldap.ReadOnlyLDAPUserStoreManager"
+  },
+  {
+    "typeId": "UmVhZFdyaXRlTERBUFVzZXJTdG9yZU1hbmFnZXI",
+    "typeName": "ReadWriteLDAPUserStoreManager",
+    "className": "org.wso2.carbon.user.core.ldap.ReadWriteLDAPUserStoreManager"
+  },
+  {
+    "typeId": "Q2FyYm9uUmVtb3RlVXNlclN0b3JlTWFuZ2Vy",
+    "typeName": "CarbonRemoteUserStoreManger",
+    "className": "org.wso2.carbon.identity.user.store.remote.CarbonRemoteUserStoreManger"
+  },
+  {
+    "typeId": "SkRCQ1VzZXJTdG9yZU1hbmFnZXI",
+    "typeName": "JDBCUserStoreManager",
+    "className": "org.wso2.carbon.user.core.jdbc.JDBCUserStoreManager"
+  }
+]
