@@ -210,10 +210,10 @@ public class ApplicationManagementFailureTest extends ApplicationManagementBaseT
     @Test
     public void testUpdateAppNameToAnotherExistingAppName() throws Exception {
 
-        // Create the first app.
         String firstAppName = "firstAppName";
         String secondAppName = "secondAppName";
 
+        // Create the first app.
         Response createFirstAppResponse = createApplication(firstAppName);
         String firstAppId = getApplicationId(createFirstAppResponse);
         assertNotBlank(firstAppId);
