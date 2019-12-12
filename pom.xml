@@ -1935,10 +1935,10 @@
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.saml.version>5.7.7</identity.inbound.auth.saml.version>
+        <identity.inbound.auth.saml.version>5.7.9</identity.inbound.auth.saml.version>
         <identity.inbound.auth.oauth.version>6.2.78</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.4.3</identity.inbound.auth.openid.version>
-        <identity.inbound.auth.sts.version>5.4.3</identity.inbound.auth.sts.version>
+        <identity.inbound.auth.sts.version>5.4.4</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.5.3</identity.inbound.provisioning.scim.version>
         <identity.inbound.provisioning.scim2.version>1.4.19</identity.inbound.provisioning.scim2.version>
 
@@ -2002,7 +2002,7 @@
         <identity.oauth2.jwt.bearer.grant.version>1.0.24</identity.oauth2.jwt.bearer.grant.version>
 
         <!--SAML Metadata-->
-        <identity.metadata.saml.version>1.3.1</identity.metadata.saml.version>
+        <identity.metadata.saml.version>1.3.2</identity.metadata.saml.version>
 
         <!-- Connector Versions -->
         <authenticator.totp.version>2.1.5</authenticator.totp.version>
