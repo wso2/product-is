@@ -322,7 +322,8 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
 
     private SAMLSSOServiceProviderDTO getServiceProvider(SAMLConfig samlConfig) throws RemoteException, IdentitySAMLSSOConfigServiceIdentityException {
 
-        SAMLSSOServiceProviderDTO[] samlssoServiceProviderDTOs = ssoConfigServiceClient.getServiceProviders().getServiceProviders();
+        SAMLSSOServiceProviderDTO[] samlssoServiceProviderDTOs = ssoConfigServiceClient.getServiceProviders()
+                .getServiceProviders();
         for (SAMLSSOServiceProviderDTO spDTO : samlssoServiceProviderDTOs) {
             if (spDTO.getIssuer().equals(samlConfig.getApp().getArtifact())) {
                 return spDTO;
