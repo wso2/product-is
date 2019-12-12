@@ -158,8 +158,14 @@
         {
           "name": "SelfRegistration.VerificationCode.ExpiryTime",
           "value": "1440",
-          "displayName": "User self registration code expiry time",
-          "description": "Set the number of minutes the user self registration verification mail would be valid.(Negative value for infinite validity)"
+          "displayName": "User self registration verification link expiry time",
+          "description": "Set the number of minutes the user self registration verification mail would be valid"
+        },
+        {
+          "name": "SelfRegistration.VerificationCode.SMSOTP.ExpiryTime",
+          "value": "1",
+          "displayName": "User self registration SMS OTP expiry time",
+          "description": "Set the number of minutes that the SMS OTP would be valid"
         },
         {
           "name": "SelfRegistration.CallbackRegex",

@@ -42,6 +42,3 @@ prompt = false
 
 [event.default_listener.consent_mgt_handler]
 enable = false
-
-
-

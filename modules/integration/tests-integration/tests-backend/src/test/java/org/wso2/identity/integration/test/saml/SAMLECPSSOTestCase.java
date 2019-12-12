@@ -171,7 +171,7 @@ public class SAMLECPSSOTestCase extends AbstractSAMLSSOTestCase {
     }
 
     private void changeISConfiguration() throws Exception {
-        log.info("Replacing identity.xml disabling the consent Management");
+        log.info("Replacing deployment.toml disabling the consent Management");
         String carbonHome = Utils.getResidentCarbonHome();
         File defaultTomlFile = getDeploymentTomlFile(carbonHome);
         File configuredTomlFile = new File(getISResourceLocation() + File.separator + "saml" + File.separator
