@@ -1950,7 +1950,7 @@
 
         <!-- Identity User Versions -->
         <identity.user.account.association.version>5.3.7</identity.user.account.association.version>
-        <identity.user.ws.version>5.3.4</identity.user.ws.version>
+        <identity.user.ws.version>5.3.5</identity.user.ws.version>
 
         <!-- Identity Userstore Versions -->
         <identity.userstore.ldap.version>6.1.7</identity.userstore.ldap.version>
