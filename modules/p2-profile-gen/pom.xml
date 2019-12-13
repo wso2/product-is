@@ -129,6 +129,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.inbound.auth.sts:org.wso2.carbon.mex.server.feature:${identity.inbound.auth.sts.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.governance:org.wso2.carbon.identity.tenant.resource.manager.feature:${identity.governance.version}
+                                </featureArtifactDef>
 
                                 <!-- registry related features -->
                                 <featureArtifactDef>
@@ -666,6 +669,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.mex.server.feature.group</id>
                                     <version>${identity.inbound.auth.sts.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.tenant.resource.manager</id>
+                                    <version>${identity.governance.version}</version>
                                 </feature>
 
                                 <!-- Features required for Cloud Identity -->
