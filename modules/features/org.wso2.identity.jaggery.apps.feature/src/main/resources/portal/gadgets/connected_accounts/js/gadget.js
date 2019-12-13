@@ -134,7 +134,7 @@ function reloadGrid() {
                 changeDropDownMenu();
             } else {
 
-                if (typeof resp.reLogin != 'undefined' && resp.reLogin == true) {
+                if (typeof resp.reLogin != 'undefined' && resp.reLogin === true) {
                     window.top.location.href = window.location.protocol + '//' + serverUrl + '/dashboard/logout.jag';
                 } else {
                     if (resp.message != null && resp.message.length > 0) {
