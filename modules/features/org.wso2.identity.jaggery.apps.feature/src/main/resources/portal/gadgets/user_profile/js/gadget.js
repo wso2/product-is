@@ -260,9 +260,29 @@ function reloadGrid() {
         type: "POST",
         data: {cookie : cookie, user : userName},
         success: function (data) {
-            json = $.parseJSON(data);
-            drawPage();
-
+            resp = $.parseJSON(data);
+            if (resp.success == true) {
+                json = resp.data;
+                drawPage();
+            } else {
+                if (typeof resp.reLogin != 'undefined' && resp.reLogin === true) {
+                    window.top.location.href = window.location.protocol + '//' + serverUrl + '/dashboard/logout.jag';
+                } else {
+                    if (resp.message != null && resp.message.length > 0) {
+                        message({
+                            content: resp.message, type: 'error', cbk: function () {
+                            }
+                        });
+                    } else {
+                        message({
+                            content: 'Error occurred while loading values for the grid.',
+                            type: 'error',
+                            cbk: function () {
+                            }
+                        });
+                    }
+                }
+            }
 
         },
         error: function (e) {
