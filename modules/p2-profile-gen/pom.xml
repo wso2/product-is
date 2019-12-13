@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>5.10.0-m9-SNAPSHOT</version>
+        <version>5.10.0-m10-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -128,6 +128,9 @@
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.inbound.auth.sts:org.wso2.carbon.mex.server.feature:${identity.inbound.auth.sts.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.governance:org.wso2.carbon.identity.tenant.resource.manager.feature:${identity.governance.version}
                                 </featureArtifactDef>
 
                                 <!-- registry related features -->
@@ -666,6 +669,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.mex.server.feature.group</id>
                                     <version>${identity.inbound.auth.sts.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.tenant.resource.manager</id>
+                                    <version>${identity.governance.version}</version>
                                 </feature>
 
                                 <!-- Features required for Cloud Identity -->
