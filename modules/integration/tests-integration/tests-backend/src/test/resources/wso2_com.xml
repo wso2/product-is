@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<UserStoreManager class="org.wso2.carbon.user.core.jdbc.JDBCUserStoreManager">
+<UserStoreManager class="org.wso2.carbon.user.core.jdbc.UniqueIDJDBCUserStoreManager">
     <Property name="driverName">org.h2.Driver</Property>
     <Property name="url">jdbc:h2:./repository/database/WSO2CARBON_DB</Property>
     <Property name="userName">wso2carbon</Property>
@@ -25,4 +25,5 @@
     <Property name="SCIMEnabled">false</Property>
     <Property name="DomainName">wso2.com</Property>
     <Property name="Description">Test multiple user stores</Property>
+    <Property name="UserIDEnabled">true</Property>
 </UserStoreManager>
