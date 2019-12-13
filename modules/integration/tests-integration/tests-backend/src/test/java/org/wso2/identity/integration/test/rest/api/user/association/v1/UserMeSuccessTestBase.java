@@ -56,6 +56,7 @@ public class UserMeSuccessTestBase extends UserAssociationTestBase {
     private static final String EXTERNAL_USER_ID_1 = "ExternalUser1";
     private static final String EXTERNAL_USER_ID_2 = "ExternalUser2";
     private String federatedAssociationIdHolder;
+    private String associatedUserIdHolder;
     private TestUserMode userMode;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
@@ -148,21 +149,23 @@ public class UserMeSuccessTestBase extends UserAssociationTestBase {
     @Test(dependsOnMethods = {"testCreateAssociation"})
     public void testGetAssociations() {
 
-        getResponseOfGet(this.userAssociationEndpointURI)
-                .then()
+        Response response = getResponseOfGet(this.userAssociationEndpointURI);
+        response.then()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .log().ifValidationFails()
                 .body("size()", is(2))
-                .body("userId", hasItems(getEncodedUserId("PRIMARY/" + TEST_USER_1),
-                        getEncodedUserId("PRIMARY/" + TEST_USER_2)));
+                .body("username", hasItems(TEST_USER_1, TEST_USER_2))
+                .body("userStoreDomain", hasItems("PRIMARY"));
+        JsonPath jsonPath = response.jsonPath();
+        associatedUserIdHolder = jsonPath.getList("findAll{it.username=='" + TEST_USER_1 + "'}.userId").get(0)
+                .toString();
     }
 
     @Test(dependsOnMethods = {"testGetAssociations"})
     public void testRemoveAssociationById() {
 
-        getResponseOfDelete(this.userAssociationEndpointURI + "/" + getEncodedUserId("PRIMARY/"
-                + TEST_USER_1))
+        getResponseOfDelete(this.userAssociationEndpointURI + "/" + associatedUserIdHolder)
                 .then()
                 .log().ifValidationFails()
                 .assertThat()
