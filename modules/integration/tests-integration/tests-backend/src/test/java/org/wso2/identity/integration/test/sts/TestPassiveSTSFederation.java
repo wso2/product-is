@@ -33,6 +33,7 @@ import org.wso2.identity.integration.test.utils.IdentityConstants;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -171,16 +172,17 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
         ServiceProvider serviceProvider = getServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SERVICE_PROVIDER_NAME);
         Assert.assertNotNull(serviceProvider, "Service provider in Primary IS not Exists");
         serviceProvider.setOutboundProvisioningConfig(new OutboundProvisioningConfig());
-        List<InboundAuthenticationRequestConfig> authRequestList = new ArrayList<InboundAuthenticationRequestConfig>();
+        List<InboundAuthenticationRequestConfig> authRequestList =
+                new ArrayList<>(Arrays.asList(
+                        serviceProvider.getInboundAuthenticationConfig().getInboundAuthenticationRequestConfigs()));
         InboundAuthenticationRequestConfig opicAuthenticationRequest = new InboundAuthenticationRequestConfig();
         opicAuthenticationRequest.setInboundAuthKey(PASSIVESTS_REALM);
         opicAuthenticationRequest.setInboundAuthType("passivests");
         authRequestList.add(opicAuthenticationRequest);
 
-        if (authRequestList.size() > 0) {
-            serviceProvider.getInboundAuthenticationConfig().setInboundAuthenticationRequestConfigs(authRequestList.
-                    toArray(new InboundAuthenticationRequestConfig[0]));
-        }
+        serviceProvider.getInboundAuthenticationConfig().setInboundAuthenticationRequestConfigs(authRequestList.
+                toArray(new InboundAuthenticationRequestConfig[0]));
+
         updateServiceProvider(PORT_OFFSET_0, serviceProvider);
         serviceProvider = getServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SERVICE_PROVIDER_NAME);
         InboundAuthenticationRequestConfig[] configs = serviceProvider.getInboundAuthenticationConfig().getInboundAuthenticationRequestConfigs();
