@@ -1,0 +1,6 @@
+{
+  "name": "My Invalid Discoverable App",
+  "advancedConfigurations": {
+    "discoverableByEndUsers": true
+  }
+}
