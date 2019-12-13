@@ -21,7 +21,7 @@ username = "$env{SHARED_DATABASE_USERNAME}"
 password = "$env{SHARED_DATABASE_PASSWORD}"
 
 [user_store]
-type = "database"
+type = "database_unique_id"
 connection_url = "ldap://localhost:${Ports.EmbeddedLDAP.LDAPServerPort}"
 connection_name = "uid=admin,ou=system"
 connection_password = "admin"
