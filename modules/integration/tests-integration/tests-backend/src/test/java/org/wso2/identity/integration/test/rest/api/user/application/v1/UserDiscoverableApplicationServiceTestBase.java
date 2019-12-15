@@ -44,6 +44,8 @@ public class UserDiscoverableApplicationServiceTestBase extends RESTAPIUserTestB
     protected static int TOTAL_DISCOVERABLE_APP_COUNT = 13;
     private static final String APP_NAME_PREFIX = "APP_";
     private static final String APP_DESC_PREFIX = "This is APP_";
+    private static final String APP_IMAGE_URL = "https://dummy-image-url.com";
+    private static final String APP_ACCESS_URL = "https://dummy-access-url.com";
 
     static {
         try {
@@ -95,6 +97,8 @@ public class UserDiscoverableApplicationServiceTestBase extends RESTAPIUserTestB
             serviceProvider = appMgtclient.getApplication(APP_NAME_PREFIX + i);
             if (serviceProvider != null) {
                 serviceProvider.setDiscoverable(true);
+                serviceProvider.setImageUrl(APP_IMAGE_URL);
+                serviceProvider.setAccessUrl(APP_ACCESS_URL);
                 appMgtclient.updateApplicationData(serviceProvider);
                 serviceProviders.add(serviceProvider);
             }
