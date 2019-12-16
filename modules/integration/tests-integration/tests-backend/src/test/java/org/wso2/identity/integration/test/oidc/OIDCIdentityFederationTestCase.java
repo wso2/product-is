@@ -96,7 +96,6 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
 
     CookieStore cookieStore = new BasicCookieStore();
     private CloseableHttpClient client;
-//private static final String HTTP_RESPONSE_HEADER_LOCATION = "location";
 
     @BeforeClass(alwaysRun = true)
     public void initTest() throws Exception {
@@ -127,11 +126,9 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
     @AfterClass(alwaysRun = true)
     public void endTest() throws Exception {
         try {
-            super.deleteSAML2WebSSOConfiguration(PORT_OFFSET_0, PRIMARY_IS_SAML_ISSUER_NAME);
             super.deleteServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SP_NAME);
             super.deleteIdentityProvider(PORT_OFFSET_0, PRIMARY_IS_IDP_NAME);
 
-            super.deleteOIDCConfiguration(PORT_OFFSET_1, secondaryISClientID);
             super.deleteServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SP_NAME);
 
             deleteAddedUsersInSecondaryIS();
