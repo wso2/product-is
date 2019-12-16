@@ -1735,6 +1735,21 @@
                 <artifactId>org.wso2.carbon.identity.saml.common.util.feature</artifactId>
                 <version>${saml.common.util.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.identity.apps</groupId>
+                <artifactId>org.wso2.identity.apps.feature</artifactId>
+                <version>${identity.apps.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.identity.apps</groupId>
+                <artifactId>org.wso2.identity.apps.authentication.portal.server.feature</artifactId>
+                <version>${identity.apps.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.identity.apps</groupId>
+                <artifactId>org.wso2.identity.apps.recovery.portal.server.feature</artifactId>
+                <version>${identity.apps.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.wso2.carbon.identity.application.authz.xacml</groupId>
