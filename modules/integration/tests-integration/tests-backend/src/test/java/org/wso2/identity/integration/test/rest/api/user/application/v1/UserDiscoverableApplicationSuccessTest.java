@@ -249,6 +249,10 @@ public class UserDiscoverableApplicationSuccessTest extends UserDiscoverableAppl
             response.then().log().ifValidationFails()
                     .body("applications.find{ it.id == '" + serviceProvider.getApplicationResourceId() + "'}.name",
                             equalTo(serviceProvider.getApplicationName()))
+                    .body("applications.find{ it.id == '" + serviceProvider.getApplicationResourceId() + "'}.image",
+                            equalTo(serviceProvider.getImageUrl()))
+                    .body("applications.find{ it.id == '" + serviceProvider.getApplicationResourceId() + "'}" +
+                                    ".accessUrl", equalTo(serviceProvider.getAccessUrl()))
                     .body("applications.find{ it.id == '" + serviceProvider.getApplicationResourceId() + "'}" +
                                     ".description",
                             equalTo(serviceProvider.getDescription()));
