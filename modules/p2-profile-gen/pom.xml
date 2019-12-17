@@ -1384,6 +1384,11 @@
                                     <id>org.wso2.carbon.identity.rest.api.dispatcher.feature.group</id>
                                     <version>${identity.api.dispatcher.version}</version>
                                 </feature>
+                                <!--FIDO2/Webauthn feature-->
+                                <feature>
+                                    <id>org.wso2.carbon.identity.application.authenticator.fido2.server.feature.group</id>
+                                    <version>${identity.local.auth.fido.version}</version>
+                                </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.template.mgt.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
@@ -1790,6 +1795,11 @@
                                     <id>org.wso2.carbon.identity.rest.api.dispatcher.feature.group</id>
                                     <version>${identity.api.dispatcher.version}</version>
                                 </feature>
+                                <!--FIDO2/Webauthn feature-->
+                                <feature>
+                                    <id>org.wso2.carbon.identity.application.authenticator.fido2.server.feature.group</id>
+                                    <version>${identity.local.auth.fido.version}</version>
+                                </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.template.mgt.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
@@ -2027,6 +2037,11 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.rest.api.dispatcher.feature.group</id>
                                     <version>${identity.api.dispatcher.version}</version>
+                                </feature>
+                                <!--FIDO2/Webauthn feature-->
+                                <feature>
+                                    <id>org.wso2.carbon.identity.application.authenticator.fido2.server.feature.group</id>
+                                    <version>${identity.local.auth.fido.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.template.mgt.feature.group</id>
