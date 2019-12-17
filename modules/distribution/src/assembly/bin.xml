@@ -452,6 +452,17 @@
             </includes>
         </fileSet>
 
+        <!--copy  web app for FIDO2 endpoint feature-->
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
+            <includes>
+                <include>api#users#v2#me#webauthn.war</include>
+            </includes>
+        </fileSet>
+
         <!--copy shindig war  -->
         <fileSet>
             <directory>
