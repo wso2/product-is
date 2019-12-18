@@ -8,6 +8,7 @@
       "Refresh Token",
       "SAML2",
       "IWA-NTLM",
+      "urn:ietf:params:oauth:grant-type:device_code",
       "urn:ietf:params:oauth:grant-type:uma-ticket",
       "account_switch",
       "urn:ietf:params:oauth:grant-type:jwt-bearer"
