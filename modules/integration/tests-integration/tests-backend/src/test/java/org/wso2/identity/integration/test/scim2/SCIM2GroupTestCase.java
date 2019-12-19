@@ -61,6 +61,18 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
     private static final String EMAIL_TYPE_HOME_CLAIM_VALUE_2 = "scim2user2@gmail.com";
     private static final String USERNAME_2 = "scim2user2";
 
+    private static final String FAMILY_NAME_CLAIM_VALUE_3 = "scim2_3";
+    private static final String GIVEN_NAME_CLAIM_VALUE_3 = "user_3";
+    private static final String EMAIL_TYPE_WORK_CLAIM_VALUE_3 = "scim2_user3@wso2.com";
+    private static final String EMAIL_TYPE_HOME_CLAIM_VALUE_3 = "scim2_user3@gmail.com";
+    private static final String USERNAME_3 = "scim2_user3";
+
+    private static final String FAMILY_NAME_CLAIM_VALUE_4 = "scim2_4";
+    private static final String GIVEN_NAME_CLAIM_VALUE_4 = "user_4";
+    private static final String EMAIL_TYPE_WORK_CLAIM_VALUE_4 = "scim2_user4@wso2.com";
+    private static final String EMAIL_TYPE_HOME_CLAIM_VALUE_4 = "scim2_user4@gmail.com";
+    private static final String USERNAME_4 = "scim2_user4";
+
     private static final String EQUAL = "+Eq+";
     private static final String STARTWITH = "+Sw+";
     private static final String ENDWITH = "+Ew+";
@@ -69,12 +81,15 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
     private CloseableHttpClient client;
     private String userId1;
     private String userId2;
+    private String userId3;
+    private String userId4;
 
     private String adminUsername;
     private String password;
     private String tenant;
 
     private String groupId;
+    private String groupId1;
 
 
     @Factory(dataProvider = "SCIM2MeConfigProvider")
@@ -126,6 +141,34 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
         EntityUtils.consume(response.getEntity());
 
         userId2 = ((JSONObject) responseObj).get(ID_ATTRIBUTE).toString();
+
+        response = createUser(
+                USERNAME_3,
+                FAMILY_NAME_CLAIM_VALUE_3,
+                GIVEN_NAME_CLAIM_VALUE_3,
+                EMAIL_TYPE_WORK_CLAIM_VALUE_3,
+                EMAIL_TYPE_HOME_CLAIM_VALUE_3);
+        assertEquals(response.getStatusLine().getStatusCode(), 201, "User " +
+                "has not been created successfully");
+
+        responseObj = JSONValue.parse(EntityUtils.toString(response.getEntity()));
+        EntityUtils.consume(response.getEntity());
+
+        userId3 = ((JSONObject) responseObj).get(ID_ATTRIBUTE).toString();
+
+        response = createUser(
+                USERNAME_4,
+                FAMILY_NAME_CLAIM_VALUE_4,
+                GIVEN_NAME_CLAIM_VALUE_4,
+                EMAIL_TYPE_WORK_CLAIM_VALUE_4,
+                EMAIL_TYPE_HOME_CLAIM_VALUE_4);
+        assertEquals(response.getStatusLine().getStatusCode(), 201, "User " +
+                "has not been created successfully");
+
+        responseObj = JSONValue.parse(EntityUtils.toString(response.getEntity()));
+        EntityUtils.consume(response.getEntity());
+
+        userId4 = ((JSONObject) responseObj).get(ID_ATTRIBUTE).toString();
     }
 
     @AfterClass(alwaysRun = true)
@@ -136,6 +179,16 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
         EntityUtils.consume(response.getEntity());
 
         response = deleteUser(userId2);
+        assertEquals(response.getStatusLine().getStatusCode(), 404, "User " +
+                "has not been deleted successfully");
+        EntityUtils.consume(response.getEntity());
+
+        response = deleteUser(userId3);
+        assertEquals(response.getStatusLine().getStatusCode(), 404, "User " +
+                "has not been deleted successfully");
+        EntityUtils.consume(response.getEntity());
+
+        response = deleteUser(userId4);
         assertEquals(response.getStatusLine().getStatusCode(), 404, "User " +
                 "has not been deleted successfully");
         EntityUtils.consume(response.getEntity());
@@ -245,6 +298,50 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
         assertNotNull(groupId);
     }
 
+    @Test
+    public void testCreateGroupWithCharsetEncodingHeader() throws Exception {
+
+        HttpPost request = new HttpPost(getPath());
+        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+        request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json; charset=utf-8");
+
+        JSONObject rootObject = new JSONObject();
+
+        JSONObject member1 = new JSONObject();
+        member1.put(SCIM2BaseTestCase.DISPLAY_ATTRIBUTE, USERNAME_3);
+        member1.put(VALUE_PARAM, userId3);
+
+        JSONObject member2 = new JSONObject();
+        member2.put(SCIM2BaseTestCase.DISPLAY_ATTRIBUTE, USERNAME_4);
+        member2.put(VALUE_PARAM, userId4);
+
+        JSONArray members = new JSONArray();
+        members.add(member1);
+        members.add(member2);
+
+        rootObject.put(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE, GROUPNAME);
+
+        rootObject.put(SCIM2BaseTestCase.MEMBERS_ATTRIBUTE, members);
+
+        StringEntity entity = new StringEntity(rootObject.toString());
+        request.setEntity(entity);
+
+        HttpResponse response = client.execute(request);
+
+        assertEquals(response.getStatusLine().getStatusCode(), 201, "User " +
+                "has not been created successfully");
+
+        Object responseObj = JSONValue.parse(EntityUtils.toString(response.getEntity()));
+        EntityUtils.consume(response.getEntity());
+
+        String groupNameFromResponse = ((JSONObject) responseObj).get(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE)
+                .toString();
+        assertTrue(groupNameFromResponse.contains(GROUPNAME));
+
+        groupId1 = ((JSONObject) responseObj).get(ID_ATTRIBUTE).toString();
+        assertNotNull(groupId1);
+    }
+
     @Test(dependsOnMethods = "testCreateGroup")
     public void testGetGroup() throws Exception {
         String userResourcePath = getPath() + "/" + groupId;
@@ -296,6 +393,31 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
         HttpGet getRequest = new HttpGet(userResourcePath);
         getRequest.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
         getRequest.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+
+        response = client.execute(getRequest);
+        assertEquals(response.getStatusLine().getStatusCode(), 404, "User " +
+                "has not been deleted successfully");
+        EntityUtils.consume(response.getEntity());
+    }
+
+    @Test(dependsOnMethods = "testCreateGroupWithCharsetEncodingHeader")
+    public void testDeleteGroupWithCharsetEncodingHeader() throws Exception {
+
+        String userResourcePath = getPath() + "/" + groupId1;
+        HttpDelete request = new HttpDelete(userResourcePath);
+        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+        request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json; charset=utf-8");
+
+        HttpResponse response = client.execute(request);
+        assertEquals(response.getStatusLine().getStatusCode(), 204, "User " +
+                "has not been retrieved successfully");
+
+        EntityUtils.consume(response.getEntity());
+
+        userResourcePath = getPath() + "/" + groupId1;
+        HttpGet getRequest = new HttpGet(userResourcePath);
+        getRequest.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+        getRequest.addHeader(HttpHeaders.CONTENT_TYPE, "application/json; charset=utf-8");
 
         response = client.execute(getRequest);
         assertEquals(response.getStatusLine().getStatusCode(), 404, "User " +

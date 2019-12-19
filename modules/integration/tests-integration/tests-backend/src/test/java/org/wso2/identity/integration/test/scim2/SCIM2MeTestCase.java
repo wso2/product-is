@@ -48,11 +48,14 @@ public class SCIM2MeTestCase extends ISIntegrationTest {
 
     private static final String FAMILY_NAME_CLAIM_VALUE = "scim";
     private static final String GIVEN_NAME_CLAIM_VALUE = "user";
+    private static final String FAMILY_NAME_CLAIM_VALU_1 = "scimUser";
+    private static final String GIVEN_NAME_CLAIM_VALUE_1 = "testScimUser";
     private static final String EMAIL_TYPE_WORK_CLAIM_URI = "work";
     private static final String EMAIL_TYPE_WORK_CLAIM_VALUE = "scim2user@wso2.com";
     private static final String EMAIL_TYPE_HOME_CLAIM_URI = "home";
     private static final String EMAIL_TYPE_HOME_CLAIM_VALUE = "scim2user@gmail.com";
     private static final String USERNAME = "scim2user";
+    private static final String USERNAME_1 = "testScim2user";
     private static final String PASSWORD = "password:123";
 
     private CloseableHttpClient client;
@@ -166,7 +169,60 @@ public class SCIM2MeTestCase extends ISIntegrationTest {
 
         userId = ((JSONObject) responseObj).get(ID_ATTRIBUTE).toString();
         assertNotNull(userId);
-        assignUserToGroup();
+        assignUserToGroup(USERNAME);
+    }
+
+    @Test
+    public void testCreateMeWithCharsetEncodingHeader() throws Exception {
+
+        HttpPost request = new HttpPost(getPath());
+        request.addHeader(HttpHeaders.AUTHORIZATION, getAdminAuthzHeader());
+        request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json; charset=utf-8");
+
+        JSONObject rootObject = new JSONObject();
+
+        JSONArray schemas = new JSONArray();
+        rootObject.put(SCHEMAS_ATTRIBUTE, schemas);
+
+        JSONObject names = new JSONObject();
+        names.put(FAMILY_NAME_ATTRIBUTE, FAMILY_NAME_CLAIM_VALU_1);
+        names.put(GIVEN_NAME_ATTRIBUTE, GIVEN_NAME_CLAIM_VALUE_1);
+
+        rootObject.put(NAME_ATTRIBUTE, names);
+        rootObject.put(USER_NAME_ATTRIBUTE, USERNAME_1);
+
+        JSONObject emailWork = new JSONObject();
+        emailWork.put(TYPE_PARAM, EMAIL_TYPE_WORK_CLAIM_URI);
+        emailWork.put(VALUE_PARAM, EMAIL_TYPE_WORK_CLAIM_VALUE);
+
+        JSONObject emailHome = new JSONObject();
+        emailHome.put(TYPE_PARAM, EMAIL_TYPE_HOME_CLAIM_URI);
+        emailHome.put(VALUE_PARAM, EMAIL_TYPE_HOME_CLAIM_VALUE);
+
+        JSONArray emails = new JSONArray();
+        emails.add(emailWork);
+        emails.add(emailHome);
+
+        rootObject.put(EMAILS_ATTRIBUTE, emails);
+
+        rootObject.put(PASSWORD_ATTRIBUTE, PASSWORD);
+
+        StringEntity entity = new StringEntity(rootObject.toString());
+        request.setEntity(entity);
+
+        HttpResponse response = client.execute(request);
+        assertEquals(response.getStatusLine().getStatusCode(), 201, "User " +
+                "has not been created successfully");
+
+        Object responseObj = JSONValue.parse(EntityUtils.toString(response.getEntity()));
+        EntityUtils.consume(response.getEntity());
+
+        String usernameFromResponse = ((JSONObject) responseObj).get(USER_NAME_ATTRIBUTE).toString();
+        assertEquals(usernameFromResponse, USERNAME_1);
+
+        userId = ((JSONObject) responseObj).get(ID_ATTRIBUTE).toString();
+        assertNotNull(userId);
+        assignUserToGroup(USERNAME_1);
     }
 
     @Test(dependsOnMethods = "testCreateMe")
@@ -225,7 +281,7 @@ public class SCIM2MeTestCase extends ISIntegrationTest {
         return "Basic " + Base64.encodeBase64String((adminUsername + ":" + admiPassword).getBytes()).trim();
     }
 
-    private void assignUserToGroup() throws Exception {
+    private void assignUserToGroup(String username) throws Exception {
 
         AutomationContext automationContext;
         if (tenant.equals(org.wso2.carbon.base.MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
@@ -239,6 +295,6 @@ public class SCIM2MeTestCase extends ISIntegrationTest {
         UserManagementClient userMgtClient = new UserManagementClient(backendUrl, sessionCookie);
 
         String[] roles = {ADMIN_ROLE};
-        userMgtClient.addRemoveRolesOfUser(USERNAME, roles, null);
+        userMgtClient.addRemoveRolesOfUser(username, roles, null);
     }
 }
