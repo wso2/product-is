@@ -112,6 +112,7 @@
                         var obj = $.parseJSON(event.data);
                         cookie = obj.cookie;
                         userName = obj.user;
+                        reloadGrid();
                         if (cookie != null) {
                             var str = PROXY_CONTEXT_PATH + "/portal/gadgets/consent_management/index.jag";
 
