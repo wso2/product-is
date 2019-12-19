@@ -72,10 +72,23 @@ function getUser() {
 
         print(orderedChallanges);
     } catch (e) {
-        log.error(e);
-        response.sendRedirect("/portal/error_pages/error.jag");
+        print(getErrorMessage(e.message));
     }
 
+}
+
+function getErrorMessage(message) {
+    if (message != null && message.length > 0) {
+        if (message.indexOf('401 Error: Unauthorized') > -1) {
+            return '{"success":false, "reLogin":true}';
+        } else {
+            var msg = message.split(':');
+            if (msg.length > 0) {
+                return '{"success":false, "message":"' + msg[1] + '"}';
+            }
+        }
+    }
+    return '{"success":false, "message":null}';
 }
 
 %>
