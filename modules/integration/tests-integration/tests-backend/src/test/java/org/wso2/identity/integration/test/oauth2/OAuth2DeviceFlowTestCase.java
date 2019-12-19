@@ -1,3 +1,18 @@
+/*
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.wso2.identity.integration.test.oauth2;
 
 import org.apache.commons.codec.binary.Base64;
@@ -20,6 +35,7 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
@@ -99,7 +115,10 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
 
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         urlParameters.add(new BasicNameValuePair("client_id", consumerKey));
-        JSONObject responseObject = responseObjectNew(urlParameters,"https://localhost:9853/oauth2/device_authorize");
+        AutomationContext automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
+        String deviceAuthEndpoint = automationContext.getContextUrls().getBackEndUrl()
+                .replace("services/", "oauth2/device_authorize");
+        JSONObject responseObject = responseObjectNew(urlParameters,deviceAuthEndpoint);
         deviceCode = responseObject.get("device_code").toString();
         userCode = responseObject.get("user_code").toString();
         Assert.assertNotNull(deviceCode, "device_code is null");
@@ -129,15 +148,20 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
     public void testSendDeviceAuthorozedPost() throws Exception {
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         urlParameters.add(new BasicNameValuePair("user_code", userCode));
-        String response = responsePost(urlParameters,"https://localhost:9853/authenticationendpoint" +
-                "/device.do");
+        AutomationContext automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
+        String authenticationEndpoint = automationContext.getContextUrls().getBackEndUrl()
+                .replace("services/", "authenticationendpoint/device.do");
+        String response = responsePost(urlParameters,authenticationEndpoint);
         Assert.assertNotNull(response, "Authorized response is null");
     }
     @Test(groups = "wso2.is", description = "Send authorize user request", dependsOnMethods = "testSendDeviceAuthorize")
     public void testDevicePost() throws Exception {
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         urlParameters.add(new BasicNameValuePair("user_code", userCode));
-        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, "https://localhost:9853/oauth2/device");
+        AutomationContext automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
+        String deviceEndpoint = automationContext.getContextUrls().getBackEndUrl()
+                .replace("services/", "oauth2/device");
+        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, deviceEndpoint);
         Header locationHeader =
                 response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         Assert.assertNotNull(response);
