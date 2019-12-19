@@ -74,7 +74,6 @@
             var json = null;
             var userName = null;
             var serverUrl = window.location.host + PROXY_CONTEXT_PATH;
-
             $(function WindowLoad(event) {
                 url = 'wss://' + serverUrl + '/dashboard/session_manager.jag';
                 ws = new WebSocket(url);
@@ -88,6 +87,7 @@
                     var obj = $.parseJSON(event.data);
                     cookie = obj.cookie;
                     userName = obj.user;
+                    reloadGrid();
                     if (cookie != null) {
                         var str = PROXY_CONTEXT_PATH + "/portal/gadgets/user_auth_apps/index.jag";
 
