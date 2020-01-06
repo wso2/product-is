@@ -156,7 +156,7 @@ public class UserMgtTestCase extends ISIntegrationTest {
 		Assert.assertFalse(nameExists(allRoles, "Internal/manager_"),
 		                   "The internal role without user delete has failed");
 
-		String[] userList = new String[] { "adminUser1_" };
+		String[] userList = new String[0];
 		// Test add internal role with user
 		userMgtClient.addInternalRole("sales_", userList, permissionList);
 		allRoles = userMgtClient.getAllRolesNames("sales_", 0);
