@@ -72,7 +72,6 @@ function callWSReturnXML(webService, serverUrl, action, params, req){
 
     }
     catch (e) {
-        log.error(e);
         throw e;
     }
 
