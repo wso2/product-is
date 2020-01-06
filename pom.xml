@@ -2004,8 +2004,8 @@
         <provisioning.connector.scim.version>5.2.0</provisioning.connector.scim.version>
 
         <!-- Local Authenticator Versions -->
-        <identity.local.auth.basicauth.version>6.2.6</identity.local.auth.basicauth.version>
-        <identity.local.auth.fido.version>5.2.0</identity.local.auth.fido.version>
+        <identity.local.auth.basicauth.version>6.2.7</identity.local.auth.basicauth.version>
+        <identity.local.auth.fido.version>5.2.1</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.3.13</identity.local.auth.iwa.version>
         <identity.local.auth.clientauth.mutualtls.version>2.2.2</identity.local.auth.clientauth.mutualtls.version>
 
