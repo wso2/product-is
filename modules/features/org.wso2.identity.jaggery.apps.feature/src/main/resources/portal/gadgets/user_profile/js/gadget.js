@@ -612,10 +612,11 @@ function extend(obj, more) {
 
 function decodePublicKeyCredentialCreationOptions(request) {
 
-    const excludeCredentials = request.excludeCredentials.map(credential => extend(
-        credential, {
-            id: base64url.toByteArray(credential.id),
-        }));
+        var excludeCredentials = request.excludeCredentials.map(function (credential) {
+          return extend(credential, {
+            id: base64url.toByteArray(credential.id)
+          });
+        });
 
     return extend(
         request, {
@@ -625,7 +626,7 @@ function decodePublicKeyCredentialCreationOptions(request) {
                     id: base64url.toByteArray(request.user.id),
                 }),
             challenge: base64url.toByteArray(request.challenge),
-            excludeCredentials,
+            excludeCredentials: excludeCredentials
         });
 }
 
@@ -689,7 +690,7 @@ function responseToObject(response) {
                     attestationObject: base64url.fromByteArray(response.response.attestationObject),
                     clientDataJSON: base64url.fromByteArray(response.response.clientDataJSON)
                 },
-                clientExtensionResults,
+                clientExtensionResults: clientExtensionResults,
                 type: response.type
             };
         } else {
@@ -701,7 +702,7 @@ function responseToObject(response) {
                     signature: base64url.fromByteArray(response.response.signature),
                     userHandle: response.response.userHandle && base64url.fromByteArray(response.response.userHandle)
                 },
-                clientExtensionResults,
+                clientExtensionResults: clientExtensionResults,
                 type: response.type
             };
         }
