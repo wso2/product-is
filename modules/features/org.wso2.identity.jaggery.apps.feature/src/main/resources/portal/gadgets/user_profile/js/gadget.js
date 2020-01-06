@@ -15,15 +15,14 @@ function drawPage() {
 
     var body = "";
     var totpEnabled = "";
+    if (json.return.totpAuthenticatorActive && typeof json.return.totpSecretKey != 'undefined' && json.return.totpSecretKey !== null) {
+        totpEnabled = json.return.totpSecretKey;
+    }
     for (var i in json.return.fieldValues) {
         if (json.return.fieldValues[i].claimUri =="http://wso2.org/claims/identity/accountDisabled") {
             continue;
         }
 
-        if (json.return.totpAuthenticatorActive && json.return.fieldValues[i].displayName == "Secret Key") {
-            totpEnabled = json.return.fieldValues[i].fieldValue;
-            continue;
-        }
         body = body + "          <tr>\n" +
             "                           <td>" +
             "<label class=\"control-label\">" + json.return.fieldValues[i].displayName;
