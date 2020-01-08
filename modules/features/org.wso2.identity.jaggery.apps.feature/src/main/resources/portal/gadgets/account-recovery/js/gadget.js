@@ -175,7 +175,6 @@ function reloadGrid() {
                     }
                 }
             }
-
         },
         error: function (e) {
             message({
