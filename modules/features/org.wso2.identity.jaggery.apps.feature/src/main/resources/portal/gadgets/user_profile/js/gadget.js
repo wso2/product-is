@@ -283,7 +283,6 @@ function reloadGrid() {
                     }
                 }
             }
-
         },
         error: function (e) {
             message({content: 'Error occurred while loading values for the grid.', type: 'error', cbk: function () {
