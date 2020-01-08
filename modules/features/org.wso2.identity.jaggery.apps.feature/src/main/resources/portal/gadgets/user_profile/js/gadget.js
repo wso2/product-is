@@ -15,15 +15,14 @@ function drawPage() {
 
     var body = "";
     var totpEnabled = "";
+    if (json.return.totpAuthenticatorActive && typeof json.return.totpSecretKey != 'undefined' && json.return.totpSecretKey !== null) {
+        totpEnabled = json.return.totpSecretKey;
+    }
     for (var i in json.return.fieldValues) {
         if (json.return.fieldValues[i].claimUri =="http://wso2.org/claims/identity/accountDisabled") {
             continue;
         }
 
-        if (json.return.totpAuthenticatorActive && json.return.fieldValues[i].displayName == "Secret Key") {
-            totpEnabled = json.return.fieldValues[i].fieldValue;
-            continue;
-        }
         body = body + "          <tr>\n" +
             "                           <td>" +
             "<label class=\"control-label\">" + json.return.fieldValues[i].displayName;
@@ -612,10 +611,11 @@ function extend(obj, more) {
 
 function decodePublicKeyCredentialCreationOptions(request) {
 
-    const excludeCredentials = request.excludeCredentials.map(credential => extend(
-        credential, {
-            id: base64url.toByteArray(credential.id),
-        }));
+        var excludeCredentials = request.excludeCredentials.map(function (credential) {
+          return extend(credential, {
+            id: base64url.toByteArray(credential.id)
+          });
+        });
 
     return extend(
         request, {
@@ -625,7 +625,7 @@ function decodePublicKeyCredentialCreationOptions(request) {
                     id: base64url.toByteArray(request.user.id),
                 }),
             challenge: base64url.toByteArray(request.challenge),
-            excludeCredentials,
+            excludeCredentials: excludeCredentials
         });
 }
 
@@ -689,7 +689,7 @@ function responseToObject(response) {
                     attestationObject: base64url.fromByteArray(response.response.attestationObject),
                     clientDataJSON: base64url.fromByteArray(response.response.clientDataJSON)
                 },
-                clientExtensionResults,
+                clientExtensionResults: clientExtensionResults,
                 type: response.type
             };
         } else {
@@ -701,7 +701,7 @@ function responseToObject(response) {
                     signature: base64url.fromByteArray(response.response.signature),
                     userHandle: response.response.userHandle && base64url.fromByteArray(response.response.userHandle)
                 },
-                clientExtensionResults,
+                clientExtensionResults: clientExtensionResults,
                 type: response.type
             };
         }
