@@ -87,6 +87,9 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
     private static final String SECONDARY_IS_TEST_USER_ROLES = "admin";
 
     private static final String SECONDARY_IS_SP_NAME = "secondarySP";
+    private static final String SECONDARY_IS_IDP_CALLBACK_URL = "https://localhost:9854/commonauth";
+    private static final String HTTPS_LOCALHOST_SERVICES = "https://localhost:%s/services/";
+
     protected OauthAdminClient adminClient;
     private String secondaryISClientID;
     private String secondaryISClientSecret;
@@ -204,7 +207,7 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
 
     protected String getSecondaryISURI() {
 
-        return String.format("https://localhost:%s/services/", DEFAULT_PORT + PORT_OFFSET_1);
+        return String.format(HTTPS_LOCALHOST_SERVICES, DEFAULT_PORT + PORT_OFFSET_1);
     }
 
     public void createServiceProviderInPrimaryIS() throws Exception {
@@ -495,8 +498,7 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
         urlParameters.add(new BasicNameValuePair("password", SECONDARY_IS_TEST_PASSWORD));
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
 
-        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, "https://localhost:9854" +
-                "/commonauth");
+        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, SECONDARY_IS_IDP_CALLBACK_URL);
 
         return response;
     }
