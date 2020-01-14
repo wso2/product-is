@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>5.10.0-alpha-SNAPSHOT</version>
+        <version>5.10.0-alpha3-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -182,6 +182,7 @@
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.core.server.feature.key-mappings.json</param>
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.application.authentication.framework.server.feature.key-mappings.json</param>
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.event.server.feature.key-mappings.json</param>
+                                        <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.scim.common.feature.key-mappings.json</param>
                                     </include>
                                     <target>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/key-mappings.json</target>
                                 </task>
