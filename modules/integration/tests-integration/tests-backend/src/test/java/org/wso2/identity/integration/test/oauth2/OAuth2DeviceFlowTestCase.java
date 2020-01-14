@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2020, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -57,33 +57,26 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT
 
 public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
-    private AuthenticatorClient logManger;
-    private String adminUsername;
-    private String adminPassword;
-    private String accessToken;
+    private static final String DEVICE_CODE = "device_code";
+    private static final String USER_CODE = "user_code";
+    private static final String CLIENT_ID = "client_id";
     private String sessionDataKeyConsent;
     private String sessionDataKey;
-    private String authorizationCode;
     private String consumerKey;
     private String consumerSecret;
     private String userCode;
     private String deviceCode;
 
-
-    private static final String PLAYGROUND_RESET_PAGE = "http://localhost:" + CommonConstants.DEFAULT_TOMCAT_PORT +
-            "/playground2/oauth2.jsp?reset=true";
     private DefaultHttpClient client;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
         super.init(TestUserMode.SUPER_TENANT_USER);
-        logManger = new AuthenticatorClient(backendURL);
-        adminUsername = userInfo.getUserName();
-        adminPassword = userInfo.getPassword();
+        AuthenticatorClient logManger = new AuthenticatorClient(backendURL);
         logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
-                isServer.getSuperTenant().getTenantAdmin().getPassword(),
-                isServer.getInstance().getHosts().get("default"));
+                        isServer.getSuperTenant().getTenantAdmin().getPassword(),
+                        isServer.getInstance().getHosts().get("default"));
         client = new DefaultHttpClient();
 
         setSystemproperties();
@@ -94,7 +87,6 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
 
         deleteApplication();
         removeOAuthApplicationData();
-
     }
 
     @Test(groups = "wso2.is", description = "Check Oauth2 application registration")
@@ -113,25 +105,26 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
             = "testRegisterApplication")
     public void testSendDeviceAuthorize() throws Exception {
 
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-        urlParameters.add(new BasicNameValuePair("client_id", consumerKey));
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair(CLIENT_ID, consumerKey));
         AutomationContext automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
         String deviceAuthEndpoint = automationContext.getContextUrls().getBackEndUrl()
                 .replace("services/", "oauth2/device_authorize");
         JSONObject responseObject = responseObjectNew(urlParameters,deviceAuthEndpoint);
-        deviceCode = responseObject.get("device_code").toString();
-        userCode = responseObject.get("user_code").toString();
+        deviceCode = responseObject.get(DEVICE_CODE).toString();
+        userCode = responseObject.get(USER_CODE).toString();
         Assert.assertNotNull(deviceCode, "device_code is null");
         Assert.assertNotNull(userCode, "user_code is null");
     }
 
     @Test(groups = "wso2.is", description = "Send approval post request", dependsOnMethods = "testSendDeviceAuthorize")
     public void testNonUsedDeviceTokenRequest() throws Exception {
+
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.GRANT_TYPE_NAME,
                 "urn:ietf:params:oauth:grant-type:device_code"));
-        urlParameters.add(new BasicNameValuePair("device_code", deviceCode));
-        urlParameters.add(new BasicNameValuePair("client_id", consumerKey));
+        urlParameters.add(new BasicNameValuePair(DEVICE_CODE, deviceCode));
+        urlParameters.add(new BasicNameValuePair(CLIENT_ID, consumerKey));
         HttpPost request = new HttpPost(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
         request.setHeader(CommonConstants.USER_AGENT_HEADER, OAuth2Constant.USER_AGENT);
         request.setHeader(OAuth2Constant.AUTHORIZATION_HEADER, OAuth2Constant.BASIC_HEADER + " " + Base64
@@ -146,18 +139,21 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
 
     @Test(groups = "wso2.is", description = "Send authorize user request", dependsOnMethods = "testSendDeviceAuthorize")
     public void testSendDeviceAuthorozedPost() throws Exception {
+
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-        urlParameters.add(new BasicNameValuePair("user_code", userCode));
+        urlParameters.add(new BasicNameValuePair(USER_CODE, userCode));
         AutomationContext automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
         String authenticationEndpoint = automationContext.getContextUrls().getBackEndUrl()
                 .replace("services/", "authenticationendpoint/device.do");
         String response = responsePost(urlParameters,authenticationEndpoint);
         Assert.assertNotNull(response, "Authorized response is null");
     }
+    
     @Test(groups = "wso2.is", description = "Send authorize user request", dependsOnMethods = "testSendDeviceAuthorize")
     public void testDevicePost() throws Exception {
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-        urlParameters.add(new BasicNameValuePair("user_code", userCode));
+
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair(USER_CODE, userCode));
         AutomationContext automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
         String deviceEndpoint = automationContext.getContextUrls().getBackEndUrl()
                 .replace("services/", "oauth2/device");
@@ -231,16 +227,16 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
         response = sendPostRequest(client, locationHeader.getValue());
         Assert.assertNotNull(response, "Get Activation response is invalid.");
         EntityUtils.consume(response.getEntity());
-
     }
 
     @Test(groups = "wso2.is", description = "Send approval post request", dependsOnMethods = "testSendApprovalPost")
     public void testTokenRequest() throws Exception {
+
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.GRANT_TYPE_NAME,
                 "urn:ietf:params:oauth:grant-type:device_code"));
-        urlParameters.add(new BasicNameValuePair("device_code", deviceCode));
-        urlParameters.add(new BasicNameValuePair("client_id", consumerKey));
+        urlParameters.add(new BasicNameValuePair(DEVICE_CODE, deviceCode));
+        urlParameters.add(new BasicNameValuePair(CLIENT_ID, consumerKey));
         HttpPost request = new HttpPost(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
         request.setHeader(CommonConstants.USER_AGENT_HEADER, OAuth2Constant.USER_AGENT);
         request.setHeader(OAuth2Constant.AUTHORIZATION_HEADER, OAuth2Constant.BASIC_HEADER + " " + Base64
@@ -255,11 +251,12 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
 
     @Test(groups = "wso2.is", description = "Send approval post request", dependsOnMethods = "testTokenRequest")
     public void testExpiredDeviceTokenRequest() throws Exception {
+
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.GRANT_TYPE_NAME,
                 "urn:ietf:params:oauth:grant-type:device_code"));
-        urlParameters.add(new BasicNameValuePair("device_code", deviceCode));
-        urlParameters.add(new BasicNameValuePair("client_id", consumerKey));
+        urlParameters.add(new BasicNameValuePair(DEVICE_CODE, deviceCode));
+        urlParameters.add(new BasicNameValuePair(CLIENT_ID, consumerKey));
         HttpPost request = new HttpPost(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
         request.setHeader(CommonConstants.USER_AGENT_HEADER, OAuth2Constant.USER_AGENT);
         request.setHeader(OAuth2Constant.AUTHORIZATION_HEADER, OAuth2Constant.BASIC_HEADER + " " + Base64
@@ -277,6 +274,7 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
 
 
     private JSONObject responseObjectNew(List<NameValuePair> postParameters, String uri) throws Exception {
+
         HttpPost httpPost = new HttpPost(uri);
         //generate post request
         httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -308,15 +306,12 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
         return responseString;
     }
 
-    public HttpResponse sendGetRequest(HttpClient client, String locationURL)
-            throws
-            ClientProtocolException,
-            IOException {
+    public HttpResponse sendGetRequest(HttpClient client, String locationURL) throws IOException {
+
         HttpGet getRequest = new HttpGet(locationURL);
         getRequest.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
-        HttpResponse response = client.execute(getRequest);
 
-        return response;
+        return client.execute(getRequest);
     }
 
     /**
@@ -326,13 +321,14 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
      * @throws Exception
      */
     private OAuthConsumerAppDTO createApp() throws Exception {
+
         OAuthConsumerAppDTO appDTO = new OAuthConsumerAppDTO();
         appDTO.setApplicationName(OAuth2Constant.OAUTH_APPLICATION_NAME);
         appDTO.setCallbackUrl(OAuth2Constant.CALLBACK_URL);
         appDTO.setOAuthVersion(OAuth2Constant.OAUTH_VERSION_2);
-        appDTO.setGrantTypes("authorization_code implicit password client_credentials refresh_token "
-                + "urn:ietf:params:oauth:grant-type:saml2-bearer iwa:ntlm urn:ietf:params:oauth:grant-type:device_code");
+        appDTO.setGrantTypes("authorization_code implicit password client_credentials refresh_token " +
+                             "urn:ietf:params:oauth:grant-type:saml2-bearer iwa:ntlm " +
+                             "urn:ietf:params:oauth:grant-type:device_code");
         return createApplication(appDTO);
     }
-
 }
