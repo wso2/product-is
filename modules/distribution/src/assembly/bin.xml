@@ -84,28 +84,6 @@
             </includes>
         </fileSet>
 
-        <!-- Bundle the jaggery apps-->
-        <fileSet>
-            <directory>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/jaggeryapps/dashboard
-            </directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/dashboard</outputDirectory>
-            <includes>
-                <include>**/**</include>
-            </includes>
-        </fileSet>
-
-        <fileSet>
-            <directory>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/jaggeryapps/portal
-            </directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/portal
-            </outputDirectory>
-            <includes>
-                <include>**/**</include>
-            </includes>
-        </fileSet>
-
         <fileSet>
             <directory>target/wso2carbon-core-${carbon.kernel.version}/dbscripts</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/dbscripts</outputDirectory>
