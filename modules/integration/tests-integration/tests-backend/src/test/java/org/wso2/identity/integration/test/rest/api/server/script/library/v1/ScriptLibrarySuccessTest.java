@@ -48,6 +48,7 @@ public class ScriptLibrarySuccessTest extends ScriptLibraryTestBase {
     public static final String SCRIPT_LIBRARY_DESCRIPTION = "sample description";
     public static final String SCRIPT_LIBRARY_UPDATED_DESCRIPTION = "sample description updated";
     public static final String SCRIPT_LIBRARY_CONTENT_PATH = "/content";
+    public static final String SCRIPT_LIBRARY_CONTENT_TYPE_OF_GET_CONTENT = "application/octet-stream";
     public static String SCRIPT_LIBRARY_CONTENT_REF = null;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
@@ -113,7 +114,7 @@ public class ScriptLibrarySuccessTest extends ScriptLibraryTestBase {
     public void testGetScriptLibrary() throws XPathExpressionException {
 
         SCRIPT_LIBRARY_CONTENT_REF = "/t/" + context.getContextTenant()
-                .getDomain() + "/api/server/v1/script-libraries/" + SCRIPT_LIBRARY_NAME + "/content";
+                .getDomain() + "/api/server/v1/script-libraries/" + SCRIPT_LIBRARY_NAME + SCRIPT_LIBRARY_CONTENT_PATH;
         Response response = getResponseOfGet(SCRIPT_LIBRARY_API_BASE_PATH + PATH_SEPARATOR + SCRIPT_LIBRARY_NAME);
         response.then()
                 .log().ifValidationFails()
@@ -138,7 +139,7 @@ public class ScriptLibrarySuccessTest extends ScriptLibraryTestBase {
     public void testUpdateScriptLibrary() throws IOException, XPathExpressionException {
 
         SCRIPT_LIBRARY_CONTENT_REF = "/t/" + context.getContextTenant()
-                .getDomain() + "/api/server/v1/script-libraries/" + SCRIPT_LIBRARY_NAME + "/content";
+                .getDomain() + "/api/server/v1/script-libraries/" + SCRIPT_LIBRARY_NAME + SCRIPT_LIBRARY_CONTENT_PATH;
         String content = readResource("sample-script-library-updated.js");
         String endpoint = SCRIPT_LIBRARY_API_BASE_PATH + PATH_SEPARATOR + SCRIPT_LIBRARY_NAME;
         Response response = getResponseOfMultipartPut(endpoint, content, SCRIPT_LIBRARY_UPDATED_DESCRIPTION);
@@ -157,7 +158,7 @@ public class ScriptLibrarySuccessTest extends ScriptLibraryTestBase {
         String content = readResource("sample-script-library-updated.js");
         String endpoint =
                 SCRIPT_LIBRARY_API_BASE_PATH + PATH_SEPARATOR + SCRIPT_LIBRARY_NAME + SCRIPT_LIBRARY_CONTENT_PATH;
-        Response response = getResponseOfGet(endpoint, "application/octet-stream");
+        Response response = getResponseOfGet(endpoint, SCRIPT_LIBRARY_CONTENT_TYPE_OF_GET_CONTENT);
         String responseContent = response.asString();
         assertEquals(content, responseContent);
         response.then()
