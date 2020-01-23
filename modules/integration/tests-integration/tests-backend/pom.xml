@@ -575,6 +575,26 @@
                             </resources>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>copy-resources-dropins</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>
+                                ${basedir}/src/test/resources/artifacts/IS/userMgt/
+                            </outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${basedir}/../../tests-common/admin-services/target</directory>
+                                    <includes>
+                                        <include>**/*alpha-SNAPSHOT.jar</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>

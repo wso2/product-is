@@ -33,6 +33,7 @@
         <module>ui-pages</module>
         <module>integration-test-utils</module>
         <module>extensions</module>
+        <module>admin-services</module>
     </modules>
 
 </project>
