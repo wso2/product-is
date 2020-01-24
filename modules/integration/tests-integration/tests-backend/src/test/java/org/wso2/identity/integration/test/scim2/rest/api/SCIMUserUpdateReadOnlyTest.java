@@ -28,8 +28,8 @@ public class SCIMUserUpdateReadOnlyTest extends SCIM2BaseTest {
 
     private static final Log log = LogFactory.getLog(SCIMUserUpdateReadOnlyTest.class);
 
-    protected String endpointURL;
-    protected String userId = null;
+    private String endpointURL;
+    private String userId = null;
     private static final String SCIM_CONTENT_TYPE = "application/scim+json";
 
     @Factory(dataProvider = "restAPIUserConfigProvider")

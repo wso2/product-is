@@ -63,7 +63,6 @@ public class ReadOnlyUserStoreInitializerTestCase extends ISIntegrationTest {
     @AfterTest(alwaysRun = true)
     public void resetUserStoreConfig() throws Exception {
 
-        super.init();
         scm.restoreToLastConfiguration(true);
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         userMgtClient = new UserManagementClient(backendURL, getSessionCookie());

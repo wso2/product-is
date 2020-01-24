@@ -38,6 +38,12 @@ public class SCIMUtils {
     private static final String SCIM_USER_SCHEMAS = "[urn:ietf:params:scim:schemas:core:2.0:User, " +
             "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User]";
 
+    /**
+     * Validate the "schema" attribute received in a response for an SCIM operation.
+     * e.g. data type should be an ArrayList of Strings.
+     *
+     * @param schemasAttribute Value of the "schema" attribute extracted from the SCIM operation response.
+     */
     public static void validateSchemasAttribute(Object schemasAttribute) {
 
         Assert.assertTrue(schemasAttribute instanceof ArrayList, "'schemas' attribute is not a list of " +
@@ -46,6 +52,14 @@ public class SCIMUtils {
         Assert.assertTrue(StringUtils.equals(SCIM_USER_SCHEMAS, schemasAttribute.toString()));
     }
 
+    /**
+     * Validate the "meta" attribute received in a response for an SCIM operation.
+     * e.g. data type should be an ArrayList of LinkedHashMap objects.
+     *
+     * @param metaAttribute Value of the "meta" attribute extracted from the SCIM operation response.
+     * @param response      Response received after performing a SCIM operation.
+     * @param endpointURL   SCIM endpoint URL
+     */
     public static void validateMetaAttribute(Object metaAttribute, Response response, String endpointURL) {
 
         Assert.assertTrue(metaAttribute instanceof LinkedHashMap, "'meta' attribute is not a list of " +
@@ -70,6 +84,11 @@ public class SCIMUtils {
          */
     }
 
+    /**
+     * Conform whether a given date string adheres to the SCIM standard date format.
+     * @param date Target date ing string format.
+     * @return true if valid, else false.
+     */
     public static boolean isValidSCIMDate(String date) {
 
         try {
