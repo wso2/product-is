@@ -1,0 +1,18 @@
+{
+    "schemas": [
+        "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+    ],
+    "Operations": [
+        {
+            "op": "add",
+            "value": {
+                "emails": [
+                    {
+                        "type": "work",
+                        "value": "kim@wso2.com"
+                    }
+                ]
+            }
+        }
+    ]
+}
