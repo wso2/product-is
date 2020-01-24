@@ -21,6 +21,13 @@ import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
 
 public class ISTestUtils {
 
+    /**
+     * Validate if a given userName is contained in a list of usernames.
+     *
+     * @param allNames  List of usernames.
+     * @param inputName Target username.
+     * @return true if contained, else false.
+     */
     public static boolean nameExists(FlaggedName[] allNames, String inputName) {
 
         boolean exists = false;

@@ -49,8 +49,8 @@ public class SCIMUserUpdateTest extends SCIM2BaseTest {
 
     private static final Log log = LogFactory.getLog(SCIMUserUpdateTest.class);
 
-    protected String endpointURL;
-    protected String userId = null;
+    private String endpointURL;
+    private String userId = null;
     private static final String SCIM_CONTENT_TYPE = "application/scim+json";
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
@@ -124,7 +124,7 @@ public class SCIMUserUpdateTest extends SCIM2BaseTest {
         String location = response.getHeader(HttpHeaders.LOCATION);
         userId = location.split(USERS_ENDPOINT)[1];
         Assert.assertNotNull(userId, "The user did not get created.");
-        log.info("userId :" + userId);
+        log.info("Created a user with userId :" + userId);
         endpointURL = USERS_ENDPOINT + userId;
 
         SCIMUtils.validateSchemasAttribute(extractableResponse.path("schemas"));
