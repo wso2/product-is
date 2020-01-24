@@ -17,8 +17,26 @@
  */
 package org.wso2.identity.integration.test.utils;
 
+import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
 
 public class ISTestUtils {
 
+    public static boolean nameExists(FlaggedName[] allNames, String inputName) {
+
+        boolean exists = false;
+
+        for (FlaggedName flaggedName : allNames) {
+            String name = flaggedName.getItemName();
+
+            if (name.equals(inputName)) {
+                exists = true;
+                break;
+            } else {
+                exists = false;
+            }
+        }
+
+        return exists;
+    }
 }
 

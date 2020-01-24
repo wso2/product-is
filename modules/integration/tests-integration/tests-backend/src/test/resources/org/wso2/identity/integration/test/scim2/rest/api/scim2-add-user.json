@@ -1,0 +1,26 @@
+{
+    "schemas": [],
+    "name": {
+        "firstName": "Kim",
+        "lastName": "Berry"
+    },
+    "userName": "kim",
+    "password": "abc123",
+    "emails": [
+        {
+            "type": "home",
+            "value": "kim@gmail.com",
+            "primary": true
+        },
+        {
+            "type": "work",
+            "value": "kim@wso2.com"
+        }
+    ],
+    "EnterpriseUser": {
+        "employeeNumber": "1234A",
+        "manager": {
+            "value": "Taylor"
+        }
+    }
+}
