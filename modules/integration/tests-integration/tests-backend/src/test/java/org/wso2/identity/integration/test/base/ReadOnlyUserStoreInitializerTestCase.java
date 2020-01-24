@@ -22,6 +22,7 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
@@ -29,7 +30,13 @@ import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.ISTestUtils;
 
 import java.io.File;
+import java.io.IOException;
+import javax.xml.xpath.XPathExpressionException;
 
+/**
+ * Initialize a read-only LDAP user store at the beginning of the test "is-tests-read-only-userstore"
+ * and reverts back to a read-write LDAP user store at the end of the test.
+ */
 public class ReadOnlyUserStoreInitializerTestCase extends ISIntegrationTest {
 
     private ServerConfigurationManager scm;
@@ -50,14 +57,7 @@ public class ReadOnlyUserStoreInitializerTestCase extends ISIntegrationTest {
         userMgtClient.addRole(newUserRole, null, new String[]{"/permission/admin/login"});
         userMgtClient.addUser(newUserName, newUserPassword, new String[]{newUserRole}, null);
 
-        String carbonHome = Utils.getResidentCarbonHome();
-        defaultConfigFile = getDeploymentTomlFile(carbonHome);
-        log.info("Default TOML: " + defaultConfigFile.toString());
-        File userMgtConfigFile = new File(getISResourceLocation() + File.separator + "userMgt"
-                + File.separator + "read_only_ldap_user_mgt_config.toml");
-        scm = new ServerConfigurationManager(isServer);
-        scm.applyConfigurationWithoutRestart(userMgtConfigFile, defaultConfigFile, true);
-        scm.restartGracefully();
+        applyTomlConfigsAndRestart();
     }
 
     @AfterTest(alwaysRun = true)
@@ -75,5 +75,17 @@ public class ReadOnlyUserStoreInitializerTestCase extends ISIntegrationTest {
         if (userMgtClient.roleNameExists(newUserRole)) {
             userMgtClient.deleteRole(newUserRole);
         }
+    }
+
+    private void applyTomlConfigsAndRestart() throws AutomationUtilException, XPathExpressionException, IOException {
+
+        String carbonHome = Utils.getResidentCarbonHome();
+        defaultConfigFile = getDeploymentTomlFile(carbonHome);
+        log.info("Default TOML: " + defaultConfigFile.toString());
+        File userMgtConfigFile = new File(getISResourceLocation() + File.separator + "userMgt"
+                + File.separator + "read_only_ldap_user_mgt_config.toml");
+        scm = new ServerConfigurationManager(isServer);
+        scm.applyConfigurationWithoutRestart(userMgtConfigFile, defaultConfigFile, true);
+        scm.restartGracefully();
     }
 }

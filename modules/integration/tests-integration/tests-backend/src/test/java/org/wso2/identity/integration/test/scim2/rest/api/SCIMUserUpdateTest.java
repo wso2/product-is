@@ -35,12 +35,16 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.USERS_ENDPOINT;
 
+/**
+ * Test cases for updating users via SCIM PATCH and PUT operations.
+ */
 public class SCIMUserUpdateTest extends SCIM2BaseTest {
 
     private static final Log log = LogFactory.getLog(SCIMUserUpdateTest.class);
@@ -69,7 +73,7 @@ public class SCIMUserUpdateTest extends SCIM2BaseTest {
     }
 
     @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    public void init() throws RemoteException {
 
         super.testInit(swaggerDefinition, tenant);
     }

@@ -30,6 +30,9 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
+/**
+ * Common utils for SCIM related test cases.
+ */
 public class SCIMUtils {
 
     private static final String SCIM_USER_SCHEMAS = "[urn:ietf:params:scim:schemas:core:2.0:User, " +
