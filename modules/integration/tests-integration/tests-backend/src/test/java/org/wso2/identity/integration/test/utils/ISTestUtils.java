@@ -17,8 +17,33 @@
  */
 package org.wso2.identity.integration.test.utils;
 
+import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
 
 public class ISTestUtils {
 
+    /**
+     * Validate if a given userName is contained in a list of usernames.
+     *
+     * @param allNames  List of usernames.
+     * @param inputName Target username.
+     * @return true if contained, else false.
+     */
+    public static boolean nameExists(FlaggedName[] allNames, String inputName) {
+
+        boolean exists = false;
+
+        for (FlaggedName flaggedName : allNames) {
+            String name = flaggedName.getItemName();
+
+            if (name.equals(inputName)) {
+                exists = true;
+                break;
+            } else {
+                exists = false;
+            }
+        }
+
+        return exists;
+    }
 }
 

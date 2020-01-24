@@ -1249,8 +1249,10 @@ definitions:
       - password
     properties:
       schemas:
-        type: object
-        example: []
+        type: array
+        items:
+          type: string
+          example: []
       name:
         type: object
         properties:
@@ -1269,7 +1271,7 @@ definitions:
       emails:
         type: array
         items:
-          type: object
+          type: {}
           example:
             - type: "home"
               value: "kim@gmail.com"
@@ -1313,10 +1315,12 @@ definitions:
             type: string
             example: User
       schemas:
-        type: object
-        example:
-          - urn:ietf:params:scim:schemas:core:2.0:User
-          - urn:ietf:params:scim:schemas:extension:enterprise:2.0:User
+        type: array
+        items:
+          type: string
+          example:
+            - urn:ietf:params:scim:schemas:core:2.0:User
+            - urn:ietf:params:scim:schemas:extension:enterprise:2.0:User
       username:
         type: string
         example: "PRIMARY/kim"
@@ -1335,7 +1339,7 @@ definitions:
       emails:
         type: array
         items:
-          type: object
+          type: {}
           example:
             - type: "home"
               value: "kim@gmail.com"
@@ -1355,10 +1359,12 @@ definitions:
                 type: string
                 example: "Taylor"
       roles:
-        type: object
-        example:
-          - type: "default"
-            value: "Internal/everyone"
+        type: array
+        items:
+          type: object
+          example:
+            - type: "default"
+              value: "Internal/everyone"
 
   #-----------------------------------------------------
   # The User Update Object
@@ -1369,8 +1375,10 @@ definitions:
       - username
     properties:
       schemas:
-        type: object
-        example: []
+        type: array
+        items:
+          type: string
+          example: []
       name:
         type: object
         properties:
@@ -1386,7 +1394,7 @@ definitions:
       emails:
         type: array
         items:
-          type: object
+          type: {}
           example:
             - type: "home"
               value: "kim@gmail.com"
@@ -1415,6 +1423,7 @@ definitions:
       schemas:
         type: array
         items:
+          type: string
           example: "urn:ietf:params:scim:api:messages:2.0:PatchOp"
       Operations:
         type: array
@@ -1482,7 +1491,7 @@ definitions:
       emails:
         type: array
         items:
-          type: object
+          type: {}
           example:
             - type: "home"
               value: "kim@gmail.com"
@@ -1613,9 +1622,11 @@ definitions:
     type: object
     properties:
       schemas:
-        type: object
-        example:
-          - urn:ietf:params:scim:api:messages:2.0:SearchRequest
+        type: array
+        items:
+          type: string
+          example:
+            - urn:ietf:params:scim:api:messages:2.0:SearchRequest
       startIndex:
         type: integer
         example: 1
@@ -1801,9 +1812,11 @@ definitions:
             type: string
             example: Group
       schemas:
-        type: object
-        example:
-          - urn:ietf:params:scim:schemas:core:2.0:Group
+        type: array
+        items:
+          type: string
+          example:
+            - urn:ietf:params:scim:schemas:core:2.0:Group
       id:
         type: string
         example: "7bac6a86-1f21-4937-9fb1-5be4a93ef469"
@@ -1832,8 +1845,10 @@ definitions:
         type: integer
         example: 1
       schemas:
-        type: object
-        example:
+        type: array
+        items:
+          type: string
+          example:
           - urn:ietf:params:scim:api:messages:2.0:ListResponse
       Resources:
         type: array
@@ -2124,8 +2139,10 @@ definitions:
         type: string
         example: "400"
       schemas:
-        type: string
-        example: "urn:ietf:params:scim:api:messages:2.0:Error"
+        type: array
+        items:
+          type: string
+          example: "urn:ietf:params:scim:api:messages:2.0:Error"
       scimType:
         type: string
         example: "invalidSyntax"
@@ -2145,8 +2162,10 @@ definitions:
         type: string
         example: "401"
       schemas:
-        type: string
-        example: "urn:ietf:params:scim:api:messages:2.0:Error"
+        type: array
+        items:
+          type: string
+          example: "urn:ietf:params:scim:api:messages:2.0:Error"
       scimType:
         type: string
         example: "Unauthorized"
@@ -2163,8 +2182,10 @@ definitions:
         type: string
         example: "406"
       schemas:
-        type: string
-        example: "urn:ietf:params:scim:api:messages:2.0:Error"
+        type: array
+        items:
+          type: string
+          example: "urn:ietf:params:scim:api:messages:2.0:Error"
       scimType:
         type: string
         example: "Not Acceptable"
@@ -2181,8 +2202,10 @@ definitions:
         type: string
         example: "403"
       schemas:
-        type: string
-        example: "urn:ietf:params:scim:api:messages:2.0:Error"
+        type: array
+        items:
+          type: string
+          example: "urn:ietf:params:scim:api:messages:2.0:Error"
       scimType:
         type: string
         example: "Forbidden"
@@ -2201,8 +2224,10 @@ definitions:
         type: string
         example: "404"
       schemas:
-        type: string
-        example: "urn:ietf:params:scim:api:messages:2.0:Error"
+        type: array
+        items:
+          type: string
+          example: "urn:ietf:params:scim:api:messages:2.0:Error"
       detail:
         type: string
         example: "No user with the id : 008bba85-451d-414b-87de-c03b5a1f4217 in the user store."
@@ -2221,8 +2246,10 @@ definitions:
         type: string
         example: "404"
       schemas:
-        type: string
-        example: "urn:ietf:params:scim:api:messages:2.0:Error"
+        type: array
+        items:
+          type: string
+          example: "urn:ietf:params:scim:api:messages:2.0:Error"
       detail:
         type: string
         example: "No Group with the id : 89a2a363-c90f-47e9-afae-949d026dad16 in the user store."
@@ -2240,8 +2267,10 @@ definitions:
         type: string
         example: "404"
       schemas:
-        type: string
-        example: "urn:ietf:params:scim:api:messages:2.0:Error"
+        type: array
+        items:
+          type: string
+          example: "urn:ietf:params:scim:api:messages:2.0:Error"
       detail:
         type: string
         example: "Schema not found."
@@ -2291,6 +2320,7 @@ definitions:
       schemas:
         type: array
         items:
+          type: string
           example: "urn:ietf:params:scim:api:messages:2.0:ListResponse"
 
   #-----------------------------------------------------
@@ -2307,8 +2337,10 @@ definitions:
         type: string
         example: "409"
       schemas:
-        type: string
-        example: "urn:ietf:params:scim:api:messages:2.0:Error"
+        type: array
+        items:
+          type: string
+          example: "urn:ietf:params:scim:api:messages:2.0:Error"
       detail:
         type: string
         example: "Group with name: PRIMARY/manager already exists in the system."
@@ -2327,8 +2359,10 @@ definitions:
         type: string
         example: "500"
       schemas:
-        type: string
-        example: "urn:ietf:params:scim:api:messages:2.0:Error"
+        type: array
+        items:
+          type: string
+          example: "urn:ietf:params:scim:api:messages:2.0:Error"
       detail:
         type: string
         example: "Internal Server Error."
@@ -2347,8 +2381,10 @@ definitions:
         type: string
         example: "501"
       schemas:
-        type: string
-        example: "urn:ietf:params:scim:api:messages:2.0:Error"
+        type: array
+        items:
+          type: string
+          example: "urn:ietf:params:scim:api:messages:2.0:Error"
       detail:
         type: string
         example: "Self delete is not supported."
