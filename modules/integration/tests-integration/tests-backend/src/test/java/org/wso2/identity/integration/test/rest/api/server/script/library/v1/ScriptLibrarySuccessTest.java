@@ -146,10 +146,7 @@ public class ScriptLibrarySuccessTest extends ScriptLibraryTestBase {
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
-                .statusCode(HttpStatus.SC_OK)
-                .body("name", equalTo(SCRIPT_LIBRARY_NAME))
-                .body("description", equalTo(SCRIPT_LIBRARY_UPDATED_DESCRIPTION))
-                .body("content-ref", equalTo(SCRIPT_LIBRARY_CONTENT_REF));
+                .statusCode(HttpStatus.SC_OK);
     }
 
     @Test(dependsOnMethods = {"testUpdateScriptLibrary"})
