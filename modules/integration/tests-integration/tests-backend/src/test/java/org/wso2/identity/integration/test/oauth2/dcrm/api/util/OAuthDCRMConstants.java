@@ -24,6 +24,7 @@ public class OAuthDCRMConstants {
     public static final String GRANT_TYPES = "grant_types";
     public static final String REDIRECT_URIS = "redirect_uris";
     public static final String CLIENT_ID = "client_id";
+    public static final String EXT_SAAS_APP = "ext_saas_app";
     public static final String CLIENT_SECRET = "client_secret";
     public static final String ERROR = "error";
     public static final String ERROR_DESCRIPTION = "error_description";
@@ -38,6 +39,7 @@ public class OAuthDCRMConstants {
     public static final String INVALID_CLIENT_SECRET = "invalid_client_secret";
 
     public static final String APPLICATION_NAME = "TestApp";
+    public static final String APPLICATION_NAME_WITH_SAAS = "TestAppSaas";
     public static final String REDIRECT_URI = "http://TestApp.com";
 
     public static final String OAUTH_VERSION = "OAuth-2.0";
