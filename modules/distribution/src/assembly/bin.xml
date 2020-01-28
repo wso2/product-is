@@ -502,28 +502,22 @@
 
         <!-- copying runtimes -->
         <fileSet>
-            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/lib/runtimes</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/lib/runtimes/</outputDirectory>
+            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/lib/runtimes/cxf3</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/lib/runtimes/cxf3</outputDirectory>
             <excludes>
-                <exclude>*/httpclient*</exclude>
-                <exclude>*/httpcore*</exclude>
-                <exclude>*/commons-logging*</exclude>
+                <exclude>jackson-annotations*</exclude>
+                <exclude>jackson-core*</exclude>
+                <exclude>jackson-databind*</exclude>
+                <exclude>javax.annotation*</exclude>
             </excludes>
         </fileSet>
+
         <fileSet>
-            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/lib/runtimes</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/lib/runtimes/</outputDirectory>
+            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/lib/</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/lib/</outputDirectory>
             <includes>
-                <include>*/httpcore-nio*</include>
+                <include>*.jar</include>
             </includes>
-        </fileSet>
-        <fileSet>
-            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/lib/</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/lib/</outputDirectory>
-        </fileSet>
-        <fileSet>
-            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/lib/</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/lib/</outputDirectory>
         </fileSet>
 
         <fileSet>
