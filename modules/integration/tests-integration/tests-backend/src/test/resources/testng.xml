@@ -42,7 +42,10 @@
             <class name="org.wso2.identity.integration.test.user.store.config.UserStoreConfigAdminTestCase"/>
             <class name="org.wso2.identity.integration.test.user.store.config.UserStoreConfigTestForIDENTITY5573"/>
             <class name="org.wso2.identity.integration.test.user.store.config.UserStoreDeployerTestCase"/>
-<!--            <class name="org.wso2.identity.integration.test.user.store.JDBCUserStoreAddingTestCase"/>-->
+            <!--TODO Uncomment ClaimMappingsOnSecondaryUserStoreTestCase once
+            https://github.com/wso2/product-is/issues/7313 is fixed -->
+            <!--            <class name="org.wso2.identity.integration.test.user.store.ClaimMappingsOnSecondaryUserStoreTestCase"/>-->
+            <!--            <class name="org.wso2.identity.integration.test.user.store.JDBCUserStoreAddingTestCase"/>-->
 
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2RequestObjectSignatureValidationTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2IDTokenEncryptionTestCase"/>
