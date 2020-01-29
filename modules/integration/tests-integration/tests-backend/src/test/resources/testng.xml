@@ -42,7 +42,10 @@
             <class name="org.wso2.identity.integration.test.user.store.config.UserStoreConfigAdminTestCase"/>
             <class name="org.wso2.identity.integration.test.user.store.config.UserStoreConfigTestForIDENTITY5573"/>
             <class name="org.wso2.identity.integration.test.user.store.config.UserStoreDeployerTestCase"/>
-<!--            <class name="org.wso2.identity.integration.test.user.store.JDBCUserStoreAddingTestCase"/>-->
+            <!--TODO Uncomment ClaimMappingsOnSecondaryUserStoreTestCase once
+            https://github.com/wso2/product-is/issues/7313 is fixed -->
+            <!--            <class name="org.wso2.identity.integration.test.user.store.ClaimMappingsOnSecondaryUserStoreTestCase"/>-->
+            <!--            <class name="org.wso2.identity.integration.test.user.store.JDBCUserStoreAddingTestCase"/>-->
 
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2RequestObjectSignatureValidationTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2IDTokenEncryptionTestCase"/>
@@ -55,6 +58,7 @@
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2XACMLScopeValidatorTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.PermissionBasedScopeValidatorTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCAuthzCodeIdTokenValidationTestCase"/>
+            <class name="org.wso2.identity.integration.test.oidc.OIDCSPWiseSkipLoginConsentTestCase"/>
 
             <!--TODO Remove following open id tests since deprecated-->
             <class name="org.wso2.identity.integration.test.openid.OpenIDAuthenticationTestCase" />
@@ -150,6 +154,7 @@
             <class name="org.wso2.identity.integration.test.scim2.SCIM2MeTestCase"/>
             <class name="org.wso2.identity.integration.test.scim2.SCIM2MultiAttributeUserFilterTestCase"/>
             <class name="org.wso2.identity.integration.test.scim2.rest.api.SCIM2GroupTest"/>
+            <class name="org.wso2.identity.integration.test.scim2.rest.api.SCIMUserUpdateTest"/>
         </classes>
     </test>
 
@@ -204,6 +209,8 @@
     </test>
     <test name="is-tests-read-only-userstore" preserve-order="true" parallel="false" group-by-instances="true" >
         <classes>
+            <class name="org.wso2.identity.integration.test.base.ReadOnlyUserStoreInitializerTestCase"/>
+            <class name="org.wso2.identity.integration.test.scim2.rest.api.SCIMUserUpdateReadOnlyTest"/>
             <class name="org.wso2.identity.integration.test.user.mgt.ReadOnlyLDAPUserStoreManagerTestCase"/>
         </classes>
     </test>
@@ -235,6 +242,7 @@
             <class name="org.wso2.identity.integration.test.saml.RegistryMountTestCase"/>
             <class name="org.wso2.identity.integration.test.provisioning.DBSeperationTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceAuthCodeGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.oidc.OIDCFileBasedSkipLoginConsentTestCase"/>
 <!--            <class name="org.wso2.identity.integration.test.scim.IDENTITY4776SCIMServiceWithOAuthTestCase" />-->
             <class name="org.wso2.identity.integration.test.identity.mgt.UserInformationRecoveryServiceTenantEmailUserTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2HashAlgorithmTestCase"/>

@@ -19,27 +19,22 @@
 package org.wso2.identity.integration.test.user.mgt;
 
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
-import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.user.mgt.stub.UserAdminUserAdminException;
 import org.wso2.carbon.user.mgt.stub.types.carbon.ClaimValue;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
 import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.utils.ISTestUtils;
 
-import java.io.File;
 import java.rmi.RemoteException;
 
 public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
-
-    private ServerConfigurationManager scm;
-    private File defaultConfigFile;
 
     private UserManagementClient userMgtClient;
     private AuthenticatorClient authenticatorClient;
@@ -52,48 +47,18 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
 
         super.init();
 
-        scm = new ServerConfigurationManager(isServer);
-        // The server configurations are now restored without restart. And is supposed to restart along with the
-        // configuration changes by the next test. In this case we need to handle this as a special case, as we need
-        // to initialize the database with some data.
-        scm.restartGracefully();
-
-        super.init();
-
         userMgtClient = new UserManagementClient(backendURL, getSessionCookie());
         authenticatorClient = new AuthenticatorClient(backendURL);
 
-        userMgtClient.addRole(newUserRole, null, new String[]{"/permission/admin/login"});
-        userMgtClient.addUser(newUserName, newUserPassword, new String[]{newUserRole}, null);
         Assert.assertTrue(userMgtClient.roleNameExists(newUserRole), "Role name doesn't exists");
         Assert.assertTrue(userMgtClient.userNameExists(newUserRole, newUserName), "User name doesn't exists");
 
-        String sessionCookie = authenticatorClient.login(newUserName, newUserPassword, isServer.getInstance().getHosts().get("default"));
+        String sessionCookie = authenticatorClient.login(newUserName, newUserPassword, isServer.getInstance()
+                .getHosts().get("default"));
         Assert.assertTrue(sessionCookie.contains("JSESSIONID"), "Session Cookie not found. Login failed");
         authenticatorClient.logOut();
 
-        String carbonHome = ServerConfigurationManager.getCarbonHome();
-        defaultConfigFile = getDeploymentTomlFile(carbonHome);
-        File userMgtConfigFile = new File(getISResourceLocation() + File.separator + "userMgt"
-                + File.separator + "read_only_ldap_user_mgt_config.toml");
-        scm.applyConfiguration(userMgtConfigFile, defaultConfigFile, true, true);
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
-        userMgtClient = new UserManagementClient(backendURL, getSessionCookie());
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void restoreServer() throws Exception {
-
-        //Need to restart here itself (unlike other test cases) to perform the rest of the cleanup.
-        scm.restoreToLastConfiguration(true);
-        super.init(TestUserMode.SUPER_TENANT_ADMIN);
-        userMgtClient = new UserManagementClient(backendURL, getSessionCookie());
-        if (nameExists(userMgtClient.listAllUsers(newUserName, 10), newUserName)) {
-            userMgtClient.deleteUser(newUserName);
-        }
-        if (userMgtClient.roleNameExists(newUserRole)) {
-            userMgtClient.deleteRole(newUserRole);
-        }
     }
 
     @Test(groups = "wso2.is", description = "Test user login already exist in the ldap")
@@ -107,26 +72,30 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
     @Test(groups = "wso2.is", description = "Test user login already exist in the ldap")
     public void getUsersOfRole() throws Exception {
 
-        Assert.assertTrue(nameExists(userMgtClient.getUsersOfRole(newUserRole, newUserName, 10), newUserName), "List does not contains the user");
+        Assert.assertTrue(ISTestUtils.nameExists(userMgtClient.getUsersOfRole(newUserRole, newUserName, 10),
+                newUserName), "List does not contains the user");
     }
 
     @Test(groups = "wso2.is", description = "Test user login already exist in the ldap")
     public void getRolesOfUser() throws Exception {
 
-        Assert.assertTrue(nameExists(userMgtClient.getRolesOfUser(newUserName, newUserRole, 10), newUserRole), "List does not contains the role");
+        Assert.assertTrue(ISTestUtils.nameExists(userMgtClient.getRolesOfUser(newUserName, newUserRole, 10),
+                newUserRole), "List does not contains the role");
     }
 
     @Test(groups = "wso2.is", description = "Test user login already exist in the ldap")
     public void getAllRolesNames() throws Exception {
 
-        Assert.assertTrue(userMgtClient.getAllRolesNames("*", 10).length >= 1, "No role listed");
+        Assert.assertTrue(userMgtClient.getAllRolesNames("*", 10).length >= 1,
+                "No role listed");
     }
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
     @Test(groups = "wso2.is", description = "Check role addition")
     public void testAddRole() throws RemoteException, UserAdminUserAdminException {
 
-        Assert.assertFalse(nameExists(userMgtClient.getAllRolesNames(newUserRole + "1", 100), newUserRole + "1"), "User Role already exist");
+        Assert.assertFalse(ISTestUtils.nameExists(userMgtClient.getAllRolesNames(newUserRole + "1", 100),
+                newUserRole + "1"), "User Role already exist");
         try {
             userMgtClient.addRole(newUserRole + "1", null, new String[]{"login"}, false);
         } catch (Exception e) {
@@ -231,7 +200,7 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
 
         FlaggedName[] userList = userMgtClient.listAllUsers("*", 100);
         Assert.assertTrue(userList.length > 0, "List all users return empty list");
-        Assert.assertTrue(nameExists(userList, newUserName), "User Not Exist in the user list");
+        Assert.assertTrue(ISTestUtils.nameExists(userList, newUserName), "User Not Exist in the user list");
     }
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
@@ -257,23 +226,5 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
 
             }
         }
-    }
-
-    private boolean nameExists(FlaggedName[] allNames, String inputName) {
-
-        boolean exists = false;
-
-        for (FlaggedName flaggedName : allNames) {
-            String name = flaggedName.getItemName();
-
-            if (name.equals(inputName)) {
-                exists = true;
-                break;
-            } else {
-                exists = false;
-            }
-        }
-
-        return exists;
     }
 }
