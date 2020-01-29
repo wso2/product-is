@@ -22,6 +22,14 @@ import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.Header;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.CookieStore;
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
+import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.application.common.model.xsd.Claim;
 import org.wso2.carbon.identity.application.common.model.xsd.ClaimConfig;
@@ -35,9 +43,11 @@ import org.wso2.carbon.um.ws.api.stub.ClaimValue;
 import org.wso2.identity.integration.test.oauth2.OAuth2ServiceAbstractIntegrationTest;
 import org.wso2.identity.integration.test.oidc.bean.OIDCApplication;
 import org.wso2.identity.integration.test.oidc.bean.OIDCUser;
+import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -55,6 +65,16 @@ public class OIDCAbstractIntegrationTest extends OAuth2ServiceAbstractIntegratio
 
         super.init(userMode);
         setSystemproperties();
+    }
+
+    /**
+     * Clear the intialized clients.
+     */
+    public void clear() {
+
+        appMgtclient = null;
+        remoteUSMServiceClient = null;
+        adminClient = null;
     }
 
     /**
@@ -186,6 +206,44 @@ public class OIDCAbstractIntegrationTest extends OAuth2ServiceAbstractIntegratio
 
         log.info("Deleting application " + application.getApplicationName());
         appMgtclient.deleteApplication(application.getApplicationName());
+    }
+
+    /**
+     * Sends Authentication Request for an OIDC Flow.
+     * @param application application
+     * @param isFirstAuthenticationRequest true if the request is the first authentication request.
+     * @param client http  client
+     * @param cookieStore cookie store
+     * @throws Exception throws if an error occurs when sending the authentication request.
+     */
+    public void testSendAuthenticationRequest(OIDCApplication application, boolean isFirstAuthenticationRequest,
+                                              HttpClient client, CookieStore cookieStore)
+            throws Exception {
+
+        List<NameValuePair> urlParameters = OIDCUtilTest.getNameValuePairs(application);
+
+        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, String.format
+                (OIDCUtilTest.targetApplicationUrl, application.getApplicationContext() + OAuth2Constant.PlaygroundAppPaths
+                        .appUserAuthorizePath));
+
+        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        EntityUtils.consume(response.getEntity());
+
+        if (isFirstAuthenticationRequest) {
+            response = sendGetRequest(client, locationHeader.getValue());
+        } else {
+            HttpClient httpClientWithoutAutoRedirections = HttpClientBuilder.create().disableRedirectHandling()
+                    .setDefaultCookieStore(cookieStore).build();
+            response = sendGetRequest(httpClientWithoutAutoRedirections, locationHeader.getValue());
+        }
+
+        Map<String, Integer> keyPositionMap = new HashMap<>(1);
+        if (isFirstAuthenticationRequest) {
+            OIDCUtilTest.setSessionDataKey(response, keyPositionMap);
+
+        } else {
+            Assert.assertFalse(Utils.requestMissingClaims(response));
+        }
     }
 
 }
