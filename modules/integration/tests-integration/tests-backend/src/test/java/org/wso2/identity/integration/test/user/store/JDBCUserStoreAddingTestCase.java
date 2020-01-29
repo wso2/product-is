@@ -49,15 +49,11 @@ public class JDBCUserStoreAddingTestCase extends ISIntegrationTest{
     private final String roLDAPClass = "org.wso2.carbon.user.core.ldap.ReadOnlyLDAPUserStoreManager";
     private final String adLDAPClass = "org.wso2.carbon.user.core.ldap.ActiveDirectoryUserStoreManager";
     private final String domainId = "WSO2TEST.COM";
-    private final String userStoreDBName = "JDBC_USER_STORE_DB";
-    private final String dbUserName = "wso2automation";
-    private final String dbUserPassword = "wso2automation";
     private UserManagementClient userMgtClient;
     private AuthenticatorClient authenticatorClient;
     private String newUserName = "WSO2TEST.COM/userStoreUser";
     private String newUserRole = "WSO2TEST.COM/jdsbUserStoreRole";
     private String  newUserPassword = "password";
-    private PropertyDTO[] propertyDTOs;
 
 
     @BeforeClass(alwaysRun = true)
@@ -83,57 +79,12 @@ public class JDBCUserStoreAddingTestCase extends ISIntegrationTest{
 
     }
 
-    @Test(groups = "wso2.is", description = "Check add user store via DTO", dependsOnMethods = "testAvailableUserStoreClasses")
+    @Test(groups = "wso2.is", description = "Check add user store via DTO",
+            dependsOnMethods = "testAvailableUserStoreClasses")
     private void testAddJDBCUserStore() throws Exception {
 
-        propertyDTOs = new PropertyDTO[11];
-        for (int i = 0; i < 11; i++) {
-            propertyDTOs[i] = new PropertyDTO();
-        }
-        //creating database
-        H2DataBaseManager dbmanager = new H2DataBaseManager("jdbc:h2:" + ServerConfigurationManager.getCarbonHome()
-                                                            + "/repository/database/" + userStoreDBName,
-                                                            dbUserName, dbUserPassword);
-        dbmanager.executeUpdate(new File(ServerConfigurationManager.getCarbonHome() + "/dbscripts/h2.sql"));
-        dbmanager.disconnect();
-
-        propertyDTOs[0].setName("driverName");
-        propertyDTOs[0].setValue("org.h2.Driver");
-
-        propertyDTOs[1].setName("url");
-        propertyDTOs[1].setValue("jdbc:h2:./repository/database/" + userStoreDBName);
-
-        propertyDTOs[2].setName("userName");
-        propertyDTOs[2].setValue(dbUserName);
-
-        propertyDTOs[3].setName("password");
-        propertyDTOs[3].setValue(dbUserPassword);
-
-        propertyDTOs[4].setName("PasswordJavaRegEx");
-        propertyDTOs[4].setValue("^[\\S]{5,30}$");
-
-        propertyDTOs[5].setName("UsernameJavaRegEx");
-        propertyDTOs[5].setValue("^[\\S]{5,30}$");
-
-        propertyDTOs[6].setName("Disabled");
-        propertyDTOs[6].setValue("false");
-
-        propertyDTOs[7].setName("PasswordDigest");
-        propertyDTOs[7].setValue("SHA-256");
-
-        propertyDTOs[8].setName("StoreSaltedPassword");
-        propertyDTOs[8].setValue("true");
-
-        propertyDTOs[9].setName("SCIMEnabled");
-        propertyDTOs[9].setValue("true");
-
-        propertyDTOs[9].setName("CountRetrieverClass");
-        propertyDTOs[9].setValue("org.wso2.carbon.identity.user.store.count.jdbc.JDBCUserStoreCountRetriever");
-
-        propertyDTOs[10].setName("UserIDEnabled");
-        propertyDTOs[10].setValue("true");
-
-        UserStoreDTO userStoreDTO = userStoreConfigAdminServiceClient.createUserStoreDTO(jdbcClass, domainId, propertyDTOs);
+        UserStoreDTO userStoreDTO = userStoreConfigAdminServiceClient.createUserStoreDTO(jdbcClass, domainId,
+                userStoreConfigUtils.getJDBCUserStoreProperties());
         userStoreConfigAdminServiceClient.addUserStore(userStoreDTO);
         Thread.sleep(5000);
         Assert.assertTrue(userStoreConfigUtils.waitForUserStoreDeployment(userStoreConfigAdminServiceClient, domainId)

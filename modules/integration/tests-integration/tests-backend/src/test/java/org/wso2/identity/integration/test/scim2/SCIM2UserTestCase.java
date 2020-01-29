@@ -400,7 +400,7 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
         postRequest.setEntity(entity);
         HttpResponse postResponse = client.execute(postRequest);
         assertEquals(postResponse.getStatusLine().getStatusCode(), 201,
-                "User " + "has not been created in patch process successfully");
+                "User has not been created in patch process successfully.");
         Object responseObj = JSONValue.parse(EntityUtils.toString(postResponse.getEntity()));
         EntityUtils.consume(postResponse.getEntity());
         String userId = ((JSONObject) responseObj).get(ID_ATTRIBUTE).toString();
@@ -419,7 +419,7 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
         request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
         request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
         HttpResponse response = client.execute(request);
-        assertEquals(response.getStatusLine().getStatusCode(), 200, "User " + "has not been updated successfully");
+        assertEquals(response.getStatusLine().getStatusCode(), 200, "User has not been updated successfully.");
         Object responseObjAfterPatch = JSONValue.parse(EntityUtils.toString(response.getEntity()));
         EntityUtils.consume(response.getEntity());
         String updatedGivenName = ((JSONObject) responseObjAfterPatch).get(NAME_ATTRIBUTE).toString();

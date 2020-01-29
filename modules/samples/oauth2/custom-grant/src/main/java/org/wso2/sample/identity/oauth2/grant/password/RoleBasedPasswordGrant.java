@@ -40,13 +40,13 @@ public class RoleBasedPasswordGrant extends PasswordGrantHandler {
     @Override
     public boolean validateGrant(OAuthTokenReqMessageContext tokReqMsgCtx) throws IdentityOAuth2Exception {
 
-        boolean superAuthorized = super.validateGrant(tokReqMsgCtx);
+        boolean grantValidated = super.validateGrant(tokReqMsgCtx);
 
         //  default password validation
         boolean authorized = super.authorizeAccessDelegation(tokReqMsgCtx);
 
         // additional check for role based
-        if (superAuthorized && authorized) {
+        if (grantValidated && authorized) {
 
             String username = tokReqMsgCtx.getOauth2AccessTokenReqDTO().getResourceOwnerUsername();
 

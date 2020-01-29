@@ -14,6 +14,7 @@ connection_url = "ldap://localhost:${Ports.EmbeddedLDAP.LDAPServerPort}"
 connection_name = "uid=admin,ou=system"
 connection_password = "admin"
 base_dn = "dc=wso2,dc=org"      #refers the base dn on which the user and group search bases will be generated
+scim_enabled = true
 
 [database.identity_db]
 driver = "$env{IDENTITY_DATABASE_DRIVER}"
@@ -28,5 +29,5 @@ username = "$env{SHARED_DATABASE_USERNAME}"
 password = "$env{SHARED_DATABASE_PASSWORD}"
 
 [keystore.primary]
-name = "wso2carbon.jks"
+file_name = "wso2carbon.jks"
 password = "wso2carbon"
