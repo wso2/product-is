@@ -1,31 +1,21 @@
 package org.wso2.identity.integration.test.user.mgt.uuid;
 
-import org.testng.annotations.AfterClass;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
-import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
-import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.identity.test.integration.service.stub.AuthenticationResultDTO;
+import org.wso2.carbon.identity.test.integration.service.stub.ClaimDTO;
+import org.wso2.carbon.identity.test.integration.service.stub.ConditionDTO;
+import org.wso2.carbon.identity.test.integration.service.stub.UserDTO;
+import org.wso2.carbon.user.core.model.xsd.UniqueIDUserClaimSearchEntry;
 
-import java.io.File;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class JDBCUUIDUMTestCase extends AbstractUUIDUMTestCase {
-
-    private ServerConfigurationManager scm;
+public class ReadWriteLDAPUUIDUMTestCase extends AbstractUUIDUMTestCase {
 
     @BeforeClass(alwaysRun = true)
-    public void initTest() throws Exception {
-
-        super.init();
-
-        String carbonHome = CarbonUtils.getCarbonHome();
-        File defaultConfigFile = getDeploymentTomlFile(carbonHome);
-        File userMgtConfigFile = new File(getISResourceLocation() + File.separator + "userMgt" + File.separator
-                + "jdbc_user_mgt_config.toml");
-        scm = new ServerConfigurationManager(isServer);
-        scm.applyConfiguration(userMgtConfigFile, defaultConfigFile, true, true);
-
+    public void init() throws Exception {
         super.init();
     }
 
@@ -120,18 +110,6 @@ public class JDBCUUIDUMTestCase extends AbstractUUIDUMTestCase {
     }
 
     @Test(dependsOnMethods = "testAddUser")
-    public void listUsersWithID() throws Exception {
-
-        super.listUsersWithID();
-    }
-
-    @Test(dependsOnMethods = "testAddUser")
-    public void testGetUserListWithID() throws Exception {
-
-        super.testGetUserListWithID();
-    }
-
-    @Test(dependsOnMethods = "testAddUser")
     public void testGetRoleListOfUsersWithID() throws Exception {
 
         super.testGetRoleListOfUsersWithID();
@@ -213,11 +191,4 @@ public class JDBCUUIDUMTestCase extends AbstractUUIDUMTestCase {
 
         super.testUpdateCredentialByAdminWithID();
     }
-
-    @AfterClass
-    public void deInit() throws IOException, AutomationUtilException {
-
-        scm.restoreToLastConfiguration();
-    }
-
 }

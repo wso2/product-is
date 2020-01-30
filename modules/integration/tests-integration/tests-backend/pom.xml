@@ -842,6 +842,10 @@
             <artifactId>org.wso2.carbon.identity.user.account.association.stub</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.wso2.is</groupId>
+            <artifactId>org.wso2.carbon.identity.test.integration.service.stubs</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.carbon.automation</groupId>
             <artifactId>org.wso2.carbon.automation.engine</artifactId>
         </dependency>

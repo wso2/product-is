@@ -7,7 +7,7 @@ public class LoginIdentifierDTO implements Serializable {
     private String loginKey;
     private String loginValue;
     private String profileName;
-    private LoginIdentifierDTO.LoginIdentifierType loginIdentifierType;
+    private String loginIdentifierType;
 
     public String getLoginKey() {
 
@@ -39,20 +39,13 @@ public class LoginIdentifierDTO implements Serializable {
         this.profileName = profileName;
     }
 
-    public LoginIdentifierType getLoginIdentifierType() {
+    public String getLoginIdentifierType() {
 
         return loginIdentifierType;
     }
 
-    public void setLoginIdentifierType(LoginIdentifierType loginIdentifierType) {
+    public void setLoginIdentifierType(String loginIdentifierType) {
 
         this.loginIdentifierType = loginIdentifierType;
-    }
-
-    public static enum LoginIdentifierType {
-        CLAIM_URI,
-        ATTRIBUTE;
-
-        private LoginIdentifierType() {}
     }
 }
