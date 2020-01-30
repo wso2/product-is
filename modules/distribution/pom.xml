@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>5.10.0-alpha-SNAPSHOT</version>
+        <version>5.10.0-alpha3-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -160,6 +160,7 @@
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.scim.common.feature.default.json</param>
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.consent.mgt.server.feature.default.json</param>
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.humantask.server.feature.default.json</param>
+                                        <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.ldap.server.server.feature.default.json</param>
                                     </include>
                                     <target>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/default.json</target>
                                     <mergeChildren>true</mergeChildren>
@@ -181,6 +182,7 @@
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.core.server.feature.key-mappings.json</param>
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.application.authentication.framework.server.feature.key-mappings.json</param>
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.event.server.feature.key-mappings.json</param>
+                                        <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.scim.common.feature.key-mappings.json</param>
                                     </include>
                                     <target>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/key-mappings.json</target>
                                 </task>
@@ -322,6 +324,9 @@
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/log4j2.properties" token="logger.net-sf-ehcache-config-ConfigurationFactory.level = ERROR" value="logger.net-sf-ehcache.level = ERROR${line.separator}" />
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/log4j2.properties" token="net-sf-ehcache-config-ConfigurationFactory," value="net-sf-ehcache," />
 
+                                <!-- Disable Admin Portal for product-is 5.10.0 release-->
+                                <replaceregexp file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/identity.xml" match="(\s)*&lt;Resource context=&quot;(.*)/admin-portal(.*)&quot; secured=&quot;false&quot; http-method=&quot;all&quot;/&gt;" replace="" flags="g" />
+                                <replaceregexp file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/identity.xml" match="(\s)*&lt;Context&gt;/admin-portal/&lt;/Context&gt;" replace="" flags="g" />
 
                                 <!--<replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/log4j2.properties" token="logger.net-sf-ehcache-config-ConfigurationFactory.name = net.sf.ehcache.config.ConfigurationFactory" value="logger.net-sf-ehcache.name = net.sf.ehcache${line.separator}${line.separator}log4j.logger.org.springframework=WARN${line.separator}log4j.logger.org.opensaml.xml.security.credential.criteria=WARN${line.separator}${line.separator} #log4j.logger.org.wso2.carbon.user.core=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity.sso.saml=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity.application=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity.application.authentication.framework=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity.mgt=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity.oauth2=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity.scim=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity.mgt=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.idp.mgt=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity.provisioning=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity.user.account.association=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity.user.profile.mgt=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.security=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity.sso.agent=DEBUG${line.separator} #log4j.logger.org.wso2.carbon.identity.core=DEBUG" />-->
 
