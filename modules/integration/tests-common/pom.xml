@@ -34,6 +34,7 @@
         <module>integration-test-utils</module>
         <module>extensions</module>
         <module>admin-services</module>
+        <module>admin-stubs</module>
     </modules>
 
 </project>

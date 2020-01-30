@@ -1,11 +1,10 @@
 package org.wso2.carbon.identity.test.integration.service.dao;
 
 import java.io.Serializable;
-import java.util.Optional;
 
 public class AuthenticationResultDTO implements Serializable {
 
-    private AuthenticationResultDTO.AuthenticationStatus authenticationStatus;
+    private String authenticationStatus;
     private UserDTO authenticatedUser;
     private String authenticatedSubjectIdentifier;
     private FailureReasonDTO failureReason;
@@ -14,14 +13,14 @@ public class AuthenticationResultDTO implements Serializable {
         super();
     }
 
-    public AuthenticationResultDTO(AuthenticationResultDTO.AuthenticationStatus authenticationStatus) {
+    public AuthenticationResultDTO(String authenticationStatus) {
 
         this.authenticationStatus = authenticationStatus;
     }
 
-    public Optional<UserDTO> getAuthenticatedUser() {
+    public UserDTO getAuthenticatedUser() {
 
-        return Optional.of(authenticatedUser);
+        return authenticatedUser;
     }
 
     public void setAuthenticatedUser(UserDTO authenticatedUser) {
@@ -39,27 +38,23 @@ public class AuthenticationResultDTO implements Serializable {
         this.authenticatedSubjectIdentifier = authenticatedSubjectIdentifier;
     }
 
-    public AuthenticationResultDTO.AuthenticationStatus getAuthenticationStatus() {
+    public String getAuthenticationStatus() {
 
         return authenticationStatus;
     }
 
-    public void setAuthenticationStatus(AuthenticationResultDTO.AuthenticationStatus authenticationStatus) {
+    public void setAuthenticationStatus(String authenticationStatus) {
 
         this.authenticationStatus = authenticationStatus;
     }
 
-    public Optional<FailureReasonDTO> getFailureReason() {
+    public FailureReasonDTO getFailureReason() {
 
-        return Optional.of(failureReason);
+        return failureReason;
     }
 
     public void setFailureReason(FailureReasonDTO failureReason) {
 
         this.failureReason = failureReason;
-    }
-
-    public enum AuthenticationStatus {
-        SUCCESS, FAIL
     }
 }

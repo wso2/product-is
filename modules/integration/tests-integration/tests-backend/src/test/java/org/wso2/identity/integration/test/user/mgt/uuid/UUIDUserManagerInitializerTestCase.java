@@ -24,19 +24,15 @@ import org.testng.annotations.BeforeTest;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.clients.UserManagementClient;
+import org.wso2.identity.integration.common.clients.usermgt.uuid.UUIDUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 import java.io.File;
 import java.io.FileFilter;
 
-public class UUIDUserManagerTestBase extends ISIntegrationTest {
+public class UUIDUserManagerInitializerTestCase extends ISIntegrationTest {
 
     private File uuidServiceJar;
-
-    protected UserManagementClient userMgtClient;
-    protected AuthenticatorClient loginManger;
-    protected String adminUsername;
-    protected String adminPassword;
 
     @BeforeTest(alwaysRun = true)
     public void initTest() throws Exception {
@@ -48,11 +44,6 @@ public class UUIDUserManagerTestBase extends ISIntegrationTest {
         ServerConfigurationManager serverConfigurationManager = new ServerConfigurationManager(isServer);
         serverConfigurationManager.copyToComponentDropins(uuidServiceJar);
         serverConfigurationManager.restartGracefully();
-
-        userMgtClient = new UserManagementClient(backendURL, sessionCookie);
-        loginManger = new AuthenticatorClient(backendURL);
-        adminUsername = userInfo.getUserName();
-        adminPassword = userInfo.getPassword();
     }
 
     private File getServiceJar() throws Exception {

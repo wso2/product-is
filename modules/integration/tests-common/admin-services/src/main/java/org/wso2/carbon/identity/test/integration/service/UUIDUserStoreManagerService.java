@@ -5,15 +5,16 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.identity.test.integration.service.dao.Attribute;
 import org.wso2.carbon.identity.test.integration.service.dao.AuthenticationResultDTO;
+import org.wso2.carbon.identity.test.integration.service.dao.ClaimDTO;
 import org.wso2.carbon.identity.test.integration.service.dao.ConditionDTO;
 import org.wso2.carbon.identity.test.integration.service.dao.FailureReasonDTO;
 import org.wso2.carbon.identity.test.integration.service.dao.LoginIdentifierDTO;
 import org.wso2.carbon.identity.test.integration.service.dao.PermissionDTO;
 import org.wso2.carbon.identity.test.integration.service.dao.UserDTO;
 import org.wso2.carbon.identity.test.integration.service.dao.UserRoleListDTO;
-import org.wso2.carbon.user.api.Permission;
+import org.wso2.carbon.identity.test.integration.service.dao.UserStoreException;
+import org.wso2.carbon.user.core.Permission;
 import org.wso2.carbon.user.core.UserRealm;
-import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.claim.Claim;
 import org.wso2.carbon.user.core.common.AbstractUserStoreManager;
 import org.wso2.carbon.user.core.common.AuthenticationResult;
@@ -31,207 +32,335 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import javax.jws.WebService;
 
-@WebService
 public class UUIDUserStoreManagerService {
 
     private static final Log log = LogFactory.getLog(UUIDUserStoreManagerService.class);
     private static final String NULL_REALM_MESSAGE = "UserRealm is null";
 
-    public UserDTO addUserWithID(String userName, Object credential, String[] roleList, ClaimValue[] claims,
+    public UserDTO addUserWithID(String userName, String credential, String[] roleList, ClaimValue[] claims,
                                  String profileName) throws UserStoreException {
 
-        return getUserDTO(getUserStoreManager().addUserWithID(userName, credential, roleList,
-                convertClaimValueToMap(claims), profileName));
+        try {
+            return getUserDTO(getUserStoreManager().addUserWithID(userName, credential, roleList,
+                    convertClaimValueToMap(claims), profileName));
+        } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
+        }
     }
 
     public AuthenticationResultDTO authenticateWithIDLoginIdentifier(LoginIdentifierDTO[] loginIdentifiers,
-                                                                     String domain, Object credential)
+                                                                     String domain, String credential)
             throws UserStoreException {
 
-        List<LoginIdentifier> identifierList = getLoginIdentifierListFromLoginIdentifierList(loginIdentifiers);
-        return getAuthenticationResultDTOFromAuthenticationResult(getUserStoreManager()
-                .authenticateWithID(identifierList, domain, credential));
+        List<LoginIdentifier> identifierList = Arrays
+                .asList(getLoginIdentifierListFromLoginIdentifierList(loginIdentifiers));
+        try {
+            return getAuthenticationResultDTOFromAuthenticationResult(getUserStoreManager()
+                    .authenticateWithID(identifierList, domain, credential));
+        } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
+        }
     }
 
-    public AuthenticationResultDTO authenticateWithIDUserId(String userID, String domain, Object credential)
+    public AuthenticationResultDTO authenticateWithIDUserId(String userID, String domain, String credential)
             throws UserStoreException {
 
-        return getAuthenticationResultDTOFromAuthenticationResult(getUserStoreManager()
-                .authenticateWithID(userID, domain, credential));
+        try {
+            return getAuthenticationResultDTOFromAuthenticationResult(getUserStoreManager()
+                    .authenticateWithID(userID, domain, credential));
+        } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
+        }
     }
 
     public AuthenticationResultDTO authenticateWithIDUsernameClaim(String preferredUserNameClaim,
-                                                                   String preferredUserNameValue, Object credential,
+                                                                   String preferredUserNameValue, String credential,
                                                                    String profileName)
             throws UserStoreException {
 
-        return getAuthenticationResultDTOFromAuthenticationResult(getUserStoreManager()
-                .authenticateWithID(preferredUserNameClaim, preferredUserNameValue, credential, profileName));
+        try {
+            return getAuthenticationResultDTOFromAuthenticationResult(getUserStoreManager()
+                    .authenticateWithID(preferredUserNameClaim, preferredUserNameValue, credential, profileName));
+        } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
+        }
     }
 
     public void deleteUserClaimValuesWithID(String userID, String[] claims, String profileName)
             throws UserStoreException {
 
-        getUserStoreManager().deleteUserClaimValuesWithID(userID, claims, profileName);
+        try {
+            getUserStoreManager().deleteUserClaimValuesWithID(userID, claims, profileName);
+        } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
+        }
     }
 
     public Date getPasswordExpirationTimeWithID(String userId) throws UserStoreException {
 
-        return getUserStoreManager().getPasswordExpirationTimeWithID(userId);
+        try {
+            return getUserStoreManager().getPasswordExpirationTimeWithID(userId);
+        } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
+        }
     }
 
     public boolean isUserInRoleWithID(String userID, String roleName) throws UserStoreException {
 
-        return getUserStoreManager().isUserInRoleWithID(userID, roleName);
+        try {
+            return getUserStoreManager().isUserInRoleWithID(userID, roleName);
+        } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
+        }
     }
 
-    public List<User> listUsersWithID(String filter, int limit, int offset) throws UserStoreException {
+    public UserDTO[] listUsersWithOffsetWithID(String filter, int limit, int offset) throws UserStoreException {
 
-        return getUserStoreManager().listUsersWithID(filter, limit, offset);
+        try {
+            return getUserDTOListFromUser(getUserStoreManager().listUsersWithID(filter, limit, offset));
+        } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
+        }
     }
 
-    public List<User> getUserListWithID(String claim, String claimValue, String profileName, int limit, int offset)
+    public UserDTO[] getUserListWithOffsetWithID(String claim, String claimValue, String profileName, int limit,
+                                                 int offset)
             throws UserStoreException {
 
-        return getUserStoreManager().getUserListWithID(claim, claimValue, profileName, limit, offset);
+        try {
+            return getUserDTOListFromUser(getUserStoreManager().getUserListWithID(claim, claimValue, profileName, limit,
+                    offset));
+        } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
+        }
     }
 
-    public List<UserDTO> getUserListWithID(ConditionDTO conditionDTO, String domain, String profileName, int limit,
-                                           int offset, String sortBy, String sortOrder)
+    public UserDTO[] getUserListWithIDCondition(ConditionDTO conditionDTO, String domain, String profileName, int limit,
+                                                int offset, String sortBy, String sortOrder)
             throws UserStoreException {
 
         org.wso2.carbon.user.core.model.Condition condition = getConditionFromConditionDTO(conditionDTO);
-        return getUserDTOListFromUser(getUserStoreManager().getUserListWithID(condition, domain, profileName, limit,
-                offset, sortBy, sortOrder));
+        try {
+            return getUserDTOListFromUser(getUserStoreManager().getUserListWithID(condition, domain, profileName, limit,
+                    offset, sortBy, sortOrder));
+        } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
+        }
     }
-
 
     public List<UniqueIDUserClaimSearchEntry> getUsersClaimValuesWithID(List<String> userIDs, List<String> claims,
                                                                         String profileName)
             throws UserStoreException {
 
-        return getUserStoreManager().getUsersClaimValuesWithID(userIDs, claims, profileName);
+        try {
+            return getUserStoreManager().getUsersClaimValuesWithID(userIDs, claims, profileName);
+        } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
+        }
     }
 
-    public UserRoleListDTO[] getRoleListOfUsersWithID(String [] userIDs) throws UserStoreException {
+    public UserRoleListDTO[] getRoleListOfUsersWithID(String[] userIDs) throws UserStoreException {
 
-        return getUserRoleListDTOs(getUserStoreManager().getRoleListOfUsersWithID(Arrays.asList(userIDs)));
+        try {
+            return getUserRoleListDTOs(getUserStoreManager().getRoleListOfUsersWithID(Arrays.asList(userIDs)));
+        } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
+        }
     }
 
     public void deleteUserClaimValueWithID(String userID, String claimURI, String profileName)
             throws UserStoreException {
 
-        getUserStoreManager().deleteUserClaimValueWithID(userID, claimURI, profileName);
+        try {
+            getUserStoreManager().deleteUserClaimValueWithID(userID, claimURI, profileName);
+        } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
+        }
     }
 
-    public List<User> listUsersWithID(String filter, int maxItemLimit) throws UserStoreException {
+    public UserDTO[] listUsersWithID(String filter, int maxItemLimit) throws UserStoreException {
 
-        return getUserStoreManager().listUsersWithID(filter, maxItemLimit);
+        try {
+            return getUserDTOListFromUser(getUserStoreManager().listUsersWithID(filter, maxItemLimit));
+        } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
+        }
     }
 
     public UserDTO getUserWithID(String userID, String[] requestedClaims, String profileName)
             throws UserStoreException {
 
-        return getUserDTO(getUserStoreManager().getUserWithID(userID, requestedClaims, profileName));
+        try {
+            return getUserDTO(getUserStoreManager().getUserWithID(userID, requestedClaims, profileName));
+        } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
+        }
     }
 
     public boolean isExistingUserWithID(String userID) throws UserStoreException {
 
-        return getUserStoreManager().isExistingUserWithID(userID);
+        try {
+            return getUserStoreManager().isExistingUserWithID(userID);
+        } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
+        }
     }
 
     public String[] getProfileNamesWithID(String userID) throws UserStoreException {
 
-        return getUserStoreManager().getProfileNamesWithID(userID);
+        try {
+            return getUserStoreManager().getProfileNamesWithID(userID);
+        } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
+        }
     }
 
-    public List<String> getRoleListOfUserWithID(String userID) throws UserStoreException {
+    public String[] getRoleListOfUserWithID(String userID) throws UserStoreException {
 
-        return getUserStoreManager().getRoleListOfUserWithID(userID);
+        try {
+            return getUserStoreManager().getRoleListOfUserWithID(userID).toArray(new String[0]);
+        } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
+        }
     }
 
-    public List<User> getUserListOfRoleWithID(String roleName) throws UserStoreException {
+    public UserDTO[] getUserListOfRoleWithID(String roleName) throws UserStoreException {
 
-        return getUserStoreManager().getUserListOfRoleWithID(roleName);
+        try {
+            return getUserDTOListFromUser(getUserStoreManager().getUserListOfRoleWithID(roleName));
+        } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
+        }
     }
 
-    public List<User> getUserListOfRoleWithID(String roleName, String filter, int maxItemLimit)
+    public UserDTO[] getUserListOfRoleFilteredWithID(String roleName, String filter, int maxItemLimit)
             throws UserStoreException {
 
-        return getUserStoreManager().getUserListOfRoleWithID(roleName, filter, maxItemLimit);
+        try {
+            return getUserDTOListFromUser(getUserStoreManager().getUserListOfRoleWithID(roleName, filter,
+                    maxItemLimit));
+        } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
+        }
     }
 
     public String getUserClaimValueWithID(String userID, String claim, String profileName) throws UserStoreException {
 
-        return getUserStoreManager().getUserClaimValueWithID(userID, claim, profileName);
+        try {
+            return getUserStoreManager().getUserClaimValueWithID(userID, claim, profileName);
+        } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
+        }
     }
 
-    public ClaimValue[] getUserClaimValuesWithID(String userID, String[] claims, String profileName)
+    public ClaimValue[] getUserClaimValuesForGivenClaimsWithID(String userID, String[] claims, String profileName)
             throws UserStoreException {
 
-        return convertMapToClaimValue(getUserStoreManager().getUserClaimValuesWithID(userID, claims, profileName));
+        try {
+            return convertMapToClaimValue(getUserStoreManager().getUserClaimValuesWithID(userID, claims, profileName));
+        } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
+        }
     }
 
-    public List<Claim> getUserClaimValuesWithID(String userID, String profileName) throws UserStoreException {
+    public ClaimDTO[] getUserClaimValuesWithID(String userID, String profileName) throws UserStoreException {
 
-        return getUserStoreManager().getUserClaimValuesWithID(userID, profileName);
+        try {
+            return convertClaimToClaimDTO(getUserStoreManager().getUserClaimValuesWithID(userID, profileName));
+        } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
+        }
     }
 
     public void deleteUserWithID(String userID) throws UserStoreException {
 
-        getUserStoreManager().deleteUserWithID(userID);
+        try {
+            getUserStoreManager().deleteUserWithID(userID);
+        } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
+        }
     }
 
     public void setUserClaimValueWithID(String userID, String claimURI, String claimValue, String profileName)
             throws UserStoreException {
 
-        getUserStoreManager().setUserClaimValueWithID(userID, claimURI, claimValue, profileName);
+        try {
+            getUserStoreManager().setUserClaimValueWithID(userID, claimURI, claimValue, profileName);
+        } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
+        }
     }
 
-    public void setUserClaimValuesWithID(String userID, ClaimValue [] claims, String profileName)
+    public void setUserClaimValuesWithID(String userID, ClaimValue[] claims, String profileName)
             throws UserStoreException {
 
-        getUserStoreManager().setUserClaimValuesWithID(userID, convertClaimValueToMap(claims), profileName);
+        try {
+            getUserStoreManager().setUserClaimValuesWithID(userID, convertClaimValueToMap(claims), profileName);
+        } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
+        }
     }
 
-    public List<User> getUserListWithID(String claim, String claimValue, String profileName) throws UserStoreException {
+    public UserDTO[] getUserListWithID(String claim, String claimValue, String profileName) throws UserStoreException {
 
-        return getUserStoreManager().getUserListWithID(claim, claimValue, profileName);
+        try {
+            return getUserDTOListFromUser(getUserStoreManager().getUserListWithID(claim, claimValue, profileName));
+        } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
+        }
     }
 
-    public void updateCredentialWithID(String userID, Object newCredential, Object oldCredential)
+    public void updateCredentialWithID(String userID, String newCredential, String oldCredential)
             throws UserStoreException {
 
-        getUserStoreManager().updateCredentialWithID(userID, newCredential, oldCredential);
+        try {
+            getUserStoreManager().updateCredentialWithID(userID, newCredential, oldCredential);
+        } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
+        }
     }
 
-    public void updateCredentialByAdminWithID(String userID, Object newCredential) throws UserStoreException {
+    public void updateCredentialByAdminWithID(String userID, String newCredential) throws UserStoreException {
 
-        getUserStoreManager().updateCredentialByAdminWithID(userID, newCredential);
+        try {
+            getUserStoreManager().updateCredentialByAdminWithID(userID, newCredential);
+        } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
+        }
     }
 
     public void addRoleWithID(String roleName, String[] userIDList, PermissionDTO[] permissionsDTOs,
                               boolean isSharedRole)
             throws UserStoreException {
 
-        org.wso2.carbon.user.core.Permission [] permissions =
+        org.wso2.carbon.user.core.Permission[] permissions =
                 (org.wso2.carbon.user.core.Permission[]) convertDTOToPermission(permissionsDTOs);
-        getUserStoreManager().addRoleWithID(roleName, userIDList, permissions, isSharedRole);
+        try {
+            getUserStoreManager().addRoleWithID(roleName, userIDList, permissions, isSharedRole);
+        } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
+        }
     }
 
     public void updateUserListOfRoleWithID(String roleName, String[] deletedUserIDs, String[] newUserIDs)
             throws UserStoreException {
 
-        getUserStoreManager().updateUserListOfRoleWithID(roleName, deletedUserIDs, newUserIDs);
+        try {
+            getUserStoreManager().updateUserListOfRoleWithID(roleName, deletedUserIDs, newUserIDs);
+        } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
+        }
     }
 
     public void updateRoleListOfUserWithID(String userID, String[] deletedRoles, String[] newRoles)
             throws UserStoreException {
 
-        getUserStoreManager().updateRoleListOfUserWithID(userID, deletedRoles, newRoles);
+        try {
+            getUserStoreManager().updateRoleListOfUserWithID(userID, deletedRoles, newRoles);
+        } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
+        }
     }
 
     private UserDTO getUserDTO(User user) {
@@ -254,9 +383,9 @@ public class UUIDUserStoreManagerService {
             return new Attribute[0];
         }
 
-        Attribute [] attributesArray = new Attribute[attributes.size()];
+        Attribute[] attributesArray = new Attribute[attributes.size()];
         int i = 0;
-        for(Map.Entry<String, String> entry : attributes.entrySet()) {
+        for (Map.Entry<String, String> entry : attributes.entrySet()) {
             Attribute attribute = new Attribute();
             attribute.setAttributeName(entry.getKey());
             attribute.setAttributeValue(entry.getValue());
@@ -266,18 +395,21 @@ public class UUIDUserStoreManagerService {
         return attributesArray;
     }
 
-    private List<UserDTO> getUserDTOListFromUser(List<User> userListWithID) {
+    private UserDTO[] getUserDTOListFromUser(List<User> userListWithID) {
 
-        return userListWithID
-                .stream()
-                .map(this::getUserDTO)
-                .collect(Collectors.toList());
+        UserDTO[] userDTOS = new UserDTO[userListWithID.size()];
+        int i = 0;
+        for (User user : userListWithID) {
+            userDTOS[i] = getUserDTO(user);
+            i++;
+        }
+        return userDTOS;
     }
 
     private Condition getConditionFromConditionDTO(ConditionDTO conditionDTO) {
+
         return conditionDTO;
     }
-
 
     private AuthenticationResultDTO getAuthenticationResultDTOFromAuthenticationResult(
             AuthenticationResult authenticationResult) {
@@ -290,12 +422,13 @@ public class UUIDUserStoreManagerService {
         authenticationResultDTO.setAuthenticationStatus(getAuthenticationStatusDTOFromAuthenticationStatus(
                 authenticationResult.getAuthenticationStatus()));
         authenticationResultDTO.setFailureReason(getFailureReasonDTOFromFailureReason(authenticationResult
-                .getFailureReason().orElse(new FailureReason())));
+                .getFailureReason()
+                .orElse(new FailureReason())));
 
         return authenticationResultDTO;
     }
 
-    private List<LoginIdentifier> getLoginIdentifierListFromLoginIdentifierList(LoginIdentifierDTO[] loginIdentifiers) {
+    private LoginIdentifier[] getLoginIdentifierListFromLoginIdentifierList(LoginIdentifierDTO[] loginIdentifiers) {
 
         List<LoginIdentifier> loginIdentifiersList = new ArrayList<>();
         for (LoginIdentifierDTO loginIdentifierDTO : loginIdentifiers) {
@@ -304,16 +437,15 @@ public class UUIDUserStoreManagerService {
                     getLoginIdentifierFromDTO(loginIdentifierDTO.getLoginIdentifierType()));
             loginIdentifiersList.add(loginIdentifier);
         }
-        return loginIdentifiersList;
+        return loginIdentifiersList.toArray(new LoginIdentifier[0]);
     }
 
-    private LoginIdentifier.LoginIdentifierType getLoginIdentifierFromDTO(
-            LoginIdentifierDTO.LoginIdentifierType loginIdentifierType) {
+    private LoginIdentifier.LoginIdentifierType getLoginIdentifierFromDTO(String loginIdentifierType) {
 
         switch (loginIdentifierType) {
-            case CLAIM_URI:
+            case "CLAIM_URI":
                 return LoginIdentifier.LoginIdentifierType.CLAIM_URI;
-            case ATTRIBUTE:
+            case "ATTRIBUTE":
                 return LoginIdentifier.LoginIdentifierType.ATTRIBUTE;
             default:
                 return null;
@@ -322,7 +454,7 @@ public class UUIDUserStoreManagerService {
 
     private UserRoleListDTO[] getUserRoleListDTOs(Map<String, List<String>> roleListOfUsersWithID) {
 
-        UserRoleListDTO [] userRoleListDTOs = new UserRoleListDTO[roleListOfUsersWithID.size()];
+        UserRoleListDTO[] userRoleListDTOs = new UserRoleListDTO[roleListOfUsersWithID.size()];
         int i = 0;
         for (Map.Entry<String, List<String>> entry : roleListOfUsersWithID.entrySet()) {
             UserRoleListDTO userRoleListDTO = new UserRoleListDTO();
@@ -334,14 +466,14 @@ public class UUIDUserStoreManagerService {
         return userRoleListDTOs;
     }
 
-    private AuthenticationResultDTO.AuthenticationStatus getAuthenticationStatusDTOFromAuthenticationStatus(
+    private String getAuthenticationStatusDTOFromAuthenticationStatus(
             AuthenticationResult.AuthenticationStatus authenticationStatus) {
 
         switch (authenticationStatus) {
             case SUCCESS:
-                return AuthenticationResultDTO.AuthenticationStatus.SUCCESS;
+                return "SUCCESS";
             case FAIL:
-                return AuthenticationResultDTO.AuthenticationStatus.FAIL;
+                return "FAIL";
             default:
                 return null;
         }
@@ -402,5 +534,23 @@ public class UUIDUserStoreManagerService {
             map.put(claimValue.getClaimURI(), claimValue.getValue());
         }
         return map;
+    }
+
+    private ClaimDTO[] convertClaimToClaimDTO(List<Claim> claims) {
+
+        List<ClaimDTO> ClaimDTOs = new ArrayList<>();
+        for (Claim claim : claims) {
+            ClaimDTO claimDTO = new ClaimDTO();
+            claimDTO.setClaimUri(claim.getClaimUri());
+            claimDTO.setValue(claim.getValue());
+            claimDTO.setDescription(claim.getDescription());
+            claimDTO.setDialectURI(claim.getDialectURI());
+            claimDTO.setDisplayOrder(claim.getDisplayOrder());
+            claimDTO.setRegEx(claim.getRegEx());
+            claimDTO.setSupportedByDefault(claim.isSupportedByDefault());
+            claimDTO.setRequired(claim.isRequired());
+            ClaimDTOs.add(claimDTO);
+        }
+        return ClaimDTOs.toArray(new ClaimDTO[0]);
     }
 }
