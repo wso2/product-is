@@ -18,8 +18,6 @@
 
 package org.wso2.identity.integration.test.oidc;
 
-import org.apache.commons.httpclient.params.HttpParams;
-import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -29,16 +27,13 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.BasicHttpParams;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONValue;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.oidc.bean.OIDCApplication;
 import org.wso2.identity.integration.test.oidc.bean.OIDCUser;
 import org.wso2.identity.integration.test.util.Utils;
@@ -46,47 +41,18 @@ import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.wso2.identity.integration.test.utils.OAuth2Constant.COMMON_AUTH_URL;
-import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT;
-
 /**
  * This test class tests OIDC SSO functionality for two replying party applications
  */
 public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
-
-    public static final String username = "oidcsessiontestuser";
-    public static final String password = "oidcsessiontestuser";
-    public static final String email = "oidcsessiontestuser@wso2.com";
-    public static final String firstName = "oidcsessiontestuser-first";
-    public static final String lastName = "oidcsessiontestuser-last";
-    public static final String role = "internal/everyone";
-    public static final String profile = "default";
-
-    public static final String playgroundAppOneAppName = "playground.appone";
-    public static final String playgroundAppOneAppCallBackUri = "http://localhost:" + TOMCAT_PORT + "/playground" + "" +
-            ".appone/oauth2client";
-    public static final String playgroundAppOneAppContext = "/playground.appone";
-
-    public static final String playgroundAppTwoAppName = "playground.apptwo";
-    public static final String playgroundAppTwoAppCallBackUri = "http://localhost:" + TOMCAT_PORT + "/playground" + "" +
-            ".apptwo/oauth2client";
-    public static final String playgroundAppTwoAppContext = "/playground.apptwo";
-
-    public static final String targetApplicationUrl = "http://localhost:" + TOMCAT_PORT + "%s";
-
-    public static final String emailClaimUri = "http://wso2.org/claims/emailaddress";
-    public static final String firstNameClaimUri = "http://wso2.org/claims/givenname";
-    public static final String lastNameClaimUri = "http://wso2.org/claims/lastname";
 
     protected OIDCUser user;
     protected Map<String, OIDCApplication> applications = new HashMap<>(2);
@@ -100,7 +66,6 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
 
     protected HttpClient client;
     protected List<NameValuePair> consentParameters = new ArrayList<>();
-
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -122,12 +87,7 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
 
         deleteUser(user);
         deleteApplications();
-
-        appMgtclient = null;
-        remoteUSMServiceClient = null;
-        adminClient = null;
-
-        client = null;
+        clear();
 
     }
 
@@ -135,7 +95,7 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
     public void testAuthzRequestWithoutValidSessionForIDENTITY5581() throws Exception {
 
         //When accessing the below endpoint from with invalid session it should provide a message with login_required
-        OIDCApplication application = applications.get(playgroundAppOneAppName);
+        OIDCApplication application = applications.get(OIDCUtilTest.playgroundAppOneAppName);
         URI uri = new URIBuilder(OAuth2Constant.APPROVAL_URL)
                 .addParameter("client_id", application.getClientId())
                 .addParameter("scope", "openid")
@@ -148,32 +108,31 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
         EntityUtils.consume(httpResponse.getEntity());
     }
 
-
-    @Test(groups = "wso2.is", description = "Initiate authentication request from playground.appone",dependsOnMethods = "testAuthzRequestWithoutValidSessionForIDENTITY5581")
+    @Test(groups = "wso2.is", description = "Initiate authentication request from playground.appone", dependsOnMethods = "testAuthzRequestWithoutValidSessionForIDENTITY5581")
     public void testSendAuthenticationRequestFromRP1() throws Exception {
 
-        testSendAuthenticationRequest(applications.get(playgroundAppOneAppName), true);
+        testSendAuthenticationRequest(applications.get(OIDCUtilTest.playgroundAppOneAppName), true, client, cookieStore);
     }
 
     @Test(groups = "wso2.is", description = "Authenticate for playground.appone", dependsOnMethods =
             "testSendAuthenticationRequestFromRP1")
     public void testAuthenticationFromRP1() throws Exception {
 
-        testAuthentication(applications.get(playgroundAppOneAppName));
+        testAuthentication(applications.get(OIDCUtilTest.playgroundAppOneAppName));
     }
 
     @Test(groups = "wso2.is", description = "Approve consent for playground.appone", dependsOnMethods =
             "testAuthenticationFromRP1")
     public void testConsentApprovalFromRP1() throws Exception {
 
-        testConsentApproval(applications.get(playgroundAppOneAppName));
+        testConsentApproval(applications.get(OIDCUtilTest.playgroundAppOneAppName));
     }
 
     @Test(groups = "wso2.is", description = "Get access token for playground.appone", dependsOnMethods =
             "testConsentApprovalFromRP1")
     public void testGetAccessTokenFromRP1() throws Exception {
 
-        testGetAccessToken(applications.get(playgroundAppOneAppName));
+        testGetAccessToken(applications.get(OIDCUtilTest.playgroundAppOneAppName));
     }
 
     @Test(groups = "wso2.is", description = "Get user claim values for playground.appone", dependsOnMethods =
@@ -186,21 +145,21 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
     @Test(groups = "wso2.is", description = "Initiate authentication request from playground.apptwo")
     public void testSendAuthenticationRequestFromRP2() throws Exception {
 
-        testSendAuthenticationRequest(applications.get(playgroundAppTwoAppName), false);
+        testSendAuthenticationRequest(applications.get(OIDCUtilTest.playgroundAppTwoAppName), false, client, cookieStore);
     }
 
     @Test(groups = "wso2.is", description = "Approve consent for playground.apptwo", dependsOnMethods =
             "testSendAuthenticationRequestFromRP2")
     public void testConsentApprovalFromRP2() throws Exception {
 
-        testConsentApproval(applications.get(playgroundAppTwoAppName));
+        testConsentApproval(applications.get(OIDCUtilTest.playgroundAppTwoAppName));
     }
 
     @Test(groups = "wso2.is", description = "Get access token for playground.apptwo", dependsOnMethods =
             "testConsentApprovalFromRP2")
     public void testGetAccessTokenFromRP2() throws Exception {
 
-        testGetAccessToken(applications.get(playgroundAppTwoAppName));
+        testGetAccessToken(applications.get(OIDCUtilTest.playgroundAppTwoAppName));
     }
 
     @Test(groups = "wso2.is", description = "Get user claim values for playground.apptwo", dependsOnMethods =
@@ -210,20 +169,13 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
         testUserClaims();
     }
 
-    private void testSendAuthenticationRequest(OIDCApplication application, boolean isFirstAuthenticationRequest)
+    public void testSendAuthenticationRequest(OIDCApplication application, boolean isFirstAuthenticationRequest,
+                                              HttpClient client, CookieStore cookieStore)
             throws Exception {
 
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-        urlParameters.add(new BasicNameValuePair("grantType", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
-        urlParameters.add(new BasicNameValuePair("consumerKey", application.getClientId()));
-        urlParameters.add(new BasicNameValuePair("callbackurl", application.getCallBackURL()));
-        urlParameters.add(new BasicNameValuePair("authorizeEndpoint", OAuth2Constant.APPROVAL_URL));
-        urlParameters.add(new BasicNameValuePair("authorize", OAuth2Constant.AUTHORIZE_PARAM));
-        urlParameters.add(new BasicNameValuePair("scope", OAuth2Constant.OAUTH2_SCOPE_OPENID + " " + OAuth2Constant
-                .OAUTH2_SCOPE_EMAIL));
-
+        List<NameValuePair> urlParameters = OIDCUtilTest.getNameValuePairs(application);
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters, String.format
-                (targetApplicationUrl, application.getApplicationContext() + OAuth2Constant.PlaygroundAppPaths
+                (OIDCUtilTest.targetApplicationUrl, application.getApplicationContext() + OAuth2Constant.PlaygroundAppPaths
                         .appUserAuthorizePath));
         Assert.assertNotNull(response, "Authorization request failed for " + application.getApplicationName() + ". "
                 + "Authorized response is null");
@@ -276,7 +228,6 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
                         (response, keyPositionMap);
                 Assert.assertNotNull(keyValues, "SessionDataKeyConsent key value is null for " + application
                         .getApplicationName());
-
 
                 sessionDataKeyConsent = keyValues.get(0).getValue();
                 Assert.assertNotNull(sessionDataKeyConsent, "Invalid sessionDataKeyConsent for " + application
@@ -344,7 +295,7 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
         Assert.assertNotNull(response, "Access token response is invalid for " + application.getApplicationName());
         EntityUtils.consume(response.getEntity());
 
-        response = sendPostRequest(client, String.format(targetApplicationUrl, application.getApplicationContext() +
+        response = sendPostRequest(client, String.format(OIDCUtilTest.targetApplicationUrl, application.getApplicationContext() +
                 OAuth2Constant.PlaygroundAppPaths.appAuthorizePath));
 
         Map<String, Integer> keyPositionMap = new HashMap<>(1);
@@ -357,7 +308,7 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
         Assert.assertNotNull(accessToken, "Access token not received for " + application.getApplicationName());
         EntityUtils.consume(response.getEntity());
 
-        response = sendPostRequest(client, String.format(targetApplicationUrl, application.getApplicationContext() +
+        response = sendPostRequest(client, String.format(OIDCUtilTest.targetApplicationUrl, application.getApplicationContext() +
                 OAuth2Constant.PlaygroundAppPaths.appAuthorizePath));
 
         keyPositionMap = new HashMap<>(1);
@@ -387,34 +338,35 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
         String email = ((org.json.simple.JSONObject) obj).get("email").toString();
 
         EntityUtils.consume(response.getEntity());
-        Assert.assertEquals(this.email, email, "Incorrect email claim value");
+        Assert.assertEquals("admin@wso2.com", email, "Incorrect email claim value");
     }
 
     protected void initUser() throws Exception {
 
-        user = new OIDCUser(username, password);
-        user.setProfile(profile);
-        user.addUserClaim(emailClaimUri, email);
-        user.addUserClaim(firstNameClaimUri, firstName);
-        user.addUserClaim(lastNameClaimUri, lastName);
-        user.addRole(role);
+        user = new OIDCUser(OIDCUtilTest.username, OIDCUtilTest.password);
+        user.setProfile(OIDCUtilTest.profile);
+        user.addUserClaim(OIDCUtilTest.emailClaimUri, OIDCUtilTest.email);
+        user.addUserClaim(OIDCUtilTest.firstNameClaimUri, OIDCUtilTest.firstName);
+        user.addUserClaim(OIDCUtilTest.lastNameClaimUri, OIDCUtilTest.lastName);
+        user.addRole(OIDCUtilTest.role);
     }
 
     protected void initApplications() throws Exception {
 
-        OIDCApplication playgroundApp = new OIDCApplication(playgroundAppOneAppName, playgroundAppOneAppContext,
-                playgroundAppOneAppCallBackUri);
-        playgroundApp.addRequiredClaim(emailClaimUri);
-        playgroundApp.addRequiredClaim(firstNameClaimUri);
-        playgroundApp.addRequiredClaim(lastNameClaimUri);
-        applications.put(playgroundAppOneAppName, playgroundApp);
+        OIDCApplication playgroundApp = new OIDCApplication(OIDCUtilTest.playgroundAppOneAppName,
+                OIDCUtilTest.playgroundAppOneAppContext,
+                OIDCUtilTest.playgroundAppOneAppCallBackUri);
+        playgroundApp.addRequiredClaim(OIDCUtilTest.emailClaimUri);
+        playgroundApp.addRequiredClaim(OIDCUtilTest.firstNameClaimUri);
+        playgroundApp.addRequiredClaim(OIDCUtilTest.lastNameClaimUri);
+        applications.put(OIDCUtilTest.playgroundAppOneAppName, playgroundApp);
 
-        playgroundApp = new OIDCApplication(playgroundAppTwoAppName, playgroundAppTwoAppContext,
-                playgroundAppTwoAppCallBackUri);
-        playgroundApp.addRequiredClaim(emailClaimUri);
-        playgroundApp.addRequiredClaim(firstNameClaimUri);
-        playgroundApp.addRequiredClaim(lastNameClaimUri);
-        applications.put(playgroundAppTwoAppName, playgroundApp);
+        playgroundApp = new OIDCApplication(OIDCUtilTest.playgroundAppTwoAppName, OIDCUtilTest.playgroundAppTwoAppContext,
+                OIDCUtilTest.playgroundAppTwoAppCallBackUri);
+        playgroundApp.addRequiredClaim(OIDCUtilTest.emailClaimUri);
+        playgroundApp.addRequiredClaim(OIDCUtilTest.firstNameClaimUri);
+        playgroundApp.addRequiredClaim(OIDCUtilTest.lastNameClaimUri);
+        applications.put(OIDCUtilTest.playgroundAppTwoAppName, playgroundApp);
     }
 
     protected void createApplications() throws Exception {
@@ -438,21 +390,8 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
         urlParameters.add(new BasicNameValuePair("accessEndpoint", OAuth2Constant.ACCESS_TOKEN_ENDPOINT));
         urlParameters.add(new BasicNameValuePair("consumerSecret", application.getClientSecret()));
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters, String.format
-                (targetApplicationUrl, application.getApplicationContext() + OAuth2Constant.PlaygroundAppPaths
+                (OIDCUtilTest.targetApplicationUrl, application.getApplicationContext() + OAuth2Constant.PlaygroundAppPaths
                         .accessTokenRequestPath));
-
-        return response;
-    }
-
-    @Override
-    public HttpResponse sendLoginPost(HttpClient client, String sessionDataKey) throws IOException {
-
-        List<NameValuePair> urlParameters = new ArrayList<>();
-        urlParameters.add(new BasicNameValuePair("username", user.getUsername()));
-        urlParameters.add(new BasicNameValuePair("password", user.getPassword()));
-        urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
-
-        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.COMMON_AUTH_URL);
 
         return response;
     }

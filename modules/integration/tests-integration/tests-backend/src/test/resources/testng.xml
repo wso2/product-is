@@ -20,6 +20,7 @@
 
     <test name="is-tests-default-configuration" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
+            <class name="org.wso2.identity.integration.test.oauth2.OAuth2DeviceFlowTestCase"/>
             <class name="org.wso2.identity.integration.test.consent.ConsentMgtTestCase"/>
             <class name="org.wso2.identity.integration.test.user.export.UserInfoExportTestCase" />
             <class name="org.wso2.identity.integration.test.consent.SelfSignUpConsentTest"/>
@@ -41,7 +42,10 @@
             <class name="org.wso2.identity.integration.test.user.store.config.UserStoreConfigAdminTestCase"/>
             <class name="org.wso2.identity.integration.test.user.store.config.UserStoreConfigTestForIDENTITY5573"/>
             <class name="org.wso2.identity.integration.test.user.store.config.UserStoreDeployerTestCase"/>
-<!--            <class name="org.wso2.identity.integration.test.user.store.JDBCUserStoreAddingTestCase"/>-->
+            <!--TODO Uncomment ClaimMappingsOnSecondaryUserStoreTestCase once
+            https://github.com/wso2/product-is/issues/7313 is fixed -->
+            <!--            <class name="org.wso2.identity.integration.test.user.store.ClaimMappingsOnSecondaryUserStoreTestCase"/>-->
+            <!--            <class name="org.wso2.identity.integration.test.user.store.JDBCUserStoreAddingTestCase"/>-->
 
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2RequestObjectSignatureValidationTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2IDTokenEncryptionTestCase"/>
@@ -54,6 +58,7 @@
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2XACMLScopeValidatorTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.PermissionBasedScopeValidatorTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCAuthzCodeIdTokenValidationTestCase"/>
+            <class name="org.wso2.identity.integration.test.oidc.OIDCSPWiseSkipLoginConsentTestCase"/>
 
             <!--TODO Remove following open id tests since deprecated-->
             <class name="org.wso2.identity.integration.test.openid.OpenIDAuthenticationTestCase" />
@@ -139,6 +144,8 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementOAuthSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementPassiveStsSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementWSTrustTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.script.library.v1.ScriptLibrarySuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.script.library.v1.ScriptLibraryFailureTest"/>
         </classes>
     </test>
 
@@ -149,6 +156,7 @@
             <class name="org.wso2.identity.integration.test.scim2.SCIM2MeTestCase"/>
             <class name="org.wso2.identity.integration.test.scim2.SCIM2MultiAttributeUserFilterTestCase"/>
             <class name="org.wso2.identity.integration.test.scim2.rest.api.SCIM2GroupTest"/>
+            <class name="org.wso2.identity.integration.test.scim2.rest.api.SCIMUserUpdateTest"/>
         </classes>
     </test>
 
@@ -199,6 +207,62 @@
             <class name="org.wso2.identity.integration.test.base.JDBCUserStoreInitializerTestCase"/>
             <class name="org.wso2.identity.integration.test.user.mgt.JDBCBasedUserMgtTestCase"/>
             <class name="org.wso2.identity.integration.test.user.mgt.JDBCUserStoreManagerTestCase"/>
+        </classes>
+    </test>
+    <test name="is-tests-read-only-userstore" preserve-order="true" parallel="false" group-by-instances="true" >
+        <classes>
+            <class name="org.wso2.identity.integration.test.base.ReadOnlyUserStoreInitializerTestCase"/>
+            <class name="org.wso2.identity.integration.test.scim2.rest.api.SCIMUserUpdateReadOnlyTest"/>
+            <class name="org.wso2.identity.integration.test.user.mgt.ReadOnlyLDAPUserStoreManagerTestCase"/>
+        </classes>
+    </test>
+    <test name="is-tests-oauth-jwt-token-gen-enabled" preserve-order="true" parallel="false" group-by-instances="true">
+        <classes>
+            <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceAuthCodeGrantOpenIdTestCase"/>
+        </classes>
+    </test>
+    <test name="is-analytics-tests-deprecated-config" preserve-order="true" parallel="false" group-by-instances="true">
+        <classes>
+            <class name="org.wso2.identity.integration.test.analytics.base.AnalyticsBaseTestCase"/>
+            <class name="org.wso2.identity.integration.test.analytics.authentication.AnalyticsLoginTestCase"/>
+            <class name="org.wso2.identity.integration.test.analytics.oauth.OAuth2TokenIssuance"/>
+        </classes>
+    </test>
+    <test name="is-analytics-tests-new-config" preserve-order="true" parallel="false" group-by-instances="true">
+        <classes>
+            <class name="org.wso2.identity.integration.test.analytics.authentication.AnalyticsLoginDataPublishHandlingTestCase"/>
+        </classes>
+    </test>
+    <test name="is-tests-email-username" preserve-order="true" parallel="false" group-by-instances="true">
+        <classes>
+            <class name="org.wso2.identity.integration.test.user.mgt.CARBON15051EmailLoginTestCase"/>
+        </classes>
+    </test>
+    <test name="is-tests-with-individual-configuration-changes" preserve-order="true" parallel="false" group-by-instances="true">
+        <classes>
+            <class name="org.wso2.identity.integration.test.saml.RegistryMountTestCase"/>
+            <class name="org.wso2.identity.integration.test.provisioning.DBSeperationTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceAuthCodeGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.oidc.OIDCFileBasedSkipLoginConsentTestCase"/>
+<!--            <class name="org.wso2.identity.integration.test.scim.IDENTITY4776SCIMServiceWithOAuthTestCase" />-->
+            <class name="org.wso2.identity.integration.test.identity.mgt.UserInformationRecoveryServiceTenantEmailUserTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.Oauth2HashAlgorithmTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.Oauth2PersistenceProcessorInsertTokenTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.Oauth2PersistenceProcessorTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceJWTGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.Oauth2TokenRenewalPerRequestTestCase"/>
+            <!--<class name="org.wso2.identity.integration.test.saml.SAMLECPSSOTestCase"/>-->
+            <class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileAdminTestCase"/>
+            <!-- TODO this test has a restart-->
+            <class name="org.wso2.identity.integration.test.auth.RiskBasedLoginTestCase" />
+            <class name="org.wso2.identity.integration.test.identity.mgt.AccountLockWhileCaseInsensitiveUserFalseTestCase"/>
+        </classes>
+    </test>
+    <test name="is-tests-saml-query-profile" preserve-order="true" parallel="false" group-by-instances="true">
+        <classes>
+            <class name="org.wso2.identity.integration.test.saml.SAMLQueryProfileTestBase"/>
+            <class name="org.wso2.identity.integration.test.saml.SAMLQueryProfileTestCase"/>
         </classes>
     </test>
     <test name="is-tests-read-only-userstore" preserve-order="true" parallel="false" group-by-instances="true" >

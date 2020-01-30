@@ -55,9 +55,12 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
 
     private static final String FAMILY_NAME_CLAIM_VALUE = "scim";
     private static final String GIVEN_NAME_CLAIM_VALUE = "user";
+    private static final String FAMILY_NAME_CLAIM_VALUE_1 = "scim1";
+    private static final String GIVEN_NAME_CLAIM_VALUE_1 = "user1";
     private static final String EMAIL_TYPE_WORK_CLAIM_VALUE = "scim2user@wso2.com";
     private static final String EMAIL_TYPE_HOME_CLAIM_VALUE = "scim2user@gmail.com";
     public static final String USERNAME = "scim2user";
+    public static final String USERNAME_1 = "scim2user1";
     public static final String PASSWORD = "testPassword";
     private ClaimMetadataManagementServiceClient claimMetadataManagementServiceClient = null;
     private String backendURL;
@@ -148,6 +151,64 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
 
         String usernameFromResponse = ((JSONObject) responseObj).get(USER_NAME_ATTRIBUTE).toString();
         assertEquals(usernameFromResponse, USERNAME);
+
+        userId = ((JSONObject) responseObj).get(ID_ATTRIBUTE).toString();
+        assertNotNull(userId);
+
+        String name = ((JSONObject) responseObj).get(NAME_ATTRIBUTE).toString();
+        assertNotNull(name);
+
+        String role = ((JSONObject) responseObj).get(ROLE_ATTRIBUTE).toString();
+        assertNotNull(role);
+    }
+
+    @Test
+    public void testCreateUserWithCharsetEncodingHeader() throws Exception {
+
+        HttpPost request = new HttpPost(getPath());
+        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+        request.addHeader(HttpHeaders.CONTENT_TYPE, "application/scim+json; charset=UTF-8");
+
+        JSONObject rootObject = new JSONObject();
+
+        JSONArray schemas = new JSONArray();
+        rootObject.put(SCHEMAS_ATTRIBUTE, schemas);
+
+        JSONObject names = new JSONObject();
+        names.put(FAMILY_NAME_ATTRIBUTE, FAMILY_NAME_CLAIM_VALUE_1);
+        names.put(GIVEN_NAME_ATTRIBUTE, GIVEN_NAME_CLAIM_VALUE_1);
+
+        rootObject.put(NAME_ATTRIBUTE, names);
+        rootObject.put(USER_NAME_ATTRIBUTE, USERNAME_1);
+
+        JSONObject emailWork = new JSONObject();
+        emailWork.put(TYPE_PARAM, EMAIL_TYPE_WORK_ATTRIBUTE);
+        emailWork.put(VALUE_PARAM, EMAIL_TYPE_WORK_CLAIM_VALUE);
+
+        JSONObject emailHome = new JSONObject();
+        emailHome.put(TYPE_PARAM, EMAIL_TYPE_HOME_ATTRIBUTE);
+        emailHome.put(VALUE_PARAM, EMAIL_TYPE_HOME_CLAIM_VALUE);
+
+        JSONArray emails = new JSONArray();
+        emails.add(emailWork);
+        emails.add(emailHome);
+
+        rootObject.put(EMAILS_ATTRIBUTE, emails);
+
+        rootObject.put(PASSWORD_ATTRIBUTE, PASSWORD);
+
+        StringEntity entity = new StringEntity(rootObject.toString());
+        request.setEntity(entity);
+
+        HttpResponse response = client.execute(request);
+        assertEquals(response.getStatusLine().getStatusCode(), 201, "User " +
+                "has not been created successfully");
+
+        Object responseObj = JSONValue.parse(EntityUtils.toString(response.getEntity()));
+        EntityUtils.consume(response.getEntity());
+
+        String usernameFromResponse = ((JSONObject) responseObj).get(USER_NAME_ATTRIBUTE).toString();
+        assertEquals(usernameFromResponse, USERNAME_1);
 
         userId = ((JSONObject) responseObj).get(ID_ATTRIBUTE).toString();
         assertNotNull(userId);
@@ -339,7 +400,7 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
         postRequest.setEntity(entity);
         HttpResponse postResponse = client.execute(postRequest);
         assertEquals(postResponse.getStatusLine().getStatusCode(), 201,
-                "User " + "has not been created in patch process successfully");
+                "User has not been created in patch process successfully.");
         Object responseObj = JSONValue.parse(EntityUtils.toString(postResponse.getEntity()));
         EntityUtils.consume(postResponse.getEntity());
         String userId = ((JSONObject) responseObj).get(ID_ATTRIBUTE).toString();
@@ -358,7 +419,7 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
         request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
         request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
         HttpResponse response = client.execute(request);
-        assertEquals(response.getStatusLine().getStatusCode(), 200, "User " + "has not been updated successfully");
+        assertEquals(response.getStatusLine().getStatusCode(), 200, "User has not been updated successfully.");
         Object responseObjAfterPatch = JSONValue.parse(EntityUtils.toString(response.getEntity()));
         EntityUtils.consume(response.getEntity());
         String updatedGivenName = ((JSONObject) responseObjAfterPatch).get(NAME_ATTRIBUTE).toString();
