@@ -1,0 +1,9 @@
+{
+  "name": "scope two",
+  "displayName": "Scope two",
+  "description": "Scope two",
+  "claims": [
+    "gender",
+    "email"
+  ]
+}
