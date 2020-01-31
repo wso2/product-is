@@ -1928,7 +1928,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.16.49</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.16.52</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -1950,16 +1950,16 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.7.12</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.2.117</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.2.119</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.4.5</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.4.6</identity.inbound.auth.sts.version>
-        <identity.inbound.provisioning.scim.version>5.5.8</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>1.4.37</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim.version>5.5.9</identity.inbound.provisioning.scim.version>
+        <identity.inbound.provisioning.scim2.version>1.4.38</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity workflow Versions -->
         <identity.user.workflow.version>5.3.6</identity.user.workflow.version>
         <identity.workflow.impl.bps.version>5.3.6</identity.workflow.impl.bps.version>
-        <identity.workflow.template.multisteps.version>5.3.6</identity.workflow.template.multisteps.version>
+        <identity.workflow.template.multisteps.version>5.3.7</identity.workflow.template.multisteps.version>
 
 
         <!-- Identity User Versions -->
@@ -2039,7 +2039,7 @@
         <carbon.identity.oauth.uma.version>1.1.8</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>0.9.10</identity.apps.version>
+        <identity.apps.version>0.9.18</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.3.0</charon.version>
