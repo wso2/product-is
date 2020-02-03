@@ -139,8 +139,8 @@ public class OIDCScopeManagementFailureTest extends OIDCScopeManagementBaseTest 
     @Test(dependsOnMethods = "testGetDeletedOIDCScope")
     public void testUpdateNotExistingOIDCScope() throws IOException {
 
-        Response response = getResponseOfJSONPost(OIDC_SCOPE_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + scopeId,
-                readResource("update-scope-request-body1.json"), new HashMap<>());
+        Response response = getResponseOfPut(OIDC_SCOPE_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + scopeId,
+                readResource("update-scope-request-body1.json"));
         validateHttpStatusCode(response, HttpStatus.SC_NOT_FOUND);
     }
 
