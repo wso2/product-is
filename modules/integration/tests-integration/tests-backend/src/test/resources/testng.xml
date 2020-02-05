@@ -257,6 +257,7 @@
             <!-- TODO this test has a restart-->
             <class name="org.wso2.identity.integration.test.auth.RiskBasedLoginTestCase" />
             <class name="org.wso2.identity.integration.test.identity.mgt.AccountLockWhileCaseInsensitiveUserFalseTestCase"/>
+            <class name="org.wso2.identity.integration.test.EmailOTPTestCase"/>
         </classes>
     </test>
     <test name="is-tests-saml-query-profile" preserve-order="true" parallel="false" group-by-instances="true">
