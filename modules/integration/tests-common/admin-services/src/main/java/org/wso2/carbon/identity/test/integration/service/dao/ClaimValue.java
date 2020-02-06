@@ -23,6 +23,9 @@ public class ClaimValue {
     private String claimUri;
     private String value;
 
+    public ClaimValue() {
+        super();
+    }
 
     public ClaimValue(String claimUri, String claimValue) {
         this.claimUri = claimUri;

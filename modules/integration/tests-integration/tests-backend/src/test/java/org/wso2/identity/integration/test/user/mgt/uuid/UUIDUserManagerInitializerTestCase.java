@@ -21,10 +21,7 @@ package org.wso2.identity.integration.test.user.mgt.uuid;
 import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
-import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
-import org.wso2.identity.integration.common.clients.UserManagementClient;
-import org.wso2.identity.integration.common.clients.usermgt.uuid.UUIDUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 import java.io.File;

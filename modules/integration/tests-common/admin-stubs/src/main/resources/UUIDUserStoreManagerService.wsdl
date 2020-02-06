@@ -1,15 +1,13 @@
 
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ax2454="http://dao.service.integration.test.identity.carbon.wso2.org/xsd" xmlns:ax2456="http://common.mgt.user.carbon.wso2.org/xsd" xmlns:ax2458="http://model.core.user.carbon.wso2.org/xsd" xmlns:ns="http://service.integration.test.identity.carbon.wso2.org" xmlns:ax2459="http://common.core.user.carbon.wso2.org/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" targetNamespace="http://service.integration.test.identity.carbon.wso2.org">
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ax2456="http://dao.service.integration.test.identity.carbon.wso2.org/xsd" xmlns:ns="http://service.integration.test.identity.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" targetNamespace="http://service.integration.test.identity.carbon.wso2.org">
     <wsdl:documentation>UUIDUserStoreManagerService</wsdl:documentation>
     <wsdl:types>
-        <xs:schema xmlns:ax2455="http://dao.service.integration.test.identity.carbon.wso2.org/xsd" xmlns:ax2457="http://common.mgt.user.carbon.wso2.org/xsd" xmlns:ax2461="http://model.core.user.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://service.integration.test.identity.carbon.wso2.org">
+        <xs:schema xmlns:ax2457="http://dao.service.integration.test.identity.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://service.integration.test.identity.carbon.wso2.org">
             <xs:import namespace="http://dao.service.integration.test.identity.carbon.wso2.org/xsd"/>
-            <xs:import namespace="http://common.mgt.user.carbon.wso2.org/xsd"/>
-            <xs:import namespace="http://model.core.user.carbon.wso2.org/xsd"/>
             <xs:element name="UUIDUserStoreManagerServiceUserStoreException">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="UserStoreException" nillable="true" type="ax2454:UserStoreException"/>
+                        <xs:element minOccurs="0" name="UserStoreException" nillable="true" type="ax2456:UserStoreException"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -25,7 +23,7 @@
             <xs:element name="getUserListWithIDResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2454:UserDTO"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2456:UserDTO"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -40,7 +38,7 @@
             <xs:element name="listUsersWithIDResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2454:UserDTO"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2456:UserDTO"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -56,7 +54,7 @@
             <xs:element name="getUserWithIDResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2454:UserDTO"/>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2456:UserDTO"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -98,7 +96,7 @@
             <xs:element name="getUserListOfRoleWithIDResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2454:UserDTO"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2456:UserDTO"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -129,7 +127,7 @@
             <xs:element name="getUserClaimValuesWithIDResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2454:ClaimDTO"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2456:ClaimDTO"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -226,7 +224,7 @@
             <xs:element name="addUserWithIDResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2454:UserDTO"/>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2456:UserDTO"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -235,7 +233,7 @@
                     <xs:sequence>
                         <xs:element minOccurs="0" name="roleName" nillable="true" type="xs:string"/>
                         <xs:element maxOccurs="unbounded" minOccurs="0" name="userIDList" nillable="true" type="xs:string"/>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="permissionsDTOs" nillable="true" type="ax2454:PermissionDTO"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="permissionsDTOs" nillable="true" type="ax2456:PermissionDTO"/>
                         <xs:element minOccurs="0" name="isSharedRole" type="xs:boolean"/>
                     </xs:sequence>
                 </xs:complexType>
@@ -267,7 +265,7 @@
             <xs:element name="getUsersClaimValuesWithIDResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2458:UniqueIDUserClaimSearchEntry"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2456:UniqueIDUserClaimSearchEntryDAO"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -281,7 +279,7 @@
             <xs:element name="getRoleListOfUsersWithIDResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2454:UserRoleListDTO"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2456:UserRoleListDTO"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -316,7 +314,7 @@
             <xs:element name="authenticateWithIDLoginIdentifier">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="loginIdentifiers" nillable="true" type="ax2454:LoginIdentifierDTO"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="loginIdentifiers" nillable="true" type="ax2456:LoginIdentifierDTO"/>
                         <xs:element minOccurs="0" name="domain" nillable="true" type="xs:string"/>
                         <xs:element minOccurs="0" name="credential" nillable="true" type="xs:string"/>
                     </xs:sequence>
@@ -325,7 +323,7 @@
             <xs:element name="authenticateWithIDLoginIdentifierResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2454:AuthenticationResultDTO"/>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2456:AuthenticationResultDTO"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -333,7 +331,6 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="userID" nillable="true" type="xs:string"/>
-                        <xs:element minOccurs="0" name="domain" nillable="true" type="xs:string"/>
                         <xs:element minOccurs="0" name="credential" nillable="true" type="xs:string"/>
                     </xs:sequence>
                 </xs:complexType>
@@ -341,7 +338,7 @@
             <xs:element name="authenticateWithIDUserIdResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2454:AuthenticationResultDTO"/>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2456:AuthenticationResultDTO"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -358,7 +355,7 @@
             <xs:element name="authenticateWithIDUsernameClaimResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2454:AuthenticationResultDTO"/>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2456:AuthenticationResultDTO"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -374,7 +371,7 @@
             <xs:element name="listUsersWithOffsetWithIDResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2454:UserDTO"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2456:UserDTO"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -392,14 +389,14 @@
             <xs:element name="getUserListWithOffsetWithIDResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2454:UserDTO"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2456:UserDTO"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
             <xs:element name="getUserListWithIDCondition">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="conditionDTO" nillable="true" type="ax2454:ConditionDTO"/>
+                        <xs:element minOccurs="0" name="conditionDTO" nillable="true" type="ax2456:ConditionDTO"/>
                         <xs:element minOccurs="0" name="domain" nillable="true" type="xs:string"/>
                         <xs:element minOccurs="0" name="profileName" nillable="true" type="xs:string"/>
                         <xs:element minOccurs="0" name="limit" type="xs:int"/>
@@ -412,7 +409,7 @@
             <xs:element name="getUserListWithIDConditionResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2454:UserDTO"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2456:UserDTO"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -428,7 +425,7 @@
             <xs:element name="getUserListOfRoleFilteredWithIDResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2454:UserDTO"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2456:UserDTO"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -449,45 +446,6 @@
                 </xs:complexType>
             </xs:element>
         </xs:schema>
-        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://common.core.user.carbon.wso2.org/xsd">
-            <xs:complexType name="User">
-                <xs:sequence>
-                    <xs:element maxOccurs="unbounded" minOccurs="0" name="attributes" nillable="true" type="xs:string"/>
-                    <xs:element minOccurs="0" name="displayName" nillable="true" type="xs:string"/>
-                    <xs:element minOccurs="0" name="domainQualifiedUsername" nillable="true" type="xs:string"/>
-                    <xs:element minOccurs="0" name="fullQualifiedUsername" nillable="true" type="xs:string"/>
-                    <xs:element minOccurs="0" name="preferredUsername" nillable="true" type="xs:string"/>
-                    <xs:element minOccurs="0" name="tenantDomain" nillable="true" type="xs:string"/>
-                    <xs:element minOccurs="0" name="userID" nillable="true" type="xs:string"/>
-                    <xs:element minOccurs="0" name="userStoreDomain" nillable="true" type="xs:string"/>
-                    <xs:element minOccurs="0" name="username" nillable="true" type="xs:string"/>
-                </xs:sequence>
-            </xs:complexType>
-        </xs:schema>
-        <xs:schema xmlns:ax2460="http://common.core.user.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://model.core.user.carbon.wso2.org/xsd">
-            <xs:import namespace="http://common.core.user.carbon.wso2.org/xsd"/>
-            <xs:complexType name="UniqueIDUserClaimSearchEntry">
-                <xs:sequence>
-                    <xs:element maxOccurs="unbounded" minOccurs="0" name="claims" nillable="true" type="xs:string"/>
-                    <xs:element minOccurs="0" name="user" nillable="true" type="ax2459:User"/>
-                    <xs:element minOccurs="0" name="userClaimSearchEntry" nillable="true" type="ax2458:UserClaimSearchEntry"/>
-                </xs:sequence>
-            </xs:complexType>
-            <xs:complexType name="UserClaimSearchEntry">
-                <xs:sequence>
-                    <xs:element maxOccurs="unbounded" minOccurs="0" name="claims" nillable="true" type="xs:string"/>
-                    <xs:element minOccurs="0" name="userName" nillable="true" type="xs:string"/>
-                </xs:sequence>
-            </xs:complexType>
-        </xs:schema>
-        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://common.mgt.user.carbon.wso2.org/xsd">
-            <xs:complexType name="ClaimValue">
-                <xs:sequence>
-                    <xs:element minOccurs="0" name="claimURI" nillable="true" type="xs:string"/>
-                    <xs:element minOccurs="0" name="value" nillable="true" type="xs:string"/>
-                </xs:sequence>
-            </xs:complexType>
-        </xs:schema>
         <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://dao.service.integration.test.identity.carbon.wso2.org/xsd">
             <xs:complexType name="UserStoreException">
                 <xs:sequence>
@@ -496,7 +454,7 @@
             </xs:complexType>
             <xs:complexType name="UserDTO">
                 <xs:sequence>
-                    <xs:element maxOccurs="unbounded" minOccurs="0" name="attributes" nillable="true" type="ax2454:Attribute"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="attributes" nillable="true" type="ax2456:Attribute"/>
                     <xs:element minOccurs="0" name="displayName" nillable="true" type="xs:string"/>
                     <xs:element minOccurs="0" name="domainQualifiedUsername" nillable="true" type="xs:string"/>
                     <xs:element minOccurs="0" name="fullQualifiedUsername" nillable="true" type="xs:string"/>
@@ -526,10 +484,29 @@
                     <xs:element minOccurs="0" name="value" nillable="true" type="xs:string"/>
                 </xs:sequence>
             </xs:complexType>
+            <xs:complexType name="ClaimValue">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="claimUri" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="claimValue" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
             <xs:complexType name="PermissionDTO">
                 <xs:sequence>
                     <xs:element minOccurs="0" name="action" nillable="true" type="xs:string"/>
                     <xs:element minOccurs="0" name="resourceId" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="UniqueIDUserClaimSearchEntryDAO">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="claims" nillable="true" type="ax2456:ClaimValue"/>
+                    <xs:element minOccurs="0" name="user" nillable="true" type="ax2456:UserDTO"/>
+                    <xs:element minOccurs="0" name="userClaimSearchEntry" nillable="true" type="ax2456:UserClaimSearchEntryDAO"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="UserClaimSearchEntryDAO">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="claims" nillable="true" type="ax2456:ClaimValue"/>
+                    <xs:element minOccurs="0" name="userName" nillable="true" type="xs:string"/>
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="UserRoleListDTO">
@@ -549,9 +526,9 @@
             <xs:complexType name="AuthenticationResultDTO">
                 <xs:sequence>
                     <xs:element minOccurs="0" name="authenticatedSubjectIdentifier" nillable="true" type="xs:string"/>
-                    <xs:element minOccurs="0" name="authenticatedUser" nillable="true" type="ax2454:UserDTO"/>
+                    <xs:element minOccurs="0" name="authenticatedUser" nillable="true" type="ax2456:UserDTO"/>
                     <xs:element minOccurs="0" name="authenticationStatus" nillable="true" type="xs:string"/>
-                    <xs:element minOccurs="0" name="failureReason" nillable="true" type="ax2454:FailureReasonDTO"/>
+                    <xs:element minOccurs="0" name="failureReason" nillable="true" type="ax2456:FailureReasonDTO"/>
                 </xs:sequence>
             </xs:complexType>
             <xs:complexType name="FailureReasonDTO">

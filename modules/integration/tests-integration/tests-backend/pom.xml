@@ -476,6 +476,20 @@
                             <goal>run</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>remove-old-test-resources</id>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <tasks>
+                                <delete>
+                                    <fileset dir="${basedir}/src/test/resources/artifacts/IS/userMgt/" includes="**/org.wso2.carbon.identity.test.integration.service*.jar"/>
+                                </delete>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -589,7 +603,7 @@
                                 <resource>
                                     <directory>${basedir}/../../tests-common/admin-services/target</directory>
                                     <includes>
-                                        <include>**/*alpha-SNAPSHOT.jar</include>
+                                        <include>**/org.wso2.carbon.identity.test.integration.service-${project.version}.jar</include>
                                     </includes>
                                 </resource>
                             </resources>

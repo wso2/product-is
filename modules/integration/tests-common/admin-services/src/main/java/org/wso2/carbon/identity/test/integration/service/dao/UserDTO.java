@@ -59,13 +59,21 @@ public class UserDTO {
 
     public String getDomainQualifiedUsername() {
 
-        return UserCoreUtil.addDomainToName(username, userStoreDomain);
+        if (username != null) {
+            return UserCoreUtil.addDomainToName(username, userStoreDomain);
+        } else {
+            return username;
+        }
     }
 
     public String getFullQualifiedUsername() {
 
         String domainQualifiedUsername = getDomainQualifiedUsername();
-        return UserCoreUtil.addTenantDomainToEntry(domainQualifiedUsername, tenantDomain);
+        if (domainQualifiedUsername != null) {
+            return UserCoreUtil.addTenantDomainToEntry(domainQualifiedUsername, tenantDomain);
+        }
+
+        return domainQualifiedUsername;
     }
 
     public String getPreferredUsername() {
