@@ -1,16 +1,7 @@
 package org.wso2.identity.integration.test.user.mgt.uuid;
 
-import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.identity.test.integration.service.stub.AuthenticationResultDTO;
-import org.wso2.carbon.identity.test.integration.service.stub.ClaimDTO;
-import org.wso2.carbon.identity.test.integration.service.stub.ConditionDTO;
-import org.wso2.carbon.identity.test.integration.service.stub.UserDTO;
-import org.wso2.carbon.user.core.model.xsd.UniqueIDUserClaimSearchEntry;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ReadWriteLDAPUUIDUMTestCase extends AbstractUUIDUMTestCase {
 

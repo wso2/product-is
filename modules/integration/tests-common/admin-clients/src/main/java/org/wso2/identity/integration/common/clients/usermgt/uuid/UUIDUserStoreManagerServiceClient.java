@@ -3,16 +3,16 @@ package org.wso2.identity.integration.common.clients.usermgt.uuid;
 import org.apache.axis2.AxisFault;
 import org.wso2.carbon.identity.test.integration.service.stub.AuthenticationResultDTO;
 import org.wso2.carbon.identity.test.integration.service.stub.ClaimDTO;
+import org.wso2.carbon.identity.test.integration.service.stub.ClaimValue;
 import org.wso2.carbon.identity.test.integration.service.stub.ConditionDTO;
 import org.wso2.carbon.identity.test.integration.service.stub.LoginIdentifierDTO;
 import org.wso2.carbon.identity.test.integration.service.stub.PermissionDTO;
 import org.wso2.carbon.identity.test.integration.service.stub.UUIDUserStoreManagerServiceStub;
 import org.wso2.carbon.identity.test.integration.service.stub.UUIDUserStoreManagerServiceUserStoreExceptionException;
+import org.wso2.carbon.identity.test.integration.service.stub.UniqueIDUserClaimSearchEntryDAO;
 import org.wso2.carbon.identity.test.integration.service.stub.UserDTO;
 import org.wso2.carbon.identity.test.integration.service.stub.UserRoleListDTO;
 import org.wso2.carbon.user.core.UserStoreException;
-import org.wso2.carbon.user.core.model.xsd.UniqueIDUserClaimSearchEntry;
-import org.wso2.carbon.user.mgt.common.xsd.ClaimValue;
 import org.wso2.identity.integration.common.clients.AuthenticateStub;
 
 import java.rmi.RemoteException;
@@ -55,7 +55,7 @@ public class UUIDUserStoreManagerServiceClient {
     public AuthenticationResultDTO authenticateWithIDUserId(String userID, String domain, String credential)
             throws UserStoreException, RemoteException, UUIDUserStoreManagerServiceUserStoreExceptionException {
 
-        return uuidUserStoreManagerServiceStub.authenticateWithIDUserId(userID, domain, credential);
+        return uuidUserStoreManagerServiceStub.authenticateWithIDUserId(userID, credential);
     }
 
     public AuthenticationResultDTO authenticateWithIDUsernameClaim(String preferredUserNameClaim,
@@ -106,8 +106,8 @@ public class UUIDUserStoreManagerServiceClient {
                 offset, sortBy, sortOrder);
     }
 
-    public UniqueIDUserClaimSearchEntry[] getUsersClaimValuesWithID(List<String> userIDs, List<String> claims,
-                                                                    String profileName) throws UserStoreException,
+    public UniqueIDUserClaimSearchEntryDAO[] getUsersClaimValuesWithID(List<String> userIDs, List<String> claims,
+                                                                       String profileName) throws UserStoreException,
             RemoteException, UUIDUserStoreManagerServiceUserStoreExceptionException {
 
         return uuidUserStoreManagerServiceStub.getUsersClaimValuesWithID(userIDs.toArray(new String[0]),

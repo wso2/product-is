@@ -3,14 +3,14 @@ package org.wso2.identity.integration.test.user.mgt.uuid;
 import org.testng.Assert;
 import org.wso2.carbon.identity.test.integration.service.stub.AuthenticationResultDTO;
 import org.wso2.carbon.identity.test.integration.service.stub.ClaimDTO;
+import org.wso2.carbon.identity.test.integration.service.stub.ClaimValue;
 import org.wso2.carbon.identity.test.integration.service.stub.ConditionDTO;
 import org.wso2.carbon.identity.test.integration.service.stub.LoginIdentifierDTO;
 import org.wso2.carbon.identity.test.integration.service.stub.PermissionDTO;
+import org.wso2.carbon.identity.test.integration.service.stub.UniqueIDUserClaimSearchEntryDAO;
 import org.wso2.carbon.identity.test.integration.service.stub.UserDTO;
 import org.wso2.carbon.identity.test.integration.service.stub.UserRoleListDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
-import org.wso2.carbon.user.core.model.xsd.UniqueIDUserClaimSearchEntry;
-import org.wso2.carbon.user.mgt.common.xsd.ClaimValue;
 import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.identity.integration.common.clients.usermgt.uuid.UUIDUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
@@ -23,11 +23,17 @@ public abstract class AbstractUUIDUMTestCase extends ISIntegrationTest {
     protected UUIDUserStoreManagerServiceClient userMgtClient;
     protected UserManagementClient oldUserMgtClient;
     protected AuthenticatorClient loginManger;
+
     protected String adminUsername;
     protected String adminPassword;
 
-    private String username = "user1";
+    private String user1Username = "user1";
+    private String user2Username = "user2";
+    private String user3Username = "user3";
+
     private String credential = "credential1";
+
+
     private String userId;
 
     protected void init() throws Exception {
@@ -43,8 +49,8 @@ public abstract class AbstractUUIDUMTestCase extends ISIntegrationTest {
 
     public void testAddUser() throws Exception {
 
-        UserDTO userDTO = userMgtClient.addUserWithID(username, credential, new String[0],
-                new org.wso2.carbon.user.mgt.common.xsd.ClaimValue[0], "default");
+        UserDTO userDTO = userMgtClient.addUserWithID(user1Username, credential, new String[0], new ClaimValue[0],
+                "default");
         this.userId = userDTO.getUserID();
         Assert.assertNotNull(userDTO);
     }
@@ -72,7 +78,7 @@ public abstract class AbstractUUIDUMTestCase extends ISIntegrationTest {
         LoginIdentifierDTO loginIdentifierDTO = new LoginIdentifierDTO();
         loginIdentifierDTO.setLoginIdentifierType("CLAIM_URI");
         loginIdentifierDTO.setLoginKey("http://wso2.org/claims/username");
-        loginIdentifierDTO.setLoginValue(username);
+        loginIdentifierDTO.setLoginValue(user1Username);
         loginIdentifierDTO.setProfileName("default");
 
         AuthenticationResultDTO authenticationResultDTO = userMgtClient
@@ -101,7 +107,7 @@ public abstract class AbstractUUIDUMTestCase extends ISIntegrationTest {
         String usernameClaim = "http://wso2.org/claims/username";
 
         AuthenticationResultDTO authenticationResultDTO = userMgtClient
-                .authenticateWithIDUsernameClaim(usernameClaim, username, credential, "default");
+                .authenticateWithIDUsernameClaim(usernameClaim, user1Username, credential, "default");
         Assert.assertNotNull(authenticationResultDTO);
         Assert.assertEquals(authenticationResultDTO.getAuthenticationStatus(), "SUCCESS");
     }
@@ -114,7 +120,7 @@ public abstract class AbstractUUIDUMTestCase extends ISIntegrationTest {
 
     public void testListAllUsers() throws Exception {
 
-        Assert.assertTrue(userNameExists(userMgtClient.listUsersWithID("user1", 100), "user1"),
+        Assert.assertTrue(userNameExists(userMgtClient.listUsersWithID(user1Username, 100), user1Username),
                 "List all users has failed");
     }
 
@@ -161,12 +167,17 @@ public abstract class AbstractUUIDUMTestCase extends ISIntegrationTest {
 
     public void testIsUserInRoleWithID() throws Exception {
 
-        Assert.assertTrue(userMgtClient.isUserInRoleWithID(userId, "role1"));
+        String roleName = "role2";
+        String[] userIdList = new String[]{userId};
+        PermissionDTO[] permissionDTOS = new PermissionDTO[0];
+
+        userMgtClient.addRoleWithID(roleName, userIdList, permissionDTOS, false);
+        Assert.assertTrue(userMgtClient.isUserInRoleWithID(userId, "role2"));
     }
 
     public void listUsersWithID() throws Exception {
 
-        String filter = "user1";
+        String filter = user1Username;
         UserDTO[] userDTO = userMgtClient.listUsersWithID(filter, 100, 0);
         Assert.assertNotNull(userDTO);
         Assert.assertTrue(userDTO.length > 0);
@@ -175,7 +186,7 @@ public abstract class AbstractUUIDUMTestCase extends ISIntegrationTest {
     public void testGetUserListWithID() throws Exception {
 
         String claimUri = "http://wso2.org/claims/username";
-        String claimValue = "user1";
+        String claimValue = user1Username;
         UserDTO[] userDTOS = userMgtClient.getUserListWithID(claimUri, claimValue, "default", 100, 0);
         Assert.assertNotNull(userDTOS);
         Assert.assertTrue(userDTOS.length > 0);
@@ -192,7 +203,7 @@ public abstract class AbstractUUIDUMTestCase extends ISIntegrationTest {
     public void testListUsers() throws Exception {
 
         boolean exists = false;
-        UserDTO[] usersList = userMgtClient.listUsersWithID("user1", 100);
+        UserDTO[] usersList = userMgtClient.listUsersWithID(user1Username, 100);
         for (UserDTO user : usersList) {
             if (this.userId.equals(user.getUserID())) {
                 exists = true;
@@ -204,8 +215,8 @@ public abstract class AbstractUUIDUMTestCase extends ISIntegrationTest {
 
     public void testAddRemoveUsersOfRole() throws Exception {
 
-        UserDTO userDTO = userMgtClient.addUserWithID("user2", "credential1", new String[0],
-                new org.wso2.carbon.user.mgt.common.xsd.ClaimValue[0], "default");
+        UserDTO userDTO = userMgtClient.addUserWithID(user2Username, "credential1", new String[0], new ClaimValue[0],
+                "default");
 
         userMgtClient.addRoleWithID("umRole3", new String[]{userDTO.getUserID()}, new PermissionDTO[]{}, false);
 
@@ -214,15 +225,17 @@ public abstract class AbstractUUIDUMTestCase extends ISIntegrationTest {
 
         userMgtClient.updateUserListOfRoleWithID("umRole3", newUsers, deletedUsers);
 
-        Assert.assertTrue(userNameExists(userMgtClient.getUserListOfRoleWithID("umRole3"), "user1"),
-                "Getting user added to admin role failed");
-        Assert.assertFalse(userNameExists(userMgtClient.getUserListOfRoleWithID("umRole3", "user2", 0), "user2"),
-                "User user2 still exists in the admin role");
+        Assert.assertTrue(userNameExists(userMgtClient.getUserListOfRoleWithID("umRole3"), user1Username),
+                "Getting user added to umRole3 role failed");
+        Assert.assertFalse(userNameExists(userMgtClient.getUserListOfRoleWithID("umRole3"), user2Username),
+                "User user2 still exists in the umRole3 role");
 
         // Clean up the modified users of role and test it.
-        userMgtClient.updateUserListOfRoleWithID("umRole3", null, newUsers);
-        Assert.assertFalse(userNameExists(userMgtClient.getUserListOfRoleWithID("umRole3", "user1", 0), "user1"),
-                "User user1 still exists in the admin role");
+        userMgtClient.updateUserListOfRoleWithID("umRole3", deletedUsers, newUsers);
+        Assert.assertTrue(userNameExists(userMgtClient.getUserListOfRoleWithID("umRole3"), user2Username),
+                "Getting user added to umRole3 role failed");
+        Assert.assertFalse(userNameExists(userMgtClient.getUserListOfRoleWithID("umRole3"), user1Username),
+                "User user1 still exists in the umRole3 role");
     }
 
     public void testAddRemoveRolesOfUser() throws Exception {
@@ -250,18 +263,20 @@ public abstract class AbstractUUIDUMTestCase extends ISIntegrationTest {
 
         userMgtClient.addRoleWithID("umRole4", new String[]{userId}, new PermissionDTO[]{}, false);
 
-        UserDTO userDTO = userMgtClient.addUserWithID("user3", "credential1", new String[0],
-                new org.wso2.carbon.user.mgt.common.xsd.ClaimValue[0], "default");
+        UserDTO userDTO = userMgtClient.addUserWithID(user3Username, "credential1", new String[0], new ClaimValue[0],
+                "default");
 
         String[] userList = new String[]{userDTO.getUserID()};
 
         userMgtClient.updateUserListOfRoleWithID("umRole4", null, userList);
-        Assert.assertTrue(userNameExists(userMgtClient.getUserListOfRoleWithID("umRole4", "user1", 0), "user1"),
+        Assert.assertTrue(userNameExists(userMgtClient.getUserListOfRoleWithID("umRole4", user1Username, 1), user1Username),
                 "Adding user1 to role has failed");
+        Assert.assertTrue(userNameExists(userMgtClient.getUserListOfRoleWithID("umRole4", user3Username, 1), user3Username),
+                "Adding user3 to role has failed");
 
         userMgtClient.updateUserListOfRoleWithID("umRole4", new String[] {userDTO.getUserID()}, null);
-        Assert.assertTrue(userNameExists(userMgtClient.getUserListOfRoleWithID("umRole4", "user3", 0), "user3"),
-                "Adding user3 to role has failed");
+        Assert.assertFalse(userNameExists(userMgtClient.getUserListOfRoleWithID("umRole4", user3Username, 1), user3Username),
+                "Removing user3 from role has failed");
     }
 
     public void testGetRolesOfCurrentUser() throws Exception {
@@ -283,8 +298,8 @@ public abstract class AbstractUUIDUMTestCase extends ISIntegrationTest {
         String claimURIStr = "http://wso2.org/claims/lastname";
 
         ClaimValue claimValue = new ClaimValue();
-        claimValue.setClaimURI(claimURIStr);
-        claimValue.setValue(claimValueStr);
+        claimValue.setClaimUri(claimURIStr);
+        claimValue.setClaimValue(claimValueStr);
 
         userMgtClient.setUserClaimValuesWithID(userId, new ClaimValue[]{claimValue}, "default");
 
@@ -301,11 +316,11 @@ public abstract class AbstractUUIDUMTestCase extends ISIntegrationTest {
     public void testListUserByClaim() throws Exception {
 
         ClaimValue claimValue = new ClaimValue();
-        claimValue.setClaimURI("http://wso2.org/claims/lastname");
-        claimValue.setValue("user3");
+        claimValue.setClaimUri("http://wso2.org/claims/lastname");
+        claimValue.setClaimValue(user3Username);
 
         userMgtClient.setUserClaimValuesWithID(userId, new ClaimValue[]{claimValue}, "default");
-        UserDTO[] userDTOS = userMgtClient.getUserListWithID(claimValue.getClaimURI(), "user3", "default");
+        UserDTO[] userDTOS = userMgtClient.getUserListWithID(claimValue.getClaimUri(), user3Username, "default");
 
         Assert.assertNotNull(userDTOS);
         Assert.assertTrue(userDTOS.length > 0);
@@ -313,16 +328,20 @@ public abstract class AbstractUUIDUMTestCase extends ISIntegrationTest {
 
     public void testDeleteUserClaimValuesWithID() throws Exception {
 
-        String claimUri = "http://wso2.org/claims/lastname";
-        String claimValue = "lastname";
+        String claimValueStr = "Sri Lanka";
+        String claimURIStr = "http://wso2.org/claims/country";
 
-        userMgtClient.setUserClaimValueWithID(userId, claimUri, claimValue, "default");
-        userMgtClient.deleteUserClaimValuesWithID(userId, new String[] {claimUri}, "default");
+        ClaimValue claimValue = new ClaimValue();
+        claimValue.setClaimUri(claimURIStr);
+        claimValue.setClaimValue(claimValueStr);
+
+        userMgtClient.setUserClaimValuesWithID(userId, new ClaimValue[]{claimValue}, "default");
+        userMgtClient.deleteUserClaimValuesWithID(userId, new String[] {claimURIStr}, "default");
 
         ClaimDTO [] claimDTOs = userMgtClient.getUserClaimValuesWithID(userId, "default");
 
         for (ClaimDTO claimDTO : claimDTOs) {
-            if (claimUri.equals(claimDTO.getClaimUri())) {
+            if (claimURIStr.equals(claimDTO.getClaimUri())) {
                 Assert.assertNotEquals(claimValue, claimDTO.getValue());
                 break;
             }
@@ -347,7 +366,7 @@ public abstract class AbstractUUIDUMTestCase extends ISIntegrationTest {
         List<String> claims = new ArrayList<>();
         claims.add("http://wso2.org/claims/username");
 
-        UniqueIDUserClaimSearchEntry [] uniqueIDUserClaimSearchEntries = userMgtClient
+        UniqueIDUserClaimSearchEntryDAO[] uniqueIDUserClaimSearchEntries = userMgtClient
                 .getUsersClaimValuesWithID(userIds, claims, "default");
         Assert.assertNotNull(uniqueIDUserClaimSearchEntries);
         Assert.assertTrue(uniqueIDUserClaimSearchEntries.length > 0);
@@ -373,13 +392,22 @@ public abstract class AbstractUUIDUMTestCase extends ISIntegrationTest {
 
     public void testUpdateCredentialWithID() throws Exception {
 
+        AuthenticationResultDTO authenticationResultDTO = userMgtClient.authenticateWithIDUserId(userId, "PRIMARY",
+                credential);
+
+        Assert.assertNotNull(authenticationResultDTO);
+        Assert.assertEquals(authenticationResultDTO.getAuthenticationStatus(), "SUCCESS");
+
         String newCredential = "credentia2";
         userMgtClient.updateCredentialWithID(userId, newCredential, credential);
 
-        AuthenticationResultDTO authenticationResultDTO = userMgtClient.authenticateWithIDUserId(userId, "PRIMARY",
+        authenticationResultDTO = userMgtClient.authenticateWithIDUserId(userId, "PRIMARY",
                 newCredential);
         Assert.assertNotNull(authenticationResultDTO);
         Assert.assertEquals(authenticationResultDTO.getAuthenticationStatus(), "SUCCESS");
+
+        // Revert again.
+        userMgtClient.updateCredentialWithID(userId, credential, newCredential);
     }
 
     public void testUpdateCredentialByAdminWithID() throws Exception {
@@ -391,6 +419,9 @@ public abstract class AbstractUUIDUMTestCase extends ISIntegrationTest {
                 newCredential);
         Assert.assertNotNull(authenticationResultDTO);
         Assert.assertEquals(authenticationResultDTO.getAuthenticationStatus(), "SUCCESS");
+
+        // Revert again.
+        userMgtClient.updateCredentialByAdminWithID(userId, credential);
     }
 
     /**
@@ -401,6 +432,10 @@ public abstract class AbstractUUIDUMTestCase extends ISIntegrationTest {
      * @return
      */
     protected boolean userNameExists(UserDTO[] userDTOS, String inputName) {
+
+        if (userDTOS == null) {
+            return false;
+        }
 
         boolean exists = false;
 

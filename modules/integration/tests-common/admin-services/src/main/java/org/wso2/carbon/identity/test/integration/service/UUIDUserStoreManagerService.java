@@ -6,10 +6,13 @@ import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.identity.test.integration.service.dao.Attribute;
 import org.wso2.carbon.identity.test.integration.service.dao.AuthenticationResultDTO;
 import org.wso2.carbon.identity.test.integration.service.dao.ClaimDTO;
+import org.wso2.carbon.identity.test.integration.service.dao.ClaimValue;
 import org.wso2.carbon.identity.test.integration.service.dao.ConditionDTO;
 import org.wso2.carbon.identity.test.integration.service.dao.FailureReasonDTO;
 import org.wso2.carbon.identity.test.integration.service.dao.LoginIdentifierDTO;
 import org.wso2.carbon.identity.test.integration.service.dao.PermissionDTO;
+import org.wso2.carbon.identity.test.integration.service.dao.UniqueIDUserClaimSearchEntryDAO;
+import org.wso2.carbon.identity.test.integration.service.dao.UserClaimSearchEntryDAO;
 import org.wso2.carbon.identity.test.integration.service.dao.UserDTO;
 import org.wso2.carbon.identity.test.integration.service.dao.UserRoleListDTO;
 import org.wso2.carbon.identity.test.integration.service.dao.UserStoreException;
@@ -23,7 +26,7 @@ import org.wso2.carbon.user.core.common.LoginIdentifier;
 import org.wso2.carbon.user.core.common.User;
 import org.wso2.carbon.user.core.model.Condition;
 import org.wso2.carbon.user.core.model.UniqueIDUserClaimSearchEntry;
-import org.wso2.carbon.user.mgt.common.ClaimValue;
+import org.wso2.carbon.user.core.model.UserClaimSearchEntry;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,12 +66,12 @@ public class UUIDUserStoreManagerService {
         }
     }
 
-    public AuthenticationResultDTO authenticateWithIDUserId(String userID, String domain, String credential)
+    public AuthenticationResultDTO authenticateWithIDUserId(String userID, String credential)
             throws UserStoreException {
 
         try {
             return getAuthenticationResultDTOFromAuthenticationResult(getUserStoreManager()
-                    .authenticateWithID(userID, domain, credential));
+                    .authenticateWithID(userID, credential));
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
             throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
         }
@@ -149,12 +152,13 @@ public class UUIDUserStoreManagerService {
         }
     }
 
-    public List<UniqueIDUserClaimSearchEntry> getUsersClaimValuesWithID(List<String> userIDs, List<String> claims,
-                                                                        String profileName)
+    public UniqueIDUserClaimSearchEntryDAO[] getUsersClaimValuesWithID(String [] userIDs, String [] claims,
+                                                                       String profileName)
             throws UserStoreException {
 
         try {
-            return getUserStoreManager().getUsersClaimValuesWithID(userIDs, claims, profileName);
+            return getClaimSearchEntryDAOFromClaimSearchEntry(getUserStoreManager().getUsersClaimValuesWithID(Arrays.asList(userIDs), Arrays.asList(claims),
+                    profileName).toArray(new UniqueIDUserClaimSearchEntry[0]));
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
             throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
         }
@@ -519,9 +523,7 @@ public class UUIDUserStoreManagerService {
         int i = 0;
         while (ite.hasNext()) {
             Map.Entry<String, String> entry = ite.next();
-            claims[i] = new ClaimValue();
-            claims[i].setClaimURI(entry.getKey());
-            claims[i].setValue(entry.getValue());
+            claims[i] = new ClaimValue(entry.getKey(), entry.getValue());
             i++;
         }
         return claims;
@@ -531,7 +533,7 @@ public class UUIDUserStoreManagerService {
 
         Map<String, String> map = new HashMap<>();
         for (ClaimValue claimValue : values) {
-            map.put(claimValue.getClaimURI(), claimValue.getValue());
+            map.put(claimValue.getClaimUri(), claimValue.getClaimValue());
         }
         return map;
     }
@@ -552,5 +554,42 @@ public class UUIDUserStoreManagerService {
             ClaimDTOs.add(claimDTO);
         }
         return ClaimDTOs.toArray(new ClaimDTO[0]);
+    }
+
+    private UniqueIDUserClaimSearchEntryDAO [] getClaimSearchEntryDAOFromClaimSearchEntry(
+            UniqueIDUserClaimSearchEntry[] claimSearchEntries) {
+
+        UniqueIDUserClaimSearchEntryDAO [] claimSearchEntryDAOS =
+                new UniqueIDUserClaimSearchEntryDAO[claimSearchEntries.length];
+        for(int i = 0; i < claimSearchEntries.length; i++) {
+            claimSearchEntryDAOS[i] = getClaimSearchEntryDAOFromClaimSearchEntry(claimSearchEntries[i]);
+        }
+
+        return claimSearchEntryDAOS;
+    }
+
+    private UniqueIDUserClaimSearchEntryDAO getClaimSearchEntryDAOFromClaimSearchEntry(UniqueIDUserClaimSearchEntry
+                                                                                               claimSearchEntry) {
+
+        UniqueIDUserClaimSearchEntryDAO uniqueIDUserClaimSearchEntryDAO = new UniqueIDUserClaimSearchEntryDAO();
+
+        ClaimValue[] claimValues = convertMapToClaimValue(claimSearchEntry.getClaims());
+
+        uniqueIDUserClaimSearchEntryDAO.setClaims(claimValues);
+        uniqueIDUserClaimSearchEntryDAO.setUser(getUserDTO(claimSearchEntry.getUser()));
+        uniqueIDUserClaimSearchEntryDAO.setUserClaimSearchEntry(getClaimEntryDAOFromClaimEntry(claimSearchEntry
+                .getUserClaimSearchEntry()));
+        return uniqueIDUserClaimSearchEntryDAO;
+    }
+
+    private UserClaimSearchEntryDAO getClaimEntryDAOFromClaimEntry(UserClaimSearchEntry userClaimSearchEntry) {
+
+        UserClaimSearchEntryDAO userClaimSearchEntryDAO = new UserClaimSearchEntryDAO();
+        userClaimSearchEntry.setUserName(userClaimSearchEntry.getUserName());
+
+        ClaimValue[] claimValues = convertMapToClaimValue(userClaimSearchEntry.getClaims());
+
+        userClaimSearchEntryDAO.setClaims(claimValues);
+        return userClaimSearchEntryDAO;
     }
 }
