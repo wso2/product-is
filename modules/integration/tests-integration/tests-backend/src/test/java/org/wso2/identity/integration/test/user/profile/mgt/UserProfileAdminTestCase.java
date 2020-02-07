@@ -81,6 +81,9 @@ public class UserProfileAdminTestCase extends ISIntegrationTest {
     
     @Test(priority = 1, groups = "wso2.is", description = "Check get user profiles")
     public void testGetUserProfiles() throws Exception {
+        super.init();
+        userProfileMgtClient = new UserProfileMgtServiceClient(backendURL, sessionCookie);
+
         UserProfileDTO[] profiles = userProfileMgtClient.getUserProfiles(userId1);
         String profile = null;
         
@@ -92,6 +95,9 @@ public class UserProfileAdminTestCase extends ISIntegrationTest {
     
     @Test(priority = 2, groups = "wso2.is", description = "Check get user profile")
     public void testGetUserProfile() throws Exception {
+        super.init();
+        userProfileMgtClient = new UserProfileMgtServiceClient(backendURL, sessionCookie);
+
         UserProfileDTO profile = userProfileMgtClient.getUserProfile(userId1, "default");
         UserFieldDTO[] fields = profile.getFieldValues(); 
         String displayValue = null;
@@ -113,6 +119,10 @@ public class UserProfileAdminTestCase extends ISIntegrationTest {
      */
     @Test(priority = 3, groups = "wso2.is", description = "Check set user profiles")
     public void testSetUserProfile() throws Exception {
+        super.init();
+        logManger = new AuthenticatorClient(backendURL);
+        userProfileMgtClient = new UserProfileMgtServiceClient(backendURL, sessionCookie);
+
         logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
                         isServer.getSuperTenant().getTenantAdmin().getPassword(),
                         isServer.getInstance().getHosts().get("default"));
@@ -157,6 +167,10 @@ public class UserProfileAdminTestCase extends ISIntegrationTest {
 
     @Test(priority = 4, groups = "wso2.is", description = "Check Fed User Account Association")
     public void testUserAccountAssociationAdd() throws Exception {
+
+        super.init();
+        userProfileMgtClient = new UserProfileMgtServiceClient(backendURL, sessionCookie);
+        userMgtClient = new UserManagementClient(backendURL, sessionCookie);
 
         String username = "testUser2";
         String password = "passWord1@";
