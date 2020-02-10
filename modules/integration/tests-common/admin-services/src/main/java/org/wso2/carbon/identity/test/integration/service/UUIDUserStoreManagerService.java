@@ -157,8 +157,9 @@ public class UUIDUserStoreManagerService {
             throws UserStoreException {
 
         try {
-            return getClaimSearchEntryDAOFromClaimSearchEntry(getUserStoreManager().getUsersClaimValuesWithID(Arrays.asList(userIDs), Arrays.asList(claims),
-                    profileName).toArray(new UniqueIDUserClaimSearchEntry[0]));
+            return getClaimSearchEntryDAOFromClaimSearchEntry(getUserStoreManager()
+                    .getUsersClaimValuesWithID(Arrays.asList(userIDs), Arrays.asList(claims), profileName)
+                    .toArray(new UniqueIDUserClaimSearchEntry[0]));
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
             throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
         }
