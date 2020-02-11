@@ -203,11 +203,9 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.wso2.carbon.extension.identity.authenticator.outbound.emailotp</groupId>
-                                    <artifactId>
-                                        org.wso2.carbon.extension.identity.authenticator.emailotp.endpoint
-                                    </artifactId>
-                                    <version>${authenticator.emailotp.version}</version>
+                                    <groupId>org.wso2.identity.apps</groupId>
+                                    <artifactId>email-otp-authentication-portal</artifactId>
+                                    <version>${identity.apps.version}</version>
                                     <type>war</type>
                                     <overWrite>true</overWrite>
                                     <destFileName>emailotpauthenticationendpoint.war</destFileName>
@@ -228,11 +226,9 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.wso2.carbon.extension.identity.authenticator.outbound.smsotp</groupId>
-                                    <artifactId>
-                                        org.wso2.carbon.extension.identity.authenticator.smsotp.endpoint
-                                    </artifactId>
-                                    <version>${authenticator.smsotp.version}</version>
+                                    <groupId>org.wso2.identity.apps</groupId>
+                                    <artifactId>sms-otp-authentication-portal</artifactId>
+                                    <version>${identity.apps.version}</version>
                                     <type>war</type>
                                     <overWrite>true</overWrite>
                                     <destFileName>smsotpauthenticationendpoint.war</destFileName>
@@ -253,11 +249,9 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.wso2.carbon.extension.identity.authenticator.outbound.totp</groupId>
-                                    <artifactId>
-                                        org.wso2.carbon.extension.identity.authenticator.totp.endpoint
-                                    </artifactId>
-                                    <version>${authenticator.totp.version}</version>
+                                    <groupId>org.wso2.identity.apps</groupId>
+                                    <artifactId>totp-authentication-portal</artifactId>
+                                    <version>${identity.apps.version}</version>
                                     <type>war</type>
                                     <overWrite>true</overWrite>
                                     <destFileName>totpauthenticationendpoint.war</destFileName>
@@ -277,11 +271,9 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.wso2.carbon.extension.identity.authenticator</groupId>
-                                    <artifactId>
-                                        org.wso2.carbon.extension.identity.authenticator.x509Certificate.endpoint
-                                    </artifactId>
-                                    <version>${authenticator.x509.version}</version>
+                                    <groupId>org.wso2.identity.apps</groupId>
+                                    <artifactId>x509-certificate-authentication-portal</artifactId>
+                                    <version>${identity.apps.version}</version>
                                     <type>war</type>
                                     <overWrite>true</overWrite>
                                     <destFileName>x509certificateauthenticationendpoint.war</destFileName>
