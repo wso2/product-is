@@ -203,8 +203,6 @@ public class JDBCUUIDUMTestCase extends AbstractUUIDUMTestCase {
 
     @Test(dependsOnMethods = "testAddUser")
     public void testGetUserListConditionWithID() throws Exception {
-
-        super.testGetUserListConditionWithID();
     }
 
     @Test(dependsOnMethods = "testAddUser")
