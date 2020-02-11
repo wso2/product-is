@@ -17,6 +17,7 @@
 package org.wso2.identity.integration.test.user.store;
 
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.identity.claim.metadata.mgt.stub.ClaimMetadataManagementServiceClaimMetadataException;
@@ -51,6 +52,12 @@ public class ClaimMappingsOnSecondaryUserStoreTestCase extends ISIntegrationTest
         super.init();
         userStoreConfigAdminServiceClient = new UserStoreConfigAdminServiceClient(backendURL, sessionCookie);
         claimMetadataManagementServiceClient = new ClaimMetadataManagementServiceClient(backendURL, sessionCookie);
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void atEnd() throws Exception {
+
+        claimMetadataManagementServiceClient.removeLocalClaim(CLAIM_URI);
     }
 
     private void addLocalClaims() throws RemoteException, ClaimMetadataManagementServiceClaimMetadataException {
