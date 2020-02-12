@@ -1,15 +1,5 @@
 [
   {
-    "id": "QWNjb3VudExvY2tBZG1pbg",
-    "displayName": "AccountLockAdmin",
-    "self": "/t/carbon.super/api/server/v1/email/template-types/QWNjb3VudExvY2tBZG1pbg"
-  },
-  {
-    "id": "QWNjb3VudEVuYWJsZQ",
-    "displayName": "AccountEnable",
-    "self": "/t/carbon.super/api/server/v1/email/template-types/QWNjb3VudEVuYWJsZQ"
-  },
-  {
     "id": "cmVzZW5kQXNrUGFzc3dvcmQ",
     "displayName": "resendAskPassword",
     "self": "/t/carbon.super/api/server/v1/email/template-types/cmVzZW5kQXNrUGFzc3dvcmQ"
@@ -25,26 +15,6 @@
     "self": "/t/carbon.super/api/server/v1/email/template-types/QWNjb3VudExvY2tGYWlsZWRBdHRlbXB0"
   },
   {
-    "id": "cmVzZW5kQWRtaW5Gb3JjZWRQYXNzd29yZFJlc2V0",
-    "displayName": "resendAdminForcedPasswordReset",
-    "self": "/t/carbon.super/api/server/v1/email/template-types/cmVzZW5kQWRtaW5Gb3JjZWRQYXNzd29yZFJlc2V0"
-  },
-  {
-    "id": "QWNjb3VudERpc2FibGU",
-    "displayName": "AccountDisable",
-    "self": "/t/carbon.super/api/server/v1/email/template-types/QWNjb3VudERpc2FibGU"
-  },
-  {
-    "id": "QWRtaW5Gb3JjZWRQYXNzd29yZFJlc2V0",
-    "displayName": "AdminForcedPasswordReset",
-    "self": "/t/carbon.super/api/server/v1/email/template-types/QWRtaW5Gb3JjZWRQYXNzd29yZFJlc2V0"
-  },
-  {
-    "id": "RW1haWxDb25maXJt",
-    "displayName": "EmailConfirm",
-    "self": "/t/carbon.super/api/server/v1/email/template-types/RW1haWxDb25maXJt"
-  },
-  {
     "id": "VGVtcG9yYXJ5UGFzc3dvcmQ",
     "displayName": "TemporaryPassword",
     "self": "/t/carbon.super/api/server/v1/email/template-types/VGVtcG9yYXJ5UGFzc3dvcmQ"
@@ -53,16 +23,6 @@
     "id": "UmVzZW5kQWNjb3VudENvbmZpcm1hdGlvbg",
     "displayName": "ResendAccountConfirmation",
     "self": "/t/carbon.super/api/server/v1/email/template-types/UmVzZW5kQWNjb3VudENvbmZpcm1hdGlvbg"
-  },
-  {
-    "id": "aW5pdGlhdGVSZWNvdmVyeQ",
-    "displayName": "initiateRecovery",
-    "self": "/t/carbon.super/api/server/v1/email/template-types/aW5pdGlhdGVSZWNvdmVyeQ"
-  },
-  {
-    "id": "T25lVGltZVBhc3N3b3Jk",
-    "displayName": "OneTimePassword",
-    "self": "/t/carbon.super/api/server/v1/email/template-types/T25lVGltZVBhc3N3b3Jk"
   },
   {
     "id": "QWNjb3VudFVubG9ja1RpbWVCYXNlZA",
@@ -105,11 +65,6 @@
     "self": "/t/carbon.super/api/server/v1/email/template-types/cmVzZW5kUGFzc3dvcmRSZXNldA"
   },
   {
-    "id": "UGFzc3dvcmRSZXNldA",
-    "displayName": "PasswordReset",
-    "self": "/t/carbon.super/api/server/v1/email/template-types/UGFzc3dvcmRSZXNldA"
-  },
-  {
     "id": "QXNrUGFzc3dvcmQ",
     "displayName": "AskPassword",
     "self": "/t/carbon.super/api/server/v1/email/template-types/QXNrUGFzc3dvcmQ"
@@ -118,5 +73,55 @@
     "id": "cmVzZW5kQWRtaW5Gb3JjZWRQYXNzd29yZFJlc2V0V2l0aE9UUA",
     "displayName": "resendAdminForcedPasswordResetWithOTP",
     "self": "/t/carbon.super/api/server/v1/email/template-types/cmVzZW5kQWRtaW5Gb3JjZWRQYXNzd29yZFJlc2V0V2l0aE9UUA"
+  },
+  {
+    "id": "QWNjb3VudExvY2tBZG1pbg",
+    "displayName": "AccountLockAdmin",
+    "self": "/t/carbon.super/api/server/v1/email/template-types/QWNjb3VudExvY2tBZG1pbg"
+  },
+  {
+    "id": "QWNjb3VudEVuYWJsZQ",
+    "displayName": "AccountEnable",
+    "self": "/t/carbon.super/api/server/v1/email/template-types/QWNjb3VudEVuYWJsZQ"
+  },
+  {
+    "id": "cmVzZW5kQWRtaW5Gb3JjZWRQYXNzd29yZFJlc2V0",
+    "displayName": "resendAdminForcedPasswordReset",
+    "self": "/t/carbon.super/api/server/v1/email/template-types/cmVzZW5kQWRtaW5Gb3JjZWRQYXNzd29yZFJlc2V0"
+  },
+  {
+    "id": "QWNjb3VudERpc2FibGU",
+    "displayName": "AccountDisable",
+    "self": "/t/carbon.super/api/server/v1/email/template-types/QWNjb3VudERpc2FibGU"
+  },
+  {
+    "id": "RW1haWxDb25maXJt",
+    "displayName": "EmailConfirm",
+    "self": "/t/carbon.super/api/server/v1/email/template-types/RW1haWxDb25maXJt"
+  },
+  {
+    "id": "QWRtaW5Gb3JjZWRQYXNzd29yZFJlc2V0",
+    "displayName": "AdminForcedPasswordReset",
+    "self": "/t/carbon.super/api/server/v1/email/template-types/QWRtaW5Gb3JjZWRQYXNzd29yZFJlc2V0"
+  },
+  {
+    "id": "VmVyaWZ5RW1haWxPblVwZGF0ZQ",
+    "displayName": "VerifyEmailOnUpdate",
+    "self": "/t/carbon.super/api/server/v1/email/template-types/VmVyaWZ5RW1haWxPblVwZGF0ZQ"
+  },
+  {
+    "id": "aW5pdGlhdGVSZWNvdmVyeQ",
+    "displayName": "initiateRecovery",
+    "self": "/t/carbon.super/api/server/v1/email/template-types/aW5pdGlhdGVSZWNvdmVyeQ"
+  },
+  {
+    "id": "T25lVGltZVBhc3N3b3Jk",
+    "displayName": "OneTimePassword",
+    "self": "/t/carbon.super/api/server/v1/email/template-types/T25lVGltZVBhc3N3b3Jk"
+  },
+  {
+    "id": "UGFzc3dvcmRSZXNldA",
+    "displayName": "PasswordReset",
+    "self": "/t/carbon.super/api/server/v1/email/template-types/UGFzc3dvcmRSZXNldA"
   }
 ]
