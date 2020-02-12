@@ -25,7 +25,7 @@
             <class name="org.wso2.identity.integration.test.user.export.UserInfoExportTestCase" />
             <class name="org.wso2.identity.integration.test.consent.SelfSignUpConsentTest"/>
             <class name="org.wso2.identity.integration.test.oauth2.OIDCDiscoveryTestCase"/>
-<!--            <class name="org.wso2.identity.integration.test.identity.governance.AdminForcedPasswordResetTestCase"/>-->
+            <!--<class name="org.wso2.identity.integration.test.identity.governance.AdminForcedPasswordResetTestCase"/>-->
             <class name="org.wso2.identity.integration.test.user.mgt.UserMgtTestCase"/>
             <class name="org.wso2.identity.integration.test.user.mgt.UserMgtUISecurityTestCase"/>
             <class name="org.wso2.identity.integration.test.scim.SCIMServiceProviderUserTestCase" />
@@ -123,8 +123,8 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.email.template.v1.EmailTemplatesNegativeTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationMetadataPositiveTest"/>
             <!-- Disabling /user/{user-id}/* type of API tests as they will not be exposed in 5.9.0 -->
-            <class name="org.wso2.identity.integration.test.rest.api.user.challenge.v1.UserSuccessTest"/>
-            <class name="org.wso2.identity.integration.test.rest.api.user.challenge.v1.UserNegativeTest"/>
+            <!--<class name="org.wso2.identity.integration.test.rest.api.user.challenge.v1.UserSuccessTest"/>-->
+            <!--<class name="org.wso2.identity.integration.test.rest.api.user.challenge.v1.UserNegativeTest"/>-->
             <class name="org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.IdentityGovernanceSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.IdentityGovernanceFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.permission.management.v1.PermissionManagementTest"/>
