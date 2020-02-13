@@ -27,7 +27,7 @@
 		<repository>
 			<id>wso2-nexus</id>
 			<name>WSO2 internal Repository</name>
-			<url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
+			<url>https://maven.wso2.org/nexus/content/groups/wso2-public/</url>
 			<releases>
 				<enabled>true</enabled>
 				<updatePolicy>daily</updatePolicy>
@@ -38,22 +38,22 @@
         <!-- Moved to nexus repo -->
 		<!--<repository>-->
             <!--<id>wso2-maven2-repository</id>-->
-            <!--<url>http://dist.wso2.org/maven2</url>-->
+            <!--<url>https://dist.wso2.org/maven2</url>-->
 	    <!--</repository>-->
         <!--<repository>-->
             <!--<id>apache-Incubating-repo</id>-->
             <!--<name>Maven Incubating Repository</name>-->
-            <!--<url>http://people.apache.org/repo/m2-incubating-repository</url>-->
+            <!--<url>https://people.apache.org/repo/m2-incubating-repository</url>-->
 	    <!--</repository>-->
         <!--<repository>-->
             <!--<id>apache-maven2-repo</id>-->
             <!--<name>Apache Maven2 Repository</name>-->
-            <!--<url>http://repo1.maven.org/maven2/</url>-->
+            <!--<url>https://repo1.maven.org/maven2/</url>-->
         <!--</repository>-->
 		<!--<repository>-->
             <!--<id>twitter4j.org</id>-->
             <!--<name>twitter4j.org Repository</name>-->
-			<!--<url>http://twitter4j.org/maven2</url>-->
+			<!--<url>https://twitter4j.org/maven2</url>-->
             <!--<releases>-->
                 <!--<enabled>true</enabled>-->
 			<!--</releases>-->
@@ -63,18 +63,18 @@
         <!--</repository>-->
 		<!--<repository>-->
             <!--<id>oauth</id>-->
-            <!--<url>http://oauth.googlecode.com/svn/code/maven</url>-->
+            <!--<url>https://oauth.googlecode.com/svn/code/maven</url>-->
 	    <!--</repository>-->
         <!--<repository>-->
             <!--<id>googlecollection</id>-->
-            <!--<url>http://repo1.maven.org/maven2</url>-->
+            <!--<url>https://repo1.maven.org/maven2</url>-->
 		<!--</repository>-->
 	</repositories>
 
 	<!--<pluginRepositories>-->
 		<!--<pluginRepository>-->
 			<!--<id>wso2-maven2-repository</id>-->
-			<!--<url>http://dist.wso2.org/maven2</url>-->
+			<!--<url>https://dist.wso2.org/maven2</url>-->
 		<!--</pluginRepository>-->
 	<!--</pluginRepositories>-->
 
