@@ -1928,7 +1928,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.16.69</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.16.76-SNAPSHOT</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -1951,7 +1951,7 @@
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.7.13</identity.inbound.auth.saml.version>
         <identity.inbound.auth.oauth.version>6.2.124</identity.inbound.auth.oauth.version>
-        <identity.inbound.auth.openid.version>5.4.5</identity.inbound.auth.openid.version>
+        <identity.inbound.auth.openid.version>5.4.6</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.4.6</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.5.9</identity.inbound.provisioning.scim.version>
         <identity.inbound.provisioning.scim2.version>1.4.41</identity.inbound.provisioning.scim2.version>
@@ -2106,11 +2106,11 @@
         <shibboleth.version>7.3.0</shibboleth.version>
         <google.guava.version>27.0.1-jre</google.guava.version>
         <joda.wso2.version>2.9.4.wso2v1</joda.wso2.version>
-        <wss4j.wso2.version>1.5.11-wso2v19</wss4j.wso2.version>
+        <wss4j.wso2.version>1.5.11-wso2v20</wss4j.wso2.version>
         <openws.version>1.5.4</openws.version>
         <xalan.version>2.7.1</xalan.version>
         <xalan.wso2.version>2.7.0.wso2v1</xalan.wso2.version>
-        <rampart.wso2.version>1.6.1-wso2v42</rampart.wso2.version>
+        <rampart.wso2.version>1.6.1-wso2v43</rampart.wso2.version>
         <orbit.version.commons.httpclient>4.2.5.wso2v1</orbit.version.commons.httpclient>
         <httpcore.wso2.version>4.3.3.wso2v1</httpcore.wso2.version>
         <httpclient.version>4.5.8</httpclient.version>
