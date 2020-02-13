@@ -13,7 +13,7 @@ var profileClient = require('controllers/my-profile/profileClient.jag');
 var fidoClient = require('controllers/my-profile/fido-check.jag');
 var userMgtClient = require('controllers/my-profile/userstoreMgtClient.jag');
 var fieldValues = profileClient.getUserProfile(user, 'default');
-var secretKey = userMgtClient.getUserClaim(user, 'http://wso2.org/claims/identity/secretkey', 'default');
+var secretKey = profileClient.getUserClaim('http://wso2.org/claims/identity/secretkey', 'default');
 if (secretKey !== null && secretKey.length > 0) {
     fieldValues.return.totpSecretKey = secretKey;
 }
