@@ -418,12 +418,12 @@
     <pluginRepositories>
         <pluginRepository>
             <id>wso2-maven2-repository</id>
-            <url>http://dist.wso2.org/maven2</url>
+            <url>https://dist.wso2.org/maven2</url>
         </pluginRepository>
         <pluginRepository>
             <id>wso2.releases</id>
             <name>WSO2 internal Repository</name>
-            <url>http://maven.wso2.org/nexus/content/repositories/releases/</url>
+            <url>https://maven.wso2.org/nexus/content/repositories/releases/</url>
             <releases>
                 <enabled>true</enabled>
                 <updatePolicy>daily</updatePolicy>
@@ -433,7 +433,7 @@
         <pluginRepository>
             <id>wso2.snapshots</id>
             <name>Apache Snapshot Repository</name>
-            <url>http://maven.wso2.org/nexus/content/repositories/snapshots/</url>
+            <url>https://maven.wso2.org/nexus/content/repositories/snapshots/</url>
             <snapshots>
                 <enabled>true</enabled>
                 <updatePolicy>daily</updatePolicy>
@@ -445,7 +445,7 @@
         <pluginRepository>
             <id>wso2-nexus</id>
             <name>WSO2 internal Repository</name>
-            <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
+            <url>https://maven.wso2.org/nexus/content/groups/wso2-public/</url>
             <releases>
                 <enabled>true</enabled>
                 <updatePolicy>daily</updatePolicy>
@@ -1949,7 +1949,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.16.66</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.16.74</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -1960,22 +1960,22 @@
         <carbon.consent.mgt.version>2.2.8</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.3.45</identity.governance.version>
+        <identity.governance.version>1.3.47</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.4.9</identity.carbon.auth.saml2.version>
         <identity.carbon.auth.mutual.ssl.version>5.3.3</identity.carbon.auth.mutual.ssl.version>
         <identity.carbon.auth.iwa.version>5.3.5</identity.carbon.auth.iwa.version>
-        <identity.carbon.auth.rest.version>1.3.19</identity.carbon.auth.rest.version>
+        <identity.carbon.auth.rest.version>1.3.21</identity.carbon.auth.rest.version>
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.saml.version>5.7.12</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.2.123</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.saml.version>5.7.13</identity.inbound.auth.saml.version>
+        <identity.inbound.auth.oauth.version>6.2.127</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.4.5</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.4.6</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.5.9</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>1.4.41</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim2.version>1.4.42</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity workflow Versions -->
         <identity.user.workflow.version>5.3.6</identity.user.workflow.version>
@@ -1988,7 +1988,7 @@
         <identity.user.ws.version>5.3.6</identity.user.ws.version>
 
         <!-- Identity Userstore Versions -->
-        <identity.userstore.ldap.version>6.1.11</identity.userstore.ldap.version>
+        <identity.userstore.ldap.version>6.1.12</identity.userstore.ldap.version>
         <identity.userstore.remote.version>5.2.5</identity.userstore.remote.version>
 
         <!-- Identity Data Publisher Versions -->
@@ -1998,7 +1998,7 @@
 
         <!-- Identity Event Handler Versions -->
         <identity.event.handler.account.lock.version>1.3.9</identity.event.handler.account.lock.version>
-        <identity.event.handler.notification.version>1.2.20</identity.event.handler.notification.version>
+        <identity.event.handler.notification.version>1.2.21</identity.event.handler.notification.version>
 
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
@@ -2040,10 +2040,10 @@
         <identity.metadata.saml.version>1.3.6</identity.metadata.saml.version>
 
         <!-- Connector Versions -->
-        <authenticator.totp.version>2.1.8</authenticator.totp.version>
+        <authenticator.totp.version>2.1.9</authenticator.totp.version>
         <authenticator.office365.version>1.0.6</authenticator.office365.version>
-        <authenticator.smsotp.version>2.0.33</authenticator.smsotp.version>
-        <authenticator.emailotp.version>2.0.37</authenticator.emailotp.version>
+        <authenticator.smsotp.version>2.0.34</authenticator.smsotp.version>
+        <authenticator.emailotp.version>2.0.38</authenticator.emailotp.version>
         <authenticator.twitter.version>1.0.10</authenticator.twitter.version>
         <authenticator.x509.version>2.0.14</authenticator.x509.version>
         <identity.extension.utils>1.0.8</identity.extension.utils>
@@ -2060,7 +2060,7 @@
         <carbon.identity.oauth.uma.version>1.1.9</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.0.1</identity.apps.version>
+        <identity.apps.version>1.0.8</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.3.0</charon.version>
@@ -2198,7 +2198,7 @@
         <repository>
             <id>wso2-nexus</id>
             <name>WSO2 internal Repository</name>
-            <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
+            <url>https://maven.wso2.org/nexus/content/groups/wso2-public/</url>
             <releases>
                 <enabled>true</enabled>
                 <updatePolicy>daily</updatePolicy>
@@ -2209,7 +2209,7 @@
         <repository>
             <id>wso2.releases</id>
             <name>WSO2 internal Repository</name>
-            <url>http://maven.wso2.org/nexus/content/repositories/releases/</url>
+            <url>https://maven.wso2.org/nexus/content/repositories/releases/</url>
             <releases>
                 <enabled>true</enabled>
                 <updatePolicy>daily</updatePolicy>
@@ -2220,7 +2220,7 @@
         <repository>
             <id>wso2.snapshots</id>
             <name>WSO2 Snapshot Repository</name>
-            <url>http://maven.wso2.org/nexus/content/repositories/snapshots/</url>
+            <url>https://maven.wso2.org/nexus/content/repositories/snapshots/</url>
             <snapshots>
                 <enabled>true</enabled>
                 <updatePolicy>daily</updatePolicy>
