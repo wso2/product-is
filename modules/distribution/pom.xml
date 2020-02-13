@@ -648,7 +648,7 @@
                         <id>copy_components</id>
                         <phase>test</phase>
                         <goals>
-                            <goal>attached</goal>
+                            <goal>single</goal>
                         </goals>
                         <configuration>
                             <filters>
@@ -664,7 +664,7 @@
                         <id>dist</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>attached</goal>
+                            <goal>single</goal>
                         </goals>
                         <configuration>
                             <filters>
@@ -680,7 +680,7 @@
                         <id>src-doc</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>attached</goal>
+                            <goal>single</goal>
                         </goals>
                         <configuration>
                             <filters>
