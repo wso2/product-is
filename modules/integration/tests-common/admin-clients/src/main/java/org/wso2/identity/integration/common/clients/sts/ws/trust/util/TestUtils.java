@@ -1,5 +1,4 @@
 /*
-
  * Copyright (c) 2020, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
@@ -29,8 +28,19 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * TestUtils contains utilities used by the ActiveSTSTestcase.
+ */
 public class TestUtils {
 
+    /**
+     * Convert a value input stream to a string.
+     *
+     * @param inputStream Input stream containing a value to be converted to a string.
+     * @return result.toString() Received input stream value as a string.
+     *
+     * @throws IOException if an error occurs while converting the input stream value to a string.
+     */
     private static String convertInputStreamToString(InputStream inputStream)
             throws IOException {
 
@@ -45,6 +55,14 @@ public class TestUtils {
 
     }
 
+    /**
+     * Load an xml template file from resources.
+     *
+     * @param resource Path to the resource.
+     * @return templatedRSTR A template of a RSTR as a string.
+     *
+     * @throws WSTrustClientException if an error occurs while loading the template.
+     */
     public static String loadTemplate(String resource) throws WSTrustClientException {
 
         String templatedRSTR;
@@ -57,20 +75,28 @@ public class TestUtils {
         return templatedRSTR;
     }
 
-    public static String convertResponseToString(SOAPMessage soapMessage) throws WSTrustClientException {
+    /**
+     * Convert a SOAPMessage to a String.
+     *
+     * @param soapMessage SOAP Message to be converted to string.
+     * @return stringSoapMessage Received SOAP Message as a string.
+     *
+     * @throws WSTrustClientException if an error occurs while converting the SOAP Message to a string.
+     */
+    public static String convertSoapMessageToString(SOAPMessage soapMessage) throws WSTrustClientException {
 
-        String responseAsAString;
+        String stringSoapMessage;
 
-        try (OutputStream outputStream = new ByteArrayOutputStream()){
+        try (OutputStream outputStream = new ByteArrayOutputStream()) {
             soapMessage.writeTo(outputStream);
-            responseAsAString = (outputStream).toString();
+            stringSoapMessage = (outputStream).toString();
         } catch (SOAPException e) {
             throw new WSTrustClientException("Error while converting the SOAP Message to a string.", e);
         } catch (IOException e) {
             throw new WSTrustClientException("Error while writing the SOAP Message to an output stream.", e);
         }
 
-        return responseAsAString;
+        return stringSoapMessage;
     }
 }
 

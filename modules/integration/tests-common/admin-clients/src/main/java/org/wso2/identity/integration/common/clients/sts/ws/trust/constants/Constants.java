@@ -1,5 +1,4 @@
 /*
-
  * Copyright (c) 2020, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
@@ -46,11 +45,8 @@ public class Constants {
     public static final String EXPIRY_TIME = "expiryTime";
     public static final String URI = "uri";
 
-    // Template file names.
+    // Location of template files.
     public static final String REQUEST_ST_TEMPLATE = "ws-trust-templates/request_security_token_RST.xml";
     public static final String RENEW_ST_TEMPLATE = "ws-trust-templates/renew_security_token_RST.xml";
     public static final String VALIDATE_ST_TEMPLATE = "ws-trust-templates/validate_security_token_RST.xml";
-
-    public static final String GREEN_COLOR = "\033[1;32m";
-    public static final String RESET_COLOR = "\033[0m";
 }
