@@ -18,22 +18,13 @@
 
 package org.wso2.identity.integration.common.clients.sts.ws.trust.constants;
 
-import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
-
-import java.io.File;
-
 /**
  * Class contains the constant values used across the module.
  */
 public class Constants {
 
-    // Trust store name.
-    public static final String TRUST_STORE_PATH = FrameworkPathUtil.getSystemResourceLocation()
-            + File.separator + "keystores" + File.separator + "products" + File.separator + "wso2carbon.jks";
-    // Trust store password.
-    public static final String TRUST_STORE_PASSWORD = "wso2carbon";
     // Security token service endpoint of WSO2 Identity Server.
-    public static final String STS_ENDPOINT_URL = "https://localhost:9443/services/wso2carbon-sts";
+    public static final String STS_ENDPOINT_URL = "https://localhost:9853/services/wso2carbon-sts";
 
     // Identifiers used to validate the action performed.
     public static final String ACTION_REQUEST = "Request";
