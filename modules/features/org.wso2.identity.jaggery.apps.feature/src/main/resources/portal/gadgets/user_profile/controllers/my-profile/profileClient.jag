@@ -45,4 +45,15 @@ function getUserProfile(username, profileName){
 
 }
 
+function getUserClaim(claimUri, profileName) {
+
+    var payload = '<ser:getUserClaim xmlns:ser="http://mgt.profile.user.identity.carbon.wso2.org"><ser:claimUri>' + claimUri + '</ser:claimUri><ser:profileName>' + profileName + '</ser:profileName></ser:getUserClaim>';
+    var result = callWSReturnJSON(webService, serverUrl, "urn:getUserClaim", null, payload);
+    var claimValue = "";
+    if (result != "") {
+        claimValue = result.return;
+    }
+    return claimValue;
+}
+
 %>

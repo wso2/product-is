@@ -393,7 +393,21 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
         return claimMappingList.toArray(new ClaimMapping[claimMappingList.size()]);
     }
 
-    public SAMLSSOServiceProviderDTO createSsoServiceProviderDTO(SAMLConfig config) {
+    /**
+     * @param config contains the details of the IDP initiated SSO enabled service provider application.
+     * @return the created SAMLSSOServiceProviderDTO.
+     */
+    public SAMLSSOServiceProviderDTO createSsoSPDTOForIdPInit(SAMLConfig config){
+        SAMLSSOServiceProviderDTO idpInitSpDTO = createSsoSPDTO(config);
+        idpInitSpDTO.setIdPInitSSOEnabled(true);
+        return idpInitSpDTO;
+    }
+
+    public SAMLSSOServiceProviderDTO createSsoServiceProviderDTO(SAMLConfig config){
+        return createSsoSPDTO(config);
+    }
+
+    private SAMLSSOServiceProviderDTO createSsoSPDTO(SAMLConfig config) {
 
         SAMLSSOServiceProviderDTO samlssoServiceProviderDTO = new SAMLSSOServiceProviderDTO();
         samlssoServiceProviderDTO.setIssuer(config.getApp().getArtifact());

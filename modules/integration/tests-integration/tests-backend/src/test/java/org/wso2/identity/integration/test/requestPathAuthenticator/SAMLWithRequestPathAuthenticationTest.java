@@ -177,7 +177,6 @@ public class SAMLWithRequestPathAuthenticationTest extends ISIntegrationTest {
             EntityUtils.consume(response.getEntity());
         }
 
-        response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, "", client);
         int responseCode = response.getStatusLine().getStatusCode();
         Assert.assertEquals(responseCode, 200, "Successful login response returned code " + responseCode);
         String samlResponse = "";
