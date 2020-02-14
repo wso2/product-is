@@ -1,0 +1,41 @@
+<soapenv:Envelope xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope">
+    <soapenv:Header xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">
+        <wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+                       soapenv:mustUnderstand="true">
+            <wsu:Timestamp
+                    xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+                    wsu:Id="Timestamp-3">
+                <wsu:Created>$creationTime</wsu:Created>
+                <wsu:Expires>$expiryTime</wsu:Expires>
+            </wsu:Timestamp>
+            <wsse:UsernameToken
+                    xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+                    wsu:Id="UsernameToken-4">
+                <wsse:Username>admin</wsse:Username>
+                <wsse:Password
+                        Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">
+                    admin
+                </wsse:Password>
+            </wsse:UsernameToken>
+        </wsse:Security>
+        <wsa:To>https://localhost:9443/services/wso2carbon-sts</wsa:To>
+        <wsa:ReplyTo>
+            <wsa:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:Address>
+        </wsa:ReplyTo>
+        <wsa:MessageID>urn:uuid:de5c56ea-0632-44c2-b455-984107d67763</wsa:MessageID>
+        <wsa:Action>http://schemas.xmlsoap.org/ws/2005/02/trust/RST/Issue</wsa:Action>
+    </soapenv:Header>
+    <soapenv:Body>
+        <wst:RequestSecurityToken xmlns:wst="http://schemas.xmlsoap.org/ws/2005/02/trust">
+            <wst:RequestType>http://schemas.xmlsoap.org/ws/2005/02/trust/Renew</wst:RequestType>
+            <wst:TokenType>http://docs.oasis-open.org/wss/oasis-wss-saml-token-profile-1.1#SAMLV2.0</wst:TokenType>
+            <wst:RenewTarget>
+                <wsse:SecurityTokenReference
+                        xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+                    <wsse:Reference URI="$uri"
+                                    ValueType="http://docs.oasis-open.org/wss/oasis-wss-saml-token-profile-1.1#SAMLV2.0"/>
+                </wsse:SecurityTokenReference>
+            </wst:RenewTarget>
+        </wst:RequestSecurityToken>
+    </soapenv:Body>
+</soapenv:Envelope>
