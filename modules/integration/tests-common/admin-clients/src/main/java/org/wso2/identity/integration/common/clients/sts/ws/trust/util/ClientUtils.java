@@ -1,5 +1,4 @@
 /*
-
  * Copyright (c) 2020, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
@@ -58,6 +57,7 @@ public class ClientUtils {
      * Security Token sent to the Security Token Service and the soapResponse
      * containing the Request Security Token Response obtained from the
      * Security Token Service.
+     * 
      * @throws WSTrustClientException if there are any exceptions throws while
      *                                building and sending the request.
      */
@@ -108,6 +108,7 @@ public class ClientUtils {
      * @param parameter            Action to be performed.
      * @param additionalParameters Identifier for the Security Token.
      * @return request SOAP request containing the Request Security Token.
+     *
      * @throws IOException            if an error occurs while creating a SOAP Message
      *                                from an input stream.
      * @throws SOAPException          if there was an error in creating the specified

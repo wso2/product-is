@@ -1,5 +1,4 @@
 /*
-
  * Copyright (c) 2020, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
@@ -20,14 +19,14 @@
 package org.wso2.identity.integration.common.clients.sts.ws.trust.exception;
 
 /**
- * Exception class used to report exceptions caused on the org.wso2.samples.is.sts.wstrust.client.Client's side.
+ * Exception class used to report exceptions caused on the Client's side.
  */
 public class WSTrustClientException extends Exception {
 
     /**
-     * Non-Default constructor accepting an org.wso2.samples.is.sts.wstrust.client.exception message.
+     * Non-Default constructor accepting an exception message.
      *
-     * @param exceptionMessage Description of the org.wso2.samples.is.sts.wstrust.client.exception.
+     * @param exceptionMessage Description of the exception.
      */
     public WSTrustClientException(String exceptionMessage) {
 
@@ -35,10 +34,10 @@ public class WSTrustClientException extends Exception {
     }
 
     /**
-     * Non-Default constructor accepting an org.wso2.samples.is.sts.wstrust.client.exception message and the cause.
+     * Non-Default constructor accepting an exception message and the cause.
      *
-     * @param errorDescription Description of the org.wso2.samples.is.sts.wstrust.client.exception.
-     * @param cause            Cause of the org.wso2.samples.is.sts.wstrust.client.exception.
+     * @param errorDescription Description of the exception.
+     * @param cause            Cause of the exception.
      */
     public WSTrustClientException(String errorDescription, Throwable cause) {
 

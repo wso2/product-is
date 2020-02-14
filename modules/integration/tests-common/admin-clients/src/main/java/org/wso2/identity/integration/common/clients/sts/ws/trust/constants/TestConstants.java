@@ -1,5 +1,4 @@
 /*
-
  * Copyright (c) 2020, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
@@ -22,15 +21,19 @@ package org.wso2.identity.integration.common.clients.sts.ws.trust.constants;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * TestConstants contains constants which are used by ActiveSTSTesCase.
+ */
 public class TestConstants {
 
-    // Template file names.
+    // Location of template files.
     public static final String REQUEST_ST_RSTR_TEMPLATE = "ws-trust-templates/request_security_token_RSTR.xml";
     public static final String RENEW_ST_RSTR_TEMPLATE = "ws-trust-templates/renew_security_token_RSTR.xml";
     public static final String VALIDATE_ST_RSTR_TEMPLATE = "ws-trust-templates/validate_security_token_RSTR.xml";
 
     public static final String XML_DECLARATION = "<?xml version='1.0' encoding='utf-8'?>";
 
+    // Resources used to validate the RSTR received when a security token is requested.
     public static final int NO_OF_DIFFERENCES_FOR_REQUEST_ST_RSTR = 17;
     public static final List<String> CHANGING_XPATHS_FOR_REQUEST_ST_RSTR = Arrays.asList(
             "/Envelope[1]/Header[1]/Security[1]/Timestamp[1]/@Id",
@@ -52,6 +55,7 @@ public class TestConstants {
             "/Envelope[1]/Body[1]/RequestSecurityTokenResponse[1]/RequestedSecurityToken[1]/Assertion[1]/AuthnStatement[1]/@AuthnInstant"
     );
 
+    // Resources used to validate the RSTR received when a security token is renewed.
     public static final int NO_OF_DIFFERENCES_FOR_RENEW_ST_RSTR = 15;
     public static final List<String> CHANGING_XPATHS_FOR_RENEW_ST_RSTR = Arrays.asList(
             "/Envelope[1]/Header[1]/Security[1]/Timestamp[1]/@Id",
@@ -71,6 +75,7 @@ public class TestConstants {
             "/Envelope[1]/Body[1]/RequestSecurityTokenResponse[1]/RequestedSecurityToken[1]/Assertion[1]/AuthnStatement[1]/@AuthnInstant"
     );
 
+    // Resources used to validate the RSTR received when a security token is validated.
     public static final int NO_OF_DIFFERENCES_FOR_VALIDATE_ST_RSTR = 4;
     public static final List<String> CHANGING_XPATHS_FOR_VALIDATE_ST_RSTR = Arrays.asList(
             "/Envelope[1]/Header[1]/Security[1]/Timestamp[1]/@Id",
