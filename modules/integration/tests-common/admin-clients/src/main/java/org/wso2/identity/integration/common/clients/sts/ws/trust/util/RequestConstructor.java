@@ -21,6 +21,7 @@ package org.wso2.identity.integration.common.clients.sts.ws.trust.util;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.runtime.RuntimeConstants;
 
 import java.io.StringWriter;
 import java.util.Properties;
@@ -127,7 +128,10 @@ public class RequestConstructor {
 
             Properties properties = new Properties();
             properties.setProperty("resource.loader", "class");
-            properties.setProperty("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+            properties.setProperty("class.resource.loader.class",
+                    "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+            properties.setProperty(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS,
+                    "org.apache.velocity.runtime.log.NullLogChute" );
 
             velocityEngine.init(properties);
 

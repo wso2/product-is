@@ -25,7 +25,6 @@ import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
@@ -39,8 +38,6 @@ import static org.wso2.identity.integration.common.clients.sts.ws.trust.constant
 import static org.wso2.identity.integration.common.clients.sts.ws.trust.constants.Constants.ACTION_REQUEST;
 import static org.wso2.identity.integration.common.clients.sts.ws.trust.constants.Constants.ACTION_VALIDATE;
 import static org.wso2.identity.integration.common.clients.sts.ws.trust.constants.Constants.STS_ENDPOINT_URL;
-import static org.wso2.identity.integration.common.clients.sts.ws.trust.constants.Constants.TRUST_STORE_PATH;
-import static org.wso2.identity.integration.common.clients.sts.ws.trust.constants.Constants.TRUST_STORE_PASSWORD;
 
 /**
  * Utils class used by the org.wso2.samples.is.sts.wstrust.client.Client to perform common operations.
@@ -63,8 +60,6 @@ public class ClientUtils {
      */
     public static SOAPMessage[] callSoapWebService(String action, String... parameters)
             throws WSTrustClientException {
-
-        setSystemProperties();
 
         SOAPMessage[] requestAndResponse = new SOAPMessage[2];
 
@@ -149,17 +144,6 @@ public class ClientUtils {
         byteArrayInputStream.close();
 
         return request;
-    }
-
-    /**
-     * Set system properties to use a custom trust store instead of the default.
-     */
-    private static void setSystemProperties() {
-
-//        Enable this property to debug ssl related problems
-//        System.setProperty("javax.net.debug", "ssl");
-        System.setProperty("javax.net.ssl.trustStore", "/home/dehami/Desktop/product-is/modules/integration/tests-integration/tests-backend/src/test/resources/keystores/products/wso2carbon.jks");
-        System.setProperty("javax.net.ssl.trustStorePassword", TRUST_STORE_PASSWORD);
     }
 
     /**
