@@ -28,7 +28,7 @@
     <artifactId>identity-server-parent</artifactId>
     <packaging>pom</packaging>
     <description>WSO2 Identity Server</description>
-    <version>5.10.0-beta2-SNAPSHOT</version>
+    <version>5.10.0-beta3-SNAPSHOT</version>
     <name>WSO2 Identity Server</name>
     <url>http://wso2.org/projects/identity</url>
 
@@ -1949,7 +1949,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.16.82</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.16.85</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -1971,7 +1971,7 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.7.14</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.2.129</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.2.131</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.4.6</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.4.6</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.5.9</identity.inbound.provisioning.scim.version>
@@ -2060,7 +2060,7 @@
         <carbon.identity.oauth.uma.version>1.1.9</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.0.20</identity.apps.version>
+        <identity.apps.version>1.0.25</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.3.0</charon.version>
