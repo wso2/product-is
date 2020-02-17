@@ -32,8 +32,8 @@ import org.xmlunit.diff.Difference;
 import javax.xml.soap.SOAPMessage;
 
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
-import org.wso2.carbon.integration.common.admin.client.SecurityAdminServiceClient;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
+import org.wso2.carbon.integration.common.admin.client.SecurityAdminServiceClient;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.sts.ws.trust.util.ClientUtils;
 import org.wso2.identity.integration.common.clients.sts.ws.trust.util.TestUtils;
