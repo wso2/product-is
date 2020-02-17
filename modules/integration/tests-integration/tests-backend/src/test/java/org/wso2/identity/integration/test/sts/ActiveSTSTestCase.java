@@ -25,16 +25,14 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
-import org.wso2.carbon.identity.application.common.model.xsd.Property;
-import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
-import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.diff.Diff;
 import org.xmlunit.diff.Difference;
 
 import javax.xml.soap.SOAPMessage;
 
+import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
+import org.wso2.carbon.integration.common.admin.client.SecurityAdminServiceClient;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.sts.ws.trust.util.ClientUtils;
@@ -77,16 +75,21 @@ public class ActiveSTSTestCase extends ISIntegrationTest {
 
     private static final String SERVICE_PROVIDER_NAME = "ActiveSTSTest";
     private static final String SERVICE_PROVIDER_DESCRIPTION = "ActiveSTS Service Provider";
-    private static final String DEFAULT_AUTH_TYPE = "default";
-    private static final String ENDPOINT_ADDRESS_PROPERTY = "endpointaddrs";
+
+    private static final String SERVICE_NAME = "wso2carbon-sts";
+    private static final String POLICY_ID = "1";
+    private static final String USER_GROUP = "admin";
+
+    private static final String WS_TRUST_AUTH_TYPE = "wstrust";
+    private static final String INBOUND_CONFIG_TYPE = "standardAPP";
     private static final String ENDPOINT_ADDRESS_VALUE = "https://localhost:9444/services/echo";
+
     private static final String ALIAS_PROPERTY = "alias";
     private static final String ALIAS_VALUE = "wso2carbon";
 
     private ServiceProvider serviceProvider;
-    private IdentityProviderMgtServiceClient idpMgtServiceClient;
-    private IdentityProvider defaultResidentIdP;
     private ApplicationManagementServiceClient applicationManagementServiceClient;
+    private SecurityAdminServiceClient securityAdminServiceClient;
     private String uri;
 
     @BeforeClass(alwaysRun = true)
@@ -98,11 +101,11 @@ public class ActiveSTSTestCase extends ISIntegrationTest {
 
         ConfigurationContext configContext = ConfigurationContextFactory
                 .createConfigurationContextFromFileSystem(null, null);
-        idpMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie,
-                backendURL, configContext);
         applicationManagementServiceClient = new ApplicationManagementServiceClient(
                 sessionCookie, backendURL, configContext);
-        defaultResidentIdP = idpMgtServiceClient.getResidentIdP();
+        securityAdminServiceClient = new SecurityAdminServiceClient(backendURL, sessionCookie);
+        securityAdminServiceClient.applySecurity(SERVICE_NAME, POLICY_ID,
+                new String[]{USER_GROUP}, new String[]{}, null);
     }
 
     @AfterClass(alwaysRun = true)
@@ -111,14 +114,9 @@ public class ActiveSTSTestCase extends ISIntegrationTest {
         removeServiceProvider();
         serviceProvider = null;
         applicationManagementServiceClient = null;
+        securityAdminServiceClient.disableSecurity(SERVICE_NAME);
+        securityAdminServiceClient = null;
     }
-
-//    @Test(alwaysRun = true, description = "Update resident IdP.")
-//    public void testUpdateResidentIdP() throws Exception {
-//
-//        IdentityProvider residentIdP = idpMgtServiceClient.getResidentIdP();
-//
-//    }
 
     @Test(alwaysRun = true, description = "Add service provider for the testcase.")
     public void testAddSP() throws Exception {
@@ -132,28 +130,19 @@ public class ActiveSTSTestCase extends ISIntegrationTest {
             , dependsOnMethods = {"testAddSP"})
     public void testUpdateSP() throws Exception {
 
-        List<InboundAuthenticationRequestConfig> requestConfigList = new ArrayList<>();
-        InboundAuthenticationRequestConfig requestConfig = new InboundAuthenticationRequestConfig();
-        requestConfig.setInboundAuthKey(SERVICE_PROVIDER_NAME);
-        requestConfig.setInboundAuthType(DEFAULT_AUTH_TYPE);
 
-        Property endpointProperty = new Property();
-        endpointProperty.setName(ENDPOINT_ADDRESS_PROPERTY);
-        endpointProperty.setValue(ENDPOINT_ADDRESS_VALUE);
-        Property aliasProperty = new Property();
-        aliasProperty.setName(ALIAS_PROPERTY);
-        aliasProperty.setValue(ALIAS_VALUE);
+        List<InboundAuthenticationRequestConfig> inboundAuthenticationRequestConfigs = new ArrayList<>();
+        InboundAuthenticationRequestConfig inboundAuthenticationRequestConfig = new InboundAuthenticationRequestConfig();
+        inboundAuthenticationRequestConfig.setInboundAuthKey(ENDPOINT_ADDRESS_VALUE);
+        inboundAuthenticationRequestConfig.setInboundAuthType(WS_TRUST_AUTH_TYPE);
+        inboundAuthenticationRequestConfig.setInboundConfigType(INBOUND_CONFIG_TYPE);
 
-        requestConfig.setProperties(new Property[]{endpointProperty, aliasProperty});
-        requestConfigList.add(requestConfig);
+        inboundAuthenticationRequestConfigs.add(inboundAuthenticationRequestConfig);
 
-        if (requestConfigList.size() > 0) {
-            serviceProvider.getInboundAuthenticationConfig()
-                    .setInboundAuthenticationRequestConfigs(
-                            requestConfigList
-                                    .toArray(new InboundAuthenticationRequestConfig[requestConfigList
-                                            .size()]));
-        }
+        serviceProvider.getInboundAuthenticationConfig()
+                .setInboundAuthenticationRequestConfigs(
+                        inboundAuthenticationRequestConfigs
+                                .toArray(new InboundAuthenticationRequestConfig[0]));
         applicationManagementServiceClient.updateApplicationData(serviceProvider);
 
         Assert.assertNotEquals(applicationManagementServiceClient.getApplication(SERVICE_PROVIDER_NAME)
