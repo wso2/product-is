@@ -43,7 +43,8 @@ public class ClaimMappingsOnSecondaryUserStoreTestCase extends ISIntegrationTest
     private UserStoreConfigAdminServiceClient userStoreConfigAdminServiceClient;
     private UserStoreConfigUtils userStoreConfigUtils = new UserStoreConfigUtils();
     private static final String JDBC_CLASS = "org.wso2.carbon.user.core.jdbc.UniqueIDJDBCUserStoreManager";
-    private static final String DOMAIN_ID = "WSO2TEST.COM";
+    private static final String DOMAIN_ID = "CLAIM.MAPPING.ON.SECONDARY.USERSTORE.TEST.COM";
+    private static final String USER_STORE_DB_NAME = "CLAIM_MAPPING_ON_SECONDARY_USER_STORE_DB";
     private ClaimMetadataManagementServiceClient claimMetadataManagementServiceClient = null;
 
     @BeforeClass(alwaysRun = true)
@@ -82,7 +83,7 @@ public class ClaimMappingsOnSecondaryUserStoreTestCase extends ISIntegrationTest
     private void testAddJDBCUserStore() throws Exception {
 
         UserStoreDTO userStoreDTO = userStoreConfigAdminServiceClient.createUserStoreDTO(JDBC_CLASS, DOMAIN_ID,
-                userStoreConfigUtils.getJDBCUserStoreProperties());
+                userStoreConfigUtils.getJDBCUserStoreProperties(USER_STORE_DB_NAME));
         userStoreConfigAdminServiceClient.addUserStore(userStoreDTO);
         Thread.sleep(5000);
         Assert.assertTrue(userStoreConfigUtils.waitForUserStoreDeployment(userStoreConfigAdminServiceClient, DOMAIN_ID)
