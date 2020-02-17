@@ -2021,8 +2021,8 @@
         <!-- Connector Versions -->
         <authenticator.totp.version>2.1.9</authenticator.totp.version>
         <authenticator.office365.version>1.0.6</authenticator.office365.version>
-        <authenticator.smsotp.version>2.0.33</authenticator.smsotp.version>
-        <authenticator.emailotp.version>2.0.37</authenticator.emailotp.version>
+        <authenticator.smsotp.version>2.0.34</authenticator.smsotp.version>
+        <authenticator.emailotp.version>2.0.38</authenticator.emailotp.version>
         <authenticator.twitter.version>1.0.10</authenticator.twitter.version>
         <authenticator.x509.version>2.0.14</authenticator.x509.version>
         <identity.extension.utils>1.0.8</identity.extension.utils>
@@ -2039,7 +2039,7 @@
         <carbon.identity.oauth.uma.version>1.1.9</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.0.25</identity.apps.version>
+        <identity.apps.version>1.0.26</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.3.0</charon.version>
