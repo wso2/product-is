@@ -141,7 +141,7 @@ public class AdminForcedPasswordResetTestCase extends ISIntegrationTest {
                 "forced password reset for user.");
 
         currentOTP = usmClient.getUserClaimValue(TEST_USER_USERNAME, OTP_CLAIM, PROFILE_NAME);
-        Assert.assertTrue(!currentOTP.isEmpty(), "OTP Claim is not properly set for user after forced password reset.");
+        Assert.assertFalse(currentOTP.isEmpty());
 
     }
 

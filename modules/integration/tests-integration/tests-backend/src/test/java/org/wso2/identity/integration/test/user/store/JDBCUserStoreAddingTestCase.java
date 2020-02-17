@@ -49,6 +49,7 @@ public class JDBCUserStoreAddingTestCase extends ISIntegrationTest{
     private final String roLDAPClass = "org.wso2.carbon.user.core.ldap.ReadOnlyLDAPUserStoreManager";
     private final String adLDAPClass = "org.wso2.carbon.user.core.ldap.ActiveDirectoryUserStoreManager";
     private final String domainId = "WSO2TEST.COM";
+    private final static String USER_STORE_DB_NAME = "JDBC_USER_STORE_ADDING_DB";
     private UserManagementClient userMgtClient;
     private AuthenticatorClient authenticatorClient;
     private String newUserName = "WSO2TEST.COM/userStoreUser";
@@ -84,7 +85,7 @@ public class JDBCUserStoreAddingTestCase extends ISIntegrationTest{
     private void testAddJDBCUserStore() throws Exception {
 
         UserStoreDTO userStoreDTO = userStoreConfigAdminServiceClient.createUserStoreDTO(jdbcClass, domainId,
-                userStoreConfigUtils.getJDBCUserStoreProperties());
+                userStoreConfigUtils.getJDBCUserStoreProperties(USER_STORE_DB_NAME));
         userStoreConfigAdminServiceClient.addUserStore(userStoreDTO);
         Thread.sleep(5000);
         Assert.assertTrue(userStoreConfigUtils.waitForUserStoreDeployment(userStoreConfigAdminServiceClient, domainId)
