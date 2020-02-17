@@ -24,6 +24,7 @@ import org.wso2.carbon.identity.claim.metadata.mgt.stub.ClaimMetadataManagementS
 import org.wso2.carbon.identity.claim.metadata.mgt.stub.dto.AttributeMappingDTO;
 import org.wso2.carbon.identity.claim.metadata.mgt.stub.dto.LocalClaimDTO;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.UserStoreDTO;
+import org.wso2.carbon.user.core.UserCoreConstants;
 import org.wso2.identity.integration.common.clients.claim.metadata.mgt.ClaimMetadataManagementServiceClient;
 import org.wso2.identity.integration.common.clients.user.store.config.UserStoreConfigAdminServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
@@ -36,10 +37,14 @@ import java.rmi.RemoteException;
  */
 public class ClaimMappingsOnSecondaryUserStoreTestCase extends ISIntegrationTest {
 
+    private static final String CLAIM_URI = "http://wso2.org/claims/test";
+    private static final String PRIMARY_DOMAIN_MAPPED_ATTRIBUTE = "testPrimary";
+    private static final String SECONDARY_DOMAIN_MAPPED_ATTRIBUTE = "testSec";
     private UserStoreConfigAdminServiceClient userStoreConfigAdminServiceClient;
     private UserStoreConfigUtils userStoreConfigUtils = new UserStoreConfigUtils();
-    private final String jdbcClass = "org.wso2.carbon.user.core.jdbc.UniqueIDJDBCUserStoreManager";
-    private final String domainId = "WSO2TEST.COM";
+    private static final String JDBC_CLASS = "org.wso2.carbon.user.core.jdbc.UniqueIDJDBCUserStoreManager";
+    private static final String DOMAIN_ID = "CLAIM.MAPPING.ON.SECONDARY.USERSTORE.TEST.COM";
+    private static final String USER_STORE_DB_NAME = "CLAIM_MAPPING_ON_SECONDARY_USER_STORE_DB";
     private ClaimMetadataManagementServiceClient claimMetadataManagementServiceClient = null;
 
     @BeforeClass(alwaysRun = true)
@@ -53,24 +58,23 @@ public class ClaimMappingsOnSecondaryUserStoreTestCase extends ISIntegrationTest
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
-        addLocalClaims();
-        userStoreConfigAdminServiceClient.deleteUserStore(domainId);
-        for (LocalClaimDTO localClaimDTO1 : claimMetadataManagementServiceClient.getLocalClaims()) {
-            for (AttributeMappingDTO attributeMappingDTO : localClaimDTO1.getAttributeMappings()) {
-                Assert.assertFalse(domainId.equals(attributeMappingDTO.getUserStoreDomain()));
-            }
-        }
+        claimMetadataManagementServiceClient.removeLocalClaim(CLAIM_URI);
     }
 
     private void addLocalClaims() throws RemoteException, ClaimMetadataManagementServiceClaimMetadataException {
 
         LocalClaimDTO localClaimDTO = new LocalClaimDTO();
-        localClaimDTO.setLocalClaimURI("http://wso2.org/claims/test");
-        AttributeMappingDTO[] attributeMappingDTO = new AttributeMappingDTO[1];
+        localClaimDTO.setLocalClaimURI(CLAIM_URI);
+        AttributeMappingDTO[] attributeMappingDTO = new AttributeMappingDTO[2];
         AttributeMappingDTO attributeMappingDTO1 = new AttributeMappingDTO();
-        attributeMappingDTO1.setAttributeName("test");
-        attributeMappingDTO1.setUserStoreDomain(domainId);
+        attributeMappingDTO1.setAttributeName(PRIMARY_DOMAIN_MAPPED_ATTRIBUTE);
+        attributeMappingDTO1.setUserStoreDomain(UserCoreConstants.PRIMARY_DEFAULT_DOMAIN_NAME);
         attributeMappingDTO[0] = attributeMappingDTO1;
+
+        AttributeMappingDTO attributeMappingDTO2 = new AttributeMappingDTO();
+        attributeMappingDTO2.setAttributeName(SECONDARY_DOMAIN_MAPPED_ATTRIBUTE);
+        attributeMappingDTO2.setUserStoreDomain(DOMAIN_ID);
+        attributeMappingDTO[1] = attributeMappingDTO2;
         localClaimDTO.setAttributeMappings(attributeMappingDTO);
         claimMetadataManagementServiceClient.addLocalClaim(localClaimDTO);
     }
@@ -78,11 +82,23 @@ public class ClaimMappingsOnSecondaryUserStoreTestCase extends ISIntegrationTest
     @Test(groups = "wso2.is", description = "Check add user store via DTO")
     private void testAddJDBCUserStore() throws Exception {
 
-        UserStoreDTO userStoreDTO = userStoreConfigAdminServiceClient.createUserStoreDTO(jdbcClass, domainId,
-                userStoreConfigUtils.getJDBCUserStoreProperties());
+        UserStoreDTO userStoreDTO = userStoreConfigAdminServiceClient.createUserStoreDTO(JDBC_CLASS, DOMAIN_ID,
+                userStoreConfigUtils.getJDBCUserStoreProperties(USER_STORE_DB_NAME));
         userStoreConfigAdminServiceClient.addUserStore(userStoreDTO);
         Thread.sleep(5000);
-        Assert.assertTrue(userStoreConfigUtils.waitForUserStoreDeployment(userStoreConfigAdminServiceClient, domainId)
+        Assert.assertTrue(userStoreConfigUtils.waitForUserStoreDeployment(userStoreConfigAdminServiceClient, DOMAIN_ID)
                 , "Domain addition via DTO has failed.");
+    }
+
+    @Test(groups = "wso2.is", description = "Check userstore delete", dependsOnMethods = {"testAddJDBCUserStore"})
+    public void testUserstoreDeletion() throws Exception {
+
+        addLocalClaims();
+        userStoreConfigAdminServiceClient.deleteUserStore(DOMAIN_ID);
+        for (LocalClaimDTO localClaimDTO : claimMetadataManagementServiceClient.getLocalClaims()) {
+            for (AttributeMappingDTO attributeMappingDTO : localClaimDTO.getAttributeMappings()) {
+                Assert.assertNotEquals(attributeMappingDTO.getUserStoreDomain(), DOMAIN_ID);
+            }
+        }
     }
 }

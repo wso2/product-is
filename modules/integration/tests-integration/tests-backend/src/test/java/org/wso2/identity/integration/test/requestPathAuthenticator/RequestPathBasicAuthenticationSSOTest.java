@@ -195,7 +195,6 @@ public class RequestPathBasicAuthenticationSSOTest extends ISIntegrationTest {
             EntityUtils.consume(response.getEntity());
         }
 
-        response = Utils.sendRedirectRequest(response, USER_AGENT, String.format(ACS_URL, ISSUER_TRAVELOCITY_COM), "", client);
         int responseCode = response.getStatusLine().getStatusCode();
         Assert.assertEquals(responseCode, 200, "Successful login response returned code " + responseCode);
         String samlResponse = "";
@@ -246,7 +245,6 @@ public class RequestPathBasicAuthenticationSSOTest extends ISIntegrationTest {
             EntityUtils.consume(response.getEntity());
         }
 
-        response = Utils.sendRedirectRequest(response, USER_AGENT, String.format(ACS_URL, ISSUER_AVIS_COM), "", client);
         int responseCode = response.getStatusLine().getStatusCode();
         Assert.assertEquals(responseCode, 200, "Successful login response returned code " + responseCode);
         String samlResponse = "";
