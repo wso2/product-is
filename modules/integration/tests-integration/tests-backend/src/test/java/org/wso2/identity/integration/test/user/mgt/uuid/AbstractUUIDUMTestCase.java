@@ -44,9 +44,17 @@ public abstract class AbstractUUIDUMTestCase extends ISIntegrationTest {
     protected String adminUsername;
     protected String adminPassword;
 
-    private String user1Username = "user1";
-    private String user2Username = "user2";
-    private String user3Username = "user3";
+    private String user1Username = "uuid-user1";
+    private String user2Username = "uuid-user2";
+    private String user3Username = "uuid-user3";
+
+    private String role1name = "uuid-role1";
+    private String role2name = "uuid-role2";
+    private String role3name = "uuid-role3";
+    private String role4name = "uuid-role4";
+    private String role5name = "uuid-role5";
+    private String role6name = "uuid-role6";
+    private String role7name = "uuid-role7";
 
     private String defaultProfile = "default";
 
@@ -176,7 +184,7 @@ public abstract class AbstractUUIDUMTestCase extends ISIntegrationTest {
 
     public void testAddRoleWithId() throws Exception {
 
-        String roleName = "role1";
+        String roleName = role6name;
         String[] userIdList = new String[]{userId};
         PermissionDTO[] permissionDTOS = new PermissionDTO[0];
 
@@ -186,12 +194,12 @@ public abstract class AbstractUUIDUMTestCase extends ISIntegrationTest {
 
     public void testIsUserInRoleWithID() throws Exception {
 
-        String roleName = "role2";
+        String roleName = role7name;
         String[] userIdList = new String[]{userId};
         PermissionDTO[] permissionDTOS = new PermissionDTO[0];
 
         userMgtClient.addRoleWithID(roleName, userIdList, permissionDTOS, false);
-        Assert.assertTrue(userMgtClient.isUserInRoleWithID(userId, "role2"));
+        Assert.assertTrue(userMgtClient.isUserInRoleWithID(userId, role7name));
     }
 
     public void listUsersWithID() throws Exception {
@@ -237,74 +245,74 @@ public abstract class AbstractUUIDUMTestCase extends ISIntegrationTest {
         UserDTO userDTO = userMgtClient.addUserWithID(user2Username, credential2, new String[0], new ClaimValue[0],
                 defaultProfile);
 
-        userMgtClient.addRoleWithID("umRole3", new String[]{userDTO.getUserID()}, new PermissionDTO[]{}, false);
+        userMgtClient.addRoleWithID(role3name, new String[]{userDTO.getUserID()}, new PermissionDTO[]{}, false);
 
         String[] newUsers = new String[]{userDTO.getUserID()};
         String[] deletedUsers = new String[]{userId};
 
-        userMgtClient.updateUserListOfRoleWithID("umRole3", newUsers, deletedUsers);
+        userMgtClient.updateUserListOfRoleWithID(role3name, newUsers, deletedUsers);
 
-        Assert.assertTrue(userNameExists(userMgtClient.getUserListOfRoleWithID("umRole3"), user1Username),
+        Assert.assertTrue(userNameExists(userMgtClient.getUserListOfRoleWithID(role3name), user1Username),
                 "Getting user added to umRole3 role failed");
-        Assert.assertFalse(userNameExists(userMgtClient.getUserListOfRoleWithID("umRole3"), user2Username),
+        Assert.assertFalse(userNameExists(userMgtClient.getUserListOfRoleWithID(role3name), user2Username),
                 "User user2 still exists in the umRole3 role");
 
         // Clean up the modified users of role and test it.
-        userMgtClient.updateUserListOfRoleWithID("umRole3", deletedUsers, newUsers);
-        Assert.assertTrue(userNameExists(userMgtClient.getUserListOfRoleWithID("umRole3"), user2Username),
+        userMgtClient.updateUserListOfRoleWithID(role3name, deletedUsers, newUsers);
+        Assert.assertTrue(userNameExists(userMgtClient.getUserListOfRoleWithID(role3name), user2Username),
                 "Getting user added to umRole3 role failed");
-        Assert.assertFalse(userNameExists(userMgtClient.getUserListOfRoleWithID("umRole3"), user1Username),
+        Assert.assertFalse(userNameExists(userMgtClient.getUserListOfRoleWithID(role3name), user1Username),
                 "User user1 still exists in the umRole3 role");
     }
 
     public void testAddRemoveRolesOfUser() throws Exception {
 
-        userMgtClient.addRoleWithID("umRole1", new String[]{userId}, new PermissionDTO[]{}, false);
-        userMgtClient.addRoleWithID("umRole2", new String[0], new PermissionDTO[]{}, false);
+        userMgtClient.addRoleWithID(role1name, new String[]{userId}, new PermissionDTO[]{}, false);
+        userMgtClient.addRoleWithID(role2name, new String[0], new PermissionDTO[]{}, false);
 
-        String[] newRoles = new String[]{"umRole1"};
-        String[] deletedRoles = new String[]{"umRole2"};
+        String[] newRoles = new String[]{role1name};
+        String[] deletedRoles = new String[]{role2name};
 
         userMgtClient.updateRoleListOfUserWithID(userId, newRoles, deletedRoles);
 
-        Assert.assertTrue(nameExists(userMgtClient.getRoleListOfUserWithID(userId), "umRole2"),
+        Assert.assertTrue(nameExists(userMgtClient.getRoleListOfUserWithID(userId), role2name),
                 "Adding role to user1 has failed");
-        Assert.assertFalse(nameExists(userMgtClient.getRoleListOfUserWithID(userId), "umRole1"),
+        Assert.assertFalse(nameExists(userMgtClient.getRoleListOfUserWithID(userId), role1name),
                 "Role still exists in the user1 roles");
 
         // Clean up the modified roles of user and test it.
         userMgtClient.updateRoleListOfUserWithID(userId, deletedRoles, null);
-        Assert.assertFalse(nameExists(userMgtClient.getRoleListOfUserWithID(userId), "umRole2"),
+        Assert.assertFalse(nameExists(userMgtClient.getRoleListOfUserWithID(userId), role2name),
                 "Role still exists in the user1 roles");
     }
 
     public void testUpdateUsersOfRole() throws Exception {
 
-        userMgtClient.addRoleWithID("umRole4", new String[]{userId}, new PermissionDTO[]{}, false);
+        userMgtClient.addRoleWithID(role4name, new String[]{userId}, new PermissionDTO[]{}, false);
 
         UserDTO userDTO = userMgtClient.addUserWithID(user3Username, credential2, new String[0], new ClaimValue[0],
                 defaultProfile);
 
         String[] userList = new String[]{userDTO.getUserID()};
 
-        userMgtClient.updateUserListOfRoleWithID("umRole4", null, userList);
-        Assert.assertTrue(userNameExists(userMgtClient.getUserListOfRoleWithID("umRole4", user1Username, 1),
+        userMgtClient.updateUserListOfRoleWithID(role4name, null, userList);
+        Assert.assertTrue(userNameExists(userMgtClient.getUserListOfRoleWithID(role4name, user1Username, 1),
                 user1Username), "Adding user1 to role has failed");
-        Assert.assertTrue(userNameExists(userMgtClient.getUserListOfRoleWithID("umRole4", user3Username, 1),
+        Assert.assertTrue(userNameExists(userMgtClient.getUserListOfRoleWithID(role4name, user3Username, 1),
                 user3Username), "Adding user3 to role has failed");
 
-        userMgtClient.updateUserListOfRoleWithID("umRole4", new String[] {userDTO.getUserID()}, null);
-        Assert.assertFalse(userNameExists(userMgtClient.getUserListOfRoleWithID("umRole4", user3Username, 1),
+        userMgtClient.updateUserListOfRoleWithID(role4name, new String[] {userDTO.getUserID()}, null);
+        Assert.assertFalse(userNameExists(userMgtClient.getUserListOfRoleWithID(role4name, user3Username, 1),
                 user3Username), "Removing user3 from role has failed");
     }
 
     public void testGetRolesOfCurrentUser() throws Exception {
 
-        userMgtClient.addRoleWithID("umRole5", new String[]{userId}, new PermissionDTO[]{}, false);
+        userMgtClient.addRoleWithID(role5name, new String[]{userId}, new PermissionDTO[]{}, false);
         String[] roles = userMgtClient.getRoleListOfUserWithID(userId);
 
         for (String role : roles) {
-            if ("umRole5".equals(role)) {
+            if (role5name.equals(role)) {
                 Assert.assertTrue(true);
                 break;
             }
