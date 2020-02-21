@@ -228,9 +228,4 @@ public class ActiveSTSTestCase extends ISIntegrationTest {
                 "Expected " + expectedNoOfChanges + " changes "
                         + "but found " + xPaths.size() + " changes.");
     }
-
-    private void printQuery(String message, String query) {
-
-        System.out.println(message + ": \n" + query + "\n");
-    }
 }
