@@ -77,7 +77,6 @@ public class SecondaryCarbonServerInitializerTestCase extends AbstractIdentityFe
 
         LOG.info("Stopping secondary carbon server...");
         try {
-            resetServerConfiguration();
             super.stopCarbonServer(PORT_OFFSET_1);
             LOG.info("Secondary carbon server stopped.");
         } catch (AutomationFrameworkException e1) {
@@ -100,11 +99,5 @@ public class SecondaryCarbonServerInitializerTestCase extends AbstractIdentityFe
         serverConfigurationManager = new ServerConfigurationManager(server);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartGracefully();
-    }
-
-    private void resetServerConfiguration() throws Exception {
-
-        log.info("Restoring default config changes in the secondary server.");
-        serverConfigurationManager.restoreToLastConfiguration(false);
     }
 }
