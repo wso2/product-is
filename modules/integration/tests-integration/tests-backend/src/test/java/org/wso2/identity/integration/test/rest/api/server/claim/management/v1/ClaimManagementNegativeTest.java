@@ -217,7 +217,7 @@ public class ClaimManagementNegativeTest extends ClaimManagementTestBase {
         String body = readResource("claim-management-add-external-claim.json");
         Response response = getResponseOfPost(CLAIM_DIALECTS_ENDPOINT_URI + "/" + testDialectId + CLAIMS_ENDPOINT_URI
                 , body);
-        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "CMT-50027", testDialectId);
+        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "CMT-50027", testDialectId);
     }
 
     @Test
