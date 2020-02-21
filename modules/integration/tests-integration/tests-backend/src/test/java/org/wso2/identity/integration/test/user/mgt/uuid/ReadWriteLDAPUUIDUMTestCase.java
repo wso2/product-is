@@ -18,11 +18,16 @@ package org.wso2.identity.integration.test.user.mgt.uuid;
 
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 
 public class ReadWriteLDAPUUIDUMTestCase extends AbstractUUIDUMTestCase {
 
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
+
+        super.init();
+        ServerConfigurationManager scm = new ServerConfigurationManager(isServer);
+        scm.restartGracefully();
         super.init();
     }
 

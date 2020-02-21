@@ -67,6 +67,7 @@ public class UUIDUserStoreManagerService {
             return getUserDTO(getUserStoreManager().addUserWithID(userName, credential, roleList,
                     convertClaimValueToMap(claims), profileName));
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            log.error("Error while calling the service method.", e);
             throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
         }
     }
@@ -81,6 +82,7 @@ public class UUIDUserStoreManagerService {
             return getAuthenticationResultDTOFromAuthenticationResult(getUserStoreManager()
                     .authenticateWithID(identifierList, domain, credential));
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            log.error("Error while calling the service method.", e);
             throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
         }
     }
@@ -92,6 +94,7 @@ public class UUIDUserStoreManagerService {
             return getAuthenticationResultDTOFromAuthenticationResult(getUserStoreManager()
                     .authenticateWithID(userID, credential));
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            log.error("Error while calling the service method.", e);
             throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
         }
     }
@@ -105,6 +108,7 @@ public class UUIDUserStoreManagerService {
             return getAuthenticationResultDTOFromAuthenticationResult(getUserStoreManager()
                     .authenticateWithID(preferredUserNameClaim, preferredUserNameValue, credential, profileName));
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            log.error("Error while calling the service method.", e);
             throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
         }
     }
@@ -115,6 +119,7 @@ public class UUIDUserStoreManagerService {
         try {
             getUserStoreManager().deleteUserClaimValuesWithID(userID, claims, profileName);
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            log.error("Error while calling the service method.", e);
             throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
         }
     }
@@ -124,6 +129,7 @@ public class UUIDUserStoreManagerService {
         try {
             return getUserStoreManager().getPasswordExpirationTimeWithID(userId);
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            log.error("Error while calling the service method.", e);
             throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
         }
     }
@@ -133,6 +139,7 @@ public class UUIDUserStoreManagerService {
         try {
             return getUserStoreManager().isUserInRoleWithID(userID, roleName);
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            log.error("Error while calling the service method.", e);
             throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
         }
     }
@@ -142,6 +149,7 @@ public class UUIDUserStoreManagerService {
         try {
             return getUserDTOListFromUser(getUserStoreManager().listUsersWithID(filter, limit, offset));
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            log.error("Error while calling the service method.", e);
             throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
         }
     }
@@ -154,6 +162,7 @@ public class UUIDUserStoreManagerService {
             return getUserDTOListFromUser(getUserStoreManager().getUserListWithID(claim, claimValue, profileName, limit,
                     offset));
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            log.error("Error while calling the service method.", e);
             throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
         }
     }
@@ -167,6 +176,7 @@ public class UUIDUserStoreManagerService {
             return getUserDTOListFromUser(getUserStoreManager().getUserListWithID(condition, domain, profileName, limit,
                     offset, sortBy, sortOrder));
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            log.error("Error while calling the service method.", e);
             throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
         }
     }
@@ -180,6 +190,7 @@ public class UUIDUserStoreManagerService {
                     .getUsersClaimValuesWithID(Arrays.asList(userIDs), Arrays.asList(claims), profileName)
                     .toArray(new UniqueIDUserClaimSearchEntry[0]));
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            log.error("Error while calling the service method.", e);
             throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
         }
     }
@@ -189,6 +200,7 @@ public class UUIDUserStoreManagerService {
         try {
             return getUserRoleListDTOs(getUserStoreManager().getRoleListOfUsersWithID(Arrays.asList(userIDs)));
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            log.error("Error while calling the service method.", e);
             throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
         }
     }
@@ -199,6 +211,7 @@ public class UUIDUserStoreManagerService {
         try {
             getUserStoreManager().deleteUserClaimValueWithID(userID, claimURI, profileName);
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            log.error("Error while calling the service method.", e);
             throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
         }
     }
@@ -208,6 +221,7 @@ public class UUIDUserStoreManagerService {
         try {
             return getUserDTOListFromUser(getUserStoreManager().listUsersWithID(filter, maxItemLimit));
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            log.error("Error while calling the service method.", e);
             throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
         }
     }
@@ -218,6 +232,7 @@ public class UUIDUserStoreManagerService {
         try {
             return getUserDTO(getUserStoreManager().getUserWithID(userID, requestedClaims, profileName));
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            log.error("Error while calling the service method.", e);
             throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
         }
     }
@@ -227,6 +242,7 @@ public class UUIDUserStoreManagerService {
         try {
             return getUserStoreManager().isExistingUserWithID(userID);
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            log.error("Error while calling the service method.", e);
             throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
         }
     }
@@ -236,6 +252,7 @@ public class UUIDUserStoreManagerService {
         try {
             return getUserStoreManager().getProfileNamesWithID(userID);
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            log.error("Error while calling the service method.", e);
             throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
         }
     }
@@ -245,6 +262,7 @@ public class UUIDUserStoreManagerService {
         try {
             return getUserStoreManager().getRoleListOfUserWithID(userID).toArray(new String[0]);
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            log.error("Error while calling the service method.", e);
             throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
         }
     }
@@ -254,6 +272,7 @@ public class UUIDUserStoreManagerService {
         try {
             return getUserDTOListFromUser(getUserStoreManager().getUserListOfRoleWithID(roleName));
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            log.error("Error while calling the service method.", e);
             throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
         }
     }
@@ -265,6 +284,7 @@ public class UUIDUserStoreManagerService {
             return getUserDTOListFromUser(getUserStoreManager().getUserListOfRoleWithID(roleName, filter,
                     maxItemLimit));
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            log.error("Error while calling the service method.", e);
             throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
         }
     }
@@ -274,6 +294,7 @@ public class UUIDUserStoreManagerService {
         try {
             return getUserStoreManager().getUserClaimValueWithID(userID, claim, profileName);
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            log.error("Error while calling the service method.", e);
             throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
         }
     }
@@ -284,6 +305,7 @@ public class UUIDUserStoreManagerService {
         try {
             return convertMapToClaimValue(getUserStoreManager().getUserClaimValuesWithID(userID, claims, profileName));
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            log.error("Error while calling the service method.", e);
             throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
         }
     }
@@ -293,6 +315,7 @@ public class UUIDUserStoreManagerService {
         try {
             return convertClaimToClaimDTO(getUserStoreManager().getUserClaimValuesWithID(userID, profileName));
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            log.error("Error while calling the service method.", e);
             throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
         }
     }
@@ -302,6 +325,7 @@ public class UUIDUserStoreManagerService {
         try {
             getUserStoreManager().deleteUserWithID(userID);
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            log.error("Error while calling the service method.", e);
             throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
         }
     }
@@ -312,6 +336,7 @@ public class UUIDUserStoreManagerService {
         try {
             getUserStoreManager().setUserClaimValueWithID(userID, claimURI, claimValue, profileName);
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            log.error("Error while calling the service method.", e);
             throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
         }
     }
@@ -322,6 +347,7 @@ public class UUIDUserStoreManagerService {
         try {
             getUserStoreManager().setUserClaimValuesWithID(userID, convertClaimValueToMap(claims), profileName);
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            log.error("Error while calling the service method.", e);
             throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
         }
     }
@@ -331,6 +357,7 @@ public class UUIDUserStoreManagerService {
         try {
             return getUserDTOListFromUser(getUserStoreManager().getUserListWithID(claim, claimValue, profileName));
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            log.error("Error while calling the service method.", e);
             throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
         }
     }
@@ -341,6 +368,7 @@ public class UUIDUserStoreManagerService {
         try {
             getUserStoreManager().updateCredentialWithID(userID, newCredential, oldCredential);
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            log.error("Error while calling the service method.", e);
             throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
         }
     }
@@ -350,6 +378,7 @@ public class UUIDUserStoreManagerService {
         try {
             getUserStoreManager().updateCredentialByAdminWithID(userID, newCredential);
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            log.error("Error while calling the service method.", e);
             throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
         }
     }
@@ -363,6 +392,7 @@ public class UUIDUserStoreManagerService {
         try {
             getUserStoreManager().addRoleWithID(roleName, userIDList, permissions, isSharedRole);
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            log.error("Error while calling the service method.", e);
             throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
         }
     }
@@ -373,6 +403,7 @@ public class UUIDUserStoreManagerService {
         try {
             getUserStoreManager().updateUserListOfRoleWithID(roleName, deletedUserIDs, newUserIDs);
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            log.error("Error while calling the service method.", e);
             throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
         }
     }
@@ -383,6 +414,7 @@ public class UUIDUserStoreManagerService {
         try {
             getUserStoreManager().updateRoleListOfUserWithID(userID, deletedRoles, newRoles);
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            log.error("Error while calling the service method.", e);
             throw new UserStoreException(e.getMessage(), e.getErrorCode(), e.getCause());
         }
     }
