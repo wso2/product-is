@@ -160,12 +160,12 @@ public class OAuth2ScopesTestCase extends ISIntegrationTest {
         String addScopeString = "{\"name\": " + "\""+name+"\"" + ", \"displayName\": " + "\""+displayName+"\"" + ", " +
                 "\"description\": " + "\""+description+"\"" + ", \"bindings\": " + bindings + "}";
 
-        ClientResponse response1 = userResource.contentType(MediaType.APPLICATION_JSON_TYPE).
+        ClientResponse clientResponse = userResource.contentType(MediaType.APPLICATION_JSON_TYPE).
                 accept(MediaType.APPLICATION_JSON).post(addScopeString);
 
-        String locationHeader = response1.getHeaders().get("Location").get(0);
+        String locationHeader = clientResponse.getHeaders().get("Location").get(0);
 
-        JSONObject response = (JSONObject) JSONValue.parse(response1.getEntity(String.class));
+        JSONObject response = (JSONObject) JSONValue.parse(clientResponse.getEntity(String.class));
         response.put("location", locationHeader);
 
         return (response);
