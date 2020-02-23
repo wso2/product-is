@@ -100,7 +100,7 @@ public class KeystoreManagementFailureTest extends KeystoreManagementBaseTest {
             Response response = getResponseOfJSONPost(KEYSTORE_MANAGEMENT_API_BASE_PATH +
                             KEYSTORE_MANAGEMENT_API_CERTIFICATE_PATH, readResource("cert-request-body1.json"),
                     new HashMap<>());
-            validateHttpStatusCode(response, HttpStatus.SC_NOT_FOUND);
+            validateHttpStatusCode(response, HttpStatus.SC_METHOD_NOT_ALLOWED);
         }
     }
 
@@ -111,7 +111,7 @@ public class KeystoreManagementFailureTest extends KeystoreManagementBaseTest {
             Response response =
                     getResponseOfDelete(KEYSTORE_MANAGEMENT_API_BASE_PATH +
                             KEYSTORE_MANAGEMENT_API_CERTIFICATE_PATH + PATH_SEPARATOR + "wso2carbon");
-            validateHttpStatusCode(response, HttpStatus.SC_NOT_FOUND);
+            validateHttpStatusCode(response, HttpStatus.SC_METHOD_NOT_ALLOWED);
         }
     }
 
