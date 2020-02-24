@@ -52,7 +52,7 @@ public class OAuth2ScopesTestCase extends ISIntegrationTest {
     public void testInit() throws Exception {
         super.init();
         isServerBackendUrl = isServer.getContextUrls().getWebAppURLHttps();
-        scopeEndpoint = isServerBackendUrl + SCOPE_ENDPOINT_SUFFIX;
+        scopeEndpoint = isServerBackendUrl + "/t/" + isServer.getContextTenant().getDomain() + SCOPE_ENDPOINT_SUFFIX;
     }
 
     @AfterClass(alwaysRun = true)
@@ -67,6 +67,7 @@ public class OAuth2ScopesTestCase extends ISIntegrationTest {
         String displayName = "profile";
         String description = "get all profile information";
         String bindings = "[\"role1\",\"role2\"]";
+        String locationHeader = scopeEndpoint + "/name/" + name;
 
         JSONObject response = addScope(name, displayName, description, bindings);
 
@@ -74,6 +75,7 @@ public class OAuth2ScopesTestCase extends ISIntegrationTest {
         Assert.assertEquals(displayName, response.get("displayName").toString());
         Assert.assertEquals(description, response.get("description").toString());
         Assert.assertEquals(bindings, response.get("bindings").toString());
+        Assert.assertEquals(locationHeader, response.get("location").toString());
     }
 
     @Test(alwaysRun = true, groups = "wso2.is", description = "Get All Scope test", dependsOnMethods = {"testAddScope"})
@@ -158,10 +160,15 @@ public class OAuth2ScopesTestCase extends ISIntegrationTest {
         String addScopeString = "{\"name\": " + "\""+name+"\"" + ", \"displayName\": " + "\""+displayName+"\"" + ", " +
                 "\"description\": " + "\""+description+"\"" + ", \"bindings\": " + bindings + "}";
 
-        String response = userResource.contentType(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON)
-                .post(String.class, addScopeString);
+        ClientResponse clientResponse = userResource.contentType(MediaType.APPLICATION_JSON_TYPE).
+                accept(MediaType.APPLICATION_JSON).post(addScopeString);
 
-        return (JSONObject) JSONValue.parse(response);
+        String locationHeader = clientResponse.getHeaders().get("Location").get(0);
+
+        JSONObject response = (JSONObject) JSONValue.parse(clientResponse.getEntity(String.class));
+        response.put("location", locationHeader);
+
+        return (response);
     }
 
     private JSONArray getAllScopes() {
