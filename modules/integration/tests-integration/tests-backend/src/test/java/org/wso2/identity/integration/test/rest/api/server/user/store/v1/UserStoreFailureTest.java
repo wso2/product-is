@@ -118,6 +118,6 @@ public class UserStoreFailureTest extends UserStoreTestBase {
 
         Response response = getResponseOfDelete(USER_STORE_PATH_COMPONENT + PATH_SEPARATOR
                 + INCORRECT_DOMAIN_ID);
-        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "SUS-60001");
+        validateHttpStatusCode(response, HttpStatus.SC_NO_CONTENT);
     }
 }
