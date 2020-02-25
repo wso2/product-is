@@ -150,6 +150,10 @@
             <artifactId>org.wso2.carbon.identity.user.profile.stub</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.wso2.is</groupId>
+            <artifactId>org.wso2.carbon.identity.test.integration.service.stubs</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.opensaml</groupId>
             <artifactId>opensaml-core</artifactId>
             <version>${opensaml3.version}</version>

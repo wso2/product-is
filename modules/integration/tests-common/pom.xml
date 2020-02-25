@@ -29,6 +29,8 @@
     <name>WSO2 Identity Integration Test Common</name>
 
     <modules>
+        <module>admin-services</module>
+        <module>admin-stubs</module>
         <module>admin-clients</module>
         <module>ui-pages</module>
         <module>integration-test-utils</module>
