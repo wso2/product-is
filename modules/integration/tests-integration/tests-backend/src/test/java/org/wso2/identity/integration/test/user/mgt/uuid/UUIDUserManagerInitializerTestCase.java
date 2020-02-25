@@ -19,6 +19,8 @@
 package org.wso2.identity.integration.test.user.mgt.uuid;
 
 import org.apache.commons.io.filefilter.RegexFileFilter;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
@@ -29,14 +31,17 @@ import java.io.FileFilter;
 
 public class UUIDUserManagerInitializerTestCase extends ISIntegrationTest {
 
+    private static final Log log = LogFactory.getLog(UUIDUserManagerInitializerTestCase.class);
     private File uuidServiceJar;
 
     @BeforeTest(alwaysRun = true)
     public void initTest() throws Exception {
 
+        log.info("Initializing UUID User manager initializer test case.");
         super.init();
 
         uuidServiceJar = getServiceJar();
+        log.info("Copying the service jar to the dropins folder before restarting the server.");
 
         ServerConfigurationManager serverConfigurationManager = new ServerConfigurationManager(isServer);
         serverConfigurationManager.copyToComponentDropins(uuidServiceJar);
@@ -52,6 +57,7 @@ public class UUIDUserManagerInitializerTestCase extends ISIntegrationTest {
         File [] files = directory.listFiles(filter);
 
         if (files == null || files.length == 0) {
+            log.error("Unable to find the services JAR file.");
             throw new Exception("Cannot find the services JAR file.");
         }
 
