@@ -23,5 +23,6 @@
 
   "log_correlation.header_config": "{'activityid':'Correlation-ID'}",
 
-  "monitoring.jmx.rmi_server_start": false
+  "monitoring.jmx.rmi_server_start": false,
+  "product.version" : "${product.version}"
 }
