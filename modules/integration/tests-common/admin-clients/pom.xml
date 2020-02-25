@@ -249,6 +249,11 @@
             <version>${java-support.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity</artifactId>
+            <version>${org.apache.velocity.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.carbon.identity.framework</groupId>
             <artifactId>org.wso2.carbon.security.mgt.stub</artifactId>
         </dependency>
