@@ -61,6 +61,10 @@ public class KeystoreManagementSuccessTest extends KeystoreManagementBaseTest {
     @AfterClass(alwaysRun = true)
     public void testConclude() {
 
+        if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
+            getResponseOfDelete(KEYSTORE_MANAGEMENT_API_BASE_PATH +
+                            KEYSTORE_MANAGEMENT_API_CERTIFICATE_PATH + PATH_SEPARATOR + "newcert");
+        }
         super.conclude();
     }
 
@@ -163,7 +167,7 @@ public class KeystoreManagementSuccessTest extends KeystoreManagementBaseTest {
                             KEYSTORE_MANAGEMENT_API_CERTIFICATE_PATH, readResource("cert-request-body1.json"),
                     new HashMap<>());
             validateHttpStatusCode(response, HttpStatus.SC_CREATED);
-            Assert.assertNotNull(response.getCookie("Certificate"));
+            Assert.assertNotNull(response.getCookie("Location"));
         }
     }
 
