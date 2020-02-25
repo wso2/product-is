@@ -125,37 +125,12 @@ public class ResourceAdminServiceClient {
          resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_WADL, description, dh, null, null);
      }
 
-     public void addWSDL(String resourceName, String description,
-                         String fetchURL)
-             throws ResourceAdminServiceExceptionException, RemoteException {
-
-         resourceAdminServiceStub.importResource("/", resourceName, MEDIA_TYPE_WSDL,
-                 description, fetchURL, null, null);
-     }
-
-     public void addWADL(String resourceName, String description,
-                         String fetchURL)
-             throws ResourceAdminServiceExceptionException, RemoteException {
-
-         resourceAdminServiceStub.importResource("/", resourceName, MEDIA_TYPE_WADL,
-                 description, fetchURL, null, null);
-     }
-
      public void addSchema(String description, DataHandler dh)
              throws ResourceAdminServiceExceptionException, RemoteException {
          String fileName;
          fileName = dh.getName().substring(dh.getName().lastIndexOf('/') + 1);
          resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_SCHEMA,
                  description, dh, null, null);
-     }
-
-     public void addSchema(String resourceName, String description,
-                           String fetchURL) throws ResourceAdminServiceExceptionException,
-             RemoteException {
-
-         resourceAdminServiceStub.importResource("/", resourceName, MEDIA_TYPE_SCHEMA,
-                 description, fetchURL, null, null);
-
      }
 
      public void addPolicy(String description, DataHandler dh)
@@ -166,25 +141,11 @@ public class ResourceAdminServiceClient {
                  description, dh, null, null);
      }
 
-     public void addPolicy(String resourceName, String description,
-                           String fetchURL)
-             throws ResourceAdminServiceExceptionException, RemoteException {
-
-         resourceAdminServiceStub.importResource("/", resourceName, MEDIA_TYPE_POLICY,
-                 description, fetchURL, null, null);
-     }
-
      public void addSwagger(String description, DataHandler dh)
              throws ResourceAdminServiceExceptionException, RemoteException {
          String fileName;
          fileName = dh.getName().substring(dh.getName().lastIndexOf('/') + 1);
          resourceAdminServiceStub.addResource("/" + fileName, MEDIA_TYPE_SWAGGER, description, dh, null, null);
-     }
-
-     public void addSwagger(String resourceName, String description, String fetchURL)
-             throws RemoteException, ResourceAdminServiceExceptionException {
-         resourceAdminServiceStub
-                 .importResource("/", resourceName, MEDIA_TYPE_SWAGGER, description, fetchURL, null, null);
      }
 
      public void uploadArtifact(String description, DataHandler dh)
