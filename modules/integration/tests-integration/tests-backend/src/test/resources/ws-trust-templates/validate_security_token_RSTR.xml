@@ -1,0 +1,25 @@
+<soapenv:Envelope xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope">
+    <soapenv:Header xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">
+        <wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+                       soapenv:mustUnderstand="true">
+            <wsu:Timestamp
+                    xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+                    wsu:Id="Timestamp-12">
+                <wsu:Created>2020-02-07T04:45:02.357Z</wsu:Created>
+                <wsu:Expires>2020-02-07T04:50:02.357Z</wsu:Expires>
+            </wsu:Timestamp>
+        </wsse:Security>
+        <wsa:To>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:To>
+        <wsa:MessageID>urn:uuid:3c6757cc-cc60-472e-9935-953e2022bbd3</wsa:MessageID>
+        <wsa:Action>http://schemas.xmlsoap.org/ws/2005/02/trust/RSTR/Validate</wsa:Action>
+        <wsa:RelatesTo>urn:uuid:dc9ae405-d1d2-4ff2-ba55-3ff27e0544b3</wsa:RelatesTo>
+    </soapenv:Header>
+    <soapenv:Body>
+        <wst:RequestSecurityTokenResponse xmlns:wst="http://schemas.xmlsoap.org/ws/2005/02/trust">
+            <wst:TokenType>http://schemas.xmlsoap.org/ws/2005/02/trust/RSTR/Status</wst:TokenType>
+            <wst:Status>
+                <wst:Code>http://schemas.xmlsoap.org/ws/2005/02/trust/status/valid</wst:Code>
+            </wst:Status>
+        </wst:RequestSecurityTokenResponse>
+    </soapenv:Body>
+</soapenv:Envelope>

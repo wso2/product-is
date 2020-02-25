@@ -629,6 +629,11 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.registry.core</artifactId>
+                <version>${carbon.kernel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.user.api</artifactId>
                 <version>${carbon.kernel.version}</version>
             </dependency>
@@ -1316,6 +1321,11 @@
                 <version>${carbon.identity.framework.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.is</groupId>
+                <artifactId>org.wso2.carbon.identity.test.integration.service.stubs</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.identity.framework</groupId>
                 <artifactId>org.wso2.carbon.identity.workflow.mgt.stub</artifactId>
                 <version>${carbon.identity.framework.version}</version>
@@ -1388,6 +1398,11 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity.framework</groupId>
                 <artifactId>org.wso2.carbon.identity.application.authentication.framework</artifactId>
+                <version>${carbon.identity.framework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.framework</groupId>
+                <artifactId>org.wso2.carbon.user.mgt.common</artifactId>
                 <version>${carbon.identity.framework.version}</version>
             </dependency>
             <dependency>
@@ -1822,6 +1837,11 @@
                 <version>${msf4j.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.velocity</groupId>
+                <artifactId>velocity</artifactId>
+                <version>${org.apache.velocity.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>io.rest-assured</groupId>
                 <artifactId>rest-assured</artifactId>
                 <version>${rest.assured.version}</version>
@@ -1837,6 +1857,12 @@
                 <groupId>com.atlassian.oai</groupId>
                 <artifactId>swagger-request-validator-restassured</artifactId>
                 <version>${swagger-request-validator.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.xmlunit</groupId>
+                <artifactId>xmlunit-core</artifactId>
+                <version>${org.xmlunit.version}</version>
                 <scope>test</scope>
             </dependency>
             <!-- Pax Logging -->
@@ -1861,6 +1887,12 @@
                 <groupId>commons-logging</groupId>
                 <artifactId>commons-logging</artifactId>
                 <version>1.2</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>commons-lang.wso2</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>${commons-lang.wso2.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -2039,7 +2071,7 @@
         <carbon.identity.oauth.uma.version>1.1.10</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.0.50</identity.apps.version>
+        <identity.apps.version>1.0.52</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.3.0</charon.version>
@@ -2142,6 +2174,7 @@
         <osgi.framework.imp.pkg.version.range>[1.7.0, 2.0.0)</osgi.framework.imp.pkg.version.range>
         <osgi.service.component.imp.pkg.version.range>[1.2.0, 2.0.0)</osgi.service.component.imp.pkg.version.range>
         <commons.logging.version.range>[1.2.0,2.0.0)</commons.logging.version.range>
+        <commons-lang.wso2.version>2.6.0.wso2v1</commons-lang.wso2.version>
 
         <!--  Test dependencies -->
         <carbon.automation.version>4.4.3</carbon.automation.version>
@@ -2162,6 +2195,10 @@
         <rest.assured.version>4.1.2</rest.assured.version>
         <swagger-core-version>1.5.22</swagger-core-version>
         <swagger-request-validator.version>2.6.0</swagger-request-validator.version>
+
+        <!--ws-trust-client-->
+        <org.apache.velocity.version>1.7</org.apache.velocity.version>
+        <org.xmlunit.version>2.6.3</org.xmlunit.version>
 
         <project.scm.id>my-scm-server</project.scm.id>
 
