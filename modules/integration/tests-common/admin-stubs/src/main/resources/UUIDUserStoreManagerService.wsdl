@@ -1,0 +1,1850 @@
+
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ax2456="http://dao.service.integration.test.identity.carbon.wso2.org/xsd" xmlns:ns="http://service.integration.test.identity.carbon.wso2.org" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" targetNamespace="http://service.integration.test.identity.carbon.wso2.org">
+    <wsdl:documentation>UUIDUserStoreManagerService</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema xmlns:ax2457="http://dao.service.integration.test.identity.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://service.integration.test.identity.carbon.wso2.org">
+            <xs:import namespace="http://dao.service.integration.test.identity.carbon.wso2.org/xsd"/>
+            <xs:element name="UUIDUserStoreManagerServiceUserStoreException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="UserStoreException" nillable="true" type="ax2456:UserStoreException"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUserListWithID">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="claim" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="claimValue" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="profileName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUserListWithIDResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2456:UserDTO"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listUsersWithID">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="filter" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="maxItemLimit" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listUsersWithIDResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2456:UserDTO"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUserWithID">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userID" nillable="true" type="xs:string"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="requestedClaims" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="profileName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUserWithIDResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2456:UserDTO"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="isExistingUserWithID">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userID" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="isExistingUserWithIDResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getRoleListOfUserWithID">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userID" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getRoleListOfUserWithIDResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUserListOfRoleWithID">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="roleName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUserListOfRoleWithIDResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2456:UserDTO"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUserClaimValueWithID">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userID" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="claim" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="profileName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUserClaimValueWithIDResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUserClaimValuesWithID">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userID" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="profileName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUserClaimValuesWithIDResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2456:ClaimDTO"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateCredentialWithID">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userID" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="newCredential" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="oldCredential" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteUserWithID">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userID" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="setUserClaimValueWithID">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userID" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="claimURI" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="claimValue" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="profileName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="setUserClaimValuesWithID">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userID" nillable="true" type="xs:string"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="claims" nillable="true" type="ax2456:ClaimValue"/>
+                        <xs:element minOccurs="0" name="profileName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateCredentialByAdminWithID">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userID" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="newCredential" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteUserClaimValueWithID">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userID" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="claimURI" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="profileName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteUserClaimValuesWithID">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userID" nillable="true" type="xs:string"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="claims" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="profileName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateRoleListOfUserWithID">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userID" nillable="true" type="xs:string"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="deletedRoles" nillable="true" type="xs:string"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="newRoles" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="updateUserListOfRoleWithID">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="roleName" nillable="true" type="xs:string"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="deletedUserIDs" nillable="true" type="xs:string"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="newUserIDs" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addUserWithID">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="credential" nillable="true" type="xs:string"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="roleList" nillable="true" type="xs:string"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="claims" nillable="true" type="ax2456:ClaimValue"/>
+                        <xs:element minOccurs="0" name="profileName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addUserWithIDResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2456:UserDTO"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="addRoleWithID">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="roleName" nillable="true" type="xs:string"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="userIDList" nillable="true" type="xs:string"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="permissionsDTOs" nillable="true" type="ax2456:PermissionDTO"/>
+                        <xs:element minOccurs="0" name="isSharedRole" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="isUserInRoleWithID">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userID" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="roleName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="isUserInRoleWithIDResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUsersClaimValuesWithID">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="userIDs" nillable="true" type="xs:string"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="claims" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="profileName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUsersClaimValuesWithIDResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2456:UniqueIDUserClaimSearchEntryDAO"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getRoleListOfUsersWithID">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="userIDs" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getRoleListOfUsersWithIDResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2456:UserRoleListDTO"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getProfileNamesWithID">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userID" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getProfileNamesWithIDResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getPasswordExpirationTimeWithID">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userId" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getPasswordExpirationTimeWithIDResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:date"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="authenticateWithIDLoginIdentifier">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="loginIdentifiers" nillable="true" type="ax2456:LoginIdentifierDTO"/>
+                        <xs:element minOccurs="0" name="domain" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="credential" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="authenticateWithIDLoginIdentifierResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2456:AuthenticationResultDTO"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="authenticateWithIDUserId">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userID" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="credential" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="authenticateWithIDUserIdResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2456:AuthenticationResultDTO"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="authenticateWithIDUsernameClaim">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="preferredUserNameClaim" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="preferredUserNameValue" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="credential" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="profileName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="authenticateWithIDUsernameClaimResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2456:AuthenticationResultDTO"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listUsersWithOffsetWithID">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="filter" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="limit" type="xs:int"/>
+                        <xs:element minOccurs="0" name="offset" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="listUsersWithOffsetWithIDResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2456:UserDTO"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUserListWithOffsetWithID">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="claim" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="claimValue" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="profileName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="limit" type="xs:int"/>
+                        <xs:element minOccurs="0" name="offset" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUserListWithOffsetWithIDResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2456:UserDTO"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUserListWithIDCondition">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="conditionDTO" nillable="true" type="ax2456:ConditionDTO"/>
+                        <xs:element minOccurs="0" name="domain" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="profileName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="limit" type="xs:int"/>
+                        <xs:element minOccurs="0" name="offset" type="xs:int"/>
+                        <xs:element minOccurs="0" name="sortBy" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="sortOrder" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUserListWithIDConditionResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2456:UserDTO"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUserListOfRoleFilteredWithID">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="roleName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="filter" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="maxItemLimit" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUserListOfRoleFilteredWithIDResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2456:UserDTO"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUserClaimValuesForGivenClaimsWithID">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userID" nillable="true" type="xs:string"/>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="claims" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="profileName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getUserClaimValuesForGivenClaimsWithIDResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax2456:ClaimValue"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://dao.service.integration.test.identity.carbon.wso2.org/xsd">
+            <xs:complexType name="UserStoreException">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="errorCode" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="UserDTO">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="attributes" nillable="true" type="ax2456:Attribute"/>
+                    <xs:element minOccurs="0" name="displayName" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="domainQualifiedUsername" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="fullQualifiedUsername" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="preferredUsername" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="tenantDomain" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="userID" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="userStoreDomain" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="username" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="Attribute">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="attributeName" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="attributeValue" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="ClaimDTO">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="claimUri" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="description" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="dialectURI" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="displayOrder" type="xs:int"/>
+                    <xs:element minOccurs="0" name="displayTag" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="regEx" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="required" type="xs:boolean"/>
+                    <xs:element minOccurs="0" name="supportedByDefault" type="xs:boolean"/>
+                    <xs:element minOccurs="0" name="value" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="ClaimValue">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="claimUri" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="claimValue" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="PermissionDTO">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="action" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="resourceId" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="UniqueIDUserClaimSearchEntryDAO">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="claims" nillable="true" type="ax2456:ClaimValue"/>
+                    <xs:element minOccurs="0" name="user" nillable="true" type="ax2456:UserDTO"/>
+                    <xs:element minOccurs="0" name="userClaimSearchEntry" nillable="true" type="ax2456:UserClaimSearchEntryDAO"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="UserClaimSearchEntryDAO">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="claims" nillable="true" type="ax2456:ClaimValue"/>
+                    <xs:element minOccurs="0" name="userName" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="UserRoleListDTO">
+                <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="roleNames" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="userId" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="LoginIdentifierDTO">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="loginIdentifierType" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="loginKey" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="loginValue" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="profileName" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="AuthenticationResultDTO">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="authenticatedSubjectIdentifier" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="authenticatedUser" nillable="true" type="ax2456:UserDTO"/>
+                    <xs:element minOccurs="0" name="authenticationStatus" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="failureReason" nillable="true" type="ax2456:FailureReasonDTO"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="FailureReasonDTO">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="failureReason" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="id" type="xs:int"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="ConditionDTO">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="operation" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="authenticateWithIDUsernameClaimRequest">
+        <wsdl:part name="parameters" element="ns:authenticateWithIDUsernameClaim"/>
+    </wsdl:message>
+    <wsdl:message name="authenticateWithIDUsernameClaimResponse">
+        <wsdl:part name="parameters" element="ns:authenticateWithIDUsernameClaimResponse"/>
+    </wsdl:message>
+    <wsdl:message name="UUIDUserStoreManagerServiceUserStoreException">
+        <wsdl:part name="parameters" element="ns:UUIDUserStoreManagerServiceUserStoreException"/>
+    </wsdl:message>
+    <wsdl:message name="updateCredentialByAdminWithIDRequest">
+        <wsdl:part name="parameters" element="ns:updateCredentialByAdminWithID"/>
+    </wsdl:message>
+    <wsdl:message name="updateRoleListOfUserWithIDRequest">
+        <wsdl:part name="parameters" element="ns:updateRoleListOfUserWithID"/>
+    </wsdl:message>
+    <wsdl:message name="getUserClaimValuesForGivenClaimsWithIDRequest">
+        <wsdl:part name="parameters" element="ns:getUserClaimValuesForGivenClaimsWithID"/>
+    </wsdl:message>
+    <wsdl:message name="getUserClaimValuesForGivenClaimsWithIDResponse">
+        <wsdl:part name="parameters" element="ns:getUserClaimValuesForGivenClaimsWithIDResponse"/>
+    </wsdl:message>
+    <wsdl:message name="isExistingUserWithIDRequest">
+        <wsdl:part name="parameters" element="ns:isExistingUserWithID"/>
+    </wsdl:message>
+    <wsdl:message name="isExistingUserWithIDResponse">
+        <wsdl:part name="parameters" element="ns:isExistingUserWithIDResponse"/>
+    </wsdl:message>
+    <wsdl:message name="setUserClaimValuesWithIDRequest">
+        <wsdl:part name="parameters" element="ns:setUserClaimValuesWithID"/>
+    </wsdl:message>
+    <wsdl:message name="deleteUserClaimValuesWithIDRequest">
+        <wsdl:part name="parameters" element="ns:deleteUserClaimValuesWithID"/>
+    </wsdl:message>
+    <wsdl:message name="getUserListWithIDRequest">
+        <wsdl:part name="parameters" element="ns:getUserListWithID"/>
+    </wsdl:message>
+    <wsdl:message name="getUserListWithIDResponse">
+        <wsdl:part name="parameters" element="ns:getUserListWithIDResponse"/>
+    </wsdl:message>
+    <wsdl:message name="isUserInRoleWithIDRequest">
+        <wsdl:part name="parameters" element="ns:isUserInRoleWithID"/>
+    </wsdl:message>
+    <wsdl:message name="isUserInRoleWithIDResponse">
+        <wsdl:part name="parameters" element="ns:isUserInRoleWithIDResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getUserClaimValueWithIDRequest">
+        <wsdl:part name="parameters" element="ns:getUserClaimValueWithID"/>
+    </wsdl:message>
+    <wsdl:message name="getUserClaimValueWithIDResponse">
+        <wsdl:part name="parameters" element="ns:getUserClaimValueWithIDResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getUserClaimValuesWithIDRequest">
+        <wsdl:part name="parameters" element="ns:getUserClaimValuesWithID"/>
+    </wsdl:message>
+    <wsdl:message name="getUserClaimValuesWithIDResponse">
+        <wsdl:part name="parameters" element="ns:getUserClaimValuesWithIDResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getUserListWithIDConditionRequest">
+        <wsdl:part name="parameters" element="ns:getUserListWithIDCondition"/>
+    </wsdl:message>
+    <wsdl:message name="getUserListWithIDConditionResponse">
+        <wsdl:part name="parameters" element="ns:getUserListWithIDConditionResponse"/>
+    </wsdl:message>
+    <wsdl:message name="updateCredentialWithIDRequest">
+        <wsdl:part name="parameters" element="ns:updateCredentialWithID"/>
+    </wsdl:message>
+    <wsdl:message name="getUsersClaimValuesWithIDRequest">
+        <wsdl:part name="parameters" element="ns:getUsersClaimValuesWithID"/>
+    </wsdl:message>
+    <wsdl:message name="getUsersClaimValuesWithIDResponse">
+        <wsdl:part name="parameters" element="ns:getUsersClaimValuesWithIDResponse"/>
+    </wsdl:message>
+    <wsdl:message name="authenticateWithIDLoginIdentifierRequest">
+        <wsdl:part name="parameters" element="ns:authenticateWithIDLoginIdentifier"/>
+    </wsdl:message>
+    <wsdl:message name="authenticateWithIDLoginIdentifierResponse">
+        <wsdl:part name="parameters" element="ns:authenticateWithIDLoginIdentifierResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getUserWithIDRequest">
+        <wsdl:part name="parameters" element="ns:getUserWithID"/>
+    </wsdl:message>
+    <wsdl:message name="getUserWithIDResponse">
+        <wsdl:part name="parameters" element="ns:getUserWithIDResponse"/>
+    </wsdl:message>
+    <wsdl:message name="addUserWithIDRequest">
+        <wsdl:part name="parameters" element="ns:addUserWithID"/>
+    </wsdl:message>
+    <wsdl:message name="addUserWithIDResponse">
+        <wsdl:part name="parameters" element="ns:addUserWithIDResponse"/>
+    </wsdl:message>
+    <wsdl:message name="listUsersWithOffsetWithIDRequest">
+        <wsdl:part name="parameters" element="ns:listUsersWithOffsetWithID"/>
+    </wsdl:message>
+    <wsdl:message name="listUsersWithOffsetWithIDResponse">
+        <wsdl:part name="parameters" element="ns:listUsersWithOffsetWithIDResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getPasswordExpirationTimeWithIDRequest">
+        <wsdl:part name="parameters" element="ns:getPasswordExpirationTimeWithID"/>
+    </wsdl:message>
+    <wsdl:message name="getPasswordExpirationTimeWithIDResponse">
+        <wsdl:part name="parameters" element="ns:getPasswordExpirationTimeWithIDResponse"/>
+    </wsdl:message>
+    <wsdl:message name="addRoleWithIDRequest">
+        <wsdl:part name="parameters" element="ns:addRoleWithID"/>
+    </wsdl:message>
+    <wsdl:message name="getProfileNamesWithIDRequest">
+        <wsdl:part name="parameters" element="ns:getProfileNamesWithID"/>
+    </wsdl:message>
+    <wsdl:message name="getProfileNamesWithIDResponse">
+        <wsdl:part name="parameters" element="ns:getProfileNamesWithIDResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getRoleListOfUsersWithIDRequest">
+        <wsdl:part name="parameters" element="ns:getRoleListOfUsersWithID"/>
+    </wsdl:message>
+    <wsdl:message name="getRoleListOfUsersWithIDResponse">
+        <wsdl:part name="parameters" element="ns:getRoleListOfUsersWithIDResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getUserListWithOffsetWithIDRequest">
+        <wsdl:part name="parameters" element="ns:getUserListWithOffsetWithID"/>
+    </wsdl:message>
+    <wsdl:message name="getUserListWithOffsetWithIDResponse">
+        <wsdl:part name="parameters" element="ns:getUserListWithOffsetWithIDResponse"/>
+    </wsdl:message>
+    <wsdl:message name="deleteUserWithIDRequest">
+        <wsdl:part name="parameters" element="ns:deleteUserWithID"/>
+    </wsdl:message>
+    <wsdl:message name="getRoleListOfUserWithIDRequest">
+        <wsdl:part name="parameters" element="ns:getRoleListOfUserWithID"/>
+    </wsdl:message>
+    <wsdl:message name="getRoleListOfUserWithIDResponse">
+        <wsdl:part name="parameters" element="ns:getRoleListOfUserWithIDResponse"/>
+    </wsdl:message>
+    <wsdl:message name="deleteUserClaimValueWithIDRequest">
+        <wsdl:part name="parameters" element="ns:deleteUserClaimValueWithID"/>
+    </wsdl:message>
+    <wsdl:message name="getUserListOfRoleFilteredWithIDRequest">
+        <wsdl:part name="parameters" element="ns:getUserListOfRoleFilteredWithID"/>
+    </wsdl:message>
+    <wsdl:message name="getUserListOfRoleFilteredWithIDResponse">
+        <wsdl:part name="parameters" element="ns:getUserListOfRoleFilteredWithIDResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getUserListOfRoleWithIDRequest">
+        <wsdl:part name="parameters" element="ns:getUserListOfRoleWithID"/>
+    </wsdl:message>
+    <wsdl:message name="getUserListOfRoleWithIDResponse">
+        <wsdl:part name="parameters" element="ns:getUserListOfRoleWithIDResponse"/>
+    </wsdl:message>
+    <wsdl:message name="setUserClaimValueWithIDRequest">
+        <wsdl:part name="parameters" element="ns:setUserClaimValueWithID"/>
+    </wsdl:message>
+    <wsdl:message name="authenticateWithIDUserIdRequest">
+        <wsdl:part name="parameters" element="ns:authenticateWithIDUserId"/>
+    </wsdl:message>
+    <wsdl:message name="authenticateWithIDUserIdResponse">
+        <wsdl:part name="parameters" element="ns:authenticateWithIDUserIdResponse"/>
+    </wsdl:message>
+    <wsdl:message name="listUsersWithIDRequest">
+        <wsdl:part name="parameters" element="ns:listUsersWithID"/>
+    </wsdl:message>
+    <wsdl:message name="listUsersWithIDResponse">
+        <wsdl:part name="parameters" element="ns:listUsersWithIDResponse"/>
+    </wsdl:message>
+    <wsdl:message name="updateUserListOfRoleWithIDRequest">
+        <wsdl:part name="parameters" element="ns:updateUserListOfRoleWithID"/>
+    </wsdl:message>
+    <wsdl:portType name="UUIDUserStoreManagerServicePortType">
+        <wsdl:operation name="authenticateWithIDUsernameClaim">
+            <wsdl:input message="ns:authenticateWithIDUsernameClaimRequest" wsaw:Action="urn:authenticateWithIDUsernameClaim"/>
+            <wsdl:output message="ns:authenticateWithIDUsernameClaimResponse" wsaw:Action="urn:authenticateWithIDUsernameClaimResponse"/>
+            <wsdl:fault message="ns:UUIDUserStoreManagerServiceUserStoreException" name="UUIDUserStoreManagerServiceUserStoreException" wsaw:Action="urn:authenticateWithIDUsernameClaimUUIDUserStoreManagerServiceUserStoreException"/>
+        </wsdl:operation>
+        <wsdl:operation name="updateCredentialByAdminWithID">
+            <wsdl:input message="ns:updateCredentialByAdminWithIDRequest" wsaw:Action="urn:updateCredentialByAdminWithID"/>
+            <wsdl:fault message="ns:UUIDUserStoreManagerServiceUserStoreException" name="UUIDUserStoreManagerServiceUserStoreException" wsaw:Action="urn:updateCredentialByAdminWithIDUUIDUserStoreManagerServiceUserStoreException"/>
+        </wsdl:operation>
+        <wsdl:operation name="updateRoleListOfUserWithID">
+            <wsdl:input message="ns:updateRoleListOfUserWithIDRequest" wsaw:Action="urn:updateRoleListOfUserWithID"/>
+            <wsdl:fault message="ns:UUIDUserStoreManagerServiceUserStoreException" name="UUIDUserStoreManagerServiceUserStoreException" wsaw:Action="urn:updateRoleListOfUserWithIDUUIDUserStoreManagerServiceUserStoreException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getUserClaimValuesForGivenClaimsWithID">
+            <wsdl:input message="ns:getUserClaimValuesForGivenClaimsWithIDRequest" wsaw:Action="urn:getUserClaimValuesForGivenClaimsWithID"/>
+            <wsdl:output message="ns:getUserClaimValuesForGivenClaimsWithIDResponse" wsaw:Action="urn:getUserClaimValuesForGivenClaimsWithIDResponse"/>
+            <wsdl:fault message="ns:UUIDUserStoreManagerServiceUserStoreException" name="UUIDUserStoreManagerServiceUserStoreException" wsaw:Action="urn:getUserClaimValuesForGivenClaimsWithIDUUIDUserStoreManagerServiceUserStoreException"/>
+        </wsdl:operation>
+        <wsdl:operation name="isExistingUserWithID">
+            <wsdl:input message="ns:isExistingUserWithIDRequest" wsaw:Action="urn:isExistingUserWithID"/>
+            <wsdl:output message="ns:isExistingUserWithIDResponse" wsaw:Action="urn:isExistingUserWithIDResponse"/>
+            <wsdl:fault message="ns:UUIDUserStoreManagerServiceUserStoreException" name="UUIDUserStoreManagerServiceUserStoreException" wsaw:Action="urn:isExistingUserWithIDUUIDUserStoreManagerServiceUserStoreException"/>
+        </wsdl:operation>
+        <wsdl:operation name="setUserClaimValuesWithID">
+            <wsdl:input message="ns:setUserClaimValuesWithIDRequest" wsaw:Action="urn:setUserClaimValuesWithID"/>
+            <wsdl:fault message="ns:UUIDUserStoreManagerServiceUserStoreException" name="UUIDUserStoreManagerServiceUserStoreException" wsaw:Action="urn:setUserClaimValuesWithIDUUIDUserStoreManagerServiceUserStoreException"/>
+        </wsdl:operation>
+        <wsdl:operation name="deleteUserClaimValuesWithID">
+            <wsdl:input message="ns:deleteUserClaimValuesWithIDRequest" wsaw:Action="urn:deleteUserClaimValuesWithID"/>
+            <wsdl:fault message="ns:UUIDUserStoreManagerServiceUserStoreException" name="UUIDUserStoreManagerServiceUserStoreException" wsaw:Action="urn:deleteUserClaimValuesWithIDUUIDUserStoreManagerServiceUserStoreException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getUserListWithID">
+            <wsdl:input message="ns:getUserListWithIDRequest" wsaw:Action="urn:getUserListWithID"/>
+            <wsdl:output message="ns:getUserListWithIDResponse" wsaw:Action="urn:getUserListWithIDResponse"/>
+            <wsdl:fault message="ns:UUIDUserStoreManagerServiceUserStoreException" name="UUIDUserStoreManagerServiceUserStoreException" wsaw:Action="urn:getUserListWithIDUUIDUserStoreManagerServiceUserStoreException"/>
+        </wsdl:operation>
+        <wsdl:operation name="isUserInRoleWithID">
+            <wsdl:input message="ns:isUserInRoleWithIDRequest" wsaw:Action="urn:isUserInRoleWithID"/>
+            <wsdl:output message="ns:isUserInRoleWithIDResponse" wsaw:Action="urn:isUserInRoleWithIDResponse"/>
+            <wsdl:fault message="ns:UUIDUserStoreManagerServiceUserStoreException" name="UUIDUserStoreManagerServiceUserStoreException" wsaw:Action="urn:isUserInRoleWithIDUUIDUserStoreManagerServiceUserStoreException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getUserClaimValueWithID">
+            <wsdl:input message="ns:getUserClaimValueWithIDRequest" wsaw:Action="urn:getUserClaimValueWithID"/>
+            <wsdl:output message="ns:getUserClaimValueWithIDResponse" wsaw:Action="urn:getUserClaimValueWithIDResponse"/>
+            <wsdl:fault message="ns:UUIDUserStoreManagerServiceUserStoreException" name="UUIDUserStoreManagerServiceUserStoreException" wsaw:Action="urn:getUserClaimValueWithIDUUIDUserStoreManagerServiceUserStoreException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getUserClaimValuesWithID">
+            <wsdl:input message="ns:getUserClaimValuesWithIDRequest" wsaw:Action="urn:getUserClaimValuesWithID"/>
+            <wsdl:output message="ns:getUserClaimValuesWithIDResponse" wsaw:Action="urn:getUserClaimValuesWithIDResponse"/>
+            <wsdl:fault message="ns:UUIDUserStoreManagerServiceUserStoreException" name="UUIDUserStoreManagerServiceUserStoreException" wsaw:Action="urn:getUserClaimValuesWithIDUUIDUserStoreManagerServiceUserStoreException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getUserListWithIDCondition">
+            <wsdl:input message="ns:getUserListWithIDConditionRequest" wsaw:Action="urn:getUserListWithIDCondition"/>
+            <wsdl:output message="ns:getUserListWithIDConditionResponse" wsaw:Action="urn:getUserListWithIDConditionResponse"/>
+            <wsdl:fault message="ns:UUIDUserStoreManagerServiceUserStoreException" name="UUIDUserStoreManagerServiceUserStoreException" wsaw:Action="urn:getUserListWithIDConditionUUIDUserStoreManagerServiceUserStoreException"/>
+        </wsdl:operation>
+        <wsdl:operation name="updateCredentialWithID">
+            <wsdl:input message="ns:updateCredentialWithIDRequest" wsaw:Action="urn:updateCredentialWithID"/>
+            <wsdl:fault message="ns:UUIDUserStoreManagerServiceUserStoreException" name="UUIDUserStoreManagerServiceUserStoreException" wsaw:Action="urn:updateCredentialWithIDUUIDUserStoreManagerServiceUserStoreException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getUsersClaimValuesWithID">
+            <wsdl:input message="ns:getUsersClaimValuesWithIDRequest" wsaw:Action="urn:getUsersClaimValuesWithID"/>
+            <wsdl:output message="ns:getUsersClaimValuesWithIDResponse" wsaw:Action="urn:getUsersClaimValuesWithIDResponse"/>
+            <wsdl:fault message="ns:UUIDUserStoreManagerServiceUserStoreException" name="UUIDUserStoreManagerServiceUserStoreException" wsaw:Action="urn:getUsersClaimValuesWithIDUUIDUserStoreManagerServiceUserStoreException"/>
+        </wsdl:operation>
+        <wsdl:operation name="authenticateWithIDLoginIdentifier">
+            <wsdl:input message="ns:authenticateWithIDLoginIdentifierRequest" wsaw:Action="urn:authenticateWithIDLoginIdentifier"/>
+            <wsdl:output message="ns:authenticateWithIDLoginIdentifierResponse" wsaw:Action="urn:authenticateWithIDLoginIdentifierResponse"/>
+            <wsdl:fault message="ns:UUIDUserStoreManagerServiceUserStoreException" name="UUIDUserStoreManagerServiceUserStoreException" wsaw:Action="urn:authenticateWithIDLoginIdentifierUUIDUserStoreManagerServiceUserStoreException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getUserWithID">
+            <wsdl:input message="ns:getUserWithIDRequest" wsaw:Action="urn:getUserWithID"/>
+            <wsdl:output message="ns:getUserWithIDResponse" wsaw:Action="urn:getUserWithIDResponse"/>
+            <wsdl:fault message="ns:UUIDUserStoreManagerServiceUserStoreException" name="UUIDUserStoreManagerServiceUserStoreException" wsaw:Action="urn:getUserWithIDUUIDUserStoreManagerServiceUserStoreException"/>
+        </wsdl:operation>
+        <wsdl:operation name="addUserWithID">
+            <wsdl:input message="ns:addUserWithIDRequest" wsaw:Action="urn:addUserWithID"/>
+            <wsdl:output message="ns:addUserWithIDResponse" wsaw:Action="urn:addUserWithIDResponse"/>
+            <wsdl:fault message="ns:UUIDUserStoreManagerServiceUserStoreException" name="UUIDUserStoreManagerServiceUserStoreException" wsaw:Action="urn:addUserWithIDUUIDUserStoreManagerServiceUserStoreException"/>
+        </wsdl:operation>
+        <wsdl:operation name="listUsersWithOffsetWithID">
+            <wsdl:input message="ns:listUsersWithOffsetWithIDRequest" wsaw:Action="urn:listUsersWithOffsetWithID"/>
+            <wsdl:output message="ns:listUsersWithOffsetWithIDResponse" wsaw:Action="urn:listUsersWithOffsetWithIDResponse"/>
+            <wsdl:fault message="ns:UUIDUserStoreManagerServiceUserStoreException" name="UUIDUserStoreManagerServiceUserStoreException" wsaw:Action="urn:listUsersWithOffsetWithIDUUIDUserStoreManagerServiceUserStoreException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getPasswordExpirationTimeWithID">
+            <wsdl:input message="ns:getPasswordExpirationTimeWithIDRequest" wsaw:Action="urn:getPasswordExpirationTimeWithID"/>
+            <wsdl:output message="ns:getPasswordExpirationTimeWithIDResponse" wsaw:Action="urn:getPasswordExpirationTimeWithIDResponse"/>
+            <wsdl:fault message="ns:UUIDUserStoreManagerServiceUserStoreException" name="UUIDUserStoreManagerServiceUserStoreException" wsaw:Action="urn:getPasswordExpirationTimeWithIDUUIDUserStoreManagerServiceUserStoreException"/>
+        </wsdl:operation>
+        <wsdl:operation name="addRoleWithID">
+            <wsdl:input message="ns:addRoleWithIDRequest" wsaw:Action="urn:addRoleWithID"/>
+            <wsdl:fault message="ns:UUIDUserStoreManagerServiceUserStoreException" name="UUIDUserStoreManagerServiceUserStoreException" wsaw:Action="urn:addRoleWithIDUUIDUserStoreManagerServiceUserStoreException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getProfileNamesWithID">
+            <wsdl:input message="ns:getProfileNamesWithIDRequest" wsaw:Action="urn:getProfileNamesWithID"/>
+            <wsdl:output message="ns:getProfileNamesWithIDResponse" wsaw:Action="urn:getProfileNamesWithIDResponse"/>
+            <wsdl:fault message="ns:UUIDUserStoreManagerServiceUserStoreException" name="UUIDUserStoreManagerServiceUserStoreException" wsaw:Action="urn:getProfileNamesWithIDUUIDUserStoreManagerServiceUserStoreException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getRoleListOfUsersWithID">
+            <wsdl:input message="ns:getRoleListOfUsersWithIDRequest" wsaw:Action="urn:getRoleListOfUsersWithID"/>
+            <wsdl:output message="ns:getRoleListOfUsersWithIDResponse" wsaw:Action="urn:getRoleListOfUsersWithIDResponse"/>
+            <wsdl:fault message="ns:UUIDUserStoreManagerServiceUserStoreException" name="UUIDUserStoreManagerServiceUserStoreException" wsaw:Action="urn:getRoleListOfUsersWithIDUUIDUserStoreManagerServiceUserStoreException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getUserListWithOffsetWithID">
+            <wsdl:input message="ns:getUserListWithOffsetWithIDRequest" wsaw:Action="urn:getUserListWithOffsetWithID"/>
+            <wsdl:output message="ns:getUserListWithOffsetWithIDResponse" wsaw:Action="urn:getUserListWithOffsetWithIDResponse"/>
+            <wsdl:fault message="ns:UUIDUserStoreManagerServiceUserStoreException" name="UUIDUserStoreManagerServiceUserStoreException" wsaw:Action="urn:getUserListWithOffsetWithIDUUIDUserStoreManagerServiceUserStoreException"/>
+        </wsdl:operation>
+        <wsdl:operation name="deleteUserWithID">
+            <wsdl:input message="ns:deleteUserWithIDRequest" wsaw:Action="urn:deleteUserWithID"/>
+            <wsdl:fault message="ns:UUIDUserStoreManagerServiceUserStoreException" name="UUIDUserStoreManagerServiceUserStoreException" wsaw:Action="urn:deleteUserWithIDUUIDUserStoreManagerServiceUserStoreException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getRoleListOfUserWithID">
+            <wsdl:input message="ns:getRoleListOfUserWithIDRequest" wsaw:Action="urn:getRoleListOfUserWithID"/>
+            <wsdl:output message="ns:getRoleListOfUserWithIDResponse" wsaw:Action="urn:getRoleListOfUserWithIDResponse"/>
+            <wsdl:fault message="ns:UUIDUserStoreManagerServiceUserStoreException" name="UUIDUserStoreManagerServiceUserStoreException" wsaw:Action="urn:getRoleListOfUserWithIDUUIDUserStoreManagerServiceUserStoreException"/>
+        </wsdl:operation>
+        <wsdl:operation name="deleteUserClaimValueWithID">
+            <wsdl:input message="ns:deleteUserClaimValueWithIDRequest" wsaw:Action="urn:deleteUserClaimValueWithID"/>
+            <wsdl:fault message="ns:UUIDUserStoreManagerServiceUserStoreException" name="UUIDUserStoreManagerServiceUserStoreException" wsaw:Action="urn:deleteUserClaimValueWithIDUUIDUserStoreManagerServiceUserStoreException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getUserListOfRoleFilteredWithID">
+            <wsdl:input message="ns:getUserListOfRoleFilteredWithIDRequest" wsaw:Action="urn:getUserListOfRoleFilteredWithID"/>
+            <wsdl:output message="ns:getUserListOfRoleFilteredWithIDResponse" wsaw:Action="urn:getUserListOfRoleFilteredWithIDResponse"/>
+            <wsdl:fault message="ns:UUIDUserStoreManagerServiceUserStoreException" name="UUIDUserStoreManagerServiceUserStoreException" wsaw:Action="urn:getUserListOfRoleFilteredWithIDUUIDUserStoreManagerServiceUserStoreException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getUserListOfRoleWithID">
+            <wsdl:input message="ns:getUserListOfRoleWithIDRequest" wsaw:Action="urn:getUserListOfRoleWithID"/>
+            <wsdl:output message="ns:getUserListOfRoleWithIDResponse" wsaw:Action="urn:getUserListOfRoleWithIDResponse"/>
+            <wsdl:fault message="ns:UUIDUserStoreManagerServiceUserStoreException" name="UUIDUserStoreManagerServiceUserStoreException" wsaw:Action="urn:getUserListOfRoleWithIDUUIDUserStoreManagerServiceUserStoreException"/>
+        </wsdl:operation>
+        <wsdl:operation name="setUserClaimValueWithID">
+            <wsdl:input message="ns:setUserClaimValueWithIDRequest" wsaw:Action="urn:setUserClaimValueWithID"/>
+            <wsdl:fault message="ns:UUIDUserStoreManagerServiceUserStoreException" name="UUIDUserStoreManagerServiceUserStoreException" wsaw:Action="urn:setUserClaimValueWithIDUUIDUserStoreManagerServiceUserStoreException"/>
+        </wsdl:operation>
+        <wsdl:operation name="authenticateWithIDUserId">
+            <wsdl:input message="ns:authenticateWithIDUserIdRequest" wsaw:Action="urn:authenticateWithIDUserId"/>
+            <wsdl:output message="ns:authenticateWithIDUserIdResponse" wsaw:Action="urn:authenticateWithIDUserIdResponse"/>
+            <wsdl:fault message="ns:UUIDUserStoreManagerServiceUserStoreException" name="UUIDUserStoreManagerServiceUserStoreException" wsaw:Action="urn:authenticateWithIDUserIdUUIDUserStoreManagerServiceUserStoreException"/>
+        </wsdl:operation>
+        <wsdl:operation name="listUsersWithID">
+            <wsdl:input message="ns:listUsersWithIDRequest" wsaw:Action="urn:listUsersWithID"/>
+            <wsdl:output message="ns:listUsersWithIDResponse" wsaw:Action="urn:listUsersWithIDResponse"/>
+            <wsdl:fault message="ns:UUIDUserStoreManagerServiceUserStoreException" name="UUIDUserStoreManagerServiceUserStoreException" wsaw:Action="urn:listUsersWithIDUUIDUserStoreManagerServiceUserStoreException"/>
+        </wsdl:operation>
+        <wsdl:operation name="updateUserListOfRoleWithID">
+            <wsdl:input message="ns:updateUserListOfRoleWithIDRequest" wsaw:Action="urn:updateUserListOfRoleWithID"/>
+            <wsdl:fault message="ns:UUIDUserStoreManagerServiceUserStoreException" name="UUIDUserStoreManagerServiceUserStoreException" wsaw:Action="urn:updateUserListOfRoleWithIDUUIDUserStoreManagerServiceUserStoreException"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="UUIDUserStoreManagerServiceSoap11Binding" type="ns:UUIDUserStoreManagerServicePortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="authenticateWithIDUsernameClaim">
+            <soap:operation soapAction="urn:authenticateWithIDUsernameClaim" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateCredentialByAdminWithID">
+            <soap:operation soapAction="urn:updateCredentialByAdminWithID" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateRoleListOfUserWithID">
+            <soap:operation soapAction="urn:updateRoleListOfUserWithID" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getUserClaimValuesForGivenClaimsWithID">
+            <soap:operation soapAction="urn:getUserClaimValuesForGivenClaimsWithID" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteUserClaimValuesWithID">
+            <soap:operation soapAction="urn:deleteUserClaimValuesWithID" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="setUserClaimValuesWithID">
+            <soap:operation soapAction="urn:setUserClaimValuesWithID" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="isExistingUserWithID">
+            <soap:operation soapAction="urn:isExistingUserWithID" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getUserListWithID">
+            <soap:operation soapAction="urn:getUserListWithID" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="isUserInRoleWithID">
+            <soap:operation soapAction="urn:isUserInRoleWithID" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getUserClaimValueWithID">
+            <soap:operation soapAction="urn:getUserClaimValueWithID" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getUserClaimValuesWithID">
+            <soap:operation soapAction="urn:getUserClaimValuesWithID" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getUserListWithIDCondition">
+            <soap:operation soapAction="urn:getUserListWithIDCondition" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateCredentialWithID">
+            <soap:operation soapAction="urn:updateCredentialWithID" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getUsersClaimValuesWithID">
+            <soap:operation soapAction="urn:getUsersClaimValuesWithID" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="authenticateWithIDLoginIdentifier">
+            <soap:operation soapAction="urn:authenticateWithIDLoginIdentifier" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getUserWithID">
+            <soap:operation soapAction="urn:getUserWithID" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addUserWithID">
+            <soap:operation soapAction="urn:addUserWithID" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="listUsersWithOffsetWithID">
+            <soap:operation soapAction="urn:listUsersWithOffsetWithID" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getPasswordExpirationTimeWithID">
+            <soap:operation soapAction="urn:getPasswordExpirationTimeWithID" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addRoleWithID">
+            <soap:operation soapAction="urn:addRoleWithID" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getProfileNamesWithID">
+            <soap:operation soapAction="urn:getProfileNamesWithID" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getRoleListOfUsersWithID">
+            <soap:operation soapAction="urn:getRoleListOfUsersWithID" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getUserListWithOffsetWithID">
+            <soap:operation soapAction="urn:getUserListWithOffsetWithID" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteUserWithID">
+            <soap:operation soapAction="urn:deleteUserWithID" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getRoleListOfUserWithID">
+            <soap:operation soapAction="urn:getRoleListOfUserWithID" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteUserClaimValueWithID">
+            <soap:operation soapAction="urn:deleteUserClaimValueWithID" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getUserListOfRoleFilteredWithID">
+            <soap:operation soapAction="urn:getUserListOfRoleFilteredWithID" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getUserListOfRoleWithID">
+            <soap:operation soapAction="urn:getUserListOfRoleWithID" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="setUserClaimValueWithID">
+            <soap:operation soapAction="urn:setUserClaimValueWithID" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="authenticateWithIDUserId">
+            <soap:operation soapAction="urn:authenticateWithIDUserId" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="listUsersWithID">
+            <soap:operation soapAction="urn:listUsersWithID" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateUserListOfRoleWithID">
+            <soap:operation soapAction="urn:updateUserListOfRoleWithID" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="UUIDUserStoreManagerServiceSoap12Binding" type="ns:UUIDUserStoreManagerServicePortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="authenticateWithIDUsernameClaim">
+            <soap12:operation soapAction="urn:authenticateWithIDUsernameClaim" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap12:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateCredentialByAdminWithID">
+            <soap12:operation soapAction="urn:updateCredentialByAdminWithID" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap12:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateRoleListOfUserWithID">
+            <soap12:operation soapAction="urn:updateRoleListOfUserWithID" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap12:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getUserClaimValuesForGivenClaimsWithID">
+            <soap12:operation soapAction="urn:getUserClaimValuesForGivenClaimsWithID" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap12:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteUserClaimValuesWithID">
+            <soap12:operation soapAction="urn:deleteUserClaimValuesWithID" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap12:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="setUserClaimValuesWithID">
+            <soap12:operation soapAction="urn:setUserClaimValuesWithID" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap12:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="isExistingUserWithID">
+            <soap12:operation soapAction="urn:isExistingUserWithID" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap12:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getUserListWithID">
+            <soap12:operation soapAction="urn:getUserListWithID" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap12:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="isUserInRoleWithID">
+            <soap12:operation soapAction="urn:isUserInRoleWithID" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap12:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getUserClaimValueWithID">
+            <soap12:operation soapAction="urn:getUserClaimValueWithID" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap12:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getUserClaimValuesWithID">
+            <soap12:operation soapAction="urn:getUserClaimValuesWithID" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap12:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getUserListWithIDCondition">
+            <soap12:operation soapAction="urn:getUserListWithIDCondition" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap12:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateCredentialWithID">
+            <soap12:operation soapAction="urn:updateCredentialWithID" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap12:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getUsersClaimValuesWithID">
+            <soap12:operation soapAction="urn:getUsersClaimValuesWithID" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap12:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="authenticateWithIDLoginIdentifier">
+            <soap12:operation soapAction="urn:authenticateWithIDLoginIdentifier" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap12:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getUserWithID">
+            <soap12:operation soapAction="urn:getUserWithID" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap12:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addUserWithID">
+            <soap12:operation soapAction="urn:addUserWithID" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap12:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="listUsersWithOffsetWithID">
+            <soap12:operation soapAction="urn:listUsersWithOffsetWithID" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap12:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getPasswordExpirationTimeWithID">
+            <soap12:operation soapAction="urn:getPasswordExpirationTimeWithID" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap12:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="addRoleWithID">
+            <soap12:operation soapAction="urn:addRoleWithID" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap12:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getProfileNamesWithID">
+            <soap12:operation soapAction="urn:getProfileNamesWithID" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap12:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getRoleListOfUsersWithID">
+            <soap12:operation soapAction="urn:getRoleListOfUsersWithID" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap12:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getUserListWithOffsetWithID">
+            <soap12:operation soapAction="urn:getUserListWithOffsetWithID" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap12:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteUserWithID">
+            <soap12:operation soapAction="urn:deleteUserWithID" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap12:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getRoleListOfUserWithID">
+            <soap12:operation soapAction="urn:getRoleListOfUserWithID" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap12:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="deleteUserClaimValueWithID">
+            <soap12:operation soapAction="urn:deleteUserClaimValueWithID" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap12:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getUserListOfRoleFilteredWithID">
+            <soap12:operation soapAction="urn:getUserListOfRoleFilteredWithID" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap12:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getUserListOfRoleWithID">
+            <soap12:operation soapAction="urn:getUserListOfRoleWithID" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap12:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="setUserClaimValueWithID">
+            <soap12:operation soapAction="urn:setUserClaimValueWithID" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap12:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="authenticateWithIDUserId">
+            <soap12:operation soapAction="urn:authenticateWithIDUserId" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap12:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="listUsersWithID">
+            <soap12:operation soapAction="urn:listUsersWithID" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap12:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="updateUserListOfRoleWithID">
+            <soap12:operation soapAction="urn:updateUserListOfRoleWithID" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:fault name="UUIDUserStoreManagerServiceUserStoreException">
+                <soap12:fault use="literal" name="UUIDUserStoreManagerServiceUserStoreException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="UUIDUserStoreManagerServiceHttpBinding" type="ns:UUIDUserStoreManagerServicePortType">
+        <http:binding verb="POST"/>
+        <wsdl:operation name="authenticateWithIDUsernameClaim">
+            <http:operation location="authenticateWithIDUsernameClaim"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateCredentialByAdminWithID">
+            <http:operation location="updateCredentialByAdminWithID"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="updateRoleListOfUserWithID">
+            <http:operation location="updateRoleListOfUserWithID"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getUserClaimValuesForGivenClaimsWithID">
+            <http:operation location="getUserClaimValuesForGivenClaimsWithID"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deleteUserClaimValuesWithID">
+            <http:operation location="deleteUserClaimValuesWithID"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="setUserClaimValuesWithID">
+            <http:operation location="setUserClaimValuesWithID"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="isExistingUserWithID">
+            <http:operation location="isExistingUserWithID"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getUserListWithID">
+            <http:operation location="getUserListWithID"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="isUserInRoleWithID">
+            <http:operation location="isUserInRoleWithID"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getUserClaimValueWithID">
+            <http:operation location="getUserClaimValueWithID"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getUserClaimValuesWithID">
+            <http:operation location="getUserClaimValuesWithID"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getUserListWithIDCondition">
+            <http:operation location="getUserListWithIDCondition"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateCredentialWithID">
+            <http:operation location="updateCredentialWithID"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getUsersClaimValuesWithID">
+            <http:operation location="getUsersClaimValuesWithID"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="authenticateWithIDLoginIdentifier">
+            <http:operation location="authenticateWithIDLoginIdentifier"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getUserWithID">
+            <http:operation location="getUserWithID"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="addUserWithID">
+            <http:operation location="addUserWithID"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listUsersWithOffsetWithID">
+            <http:operation location="listUsersWithOffsetWithID"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getPasswordExpirationTimeWithID">
+            <http:operation location="getPasswordExpirationTimeWithID"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="addRoleWithID">
+            <http:operation location="addRoleWithID"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getProfileNamesWithID">
+            <http:operation location="getProfileNamesWithID"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getRoleListOfUsersWithID">
+            <http:operation location="getRoleListOfUsersWithID"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getUserListWithOffsetWithID">
+            <http:operation location="getUserListWithOffsetWithID"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deleteUserWithID">
+            <http:operation location="deleteUserWithID"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getRoleListOfUserWithID">
+            <http:operation location="getRoleListOfUserWithID"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deleteUserClaimValueWithID">
+            <http:operation location="deleteUserClaimValueWithID"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="getUserListOfRoleFilteredWithID">
+            <http:operation location="getUserListOfRoleFilteredWithID"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getUserListOfRoleWithID">
+            <http:operation location="getUserListOfRoleWithID"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="setUserClaimValueWithID">
+            <http:operation location="setUserClaimValueWithID"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="authenticateWithIDUserId">
+            <http:operation location="authenticateWithIDUserId"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="listUsersWithID">
+            <http:operation location="listUsersWithID"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="updateUserListOfRoleWithID">
+            <http:operation location="updateUserListOfRoleWithID"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters"/>
+            </wsdl:input>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="UUIDUserStoreManagerService">
+        <wsdl:port name="UUIDUserStoreManagerServiceHttpsSoap11Endpoint" binding="ns:UUIDUserStoreManagerServiceSoap11Binding">
+            <soap:address location="https://localhost:9443/services/UUIDUserStoreManagerService.UUIDUserStoreManagerServiceHttpsSoap11Endpoint/"/>
+        </wsdl:port>
+        <wsdl:port name="UUIDUserStoreManagerServiceHttpsSoap12Endpoint" binding="ns:UUIDUserStoreManagerServiceSoap12Binding">
+            <soap12:address location="https://localhost:9443/services/UUIDUserStoreManagerService.UUIDUserStoreManagerServiceHttpsSoap12Endpoint/"/>
+        </wsdl:port>
+        <wsdl:port name="UUIDUserStoreManagerServiceHttpsEndpoint" binding="ns:UUIDUserStoreManagerServiceHttpBinding">
+            <http:address location="https://localhost:9443/services/UUIDUserStoreManagerService.UUIDUserStoreManagerServiceHttpsEndpoint/"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
