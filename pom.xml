@@ -1837,6 +1837,11 @@
                 <version>${msf4j.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.velocity</groupId>
+                <artifactId>velocity</artifactId>
+                <version>${org.apache.velocity.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>io.rest-assured</groupId>
                 <artifactId>rest-assured</artifactId>
                 <version>${rest.assured.version}</version>
@@ -1852,6 +1857,12 @@
                 <groupId>com.atlassian.oai</groupId>
                 <artifactId>swagger-request-validator-restassured</artifactId>
                 <version>${swagger-request-validator.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.xmlunit</groupId>
+                <artifactId>xmlunit-core</artifactId>
+                <version>${org.xmlunit.version}</version>
                 <scope>test</scope>
             </dependency>
             <!-- Pax Logging -->
@@ -2184,6 +2195,10 @@
         <rest.assured.version>4.1.2</rest.assured.version>
         <swagger-core-version>1.5.22</swagger-core-version>
         <swagger-request-validator.version>2.6.0</swagger-request-validator.version>
+
+        <!--ws-trust-client-->
+        <org.apache.velocity.version>1.7</org.apache.velocity.version>
+        <org.xmlunit.version>2.6.3</org.xmlunit.version>
 
         <project.scm.id>my-scm-server</project.scm.id>
 

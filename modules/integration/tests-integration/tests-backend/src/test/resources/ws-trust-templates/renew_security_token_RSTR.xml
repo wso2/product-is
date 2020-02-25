@@ -1,0 +1,87 @@
+<soapenv:Envelope xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope">
+    <soapenv:Header xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">
+        <wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+                       soapenv:mustUnderstand="true">
+            <wsu:Timestamp
+                    xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+                    wsu:Id="Timestamp-11">
+                <wsu:Created>2020-02-07T04:45:02.295Z</wsu:Created>
+                <wsu:Expires>2020-02-07T04:50:02.295Z</wsu:Expires>
+            </wsu:Timestamp>
+        </wsse:Security>
+        <wsa:To>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous</wsa:To>
+        <wsa:MessageID>urn:uuid:bb2be5be-021a-4466-a0c9-928ca2577ef3</wsa:MessageID>
+        <wsa:Action>http://schemas.xmlsoap.org/ws/2005/02/trust/RSTR/Renew</wsa:Action>
+        <wsa:RelatesTo>urn:uuid:de5c56ea-0632-44c2-b455-984107d67763</wsa:RelatesTo>
+    </soapenv:Header>
+    <soapenv:Body>
+        <wst:RequestSecurityTokenResponse xmlns:wst="http://schemas.xmlsoap.org/ws/2005/02/trust">
+            <wst:TokenType>http://docs.oasis-open.org/wss/oasis-wss-saml-token-profile-1.1#SAMLV2.0</wst:TokenType>
+            <wst:Lifetime>
+                <wsu:Created
+                        xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+                    2020-02-07T04:45:02.216Z
+                </wsu:Created>
+                <wsu:Expires
+                        xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+                    2020-02-07T04:50:02.216Z
+                </wsu:Expires>
+            </wst:Lifetime>
+            <wst:RequestedSecurityToken>
+                <saml2:Assertion xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion"
+                                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                                 ID="urn:uuid:A5571AE6A8827AE3841581050702133" IssueInstant="2020-02-07T04:45:02.129Z"
+                                 Version="2.0">
+                    <saml2:Issuer>https://localhost</saml2:Issuer>
+                    <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+                        <ds:SignedInfo>
+                            <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                            <ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+                            <ds:Reference URI="#urn:uuid:A5571AE6A8827AE3841581050702133">
+                                <ds:Transforms>
+                                    <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+                                    <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
+                                        <ec:InclusiveNamespaces xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#"
+                                                                PrefixList="xs"/>
+                                    </ds:Transform>
+                                </ds:Transforms>
+                                <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                                <ds:DigestValue>99w/53/mRG5gnyA8i9eWIj9dgTA=</ds:DigestValue>
+                            </ds:Reference>
+                        </ds:SignedInfo>
+                        <ds:SignatureValue>
+                            v65sv9utUPK45wxsSe6S+vJYpZzoKU6WCdxV1YVnEXi/SCw/zXUWdpVcDLOf+dG414UT+FvXOkMTilzbQ0eZleAxcVHV974AKdjYPPCzPWy+j+HKt2nXQUbewRwqQiE5s/QjmEycFQKOcT6LGpdQELCBhiXzf2mfeOVSsZ6RST3qXm6yI/jvTQWIolq2+AXbBk75HlQvlXBBoQhseU3LDwPnjIlIJZ1t+2Zv5+1TmGaubtdbOvywkRZ5z2E3lqQA6V0cioAetUzHj5u6sO8GvLrUQQ2xZAR+AUGRXlLnSfM7zNETGp6pozKBNo4+blWHsfIzBZv2tVCQmYKknT15kw==
+                        </ds:SignatureValue>
+                        <ds:KeyInfo>
+                            <ds:X509Data>
+                                <ds:X509Certificate>
+                                    MIIDqTCCApGgAwIBAgIEXbABozANBgkqhkiG9w0BAQsFADBkMQswCQYDVQQGEwJVUzELMAkGA1UECAwCQ0ExFjAUBgNVBAcMDU1vdW50YWluIFZpZXcxDTALBgNVBAoMBFdTTzIxDTALBgNVBAsMBFdTTzIxEjAQBgNVBAMMCWxvY2FsaG9zdDAeFw0xOTEwMjMwNzMwNDNaFw0yMjAxMjUwNzMwNDNaMGQxCzAJBgNVBAYTAlVTMQswCQYDVQQIDAJDQTEWMBQGA1UEBwwNTW91bnRhaW4gVmlldzENMAsGA1UECgwEV1NPMjENMAsGA1UECwwEV1NPMjESMBAGA1UEAwwJbG9jYWxob3N0MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxeqoZYbQ/Sr8DOFQ+/qbEbCp6Vzb5hzH7oa3hf2FZxRKF0H6b8COMzz8+0mvEdYVvb/31jMEL2CIQhkQRol1IruD6nBOmkjuXJSBficklMaJZORhuCrB4roHxzoG19aWmscA0gnfBKo2oGXSjJmnZxIh+2X6syHCfyMZZ00LzDyrgoXWQXyFvCA2ax54s7sKiHOM3P4A9W4QUwmoEi4HQmPgJjIM4eGVPh0GtIANN+BOQ1KkUI7OzteHCTLu3VjxM0sw8QRayZdhniPF+U9n3fa1mO4KLBsW4mDLjg8R/JuAGTX/SEEGj0B5HWQAP6myxKFz2xwDaCGvT+rdvkktOwIDAQABo2MwYTAUBgNVHREEDTALgglsb2NhbGhvc3QwHQYDVR0OBBYEFEDpLB4PDgzsdxD2FV3rVnOr/A0DMB0GA1UdJQQWMBQGCCsGAQUFBwMBBggrBgEFBQcDAjALBgNVHQ8EBAMCBPAwDQYJKoZIhvcNAQELBQADggEBAE8H/axAgXjt93HGCYGumULW2lKkgqEvXryP2QkRpbyQSsTYcL7ZLSVB7MVVHtIsHh8f1C4Xq6Qu8NUrqu5ZLC1pUByaqR2ZIzcj/OWLGYRjSTHSVmVIq9QqBq1j7r6f3BWqaOIiknmTzEuqIVlOTY0gO+SHdS62vr2FCz4yOrBEulGAvomsU8sqg4PhFnkhxI4M912Ly+2RgN9L7AkhzK+EzXY1/QtlI/VysNfS6zrHasKz6CrKKCGqQnBnSvSTyF9OR5KFHnkAwE995IZrcSQicMxsLhTMUHDLQ/gRyy7V/ZpDMfAWR+5OeQiNAp/bG4fjJoTdoqkul51+2bHHVrU=
+                                </ds:X509Certificate>
+                            </ds:X509Data>
+                        </ds:KeyInfo>
+                    </ds:Signature>
+                    <saml2:Subject>
+                        <saml2:NameID Format="urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress">admin
+                        </saml2:NameID>
+                        <saml2:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer"/>
+                    </saml2:Subject>
+                    <saml2:Conditions NotBefore="2020-02-07T04:45:02.290Z" NotOnOrAfter="2020-02-07T04:50:02.290Z"/>
+                    <saml2:AttributeStatement>
+                        <saml2:Attribute Name="http://wso2.org/claims/emailaddress"
+                                         NameFormat="http://wso2.org/claims/emailaddress">
+                            <saml2:AttributeValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                                  xsi:type="xs:string">admin@wso2.com
+                            </saml2:AttributeValue>
+                        </saml2:Attribute>
+                    </saml2:AttributeStatement>
+                    <saml2:AuthnStatement AuthnInstant="2020-02-07T04:45:02.140Z">
+                        <saml2:AuthnContext>
+                            <saml2:AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:Password
+                            </saml2:AuthnContextClassRef>
+                        </saml2:AuthnContext>
+                    </saml2:AuthnStatement>
+                </saml2:Assertion>
+            </wst:RequestedSecurityToken>
+        </wst:RequestSecurityTokenResponse>
+    </soapenv:Body>
+</soapenv:Envelope>
