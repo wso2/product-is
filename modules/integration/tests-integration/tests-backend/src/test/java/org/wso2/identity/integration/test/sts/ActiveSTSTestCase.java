@@ -84,9 +84,6 @@ public class ActiveSTSTestCase extends ISIntegrationTest {
     private static final String INBOUND_CONFIG_TYPE = "standardAPP";
     private static final String ENDPOINT_ADDRESS_VALUE = "https://localhost:9444/services/echo";
 
-    private static final String ALIAS_PROPERTY = "alias";
-    private static final String ALIAS_VALUE = "wso2carbon";
-
     private ServiceProvider serviceProvider;
     private ApplicationManagementServiceClient applicationManagementServiceClient;
     private SecurityAdminServiceClient securityAdminServiceClient;
@@ -129,7 +126,6 @@ public class ActiveSTSTestCase extends ISIntegrationTest {
     @Test(alwaysRun = true, description = "Update service provider with the required configurations."
             , dependsOnMethods = {"testAddSP"})
     public void testUpdateSP() throws Exception {
-
 
         List<InboundAuthenticationRequestConfig> inboundAuthenticationRequestConfigs = new ArrayList<>();
         InboundAuthenticationRequestConfig inboundAuthenticationRequestConfig = new InboundAuthenticationRequestConfig();

@@ -7,7 +7,8 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
@@ -41,7 +42,6 @@ import static org.testng.Assert.assertTrue;
 
 public class TestPassiveSTS extends ISIntegrationTest {
 
-    private static final String ADMIN_EMAIL = "admin@wso2.com";
     private static final String SERVICE_PROVIDER_NAME = "PassiveSTSSampleApp";
     private static final String SERVICE_PROVIDER_Desc = "PassiveSTS Service Provider";
     private static final String EMAIL_CLAIM_URI = "http://wso2.org/claims/emailaddress";
@@ -55,29 +55,27 @@ public class TestPassiveSTS extends ISIntegrationTest {
     private String adminUsername;
     private String adminPassword;
     private String sessionDataKey;
-    private String resultPage;
     private Header locationHeader;
     private String passiveStsURL;
 
-    private AuthenticatorClient logManger;
-    private ApplicationManagementServiceClient appMgtclient;
+    private ApplicationManagementServiceClient appMgtClient;
     private ServiceProvider serviceProvider;
-    private DefaultHttpClient client;
+    private CloseableHttpClient client;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
         super.init();
 
-        logManger = new AuthenticatorClient(backendURL);
+        AuthenticatorClient logManger = new AuthenticatorClient(backendURL);
         adminUsername = userInfo.getUserName();
         adminPassword = userInfo.getPassword();
         logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
                 isServer.getSuperTenant().getTenantAdmin().getPassword(),
                 isServer.getInstance().getHosts().get("default"));
 
-        appMgtclient = new ApplicationManagementServiceClient(sessionCookie, backendURL, null);
+        appMgtClient = new ApplicationManagementServiceClient(sessionCookie, backendURL, null);
 
-        client = new DefaultHttpClient();
+        client = HttpClientBuilder.create().build();
         String isURL = backendURL.substring(0, backendURL.indexOf("services/"));
         this.passiveStsURL = isURL + "passivests";
 
@@ -86,7 +84,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
-        appMgtclient.deleteApplication(SERVICE_PROVIDER_NAME);
+        appMgtClient.deleteApplication(SERVICE_PROVIDER_NAME);
     }
 
     @Test(alwaysRun = true, description = "Add service provider")
@@ -95,8 +93,8 @@ public class TestPassiveSTS extends ISIntegrationTest {
         serviceProvider = new ServiceProvider();
         serviceProvider.setApplicationName(SERVICE_PROVIDER_NAME);
         serviceProvider.setDescription(SERVICE_PROVIDER_Desc);
-        appMgtclient.createApplication(serviceProvider);
-        serviceProvider = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
+        appMgtClient.createApplication(serviceProvider);
+        serviceProvider = appMgtClient.getApplication(SERVICE_PROVIDER_NAME);
         Assert.assertNotNull(serviceProvider, "Service provider registration failed.");
     }
 
@@ -119,11 +117,10 @@ public class TestPassiveSTS extends ISIntegrationTest {
             serviceProvider.getInboundAuthenticationConfig()
                     .setInboundAuthenticationRequestConfigs(
                             authRequestList
-                                    .toArray(new InboundAuthenticationRequestConfig[authRequestList
-                                            .size()]));
+                                    .toArray(new InboundAuthenticationRequestConfig[0]));
         }
-        appMgtclient.updateApplicationData(serviceProvider);
-        Assert.assertNotEquals(appMgtclient.getApplication(SERVICE_PROVIDER_NAME)
+        appMgtClient.updateApplicationData(serviceProvider);
+        Assert.assertNotEquals(appMgtClient.getApplication(SERVICE_PROVIDER_NAME)
                 .getInboundAuthenticationConfig()
                 .getInboundAuthenticationRequestConfigs().length,
                 0, "Fail to update service provider with passiveSTS configs");
@@ -134,8 +131,8 @@ public class TestPassiveSTS extends ISIntegrationTest {
     public void testAddClaimConfiguration() throws Exception {
 
         serviceProvider.getClaimConfig().setClaimMappings(getClaimMappings());
-        appMgtclient.updateApplicationData(serviceProvider);
-        ServiceProvider updatedServiceProvider = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
+        appMgtClient.updateApplicationData(serviceProvider);
+        ServiceProvider updatedServiceProvider = appMgtClient.getApplication(SERVICE_PROVIDER_NAME);
         ClaimConfig updatedClaimConfig = updatedServiceProvider.getClaimConfig();
 
         int arraySize = updatedClaimConfig.getClaimMappings().length;
@@ -144,10 +141,9 @@ public class TestPassiveSTS extends ISIntegrationTest {
             claimsUris[index] = updatedClaimConfig.getClaimMappings()[index].getLocalClaim().getClaimUri();
         }
 
-        List claimsList = Arrays.asList(claimsUris);
+        List<String> claimsList = Arrays.asList(claimsUris);
         Assert.assertTrue(claimsList.contains(GIVEN_NAME_CLAIM_URI), "Failed update given name claim uri");
         Assert.assertTrue(claimsList.contains(EMAIL_CLAIM_URI), "Failed update email claim uri");
-
     }
 
     @Test(alwaysRun = true, description = "Invoke PassiveSTSSampleApp",
@@ -160,7 +156,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
         int responseCode = response.getStatusLine().getStatusCode();
         Assert.assertEquals(responseCode, 200, "Invalid Response");
 
-        Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
+        Map<String, Integer> keyPositionMap = new HashMap<>(1);
         keyPositionMap.put("name=\"sessionDataKey\"", 1);
         List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil.extractDataFromResponse(response,
                 keyPositionMap);
@@ -201,7 +197,6 @@ public class TestPassiveSTS extends ISIntegrationTest {
         HttpGet getRequest = new HttpGet(locationHeader.getValue());
         EntityUtils.consume(response.getEntity());
         response = client.execute(getRequest);
-        resultPage = DataExtractUtil.getContentData(response);
         EntityUtils.consume(response.getEntity());
     }
 
@@ -315,14 +310,13 @@ public class TestPassiveSTS extends ISIntegrationTest {
         emailClaimMapping.setRemoteClaim(emailClaim);
         claimMappingList.add(emailClaimMapping);
 
-        return claimMappingList.toArray(new ClaimMapping[claimMappingList.size()]);
+        return claimMappingList.toArray(new ClaimMapping[0]);
     }
 
     private boolean requestMissingClaims (HttpResponse response) {
 
         String redirectUrl = Utils.getRedirectUrl(response);
         return redirectUrl.contains("consent.do");
-
     }
 
 }
