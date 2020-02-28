@@ -147,26 +147,17 @@ public class OAuth2IDTokenEncryptionTestCase extends OAuth2ServiceAbstractIntegr
         Assert.assertNotNull(updatedApp.getCertificateContent(), "Updating application certificate failed.");
     }
 
-    @Test(groups = "wso2.is", description = "Check enabling option to encrypt ID tokens.",
-            dependsOnMethods = "updateServiceProviderCert")
-    public void testEnforceIDTokenEncryption() throws Exception {
-
-        OAuthConsumerAppDTO consumerAppDTO = adminClient.getOAuthAppByConsumerKey(consumerKey);
-        consumerAppDTO.setIdTokenEncryptionEnabled(true);
-        adminClient.updateConsumerApp(consumerAppDTO);
-        OAuthConsumerAppDTO updateApp = adminClient.getOAuthAppByConsumerKey(consumerKey);
-        Assert.assertTrue(updateApp.getIdTokenEncryptionEnabled(), "Enforcing ID Token encryption failed.");
-    }
-
     @Test(groups = "wso2.is", description = "Setup encryption algorithm and encryption method.",
-            dependsOnMethods = "testEnforceIDTokenEncryption")
+            dependsOnMethods = "updateServiceProviderCert")
     public void testConfigureIDTokenEncryptionAlgorithms() throws Exception {
 
         OAuthConsumerAppDTO consumerAppDTO = adminClient.getOAuthAppByConsumerKey(consumerKey);
+        consumerAppDTO.setIdTokenEncryptionEnabled(true);
         consumerAppDTO.setIdTokenEncryptionAlgorithm(ENCRYPTION_ALGORITHM);
         consumerAppDTO.setIdTokenEncryptionMethod(ENCRYPTION_METHOD);
         adminClient.updateConsumerApp(consumerAppDTO);
         OAuthConsumerAppDTO updateApp = adminClient.getOAuthAppByConsumerKey(consumerKey);
+        Assert.assertTrue(updateApp.getIdTokenEncryptionEnabled(), "Enforcing ID Token encryption failed.");
         Assert.assertEquals(updateApp.getIdTokenEncryptionAlgorithm(),
                 ENCRYPTION_ALGORITHM, "Configuring encryption algorithm failed.");
         Assert.assertEquals(updateApp.getIdTokenEncryptionMethod(),
