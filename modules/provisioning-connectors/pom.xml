@@ -31,29 +31,6 @@
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
-                    <!-- Download SPML Provisioning connector jar from nexus and copy to the provisioningconnectorCopied/jar folder-->
-                    <execution>
-                        <id>download_spml_provisioning_jar</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.wso2.carbon.identity.outbound.provisioning.spml</groupId>
-                                    <artifactId>org.wso2.carbon.identity.provisioning.connector.spml
-                                    </artifactId>
-                                    <version>${provisioning.connector.spml.version}</version>
-                                    <type>jar</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${basedir}/target/provisioningconnectorCopied/jar
-                                    </outputDirectory>
-                                    <includes>**/*.jar</includes>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
                     <!-- Download Google Provisioning connector jar from nexus and copy to the provisioningconnectorCopied/jar folder-->
                     <execution>
                         <id>download_google_provisioning_jar</id>

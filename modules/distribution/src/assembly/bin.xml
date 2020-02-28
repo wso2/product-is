@@ -420,7 +420,7 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
         </fileSet>
 
-        <!--copy provisioning-connector jars SPML,Google,Salesforce,SCIM .-->
+        <!--copy provisioning-connector jars Google,Salesforce,SCIM .-->
         <fileSet>
             <directory>../provisioning-connectors/target/provisioningconnectorCopied/jar</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
