@@ -165,6 +165,16 @@
         </classes>
     </test>
 
+    <test name="is-tests-uuid-user-store" preserve-order="true" parallel="false" group-by-instances="true">
+        <classes>
+            <!-- This initializer test should run before running other tests. This will copy the relevant services that
+                 needs to run the new test cases.-->
+            <class name="org.wso2.identity.integration.test.user.mgt.uuid.UUIDUserManagerInitializerTestCase"/>
+            <class name="org.wso2.identity.integration.test.user.mgt.uuid.ReadWriteLDAPUUIDUMTestCase"/>
+            <class name="org.wso2.identity.integration.test.user.mgt.uuid.JDBCUUIDUMTestCase"/>
+        </classes>
+    </test>
+
     <!--
     ====================================================================================================================
         IMPORTANT : All the tests below this section, should be the ones that requires additional Identity Server
@@ -269,15 +279,6 @@
         <classes>
             <class name="org.wso2.identity.integration.test.saml.SAMLQueryProfileTestBase"/>
             <class name="org.wso2.identity.integration.test.saml.SAMLQueryProfileTestCase"/>
-        </classes>
-    </test>
-    <test name="is-tests-uuid-user-store" preserve-order="true" parallel="false" group-by-instances="true">
-        <classes>
-            <!-- This initializer test should run before running other tests. This will copy the relevant services that
-                 needs to run the new test cases.-->
-            <class name="org.wso2.identity.integration.test.user.mgt.uuid.UUIDUserManagerInitializerTestCase"/>
-            <class name="org.wso2.identity.integration.test.user.mgt.uuid.ReadWriteLDAPUUIDUMTestCase"/>
-            <class name="org.wso2.identity.integration.test.user.mgt.uuid.JDBCUUIDUMTestCase"/>
         </classes>
     </test>
 </suite>
