@@ -20,7 +20,6 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
@@ -59,7 +58,7 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
 
     private static final String DEVICE_CODE = "device_code";
     private static final String USER_CODE = "user_code";
-    private static final String CLIENT_ID = "client_id";
+    private static final String CLIENT_ID_PARAM = "client_id";
     private String sessionDataKeyConsent;
     private String sessionDataKey;
     private String consumerKey;
@@ -106,11 +105,11 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
     public void testSendDeviceAuthorize() throws Exception {
 
         List<NameValuePair> urlParameters = new ArrayList<>();
-        urlParameters.add(new BasicNameValuePair(CLIENT_ID, consumerKey));
+        urlParameters.add(new BasicNameValuePair(CLIENT_ID_PARAM, consumerKey));
         AutomationContext automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
         String deviceAuthEndpoint = automationContext.getContextUrls().getBackEndUrl()
                 .replace("services/", "oauth2/device_authorize");
-        JSONObject responseObject = responseObjectNew(urlParameters,deviceAuthEndpoint);
+        JSONObject responseObject = responseObjectNew(urlParameters, deviceAuthEndpoint);
         deviceCode = responseObject.get(DEVICE_CODE).toString();
         userCode = responseObject.get(USER_CODE).toString();
         Assert.assertNotNull(deviceCode, "device_code is null");
@@ -124,7 +123,7 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.GRANT_TYPE_NAME,
                 "urn:ietf:params:oauth:grant-type:device_code"));
         urlParameters.add(new BasicNameValuePair(DEVICE_CODE, deviceCode));
-        urlParameters.add(new BasicNameValuePair(CLIENT_ID, consumerKey));
+        urlParameters.add(new BasicNameValuePair(CLIENT_ID_PARAM, consumerKey));
         HttpPost request = new HttpPost(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
         request.setHeader(CommonConstants.USER_AGENT_HEADER, OAuth2Constant.USER_AGENT);
         request.setHeader(OAuth2Constant.AUTHORIZATION_HEADER, OAuth2Constant.BASIC_HEADER + " " + Base64
@@ -236,11 +235,9 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.GRANT_TYPE_NAME,
                 "urn:ietf:params:oauth:grant-type:device_code"));
         urlParameters.add(new BasicNameValuePair(DEVICE_CODE, deviceCode));
-        urlParameters.add(new BasicNameValuePair(CLIENT_ID, consumerKey));
+        urlParameters.add(new BasicNameValuePair(CLIENT_ID_PARAM, consumerKey));
         HttpPost request = new HttpPost(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
         request.setHeader(CommonConstants.USER_AGENT_HEADER, OAuth2Constant.USER_AGENT);
-        request.setHeader(OAuth2Constant.AUTHORIZATION_HEADER, OAuth2Constant.BASIC_HEADER + " " + Base64
-                .encodeBase64String((consumerKey + ":" + consumerSecret).getBytes()).trim());
         request.setEntity(new UrlEncodedFormEntity(urlParameters));
         HttpResponse response = client.execute(request);
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
@@ -256,7 +253,7 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.GRANT_TYPE_NAME,
                 "urn:ietf:params:oauth:grant-type:device_code"));
         urlParameters.add(new BasicNameValuePair(DEVICE_CODE, deviceCode));
-        urlParameters.add(new BasicNameValuePair(CLIENT_ID, consumerKey));
+        urlParameters.add(new BasicNameValuePair(CLIENT_ID_PARAM, consumerKey));
         HttpPost request = new HttpPost(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
         request.setHeader(CommonConstants.USER_AGENT_HEADER, OAuth2Constant.USER_AGENT);
         request.setHeader(OAuth2Constant.AUTHORIZATION_HEADER, OAuth2Constant.BASIC_HEADER + " " + Base64
@@ -329,6 +326,7 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
         appDTO.setGrantTypes("authorization_code implicit password client_credentials refresh_token " +
                              "urn:ietf:params:oauth:grant-type:saml2-bearer iwa:ntlm " +
                              "urn:ietf:params:oauth:grant-type:device_code");
+        appDTO.setBypassClientCredentials(true);
         return createApplication(appDTO);
     }
 }
