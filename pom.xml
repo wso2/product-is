@@ -1961,7 +1961,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.17.0</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.17.2</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -1972,7 +1972,7 @@
         <carbon.consent.mgt.version>2.2.8</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.4.0</identity.governance.version>
+        <identity.governance.version>1.4.1</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.5.0</identity.carbon.auth.saml2.version>
@@ -1992,7 +1992,7 @@
         <!-- Identity workflow Versions -->
         <identity.user.workflow.version>5.4.0</identity.user.workflow.version>
         <identity.workflow.impl.bps.version>5.4.0</identity.workflow.impl.bps.version>
-        <identity.workflow.template.multisteps.version>5.3.7</identity.workflow.template.multisteps.version>
+        <identity.workflow.template.multisteps.version>5.4.0</identity.workflow.template.multisteps.version>
 
 
         <!-- Identity User Versions -->
@@ -2040,13 +2040,13 @@
         <provisioning.connector.scim.version>5.2.1</provisioning.connector.scim.version>
 
         <!-- Local Authenticator Versions -->
-        <identity.local.auth.basicauth.version>6.2.8</identity.local.auth.basicauth.version>
+        <identity.local.auth.basicauth.version>6.3.0</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.2.3</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.3.13</identity.local.auth.iwa.version>
         <identity.local.auth.clientauth.mutualtls.version>2.3.0</identity.local.auth.clientauth.mutualtls.version>
 
         <!-- Local Authentication API Connector Version -->
-        <identity.local.auth.api.version>2.3.1</identity.local.auth.api.version>
+        <identity.local.auth.api.version>2.4.0</identity.local.auth.api.version>
 
         <!-- OAuth2 Grant Type extensions -->
         <identity.oauth2.jwt.bearer.grant.version>1.0.26</identity.oauth2.jwt.bearer.grant.version>
@@ -2064,7 +2064,7 @@
         <identity.extension.utils>1.0.8</identity.extension.utils>
 
         <!-- Identity REST API feature -->
-        <identity.api.dispatcher.version>1.0.71</identity.api.dispatcher.version>
+        <identity.api.dispatcher.version>1.0.72</identity.api.dispatcher.version>
 
         <identity.agent.sso.version>5.4.0</identity.agent.sso.version>
         <identity.tool.samlsso.validator.version>5.4.0</identity.tool.samlsso.validator.version>
@@ -2072,10 +2072,10 @@
         <identity.oauth2.validators.xacml.version>2.3.0</identity.oauth2.validators.xacml.version>
         <org.wso2.carbon.extension.identity.x509certificate.version>1.0.6</org.wso2.carbon.extension.identity.x509certificate.version>
         <conditional.authentication.functions.version>0.1.40</conditional.authentication.functions.version>
-        <carbon.identity.oauth.uma.version>1.1.11</carbon.identity.oauth.uma.version>
+        <carbon.identity.oauth.uma.version>1.2.0</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.0.66</identity.apps.version>
+        <identity.apps.version>1.0.70</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.3.0</charon.version>
