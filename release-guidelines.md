@@ -14,7 +14,7 @@
    
    charon       : [identity-inbound-provisioning-scim2](https://github.com/wso2-extensions/identity-inbound-provisioning-scim2/)
    
-   balana       : [identity-application-authz-xacml](https://github.com/wso2-extensions/identity-application-authz-xacml/)
+   balana       : [carbon-identity-framework](https://github.com/wso2/carbon-identity-framework)
    
    rampart      : [identity-inbound-auth-sts](https://github.com/wso2-extensions/identity-inbound-auth-sts/)
    
