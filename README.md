@@ -201,7 +201,7 @@ By default mode, it would ask you to enter the master password
 > ciphertool -Dchange  (in UNIX)
 
 For more details see
-https://is.docs.wso2.com/en/5.9.0/administer/carbon-secure-vault-implementation
+https://is.docs.wso2.com/en/5.10.0/administer/carbon-secure-vault-implementation
 
 Support
 =======
@@ -221,4 +221,4 @@ For further details, see the WSO2 Carbon documentation at
 https://docs.wso2.com/display/Carbon4411/WSO2+Carbon+Documentation
 
 ---------------------------------------------------------------------------
-(c) Copyright 2019 WSO2 Inc.
+(c) Copyright 2020 WSO2 Inc.
