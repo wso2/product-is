@@ -2060,7 +2060,7 @@
         <authenticator.smsotp.version>3.0.0</authenticator.smsotp.version>
         <authenticator.emailotp.version>3.0.0</authenticator.emailotp.version>
         <authenticator.twitter.version>1.0.10</authenticator.twitter.version>
-        <authenticator.x509.version>2.0.14</authenticator.x509.version>
+        <authenticator.x509.version>2.0.15</authenticator.x509.version>
         <identity.extension.utils>1.0.8</identity.extension.utils>
 
         <!-- Identity REST API feature -->
