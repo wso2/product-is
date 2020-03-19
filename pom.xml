@@ -540,6 +540,11 @@
                     <artifactId>wso2-maven-json-merge-plugin</artifactId>
                     <version>${wso2.json.merge.plugin.version}</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>${maven.checkstyle.plugin.version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
 
@@ -2126,6 +2131,7 @@
         <carbon.p2.plugin.version>5.1.2</carbon.p2.plugin.version>
         <ds-annotations.version>1.2.10</ds-annotations.version>
         <maven.war.plugin.version>3.2.0</maven.war.plugin.version>
+        <maven.checkstyle.plugin.version>3.1.1</maven.checkstyle.plugin.version>
 
         <!-- Sample dependency Versions -->
         <sevlet.api.version>2.5</sevlet.api.version>
