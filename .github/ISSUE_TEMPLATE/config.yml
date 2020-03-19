@@ -1,7 +1,7 @@
 blank_issues_enabled: true
 contact_links:
   - name: UI issues
-    url: https://github.com/wso2/identity-apps/issues
+    url: https://github.com/wso2/identity-apps/issues/new/choose
     about: Please report UI issues here
   - name: Doc issues
     url: https://github.com/wso2/docs-is/issues

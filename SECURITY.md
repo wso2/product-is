@@ -8,7 +8,7 @@ WSO2 takes security issues very seriously. If you have any concerns regarding
 our product security or have uncovered a security vulnerability, we strongly 
 encourage you to report that to our private and highly confidential security 
 mailing list: security@wso2.com first, without disclosing them in any forums, 
-sites or other groups - public or private. To protect the end-user security, 
+sites, or other groups - public or private. To protect the end-user security, 
 these issues could be disclosed in other places only after WSO2 completes its 
 [Vulnerability Management Process](https://docs.wso2.com/display/Security/WSO2+Security+Vulnerability+Management+Process).
 
