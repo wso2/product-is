@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 **Question**
-<!-- A clear and concise description of the question. Ex. How can I [...] -->
+<!-- A clear and concise description of the question. e.g., How can I [...] -->
 
-**Environment Information** 
- - Product Version: [e.g. IS 5.10.0, IS 5.9.0]
+**Environment information** 
+ - Product version: [e.g., IS 5.10.0, IS 5.9.0]
