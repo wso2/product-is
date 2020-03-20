@@ -97,6 +97,9 @@
                             <featureArtifacts>
                                 <!--Carbon features-->
                                 <featureArtifactDef>
+                                    org.wso2.identity.remotefetch:org.wso2.carbon.identity.remotefetch.core.feature:${org.wso2.identity.remotefetch.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon.deployment:org.wso2.carbon.as.runtimes.cxf3.feature:${carbon.deployment.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -483,6 +486,10 @@
                             </destination>
                             <deleteOldProfileFiles>true</deleteOldProfileFiles>
                             <features>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.remotefetch.core.feature.group</id>
+                                    <version>${org.wso2.identity.remotefetch.version}</version>
+                                </feature>
                                 <feature>
                                     <id>org.wso2.carbon.as.runtimes.cxf3.feature.group</id>
                                     <version>${carbon.deployment.version}</version>
@@ -989,6 +996,10 @@
                             <deleteOldProfileFiles>true</deleteOldProfileFiles>
                             <features>
                                 <feature>
+                                    <id>org.wso2.carbon.identity.remotefetch.core.feature.group</id>
+                                    <version>${org.wso2.identity.remotefetch.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.as.runtimes.cxf3.feature.group</id>
                                     <version>${carbon.deployment.version}</version>
                                 </feature>
@@ -1449,6 +1460,10 @@
                             </destination>
                             <deleteOldProfileFiles>true</deleteOldProfileFiles>
                             <features>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.remotefetch.core.feature.group</id>
+                                    <version>${org.wso2.identity.remotefetch.version}</version>
+                                </feature>
                                 <feature>
                                     <id>org.wso2.carbon.as.runtimes.cxf3.feature.group</id>
                                     <version>${carbon.deployment.version}</version>
@@ -2076,6 +2091,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.uuid.generator.feature.group</id>
                                     <version>${carbon.commons.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.remotefetch.core.feature.group</id>
+                                    <version>${org.wso2.identity.remotefetch.version}</version>
                                 </feature>
                             </features>
                         </configuration>
