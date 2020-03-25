@@ -17,6 +17,7 @@
 package org.wso2.identity.integration.test.rest.api.server.user.store.v1;
 
 import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
@@ -145,6 +146,9 @@ public class UserStoreSuccessTest extends UserStoreTestBase {
                     equalTo(resEntry.getValue().getTypeName()));
             validatableResponse.body("find{ it.typeId == '" + resEntry.getKey() + "' }.className",
                     equalTo(resEntry.getValue().getClassName()));
+            validatableResponse.body("find{ it.typeId == '" + resEntry.getKey() + "' }.self",
+                    equalTo("/t/" + tenant + "/api/server/v1" + USER_STORE_PATH_COMPONENT +
+                            PATH_SEPARATOR + "meta/types/" + resEntry.getValue().getTypeId()));
         }
     }
 
@@ -193,18 +197,20 @@ public class UserStoreSuccessTest extends UserStoreTestBase {
     }
 
     @Test(dependsOnMethods = {"testGetUserStore"})
-    public void testGetUserStoreTypeMeta() {
+    public void testGetUserStoreTypeMeta() throws IOException {
 
+        String expectedResponse = readResource("get-user-store_by_type_id_response.json");
+        ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+        JsonNode jsonNode = jsonWriter.readTree(expectedResponse);
         Response response = getResponseOfGet(USER_STORE_PATH_COMPONENT + USER_STORE_META_COMPONENT
                 + PATH_SEPARATOR + USER_STORE_TYPE_ID);
-        response.then().log().ifValidationFails().assertThat().
-                statusCode(HttpStatus.SC_OK)
-                .body("name", equalTo(response.jsonPath().getList("name")))
-                .body("typeName", equalTo(response.jsonPath().getList("typeName")))
-                .body("typeId", equalTo(response.jsonPath().getList("typeId")))
-                .body("className", equalTo(response.jsonPath().getList("className")))
-                .body("description", equalTo(response.jsonPath().getList("description")))
-                .body("find { it.typeId == 'SkRCQ1VzZXJTdG9yZU1hbmFnZXI' }.properties", notNullValue());
+        ValidatableResponse validatableResponse = response.then().log().ifValidationFails().assertThat().
+                statusCode(HttpStatus.SC_OK);
+        validatableResponse
+                .body("typeName", equalTo(jsonNode.get("typeName").asText()))
+                .body("typeId", equalTo(jsonNode.get("typeId").asText()))
+                .body("className", equalTo(jsonNode.get("className").asText()))
+                .body("properties", notNullValue());
     }
 
     @Test(dependsOnMethods = {"testGetUserStoreTypeMeta"})
