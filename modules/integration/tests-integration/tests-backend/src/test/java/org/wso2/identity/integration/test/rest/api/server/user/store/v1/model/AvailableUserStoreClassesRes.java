@@ -23,6 +23,7 @@ public class AvailableUserStoreClassesRes {
     private String typeId;
     private String typeName;
     private String className;
+    private String self;
 
     public AvailableUserStoreClassesRes typeId(String typeId) {
 
@@ -70,6 +71,20 @@ public class AvailableUserStoreClassesRes {
         this.className = className;
     }
 
+    public AvailableUserStoreClassesRes self(String self) {
+
+        this.self = self;
+        return this;
+    }
+
+    public String getSelf() {
+        return self;
+    }
+
+    public void setSelf(String self) {
+        this.self = self;
+    }
+
     @Override
     public boolean equals(Object o) {
 
@@ -82,12 +97,13 @@ public class AvailableUserStoreClassesRes {
         AvailableUserStoreClassesRes availableUserStoreClassesRes = (AvailableUserStoreClassesRes) o;
         return Objects.equals(this.typeId, availableUserStoreClassesRes.typeId) &&
                 Objects.equals(this.typeName, availableUserStoreClassesRes.typeName) &&
-                Objects.equals(this.className, availableUserStoreClassesRes.className);
+                Objects.equals(this.className, availableUserStoreClassesRes.className) &&
+                Objects.equals(this.self, availableUserStoreClassesRes.self);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(typeId, typeName, className);
+        return Objects.hash(typeId, typeName, className, self);
     }
 }
