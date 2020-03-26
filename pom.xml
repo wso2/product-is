@@ -1327,22 +1327,22 @@
                 <version>${carbon.identity.framework.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.identity.remotefetch</groupId>
+                <groupId>org.wso2.identity.fetch.remote</groupId>
                 <artifactId>org.wso2.carbon.identity.remotefetch.common</artifactId>
                 <version>${org.wso2.identity.remotefetch.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.identity.remotefetch</groupId>
+                <groupId>org.wso2.identity.fetch.remote</groupId>
                 <artifactId>org.wso2.carbon.identity.remotefetch.core</artifactId>
                 <version>${org.wso2.identity.remotefetch.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.identity.remotefetch</groupId>
+                <groupId>org.wso2.identity.fetch.remote</groupId>
                 <artifactId>org.wso2.carbon.identity.remotefetch.core.ui</artifactId>
                 <version>${org.wso2.identity.remotefetch.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.identity.remotefetch</groupId>
+                <groupId>org.wso2.identity.fetch.remote</groupId>
                 <artifactId>org.wso2.carbon.identity.remotefetch.core.feature</artifactId>
                 <version>${org.wso2.identity.remotefetch.version}</version>
             </dependency>
@@ -1878,6 +1878,11 @@
                 <version>${org.apache.velocity.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.orbit.org.apache.velocity</groupId>
+                <artifactId>velocity</artifactId>
+                <version>${org.wso2.orbit.org.apache.velocity.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>io.rest-assured</groupId>
                 <artifactId>rest-assured</artifactId>
                 <version>${rest.assured.version}</version>
@@ -2051,7 +2056,7 @@
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
         <!--<identity.userstore.cassandra.version>5.1.1</identity.userstore.cassandra.version>-->
         <!--<identity.agent-entitlement-filter.version>5.1.1</identity.agent-entitlement-filter.version>-->
-        <org.wso2.identity.remotefetch.version>1.0.0</org.wso2.identity.remotefetch.version>
+        <org.wso2.identity.remotefetch.version>0.7.0-SNAPSHOT</org.wso2.identity.remotefetch.version>
         <!-- CallHome version -->
         <callhome.version>4.5.x_1.0.4</callhome.version>
 
@@ -2210,6 +2215,7 @@
         <commons.pool.wso2.version>1.5.6.wso2v1</commons.pool.wso2.version>
         <liberty.maven.plugin.version>2.2</liberty.maven.plugin.version>
         <pax.logging.api.version>1.10.1</pax.logging.api.version>
+        <org.wso2.orbit.org.apache.velocity.version>1.7.0.wso2v1</org.wso2.orbit.org.apache.velocity.version>
 
         <osgi.framework.imp.pkg.version.range>[1.7.0, 2.0.0)</osgi.framework.imp.pkg.version.range>
         <osgi.service.component.imp.pkg.version.range>[1.2.0, 2.0.0)</osgi.service.component.imp.pkg.version.range>
