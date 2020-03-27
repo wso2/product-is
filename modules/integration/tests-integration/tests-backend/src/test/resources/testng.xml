@@ -151,6 +151,8 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementWSTrustTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.script.library.v1.ScriptLibrarySuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.script.library.v1.ScriptLibraryFailureTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.configs.v1.ConfigSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.configs.v1.ConfigFailureTest"/>
         </classes>
     </test>
 
