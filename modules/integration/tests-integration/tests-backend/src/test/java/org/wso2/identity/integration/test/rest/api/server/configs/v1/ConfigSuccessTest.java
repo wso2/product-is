@@ -86,7 +86,8 @@ public class ConfigSuccessTest extends ConfigTestBase {
     @Test
     public void testGetAuthenticator() throws Exception {
 
-        Response response = getResponseOfGet(CONFIGS_API_BASE_PATH + PATH_SEPARATOR + SAMPLE_AUTHENTICATOR_ID);
+        Response response = getResponseOfGet(
+                CONFIGS_AUTHENTICATOR_API_BASE_PATH + PATH_SEPARATOR + SAMPLE_AUTHENTICATOR_ID);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -101,16 +102,14 @@ public class ConfigSuccessTest extends ConfigTestBase {
     @Test(dependsOnMethods = {"testGetAuthenticator"})
     public void testGetAuthenticators() throws Exception {
 
-        String baseIdentifier = "identityProviders.find{ it.id == '" + SAMPLE_AUTHENTICATOR_ID + "' }.";
-        Response response = getResponseOfGet(CONFIGS_API_BASE_PATH);
+        String baseIdentifier = "find{ it.id == '" + SAMPLE_AUTHENTICATOR_ID + "' }.";
+        Response response = getResponseOfGet(CONFIGS_AUTHENTICATOR_API_BASE_PATH);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .body(baseIdentifier + "name", equalTo("BasicAuthenticator"))
                 .body(baseIdentifier + "displayName", equalTo("basic"))
-                .body(baseIdentifier + "isEnabled", equalTo(false))
-                .body(baseIdentifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
-                        "/api/server/" + API_VERSION + CONFIGS_API_BASE_PATH + "/" + SAMPLE_AUTHENTICATOR_ID));
+                .body(baseIdentifier + "isEnabled", equalTo(false));
     }
 }

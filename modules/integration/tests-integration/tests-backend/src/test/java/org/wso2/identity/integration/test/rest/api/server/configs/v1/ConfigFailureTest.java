@@ -36,6 +36,8 @@ import java.io.IOException;
  */
 public class ConfigFailureTest extends ConfigTestBase {
 
+    private static final String INVALID_AUTHENTICATOR_ID = "SW52YWxpZEJhc2ljQXV0aGVudGljYXRvcg";
+
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public ConfigFailureTest(TestUserMode userMode) throws Exception {
 
@@ -82,14 +84,16 @@ public class ConfigFailureTest extends ConfigTestBase {
     @Test
     public void testGetAuthenticatorWithInvalidId() {
 
-        Response response = getResponseOfGet(CONFIGS_API_BASE_PATH + PATH_SEPARATOR + "random-id");
-        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "CNF-60002", "random-id");
+        Response response =
+                getResponseOfGet(CONFIGS_AUTHENTICATOR_API_BASE_PATH + PATH_SEPARATOR + INVALID_AUTHENTICATOR_ID);
+        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "CNF-60002", INVALID_AUTHENTICATOR_ID);
     }
 
     @Test(dependsOnMethods = "testGetAuthenticatorWithInvalidId")
     public void testGetAuthenticatorsWithInvalidAuth() {
 
-        Response response = getResponseOfGetWithoutAuthentication(CONFIGS_API_BASE_PATH, "application/json");
+        Response response =
+                getResponseOfGetWithoutAuthentication(CONFIGS_AUTHENTICATOR_API_BASE_PATH, "application/json");
         validateHttpStatusCode(response, 401);
     }
 }
