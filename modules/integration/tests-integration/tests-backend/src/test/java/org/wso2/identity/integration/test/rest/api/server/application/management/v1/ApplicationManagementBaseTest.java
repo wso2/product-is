@@ -17,6 +17,7 @@ package org.wso2.identity.integration.test.rest.api.server.application.managemen
 
 import io.restassured.RestAssured;
 import org.apache.commons.lang.StringUtils;
+import org.json.JSONException;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
@@ -38,6 +39,8 @@ public class ApplicationManagementBaseTest extends RESTAPIServerTestBase {
 
     static final String APPLICATION_MANAGEMENT_API_BASE_PATH = "/applications";
     static final String METADATA_API_BASE_PATH = APPLICATION_MANAGEMENT_API_BASE_PATH + "/meta";
+    static final String APPLICATION_TEMPLATE_MANAGEMENT_API_BASE_PATH = APPLICATION_MANAGEMENT_API_BASE_PATH +
+            "/templates";
     static final String PATH_SEPARATOR = "/";
 
     protected static String swaggerDefinition;
