@@ -2065,7 +2065,7 @@
         <authenticator.smsotp.version>3.0.1</authenticator.smsotp.version>
         <authenticator.emailotp.version>3.0.0</authenticator.emailotp.version>
         <authenticator.twitter.version>1.0.10</authenticator.twitter.version>
-        <authenticator.x509.version>2.0.16</authenticator.x509.version>
+        <authenticator.x509.version>2.0.17</authenticator.x509.version>
         <identity.extension.utils>1.0.8</identity.extension.utils>
 
         <!-- Identity REST API feature -->
@@ -2080,7 +2080,7 @@
         <carbon.identity.oauth.uma.version>1.2.0</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.0.139</identity.apps.version>
+        <identity.apps.version>1.0.140</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.3.0</charon.version>
