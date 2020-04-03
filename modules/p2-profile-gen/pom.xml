@@ -456,7 +456,7 @@
                                    org.wso2.carbon.identity.local.auth.fido:org.wso2.carbon.identity.application.authenticator.fido2.server.feature:${identity.local.auth.fido.version}
                                 </featureArtifactDef>
 
-                                 UUID Generator feature
+                                 <!-- UUID Generator feature -->
                                 <featureArtifactDef>
                                     org.wso2.carbon.commons:org.wso2.carbon.uuid.generator.feature:${carbon.commons.version}
                                 </featureArtifactDef>
