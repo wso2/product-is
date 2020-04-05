@@ -41,6 +41,7 @@ public class IdPTestBase extends RESTAPIServerTestBase {
     public static final String IDP_ROLES_PATH = "roles";
     public static final String META_FEDERATED_AUTHENTICATORS_PATH = "meta/federated-authenticators";
     public static final String META_OUTBOUND_CONNECTORS_PATH = "meta/outbound-provisioning-connectors";
+    public static final String IDP_TEMPLATE_PATH = "templates";
     public static final String SAMPLE_FEDERATED_AUTHENTICATOR_ID = "R29vZ2xlT0lEQ0F1dGhlbnRpY2F0b3I";
     public static final String SAMPLE_OUTBOUND_CONNECTOR_ID = "c2NpbQ";
 
