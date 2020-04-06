@@ -42,6 +42,7 @@ import static org.testng.Assert.assertNotNull;
 public class IdPSuccessTest extends IdPTestBase {
 
     private String idPId;
+    private String idPTemplateId;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public IdPSuccessTest(TestUserMode userMode) throws Exception {
@@ -547,5 +548,81 @@ public class IdPSuccessTest extends IdPTestBase {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_NOT_FOUND);
+    }
+
+    @Test
+    public void testAddIdPTemplate() throws IOException {
+
+        String body = readResource("add-idp-template.json");
+        Response response = getResponseOfPost(IDP_API_BASE_PATH + PATH_SEPARATOR + IDP_TEMPLATE_PATH, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .header(HttpHeaders.LOCATION, notNullValue());
+
+        String location = response.getHeader(HttpHeaders.LOCATION);
+        assertNotNull(location);
+        idPTemplateId = location.substring(location.lastIndexOf("/") + 1);
+        assertNotNull(idPTemplateId);
+    }
+
+    @Test(dependsOnMethods = "testAddIdPTemplate")
+    public void testGetIdPTemplate() throws Exception {
+
+        Response response = getResponseOfGet(IDP_API_BASE_PATH + PATH_SEPARATOR + IDP_TEMPLATE_PATH +
+                PATH_SEPARATOR + idPTemplateId);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("id", equalTo(idPTemplateId))
+                .body("name", equalTo("Google"))
+                .body("description", equalTo("Template for google IdPs."))
+                .body("category", equalTo("DEFAULT"))
+                .body("image", equalTo("google-logo-url"))
+                .body("displayOrder", equalTo(10))
+                .body("idp", notNullValue());
+    }
+
+    @Test(dependsOnMethods = {"testGetIdPTemplate"})
+    public void testGetIdPTemplates() throws Exception {
+
+        String baseIdentifier = "templates.find{ it.id == '" + idPTemplateId + "' }.";
+        Response response = getResponseOfGet(IDP_API_BASE_PATH + PATH_SEPARATOR + IDP_TEMPLATE_PATH);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body(baseIdentifier + "name", equalTo("Google"))
+                .body(baseIdentifier + "description", equalTo("Template for google IdPs."))
+                .body(baseIdentifier + "category", equalTo("DEFAULT"))
+                .body(baseIdentifier + "image", equalTo("google-logo-url"))
+                .body(baseIdentifier + "displayOrder", equalTo(10))
+                .body(baseIdentifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                        "/api/server/v1/identity-providers/templates/" + idPTemplateId));
+    }
+
+    @Test(dependsOnMethods = {"testGetIdPTemplates"})
+    public void testUpdateIdPTemplate() throws Exception {
+
+        String body = readResource("update-idp-template.json");
+        Response response = getResponseOfPut(IDP_API_BASE_PATH + PATH_SEPARATOR + IDP_TEMPLATE_PATH +
+                PATH_SEPARATOR + idPTemplateId, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK);
+    }
+
+    @Test(dependsOnMethods = {"testUpdateIdPTemplate"})
+    public void testDeleteIdPTemplate() throws Exception {
+
+        Response response = getResponseOfDelete(IDP_API_BASE_PATH + PATH_SEPARATOR + IDP_TEMPLATE_PATH +
+                PATH_SEPARATOR + idPTemplateId);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
     }
 }
