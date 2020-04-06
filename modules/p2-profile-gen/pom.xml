@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>5.11.0-m11-SNAPSHOT</version>
+        <version>5.11.0-m13-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -454,6 +454,11 @@
                                 <!-- FIDO2/WebAuthn feature -->
                                 <featureArtifactDef>
                                    org.wso2.carbon.identity.local.auth.fido:org.wso2.carbon.identity.application.authenticator.fido2.server.feature:${identity.local.auth.fido.version}
+                                </featureArtifactDef>
+
+                                 <!-- UUID Generator feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.commons:org.wso2.carbon.uuid.generator.feature:${carbon.commons.version}
                                 </featureArtifactDef>
 
                             </featureArtifacts>
@@ -923,6 +928,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.application.authenticator.fido2.server.feature.group</id>
                                     <version>${identity.local.auth.fido.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.uuid.generator.feature.group</id>
+                                    <version>${carbon.commons.version}</version>
                                 </feature>
                             </features>
                         </configuration>
@@ -1398,6 +1407,10 @@
                                     <id>org.wso2.carbon.identity.template.mgt.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.uuid.generator.feature.group</id>
+                                    <version>${carbon.commons.version}</version>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>
@@ -1809,6 +1822,10 @@
                                     <id>org.wso2.carbon.identity.template.mgt.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.uuid.generator.server.feature.group</id>
+                                    <version>${carbon.commons.version}</version>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>
@@ -2051,6 +2068,14 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.template.mgt.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.uuid.generator.server.feature.group</id>
+                                    <version>${carbon.commons.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.uuid.generator.feature.group</id>
+                                    <version>${carbon.commons.version}</version>
                                 </feature>
                             </features>
                         </configuration>

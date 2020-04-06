@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>5.11.0-m11-SNAPSHOT</version>
+        <version>5.11.0-m13-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -264,6 +264,7 @@
                                 <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/carbon.xml.j2" token="${product.key}" value="IS" />
 
                                 <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/context.xml" token="&lt;Context crossContext=&quot;true&quot;&gt;" value="&lt;Context crossContext=&quot;true&quot; useHttpOnly=&quot;true&quot;&gt;" />
+                                <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/context.xml" token="&lt;Manager className=&quot;org.wso2.carbon.webapp.mgt.CarbonTomcatSessionManager&quot;&gt;" value="&lt;Manager className=&quot;org.apache.catalina.session.StandardManager&quot;&gt;" />
                                 <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/catalina-server.xml" token="clientAuth=&quot;false&quot;" value="clientAuth=&quot;want&quot;" />
 
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;ServerURL&gt;https://${carbon.local.ip}" value="&lt;ServerURL&gt;https://localhost" />
