@@ -18,7 +18,6 @@
 
 package org.wso2.identity.integration.test.user.mgt.uuid;
 
-import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.AfterTest;
@@ -27,7 +26,7 @@ import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 import java.io.File;
-import java.io.FileFilter;
+import java.net.URL;
 
 public class UUIDUserManagerInitializerTestCase extends ISIntegrationTest {
 
@@ -48,20 +47,13 @@ public class UUIDUserManagerInitializerTestCase extends ISIntegrationTest {
         serverConfigurationManager.restartGracefully();
     }
 
-    private File getServiceJar() throws Exception {
+    private File getServiceJar() {
 
-        File directory = new File(getISResourceLocation() + File.separator + "userMgt");
-
-        String pattern = "^(\\w*\\W)*(test\\.integration\\.service)(\\w*\\W)*(jar)";
-        FileFilter filter = new RegexFileFilter(pattern);
-        File [] files = directory.listFiles(filter);
-
-        if (files == null || files.length == 0) {
-            log.error("Unable to find the services JAR file.");
-            throw new Exception("Cannot find the services JAR file.");
-        }
-
-        return files[0];
+        URL serviceJar = getClass().getResource(
+                ISIntegrationTest.URL_SEPARATOR + "samples" + ISIntegrationTest.URL_SEPARATOR +
+                        "userMgt" + ISIntegrationTest.URL_SEPARATOR +
+                        "org.wso2.carbon.identity.test.integration.service.jar");
+        return new File(serviceJar.getPath());
     }
 
     @AfterTest
