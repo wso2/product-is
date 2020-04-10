@@ -7,8 +7,8 @@ assignees: ''
 
 ---
 
-**Is your suggestion related to a experience ? Please describe.**
-<!-- A clear and concise description of what the suggestion is. Ex. Need to improve experience in [...] -->
+**Is your suggestion related to an experience ? Please describe.**
+<!-- A clear and concise description of what the suggestion is. (e.g., Need to improve experience in [...]) -->
 
 **Describe the improvement**
 <!-- A clear and concise description of what you want to happen. -->
