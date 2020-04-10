@@ -598,6 +598,23 @@ public class IdPSuccessTest extends IdPTestBase {
     }
 
     @Test(dependsOnMethods = {"testGetIdPTemplates"})
+    public void testFilterIdPTemplates() throws Exception {
+
+        String baseIdentifier = "templates.find{ it.id == '" + idPTemplateId + "' }.";
+        String urlWithFilters = IDP_API_BASE_PATH + PATH_SEPARATOR + IDP_TEMPLATE_PATH +
+                "?filter=category+eq+'DEFAULT'+and+name+eq+'Google'";
+        Response response = getResponseOfGet(urlWithFilters);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body(baseIdentifier + "name", equalTo("Google"))
+                .body(baseIdentifier + "category", equalTo("DEFAULT"))
+                .body(baseIdentifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                        "/api/server/v1/identity-providers/templates/" + idPTemplateId));
+    }
+
+    @Test(dependsOnMethods = {"testFilterIdPTemplates"})
     public void testUpdateIdPTemplate() throws Exception {
 
         String body = readResource("update-idp-template.json");
