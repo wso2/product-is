@@ -7,7 +7,7 @@
     "react",
     "angular"
   ],
-  "category": "Server Template",
+  "category": "DEFAULT",
   "displayOrder": 2,
   "application": {
     "name": "pickup",
