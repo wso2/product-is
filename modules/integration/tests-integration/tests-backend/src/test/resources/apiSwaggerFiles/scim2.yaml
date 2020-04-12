@@ -1016,7 +1016,10 @@ paths:
           description: Valid user is found
           schema:
             $ref: '#/definitions/UserResponseObject'
-
+        400:
+          description: Invalid Input
+          schema:
+            $ref: '#/definitions/ErrorIvalidInput'
         401:
           description: Unauthorized
           schema:
@@ -1111,7 +1114,10 @@ paths:
           description: Valid user is found
           schema:
             $ref: '#/definitions/UserResponseObject'
-
+        400:
+          description: Invalid Input
+          schema:
+            $ref: '#/definitions/ErrorIvalidInput'
         401:
           description: Unauthorized
           schema:
