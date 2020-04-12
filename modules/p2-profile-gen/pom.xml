@@ -460,7 +460,10 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.commons:org.wso2.carbon.uuid.generator.feature:${carbon.commons.version}
                                 </featureArtifactDef>
-
+                                <!--  RemoteFetch feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.fetch.remote:org.wso2.carbon.identity.remotefetch.core.feature:${org.wso2.carbon.identity.remotefetch.version}
+                                </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -932,6 +935,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.uuid.generator.feature.group</id>
                                     <version>${carbon.commons.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.remotefetch.core.feature.group</id>
+                                    <version>${org.wso2.carbon.identity.remotefetch.version}</version>
                                 </feature>
                             </features>
                         </configuration>
@@ -1411,6 +1418,10 @@
                                     <id>org.wso2.carbon.uuid.generator.feature.group</id>
                                     <version>${carbon.commons.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.remotefetch.core.feature.group</id>
+                                    <version>${org.wso2.carbon.identity.remotefetch.version}</version>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>
@@ -1826,6 +1837,10 @@
                                     <id>org.wso2.carbon.uuid.generator.server.feature.group</id>
                                     <version>${carbon.commons.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.remotefetch.core.feature.group</id>
+                                    <version>${org.wso2.carbon.identity.remotefetch.version}</version>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>
@@ -2076,6 +2091,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.uuid.generator.feature.group</id>
                                     <version>${carbon.commons.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.remotefetch.core.feature.group</id>
+                                    <version>${org.wso2.carbon.identity.remotefetch.version}</version>
                                 </feature>
                             </features>
                         </configuration>
