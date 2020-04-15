@@ -1996,7 +1996,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.17.36</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.17.39</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2018,7 +2018,7 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.8.3</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.4.4</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.4.5</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.5.0</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.5.2</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.6.0</identity.inbound.provisioning.scim.version>
@@ -2076,7 +2076,7 @@
         <provisioning.connector.scim.version>5.2.1</provisioning.connector.scim.version>
 
         <!-- Local Authenticator Versions -->
-        <identity.local.auth.basicauth.version>6.3.0</identity.local.auth.basicauth.version>
+        <identity.local.auth.basicauth.version>6.3.1</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.2.3</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.3.13</identity.local.auth.iwa.version>
         <identity.local.auth.clientauth.mutualtls.version>2.3.0</identity.local.auth.clientauth.mutualtls.version>
