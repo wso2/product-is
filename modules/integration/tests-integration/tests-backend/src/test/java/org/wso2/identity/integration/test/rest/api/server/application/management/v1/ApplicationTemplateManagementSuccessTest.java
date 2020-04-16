@@ -72,7 +72,7 @@ public class ApplicationTemplateManagementSuccessTest extends ApplicationManagem
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("templates.size()", is(1))
+                .body("templates.size()", notNullValue())
                 .body(baseIdentifier + "name", equalTo(CREATED_TEMPLATE_NAME))
                 .body(baseIdentifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
                         "/api/server/" + API_VERSION + APPLICATION_TEMPLATE_MANAGEMENT_API_BASE_PATH + "/" +
