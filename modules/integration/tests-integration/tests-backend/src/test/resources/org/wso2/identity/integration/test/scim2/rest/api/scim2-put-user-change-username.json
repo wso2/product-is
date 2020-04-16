@@ -1,0 +1,11 @@
+{
+    "schemas": [
+        "urn:ietf:params:scim:schemas:core:2.0:User"
+    ],
+    "name": {
+        "givenName": "kim",
+        "familyName": "jackson"
+    },
+    "id": "userId-value",
+    "userName": "kimnew"
+}
