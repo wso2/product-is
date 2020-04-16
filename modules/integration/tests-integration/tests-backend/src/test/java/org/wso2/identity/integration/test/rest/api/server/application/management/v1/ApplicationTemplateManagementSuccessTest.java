@@ -129,15 +129,4 @@ public class ApplicationTemplateManagementSuccessTest extends ApplicationManagem
                 .assertThat()
                 .statusCode(HttpStatus.SC_NOT_FOUND);
     }
-
-    @Test(dependsOnMethods = {"testDeleteApplicationById"})
-    public void testGetEmptyList() throws Exception {
-
-        getResponseOfGet(APPLICATION_TEMPLATE_MANAGEMENT_API_BASE_PATH)
-                .then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK)
-                .body("templates.size()", is(0));
-    }
 }
