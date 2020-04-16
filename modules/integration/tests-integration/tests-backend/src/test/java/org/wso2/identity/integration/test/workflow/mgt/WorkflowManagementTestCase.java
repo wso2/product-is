@@ -1299,9 +1299,9 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         }
 
         try {
-            if (workflowExists(workflowId)) {
+            if (isWorkflowPresent(workflowId)) {
                 client.deleteWorkflow(workflowId);
-                if (workflowExists(workflowId)) {
+                if (isWorkflowPresent(workflowId)) {
                     Assert.fail("Workflow " + workflowId + " is not deleted, It still exists.");
                 }
             } else {
@@ -1380,7 +1380,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         return workflowDTO;
     }
 
-    private boolean workflowExists(String workflowIdentity) throws RemoteException, WorkflowAdminServiceWorkflowException {
+    private boolean isWorkflowPresent(String workflowIdentity) throws RemoteException, WorkflowAdminServiceWorkflowException {
 
         WorkflowWizard[] workflows = client.listWorkflows();
 
