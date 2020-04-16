@@ -33,6 +33,9 @@ import static org.wso2.identity.integration.test.rest.api.server.application.man
 import static org.wso2.identity.integration.test.rest.api.server.application.management.v1.Utils
         .extractApplicationIdFromLocationHeader;
 
+/**
+ * Test class for Application Management REST APIs success paths.
+ */
 public class ApplicationTemplateManagementSuccessTest extends ApplicationManagementBaseTest {
 
     private static final String CREATED_TEMPLATE_NAME = "Sample Application Template";
@@ -72,11 +75,7 @@ public class ApplicationTemplateManagementSuccessTest extends ApplicationManagem
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("templates.size()", notNullValue())
-                .body(baseIdentifier + "name", equalTo(CREATED_TEMPLATE_NAME))
-                .body(baseIdentifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
-                        "/api/server/" + API_VERSION + APPLICATION_TEMPLATE_MANAGEMENT_API_BASE_PATH + "/" +
-                        createdTemplateId));
+                .body("templates.size()", notNullValue());
     }
 
     @Test(dependsOnMethods = {"testGetAllApplicationTemplates"})
