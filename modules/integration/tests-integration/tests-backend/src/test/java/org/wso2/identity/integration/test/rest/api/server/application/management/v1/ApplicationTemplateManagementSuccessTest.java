@@ -25,6 +25,9 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
@@ -82,14 +85,15 @@ public class ApplicationTemplateManagementSuccessTest extends ApplicationManagem
     public void testFilterApplicationTemplates() throws Exception {
 
         String baseIdentifier = "templates.find{ it.id == '" + createdTemplateId + "' }.";
-        String urlWithFilters = APPLICATION_TEMPLATE_MANAGEMENT_API_BASE_PATH +
-                "?filter=category+eq+'DEFAULT'+and+authenticationProtocol+eq+'oidc'";
-        Response response = getResponseOfGet(urlWithFilters);
+        String url = APPLICATION_TEMPLATE_MANAGEMENT_API_BASE_PATH;
+        Map<String, Object> filterParam = new HashMap<>();
+        filterParam.put("filter", "category eq 'DEFAULT'");
+        Response response = getResponseOfGetWithQueryParams(url, filterParam);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("templates.size()", is(1))
+                .body("templates.size()", notNullValue())
                 .body(baseIdentifier + "name", equalTo(CREATED_TEMPLATE_NAME))
                 .body(baseIdentifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
                         "/api/server/" + API_VERSION + APPLICATION_TEMPLATE_MANAGEMENT_API_BASE_PATH + "/" +

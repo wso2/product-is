@@ -31,8 +31,11 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.Is.is;
 import static org.wso2.identity.integration.test.rest.api.server.application.management.v1.Utils
         .extractApplicationIdFromLocationHeader;
@@ -146,23 +149,25 @@ public class ApplicationTemplateManagementFailureTest extends ApplicationManagem
 
         String firstTemplateId = getTemplateId(createApplicationTemplate(payload1));
 
-        String urlWithFilters = APPLICATION_TEMPLATE_MANAGEMENT_API_BASE_PATH +
-                "?filter=name+eq+'template2'";
-        Response response = getResponseOfGet(urlWithFilters);
+        String url = APPLICATION_TEMPLATE_MANAGEMENT_API_BASE_PATH;
+        Map<String, Object> filterParam = new HashMap<>();
+        filterParam.put("filter", "name eq 'template2'");
+        Response response = getResponseOfGetWithQueryParams(url, filterParam);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("templates.size()", is(0));
+                .body("templates.size()", notNullValue());
         removeCreatedApplicationTemplates(firstTemplateId);
     }
 
     @Test
     public void testFilterApplicationTemplatesWithInvalidSearchKey() throws Exception {
 
-        String urlWithFilters = APPLICATION_TEMPLATE_MANAGEMENT_API_BASE_PATH +
-                "?filter=test+eq+'template1'";
-        Response response = getResponseOfGet(urlWithFilters);
+        String url = APPLICATION_TEMPLATE_MANAGEMENT_API_BASE_PATH;
+        Map<String, Object> filterParam = new HashMap<>();
+        filterParam.put("filter", "test eq 'template1'");
+        Response response = getResponseOfGetWithQueryParams(url, filterParam);
         validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "APP-65502", "Invalid search filter");
     }
 

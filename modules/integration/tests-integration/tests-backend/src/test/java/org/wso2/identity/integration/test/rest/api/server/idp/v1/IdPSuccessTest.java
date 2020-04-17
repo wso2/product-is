@@ -31,6 +31,8 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
@@ -320,8 +322,10 @@ public class IdPSuccessTest extends IdPTestBase {
     public void testGetIdPsWithRequiredAttribute() throws Exception {
 
         String baseIdentifier = "identityProviders.find{ it.id == '" + idPId + "' }.";
+        Map<String, Object> requiredAttributeParam = new HashMap<>();
+        requiredAttributeParam.put("requiredAttributes", "homeRealmIdentifier");
         Response response =
-                getResponseOfGet(IDP_API_BASE_PATH + "?requiredAttributes=alias,homeRealmIdentifier");
+                getResponseOfGetWithQueryParams(IDP_API_BASE_PATH, requiredAttributeParam);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -332,8 +336,7 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body(baseIdentifier + "image", equalTo("google-logo-url"))
                 .body(baseIdentifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
                         "/api/server/v1/identity-providers/" + idPId))
-                .body(baseIdentifier + "homeRealmIdentifier", equalTo("localhost"))
-                .body(baseIdentifier + "alias", equalTo("https://localhost:9444/oauth2/token"));
+                .body(baseIdentifier + "homeRealmIdentifier", equalTo("localhost"));
     }
 
     @Test(dependsOnMethods = {"testGetIdPsWithRequiredAttribute"})
@@ -621,9 +624,10 @@ public class IdPSuccessTest extends IdPTestBase {
     public void testFilterIdPTemplates() throws Exception {
 
         String baseIdentifier = "templates.find{ it.id == '" + idPTemplateId + "' }.";
-        String urlWithFilters = IDP_API_BASE_PATH + PATH_SEPARATOR + IDP_TEMPLATE_PATH +
-                "?filter=category+eq+'DEFAULT'+and+name+eq+'Google'";
-        Response response = getResponseOfGet(urlWithFilters);
+        String url = IDP_API_BASE_PATH + PATH_SEPARATOR + IDP_TEMPLATE_PATH;
+        Map<String, Object> filterParam = new HashMap<>();
+        filterParam.put("filter", "category eq 'DEFAULT' and name eq 'Google'");
+        Response response = getResponseOfGetWithQueryParams(url, filterParam);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
