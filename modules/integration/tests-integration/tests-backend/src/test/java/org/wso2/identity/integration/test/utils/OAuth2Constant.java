@@ -28,6 +28,7 @@ public final class OAuth2Constant {
     public static final String OAUTH2_GRANT_TYPE_CLIENT_CREDENTIALS = "client_credentials";
     public static final String OAUTH2_GRANT_TYPE_RESOURCE_OWNER = "password";
     public static final String OAUTH2_GRANT_TYPE_REFRESH_TOKEN = "refresh_token";
+    public static final String OAUTH2_RESPONSE_TYPE_TOKEN = "token";
 
     public static final String OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE = "authorization_code";
     public static final String AUTHORIZATION_HEADER = "Authorization";

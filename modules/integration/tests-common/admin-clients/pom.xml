@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-integration-tests</artifactId>
-        <version>5.10.0-alpha3-SNAPSHOT</version>
+        <version>5.11.0-m15-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -150,6 +150,10 @@
             <artifactId>org.wso2.carbon.identity.user.profile.stub</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.wso2.is</groupId>
+            <artifactId>org.wso2.carbon.identity.test.integration.service.stubs</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.opensaml</groupId>
             <artifactId>opensaml-core</artifactId>
             <version>${opensaml3.version}</version>
@@ -243,6 +247,11 @@
             <groupId>net.shibboleth.utilities</groupId>
             <artifactId>java-support</artifactId>
             <version>${java-support.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity</artifactId>
+            <version>${org.apache.velocity.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.framework</groupId>

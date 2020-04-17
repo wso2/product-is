@@ -90,7 +90,7 @@ public class EmailTemplatesNegativeTest extends EmailTemplatesTestBase {
 
         Response response = getResponseOfGet(EMAIL_TEMPLATES_API_BASE_PATH + EMAIL_TEMPLATE_TYPES_PATH +
                 PATH_SEPARATOR + UNDECODABLE_TEMPLATE_TYPE_ID);
-        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "ETM-50001");
+        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "ETM-50002");
     }
 
     @Test

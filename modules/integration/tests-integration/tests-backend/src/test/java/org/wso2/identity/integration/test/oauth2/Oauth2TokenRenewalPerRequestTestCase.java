@@ -56,11 +56,6 @@ public class Oauth2TokenRenewalPerRequestTestCase extends OAuth2ServiceAbstractI
     private ServerConfigurationManager serverConfigurationManager;
     private CloseableHttpClient client;
     private static final String TEST_NONCE = "test_nonce";
-    private String authorizationCode;
-    private String firstAccessToken;
-    private String secondAccessToken;
-    private String firstRefreshToken;
-    private String secondRefreshToken;
     private String tempAccessToken;
 
     @BeforeClass(alwaysRun = true)
@@ -89,16 +84,12 @@ public class Oauth2TokenRenewalPerRequestTestCase extends OAuth2ServiceAbstractI
     public void authorizationCodeGrantTokenRenewalTest() throws Exception {
 
         JSONObject firstTokenRequest = getAuthzCodeAccessToken();
-        firstAccessToken = (String) firstTokenRequest.get(OAuth2Constant.ACCESS_TOKEN);
-        firstRefreshToken = (String) firstTokenRequest.get(OAuth2Constant.REFRESH_TOKEN);
-
-        if (tempAccessToken != null) {
-            checkOldTokenRevocation(tempAccessToken);
-        }
+        String firstAccessToken = (String) firstTokenRequest.get(OAuth2Constant.ACCESS_TOKEN);
+        String firstRefreshToken = (String) firstTokenRequest.get(OAuth2Constant.REFRESH_TOKEN);
 
         JSONObject secondTokenRequest = getAuthzCodeAccessToken();
-        secondAccessToken = (String) secondTokenRequest.get(OAuth2Constant.ACCESS_TOKEN);
-        secondRefreshToken = (String) secondTokenRequest.get(OAuth2Constant.REFRESH_TOKEN);
+        String secondAccessToken = (String) secondTokenRequest.get(OAuth2Constant.ACCESS_TOKEN);
+        String secondRefreshToken = (String) secondTokenRequest.get(OAuth2Constant.REFRESH_TOKEN);
 
         Assert.assertNotEquals(firstAccessToken, secondAccessToken, "Old access token returned.");
         Assert.assertNotEquals(firstRefreshToken, secondRefreshToken, "Old refresh token returned.");
@@ -106,36 +97,34 @@ public class Oauth2TokenRenewalPerRequestTestCase extends OAuth2ServiceAbstractI
         tempAccessToken = secondAccessToken;
     }
 
-    @Test(description = "Test token renewal per request and old token revocation using implicit grant type.")
+    @Test(dependsOnMethods = {"authorizationCodeGrantTokenRenewalTest"}, description = "Test token renewal per " +
+            "request and old token revocation using implicit grant type.")
     public void implicitGrantTokenRenewalTest() throws Exception {
 
-        firstAccessToken = getImplicitAccessToken();
+        String firstAccessToken = getImplicitAccessToken();
 
-        if (tempAccessToken != null) {
-            checkOldTokenRevocation(tempAccessToken);
-        }
+        checkOldTokenRevocation(tempAccessToken);
 
-        secondAccessToken = getImplicitAccessToken();
-
+        String secondAccessToken = getImplicitAccessToken();
         Assert.assertNotEquals(firstAccessToken, secondAccessToken, "Old access token returned.");
         checkOldTokenRevocation(firstAccessToken);
+
         tempAccessToken = secondAccessToken;
     }
 
-    @Test(description = "Test token renewal per request and old token revocation using password grant type.")
+    @Test(dependsOnMethods = {"implicitGrantTokenRenewalTest"}, description = "Test token renewal per request and old" +
+            " token revocation using password grant type.")
     public void resourceOwnerTokenRenewalTest() throws Exception {
 
         JSONObject firstTokenRequest = getResourceOwnerAccessToken();
-        firstAccessToken = (String) firstTokenRequest.get(OAuth2Constant.ACCESS_TOKEN);
-        firstRefreshToken = (String) firstTokenRequest.get(OAuth2Constant.REFRESH_TOKEN);
+        String firstAccessToken = (String) firstTokenRequest.get(OAuth2Constant.ACCESS_TOKEN);
+        String firstRefreshToken = (String) firstTokenRequest.get(OAuth2Constant.REFRESH_TOKEN);
 
-        if (tempAccessToken != null) {
-            checkOldTokenRevocation(tempAccessToken);
-        }
+        checkOldTokenRevocation(tempAccessToken);
 
         JSONObject secondTokenRequest = getResourceOwnerAccessToken();
-        secondAccessToken = (String) secondTokenRequest.get(OAuth2Constant.ACCESS_TOKEN);
-        secondRefreshToken = (String) secondTokenRequest.get(OAuth2Constant.REFRESH_TOKEN);
+        String secondAccessToken = (String) secondTokenRequest.get(OAuth2Constant.ACCESS_TOKEN);
+        String secondRefreshToken = (String) secondTokenRequest.get(OAuth2Constant.REFRESH_TOKEN);
 
         Assert.assertNotEquals(firstAccessToken, secondAccessToken, "Old access token returned.");
         Assert.assertNotEquals(firstRefreshToken, secondRefreshToken, "Old refresh token returned.");
@@ -143,14 +132,15 @@ public class Oauth2TokenRenewalPerRequestTestCase extends OAuth2ServiceAbstractI
         tempAccessToken = secondAccessToken;
     }
 
-    @Test(description = "Test token renewal per request and old token revocation using client credentials grant type.")
+    @Test(dependsOnMethods = {"resourceOwnerTokenRenewalTest"}, description = "Test token renewal per request and " +
+            "old token revocation using client credentials grant type.")
     public void clientCredentialsTokenRenewalTest() throws Exception {
 
         JSONObject firstTokenRequest = getClientCredentialsAccessToken();
-        firstAccessToken = (String) firstTokenRequest.get(OAuth2Constant.ACCESS_TOKEN);
+        String firstAccessToken = (String) firstTokenRequest.get(OAuth2Constant.ACCESS_TOKEN);
 
         JSONObject secondTokenRequest = getClientCredentialsAccessToken();
-        secondAccessToken = (String) secondTokenRequest.get(OAuth2Constant.ACCESS_TOKEN);
+        String secondAccessToken = (String) secondTokenRequest.get(OAuth2Constant.ACCESS_TOKEN);
 
         Assert.assertNotEquals(firstAccessToken, secondAccessToken, "Old access token returned.");
         checkOldTokenRevocation(firstAccessToken);
@@ -168,7 +158,7 @@ public class Oauth2TokenRenewalPerRequestTestCase extends OAuth2ServiceAbstractI
         String locationValue = sendAuthorizationRequest(client, urlParameters);
         Assert.assertTrue(locationValue.contains(OAuth2Constant.AUTHORIZATION_CODE_NAME),
                 "Authorization code not found in the response.");
-        authorizationCode = DataExtractUtil.getParamFromURIString(locationValue,
+        String authorizationCode = DataExtractUtil.getParamFromURIString(locationValue,
                 OAuth2Constant.AUTHORIZATION_CODE_NAME);
         Assert.assertNotNull(authorizationCode, "Authorization code is null.");
 
@@ -190,7 +180,7 @@ public class Oauth2TokenRenewalPerRequestTestCase extends OAuth2ServiceAbstractI
 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_RESPONSE_TYPE,
-                OAuth2Constant.OAUTH2_GRANT_TYPE_IMPLICIT));
+                OAuth2Constant.OAUTH2_RESPONSE_TYPE_TOKEN));
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_CLIENT_ID, consumerKey));
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_REDIRECT_URI, OAuth2Constant.CALLBACK_URL));
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_NONCE, TEST_NONCE));
@@ -201,7 +191,7 @@ public class Oauth2TokenRenewalPerRequestTestCase extends OAuth2ServiceAbstractI
         locationValue = locationValue.replace("#", "?");
         String token = DataExtractUtil.getParamFromURIString(locationValue,
                 OAuth2Constant.ACCESS_TOKEN);
-        Assert.assertNotNull(authorizationCode, "Authorization code is null.");
+        Assert.assertNotNull(token, "Access token is null.");
 
         return token;
     }

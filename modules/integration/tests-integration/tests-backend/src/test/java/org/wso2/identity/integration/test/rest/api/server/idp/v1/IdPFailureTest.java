@@ -32,13 +32,13 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 
 import java.io.IOException;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
 
 /**
  * Test class for Identity Provider Management REST APIs failure paths.
  */
 public class IdPFailureTest extends IdPTestBase {
-
 
     private String idPId;
 
@@ -126,5 +126,38 @@ public class IdPFailureTest extends IdPTestBase {
                 IDP_PROVISIONING_PATH + PATH_SEPARATOR + IDP_OUTBOUND_CONNECTORS_PATH + PATH_SEPARATOR +
                 "random-connector-id");
         validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "IDP-60023", "random-connector-id");
+    }
+
+    @Test
+    public void testGetIdPTemplateWithInvalidId() throws Exception {
+
+        Response response = getResponseOfGet(IDP_API_BASE_PATH + PATH_SEPARATOR + IDP_TEMPLATE_PATH +
+                PATH_SEPARATOR + "random-id");
+        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "TMM_00021", "random-id");
+    }
+
+    @Test(dependsOnMethods = {"testGetIdPTemplateWithInvalidId"})
+    public void testAddIdPTemplateConflict() throws IOException {
+
+        String body = readResource("add-idp-template2.json");
+        Response response = getResponseOfPost(IDP_API_BASE_PATH + PATH_SEPARATOR + IDP_TEMPLATE_PATH, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .header(HttpHeaders.LOCATION, notNullValue());
+
+        response = getResponseOfPost(IDP_API_BASE_PATH + PATH_SEPARATOR + IDP_TEMPLATE_PATH,
+                readResource("add-idp-template-conflict.json"));
+        validateErrorResponse(response, HttpStatus.SC_CONFLICT, "TMM_00014", "Google-2");
+    }
+
+    @Test(dependsOnMethods = {"testAddIdPTemplateConflict"})
+    public void testFilterIdPTemplatesWithInvalidSearchKey() throws Exception {
+
+        String urlWithFilters = IDP_API_BASE_PATH + PATH_SEPARATOR + IDP_TEMPLATE_PATH +
+                "?filter=test+eq+'DEFAULT'";
+        Response response = getResponseOfGet(urlWithFilters);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "IDP-65055", "Invalid search filter");
     }
 }

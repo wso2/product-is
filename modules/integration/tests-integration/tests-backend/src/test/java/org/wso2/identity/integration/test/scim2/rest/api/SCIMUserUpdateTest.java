@@ -240,4 +240,13 @@ public class SCIMUserUpdateTest extends SCIM2BaseTest {
         SCIMUtils.validateSchemasAttribute(extractableResponse.path("schemas"));
         SCIMUtils.validateMetaAttribute(extractableResponse.path("meta"), response, endpointURL);
     }
+
+    @Test(dependsOnMethods = "testPutUser")
+    public void testPutUserWithUsernameChange() throws IOException {
+
+        String body = readResource("scim2-put-user-change-username.json");
+        body = body.replaceAll("(?i)\\b" + "userId-value" + "\\b", userId);
+        Response response = getResponseOfPut(endpointURL, body, SCIM_CONTENT_TYPE);
+        Assert.assertEquals(response.getStatusCode(), HttpStatus.SC_BAD_REQUEST, "Able to update username attribute.");
+    }
 }

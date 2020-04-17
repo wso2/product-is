@@ -171,6 +171,15 @@
             </includes>
         </fileSet>
         <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/identity/templates
+            </directory>
+            <outputDirectory>wso2is-${pom.version}/repository/resources/identity/templates</outputDirectory>
+            <includes>
+                <include>**/*.json</include>
+            </includes>
+        </fileSet>
+        <fileSet>
             <directory>src/repository/resources/conf/templates</directory>
             <outputDirectory>wso2is-${pom.version}/repository/resources/conf/templates</outputDirectory>
             <includes>
@@ -342,7 +351,7 @@
             </includes>
         </fileSet>
 
-        <!--copy user portal web app-->
+        <!--copy user-portal web app-->
         <fileSet>
             <directory>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
@@ -353,12 +362,28 @@
             </includes>
         </fileSet>
 
+        <!--copy admin-portal web app-->
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
+            <includes>
+                <include>admin-portal/</include>
+            </includes>
+        </fileSet>
+
         <!--copy the oauth2 grant type extensions -->
         <fileSet>
             <directory>../oauth2-grant-types/target/oauth2GrantCopied/jar</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
         </fileSet>
 
+        <!--copy the callhome jar -->
+        <fileSet>
+            <directory>../callhome/target/callhomeCopied/jar</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
+        </fileSet>
 
         <!--copy the social authenticator jars Facebook,Google,Windows-Live,Yahoo.-->
         <fileSet>
@@ -651,13 +676,6 @@
                 <include>accountrecoveryendpoint/</include>
             </includes>
         </fileSet>
-
-        <!-- Copying the in-place update tools-->
-        <fileSet>
-            <directory>target/update/</directory>
-            <outputDirectory>wso2is-${pom.version}/bin</outputDirectory>
-            <fileMode>744</fileMode>
-        </fileSet>
     </fileSets>
 
     <files>
@@ -839,6 +857,13 @@
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/captcha-config.properties
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/identity</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/sms/sms-templates-admin-config.xml
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/sms</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <file>

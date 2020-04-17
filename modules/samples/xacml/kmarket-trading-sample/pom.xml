@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>wso2is-identity-samples-xacml</artifactId>
-        <version>5.10.0-alpha3-SNAPSHOT</version>
+        <version>5.11.0-m15-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -75,14 +75,14 @@
     <repositories>
         <repository>
             <id>wso2-maven2-repository</id>
-            <url>http://dist.wso2.org/maven2</url>
+            <url>https://dist.wso2.org/maven2</url>
         </repository>
     </repositories>
 
     <pluginRepositories>
         <pluginRepository>
             <id>wso2-maven2-repository</id>
-            <url>http://dist.wso2.org/maven2</url>
+            <url>https://dist.wso2.org/maven2</url>
         </pluginRepository>
     </pluginRepositories>
 </project>

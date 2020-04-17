@@ -1,0 +1,57 @@
+{
+  "name": "Sample Application Template",
+  "description": "This is a sample application template",
+  "image": "https://example.com/logo/my-logo.png",
+  "authenticationProtocol": "oidc",
+  "types": [
+    "react",
+    "angular"
+  ],
+  "category": "DEFAULT",
+  "displayOrder": 2,
+  "application": {
+    "name": "pickup",
+    "description": "This is the configuration for Pickup application.",
+    "imageUrl": "https://example.com/logo/my-logo.png",
+    "accessUrl": "https://example.com/login",
+    "claimConfiguration": {
+      "dialect": "LOCAL",
+      "claimMappings": [
+        {
+          "applicationClaim": "firstname",
+          "localClaim": {
+            "uri": "http://wso2.org/claims/username"
+          }
+        }
+      ],
+      "requestedClaims": [
+        {
+          "claim": {
+            "uri": "http://wso2.org/claims/username"
+          },
+          "mandatory": false
+        }
+      ],
+      "subject": {
+        "claim": {
+          "uri": "http://wso2.org/claims/username"
+        },
+        "includeUserDomain": false,
+        "includeTenantDomain": false,
+        "useMappedLocalSubject": false
+      },
+      "role": {
+        "mappings": [
+          {
+            "localRole": "admin",
+            "applicationRole": "Administrator"
+          }
+        ],
+        "includeUserDomain": true,
+        "claim": {
+          "uri": "http://wso2.org/claims/username"
+        }
+      }
+    }
+  }
+}

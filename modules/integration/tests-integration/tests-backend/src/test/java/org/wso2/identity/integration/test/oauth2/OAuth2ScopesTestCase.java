@@ -45,14 +45,20 @@ import static org.wso2.identity.integration.test.util.Utils.getBasicAuthHeader;
 public class OAuth2ScopesTestCase extends ISIntegrationTest {
 
     public static final String SCOPE_ENDPOINT_SUFFIX = "/api/identity/oauth2/v1.0/scopes";
-    private String isServerBackendUrl;
+
+    public static final String SCOPE1 = "samplescope1";
+    public static final String SCOPE2 = "samplescope2";
+
+    public static final String SCOPE1_DISPLAY_NAME = "Sample Scope 1";
+    public static final String SCOPE2_DISPLAY_NAME = "Sample Scope 2";
+
     private String scopeEndpoint;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
         super.init();
-        isServerBackendUrl = isServer.getContextUrls().getWebAppURLHttps();
-        scopeEndpoint = isServerBackendUrl + SCOPE_ENDPOINT_SUFFIX;
+        String isServerBackendUrl = isServer.getContextUrls().getWebAppURLHttps();
+        scopeEndpoint = isServerBackendUrl + "/t/" + isServer.getContextTenant().getDomain() + SCOPE_ENDPOINT_SUFFIX;
     }
 
     @AfterClass(alwaysRun = true)
@@ -63,29 +69,26 @@ public class OAuth2ScopesTestCase extends ISIntegrationTest {
     @Test(alwaysRun = true, groups = "wso2.is", description = "Add Scope test")
     public void testAddScope() throws IOException {
 
-        String name = "profile";
-        String displayName = "profile";
         String description = "get all profile information";
         String bindings = "[\"role1\",\"role2\"]";
+        String locationHeader = scopeEndpoint + "/name/" + SCOPE1;
 
-        JSONObject response = addScope(name, displayName, description, bindings);
+        JSONObject response = addScope(SCOPE1, SCOPE1_DISPLAY_NAME, description, bindings);
 
-        Assert.assertEquals(name, response.get("name").toString());
-        Assert.assertEquals(displayName, response.get("displayName").toString());
+        Assert.assertEquals(SCOPE1, response.get("name").toString());
+        Assert.assertEquals(SCOPE1_DISPLAY_NAME, response.get("displayName").toString());
         Assert.assertEquals(description, response.get("description").toString());
         Assert.assertEquals(bindings, response.get("bindings").toString());
+        Assert.assertEquals(locationHeader, response.get("location").toString());
     }
 
     @Test(alwaysRun = true, groups = "wso2.is", description = "Get All Scope test", dependsOnMethods = {"testAddScope"})
     public void testGetAllScopes() throws IOException {
 
-        String name1 = "profile";
-        String name2 = "phone";
-        String displayName = "phone";
         String description = "get the phone information";
         String bindings = "[\"role3\",\"role4\"]";
 
-        addScope(name2, displayName, description, bindings);
+        addScope(SCOPE2, SCOPE2_DISPLAY_NAME, description, bindings);
 
         JSONArray response = getAllScopes();
 
@@ -93,23 +96,21 @@ public class OAuth2ScopesTestCase extends ISIntegrationTest {
                 .mapToObj(i -> (JSONObject) JSONValue.parse(response.get(i).toString()))
                 .collect(Collectors.toMap(item -> (String) item.get("name"), item -> item, (a, b) -> b));
 
-        Assert.assertNotNull(responseItems.get(name1));
-        Assert.assertNotNull(responseItems.get(name2));
+        Assert.assertNotNull(responseItems.get(SCOPE1));
+        Assert.assertNotNull(responseItems.get(SCOPE2));
     }
 
 
     @Test(alwaysRun = true, groups = "wso2.is", description = "Get Scope test", dependsOnMethods = { "testGetAllScopes" })
     public void testGetScope() throws IOException {
 
-        String name = "profile";
-        String displayName = "profile";
         String description = "get all profile information";
         String bindings = "[\"role1\",\"role2\"]";
 
-        JSONObject response = getScope(name);
+        JSONObject response = getScope(SCOPE1);
 
-        Assert.assertEquals(name, response.get("name").toString());
-        Assert.assertEquals(displayName, response.get("displayName").toString());
+        Assert.assertEquals(SCOPE1, response.get("name").toString());
+        Assert.assertEquals(SCOPE1_DISPLAY_NAME, response.get("displayName").toString());
         Assert.assertEquals(description, response.get("description").toString());
         Assert.assertEquals(bindings, response.get("bindings").toString());
     }
@@ -117,15 +118,13 @@ public class OAuth2ScopesTestCase extends ISIntegrationTest {
     @Test(alwaysRun = true, groups = "wso2.is", description = "Update Scope test", dependsOnMethods = { "testGetScope" })
     public void testUpdateScope() throws IOException {
 
-        String name = "profile";
-        String displayName = "profile";
         String updatedDescription = "get all user profile information";
         String updatedBindings = "[\"role3\",\"role2\"]";
 
-        JSONObject response = updateScope(name, displayName, updatedDescription, updatedBindings);
+        JSONObject response = updateScope(SCOPE1, SCOPE1_DISPLAY_NAME, updatedDescription, updatedBindings);
 
-        Assert.assertEquals(name, response.get("name").toString());
-        Assert.assertEquals(displayName, response.get("displayName").toString());
+        Assert.assertEquals(SCOPE1, response.get("name").toString());
+        Assert.assertEquals(SCOPE1_DISPLAY_NAME, response.get("displayName").toString());
         Assert.assertEquals(updatedDescription, response.get("description").toString());
         Assert.assertEquals(updatedBindings, response.get("bindings").toString());
     }
@@ -133,8 +132,7 @@ public class OAuth2ScopesTestCase extends ISIntegrationTest {
     @Test(alwaysRun = true, groups = "wso2.is", description = "Check existence of Scope test", dependsOnMethods = { "testUpdateScope" })
     public void testScopeExistence() throws IOException {
 
-        String name = "profile";
-        ClientResponse response = isScopeExists(name);
+        ClientResponse response = isScopeExists(SCOPE1);
 
         Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatusCode());
     }
@@ -142,12 +140,10 @@ public class OAuth2ScopesTestCase extends ISIntegrationTest {
     @Test(alwaysRun = true, groups = "wso2.is", description = "Delete Scope test", dependsOnMethods = { "testScopeExistence" })
     public void testDeleteScope() throws IOException {
 
-        String name = "profile";
-
-        ClientResponse response = deleteScope(name);
+        ClientResponse response = deleteScope(SCOPE1);
 
         Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatusCode());
-        Assert.assertEquals(Response.Status.NOT_FOUND.getStatusCode(), isScopeExists(name).getStatusCode());
+        Assert.assertEquals(Response.Status.NOT_FOUND.getStatusCode(), isScopeExists(SCOPE1).getStatusCode());
     }
 
 
@@ -155,13 +151,22 @@ public class OAuth2ScopesTestCase extends ISIntegrationTest {
 
         Resource userResource = getUserResource(null);
 
-        String addScopeString = "{\"name\": " + "\""+name+"\"" + ", \"displayName\": " + "\""+displayName+"\"" + ", " +
-                "\"description\": " + "\""+description+"\"" + ", \"bindings\": " + bindings + "}";
+        String addScopeString =
+                "{\"name\": " + "\"" + name + "\"" + ", \"displayName\": " + "\"" + displayName + "\"" + ", " +
+                        "\"description\": " + "\"" + description + "\"" + ", \"bindings\": " + bindings + "}";
 
-        String response = userResource.contentType(MediaType.APPLICATION_JSON_TYPE).accept(MediaType.APPLICATION_JSON)
-                .post(String.class, addScopeString);
+        ClientResponse clientResponse = userResource.contentType(MediaType.APPLICATION_JSON_TYPE).
+                accept(MediaType.APPLICATION_JSON).post(addScopeString);
 
-        return (JSONObject) JSONValue.parse(response);
+        if (clientResponse.getHeaders().get("Location") == null) {
+            Assert.fail("Resource is not created.");
+        }
+        String locationHeader = clientResponse.getHeaders().get("Location").get(0);
+
+        JSONObject response = (JSONObject) JSONValue.parse(clientResponse.getEntity(String.class));
+        response.put("location", locationHeader);
+
+        return (response);
     }
 
     private JSONArray getAllScopes() {
