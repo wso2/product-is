@@ -571,6 +571,23 @@ public class IdPSuccessTest extends IdPTestBase {
     }
 
     @Test
+    public void testGetFilBasedIdpTemplates() throws Exception {
+
+        String fileBasedIdpTemplateId = "d7c8549f-32af-4f53-9013-f66f1a6c67bf";
+        String baseIdentifier = "templates.find{ it.id == '" + fileBasedIdpTemplateId + "' }.";
+        Response response = getResponseOfGet(IDP_API_BASE_PATH + PATH_SEPARATOR + IDP_TEMPLATE_PATH);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body(baseIdentifier + "name", equalTo("Facebook"))
+                .body(baseIdentifier + "category", equalTo("DEFAULT"))
+                .body(baseIdentifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                        "/api/server/v1/identity-providers/templates/" + fileBasedIdpTemplateId))
+                .body("templates.size()", notNullValue());
+    }
+
+    @Test
     public void testAddIdPTemplate() throws IOException {
 
         String body = readResource("add-idp-template.json");
@@ -614,6 +631,13 @@ public class IdPSuccessTest extends IdPTestBase {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
+                .body(baseIdentifier + "name", equalTo("Google"))
+                .body(baseIdentifier + "description", equalTo("Template for google IdPs."))
+                .body(baseIdentifier + "category", equalTo("DEFAULT"))
+                .body(baseIdentifier + "image", equalTo("google-logo-url"))
+                .body(baseIdentifier + "displayOrder", equalTo(10))
+                .body(baseIdentifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                        "/api/server/v1/identity-providers/templates/" + idPTemplateId))
                 .body("templates.size()", notNullValue());
     }
 
