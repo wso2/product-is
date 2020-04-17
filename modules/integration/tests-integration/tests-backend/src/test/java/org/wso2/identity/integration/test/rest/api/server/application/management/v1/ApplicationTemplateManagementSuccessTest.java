@@ -79,6 +79,24 @@ public class ApplicationTemplateManagementSuccessTest extends ApplicationManagem
     }
 
     @Test(dependsOnMethods = {"testGetAllApplicationTemplates"})
+    public void testFilterApplicationTemplates() throws Exception {
+
+        String baseIdentifier = "templates.find{ it.id == '" + createdTemplateId + "' }.";
+        String urlWithFilters = APPLICATION_TEMPLATE_MANAGEMENT_API_BASE_PATH +
+                "?filter=category+eq+'DEFAULT'+and+authenticationProtocol+eq+'oidc'";
+        Response response = getResponseOfGet(urlWithFilters);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("templates.size()", is(1))
+                .body(baseIdentifier + "name", equalTo(CREATED_TEMPLATE_NAME))
+                .body(baseIdentifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                        "/api/server/" + API_VERSION + APPLICATION_TEMPLATE_MANAGEMENT_API_BASE_PATH + "/" +
+                        createdTemplateId));
+    }
+
+    @Test(dependsOnMethods = {"testFilterApplicationTemplates"})
     public void testGetApplicationTemplateById() throws Exception {
 
         getResponseOfGet(APPLICATION_TEMPLATE_MANAGEMENT_API_BASE_PATH + "/" + createdTemplateId)
