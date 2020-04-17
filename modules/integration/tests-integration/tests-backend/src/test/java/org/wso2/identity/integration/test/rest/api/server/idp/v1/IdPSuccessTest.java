@@ -317,6 +317,26 @@ public class IdPSuccessTest extends IdPTestBase {
     }
 
     @Test(dependsOnMethods = {"testGetIdPs"})
+    public void testGetIdPsWithRequiredAttribute() throws Exception {
+
+        String baseIdentifier = "identityProviders.find{ it.id == '" + idPId + "' }.";
+        Response response =
+                getResponseOfGet(IDP_API_BASE_PATH + "?requiredAttributes=alias,homeRealmIdentifier");
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body(baseIdentifier + "name", equalTo("Google"))
+                .body(baseIdentifier + "description", equalTo("IDP for Google Federation"))
+                .body(baseIdentifier + "isEnabled", equalTo(true))
+                .body(baseIdentifier + "image", equalTo("google-logo-url"))
+                .body(baseIdentifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                        "/api/server/v1/identity-providers/" + idPId))
+                .body(baseIdentifier + "homeRealmIdentifier", equalTo("localhost"))
+                .body(baseIdentifier + "alias", equalTo("https://localhost:9444/oauth2/token"));
+    }
+
+    @Test(dependsOnMethods = {"testGetIdPsWithRequiredAttribute"})
     public void testGetIdPFederatedAuthenticators() throws Exception {
 
         String baseIdentifier =
