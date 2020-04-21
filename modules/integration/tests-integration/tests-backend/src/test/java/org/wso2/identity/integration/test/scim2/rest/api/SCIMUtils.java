@@ -22,6 +22,10 @@ import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpHeaders;
 import org.testng.Assert;
+import org.wso2.carbon.identity.user.store.configuration.stub.dto.PropertyDTO;
+import org.wso2.carbon.identity.user.store.configuration.stub.dto.UserStoreDTO;
+import org.wso2.identity.integration.common.clients.user.store.config.UserStoreConfigAdminServiceClient;
+import org.wso2.identity.integration.common.utils.UserStoreConfigUtils;
 
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
@@ -37,14 +41,15 @@ public class SCIMUtils {
 
     private static final String SCIM_USER_SCHEMAS = "[urn:ietf:params:scim:schemas:core:2.0:User, " +
             "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User]";
+    private static final UserStoreConfigUtils userStoreConfigUtils = new UserStoreConfigUtils();
 
     /**
-     * Validate the "schema" attribute received in a response for an SCIM operation.
+     * Validate the "schema" attribute received in a response for an SCIM operation in Users endpoint.
      * e.g. data type should be an ArrayList of Strings.
      *
      * @param schemasAttribute Value of the "schema" attribute extracted from the SCIM operation response.
      */
-    public static void validateSchemasAttribute(Object schemasAttribute) {
+    public static void validateSchemasAttributeOfUsersEndpoint(Object schemasAttribute) {
 
         Assert.assertTrue(schemasAttribute instanceof ArrayList, "'schemas' attribute is not a list of " +
                 "strings");
@@ -53,14 +58,15 @@ public class SCIMUtils {
     }
 
     /**
-     * Validate the "meta" attribute received in a response for an SCIM operation.
+     * Validate the "meta" attribute received in a response for an SCIM operation in Users endpoint.
      * e.g. data type should be an ArrayList of LinkedHashMap objects.
      *
      * @param metaAttribute Value of the "meta" attribute extracted from the SCIM operation response.
      * @param response      Response received after performing a SCIM operation.
      * @param endpointURL   SCIM endpoint URL
      */
-    public static void validateMetaAttribute(Object metaAttribute, Response response, String endpointURL) {
+    public static void validateMetaAttributeOfUsersEndpoint(Object metaAttribute, Response response,
+                                                            String endpointURL) {
 
         Assert.assertTrue(metaAttribute instanceof LinkedHashMap, "'meta' attribute is not a list of " +
                 "key-value pairs");
@@ -101,5 +107,46 @@ public class SCIMUtils {
             }
         }
         return true;
+    }
+
+    /**
+     * Create a secondary user store.
+     *
+     * @param userStoreType       User store type.
+     * @param userStoreDomain     User store domain.
+     * @param userStoreProperties Configuration properties for the user store.
+     * @param backendURL          Backend URL of the Identity Server.
+     * @param sessionCookie       Session Cookie.
+     * @throws Exception Thrown if the user store creation fails.
+     */
+    public static void createSecondaryUserStore(String userStoreType, String userStoreDomain,
+                                                PropertyDTO[] userStoreProperties, String backendURL,
+                                                String sessionCookie) throws Exception {
+
+        UserStoreConfigAdminServiceClient userStoreConfigAdminServiceClient =
+                new UserStoreConfigAdminServiceClient(backendURL, sessionCookie);
+        UserStoreDTO userStoreDTO = userStoreConfigAdminServiceClient.createUserStoreDTO(userStoreType, userStoreDomain,
+                userStoreProperties);
+        userStoreConfigAdminServiceClient.addUserStore(userStoreDTO);
+        Thread.sleep(5000);
+        Assert.assertTrue(userStoreConfigUtils.waitForUserStoreDeployment(userStoreConfigAdminServiceClient,
+                userStoreDomain), "Domain addition via DTO has failed.");
+
+    }
+
+    /**
+     * Delete a secondary user store.
+     *
+     * @param userStoreDomain User store domain.
+     * @param backendURL      Backend URL of the Identity Server.
+     * @param sessionCookie   Session Cookie.
+     * @throws Exception Thrown if the user store deletion fails.
+     */
+    public static void deleteSecondaryUserStore(String userStoreDomain, String backendURL, String sessionCookie)
+            throws Exception {
+
+        UserStoreConfigAdminServiceClient userStoreConfigAdminServiceClient =
+                new UserStoreConfigAdminServiceClient(backendURL, sessionCookie);
+        userStoreConfigAdminServiceClient.deleteUserStore(userStoreDomain);
     }
 }
