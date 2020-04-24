@@ -2076,7 +2076,7 @@
         <provisioning.connector.scim.version>5.2.1</provisioning.connector.scim.version>
 
         <!-- Local Authenticator Versions -->
-        <identity.local.auth.basicauth.version>6.3.2</identity.local.auth.basicauth.version>
+        <identity.local.auth.basicauth.version>6.3.3</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.2.4</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.3.13</identity.local.auth.iwa.version>
         <identity.local.auth.clientauth.mutualtls.version>2.3.0</identity.local.auth.clientauth.mutualtls.version>
@@ -2111,7 +2111,7 @@
         <carbon.identity.oauth.uma.version>1.2.1</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.0.191</identity.apps.version>
+        <identity.apps.version>1.0.193</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.3.0</charon.version>
