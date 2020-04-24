@@ -34,7 +34,10 @@ public class ConfigTestBase extends RESTAPIServerTestBase {
     public static final String API_DEFINITION_NAME = "configs.yaml";
     public static final String API_VERSION = "v1";
     public static final String API_PACKAGE_NAME = "org.wso2.carbon.identity.api.server.configs.v1";
+    public static final String CONFIGS_API_BASE_PATH = "/configs";
     public static final String CONFIGS_AUTHENTICATOR_API_BASE_PATH = "/configs/authenticators";
+    public static final String CONFIGS_INBOUND_SCIM_API_BASE_PATH = "/configs/provisioning/inbound/scim";
+
     public static final String PATH_SEPARATOR = "/";
     public static final String SAMPLE_AUTHENTICATOR_ID = "QmFzaWNBdXRoZW50aWNhdG9y";
 

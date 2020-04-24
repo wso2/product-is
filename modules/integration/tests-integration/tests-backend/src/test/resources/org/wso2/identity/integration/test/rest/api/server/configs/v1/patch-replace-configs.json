@@ -1,0 +1,6 @@
+[
+  {"path" : "/idleSessionTimeoutPeriod",
+    "value": "20",
+    "operation": "REPLACE"
+  }
+]
