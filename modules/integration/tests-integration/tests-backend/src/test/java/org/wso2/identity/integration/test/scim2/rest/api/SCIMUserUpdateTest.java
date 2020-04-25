@@ -127,8 +127,8 @@ public class SCIMUserUpdateTest extends SCIM2BaseTest {
         log.info("Created a user with userId :" + userId);
         endpointURL = USERS_ENDPOINT + userId;
 
-        SCIMUtils.validateSchemasAttribute(extractableResponse.path("schemas"));
-        SCIMUtils.validateMetaAttribute(extractableResponse.path("meta"), response, endpointURL);
+        SCIMUtils.validateSchemasAttributeOfUsersEndpoint(extractableResponse.path("schemas"));
+        SCIMUtils.validateMetaAttributeOfUsersEndpoint(extractableResponse.path("meta"), response, endpointURL);
     }
 
     @Test(dependsOnMethods = "testCreateUser")
@@ -152,8 +152,8 @@ public class SCIMUserUpdateTest extends SCIM2BaseTest {
         Assert.assertEquals(((ArrayList) emailsAttribute).size(), 1);
         Assert.assertNotEquals(((LinkedHashMap) ((ArrayList) emailsAttribute).get(0)).get("type"), "work");
 
-        SCIMUtils.validateSchemasAttribute(extractableResponse.path("schemas"));
-        SCIMUtils.validateMetaAttribute(extractableResponse.path("meta"), response, endpointURL);
+        SCIMUtils.validateSchemasAttributeOfUsersEndpoint(extractableResponse.path("schemas"));
+        SCIMUtils.validateMetaAttributeOfUsersEndpoint(extractableResponse.path("meta"), response, endpointURL);
     }
 
     @Test(dependsOnMethods = "testPatchUserRemoveOperation")
@@ -176,8 +176,8 @@ public class SCIMUserUpdateTest extends SCIM2BaseTest {
         Assert.assertTrue(emailsAttribute instanceof ArrayList, "'emails' attribute is not a list of objects");
         Assert.assertEquals(((ArrayList) emailsAttribute).size(), 2);
 
-        SCIMUtils.validateSchemasAttribute(extractableResponse.path("schemas"));
-        SCIMUtils.validateMetaAttribute(extractableResponse.path("meta"), response, endpointURL);
+        SCIMUtils.validateSchemasAttributeOfUsersEndpoint(extractableResponse.path("schemas"));
+        SCIMUtils.validateMetaAttributeOfUsersEndpoint(extractableResponse.path("meta"), response, endpointURL);
 
     }
 
@@ -210,14 +210,41 @@ public class SCIMUserUpdateTest extends SCIM2BaseTest {
         Assert.assertEquals(((LinkedHashMap) ((ArrayList) emailsAttribute).get(0)).get("value"),
                 "desmond@mail.net");
 
-        SCIMUtils.validateSchemasAttribute(extractableResponse.path("schemas"));
-        SCIMUtils.validateMetaAttribute(extractableResponse.path("meta"), response, endpointURL);
+        SCIMUtils.validateSchemasAttributeOfUsersEndpoint(extractableResponse.path("schemas"));
+        SCIMUtils.validateMetaAttributeOfUsersEndpoint(extractableResponse.path("meta"), response, endpointURL);
     }
 
     @Test(dependsOnMethods = "testPatchUserReplaceOperation")
     public void testPutUser() throws IOException {
 
         String body = readResource("scim2-put-user.json");
+        body = body.replaceAll("(?i)\\b" + "userId-value" + "\\b", userId);
+        Response response = getResponseOfPut(endpointURL, body, SCIM_CONTENT_TYPE);
+        ExtractableResponse<Response> extractableResponse = response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .and()
+                .assertThat()
+                .header(HttpHeaders.CONTENT_TYPE, SCIM_CONTENT_TYPE)
+                .extract();
+        Assert.assertNotNull(extractableResponse);
+
+        Object nameAttribute = extractableResponse.path("name");
+
+        Assert.assertTrue(nameAttribute instanceof LinkedHashMap, "'name' attribute is not a list of " +
+                "key-value pairs");
+        Assert.assertEquals(((LinkedHashMap) nameAttribute).get("familyName"), "jackson");
+        Assert.assertEquals(((LinkedHashMap) nameAttribute).get("givenName"), "kim");
+
+        SCIMUtils.validateSchemasAttributeOfUsersEndpoint(extractableResponse.path("schemas"));
+        SCIMUtils.validateMetaAttributeOfUsersEndpoint(extractableResponse.path("meta"), response, endpointURL);
+    }
+
+    @Test(dependsOnMethods = "testPutUser")
+    public void testPutUserWithUsernameChange() throws IOException {
+
+        String body = readResource("scim2-put-user-change-username.json");
         body = body.replaceAll("(?i)\\b" + "userId-value" + "\\b", userId);
         Response response = getResponseOfPut(endpointURL, body, SCIM_CONTENT_TYPE);
         Assert.assertEquals(response.getStatusCode(), HttpStatus.SC_BAD_REQUEST, "Able to update username attribute.");

@@ -31,7 +31,12 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.core.Is.is;
 import static org.wso2.identity.integration.test.rest.api.server.application.management.v1.Utils
         .extractApplicationIdFromLocationHeader;
 
@@ -131,6 +136,39 @@ public class ApplicationTemplateManagementFailureTest extends ApplicationManagem
 
         removeCreatedApplicationTemplates(firstTemplateId);
         removeCreatedApplicationTemplates(secondTemplateId);
+    }
+
+    @Test
+    public void testFilterApplicationTemplatesWithInvalidSearchValue() throws Exception {
+
+        JSONObject firstTemplate = new JSONObject();
+        firstTemplate.put("name", "template1");
+        firstTemplate.put("description", "Description of first template");
+        firstTemplate.put("application", applicationObject);
+        String payload1 = firstTemplate.toString();
+
+        String firstTemplateId = getTemplateId(createApplicationTemplate(payload1));
+
+        String url = APPLICATION_TEMPLATE_MANAGEMENT_API_BASE_PATH;
+        Map<String, Object> filterParam = new HashMap<>();
+        filterParam.put("filter", "name eq 'template2'");
+        Response response = getResponseOfGetWithQueryParams(url, filterParam);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("templates.size()", notNullValue());
+        removeCreatedApplicationTemplates(firstTemplateId);
+    }
+
+    @Test
+    public void testFilterApplicationTemplatesWithInvalidSearchKey() throws Exception {
+
+        String url = APPLICATION_TEMPLATE_MANAGEMENT_API_BASE_PATH;
+        Map<String, Object> filterParam = new HashMap<>();
+        filterParam.put("filter", "test eq 'template1'");
+        Response response = getResponseOfGetWithQueryParams(url, filterParam);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "APP-65502", "Invalid search filter");
     }
 
     @Test

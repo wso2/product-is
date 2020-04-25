@@ -302,6 +302,26 @@ public class RESTTestBase extends ISIntegrationTest {
     }
 
     /**
+     * Invoke given endpointUri for GET with Basic authentication, authentication credential being the
+     * authenticatingUserName and authenticatingCredential.
+     *
+     * @param endpointUri endpoint to be invoked
+     * @param queryParams request query parameters
+     * @return response
+     */
+    protected Response getResponseOfGetWithQueryParams(String endpointUri, Map<String, Object> queryParams) {
+
+        return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.ACCEPT, ContentType.JSON)
+                .queryParams(queryParams)
+                .log().ifValidationFails()
+                .filter(validationFilter)
+                .when()
+                .get(endpointUri);
+    }
+
+    /**
      * Invoke given endpointUri for GET without authentication.
      *
      * @param endpointUri endpoint to be invoked

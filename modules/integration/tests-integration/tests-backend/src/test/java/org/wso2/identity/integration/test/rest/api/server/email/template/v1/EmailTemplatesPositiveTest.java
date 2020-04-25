@@ -39,8 +39,11 @@ import org.wso2.identity.integration.test.rest.api.server.email.template.v1.mode
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
 
 /**
@@ -123,22 +126,42 @@ public class EmailTemplatesPositiveTest extends EmailTemplatesTestBase {
 
     // Get all default email template types from the API and match.
     @Test
-    public void testGetAllEmailTemplateTypes() throws IOException {
+    public void testGetAllEmailTemplateTypes() throws Exception {
 
         Response response = getResponseOfGet(EMAIL_TEMPLATES_API_BASE_PATH + EMAIL_TEMPLATE_TYPES_PATH);
+        String baseIdentifier = "find{ it.id == 'QWNjb3VudENvbmZpcm1hdGlvbg' }.";
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
-                .statusCode(HttpStatus.SC_OK);
-        ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
-        List<EmailTemplateTypeWithoutTemplates> responseFound =
-                Arrays.asList(jsonWriter.readValue(response.asString(), EmailTemplateTypeWithoutTemplates[].class));
-        Assert.assertEquals(responseFound, getAllEmailTemplateTypesResponse,
-                "Response of the get all email template types doesn't match.");
+                .statusCode(HttpStatus.SC_OK)
+                .body(baseIdentifier + "displayName", equalTo("AccountConfirmation"))
+                .body(baseIdentifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                        "/api/server/v1/email/template-types/QWNjb3VudENvbmZpcm1hdGlvbg"));
+    }
+
+    // Get all email template types with required attributes.
+    @Test(dependsOnMethods = {"testGetAllEmailTemplateTypes"})
+    public void testGetAllEmailTemplateTypesWithRequiredAttribute() throws Exception {
+
+        Map<String, Object> requiredAttributeParam = new HashMap<>();
+        requiredAttributeParam.put("requiredAttributes",
+                "templates.id,templates.contentType,templates.subject,templates.body,templates.footer");
+        Response response = getResponseOfGetWithQueryParams(EMAIL_TEMPLATES_API_BASE_PATH +
+                EMAIL_TEMPLATE_TYPES_PATH, requiredAttributeParam);
+        String baseIdentifier = "find{ it.id == 'QWNjb3VudENvbmZpcm1hdGlvbg' }.";
+
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body(baseIdentifier + "displayName", equalTo("AccountConfirmation"))
+                .body(baseIdentifier + "templates", notNullValue())
+                .body(baseIdentifier + "templates.find{ it.id == 'en_US' }." + "subject",
+                        equalTo("WSO2 - Account Confirmation"));
     }
 
     // Get the list of templates of the default AccountEnable email template type
-    @Test(dependsOnMethods = {"testGetAllEmailTemplateTypes"})
+    @Test(dependsOnMethods = {"testGetAllEmailTemplateTypesWithRequiredAttribute"})
     public void testGetTemplatesListOfEmailTemplateType() throws IOException {
 
         Response response = getResponseOfGet(EMAIL_TEMPLATES_API_BASE_PATH + EMAIL_TEMPLATE_TYPES_PATH +

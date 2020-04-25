@@ -31,6 +31,8 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
@@ -317,6 +319,27 @@ public class IdPSuccessTest extends IdPTestBase {
     }
 
     @Test(dependsOnMethods = {"testGetIdPs"})
+    public void testGetIdPsWithRequiredAttribute() throws Exception {
+
+        String baseIdentifier = "identityProviders.find{ it.id == '" + idPId + "' }.";
+        Map<String, Object> requiredAttributeParam = new HashMap<>();
+        requiredAttributeParam.put("requiredAttributes", "homeRealmIdentifier");
+        Response response =
+                getResponseOfGetWithQueryParams(IDP_API_BASE_PATH, requiredAttributeParam);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body(baseIdentifier + "name", equalTo("Google"))
+                .body(baseIdentifier + "description", equalTo("IDP for Google Federation"))
+                .body(baseIdentifier + "isEnabled", equalTo(true))
+                .body(baseIdentifier + "image", equalTo("google-logo-url"))
+                .body(baseIdentifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                        "/api/server/v1/identity-providers/" + idPId))
+                .body(baseIdentifier + "homeRealmIdentifier", equalTo("localhost"));
+    }
+
+    @Test(dependsOnMethods = {"testGetIdPsWithRequiredAttribute"})
     public void testGetIdPFederatedAuthenticators() throws Exception {
 
         String baseIdentifier =
@@ -551,6 +574,23 @@ public class IdPSuccessTest extends IdPTestBase {
     }
 
     @Test
+    public void testGetFilBasedIdpTemplates() throws Exception {
+
+        String fileBasedIdpTemplateId = "d7c8549f-32af-4f53-9013-f66f1a6c67bf";
+        String baseIdentifier = "templates.find{ it.id == '" + fileBasedIdpTemplateId + "' }.";
+        Response response = getResponseOfGet(IDP_API_BASE_PATH + PATH_SEPARATOR + IDP_TEMPLATE_PATH);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body(baseIdentifier + "name", equalTo("Facebook"))
+                .body(baseIdentifier + "category", equalTo("DEFAULT"))
+                .body(baseIdentifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                        "/api/server/v1/identity-providers/templates/" + fileBasedIdpTemplateId))
+                .body("templates.size()", notNullValue());
+    }
+
+    @Test
     public void testAddIdPTemplate() throws IOException {
 
         String body = readResource("add-idp-template.json");
@@ -600,10 +640,29 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body(baseIdentifier + "image", equalTo("google-logo-url"))
                 .body(baseIdentifier + "displayOrder", equalTo(10))
                 .body(baseIdentifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
-                        "/api/server/v1/identity-providers/templates/" + idPTemplateId));
+                        "/api/server/v1/identity-providers/templates/" + idPTemplateId))
+                .body("templates.size()", notNullValue());
     }
 
     @Test(dependsOnMethods = {"testGetIdPTemplates"})
+    public void testFilterIdPTemplates() throws Exception {
+
+        String baseIdentifier = "templates.find{ it.id == '" + idPTemplateId + "' }.";
+        String url = IDP_API_BASE_PATH + PATH_SEPARATOR + IDP_TEMPLATE_PATH;
+        Map<String, Object> filterParam = new HashMap<>();
+        filterParam.put("filter", "category eq 'DEFAULT' and name eq 'Google'");
+        Response response = getResponseOfGetWithQueryParams(url, filterParam);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body(baseIdentifier + "name", equalTo("Google"))
+                .body(baseIdentifier + "category", equalTo("DEFAULT"))
+                .body(baseIdentifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                        "/api/server/v1/identity-providers/templates/" + idPTemplateId));
+    }
+
+    @Test(dependsOnMethods = {"testFilterIdPTemplates"})
     public void testUpdateIdPTemplate() throws Exception {
 
         String body = readResource("update-idp-template.json");
