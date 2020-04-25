@@ -32,6 +32,8 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Test class for Email Templates REST API negative paths.
@@ -158,4 +160,15 @@ public class EmailTemplatesNegativeTest extends EmailTemplatesTestBase {
         Response response = getResponseOfPut(path, body);
         validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "ETM-50003");
     }
+
+    @Test
+    public void testGetAllEmailTemplateTypesWithIncorrectRequiredAttribute() throws Exception {
+
+        Map<String, Object> requiredAttributeParam = new HashMap<>();
+        requiredAttributeParam.put("requiredAttributes", "template");
+        Response response = getResponseOfGetWithQueryParams(EMAIL_TEMPLATES_API_BASE_PATH + EMAIL_TEMPLATE_TYPES_PATH,
+                requiredAttributeParam);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "ETM-50006");
+    }
+
 }

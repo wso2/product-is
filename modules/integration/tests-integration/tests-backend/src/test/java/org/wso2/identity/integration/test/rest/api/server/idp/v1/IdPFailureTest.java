@@ -31,7 +31,10 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
 
 /**
@@ -149,5 +152,15 @@ public class IdPFailureTest extends IdPTestBase {
         response = getResponseOfPost(IDP_API_BASE_PATH + PATH_SEPARATOR + IDP_TEMPLATE_PATH,
                 readResource("add-idp-template-conflict.json"));
         validateErrorResponse(response, HttpStatus.SC_CONFLICT, "TMM_00014", "Google-2");
+    }
+
+    @Test(dependsOnMethods = {"testAddIdPTemplateConflict"})
+    public void testFilterIdPTemplatesWithInvalidSearchKey() throws Exception {
+
+        String url = IDP_API_BASE_PATH + PATH_SEPARATOR + IDP_TEMPLATE_PATH;
+        Map<String, Object> filterParam = new HashMap<>();
+        filterParam.put("filter", "test eq 'DEFAULT'");
+        Response response = getResponseOfGetWithQueryParams(url, filterParam);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "IDP-65055", "Invalid search filter");
     }
 }
