@@ -120,7 +120,7 @@ public class TenantSuccessTest extends TenantManagementBaseTest {
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .body(baseIdentifier + "domain", equalTo("abc.com"))
-                .body(activeStatusIdentifier + "username", equalTo("kim"));
+                .body(baseIdentifier + activeStatusIdentifier + "username", equalTo("kim"));
     }
 
     @Test(dependsOnMethods = {"testGetTenant"})
@@ -128,11 +128,13 @@ public class TenantSuccessTest extends TenantManagementBaseTest {
 
         Response response = getResponseOfGet(TENANT_API_BASE_PATH + PATH_SEPARATOR + tenantId +
                 TENANT_API_OWNER_PATH);
+
+        String activeStatusIdentifier = "find{ it.id == '" + userId + "'}";
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("id", equalTo(userId))
-                .body("username", equalTo("kim"));
+                .body(activeStatusIdentifier, notNullValue())
+                .body(activeStatusIdentifier + ".username", equalTo("kim"));
     }
 }
