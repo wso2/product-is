@@ -54,6 +54,25 @@ public class ApplicationTemplateManagementSuccessTest extends ApplicationManagem
     }
 
     @Test
+    public void testGetFilBasedApplicationTemplates() throws Exception {
+
+        String fileBasedApplicationTemplateId = "776a73da-fd8e-490b-84ff-93009f8ede85";
+        String baseIdentifier = "templates.find{ it.id == '" + fileBasedApplicationTemplateId + "' }.";
+        Response response = getResponseOfGet(APPLICATION_TEMPLATE_MANAGEMENT_API_BASE_PATH);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body(baseIdentifier + "name", equalTo("SAML web application"))
+                .body(baseIdentifier + "authenticationProtocol", equalTo("saml"))
+                .body(baseIdentifier + "category", equalTo("DEFAULT"))
+                .body(baseIdentifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                        "/api/server/" + API_VERSION + APPLICATION_TEMPLATE_MANAGEMENT_API_BASE_PATH + "/" +
+                        fileBasedApplicationTemplateId))
+                .body("templates.size()", notNullValue());
+    }
+
+    @Test
     public void testCreateTemplate() throws Exception {
 
         String body = readResource("create-application-template.json");
@@ -78,6 +97,10 @@ public class ApplicationTemplateManagementSuccessTest extends ApplicationManagem
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
+                .body(baseIdentifier + "name", equalTo(CREATED_TEMPLATE_NAME))
+                .body(baseIdentifier + "self", equalTo("/t/" + context.getContextTenant().getDomain() +
+                        "/api/server/" + API_VERSION + APPLICATION_TEMPLATE_MANAGEMENT_API_BASE_PATH + "/" +
+                        createdTemplateId))
                 .body("templates.size()", notNullValue());
     }
 

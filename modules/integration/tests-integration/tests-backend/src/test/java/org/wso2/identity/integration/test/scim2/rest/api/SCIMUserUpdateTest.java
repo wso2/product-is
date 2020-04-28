@@ -127,8 +127,8 @@ public class SCIMUserUpdateTest extends SCIM2BaseTest {
         log.info("Created a user with userId :" + userId);
         endpointURL = USERS_ENDPOINT + userId;
 
-        SCIMUtils.validateSchemasAttribute(extractableResponse.path("schemas"));
-        SCIMUtils.validateMetaAttribute(extractableResponse.path("meta"), response, endpointURL);
+        SCIMUtils.validateSchemasAttributeOfUsersEndpoint(extractableResponse.path("schemas"));
+        SCIMUtils.validateMetaAttributeOfUsersEndpoint(extractableResponse.path("meta"), response, endpointURL);
     }
 
     @Test(dependsOnMethods = "testCreateUser")
@@ -152,8 +152,8 @@ public class SCIMUserUpdateTest extends SCIM2BaseTest {
         Assert.assertEquals(((ArrayList) emailsAttribute).size(), 1);
         Assert.assertNotEquals(((LinkedHashMap) ((ArrayList) emailsAttribute).get(0)).get("type"), "work");
 
-        SCIMUtils.validateSchemasAttribute(extractableResponse.path("schemas"));
-        SCIMUtils.validateMetaAttribute(extractableResponse.path("meta"), response, endpointURL);
+        SCIMUtils.validateSchemasAttributeOfUsersEndpoint(extractableResponse.path("schemas"));
+        SCIMUtils.validateMetaAttributeOfUsersEndpoint(extractableResponse.path("meta"), response, endpointURL);
     }
 
     @Test(dependsOnMethods = "testPatchUserRemoveOperation")
@@ -176,8 +176,8 @@ public class SCIMUserUpdateTest extends SCIM2BaseTest {
         Assert.assertTrue(emailsAttribute instanceof ArrayList, "'emails' attribute is not a list of objects");
         Assert.assertEquals(((ArrayList) emailsAttribute).size(), 2);
 
-        SCIMUtils.validateSchemasAttribute(extractableResponse.path("schemas"));
-        SCIMUtils.validateMetaAttribute(extractableResponse.path("meta"), response, endpointURL);
+        SCIMUtils.validateSchemasAttributeOfUsersEndpoint(extractableResponse.path("schemas"));
+        SCIMUtils.validateMetaAttributeOfUsersEndpoint(extractableResponse.path("meta"), response, endpointURL);
 
     }
 
@@ -210,8 +210,8 @@ public class SCIMUserUpdateTest extends SCIM2BaseTest {
         Assert.assertEquals(((LinkedHashMap) ((ArrayList) emailsAttribute).get(0)).get("value"),
                 "desmond@mail.net");
 
-        SCIMUtils.validateSchemasAttribute(extractableResponse.path("schemas"));
-        SCIMUtils.validateMetaAttribute(extractableResponse.path("meta"), response, endpointURL);
+        SCIMUtils.validateSchemasAttributeOfUsersEndpoint(extractableResponse.path("schemas"));
+        SCIMUtils.validateMetaAttributeOfUsersEndpoint(extractableResponse.path("meta"), response, endpointURL);
     }
 
     @Test(dependsOnMethods = "testPatchUserReplaceOperation")
@@ -237,8 +237,8 @@ public class SCIMUserUpdateTest extends SCIM2BaseTest {
         Assert.assertEquals(((LinkedHashMap) nameAttribute).get("familyName"), "jackson");
         Assert.assertEquals(((LinkedHashMap) nameAttribute).get("givenName"), "kim");
 
-        SCIMUtils.validateSchemasAttribute(extractableResponse.path("schemas"));
-        SCIMUtils.validateMetaAttribute(extractableResponse.path("meta"), response, endpointURL);
+        SCIMUtils.validateSchemasAttributeOfUsersEndpoint(extractableResponse.path("schemas"));
+        SCIMUtils.validateMetaAttributeOfUsersEndpoint(extractableResponse.path("meta"), response, endpointURL);
     }
 
     @Test(dependsOnMethods = "testPutUser")

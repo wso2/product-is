@@ -77,7 +77,7 @@ public class SCIM2BaseTest extends RESTTestBase {
     }
 
     @AfterMethod(alwaysRun = true)
-    public void testFinish() {
+    public void testFinish() throws Exception {
 
         RestAssured.basePath = StringUtils.EMPTY;
     }
