@@ -92,49 +92,47 @@ public class TenantSuccessTest extends TenantManagementBaseTest {
         assertNotNull(tenantId);
     }
 
-    // The following test cases should be uncommented once new kernel release after merging the PR
-    // https://github.com/wso2/carbon-kernel/pull/2667
-//    @Test(dependsOnMethods = {"testAddTenant"})
-//    public void testGetTenant() throws IOException {
-//
-//        Response response = getResponseOfGet(TENANT_API_BASE_PATH + PATH_SEPARATOR + tenantId);
-//        String ownerName = "kim";
-//        String baseIdentifier = "owners.find{ it.username == '" + ownerName + "' }.";
-//        response.then()
-//                .log().ifValidationFails()
-//                .assertThat()
-//                .statusCode(HttpStatus.SC_OK)
-//                .body("id", equalTo(tenantId))
-//                .body("domain", equalTo("abc.com"))
-//                .body(baseIdentifier, notNullValue());
-//        TenantResponseModel tenantResponseModel = response.getBody().as(TenantResponseModel.class);
-//        userId = tenantResponseModel.getOwners().get(0).getId();
-//    }
-//
-//    @Test(dependsOnMethods = {"testGetTenant"})
-//    public void testGetTenants() throws Exception {
-//
-//        String baseIdentifier = "tenants.find{ it.id == '" + tenantId + "' }.";
-//        String activeStatusIdentifier = "owners.find{ it.id == '" + userId + "' }.";
-//        Response response = getResponseOfGet(TENANT_API_BASE_PATH);
-//        response.then()
-//                .log().ifValidationFails()
-//                .assertThat()
-//                .statusCode(HttpStatus.SC_OK)
-//                .body(baseIdentifier + "domain", equalTo("abc.com"))
-//                .body(activeStatusIdentifier + "username", equalTo("kim"));
-//    }
-//
-//    @Test(dependsOnMethods = {"testGetTenant"})
-//    public void testGetOwners() throws Exception {
-//
-//        Response response = getResponseOfGet(TENANT_API_BASE_PATH + PATH_SEPARATOR + tenantId +
-//                TENANT_API_OWNER_PATH);
-//        response.then()
-//                .log().ifValidationFails()
-//                .assertThat()
-//                .statusCode(HttpStatus.SC_OK)
-//                .body("id", equalTo(userId))
-//                .body("username", equalTo("kim"));
-//    }
+    @Test(dependsOnMethods = {"testAddTenant"})
+    public void testGetTenant() throws IOException {
+
+        Response response = getResponseOfGet(TENANT_API_BASE_PATH + PATH_SEPARATOR + tenantId);
+        String ownerName = "kim";
+        String baseIdentifier = "owners.find{ it.username == '" + ownerName + "' }.";
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("id", equalTo(tenantId))
+                .body("domain", equalTo("abc.com"))
+                .body(baseIdentifier, notNullValue());
+        TenantResponseModel tenantResponseModel = response.getBody().as(TenantResponseModel.class);
+        userId = tenantResponseModel.getOwners().get(0).getId();
+    }
+
+    @Test(dependsOnMethods = {"testGetTenant"})
+    public void testGetTenants() throws Exception {
+
+        String baseIdentifier = "tenants.find{ it.id == '" + tenantId + "' }.";
+        String activeStatusIdentifier = "owners.find{ it.id == '" + userId + "' }.";
+        Response response = getResponseOfGet(TENANT_API_BASE_PATH);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body(baseIdentifier + "domain", equalTo("abc.com"))
+                .body(activeStatusIdentifier + "username", equalTo("kim"));
+    }
+
+    @Test(dependsOnMethods = {"testGetTenant"})
+    public void testGetOwners() throws Exception {
+
+        Response response = getResponseOfGet(TENANT_API_BASE_PATH + PATH_SEPARATOR + tenantId +
+                TENANT_API_OWNER_PATH);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("id", equalTo(userId))
+                .body("username", equalTo("kim"));
+    }
 }
