@@ -234,7 +234,7 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
         updateResidentIDPProperty(tenantResidentIDP, DISABLE_ACC_LOCK_ON_SELF_REG_PROP_KEY, "false", false);
         selfRegister(EBONY, PASSWORD, EBONY, EBONY + "@gmail.com", "Jackson", "+9433909388");
         String content = doCallSignUpDo(EBONY + "@" + secondaryTenantDomain);
-        Assert.assertTrue(content.contains(String.format(ERROR_MESSAGE_USERNAME_TAKEN, EBONY + "@" + secondaryTenantDomain)));
+        Assert.assertTrue(content.contains(String.format(ERROR_MESSAGE_USERNAME_TAKEN, EBONY)));
 
     }
 
