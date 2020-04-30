@@ -1,17 +1,50 @@
 {
   "allowedGrantTypes": {
     "options": [
-      "Code",
-      "Implicit",
-      "Password",
-      "Client Credential",
-      "Refresh Token",
-      "SAML2",
-      "IWA-NTLM",
-      "urn:ietf:params:oauth:grant-type:device_code",
-      "urn:ietf:params:oauth:grant-type:uma-ticket",
-      "account_switch",
-      "urn:ietf:params:oauth:grant-type:jwt-bearer"
+      {
+        "name": "refresh_token",
+        "displayName": "Refresh Token"
+      },
+      {
+        "name": "urn:ietf:params:oauth:grant-type:saml2-bearer",
+        "displayName": "SAML2"
+      },
+      {
+        "name": "implicit",
+        "displayName": "Implicit"
+      },
+      {
+        "name": "password",
+        "displayName": "Password"
+      },
+      {
+        "name": "client_credentials",
+        "displayName": "Client Credential"
+      },
+      {
+        "name": "iwa:ntlm",
+        "displayName": "IWA-NTLM"
+      },
+      {
+        "name": "urn:ietf:params:oauth:grant-type:device_code",
+        "displayName": "urn:ietf:params:oauth:grant-type:device_code"
+      },
+      {
+        "name": "authorization_code",
+        "displayName": "Code"
+      },
+      {
+        "name": "urn:ietf:params:oauth:grant-type:uma-ticket",
+        "displayName": "urn:ietf:params:oauth:grant-type:uma-ticket"
+      },
+      {
+        "name": "account_switch",
+        "displayName": "account_switch"
+      },
+      {
+        "name": "urn:ietf:params:oauth:grant-type:jwt-bearer",
+        "displayName": "urn:ietf:params:oauth:grant-type:jwt-bearer"
+      }
     ]
   },
   "defaultUserAccessTokenExpiryTime": "3600",
