@@ -22,6 +22,7 @@ import org.apache.axis2.AxisFault;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
+import org.hamcrest.Matchers;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
@@ -34,6 +35,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import java.io.IOException;
 import java.rmi.RemoteException;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
 
 /**
@@ -98,7 +100,7 @@ public class ClaimManagementNegativeTest extends ClaimManagementTestBase {
     public void testGetClaimsWithInvalidDialectId() {
 
         Response response = getResponseOfGet(CLAIM_DIALECTS_ENDPOINT_URI + "/" + testDialectId + CLAIMS_ENDPOINT_URI);
-        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "CMT-50017", testDialectId);
+        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "CMT-50016", testDialectId);
     }
 
     @Test
@@ -107,7 +109,11 @@ public class ClaimManagementNegativeTest extends ClaimManagementTestBase {
         String dialectId = createDialect();
 
         Response response = getResponseOfGet(CLAIM_DIALECTS_ENDPOINT_URI + "/" + dialectId + CLAIMS_ENDPOINT_URI);
-        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "CMT-50017", dialectId);
+
+        response.then()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("isEmpty()", Matchers.is(true));
 
         removeDialect(dialectId);
     }
