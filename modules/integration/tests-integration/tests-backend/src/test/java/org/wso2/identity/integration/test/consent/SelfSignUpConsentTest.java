@@ -42,6 +42,7 @@ import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvide
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProviderProperty;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.user.mgt.stub.UserAdminUserAdminException;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.common.clients.UserManagementClient;
@@ -68,6 +69,7 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
     private static final String COUNTRY_WSO2_CLAIM = "http://wso2.org/claims/country";
     private static final String CALLBACK_QUERY_PARAM = "callback";
     private static final String USERNAME_QUERY_PARAM = "username";
+    private static final String TENANT_DOMAIN_QUERY_PARAM = "tenantDomain";
     private static final String ADMIN = "admin";
     private static final String EBONY = "ebony";
     private static final String PASSWORD = "UsEr@123";
@@ -232,7 +234,7 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
         updateResidentIDPProperty(tenantResidentIDP, DISABLE_ACC_LOCK_ON_SELF_REG_PROP_KEY, "false", false);
         selfRegister(EBONY, PASSWORD, EBONY, EBONY + "@gmail.com", "Jackson", "+9433909388");
         String content = doCallSignUpDo(EBONY + "@" + secondaryTenantDomain);
-        Assert.assertTrue(content.contains(String.format(ERROR_MESSAGE_USERNAME_TAKEN, EBONY + "@" + secondaryTenantDomain)));
+        Assert.assertTrue(content.contains(String.format(ERROR_MESSAGE_USERNAME_TAKEN, EBONY)));
 
     }
 
@@ -288,7 +290,14 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
     private String doCallSignUpDo(String username) throws IOException {
 
         HttpClient client = HttpClientBuilder.create().build();
-        String selfRegisterEndpoint = signupDoEndpoint + "?" + USERNAME_QUERY_PARAM + "=" + username;
+        String tenantDomain = MultitenantConstants.SUPER_TENANT_DOMAIN_NAME;
+        if (username.contains("@")) {
+            tenantDomain = MultitenantUtils.getTenantDomain(username);
+            username = MultitenantUtils.getTenantAwareUsername(username);
+        }
+        String selfRegisterEndpoint =
+                signupDoEndpoint + "?" + USERNAME_QUERY_PARAM + "=" + username + "&" + TENANT_DOMAIN_QUERY_PARAM + "="
+                        + tenantDomain;
         HttpResponse httpResponse = sendGetRequest(client, selfRegisterEndpoint);
         return DataExtractUtil.getContentData(httpResponse);
     }
