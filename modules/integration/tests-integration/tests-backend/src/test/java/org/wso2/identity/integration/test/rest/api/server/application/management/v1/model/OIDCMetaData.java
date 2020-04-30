@@ -1,18 +1,18 @@
 /*
-* Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 package org.wso2.identity.integration.test.rest.api.server.application.management.v1.model;
 
@@ -23,8 +23,8 @@ import java.util.Objects;
 import javax.validation.Valid;
 
 public class OIDCMetaData  {
-  
-    private MetadataProperty allowedGrantTypes;
+
+    private GrantTypeMetaData allowedGrantTypes;
     private String defaultUserAccessTokenExpiryTime;
     private String defaultApplicationAccessTokenExpiryTime;
     private String defaultRefreshTokenExpiryTime;
@@ -35,31 +35,31 @@ public class OIDCMetaData  {
     private MetadataProperty accessTokenType;
 
     /**
-    **/
-    public OIDCMetaData allowedGrantTypes(MetadataProperty allowedGrantTypes) {
+     **/
+    public OIDCMetaData allowedGrantTypes(GrantTypeMetaData allowedGrantTypes) {
 
         this.allowedGrantTypes = allowedGrantTypes;
         return this;
     }
-    
+
     @ApiModelProperty(value = "")
     @JsonProperty("allowedGrantTypes")
     @Valid
-    public MetadataProperty getAllowedGrantTypes() {
+    public GrantTypeMetaData getAllowedGrantTypes() {
         return allowedGrantTypes;
     }
-    public void setAllowedGrantTypes(MetadataProperty allowedGrantTypes) {
+    public void setAllowedGrantTypes(GrantTypeMetaData allowedGrantTypes) {
         this.allowedGrantTypes = allowedGrantTypes;
     }
 
     /**
-    **/
+     **/
     public OIDCMetaData defaultUserAccessTokenExpiryTime(String defaultUserAccessTokenExpiryTime) {
 
         this.defaultUserAccessTokenExpiryTime = defaultUserAccessTokenExpiryTime;
         return this;
     }
-    
+
     @ApiModelProperty(example = "3600", value = "")
     @JsonProperty("defaultUserAccessTokenExpiryTime")
     @Valid
@@ -71,13 +71,13 @@ public class OIDCMetaData  {
     }
 
     /**
-    **/
+     **/
     public OIDCMetaData defaultApplicationAccessTokenExpiryTime(String defaultApplicationAccessTokenExpiryTime) {
 
         this.defaultApplicationAccessTokenExpiryTime = defaultApplicationAccessTokenExpiryTime;
         return this;
     }
-    
+
     @ApiModelProperty(example = "3600", value = "")
     @JsonProperty("defaultApplicationAccessTokenExpiryTime")
     @Valid
@@ -89,13 +89,13 @@ public class OIDCMetaData  {
     }
 
     /**
-    **/
+     **/
     public OIDCMetaData defaultRefreshTokenExpiryTime(String defaultRefreshTokenExpiryTime) {
 
         this.defaultRefreshTokenExpiryTime = defaultRefreshTokenExpiryTime;
         return this;
     }
-    
+
     @ApiModelProperty(example = "86400", value = "")
     @JsonProperty("defaultRefreshTokenExpiryTime")
     @Valid
@@ -107,13 +107,13 @@ public class OIDCMetaData  {
     }
 
     /**
-    **/
+     **/
     public OIDCMetaData defaultIdTokenExpiryTime(String defaultIdTokenExpiryTime) {
 
         this.defaultIdTokenExpiryTime = defaultIdTokenExpiryTime;
         return this;
     }
-    
+
     @ApiModelProperty(example = "3600", value = "")
     @JsonProperty("defaultIdTokenExpiryTime")
     @Valid
@@ -125,13 +125,13 @@ public class OIDCMetaData  {
     }
 
     /**
-    **/
+     **/
     public OIDCMetaData idTokenEncryptionAlgorithm(MetadataProperty idTokenEncryptionAlgorithm) {
 
         this.idTokenEncryptionAlgorithm = idTokenEncryptionAlgorithm;
         return this;
     }
-    
+
     @ApiModelProperty(value = "")
     @JsonProperty("idTokenEncryptionAlgorithm")
     @Valid
@@ -143,13 +143,13 @@ public class OIDCMetaData  {
     }
 
     /**
-    **/
+     **/
     public OIDCMetaData idTokenEncryptionMethod(MetadataProperty idTokenEncryptionMethod) {
 
         this.idTokenEncryptionMethod = idTokenEncryptionMethod;
         return this;
     }
-    
+
     @ApiModelProperty(value = "")
     @JsonProperty("idTokenEncryptionMethod")
     @Valid
@@ -161,13 +161,13 @@ public class OIDCMetaData  {
     }
 
     /**
-    **/
+     **/
     public OIDCMetaData scopeValidators(MetadataProperty scopeValidators) {
 
         this.scopeValidators = scopeValidators;
         return this;
     }
-    
+
     @ApiModelProperty(value = "")
     @JsonProperty("scopeValidators")
     @Valid
@@ -179,13 +179,13 @@ public class OIDCMetaData  {
     }
 
     /**
-    **/
+     **/
     public OIDCMetaData accessTokenType(MetadataProperty accessTokenType) {
 
         this.accessTokenType = accessTokenType;
         return this;
     }
-    
+
     @ApiModelProperty(value = "")
     @JsonProperty("accessTokenType")
     @Valid
@@ -199,7 +199,7 @@ public class OIDCMetaData  {
 
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(java.lang.Object o) {
 
         if (this == o) {
             return true;
@@ -209,14 +209,14 @@ public class OIDCMetaData  {
         }
         OIDCMetaData oiDCMetaData = (OIDCMetaData) o;
         return Objects.equals(this.allowedGrantTypes, oiDCMetaData.allowedGrantTypes) &&
-            Objects.equals(this.defaultUserAccessTokenExpiryTime, oiDCMetaData.defaultUserAccessTokenExpiryTime) &&
-            Objects.equals(this.defaultApplicationAccessTokenExpiryTime, oiDCMetaData.defaultApplicationAccessTokenExpiryTime) &&
-            Objects.equals(this.defaultRefreshTokenExpiryTime, oiDCMetaData.defaultRefreshTokenExpiryTime) &&
-            Objects.equals(this.defaultIdTokenExpiryTime, oiDCMetaData.defaultIdTokenExpiryTime) &&
-            Objects.equals(this.idTokenEncryptionAlgorithm, oiDCMetaData.idTokenEncryptionAlgorithm) &&
-            Objects.equals(this.idTokenEncryptionMethod, oiDCMetaData.idTokenEncryptionMethod) &&
-            Objects.equals(this.scopeValidators, oiDCMetaData.scopeValidators) &&
-            Objects.equals(this.accessTokenType, oiDCMetaData.accessTokenType);
+                Objects.equals(this.defaultUserAccessTokenExpiryTime, oiDCMetaData.defaultUserAccessTokenExpiryTime) &&
+                Objects.equals(this.defaultApplicationAccessTokenExpiryTime, oiDCMetaData.defaultApplicationAccessTokenExpiryTime) &&
+                Objects.equals(this.defaultRefreshTokenExpiryTime, oiDCMetaData.defaultRefreshTokenExpiryTime) &&
+                Objects.equals(this.defaultIdTokenExpiryTime, oiDCMetaData.defaultIdTokenExpiryTime) &&
+                Objects.equals(this.idTokenEncryptionAlgorithm, oiDCMetaData.idTokenEncryptionAlgorithm) &&
+                Objects.equals(this.idTokenEncryptionMethod, oiDCMetaData.idTokenEncryptionMethod) &&
+                Objects.equals(this.scopeValidators, oiDCMetaData.scopeValidators) &&
+                Objects.equals(this.accessTokenType, oiDCMetaData.accessTokenType);
     }
 
     @Override
@@ -244,10 +244,10 @@ public class OIDCMetaData  {
     }
 
     /**
-    * Convert the given object to string with each line indented by 4 spaces
-    * (except the first line).
-    */
-    private String toIndentedString(Object o) {
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
+     */
+    private String toIndentedString(java.lang.Object o) {
 
         if (o == null) {
             return "null";
