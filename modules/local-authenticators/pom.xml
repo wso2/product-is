@@ -155,7 +155,7 @@
                                 <artifactItem>
                                     <groupId>org.wso2.carbon.extension.identity.oauth.addons</groupId>
                                     <artifactId>org.wso2.carbon.identity.oauth2.token.handler.clientauth.mutualtls</artifactId>
-                                    <version>${identity.local.auth.clientauth.mutualtls.version}</version>
+                                    <version>${identity.oauth.addons.version}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${basedir}/target/localauthenticatorCopied/jar

@@ -664,12 +664,6 @@
                 <version>${carbon.identity.framework.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.registry.resource.stub</artifactId>
-                <version>${carbon.registry.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
                 <groupId>org.wso2.carbon.registry</groupId>
                 <artifactId>org.wso2.carbon.registry.resource.stub</artifactId>
                 <version>${carbon.registry.version}</version>
@@ -1595,7 +1589,7 @@
             <dependency>
                 <groupId>org.wso2.carbon.extension.identity.oauth.addons</groupId>
                 <artifactId>org.wso2.carbon.identity.oauth2.token.handler.clientauth.mutualtls</artifactId>
-                <version>${identity.local.auth.clientauth.mutualtls.version}</version>
+                <version>${identity.oauth.addons.version}</version>
             </dependency>
 
             <!-- Local Authentication API Connector -->
@@ -1667,7 +1661,7 @@
                 <version>${authenticator.twitter.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.extension.identity.authenticator</groupId>
+                <groupId>org.wso2.carbon.extension.identity.authenticator.outbound.office365</groupId>
                 <artifactId>org.wso2.carbon.extension.identity.authenticator.office365.connector</artifactId>
                 <version>${authenticator.office365.version}</version>
             </dependency>
@@ -1677,7 +1671,7 @@
                 <version>${authenticator.totp.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.extension.identity.authenticator</groupId>
+                <groupId>org.wso2.carbon.extension.identity.authenticator.outbound.x509Certificate</groupId>
                 <artifactId>org.wso2.carbon.extension.identity.authenticator.x509Certificate.connector</artifactId>
                 <version>${authenticator.x509.version}</version>
             </dependency>
@@ -1810,7 +1804,7 @@
             <dependency>
                 <groupId>org.wso2.carbon.extension.identity.oauth.addons</groupId>
                 <artifactId>org.wso2.carbon.identity.oauth2.validators.xacml.server.feature</artifactId>
-                <version>${identity.oauth2.validators.xacml.version}</version>
+                <version>${identity.oauth.addons.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.felix</groupId>
@@ -2079,7 +2073,6 @@
         <identity.local.auth.basicauth.version>6.3.3</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.2.4</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.3.13</identity.local.auth.iwa.version>
-        <identity.local.auth.clientauth.mutualtls.version>2.3.0</identity.local.auth.clientauth.mutualtls.version>
 
         <!-- Local Authentication API Connector Version -->
         <identity.local.auth.api.version>2.4.0</identity.local.auth.api.version>
@@ -2092,11 +2085,11 @@
 
         <!-- Connector Versions -->
         <authenticator.totp.version>2.2.1</authenticator.totp.version>
-        <authenticator.office365.version>1.0.6</authenticator.office365.version>
+        <authenticator.office365.version>2.0.1</authenticator.office365.version>
         <authenticator.smsotp.version>3.0.1</authenticator.smsotp.version>
         <authenticator.emailotp.version>3.0.0</authenticator.emailotp.version>
         <authenticator.twitter.version>1.0.10</authenticator.twitter.version>
-        <authenticator.x509.version>2.0.17</authenticator.x509.version>
+        <authenticator.x509.version>3.0.2</authenticator.x509.version>
         <identity.extension.utils>1.0.8</identity.extension.utils>
 
         <!-- Identity REST API feature -->
@@ -2105,7 +2098,7 @@
         <identity.agent.sso.version>5.4.0</identity.agent.sso.version>
         <identity.tool.samlsso.validator.version>5.4.0</identity.tool.samlsso.validator.version>
         <identity.app.authz.xacml.version>2.2.1</identity.app.authz.xacml.version>
-        <identity.oauth2.validators.xacml.version>2.3.0</identity.oauth2.validators.xacml.version>
+        <identity.oauth.addons.version>2.3.0</identity.oauth.addons.version>
         <org.wso2.carbon.extension.identity.x509certificate.version>1.0.6</org.wso2.carbon.extension.identity.x509certificate.version>
         <conditional.authentication.functions.version>0.1.40</conditional.authentication.functions.version>
         <carbon.identity.oauth.uma.version>1.2.1</carbon.identity.oauth.uma.version>
