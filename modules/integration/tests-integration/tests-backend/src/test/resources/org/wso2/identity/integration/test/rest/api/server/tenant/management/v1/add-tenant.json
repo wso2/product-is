@@ -1,11 +1,13 @@
 {
-  "domain": "abc.com",
+  "domain": "abc3.com",
   "owners": [
     {
       "username": "kim",
+      "password": "kim123",
       "email": "kim@wso2.com",
       "firstname": "kim",
       "lastname": "kim",
+      "provisioningMethod": "inline-password",
       "additionalClaims": [
         {
           "claim": "http://wso2.org/claims/telephone",
@@ -13,7 +15,7 @@
         },
         {
           "claim": "http://wso2.org/claims/country",
-          "value": "Srilanka"
+          "value": "SriLanka"
         }
       ]
     }

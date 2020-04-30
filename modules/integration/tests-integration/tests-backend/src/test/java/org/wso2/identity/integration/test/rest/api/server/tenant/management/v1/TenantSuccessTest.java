@@ -24,6 +24,8 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.tenant.management.v1.model.TenantResponseModel;
@@ -75,10 +77,10 @@ public class TenantSuccessTest extends TenantManagementBaseTest {
         RestAssured.basePath = StringUtils.EMPTY;
     }
 
-    @Test
-    public void testAddTenant() throws IOException {
+    @Factory(dataProvider = "tenantProvisioningMethodProvider")
+    public void testAddTenant(String fileName) throws IOException {
 
-        String body = readResource("add-tenant.json");
+        String body = readResource(fileName);
         Response response = getResponseOfPost(TENANT_API_BASE_PATH, body);
         response.then()
                 .log().ifValidationFails()
@@ -92,6 +94,15 @@ public class TenantSuccessTest extends TenantManagementBaseTest {
         assertNotNull(tenantId);
     }
 
+    @DataProvider(name = "tenantProvisioningMethodProvider")
+    public static Object[][] tenantProvisioningMethodProvider() {
+
+        return new Object[][]{
+                {"add-tenant-inline-password.json", },
+                {"add-tenant-email-link.json"}
+        };
+    }
+
     @Test(dependsOnMethods = {"testAddTenant"})
     public void testGetTenant() throws IOException {
 
@@ -103,7 +114,7 @@ public class TenantSuccessTest extends TenantManagementBaseTest {
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .body("id", equalTo(tenantId))
-                .body("domain", equalTo("abc.com"))
+                .body("domain", equalTo("abc2.com"))
                 .body(baseIdentifier, notNullValue());
         TenantResponseModel tenantResponseModel = response.getBody().as(TenantResponseModel.class);
         userId = tenantResponseModel.getOwners().get(0).getId();
@@ -119,7 +130,7 @@ public class TenantSuccessTest extends TenantManagementBaseTest {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body(baseIdentifier + "domain", equalTo("abc.com"))
+                .body(baseIdentifier + "domain", equalTo("abc2.com"))
                 .body(baseIdentifier + activeStatusIdentifier + "username", equalTo("kim"));
     }
 

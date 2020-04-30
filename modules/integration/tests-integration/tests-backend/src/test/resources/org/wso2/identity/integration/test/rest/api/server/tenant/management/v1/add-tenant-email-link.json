@@ -6,6 +6,7 @@
       "email": "kim@wso2.com",
       "firstname": "kim",
       "lastname": "kim",
+      "provisioningMethod": "invite-via-email",
       "additionalClaims": [
         {
           "claim": "http://wso2.org/claims/telephone",
