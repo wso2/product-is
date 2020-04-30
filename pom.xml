@@ -2017,7 +2017,7 @@
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.saml.version>5.8.8</identity.inbound.auth.saml.version>
+        <identity.inbound.auth.saml.version>5.8.9</identity.inbound.auth.saml.version>
         <identity.inbound.auth.oauth.version>6.4.15</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.5.0</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.5.2</identity.inbound.auth.sts.version>
