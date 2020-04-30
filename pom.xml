@@ -2051,7 +2051,7 @@
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
         <!--<identity.userstore.cassandra.version>5.1.1</identity.userstore.cassandra.version>-->
         <!--<identity.agent-entitlement-filter.version>5.1.1</identity.agent-entitlement-filter.version>-->
-        <org.wso2.carbon.identity.remotefetch.version>0.7.3</org.wso2.carbon.identity.remotefetch.version>
+        <org.wso2.carbon.identity.remotefetch.version>0.7.4</org.wso2.carbon.identity.remotefetch.version>
 
         <!-- CallHome version -->
         <callhome.version>4.5.x_1.0.4</callhome.version>
@@ -2073,7 +2073,7 @@
         <provisioning.connector.spml.version>5.1.2</provisioning.connector.spml.version>
         <provisioning.connector.google.version>5.1.8</provisioning.connector.google.version>
         <provisioning.connector.salesforce.version>5.1.6</provisioning.connector.salesforce.version>
-        <provisioning.connector.scim.version>5.2.1</provisioning.connector.scim.version>
+        <provisioning.connector.scim.version>5.2.2</provisioning.connector.scim.version>
 
         <!-- Local Authenticator Versions -->
         <identity.local.auth.basicauth.version>6.3.3</identity.local.auth.basicauth.version>
