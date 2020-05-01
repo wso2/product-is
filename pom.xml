@@ -2007,7 +2007,7 @@
         <carbon.consent.mgt.version>2.2.9</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.4.6</identity.governance.version>
+        <identity.governance.version>1.4.7</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.5.0</identity.carbon.auth.saml2.version>
