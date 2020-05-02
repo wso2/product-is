@@ -1221,7 +1221,7 @@
                                 </feature>
 
                                 <feature>
-                                    <id>org.wso2.identity.apps.admin.portal.server.feature.group</id>
+                                    <id>org.wso2.identity.apps.developer.portal.server.feature.group</id>
                                     <version>${identity.apps.version}</version>
                                 </feature>
 
