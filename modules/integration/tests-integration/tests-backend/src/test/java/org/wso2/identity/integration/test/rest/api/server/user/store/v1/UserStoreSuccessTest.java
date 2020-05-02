@@ -54,7 +54,7 @@ public class UserStoreSuccessTest extends UserStoreTestBase {
     private static String domainId;
     private UserStoreConfigAdminServiceClient userStoreConfigAdminServiceClient;
     private UserStoreConfigUtils userStoreConfigUtils;
-    private static final String USER_STORE_TYPE_ID = "SkRCQ1VzZXJTdG9yZU1hbmFnZXI";
+    private static final String USER_STORE_TYPE_ID = "VW5pcXVlSURKREJDVXNlclN0b3JlTWFuYWdlcg";
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public UserStoreSuccessTest(TestUserMode userMode) throws Exception {
