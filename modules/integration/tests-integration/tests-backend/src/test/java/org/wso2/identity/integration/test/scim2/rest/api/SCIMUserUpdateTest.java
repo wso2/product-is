@@ -73,9 +73,10 @@ public class SCIMUserUpdateTest extends SCIM2BaseTest {
     }
 
     @BeforeClass(alwaysRun = true)
-    public void init() throws RemoteException {
+    public void init() throws RemoteException, InterruptedException {
 
         super.testInit(swaggerDefinition, tenant);
+        Thread.sleep(20000);
     }
 
     @AfterClass(alwaysRun = true)
