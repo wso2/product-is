@@ -39,10 +39,10 @@ public class UserStoreConfigAdminTestCase extends ISIntegrationTest {
 
     private UserStoreConfigAdminServiceClient userStoreConfigurationClient;
     private UserStoreConfigUtils userStoreConfigUtils = new UserStoreConfigUtils();
-    private String jdbcClass = "org.wso2.carbon.user.core.jdbc.JDBCUserStoreManager";
-    private String rwLDAPClass = "org.wso2.carbon.user.core.ldap.ReadWriteLDAPUserStoreManager";
-    private String roLDAPClass = "org.wso2.carbon.user.core.ldap.ReadOnlyLDAPUserStoreManager";
-    private String adLDAPClass = "org.wso2.carbon.user.core.ldap.ActiveDirectoryUserStoreManager";
+    private final String jdbcClass = "org.wso2.carbon.user.core.jdbc.UniqueIDJDBCUserStoreManager";
+    private final String rwLDAPClass = "org.wso2.carbon.user.core.ldap.UniqueIDReadWriteLDAPUserStoreManager";
+    private final String roLDAPClass = "org.wso2.carbon.user.core.ldap.UniqueIDReadOnlyLDAPUserStoreManager";
+    private final String adLDAPClass = "org.wso2.carbon.user.core.ldap.UniqueIDActiveDirectoryUserStoreManager";
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
