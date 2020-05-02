@@ -6,18 +6,6 @@
     "self": "/t/carbon.super/api/server/v1/userstores/meta/types/VW5pcXVlSURSZWFkT25seUxEQVBVc2VyU3RvcmVNYW5hZ2Vy"
   },
   {
-    "typeId": "QWN0aXZlRGlyZWN0b3J5VXNlclN0b3JlTWFuYWdlcg",
-    "typeName": "ActiveDirectoryUserStoreManager",
-    "className": "org.wso2.carbon.user.core.ldap.ActiveDirectoryUserStoreManager",
-    "self": "/t/carbon.super/api/server/v1/userstores/meta/types/QWN0aXZlRGlyZWN0b3J5VXNlclN0b3JlTWFuYWdlcg"
-  },
-  {
-    "typeId": "UmVhZE9ubHlMREFQVXNlclN0b3JlTWFuYWdlcg",
-    "typeName": "ReadOnlyLDAPUserStoreManager",
-    "className": "org.wso2.carbon.user.core.ldap.ReadOnlyLDAPUserStoreManager",
-    "self": "/t/carbon.super/api/server/v1/userstores/meta/types/UmVhZE9ubHlMREFQVXNlclN0b3JlTWFuYWdlcg"
-  },
-  {
     "typeId": "VW5pcXVlSURSZWFkV3JpdGVMREFQVXNlclN0b3JlTWFuYWdlcg",
     "typeName": "UniqueIDReadWriteLDAPUserStoreManager",
     "className": "org.wso2.carbon.user.core.ldap.UniqueIDReadWriteLDAPUserStoreManager",
@@ -30,27 +18,9 @@
     "self": "/t/carbon.super/api/server/v1/userstores/meta/types/VW5pcXVlSURBY3RpdmVEaXJlY3RvcnlVc2VyU3RvcmVNYW5hZ2Vy"
   },
   {
-    "typeId": "UmVhZFdyaXRlTERBUFVzZXJTdG9yZU1hbmFnZXI",
-    "typeName": "ReadWriteLDAPUserStoreManager",
-    "className": "org.wso2.carbon.user.core.ldap.ReadWriteLDAPUserStoreManager",
-    "self": "/t/carbon.super/api/server/v1/userstores/meta/types/UmVhZFdyaXRlTERBUFVzZXJTdG9yZU1hbmFnZXI"
-  },
-  {
     "typeId": "VW5pcXVlSURKREJDVXNlclN0b3JlTWFuYWdlcg",
     "typeName": "UniqueIDJDBCUserStoreManager",
     "className": "org.wso2.carbon.user.core.jdbc.UniqueIDJDBCUserStoreManager",
     "self": "/t/carbon.super/api/server/v1/userstores/meta/types/VW5pcXVlSURKREJDVXNlclN0b3JlTWFuYWdlcg"
-  },
-  {
-    "typeId": "Q2FyYm9uUmVtb3RlVXNlclN0b3JlTWFuZ2Vy",
-    "typeName": "CarbonRemoteUserStoreManger",
-    "className": "org.wso2.carbon.identity.user.store.remote.CarbonRemoteUserStoreManger",
-    "self": "/t/carbon.super/api/server/v1/userstores/meta/types/Q2FyYm9uUmVtb3RlVXNlclN0b3JlTWFuZ2Vy"
-  },
-  {
-    "typeId": "SkRCQ1VzZXJTdG9yZU1hbmFnZXI",
-    "typeName": "JDBCUserStoreManager",
-    "className": "org.wso2.carbon.user.core.jdbc.JDBCUserStoreManager",
-    "self": "/t/carbon.super/api/server/v1/userstores/meta/types/SkRCQ1VzZXJTdG9yZU1hbmFnZXI"
   }
 ]
