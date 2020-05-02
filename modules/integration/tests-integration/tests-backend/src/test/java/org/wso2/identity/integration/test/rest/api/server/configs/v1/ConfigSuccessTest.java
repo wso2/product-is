@@ -33,7 +33,6 @@ import java.io.IOException;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
-import static org.testng.Assert.assertNotNull;
 
 /**
  * Test class for Server Configuration Management REST APIs success paths.
@@ -95,7 +94,7 @@ public class ConfigSuccessTest extends ConfigTestBase {
                 .body("id", equalTo(SAMPLE_AUTHENTICATOR_ID))
                 .body("name", equalTo("BasicAuthenticator"))
                 .body("displayName", equalTo("basic"))
-                .body("isEnabled", equalTo(false))
+                .body("isEnabled", equalTo(true))
                 .body("properties", notNullValue());
     }
 
@@ -110,6 +109,92 @@ public class ConfigSuccessTest extends ConfigTestBase {
                 .statusCode(HttpStatus.SC_OK)
                 .body(baseIdentifier + "name", equalTo("BasicAuthenticator"))
                 .body(baseIdentifier + "displayName", equalTo("basic"))
-                .body(baseIdentifier + "isEnabled", equalTo(false));
+                .body(baseIdentifier + "isEnabled", equalTo(true));
+    }
+
+    @Test(dependsOnMethods = {"testGetAuthenticators"})
+    public void testGetConfigs() throws Exception {
+
+        Response response = getResponseOfGet(
+                CONFIGS_API_BASE_PATH);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("idleSessionTimeoutPeriod", notNullValue())
+                .body("rememberMePeriod", notNullValue())
+                .body("homeRealmIdentifiers", notNullValue())
+                .body("provisioning", notNullValue())
+                .body("authenticators", notNullValue());
+    }
+
+    @Test(dependsOnMethods = {"testGetConfigs"})
+    public void testPatchConfigs() throws Exception {
+
+        String body = readResource("patch-replace-configs.json");
+        Response response = getResponseOfPatch(
+                CONFIGS_API_BASE_PATH, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK);
+
+        response = getResponseOfGet(CONFIGS_API_BASE_PATH);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("idleSessionTimeoutPeriod", equalTo("20"));
+
+        body = readResource("patch-add-configs.json");
+        response = getResponseOfPatch(
+                CONFIGS_API_BASE_PATH, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK);
+
+        response = getResponseOfGet(CONFIGS_API_BASE_PATH);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("homeRealmIdentifiers.contains(\"test-realm\")", equalTo(true));
+
+        body = readResource("patch-remove-configs.json");
+        response = getResponseOfPatch(
+                CONFIGS_API_BASE_PATH, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK);
+
+        response = getResponseOfGet(CONFIGS_API_BASE_PATH);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("homeRealmIdentifiers.contains(\"test-realm\")", equalTo(false));
+    }
+
+    @Test(dependsOnMethods = {"testPatchConfigs"})
+    public void testUpdateScimConfigs() throws Exception {
+
+        String body = readResource("update-scim-configs.json");
+
+        Response response = getResponseOfPut(CONFIGS_INBOUND_SCIM_API_BASE_PATH, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK);
+
+        response = getResponseOfGet(CONFIGS_API_BASE_PATH);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("provisioning", notNullValue())
+                .body("provisioning.inbound.scim.provisioningUserstore", equalTo("PRIMARY"))
+                .body("provisioning.inbound.scim.enableProxyMode", equalTo(false));
     }
 }
