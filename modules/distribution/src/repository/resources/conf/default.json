@@ -19,7 +19,7 @@
     "identity_security_questions_menu",
     "metrics_menu"
   ],
-  "http_access_log.pattern": "%h %l %u %t %r %s %b %{Referer}i %{User-Agent}i %T",
+  "http_access_log.pattern": "%h %l %u %t %r %s %b &quot;%{Referer}i&quot; &quot;%{User-Agent}i&quot; %T",
 
   "log_correlation.header_config": "{'activityid':'Correlation-ID'}",
 
