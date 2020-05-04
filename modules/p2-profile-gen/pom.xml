@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>5.11.0-m17-SNAPSHOT</version>
+        <version>5.11.0-m18-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -1246,7 +1246,7 @@
                                 </feature>
 
                                 <feature>
-                                    <id>org.wso2.identity.apps.admin.portal.server.feature.group</id>
+                                    <id>org.wso2.identity.apps.developer.portal.server.feature.group</id>
                                     <version>${identity.apps.version}</version>
                                 </feature>
 

@@ -1,912 +1,3432 @@
 {
-  "typeName": "JDBCUserStoreManager",
-  "typeId": "SkRCQ1VzZXJTdG9yZU1hbmFnZXI",
-  "className": "org.wso2.carbon.user.core.jdbc.JDBCUserStoreManager",
+  "typeName": "UniqueIDJDBCUserStoreManager",
+  "typeId": "VW5pcXVlSURKREJDVXNlclN0b3JlTWFuYWdlcg",
+  "className": "org.wso2.carbon.user.core.jdbc.UniqueIDJDBCUserStoreManager",
   "properties": {
     "Mandatory": [
       {
         "name": "url",
         "defaultValue": "",
-        "description": "Connection URL#URL of the user store database"
+        "description": "Connection URL#URL of the user store database",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "connection"
+          },
+          {
+            "name": "type",
+            "value": "string"
+          },
+          {
+            "name": "required",
+            "value": "true"
+          }
+        ]
       },
       {
         "name": "userName",
         "defaultValue": "",
-        "description": "Connection Name#Username for the database"
+        "description": "Connection Name#Username for the database",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "connection"
+          },
+          {
+            "name": "type",
+            "value": "string"
+          },
+          {
+            "name": "required",
+            "value": "true"
+          }
+        ]
       },
       {
         "name": "password",
         "defaultValue": "",
-        "description": "Connection Password#Password for the database#encrypt"
+        "description": "Connection Password#Password for the database#encrypt",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "connection"
+          },
+          {
+            "name": "type",
+            "value": "password"
+          },
+          {
+            "name": "required",
+            "value": "true"
+          }
+        ]
       },
       {
         "name": "driverName",
         "defaultValue": "",
-        "description": "Driver Name#Full qualified driver name"
+        "description": "Driver Name#Full qualified driver name",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "connection"
+          },
+          {
+            "name": "type",
+            "value": "string"
+          },
+          {
+            "name": "required",
+            "value": "true"
+          }
+        ]
       }
     ],
     "Optional": [
       {
         "name": "Disabled",
         "defaultValue": "false",
-        "description": "Disabled#Whether user store is disabled"
+        "description": "Disabled#Whether user store is disabled",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "basic"
+          },
+          {
+            "name": "type",
+            "value": "boolean"
+          },
+          {
+            "name": "required",
+            "value": "true"
+          }
+        ]
       },
       {
         "name": "ReadOnly",
         "defaultValue": "false",
-        "description": "Read-only#Indicates whether the user store of this realm operates in the user read only mode or not"
+        "description": "Read-only#Indicates whether the user store of this realm operates in the user read only mode or not",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "basic"
+          },
+          {
+            "name": "type",
+            "value": "boolean"
+          },
+          {
+            "name": "required",
+            "value": "true"
+          }
+        ]
       },
       {
         "name": "ReadGroups",
         "defaultValue": "true",
-        "description": "Read Groups#Specifies whether groups should be read from LDAP"
+        "description": "Read Groups#Specifies whether groups should be read from LDAP",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "boolean"
+          },
+          {
+            "name": "required",
+            "value": "true"
+          }
+        ]
       },
       {
         "name": "WriteGroups",
         "defaultValue": "true",
-        "description": "Write Groups#Indicate whether write groups enabled"
+        "description": "Write Groups#Indicate whether write groups enabled",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "boolean"
+          },
+          {
+            "name": "required",
+            "value": "true"
+          }
+        ]
       },
       {
         "name": "UsernameJavaRegEx",
         "defaultValue": "[a-zA-Z0-9._\\-|//]{3,30}$",
-        "description": "Username RegEx (Java)#A regular expression to validate user names"
+        "description": "Username RegEx (Java)#A regular expression to validate user names",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "string"
+          },
+          {
+            "name": "required",
+            "value": "true"
+          }
+        ]
       },
       {
         "name": "UsernameJavaScriptRegEx",
         "defaultValue": "^[\\S]{5,30}$",
-        "description": "Username RegEx (Javascript)#The regular expression used by the font-end components for username validation"
+        "description": "Username RegEx (Javascript)#The regular expression used by the font-end components for username validation",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "string"
+          },
+          {
+            "name": "required",
+            "value": "true"
+          }
+        ]
       },
       {
         "name": "UsernameJavaRegExViolationErrorMsg",
         "defaultValue": "Username pattern policy violated.",
-        "description": "Username RegEx Violation Error Message#Error message when the Username is not matched with UsernameJavaRegEx"
+        "description": "Username RegEx Violation Error Message#Error message when the Username is not matched with UsernameJavaRegEx",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "string"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "PasswordJavaRegEx",
         "defaultValue": "^[\\S]{5,30}$",
-        "description": "Password RegEx (Java)#A regular expression to validate passwords"
+        "description": "Password RegEx (Java)#A regular expression to validate passwords",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "string"
+          },
+          {
+            "name": "required",
+            "value": "true"
+          }
+        ]
       },
       {
         "name": "PasswordJavaScriptRegEx",
         "defaultValue": "^[\\S]{5,30}$",
-        "description": "Password RegEx (Javascript)#The regular expression used by the font-end components for password validation"
+        "description": "Password RegEx (Javascript)#The regular expression used by the font-end components for password validation",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "string"
+          },
+          {
+            "name": "required",
+            "value": "true"
+          }
+        ]
       },
       {
         "name": "PasswordJavaRegExViolationErrorMsg",
-        "defaultValue": "Password pattern policy violated.",
-        "description": "Password RegEx Violation Error Message#Error message when the Password is not matched with passwordJavaRegEx"
+        "defaultValue": "Password pattern policy violated",
+        "description": "Password RegEx Violation Error Message#Error message when the Password is not matched with passwordJavaRegEx",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "string"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "RolenameJavaRegEx",
         "defaultValue": "[a-zA-Z0-9._\\-|//]{3,30}$",
-        "description": "Role Name RegEx (Java)#A regular expression to validate role names"
+        "description": "Group Name RegEx (Java)#A regular expression to validate group names",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "string"
+          },
+          {
+            "name": "required",
+            "value": "true"
+          }
+        ]
       },
       {
         "name": "RolenameJavaScriptRegEx",
         "defaultValue": "^[\\S]{5,30}$",
-        "description": "Role Name RegEx (Javascript)#The regular expression used by the font-end components for role name validation"
+        "description": "Group Name RegEx (Javascript)#The regular expression used by the font-end components for group name validation",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "string"
+          },
+          {
+            "name": "required",
+            "value": "true"
+          }
+        ]
       },
       {
         "name": "CaseInsensitiveUsername",
         "defaultValue": "false",
-        "description": "Case Insensitive Username#Whether the username is case sensitive or not"
+        "description": "Case Insensitive Username#Whether the username is case sensitive or not",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "boolean"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "UniqueID",
         "defaultValue": "",
-        "description": "#"
+        "description": "#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "string"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       }
     ],
     "Advanced": [
       {
         "name": "IsBulkImportSupported",
         "defaultValue": "false",
-        "description": "Is Bulk Import Supported#Support Bulk User Import Operation for this user store"
+        "description": "Is Bulk Import Supported#Support Bulk User Import Operation for this user store",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "boolean"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "PasswordDigest",
         "defaultValue": "SHA-256",
-        "description": "Password Hashing Algorithm#Password Hash method to use when storing user entries"
+        "description": "Password Hashing Algorithm#Password Hash method to use when storing user entries",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "string"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "MultiAttributeSeparator",
         "defaultValue": ",",
-        "description": "Multiple Attribute Separator#This is the separator for multiple claim values"
+        "description": "Multiple Attribute Separator#This is the separator for multiple claim values",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "string"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "StoreSaltedPassword",
         "defaultValue": "true",
-        "description": "Enable Salted Passwords#Indicates whether to salt the password"
+        "description": "Enable Salted Passwords#Indicates whether to salt the password",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "boolean"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "MaxUserNameListLength",
         "defaultValue": "100",
-        "description": "Maximum User List Length#Maximum number of users retrieved at once"
+        "description": "Maximum User List Length#Maximum number of users retrieved at once",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "number"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "MaxRoleNameListLength",
         "defaultValue": "100",
-        "description": "Maximum Role List Length#Maximum number of roles retrieved at once"
+        "description": "Maximum Group List Length#Maximum number of groups retrieved at once",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "boolean"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "UserRolesCacheEnabled",
         "defaultValue": "true",
-        "description": "Enable User Role Cache#This is to indicate whether to cache the role list of a user"
+        "description": "Enable User Group Cache#This is to indicate whether to cache the group list of a user",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "boolean"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "UserNameUniqueAcrossTenants",
         "defaultValue": "false",
-        "description": "Make Username Unique Across Tenants#An attribute used for multi-tenancy"
+        "description": "Make Username Unique Across Tenants#An attribute used for multi-tenancy",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "boolean"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "validationQuery",
         "defaultValue": "",
-        "description": "validationQuery for the database#validationQuery is the SQL query that will be used to validate connections. This query MUST be an SQL SELECT statement that returns at least one row"
+        "description": "Validation Query for the Database#validationQuery is the SQL query that will be used to validate connections. This query MUST be an SQL SELECT statement that returns at least one row",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "connection"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "validationInterval",
         "defaultValue": "",
-        "description": "Validation Interval(time in milliseconds)#Used to avoid excess validation, only run validation at most at this frequency"
+        "description": "Validation Interval(milliseconds)#Used to avoid excess validation, only run validation at most at this frequency",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "connection"
+          },
+          {
+            "name": "type",
+            "value": "number"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "defaultAutoCommit",
         "defaultValue": "",
-        "description": "Default Auto commit#The default auto-commit state of connections created by this pool"
+        "description": "Default Auto-Commit#The default auto-commit state of connections created by this pool",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "connection"
+          },
+          {
+            "name": "type",
+            "value": "boolean"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "defaultReadOnly",
         "defaultValue": "",
-        "description": "Default Read Only#The default read-only state of connections created by this pool"
+        "description": "Default Read Only#The default read-only state of connections created by this pool",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "connection"
+          },
+          {
+            "name": "type",
+            "value": "boolean"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "defaultTransactionIsolation",
         "defaultValue": "",
-        "description": "Default Transaction Isolation#The default TransactionIsolation state of connections created by this pool"
+        "description": "Default Transaction Isolation#The default TransactionIsolation state of connections created by this pool",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "connection"
+          },
+          {
+            "name": "type",
+            "value": "string"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "defaultCatalog",
         "defaultValue": "",
-        "description": "Default Catalog#The default catalog of connections created by this pool"
+        "description": "Default Catalog#The default catalog of connections created by this pool",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "connection"
+          },
+          {
+            "name": "type",
+            "value": "string"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "initialSize",
         "defaultValue": "",
-        "description": "Initial Size#The initial number of connections that are created when the pool is started"
+        "description": "Initial Size#The initial number of connections that are created when the pool is started",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "connection"
+          },
+          {
+            "name": "type",
+            "value": "number"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "testOnReturn",
         "defaultValue": "false",
-        "description": "Test On Return#The indication of whether objects will be validated before being returned to the pool"
+        "description": "Test On Return#The indication of whether objects will be validated before being returned to the pool",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "connection"
+          },
+          {
+            "name": "type",
+            "value": "boolean"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "testOnBorrow",
         "defaultValue": "false",
-        "description": "Test On Borrow#The indication of whether objects will be validated before being borrowed from the pool"
+        "description": "Test On Borrow#The indication of whether objects will be validated before being borrowed from the pool",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "connection"
+          },
+          {
+            "name": "type",
+            "value": "boolean"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "validatorClassName",
         "defaultValue": "",
-        "description": "Validator Class Name#The name of a class which implements the org.apache.tomcat.jdbc.pool.Validator interface and provides a no-arg constructor (may be implicit)"
+        "description": "Validator Class Name#The name of a class which implements the org.apache.tomcat.jdbc.pool.Validator interface and provides a no-arg constructor (may be implicit)",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "connection"
+          },
+          {
+            "name": "type",
+            "value": "string"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "numTestsPerEvictionRun",
         "defaultValue": "",
-        "description": "Num Tests Per Eviction Run# Property not used in tomcat-jdbc-pool"
+        "description": "Num Tests Per Eviction Run# Property not used in tomcat-jdbc-pool",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "connection"
+          },
+          {
+            "name": "type",
+            "value": "number"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "accessToUnderlyingConnectionAllowed",
         "defaultValue": "",
-        "description": "Access To Underlying Connection Allowed#Property not used. Access can be achieved by calling unwrap on the pooled connection"
+        "description": "Access To Underlying Connection Allowed#Property not used. Access can be achieved by calling unwrap on the pooled connection",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "connection"
+          },
+          {
+            "name": "type",
+            "value": "boolean"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "removeAbandoned",
         "defaultValue": "false",
-        "description": "Remove Abandoned#Flag to remove abandoned connections if they exceed the removeAbandonedTimeout"
+        "description": "Remove Abandoned#Flag to remove abandoned connections if they exceed the removeAbandonedTimeout",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "connection"
+          },
+          {
+            "name": "type",
+            "value": "boolean"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "removeAbandonedTimeout",
         "defaultValue": "",
-        "description": "Remove Abandoned Timeout#Timeout in seconds before an abandoned(in use) connection can be removed"
+        "description": "Remove Abandoned Timeout#Timeout in seconds before an abandoned(in use) connection can be removed",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "connection"
+          },
+          {
+            "name": "type",
+            "value": "number"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "logAbandoned",
         "defaultValue": "false",
-        "description": "Log Abandoned#Flag to log stack traces for application code which abandoned a Connection"
+        "description": "Log Abandoned#Flag to log stack traces for application code which abandoned a Connection",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "connection"
+          },
+          {
+            "name": "type",
+            "value": "boolean"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "connectionProperties",
         "defaultValue": "",
-        "description": "Connection Properties#The connection properties that will be sent to our JDBC driver when establishing new connections"
+        "description": "Connection Properties#The connection properties that will be sent to our JDBC driver when establishing new connections",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "connection"
+          },
+          {
+            "name": "type",
+            "value": "string"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "initSQL",
         "defaultValue": "",
-        "description": "Init SQL#A custom query to be run when a connection is first created"
+        "description": "Init SQL#A custom query to be run when a connection is first created",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "connection"
+          },
+          {
+            "name": "type",
+            "value": "string"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "jdbcInterceptors",
         "defaultValue": "",
-        "description": "JDBC Interceptors#JDBC Interceptors"
+        "description": "JDBC Interceptors#JDBC Interceptors",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "connection"
+          },
+          {
+            "name": "type",
+            "value": "string"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "jmxEnabled",
         "defaultValue": "true",
-        "description": "JMX Enabled#Register the pool with JMX or not"
+        "description": "JMX Enabled#Register the pool with JMX or not",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "connection"
+          },
+          {
+            "name": "type",
+            "value": "boolean"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "fairQueue",
         "defaultValue": "true",
-        "description": "Fiar Queue#Set to true if you wish that calls to getConnection should be treated fairly in a true FIFO fashion"
+        "description": "Fair Queue#Set to true if you wish that calls to getConnection should be treated fairly in a true FIFO fashion",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "connection"
+          },
+          {
+            "name": "type",
+            "value": "boolean"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "abandonWhenPercentageFull",
         "defaultValue": "",
-        "description": "Abandon when percentage full#Connections that have been abandoned (timed out) wont get closed and reported up unless the number of connections in use are above the percentage defined by abandonWhenPercentageFull"
+        "description": "Abandon When Percentage Full#Connections that have been abandoned (timed out) wont get closed and reported up unless the number of connections in use are above the percentage defined by abandonWhenPercentageFull",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "connection"
+          },
+          {
+            "name": "type",
+            "value": "number"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "maxAge",
         "defaultValue": "",
-        "description": "Max Age#Time in milliseconds to keep the connection"
+        "description": "Max Age#Time in milliseconds to keep the connection",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "connection"
+          },
+          {
+            "name": "type",
+            "value": "number"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "useEquals",
         "defaultValue": "true",
-        "description": "Use Equals#Set to true if you wish the ProxyConnection class to use String.equals and set to false when you wish to use == when comparing method names"
+        "description": "Use Equals#Set to true if you wish the ProxyConnection class to use String.equals and set to false when you wish to use == when comparing method names",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "connection"
+          },
+          {
+            "name": "type",
+            "value": "boolean"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "suspectTimeout",
         "defaultValue": "",
-        "description": "Suspect Timeout#Similar to to the removeAbandonedTimeout value but instead of treating the connection as abandoned, and potentially closing the connection, this simply logs the warning if logAbandoned is set to true"
+        "description": "Suspect Timeout#Similar to to the removeAbandonedTimeout value but instead of treating the connection as abandoned, and potentially closing the connection, this simply logs the warning if logAbandoned is set to true",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "connection"
+          },
+          {
+            "name": "type",
+            "value": "number"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "validationQueryTimeout",
         "defaultValue": "",
-        "description": "Validation Query Timeout#The timeout in seconds before a connection validation queries fail"
+        "description": "Validation Query Timeout#The timeout in seconds before a connection validation queries fail",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "connection"
+          },
+          {
+            "name": "type",
+            "value": "number"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "alternateUsernameAllowed",
         "defaultValue": "false",
-        "description": "Alternate Username Allowed#If enabled, the pool size is still managed on a global level, and not on a per schema level"
+        "description": "Alternate Username Allowed#If enabled, the pool size is still managed on a global level, and not on a per schema level",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "connection"
+          },
+          {
+            "name": "type",
+            "value": "boolean"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "commitOnReturn",
         "defaultValue": "false",
-        "description": "Commit On Return#If autoCommit==false then the pool can complete the transaction by calling commit on the connection as it is returned to the pool If rollbackOnReturn==true then this attribute is ignored"
+        "description": "Commit On Return#If autoCommit==false then the pool can complete the transaction by calling commit on the connection as it is returned to the pool If rollbackOnReturn==true then this attribute is ignored",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "connection"
+          },
+          {
+            "name": "type",
+            "value": "boolean"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "rollbackOnReturn",
         "defaultValue": "false",
-        "description": "Rollback On Return#If autoCommit==false then the pool can terminate the transaction by calling rollback on the connection as it is returned to the pool"
+        "description": "Rollback On Return#If autoCommit==false then the pool can terminate the transaction by calling rollback on the connection as it is returned to the pool",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "connection"
+          },
+          {
+            "name": "type",
+            "value": "boolean"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "CountRetrieverClass",
         "defaultValue": "org.wso2.carbon.identity.user.store.count.jdbc.JDBCUserStoreCountRetriever",
-        "description": "Count Implementation#Name of the class that implements the count functionality"
+        "description": "Count Implementation#Name of the class that implements the count functionality",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "connection"
+          },
+          {
+            "name": "type",
+            "value": "string"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "SelectUserSQL",
         "defaultValue": "SELECT * FROM UM_USER WHERE UM_USER_NAME=? AND UM_TENANT_ID=?",
-        "description": "Select User SQL#"
+        "description": "Select User SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "SelectUserNameSQL",
         "defaultValue": "SELECT UM_USER_ID, UM_USER_NAME, UM_USER_PASSWORD, UM_SALT_VALUE, UM_REQUIRE_CHANGE, UM_CHANGED_TIME FROM UM_USER WHERE UM_USER_NAME=? AND UM_TENANT_ID=?",
-        "description": "Select UserName SQL#"
+        "description": "Select Username SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "SelectUserIDSQL",
         "defaultValue": "SELECT UM_USER_ID, UM_USER_NAME, UM_USER_PASSWORD, UM_SALT_VALUE, UM_REQUIRE_CHANGE, UM_CHANGED_TIME FROM UM_USER WHERE UM_USER_ID=? AND UM_TENANT_ID=?",
-        "description": "Select User ID SQL#"
+        "description": "Select User ID SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "SelectUserWithIDSQL",
         "defaultValue": "SELECT UM_USER.UM_USER_ID, UM_USER.UM_USER_NAME, UM_USER.UM_USER_PASSWORD, UM_USER.UM_SALT_VALUE, UM_USER.UM_REQUIRE_CHANGE, UM_USER.UM_CHANGED_TIME FROM UM_USER, UM_USER_ATTRIBUTE WHERE UM_USER_ATTRIBUTE.UM_USER_ID = UM_USER.UM_ID AND UM_USER_ATTRIBUTE.UM_ATTR_NAME =? AND UM_USER_ATTRIBUTE.UM_ATTR_VALUE =? AND UM_USER_ATTRIBUTE.UM_PROFILE_ID=? AND UM_USER_ATTRIBUTE.UM_TENANT_ID=? AND UM_USER.UM_TENANT_ID=?",
-        "description": "Select User ID SQL#"
+        "description": "Select User ID SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "SelectUserSQLCaseInsensitive",
         "defaultValue": "SELECT * FROM UM_USER WHERE LOWER(UM_USER_NAME)=LOWER(?) AND UM_TENANT_ID=?",
-        "description": "Select User SQL With Case Insensitive Username#"
+        "description": "Select User SQL With Case Insensitive Username#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "SelectUserNameSQLCaseInsensitive",
         "defaultValue": "SELECT UM_USER_ID, UM_USER_NAME, UM_USER_PASSWORD, UM_SALT_VALUE, UM_REQUIRE_CHANGE, UM_CHANGED_TIME FROM UM_USER WHERE LOWER(UM_USER_NAME)=LOWER(?) AND UM_TENANT_ID=?",
-        "description": "Select User Name SQL With Case Insensitive Username#"
+        "description": "Select User Name SQL With Case Insensitive Username#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "SelectUserWithIDSQLCaseInsensitive",
         "defaultValue": "SELECT UM_USER.UM_USER_ID, UM_USER.UM_USER_NAME, UM_USER.UM_USER_PASSWORD, UM_USER.UM_SALT_VALUE, UM_USER.UM_REQUIRE_CHANGE, UM_USER.UM_CHANGED_TIME FROM UM_USER, UM_USER_ATTRIBUTE WHERE UM_USER_ATTRIBUTE.UM_USER_ID = UM_USER.UM_ID AND UM_USER_ATTRIBUTE.UM_ATTR_NAME =? AND LOWER(UM_USER_ATTRIBUTE.UM_ATTR_VALUE) =LOWER(?) AND UM_USER_ATTRIBUTE.UM_PROFILE_ID=? AND UM_USER_ATTRIBUTE.UM_TENANT_ID=? AND UM_USER.UM_TENANT_ID=?",
-        "description": "Select User With ID SQL With Case Insensitive Username#"
+        "description": "Select User With ID SQL With Case Insensitive Username#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "SelectUserIDFromUserNameSQL",
         "defaultValue": "SELECT UM_USER_ID FROM UM_USER WHERE UM_USER_NAME=? AND UM_TENANT_ID=?",
-        "description": "Select User ID From UserName SQL#"
+        "description": "Select User ID From Username SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "SelectUserNameFromUserIDSQL",
         "defaultValue": "SELECT UM_USER_NAME FROM UM_USER WHERE UM_USER_ID=? AND UM_TENANT_ID=?",
-        "description": "Select UserName From User ID SQL#"
+        "description": "Select Username From User ID SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "SelectUserIDFromUserNameSQLCaseInsensitive",
         "defaultValue": "SELECT UM_USER_ID FROM UM_USER WHERE LOWER(UM_USER_NAME)=LOWER(?) AND UM_TENANT_ID=?",
-        "description": "Select User ID From UserName SQL With Case Insensitive Username#"
+        "description": "Select User ID From Username SQL With Case Insensitive Username#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "GetRoleListSQL",
         "defaultValue": "SELECT UM_ROLE_NAME, UM_TENANT_ID, UM_SHARED_ROLE FROM UM_ROLE WHERE UM_ROLE_NAME LIKE ? AND UM_TENANT_ID=? AND UM_SHARED_ROLE ='0' ORDER BY UM_ROLE_NAME",
-        "description": "Get Role List SQL#"
+        "description": "Get Group List SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "GetSharedRoleListSQL",
         "defaultValue": "SELECT UM_ROLE_NAME, UM_TENANT_ID, UM_SHARED_ROLE FROM UM_ROLE WHERE UM_ROLE_NAME LIKE ? AND UM_SHARED_ROLE ='1' ORDER BY UM_ROLE_NAME",
-        "description": "Get Shared Role List SQP#"
+        "description": "Get Shared Group List SQP#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "UserFilterSQL",
         "defaultValue": "SELECT UM_USER_NAME FROM UM_USER WHERE UM_USER_NAME LIKE ? AND UM_TENANT_ID=? ORDER BY UM_USER_NAME",
-        "description": "User Filter SQL#"
+        "description": "User Filter SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "UserFilterWithIDSQL",
         "defaultValue": "SELECT UM_USER_ID, UM_USER_NAME FROM UM_USER WHERE UM_USER_NAME LIKE ? AND UM_TENANT_ID=? ORDER BY UM_USER_NAME",
-        "description": "User ID Filter SQL#"
+        "description": "User ID Filter SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "UserFilterSQLWithEscape",
         "defaultValue": "SELECT UM_USER_NAME FROM UM_USER WHERE UM_USER_NAME LIKE ? ESCAPE ? AND UM_TENANT_ID=? ORDER BY UM_USER_NAME",
-        "description": "User Filter SQL With Escape#"
+        "description": "User Filter SQL With Escape#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "UserFilterSQLCaseInsensitive",
         "defaultValue": "SELECT UM_USER_NAME FROM UM_USER WHERE LOWER(UM_USER_NAME) LIKE LOWER(?) AND UM_TENANT_ID=? ORDER BY UM_USER_NAME",
-        "description": "User Filter SQL With Case Insensitive Username#"
+        "description": "User Filter SQL With Case Insensitive Username#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "UserFilterWithIDSQLCaseInsensitive",
         "defaultValue": "SELECT UM_USER_ID, UM_USER_NAME FROM UM_USER WHERE LOWER(UM_USER_NAME) LIKE LOWER(?) AND UM_TENANT_ID=? ORDER BY UM_USER_NAME",
-        "description": "User Filter With ID SQL With Case Insensitive Username#"
+        "description": "User Filter With ID SQL With Case Insensitive Username#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "UserFilterSQLCaseInsensitiveWithEscape",
         "defaultValue": "SELECT UM_USER_NAME FROM UM_USER WHERE LOWER(UM_USER_NAME) LIKE LOWER(?) ESCAPE ? AND UM_TENANT_ID=? ORDER BY UM_USER_NAME",
-        "description": "User Filter SQL With Case Insensitive Username With Escape#"
+        "description": "User Filter SQL With Case Insensitive Username With Escape#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "UserRoleSQL",
         "defaultValue": "SELECT UM_ROLE_NAME FROM UM_USER_ROLE, UM_ROLE, UM_USER WHERE UM_USER.UM_USER_NAME=? AND UM_USER.UM_ID=UM_USER_ROLE.UM_USER_ID AND UM_ROLE.UM_ID=UM_USER_ROLE.UM_ROLE_ID AND UM_USER_ROLE.UM_TENANT_ID=? AND UM_ROLE.UM_TENANT_ID=? AND UM_USER.UM_TENANT_ID=?",
-        "description": "User Role SQL#"
+        "description": "User Group SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "UserRoleWithIDSQL",
         "defaultValue": "SELECT UM_ROLE_NAME FROM UM_USER_ROLE, UM_ROLE, UM_USER WHERE UM_USER.UM_USER_ID=? AND UM_USER.UM_ID=UM_USER_ROLE.UM_USER_ID AND UM_ROLE.UM_ID=UM_USER_ROLE.UM_ROLE_ID AND UM_USER_ROLE.UM_TENANT_ID=? AND UM_ROLE.UM_TENANT_ID=? AND UM_USER.UM_TENANT_ID=?",
-        "description": "User Role With ID SQL#"
+        "description": "User Group With ID SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "UserRoleExistSQL",
         "defaultValue": "SELECT UM_ROLE_NAME FROM UM_USER_ROLE, UM_ROLE, UM_USER WHERE UM_USER.UM_USER_NAME=? AND UM_USER.UM_ID=UM_USER_ROLE.UM_USER_ID AND UM_ROLE.UM_ID=UM_USER_ROLE.UM_ROLE_ID AND UM_USER_ROLE.UM_TENANT_ID=? AND UM_ROLE.UM_TENANT_ID=? AND UM_USER.UM_TENANT_ID=? AND UM_ROLE_NAME LIKE ?",
-        "description": "User Role Exist SQL#"
+        "description": "User Group Exist SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "UserRoleExistWithIDSQL",
         "defaultValue": "SELECT UM_ROLE_NAME FROM UM_USER_ROLE, UM_ROLE, UM_USER WHERE UM_USER.UM_USER_ID=? AND UM_USER.UM_ID=UM_USER_ROLE.UM_USER_ID AND UM_ROLE.UM_ID=UM_USER_ROLE.UM_ROLE_ID AND UM_USER_ROLE.UM_TENANT_ID=? AND UM_ROLE.UM_TENANT_ID=? AND UM_USER.UM_TENANT_ID=? AND UM_ROLE_NAME LIKE ?",
-        "description": "User Role Exist With ID SQL#"
+        "description": "User Group Exist With ID SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "UserRoleSQLCaseInsensitive",
         "defaultValue": "SELECT UM_ROLE_NAME FROM UM_USER_ROLE, UM_ROLE, UM_USER WHERE LOWER(UM_USER.UM_USER_NAME)=LOWER(?) AND UM_USER.UM_ID=UM_USER_ROLE.UM_USER_ID AND UM_ROLE.UM_ID=UM_USER_ROLE.UM_ROLE_ID AND UM_USER_ROLE.UM_TENANT_ID=? AND UM_ROLE.UM_TENANT_ID=? AND UM_USER.UM_TENANT_ID=?",
-        "description": "User Role SQL With Case Insensitive Username#"
+        "description": "User Group SQL With Case Insensitive Username#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "IsUserRoleExistSQLCaseInsensitive",
         "defaultValue": "SELECT UM_ROLE_NAME FROM UM_USER_ROLE, UM_ROLE, UM_USER WHERE LOWER(UM_USER.UM_USER_NAME)=LOWER(?) AND UM_USER.UM_ID=UM_USER_ROLE.UM_USER_ID AND UM_ROLE.UM_ID=UM_USER_ROLE.UM_ROLE_ID AND UM_USER_ROLE.UM_TENANT_ID=? AND UM_ROLE.UM_TENANT_ID=? AND UM_USER.UM_TENANT_ID=? AND UM_ROLE_NAME LIKE ?",
-        "description": "User Role Exist SQL With Case Insensitive Username#"
+        "description": "User Group Exist SQL With Case Insensitive Username#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "UserSharedRoleSQL",
         "defaultValue": "SELECT UM_ROLE_NAME, UM_ROLE.UM_TENANT_ID, UM_SHARED_ROLE FROM UM_SHARED_USER_ROLE INNER JOIN UM_USER ON UM_SHARED_USER_ROLE.UM_USER_ID = UM_USER.UM_ID INNER JOIN UM_ROLE ON UM_SHARED_USER_ROLE.UM_ROLE_ID = UM_ROLE.UM_ID WHERE UM_USER.UM_USER_NAME = ? AND UM_SHARED_USER_ROLE.UM_USER_TENANT_ID = UM_USER.UM_TENANT_ID AND UM_SHARED_USER_ROLE.UM_ROLE_TENANT_ID = UM_ROLE.UM_TENANT_ID AND UM_SHARED_USER_ROLE.UM_USER_TENANT_ID = ? ",
-        "description": "User Shared Role SQL#"
+        "description": "User Shared Role SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "UserSharedRoleWithIDSQL",
         "defaultValue": "SELECT UM_ROLE_NAME, UM_ROLE.UM_TENANT_ID, UM_SHARED_ROLE FROM UM_SHARED_USER_ROLE INNER JOIN UM_USER ON UM_SHARED_USER_ROLE.UM_USER_ID = UM_USER.UM_ID INNER JOIN UM_ROLE ON UM_SHARED_USER_ROLE.UM_ROLE_ID = UM_ROLE.UM_ID WHERE UM_USER.UM_USER_ID = ? AND UM_SHARED_USER_ROLE.UM_USER_TENANT_ID = UM_USER.UM_TENANT_ID AND UM_SHARED_USER_ROLE.UM_ROLE_TENANT_ID = UM_ROLE.UM_TENANT_ID AND UM_SHARED_USER_ROLE.UM_USER_TENANT_ID = ? ",
-        "description": "User Shared Role With ID SQL#"
+        "description": "User Shared Role With ID SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "UserSharedRoleSQLCaseInsensitive",
         "defaultValue": "SELECT UM_ROLE_NAME, UM_ROLE.UM_TENANT_ID, UM_SHARED_ROLE FROM UM_SHARED_USER_ROLE INNER JOIN UM_USER ON UM_SHARED_USER_ROLE.UM_USER_ID = UM_USER.UM_ID INNER JOIN UM_ROLE ON UM_SHARED_USER_ROLE.UM_ROLE_ID = UM_ROLE.UM_ID WHERE LOWER(UM_USER.UM_USER_NAME) = LOWER(?) AND UM_SHARED_USER_ROLE.UM_USER_TENANT_ID = UM_USER.UM_TENANT_ID AND UM_SHARED_USER_ROLE.UM_ROLE_TENANT_ID = UM_ROLE.UM_TENANT_ID AND UM_SHARED_USER_ROLE.UM_USER_TENANT_ID = ? ",
-        "description": "User Shared Role SQL With Case Insensitive Username#"
+        "description": "User Shared Role SQL With Case Insensitive Username#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "IsRoleExistingSQL",
         "defaultValue": "SELECT UM_ID FROM UM_ROLE WHERE UM_ROLE_NAME=? AND UM_TENANT_ID=?",
-        "description": "Is Role Existing SQL#"
+        "description": "Is Group Existing SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "GetUserListOfRoleSQL",
         "defaultValue": "SELECT UM_USER_NAME FROM UM_USER_ROLE, UM_ROLE, UM_USER WHERE UM_ROLE.UM_ROLE_NAME=? AND UM_USER.UM_ID=UM_USER_ROLE.UM_USER_ID AND UM_ROLE.UM_ID=UM_USER_ROLE.UM_ROLE_ID AND UM_USER_ROLE.UM_TENANT_ID=? AND UM_ROLE.UM_TENANT_ID=? AND UM_USER.UM_TENANT_ID=?",
-        "description": "Get User List Of Role SQL#"
+        "description": "Get User List Of Group SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "GetUserListOfRoleFilterSQL",
         "defaultValue": "SELECT UM_USER_NAME FROM UM_USER_ROLE, UM_ROLE, UM_USER WHERE UM_USER.UM_USER_NAME LIKE ? AND UM_ROLE.UM_ROLE_NAME=? AND UM_USER.UM_ID=UM_USER_ROLE.UM_USER_ID AND UM_ROLE.UM_ID=UM_USER_ROLE.UM_ROLE_ID AND UM_USER_ROLE.UM_TENANT_ID=? AND UM_ROLE.UM_TENANT_ID=? AND UM_USER.UM_TENANT_ID=?",
-        "description": "Get User List Of Role Filter SQL#"
+        "description": "Get User List Of Group Filter SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "GetUserListOfRoleFilterWithIDSQL",
         "defaultValue": "SELECT UM_USER.UM_USER_ID, UM_USER.UM_USER_NAME FROM UM_USER_ROLE, UM_ROLE, UM_USER WHERE UM_USER.UM_USER_NAME LIKE ? AND UM_ROLE.UM_ROLE_NAME=? AND UM_USER.UM_ID=UM_USER_ROLE.UM_USER_ID AND UM_ROLE.UM_ID=UM_USER_ROLE.UM_ROLE_ID AND UM_USER_ROLE.UM_TENANT_ID=? AND UM_ROLE.UM_TENANT_ID=? AND UM_USER.UM_TENANT_ID=?",
-        "description": "Get User List Of Role Filter SQL With ID#"
+        "description": "Get User List Of Group Filter SQL With ID#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "GetUserListOfSharedRoleSQL",
         "defaultValue": "SELECT UM_USER_NAME FROM UM_SHARED_USER_ROLE INNER JOIN UM_USER ON UM_SHARED_USER_ROLE.UM_USER_ID = UM_USER.UM_ID INNER JOIN UM_ROLE ON UM_SHARED_USER_ROLE.UM_ROLE_ID = UM_ROLE.UM_ID WHERE UM_ROLE.UM_ROLE_NAME= ? AND UM_SHARED_USER_ROLE.UM_USER_TENANT_ID = UM_USER.UM_TENANT_ID AND UM_SHARED_USER_ROLE.UM_ROLE_TENANT_ID = UM_ROLE.UM_TENANT_ID",
-        "description": "Get User List Of Shared Role SQL#"
+        "description": "Get User List Of Shared Role SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "GetUserListOfSharedRoleFilterSQL",
         "defaultValue": "SELECT UM_USER_NAME FROM UM_SHARED_USER_ROLE INNER JOIN UM_USER ON UM_SHARED_USER_ROLE.UM_USER_ID = UM_USER.UM_ID INNER JOIN UM_ROLE ON UM_SHARED_USER_ROLE.UM_ROLE_ID = UM_ROLE.UM_ID WHERE UM_USER.UM_USER_NAME LIKE ? AND UM_ROLE.UM_ROLE_NAME= ? AND UM_SHARED_USER_ROLE.UM_USER_TENANT_ID = UM_USER.UM_TENANT_ID AND UM_SHARED_USER_ROLE.UM_ROLE_TENANT_ID = UM_ROLE.UM_TENANT_ID",
-        "description": "Get User List Of Shared Role Filter SQL#"
+        "description": "Get User List Of Shared Role Filter SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "GetUserListOfSharedRoleFilterWithIDSQL",
         "defaultValue": "SELECT UM_USER.UM_USER_ID, UM_USER.UM_USER_NAME FROM UM_SHARED_USER_ROLE INNER JOIN UM_USER ON UM_SHARED_USER_ROLE.UM_USER_ID = UM_USER.UM_ID INNER JOIN UM_ROLE ON UM_SHARED_USER_ROLE.UM_ROLE_ID = UM_ROLE.UM_ID WHERE UM_USER.UM_USER_NAME LIKE ? AND UM_ROLE.UM_ROLE_NAME= ? AND UM_SHARED_USER_ROLE.UM_USER_TENANT_ID = UM_USER.UM_TENANT_ID AND UM_SHARED_USER_ROLE.UM_ROLE_TENANT_ID = UM_ROLE.UM_TENANT_ID",
-        "description": "Get User List Of Shared Role Filter With ID SQL#"
+        "description": "Get User List Of Shared Role Filter With ID SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "IsUserExistingSQL",
         "defaultValue": "SELECT UM_ID FROM UM_USER WHERE UM_USER_NAME=? AND UM_TENANT_ID=?",
-        "description": "Is User Existing SQL#"
+        "description": "Is User Existing SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "IsUserExistingWithIDSQL",
         "defaultValue": "SELECT UM_ID FROM UM_USER WHERE UM_USER_ID=? AND UM_TENANT_ID=?",
-        "description": "Is User Existing SQL With ID#"
+        "description": "Is User Existing SQL With ID#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "IsUserNameExistingSQL",
         "defaultValue": "SELECT UM_ID FROM UM_USER WHERE UM_USER_NAME=? AND UM_TENANT_ID=?",
-        "description": "Is User name Existing SQL#"
+        "description": "Is Username Existing SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "IsUserExistingSQLCaseInsensitive",
         "defaultValue": "SELECT UM_ID FROM UM_USER WHERE LOWER(UM_USER_NAME)=LOWER(?) AND UM_TENANT_ID=?",
-        "description": "Is User Existing SQL With Case Insensitive Username#"
+        "description": "Is User Existing SQL With Case Insensitive Username#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "IsUserExistingSQLCaseInsensitive",
         "defaultValue": "SELECT UM_ID FROM UM_USER WHERE LOWER(UM_USER_NAME)=LOWER(?) AND UM_TENANT_ID=?",
-        "description": "Is User name Existing SQL With Case Insensitive Username#"
+        "description": "Is Username Existing SQL With Case Insensitive Username#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "GetUserPropertiesForProfileSQL",
         "defaultValue": "SELECT UM_ATTR_NAME, UM_ATTR_VALUE FROM UM_USER_ATTRIBUTE, UM_USER WHERE UM_USER.UM_ID = UM_USER_ATTRIBUTE.UM_USER_ID AND UM_USER.UM_USER_NAME=? AND UM_PROFILE_ID=? AND UM_USER_ATTRIBUTE.UM_TENANT_ID=? AND UM_USER.UM_TENANT_ID=?",
-        "description": "Get User Properties for Profile SQL#"
+        "description": "Get User Properties for Profile SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "GetUserPropertiesForProfileWithIDSQL",
         "defaultValue": "SELECT UM_ATTR_NAME, UM_ATTR_VALUE FROM UM_USER_ATTRIBUTE, UM_USER WHERE UM_USER.UM_ID = UM_USER_ATTRIBUTE.UM_USER_ID AND UM_USER.UM_USER_ID=? AND UM_PROFILE_ID=? AND UM_USER_ATTRIBUTE.UM_TENANT_ID=? AND UM_USER.UM_TENANT_ID=?",
-        "description": "Get User Properties for Profile SQL With ID#"
+        "description": "Get User Properties for Profile SQL With ID#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "GetUserPropertiesForProfileSQLCaseInsensitive",
         "defaultValue": "SELECT UM_ATTR_NAME, UM_ATTR_VALUE FROM UM_USER_ATTRIBUTE, UM_USER WHERE UM_USER.UM_ID = UM_USER_ATTRIBUTE.UM_USER_ID AND LOWER(UM_USER.UM_USER_NAME)=LOWER(?) AND UM_PROFILE_ID=? AND UM_USER_ATTRIBUTE.UM_TENANT_ID=? AND UM_USER.UM_TENANT_ID=?",
-        "description": "Get User Properties for Profile SQL With Case Insensitive Username#"
+        "description": "Get User Properties for Profile SQL With Case Insensitive Username#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "GetUserPropertyForProfileSQL",
         "defaultValue": "SELECT UM_ATTR_VALUE FROM UM_USER_ATTRIBUTE, UM_USER WHERE UM_USER.UM_ID = UM_USER_ATTRIBUTE.UM_USER_ID AND UM_USER.UM_USER_NAME=? AND UM_ATTR_NAME=? AND UM_PROFILE_ID=? AND UM_USER_ATTRIBUTE.UM_TENANT_ID=? AND UM_USER.UM_TENANT_ID=?",
-        "description": "Get User Property for Profile SQL#"
+        "description": "Get User Property for Profile SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "GetUserPropertyForProfileWithIDSQL",
         "defaultValue": "SELECT UM_ATTR_VALUE FROM UM_USER_ATTRIBUTE, UM_USER WHERE UM_USER.UM_ID = UM_USER_ATTRIBUTE.UM_USER_ID AND UM_USER.UM_USER_ID=? AND UM_ATTR_NAME=? AND UM_PROFILE_ID=? AND UM_USER_ATTRIBUTE.UM_TENANT_ID=? AND UM_USER.UM_TENANT_ID=?",
-        "description": "Get User Property for Profile With ID SQL#"
+        "description": "Get User Property for Profile With ID SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "GetUserPropertyForProfileSQLCaseInsensitive",
         "defaultValue": "SELECT UM_ATTR_VALUE FROM UM_USER_ATTRIBUTE, UM_USER WHERE UM_USER.UM_ID = UM_USER_ATTRIBUTE.UM_USER_ID AND LOWER(UM_USER.UM_USER_NAME)=LOWER(?) AND UM_ATTR_NAME=? AND UM_PROFILE_ID=? AND UM_USER_ATTRIBUTE.UM_TENANT_ID=? AND UM_USER.UM_TENANT_ID=?",
-        "description": "Get User Property for Profile SQL With Case Insensitive Username#"
+        "description": "Get User Property for Profile SQL With Case Insensitive Username#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "GetUserLisForPropertySQL",
         "defaultValue": "SELECT DISTINCT UM_USER_NAME FROM UM_USER, UM_USER_ATTRIBUTE WHERE UM_USER_ATTRIBUTE.UM_USER_ID = UM_USER.UM_ID AND UM_USER_ATTRIBUTE.UM_ATTR_NAME =? AND UM_USER_ATTRIBUTE.UM_ATTR_VALUE LIKE ? AND UM_USER_ATTRIBUTE.UM_PROFILE_ID=? AND UM_USER_ATTRIBUTE.UM_TENANT_ID=? AND UM_USER.UM_TENANT_ID=?",
-        "description": "Get User List for Property SQL#"
+        "description": "Get User List for Property SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "GetUserLisForPropertyWithIDSQL",
         "defaultValue": "SELECT DISTINCT UM_USER.UM_USER_ID FROM UM_USER, UM_USER_ATTRIBUTE WHERE UM_USER_ATTRIBUTE.UM_USER_ID = UM_USER.UM_ID AND UM_USER_ATTRIBUTE.UM_ATTR_NAME =? AND UM_USER_ATTRIBUTE.UM_ATTR_VALUE LIKE ? AND UM_USER_ATTRIBUTE.UM_PROFILE_ID=? AND UM_USER_ATTRIBUTE.UM_TENANT_ID=? AND UM_USER.UM_TENANT_ID=?",
-        "description": "Get User List for Property With ID SQL#"
+        "description": "Get User List for Property With ID SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "GetProfileNamesSQL",
         "defaultValue": "SELECT DISTINCT UM_PROFILE_ID FROM UM_USER_ATTRIBUTE WHERE UM_TENANT_ID=?",
-        "description": "Get Profile Names SQL#"
+        "description": "Get Profile Names SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "GetUserProfileNamesSQL",
         "defaultValue": "SELECT DISTINCT UM_PROFILE_ID FROM UM_USER_ATTRIBUTE WHERE UM_USER_ID=(SELECT UM_ID FROM UM_USER WHERE UM_USER_NAME=? AND UM_TENANT_ID=?) AND UM_TENANT_ID=?",
-        "description": "Get User Profile Names SQL#"
+        "description": "Get User Profile Names SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "GetUserProfileNamesWithIDSQL",
         "defaultValue": "SELECT DISTINCT UM_PROFILE_ID FROM UM_USER_ATTRIBUTE WHERE UM_USER_ATTRIBUTE.UM_USER_ID=(SELECT UM_ID FROM UM_USER WHERE UM_USER_ID=? AND UM_TENANT_ID=?) AND UM_TENANT_ID=?",
-        "description": "Get User Profile Names SQL With ID#"
+        "description": "Get User Profile Names SQL With ID#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "GetUserProfileNamesSQLCaseInsensitive",
         "defaultValue": "SELECT DISTINCT UM_PROFILE_ID FROM UM_USER_ATTRIBUTE WHERE UM_USER_ID=(SELECT UM_ID FROM UM_USER WHERE LOWER(UM_USER_NAME)=LOWER(?) AND UM_TENANT_ID=?) AND UM_TENANT_ID=?",
-        "description": "Get User Profile Names SQL With Case Insensitive Username#"
+        "description": "Get User Profile Names SQL With Case Insensitive Username#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "GetUserIDFromUserNameSQL",
         "defaultValue": "SELECT UM_ID FROM UM_USER WHERE UM_USER_NAME=? AND UM_TENANT_ID=?",
-        "description": "Get User ID From Username SQL#"
+        "description": "Get User ID From Username SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "GetUserIDFromUserNameWithIDSQL",
         "defaultValue": "SELECT UM_ID FROM UM_USER WHERE UM_USER_ID=? AND UM_TENANT_ID=?",
-        "description": "Get User ID From Username SQL With ID#"
+        "description": "Get User ID From Username SQL With ID#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "GetUserIDFromUserNameSQLCaseInsensitive",
         "defaultValue": "SELECT UM_ID FROM UM_USER WHERE LOWER(UM_USER_NAME)=LOWER(?) AND UM_TENANT_ID=?",
-        "description": "Get User ID From Username SQL With Case Insensitive Username#"
+        "description": "Get User ID From Username SQL With Case Insensitive Username#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "GetUserNameFromTenantIDSQL",
         "defaultValue": "SELECT UM_USER_NAME FROM UM_USER WHERE UM_TENANT_ID=?",
-        "description": "Get Username From Tenant ID SQL#"
+        "description": "Get Username From Tenant ID SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "GetTenantIDFromUserNameSQL",
         "defaultValue": "SELECT UM_TENANT_ID FROM UM_USER WHERE UM_USER_NAME=?",
-        "description": "Get Tenant ID From Username SQL#"
+        "description": "Get Tenant ID From Username SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "GetTenantIDFromUserNameSQLCaseInsensitive",
         "defaultValue": "SELECT UM_TENANT_ID FROM UM_USER WHERE LOWER(UM_USER_NAME)=LOWER(?)",
-        "description": "Get Tenant ID From Username SQL With Case Insensitive Username#"
+        "description": "Get Tenant ID From Username SQL With Case Insensitive Username#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "AddUserSQL",
         "defaultValue": "INSERT INTO UM_USER (UM_USER_NAME, UM_USER_PASSWORD, UM_SALT_VALUE, UM_REQUIRE_CHANGE, UM_CHANGED_TIME, UM_TENANT_ID) VALUES (?, ?, ?, ?, ?, ?)",
-        "description": "Add User SQL#"
+        "description": "Add User SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "AddUserWithIDSQL",
         "defaultValue": "INSERT INTO UM_USER (UM_USER_ID, UM_USER_NAME, UM_USER_PASSWORD, UM_SALT_VALUE, UM_REQUIRE_CHANGE, UM_CHANGED_TIME, UM_TENANT_ID) VALUES (?, ?, ?, ?, ?, ?, ?)",
-        "description": "Add User With ID SQL#"
+        "description": "Add User With ID SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "AddUserToRoleSQL",
         "defaultValue": "INSERT INTO UM_USER_ROLE (UM_USER_ID, UM_ROLE_ID, UM_TENANT_ID) VALUES ((SELECT UM_ID FROM UM_USER WHERE UM_USER_NAME=? AND UM_TENANT_ID=?),(SELECT UM_ID FROM UM_ROLE WHERE UM_ROLE_NAME=? AND UM_TENANT_ID=?), ?)",
-        "description": "Add User To Role SQL#"
+        "description": "Add User To Group SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "AddUserToRoleWithIDSQL",
         "defaultValue": "INSERT INTO UM_USER_ROLE (UM_USER_ID, UM_ROLE_ID, UM_TENANT_ID) VALUES ((SELECT UM_ID FROM UM_USER WHERE UM_USER_ID=? AND UM_TENANT_ID=?),(SELECT UM_ID FROM UM_ROLE WHERE UM_ROLE_NAME=? AND UM_TENANT_ID=?), ?)",
-        "description": "Add User To Role With ID SQL#"
+        "description": "Add User To Group With ID SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "AddUserToRoleSQLCaseInsensitive",
         "defaultValue": "INSERT INTO UM_USER_ROLE (UM_USER_ID, UM_ROLE_ID, UM_TENANT_ID) VALUES ((SELECT UM_ID FROM UM_USER WHERE LOWER(UM_USER_NAME)=LOWER(?) AND UM_TENANT_ID=?),(SELECT UM_ID FROM UM_ROLE WHERE UM_ROLE_NAME=? AND UM_TENANT_ID=?), ?)",
-        "description": "Add User To Role SQL With Case Insensitive Username#"
+        "description": "Add User To Group SQL With Case Insensitive Username#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "AddRoleSQL",
         "defaultValue": "INSERT INTO UM_ROLE (UM_ROLE_NAME, UM_TENANT_ID) VALUES (?, ?)",
-        "description": "Add Role SQL#"
+        "description": "Add Group SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "AddSharedRoleSQL",
         "defaultValue": "UPDATE UM_ROLE SET UM_SHARED_ROLE = ? WHERE UM_ROLE_NAME = ? AND UM_TENANT_ID = ?",
-        "description": "Add Shared Role SQL#"
+        "description": "Add Shared Role SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "AddRoleToUserSQL",
         "defaultValue": "INSERT INTO UM_USER_ROLE (UM_ROLE_ID, UM_USER_ID, UM_TENANT_ID) VALUES ((SELECT UM_ID FROM UM_ROLE WHERE UM_ROLE_NAME=? AND UM_TENANT_ID=?),(SELECT UM_ID FROM UM_USER WHERE UM_USER_NAME=? AND UM_TENANT_ID=?), ?)",
-        "description": "Add Role To User SQL#"
+        "description": "Add Group To User SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "AddRoleToUserWithIDSQL",
         "defaultValue": "INSERT INTO UM_USER_ROLE (UM_ROLE_ID, UM_USER_ID, UM_TENANT_ID) VALUES ((SELECT UM_ID FROM UM_ROLE WHERE UM_ROLE_NAME=? AND UM_TENANT_ID=?),(SELECT UM_ID FROM UM_USER WHERE UM_USER_ID=? AND UM_TENANT_ID=?), ?)",
-        "description": "Add Role To User With ID SQL#"
+        "description": "Add Group To User With ID SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "AddSharedRoleToUserSQL",
         "defaultValue": "INSERT INTO UM_SHARED_USER_ROLE (UM_ROLE_ID, UM_USER_ID, UM_USER_TENANT_ID, UM_ROLE_TENANT_ID) VALUES ((SELECT UM_ID FROM UM_ROLE WHERE UM_ROLE_NAME=? AND UM_TENANT_ID=?),(SELECT UM_ID FROM UM_USER WHERE UM_USER_NAME=? AND UM_TENANT_ID=?), ?, ?)",
-        "description": "Add Shared Role To User SQL#"
+        "description": "Add Shared Role To User SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "AddSharedRoleToUserWithIDSQL",
         "defaultValue": "INSERT INTO UM_SHARED_USER_ROLE (UM_ROLE_ID, UM_USER_ID, UM_USER_TENANT_ID, UM_ROLE_TENANT_ID) VALUES ((SELECT UM_ID FROM UM_ROLE WHERE UM_ROLE_NAME=? AND UM_TENANT_ID=?),(SELECT UM_ID FROM UM_USER WHERE UM_USER_ID=? AND UM_TENANT_ID=?), ?, ?)",
-        "description": "Add Shared Role To User With ID SQL#"
+        "description": "Add Shared Role To User With ID SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "AddSharedRoleToUserSQLCaseInsensitive",
         "defaultValue": "INSERT INTO UM_SHARED_USER_ROLE (UM_ROLE_ID, UM_USER_ID, UM_USER_TENANT_ID, UM_ROLE_TENANT_ID) VALUES ((SELECT UM_ID FROM UM_ROLE WHERE UM_ROLE_NAME=? AND UM_TENANT_ID=?), (SELECT UM_ID FROM UM_USER WHERE LOWER(UM_USER_NAME)=LOWER(?) AND UM_TENANT_ID=?), ?, ?)",
-        "description": "Add Shared Role To User SQL With Case Insensitive Username#"
+        "description": "Add Shared Role To User SQL With Case Insensitive Username#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "RemoveUserFromSharedRoleSQL",
         "defaultValue": "DELETE FROM UM_SHARED_USER_ROLE WHERE UM_ROLE_ID=(SELECT UM_ID FROM UM_ROLE WHERE UM_ROLE_NAME=? AND UM_TENANT_ID=?) AND UM_USER_ID=(SELECT UM_ID FROM UM_USER WHERE UM_USER_NAME=? AND UM_TENANT_ID=?) AND UM_USER_TENANT_ID=? AND UM_ROLE_TENANT_ID = ?",
-        "description": "Remove User From Shared Roles SQL#"
+        "description": "Remove User From Shared Roles SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "RemoveUserFromSharedRoleWithIDSQL",
         "defaultValue": "DELETE FROM UM_SHARED_USER_ROLE WHERE UM_ROLE_ID=(SELECT UM_ID FROM UM_ROLE WHERE UM_ROLE_NAME=? AND UM_TENANT_ID=?) AND UM_USER_ID=(SELECT UM_ID FROM UM_USER WHERE UM_USER_ID=? AND UM_TENANT_ID=?) AND UM_USER_TENANT_ID=? AND UM_ROLE_TENANT_ID = ?",
-        "description": "Remove User From Shared Roles With ID SQL#"
+        "description": "Remove User From Shared Roles With ID SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "RemoveUserFromRoleSQLCaseInsensitive",
         "defaultValue": "DELETE FROM UM_USER_ROLE WHERE UM_USER_ID=(SELECT UM_ID FROM UM_USER WHERE LOWER(UM_USER_NAME)=LOWER(?) AND UM_TENANT_ID=?) AND UM_ROLE_ID=(SELECT UM_ID FROM UM_ROLE WHERE UM_ROLE_NAME=? AND UM_TENANT_ID=?) AND UM_TENANT_ID=?",
-        "description": "Remove User From Role SQL With Case Insensitive Username#"
+        "description": "Remove User From Role SQL With Case Insensitive Username#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "RemoveUserFromRoleSQL",
         "defaultValue": "DELETE FROM UM_USER_ROLE WHERE UM_USER_ID=(SELECT UM_ID FROM UM_USER WHERE UM_USER_NAME=? AND UM_TENANT_ID=?) AND UM_ROLE_ID=(SELECT UM_ID FROM UM_ROLE WHERE UM_ROLE_NAME=? AND UM_TENANT_ID=?) AND UM_TENANT_ID=?",
-        "description": "Remove User From Role SQL#"
+        "description": "Remove User From Group SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "RemoveUserFromRoleWithIDSQL",
         "defaultValue": "DELETE FROM UM_USER_ROLE WHERE UM_USER_ID=(SELECT UM_ID FROM UM_USER WHERE UM_USER_ID=? AND UM_TENANT_ID=?) AND UM_ROLE_ID=(SELECT UM_ID FROM UM_ROLE WHERE UM_ROLE_NAME=? AND UM_TENANT_ID=?) AND UM_TENANT_ID=?",
-        "description": "Remove User From Role With ID SQL#"
+        "description": "Remove User From Group With ID SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "RemoveUserFromRoleSQLCaseInsensitive",
         "defaultValue": "DELETE FROM UM_USER_ROLE WHERE UM_USER_ID=(SELECT UM_ID FROM UM_USER WHERE LOWER(UM_USER_NAME)=LOWER(?) AND UM_TENANT_ID=?) AND UM_ROLE_ID=(SELECT UM_ID FROM UM_ROLE WHERE UM_ROLE_NAME=? AND UM_TENANT_ID=?) AND UM_TENANT_ID=?",
-        "description": "Remove User From Role SQL With Case Insensitive Username#"
+        "description": "Remove Use From Group SQL With Case Insensitive Username#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "RemoveRoleFromUserSQL",
         "defaultValue": "DELETE FROM UM_USER_ROLE WHERE UM_ROLE_ID=(SELECT UM_ID FROM UM_ROLE WHERE UM_ROLE_NAME=? AND UM_TENANT_ID=?) AND UM_USER_ID=(SELECT UM_ID FROM UM_USER WHERE UM_USER_NAME=? AND UM_TENANT_ID=?) AND UM_TENANT_ID=?",
-        "description": "Remove Role From User SQL#"
+        "description": "Remove Group From User SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "RemoveRoleFromUserWithIDSQL",
         "defaultValue": "DELETE FROM UM_USER_ROLE WHERE UM_ROLE_ID=(SELECT UM_ID FROM UM_ROLE WHERE UM_ROLE_NAME=? AND UM_TENANT_ID=?) AND UM_USER_ID=(SELECT UM_ID FROM UM_USER WHERE UM_USER_ID=? AND UM_TENANT_ID=?) AND UM_TENANT_ID=?",
-        "description": "Remove Role From User With ID SQL#"
+        "description": "Remove Group From User With ID SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "RemoveRoleFromUserSQLCaseInsensitive",
         "defaultValue": "DELETE FROM UM_USER_ROLE WHERE UM_ROLE_ID=(SELECT UM_ID FROM UM_ROLE WHERE UM_ROLE_NAME=? AND UM_TENANT_ID=?) AND UM_USER_ID=(SELECT UM_ID FROM UM_USER WHERE LOWER(UM_USER_NAME)=LOWER(?) AND UM_TENANT_ID=?) AND UM_TENANT_ID=?",
-        "description": "Remove Role From User SQL With Case Insensitive Username#"
+        "description": "Remove Group From User SQL With Case Insensitive Username#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "DeleteRoleSQL",
         "defaultValue": "DELETE FROM UM_ROLE WHERE UM_ROLE_NAME = ? AND UM_TENANT_ID=?",
-        "description": "Delete Roles SQL#"
+        "description": "Delete Group SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "OnDeleteRoleRemoveUserRoleMappingSQL",
         "defaultValue": "DELETE FROM UM_USER_ROLE WHERE UM_ROLE_ID=(SELECT UM_ID FROM UM_ROLE WHERE UM_ROLE_NAME=? AND UM_TENANT_ID=?) AND UM_TENANT_ID=?",
-        "description": "On Delete Role Remove User Role Mapping SQL#"
+        "description": "On Delete Group, Remove User Group Mapping SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "DeleteUserSQL",
         "defaultValue": "DELETE FROM UM_USER WHERE UM_USER_NAME = ? AND UM_TENANT_ID=?",
-        "description": "Delete User SQL#"
+        "description": "Delete User SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "DeleteUserSQLCaseInsensitive",
         "defaultValue": "DELETE FROM UM_USER WHERE LOWER(UM_USER_NAME) = LOWER(?) AND UM_TENANT_ID=?",
-        "description": "Delete User SQL With Case Insensitive Username#"
+        "description": "Delete User SQL With Case Insensitive Username#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "OnDeleteUserRemoveUserRoleMappingSQL",
         "defaultValue": "DELETE FROM UM_USER_ROLE WHERE UM_USER_ID=(SELECT UM_ID FROM UM_USER WHERE UM_USER_NAME=? AND UM_TENANT_ID=?) AND UM_TENANT_ID=?",
-        "description": "On Delete User Remove User Role Mapping SQL#"
+        "description": "On Delete User, Remove User Group Mapping SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "OnDeleteUserRemoveUserRoleMappingWithIDSQL",
         "defaultValue": "DELETE FROM UM_USER_ROLE WHERE UM_USER_ID=(SELECT UM_ID FROM UM_USER WHERE UM_USER_ID=? AND UM_TENANT_ID=?) AND UM_TENANT_ID=?",
-        "description": "On Delete User Remove User Role Mapping SQL With ID#"
+        "description": "On Delete User, Remove User Group Mapping SQL With ID#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "CountUsersWithClaimSQL",
         "defaultValue": "SELECT COUNT(UM_USER_ID) AS RESULT FROM UM_USER_ATTRIBUTE WHERE UM_ATTR_NAME = ? AND UM_TENANT_ID = ? AND UM_ATTR_VALUE LIKE ? AND UM_PROFILE_ID = ?",
-        "description": "Count Users With Claim SQL#"
+        "description": "Count Users With Claim SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "CountInternalRolesSQL",
         "defaultValue": "SELECT COUNT(UM_ID) AS RESULT FROM UM_HYBRID_ROLE WHERE UM_ROLE_NAME NOT LIKE 'Application%' AND UM_ROLE_NAME LIKE ? AND UM_TENANT_ID = ?",
-        "description": "Count Internal Roles SQL#"
+        "description": "Count Internal Roles SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "CountApplicationRolesSQL",
         "defaultValue": "SELECT COUNT(UM_ID) AS RESULT FROM UM_HYBRID_ROLE WHERE UM_ROLE_NAME LIKE ? AND UM_TENANT_ID = ?",
-        "description": "Count Application Roles SQL#"
+        "description": "Count Application Roles SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "CountRolesSQL",
         "defaultValue": "SELECT COUNT(UM_ROLE_NAME) AS RESULT FROM UM_ROLE WHERE UM_ROLE_NAME LIKE ? AND UM_TENANT_ID = ?",
-        "description": "Count Roles SQL#"
+        "description": "Count Groups SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "CountUsersSQL",
         "defaultValue": "SELECT COUNT(UM_USER_NAME) AS RESULT FROM UM_USER WHERE UM_USER_NAME LIKE ? AND UM_TENANT_ID = ?",
-        "description": "Count Users SQL#"
+        "description": "Count Users SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "OnDeleteUserRemoveUserAttributeSQL",
         "defaultValue": "DELETE FROM UM_USER_ATTRIBUTE WHERE UM_USER_ID=(SELECT UM_ID FROM UM_USER WHERE UM_USER_NAME=? AND UM_TENANT_ID=?) AND UM_TENANT_ID=?",
-        "description": "On Delete User Remove User Attribute SQL#"
+        "description": "On Delete User, Remove User Attribute SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "OnDeleteUserRemoveUserAttributeWithIDSQL",
         "defaultValue": "DELETE FROM UM_USER_ATTRIBUTE WHERE UM_USER_ID=(SELECT UM_ID FROM UM_USER WHERE UM_USER_ID=? AND UM_TENANT_ID=?) AND UM_TENANT_ID=?",
-        "description": "On Delete User Remove User Attribute SQL With ID#"
+        "description": "On Delete User, Remove User Attribute SQL With ID#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "DeleteUserWithIDSQL",
         "defaultValue": "DELETE FROM UM_USER WHERE UM_USER_ID = ? AND UM_TENANT_ID=?",
-        "description": "Delete User With ID#"
+        "description": "Delete User With ID#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "OnDeleteUserRemoveUserAttributeSQLCaseInsensitive",
         "defaultValue": "DELETE FROM UM_USER_ATTRIBUTE WHERE UM_USER_ID=(SELECT UM_ID FROM UM_USER WHERE LOWER(UM_USER_NAME)=LOWER(?) AND UM_TENANT_ID=?) AND UM_TENANT_ID=?",
-        "description": "On Delete User Remove User Attribute SQL With Case Insensitive Username#"
+        "description": "On Delete User, Remove User Attribute SQL With Case Insensitive Username#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "UpdateUserPasswordSQL",
         "defaultValue": "UPDATE UM_USER SET UM_USER_PASSWORD= ?, UM_SALT_VALUE=?, UM_REQUIRE_CHANGE=?, UM_CHANGED_TIME=? WHERE UM_USER_NAME= ? AND UM_TENANT_ID=?",
-        "description": "Update User Password SQL#"
+        "description": "Update User Password SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "UpdateUserPasswordWithIDSQL",
         "defaultValue": "UPDATE UM_USER SET UM_USER_PASSWORD= ?, UM_SALT_VALUE=?, UM_REQUIRE_CHANGE=?, UM_CHANGED_TIME=? WHERE UM_USER_ID= ? AND UM_TENANT_ID=?",
-        "description": "Update User Password With ID SQL#"
+        "description": "Update User Password With ID SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "UpdateUserPasswordSQLCaseInsensitive",
         "defaultValue": "UPDATE UM_USER SET UM_USER_PASSWORD= ?, UM_SALT_VALUE=?, UM_REQUIRE_CHANGE=?, UM_CHANGED_TIME=? WHERE LOWER(UM_USER_NAME)= LOWER(?) AND UM_TENANT_ID=?",
-        "description": "Update User Password SQL With Case Insensitive Username#"
+        "description": "Update User Password SQL With Case Insensitive Username#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "UpdateRoleNameSQL",
         "defaultValue": "UPDATE UM_ROLE set UM_ROLE_NAME=? WHERE UM_ROLE_NAME = ? AND UM_TENANT_ID=?",
-        "description": "Update Role Name SQL#"
+        "description": "Update Group Name SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "AddUserPropertySQL",
         "defaultValue": "INSERT INTO UM_USER_ATTRIBUTE (UM_USER_ID, UM_ATTR_NAME, UM_ATTR_VALUE, UM_PROFILE_ID, UM_TENANT_ID) VALUES ((SELECT UM_ID FROM UM_USER WHERE UM_USER_NAME=? AND UM_TENANT_ID=?), ?, ?, ?, ?)",
-        "description": "Add User Property SQL#"
+        "description": "Add User Property SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "AddUserPropertyWithIDSQL",
         "defaultValue": "INSERT INTO UM_USER_ATTRIBUTE (UM_USER_ID, UM_ATTR_NAME, UM_ATTR_VALUE, UM_PROFILE_ID, UM_TENANT_ID) VALUES ((SELECT UM_ID FROM UM_USER WHERE UM_USER_ID=? AND UM_TENANT_ID=?), ?, ?, ?, ?)",
-        "description": "Add User Property With ID SQL#"
+        "description": "Add User Property With ID SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "UpdateUserPropertySQL",
         "defaultValue": "UPDATE UM_USER_ATTRIBUTE SET UM_ATTR_VALUE=? WHERE UM_USER_ID=(SELECT UM_ID FROM UM_USER WHERE UM_USER_NAME=? AND UM_TENANT_ID=?) AND UM_ATTR_NAME=? AND UM_PROFILE_ID=? AND UM_TENANT_ID=?",
-        "description": "Update User Property SQL#"
+        "description": "Update User Property SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "UpdateUserPropertyWithIDSQL",
         "defaultValue": "UPDATE UM_USER_ATTRIBUTE SET UM_ATTR_VALUE=? WHERE UM_USER_ID=(SELECT UM_ID FROM UM_USER WHERE UM_USER_ID=? AND UM_TENANT_ID=?) AND UM_ATTR_NAME=? AND UM_PROFILE_ID=? AND UM_TENANT_ID=?",
-        "description": "Update User Property With ID SQL#"
+        "description": "Update User Property With ID SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "UpdateUserPropertySQLCaseInsensitive",
         "defaultValue": "UPDATE UM_USER_ATTRIBUTE SET UM_ATTR_VALUE=? WHERE UM_USER_ID=(SELECT UM_ID FROM UM_USER WHERE LOWER(UM_USER_NAME)=LOWER(?) AND UM_TENANT_ID=?) AND UM_ATTR_NAME=? AND UM_PROFILE_ID=? AND UM_TENANT_ID=?",
-        "description": "Update User Property SQL With Case Insensitive Username#"
+        "description": "Update User Property SQL With Case Insensitive Username#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "DeleteUserPropertySQL",
         "defaultValue": "DELETE FROM UM_USER_ATTRIBUTE WHERE UM_USER_ID=(SELECT UM_ID FROM UM_USER WHERE UM_USER_NAME=? AND UM_TENANT_ID=?) AND UM_ATTR_NAME=? AND UM_PROFILE_ID=? AND UM_TENANT_ID=?",
-        "description": "Delete User Property SQL#"
+        "description": "Delete User Property SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "DeleteUserPropertyWWithIDSQL",
         "defaultValue": "DELETE FROM UM_USER_ATTRIBUTE WHERE UM_USER_ID=(SELECT UM_ID FROM UM_USER WHERE UM_USER_ID=? AND UM_TENANT_ID=?) AND UM_ATTR_NAME=? AND UM_PROFILE_ID=? AND UM_TENANT_ID=?",
-        "description": "Delete User Property With ID SQL#"
+        "description": "Delete User Property With ID SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "DeleteUserPropertySQLCaseInsensitive",
         "defaultValue": "DELETE FROM UM_USER_ATTRIBUTE WHERE UM_USER_ID=(SELECT UM_ID FROM UM_USER WHERE LOWER(UM_USER_NAME)=LOWER(?) AND UM_TENANT_ID=?) AND UM_ATTR_NAME=? AND UM_PROFILE_ID=? AND UM_TENANT_ID=?",
-        "description": "Delete User Property SQL With Case Insensitive Username#"
+        "description": "Delete User Property SQL With Case Insensitive Username#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "UserNameUniqueAcrossTenantsSQL",
         "defaultValue": "SELECT UM_ID FROM UM_USER WHERE UM_USER_NAME=?",
-        "description": "User Name Unique Across Tenant SQL#"
+        "description": "User Name Unique Across Tenant SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "UserIDUniqueAcrossTenantsSQLWithID",
         "defaultValue": "SELECT UM_ID FROM UM_USER WHERE UM_USER_ID=?",
-        "description": "User ID Unique Across Tenant SQL With ID#"
+        "description": "User ID Unique Across Tenant SQL With ID#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "UserNameUniqueAcrossTenantsSQLWithID",
         "defaultValue": "SELECT UM_ID FROM UM_USER_ATTRIBUTE WHERE UM_ATTR_NAME=? AND UM_ATTR_VALUE=?",
-        "description": "User Name Unique Across Tenant SQL With ID#"
+        "description": "User Name Unique Across Tenant SQL With ID#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "UserNameUniqueAcrossTenantsSQLCaseInsensitive",
         "defaultValue": "SELECT UM_ID FROM UM_USER WHERE LOWER(UM_USER_NAME)=LOWER(?)",
-        "description": "User Name Unique Across Tenant SQL With Case Insensitive Username#"
+        "description": "User Name Unique Across Tenant SQL With Case Insensitive Username#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "UserNameUniqueAcrossTenantsSQLCaseInsensitiveWithID",
         "defaultValue": "SELECT UM_ID FROM UM_USER_ATTRIBUTE WHERE UM_ATTR_NAME=? AND LOWER(UM_ATTR_VALUE)=LOWER(?)",
-        "description": "User Name Unique Across Tenant SQL With Case Insensitive Username With ID#"
+        "description": "User Name Unique Across Tenant SQL With Case Insensitive Username With ID#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "IsDomainExistingSQL",
         "defaultValue": "SELECT UM_DOMAIN_ID FROM UM_DOMAIN WHERE UM_DOMAIN_NAME=? AND UM_TENANT_ID=?",
-        "description": "Is Domain Existing SQL#"
+        "description": "Is Domain Existing SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "connection"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "AddDomainSQL",
         "defaultValue": "INSERT INTO UM_DOMAIN (UM_DOMAIN_NAME, UM_TENANT_ID) VALUES (?, ?)",
-        "description": "Add Domain SQL#"
+        "description": "Add Domain SQL#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "connection"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "AddUserToRoleSQL-mssql",
         "defaultValue": "INSERT INTO UM_USER_ROLE (UM_USER_ID, UM_ROLE_ID, UM_TENANT_ID) SELECT (SELECT UM_ID FROM UM_USER WHERE UM_USER_NAME=? AND UM_TENANT_ID=?),(SELECT UM_ID FROM UM_ROLE WHERE UM_ROLE_NAME=? AND UM_TENANT_ID=?),(?)",
-        "description": "Add User To Role SQL (MSSQL)#"
+        "description": "Add User To Group SQL (MSSQL)#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "AddRoleToUserSQL-mssql",
         "defaultValue": "INSERT INTO UM_USER_ROLE (UM_ROLE_ID, UM_USER_ID, UM_TENANT_ID) SELECT (SELECT UM_ID FROM UM_ROLE WHERE UM_ROLE_NAME=? AND UM_TENANT_ID=?),(SELECT UM_ID FROM UM_USER WHERE UM_USER_NAME=? AND UM_TENANT_ID=?), (?)",
-        "description": "Add Role To User SQL (MSSQL)#"
+        "description": "Add Group To User SQL (MSSQL)#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "AddUserPropertySQL-mssql",
         "defaultValue": "INSERT INTO UM_USER_ATTRIBUTE (UM_USER_ID, UM_ATTR_NAME, UM_ATTR_VALUE, UM_PROFILE_ID, UM_TENANT_ID) SELECT (SELECT UM_ID FROM UM_USER WHERE UM_USER_NAME=? AND UM_TENANT_ID=?), (?), (?), (?), (?)",
-        "description": "Add User Property (MSSQL)#"
+        "description": "Add User Property (MSSQL)#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "AddUserToRoleSQLCaseInsensitive-mssql",
         "defaultValue": "INSERT INTO UM_USER_ROLE (UM_USER_ID, UM_ROLE_ID, UM_TENANT_ID) SELECT (SELECT UM_ID FROM UM_USER WHERE LOWER(UM_USER_NAME)=LOWER(?) AND UM_TENANT_ID=?),(SELECT UM_ID FROM UM_ROLE WHERE UM_ROLE_NAME=? AND UM_TENANT_ID=?),(?)",
-        "description": "Add User To Role SQL With Case Insensitive Username (MSSQL)#"
+        "description": "Add User To Group SQL With Case Insensitive Username (MSSQL)#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "AddRoleToUserSQLCaseInsensitive-mssql",
         "defaultValue": "INSERT INTO UM_USER_ROLE (UM_ROLE_ID, UM_USER_ID, UM_TENANT_ID) SELECT (SELECT UM_ID FROM UM_ROLE WHERE UM_ROLE_NAME=? AND UM_TENANT_ID=?),(SELECT UM_ID FROM UM_USER WHERE LOWER(UM_USER_NAME)=LOWER(?) AND UM_TENANT_ID=?), (?)",
-        "description": "Add Role To User SQL With Case Insensitive Username (MSSQL)#"
+        "description": "Add Group To User SQL With Case Insensitive Username (MSSQL)#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "AddUserPropertySQLCaseInsensitive-mssql",
         "defaultValue": "INSERT INTO UM_USER_ATTRIBUTE (UM_USER_ID, UM_ATTR_NAME, UM_ATTR_VALUE, UM_PROFILE_ID, UM_TENANT_ID) SELECT (SELECT UM_ID FROM UM_USER WHERE LOWER(UM_USER_NAME)=LOWER(?) AND UM_TENANT_ID=?), (?), (?), (?), (?)",
-        "description": "Add User Property With Case Insensitive Username (MSSQL)#"
+        "description": "Add User Property With Case Insensitive Username (MSSQL)#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "AddUserToRoleSQL-openedge",
         "defaultValue": "INSERT INTO UM_USER_ROLE (UM_USER_ID, UM_ROLE_ID, UM_TENANT_ID) SELECT UU.UM_ID, UR.UM_ID, ? FROM UM_USER UU, UM_ROLE UR WHERE UU.UM_USER_NAME=? AND UU.UM_TENANT_ID=? AND UR.UM_ROLE_NAME=? AND UR.UM_TENANT_ID=?",
-        "description": "Add User To Role SQL (OpenEdge)#"
+        "description": "Add User To Group SQL (OpenEdge)#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "AddRoleToUserSQL-openedge",
         "defaultValue": "INSERT INTO UM_USER_ROLE (UM_ROLE_ID, UM_USER_ID, UM_TENANT_ID) SELECT UR.UM_ID, UU.UM_ID, ? FROM UM_ROLE UR, UM_USER UU WHERE UR.UM_ROLE_NAME=? AND UR.UM_TENANT_ID=? AND UU.UM_USER_NAME=? AND UU.UM_TENANT_ID=?",
-        "description": "Add Role To User SQL (OpenEdge)#"
+        "description": "Add Group To User SQL (OpenEdge)#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "AddUserPropertySQL-openedge",
         "defaultValue": "INSERT INTO UM_USER_ATTRIBUTE (UM_USER_ID, UM_ATTR_NAME, UM_ATTR_VALUE, UM_PROFILE_ID, UM_TENANT_ID) SELECT UM_ID, ?, ?, ?, ? FROM UM_USER WHERE UM_USER_NAME=? AND UM_TENANT_ID=?",
-        "description": "Add User Property (OpenEdge)#"
+        "description": "Add User Property (OpenEdge)#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "AddUserToRoleSQLCaseInsensitive-openedge",
         "defaultValue": "INSERT INTO UM_USER_ROLE (UM_USER_ID, UM_ROLE_ID, UM_TENANT_ID) SELECT UU.UM_ID, UR.UM_ID, ? FROM UM_USER UU, UM_ROLE UR WHERE LOWER(UU.UM_USER_NAME)=LOWER(?) AND UU.UM_TENANT_ID=? AND UR.UM_ROLE_NAME=? AND UR.UM_TENANT_ID=?",
-        "description": "Add User To Role SQL With Case Insensitive Username (OpenEdge)#"
+        "description": "Add User To Group SQL With Case Insensitive Username (OpenEdge)#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "AddRoleToUserSQLCaseInsensitive-openedge",
         "defaultValue": "INSERT INTO UM_USER_ROLE (UM_ROLE_ID, UM_USER_ID, UM_TENANT_ID) SELECT UR.UM_ID, UU.UM_ID, ? FROM UM_ROLE UR, UM_USER UU WHERE UR.UM_ROLE_NAME=? AND UR.UM_TENANT_ID=? AND LOWER(UU.UM_USER_NAME)=LOWER(?) AND UU.UM_TENANT_ID=?",
-        "description": "Add Role To User SQL With Case Insensitive Username (OpenEdge)#"
+        "description": "Add Group To User SQL With Case Insensitive Username (OpenEdge)#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "group"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "AddUserPropertySQLCaseInsensitive-openedge",
         "defaultValue": "INSERT INTO UM_USER_ATTRIBUTE (UM_USER_ID, UM_ATTR_NAME, UM_ATTR_VALUE, UM_PROFILE_ID, UM_TENANT_ID) SELECT UM_ID, ?, ?, ?, ? FROM UM_USER WHERE LOWER(UM_USER_NAME)=LOWER(?) AND UM_TENANT_ID=?",
-        "description": "Add User Property With Case Insensitive Username (OpenEdge)#"
+        "description": "Add User Property With Case Insensitive Username (OpenEdge)#",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       },
       {
         "name": "ClaimOperationsSupported",
         "defaultValue": "true",
-        "description": "Claim Operations Supported#Whether the userstore supports claim read and write"
+        "description": "Claim Operations Supported#Whether the userstore supports claim read and write",
+        "attributes": [
+          {
+            "name": "category",
+            "value": "user"
+          },
+          {
+            "name": "type",
+            "value": "sql"
+          },
+          {
+            "name": "required",
+            "value": "false"
+          }
+        ]
       }
     ]
   }
