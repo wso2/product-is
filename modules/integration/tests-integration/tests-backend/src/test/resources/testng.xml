@@ -18,12 +18,13 @@
         </classes>
     </test>
 
-    <test name="is-tests-default-configuration-sts" preserve-order="true" parallel="false" group-by-instances="true">
-        <!-- Active sts test case needs to run before passive sts test case-->
-        <classes>
-            <class name="org.wso2.identity.integration.test.sts.ActiveSTSTestCase"/>
-        </classes>
-    </test>
+    <!--Disabling since the STS functionality is a connector and it does not exist in the product by default.-->
+    <!--<test name="is-tests-default-configuration-sts" preserve-order="true" parallel="false" group-by-instances="true">-->
+        <!--&lt;!&ndash; Active sts test case needs to run before passive sts test case&ndash;&gt;-->
+        <!--<classes>-->
+            <!--<class name="org.wso2.identity.integration.test.sts.ActiveSTSTestCase"/>-->
+        <!--</classes>-->
+    <!--</test>-->
 
     <test name="is-tests-default-configuration" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
@@ -96,7 +97,8 @@
             <class name="org.wso2.identity.integration.test.saml.SAMLFederationDynamicQueryParametersTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.SAMLInvalidIssuerTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.SAMLSSOTestCase"/>
-            <class name="org.wso2.identity.integration.test.sts.TestPassiveSTS"/>
+            <!--Disabling since the STS functionality is a connector and it does not exist in the product by default.-->
+            <!--<class name="org.wso2.identity.integration.test.sts.TestPassiveSTS"/>-->
             <class name="org.wso2.identity.integration.test.saml.SAMLIdPInitiatedSLOTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.SAMLIdPInitiatedSSOTestCase"/>
             <class name="org.wso2.identity.integration.test.postAuthnHandler.ChallengeQuestionPostAuthnHandlerTestCase"/>
@@ -147,8 +149,9 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementSAMLSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementOAuthSuccessTest"/>
-            <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementPassiveStsSuccessTest"/>
-            <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementWSTrustTest"/>
+            <!--Disabling since the STS functionality is a connector and it does not exist in the product by default.-->
+            <!--<class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementPassiveStsSuccessTest"/>-->
+            <!--<class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementWSTrustTest"/>-->
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationTemplateManagementSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationTemplateManagementFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.script.library.v1.ScriptLibrarySuccessTest"/>
@@ -192,7 +195,8 @@
     <test name="is-tests-federation" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
             <class name="org.wso2.identity.integration.test.base.SecondaryCarbonServerInitializerTestCase"/>
-            <class name="org.wso2.identity.integration.test.sts.TestPassiveSTSFederation"/>
+            <!--Disabling since the STS functionality is a connector and it does not exist in the product by default.-->
+            <!--<class name="org.wso2.identity.integration.test.sts.TestPassiveSTSFederation"/>-->
             <class name="org.wso2.identity.integration.test.auth.ConditionalAuthenticationTestCase" />
             <class name="org.wso2.identity.integration.test.provisioning.ProvisioningTestCase"/>
             <class name="org.wso2.identity.integration.test.workflow.mgt.WorkflowManagementTestCase"/>
@@ -262,7 +266,7 @@
         <classes>
             <class name="org.wso2.identity.integration.test.saml.RegistryMountTestCase"/>
             <class name="org.wso2.identity.integration.test.provisioning.DBSeperationTestCase"/>
-<!--            <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceAuthCodeGrantTestCase"/>-->
+            <!--<class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceAuthCodeGrantTestCase"/>-->
             <class name="org.wso2.identity.integration.test.oidc.OIDCFileBasedSkipLoginConsentTestCase"/>
             <class name="org.wso2.identity.integration.test.scim.IDENTITY4776SCIMServiceWithOAuthTestCase" />
             <class name="org.wso2.identity.integration.test.identity.mgt.UserInformationRecoveryServiceTenantEmailUserTestCase"/>
