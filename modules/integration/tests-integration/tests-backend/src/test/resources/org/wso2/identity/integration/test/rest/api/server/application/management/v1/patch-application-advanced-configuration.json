@@ -1,0 +1,10 @@
+{
+  "advancedConfigurations": {
+    "saas": true,
+    "discoverableByEndUsers": true,
+    "skipLoginConsent": true,
+    "skipLogoutConsent": true,
+    "returnAuthenticatedIdpList": true,
+    "enableAuthorization": true
+  }
+}
