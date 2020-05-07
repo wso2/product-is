@@ -136,6 +136,23 @@ public class ApplicationPatchTest extends ApplicationManagementBaseTest {
                 .body("advancedConfigurations.find{ it.key == 'enableAuthorization' }.value", equalTo(true));
     }
 
+    @Test(dependsOnMethods = "testUpdateAdvancedConfiguration")
+    public void testDeleteApplicationById() throws Exception {
+
+        getResponseOfDelete(APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + appId)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
+
+        // Verify that the application is not available.
+        getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + appId)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NOT_FOUND);
+    }
+
     private String getApplicationId(Response createFirstAppResponse) {
 
         String location = createFirstAppResponse.getHeader(HttpHeaders.LOCATION);
