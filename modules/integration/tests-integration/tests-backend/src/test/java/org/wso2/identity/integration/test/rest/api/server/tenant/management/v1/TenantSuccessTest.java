@@ -77,10 +77,10 @@ public class TenantSuccessTest extends TenantManagementBaseTest {
         RestAssured.basePath = StringUtils.EMPTY;
     }
 
-    @Factory(dataProvider = "tenantProvisioningMethodProvider")
-    public void testAddTenant(String fileName) throws IOException {
+    @Test(description = "Test adding tenants with different provisioning method.")
+    public void testAddTenant() throws IOException {
 
-        String body = readResource(fileName);
+        String body = readResource("add-tenant-inline-password.json");
         Response response = getResponseOfPost(TENANT_API_BASE_PATH, body);
         response.then()
                 .log().ifValidationFails()
@@ -94,15 +94,6 @@ public class TenantSuccessTest extends TenantManagementBaseTest {
         assertNotNull(tenantId);
     }
 
-    @DataProvider(name = "tenantProvisioningMethodProvider")
-    public static Object[][] tenantProvisioningMethodProvider() {
-
-        return new Object[][]{
-                {"add-tenant-inline-password.json", },
-                {"add-tenant-email-link.json"}
-        };
-    }
-
     @Test(dependsOnMethods = {"testAddTenant"})
     public void testGetTenant() throws IOException {
 
@@ -114,7 +105,7 @@ public class TenantSuccessTest extends TenantManagementBaseTest {
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .body("id", equalTo(tenantId))
-                .body("domain", equalTo("abc2.com"))
+                .body("domain", equalTo("abc1.com"))
                 .body(baseIdentifier, notNullValue());
         TenantResponseModel tenantResponseModel = response.getBody().as(TenantResponseModel.class);
         userId = tenantResponseModel.getOwners().get(0).getId();
@@ -130,7 +121,7 @@ public class TenantSuccessTest extends TenantManagementBaseTest {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body(baseIdentifier + "domain", equalTo("abc2.com"))
+                .body(baseIdentifier + "domain", equalTo("abc1.com"))
                 .body(baseIdentifier + activeStatusIdentifier + "username", equalTo("kim"));
     }
 
