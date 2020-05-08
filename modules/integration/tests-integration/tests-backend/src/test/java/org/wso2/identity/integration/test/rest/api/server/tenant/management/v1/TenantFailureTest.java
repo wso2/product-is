@@ -81,7 +81,7 @@ public class TenantFailureTest extends TenantManagementBaseTest {
     @Test
     public void addTenantConflict() throws IOException {
 
-        Response response = getResponseOfPost(TENANT_API_BASE_PATH, readResource("add-tenant2.json"));
+        Response response = getResponseOfPost(TENANT_API_BASE_PATH, readResource("add-tenant.json"));
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
