@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>5.11.0-m17-SNAPSHOT</version>
+        <version>5.11.0-m19-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -63,7 +63,7 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.wso2.carbon.extension.identity.authenticator</groupId>
+                                    <groupId>org.wso2.carbon.extension.identity.authenticator.outbound.x509Certificate</groupId>
                                     <artifactId>
                                         org.wso2.carbon.extension.identity.authenticator.x509Certificate.connector
                                     </artifactId>
@@ -133,7 +133,7 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.wso2.carbon.extension.identity.authenticator</groupId>
+                                    <groupId>org.wso2.carbon.extension.identity.authenticator.outbound.office365</groupId>
                                     <artifactId>org.wso2.carbon.extension.identity.authenticator.office365.connector
                                     </artifactId>
                                     <version>${authenticator.office365.version}</version>
