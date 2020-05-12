@@ -1990,7 +1990,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.17.76</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.17.78</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2012,7 +2012,7 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.8.9</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.4.20</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.4.21</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.5.0</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.5.2</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.6.0</identity.inbound.provisioning.scim.version>
@@ -2053,7 +2053,7 @@
         <!-- Authenticator Versions -->
         <identity.outbound.auth.oidc.version>5.5.2</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.passive.sts.version>5.4.1</identity.outbound.auth.passive.sts.version>
-        <identity.outbound.auth.samlsso.version>5.3.7</identity.outbound.auth.samlsso.version>
+        <identity.outbound.auth.samlsso.version>5.3.8</identity.outbound.auth.samlsso.version>
         <identity.outbound.auth.requestpath.basicauth.version>5.4.0</identity.outbound.auth.requestpath.basicauth.version>
         <identity.outbound.auth.requestpath.oauth.version>5.3.0</identity.outbound.auth.requestpath.oauth.version>
 
