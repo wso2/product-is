@@ -69,11 +69,10 @@ public class SAMLMetadataTestCase extends ISIntegrationTest {
         HttpResponse httpResponse = sendGetRequest(client, locationURL);
         String content = DataExtractUtil.getContentData(httpResponse);
         Assert.assertNotNull(content);
+
         JSONArray singleLogoutServices = XML.toJSONObject(content).getJSONObject("EntityDescriptor").getJSONObject(
                 "IDPSSODescriptor").getJSONArray("SingleLogoutService");
-
         for (int i = 0; i < singleLogoutServices.length(); i++) {
-
             JSONObject singleLogoutService = singleLogoutServices.getJSONObject(i);
             Assert.assertEquals(singleLogoutService.getString("Location"),
                     samlMetadataEndpoint, String.format("Expected location was not received for single logout" +
@@ -85,7 +84,6 @@ public class SAMLMetadataTestCase extends ISIntegrationTest {
 
         JSONArray singleSignOnServices = XML.toJSONObject(content).getJSONObject("EntityDescriptor").getJSONObject(
                 "IDPSSODescriptor").getJSONArray("SingleSignOnService");
-
         for (int i = 0; i < singleSignOnServices.length(); i++) {
             JSONObject singleSignOnService = singleSignOnServices.getJSONObject(i);
             Assert.assertEquals(singleSignOnService.getString("Location"),
