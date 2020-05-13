@@ -1,7 +1,7 @@
 ---
 name: ❓ Question
 about: Ask a question related to the product
-title: '[QUESTION]'
+title: ''
 labels: 'Type/Question'
 assignees: ''
 
