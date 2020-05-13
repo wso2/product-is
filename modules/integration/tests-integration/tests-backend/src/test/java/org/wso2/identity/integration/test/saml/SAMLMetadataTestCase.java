@@ -38,10 +38,10 @@ import java.io.IOException;
 
 public class SAMLMetadataTestCase extends ISIntegrationTest {
 
-    private static final String SUPER_TENANT_URL = "https://localhost:9853/identity/metadata/saml2";
-    private static final String TENANT_URL = "https://localhost:9853/t/wso2.com/identity/metadata/saml2";
-    private static final String SAML_METADATA_ENDPOINT_TENANT = "https://localhost:9853/samlsso?tenantDomain=wso2.com";
-    private static final String SAML_METADATA_ENDPOINT_SUPER_TENANT = "https://localhost:9853/samlsso";
+    private static final String SAML_METADATA_ENDPOINT_SUPER_TENANT = "https://localhost:9853/identity/metadata/saml2";
+    private static final String SAML_METADATA_ENDPOINT_TENANT = "https://localhost:9853/t/wso2.com/identity/metadata/saml2";
+    private static final String SAML_SSO_ENDPOINT_TENANT = "https://localhost:9853/samlsso?tenantDomain=wso2.com";
+    private static final String SAML_SSO_ENDPOINT_SUPER_TENANT = "https://localhost:9853/samlsso";
     private static final String SAMLARTRESOLVE_ENDPOINT = "https://localhost:9853/samlartresolve";
     private TenantManagementServiceClient tenantServiceClient;
 
@@ -56,17 +56,17 @@ public class SAMLMetadataTestCase extends ISIntegrationTest {
     @Test(groups = "wso2.is", description = "This test method will test SAML Metadata endpoints.")
     public void getSAMLMetadata() throws IOException, TenantMgtAdminServiceExceptionException, JSONException {
 
-        testResponseContent(SUPER_TENANT_URL, SAML_METADATA_ENDPOINT_SUPER_TENANT);
+        testResponseContent(SAML_METADATA_ENDPOINT_SUPER_TENANT, SAML_SSO_ENDPOINT_SUPER_TENANT);
         tenantServiceClient.addTenant("wso2.com", "John", "password",
                 "john@friends.com", "John", "Smith");
-        testResponseContent(TENANT_URL, SAML_METADATA_ENDPOINT_TENANT);
+        testResponseContent(SAML_METADATA_ENDPOINT_TENANT, SAML_SSO_ENDPOINT_TENANT);
     }
 
-    private void testResponseContent(String locationURL, String samlMetadataEndpoint)
+    private void testResponseContent(String samlMetadataEndpoint, String samlEndpoint)
             throws IOException, JSONException {
 
         HttpClient client = HttpClientBuilder.create().build();
-        HttpResponse httpResponse = sendGetRequest(client, locationURL);
+        HttpResponse httpResponse = sendGetRequest(client, samlMetadataEndpoint);
         String content = DataExtractUtil.getContentData(httpResponse);
         Assert.assertNotNull(content);
 
@@ -75,10 +75,10 @@ public class SAMLMetadataTestCase extends ISIntegrationTest {
         for (int i = 0; i < singleLogoutServices.length(); i++) {
             JSONObject singleLogoutService = singleLogoutServices.getJSONObject(i);
             Assert.assertEquals(singleLogoutService.getString("Location"),
-                    samlMetadataEndpoint, String.format("Expected location was not received for single logout" +
+                    samlEndpoint, String.format("Expected location was not received for single logout" +
                             " service for the binding %S.", singleLogoutService.getString("Binding")));
             Assert.assertEquals(singleLogoutService.getString("ResponseLocation"),
-                    samlMetadataEndpoint, String.format("Expected response location was not received for single " +
+                    samlEndpoint, String.format("Expected response location was not received for single " +
                             "logout service for the binding %S.", singleLogoutService.getString("Binding")));
         }
 
@@ -87,7 +87,7 @@ public class SAMLMetadataTestCase extends ISIntegrationTest {
         for (int i = 0; i < singleSignOnServices.length(); i++) {
             JSONObject singleSignOnService = singleSignOnServices.getJSONObject(i);
             Assert.assertEquals(singleSignOnService.getString("Location"),
-                    samlMetadataEndpoint, String.format("Expected location was not received for single sign-on " +
+                    samlEndpoint, String.format("Expected location was not received for single sign-on " +
                             "service for the binding %S.", singleSignOnService.getString("Binding")));
         }
 
@@ -99,9 +99,9 @@ public class SAMLMetadataTestCase extends ISIntegrationTest {
                         "service for the binding %S.", artifactResolutionService.getString("Binding")));
     }
 
-    private HttpResponse sendGetRequest(HttpClient client, String locationURL) throws IOException {
+    private HttpResponse sendGetRequest(HttpClient client, String samlMetadataEndpoint) throws IOException {
 
-        HttpGet getRequest = new HttpGet(locationURL);
+        HttpGet getRequest = new HttpGet(samlMetadataEndpoint);
         HttpResponse response = client.execute(getRequest);
         return response;
     }
