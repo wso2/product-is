@@ -1,7 +1,7 @@
 ---
 name: ✅ Improvement suggestion
 about: Suggest an improvement for the project
-title: '[IMPROVEMENT]'
+title: ''
 labels: 'Type/Improvement'
 assignees: ''
 
