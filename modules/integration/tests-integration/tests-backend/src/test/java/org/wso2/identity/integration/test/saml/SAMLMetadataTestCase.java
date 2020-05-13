@@ -53,7 +53,7 @@ public class SAMLMetadataTestCase extends ISIntegrationTest {
                 sessionCookie);
     }
 
-    @Test(groups = "wso2.is", description = "This test method will test, invoking SAML Metadata endpoint.")
+    @Test(groups = "wso2.is", description = "This test method will test SAML Metadata endpoints.")
     public void getSAMLMetadata() throws IOException, TenantMgtAdminServiceExceptionException, JSONException {
 
         testResponseContent(SUPER_TENANT_URL, SAML_METADATA_ENDPOINT_SUPER_TENANT);
