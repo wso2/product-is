@@ -25,10 +25,8 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.tenant.mgt.stub.TenantMgtAdminServiceExceptionException;
-import org.wso2.identity.integration.common.clients.TenantManagementServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.json.JSONObject;
@@ -41,6 +39,8 @@ public class SAMLMetadataTestCase extends ISIntegrationTest {
     private static final String SAML_METADATA_ENDPOINT_SUPER_TENANT = "https://localhost:9853/identity/metadata/saml2";
     private static final String SAML_METADATA_ENDPOINT_TENANT =
             "https://localhost:9853/t/wso2.com/identity/metadata/saml2";
+    private static final String SAML_METADATA_ENDPOINT_WITH_SUPER_TENANT_AS_PATH_PARAM =
+            "https://localhost:9853//t/carbon.super/identity/metadata/saml2";
     private static final String SAML_SSO_ENDPOINT_TENANT = "https://localhost:9853/samlsso?tenantDomain=wso2.com";
     private static final String SAML_SSO_ENDPOINT_SUPER_TENANT = "https://localhost:9853/samlsso";
     private static final String SAMLARTRESOLVE_ENDPOINT = "https://localhost:9853/samlartresolve";
@@ -49,6 +49,7 @@ public class SAMLMetadataTestCase extends ISIntegrationTest {
     public void getSAMLMetadata() throws IOException, TenantMgtAdminServiceExceptionException, JSONException {
 
         testResponseContent(SAML_METADATA_ENDPOINT_SUPER_TENANT, SAML_SSO_ENDPOINT_SUPER_TENANT);
+        testResponseContent(SAML_METADATA_ENDPOINT_WITH_SUPER_TENANT_AS_PATH_PARAM, SAML_SSO_ENDPOINT_SUPER_TENANT);
         testResponseContent(SAML_METADATA_ENDPOINT_TENANT, SAML_SSO_ENDPOINT_TENANT);
     }
 
