@@ -5,7 +5,7 @@ contact_links:
     about: Please report UI issues here
   - name: Doc issues
     url: https://github.com/wso2/docs-is/issues
-    about: Please report documentaion issues here
+    about: Please report documentation issues here
   - name: Ask a question
     url: https://github.com/wso2/product-is/wiki/Engage-with-the-community
-    about: Check here on how you can ask questions about the product
+    about: Check here on how you can ask a question about the product
