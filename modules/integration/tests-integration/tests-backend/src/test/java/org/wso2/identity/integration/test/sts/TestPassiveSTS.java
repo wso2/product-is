@@ -174,7 +174,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
     public void testInvokePassiveSTSEndPoint() throws IOException {
 
         String passiveParams = "?wreply=" + PASSIVE_STS_SAMPLE_APP_URL + "&wtrealm=PassiveSTSSampleApp";
-        passiveParams = getPassiveParamsForTenant(passiveParams);
+        passiveParams = appendTenantDomainQueryParam(passiveParams);
         HttpGet request = new HttpGet(this.passiveStsURL + passiveParams);
         HttpResponse response = client.execute(request);
         Assert.assertNotNull(response, "PassiveSTSSampleApp invoke response is null for tenant domain: " +
@@ -236,7 +236,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
                 + "%2Fwss%2Foasis-wss-saml-token-profile-1.1%23SAMLV2.0%3C%2Fwst%3ATokenType%3E%3C%2Fwst"
                 + "%3ARequestSecurityToken%3E";
 
-        passiveParams = getPassiveParamsForTenant(passiveParams);
+        passiveParams = appendTenantDomainQueryParam(passiveParams);
         HttpGet request = new HttpGet(this.passiveStsURL + passiveParams + wreqParam);
         HttpResponse response = client.execute(request);
 
@@ -261,7 +261,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
                 + "%2Fwss%2Foasis-wss-saml-token-profile-1.1%23SAMLV2.0%3C%2Fwst%3ATokenType%3E%3C%2Fwst"
                 + "%3ARequestSecurityToken%3E";
 
-        passiveParams = getPassiveParamsForTenant(passiveParams);
+        passiveParams = appendTenantDomainQueryParam(passiveParams);
         HttpGet request = new HttpGet(this.passiveStsURL + passiveParams + wreqParam);
         HttpResponse response = client.execute(request);
 
@@ -290,7 +290,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
                 + "%2Fwss%2Foasis-wss-saml-token-profile-1.1%23SAMLV2.0%3C%2Fwst%3ATokenType%3E%3C%2Fwst"
                 + "%3ARequestSecurityToken%3E";
 
-        passiveParams = getPassiveParamsForTenant(passiveParams);
+        passiveParams = appendTenantDomainQueryParam(passiveParams);
         HttpGet request = new HttpGet(this.passiveStsURL + passiveParams + wreqParam);
         HttpResponse response = client.execute(request);
 
@@ -321,7 +321,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
     public void testSendLogoutRequest() throws Exception {
 
         String passiveParams = "?wa=wsignout1.0&wreply=" + PASSIVE_STS_SAMPLE_APP_URL + "&wtrealm=PassiveSTSSampleApp";
-        passiveParams = getPassiveParamsForTenant(passiveParams);
+        passiveParams = appendTenantDomainQueryParam(passiveParams);
         HttpGet request = new HttpGet(this.passiveStsURL + passiveParams);
         HttpResponse response = client.execute(request);
 
@@ -329,6 +329,16 @@ public class TestPassiveSTS extends ISIntegrationTest {
                 tenantDomain);
         int responseCode = response.getStatusLine().getStatusCode();
         Assert.assertEquals(responseCode, 200, "Invalid Response for tenant domain: " + tenantDomain);
+
+        Map<String, Integer> keyPositionMap = new HashMap<>(1);
+        keyPositionMap.put("name=\"sessionDataKey\"", 1);
+        List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil.extractDataFromResponse(response,
+                keyPositionMap);
+        EntityUtils.consume(response.getEntity());
+        Assert.assertNotNull(keyValues, "sessionDataKey key value is null for tenant domain: " + tenantDomain +
+                "Authentication request was not initiated after logout from sample. Possible logout failure.");
+        sessionDataKey = keyValues.get(0).getValue();
+        Assert.assertNotNull(sessionDataKey, "Session data key is null for tenant domain: " + tenantDomain);
     }
 
     private void setSystemProperties() {
@@ -368,7 +378,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
         return redirectUrl.contains("consent.do");
     }
 
-    private String getPassiveParamsForTenant(String params) {
+    private String appendTenantDomainQueryParam(String params) {
 
         if (!StringUtils.equals(tenantDomain, "carbon.super")) {
             return params + "&tenantDomain=" + tenantDomain;
