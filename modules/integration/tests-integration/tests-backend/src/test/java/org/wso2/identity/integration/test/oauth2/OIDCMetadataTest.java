@@ -31,7 +31,7 @@ import org.wso2.identity.integration.test.utils.DataExtractUtil;
 
 import java.io.IOException;
 
-public class OAuthMetadataTestCase extends ISIntegrationTest {
+public class OIDCMetadataTest extends ISIntegrationTest {
 
     private static final String TOKEN_ENDPOINT_SUPER_TENANT =
             "https://localhost:9853/oauth2/token/.well-known/openid-configuration";
@@ -60,8 +60,8 @@ public class OAuthMetadataTestCase extends ISIntegrationTest {
     private static final String REGISTRATION_ENDPOINT_TENANT =
             "https://localhost:9853/t/wso2.com/api/identity/oauth2/dcr/v1.1/register";
 
-    @Test(groups = "wso2.is", description = "This test method will test OAuth Metadata endpoints.")
-    public void getOAuthMetadata() throws Exception {
+    @Test(groups = "wso2.is", description = "This test method will test OIDC Metadata endpoints.")
+    public void getOIDCMetadata() throws Exception {
 
         testResponseContent(TOKEN_ENDPOINT_SUPER_TENANT);
         testResponseContent(TOKEN_ENDPOINT_TENANT);
@@ -71,53 +71,53 @@ public class OAuthMetadataTestCase extends ISIntegrationTest {
         testResponseContent(OIDCDISCOVERY_ENDPOINT_WITH_SUPER_TENANT_AS_PATH_PARAM);
     }
 
-    private void testResponseContent(String oauthMetadataEndpoint) throws IOException, JSONException {
+    private void testResponseContent(String oidcMetadataEndpoint) throws IOException, JSONException {
 
         HttpClient client = HttpClientBuilder.create().build();
-        HttpResponse httpResponse = sendGetRequest(client, oauthMetadataEndpoint);
+        HttpResponse httpResponse = sendGetRequest(client, oidcMetadataEndpoint);
         String content = DataExtractUtil.getContentData(httpResponse);
         Assert.assertNotNull(content, "Response content is not received");
 
-        JSONObject oauthMetadataEndpoints = new JSONObject(content);
-        Assert.assertEquals(oauthMetadataEndpoints.getString("introspection_endpoint"),
+        JSONObject oidcMetadataEndpoints = new JSONObject(content);
+        Assert.assertEquals(oidcMetadataEndpoints.getString("introspection_endpoint"),
                 INTROSPECTION_ENDPOINT, "Incorrect introspection endpoint");
-        Assert.assertEquals(oauthMetadataEndpoints.getString("check_session_iframe"),
+        Assert.assertEquals(oidcMetadataEndpoints.getString("check_session_iframe"),
                 CHECK_SESSION_IFRAME, "Incorrect session iframe");
-        Assert.assertEquals(oauthMetadataEndpoints.getString("issuer"),
+        Assert.assertEquals(oidcMetadataEndpoints.getString("issuer"),
                 ISSUER, "Incorrect issuer");
-        Assert.assertEquals(oauthMetadataEndpoints.getString("authorization_endpoint"),
+        Assert.assertEquals(oidcMetadataEndpoints.getString("authorization_endpoint"),
                 AUTHORIZATION_ENDPOINT, "Incorrect authorization endpoint");
-        Assert.assertEquals(oauthMetadataEndpoints.getString("token_endpoint"),
+        Assert.assertEquals(oidcMetadataEndpoints.getString("token_endpoint"),
                 TOKEN_ENDPOINT, "Incorrect token_endpoint");
-        Assert.assertEquals(oauthMetadataEndpoints.getString("end_session_endpoint"),
+        Assert.assertEquals(oidcMetadataEndpoints.getString("end_session_endpoint"),
                 END_SESSION_ENDPOINT, "Incorrect end session endpoint");
-        Assert.assertEquals(oauthMetadataEndpoints.getString("revocation_endpoint"),
+        Assert.assertEquals(oidcMetadataEndpoints.getString("revocation_endpoint"),
                 REVOCATION_ENDPOINT, "Incorrect revocation endpoint");
-        Assert.assertEquals(oauthMetadataEndpoints.getString("userinfo_endpoint"),
+        Assert.assertEquals(oidcMetadataEndpoints.getString("userinfo_endpoint"),
                 USERINFO_ENDPOINT, "Incorrect userinfo endpoint");
 
-        if (oauthMetadataEndpoint.equals(TOKEN_ENDPOINT_SUPER_TENANT) ||
-                oauthMetadataEndpoint.equals(OIDCDISCOVERY_ENDPOINT_SUPER_TENANT) ||
-                oauthMetadataEndpoint.equals(TOKEN_ENDPOINT_WITH_SUPER_TENANT_AS_PATH_PARAM) ||
-                oauthMetadataEndpoint.equals(OIDCDISCOVERY_ENDPOINT_WITH_SUPER_TENANT_AS_PATH_PARAM)) {
-            Assert.assertEquals(oauthMetadataEndpoints.getString("jwks_uri"),
+        if (oidcMetadataEndpoint.equals(TOKEN_ENDPOINT_SUPER_TENANT) ||
+                oidcMetadataEndpoint.equals(OIDCDISCOVERY_ENDPOINT_SUPER_TENANT) ||
+                oidcMetadataEndpoint.equals(TOKEN_ENDPOINT_WITH_SUPER_TENANT_AS_PATH_PARAM) ||
+                oidcMetadataEndpoint.equals(OIDCDISCOVERY_ENDPOINT_WITH_SUPER_TENANT_AS_PATH_PARAM)) {
+            Assert.assertEquals(oidcMetadataEndpoints.getString("jwks_uri"),
                     JKWS_URI_SUPER_TENANT, "Incorrect jwks uri");
-            Assert.assertEquals(oauthMetadataEndpoints.getString("registration_endpoint"),
+            Assert.assertEquals(oidcMetadataEndpoints.getString("registration_endpoint"),
                     REGISTRATION_ENDPOINT_SUPER_TENANT, "Incorrect registration endpoint");
         }
 
-        if (oauthMetadataEndpoint.equals(TOKEN_ENDPOINT_TENANT) ||
-                oauthMetadataEndpoint.equals(OIDCDISCOVERY_ENDPOINT_TENANT)) {
-            Assert.assertEquals(oauthMetadataEndpoints.getString("jwks_uri"),
+        if (oidcMetadataEndpoint.equals(TOKEN_ENDPOINT_TENANT) ||
+                oidcMetadataEndpoint.equals(OIDCDISCOVERY_ENDPOINT_TENANT)) {
+            Assert.assertEquals(oidcMetadataEndpoints.getString("jwks_uri"),
                     JKWS_URI_TENANT, "Incorrect jwks uri");
-            Assert.assertEquals(oauthMetadataEndpoints.getString("registration_endpoint"),
+            Assert.assertEquals(oidcMetadataEndpoints.getString("registration_endpoint"),
                     REGISTRATION_ENDPOINT_TENANT, "Incorrect registration endpoint");
         }
     }
 
-    private HttpResponse sendGetRequest(HttpClient client, String oauthMetadataEndpoint) throws IOException {
+    private HttpResponse sendGetRequest(HttpClient client, String oidcMetadataEndpoint) throws IOException {
 
-        HttpGet getRequest = new HttpGet(oauthMetadataEndpoint);
+        HttpGet getRequest = new HttpGet(oidcMetadataEndpoint);
         HttpResponse response = client.execute(getRequest);
         return response;
     }
