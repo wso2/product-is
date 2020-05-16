@@ -1990,7 +1990,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.17.83</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.17.85-SNAPSHOT</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2014,7 +2014,7 @@
         <identity.inbound.auth.saml.version>5.8.9</identity.inbound.auth.saml.version>
         <identity.inbound.auth.oauth.version>6.4.22</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.5.1-SNAPSHOT</identity.inbound.auth.openid.version>
-        <identity.inbound.auth.sts.version>5.5.4</identity.inbound.auth.sts.version>
+        <identity.inbound.auth.sts.version>5.5.5-SNAPSHOT</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.6.0</identity.inbound.provisioning.scim.version>
         <identity.inbound.provisioning.scim2.version>1.5.6</identity.inbound.provisioning.scim2.version>
 
@@ -2118,7 +2118,7 @@
         <carbon.registry.version>4.7.33</carbon.registry.version>
         <carbon.multitenancy.version>4.8.6-SNAPSHOT</carbon.multitenancy.version>
         <carbon.metrics.version>1.3.7</carbon.metrics.version>
-        <carbon.business-process.version>4.5.33-SNAPSHOT</carbon.business-process.version>
+        <carbon.business-process.version>4.5.33</carbon.business-process.version>
         <carbon.analytics-common.version>5.2.24</carbon.analytics-common.version>
         <carbon.dashboards.version>2.0.26</carbon.dashboards.version>
         <carbon.database.utils.version>2.0.11</carbon.database.utils.version>
