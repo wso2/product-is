@@ -34,6 +34,9 @@ import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This test class is to test the resident IDP config URLs in super tenant legacy URL mode and tenant legacy URL mode.
+ */
 public class ResidentIDPConfigsTestCase extends ISIntegrationTest {
 
     private IdentityProviderMgtServiceClient idpMgtServiceClient;
@@ -47,8 +50,8 @@ public class ResidentIDPConfigsTestCase extends ISIntegrationTest {
         idpMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL, configContext);
     }
 
-    @Test(groups = "wso2.is", description = "Test getResidentIdP configs")
-    public void testGetResidentIdP() throws Exception {
+    @Test(groups = "wso2.is", description = "Test resident IdP config URLs in super tenant mode")
+    public void testResidentIdPConfigs() throws Exception {
 
         log.info("Retrieving resident identity provide");
         IdentityProvider idProvider = idpMgtServiceClient.getResidentIdP();
@@ -146,11 +149,15 @@ public class ResidentIDPConfigsTestCase extends ISIntegrationTest {
                 "https://localhost:9853/wso2/scim/Users",
                 "Expected SCIM User Endpoint is not found");
         Assert.assertEquals(provisioningConfigMap.get("scim2UserEndpoint"),
-                "https://localhost:9853/wso2/scim2/Users",
+                "https://localhost:9853/scim2/Users",
                 "Expected SCIM 2.0 User Endpoint is not found");
         Assert.assertEquals(provisioningConfigMap.get("scim2GroupEndpoint"),
-                "https://localhost:9853/wso2/scim2/Groups",
+                "https://localhost:9853/scim2/Groups",
                 "Expected SCIM 2.0 Group Endpoint is not found");
+    }
+
+    @Test(groups = "wso2.is", description = "Test resident IDP config URLs in tenant mode")
+    public void testResidentIdPConfigsTenantMode() throws Exception {
 
         ConfigurationContext configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem
                 (null, null);
@@ -253,10 +260,10 @@ public class ResidentIDPConfigsTestCase extends ISIntegrationTest {
                 "https://localhost:9853/wso2/scim/Users",
                 "Expected SCIM User Endpoint is not found in the tenant mode");
         Assert.assertEquals(provisioningConfigTenantMap.get("scim2UserEndpoint"),
-                "https://localhost:9853/t/wso2.com/wso2/scim2/Users",
+                "https://localhost:9853/t/wso2.com/scim2/Users",
                 "Expected SCIM 2.0 User Endpoint is not found in the tenant mode");
         Assert.assertEquals(provisioningConfigTenantMap.get("scim2GroupEndpoint"),
-                "https://localhost:9853/t/wso2.com/wso2/scim2/Groups",
+                "https://localhost:9853/t/wso2.com/scim2/Groups",
                 "Expected SCIM 2.0 Group Endpoint is not found in the tenant mode");
     }
 }
