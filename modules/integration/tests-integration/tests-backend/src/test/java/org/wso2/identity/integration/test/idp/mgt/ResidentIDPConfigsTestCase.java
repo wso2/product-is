@@ -22,7 +22,11 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.context.AutomationContext;
+import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.FederatedAuthenticatorConfig;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.Property;
@@ -40,230 +44,207 @@ import java.util.Map;
 public class ResidentIDPConfigsTestCase extends ISIntegrationTest {
 
     private IdentityProviderMgtServiceClient idpMgtServiceClient;
-    private AuthenticatorClient loginManger;
+
+    private final String username;
+    private final String userPassword;
+    private final String tenantDomain;
+    private Map<String, String> fedAuthConfigMap;
+    private Map<String, String> provisioningConfigMap;
+
+    @DataProvider(name = "configProvider")
+    public static Object[][] configProvider() {
+        return new Object[][]{
+                {TestUserMode.SUPER_TENANT_ADMIN},
+                {TestUserMode.TENANT_ADMIN}
+        };
+    }
+
+    @Factory(dataProvider = "configProvider")
+    public ResidentIDPConfigsTestCase(TestUserMode userMode) throws Exception {
+
+        super.init(userMode);
+        AutomationContext context = new AutomationContext("IDENTITY", userMode);
+        this.username = context.getContextTenant().getTenantAdmin().getUserName();
+        this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
+        this.tenantDomain = context.getContextTenant().getDomain();
+    }
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
-        super.init();
-        ConfigurationContext configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem(null, null);
-        idpMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL, configContext);
+        AuthenticatorClient loginManger = new AuthenticatorClient(backendURL);
+        ConfigurationContext configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem
+                (null, null);
+        String cookie = loginManger.login(username, userPassword, isServer.getInstance().getHosts().get("default"));
+        idpMgtServiceClient = new IdentityProviderMgtServiceClient(cookie, isServer.getContextUrls().getBackEndUrl(),
+                configContext);
+        IdentityProvider idProvider = idpMgtServiceClient.getResidentIdP();
+        fedAuthConfigMap = getFedAuthConfigMap(idProvider);
+        provisioningConfigMap = getProvisioningConfigMap(idProvider);
     }
 
-    @Test(groups = "wso2.is", description = "Test resident IdP config URLs in super tenant mode")
-    public void testResidentIdPConfigs() throws Exception {
+    @DataProvider(name = "federatedAuthConfigURLProvider")
+    public static Object[][] federatedAuthConfigURLProvider() {
+        return new Object[][]{
+                {"carbon.super", "OAuth1AccessTokenUrl", "https://localhost:9853/oauth/access-token",
+                        "Expected OAuth10a Access Token URL is not found "},
+                {"carbon.super", "OAuth1AuthorizeUrl", "https://localhost:9853/oauth/authorize-url",
+                        "Expected OAuth10a Authorize URL is not found"},
+                {"carbon.super", "OAuth1RequestTokenUrl", "https://localhost:9853/oauth/request-token",
+                        "Expected OAuth10a Request Token URL is not found"},
+                {"carbon.super", "IdentityProviderUrl", "https://localhost:9853/passivests",
+                        "Expected Passive STS URL is not found"},
+                {"carbon.super", "OpenIdUrl", "https://localhost:9853/openidserver",
+                        "Expected OpenID Server URL is not found"},
+                {"carbon.super", "ECPUrl", "https://localhost:9853/samlecp",
+                        "Expected ECP URL is not found"},
+                {"carbon.super", "LogoutReqUrl", "https://localhost:9853/samlsso",
+                        "Expected Logout URL is not found"},
+                {"carbon.super", "ArtifactResolveUrl", "https://localhost:9853/samlartresolve",
+                        "Expected Artifact Resolution URL is not found"},
+                {"carbon.super", "SSOUrl", "https://localhost:9853/samlsso",
+                        "Expected SSO URL is not found"},
+                {"carbon.super", "IDENTITY_PROVIDER_URL", "https://localhost:9853/services/wso2carbon-sts",
+                        "Expected Security Token Service URL is not found"},
+                {"carbon.super", "OIDCWebFingerEPUrl", "https://localhost:9853/.well-known/webfinger",
+                        "Expected Web finger Endpoint URL is not found"},
+                {"carbon.super", "IdPEntityId", "https://localhost:9853/oauth2/token",
+                        "Expected Token Endpoint URL is not found"},
+                {"carbon.super", "OIDCCheckSessionEPUrl", "https://localhost:9853/oidc/checksession",
+                        "Expected Session IFrame Endpoint URL is not found"},
+                {"carbon.super", "OAuth2IntrospectEPUrl", "https://localhost:9853/oauth2/introspect",
+                        "Expected Token Introspection Endpoint URL is not found"},
+                {"carbon.super", "OAuth2RevokeEPUrl", "https://localhost:9853/oauth2/revoke",
+                        "Expected Token Revocation Endpoint URL is not found"},
+                {"carbon.super", "OIDCLogoutEPUrl", "https://localhost:9853/oidc/logout",
+                        "Expected Logout Endpoint URL not found"},
+                {"carbon.super", "OAuth2AuthzEPUrl", "https://localhost:9853/oauth2/authorize",
+                        "Expected Authorization Endpoint URL is not found"},
+                {"carbon.super", "OAuth2DCREPUrl", "https://localhost:9853/api/identity/oauth2/dcr/v1.1/register",
+                        "Expected Dynamic Client Registration Endpoint URL is not found"},
+                {"carbon.super", "OIDCDiscoveryEPUrl", "https://localhost:9853/oauth2/oidcdiscovery",
+                        "Expected Dynamic Client Registration Endpoint URL is not found"},
+                {"carbon.super", "OAuth2JWKSPage", "https://localhost:9853/oauth2/jwks", "Expected is not found"},
+                {"carbon.super", "OAuth2TokenEPUrl", "https://localhost:9853/oauth2/token",
+                        "Expected Token Endpoint URL is not found"},
+                {"carbon.super", "OAuth2UserInfoEPUrl", "https://localhost:9853/oauth2/userinfo",
+                        "Expected User Info Endpoint URL is not found"},
+                {"wso2.com", "OAuth1AccessTokenUrl", "https://localhost:9853/oauth/access-token",
+                        "Expected OAuth10a Access Token URL is not found in the tenant mode"},
+                {"wso2.com", "OAuth1AuthorizeUrl", "https://localhost:9853/oauth/authorize-url",
+                        "Expected OAuth10a Authorize URL is not found in the tenant mode"},
+                {"wso2.com", "OAuth1RequestTokenUrl", "https://localhost:9853/oauth/request-token",
+                        "Expected OAuth10a Request Token URL is not found in the tenant mode"},
+                {"wso2.com", "IdentityProviderUrl", "https://localhost:9853/passivests",
+                        "Expected Passive STS URL is not found in the tenant mode"},
+                {"wso2.com", "OpenIdUrl", "https://localhost:9853/openidserver",
+                        "Expected OpenID Server URL is not found in the tenant mode"},
+                {"wso2.com", "ECPUrl", "https://localhost:9853/samlecp?tenantDomain=wso2.com",
+                        "Expected ECP URL is not found in the tenant mode"},
+                {"wso2.com", "LogoutReqUrl" ,"https://localhost:9853/samlsso?tenantDomain=wso2.com",
+                        "Expected Logout URL is not found in the tenant mode"},
+                {"wso2.com", "ArtifactResolveUrl", "https://localhost:9853/samlartresolve",
+                        "Expected Artifact Resolution URL is not found in the tenant mode"},
+                {"wso2.com", "SSOUrl", "https://localhost:9853/samlsso?tenantDomain=wso2.com",
+                        "Expected SSO URL is not found in the tenant mode"},
+                {"wso2.com", "IDENTITY_PROVIDER_URL", "https://localhost:9853/services/t/wso2.com/wso2carbon-sts",
+                        "Expected Security Token Service URL is not found in the tenant mode"},
+                {"wso2.com", "OIDCWebFingerEPUrl", "https://localhost:9853/.well-known/webfinger",
+                        "Expected Web finger Endpoint URL is not found in the tenant mode"},
+                {"wso2.com", "OIDCCheckSessionEPUrl", "https://localhost:9853/oidc/checksession",
+                        "Expected Session IFrame Endpoint URL is not found in the tenant mode"},
+                {"wso2.com", "OAuth2IntrospectEPUrl", "https://localhost:9853/t/wso2.com/oauth2/introspect",
+                        "Expected Token Introspection Endpoint URL is not found in the tenant mode"},
+                {"wso2.com", "OAuth2RevokeEPUrl", "https://localhost:9853/oauth2/revoke",
+                        "Expected Token Revocation Endpoint URL is not found in the tenant mode"},
+                {"wso2.com", "OIDCLogoutEPUrl", "https://localhost:9853/oidc/logout",
+                        "Expected Logout Endpoint URL not found in the tenant mode"},
+                {"wso2.com", "OAuth2AuthzEPUrl", "https://localhost:9853/oauth2/authorize",
+                        "Expected Authorization Endpoint URL is not found in the tenant mode"},
+                {"wso2.com", "OAuth2DCREPUrl", "https://localhost:9853/t/wso2.com/api/identity/oauth2/dcr/v1.1/register",
+                        "Expected Dynamic Client Registration Endpoint URL is not found in the tenant mode"},
+                {"wso2.com", "OIDCDiscoveryEPUrl", "https://localhost:9853/t/wso2.com/oauth2/oidcdiscovery",
+                        "Expected Dynamic Client Registration Endpoint URL is not found in the tenant mode"},
+                {"wso2.com", "OAuth2JWKSPage", "https://localhost:9853/t/wso2.com/oauth2/jwks",
+                        "Expected is not found in the tenant mode"},
+                {"wso2.com", "OAuth2TokenEPUrl", "https://localhost:9853/oauth2/token",
+                        "Expected Token Endpoint URL is not found in the tenant mode"},
+                {"wso2.com", "OAuth2UserInfoEPUrl", "https://localhost:9853/oauth2/userinfo",
+                        "Expected User Info Endpoint URL is not found in the tenant mode"}
+        };
+    }
 
-        log.info("Retrieving resident identity provide");
-        IdentityProvider idProvider = idpMgtServiceClient.getResidentIdP();
+    @DataProvider(name = "provisioningConfigURLProvider")
+    public static Object[][] provisioningConfigURLProvider() {
+        return new Object[][]{
+                {"carbon.super", "scimGroupEndpoint", "https://localhost:9853/wso2/scim/Groups",
+                        "Expected SCIM Group Endpoint is not found"},
+                {"carbon.super", "scimUserEndpoint", "https://localhost:9853/wso2/scim/Users",
+                        "Expected SCIM User Endpoint is not found"},
+                {"carbon.super", "scim2UserEndpoint", "https://localhost:9853/scim2/Users",
+                        "Expected SCIM 2.0 User Endpoint is not found"},
+                {"carbon.super", "scim2GroupEndpoint", "https://localhost:9853/scim2/Groups",
+                        "Expected SCIM 2.0 Group Endpoint is not found"},
+                {"wso2.com", "scimGroupEndpoint", "https://localhost:9853/wso2/scim/Groups",
+                        "Expected SCIM Group Endpoint is not found in the tenant mode"},
+                {"wso2.com", "scimUserEndpoint", "https://localhost:9853/wso2/scim/Users",
+                        "Expected SCIM User Endpoint is not found in the tenant mode"},
+                {"wso2.com", "scim2UserEndpoint", "https://localhost:9853/t/wso2.com/scim2/Users",
+                        "Expected SCIM 2.0 User Endpoint is not found in the tenant mode"},
+                {"wso2.com", "scim2GroupEndpoint", "https://localhost:9853/t/wso2.com/scim2/Groups",
+                        "Expected SCIM 2.0 Group Endpoint is not found in the tenant mode"}
+        };
+    }
 
-        //Extract authenticator configurations.
+    @Test(groups = "wso2.is", dataProvider = "federatedAuthConfigURLProvider",
+            description = "Test resident IdP authentication configs URLs in tenant and super tenant mode")
+    public void testResidentIdPAuthenticationConfigs(String tenant, String endpoint, String expectedURL,
+                                                     String errorMessage) {
+
+        if (tenantDomain.equals("carbon.super") && tenant.equals("carbon.super")) {
+            Assert.assertEquals(fedAuthConfigMap.get(endpoint), expectedURL, errorMessage);
+        }
+
+        if (tenantDomain.equals("wso2.com") && tenant.equals("wso2.com")) {
+            Assert.assertEquals(fedAuthConfigMap.get(endpoint), expectedURL, errorMessage);
+        }
+    }
+
+    @Test(groups = "wso2.is", dataProvider = "provisioningConfigURLProvider",
+            description = "Test resident IdP provisioning config URLs in super tenant and tenant mode")
+    public void testResidentIdPProvisioningConfigs(String tenant,String endpoint, String expectedURL,
+                                                String errorMessage) {
+
+        if (tenantDomain.equals("carbon.super") && tenant.equals("carbon.super")) {
+            Assert.assertEquals(provisioningConfigMap.get(endpoint), expectedURL, errorMessage);
+        }
+
+        if (tenantDomain.equals("wso2.com") && tenant.equals("wso2.com")) {
+            Assert.assertEquals(provisioningConfigMap.get(endpoint), expectedURL, errorMessage);
+        }
+    }
+
+    private Map<String, String> getFedAuthConfigMap(IdentityProvider idProvider) {
+
         FederatedAuthenticatorConfig[] authConfigs = idProvider.getFederatedAuthenticatorConfigs();
-
         Map<String, String> fedAuthConfigMap = new HashMap<String, String>();
         for (FederatedAuthenticatorConfig config : authConfigs) {
-            for (Property property: config.getProperties()) {
+            for (Property property : config.getProperties()) {
                 fedAuthConfigMap.put(property.getName(), property.getValue());
             }
         }
+        return fedAuthConfigMap;
+    }
 
-        Assert.assertEquals(fedAuthConfigMap.get("OAuth1AccessTokenUrl"),
-                "https://localhost:9853/oauth/access-token",
-                "Expected OAuth10a Access Token URL is not found ");
-        Assert.assertEquals(fedAuthConfigMap.get("OAuth1AuthorizeUrl"),
-                "https://localhost:9853/oauth/authorize-url",
-                "Expected OAuth10a Authorize URL is not found");
-        Assert.assertEquals(fedAuthConfigMap.get("OAuth1RequestTokenUrl"),
-                "https://localhost:9853/oauth/request-token",
-                "Expected OAuth10a Request Token URL is not found");
-        Assert.assertEquals(fedAuthConfigMap.get("IdentityProviderUrl"),
-                "https://localhost:9853/passivests",
-                "Expected Passive STS URL is not found");
-        Assert.assertEquals(fedAuthConfigMap.get("OpenIdUrl"),
-                "https://localhost:9853/openidserver",
-                "Expected OpenID Server URL is not found");
-        Assert.assertEquals(fedAuthConfigMap.get("ECPUrl"),
-                "https://localhost:9853/samlecp",
-                "Expected ECP URL is not found");
-        Assert.assertEquals(fedAuthConfigMap.get("LogoutReqUrl"),
-                "https://localhost:9853/samlsso",
-                "Expected Logout URL is not found");
-        Assert.assertEquals(fedAuthConfigMap.get("ArtifactResolveUrl"),
-                "https://localhost:9853/samlartresolve",
-                "Expected Artifact Resolution URL is not found");
-        Assert.assertEquals(fedAuthConfigMap.get("SSOUrl"),
-                "https://localhost:9853/samlsso",
-                "Expected SSO URL is not found");
-        Assert.assertEquals(fedAuthConfigMap.get("IDENTITY_PROVIDER_URL"),
-                "https://localhost:9853/services/wso2carbon-sts",
-                "Expected Security Token Service URL is not found");
-        Assert.assertEquals(fedAuthConfigMap.get("OIDCWebFingerEPUrl"),
-                "https://localhost:9853/.well-known/webfinger",
-                "Expected Web finger Endpoint URL is not found");
-        Assert.assertEquals(fedAuthConfigMap.get("IdPEntityId"),
-                "https://localhost:9853/oauth2/token",
-                "Expected Token Endpoint URL is not found");
-        Assert.assertEquals(fedAuthConfigMap.get("OIDCCheckSessionEPUrl"),
-                "https://localhost:9853/oidc/checksession",
-                "Expected Session IFrame Endpoint URL is not found");
-        Assert.assertEquals(fedAuthConfigMap.get("OAuth2IntrospectEPUrl"),
-                "https://localhost:9853/oauth2/introspect",
-                "Expected Token Introspection Endpoint URL is not found");
-        Assert.assertEquals(fedAuthConfigMap.get("OAuth2RevokeEPUrl"),
-                "https://localhost:9853/oauth2/revoke",
-                "Expected Token Revocation Endpoint URL is not found");
-        Assert.assertEquals(fedAuthConfigMap.get("OIDCLogoutEPUrl"),
-                "https://localhost:9853/oidc/logout",
-                "Expected Logout Endpoint URL not found");
-        Assert.assertEquals(fedAuthConfigMap.get("OAuth2AuthzEPUrl"),
-                "https://localhost:9853/oauth2/authorize",
-                "Expected Authorization Endpoint URL is not found");
-        Assert.assertEquals(fedAuthConfigMap.get("OAuth2DCREPUrl"),
-                "https://localhost:9853/api/identity/oauth2/dcr/v1.1/register",
-                "Expected Dynamic Client Registration Endpoint URL is not found");
-        Assert.assertEquals(fedAuthConfigMap.get("OIDCDiscoveryEPUrl"),
-                "https://localhost:9853/oauth2/oidcdiscovery",
-                "Expected Dynamic Client Registration Endpoint URL is not found");
-        Assert.assertEquals(fedAuthConfigMap.get("OAuth2JWKSPage"),
-                "https://localhost:9853/oauth2/jwks", "Expected is not found");
-        Assert.assertEquals(fedAuthConfigMap.get("OAuth2TokenEPUrl"),
-                "https://localhost:9853/oauth2/token",
-                "Expected Token Endpoint URL is not found");
-        Assert.assertEquals(fedAuthConfigMap.get("OAuth2UserInfoEPUrl"),
-                "https://localhost:9853/oauth2/userinfo",
-                "Expected User Info Endpoint URL is not found");
+    private Map<String, String> getProvisioningConfigMap(IdentityProvider idProvider) {
 
-        //Extract provisioning configurations.
         ProvisioningConnectorConfig[] provisioningConfigs = idProvider.getProvisioningConnectorConfigs();
-
         Map<String, String> provisioningConfigMap = new HashMap<String, String>();
         for (ProvisioningConnectorConfig config : provisioningConfigs) {
             for (Property property: config.getProvisioningProperties()) {
                 provisioningConfigMap.put(property.getName(), property.getValue());
             }
         }
-
-        Assert.assertEquals(provisioningConfigMap.get("scimGroupEndpoint"),
-                "https://localhost:9853/wso2/scim/Groups",
-                "Expected SCIM Group Endpoint is not found");
-        Assert.assertEquals(provisioningConfigMap.get("scimUserEndpoint"),
-                "https://localhost:9853/wso2/scim/Users",
-                "Expected SCIM User Endpoint is not found");
-        Assert.assertEquals(provisioningConfigMap.get("scim2UserEndpoint"),
-                "https://localhost:9853/scim2/Users",
-                "Expected SCIM 2.0 User Endpoint is not found");
-        Assert.assertEquals(provisioningConfigMap.get("scim2GroupEndpoint"),
-                "https://localhost:9853/scim2/Groups",
-                "Expected SCIM 2.0 Group Endpoint is not found");
-    }
-
-    @Test(groups = "wso2.is", description = "Test resident IDP config URLs in tenant mode")
-    public void testResidentIdPConfigsTenantMode() throws Exception {
-
-        ConfigurationContext configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem
-                (null, null);
-        loginManger = new AuthenticatorClient(isServer.getContextUrls().getBackEndUrl());
-        String cookie = loginManger.login("admin@wso2.com", "admin",
-                isServer.getInstance().getHosts().get("default"));
-        idpMgtServiceClient = new IdentityProviderMgtServiceClient(cookie, isServer.getContextUrls().getBackEndUrl(),
-                configContext);
-
-        IdentityProvider residentIdP = idpMgtServiceClient.getResidentIdP();
-
-        //Extract authenticator configurations for tenant.
-        FederatedAuthenticatorConfig[] fedAuthConfigsTenant = residentIdP.getFederatedAuthenticatorConfigs();
-
-        Map<String, String> fedAuthConfigTenantMap = new HashMap<String, String>();
-        for (FederatedAuthenticatorConfig config : fedAuthConfigsTenant) {
-            for (Property property: config.getProperties()) {
-                fedAuthConfigTenantMap.put(property.getName(), property.getValue());
-            }
-        }
-
-        Assert.assertEquals(fedAuthConfigTenantMap.get("OAuth1AccessTokenUrl"),
-                "https://localhost:9853/oauth/access-token",
-                "Expected OAuth10a Access Token URL is not found in the tenant mode");
-        Assert.assertEquals(fedAuthConfigTenantMap.get("OAuth1AuthorizeUrl"),
-                "https://localhost:9853/oauth/authorize-url",
-                "Expected OAuth10a Authorize URL is not found in the tenant mode");
-        Assert.assertEquals(fedAuthConfigTenantMap.get("OAuth1RequestTokenUrl"),
-                "https://localhost:9853/oauth/request-token",
-                "Expected OAuth10a Request Token URL is not found in the tenant mode");
-        Assert.assertEquals(fedAuthConfigTenantMap.get("IdentityProviderUrl"),
-                "https://localhost:9853/passivests",
-                "Expected Passive STS URL is not found in the tenant mode");
-        Assert.assertEquals(fedAuthConfigTenantMap.get("OpenIdUrl"),
-                "https://localhost:9853/openidserver",
-                "Expected OpenID Server URL is not found in the tenant mode");
-        Assert.assertEquals(fedAuthConfigTenantMap.get("ECPUrl"),
-                "https://localhost:9853/samlecp?tenantDomain=wso2.com",
-                "Expected ECP URL is not found in the tenant mode");
-        Assert.assertEquals(fedAuthConfigTenantMap.get("LogoutReqUrl"),
-                "https://localhost:9853/samlsso?tenantDomain=wso2.com",
-                "Expected Logout URL is not found in the tenant mode");
-        Assert.assertEquals(fedAuthConfigTenantMap.get("ArtifactResolveUrl"),
-                "https://localhost:9853/samlartresolve",
-                "Expected Artifact Resolution URL is not found in the tenant mode");
-        Assert.assertEquals(fedAuthConfigTenantMap.get("SSOUrl"),
-                "https://localhost:9853/samlsso?tenantDomain=wso2.com",
-                "Expected SSO URL is not found in the tenant mode");
-        Assert.assertEquals(fedAuthConfigTenantMap.get("IDENTITY_PROVIDER_URL"),
-                "https://localhost:9853/services/t/wso2.com/wso2carbon-sts",
-                "Expected Security Token Service URL is not found in the tenant mode");
-        Assert.assertEquals(fedAuthConfigTenantMap.get("OIDCWebFingerEPUrl"),
-                "https://localhost:9853/.well-known/webfinger",
-                "Expected Web finger Endpoint URL is not found in the tenant mode");
-        Assert.assertEquals(fedAuthConfigTenantMap.get("OIDCCheckSessionEPUrl"),
-                "https://localhost:9853/oidc/checksession",
-                "Expected Session IFrame Endpoint URL is not found in the tenant mode");
-        Assert.assertEquals(fedAuthConfigTenantMap.get("OAuth2IntrospectEPUrl"),
-                "https://localhost:9853/t/wso2.com/oauth2/introspect",
-                "Expected Token Introspection Endpoint URL is not found in the tenant mode");
-        Assert.assertEquals(fedAuthConfigTenantMap.get("OAuth2RevokeEPUrl"),
-                "https://localhost:9853/oauth2/revoke",
-                "Expected Token Revocation Endpoint URL is not found in the tenant mode");
-        Assert.assertEquals(fedAuthConfigTenantMap.get("OIDCLogoutEPUrl"),
-                "https://localhost:9853/oidc/logout",
-                "Expected Logout Endpoint URL not found in the tenant mode");
-        Assert.assertEquals(fedAuthConfigTenantMap.get("OAuth2AuthzEPUrl"),
-                "https://localhost:9853/oauth2/authorize",
-                "Expected Authorization Endpoint URL is not found in the tenant mode");
-        Assert.assertEquals(fedAuthConfigTenantMap.get("OAuth2DCREPUrl"),
-                "https://localhost:9853/t/wso2.com/api/identity/oauth2/dcr/v1.1/register",
-                "Expected Dynamic Client Registration Endpoint URL is not found in the tenant mode");
-        Assert.assertEquals(fedAuthConfigTenantMap.get("OIDCDiscoveryEPUrl"),
-                "https://localhost:9853/t/wso2.com/oauth2/oidcdiscovery",
-                "Expected Dynamic Client Registration Endpoint URL is not found in the tenant mode");
-        Assert.assertEquals(fedAuthConfigTenantMap.get("OAuth2JWKSPage"),
-                "https://localhost:9853/t/wso2.com/oauth2/jwks",
-                "Expected is not found in the tenant mode");
-        Assert.assertEquals(fedAuthConfigTenantMap.get("OAuth2TokenEPUrl"),
-                "https://localhost:9853/oauth2/token",
-                "Expected Token Endpoint URL is not found in the tenant mode");
-        Assert.assertEquals(fedAuthConfigTenantMap.get("OAuth2UserInfoEPUrl"),
-                "https://localhost:9853/oauth2/userinfo",
-                "Expected User Info Endpoint URL is not found in the tenant mode");
-
-        //Extract provisioning configurations for tenant.
-        ProvisioningConnectorConfig[] provisioningConfigsTenant = residentIdP.getProvisioningConnectorConfigs();
-
-        Map<String, String> provisioningConfigTenantMap = new HashMap<String, String>();
-        for (ProvisioningConnectorConfig config : provisioningConfigsTenant) {
-            for (Property property: config.getProvisioningProperties()) {
-                provisioningConfigTenantMap.put(property.getName(), property.getValue());
-            }
-        }
-
-        Assert.assertEquals(provisioningConfigTenantMap.get("scimGroupEndpoint"),
-                "https://localhost:9853/wso2/scim/Groups",
-                "Expected SCIM Group Endpoint is not found in the tenant mode");
-        Assert.assertEquals(provisioningConfigTenantMap.get("scimUserEndpoint"),
-                "https://localhost:9853/wso2/scim/Users",
-                "Expected SCIM User Endpoint is not found in the tenant mode");
-        Assert.assertEquals(provisioningConfigTenantMap.get("scim2UserEndpoint"),
-                "https://localhost:9853/t/wso2.com/scim2/Users",
-                "Expected SCIM 2.0 User Endpoint is not found in the tenant mode");
-        Assert.assertEquals(provisioningConfigTenantMap.get("scim2GroupEndpoint"),
-                "https://localhost:9853/t/wso2.com/scim2/Groups",
-                "Expected SCIM 2.0 Group Endpoint is not found in the tenant mode");
+        return provisioningConfigMap;
     }
 }
