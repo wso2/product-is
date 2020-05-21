@@ -47,9 +47,11 @@ public class ResidentIDPConfigsTestCase extends ISIntegrationTest {
 
     private final String username;
     private final String userPassword;
-    private final String tenantDomain;
+    private final String activeTenant;
     private Map<String, String> fedAuthConfigMap;
     private Map<String, String> provisioningConfigMap;
+    private final String SUPER_TENANT = "carbon.super";
+    private final String TENANT_DOMAIN = "wso2.com";
 
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
@@ -66,7 +68,7 @@ public class ResidentIDPConfigsTestCase extends ISIntegrationTest {
         AutomationContext context = new AutomationContext("IDENTITY", userMode);
         this.username = context.getContextTenant().getTenantAdmin().getUserName();
         this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
-        this.tenantDomain = context.getContextTenant().getDomain();
+        this.activeTenant = context.getContextTenant().getDomain();
     }
 
     @BeforeClass(alwaysRun = true)
@@ -141,7 +143,7 @@ public class ResidentIDPConfigsTestCase extends ISIntegrationTest {
                         "Expected OpenID Server URL is not found in the tenant mode"},
                 {"wso2.com", "ECPUrl", "https://localhost:9853/samlecp?tenantDomain=wso2.com",
                         "Expected ECP URL is not found in the tenant mode"},
-                {"wso2.com", "LogoutReqUrl" ,"https://localhost:9853/samlsso?tenantDomain=wso2.com",
+                {"wso2.com", "LogoutReqUrl", "https://localhost:9853/samlsso?tenantDomain=wso2.com",
                         "Expected Logout URL is not found in the tenant mode"},
                 {"wso2.com", "ArtifactResolveUrl", "https://localhost:9853/samlartresolve",
                         "Expected Artifact Resolution URL is not found in the tenant mode"},
@@ -198,28 +200,28 @@ public class ResidentIDPConfigsTestCase extends ISIntegrationTest {
 
     @Test(groups = "wso2.is", dataProvider = "federatedAuthConfigURLProvider",
             description = "Test resident IdP authentication configs URLs in tenant and super tenant mode")
-    public void testResidentIdPAuthenticationConfigs(String tenant, String endpoint, String expectedURL,
-                                                     String errorMessage) {
+    public void testResidentIdPAuthenticationConfigs(String configBindTenant, String endpoint,
+                                                     String expectedURL, String errorMessage) {
 
-        if (tenantDomain.equals("carbon.super") && tenant.equals("carbon.super")) {
+        if (SUPER_TENANT.equals(activeTenant) && SUPER_TENANT.equals(configBindTenant)) {
             Assert.assertEquals(fedAuthConfigMap.get(endpoint), expectedURL, errorMessage);
         }
 
-        if (tenantDomain.equals("wso2.com") && tenant.equals("wso2.com")) {
+        if (TENANT_DOMAIN.equals(activeTenant) && TENANT_DOMAIN.equals(configBindTenant)) {
             Assert.assertEquals(fedAuthConfigMap.get(endpoint), expectedURL, errorMessage);
         }
     }
 
     @Test(groups = "wso2.is", dataProvider = "provisioningConfigURLProvider",
             description = "Test resident IdP provisioning config URLs in super tenant and tenant mode")
-    public void testResidentIdPProvisioningConfigs(String tenant,String endpoint, String expectedURL,
-                                                String errorMessage) {
+    public void testResidentIdPProvisioningConfigs(String configBindTenant, String endpoint, String expectedURL,
+                                                   String errorMessage) {
 
-        if (tenantDomain.equals("carbon.super") && tenant.equals("carbon.super")) {
+        if (SUPER_TENANT.equals(activeTenant) && SUPER_TENANT.equals(configBindTenant)) {
             Assert.assertEquals(provisioningConfigMap.get(endpoint), expectedURL, errorMessage);
         }
 
-        if (tenantDomain.equals("wso2.com") && tenant.equals("wso2.com")) {
+        if (TENANT_DOMAIN.equals(activeTenant) && TENANT_DOMAIN.equals(configBindTenant)) {
             Assert.assertEquals(provisioningConfigMap.get(endpoint), expectedURL, errorMessage);
         }
     }
@@ -241,7 +243,7 @@ public class ResidentIDPConfigsTestCase extends ISIntegrationTest {
         ProvisioningConnectorConfig[] provisioningConfigs = idProvider.getProvisioningConnectorConfigs();
         Map<String, String> provisioningConfigMap = new HashMap<String, String>();
         for (ProvisioningConnectorConfig config : provisioningConfigs) {
-            for (Property property: config.getProvisioningProperties()) {
+            for (Property property : config.getProvisioningProperties()) {
                 provisioningConfigMap.put(property.getName(), property.getValue());
             }
         }
