@@ -24,5 +24,8 @@
   "log_correlation.header_config": "{'activityid':'Correlation-ID'}",
 
   "monitoring.jmx.rmi_server_start": false,
-  "product.version" : "${product.version}"
+  "product.version" : "${product.version}",
+
+  "transport.http.enabled" : true,
+  "transport.https.enabled" : true
 }
