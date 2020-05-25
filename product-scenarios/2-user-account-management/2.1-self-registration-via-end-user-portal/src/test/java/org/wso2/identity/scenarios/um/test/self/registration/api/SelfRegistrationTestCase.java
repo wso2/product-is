@@ -16,6 +16,7 @@
 
 package org.wso2.identity.scenarios.um.test.self.registration.api;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -299,7 +300,14 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
         ClaimValue[] claimValues = userStoreManagerServiceClient
                 .getUserClaimValuesForClaims(((JSONObject) registerRequestJSON.get(USER)).get(USERNAME).toString(),
                         new String[] { ACCOUNT_LOCK_CLAIM }, "default");
-        log.info("Claim values received: " + Arrays.toString(claimValues));
+        if (ArrayUtils.isEmpty(claimValues)) {
+            for (ClaimValue claimValue : claimValues) {
+                log.info("For Claim URI : " + claimValue.getClaimURI() + 
+                        " following value is set : " + claimValue.getValue());
+            }
+        } else {
+            log.info("Claim values array is empty.");
+        }
         assertNotNull(claimValues, "Failed to get the value for Claim URI: " + ACCOUNT_LOCK_CLAIM);
 
         assertEquals(claimValues[0].getValue(), "false",
