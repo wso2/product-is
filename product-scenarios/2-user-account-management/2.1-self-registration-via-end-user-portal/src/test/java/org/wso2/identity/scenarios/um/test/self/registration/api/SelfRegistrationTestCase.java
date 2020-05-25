@@ -300,7 +300,7 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
         ClaimValue[] claimValues = userStoreManagerServiceClient
                 .getUserClaimValuesForClaims(((JSONObject) registerRequestJSON.get(USER)).get(USERNAME).toString(),
                         new String[] { ACCOUNT_LOCK_CLAIM }, "default");
-        if (ArrayUtils.isEmpty(claimValues)) {
+        if (ArrayUtils.isNotEmpty(claimValues)) {
             for (ClaimValue claimValue : claimValues) {
                 log.info("For Claim URI : " + claimValue.getClaimURI() + 
                         " following value is set : " + claimValue.getValue());
