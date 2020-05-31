@@ -16,6 +16,7 @@
 
 package org.wso2.identity.scenarios.um.test.self.registration.api;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -44,6 +45,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.testng.Assert.assertEquals;
@@ -298,6 +300,7 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
         ClaimValue[] claimValues = userStoreManagerServiceClient
                 .getUserClaimValuesForClaims(((JSONObject) registerRequestJSON.get(USER)).get(USERNAME).toString(),
                         new String[] { ACCOUNT_LOCK_CLAIM }, "default");
+        log.info("Claim values received: " + Arrays.toString(claimValues));
         assertNotNull(claimValues, "Failed to get the value for Claim URI: " + ACCOUNT_LOCK_CLAIM);
 
         assertEquals(claimValues[0].getValue(), "false",
