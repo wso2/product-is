@@ -34,6 +34,8 @@ mv PassiveSTSSampleApp apache-tomcat-8.5.35/webapps/
 
 cd apache-tomcat-8.5.35/
 
+echo 'export CATALINA_OPTS="-Xms128m -Xmx256m -Xss128m"' >> bin/setenv.sh
+
 if [ $# -eq 0 ]
   then
     echo "ISHttpsUrl is not provided, hence using default configurations."
