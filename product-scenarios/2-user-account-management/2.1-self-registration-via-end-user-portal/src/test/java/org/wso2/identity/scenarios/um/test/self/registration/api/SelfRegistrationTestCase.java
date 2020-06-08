@@ -212,6 +212,8 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
                 .sendPostRequestWithJSON(getEndPoint(ME), registerRequestJSON, getCommonHeaders(username, password));
 
         confirmationCode = httpCommonClient.getStringFromResponse(response);
+        log.info("Self registration result. Request Object: " + registerRequestJSON.toJSONString()
+                + " Response body (confirmation code): " + confirmationCode);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED,
                 "Self registration failed. Request Object: " + registerRequestJSON.toJSONString() + " Response body: "
                         + confirmationCode);
@@ -259,6 +261,8 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
                         + registerRequestJSON.toJSONString());
 
         newConfirmationCode = httpCommonClient.getStringFromResponse(response);
+        log.info("Self registration resend code result. Request Object: " + registerRequestJSON.toJSONString()
+                + " Response body (confirmation code): " + newConfirmationCode);
         assertNotNull(newConfirmationCode, "Failed to receive the new confirmation code.");
     }
 
@@ -286,8 +290,10 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
 
         JSONObject confirmRequestJSON = new JSONObject();
         if (resendCode) {
+            log.info("Resend code scenario. Confirmation code: " + newConfirmationCode);
             confirmRequestJSON.put(CODE, newConfirmationCode);
         } else {
+            log.info("Confirmation code: " + confirmationCode);
             confirmRequestJSON.put(CODE, confirmationCode);
         }
         HttpResponse response = httpCommonClient.sendPostRequestWithJSON(getEndPoint(VALIDATE_CODE), confirmRequestJSON,
@@ -310,6 +316,9 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
         }
         assertNotNull(claimValues, "Failed to get the value for Claim URI: " + ACCOUNT_LOCK_CLAIM);
 
+        if (ArrayUtils.isNotEmpty(claimValues)) {
+            log.info("Claim: " + claimValues[0].getClaimURI() + " value: " + claimValues[0].getValue());
+        }
         assertEquals(claimValues[0].getValue(), "false",
                 "Failed to unlock the user account upon confirmation. Confirmation code: " + confirmationCode
                         + " Request Object: " + registerRequestJSON.toJSONString());
