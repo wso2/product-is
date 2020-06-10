@@ -211,7 +211,7 @@ code and source code.
 The following provides more details on the included cryptographic
 software:
 
-Apacge Rampart   : http://ws.apache.org/rampart/
+Apache Rampart   : http://ws.apache.org/rampart/
 Apache WSS4J     : http://ws.apache.org/wss4j/
 Apache Santuario : http://santuario.apache.org/
 Bouncycastle     : http://www.bouncycastle.org/
