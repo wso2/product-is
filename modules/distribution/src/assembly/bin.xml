@@ -374,6 +374,17 @@
             </includes>
         </fileSet>
 
+        <!--copy admin-portal web app-->
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
+            <includes>
+                <include>admin-portal/</include>
+            </includes>
+        </fileSet>
+
         <!--copy the lsp-debug webapp -->
         <fileSet>
             <directory>
