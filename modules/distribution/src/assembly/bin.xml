@@ -58,6 +58,7 @@
                 <exclude>**/metrics.xml</exclude>
                 <exclude>**/log4j2.properties</exclude>
                 <exclude>**/catalina.properties</exclude>
+                <exclude>**/carbon.properties</exclude>
             </excludes>
         </fileSet>
 
@@ -1241,6 +1242,15 @@
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
+
+        <!-- add carbon.properties with symmetric key cipher -->
+        <file>
+            <source>src/repository/resources/conf/carbon.properties</source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
+            <destName>carbon.properties</destName>
+            <filtered>true</filtered>
+        </file>
+
     </files>
 
     <dependencySets>
