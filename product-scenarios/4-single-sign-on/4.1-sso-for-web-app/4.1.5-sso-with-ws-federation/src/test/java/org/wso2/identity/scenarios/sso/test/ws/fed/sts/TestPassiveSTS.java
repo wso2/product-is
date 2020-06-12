@@ -243,8 +243,15 @@ public class TestPassiveSTS extends ScenarioTestBase {
         EntityUtils.consume(response.getEntity());
         response = sendGetRequest(client, locationHeader.getValue(), null);
         resultPage = extractFullContentFromResponse(response);
-        assertTrue(resultPage.contains("You are now redirected to " + passiveStsSampleAppURL), "Passive STS " +
-                "Login failed for: " + this.config);
+
+        // Following error log is added to analyze an intermittent error caught with Passive STS Login fail assertion.
+        boolean successfullyRedirected = resultPage.contains("You are now redirected to " + passiveStsSampleAppURL);
+        if (!successfullyRedirected) {
+            log.error(String.format("Could not find the successfully redirected message from the result page. " +
+                    "Here are some helpful information to analyze the root cause. responseStatus: %s, " +
+                    "resultPage: %s", response.getStatusLine(), resultPage));
+        }
+        assertTrue(successfullyRedirected, "Passive STS Login failed for: " + this.config);
         assertTrue(resultPage.contains("RequestSecurityTokenResponseCollection"), "Passive STS " +
                 "Login response doesn't have wresult for: " + this.config);
         assertTrue(resultPage.contains("urn:oasis:names:tc:SAML:1.0:assertion"), "Passive STS " +
