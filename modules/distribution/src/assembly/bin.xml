@@ -58,6 +58,7 @@
                 <exclude>**/metrics.xml</exclude>
                 <exclude>**/log4j2.properties</exclude>
                 <exclude>**/catalina.properties</exclude>
+                <exclude>**/carbon.properties</exclude>
             </excludes>
         </fileSet>
 
@@ -370,6 +371,17 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
             <includes>
                 <include>developer-portal/</include>
+            </includes>
+        </fileSet>
+
+        <!--copy admin-portal web app-->
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
+            <includes>
+                <include>admin-portal/</include>
             </includes>
         </fileSet>
 
@@ -1227,6 +1239,15 @@
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
+
+        <!-- add carbon.properties with symmetric key cipher -->
+        <file>
+            <source>src/repository/resources/conf/carbon.properties</source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
+            <destName>carbon.properties</destName>
+            <filtered>true</filtered>
+        </file>
+
     </files>
 
     <dependencySets>
