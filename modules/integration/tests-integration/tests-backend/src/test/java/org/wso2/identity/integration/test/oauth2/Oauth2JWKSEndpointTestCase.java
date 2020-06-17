@@ -32,7 +32,7 @@ import java.io.IOException;
 
 public class Oauth2JWKSEndpointTestCase {
 
-    private static final String JKWS_URI_SUPER_TENANT =	"https://localhost:9853/oauth2/jwks";
+    private static final String JKWS_URI_SUPER_TENANT = "https://localhost:9853/oauth2/jwks";
     private static final String JKWS_URI_TENANT = "https://localhost:9853/t/wso2.com/oauth2/jwks";
 
     @Test(groups = "wso2.is", description = "This test JWKS endpoints.")

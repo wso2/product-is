@@ -61,7 +61,7 @@ public class OAuth2ServiceIntrospectionTestCase extends OAuth2ServiceAbstractInt
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
         return new Object[][]{
-//                {TestUserMode.SUPER_TENANT_ADMIN},
+                {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
         };
     }
@@ -110,7 +110,6 @@ public class OAuth2ServiceIntrospectionTestCase extends OAuth2ServiceAbstractInt
 
         consumerSecret = appDto.getOauthConsumerSecret();
         Assert.assertNotNull(consumerSecret, "Application creation failed.");
-
     }
 
     @Test(groups = "wso2.is", description = "Send authorize user request and get access token", dependsOnMethods = "testRegisterApplication")
@@ -154,5 +153,4 @@ public class OAuth2ServiceIntrospectionTestCase extends OAuth2ServiceAbstractInt
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.ACCESS_RESOURCES_URL);
         Assert.assertNotNull(response, "Error in calling to introspection endpoint. Response is invalid.");
     }
-
 }
