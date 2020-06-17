@@ -87,7 +87,6 @@ public class OAuth2BackChannelLogoutTestCase extends OAuth2ServiceAbstractIntegr
 
         init();
         createOIDCApplication();
-
         client = HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build();
     }
 
