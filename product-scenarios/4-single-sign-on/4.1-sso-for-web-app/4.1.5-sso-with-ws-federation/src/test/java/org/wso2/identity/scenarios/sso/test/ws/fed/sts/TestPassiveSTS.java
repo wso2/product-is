@@ -22,8 +22,9 @@ import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -206,7 +207,7 @@ public class TestPassiveSTS extends ScenarioTestBase {
             dependsOnMethods = {"testAddClaimConfiguration"})
     public void testInvokePassiveSTSSampleApp() throws IOException, URISyntaxException {
 
-        CloseableHttpClient client = HttpClients.createDefault();
+        CloseableHttpClient client = HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build();
         HttpResponse response;
         response = sendGetRequest(client, passiveStsSampleAppURL, null);
 

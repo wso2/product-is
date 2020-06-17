@@ -22,6 +22,7 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.commons.collections.MapUtils;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
@@ -126,7 +127,8 @@ public class ScenarioTestBase {
 
     public CloseableHttpClient createHttpClient(int timeOutInSeconds) {
         RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(timeOutInSeconds * 1000).build();
-        return HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
+        return HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore())
+                .setDefaultRequestConfig(requestConfig).build();
     }
 
     public CloseableHttpClient createHttpClient() {
