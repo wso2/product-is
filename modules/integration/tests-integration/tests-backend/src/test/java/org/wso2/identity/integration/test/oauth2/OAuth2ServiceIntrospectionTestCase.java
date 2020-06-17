@@ -26,7 +26,10 @@ import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Factory;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
@@ -50,17 +53,37 @@ public class OAuth2ServiceIntrospectionTestCase extends OAuth2ServiceAbstractInt
     private String consumerSecret;
 
     private CloseableHttpClient client;
+    private final String username;
+    private final String userPassword;
+    private final String activeTenant;
+    private final String TENANT_DOMAIN = "wso2.com";
+
+    @DataProvider(name = "configProvider")
+    public static Object[][] configProvider() {
+        return new Object[][]{
+//                {TestUserMode.SUPER_TENANT_ADMIN},
+                {TestUserMode.TENANT_ADMIN}
+        };
+    }
+
+    @Factory(dataProvider = "configProvider")
+    public OAuth2ServiceIntrospectionTestCase(TestUserMode userMode) throws Exception {
+
+        super.init(userMode);
+        AutomationContext context = new AutomationContext("IDENTITY", userMode);
+        this.username = context.getContextTenant().getTenantAdmin().getUserName();
+        this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
+        this.activeTenant = context.getContextTenant().getDomain();
+
+    }
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
-        super.init(TestUserMode.SUPER_TENANT_USER);
         logManger = new AuthenticatorClient(backendURL);
         adminUsername = userInfo.getUserName();
         adminPassword = userInfo.getPassword();
-        logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
-                isServer.getSuperTenant().getTenantAdmin().getPassword(),
-                isServer.getInstance().getHosts().get("default"));
+        logManger.login(username, userPassword,	isServer.getInstance().getHosts().get("default"));
 
         setSystemproperties();
         client = HttpClientBuilder.create().build();

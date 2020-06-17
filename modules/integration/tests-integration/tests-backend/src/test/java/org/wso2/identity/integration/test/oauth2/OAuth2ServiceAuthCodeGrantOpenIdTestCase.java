@@ -30,9 +30,8 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 import org.json.simple.JSONValue;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
+import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationRequestDTO;
@@ -81,17 +80,34 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
 
     private List<NameValuePair> consentParameters = new ArrayList<>();
     private CookieStore cookieStore = new BasicCookieStore();
+    private String username;
+    private String userPassword;
+
+    @DataProvider(name = "configProvider")
+    public static Object[][] configProvider() {
+        return new Object[][]{
+                {TestUserMode.SUPER_TENANT_ADMIN},
+                {TestUserMode.TENANT_ADMIN}
+        };
+    }
+
+    @Factory(dataProvider = "configProvider")
+    public OAuth2ServiceAuthCodeGrantOpenIdTestCase(TestUserMode userMode) throws Exception {
+
+        super.init(userMode);
+        AutomationContext context = new AutomationContext("IDENTITY", userMode);
+        this.username = context.getContextTenant().getTenantAdmin().getUserName();
+        this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
+    }
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
-        super.init(TestUserMode.SUPER_TENANT_USER);
 
         logManger = new AuthenticatorClient(backendURL);
         adminUsername = userInfo.getUserName();
         adminPassword = userInfo.getPassword();
-        String sessionIndex = logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
-                isServer.getSuperTenant().getTenantAdmin().getPassword(),
-                isServer.getInstance().getHosts().get("default"));
+        String sessionIndex =
+                logManger.login(username, userPassword,	isServer.getInstance().getHosts().get("default"));
         oAuth2TokenValidationClient = new Oauth2TokenValidationClient(backendURL, sessionIndex);
         client = new DefaultHttpClient();
         client.setCookieStore(cookieStore);

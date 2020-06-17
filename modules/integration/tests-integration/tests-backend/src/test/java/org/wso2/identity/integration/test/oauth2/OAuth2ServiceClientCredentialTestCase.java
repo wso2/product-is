@@ -26,7 +26,10 @@ import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
@@ -47,19 +50,35 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
 	private String accessToken;
 	private String consumerKey;
 	private String consumerSecret;
+	private String username;
+	private String userPassword;
 
 	private CloseableHttpClient client;
+
+	@DataProvider(name = "configProvider")
+	public static Object[][] configProvider() {
+		return new Object[][]{
+				{TestUserMode.SUPER_TENANT_ADMIN},
+				{TestUserMode.TENANT_ADMIN}
+		};
+	}
+
+	@Factory(dataProvider = "configProvider")
+	public OAuth2ServiceClientCredentialTestCase(TestUserMode userMode) throws Exception {
+
+		super.init(userMode);
+		AutomationContext context = new AutomationContext("IDENTITY", userMode);
+		this.username = context.getContextTenant().getTenantAdmin().getUserName();
+		this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
+	}
 
 	@BeforeClass(alwaysRun = true)
 	public void testInit() throws Exception {
 
-		super.init(TestUserMode.SUPER_TENANT_USER);
 		logManger = new AuthenticatorClient(backendURL);
 		adminUsername = userInfo.getUserName();
 		adminPassword = userInfo.getPassword();
-		logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
-				isServer.getSuperTenant().getTenantAdmin().getPassword(),
-				isServer.getInstance().getHosts().get("default"));
+		logManger.login(username, userPassword,	isServer.getInstance().getHosts().get("default"));
 
 		setSystemproperties();
 		client = HttpClientBuilder.create().build();
