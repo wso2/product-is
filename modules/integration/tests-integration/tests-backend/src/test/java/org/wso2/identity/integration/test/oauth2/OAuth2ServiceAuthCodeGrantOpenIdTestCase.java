@@ -84,8 +84,8 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
 
     private List<NameValuePair> consentParameters = new ArrayList<>();
     private CookieStore cookieStore = new BasicCookieStore();
-    private String username;
-    private String userPassword;
+    private final String username;
+    private final String userPassword;
 
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
@@ -362,7 +362,6 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
         return response;
     }
 
-
     protected ClaimValue[] getUserClaims() {
         ClaimValue[] claimValues = new ClaimValue[1];
 
@@ -373,5 +372,4 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
 
         return claimValues;
     }
-
 }
