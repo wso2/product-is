@@ -31,6 +31,8 @@ import org.json.simple.JSONValue;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
@@ -63,21 +65,38 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
     private String authorizationCode;
     private String consumerKey;
     private String consumerSecret;
+    private final String username;
+    private final String userPassword;
+    private final AutomationContext context;
 
     private static final String PLAYGROUND_RESET_PAGE = "http://localhost:" + CommonConstants.DEFAULT_TOMCAT_PORT +
             "/playground2/oauth2.jsp?reset=true";
     private DefaultHttpClient client;
 
+    @DataProvider(name = "configProvider")
+    public static Object[][] configProvider() {
+        return new Object[][]{
+                {TestUserMode.SUPER_TENANT_ADMIN},
+                {TestUserMode.TENANT_ADMIN}
+        };
+    }
+
+    @Factory(dataProvider = "configProvider")
+    public OAuth2ServiceAuthCodeGrantTestCase(TestUserMode userMode) throws Exception {
+
+        super.init(userMode);
+        context = new AutomationContext("IDENTITY", userMode);
+        this.username = context.getContextTenant().getTenantAdmin().getUserName();
+        this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
+    }
+
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
-        super.init(TestUserMode.SUPER_TENANT_USER);
         logManger = new AuthenticatorClient(backendURL);
         adminUsername = userInfo.getUserName();
         adminPassword = userInfo.getPassword();
-        logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
-                isServer.getSuperTenant().getTenantAdmin().getPassword(),
-                isServer.getInstance().getHosts().get("default"));
+        logManger.login(username, userPassword,	isServer.getInstance().getHosts().get("default"));
         client = new DefaultHttpClient();
 
         setSystemproperties();
@@ -103,22 +122,21 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
         consumerSecret = appDto.getOauthConsumerSecret();
     }
 
-//    @Test(groups = "wso2.is", description = "Send authorize user request without response_type param", dependsOnMethods
-//            = "testRegisterApplication")
-//    public void testSendAuthorozedPostForError() throws Exception {
-//
-//        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-//        urlParameters.add(new BasicNameValuePair("client_id", consumerKey));
-//        urlParameters.add(new BasicNameValuePair("redirect_uri", OAuth2Constant.CALLBACK_URL));
-//        AutomationContext automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
-//        String authorizeEndpoint = automationContext.getContextUrls().getBackEndUrl()
-//                .replace("services/", "oauth2/authorize");
-//        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, authorizeEndpoint);
-//        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
-//        Assert.assertTrue(locationHeader.getValue().startsWith(OAuth2Constant.CALLBACK_URL),
-//                "Error response is not redirected to the redirect_uri given in the request");
-//        EntityUtils.consume(response.getEntity());
-//    }
+    @Test(groups = "wso2.is", description = "Send authorize user request without response_type param", dependsOnMethods
+            = "testRegisterApplication")
+    public void testSendAuthorizedPostForError() throws Exception {
+
+        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        urlParameters.add(new BasicNameValuePair("client_id", consumerKey));
+        urlParameters.add(new BasicNameValuePair("redirect_uri", OAuth2Constant.CALLBACK_URL));
+        String authorizeEndpoint = context.getContextUrls().getBackEndUrl()
+                .replace("services/", "oauth2/authorize");
+        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, authorizeEndpoint);
+        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        Assert.assertTrue(locationHeader.getValue().startsWith(OAuth2Constant.CALLBACK_URL),
+                "Error response is not redirected to the redirect_uri given in the request");
+        EntityUtils.consume(response.getEntity());
+    }
 
     @Test(groups = "wso2.is", description = "Send authorize user request without redirect_uri param", dependsOnMethods
             = "testRegisterApplication")
@@ -126,8 +144,7 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
 
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         urlParameters.add(new BasicNameValuePair("client_id", consumerKey));
-        AutomationContext automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
-        String authorizeEndpoint = automationContext.getContextUrls().getBackEndUrl()
+        String authorizeEndpoint = context.getContextUrls().getBackEndUrl()
                 .replace("services/", "oauth2/authorize");
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters, authorizeEndpoint);
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
@@ -137,7 +154,7 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
     }
 
     @Test(groups = "wso2.is", description = "Send authorize user request", dependsOnMethods = "testRegisterApplication")
-    public void testSendAuthorozedPost() throws Exception {
+    public void testSendAuthorizedPost() throws Exception {
 
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         urlParameters.add(new BasicNameValuePair("grantType", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
@@ -171,7 +188,7 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
         EntityUtils.consume(response.getEntity());
     }
 
-    @Test(groups = "wso2.is", description = "Send login post request", dependsOnMethods = "testSendAuthorozedPost")
+    @Test(groups = "wso2.is", description = "Send login post request", dependsOnMethods = "testSendAuthorizedPost")
     public void testSendLoginPost() throws Exception {
 
         HttpResponse response = sendLoginPost(client, sessionDataKey);
