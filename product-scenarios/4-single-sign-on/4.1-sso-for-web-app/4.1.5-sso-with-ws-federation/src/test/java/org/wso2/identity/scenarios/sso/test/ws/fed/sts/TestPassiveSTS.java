@@ -120,7 +120,7 @@ public class TestPassiveSTS extends ScenarioTestBase {
         appMgtclient = new ApplicationManagementServiceClient(sessionCookie, backendServiceURL, configContext);
         remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendServiceURL, sessionCookie);
 
-        client = createHttpClient();
+        client = HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build();
         this.passiveStsURL = backendURL + PASSIVESTS_URI_CONTEXT;
         passiveStsSampleAppURL = String.format(PASSIVE_STS_SAMPLE_APP_URL, webAppHost);
         commonAuthUrl = backendURL + COMMONAUTH_URI_CONTEXT;
@@ -207,7 +207,6 @@ public class TestPassiveSTS extends ScenarioTestBase {
             dependsOnMethods = {"testAddClaimConfiguration"})
     public void testInvokePassiveSTSSampleApp() throws IOException, URISyntaxException {
 
-        CloseableHttpClient client = HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build();
         HttpResponse response;
         response = sendGetRequest(client, passiveStsSampleAppURL, null);
 
