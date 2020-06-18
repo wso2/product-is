@@ -45,9 +45,9 @@ public class JDBCUserStoreAddingTestCase extends ISIntegrationTest{
     private UserStoreCountServiceClient userStoreCountServiceClient;
     private UserStoreConfigUtils userStoreConfigUtils =  new UserStoreConfigUtils();
     private final String jdbcClass = "org.wso2.carbon.user.core.jdbc.UniqueIDJDBCUserStoreManager";
-    private final String rwLDAPClass = "org.wso2.carbon.user.core.ldap.ReadWriteLDAPUserStoreManager";
-    private final String roLDAPClass = "org.wso2.carbon.user.core.ldap.ReadOnlyLDAPUserStoreManager";
-    private final String adLDAPClass = "org.wso2.carbon.user.core.ldap.ActiveDirectoryUserStoreManager";
+    private final String rwLDAPClass = "org.wso2.carbon.user.core.ldap.UniqueIDReadWriteLDAPUserStoreManager";
+    private final String roLDAPClass = "org.wso2.carbon.user.core.ldap.UniqueIDReadOnlyLDAPUserStoreManager";
+    private final String adLDAPClass = "org.wso2.carbon.user.core.ldap.UniqueIDActiveDirectoryUserStoreManager";
     private final String domainId = "WSO2TEST.COM";
     private final static String USER_STORE_DB_NAME = "JDBC_USER_STORE_ADDING_DB";
     private UserManagementClient userMgtClient;

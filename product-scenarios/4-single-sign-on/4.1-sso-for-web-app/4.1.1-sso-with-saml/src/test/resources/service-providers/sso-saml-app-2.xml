@@ -20,7 +20,7 @@
   <InboundAuthenticationConfig>
     <InboundAuthenticationRequestConfigs>
       <InboundAuthenticationRequestConfig>
-        <InboundAuthKey>sso-saml.app</InboundAuthKey>
+        <InboundAuthKey>sso-saml.app-2</InboundAuthKey>
         <InboundAuthType>openid</InboundAuthType>
         <InboundConfigType>standardAPP</InboundConfigType>
         <Properties/>
@@ -73,7 +73,7 @@
         </Properties>
       </InboundAuthenticationRequestConfig>
       <InboundAuthenticationRequestConfig>
-        <InboundAuthKey>sso-saml.app</InboundAuthKey>
+        <InboundAuthKey>sso-saml.app-2</InboundAuthKey>
         <InboundAuthType>passivests</InboundAuthType>
         <InboundConfigType>standardAPP</InboundConfigType>
         <Properties/>

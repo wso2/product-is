@@ -26,18 +26,20 @@
             optional attributes:
             proxyPort="80"
        -->
+       {% if transport.http.enabled is sameas true %}
        <Connector protocol="org.apache.coyote.http11.Http11NioProtocol"
        {% for property_name,property_value in transport.http.properties.items() %}
                   {{property_name}}="{{property_value}}"
                           {% endfor %}
        >
        </Connector>
-
+       {% endif %}
        <!--
             optional attributes:
             proxyPort="443"
             Added sslEnabledProtocols="TLSv1,TLSv1.1,TLSv1.2" for poodle vulnerability fix
        -->
+       {% if transport.https.enabled is sameas true %}
        <Connector protocol="org.apache.coyote.http11.Http11NioProtocol"
        {% for property_name,property_value in transport.https.properties.items() %}
                   {{property_name}}="{{property_value}}"
@@ -55,6 +57,7 @@
                             />
            </SSLHostConfig>
        </Connector>
+       {% endif %}
 
         <Engine name="Catalina" defaultHost="localhost">
 
@@ -69,8 +72,13 @@
                        queryToCorrelationIdMapping="{'RelayState':'Correlation-ID'}"/>
                 <Valve className="org.wso2.carbon.tomcat.ext.valves.RequestEncodingValve" encoding="UTF-8"/>
                 <Valve className="org.wso2.carbon.tomcat.ext.valves.CarbonContextCreatorValve"/>
+                {% if http_access_log.useLogger is sameas true %}
+                <Valve className="org.wso2.carbon.tomcat.ext.valves.ConfigurableLoggerAccessLogValve"
+                                    pattern="{{http_access_log.pattern}}"/>
+                {% else %}
                 <Valve className="org.apache.catalina.valves.AccessLogValve" directory="${carbon.home}/repository/logs"
                        prefix="http_access_" suffix=".log" pattern="{{http_access_log.pattern}}"/>
+                {% endif %}
                 <Valve className="org.wso2.carbon.tomcat.ext.valves.CarbonStuckThreadDetectionValve" threshold="600"/>
                 <Valve className="org.wso2.carbon.tomcat.ext.valves.CompositeValve"/>
 

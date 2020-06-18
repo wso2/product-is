@@ -32,6 +32,7 @@
             <class name="org.wso2.identity.integration.test.user.export.UserInfoExportTestCase" />
             <class name="org.wso2.identity.integration.test.consent.SelfSignUpConsentTest"/>
             <class name="org.wso2.identity.integration.test.oauth2.OIDCDiscoveryTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.OIDCMetadataTest"/>
             <!--<class name="org.wso2.identity.integration.test.identity.governance.AdminForcedPasswordResetTestCase"/>-->
             <class name="org.wso2.identity.integration.test.user.mgt.UserMgtTestCase"/>
             <class name="org.wso2.identity.integration.test.user.mgt.UserMgtUISecurityTestCase"/>
@@ -74,11 +75,13 @@
             <class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileMgtTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.SPMetadataTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.IDPMetadataTestCase"/>
+            <class name="org.wso2.identity.integration.test.saml.SAMLMetadataTestCase"/>
             <class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderManagementTestCase" />
             <class name="org.wso2.identity.integration.test.entitlement.EntitlementSecurityTestCase"/>
             <class name="org.wso2.identity.integration.test.entitlement.EntitlementRestServiceTestCase"/>
             <class name="org.wso2.identity.integration.test.requestPathAuthenticator.RequestPathBasicAuthenticationSSOTest" />
             <class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderMgtServiceTestCase" />
+            <class name="org.wso2.identity.integration.test.idp.mgt.ResidentIDPConfigsTestCase" />
 
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceSAML2BearerGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.application.authz.ApplicationAuthzTestCase"/>
@@ -143,8 +146,9 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.user.store.v1.UserStoreSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.user.store.v1.UserStoreFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementSuccessTest"/>
-            <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationImportExportTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementFailureTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationImportExportTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationPatchTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementSAMLSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementOAuthSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementPassiveStsSuccessTest"/>
@@ -155,6 +159,8 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.script.library.v1.ScriptLibraryFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.configs.v1.ConfigSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.configs.v1.ConfigFailureTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.tenant.management.v1.TenantSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.tenant.management.v1.TenantFailureTest"/>
         </classes>
     </test>
 
@@ -262,7 +268,7 @@
         <classes>
             <class name="org.wso2.identity.integration.test.saml.RegistryMountTestCase"/>
             <class name="org.wso2.identity.integration.test.provisioning.DBSeperationTestCase"/>
-<!--            <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceAuthCodeGrantTestCase"/>-->
+            <!--<class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceAuthCodeGrantTestCase"/>-->
             <class name="org.wso2.identity.integration.test.oidc.OIDCFileBasedSkipLoginConsentTestCase"/>
             <class name="org.wso2.identity.integration.test.scim.IDENTITY4776SCIMServiceWithOAuthTestCase" />
             <class name="org.wso2.identity.integration.test.identity.mgt.UserInformationRecoveryServiceTenantEmailUserTestCase"/>

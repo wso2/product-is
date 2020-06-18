@@ -118,20 +118,26 @@ public class SAMLSSOWithExternalAppTestCase extends ScenarioTestBase {
 
         SAMLSSOServiceProviderDTO samlssoServiceProviderDTOs = samlssoExternalAppClient.getSAMLSSOServiceProviderByIssuer(config.getArtifact());
         Assert.assertNotNull(samlssoServiceProviderDTOs, "Adding a service provider has failed for " + config);
+        samlssoExternalAppClient.clear();
+        httpClient.close();
     }
 
     @Test(alwaysRun = true, description = "4.1.1.2", dependsOnMethods = {"retrieveSAMLSSOServiceProvider"})
     public void testSAMLSSOIsPassiveLogin() {
         try {
 
-            CloseableHttpClient client = createHttpClient();
+            samlssoExternalAppClient = new SAMLSSOExternalAppTestClient(backendURL, sessionCookie, backendServiceURL,
+                    webAppHost, configContext, config);
+            httpClient = createHttpClient();
             HttpResponse response;
-            response = sendGetRequest(client, samlssoExternalAppClient.getSamlAppIndexUrl(), null, new
+            response = sendGetRequest(httpClient, samlssoExternalAppClient.getSamlAppIndexUrl(), null, new
                     Header[]{userAgentHeader});
             String samlResponse = SAML2SSOTestBase.extractSAMLResponse(response);
             assertNotNull(samlResponse, "SAMLResponse is not recived in Passive Login.");
             samlResponse = IdentityScenarioUtil.bese64Decode(samlResponse);
             assertTrue(samlResponse.contains("Destination=\"" + samlssoExternalAppClient.getAcsUrl() + "\""));
+            samlssoExternalAppClient.clear();
+            httpClient.close();
         } catch (Exception e) {
             Assert.fail("SAML SSO Login test failed for " + config, e);
         }
@@ -142,6 +148,10 @@ public class SAMLSSOWithExternalAppTestCase extends ScenarioTestBase {
     public void testSAMLSSOLogin() {
         try {
             HttpResponse response;
+
+            samlssoExternalAppClient = new SAMLSSOExternalAppTestClient(backendURL, sessionCookie, backendServiceURL,
+                    webAppHost, configContext, config);
+            httpClient = createHttpClient();
 
             response = sendGetRequest(httpClient, samlssoExternalAppClient.getSamlSSOLoginUrl(), null, new
                     Header[]{userAgentHeader});
@@ -187,6 +197,8 @@ public class SAMLSSOWithExternalAppTestCase extends ScenarioTestBase {
 
             assertTrue(resultPage.contains("You are logged in as " + config.getUser().getTenantAwareUsername()),
                     "SAML SSO Login failed for " + config);
+            samlssoExternalAppClient.clear();
+            httpClient.close();
         } catch (Exception e) {
             Assert.fail("SAML SSO Login test failed for " + config, e);
         }
