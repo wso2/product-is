@@ -142,9 +142,11 @@ public class FunctionLibraryManagementTestCase extends ISIntegrationTest {
             deleteFunctionLibrary(functionLibraryName);
             FunctionLibrary[] functionLibraries = functionLibraryManagementServiceClient.listFunctionLibraries();
             boolean functionLibraryExists = false;
-            for (FunctionLibrary functionLibrary : functionLibraries) {
-                if (functionLibrary.getFunctionLibraryName().equals(functionLibraryName)) {
-                    functionLibraryExists = true;
+            if (functionLibraries != null) {
+                for (FunctionLibrary functionLibrary : functionLibraries) {
+                    if (functionLibrary.getFunctionLibraryName().equals(functionLibraryName)) {
+                        functionLibraryExists = true;
+                    }
                 }
             }
 

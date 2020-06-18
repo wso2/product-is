@@ -20,9 +20,9 @@
 
     <parent>
         <groupId>org.wso2.is</groupId>
-        <artifactId>identity-integration-tests</artifactId>
+        <artifactId>identity-integration-tests-utils</artifactId>
         <version>5.11.0-m24-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>

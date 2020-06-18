@@ -45,6 +45,7 @@
         <module>modules/distribution</module>
         <module>modules/styles</module>
         <module>modules/samples</module>
+        <module>modules/tests-utils</module>
         <module>modules/integration</module>
     </modules>
 
@@ -1935,6 +1936,11 @@
                 <groupId>com.google.guava</groupId>
                 <type>jar</type>
                 <version>${google.guava.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.is</groupId>
+                <artifactId>org.wso2.carbon.identity.test.integration.service</artifactId>
+                <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
