@@ -1995,7 +1995,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.17.111</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.17.112</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2092,7 +2092,7 @@
         <authenticator.totp.version>2.2.2</authenticator.totp.version>
         <authenticator.office365.version>2.0.2</authenticator.office365.version>
         <authenticator.smsotp.version>3.0.2</authenticator.smsotp.version>
-        <authenticator.emailotp.version>3.0.2</authenticator.emailotp.version>
+        <authenticator.emailotp.version>3.0.3</authenticator.emailotp.version>
         <authenticator.twitter.version>1.0.10</authenticator.twitter.version>
         <authenticator.x509.version>3.0.2</authenticator.x509.version>
         <identity.extension.utils>1.0.8</identity.extension.utils>
@@ -2109,7 +2109,7 @@
         <carbon.identity.oauth.uma.version>1.2.1</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.0.294</identity.apps.version>
+        <identity.apps.version>1.0.296</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.3.0</charon.version>
