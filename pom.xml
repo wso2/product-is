@@ -1531,11 +1531,6 @@
 
             <!-- Provisioning Connectors -->
             <dependency>
-                <groupId>org.wso2.carbon.identity.outbound.provisioning.spml</groupId>
-                <artifactId>org.wso2.carbon.identity.provisioning.connector.spml</artifactId>
-                <version>${provisioning.connector.spml.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.wso2.carbon.identity.outbound.provisioning.google</groupId>
                 <artifactId>org.wso2.carbon.identity.provisioning.connector.google</artifactId>
                 <version>${provisioning.connector.google.version}</version>
@@ -2075,7 +2070,6 @@
         <social.authenticator.yahoo.version>5.1.6</social.authenticator.yahoo.version>
 
         <!-- Provisioning connector Versions -->
-        <provisioning.connector.spml.version>5.1.2</provisioning.connector.spml.version>
         <provisioning.connector.google.version>5.1.8</provisioning.connector.google.version>
         <provisioning.connector.salesforce.version>5.1.6</provisioning.connector.salesforce.version>
         <provisioning.connector.scim.version>5.2.2</provisioning.connector.scim.version>
