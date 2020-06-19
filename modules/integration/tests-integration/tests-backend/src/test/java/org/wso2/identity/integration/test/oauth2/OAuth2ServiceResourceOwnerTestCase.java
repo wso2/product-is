@@ -71,14 +71,11 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 	private final String username;
 	private final String userPassword;
 	private final String activeTenant;
-	private final String TENANT_DOMAIN = "wso2.com";
+	private static final String TENANT_DOMAIN = "wso2.com";
 
 	@DataProvider(name = "configProvider")
 	public static Object[][] configProvider() {
-		return new Object[][]{
-				{TestUserMode.SUPER_TENANT_ADMIN},
-				{TestUserMode.TENANT_ADMIN}
-		};
+		return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}};
 	}
 
 	@Factory(dataProvider = "configProvider")

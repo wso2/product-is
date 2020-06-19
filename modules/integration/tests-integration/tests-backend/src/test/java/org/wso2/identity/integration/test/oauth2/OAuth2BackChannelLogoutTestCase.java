@@ -30,9 +30,14 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
+import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.identity.oauth.stub.OAuthAdminServiceIdentityOAuthAdminException;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.test.util.Utils;
@@ -41,6 +46,7 @@ import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -66,10 +72,7 @@ public class OAuth2BackChannelLogoutTestCase extends OAuth2ServiceAbstractIntegr
 
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
-        return new Object[][]{
-                {TestUserMode.SUPER_TENANT_ADMIN},
-                {TestUserMode.TENANT_ADMIN}
-        };
+        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}};
     }
 
     @Factory(dataProvider = "configProvider")
@@ -103,7 +106,7 @@ public class OAuth2BackChannelLogoutTestCase extends OAuth2ServiceAbstractIntegr
     }
 
     @Test(groups = "wso2.is", description = "Test back channel logout for OIDC.")
-    public void testOIDCLogout() {
+    public void testOIDCLogout() throws IOException {
 
         // Login.
         initiateOIDCRequest(false);
@@ -114,23 +117,19 @@ public class OAuth2BackChannelLogoutTestCase extends OAuth2ServiceAbstractIntegr
         performOIDCLogout();
     }
 
-    private void createOIDCApplication() {
+    private void createOIDCApplication() throws Exception {
 
-        try {
-            OAuthConsumerAppDTO appDTO = new OAuthConsumerAppDTO();
-            appDTO.setApplicationName(OIDC_APP_NAME);
-            appDTO.setCallbackUrl(OAuth2Constant.CALLBACK_URL);
-            appDTO.setOAuthVersion(OAuth2Constant.OAUTH_VERSION_2);
-            appDTO.setGrantTypes(OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE);
-            appDTO.setBackChannelLogoutUrl("http://localhost:" + DEFAULT_TOMCAT_PORT + "/playground2/bclogout");
+        OAuthConsumerAppDTO appDTO = new OAuthConsumerAppDTO();
+        appDTO.setApplicationName(OIDC_APP_NAME);
+        appDTO.setCallbackUrl(OAuth2Constant.CALLBACK_URL);
+        appDTO.setOAuthVersion(OAuth2Constant.OAUTH_VERSION_2);
+        appDTO.setGrantTypes(OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE);
+        appDTO.setBackChannelLogoutUrl("http://localhost:" + DEFAULT_TOMCAT_PORT + "/playground2/bclogout");
 
-            adminClient.registerOAuthApplicationData(appDTO);
-            OAuthConsumerAppDTO createdApp = adminClient.getOAuthAppByName(OIDC_APP_NAME);
-            Assert.assertNotNull(createdApp, "Adding OIDC app failed.");
-            oidcAppClientId = createdApp.getOauthConsumerKey();
-        } catch (Exception e) {
-            Assert.fail("Adding OIDC app failed.", e);
-        }
+        adminClient.registerOAuthApplicationData(appDTO);
+        OAuthConsumerAppDTO createdApp = adminClient.getOAuthAppByName(OIDC_APP_NAME);
+        Assert.assertNotNull(createdApp, "Adding OIDC app failed.");
+        oidcAppClientId = createdApp.getOauthConsumerKey();
     }
 
     private void removeApplications() throws Exception {
@@ -138,97 +137,81 @@ public class OAuth2BackChannelLogoutTestCase extends OAuth2ServiceAbstractIntegr
         adminClient.removeOAuthApplicationData(oidcAppClientId);
     }
 
-    private void initiateOIDCRequest(boolean isCheckLogoutConfirmation) {
+    private void initiateOIDCRequest(boolean isCheckLogoutConfirmation) throws IOException {
 
-        try {
-            List<NameValuePair> urlParameters = getOIDCInitiationRequestParams();
-            HttpResponse response = sendPostRequestWithParameters(urlParameters,
-                    "http://localhost:" + DEFAULT_TOMCAT_PORT + "/playground2/oauth2-authorize-user.jsp");
-            Assert.assertNotNull(response, "Authorization response is null");
-            Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
-            Assert.assertNotNull(locationHeader, "Authorization response header is null.");
-            EntityUtils.consume(response.getEntity());
+        List<NameValuePair> urlParameters = getOIDCInitiationRequestParams();
+        HttpResponse response = sendPostRequestWithParameters(urlParameters,
+                "http://localhost:" + DEFAULT_TOMCAT_PORT + "/playground2/oauth2-authorize-user.jsp");
+        Assert.assertNotNull(response, "Authorization response is null");
+        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        Assert.assertNotNull(locationHeader, "Authorization response header is null.");
+        EntityUtils.consume(response.getEntity());
 
-            response = sendGetRequest(locationHeader.getValue());
-            sessionDataKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
-            if (isCheckLogoutConfirmation) {
-                Assert.assertNotNull(sessionDataKey, "Back channel logout failed for OIDC.");
-            } else {
-                Assert.assertNotNull(sessionDataKey, "sessionDataKey is null for ." + OIDC_APP_NAME);
-            }
-            EntityUtils.consume(response.getEntity());
-        } catch (Exception e) {
-            Assert.fail("OIDC initiation request failed.", e);
+        response = sendGetRequest(locationHeader.getValue());
+        sessionDataKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
+        if (isCheckLogoutConfirmation) {
+            Assert.assertNotNull(sessionDataKey, "Back channel logout failed for OIDC.");
+        } else {
+            Assert.assertNotNull(sessionDataKey, "sessionDataKey is null for ." + OIDC_APP_NAME);
         }
+        EntityUtils.consume(response.getEntity());
     }
 
-    private void performOIDCLogin() {
+    private void performOIDCLogin() throws IOException {
 
-        try {
-            HttpResponse response = sendLoginPost(sessionDataKey);
-            Assert.assertNotNull(response, "OIDC login request response is null.");
-            Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
-            Assert.assertNotNull(locationHeader, "OIDC login response header is null.");
-            EntityUtils.consume(response.getEntity());
+        HttpResponse response = sendLoginPost(sessionDataKey);
+        Assert.assertNotNull(response, "OIDC login request response is null.");
+        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        Assert.assertNotNull(locationHeader, "OIDC login response header is null.");
+        EntityUtils.consume(response.getEntity());
 
-            response = sendGetRequest(locationHeader.getValue());
-            Map<String, Integer> keyPositionMap = new HashMap<>(1);
-            keyPositionMap.put("name=\"sessionDataKeyConsent\"", 1);
-            List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil.extractSessionConsentDataFromResponse(
-                    response, keyPositionMap);
-            Assert.assertNotNull(keyValues, "SessionDataKeyConsent keyValues map is null.");
-            sessionDataKeyConsent = keyValues.get(0).getValue();
-            Assert.assertNotNull(sessionDataKeyConsent, "sessionDataKeyConsent is null.");
-            EntityUtils.consume(response.getEntity());
-        } catch (Exception e) {
-            Assert.fail("OIDC login failed.", e);
-        }
+        response = sendGetRequest(locationHeader.getValue());
+        Map<String, Integer> keyPositionMap = new HashMap<>(1);
+        keyPositionMap.put("name=\"sessionDataKeyConsent\"", 1);
+        List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil.extractSessionConsentDataFromResponse(
+                response, keyPositionMap);
+        Assert.assertNotNull(keyValues, "SessionDataKeyConsent keyValues map is null.");
+        sessionDataKeyConsent = keyValues.get(0).getValue();
+        Assert.assertNotNull(sessionDataKeyConsent, "sessionDataKeyConsent is null.");
+        EntityUtils.consume(response.getEntity());
     }
 
-    private void performOIDCConsentApproval() {
+    private void performOIDCConsentApproval() throws IOException {
 
-        try {
-            HttpResponse response = sendApprovalPostWithConsent(sessionDataKeyConsent);
-            Assert.assertNotNull(response, "OIDC consent approval request response is null.");
-            Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
-            Assert.assertNotNull(locationHeader, "OIDC consent approval request location header is null.");
-            EntityUtils.consume(response.getEntity());
+        HttpResponse response = sendApprovalPostWithConsent(sessionDataKeyConsent);
+        Assert.assertNotNull(response, "OIDC consent approval request response is null.");
+        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        Assert.assertNotNull(locationHeader, "OIDC consent approval request location header is null.");
+        EntityUtils.consume(response.getEntity());
 
-            response = sendPostRequest(locationHeader.getValue());
-            Map<String, Integer> keyPositionMap = new HashMap<>(1);
-            keyPositionMap.put("Authorization Code", 1);
-            List<DataExtractUtil.KeyValue> keyValues =
-                    DataExtractUtil.extractTableRowDataFromResponse(response, keyPositionMap);
-            Assert.assertNotNull(keyValues, "Authorization code not received.");
-            String authorizationCode = keyValues.get(0).getValue();
-            Assert.assertNotNull(authorizationCode, "Authorization code not received.");
-            EntityUtils.consume(response.getEntity());
-        } catch (Exception e) {
-            Assert.fail("OIDC consent approval request failed.", e);
-        }
+        response = sendPostRequest(locationHeader.getValue());
+        Map<String, Integer> keyPositionMap = new HashMap<>(1);
+        keyPositionMap.put("Authorization Code", 1);
+        List<DataExtractUtil.KeyValue> keyValues =
+                DataExtractUtil.extractTableRowDataFromResponse(response, keyPositionMap);
+        Assert.assertNotNull(keyValues, "Authorization code not received.");
+        String authorizationCode = keyValues.get(0).getValue();
+        Assert.assertNotNull(authorizationCode, "Authorization code not received.");
+        EntityUtils.consume(response.getEntity());
     }
 
-    private void performOIDCLogout() {
+    private void performOIDCLogout() throws IOException {
 
-        try {
-            String oidcLogoutUrl = identityContextUrls.getWebAppURLHttps() + "/oidc/logout";
-            HttpResponse response = sendGetRequest(oidcLogoutUrl);
-            EntityUtils.consume(response.getEntity());
+        String oidcLogoutUrl = identityContextUrls.getWebAppURLHttps() + "/oidc/logout";
+        HttpResponse response = sendGetRequest(oidcLogoutUrl);
+        EntityUtils.consume(response.getEntity());
 
-            List<NameValuePair> urlParameters = new ArrayList<>();
-            urlParameters.add(new BasicNameValuePair(CONSENT, APPROVE));
-            response = sendPostRequestWithParameters(urlParameters, oidcLogoutUrl);
-            Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
-            EntityUtils.consume(response.getEntity());
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair(CONSENT, APPROVE));
+        response = sendPostRequestWithParameters(urlParameters, oidcLogoutUrl);
+        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        EntityUtils.consume(response.getEntity());
 
-            response = sendGetRequest(locationHeader.getValue());
-            Assert.assertNotNull(response, "OIDC Logout failed.");
-            String result = DataExtractUtil.getContentData(response);
-            Assert.assertTrue(result.contains("You have successfully logged out"), "OIDC logout failed.");
-            EntityUtils.consume(response.getEntity());
-        } catch (Exception e) {
-            Assert.fail("OIDC Logout failed.", e);
-        }
+        response = sendGetRequest(locationHeader.getValue());
+        Assert.assertNotNull(response, "OIDC Logout failed.");
+        String result = DataExtractUtil.getContentData(response);
+        Assert.assertTrue(result.contains("You have successfully logged out"), "OIDC logout failed.");
+        EntityUtils.consume(response.getEntity());
     }
 
     public HttpResponse sendGetRequest(String locationURL) throws IOException {

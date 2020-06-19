@@ -96,7 +96,7 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
         logManger = new AuthenticatorClient(backendURL);
         adminUsername = userInfo.getUserName();
         adminPassword = userInfo.getPassword();
-        logManger.login(username, userPassword,	isServer.getInstance().getHosts().get("default"));
+        logManger.login(username, userPassword, isServer.getInstance().getHosts().get("default"));
         client = new DefaultHttpClient();
 
         setSystemproperties();
@@ -387,5 +387,4 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
                 "Invalid authorization code should have " + "produced error code : "
                         + OAuth2Constant.INVALID_GRANT_ERROR);
     }
-
 }

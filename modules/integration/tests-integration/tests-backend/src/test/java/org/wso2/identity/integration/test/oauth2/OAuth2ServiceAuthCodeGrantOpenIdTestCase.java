@@ -89,10 +89,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
 
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
-        return new Object[][]{
-                {TestUserMode.SUPER_TENANT_ADMIN},
-                {TestUserMode.TENANT_ADMIN}
-        };
+        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}};
     }
 
     @Factory(dataProvider = "configProvider")
@@ -110,13 +107,13 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
         logManger = new AuthenticatorClient(backendURL);
         adminUsername = userInfo.getUserName();
         adminPassword = userInfo.getPassword();
-        String sessionIndex =
-                logManger.login(username, userPassword,	isServer.getInstance().getHosts().get("default"));
+        String sessionIndex = logManger.login(username, userPassword, isServer.getInstance().getHosts().get("default"));
         oAuth2TokenValidationClient = new Oauth2TokenValidationClient(backendURL, sessionIndex);
         client = new DefaultHttpClient();
         client.setCookieStore(cookieStore);
         setSystemproperties();
-        remoteUSMServiceClient.addUser(USERNAME, PASSWORD, new String[]{"admin"}, getUserClaims(), "default", true);
+        remoteUSMServiceClient.addUser(USERNAME, PASSWORD, new String[]{"admin"},
+                getUserClaims(), "default", true);
     }
 
     @AfterClass(alwaysRun = true)
