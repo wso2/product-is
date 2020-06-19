@@ -59,7 +59,7 @@ public class OAuth2TokenRevocationWithRevokedAccessToken extends OAuth2ServiceAb
     private final String username;
     private final String userPassword;
     private final String activeTenant;
-    private final String TENANT_DOMAIN = "wso2.com";
+    private static final String TENANT_DOMAIN = "wso2.com";
 
     @Factory(dataProvider = "oAuthConsumerApplicationProvider")
     public OAuth2TokenRevocationWithRevokedAccessToken(String tokenType, TestUserMode userMode) throws Exception {

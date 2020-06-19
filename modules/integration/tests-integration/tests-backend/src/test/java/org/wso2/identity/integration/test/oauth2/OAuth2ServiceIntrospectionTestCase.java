@@ -60,10 +60,7 @@ public class OAuth2ServiceIntrospectionTestCase extends OAuth2ServiceAbstractInt
 
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
-        return new Object[][]{
-                {TestUserMode.SUPER_TENANT_ADMIN},
-                {TestUserMode.TENANT_ADMIN}
-        };
+        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}};
     }
 
     @Factory(dataProvider = "configProvider")
@@ -74,7 +71,6 @@ public class OAuth2ServiceIntrospectionTestCase extends OAuth2ServiceAbstractInt
         this.username = context.getContextTenant().getTenantAdmin().getUserName();
         this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
         this.activeTenant = context.getContextTenant().getDomain();
-
     }
 
     @BeforeClass(alwaysRun = true)
@@ -83,7 +79,7 @@ public class OAuth2ServiceIntrospectionTestCase extends OAuth2ServiceAbstractInt
         logManger = new AuthenticatorClient(backendURL);
         adminUsername = userInfo.getUserName();
         adminPassword = userInfo.getPassword();
-        logManger.login(username, userPassword,	isServer.getInstance().getHosts().get("default"));
+        logManger.login(username, userPassword, isServer.getInstance().getHosts().get("default"));
 
         setSystemproperties();
         client = HttpClientBuilder.create().build();

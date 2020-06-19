@@ -65,10 +65,7 @@ public class OAuth2ServiceImplicitGrantTestCase extends OAuth2ServiceAbstractInt
 
 	@DataProvider(name = "configProvider")
 	public static Object[][] configProvider() {
-		return new Object[][]{
-				{TestUserMode.SUPER_TENANT_ADMIN},
-				{TestUserMode.TENANT_ADMIN}
-		};
+		return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}};
 	}
 
 	@Factory(dataProvider = "configProvider")
