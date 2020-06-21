@@ -242,11 +242,7 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body("find{ it.connectorId == 'c2NpbQ' }.self", equalTo("/t/" + context.getContextTenant()
                         .getDomain() +
                         "/api/server/v1/identity-providers/meta/outbound-provisioning-connectors" +
-                        "/c2NpbQ"))
-                .body("find{ it.connectorId == 'c3BtbA' }.name", equalTo("spml"))
-                .body("find{ it.connectorId == 'c3BtbA' }.self", equalTo("/t/" + context.getContextTenant()
-                        .getDomain() + "/api/server/v1/identity-providers/meta/outbound-provisioning-connectors" +
-                        "/c3BtbA"));
+                        "/c2NpbQ"));
     }
 
     @Test(dependsOnMethods = {"testListMetaOutboundConnectors"})

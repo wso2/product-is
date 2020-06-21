@@ -18,7 +18,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-integration-tests</artifactId>
-        <version>5.11.0-m23-SNAPSHOT</version>
+        <version>5.11.0-m25-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -391,6 +391,28 @@
                             </artifactItems>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>copy-resources-dropins</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.is</groupId>
+                                    <artifactId>org.wso2.carbon.identity.test.integration.service</artifactId>
+                                    <version>${project.version}</version>
+                                    <type>jar</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>
+                                        ${basedir}/target/test-classes/samples/userMgt
+                                    </outputDirectory>
+                                    <destFileName>org.wso2.carbon.identity.test.integration.service.jar</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -470,20 +492,6 @@
                             <tasks>
                                 <ant antfile="src/test/resources/artifacts/IS/saml/saml-app-build.xml" target="saml-tenant-signingdisabled" />
                                 <ant antfile="src/test/resources/artifacts/IS/saml/registrymount/registry-app-build.xml" target="saml-tenant-registrymount" />
-                            </tasks>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>remove-old-test-resources</id>
-                        <phase>process-resources</phase>
-                        <configuration>
-                            <tasks>
-                                <delete>
-                                    <fileset dir="${basedir}/src/test/resources/artifacts/IS/userMgt/" includes="**/org.wso2.carbon.identity.test.integration.service*.jar" />
-                                </delete>
                             </tasks>
                         </configuration>
                         <goals>
@@ -584,26 +592,6 @@
                                     </directory>
                                     <includes>
                                         <include>**/*.mar</include>
-                                    </includes>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>copy-resources-dropins</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>
-                                ${basedir}/src/test/resources/artifacts/IS/userMgt/
-                            </outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>${basedir}/../../tests-common/admin-services/target</directory>
-                                    <includes>
-                                        <include>**/org.wso2.carbon.identity.test.integration.service-${project.version}.jar</include>
                                     </includes>
                                 </resource>
                             </resources>
@@ -961,6 +949,10 @@
         <dependency>
             <groupId>org.xmlunit</groupId>
             <artifactId>xmlunit-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.is</groupId>
+            <artifactId>org.wso2.carbon.identity.test.integration.service</artifactId>
         </dependency>
     </dependencies>
 </project>
