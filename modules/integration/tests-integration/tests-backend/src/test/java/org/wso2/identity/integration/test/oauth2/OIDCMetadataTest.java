@@ -45,7 +45,8 @@ public class OIDCMetadataTest extends ISIntegrationTest {
             "https://localhost:9853/t/wso2.com/oauth2/oidcdiscovery/.well-known/openid-configuration";
     private static final String OIDCDISCOVERY_ENDPOINT_WITH_SUPER_TENANT_AS_PATH_PARAM =
             "https://localhost:9853/t/carbon.super/oauth2/oidcdiscovery/.well-known/openid-configuration";
-    private static final String INTROSPECTION_ENDPOINT = "https://localhost:9853/oauth2/introspect";
+    private static final String INTROSPECTION_ENDPOINT_SUPER_TENANT = "https://localhost:9853/oauth2/introspect";
+    private static final String INTROSPECTION_ENDPOINT_TENANT = "https://localhost:9853/t/wso2.com/oauth2/introspect";
     private static final String CHECK_SESSION_IFRAME = "https://localhost:9853/oidc/checksession";
     private static final String ISSUER = "https://localhost:9853/oauth2/token";
     private static final String AUTHORIZATION_ENDPOINT = "https://localhost:9853/oauth2/authorize";
@@ -79,8 +80,6 @@ public class OIDCMetadataTest extends ISIntegrationTest {
         Assert.assertNotNull(content, "Response content is not received");
 
         JSONObject oidcMetadataEndpoints = new JSONObject(content);
-        Assert.assertEquals(oidcMetadataEndpoints.getString("introspection_endpoint"),
-                INTROSPECTION_ENDPOINT, "Incorrect introspection endpoint");
         Assert.assertEquals(oidcMetadataEndpoints.getString("check_session_iframe"),
                 CHECK_SESSION_IFRAME, "Incorrect session iframe");
         Assert.assertEquals(oidcMetadataEndpoints.getString("issuer"),
@@ -104,6 +103,8 @@ public class OIDCMetadataTest extends ISIntegrationTest {
                     JKWS_URI_SUPER_TENANT, "Incorrect jwks uri");
             Assert.assertEquals(oidcMetadataEndpoints.getString("registration_endpoint"),
                     REGISTRATION_ENDPOINT_SUPER_TENANT, "Incorrect registration endpoint");
+            Assert.assertEquals(oidcMetadataEndpoints.getString("introspection_endpoint"),
+                    INTROSPECTION_ENDPOINT_SUPER_TENANT, "Incorrect introspection endpoint");
         }
 
         if (oidcMetadataEndpoint.equals(TOKEN_ENDPOINT_TENANT) ||
@@ -112,6 +113,8 @@ public class OIDCMetadataTest extends ISIntegrationTest {
                     JKWS_URI_TENANT, "Incorrect jwks uri");
             Assert.assertEquals(oidcMetadataEndpoints.getString("registration_endpoint"),
                     REGISTRATION_ENDPOINT_TENANT, "Incorrect registration endpoint");
+            Assert.assertEquals(oidcMetadataEndpoints.getString("introspection_endpoint"),
+                    INTROSPECTION_ENDPOINT_TENANT, "Incorrect introspection endpoint");
         }
     }
 
