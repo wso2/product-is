@@ -9,9 +9,10 @@ Welcome to WSO2 Identity Server
 
 ---
 
-|  Branch | Build Status |
-| :------------ |:-------------
-| master      | [![Build Status](https://wso2.org/jenkins/job/products/job/product-is/badge/icon)](https://wso2.org/jenkins/job/products/job/product-is) |
+
+|  Branch | Build Status | Test Results |
+| :------------ |:------------- |:-------------
+| master      | [![Build Status](https://img.shields.io/jenkins/build?jobUrl=https%3A%2F%2Fwso2.org%2Fjenkins%2Fjob%2Fproducts%2Fjob%2Fproduct-is%2F&style=flat)](https://wso2.org/jenkins/job/products/job/product-is/) | [![Test Results](https://img.shields.io/jenkins/tests?compact_message&failed_label=failed&jobUrl=https%3A%2F%2Fwso2.org%2Fjenkins%2Fjob%2Fproducts%2Fjob%2Fproduct-is%2F&passed_label=passed&skipped_label=skipped)](https://wso2.org/jenkins/job/products/job/product-is/lastBuild/testReport/) |
 
 
 
