@@ -2091,8 +2091,8 @@
         <!-- Connector Versions -->
         <authenticator.totp.version>2.2.2</authenticator.totp.version>
         <authenticator.office365.version>2.0.2</authenticator.office365.version>
-        <authenticator.smsotp.version>3.0.2</authenticator.smsotp.version>
-        <authenticator.emailotp.version>3.0.3</authenticator.emailotp.version>
+        <authenticator.smsotp.version>3.0.3</authenticator.smsotp.version>
+        <authenticator.emailotp.version>3.0.4</authenticator.emailotp.version>
         <authenticator.twitter.version>1.0.10</authenticator.twitter.version>
         <authenticator.x509.version>3.0.2</authenticator.x509.version>
         <identity.extension.utils>1.0.8</identity.extension.utils>
