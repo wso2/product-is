@@ -37,11 +37,18 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.automation.engine.context.beans.ContextUrls;
+import org.wso2.carbon.automation.engine.context.beans.Tenant;
+import org.wso2.carbon.automation.engine.context.beans.User;
 import org.wso2.carbon.identity.governance.stub.bean.Property;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
+import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.mgt.IdentityGovernanceServiceClient;
+import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
+import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
@@ -63,6 +70,14 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 	private String consumerSecret;
 
 	private CloseableHttpClient client;
+	private final AutomationContext context;
+	private String backendURL;
+	private String sessionCookie;
+	private Tenant tenantInfo;
+	private User userInfo;
+	private LoginLogoutClient loginLogoutClient;
+	private ContextUrls identityContextUrls;
+	private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
 
 	private static final String lockedUser = "test_locked_user";
 	private static final String lockedUserPassword = "test_locked_user_pass";
@@ -81,8 +96,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 	@Factory(dataProvider = "configProvider")
 	public OAuth2ServiceResourceOwnerTestCase(TestUserMode userMode) throws Exception {
 
-		super.init(userMode);
-		AutomationContext context = new AutomationContext("IDENTITY", userMode);
+		context = new AutomationContext("IDENTITY", userMode);
 		this.username = context.getContextTenant().getTenantAdmin().getUserName();
 		this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
 		this.activeTenant = context.getContextTenant().getDomain();
@@ -91,10 +105,16 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 	@BeforeClass(alwaysRun = true)
 	public void testInit() throws Exception {
 
+		backendURL = context.getContextUrls().getBackEndUrl();
+		loginLogoutClient = new LoginLogoutClient(context);
 		logManger = new AuthenticatorClient(backendURL);
-		adminUsername = userInfo.getUserName();
-		adminPassword = userInfo.getPassword();
-		logManger.login(username, userPassword,	isServer.getInstance().getHosts().get("default"));
+		sessionCookie = logManger.login(username, userPassword, context.getInstance().getHosts().get("default"));
+		identityContextUrls = context.getContextUrls();
+		tenantInfo = context.getContextTenant();
+		userInfo = tenantInfo.getContextUser();
+		appMgtclient = new ApplicationManagementServiceClient(sessionCookie, backendURL, null);
+		adminClient = new OauthAdminClient(backendURL, sessionCookie);
+		remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
 
 		setSystemproperties();
 		client = HttpClientBuilder.create().build();
@@ -106,11 +126,12 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 
 	@AfterClass(alwaysRun = true)
 	public void atEnd() throws Exception {
+
 		setAccountLocking("false");
 		deleteUser(lockedUser);
 
-		deleteApplication();
-		removeOAuthApplicationData();
+		appMgtclient.deleteApplication(SERVICE_PROVIDER_NAME);
+		adminClient.removeOAuthApplicationData(consumerKey);
 		client.close();
 		logManger = null;
 		consumerKey = null;
