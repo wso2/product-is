@@ -30,8 +30,15 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.automation.engine.context.beans.ContextUrls;
+import org.wso2.carbon.automation.engine.context.beans.Tenant;
+import org.wso2.carbon.automation.engine.context.beans.User;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
+import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
+import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
+import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT;
@@ -45,6 +52,14 @@ public class Oauth2OPIframeTestCase extends OAuth2ServiceAbstractIntegrationTest
     private DefaultHttpClient client;
     private final String username;
     private final String userPassword;
+    private final AutomationContext context;
+    private String backendURL;
+    private String sessionCookie;
+    private Tenant tenantInfo;
+    private User userInfo;
+    private LoginLogoutClient loginLogoutClient;
+    private ContextUrls identityContextUrls;
+    private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
 
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
@@ -54,8 +69,7 @@ public class Oauth2OPIframeTestCase extends OAuth2ServiceAbstractIntegrationTest
     @Factory(dataProvider = "configProvider")
     public Oauth2OPIframeTestCase(TestUserMode userMode) throws Exception {
 
-        super.init(userMode);
-        AutomationContext context = new AutomationContext("IDENTITY", userMode);
+        context = new AutomationContext("IDENTITY", userMode);
         this.username = context.getContextTenant().getTenantAdmin().getUserName();
         this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
     }
@@ -63,8 +77,17 @@ public class Oauth2OPIframeTestCase extends OAuth2ServiceAbstractIntegrationTest
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
-        AuthenticatorClient loginManger = new AuthenticatorClient(backendURL);
-        loginManger.login(username, userPassword, isServer.getInstance().getHosts().get("default"));
+        backendURL = context.getContextUrls().getBackEndUrl();
+        loginLogoutClient = new LoginLogoutClient(context);
+        logManger = new AuthenticatorClient(backendURL);
+        sessionCookie = logManger.login(username, userPassword, context.getInstance().getHosts().get("default"));
+        identityContextUrls = context.getContextUrls();
+        tenantInfo = context.getContextTenant();
+        userInfo = tenantInfo.getContextUser();
+        appMgtclient = new ApplicationManagementServiceClient(sessionCookie, backendURL, null);
+        adminClient = new OauthAdminClient(backendURL, sessionCookie);
+        remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
+
         setSystemproperties();
         client = new DefaultHttpClient();
     }
@@ -72,8 +95,8 @@ public class Oauth2OPIframeTestCase extends OAuth2ServiceAbstractIntegrationTest
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
-        deleteApplication();
-        removeOAuthApplicationData();
+        appMgtclient.deleteApplication(SERVICE_PROVIDER_NAME);
+        adminClient.removeOAuthApplicationData(consumerKey);
 
         logManger = null;
         consumerKey = null;

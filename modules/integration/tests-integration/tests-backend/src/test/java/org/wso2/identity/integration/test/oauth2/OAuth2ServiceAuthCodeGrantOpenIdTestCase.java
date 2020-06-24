@@ -37,6 +37,9 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.automation.engine.context.beans.ContextUrls;
+import org.wso2.carbon.automation.engine.context.beans.Tenant;
+import org.wso2.carbon.automation.engine.context.beans.User;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationRequestDTO;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationRequestDTO_OAuth2AccessToken;
@@ -107,19 +110,15 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
 
         backendURL = context.getContextUrls().getBackEndUrl();
         loginLogoutClient = new LoginLogoutClient(context);
-        sessionCookie = loginLogoutClient.login();
+        logManger = new AuthenticatorClient(backendURL);
+        sessionCookie = logManger.login(username, userPassword, context.getInstance().getHosts().get("default"));
         identityContextUrls = context.getContextUrls();
         tenantInfo = context.getContextTenant();
         userInfo = tenantInfo.getContextUser();
-
         appMgtclient = new ApplicationManagementServiceClient(sessionCookie, backendURL, null);
         adminClient = new OauthAdminClient(backendURL, sessionCookie);
         remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
-
-        logManger = new AuthenticatorClient(backendURL);
-        String sessionIndex = logManger.login(username, userPassword,
-                context.getInstance().getHosts().get("default"));
-        oAuth2TokenValidationClient = new Oauth2TokenValidationClient(backendURL, sessionIndex);
+        oAuth2TokenValidationClient = new Oauth2TokenValidationClient(backendURL, sessionCookie);
         client = new DefaultHttpClient();
         client.setCookieStore(cookieStore);
         setSystemproperties();
