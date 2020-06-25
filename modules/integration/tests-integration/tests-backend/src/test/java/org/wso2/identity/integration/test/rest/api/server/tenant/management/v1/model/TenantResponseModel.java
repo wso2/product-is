@@ -99,16 +99,16 @@ public class TenantResponseModel {
         return this;
     }
 
-        /**
-    * Tenant created time.
-    **/
+    /**
+     * Tenant created time in ISO-8601 format.
+     **/
     public TenantResponseModel createdDate(String createdDate) {
 
         this.createdDate = createdDate;
         return this;
     }
-    
-    @ApiModelProperty(example = "2020-03-03T17:04:06.570+05:30", value = "Tenant created time.")
+
+    @ApiModelProperty(example = "2020-06-19T17:36:46.271Z", value = "Tenant created time in ISO-8601 format.")
     @JsonProperty("createdDate")
     @Valid
     public String getCreatedDate() {
@@ -125,9 +125,9 @@ public class TenantResponseModel {
         this.lifecycleStatus = lifecycleStatus;
         return this;
     }
-    
+
     @ApiModelProperty(value = "")
-    @JsonProperty("lifecycle-status")
+    @JsonProperty("lifecycleStatus")
     @Valid
     public LifeCycleStatus getLifecycleStatus() {
         return lifecycleStatus;
