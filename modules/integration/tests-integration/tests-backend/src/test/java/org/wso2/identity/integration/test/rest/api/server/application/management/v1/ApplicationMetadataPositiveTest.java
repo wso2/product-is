@@ -190,8 +190,8 @@ public class ApplicationMetadataPositiveTest extends ApplicationManagementBaseTe
         }
     }
 
-    /* Disabling the test below since the STS functionality is a connector and
-       it does not exist in the product by default.*/
+    /* Disabling the test below since the WS-Trust functionality is provided
+       as a connector and it does not exist in the product by default.*/
 //    @Test
 //    public void testGetWSTrustMetadata() throws IOException {
 //

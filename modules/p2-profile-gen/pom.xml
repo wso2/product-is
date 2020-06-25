@@ -261,6 +261,9 @@
                                 </featureArtifactDef>
 
                                 <featureArtifactDef>
+                                    org.wso2.carbon.identity.inbound.auth.sts:org.wso2.carbon.identity.sts.passive.feature:${identity.inbound.auth.sts.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon.identity.userstore.ldap:org.wso2.carbon.ldap.server.feature:${identity.userstore.ldap.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -624,6 +627,10 @@
                                 <feature>
                                     <id>org.wso2.identity.styles.feature.group</id>
                                     <version>${project.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.sts.passive.feature.group</id>
+                                    <version>${identity.inbound.auth.sts.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.identity.utils.feature.group</id>
@@ -1115,6 +1122,10 @@
                                     <version>${project.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.identity.sts.passive.feature.group</id>
+                                    <version>${identity.inbound.auth.sts.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.identity.utils.feature.group</id>
                                     <version>${project.version}</version>
                                 </feature>
@@ -1551,6 +1562,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.directory.service.mgr.server.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.sts.passive.server.feature.group</id>
+                                    <version>${identity.inbound.auth.sts.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.identity.utils.feature.group</id>

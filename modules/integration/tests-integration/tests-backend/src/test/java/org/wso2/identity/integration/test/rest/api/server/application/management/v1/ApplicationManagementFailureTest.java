@@ -243,27 +243,25 @@ public class ApplicationManagementFailureTest extends ApplicationManagementBaseT
         validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "APP-60001");
     }
 
-    /* Disabling the test below since the STS functionality is a connector and
-       it does not exist in the product by default.*/
-//    @Test(description = "Tests whether inbound unique key is validated during application creation.")
-//    public void testCreateApplicationsWithConflictingInboundKeys() throws Exception {
-//
-//        // Create the first passive sts app.
-//        String payload = readResource("create-passive-sts-app.json");
-//        Response createFirstAppResponse = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, payload);
-//        createFirstAppResponse.then()
-//                .log().ifValidationFails()
-//                .assertThat()
-//                .statusCode(HttpStatus.SC_CREATED)
-//                .header(HttpHeaders.LOCATION, notNullValue());
-//        // Add app id to be cleaned up after the tests.
-//        createdApps.add(getApplicationId(createFirstAppResponse));
-//
-//        String secondAppPayload = readResource("create-passive-sts-app-conflicting-inbound-key.json");
-//        Response createSecondAppResponse = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, secondAppPayload);
-//        validateErrorResponse(createSecondAppResponse, HttpStatus.SC_CONFLICT, "APP-60009");
-//
-//    }
+    @Test(description = "Tests whether inbound unique key is validated during application creation.")
+    public void testCreateApplicationsWithConflictingInboundKeys() throws Exception {
+
+        // Create the first passive sts app.
+        String payload = readResource("create-passive-sts-app.json");
+        Response createFirstAppResponse = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, payload);
+        createFirstAppResponse.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .header(HttpHeaders.LOCATION, notNullValue());
+        // Add app id to be cleaned up after the tests.
+        createdApps.add(getApplicationId(createFirstAppResponse));
+
+        String secondAppPayload = readResource("create-passive-sts-app-conflicting-inbound-key.json");
+        Response createSecondAppResponse = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, secondAppPayload);
+        validateErrorResponse(createSecondAppResponse, HttpStatus.SC_CONFLICT, "APP-60009");
+
+    }
 
     private String getApplicationId(Response createFirstAppResponse) {
 
