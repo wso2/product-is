@@ -32,13 +32,23 @@ import org.json.simple.JSONValue;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.automation.engine.context.beans.ContextUrls;
+import org.wso2.carbon.automation.engine.context.beans.Tenant;
+import org.wso2.carbon.automation.engine.context.beans.User;
 import org.wso2.carbon.identity.governance.stub.bean.Property;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
+import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.mgt.IdentityGovernanceServiceClient;
+import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
+import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
@@ -60,21 +70,51 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 	private String consumerSecret;
 
 	private CloseableHttpClient client;
+	private final AutomationContext context;
+	private String backendURL;
+	private String sessionCookie;
+	private Tenant tenantInfo;
+	private User userInfo;
+	private LoginLogoutClient loginLogoutClient;
+	private ContextUrls identityContextUrls;
+	private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
 
 	private static final String lockedUser = "test_locked_user";
 	private static final String lockedUserPassword = "test_locked_user_pass";
 	private static final String ACCOUNT_LOCK_CLAIM_URI = "http://wso2.org/claims/identity/accountLocked";
 	protected IdentityGovernanceServiceClient identityGovernanceServiceClient;
+	private final String username;
+	private final String userPassword;
+	private final String activeTenant;
+	private static final String TENANT_DOMAIN = "wso2.com";
+
+	@DataProvider(name = "configProvider")
+	public static Object[][] configProvider() {
+		return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}};
+	}
+
+	@Factory(dataProvider = "configProvider")
+	public OAuth2ServiceResourceOwnerTestCase(TestUserMode userMode) throws Exception {
+
+		context = new AutomationContext("IDENTITY", userMode);
+		this.username = context.getContextTenant().getTenantAdmin().getUserName();
+		this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
+		this.activeTenant = context.getContextTenant().getDomain();
+	}
 
 	@BeforeClass(alwaysRun = true)
 	public void testInit() throws Exception {
-		super.init(TestUserMode.SUPER_TENANT_USER);
+
+		backendURL = context.getContextUrls().getBackEndUrl();
+		loginLogoutClient = new LoginLogoutClient(context);
 		logManger = new AuthenticatorClient(backendURL);
-		adminUsername = userInfo.getUserName();
-		adminPassword = userInfo.getPassword();
-		logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
-				isServer.getSuperTenant().getTenantAdmin().getPassword(),
-				isServer.getInstance().getHosts().get("default"));
+		sessionCookie = logManger.login(username, userPassword, context.getInstance().getHosts().get("default"));
+		identityContextUrls = context.getContextUrls();
+		tenantInfo = context.getContextTenant();
+		userInfo = tenantInfo.getContextUser();
+		appMgtclient = new ApplicationManagementServiceClient(sessionCookie, backendURL, null);
+		adminClient = new OauthAdminClient(backendURL, sessionCookie);
+		remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
 
 		setSystemproperties();
 		client = HttpClientBuilder.create().build();
@@ -86,11 +126,12 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 
 	@AfterClass(alwaysRun = true)
 	public void atEnd() throws Exception {
+
 		setAccountLocking("false");
 		deleteUser(lockedUser);
 
-		deleteApplication();
-		removeOAuthApplicationData();
+		appMgtclient.deleteApplication(SERVICE_PROVIDER_NAME);
+		adminClient.removeOAuthApplicationData(consumerKey);
 		client.close();
 		logManger = null;
 		consumerKey = null;
@@ -117,8 +158,8 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 		urlParameters.add(new BasicNameValuePair("consumerSecret", consumerSecret));
 		urlParameters.add(new BasicNameValuePair("accessEndpoint",
 		                                         OAuth2Constant.ACCESS_TOKEN_ENDPOINT));
-		urlParameters.add(new BasicNameValuePair("recowner", "admin"));
-		urlParameters.add(new BasicNameValuePair("recpassword", "admin"));
+		urlParameters.add(new BasicNameValuePair("recowner", username));
+		urlParameters.add(new BasicNameValuePair("recpassword", userPassword));
 		urlParameters.add(new BasicNameValuePair("authorize", OAuth2Constant.AUTHORIZE_PARAM));
 
 		HttpResponse response =
@@ -167,8 +208,8 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("grant_type",
                 OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER));
-        urlParameters.add(new BasicNameValuePair("username", "admin"));
-        urlParameters.add(new BasicNameValuePair("password", "admin"));
+        urlParameters.add(new BasicNameValuePair("username", username));
+        urlParameters.add(new BasicNameValuePair("password", userPassword));
 
         request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
 		request.setHeader("Authorization", "Basic " + Base64.encodeBase64String((consumerKey + consumerSecret)
@@ -195,7 +236,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("grant_type",
                 OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER));
-        urlParameters.add(new BasicNameValuePair("username", "admin"));
+        urlParameters.add(new BasicNameValuePair("username", username));
         urlParameters.add(new BasicNameValuePair("password", "admin1"));
 
         request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
@@ -224,8 +265,8 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("grant_type",
                 OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER));
-        urlParameters.add(new BasicNameValuePair("username", "admin"));
-        urlParameters.add(new BasicNameValuePair("password", "admin"));
+        urlParameters.add(new BasicNameValuePair("username", username));
+        urlParameters.add(new BasicNameValuePair("password", userPassword));
 
         request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
         request.setHeader("Authorization", "Basic " + Base64.encodeBase64String((consumerKey + ":someRandomString")
@@ -252,8 +293,8 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("grant_type",
                 OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER));
-        urlParameters.add(new BasicNameValuePair("username", "admin"));
-        urlParameters.add(new BasicNameValuePair("password", "admin"));
+        urlParameters.add(new BasicNameValuePair("username", username));
+        urlParameters.add(new BasicNameValuePair("password", userPassword));
 
         request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
         request.setHeader("Authorization", "Basic " + Base64.encodeBase64String(("someRandomString:" + consumerSecret)
@@ -280,9 +321,9 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("grant_type",
                 OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER));
-        urlParameters.add(new BasicNameValuePair("username", "admin"));
-        urlParameters.add(new BasicNameValuePair("password", "admin"));
-        urlParameters.add(new BasicNameValuePair("password", "admin"));
+        urlParameters.add(new BasicNameValuePair("username", username));
+        urlParameters.add(new BasicNameValuePair("password", userPassword));
+        urlParameters.add(new BasicNameValuePair("password", userPassword));
 
         request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
         request.setHeader("Authorization", "Basic " + Base64.encodeBase64String((consumerKey + ":" + consumerSecret)
@@ -305,28 +346,30 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 			"testSendInvalidAuthenticationPost")
 	public void testSendLockedAuthenticationPost() throws Exception {
 
-		HttpPost request = new HttpPost(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
-		List<NameValuePair> urlParameters = new ArrayList<>();
-		urlParameters.add(new BasicNameValuePair("grant_type",
-				OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER));
-		urlParameters.add(new BasicNameValuePair("username", lockedUser));
-		urlParameters.add(new BasicNameValuePair("password", lockedUserPassword));
+		if (!TENANT_DOMAIN.equals(activeTenant)) {
+			HttpPost request = new HttpPost(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
+			List<NameValuePair> urlParameters = new ArrayList<>();
+			urlParameters.add(new BasicNameValuePair("grant_type",
+					OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER));
+			urlParameters.add(new BasicNameValuePair("username", lockedUser));
+			urlParameters.add(new BasicNameValuePair("password", lockedUserPassword));
 
-		request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
-		request.setHeader("Authorization", "Basic " + Base64.encodeBase64String((consumerKey + ":" + consumerSecret)
-				.getBytes()).trim());
-		request.setHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-		request.setEntity(new UrlEncodedFormEntity(urlParameters));
+			request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
+			request.setHeader("Authorization", "Basic " + Base64.encodeBase64String((consumerKey + ":" + consumerSecret)
+					.getBytes()).trim());
+			request.setHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+			request.setEntity(new UrlEncodedFormEntity(urlParameters));
 
-		HttpResponse response = client.execute(request);
+			HttpResponse response = client.execute(request);
 
-		BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+			BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
-		Object obj = JSONValue.parse(rd);
-		String errormsg = ((JSONObject) obj).get("error_description").toString();
+			Object obj = JSONValue.parse(rd);
+			String errormsg = ((JSONObject) obj).get("error_description").toString();
 
-		EntityUtils.consume(response.getEntity());
-		Assert.assertTrue(errormsg.contains("17003 Account is locked for user " + lockedUser));
+			EntityUtils.consume(response.getEntity());
+			Assert.assertTrue(errormsg.contains("17003 Account is locked for user " ));
+		}
 	}
 
 	private void setAccountLocking(String value) {
