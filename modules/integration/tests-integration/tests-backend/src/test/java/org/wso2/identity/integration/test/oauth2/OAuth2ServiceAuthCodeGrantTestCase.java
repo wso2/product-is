@@ -123,6 +123,7 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
+        this.logManger.logOut();
         appMgtclient.deleteApplication(SERVICE_PROVIDER_NAME);
         adminClient.removeOAuthApplicationData(consumerKey);
     }
