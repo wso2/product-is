@@ -18,12 +18,13 @@
         </classes>
     </test>
 
-    <test name="is-tests-default-configuration-sts" preserve-order="true" parallel="false" group-by-instances="true">
-        <!-- Active sts test case needs to run before passive sts test case-->
-        <classes>
-            <class name="org.wso2.identity.integration.test.sts.ActiveSTSTestCase"/>
-        </classes>
-    </test>
+    <!--Disabling since the WS-Trust functionality is provided as a connector and it does not exist in the product by default.-->
+    <!--<test name="is-tests-default-configuration-sts" preserve-order="true" parallel="false" group-by-instances="true">-->
+        <!--&lt;!&ndash; Active sts test case needs to run before passive sts test case&ndash;&gt;-->
+        <!--<classes>-->
+            <!--<class name="org.wso2.identity.integration.test.sts.ActiveSTSTestCase"/>-->
+        <!--</classes>-->
+    <!--</test>-->
 
     <test name="is-tests-default-configuration" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
@@ -155,7 +156,8 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementSAMLSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementOAuthSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementPassiveStsSuccessTest"/>
-            <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementWSTrustTest"/>
+            <!--Disabling since the WS-Trust functionality is provided as a connector and it does not exist in the product by default.-->
+            <!--<class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementWSTrustTest"/>-->
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationTemplateManagementSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationTemplateManagementFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.script.library.v1.ScriptLibrarySuccessTest"/>
