@@ -21,7 +21,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -32,27 +31,17 @@ import org.json.simple.JSONValue;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.automation.engine.context.beans.ContextUrls;
-import org.wso2.carbon.automation.engine.context.beans.Tenant;
-import org.wso2.carbon.automation.engine.context.beans.User;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
-import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
-import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
-import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
-import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,57 +55,31 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT
 public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
     private AuthenticatorClient logManger;
+    private String adminUsername;
+    private String adminPassword;
     private String accessToken;
     private String sessionDataKeyConsent;
     private String sessionDataKey;
     private String authorizationCode;
     private String consumerKey;
     private String consumerSecret;
-    private final String username;
-    private final String userPassword;
-    private final AutomationContext context;
-    private String backendURL;
-    private String sessionCookie;
-    private Tenant tenantInfo;
-    private User userInfo;
-    private LoginLogoutClient loginLogoutClient;
-    private ContextUrls identityContextUrls;
-    private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
 
     private static final String PLAYGROUND_RESET_PAGE = "http://localhost:" + CommonConstants.DEFAULT_TOMCAT_PORT +
             "/playground2/oauth2.jsp?reset=true";
     private DefaultHttpClient client;
 
-    @DataProvider(name = "configProvider")
-    public static Object[][] configProvider() {
-        return new Object[][]{
-                {TestUserMode.SUPER_TENANT_USER},
-                {TestUserMode.TENANT_USER}
-        };
-    }
-
-    @Factory(dataProvider = "configProvider")
-    public OAuth2ServiceAuthCodeGrantTestCase(TestUserMode userMode) throws Exception {
-
-        context = new AutomationContext("IDENTITY", userMode);
-        this.username = context.getContextTenant().getTenantAdmin().getUserName();
-        this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
-    }
-
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
-        backendURL = context.getContextUrls().getBackEndUrl();
-        loginLogoutClient = new LoginLogoutClient(context);
+        super.init(TestUserMode.SUPER_TENANT_USER);
         logManger = new AuthenticatorClient(backendURL);
-        sessionCookie = logManger.login(username, userPassword, context.getInstance().getHosts().get("default"));
-        identityContextUrls = context.getContextUrls();
-        tenantInfo = context.getContextTenant();
-        userInfo = tenantInfo.getContextUser();
-        appMgtclient = new ApplicationManagementServiceClient(sessionCookie, backendURL, null);
-        adminClient = new OauthAdminClient(backendURL, sessionCookie);
-        remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
+        adminUsername = userInfo.getUserName();
+        adminPassword = userInfo.getPassword();
+        logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
+                isServer.getSuperTenant().getTenantAdmin().getPassword(),
+                isServer.getInstance().getHosts().get("default"));
         client = new DefaultHttpClient();
+
         setSystemproperties();
     }
 
@@ -124,8 +87,9 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
     public void atEnd() throws Exception {
 
         this.logManger.logOut();
-        appMgtclient.deleteApplication(SERVICE_PROVIDER_NAME);
-        adminClient.removeOAuthApplicationData(consumerKey);
+        deleteApplication();
+        removeOAuthApplicationData();
+
     }
 
     @Test(groups = "wso2.is", description = "Check Oauth2 application registration")
@@ -142,12 +106,13 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
 
     @Test(groups = "wso2.is", description = "Send authorize user request without response_type param", dependsOnMethods
             = "testRegisterApplication")
-    public void testSendAuthorizedPostForError() throws Exception {
+    public void testSendAuthorozedPostForError() throws Exception {
 
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         urlParameters.add(new BasicNameValuePair("client_id", consumerKey));
         urlParameters.add(new BasicNameValuePair("redirect_uri", OAuth2Constant.CALLBACK_URL));
-        String authorizeEndpoint = context.getContextUrls().getBackEndUrl()
+        AutomationContext automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
+        String authorizeEndpoint = automationContext.getContextUrls().getBackEndUrl()
                 .replace("services/", "oauth2/authorize");
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters, authorizeEndpoint);
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
@@ -162,7 +127,8 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
 
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         urlParameters.add(new BasicNameValuePair("client_id", consumerKey));
-        String authorizeEndpoint = context.getContextUrls().getBackEndUrl()
+        AutomationContext automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
+        String authorizeEndpoint = automationContext.getContextUrls().getBackEndUrl()
                 .replace("services/", "oauth2/authorize");
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters, authorizeEndpoint);
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
@@ -172,7 +138,7 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
     }
 
     @Test(groups = "wso2.is", description = "Send authorize user request", dependsOnMethods = "testRegisterApplication")
-    public void testSendAuthorizedPost() throws Exception {
+    public void testSendAuthorozedPost() throws Exception {
 
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         urlParameters.add(new BasicNameValuePair("grantType", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
@@ -206,10 +172,10 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
         EntityUtils.consume(response.getEntity());
     }
 
-    @Test(groups = "wso2.is", description = "Send login post request", dependsOnMethods = "testSendAuthorizedPost")
+    @Test(groups = "wso2.is", description = "Send login post request", dependsOnMethods = "testSendAuthorozedPost")
     public void testSendLoginPost() throws Exception {
 
-        HttpResponse response = loginPost(client, sessionDataKey);
+        HttpResponse response = sendLoginPost(client, sessionDataKey);
         Assert.assertNotNull(response, "Login request failed. Login response is null.");
 
         if (Utils.requestMissingClaims(response)) {
@@ -406,15 +372,4 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
                         + OAuth2Constant.INVALID_GRANT_ERROR);
     }
 
-    public HttpResponse loginPost(HttpClient client, String sessionDataKey)
-            throws IOException {
-        List<NameValuePair> urlParameters = new ArrayList<>();
-        urlParameters.add(new BasicNameValuePair("username", userInfo.getUserName()));
-        urlParameters.add(new BasicNameValuePair("password", userInfo.getPassword()));
-        urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
-
-        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.COMMON_AUTH_URL);
-
-        return response;
-    }
 }
