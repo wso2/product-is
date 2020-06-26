@@ -33,12 +33,14 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.token.AccessToken;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
@@ -53,11 +55,20 @@ public class OAuth2TokenRevocationWithRevokedAccessToken extends OAuth2ServiceAb
     private ClientID consumerKey;
     private Secret consumerSecret;
 
-    private String tokenType;
+    private final String tokenType;
+    private final String username;
+    private final String userPassword;
+    private final String activeTenant;
+    private static final String TENANT_DOMAIN = "wso2.com";
 
     @Factory(dataProvider = "oAuthConsumerApplicationProvider")
-    public OAuth2TokenRevocationWithRevokedAccessToken(String tokenType) {
+    public OAuth2TokenRevocationWithRevokedAccessToken(String tokenType, TestUserMode userMode) throws Exception {
 
+        super.init(userMode);
+        AutomationContext context = new AutomationContext("IDENTITY", userMode);
+        this.username = context.getContextTenant().getTenantAdmin().getUserName();
+        this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
+        this.activeTenant = context.getContextTenant().getDomain();
         this.tokenType = tokenType;
     }
 
@@ -66,15 +77,15 @@ public class OAuth2TokenRevocationWithRevokedAccessToken extends OAuth2ServiceAb
 
         // This test will be carried out for both default and JWT access tokens
         return new Object[][]{
-                {"Default"},
-                {"JWT"}
+                {"Default", TestUserMode.SUPER_TENANT_ADMIN},
+                {"Default", TestUserMode.TENANT_ADMIN},
+                {"JWT", TestUserMode.SUPER_TENANT_ADMIN},
+                {"JWT", TestUserMode.TENANT_ADMIN}
         };
     }
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
-
-        super.init(TestUserMode.SUPER_TENANT_USER);
 
         OAuthConsumerAppDTO appDTO = new OAuthConsumerAppDTO();
         appDTO.setApplicationName(OAuth2Constant.OAUTH_APPLICATION_NAME);
@@ -126,8 +137,8 @@ public class OAuth2TokenRevocationWithRevokedAccessToken extends OAuth2ServiceAb
 
         ClientAuthentication clientAuth = new ClientSecretBasic(consumerKey, consumerSecret);
         URI tokenEndpoint = new URI(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
-        AuthorizationGrant authorizationGrant = new ResourceOwnerPasswordCredentialsGrant("admin",
-                new Secret("admin"));
+        AuthorizationGrant authorizationGrant = new ResourceOwnerPasswordCredentialsGrant(username,
+                new Secret(userPassword));
 
         TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, authorizationGrant, null);
         HTTPResponse tokenHTTPResp = request.toHTTPRequest().send();
@@ -140,8 +151,8 @@ public class OAuth2TokenRevocationWithRevokedAccessToken extends OAuth2ServiceAb
 
         ClientAuthentication clientAuth = new ClientSecretBasic(consumerKey, consumerSecret);
         URI tokenEndpoint = new URI(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
-        AuthorizationGrant authorizationGrant = new ResourceOwnerPasswordCredentialsGrant("admin",
-                new Secret("admin"));
+        AuthorizationGrant authorizationGrant = new ResourceOwnerPasswordCredentialsGrant(username,
+                new Secret(userPassword));
 
         Scope scope = new Scope("internal_application_mgt_view");
 
@@ -164,7 +175,12 @@ public class OAuth2TokenRevocationWithRevokedAccessToken extends OAuth2ServiceAb
 
     private TokenIntrospectionResponse introspectAccessToken(AccessToken accessToken, AccessToken privilegedAccessToken) throws Exception {
 
-        URI introSpecEndpoint = new URI(OAuth2Constant.INTRO_SPEC_ENDPOINT);
+        URI introSpecEndpoint;
+        if (TENANT_DOMAIN.equals(activeTenant)) {
+            introSpecEndpoint = new URI(OAuth2Constant.TENANT_INTRO_SPEC_ENDPOINT);
+        } else {
+            introSpecEndpoint = new URI(OAuth2Constant.INTRO_SPEC_ENDPOINT);
+        }
         BearerAccessToken bearerAccessToken = new BearerAccessToken(privilegedAccessToken.getValue());
         TokenIntrospectionRequest TokenIntroRequest = new TokenIntrospectionRequest(introSpecEndpoint,
                 bearerAccessToken,
