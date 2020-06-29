@@ -1300,6 +1300,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
 
         try {
             if (isWorkflowPresent(workflowId)) {
+                Thread.sleep(20000);
                 client.deleteWorkflow(workflowId);
                 if (isWorkflowPresent(workflowId)) {
                     Assert.fail("Workflow " + workflowId + " is not deleted, It still exists.");
