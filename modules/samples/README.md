@@ -1,0 +1,1 @@
+Moved the sample apps code to [samples-is](https://github.com/wso2/samples-is)
