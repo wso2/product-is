@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2020, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
@@ -36,8 +36,6 @@ import org.wso2.identity.integration.test.utils.CommonConstants;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
 
 public class SAMLARTRESOLVETestCase extends AbstractSAMLSSOTestCase {
 
@@ -49,7 +47,7 @@ public class SAMLARTRESOLVETestCase extends AbstractSAMLSSOTestCase {
     @Factory(dataProvider = "samlConfigProvider")
     public SAMLARTRESOLVETestCase(SAMLConfig config) {
 
-        if (log.isDebugEnabled()){
+        if (log.isDebugEnabled()) {
             log.info("SAML Artifact Binding Test initialized for " + config);
         }
         this.config = config;
@@ -65,7 +63,7 @@ public class SAMLARTRESOLVETestCase extends AbstractSAMLSSOTestCase {
     }
 
     @AfterClass(alwaysRun = true)
-    public void testClear() throws Exception{
+    public void testClear() throws Exception {
 
         super.deleteUser(config);
         super.deleteApplication(config.getApp().getArtifact());
@@ -92,17 +90,6 @@ public class SAMLARTRESOLVETestCase extends AbstractSAMLSSOTestCase {
             response = Utils.sendPOSTMessage(sessionKey, SAML_SSO_URL, USER_AGENT, ACS_URL, config.getApp()
                     .getArtifact(), config.getUser().getUsername(), config.getUser().getPassword(), httpClient);
 
-            if (requestMissingClaims(response)) {
-                String pastrCookie = Utils.getPastreCookie(response);
-                Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
-                EntityUtils.consume(response.getEntity());
-
-                response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT,
-                        String.format(ACS_URL, config.getApp()
-                                .getArtifact()), httpClient, pastrCookie);
-                EntityUtils.consume(response.getEntity());
-            }
-
             String samlRedirectUrl = Utils.getRedirectUrl(response);
             Assert.assertTrue(samlRedirectUrl.contains("SAMLart"), "SAML artifact binding failed for " + config);
             EntityUtils.consume(response.getEntity());
@@ -123,8 +110,8 @@ public class SAMLARTRESOLVETestCase extends AbstractSAMLSSOTestCase {
     }
 
     @DataProvider(name = "samlConfigProvider")
-    public static Object[][] samlConfigProvider(){
-        return  new SAMLConfig[][]{
+    public static Object[][] samlConfigProvider() {
+        return new SAMLConfig[][]{
                 {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_REDIRECT,
                         ClaimType.NONE, App.SUPER_TENANT_APP_WITH_SIGNING)},
                 {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_REDIRECT,
@@ -142,29 +129,5 @@ public class SAMLARTRESOLVETestCase extends AbstractSAMLSSOTestCase {
         }
         rd.close();
         return result.toString();
-    }
-
-    private Map<String,String> extractClaims(String claimString){
-        String[] dataArray = StringUtils.substringsBetween(claimString, "<td>", "</td>");
-        Map<String,String> attributeMap = new HashMap<String, String>();
-        String key = null;
-        String value;
-        for (int i = 0; i< dataArray.length; i++){
-            if((i%2) == 0){
-                key = dataArray[i];
-            }else{
-                value = dataArray[i].trim();
-                attributeMap.put(key,value);
-            }
-        }
-
-        return attributeMap;
-    }
-
-    private boolean requestMissingClaims (HttpResponse response) {
-
-        String redirectUrl = Utils.getRedirectUrl(response);
-        return redirectUrl.contains("consent.do");
-
     }
 }
