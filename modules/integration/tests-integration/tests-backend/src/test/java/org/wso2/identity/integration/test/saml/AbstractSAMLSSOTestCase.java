@@ -286,7 +286,7 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
 
     public void createApplicationForSAMLAartResolve(SAMLConfig config, String appName) throws Exception {
 
-        samlArtResolve =true;
+        samlArtResolve = true;
         createApplication(config, appName);
     }
 
