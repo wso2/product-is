@@ -385,7 +385,7 @@
             </includes>
         </fileSet>
 
-        <!--copy the lsp-debug webapp -->
+        <!--Copy the lsp-debug webapp -->
         <fileSet>
             <directory>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
@@ -438,13 +438,52 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
         </fileSet>
 
-        <!--copy web apps for for totp, smsotp and emailotp authenticators-->
+        <!--Copy web apps for for smsotp authenticators-->
         <fileSet>
             <directory>../connectors/target/authenticatorCopied/war</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
+            <includes>
+                <include>smsotpauthenticationendpoint.war</include>
+            </includes>
         </fileSet>
 
-        <!--copy web app for identity management feature -->
+        <!--Copy web apps for for totp authenticators-->
+        <fileSet>
+            <directory>../connectors/target/authenticatorCopied/war</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
+            <includes>
+                <include>totpauthenticationendpoint.war</include>
+            </includes>
+        </fileSet>
+
+        <!--Copy web apps for for emailotp authenticators-->
+        <fileSet>
+            <directory>../connectors/target/authenticatorCopied/war</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
+            <includes>
+                <include>emailotpauthenticationendpoint.war</include>
+            </includes>
+        </fileSet>
+
+        <!--copy web apps api#identity#auth#v1.1 -->
+        <fileSet>
+            <directory>../connectors/target/authenticatorCopied/war</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
+            <includes>
+                <include>api#identity#auth#v1.1.war</include>
+            </includes>
+        </fileSet>
+
+        <!--Copy web apps for for x509 certificate authenticators-->
+        <fileSet>
+            <directory>../connectors/target/authenticatorCopied/war</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
+            <includes>
+                <include>x509certificateauthenticationendpoint.war</include>
+            </includes>
+        </fileSet>
+
+        <!--Copy web app for account recovery endpoint -->
         <fileSet>
             <directory>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
@@ -456,7 +495,7 @@
         </fileSet>
 
 
-        <!--copy web app for identity recovery feature -->
+        <!--Copy web app api#identity#recovery#v0.9 -->
         <fileSet>
             <directory>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
@@ -467,7 +506,7 @@
             </includes>
         </fileSet>
 
-        <!--copy web app for identity recovery feature -->
+        <!--Copy web app api#identity#user#v1.0 -->
         <fileSet>
             <directory>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
@@ -478,7 +517,7 @@
             </includes>
         </fileSet>
 
-        <!--copy  web app for FIDO2 endpoint feature-->
+        <!--Copy  web app api#users#v2#me#webauthn.-->
         <fileSet>
             <directory>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
@@ -696,6 +735,7 @@
             <includes>
                 <include>api/</include>
                 <include>authenticationendpoint/</include>
+                <include>mex</include>
                 <include>mexut/</include>
                 <include>oauth2/</include>
                 <include>scim2/</include>
@@ -713,7 +753,20 @@
                 <include>accountrecoveryendpoint/</include>
                 <include>api#identity#recovery#v0.9/</include>
                 <include>api#identity#user#v1.0/</include>
+                <include>api#identity#oauth2#uma#resourceregistration#v1.0/</include>
                 <include>api#users#v2#me#webauthn/</include>
+            </includes>
+        </fileSet>
+
+        <fileSet>
+            <directory>../connectors/target/authenticatorCopied/war</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
+            <includes>
+                <include>smsotpauthenticationendpoint/</include>
+                <include>totpauthenticationendpoint/</include>
+                <include>emailotpauthenticationendpoint/</include>
+                <include>api#identity#auth#v1.1/</include>
+                <include>x509certificateauthenticationendpoint</include>
             </includes>
         </fileSet>
     </fileSets>
