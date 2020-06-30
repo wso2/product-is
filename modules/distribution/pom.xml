@@ -604,12 +604,12 @@
                                 <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#identity#user#v1.0.war" />
 
                                 <!-- Explode the api#users#v2#me#webauthn.war -->
-                                <unzip dest="../connectors/target/authenticatorCopied/war/api#users#v2#me#webauthn">
-                                    <fileset dir="../connectors/target/authenticatorCopied/war">
+                                <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#users#v2#me#webauthn">
+                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
                                         <include name="api#users#v2#me#webauthn.war" />
                                     </fileset>
                                 </unzip>
-                                <delete file=".../connectors/target/authenticatorCopied/war/api#users#v2#me#webauthn.war" />
+                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#users#v2#me#webauthn.war" />
 
                                 <!-- Explode the lsp.war -->
                                 <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/lsp">
@@ -651,6 +651,14 @@
                                 </unzip>
                                 <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/wso2.war" />
 
+                                <!-- Explode the admin-portal.war -->
+                                <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/admin-portal">
+                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
+                                        <include name="admin-portal.war" />
+                                    </fileset>
+                                </unzip>
+                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/admin-portal.war" />
+
                                 <!-- Explode the smsotpauthenticationendpoint.war -->
                                 <unzip dest="../connectors/target/authenticatorCopied/war/smsotpauthenticationendpoint">
                                     <fileset dir="../connectors/target/authenticatorCopied/war">
@@ -684,20 +692,12 @@
                                 <delete file="../connectors/target/authenticatorCopied/war/x509certificateauthenticationendpoint.war" />
 
                                 <!-- Explode the api#identity#auth#v1.1.war -->
-                                <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#identity#auth#v1.1">
-                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
+                                <unzip dest="../connectors/target/authenticatorCopied/war/api#identity#auth#v1.1">
+                                    <fileset dir="../connectors/target/authenticatorCopied/war/">
                                         <include name="api#identity#auth#v1.1.war" />
                                     </fileset>
                                 </unzip>
                                 <delete file="../connectors/target/authenticatorCopied/war/api#identity#auth#v1.1.war" />
-
-                                <!-- Explode the admin-portal.war -->
-                                <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/admin-portal">
-                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
-                                        <include name="admin-portal.war" />
-                                    </fileset>
-                                </unzip>
-                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/admin-portal.war" />
                             </tasks>
                         </configuration>
                     </execution>

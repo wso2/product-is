@@ -465,7 +465,7 @@
             </includes>
         </fileSet>
 
-        <!--copy web apps api#identity#auth#v1.1 -->
+        <!--Copy web apps api#identity#auth#v1.1 -->
         <fileSet>
             <directory>../connectors/target/authenticatorCopied/war</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
