@@ -696,7 +696,24 @@
             <includes>
                 <include>api/</include>
                 <include>authenticationendpoint/</include>
+                <include>mexut/</include>
+                <include>oauth2/</include>
+                <include>scim2/</include>
+                <include>wso2</include>
+                <include>api#identity#oauth2#v1.0/</include>
+                <include>api#identity#oauth2#dcr#v1.1/</include>
+                <include>api#identity#template#mgt#v1.0.0/</include>
+                <include>api#identity#config-mgt#v1.0/</include>
+                <include>api#identity#entitlement</include>
+                <include>api#identity#consent-mgt#v1.0/</include>
+                <include>api#identity#oauth2#uma#permission#v1.0</include>
+                <include>api#identity#oauth2#uma#resourceregistration#v1.0</include>
+                <include>api#health-check#v1.0</include>
+                <include>lsp</include>
                 <include>accountrecoveryendpoint/</include>
+                <include>api#identity#recovery#v0.9/</include>
+                <include>api#identity#user#v1.0/</include>
+                <include>api#users#v2#me#webauthn/</include
             </includes>
         </fileSet>
     </fileSets>
