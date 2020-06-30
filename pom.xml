@@ -2098,7 +2098,6 @@
         <identity.extension.utils>1.0.8</identity.extension.utils>
 
         <!-- Identity REST API feature -->
-<!--        <identity.api.dispatcher.version>1.0.114</identity.api.dispatcher.version>-->
         <identity.api.dispatcher.version>1.0.115</identity.api.dispatcher.version>
 
         <identity.agent.sso.version>5.4.0</identity.agent.sso.version>
