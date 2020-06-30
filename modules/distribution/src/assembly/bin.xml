@@ -713,7 +713,7 @@
                 <include>accountrecoveryendpoint/</include>
                 <include>api#identity#recovery#v0.9/</include>
                 <include>api#identity#user#v1.0/</include>
-                <include>api#users#v2#me#webauthn/</include
+                <include>api#users#v2#me#webauthn/</include>
             </includes>
         </fileSet>
     </fileSets>
