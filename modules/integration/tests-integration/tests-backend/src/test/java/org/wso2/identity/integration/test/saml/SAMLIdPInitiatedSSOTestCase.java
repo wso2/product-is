@@ -53,7 +53,6 @@ public class SAMLIdPInitiatedSSOTestCase extends AbstractSAMLSSOTestCase {
 
     private Log log = LogFactory.getLog(getClass());
 
-    private static final String SP_NAME = "travelocity.com";
     private static final String IDP_INIT_SSO_URL = "https://localhost:%s/samlsso?spEntityID=%s";
     private static final String IDP_INIT_SSO_TENANT_URL
             = "https://localhost:%s/samlsso?tenantDomain=wso2.com&spEntityID=%s";
@@ -61,7 +60,7 @@ public class SAMLIdPInitiatedSSOTestCase extends AbstractSAMLSSOTestCase {
     private static final String SP_ACS_URL = "http://localhost:8490/%s/home.jsp";
     private HttpClient httpClient;
     private CookieStore cookieStore = new BasicCookieStore();
-    private AbstractSAMLSSOTestCase.SAMLConfig samlConfig;
+    private SAMLConfig samlConfig;
 
     @Factory(dataProvider = "samlConfigProvider")
     public SAMLIdPInitiatedSSOTestCase(SAMLConfig config) {
@@ -78,20 +77,8 @@ public class SAMLIdPInitiatedSSOTestCase extends AbstractSAMLSSOTestCase {
         return new SAMLConfig[][]{
                 {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_REDIRECT,
                         ClaimType.NONE, App.SUPER_TENANT_APP_WITH_SIGNING)},
-                {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_REDIRECT,
-                        ClaimType.LOCAL, App.SUPER_TENANT_APP_WITH_SIGNING)},
-                {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_POST,
-                        ClaimType.NONE, App.SUPER_TENANT_APP_WITH_SIGNING)},
-                {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_POST,
-                        ClaimType.LOCAL, App.SUPER_TENANT_APP_WITH_SIGNING)},
                 {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_REDIRECT,
                         ClaimType.NONE, App.TENANT_APP_WITHOUT_SIGNING)},
-                {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_REDIRECT,
-                        ClaimType.LOCAL, App.TENANT_APP_WITHOUT_SIGNING)},
-                {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_POST,
-                        ClaimType.NONE, App.TENANT_APP_WITHOUT_SIGNING)},
-                {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_POST,
-                        ClaimType.LOCAL, App.TENANT_APP_WITHOUT_SIGNING)},
         };
     }
 
@@ -100,7 +87,7 @@ public class SAMLIdPInitiatedSSOTestCase extends AbstractSAMLSSOTestCase {
 
         super.init(samlConfig.getUserMode());
         super.testInit();
-        addServiceProvider();
+        super.createApplication(samlConfig, samlConfig.getApp().getArtifact());
         httpClient = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).disableRedirectHandling().build();
         super.createUser(samlConfig);
     }
@@ -118,6 +105,7 @@ public class SAMLIdPInitiatedSSOTestCase extends AbstractSAMLSSOTestCase {
     public void testIdPInitiatedSSO() throws Exception {
 
         HttpResponse idpInitResponse;
+        ssoConfigServiceClient.addServiceProvider(super.createSsoSPDTOForIdPInit(samlConfig));
         if (samlConfig.getUserMode().name().equals("TENANT_ADMIN")) {
             idpInitResponse = Utils.sendGetRequest(String.format(IDP_INIT_SSO_TENANT_URL, IS_DEFAULT_HTTPS_PORT,
                     samlConfig.getApp().getArtifact()), USER_AGENT, httpClient);
@@ -145,13 +133,6 @@ public class SAMLIdPInitiatedSSOTestCase extends AbstractSAMLSSOTestCase {
         String samlRedirectPage = extractDataFromResponse(samlRedirectResponse);
         Assert.assertTrue(samlRedirectPage.contains(String.format(SP_ACS_URL, samlConfig.getApp().getArtifact())), "Cannot find the assertion " +
                 "consumer URL in the resulting page.");
-    }
-
-    private void addServiceProvider() throws Exception {
-
-        super.createApplication(samlConfig, samlConfig.getApp().getArtifact());
-        super.ssoConfigServiceClient.addServiceProvider(super.createSsoSPDTOForIdPInit(samlConfig));
-        log.info("Service Provider " + samlConfig.getApp().getArtifact() + " created.");
     }
 
     private String getSessionDataKeyFromRedirectUrl(String redirectUrl) throws Exception {
