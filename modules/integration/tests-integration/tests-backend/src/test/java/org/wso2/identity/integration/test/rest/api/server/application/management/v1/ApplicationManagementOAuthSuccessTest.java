@@ -182,7 +182,7 @@ public class ApplicationManagementOAuthSuccessTest extends ApplicationManagement
         getResponseOfGet(path).then().assertThat().statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
-    @Test(dependsOnMethods = "testUpdateOAuthInboundDetailsOfSecondApp")
+    @Test(dependsOnMethods = "testDeleteOAuthInboundOfSecondApp")
     public void testDeleteSecondApp() throws Exception {
 
         String path = APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId;
