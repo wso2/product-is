@@ -1,0 +1,46 @@
+{
+  "accessToken": {
+    "applicationAccessTokenExpiryInSeconds": 3600,
+    "type": "Default",
+    "userAccessTokenExpiryInSeconds": 3600,
+    "bindingType" : "cookie"
+  },
+  "allowedOrigins": [],
+  "callbackURLs": [
+    "http://localhost:8080/playground2/oauth2client"
+  ],
+  "grantTypes": [
+    "refresh_token",
+    "authorization_code",
+    "account_switch",
+    "password"
+  ],
+  "idToken": {
+    "audience": [
+      ""
+    ],
+    "encryption": {
+      "algorithm": "RSA-OAEP",
+      "enabled": false,
+      "method": "A128GCM"
+    },
+    "expiryInSeconds": 3600
+  },
+  "logout": {
+    "backChannelLogoutUrl": "",
+    "frontChannelLogoutUrl": ""
+  },
+  "pkce": {
+    "mandatory": true,
+    "supportPlainTransformAlgorithm": true
+  },
+  "publicClient": false,
+  "refreshToken": {
+    "expiryInSeconds": 86400,
+    "renewRefreshToken": true
+  },
+  "scopeValidators": [],
+  "validateRequestObjectSignature": false,
+  "clientId": "my_custom_client_id",
+  "clientSecret": "my_custom_client_secret"
+}
