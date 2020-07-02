@@ -24,39 +24,33 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.ProtocolException;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.DefaultRedirectHandler;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.Property;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
-import org.wso2.carbon.um.ws.api.stub.ClaimValue;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
-import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.util.Utils;
+import org.wso2.identity.integration.test.utils.CommonConstants;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
-public class SAMLInvalidIssuerTestCase extends ISIntegrationTest {
+public class SAMLInvalidIssuerTestCase extends AbstractSAMLSSOTestCase {
+
     private static final Log log = LogFactory.getLog(SAMLInvalidIssuerTestCase.class);
 
     // SAML Application attributes
@@ -67,24 +61,11 @@ public class SAMLInvalidIssuerTestCase extends ISIntegrationTest {
     private static final String ATTRIBUTE_CS_INDEX_VALUE = "1239245949";
     private static final String ATTRIBUTE_CS_INDEX_NAME = "attrConsumServiceIndex";
 
-    // User Attributes
-    private static final String USERNAME = "testUser";
-    private static final String PASSWORD = "testUser";
-    private static final String EMAIL = "testUser@wso2.com";
-    private static final String NICKNAME = "testUserNick";
-
     private static final String ACS_URL = "http://localhost:8490/travelocity.com/home.jsp";
     private static final String COMMON_AUTH_URL = "https://localhost:9853/commonauth";
     private static final String SAML_SSO_LOGIN_URL =
             "http://localhost:8490/travelocity.com/samlsso?SAML2.HTTPBinding=HTTP-Redirect";
     private static final String SAML_ERROR_NOTIFICATION_PATH = "/authenticationendpoint/samlsso_notification.do";
-
-    //Claim Uris
-    private static final String firstNameClaimURI = "http://wso2.org/claims/givenname";
-    private static final String lastNameClaimURI = "http://wso2.org/claims/lastname";
-    private static final String emailClaimURI = "http://wso2.org/claims/emailaddress";
-
-    private static final String profileName = "default";
 
     private ApplicationManagementServiceClient applicationManagementServiceClient;
     private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
@@ -92,9 +73,21 @@ public class SAMLInvalidIssuerTestCase extends ISIntegrationTest {
 
     private boolean isSAMLReturned;
 
+    private SAMLConfig config;
+
+    @Factory(dataProvider = "samlConfigProvider")
+    public SAMLInvalidIssuerTestCase(SAMLConfig config) {
+
+        if (log.isDebugEnabled()){
+            log.info("SAML SSO Test initialized for " + config);
+        }
+        this.config = config;
+    }
+
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
-        super.init();
+
+        super.init(config.getUserMode());
 
         ConfigurationContext configContext = ConfigurationContextFactory
                 .createConfigurationContextFromFileSystem(null
@@ -138,13 +131,14 @@ public class SAMLInvalidIssuerTestCase extends ISIntegrationTest {
             }
         });
 
-        createUser();
-        createApplication();
+        super.createUser(config);
+        createApplication(config, APPLICATION_NAME);
     }
 
     @AfterClass(alwaysRun = true)
     public void testClear() throws Exception {
-        deleteUser();
+
+        super.deleteUser(config);
         deleteApplication();
 
         applicationManagementServiceClient = null;
@@ -155,16 +149,18 @@ public class SAMLInvalidIssuerTestCase extends ISIntegrationTest {
     @Test(alwaysRun = true, description = "Testing SAML SSO login", groups = "wso2.is",
           priority = 1)
     public void testSAMLSSOLogin() {
+
         try {
             HttpResponse response;
 
-            response = sendGetRequest(SAML_SSO_LOGIN_URL);
+            response = Utils.sendGetRequest(SAML_SSO_LOGIN_URL, USER_AGENT, httpClient);
 
-            String sessionKey = extractDataFromResponse(response, "name=\"sessionDataKey\"", 1);
-            response = sendPOSTMessage(sessionKey);
+            String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SAML_RESPONSE_PARAM, 1);
+            response = Utils.sendPOSTMessage(sessionKey, SAML_SSO_URL, USER_AGENT, ACS_URL, config.getApp()
+                    .getArtifact(), config.getUser().getUsername(), config.getUser().getPassword(), httpClient);
             EntityUtils.consume(response.getEntity());
 
-            sendRedirectRequest(response);
+            Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, config.getApp().getArtifact(), httpClient);
 
             Assert.assertTrue(isSAMLReturned,
                               "Sending SAML response to the samlsso_notification page failed");
@@ -174,73 +170,43 @@ public class SAMLInvalidIssuerTestCase extends ISIntegrationTest {
         }
     }
 
-    private void setSystemProperties() {
-        URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "keystores" + ISIntegrationTest.URL_SEPARATOR
-                                                 + "products" + ISIntegrationTest.URL_SEPARATOR + "wso2carbon.jks");
-        System.setProperty("javax.net.ssl.trustStore", resourceUrl.getPath());
-        System.setProperty("javax.net.ssl.trustStorePassword",
-                           "wso2carbon");
-        System.setProperty("javax.net.ssl.trustStoreType", "JKS");
+    @DataProvider(name = "samlConfigProvider")
+    public static Object[][] samlConfigProvider(){
+        return  new SAMLConfig[][]{
+                {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_REDIRECT,
+                        ClaimType.NONE, App.SUPER_TENANT_APP_WITH_SIGNING)},
+                {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_REDIRECT,
+                        ClaimType.LOCAL, App.SUPER_TENANT_APP_WITH_SIGNING)},
+                {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_POST,
+                        ClaimType.NONE, App.SUPER_TENANT_APP_WITH_SIGNING)},
+                {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_POST,
+                        ClaimType.LOCAL, App.SUPER_TENANT_APP_WITH_SIGNING)},
+                {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_REDIRECT,
+                        ClaimType.NONE, App.TENANT_APP_WITHOUT_SIGNING)},
+                {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_REDIRECT,
+                        ClaimType.LOCAL, App.TENANT_APP_WITHOUT_SIGNING)},
+                {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_POST,
+                        ClaimType.NONE, App.TENANT_APP_WITHOUT_SIGNING)},
+                {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_POST,
+                        ClaimType.LOCAL, App.TENANT_APP_WITHOUT_SIGNING)},
+        };
     }
 
-    private String extractDataFromResponse(HttpResponse response, String key, int token)
-            throws IOException {
-        BufferedReader rd = new BufferedReader(
-                new InputStreamReader(response.getEntity().getContent()));
-        String line;
-        String value = "";
+    private void deleteApplication() throws Exception {
 
-        while ((line = rd.readLine()) != null) {
-            if (line.contains(key)) {
-                String[] tokens = line.split("'");
-                value = tokens[token];
-            }
-        }
-        rd.close();
-        return value;
+        applicationManagementServiceClient.deleteApplication(APPLICATION_NAME);
     }
 
-    private HttpResponse sendPOSTMessage(String sessionKey) throws Exception {
-        HttpPost post = new HttpPost(COMMON_AUTH_URL);
-        post.setHeader("User-Agent", USER_AGENT);
-        post.addHeader("Referer", ACS_URL);
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-        urlParameters.add(new BasicNameValuePair("username", USERNAME));
-        urlParameters.add(new BasicNameValuePair("password", PASSWORD));
-        urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionKey));
-        post.setEntity(new UrlEncodedFormEntity(urlParameters));
-        return httpClient.execute(post);
-    }
+    public void createApplication(SAMLConfig config, String appName) throws Exception {
 
-    private HttpResponse sendGetRequest(String url) throws Exception {
-        HttpGet request = new HttpGet(url);
-        request.addHeader("User-Agent", USER_AGENT);
-        return httpClient.execute(request);
-    }
-
-    private HttpResponse sendRedirectRequest(HttpResponse response) throws IOException {
-        Header[] headers = response.getAllHeaders();
-        String url = "";
-        for (Header header : headers) {
-            if ("Location".equals(header.getName())) {
-                url = header.getValue();
-            }
-        }
-
-        HttpGet request = new HttpGet(url);
-        request.addHeader("User-Agent", USER_AGENT);
-        request.addHeader("Referer", ACS_URL);
-
-        return httpClient.execute(request);
-    }
-
-    private void createApplication() throws Exception {
         ServiceProvider serviceProvider = new ServiceProvider();
-        serviceProvider.setApplicationName(APPLICATION_NAME);
+        serviceProvider.setApplicationName(appName);
         serviceProvider.setDescription("This is a test Service Provider");
         applicationManagementServiceClient.createApplication(serviceProvider);
 
-        serviceProvider = applicationManagementServiceClient.getApplication(APPLICATION_NAME);
+        serviceProvider = applicationManagementServiceClient.getApplication(appName);
+
+        serviceProvider.getClaimConfig().setClaimMappings(getClaimMappings());
 
         InboundAuthenticationRequestConfig requestConfig = new InboundAuthenticationRequestConfig();
         requestConfig.setInboundAuthType(INBOUND_AUTH_TYPE);
@@ -257,52 +223,5 @@ public class SAMLInvalidIssuerTestCase extends ISIntegrationTest {
 
         serviceProvider.setInboundAuthenticationConfig(inboundAuthenticationConfig);
         applicationManagementServiceClient.updateApplicationData(serviceProvider);
-    }
-
-    private void deleteApplication() throws Exception {
-        applicationManagementServiceClient.deleteApplication(APPLICATION_NAME);
-    }
-
-    private void createUser() {
-        log.info("Creating User " + USERNAME);
-        try {
-            // creating the user
-            remoteUSMServiceClient.addUser(USERNAME, PASSWORD,
-                                           null, getUserClaims(),
-                                           profileName, true);
-        } catch (Exception e) {
-            Assert.fail("Error while creating the user", e);
-        }
-
-    }
-
-    private void deleteUser() {
-        log.info("Deleting User " + USERNAME);
-        try {
-            remoteUSMServiceClient.deleteUser(USERNAME);
-        } catch (Exception e) {
-            Assert.fail("Error while deleting the user", e);
-        }
-    }
-
-    private ClaimValue[] getUserClaims() {
-        ClaimValue[] claimValues = new ClaimValue[3];
-
-        ClaimValue firstName = new ClaimValue();
-        firstName.setClaimURI(firstNameClaimURI);
-        firstName.setValue(NICKNAME);
-        claimValues[0] = firstName;
-
-        ClaimValue lastName = new ClaimValue();
-        lastName.setClaimURI(lastNameClaimURI);
-        lastName.setValue(USERNAME);
-        claimValues[1] = lastName;
-
-        ClaimValue email = new ClaimValue();
-        email.setClaimURI(emailClaimURI);
-        email.setValue(EMAIL);
-        claimValues[2] = email;
-
-        return claimValues;
     }
 }
