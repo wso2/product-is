@@ -42,7 +42,6 @@ public class SAMLARTRESOLVETestCase extends AbstractSAMLSSOTestCase {
     private static final Log log = LogFactory.getLog(SAMLSSOTestCase.class);
 
     private SAMLConfig config;
-    private String resultPage;
 
     @Factory(dataProvider = "samlConfigProvider")
     public SAMLARTRESOLVETestCase(SAMLConfig config) {
@@ -59,7 +58,7 @@ public class SAMLARTRESOLVETestCase extends AbstractSAMLSSOTestCase {
         super.init(config.getUserMode());
         super.testInit();
         super.createUser(config);
-        super.createApplicationForSAMLAartResolve(config, config.getApp().getArtifact());
+        super.createApplicationForSAMLArtResolve(config, config.getApp().getArtifact());
     }
 
     @AfterClass(alwaysRun = true)
