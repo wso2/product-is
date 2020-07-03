@@ -23,7 +23,9 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 import static org.wso2.identity.integration.test.rest.api.server.application.management.v1.Utils.assertNotBlank;
 import static org.wso2.identity.integration.test.rest.api.server.application.management.v1.Utils.extractApplicationIdFromLocationHeader;
 
@@ -139,6 +141,32 @@ public class ApplicationManagementOAuthSuccessTest extends ApplicationManagement
     }
 
     @Test(dependsOnMethods = "testGetOAuthInboundDetailsOfSecondApp")
+    public void testUpdateOAuthInboundDetailsOfSecondApp() throws Exception {
+
+        String body = readResource("update-oauth-app-with-predefined-clientid.json");
+        String path = APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId + INBOUND_PROTOCOLS_OIDC_CONTEXT_PATH;
+
+        getResponseOfPut(path, body)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK);
+
+        getResponseOfGet(path)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("accessToken.bindingType", equalTo("cookie"))
+                .body("grantTypes", containsInAnyOrder("refresh_token", "authorization_code", "account_switch",
+                        "password"))
+                .body("callbackURLs" , hasItem("http://localhost:8080/playground2/oauth2client"))
+                .body("pkce.mandatory", equalTo(true))
+                .body("pkce.supportPlainTransformAlgorithm", equalTo(true))
+                .body("publicClient", equalTo(false));
+    }
+
+    @Test(dependsOnMethods = "testUpdateOAuthInboundDetailsOfSecondApp")
     public void testDeleteOAuthInboundOfSecondApp() throws Exception {
 
         String path = APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId + INBOUND_PROTOCOLS_OIDC_CONTEXT_PATH;
@@ -154,7 +182,7 @@ public class ApplicationManagementOAuthSuccessTest extends ApplicationManagement
         getResponseOfGet(path).then().assertThat().statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
-    @Test(dependsOnMethods = "testGetOAuthInboundDetailsOfSecondApp")
+    @Test(dependsOnMethods = "testDeleteOAuthInboundOfSecondApp")
     public void testDeleteSecondApp() throws Exception {
 
         String path = APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId;
