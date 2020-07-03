@@ -80,5 +80,13 @@
       "Default"
     ],
     "defaultValue": "Default"
+  },
+  "accessTokenBindingType": {
+    "options": [
+      "None",
+      "cookie",
+      "sso-session"
+    ],
+    "defaultValue": "None"
   }
 }
