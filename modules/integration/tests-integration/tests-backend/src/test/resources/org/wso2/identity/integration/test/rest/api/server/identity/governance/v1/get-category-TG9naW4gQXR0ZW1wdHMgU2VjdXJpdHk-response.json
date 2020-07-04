@@ -1,0 +1,45 @@
+{
+  "name": "Login Attempts Security",
+  "connectors": [
+    {
+      "id": "YWNjb3VudC5sb2NrLmhhbmRsZXI",
+      "name": "account.lock.handler",
+      "category": "Login Attempts Security",
+      "friendlyName": "Account Lock",
+      "order": 0,
+      "subCategory": "DEFAULT",
+      "properties": [
+        {
+          "name": "account.lock.handler.enable",
+          "value": "false",
+          "displayName": "Lock user accounts",
+          "description": "Lock user accounts on failed login attempts"
+        },
+        {
+          "name": "account.lock.handler.On.Failure.Max.Attempts",
+          "value": "5",
+          "displayName": "Maximum failed login attempts",
+          "description": "Number of failed login attempts allowed until account lock."
+        },
+        {
+          "name": "account.lock.handler.Time",
+          "value": "5",
+          "displayName": "Initial account lock duration",
+          "description": "Initial account lock time period in minutes. Account will be automatically unlocked after this time period."
+        },
+        {
+          "name": "account.lock.handler.login.fail.timeout.ratio",
+          "value": "2",
+          "displayName": "Account lock duration increment factor",
+          "description": "Account lock duration will be increased by this factor. Ex: Initial duration: 5m; Increment factor: 2; Next lock duration: 5 x 2 = 10m"
+        },
+        {
+          "name": "account.lock.handler.notification.manageInternally",
+          "value": "true",
+          "displayName": "Manage notification sending internally",
+          "description": "Disable if the client application handles notification sending"
+        }
+      ]
+    }
+  ]
+}
