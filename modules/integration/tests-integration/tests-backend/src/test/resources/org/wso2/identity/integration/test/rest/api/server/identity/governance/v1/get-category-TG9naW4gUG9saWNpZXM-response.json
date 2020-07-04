@@ -1,93 +1,31 @@
 {
-  "name": "Login Policies",
-  "connectors": [
+  "name":"Login Policies",
+  "connectors":[
     {
-      "id": "YWNjb3VudC5sb2NrLmhhbmRsZXI",
-      "name": "account.lock.handler",
-      "category": "Login Policies",
-      "friendlyName": "Account Locking",
-      "order": 0,
-      "subCategory": "DEFAULT",
-      "properties": [
+      "id":"c3NvLmxvZ2luLnJlY2FwdGNoYQ",
+      "name":"sso.login.recaptcha",
+      "category":"Login Policies",
+      "friendlyName":"Captcha for SSO Login",
+      "order":0,
+      "subCategory":"DEFAULT",
+      "properties":[
         {
-          "name": "account.lock.handler.enable",
-          "value": "false",
-          "displayName": "Account Lock Enabled",
-          "description": "Enable account locking for failed logins"
+          "name":"sso.login.recaptcha.enable.always",
+          "value":"false",
+          "displayName":"Enable captcha always",
+          "description":"Enable captcha verification always during SSO login"
         },
         {
-          "name": "account.lock.handler.On.Failure.Max.Attempts",
-          "value": "5",
-          "displayName": "Maximum Failed Login Attempts",
-          "description": "Number of failed attempts allows without locking the account"
+          "name":"sso.login.recaptcha.enable",
+          "value":"false",
+          "displayName":"Enable captcha after the Max failed attempts",
+          "description":"Enable captcha verification during SSO login after allowed number of failed attempts"
         },
         {
-          "name": "account.lock.handler.Time",
-          "value": "5",
-          "displayName": "Account Unlock Time",
-          "description": "Account locked time span in minutes"
-        },
-        {
-          "name": "account.lock.handler.login.fail.timeout.ratio",
-          "value": "2",
-          "displayName": "Lock Timeout Increment Factor",
-          "description": ""
-        },
-        {
-          "name": "account.lock.handler.notification.manageInternally",
-          "value": "true",
-          "displayName": "Internal Notification Management",
-          "description": "Set false if the client application handles notification sending"
-        }
-      ]
-    },
-    {
-      "id": "YWNjb3VudC5kaXNhYmxlLmhhbmRsZXI",
-      "name": "account.disable.handler",
-      "category": "Login Policies",
-      "friendlyName": "Account Disabling",
-      "order": 0,
-      "subCategory": "DEFAULT",
-      "properties": [
-        {
-          "name": "account.disable.handler.enable",
-          "value": "false",
-          "displayName": "Enable Account Disabling",
-          "description": "Enable account disable Feature"
-        },
-        {
-          "name": "account.disable.handler.notification.manageInternally",
-          "value": "true",
-          "displayName": "Internal Notification Management",
-          "description": "Set false if the client application handles notification sending"
-        }
-      ]
-    },
-    {
-      "id": "c3NvLmxvZ2luLnJlY2FwdGNoYQ",
-      "name": "sso.login.recaptcha",
-      "category": "Login Policies",
-      "friendlyName": "Captcha for SSO Login",
-      "order": 0,
-      "subCategory": "DEFAULT",
-      "properties": [
-        {
-          "name": "sso.login.recaptcha.enable.always",
-          "value": "false",
-          "displayName": "Enable captcha always",
-          "description": "Enable captcha verification always during SSO login"
-        },
-        {
-          "name": "sso.login.recaptcha.enable",
-          "value": "false",
-          "displayName": "Enable captcha after the Max failed attempts",
-          "description": "Enable captcha verification during SSO login after allowed number of failed attempts"
-        },
-        {
-          "name": "sso.login.recaptcha.on.max.failed.attempts",
-          "value": "3",
-          "displayName": "Max failed attempts",
-          "description": "Number of failed attempts allows without showing the captcha"
+          "name":"sso.login.recaptcha.on.max.failed.attempts",
+          "value":"3",
+          "displayName":"Max failed attempts",
+          "description":"Number of failed attempts allows without showing the captcha"
         }
       ]
     }

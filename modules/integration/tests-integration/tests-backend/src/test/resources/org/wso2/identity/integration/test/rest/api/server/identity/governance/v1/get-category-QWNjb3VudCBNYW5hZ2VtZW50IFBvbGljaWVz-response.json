@@ -62,6 +62,18 @@
           "description": ""
         },
         {
+          "name": "Recovery.Question.Answer.Regex",
+          "value": ".*",
+          "displayName": "Challenge question answer regex",
+          "description": "Challenge question answer regex"
+        },
+        {
+          "name": "Recovery.Question.Answer.Uniqueness",
+          "value": "false",
+          "displayName": "Enforce challenge question answer uniqueness",
+          "description": "Enforce challenge question answer uniqueness"
+        },
+        {
           "name": "Recovery.Question.Password.ReCaptcha.Enable",
           "value": "true",
           "displayName": "Enable reCaptcha for Security Questions Based Password Recovery",
@@ -110,14 +122,26 @@
           "description": ""
         },
         {
+          "name": "Recovery.Notification.Password.ExpiryTime.smsOtp",
+          "value": "1",
+          "displayName": "SMS OTP Expiry Time",
+          "description": "Expiration time of the SMS OTP code for password recovery"
+        },
+        {
           "name": "Recovery.Question.Password.Forced.Enable",
           "value": "false",
           "displayName": "Enable forced challenge questions",
           "description": "Force users to provide answers to challenge questions during sign in"
         },
         {
+          "name": "Recovery.Question.MinQuestionsToAnswer",
+          "value": "",
+          "displayName": "Minimum Number of Forced Challenge Questions to be Answered",
+          "description": "Force users to provide answers to challenge questions during sign in if user has answered lesser than this value"
+        },
+        {
           "name": "Recovery.CallbackRegex",
-          "value": "https://localhost:9443/authenticationendpoint/login.do",
+          "value": ".*",
           "displayName": "Recovery callback URL regex",
           "description": "Recovery callback URL regex"
         }
@@ -169,7 +193,7 @@
         },
         {
           "name": "SelfRegistration.CallbackRegex",
-          "value": "https://localhost:9443/authenticationendpoint/login.do",
+          "value": "[https://localhost:9443].*[/authenticationendpoint/login.do]",
           "displayName": "User self registration callback URL regex",
           "description": "User self registration callback URL regex"
         },
@@ -178,6 +202,64 @@
           "value": "/carbon/consent/list-purposes.jsp?purposeGroup=SELF-SIGNUP&purposeGroupType=SYSTEM&callback=%2Fcarbon%2Fidpmgt%2Fidp-mgt-edit-local.jsp%3Fcategory%3DAccount+Management+Policies%26subCategory%3DUser+Self+Registration",
           "displayName": "Manage Self-Sign-Up purposes",
           "description": "Click here to manage Self-Sign-Up purposes"
+        }
+      ]
+    },
+    {
+      "id": "bGl0ZS11c2VyLXNpZ24tdXA",
+      "name": "lite-user-sign-up",
+      "category": "Account Management Policies",
+      "friendlyName": "Lite User Registration",
+      "order": 0,
+      "subCategory": "DEFAULT",
+      "properties": [
+        {
+          "name": "LiteRegistration.Enable",
+          "value": "false",
+          "displayName": "Enable Lite User Registration",
+          "description": "Enable lite user registration"
+        },
+        {
+          "name": "LiteRegistration.LockOnCreation",
+          "value": "true",
+          "displayName": "Enable Account Lock On Creation",
+          "description": "Lock user account during lite user registration"
+        },
+        {
+          "name": "LiteRegistration.Notification.InternallyManage",
+          "value": "true",
+          "displayName": "Internal Notification Management",
+          "description": "Set false if the client application handles notification sending"
+        },
+        {
+          "name": "LiteRegistration.ReCaptcha",
+          "value": "true",
+          "displayName": "Enable reCaptcha",
+          "description": "Enable captcha verification during lite user registration"
+        },
+        {
+          "name": "LiteRegistration.VerificationCode.ExpiryTime",
+          "value": "1440",
+          "displayName": "Lite user registration verification link expiry time",
+          "description": "Set the number of minutes the lite user registration verification mail would be valid"
+        },
+        {
+          "name": "LiteRegistration.VerificationCode.SMSOTP.ExpiryTime",
+          "value": "1",
+          "displayName": "Lite user registration SMS OTP expiry time",
+          "description": "Set the number of minutes that the SMS OTP would be valid"
+        },
+        {
+          "name": "LiteRegistration.CallbackRegex",
+          "value": ".*",
+          "displayName": "Lite user registration callback URL regex",
+          "description": "Lite user registration callback URL regex"
+        },
+        {
+          "name": "_url_listPurposeLiteUserSignUp",
+          "value": "/carbon/consent/list-purposes.jsp?purposeGroup=LITE-SIGNUP&purposeGroupType=SYSTEM&callback=%2Fcarbon%2Fidpmgt%2Fidp-mgt-edit-local.jsp%3Fcategory%3DAccount+Management+Policies%26subCategory%3DLite+User+Registration",
+          "displayName": "Manage Lite-Sign-Up purposes",
+          "description": "Click here to manage Lite-Sign-Up purposes"
         }
       ]
     },
@@ -230,6 +312,28 @@
           "value": "/carbon/consent/list-purposes.jsp?purposeGroup=JIT&purposeGroupType=SYSTEM&callback=%2Fcarbon%2Fidpmgt%2Fidp-mgt-edit-local.jsp%3Fcategory%3DAccount+Management+Policies%26subCategory%3DUser+Onboarding",
           "displayName": "Manage Just In Time Provisioning purposes",
           "description": "Click here to manage JIT purposes"
+        }
+      ]
+    },
+    {
+      "id": "dXNlci1jbGFpbS11cGRhdGU",
+      "name": "user-claim-update",
+      "category": "Account Management Policies",
+      "friendlyName": "User Claim Update",
+      "order": 0,
+      "subCategory": "DEFAULT",
+      "properties": [
+        {
+          "name": "UserClaimUpdate.Email.EnableVerification",
+          "value": "false",
+          "displayName": "Enable user email verification on update",
+          "description": "Trigger a verification notification when user's email address is updated."
+        },
+        {
+          "name": "UserClaimUpdate.Email.VerificationCode.ExpiryTime",
+          "value": "1440",
+          "displayName": "Email verification on update link expiry time",
+          "description": "Validity time of the email confirmation link in minutes."
         }
       ]
     },
