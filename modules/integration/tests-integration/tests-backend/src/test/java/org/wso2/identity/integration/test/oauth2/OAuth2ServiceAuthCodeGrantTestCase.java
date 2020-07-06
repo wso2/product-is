@@ -105,7 +105,7 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
     }
 
     @Test(groups = "wso2.is", description = "Send authorize user request without response_type param", dependsOnMethods
-            = "testRegisterApplication")
+            = "testInvalidAuthzCode")
     public void testSendAuthorozedPostForError() throws Exception {
 
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
@@ -122,7 +122,7 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
     }
 
     @Test(groups = "wso2.is", description = "Send authorize user request without redirect_uri param", dependsOnMethods
-            = "testRegisterApplication")
+            = "testSendAuthorozedPostForError")
     public void testInvalidRedirectUri() throws Exception {
 
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
