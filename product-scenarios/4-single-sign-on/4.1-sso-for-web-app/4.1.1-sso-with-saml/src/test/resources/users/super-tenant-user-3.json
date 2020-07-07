@@ -1,0 +1,75 @@
+{
+  "consents": [
+    {
+      "version": "KI-CR-v1.1.0",
+      "jurisdiction": "NONE",
+      "consentTimestamp": 1.547090818938E12,
+      "collectionMethod": "Web Form - Sign-in",
+      "consentReceiptID": "f6095cf9-a082-4178-8a28-d85beede30d5",
+      "publicKey": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAluZFdW1ynitztkWLC6xKegbRWxky+5P0p4ShYEOkHs30QI2VCuR6Qo4Bz5rTgLBrky03W1GAVrZxuvKRGj9V9+PmjdGtau4CTXu9pLLcqnruaczoSdvBYA3lS9a7zgFU0+s6kMl2EhB+rk7gXluEep7lIOenzfl2f6IoTKa2fVgVd3YKiSGsyL4tztS70vmmX121qm0sTJdKWP4HxXyqK9neolXI9fYyHOYILVNZ69z/73OOVhkh/mvTmWZLM7GM6sApmyLX6OXUp8z0pkY+vT/9+zRxxQs7GurC4/C1nK3rI/0ySUgGEafO1atNjYmlFN+M3tZX6nEcA6g94IavyQIDAQAB",
+      "language": "us_EN",
+      "piiPrincipalId": "aysh",
+      "tenantDomain": "carbon.super",
+      "state": "ACTIVE",
+      "piiControllers": [
+        {
+          "piiController": "change-me",
+          "contact": "change-me",
+          "address": {
+            "addressCountry": "change-me",
+            "addressLocality": "change-me",
+            "addressRegion": "change-me",
+            "postOfficeBoxNumber": "change-me",
+            "postalCode": "change-me",
+            "streetAddress": "change-me"
+          },
+          "email": "change-me",
+          "phone": "change-me",
+          "onBehalf": false,
+          "piiControllerUrl": "change-me"
+        }
+      ],
+      "policyUrl": "NONE",
+      "services": [
+        {
+          "service": "wso2_sp_dashboard",
+          "tenantDomain": "carbon.super",
+          "purposes": [
+            {
+              "purpose": "DEFAULT",
+              "purposeCategory": [
+                "DEFAULT"
+              ],
+              "consentType": "EXPLICIT",
+              "piiCategory": [
+                {
+                  "piiCategory": "http://wso2.org/claims/username",
+                  "validity": "VALID_UNTIL:INDEFINITE"
+                }
+              ],
+              "primaryPurpose": true,
+              "termination": "VALID_UNTIL:INDEFINITE",
+              "thirdPartyDisclosure": false,
+              "thirdPartyName": null
+            }
+          ]
+        }
+      ],
+      "sensitive": false,
+      "spiCat": null
+    }
+  ],
+  "basic": {
+    "http://wso2.org/claims/organization": "WSO2",
+    "http://wso2.org/claims/username": "testuser3",
+    "http://wso2.org/claims/mobile": "71",
+    "http://wso2.org/claims/givenname": "Ayesha",
+    "http://wso2.org/claims/telephone": "6506952324",
+    "http://wso2.org/claims/fullname": "aysh",
+    "http://wso2.org/claims/country": "United States",
+    "http://wso2.org/claims/emailaddress": "ayesha@wso2.com",
+    "http://wso2.org/claims/lastname": "Dissanayaka",
+    "password" : "testpass3",
+    "tenantDomain" : "carbon.super"
+  }
+}
