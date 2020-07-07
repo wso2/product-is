@@ -42,23 +42,27 @@ public class IdentityGovernanceTestCase extends ISIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
+
         super.init();
         identityGovernanceServiceClient = new IdentityGovernanceServiceClient(sessionCookie, backendURL);
     }
 
     @AfterClass(alwaysRun = true)
     public void atEnd() {
+
     }
 
     @Test(groups = "wso2.is", description = "Test retrieving identity governance connector configs")
-    public void testGetConnectorConfigs() throws RemoteException, IdentityGovernanceAdminServiceIdentityGovernanceExceptionException {
+    public void testGetConnectorConfigs() throws RemoteException,
+            IdentityGovernanceAdminServiceIdentityGovernanceExceptionException {
+
         ConnectorConfig[] connectors = identityGovernanceServiceClient.getConnectorList();
-        Assert.assertTrue(connectors.length>=1, "No connector configs received");
+        Assert.assertTrue(connectors.length >= 1, "No connector configs received");
         boolean accountLockingAvailable = false;
-        for (int i = 0; i < connectors.length; i++) {
-            if (connectors[i].getFriendlyName().equals(CONNECTOR_FRIENDLY_NAME)) {
-                Assert.assertEquals(connectors[i].getProperties().length, 5, "Account locking feature properties not " +
-                        "received properly.");
+        for (ConnectorConfig connector : connectors) {
+            if (connector.getFriendlyName().equals(CONNECTOR_FRIENDLY_NAME)) {
+                Assert.assertEquals(connector.getProperties().length, 5,
+                        "Account locking feature properties not received properly.");
                 accountLockingAvailable = true;
                 break;
             }
@@ -77,15 +81,16 @@ public class IdentityGovernanceTestCase extends ISIntegrationTest {
         newProperties[0] = prop;
         identityGovernanceServiceClient.updateConfigurations(newProperties);
         ConnectorConfig[] connectors = identityGovernanceServiceClient.getConnectorList();
-        Assert.assertTrue(connectors.length>=1, "No connector configs received");
+        Assert.assertTrue(connectors.length >= 1, "No connector configs received");
         boolean propertyAvailable = false;
         outer:
-        for (int i = 0; i < connectors.length; i++) {
-            if (connectors[i].getFriendlyName().equals(CONNECTOR_FRIENDLY_NAME)) {
-                Property[] connectorProperties = connectors[i].getProperties();
-                for (int j = 0; j < connectorProperties.length; j++) {
-                    if (ACCOUNT_LOCK_TIME_PROPERTY_NAME.equals(connectorProperties[j].getName())) {
-                        Assert.assertEquals(connectorProperties[j].getValue(), ACCOUNT_LOCK_TIME_NEW_VALUE, "Property update unsuccessful");
+        for (ConnectorConfig connector : connectors) {
+            if (connector.getFriendlyName().equals(CONNECTOR_FRIENDLY_NAME)) {
+                Property[] connectorProperties = connector.getProperties();
+                for (Property connectorProperty : connectorProperties) {
+                    if (ACCOUNT_LOCK_TIME_PROPERTY_NAME.equals(connectorProperty.getName())) {
+                        Assert.assertEquals(connectorProperty.getValue(), ACCOUNT_LOCK_TIME_NEW_VALUE,
+                                "Property update unsuccessful");
                     }
                     propertyAvailable = true;
                 }
@@ -93,5 +98,4 @@ public class IdentityGovernanceTestCase extends ISIntegrationTest {
         }
         Assert.assertTrue(propertyAvailable, "Updated property was not available in connector configs retrieved.");
     }
-
 }

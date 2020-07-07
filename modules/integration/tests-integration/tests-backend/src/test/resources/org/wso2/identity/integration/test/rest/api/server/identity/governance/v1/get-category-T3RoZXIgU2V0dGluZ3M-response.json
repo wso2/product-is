@@ -1,0 +1,167 @@
+{
+  "name": "Other Settings",
+  "connectors": [
+    {
+      "id": "cGlpLWNvbnRyb2xsZXI",
+      "name": "pii-controller",
+      "category": "Other Settings",
+      "friendlyName": "Consent Information Controller",
+      "order": 4,
+      "subCategory": "DEFAULT",
+      "properties": [
+        {
+          "name": "piiController",
+          "value": "change-me1",
+          "displayName": "Controller Name",
+          "description": "Name of the first Controller who collects the data"
+        },
+        {
+          "name": "contact",
+          "value": "change-me",
+          "displayName": "Contact Name",
+          "description": "Contact name of the Controller"
+        },
+        {
+          "name": "email",
+          "value": "change-me",
+          "displayName": "Email Address",
+          "description": "Contact email address of the Controller"
+        },
+        {
+          "name": "phone",
+          "value": "change-me",
+          "displayName": "Phone Number",
+          "description": "Contact phone number of the Controller"
+        },
+        {
+          "name": "onBehalf",
+          "value": "change-me",
+          "displayName": "On Behalf",
+          "description": "A user information (PII) Processor acting on behalf of a Controller or PII Processor"
+        },
+        {
+          "name": "piiControllerUrl",
+          "value": "change-me",
+          "displayName": "Url",
+          "description": "A URL for contacting the Controller"
+        },
+        {
+          "name": "addressCountry",
+          "value": "change-me",
+          "displayName": "Country",
+          "description": "Country of the Controller"
+        },
+        {
+          "name": "addressLocality",
+          "value": "change-me",
+          "displayName": "Locality",
+          "description": "Locality of the Controller"
+        },
+        {
+          "name": "addressRegion",
+          "value": "change-me",
+          "displayName": "Region",
+          "description": "Region of the Controller"
+        },
+        {
+          "name": "postOfficeBoxNumber",
+          "value": "change-me",
+          "displayName": "Post Office Box Number",
+          "description": "Post Office Box Number of the Controller"
+        },
+        {
+          "name": "postalCode",
+          "value": "change-me",
+          "displayName": "Postal Code",
+          "description": "Postal Code of the Controller"
+        },
+        {
+          "name": "streetAddress",
+          "value": "change-me",
+          "displayName": "Street Address",
+          "description": "Street Address of the Controller"
+        }
+      ]
+    },
+    {
+      "id": "YW5hbHl0aWNzLWVuZ2luZQ",
+      "name": "analytics-engine",
+      "category": "Other Settings",
+      "friendlyName": "Analytics Engine Configuration",
+      "order": 10,
+      "subCategory": "Sub Category",
+      "properties": [
+        {
+          "name": "adaptive_authentication.analytics.receiver",
+          "value": "http://localhost:8280/",
+          "displayName": "Target Host",
+          "description": "Target Host"
+        },
+        {
+          "name": "adaptive_authentication.analytics.basicAuth.enabled",
+          "value": "true",
+          "displayName": "Enable Basic Authentication",
+          "description": "Enable Basic Authentication"
+        },
+        {
+          "name": "adaptive_authentication.analytics.basicAuth.username",
+          "value": "change-me",
+          "displayName": "User ID",
+          "description": "Target Host Secured User ID"
+        },
+        {
+          "name": "__secret__adaptive_authentication.analytics.basicAuth.password",
+          "value": "change-me",
+          "displayName": "Secret",
+          "description": "Target Host Secured Secret"
+        },
+        {
+          "name": "adaptive_authentication.analytics.HTTPConnectionTimeout",
+          "value": "5000",
+          "displayName": "HTTP Connection Timeout",
+          "description": "HTTP Connection Timeout in milliseconds"
+        },
+        {
+          "name": "adaptive_authentication.analytics.HTTPReadTimeout",
+          "value": "5000",
+          "displayName": "HTTP Read Timeout",
+          "description": "HTTP Read Timeout in milliseconds"
+        },
+        {
+          "name": "adaptive_authentication.analytics.HTTPConnectionRequestTimeout",
+          "value": "5000",
+          "displayName": "HTTP Connection Request Timeout",
+          "description": "HTTP Connection Request Timeout in milliseconds"
+        },
+        {
+          "name": "adaptive_authentication.analytics.hostnameVerfier",
+          "value": "STRICT",
+          "displayName": "Hostname verification",
+          "description": "Hostname verification. (STRICT, ALLOW_ALL)"
+        }
+      ]
+    },
+    {
+      "id": "dXNlci1jbGFpbS11cGRhdGU",
+      "name": "user-claim-update",
+      "category": "Other Settings",
+      "friendlyName": "User Claim Update",
+      "order": 0,
+      "subCategory": "DEFAULT",
+      "properties": [
+        {
+          "name": "UserClaimUpdate.Email.EnableVerification",
+          "value": "false",
+          "displayName": "Enable user email verification on update",
+          "description": "Trigger a verification notification when user's email address is updated."
+        },
+        {
+          "name": "UserClaimUpdate.Email.VerificationCode.ExpiryTime",
+          "value": "1410",
+          "displayName": "Email verification on update link expiry time",
+          "description": "Validity time of the email confirmation link in minutes."
+        }
+      ]
+    }
+  ]
+}

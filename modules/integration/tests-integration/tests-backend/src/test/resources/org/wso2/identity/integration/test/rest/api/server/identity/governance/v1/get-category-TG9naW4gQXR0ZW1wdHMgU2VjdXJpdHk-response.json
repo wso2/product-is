@@ -11,7 +11,7 @@
       "properties": [
         {
           "name": "account.lock.handler.enable",
-          "value": "false",
+          "value": "true",
           "displayName": "Lock user accounts",
           "description": "Lock user accounts on failed login attempts"
         },
@@ -38,6 +38,34 @@
           "value": "true",
           "displayName": "Manage notification sending internally",
           "description": "Disable if the client application handles notification sending"
+        }
+      ]
+    },
+    {
+      "id": "c3NvLmxvZ2luLnJlY2FwdGNoYQ",
+      "name": "sso.login.recaptcha",
+      "category": "Login Attempts Security",
+      "friendlyName": "reCaptcha for SSO Login",
+      "order": 0,
+      "subCategory": "DEFAULT",
+      "properties": [
+        {
+          "name": "sso.login.recaptcha.enable.always",
+          "value": "false",
+          "displayName": "Always prompt reCaptcha",
+          "description": "Always prompt reCaptcha verification during SSO login flow."
+        },
+        {
+          "name": "sso.login.recaptcha.enable",
+          "value": "false",
+          "displayName": "Prompt reCaptcha after max failed attempts",
+          "description": "Prompt reCaptcha verification during SSO login floe only after the max failed attempts exceeded."
+        },
+        {
+          "name": "sso.login.recaptcha.on.max.failed.attempts",
+          "value": "3",
+          "displayName": "Max failed attempts for reCaptcha",
+          "description": "Number of failed attempts allowed without prompting reCaptcha verification."
         }
       ]
     }
