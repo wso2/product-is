@@ -1,0 +1,6 @@
+{
+  "client_name": "9.1.6-dcr-app-password-grant",
+  "grant_types": [
+    "password"
+  ]
+}
