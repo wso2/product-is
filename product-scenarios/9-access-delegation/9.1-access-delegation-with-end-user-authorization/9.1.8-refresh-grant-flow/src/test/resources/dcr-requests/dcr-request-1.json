@@ -1,7 +1,0 @@
-{
-  "client_name": "9.1.8.1-dcr-app-refreshtoken-password-grant",
-  "grant_types": [
-    "password",
-    "refresh_token"
-  ]
-}
