@@ -113,6 +113,7 @@
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2BackChannelLogoutTestCase" />
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2OPIframeTestCase" />
             <class name="org.wso2.identity.integration.test.CrossProtocolLogoutTestCase"/>
+            <class name="org.wso2.identity.integration.test.saml.SAMLARTRESOLVETestCase"/>
         </classes>
     </test>
 

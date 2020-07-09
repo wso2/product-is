@@ -104,39 +104,6 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
         consumerSecret = appDto.getOauthConsumerSecret();
     }
 
-    @Test(groups = "wso2.is", description = "Send authorize user request without response_type param", dependsOnMethods
-            = "testRegisterApplication")
-    public void testSendAuthorozedPostForError() throws Exception {
-
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-        urlParameters.add(new BasicNameValuePair("client_id", consumerKey));
-        urlParameters.add(new BasicNameValuePair("redirect_uri", OAuth2Constant.CALLBACK_URL));
-        AutomationContext automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
-        String authorizeEndpoint = automationContext.getContextUrls().getBackEndUrl()
-                .replace("services/", "oauth2/authorize");
-        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, authorizeEndpoint);
-        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
-        Assert.assertTrue(locationHeader.getValue().startsWith(OAuth2Constant.CALLBACK_URL),
-                "Error response is not redirected to the redirect_uri given in the request");
-        EntityUtils.consume(response.getEntity());
-    }
-
-    @Test(groups = "wso2.is", description = "Send authorize user request without redirect_uri param", dependsOnMethods
-            = "testRegisterApplication")
-    public void testInvalidRedirectUri() throws Exception {
-
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-        urlParameters.add(new BasicNameValuePair("client_id", consumerKey));
-        AutomationContext automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
-        String authorizeEndpoint = automationContext.getContextUrls().getBackEndUrl()
-                .replace("services/", "oauth2/authorize");
-        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, authorizeEndpoint);
-        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
-        Assert.assertTrue(locationHeader.getValue().startsWith(OAuth2Constant.OAUTH2_DEFAULT_ERROR_URL),
-                "Error response is not redirected to default OAuth error URI");
-        EntityUtils.consume(response.getEntity());
-    }
-
     @Test(groups = "wso2.is", description = "Send authorize user request", dependsOnMethods = "testRegisterApplication")
     public void testSendAuthorozedPost() throws Exception {
 
@@ -345,7 +312,7 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
 
     @Test(groups = "wso2.is",
             description = "Invalid authorization code",
-            dependsOnMethods = "testRegisterApplication")
+            dependsOnMethods = "testAuthzCodeGrantRetry")
     public void testInvalidAuthzCode() throws Exception {
 
         List<NameValuePair> urlParameters = new ArrayList<>();
@@ -372,4 +339,36 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
                         + OAuth2Constant.INVALID_GRANT_ERROR);
     }
 
+    @Test(groups = "wso2.is", description = "Send authorize user request without response_type param", dependsOnMethods
+            = "testInvalidAuthzCode")
+    public void testSendAuthorozedPostForError() throws Exception {
+
+        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        urlParameters.add(new BasicNameValuePair("client_id", consumerKey));
+        urlParameters.add(new BasicNameValuePair("redirect_uri", OAuth2Constant.CALLBACK_URL));
+        AutomationContext automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
+        String authorizeEndpoint = automationContext.getContextUrls().getBackEndUrl()
+                .replace("services/", "oauth2/authorize");
+        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, authorizeEndpoint);
+        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        Assert.assertTrue(locationHeader.getValue().startsWith(OAuth2Constant.CALLBACK_URL),
+                "Error response is not redirected to the redirect_uri given in the request");
+        EntityUtils.consume(response.getEntity());
+    }
+
+    @Test(groups = "wso2.is", description = "Send authorize user request without redirect_uri param", dependsOnMethods
+            = "testSendAuthorozedPostForError")
+    public void testInvalidRedirectUri() throws Exception {
+
+        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        urlParameters.add(new BasicNameValuePair("client_id", consumerKey));
+        AutomationContext automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
+        String authorizeEndpoint = automationContext.getContextUrls().getBackEndUrl()
+                .replace("services/", "oauth2/authorize");
+        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, authorizeEndpoint);
+        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        Assert.assertTrue(locationHeader.getValue().startsWith(OAuth2Constant.OAUTH2_DEFAULT_ERROR_URL),
+                "Error response is not redirected to default OAuth error URI");
+        EntityUtils.consume(response.getEntity());
+    }
 }

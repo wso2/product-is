@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>5.11.0-m26-SNAPSHOT</version>
+        <version>5.11.0-m27-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -515,6 +515,142 @@
                                 </unzip>
                                 <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/developer-portal.war" />
 
+                                <!-- Explode the api#health-check#v1.0.war -->
+                                <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#health-check#v1.0">
+                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
+                                        <include name="api#health-check#v1.0.war" />
+                                    </fileset>
+                                </unzip>
+                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#health-check#v1.0.war" />
+
+                                <!-- Explode the api#identity#config-mgt#v1.0.war -->
+                                <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#identity#config-mgt#v1.0">
+                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
+                                        <include name="api#identity#config-mgt#v1.0.war" />
+                                    </fileset>
+                                </unzip>
+                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#identity#config-mgt#v1.0.war" />
+
+                                <!-- Explode the api#identity#consent-mgt#v1.0.war -->
+                                <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#identity#consent-mgt#v1.0">
+                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
+                                        <include name="api#identity#consent-mgt#v1.0.war" />
+                                    </fileset>
+                                </unzip>
+                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#identity#consent-mgt#v1.0.war" />
+
+                                <!-- Explode the api#identity#entitlement.war -->
+                                <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#identity#entitlement">
+                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
+                                        <include name="api#identity#entitlement.war" />
+                                    </fileset>
+                                </unzip>
+                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#identity#entitlement.war" />
+
+                                <!-- Explode the api#identity#oauth2#dcr#v1.1.war -->
+                                <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#identity#oauth2#dcr#v1.1">
+                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
+                                        <include name="api#identity#oauth2#dcr#v1.1.war" />
+                                    </fileset>
+                                </unzip>
+                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#identity#oauth2#dcr#v1.1.war" />
+
+                                <!-- Explode the api#identity#oauth2#uma#permission#v1.0.war -->
+                                <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#identity#oauth2#uma#permission#v1.0">
+                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
+                                        <include name="api#identity#oauth2#uma#permission#v1.0.war" />
+                                    </fileset>
+                                </unzip>
+                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#identity#oauth2#uma#permission#v1.0.war" />
+
+                                <!-- Explode the api#identity#oauth2#uma#resourceregistration#v1.0.war -->
+                                <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#identity#oauth2#uma#resourceregistration#v1.0">
+                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
+                                        <include name="api#identity#oauth2#uma#resourceregistration#v1.0.war" />
+                                    </fileset>
+                                </unzip>
+                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#identity#oauth2#uma#resourceregistration#v1.0.war" />
+
+                                <!-- Explode the api#identity#oauth2#v1.0.war-->
+                                <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#identity#oauth2#v1.0">
+                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
+                                        <include name="api#identity#oauth2#v1.0.war" />
+                                    </fileset>
+                                </unzip>
+                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#identity#oauth2#v1.0.war" />
+
+                                <!-- Explode the api#identity#recovery#v0.9.war -->
+                                <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#identity#recovery#v0.9">
+                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
+                                        <include name="api#identity#recovery#v0.9.war" />
+                                    </fileset>
+                                </unzip>
+                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#identity#recovery#v0.9.war" />
+
+                                <!-- Explode the api#identity#template#mgt#v1.0.0.war -->
+                                <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#identity#template#mgt#v1.0.0">
+                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
+                                        <include name="api#identity#template#mgt#v1.0.0.war" />
+                                    </fileset>
+                                </unzip>
+                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#identity#template#mgt#v1.0.0.war" />
+
+                                <!-- Explode the api#identity#user#v1.0.war -->
+                                <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#identity#user#v1.0">
+                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
+                                        <include name="api#identity#user#v1.0.war" />
+                                    </fileset>
+                                </unzip>
+                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#identity#user#v1.0.war" />
+
+                                <!-- Explode the api#users#v2#me#webauthn.war -->
+                                <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#users#v2#me#webauthn">
+                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
+                                        <include name="api#users#v2#me#webauthn.war" />
+                                    </fileset>
+                                </unzip>
+                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#users#v2#me#webauthn.war" />
+
+                                <!-- Explode the lsp.war -->
+                                <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/lsp">
+                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
+                                        <include name="lsp.war" />
+                                    </fileset>
+                                </unzip>
+                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/lsp.war" />
+
+                                <!-- Explode the mexut.war -->
+                                <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/mexut">
+                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
+                                        <include name="mexut.war" />
+                                    </fileset>
+                                </unzip>
+                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/mexut.war" />
+
+                                <!-- Explode the scim2.war -->
+                                <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/scim2">
+                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
+                                        <include name="scim2.war" />
+                                    </fileset>
+                                </unzip>
+                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/scim2.war" />
+
+                                <!-- Explode the oauth2.war -->
+                                <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/oauth2">
+                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
+                                        <include name="oauth2.war" />
+                                    </fileset>
+                                </unzip>
+                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/oauth2.war" />
+
+                                <!-- Explode the wso2.war -->
+                                <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/wso2">
+                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
+                                        <include name="wso2.war" />
+                                    </fileset>
+                                </unzip>
+                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/wso2.war" />
+
                                 <!-- Explode the admin-portal.war -->
                                 <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/admin-portal">
                                     <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
@@ -522,6 +658,46 @@
                                     </fileset>
                                 </unzip>
                                 <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/admin-portal.war" />
+
+                                <!-- Explode the smsotpauthenticationendpoint.war -->
+                                <unzip dest="../connectors/target/authenticatorCopied/war/smsotpauthenticationendpoint">
+                                    <fileset dir="../connectors/target/authenticatorCopied/war">
+                                        <include name="smsotpauthenticationendpoint.war" />
+                                    </fileset>
+                                </unzip>
+                                <delete file="../connectors/target/authenticatorCopied/war/smsotpauthenticationendpoint.war" />
+
+                                <!-- Explode the totpauthenticationendpoint.war -->
+                                <unzip dest="../connectors/target/authenticatorCopied/war/totpauthenticationendpoint">
+                                    <fileset dir="../connectors/target/authenticatorCopied/war">
+                                        <include name="totpauthenticationendpoint.war" />
+                                    </fileset>
+                                </unzip>
+                                <delete file="../connectors/target/authenticatorCopied/war/totpauthenticationendpoint.war" />
+
+                                <!-- Explode the emailotpauthenticationendpoint.war -->
+                                <unzip dest="../connectors/target/authenticatorCopied/war/emailotpauthenticationendpoint">
+                                    <fileset dir="../connectors/target/authenticatorCopied/war">
+                                        <include name="emailotpauthenticationendpoint.war" />
+                                    </fileset>
+                                </unzip>
+                                <delete file="../connectors/target/authenticatorCopied/war/emailotpauthenticationendpoint.war" />
+
+                                <!-- Explode the x509certificateauthenticationendpoint.war -->
+                                <unzip dest="../connectors/target/authenticatorCopied/war/x509certificateauthenticationendpoint">
+                                    <fileset dir="../connectors/target/authenticatorCopied/war">
+                                        <include name="x509certificateauthenticationendpoint.war" />
+                                    </fileset>
+                                </unzip>
+                                <delete file="../connectors/target/authenticatorCopied/war/x509certificateauthenticationendpoint.war" />
+
+                                <!-- Explode the api#identity#auth#v1.1.war -->
+                                <unzip dest="../connectors/target/authenticatorCopied/war/api#identity#auth#v1.1">
+                                    <fileset dir="../connectors/target/authenticatorCopied/war/">
+                                        <include name="api#identity#auth#v1.1.war" />
+                                    </fileset>
+                                </unzip>
+                                <delete file="../connectors/target/authenticatorCopied/war/api#identity#auth#v1.1.war" />
                             </tasks>
                         </configuration>
                     </execution>

@@ -32,6 +32,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
+import org.wso2.carbon.identity.application.common.model.xsd.LocalAndOutboundAuthenticationConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.Property;
 import org.wso2.carbon.identity.application.common.model.xsd.RequestPathAuthenticatorConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
@@ -75,6 +76,7 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
     private static final String emailClaimURI = "http://wso2.org/claims/emailaddress";
 
     private static final String profileName = "default";
+    private static Boolean samlArtResolve = false;
 
     private ApplicationManagementServiceClient applicationManagementServiceClient;
     protected SAMLSSOConfigServiceClient ssoConfigServiceClient;
@@ -171,6 +173,8 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
 
         SUPER_TENANT_APP_WITH_SIGNING("travelocity.com", true),
         TENANT_APP_WITHOUT_SIGNING("travelocity.com-saml-tenantwithoutsigning", false),
+        SUPER_TENANT_APP_WITH_SAMLARTIFACT_CONFIG("travelocity.com-saml-artifactresolving", false),
+        TENANT_APP_WITH_SAMLARTIFACT_CONFIG("travelocity.com-saml-tenant-artifactresolving", false),
         ECP_APP("https://localhost/ecp-sp", false);
 
         private String artifact;
@@ -280,6 +284,12 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
         }
     }
 
+    public void createApplicationForSAMLArtResolve(SAMLConfig config, String appName) throws Exception {
+
+        samlArtResolve = true;
+        createApplication(config, appName);
+    }
+
     public void createApplication(SAMLConfig config, String appName) throws Exception {
 
         ServiceProvider serviceProvider = new ServiceProvider();
@@ -309,6 +319,13 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
             requestPathAuthenticatorConfig.setName("BasicAuthRequestPathAuthenticator");
             serviceProvider.setRequestPathAuthenticatorConfigs(
                     new RequestPathAuthenticatorConfig[]{requestPathAuthenticatorConfig});
+        }
+
+        if (samlArtResolve) {
+        LocalAndOutboundAuthenticationConfig localAndOutboundAuthenticationConfig =
+                new LocalAndOutboundAuthenticationConfig();
+        localAndOutboundAuthenticationConfig.setSkipConsent(true);
+        serviceProvider.setLocalAndOutBoundAuthenticationConfig(localAndOutboundAuthenticationConfig);
         }
         serviceProvider.setInboundAuthenticationConfig(inboundAuthenticationConfig);
         applicationManagementServiceClient.updateApplicationData(serviceProvider);
@@ -403,6 +420,16 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
         return idpInitSpDTO;
     }
 
+    /**
+     * @param config contains the details of the SAML artifact binding enabled service provider application.
+     * @return the created SAMLSSOServiceProviderDTO.
+     */
+    public SAMLSSOServiceProviderDTO createSsoSPDTOForSAMLartifactBinding(SAMLConfig config){
+        SAMLSSOServiceProviderDTO idpInitSpDTO = createSsoSPDTO(config);
+        idpInitSpDTO.setEnableSAML2ArtifactBinding(true);
+        return idpInitSpDTO;
+    }
+
     public SAMLSSOServiceProviderDTO createSsoServiceProviderDTO(SAMLConfig config){
         return createSsoSPDTO(config);
     }
@@ -424,7 +451,6 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
             samlssoServiceProviderDTO.setEnableAttributeProfile(true);
             samlssoServiceProviderDTO.setEnableAttributesByDefault(true);
         }
-
         return samlssoServiceProviderDTO;
     }
 
