@@ -622,7 +622,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>commons-codec.wso2</groupId>
+            <groupId>org.wso2.orbit.commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
         </dependency>
         <dependency>
