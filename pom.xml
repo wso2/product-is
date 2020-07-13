@@ -2104,7 +2104,7 @@
         <identity.tool.samlsso.validator.version>5.4.0</identity.tool.samlsso.validator.version>
         <identity.app.authz.xacml.version>2.2.1</identity.app.authz.xacml.version>
         <identity.oauth.addons.version>2.3.1</identity.oauth.addons.version>
-        <org.wso2.carbon.extension.identity.x509certificate.version>1.0.6</org.wso2.carbon.extension.identity.x509certificate.version>
+        <org.wso2.carbon.extension.identity.x509certificate.version>1.0.7</org.wso2.carbon.extension.identity.x509certificate.version>
         <conditional.authentication.functions.version>0.1.40</conditional.authentication.functions.version>
         <carbon.identity.oauth.uma.version>1.2.1</carbon.identity.oauth.uma.version>
 
