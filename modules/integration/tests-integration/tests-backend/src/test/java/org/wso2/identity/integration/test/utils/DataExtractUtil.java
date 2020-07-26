@@ -18,6 +18,8 @@
 package org.wso2.identity.integration.test.utils;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -38,6 +40,8 @@ import java.util.regex.Pattern;
  * Use to extract data from HttpResponce
  */
 public class DataExtractUtil {
+
+    private static Log log = LogFactory.getLog(DataExtractUtil.class);
 
     /**
      * Extract data from http response with the given keywords
@@ -219,6 +223,7 @@ public class DataExtractUtil {
                         .getContent()));
         String line;
         while ((line = rd.readLine()) != null) {
+            log.info(">>> extractSessionConsentDataFromResponse: " + line);
             for (String key : keyPositionMap.keySet()) {
                 if (line.contains(key)) {
                     lineReached = true;
