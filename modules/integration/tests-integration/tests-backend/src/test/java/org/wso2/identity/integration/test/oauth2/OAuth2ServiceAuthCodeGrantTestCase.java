@@ -102,10 +102,11 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
         Assert.assertNotNull(consumerKey, "Application creation failed.");
 
         consumerSecret = appDto.getOauthConsumerSecret();
+        Assert.assertNotNull(consumerSecret, "Application creation failed.");
     }
 
     @Test(groups = "wso2.is", description = "Send authorize user request", dependsOnMethods = "testRegisterApplication")
-    public void testSendAuthorozedPost() throws Exception {
+    public void testSendAuthorizedPost() throws Exception {
 
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         urlParameters.add(new BasicNameValuePair("grantType", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
@@ -122,6 +123,7 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
 
         Header locationHeader =
                 response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        log.info(">>> testSendAuthorizedPost:Location: " + locationHeader.getValue());
         Assert.assertNotNull(locationHeader, "Authorized response header is null");
         EntityUtils.consume(response.getEntity());
 
@@ -135,17 +137,20 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
         Assert.assertNotNull(keyValues, "sessionDataKey key value is null");
 
         sessionDataKey = keyValues.get(0).getValue();
+        log.info(">>> testSendAuthorizedPost:sessionDataKey: " + sessionDataKey);
         Assert.assertNotNull(sessionDataKey, "Session data key is null.");
         EntityUtils.consume(response.getEntity());
     }
 
-    @Test(groups = "wso2.is", description = "Send login post request", dependsOnMethods = "testSendAuthorozedPost")
+    @Test(groups = "wso2.is", description = "Send login post request", dependsOnMethods = "testSendAuthorizedPost")
     public void testSendLoginPost() throws Exception {
 
         HttpResponse response = sendLoginPost(client, sessionDataKey);
         Assert.assertNotNull(response, "Login request failed. Login response is null.");
-
+        log.info(">>> testSendLoginPost:locationHeader1: " + response
+                .getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION).getValue());
         if (Utils.requestMissingClaims(response)) {
+            log.info(">>> requestMissingClaims");
             Assert.assertTrue(response.getFirstHeader("Set-Cookie").getValue().contains("pastr"),
                     "pastr cookie not found in response.");
             String pastreCookie = response.getFirstHeader("Set-Cookie").getValue().split(";")[0];
@@ -158,6 +163,7 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
         Header locationHeader =
                 response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         Assert.assertNotNull(locationHeader, "Login response header is null");
+        log.info(">>> testSendLoginPost:locationHeader2: " + locationHeader.getValue());
         EntityUtils.consume(response.getEntity());
 
         response = sendGetRequest(client, locationHeader.getValue());
