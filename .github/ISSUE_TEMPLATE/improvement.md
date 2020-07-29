@@ -2,7 +2,7 @@
 name: ✅ Improvement suggestion
 about: Suggest an improvement for the project
 title: ''
-labels: 'Type/Improvement'
+labels: 'improvement'
 assignees: ''
 
 ---
