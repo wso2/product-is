@@ -1214,11 +1214,6 @@
                                 </feature>
 
                                 <feature>
-                                    <id>org.wso2.identity.apps.developer.portal.server.feature.group</id>
-                                    <version>${identity.apps.version}</version>
-                                </feature>
-
-                                <feature>
                                     <id>org.wso2.identity.apps.console.server.feature.group</id>
                                     <version>${identity.apps.version}</version>
                                 </feature>
