@@ -223,6 +223,7 @@ public class DataExtractUtil {
                         .getContent()));
         String line;
         while ((line = rd.readLine()) != null) {
+            log.info(">>> extractSessionConsentDataFromResponse: " + line);
             for (String key : keyPositionMap.keySet()) {
                 if (line.contains(key)) {
                     lineReached = true;
