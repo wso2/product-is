@@ -123,6 +123,7 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
 
         Header locationHeader =
                 response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        log.info(">>> testSendAuthorizedPost:Location: " + locationHeader.getValue());
         Assert.assertNotNull(locationHeader, "Authorized response header is null");
         EntityUtils.consume(response.getEntity());
 
@@ -145,7 +146,10 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
 
         HttpResponse response = sendLoginPost(client, sessionDataKey);
         Assert.assertNotNull(response, "Login request failed. Login response is null.");
+        log.info(">>> testSendLoginPost:locationHeader1: " + response
+                .getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION).getValue());
         if (Utils.requestMissingClaims(response)) {
+            log.info(">>> requestMissingClaims");
             Assert.assertTrue(response.getFirstHeader("Set-Cookie").getValue().contains("pastr"),
                     "pastr cookie not found in response.");
             String pastreCookie = response.getFirstHeader("Set-Cookie").getValue().split(";")[0];
@@ -158,6 +162,7 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
         Header locationHeader =
                 response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         Assert.assertNotNull(locationHeader, "Login response header is null");
+        log.info(">>> testSendLoginPost:locationHeader2: " + locationHeader.getValue());
         EntityUtils.consume(response.getEntity());
 
         response = sendGetRequest(client, locationHeader.getValue());
