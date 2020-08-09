@@ -63,7 +63,7 @@ public class Oauth2PersistenceProcessorTestCase extends OAuth2ServiceAbstractInt
         String consumerSecret1 = oAuthConsumerAppDTO.getOauthConsumerSecret();
         Assert.assertNotNull(consumerSecret1, "Application creation failed.");
 
-        deleteApplication(consumerKey1);
+        deleteOAuthApplication(consumerKey1);
     }
 
     @Test(groups = "wso2.is", description = "Test EncryptionDecryptionPersistenceProcessor",
@@ -82,10 +82,10 @@ public class Oauth2PersistenceProcessorTestCase extends OAuth2ServiceAbstractInt
         String consumerSecret2 = oAuthConsumerAppDTO.getOauthConsumerSecret();
         Assert.assertNotNull(consumerSecret2, "Application creation failed.");
 
-        deleteApplication(consumerKey2);
+        deleteOAuthApplication(consumerKey2);
     }
 
-    private OAuthConsumerAppDTO createApplication(String applicationName) throws Exception {
+    public OAuthConsumerAppDTO createApplication(String applicationName) throws Exception {
 
         OAuthConsumerAppDTO oAuthConsumerAppDTO = new OAuthConsumerAppDTO();
         oAuthConsumerAppDTO.setApplicationName(applicationName);
@@ -105,7 +105,7 @@ public class Oauth2PersistenceProcessorTestCase extends OAuth2ServiceAbstractInt
         return null;
     }
 
-    private void deleteApplication(String consumerKey) throws Exception {
+    private void deleteOAuthApplication(String consumerKey) throws Exception {
 
         adminClient.removeOAuthApplicationData(consumerKey);
     }
