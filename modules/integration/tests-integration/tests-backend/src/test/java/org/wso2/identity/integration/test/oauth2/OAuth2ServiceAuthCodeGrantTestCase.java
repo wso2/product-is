@@ -49,6 +49,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.wso2.identity.integration.test.utils.DataExtractUtil.KeyValue;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTH_CODE_BODY_ELEMENT;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.COMMON_AUTH_URL;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT;
 
@@ -123,7 +124,6 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
 
         Header locationHeader =
                 response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
-        log.info(">>> testSendAuthorizedPost:Location: " + locationHeader.getValue());
         Assert.assertNotNull(locationHeader, "Authorized response header is null");
         EntityUtils.consume(response.getEntity());
 
@@ -146,10 +146,7 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
 
         HttpResponse response = sendLoginPost(client, sessionDataKey);
         Assert.assertNotNull(response, "Login request failed. Login response is null.");
-        log.info(">>> testSendLoginPost:locationHeader1: " + response
-                .getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION).getValue());
         if (Utils.requestMissingClaims(response)) {
-            log.info(">>> requestMissingClaims");
             Assert.assertTrue(response.getFirstHeader("Set-Cookie").getValue().contains("pastr"),
                     "pastr cookie not found in response.");
             String pastreCookie = response.getFirstHeader("Set-Cookie").getValue().split(";")[0];
@@ -162,30 +159,53 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
         Header locationHeader =
                 response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         Assert.assertNotNull(locationHeader, "Login response header is null");
-        log.info(">>> testSendLoginPost:locationHeader2: " + locationHeader.getValue());
         EntityUtils.consume(response.getEntity());
 
         response = sendGetRequest(client, locationHeader.getValue());
-        Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
+        // TODO: This fix is done to handle situations where consent page is skipped. Need to identify cause for this
+        //  intermittent issue.
+        Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(2);
         keyPositionMap.put("name=\"" + OAuth2Constant.SESSION_DATA_KEY_CONSENT + "\"", 1);
+        keyPositionMap.put(AUTH_CODE_BODY_ELEMENT, 2);
         List<KeyValue> keyValues =
                 DataExtractUtil.extractSessionConsentDataFromResponse(response,
                         keyPositionMap);
         Assert.assertNotNull(keyValues, "SessionDataKeyConsent key value is null");
-        sessionDataKeyConsent = keyValues.get(0).getValue();
-        EntityUtils.consume(response.getEntity());
 
-        Assert.assertNotNull(sessionDataKeyConsent, "Invalid session key consent.");
+        if (!AUTH_CODE_BODY_ELEMENT.equals(keyValues.get(0).getKey())) {
+
+            sessionDataKeyConsent = keyValues.get(0).getValue();
+            EntityUtils.consume(response.getEntity());
+
+            Assert.assertNotNull(sessionDataKeyConsent, "Invalid session key consent.");
+
+            response = sendApprovalPost(client, sessionDataKeyConsent);
+            Assert.assertNotNull(response, "Approval response is invalid.");
+
+            locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+            Assert.assertNotNull(locationHeader, "Approval Location header is null.");
+
+            EntityUtils.consume(response.getEntity());
+
+            response = sendPostRequest(client, locationHeader.getValue());
+            Assert.assertNotNull(response, "Get Activation response is invalid.");
+
+            keyPositionMap = new HashMap<String, Integer>(1);
+            keyPositionMap.put("Authorization Code", 1);
+            keyValues = DataExtractUtil.extractTableRowDataFromResponse(response, keyPositionMap);
+            Assert.assertNotNull(keyValues, "Authorization Code key value is invalid.");
+        }
+        authorizationCode = keyValues.get(0).getValue();
+        Assert.assertNotNull(authorizationCode, "Authorization code is null.");
+        EntityUtils.consume(response.getEntity());
     }
 
-    @Test(groups = "wso2.is", description = "Send approval post request", dependsOnMethods = "testSendLoginPost")
-    public void testSendApprovalPost() throws Exception {
+    private void testSendApprovalPost() throws Exception {
 
         HttpResponse response = sendApprovalPost(client, sessionDataKeyConsent);
         Assert.assertNotNull(response, "Approval response is invalid.");
 
-        Header locationHeader =
-                response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         Assert.assertNotNull(locationHeader, "Approval Location header is null.");
 
         EntityUtils.consume(response.getEntity());
@@ -194,18 +214,15 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
         Assert.assertNotNull(response, "Get Activation response is invalid.");
 
         Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
-        keyPositionMap.put("Authorization Code", 1);
-        List<KeyValue> keyValues =
-                DataExtractUtil.extractTableRowDataFromResponse(response,
-                        keyPositionMap);
-        Assert.assertNotNull(response, "Authorization Code key value is invalid.");
+        keyPositionMap.put(AUTH_CODE_BODY_ELEMENT, 1);
+        List<KeyValue> keyValues = DataExtractUtil.extractTableRowDataFromResponse(response, keyPositionMap);
+        Assert.assertNotNull(keyValues, "Authorization Code key value is invalid.");
         authorizationCode = keyValues.get(0).getValue();
         Assert.assertNotNull(authorizationCode, "Authorization code is null.");
         EntityUtils.consume(response.getEntity());
-
     }
 
-    @Test(groups = "wso2.is", description = "Get access token", dependsOnMethods = "testSendApprovalPost")
+    @Test(groups = "wso2.is", description = "Get access token", dependsOnMethods = "testSendLoginPost")
     public void testGetAccessToken() throws Exception {
 
         HttpResponse response = sendGetAccessTokenPost(client, consumerSecret);
