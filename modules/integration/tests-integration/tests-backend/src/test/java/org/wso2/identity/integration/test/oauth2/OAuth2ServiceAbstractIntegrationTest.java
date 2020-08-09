@@ -111,6 +111,25 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		return createApplication(appDTO);
 	}
 
+	/**
+	 * Create Application with the given app configurations
+	 *
+	 * @param oauthApplicationName oauth application name
+	 * @param serviceProviderName service provider name
+	 * @return OAuthConsumerAppDTO
+	 * @throws Exception if error
+	 */
+	public OAuthConsumerAppDTO createApplication(String oauthApplicationName, String serviceProviderName) throws Exception {
+
+		OAuthConsumerAppDTO appDTO = new OAuthConsumerAppDTO();
+		appDTO.setApplicationName(oauthApplicationName);
+		appDTO.setCallbackUrl(OAuth2Constant.CALLBACK_URL);
+		appDTO.setOAuthVersion(OAuth2Constant.OAUTH_VERSION_2);
+		appDTO.setGrantTypes("authorization_code implicit password client_credentials refresh_token "
+				+ "urn:ietf:params:oauth:grant-type:saml2-bearer iwa:ntlm");
+		return createApplication(appDTO, serviceProviderName);
+	}
+
     /**
      * To set ServiceProvider Provider Claim configuration.
      *
@@ -161,12 +180,45 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 				consumerSecret = appDto.getOauthConsumerSecret();
 			}
 		}
+		createServiceProvider(SERVICE_PROVIDER_NAME);
+		return appDtoResult;
+	}
+
+	/**
+	 * Create Application with a given appDTO
+	 *
+	 * @param appDTO              app dto
+	 * @param serviceProviderName service provider name
+	 * @return OAuthConsumerAppDTO
+	 * @throws Exception if error
+	 */
+	public OAuthConsumerAppDTO createApplication(OAuthConsumerAppDTO appDTO, String serviceProviderName)
+			throws Exception {
+
+		OAuthConsumerAppDTO appDtoResult = null;
+
+		adminClient.registerOAuthApplicationData(appDTO);
+		OAuthConsumerAppDTO[] appDtos = adminClient.getAllOAuthApplicationData();
+
+		for (OAuthConsumerAppDTO appDto : appDtos) {
+			if (appDto.getApplicationName().equals(appDTO.getApplicationName())) {
+				appDtoResult = appDto;
+				consumerKey = appDto.getOauthConsumerKey();
+				consumerSecret = appDto.getOauthConsumerSecret();
+			}
+		}
+		createServiceProvider(serviceProviderName);
+		return appDtoResult;
+	}
+
+	private void createServiceProvider(String serviceProviderName) throws Exception {
+
 		ServiceProvider serviceProvider = new ServiceProvider();
-		serviceProvider.setApplicationName(SERVICE_PROVIDER_NAME);
+		serviceProvider.setApplicationName(serviceProviderName);
 		serviceProvider.setDescription(SERVICE_PROVIDER_DESC);
 		appMgtclient.createApplication(serviceProvider);
 
-		serviceProvider = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
+		serviceProvider = appMgtclient.getApplication(serviceProviderName);
 		serviceProvider = setServiceProviderClaimConfig(serviceProvider);
 		serviceProvider.setOutboundProvisioningConfig(new OutboundProvisioningConfig());
 		List<InboundAuthenticationRequestConfig> authRequestList = new ArrayList<>();
@@ -185,7 +237,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 			authRequestList.add(opicAuthenticationRequest);
 		}
 
-		String passiveSTSRealm = SERVICE_PROVIDER_NAME;
+		String passiveSTSRealm = serviceProviderName;
 		if (passiveSTSRealm != null) {
 			InboundAuthenticationRequestConfig opicAuthenticationRequest = new InboundAuthenticationRequestConfig();
 			opicAuthenticationRequest.setInboundAuthKey(passiveSTSRealm);
@@ -193,7 +245,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 			authRequestList.add(opicAuthenticationRequest);
 		}
 
-		String openidRealm = SERVICE_PROVIDER_NAME;
+		String openidRealm = serviceProviderName;
 		if (openidRealm != null) {
 			InboundAuthenticationRequestConfig opicAuthenticationRequest = new InboundAuthenticationRequestConfig();
 			opicAuthenticationRequest.setInboundAuthKey(openidRealm);
@@ -202,11 +254,10 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		}
 
 		if (authRequestList.size() > 0) {
-			serviceProvider.getInboundAuthenticationConfig()
-			               .setInboundAuthenticationRequestConfigs(authRequestList.toArray(new InboundAuthenticationRequestConfig[authRequestList.size()]));
+			serviceProvider.getInboundAuthenticationConfig().setInboundAuthenticationRequestConfigs(
+					authRequestList.toArray(new InboundAuthenticationRequestConfig[authRequestList.size()]));
 		}
 		appMgtclient.updateApplicationData(serviceProvider);
-		return appDtoResult;
 	}
 
 	public void UpdateApplicationClaimConfig() throws Exception {
@@ -437,6 +488,16 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	 */
 	public void deleteApplication() throws Exception {
 		appMgtclient.deleteApplication(SERVICE_PROVIDER_NAME);
+	}
+
+	/**
+	 * Delete Application
+	 *
+	 * @throws Exception
+	 */
+	public void deleteApplication(String serviceProviderName) throws Exception {
+
+		appMgtclient.deleteApplication(serviceProviderName);
 	}
 
 	/**

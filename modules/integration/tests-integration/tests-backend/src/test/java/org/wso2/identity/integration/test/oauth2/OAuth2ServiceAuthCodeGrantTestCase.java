@@ -54,6 +54,11 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT
 
 public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
+    private static final String PLAYGROUND_RESET_PAGE = "http://localhost:" + CommonConstants.DEFAULT_TOMCAT_PORT +
+            "/playground2/oauth2.jsp?reset=true";
+    private static final String OAUTH_APPLICATION_NAME = "OAuth2TestApplicationForCodeGrant";
+    private static final String SERVICE_PROVIDER_NAME = "PlayGroundForCodeGrantTest";
+
     private AuthenticatorClient logManger;
     private String adminUsername;
     private String adminPassword;
@@ -63,9 +68,6 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
     private String authorizationCode;
     private String consumerKey;
     private String consumerSecret;
-
-    private static final String PLAYGROUND_RESET_PAGE = "http://localhost:" + CommonConstants.DEFAULT_TOMCAT_PORT +
-            "/playground2/oauth2.jsp?reset=true";
     private DefaultHttpClient client;
 
     @BeforeClass(alwaysRun = true)
@@ -87,7 +89,7 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
     public void atEnd() throws Exception {
 
         this.logManger.logOut();
-        deleteApplication();
+        deleteApplication(SERVICE_PROVIDER_NAME);
         removeOAuthApplicationData();
 
     }
@@ -95,7 +97,7 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
     @Test(groups = "wso2.is", description = "Check Oauth2 application registration")
     public void testRegisterApplication() throws Exception {
 
-        OAuthConsumerAppDTO appDto = createApplication();
+        OAuthConsumerAppDTO appDto = createApplication(OAUTH_APPLICATION_NAME, SERVICE_PROVIDER_NAME);
         Assert.assertNotNull(appDto, "Application creation failed.");
 
         consumerKey = appDto.getOauthConsumerKey();
