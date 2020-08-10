@@ -95,8 +95,11 @@ public class SCIMUserUpdateTest extends SCIM2BaseTest {
     public void testGetUsers() {
 
         endpointURL = USERS_ENDPOINT;
-        getResponseOfGet(endpointURL, SCIM_CONTENT_TYPE)
-                .then()
+        Response response = getResponseOfGet(endpointURL, SCIM_CONTENT_TYPE);
+        if (HttpStatus.SC_INTERNAL_SERVER_ERROR == response.getStatusCode()) {
+            log.info(">>> Content: >>>" + response.getBody().prettyPrint());
+        }
+        response.then()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .log()
