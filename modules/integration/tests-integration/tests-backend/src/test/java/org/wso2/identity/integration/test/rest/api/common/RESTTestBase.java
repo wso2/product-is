@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.restassured.RestAssured;
 import io.restassured.config.EncoderConfig;
+import io.restassured.filter.log.LogDetail;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
@@ -275,7 +276,7 @@ public class RESTTestBase extends ISIntegrationTest {
                         .appendDefaultContentCharsetToContentTypeIfUndefined(false)))
                 .contentType(contentType)
                 .header(HttpHeaders.ACCEPT, contentType)
-                .log().ifValidationFails()
+                .log().ifValidationFails(LogDetail.ALL)
                 .filter(validationFilter)
                 .when()
                 .get(endpointUri);
