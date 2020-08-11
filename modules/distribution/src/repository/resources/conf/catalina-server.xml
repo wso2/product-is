@@ -100,6 +100,7 @@
                 <Valve className="org.wso2.carbon.identity.auth.valve.AuthenticationValve"/>
                 <Valve className="org.wso2.carbon.identity.authz.valve.AuthorizationValve"/>
                 <Valve className="org.wso2.carbon.identity.context.rewrite.valve.TenantContextRewriteValve"/>
+                <Valve className="org.wso2.carbon.identity.context.cors.valve.CORSValve"/>
                 <!--Error pages -->
                 <Valve className="org.apache.catalina.valves.ErrorReportValve" showServerInfo="false" showReport="false"/>
             </Host>
