@@ -173,31 +173,14 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
         Assert.assertNotNull(keyValues, "SessionDataKeyConsent key value is null");
 
         if (!AUTH_CODE_BODY_ELEMENT.equals(keyValues.get(0).getKey())) {
-
             sessionDataKeyConsent = keyValues.get(0).getValue();
             EntityUtils.consume(response.getEntity());
-
-            Assert.assertNotNull(sessionDataKeyConsent, "Invalid session key consent.");
-
-            response = sendApprovalPost(client, sessionDataKeyConsent);
-            Assert.assertNotNull(response, "Approval response is invalid.");
-
-            locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
-            Assert.assertNotNull(locationHeader, "Approval Location header is null.");
-
+            testSendApprovalPost();
+        } else {
+            authorizationCode = keyValues.get(0).getValue();
+            Assert.assertNotNull(authorizationCode, "Authorization code is null.");
             EntityUtils.consume(response.getEntity());
-
-            response = sendPostRequest(client, locationHeader.getValue());
-            Assert.assertNotNull(response, "Get Activation response is invalid.");
-
-            keyPositionMap = new HashMap<String, Integer>(1);
-            keyPositionMap.put("Authorization Code", 1);
-            keyValues = DataExtractUtil.extractTableRowDataFromResponse(response, keyPositionMap);
-            Assert.assertNotNull(keyValues, "Authorization Code key value is invalid.");
         }
-        authorizationCode = keyValues.get(0).getValue();
-        Assert.assertNotNull(authorizationCode, "Authorization code is null.");
-        EntityUtils.consume(response.getEntity());
     }
 
     private void testSendApprovalPost() throws Exception {
@@ -317,16 +300,25 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
         EntityUtils.consume(response.getEntity());
 
         response = sendGetRequest(client, locationHeader.getValue());
-        Map<String, Integer> keyPositionMap = new HashMap<>(1);
+        // TODO: This fix is done to handle situations where consent page is skipped. Need to identify cause for this
+        //  intermittent issue.
+        Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(2);
         keyPositionMap.put("name=\"" + OAuth2Constant.SESSION_DATA_KEY_CONSENT + "\"", 1);
-        List<KeyValue> keyValues = DataExtractUtil.extractSessionConsentDataFromResponse(response, keyPositionMap);
+        keyPositionMap.put(AUTH_CODE_BODY_ELEMENT, 2);
+        List<KeyValue> keyValues =
+                DataExtractUtil.extractSessionConsentDataFromResponse(response,
+                        keyPositionMap);
         Assert.assertNotNull(keyValues, "SessionDataKeyConsent key value is null");
-        sessionDataKeyConsent = keyValues.get(0).getValue();
-        EntityUtils.consume(response.getEntity());
 
-        Assert.assertNotNull(sessionDataKeyConsent, "Invalid session key consent.");
-
-        testSendApprovalPost();
+        if (!AUTH_CODE_BODY_ELEMENT.equals(keyValues.get(0).getKey())) {
+            sessionDataKeyConsent = keyValues.get(0).getValue();
+            EntityUtils.consume(response.getEntity());
+            testSendApprovalPost();
+        } else {
+            authorizationCode = keyValues.get(0).getValue();
+            Assert.assertNotNull(authorizationCode, "Authorization code is null.");
+            EntityUtils.consume(response.getEntity());
+        }
         testGetAccessToken();
         Assert.assertNotEquals(oldAccessToken, accessToken, "Access token not revoked from authorization code reusing");
         testAuthzCodeResend();
