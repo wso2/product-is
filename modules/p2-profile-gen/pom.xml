@@ -390,6 +390,11 @@
                                     org.wso2.carbon.identity.auth.rest:org.wso2.carbon.identity.context.rewrite.server.feature:${identity.carbon.auth.rest.version}
                                 </featureArtifactDef>
 
+                                <!--CORS-->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.auth.rest:org.wso2.carbon.identity.cors.server.feature:${identity.carbon.auth.rest.version}
+                                </featureArtifactDef>
+
                                 <featureArtifactDef>
                                     org.wso2.carbon.consent.mgt:org.wso2.carbon.consent.mgt.server.feature:${carbon.consent.mgt.version}
                                 </featureArtifactDef>
@@ -873,6 +878,10 @@
                                     <version>${identity.carbon.auth.rest.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.identity.cors.server.feature.group</id>
+                                    <version>${identity.carbon.auth.rest.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.consent.mgt.server.feature.group</id>
                                     <version>${carbon.consent.mgt.version}</version>
                                 </feature>
@@ -1352,6 +1361,10 @@
                                     <id>org.wso2.carbon.identity.context.rewrite.server.feature.group</id>
                                     <version>${identity.carbon.auth.rest.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.cors.server.feature.group</id>
+                                    <version>${identity.carbon.auth.rest.version}</version>
+                                </feature>
 
                                 <feature>
                                     <id>org.wso2.carbon.consent.mgt.server.feature.group</id>
@@ -1763,6 +1776,10 @@
 
                                 <feature>
                                     <id>org.wso2.carbon.identity.context.rewrite.server.feature.group</id>
+                                    <version>${identity.carbon.auth.rest.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.cors.server.feature.group</id>
                                     <version>${identity.carbon.auth.rest.version}</version>
                                 </feature>
 
