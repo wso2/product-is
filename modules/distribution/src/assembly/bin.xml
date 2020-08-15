@@ -363,29 +363,18 @@
             </includes>
         </fileSet>
 
-        <!--copy developer-portal web app-->
+        <!--copy console web app-->
         <fileSet>
             <directory>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
             </directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
             <includes>
-                <include>developer-portal/</include>
+                <include>console/</include>
             </includes>
         </fileSet>
 
-        <!--copy admin-portal web app-->
-        <fileSet>
-            <directory>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
-            </directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
-            <includes>
-                <include>admin-portal/</include>
-            </includes>
-        </fileSet>
-
-        <!--copy the lsp-debug webapp -->
+        <!--Copy the lsp-debug webapp -->
         <fileSet>
             <directory>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
@@ -420,7 +409,7 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
         </fileSet>
 
-        <!--copy provisioning-connector jars SPML,Google,Salesforce,SCIM .-->
+        <!--copy provisioning-connector jars Google,Salesforce,SCIM .-->
         <fileSet>
             <directory>../provisioning-connectors/target/provisioningconnectorCopied/jar</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
@@ -438,13 +427,52 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
         </fileSet>
 
-        <!--copy web apps for for totp, smsotp and emailotp authenticators-->
+        <!--Copy web apps for for smsotp authenticators-->
         <fileSet>
             <directory>../connectors/target/authenticatorCopied/war</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
+            <includes>
+                <include>smsotpauthenticationendpoint.war</include>
+            </includes>
         </fileSet>
 
-        <!--copy web app for identity management feature -->
+        <!--Copy web apps for for totp authenticators-->
+        <fileSet>
+            <directory>../connectors/target/authenticatorCopied/war</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
+            <includes>
+                <include>totpauthenticationendpoint.war</include>
+            </includes>
+        </fileSet>
+
+        <!--Copy web apps for for emailotp authenticators-->
+        <fileSet>
+            <directory>../connectors/target/authenticatorCopied/war</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
+            <includes>
+                <include>emailotpauthenticationendpoint.war</include>
+            </includes>
+        </fileSet>
+
+        <!--Copy web apps api#identity#auth#v1.1 -->
+        <fileSet>
+            <directory>../connectors/target/authenticatorCopied/war</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
+            <includes>
+                <include>api#identity#auth#v1.1.war</include>
+            </includes>
+        </fileSet>
+
+        <!--Copy web apps for for x509 certificate authenticators-->
+        <fileSet>
+            <directory>../connectors/target/authenticatorCopied/war</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
+            <includes>
+                <include>x509certificateauthenticationendpoint.war</include>
+            </includes>
+        </fileSet>
+
+        <!--Copy web app for account recovery endpoint -->
         <fileSet>
             <directory>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
@@ -456,7 +484,7 @@
         </fileSet>
 
 
-        <!--copy web app for identity recovery feature -->
+        <!--Copy web app api#identity#recovery#v0.9 -->
         <fileSet>
             <directory>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
@@ -467,7 +495,7 @@
             </includes>
         </fileSet>
 
-        <!--copy web app for identity recovery feature -->
+        <!--Copy web app api#identity#user#v1.0 -->
         <fileSet>
             <directory>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
@@ -478,7 +506,7 @@
             </includes>
         </fileSet>
 
-        <!--copy  web app for FIDO2 endpoint feature-->
+        <!--Copy  web app api#users#v2#me#webauthn.-->
         <fileSet>
             <directory>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
@@ -696,7 +724,38 @@
             <includes>
                 <include>api/</include>
                 <include>authenticationendpoint/</include>
+                <include>mex/</include>
+                <include>mexut/</include>
+                <include>oauth2/</include>
+                <include>scim2/</include>
+                <include>wso2/</include>
+                <include>api#identity#oauth2#v1.0/</include>
+                <include>api#identity#oauth2#dcr#v1.1/</include>
+                <include>api#identity#template#mgt#v1.0.0/</include>
+                <include>api#identity#config-mgt#v1.0/</include>
+                <include>api#identity#entitlement/</include>
+                <include>api#identity#consent-mgt#v1.0/</include>
+                <include>api#identity#oauth2#uma#permission#v1.0/</include>
+                <include>api#identity#oauth2#uma#resourceregistration#v1.0/</include>
+                <include>api#health-check#v1.0/</include>
+                <include>lsp/</include>
                 <include>accountrecoveryendpoint/</include>
+                <include>api#identity#recovery#v0.9/</include>
+                <include>api#identity#user#v1.0/</include>
+                <include>api#identity#oauth2#uma#resourceregistration#v1.0/</include>
+                <include>api#users#v2#me#webauthn/</include>
+            </includes>
+        </fileSet>
+
+        <fileSet>
+            <directory>../connectors/target/authenticatorCopied/war</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
+            <includes>
+                <include>smsotpauthenticationendpoint/</include>
+                <include>totpauthenticationendpoint/</include>
+                <include>emailotpauthenticationendpoint/</include>
+                <include>api#identity#auth#v1.1/</include>
+                <include>x509certificateauthenticationendpoint/</include>
             </includes>
         </fileSet>
     </fileSets>
@@ -1171,13 +1230,6 @@
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/oauth-scope-bindings.xml
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/identity</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/mex/metadata.xml
-            </source>
-            <outputDirectory>wso2is-${pom.version}/repository/deployment/server/webapps/mex/</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <file>

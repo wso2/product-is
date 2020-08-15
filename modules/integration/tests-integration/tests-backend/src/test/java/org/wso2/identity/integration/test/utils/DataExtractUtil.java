@@ -18,6 +18,8 @@
 package org.wso2.identity.integration.test.utils;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -34,10 +36,14 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTH_CODE_BODY_ELEMENT;
+
 /**
  * Use to extract data from HttpResponce
  */
 public class DataExtractUtil {
+
+    private static Log log = LogFactory.getLog(DataExtractUtil.class);
 
     /**
      * Extract data from http response with the given keywords
@@ -213,6 +219,7 @@ public class DataExtractUtil {
             throws IOException {
 
         boolean lineReached = false;
+        boolean isSessionConsentData = true;
         List<KeyValue> keyValues = new ArrayList<KeyValue>();
         BufferedReader rd =
                 new BufferedReader(new InputStreamReader(response.getEntity()
@@ -222,11 +229,25 @@ public class DataExtractUtil {
             for (String key : keyPositionMap.keySet()) {
                 if (line.contains(key)) {
                     lineReached = true;
+                    if (AUTH_CODE_BODY_ELEMENT.equals(key)) {
+                        isSessionConsentData = false;
+                    }
                 }
                 if (lineReached) {
-                    if (line.contains("value")) {
+                    if (!isSessionConsentData) {
+                        if (line.contains("<td>")) {
+                            Pattern p = Pattern.compile("<td>(\\S+)</td>");
+                            Matcher m = p.matcher(line);
+                            if (m.find()) {
+                                KeyValue keyValue = new KeyValue(AUTH_CODE_BODY_ELEMENT, m.group(1));
+                                keyValues.add(keyValue);
+                                return keyValues;
+                            }
+                        }
+                    } else if (line.contains("value")) {
                         String[] tokens = line.split("\"");
-                        KeyValue keyValue = new KeyValue(key, tokens[1]);
+                        KeyValue keyValue = new KeyValue("name=\"" + OAuth2Constant.SESSION_DATA_KEY_CONSENT + "\"",
+                                tokens[1]);
                         keyValues.add(keyValue);
                         return keyValues;
                     }

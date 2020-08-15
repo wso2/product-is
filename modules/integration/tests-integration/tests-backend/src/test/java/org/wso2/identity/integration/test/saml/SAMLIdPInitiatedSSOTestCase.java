@@ -53,13 +53,14 @@ public class SAMLIdPInitiatedSSOTestCase extends AbstractSAMLSSOTestCase {
 
     private Log log = LogFactory.getLog(getClass());
 
-    private static final String SP_NAME = "travelocity.com";
-    private static final String IDP_INIT_SSO_URL = "https://localhost:%s/samlsso?spEntityID=travelocity.com";
+    private static final String IDP_INIT_SSO_URL = "https://localhost:%s/samlsso?spEntityID=%s";
+    private static final String IDP_INIT_SSO_TENANT_URL
+            = "https://localhost:%s/samlsso?tenantDomain=wso2.com&spEntityID=%s";
     private static final String SAML_SSO_URL = "https://localhost:%s/samlsso";
     private static final String SP_ACS_URL = "http://localhost:8490/%s/home.jsp";
     private HttpClient httpClient;
     private CookieStore cookieStore = new BasicCookieStore();
-    private AbstractSAMLSSOTestCase.SAMLConfig samlConfig;
+    private SAMLConfig samlConfig;
 
     @Factory(dataProvider = "samlConfigProvider")
     public SAMLIdPInitiatedSSOTestCase(SAMLConfig config) {
@@ -76,15 +77,17 @@ public class SAMLIdPInitiatedSSOTestCase extends AbstractSAMLSSOTestCase {
         return new SAMLConfig[][]{
                 {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_REDIRECT,
                         ClaimType.NONE, App.SUPER_TENANT_APP_WITH_SIGNING)},
+                {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_REDIRECT,
+                        ClaimType.NONE, App.TENANT_APP_WITHOUT_SIGNING)},
         };
     }
 
     @BeforeClass(alwaysRun = true)
     public void initTest() throws Exception {
 
-        super.init();
+        super.init(samlConfig.getUserMode());
         super.testInit();
-        addServiceProvider();
+        super.createApplication(samlConfig, samlConfig.getApp().getArtifact());
         httpClient = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).disableRedirectHandling().build();
         super.createUser(samlConfig);
     }
@@ -93,17 +96,24 @@ public class SAMLIdPInitiatedSSOTestCase extends AbstractSAMLSSOTestCase {
     public void testClear() throws Exception {
 
         super.deleteUser(samlConfig);
-        super.ssoConfigServiceClient.removeServiceProvider(SP_NAME);
-        super.deleteApplication(SP_NAME);
+        super.ssoConfigServiceClient.removeServiceProvider(samlConfig.getApp().getArtifact());
+        super.deleteApplication(samlConfig.getApp().getArtifact());
         super.testClear();
     }
 
     @Test(groups = "wso2.is", description = "This test method will test the IdP initiated SAML SSO process.")
     public void testIdPInitiatedSSO() throws Exception {
 
-        HttpResponse idpInitResponse =
-                Utils.sendGetRequest(String.format(IDP_INIT_SSO_URL, IS_DEFAULT_HTTPS_PORT), USER_AGENT,
-                        httpClient);
+        HttpResponse idpInitResponse;
+        ssoConfigServiceClient.addServiceProvider(super.createSsoSPDTOForIdPInit(samlConfig));
+        if (samlConfig.getUserMode().name().equals("TENANT_ADMIN")) {
+            idpInitResponse = Utils.sendGetRequest(String.format(IDP_INIT_SSO_TENANT_URL, IS_DEFAULT_HTTPS_PORT,
+                    samlConfig.getApp().getArtifact()), USER_AGENT, httpClient);
+        } else {
+            idpInitResponse = Utils.sendGetRequest(String.format(IDP_INIT_SSO_URL, IS_DEFAULT_HTTPS_PORT,
+                    samlConfig.getApp().getArtifact()), USER_AGENT, httpClient);
+        }
+
         String redirectUrl = Utils.getRedirectUrl(idpInitResponse);
         Assert.assertTrue(redirectUrl.contains("/authenticationendpoint/login.do"), "Cannot find the login page.");
 
@@ -121,15 +131,8 @@ public class SAMLIdPInitiatedSSOTestCase extends AbstractSAMLSSOTestCase {
         HttpResponse samlRedirectResponse = Utils.sendGetRequest(samlRedirectUrl, USER_AGENT, httpClient);
 
         String samlRedirectPage = extractDataFromResponse(samlRedirectResponse);
-        Assert.assertTrue(samlRedirectPage.contains(String.format(SP_ACS_URL, SP_NAME)), "Cannot find the assertion " +
+        Assert.assertTrue(samlRedirectPage.contains(String.format(SP_ACS_URL, samlConfig.getApp().getArtifact())), "Cannot find the assertion " +
                 "consumer URL in the resulting page.");
-    }
-
-    private void addServiceProvider() throws Exception {
-
-        super.createApplication(samlConfig, SP_NAME);
-        super.ssoConfigServiceClient.addServiceProvider(super.createSsoSPDTOForIdPInit(samlConfig));
-        log.info("Service Provider " + samlConfig.getApp().getArtifact() + " created.");
     }
 
     private String getSessionDataKeyFromRedirectUrl(String redirectUrl) throws Exception {

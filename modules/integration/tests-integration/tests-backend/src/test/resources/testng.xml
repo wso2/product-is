@@ -18,12 +18,13 @@
         </classes>
     </test>
 
-    <test name="is-tests-default-configuration-sts" preserve-order="true" parallel="false" group-by-instances="true">
-        <!-- Active sts test case needs to run before passive sts test case-->
-        <classes>
-            <class name="org.wso2.identity.integration.test.sts.ActiveSTSTestCase"/>
-        </classes>
-    </test>
+    <!--Disabling since the WS-Trust functionality is provided as a connector and it does not exist in the product by default.-->
+    <!--<test name="is-tests-default-configuration-sts" preserve-order="true" parallel="false" group-by-instances="true">-->
+        <!--&lt;!&ndash; Active sts test case needs to run before passive sts test case&ndash;&gt;-->
+        <!--<classes>-->
+            <!--<class name="org.wso2.identity.integration.test.sts.ActiveSTSTestCase"/>-->
+        <!--</classes>-->
+    <!--</test>-->
 
     <test name="is-tests-default-configuration" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
@@ -33,6 +34,7 @@
             <class name="org.wso2.identity.integration.test.consent.SelfSignUpConsentTest"/>
             <class name="org.wso2.identity.integration.test.oauth2.OIDCDiscoveryTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OIDCMetadataTest"/>
+            <class name="org.wso2.identity.integration.test.oauth2.Oauth2JWKSEndpointTestCase"/>
             <!--<class name="org.wso2.identity.integration.test.identity.governance.AdminForcedPasswordResetTestCase"/>-->
             <class name="org.wso2.identity.integration.test.user.mgt.UserMgtTestCase"/>
             <class name="org.wso2.identity.integration.test.user.mgt.UserMgtUISecurityTestCase"/>
@@ -108,7 +110,10 @@
             <class name="org.wso2.identity.integration.test.oauth2.dcrm.api.OAuthDCRMTestCase"/>
             <class name="org.wso2.identity.integration.test.functions.library.mgt.FunctionLibraryManagementTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenRevocationWithRevokedAccessToken" />
+            <class name="org.wso2.identity.integration.test.oauth2.OAuth2BackChannelLogoutTestCase" />
+            <class name="org.wso2.identity.integration.test.oauth2.Oauth2OPIframeTestCase" />
             <class name="org.wso2.identity.integration.test.CrossProtocolLogoutTestCase"/>
+            <class name="org.wso2.identity.integration.test.saml.SAMLARTRESOLVETestCase"/>
         </classes>
     </test>
 
@@ -152,8 +157,10 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementSAMLSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementOAuthSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementPassiveStsSuccessTest"/>
-            <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementWSTrustTest"/>
-            <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationTemplateManagementSuccessTest"/>
+            <!--Disabling since the WS-Trust functionality is provided as a connector and it does not exist in the product by default.-->
+            <!--<class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementWSTrustTest"/>-->
+            <!--Disabling the test until the application templates are restructured.-->
+            <!--<class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationTemplateManagementSuccessTest"/>-->
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationTemplateManagementFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.script.library.v1.ScriptLibrarySuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.script.library.v1.ScriptLibraryFailureTest"/>
@@ -268,7 +275,7 @@
         <classes>
             <class name="org.wso2.identity.integration.test.saml.RegistryMountTestCase"/>
             <class name="org.wso2.identity.integration.test.provisioning.DBSeperationTestCase"/>
-            <!--<class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceAuthCodeGrantTestCase"/>-->
+            <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceAuthCodeGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCFileBasedSkipLoginConsentTestCase"/>
             <class name="org.wso2.identity.integration.test.scim.IDENTITY4776SCIMServiceWithOAuthTestCase" />
             <class name="org.wso2.identity.integration.test.identity.mgt.UserInformationRecoveryServiceTenantEmailUserTestCase"/>
@@ -277,6 +284,7 @@
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2PersistenceProcessorTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceJWTGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2TokenRenewalPerRequestTestCase"/>
+            <class name="org.wso2.identity.integration.test.oidc.OIDCPasswordGrantTest"/>
             <!--<class name="org.wso2.identity.integration.test.saml.SAMLECPSSOTestCase"/>-->
             <class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileAdminTestCase"/>
             <!-- TODO this test has a restart-->

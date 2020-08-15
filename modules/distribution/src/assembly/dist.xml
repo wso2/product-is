@@ -42,16 +42,12 @@
                 <exclude>features/org.wso2.carbon.identity.oauth2.validators.xacml.server_*/dropins/*.jar</exclude>
             </excludes>
         </fileSet>
+        <!-- Creates an empty directory -->
+        <fileSet>
+            <outputDirectory>wso2is-${pom.version}/repository/deployment/client/modules</outputDirectory>
+            <excludes>
+                <exclude>**/*</exclude>
+            </excludes>
+        </fileSet>
     </fileSets>
-    <dependencySets>
-        <dependencySet>
-            <outputDirectory>
-                wso2is-${pom.version}/repository/deployment/client/modules
-            </outputDirectory>
-            <includes>
-                <include>org.apache.rampart:rampart:mar
-                </include>
-            </includes>
-        </dependencySet>
-    </dependencySets>
 </assembly>

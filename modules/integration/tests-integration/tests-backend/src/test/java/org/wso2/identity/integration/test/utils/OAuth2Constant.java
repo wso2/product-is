@@ -77,6 +77,7 @@ public final class OAuth2Constant {
     public static final String AUTHORIZE_ENDPOINT_PLAYGROUND_NAME = "authorizeEndpoint";
     public static final String AUTHORIZE_PLAYGROUND_NAME = "authorize";
     public static final String SCOPE_PLAYGROUND_NAME = "scope";
+    public static final String AUTH_CODE_BODY_ELEMENT = "Authorization Code";
 
     public final static String WSO2_CLAIM_DIALECT_ROLE="http://wso2.org/claims/role";
     public static final String GRANT_TYPE_NAME = "grant_type";
@@ -97,6 +98,7 @@ public final class OAuth2Constant {
     public static final String OAUTH2_SCOPE = "scope";
     public static final String OAUTH2_NONCE = "nonce";
     public static final String INTRO_SPEC_ENDPOINT = "https://localhost:9853/oauth2/introspect";
+    public static final String TENANT_INTRO_SPEC_ENDPOINT = "https://localhost:9853/t/wso2.com/oauth2/introspect";
 
     public static final class PlaygroundAppPaths {
 

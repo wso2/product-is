@@ -27,11 +27,20 @@ import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.automation.engine.context.beans.ContextUrls;
+import org.wso2.carbon.automation.engine.context.beans.Tenant;
+import org.wso2.carbon.automation.engine.context.beans.User;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
-import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
+import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
+import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
+import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.DataExtractUtil.KeyValue;
@@ -48,8 +57,6 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT
 public class OAuth2ServiceImplicitGrantTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
 	private AuthenticatorClient logManger;
-	private String adminUsername;
-	private String adminPassword;
 	private String accessToken;
 	private String sessionDataKeyConsent;
 	private String sessionDataKey;
@@ -58,16 +65,44 @@ public class OAuth2ServiceImplicitGrantTestCase extends OAuth2ServiceAbstractInt
 	private String consumerSecret;
 
 	private CloseableHttpClient client;
+	private final String username;
+	private final String userPassword;
+	private final AutomationContext context;
+	private String backendURL;
+	private String sessionCookie;
+	private Tenant tenantInfo;
+	private User userInfo;
+	private LoginLogoutClient loginLogoutClient;
+	private ContextUrls identityContextUrls;
+	private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
+
+	@DataProvider(name = "configProvider")
+	public static Object[][] configProvider() {
+		return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}};
+	}
+
+	@Factory(dataProvider = "configProvider")
+	public OAuth2ServiceImplicitGrantTestCase(TestUserMode userMode) throws Exception {
+
+		super.init(userMode);
+		context = new AutomationContext("IDENTITY", userMode);
+		this.username = context.getContextTenant().getTenantAdmin().getUserName();
+		this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
+	}
 
 	@BeforeClass(alwaysRun = true)
 	public void testInit() throws Exception {
-		super.init(TestUserMode.SUPER_TENANT_USER);
+
+		backendURL = context.getContextUrls().getBackEndUrl();
+		loginLogoutClient = new LoginLogoutClient(context);
 		logManger = new AuthenticatorClient(backendURL);
-		adminUsername = userInfo.getUserName();
-		adminPassword = userInfo.getPassword();
-		logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
-				isServer.getSuperTenant().getTenantAdmin().getPassword(),
-				isServer.getInstance().getHosts().get("default"));
+		sessionCookie = logManger.login(username, userPassword, context.getInstance().getHosts().get("default"));
+		identityContextUrls = context.getContextUrls();
+		tenantInfo = context.getContextTenant();
+		userInfo = tenantInfo.getContextUser();
+		appMgtclient = new ApplicationManagementServiceClient(sessionCookie, backendURL, null);
+		adminClient = new OauthAdminClient(backendURL, sessionCookie);
+		remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
 
 		setSystemproperties();
 		client = HttpClientBuilder.create().build();
@@ -75,8 +110,9 @@ public class OAuth2ServiceImplicitGrantTestCase extends OAuth2ServiceAbstractInt
 
 	@AfterClass(alwaysRun = true)
 	public void atEnd() throws Exception {
-		deleteApplication();
-		removeOAuthApplicationData();
+
+		appMgtclient.deleteApplication(SERVICE_PROVIDER_NAME);
+		adminClient.removeOAuthApplicationData(consumerKey);
 		client.close();
 		logManger = null;
 		consumerKey = null;

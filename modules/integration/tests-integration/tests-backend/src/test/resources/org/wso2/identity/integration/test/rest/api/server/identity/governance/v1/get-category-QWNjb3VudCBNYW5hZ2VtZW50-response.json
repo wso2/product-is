@@ -1,0 +1,27 @@
+{
+  "name": "Account Management",
+  "connectors": [
+    {
+      "id": "YWNjb3VudC5kaXNhYmxlLmhhbmRsZXI",
+      "name": "account.disable.handler",
+      "category": "Account Management",
+      "friendlyName": "Account Disable",
+      "order": 0,
+      "subCategory": "DEFAULT",
+      "properties": [
+        {
+          "name": "account.disable.handler.enable",
+          "value": "false",
+          "displayName": "Enable account disabling",
+          "description": "Allow an administrative user to disable user accounts"
+        },
+        {
+          "name": "account.disable.handler.notification.manageInternally",
+          "value": "true",
+          "displayName": "Manage notification sending internally",
+          "description": "Disable, if the client application handles notification sending"
+        }
+      ]
+    }
+  ]
+}

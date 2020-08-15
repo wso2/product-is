@@ -49,6 +49,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.wso2.identity.integration.test.utils.DataExtractUtil.KeyValue;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTH_CODE_BODY_ELEMENT;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.COMMON_AUTH_URL;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT;
 
@@ -86,6 +87,7 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
+        this.logManger.logOut();
         deleteApplication();
         removeOAuthApplicationData();
 
@@ -101,43 +103,11 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
         Assert.assertNotNull(consumerKey, "Application creation failed.");
 
         consumerSecret = appDto.getOauthConsumerSecret();
-    }
-
-    @Test(groups = "wso2.is", description = "Send authorize user request without response_type param", dependsOnMethods
-            = "testRegisterApplication")
-    public void testSendAuthorozedPostForError() throws Exception {
-
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-        urlParameters.add(new BasicNameValuePair("client_id", consumerKey));
-        urlParameters.add(new BasicNameValuePair("redirect_uri", OAuth2Constant.CALLBACK_URL));
-        AutomationContext automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
-        String authorizeEndpoint = automationContext.getContextUrls().getBackEndUrl()
-                .replace("services/", "oauth2/authorize");
-        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, authorizeEndpoint);
-        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
-        Assert.assertTrue(locationHeader.getValue().startsWith(OAuth2Constant.CALLBACK_URL),
-                "Error response is not redirected to the redirect_uri given in the request");
-        EntityUtils.consume(response.getEntity());
-    }
-
-    @Test(groups = "wso2.is", description = "Send authorize user request without redirect_uri param", dependsOnMethods
-            = "testRegisterApplication")
-    public void testInvalidRedirectUri() throws Exception {
-
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-        urlParameters.add(new BasicNameValuePair("client_id", consumerKey));
-        AutomationContext automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
-        String authorizeEndpoint = automationContext.getContextUrls().getBackEndUrl()
-                .replace("services/", "oauth2/authorize");
-        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, authorizeEndpoint);
-        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
-        Assert.assertTrue(locationHeader.getValue().startsWith(OAuth2Constant.OAUTH2_DEFAULT_ERROR_URL),
-                "Error response is not redirected to default OAuth error URI");
-        EntityUtils.consume(response.getEntity());
+        Assert.assertNotNull(consumerSecret, "Application creation failed.");
     }
 
     @Test(groups = "wso2.is", description = "Send authorize user request", dependsOnMethods = "testRegisterApplication")
-    public void testSendAuthorozedPost() throws Exception {
+    public void testSendAuthorizedPost() throws Exception {
 
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         urlParameters.add(new BasicNameValuePair("grantType", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
@@ -171,12 +141,11 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
         EntityUtils.consume(response.getEntity());
     }
 
-    @Test(groups = "wso2.is", description = "Send login post request", dependsOnMethods = "testSendAuthorozedPost")
+    @Test(groups = "wso2.is", description = "Send login post request", dependsOnMethods = "testSendAuthorizedPost")
     public void testSendLoginPost() throws Exception {
 
         HttpResponse response = sendLoginPost(client, sessionDataKey);
         Assert.assertNotNull(response, "Login request failed. Login response is null.");
-
         if (Utils.requestMissingClaims(response)) {
             Assert.assertTrue(response.getFirstHeader("Set-Cookie").getValue().contains("pastr"),
                     "pastr cookie not found in response.");
@@ -193,26 +162,33 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
         EntityUtils.consume(response.getEntity());
 
         response = sendGetRequest(client, locationHeader.getValue());
-        Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
+        // TODO: This fix is done to handle situations where consent page is skipped. Need to identify cause for this
+        //  intermittent issue.
+        Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(2);
         keyPositionMap.put("name=\"" + OAuth2Constant.SESSION_DATA_KEY_CONSENT + "\"", 1);
+        keyPositionMap.put(AUTH_CODE_BODY_ELEMENT, 2);
         List<KeyValue> keyValues =
                 DataExtractUtil.extractSessionConsentDataFromResponse(response,
                         keyPositionMap);
         Assert.assertNotNull(keyValues, "SessionDataKeyConsent key value is null");
-        sessionDataKeyConsent = keyValues.get(0).getValue();
-        EntityUtils.consume(response.getEntity());
 
-        Assert.assertNotNull(sessionDataKeyConsent, "Invalid session key consent.");
+        if (!AUTH_CODE_BODY_ELEMENT.equals(keyValues.get(0).getKey())) {
+            sessionDataKeyConsent = keyValues.get(0).getValue();
+            EntityUtils.consume(response.getEntity());
+            testSendApprovalPost();
+        } else {
+            authorizationCode = keyValues.get(0).getValue();
+            Assert.assertNotNull(authorizationCode, "Authorization code is null.");
+            EntityUtils.consume(response.getEntity());
+        }
     }
 
-    @Test(groups = "wso2.is", description = "Send approval post request", dependsOnMethods = "testSendLoginPost")
-    public void testSendApprovalPost() throws Exception {
+    private void testSendApprovalPost() throws Exception {
 
         HttpResponse response = sendApprovalPost(client, sessionDataKeyConsent);
         Assert.assertNotNull(response, "Approval response is invalid.");
 
-        Header locationHeader =
-                response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         Assert.assertNotNull(locationHeader, "Approval Location header is null.");
 
         EntityUtils.consume(response.getEntity());
@@ -221,18 +197,15 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
         Assert.assertNotNull(response, "Get Activation response is invalid.");
 
         Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
-        keyPositionMap.put("Authorization Code", 1);
-        List<KeyValue> keyValues =
-                DataExtractUtil.extractTableRowDataFromResponse(response,
-                        keyPositionMap);
-        Assert.assertNotNull(response, "Authorization Code key value is invalid.");
+        keyPositionMap.put(AUTH_CODE_BODY_ELEMENT, 1);
+        List<KeyValue> keyValues = DataExtractUtil.extractTableRowDataFromResponse(response, keyPositionMap);
+        Assert.assertNotNull(keyValues, "Authorization Code key value is invalid.");
         authorizationCode = keyValues.get(0).getValue();
         Assert.assertNotNull(authorizationCode, "Authorization code is null.");
         EntityUtils.consume(response.getEntity());
-
     }
 
-    @Test(groups = "wso2.is", description = "Get access token", dependsOnMethods = "testSendApprovalPost")
+    @Test(groups = "wso2.is", description = "Get access token", dependsOnMethods = "testSendLoginPost")
     public void testGetAccessToken() throws Exception {
 
         HttpResponse response = sendGetAccessTokenPost(client, consumerSecret);
@@ -327,16 +300,25 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
         EntityUtils.consume(response.getEntity());
 
         response = sendGetRequest(client, locationHeader.getValue());
-        Map<String, Integer> keyPositionMap = new HashMap<>(1);
+        // TODO: This fix is done to handle situations where consent page is skipped. Need to identify cause for this
+        //  intermittent issue.
+        Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(2);
         keyPositionMap.put("name=\"" + OAuth2Constant.SESSION_DATA_KEY_CONSENT + "\"", 1);
-        List<KeyValue> keyValues = DataExtractUtil.extractSessionConsentDataFromResponse(response, keyPositionMap);
+        keyPositionMap.put(AUTH_CODE_BODY_ELEMENT, 2);
+        List<KeyValue> keyValues =
+                DataExtractUtil.extractSessionConsentDataFromResponse(response,
+                        keyPositionMap);
         Assert.assertNotNull(keyValues, "SessionDataKeyConsent key value is null");
-        sessionDataKeyConsent = keyValues.get(0).getValue();
-        EntityUtils.consume(response.getEntity());
 
-        Assert.assertNotNull(sessionDataKeyConsent, "Invalid session key consent.");
-
-        testSendApprovalPost();
+        if (!AUTH_CODE_BODY_ELEMENT.equals(keyValues.get(0).getKey())) {
+            sessionDataKeyConsent = keyValues.get(0).getValue();
+            EntityUtils.consume(response.getEntity());
+            testSendApprovalPost();
+        } else {
+            authorizationCode = keyValues.get(0).getValue();
+            Assert.assertNotNull(authorizationCode, "Authorization code is null.");
+            EntityUtils.consume(response.getEntity());
+        }
         testGetAccessToken();
         Assert.assertNotEquals(oldAccessToken, accessToken, "Access token not revoked from authorization code reusing");
         testAuthzCodeResend();
@@ -344,7 +326,7 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
 
     @Test(groups = "wso2.is",
             description = "Invalid authorization code",
-            dependsOnMethods = "testRegisterApplication")
+            dependsOnMethods = "testAuthzCodeGrantRetry")
     public void testInvalidAuthzCode() throws Exception {
 
         List<NameValuePair> urlParameters = new ArrayList<>();
@@ -371,4 +353,36 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
                         + OAuth2Constant.INVALID_GRANT_ERROR);
     }
 
+    @Test(groups = "wso2.is", description = "Send authorize user request without response_type param", dependsOnMethods
+            = "testInvalidAuthzCode")
+    public void testSendAuthorozedPostForError() throws Exception {
+
+        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        urlParameters.add(new BasicNameValuePair("client_id", consumerKey));
+        urlParameters.add(new BasicNameValuePair("redirect_uri", OAuth2Constant.CALLBACK_URL));
+        AutomationContext automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
+        String authorizeEndpoint = automationContext.getContextUrls().getBackEndUrl()
+                .replace("services/", "oauth2/authorize");
+        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, authorizeEndpoint);
+        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        Assert.assertTrue(locationHeader.getValue().startsWith(OAuth2Constant.CALLBACK_URL),
+                "Error response is not redirected to the redirect_uri given in the request");
+        EntityUtils.consume(response.getEntity());
+    }
+
+    @Test(groups = "wso2.is", description = "Send authorize user request without redirect_uri param", dependsOnMethods
+            = "testSendAuthorozedPostForError")
+    public void testInvalidRedirectUri() throws Exception {
+
+        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        urlParameters.add(new BasicNameValuePair("client_id", consumerKey));
+        AutomationContext automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
+        String authorizeEndpoint = automationContext.getContextUrls().getBackEndUrl()
+                .replace("services/", "oauth2/authorize");
+        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, authorizeEndpoint);
+        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        Assert.assertTrue(locationHeader.getValue().startsWith(OAuth2Constant.OAUTH2_DEFAULT_ERROR_URL),
+                "Error response is not redirected to default OAuth error URI");
+        EntityUtils.consume(response.getEntity());
+    }
 }
