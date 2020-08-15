@@ -335,7 +335,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		urlParameters.add(new BasicNameValuePair("username", userInfo.getUserName()));
 		urlParameters.add(new BasicNameValuePair("password", userInfo.getPassword()));
 		urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
-
+		log.info(">>> sendLoginPost:sessionDataKey: " + sessionDataKey);
 		HttpResponse response = sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.COMMON_AUTH_URL);
 
 		return response;

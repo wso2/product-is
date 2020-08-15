@@ -190,28 +190,30 @@ public class ApplicationMetadataPositiveTest extends ApplicationManagementBaseTe
         }
     }
 
-    @Test
-    public void testGetWSTrustMetadata() throws IOException {
-
-        Response response = getResponseOfGet(METADATA_API_BASE_PATH +
-                PATH_SEPARATOR + INBOUND_PROTOCOLS_PATH +
-                PATH_SEPARATOR + WS_TRUST_PATH);
-        response.then()
-                .log()
-                .ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK);
-        ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
-        WSTrustMetaData responseFound = jsonWriter.readValue(response.asString(), WSTrustMetaData.class);
-
-        if (this.tenant.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
-            Assert.assertEquals(responseFound, wsTrustMetaDataSuperTenant,
-                    "WS Trust Metadata returned from the API doesn't match.");
-        } else {
-            Assert.assertEquals(responseFound, wsTrustMetaDataTenant,
-                    "WS Trust Metadata returned from the API doesn't match.");
-        }
-    }
+    /* Disabling the test below since the WS-Trust functionality is provided
+       as a connector and it does not exist in the product by default.*/
+//    @Test
+//    public void testGetWSTrustMetadata() throws IOException {
+//
+//        Response response = getResponseOfGet(METADATA_API_BASE_PATH +
+//                PATH_SEPARATOR + INBOUND_PROTOCOLS_PATH +
+//                PATH_SEPARATOR + WS_TRUST_PATH);
+//        response.then()
+//                .log()
+//                .ifValidationFails()
+//                .assertThat()
+//                .statusCode(HttpStatus.SC_OK);
+//        ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+//        WSTrustMetaData responseFound = jsonWriter.readValue(response.asString(), WSTrustMetaData.class);
+//
+//        if (this.tenant.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+//            Assert.assertEquals(responseFound, wsTrustMetaDataSuperTenant,
+//                    "WS Trust Metadata returned from the API doesn't match.");
+//        } else {
+//            Assert.assertEquals(responseFound, wsTrustMetaDataTenant,
+//                    "WS Trust Metadata returned from the API doesn't match.");
+//        }
+//    }
 
     @Test
     public void testGetAdaptiveAuthTemplates() throws IOException, JSONException {

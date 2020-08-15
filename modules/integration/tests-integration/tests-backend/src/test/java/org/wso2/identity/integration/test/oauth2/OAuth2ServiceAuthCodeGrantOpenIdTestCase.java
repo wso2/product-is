@@ -32,15 +32,25 @@ import org.json.simple.JSONValue;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.automation.engine.context.beans.ContextUrls;
+import org.wso2.carbon.automation.engine.context.beans.Tenant;
+import org.wso2.carbon.automation.engine.context.beans.User;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationRequestDTO;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationRequestDTO_OAuth2AccessToken;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationResponseDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
+import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.oauth.Oauth2TokenValidationClient;
+import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
+import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
@@ -60,13 +70,11 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
 
     private Oauth2TokenValidationClient oAuth2TokenValidationClient;
     private AuthenticatorClient logManger;
-
-    private String adminUsername;
-    private String adminPassword;
     private String accessToken;
     private String sessionDataKeyConsent;
     private String sessionDataKey;
     private String authorizationCode;
+    AutomationContext context;
 
     private String consumerKey;
     private String consumerSecret;
@@ -81,22 +89,41 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
 
     private List<NameValuePair> consentParameters = new ArrayList<>();
     private CookieStore cookieStore = new BasicCookieStore();
+    private final String username;
+    private final String userPassword;
+
+    @DataProvider(name = "configProvider")
+    public static Object[][] configProvider() {
+        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}};
+    }
+
+    @Factory(dataProvider = "configProvider")
+    public OAuth2ServiceAuthCodeGrantOpenIdTestCase(TestUserMode userMode) throws Exception {
+
+        context = new AutomationContext("IDENTITY", userMode);
+        this.username = context.getContextTenant().getTenantAdmin().getUserName();
+        this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
+    }
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
-        super.init(TestUserMode.SUPER_TENANT_USER);
 
+        backendURL = context.getContextUrls().getBackEndUrl();
+        loginLogoutClient = new LoginLogoutClient(context);
         logManger = new AuthenticatorClient(backendURL);
-        adminUsername = userInfo.getUserName();
-        adminPassword = userInfo.getPassword();
-        String sessionIndex = logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
-                isServer.getSuperTenant().getTenantAdmin().getPassword(),
-                isServer.getInstance().getHosts().get("default"));
-        oAuth2TokenValidationClient = new Oauth2TokenValidationClient(backendURL, sessionIndex);
+        sessionCookie = logManger.login(username, userPassword, context.getInstance().getHosts().get("default"));
+        identityContextUrls = context.getContextUrls();
+        tenantInfo = context.getContextTenant();
+        userInfo = tenantInfo.getContextUser();
+        appMgtclient = new ApplicationManagementServiceClient(sessionCookie, backendURL, null);
+        adminClient = new OauthAdminClient(backendURL, sessionCookie);
+        remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
+        oAuth2TokenValidationClient = new Oauth2TokenValidationClient(backendURL, sessionCookie);
         client = new DefaultHttpClient();
         client.setCookieStore(cookieStore);
         setSystemproperties();
-        remoteUSMServiceClient.addUser(USERNAME, PASSWORD, new String[]{"admin"}, getUserClaims(), "default", true);
+        remoteUSMServiceClient.addUser(USERNAME, PASSWORD, new String[]{"admin"},
+                getUserClaims(), "default", true);
     }
 
     @AfterClass(alwaysRun = true)
@@ -302,7 +329,6 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
         }
     }
 
-
     @Test(groups = "wso2.is", description = "Validate Authorization Context of jwt Token", dependsOnMethods =
             "testGetAccessToken")
     public void testAuthorizationContextValidateJwtToken() throws Exception {
@@ -342,7 +368,6 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
         return response;
     }
 
-
     protected ClaimValue[] getUserClaims() {
         ClaimValue[] claimValues = new ClaimValue[1];
 
@@ -353,5 +378,4 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
 
         return claimValues;
     }
-
 }

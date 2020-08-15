@@ -33,6 +33,7 @@ public class OIDCMetaData  {
     private MetadataProperty idTokenEncryptionMethod;
     private MetadataProperty scopeValidators;
     private MetadataProperty accessTokenType;
+    private MetadataProperty accessTokenBindingType;
 
     /**
      **/
@@ -196,7 +197,23 @@ public class OIDCMetaData  {
         this.accessTokenType = accessTokenType;
     }
 
+    /**
+     **/
+    public OIDCMetaData accessTokenBindingType(MetadataProperty accessTokenBindingType) {
 
+        this.accessTokenBindingType = accessTokenBindingType;
+        return this;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("accessTokenBindingType")
+    @Valid
+    public MetadataProperty getAccessTokenBindingType() {
+        return accessTokenBindingType;
+    }
+    public void setAccessTokenBindingType(MetadataProperty accessTokenBindingType) {
+        this.accessTokenBindingType = accessTokenBindingType;
+    }
 
     @Override
     public boolean equals(java.lang.Object o) {
@@ -216,12 +233,13 @@ public class OIDCMetaData  {
                 Objects.equals(this.idTokenEncryptionAlgorithm, oiDCMetaData.idTokenEncryptionAlgorithm) &&
                 Objects.equals(this.idTokenEncryptionMethod, oiDCMetaData.idTokenEncryptionMethod) &&
                 Objects.equals(this.scopeValidators, oiDCMetaData.scopeValidators) &&
-                Objects.equals(this.accessTokenType, oiDCMetaData.accessTokenType);
+                Objects.equals(this.accessTokenType, oiDCMetaData.accessTokenType) &&
+                Objects.equals(this.accessTokenBindingType, oiDCMetaData.accessTokenBindingType);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(allowedGrantTypes, defaultUserAccessTokenExpiryTime, defaultApplicationAccessTokenExpiryTime, defaultRefreshTokenExpiryTime, defaultIdTokenExpiryTime, idTokenEncryptionAlgorithm, idTokenEncryptionMethod, scopeValidators, accessTokenType);
+        return Objects.hash(allowedGrantTypes, defaultUserAccessTokenExpiryTime, defaultApplicationAccessTokenExpiryTime, defaultRefreshTokenExpiryTime, defaultIdTokenExpiryTime, idTokenEncryptionAlgorithm, idTokenEncryptionMethod, scopeValidators, accessTokenType, accessTokenBindingType);
     }
 
     @Override
@@ -239,6 +257,7 @@ public class OIDCMetaData  {
         sb.append("    idTokenEncryptionMethod: ").append(toIndentedString(idTokenEncryptionMethod)).append("\n");
         sb.append("    scopeValidators: ").append(toIndentedString(scopeValidators)).append("\n");
         sb.append("    accessTokenType: ").append(toIndentedString(accessTokenType)).append("\n");
+        sb.append("    accessTokenBindingType: ").append(toIndentedString(accessTokenBindingType)).append("\n");
         sb.append("}");
         return sb.toString();
     }
@@ -255,4 +274,3 @@ public class OIDCMetaData  {
         return o.toString().replace("\n", "\n");
     }
 }
-

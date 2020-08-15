@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>wso2is-identity-samples-authenticators</artifactId>
-        <version>5.11.0-m24-SNAPSHOT</version>
+        <version>5.11.0-m31-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -52,7 +52,7 @@
             <artifactId>jstl</artifactId>
         </dependency>
         <dependency>
-            <groupId>commons-codec.wso2</groupId>
+            <groupId>org.wso2.orbit.commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
         </dependency>
         <dependency>
