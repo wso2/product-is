@@ -2115,7 +2115,7 @@
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>1.0.122</identity.api.dispatcher.version>
 
-        <identity.agent.sso.version>5.4.0</identity.agent.sso.version>
+        <identity.agent.sso.version>5.5.0</identity.agent.sso.version>
         <identity.tool.samlsso.validator.version>5.4.0</identity.tool.samlsso.validator.version>
         <identity.app.authz.xacml.version>2.2.1</identity.app.authz.xacml.version>
         <identity.oauth.addons.version>2.3.3</identity.oauth.addons.version>
