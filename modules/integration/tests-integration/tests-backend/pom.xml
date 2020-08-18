@@ -296,7 +296,7 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.wso2.is</groupId>
+                                    <groupId>org.wso2.samples.is</groupId>
                                     <artifactId>org.wso2.sample.is.sso.agent</artifactId>
                                     <type>war</type>
                                     <overWrite>false</overWrite>
@@ -316,7 +316,7 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.wso2.is</groupId>
+                                    <groupId>org.wso2.samples.is</groupId>
                                     <artifactId>playground2</artifactId>
                                     <type>war</type>
                                     <overWrite>false</overWrite>
@@ -336,7 +336,7 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.wso2.is</groupId>
+                                    <groupId>org.wso2.samples.is</groupId>
                                     <artifactId>PassiveSTSSampleApp</artifactId>
                                     <type>war</type>
                                     <overWrite>false</overWrite>
@@ -356,9 +356,8 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.wso2.is</groupId>
+                                    <groupId>org.wso2.samples.is</groupId>
                                     <artifactId>org.wso2.carbon.identity.sample.extension.auth.endpoint</artifactId>
-                                    <version>${project.version}</version>
                                     <type>war</type>
                                     <overWrite>false</overWrite>
                                     <outputDirectory>
@@ -378,9 +377,8 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>org.wso2.is</groupId>
+                                    <groupId>org.wso2.samples.is</groupId>
                                     <artifactId>org.wso2.carbon.identity.sample.extension.authenticators</artifactId>
-                                    <version>${project.version}</version>
                                     <type>jar</type>
                                     <overWrite>false</overWrite>
                                     <outputDirectory>
@@ -866,22 +864,33 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.wso2.is</groupId>
+            <groupId>org.wso2.samples.is</groupId>
             <artifactId>org.wso2.sample.is.sso.agent</artifactId>
-            <version>${project.version}</version>
+            <version>${samples.is.version}</version>
             <type>war</type>
         </dependency>
         <dependency>
-            <groupId>org.wso2.is</groupId>
+            <groupId>org.wso2.samples.is</groupId>
             <artifactId>playground2</artifactId>
-            <version>${project.version}</version>
+            <version>${samples.is.version}</version>
             <type>war</type>
         </dependency>
         <dependency>
-            <groupId>org.wso2.is</groupId>
+            <groupId>org.wso2.samples.is</groupId>
             <artifactId>PassiveSTSSampleApp</artifactId>
-            <version>${project.version}</version>
+            <version>${samples.is.version}</version>
             <type>war</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.samples.is</groupId>
+            <artifactId>org.wso2.carbon.identity.sample.extension.auth.endpoint</artifactId>
+            <version>${samples.is.version}</version>
+            <type>war</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.samples.is</groupId>
+            <artifactId>org.wso2.carbon.identity.sample.extension.authenticators</artifactId>
+            <version>${samples.is.version}</version>
         </dependency>
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
