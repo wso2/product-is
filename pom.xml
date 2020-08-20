@@ -47,6 +47,7 @@
         <module>modules/samples</module>
         <module>modules/tests-utils</module>
         <module>modules/integration</module>
+        <module>org.wso2.identity.cypress.integration.test</module>
     </modules>
 
     <licenses>
@@ -488,6 +489,11 @@
                 <inherited>false</inherited>
                 <artifactId>maven-clean-plugin</artifactId>
                 <version>2.1</version>
+            </plugin>
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>1.6</version>
             </plugin>
         </plugins>
 

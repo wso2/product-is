@@ -1,0 +1,7 @@
+{
+  "video": false,
+  "screenshots": false,
+  "reporter": "cypress-mochawesome-reporter",
+  "testFiles": "**/*.spec.js",
+  "pageLoadTimeout": 300000
+}

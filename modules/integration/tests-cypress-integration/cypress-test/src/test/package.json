@@ -1,0 +1,42 @@
+{
+  "name": "org.wso2.identity.cypress.integration.test",
+  "version": "1.0.0",
+  "description": "This is cypress integration test suite for Identity Server WSO2.",
+  "main": "index.js",
+  "scripts": {
+    "delete:reports": "rm -rf cypress/reports && rm -rf cypress/results && rm -rf cypress/screenshots",
+    "prereport": "npm run delete:reports",
+    "scripts": "npx cypress run --headless",
+    "test": "npm run scripts",
+    "cypress:report": "generate-mochawesome-report",
+    "lint": "eslint --ext .js,.ts ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wso2/product-is.git"
+  },
+  "keywords": [
+    "wso2-identity-cypress-tests"
+  ],
+  "author": "wso2-identity-server",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wso2/product-is/issues"
+  },
+  "homepage": "https://github.com/wso2/product-is#readme",
+  "dependencies": {
+    "google-auth-library": "^6.0.0",
+    "googleapis": "^27.0.0",
+    "lodash.unescape": "^4.0.1",
+    "pify": "^5.0.0",
+    "util": "^0.12.2",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "cypress": "^5.0.0",
+    "cypress-mochawesome-reporter": "^1.0.2",
+    "eslint": "^7.4.0",
+    "eslint-plugin-cypress": "^2.11.1",
+    "eslint-plugin-import": "^2.22.0"
+  }
+}
