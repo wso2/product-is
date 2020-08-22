@@ -1,0 +1,7 @@
+[
+  {
+    "path": "/randomInvalidPath",
+    "value": "true",
+    "operation": "REPLACE"
+  }
+]

@@ -5,7 +5,9 @@
     "userAccessTokenExpiryInSeconds": 3600,
     "bindingType" : "cookie"
   },
-  "allowedOrigins": [],
+  "allowedOrigins": [
+    "http://wso2.is"
+  ],
   "callbackURLs": [
     "http://localhost:8080/playground2/oauth2client"
   ],

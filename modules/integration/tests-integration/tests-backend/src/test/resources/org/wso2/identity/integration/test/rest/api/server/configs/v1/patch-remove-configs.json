@@ -1,5 +1,6 @@
 [
-  {"path" : "/homeRealmIdentifiers/1",
+  {
+    "path": "/homeRealmIdentifiers/1",
     "operation": "REMOVE"
   }
 ]
