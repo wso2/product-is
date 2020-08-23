@@ -2022,13 +2022,13 @@
         <carbon.consent.mgt.version>2.2.10</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.4.27</identity.governance.version>
+        <identity.governance.version>1.4.31</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.5.0</identity.carbon.auth.saml2.version>
         <identity.carbon.auth.mutual.ssl.version>5.4.0</identity.carbon.auth.mutual.ssl.version>
         <identity.carbon.auth.iwa.version>5.4.1</identity.carbon.auth.iwa.version>
-        <identity.carbon.auth.rest.version>1.4.11</identity.carbon.auth.rest.version>
+        <identity.carbon.auth.rest.version>1.4.12</identity.carbon.auth.rest.version>
 
 
         <!-- Identity Inbound Versions   -->
@@ -2047,19 +2047,19 @@
 
         <!-- Identity User Versions -->
         <identity.user.account.association.version>5.4.0</identity.user.account.association.version>
-        <identity.user.ws.version>5.4.0</identity.user.ws.version>
+        <identity.user.ws.version>5.4.1</identity.user.ws.version>
 
         <!-- Identity Userstore Versions -->
         <identity.userstore.ldap.version>6.2.1</identity.userstore.ldap.version>
         <identity.userstore.remote.version>5.2.5</identity.userstore.remote.version>
 
         <!-- Identity Data Publisher Versions -->
-        <identity.data.publisher.authentication.version>5.3.15</identity.data.publisher.authentication.version>
+        <identity.data.publisher.authentication.version>5.3.16</identity.data.publisher.authentication.version>
         <identity.data.publisher.oauth.version>1.3.0</identity.data.publisher.oauth.version>
         <identity.data.publisher.audit.version>1.3.0</identity.data.publisher.audit.version>
 
         <!-- Identity Event Handler Versions -->
-        <identity.event.handler.account.lock.version>1.4.4</identity.event.handler.account.lock.version>
+        <identity.event.handler.account.lock.version>1.4.5</identity.event.handler.account.lock.version>
         <identity.event.handler.notification.version>1.3.8</identity.event.handler.notification.version>
 
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
@@ -2098,7 +2098,7 @@
         <identity.local.auth.api.version>2.4.0</identity.local.auth.api.version>
 
         <!-- OAuth2 Grant Type extensions -->
-        <identity.oauth2.jwt.bearer.grant.version>1.0.26</identity.oauth2.jwt.bearer.grant.version>
+        <identity.oauth2.jwt.bearer.grant.version>1.0.28</identity.oauth2.jwt.bearer.grant.version>
 
         <!--SAML Metadata-->
         <identity.metadata.saml.version>1.4.0</identity.metadata.saml.version>
