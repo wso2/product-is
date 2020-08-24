@@ -33,6 +33,9 @@ import org.wso2.carbon.user.api.UserStoreException;
 
 import java.util.List;
 
+/**
+ * Client for the template management service.
+ */
 public class TemplateManagementServiceClient {
 
     private String loggedInUser;
