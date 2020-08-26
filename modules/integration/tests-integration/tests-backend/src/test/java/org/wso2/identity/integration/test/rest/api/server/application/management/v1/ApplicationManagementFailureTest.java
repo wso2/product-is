@@ -49,8 +49,6 @@ import static org.wso2.identity.integration.test.rest.api.server.application.man
 public class ApplicationManagementFailureTest extends ApplicationManagementBaseTest {
 
     private static final String INVALID_APPLICATION_ID = "xxx";
-    private static final String USER_PORTAL = "User Portal";
-
     private Set<String> createdApps = new HashSet<>();
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
