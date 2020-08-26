@@ -196,5 +196,9 @@ public class ConfigSuccessTest extends ConfigTestBase {
                 .body("provisioning", notNullValue())
                 .body("provisioning.inbound.scim.provisioningUserstore", equalTo("PRIMARY"))
                 .body("provisioning.inbound.scim.enableProxyMode", equalTo(false));
+
+        // Clearing added inbound scim config.
+        String defaultBody = readResource("default-scim-configs.json");
+        getResponseOfPut(CONFIGS_INBOUND_SCIM_API_BASE_PATH, defaultBody);
     }
 }
