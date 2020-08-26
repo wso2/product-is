@@ -42,7 +42,7 @@ import static org.wso2.identity.integration.test.rest.api.server.application.man
  */
 public class ApplicationManagementSuccessTest extends ApplicationManagementBaseTest {
 
-    private static final String USER_PORTAL = "User Portal";
+    private static final String MY_ACCOUNT = "My Account";
     private static final String CREATED_APP_NAME = "My SAMPLE APP";
     private String createdAppId;
 
@@ -70,11 +70,11 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
                 "Default resident service provider '" + ApplicationConstants.LOCAL_SP + "' is not listed by the API");
 
         if (StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            // Check whether the default "User Portal" app exists.
+            // Check whether the default "My Account" app exists.
             Assert.assertTrue(listResponse.getApplications()
                             .stream()
-                            .anyMatch(appBasicInfo -> appBasicInfo.getName().equals(USER_PORTAL)),
-                    "Default application 'User Portal' is not listed by the API.");
+                            .anyMatch(appBasicInfo -> appBasicInfo.getName().equals(MY_ACCOUNT)),
+                    "Default application 'My Account' is not listed by the API.");
         }
     }
 
