@@ -500,13 +500,13 @@
                                 </unzip>
                                 <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/accountrecoveryendpoint.war" />
 
-                                <!-- Explode the user-portal.war -->
-                                <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/user-portal">
+                                <!-- Explode the myaccount.war -->
+                                <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/myaccount">
                                     <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
-                                        <include name="user-portal.war" />
+                                        <include name="myaccount.war" />
                                     </fileset>
                                 </unzip>
-                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/user-portal.war" />
+                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/myaccount.war" />
 
                                 <!-- Explode the api#health-check#v1.0.war -->
                                 <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#health-check#v1.0">
