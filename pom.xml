@@ -44,7 +44,6 @@
         <module>modules/oauth2-grant-types</module>
         <module>modules/distribution</module>
         <module>modules/styles</module>
-        <module>modules/samples</module>
         <module>modules/tests-utils</module>
         <module>modules/integration</module>
     </modules>
@@ -2178,6 +2177,7 @@
         <maven.checkstyle.plugin.version>3.1.1</maven.checkstyle.plugin.version>
 
         <!-- Sample dependency Versions -->
+        <samples.is.version>4.3.5</samples.is.version>
         <sevlet.api.version>2.5</sevlet.api.version>
         <jsp.api.version>2.0</jsp.api.version>
         <neethi.wso2.version>2.0.4.wso2v5</neethi.wso2.version>
