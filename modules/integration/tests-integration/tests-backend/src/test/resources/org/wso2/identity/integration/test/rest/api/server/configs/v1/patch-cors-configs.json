@@ -1,0 +1,32 @@
+[
+  {
+    "path": "/allowSubdomains",
+    "value": "true",
+    "operation": "REPLACE"
+  },
+  {
+    "path": "/supportedMethods",
+    "value": "POST",
+    "operation": "ADD"
+  },
+  {
+    "path": "/supportedHeaders",
+    "value": "Content-Type",
+    "operation": "ADD"
+  },
+  {
+    "path": "/exposedHeaders",
+    "value": "X-Custom-1",
+    "operation": "ADD"
+  },
+  {
+    "path": "/supportsCredentials",
+    "value": "false",
+    "operation": "REPLACE"
+  },
+  {
+    "path": "/maxAge",
+    "value": "3600",
+    "operation": "REPLACE"
+  }
+]
