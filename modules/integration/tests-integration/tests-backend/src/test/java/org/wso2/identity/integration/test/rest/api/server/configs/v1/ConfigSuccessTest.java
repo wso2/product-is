@@ -32,6 +32,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import java.io.IOException;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.core.IsNull.notNullValue;
 
 /**
@@ -115,8 +116,7 @@ public class ConfigSuccessTest extends ConfigTestBase {
     @Test(dependsOnMethods = {"testGetAuthenticators"})
     public void testGetConfigs() throws Exception {
 
-        Response response = getResponseOfGet(
-                CONFIGS_API_BASE_PATH);
+        Response response = getResponseOfGet(CONFIGS_API_BASE_PATH);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -125,15 +125,15 @@ public class ConfigSuccessTest extends ConfigTestBase {
                 .body("rememberMePeriod", notNullValue())
                 .body("homeRealmIdentifiers", notNullValue())
                 .body("provisioning", notNullValue())
-                .body("authenticators", notNullValue());
+                .body("authenticators", notNullValue())
+                .body("cors", notNullValue());
     }
 
     @Test(dependsOnMethods = {"testGetConfigs"})
     public void testPatchConfigs() throws Exception {
 
         String body = readResource("patch-replace-configs.json");
-        Response response = getResponseOfPatch(
-                CONFIGS_API_BASE_PATH, body);
+        Response response = getResponseOfPatch(CONFIGS_API_BASE_PATH, body);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -147,8 +147,7 @@ public class ConfigSuccessTest extends ConfigTestBase {
                 .body("idleSessionTimeoutPeriod", equalTo("20"));
 
         body = readResource("patch-add-configs.json");
-        response = getResponseOfPatch(
-                CONFIGS_API_BASE_PATH, body);
+        response = getResponseOfPatch(CONFIGS_API_BASE_PATH, body);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -162,8 +161,7 @@ public class ConfigSuccessTest extends ConfigTestBase {
                 .body("homeRealmIdentifiers.contains(\"test-realm\")", equalTo(true));
 
         body = readResource("patch-remove-configs.json");
-        response = getResponseOfPatch(
-                CONFIGS_API_BASE_PATH, body);
+        response = getResponseOfPatch(CONFIGS_API_BASE_PATH, body);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -181,7 +179,6 @@ public class ConfigSuccessTest extends ConfigTestBase {
     public void testUpdateScimConfigs() throws Exception {
 
         String body = readResource("update-scim-configs.json");
-
         Response response = getResponseOfPut(CONFIGS_INBOUND_SCIM_API_BASE_PATH, body);
         response.then()
                 .log().ifValidationFails()
@@ -200,5 +197,46 @@ public class ConfigSuccessTest extends ConfigTestBase {
         // Clearing added inbound scim config.
         String defaultBody = readResource("default-scim-configs.json");
         getResponseOfPut(CONFIGS_INBOUND_SCIM_API_BASE_PATH, defaultBody);
+    }
+
+    @Test(priority = 1)
+    public void testGetCORSConfigs() throws Exception {
+
+        Response response = getResponseOfGet(CORS_CONFIGS_API_BASE_PATH);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("allowGenericHttpRequests", notNullValue())
+                .body("allowSubdomains", notNullValue())
+                .body("supportedMethods", notNullValue())
+                .body("supportedHeaders", notNullValue())
+                .body("exposedHeaders", notNullValue())
+                .body("supportsCredentials", notNullValue())
+                .body("maxAge", notNullValue());
+    }
+
+    @Test(priority = 2)
+    public void testPatchCORSConfigs() throws Exception {
+
+        String body = readResource("patch-cors-configs.json");
+        Response response = getResponseOfPatch(CORS_CONFIGS_API_BASE_PATH, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK);
+
+        response = getResponseOfGet(CORS_CONFIGS_API_BASE_PATH);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("allowGenericHttpRequests", equalTo(true))
+                .body("allowSubdomains", equalTo(true))
+                .body("supportedMethods", hasItem("POST"))
+                .body("supportedHeaders", hasItem("Content-Type"))
+                .body("exposedHeaders", hasItem("X-Custom-1"))
+                .body("supportsCredentials", equalTo(false))
+                .body("maxAge", equalTo(3600));
     }
 }

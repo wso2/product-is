@@ -96,4 +96,28 @@ public class ConfigFailureTest extends ConfigTestBase {
                 getResponseOfGetWithoutAuthentication(CONFIGS_AUTHENTICATOR_API_BASE_PATH, "application/json");
         validateHttpStatusCode(response, 401);
     }
+
+    @Test
+    public void testPatchCORSConfigsWithInvalidPath() throws Exception {
+
+        String body = readResource("patch-cors-configs-invalid-path.json");
+        Response response = getResponseOfPatch(CORS_CONFIGS_API_BASE_PATH, body);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "CNF-60003");
+    }
+
+    @Test
+    public void testPatchCORSConfigsWithInvalidValue() throws Exception {
+
+        String body = readResource("patch-cors-configs-invalid-value.json");
+        Response response = getResponseOfPatch(CORS_CONFIGS_API_BASE_PATH, body);
+        validateErrorResponse(response, HttpStatus.SC_INTERNAL_SERVER_ERROR, "SE-50000");
+    }
+
+    @Test
+    public void testPatchCORSConfigsWithInvalidOperation() throws Exception {
+
+        String body = readResource("patch-cors-configs-invalid-operation.json");
+        Response response = getResponseOfPatch(CORS_CONFIGS_API_BASE_PATH, body);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "CNF-60003", "Unsupported patch operation");
+    }
 }
