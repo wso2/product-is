@@ -45,7 +45,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.testng.Assert.assertEquals;
@@ -76,6 +75,7 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
     private static final Log log = LogFactory.getLog(SelfRegistrationTestCase.class);
 
     private static final String REGISTER_REQUESTS_LOCATION = "registration.requests.location";
+    private static final long THREAD_WAIT_TIME = 5000;
 
     private static JSONParser parser = new JSONParser();
 
@@ -302,7 +302,8 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_ACCEPTED,
                 "User confirmation failed. Confirmation code: " + confirmationCode + " Request Object: "
                         + registerRequestJSON.toJSONString());
-
+        // To sync the local caches after validation of confirmation code request sent
+        Thread.sleep(THREAD_WAIT_TIME);
         ClaimValue[] claimValues = userStoreManagerServiceClient
                 .getUserClaimValuesForClaims(((JSONObject) registerRequestJSON.get(USER)).get(USERNAME).toString(),
                         new String[] { ACCOUNT_LOCK_CLAIM }, "default");
