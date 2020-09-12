@@ -124,5 +124,4 @@ public class OIDCMetadataTest extends ISIntegrationTest {
         HttpResponse response = client.execute(getRequest);
         return response;
     }
-
 }
