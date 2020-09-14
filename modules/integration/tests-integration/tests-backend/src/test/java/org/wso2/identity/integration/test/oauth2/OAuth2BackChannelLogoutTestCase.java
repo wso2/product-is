@@ -152,7 +152,7 @@ public class OAuth2BackChannelLogoutTestCase extends OAuth2ServiceAbstractIntegr
         if (isCheckLogoutConfirmation) {
             Assert.assertNotNull(sessionDataKey, "Back channel logout failed for OIDC.");
         } else {
-            Assert.assertNotNull(sessionDataKey, "sessionDataKey is null for ." + OIDC_APP_NAME);
+            Assert.assertNotNull(sessionDataKey, "SessionDataKey is null for for OIDC app: " + OIDC_APP_NAME);
         }
         EntityUtils.consume(response.getEntity());
     }
