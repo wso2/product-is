@@ -81,15 +81,17 @@ public class ResidentIDPConfigsTestCase extends ISIntegrationTest {
         idpMgtServiceClient = new IdentityProviderMgtServiceClient(cookie, isServer.getContextUrls().getBackEndUrl(),
                 configContext);
         IdentityProvider idProvider = idpMgtServiceClient.getResidentIdP();
+        log.info("Retrieving resident identity provider");
         fedAuthConfigMap = getFedAuthConfigMap(idProvider);
         provisioningConfigMap = getProvisioningConfigMap(idProvider);
     }
 
     @DataProvider(name = "federatedAuthConfigURLProvider")
     public static Object[][] federatedAuthConfigURLProvider() {
+
         return new Object[][]{
                 {"carbon.super", "OAuth1AccessTokenUrl", "https://localhost:9853/oauth/access-token",
-                        "Expected OAuth10a Access Token URL is not found "},
+                        "Expected OAuth10a Access Token URL is not found"},
                 {"carbon.super", "OAuth1AuthorizeUrl", "https://localhost:9853/oauth/authorize-url",
                         "Expected OAuth10a Authorize URL is not found"},
                 {"carbon.super", "OAuth1RequestTokenUrl", "https://localhost:9853/oauth/request-token",
@@ -126,7 +128,8 @@ public class ResidentIDPConfigsTestCase extends ISIntegrationTest {
                         "Expected Dynamic Client Registration Endpoint URL is not found"},
                 {"carbon.super", "OIDCDiscoveryEPUrl", "https://localhost:9853/oauth2/oidcdiscovery",
                         "Expected Dynamic Client Registration Endpoint URL is not found"},
-                {"carbon.super", "OAuth2JWKSPage", "https://localhost:9853/oauth2/jwks", "Expected is not found"},
+                {"carbon.super", "OAuth2JWKSPage", "https://localhost:9853/oauth2/jwks",
+                        "Expected OAuth2 JWKS Page is not found"},
                 {"carbon.super", "OAuth2TokenEPUrl", "https://localhost:9853/oauth2/token",
                         "Expected Token Endpoint URL is not found"},
                 {"carbon.super", "OAuth2UserInfoEPUrl", "https://localhost:9853/oauth2/userinfo",
@@ -168,7 +171,7 @@ public class ResidentIDPConfigsTestCase extends ISIntegrationTest {
                 {"wso2.com", "OIDCDiscoveryEPUrl", "https://localhost:9853/t/wso2.com/oauth2/oidcdiscovery",
                         "Expected Dynamic Client Registration Endpoint URL is not found in the tenant mode"},
                 {"wso2.com", "OAuth2JWKSPage", "https://localhost:9853/t/wso2.com/oauth2/jwks",
-                        "Expected is not found in the tenant mode"},
+                        "Expected OAuth2 JWKS Page is not found in the tenant mode"},
                 {"wso2.com", "OAuth2TokenEPUrl", "https://localhost:9853/oauth2/token",
                         "Expected Token Endpoint URL is not found in the tenant mode"},
                 {"wso2.com", "OAuth2UserInfoEPUrl", "https://localhost:9853/oauth2/userinfo",
@@ -178,6 +181,7 @@ public class ResidentIDPConfigsTestCase extends ISIntegrationTest {
 
     @DataProvider(name = "provisioningConfigURLProvider")
     public static Object[][] provisioningConfigURLProvider() {
+
         return new Object[][]{
                 {"carbon.super", "scimGroupEndpoint", "https://localhost:9853/wso2/scim/Groups",
                         "Expected SCIM Group Endpoint is not found"},
@@ -203,6 +207,7 @@ public class ResidentIDPConfigsTestCase extends ISIntegrationTest {
     public void testResidentIdPAuthenticationConfigs(String configBindTenant, String endpoint,
                                                      String expectedURL, String errorMessage) {
 
+        log.info("Test resident IdP authentication configs URLs in tenant:" + activeTenant);
         if (SUPER_TENANT.equals(activeTenant) && SUPER_TENANT.equals(configBindTenant)) {
             Assert.assertEquals(fedAuthConfigMap.get(endpoint), expectedURL, errorMessage);
         }
@@ -217,6 +222,7 @@ public class ResidentIDPConfigsTestCase extends ISIntegrationTest {
     public void testResidentIdPProvisioningConfigs(String configBindTenant, String endpoint, String expectedURL,
                                                    String errorMessage) {
 
+        log.info("Test resident IdP provisioning config URLs in tenant:" + activeTenant);
         if (SUPER_TENANT.equals(activeTenant) && SUPER_TENANT.equals(configBindTenant)) {
             Assert.assertEquals(provisioningConfigMap.get(endpoint), expectedURL, errorMessage);
         }
