@@ -51,6 +51,7 @@ public class UserMeApprovalTest extends UserApprovalTestBase {
     private static final String TEST_WORKFLOW_ADD_USER_FOR_REST_TASK = addUserWorkflowName + "Task";
     private static final String JSON_PATH_MATCHING_REST_API_TEST_APPROVAL_TASK = "findAll{ it.presentationName == '"
             + TEST_WORKFLOW_ADD_USER_FOR_REST_TASK + "' }";
+    private static final int WAIT_TILL_WORKFLOW_DEPLOYMENT = 6;
 
     private static String swaggerDefinition;
     private String taskIdToApprove;
@@ -117,7 +118,7 @@ public class UserMeApprovalTest extends UserApprovalTestBase {
     public void testListTasksWhenAvailable() throws Exception {
 
         addAssociationForMatch();
-        for (int i = 1; i <= 3; i++) {
+        for (int i = 1; i <= WAIT_TILL_WORKFLOW_DEPLOYMENT; i++) {
             int numOfTasks = getResponseOfGet(ME_APPROVAL_TASKS_ENDPOINT_URI)
                     .then()
                     .extract()
