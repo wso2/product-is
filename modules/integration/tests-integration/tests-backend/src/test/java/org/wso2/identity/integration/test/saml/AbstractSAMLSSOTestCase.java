@@ -24,10 +24,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationConfig;
@@ -82,6 +85,7 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
     protected SAMLSSOConfigServiceClient ssoConfigServiceClient;
     private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
     protected HttpClient httpClient;
+    CookieStore cookieStore = new BasicCookieStore();
 
     protected enum HttpBinding {
 
@@ -260,7 +264,7 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
                 configContext);
         ssoConfigServiceClient = new SAMLSSOConfigServiceClient(backendURL, sessionCookie);
         remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
-        httpClient = new DefaultHttpClient();
+        httpClient = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
     }
 
     public void testClear() throws Exception {

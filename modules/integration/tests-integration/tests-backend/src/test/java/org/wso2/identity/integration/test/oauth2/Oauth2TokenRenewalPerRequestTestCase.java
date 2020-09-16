@@ -23,9 +23,11 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
@@ -58,6 +60,8 @@ public class Oauth2TokenRenewalPerRequestTestCase extends OAuth2ServiceAbstractI
     private static final String TEST_NONCE = "test_nonce";
     private String tempAccessToken;
 
+    CookieStore cookieStore = new BasicCookieStore();
+
     @BeforeClass(alwaysRun = true)
     public void setup() throws Exception {
 
@@ -67,7 +71,7 @@ public class Oauth2TokenRenewalPerRequestTestCase extends OAuth2ServiceAbstractI
         OAuthConsumerAppDTO appDto = createApplication();
         consumerKey = appDto.getOauthConsumerKey();
         consumerSecret = appDto.getOauthConsumerSecret();
-        client = HttpClientBuilder.create().disableRedirectHandling().disableCookieManagement().build();
+        client = HttpClientBuilder.create().disableRedirectHandling().setDefaultCookieStore(cookieStore).build();
     }
 
     @AfterClass(alwaysRun = true)
@@ -87,6 +91,7 @@ public class Oauth2TokenRenewalPerRequestTestCase extends OAuth2ServiceAbstractI
         String firstAccessToken = (String) firstTokenRequest.get(OAuth2Constant.ACCESS_TOKEN);
         String firstRefreshToken = (String) firstTokenRequest.get(OAuth2Constant.REFRESH_TOKEN);
 
+        refreshHTTPClient();
         JSONObject secondTokenRequest = getAuthzCodeAccessToken();
         String secondAccessToken = (String) secondTokenRequest.get(OAuth2Constant.ACCESS_TOKEN);
         String secondRefreshToken = (String) secondTokenRequest.get(OAuth2Constant.REFRESH_TOKEN);
@@ -101,10 +106,12 @@ public class Oauth2TokenRenewalPerRequestTestCase extends OAuth2ServiceAbstractI
             "request and old token revocation using implicit grant type.")
     public void implicitGrantTokenRenewalTest() throws Exception {
 
+        refreshHTTPClient();
         String firstAccessToken = getImplicitAccessToken();
 
         checkOldTokenRevocation(tempAccessToken);
 
+        refreshHTTPClient();
         String secondAccessToken = getImplicitAccessToken();
         Assert.assertNotEquals(firstAccessToken, secondAccessToken, "Old access token returned.");
         checkOldTokenRevocation(firstAccessToken);
@@ -116,12 +123,14 @@ public class Oauth2TokenRenewalPerRequestTestCase extends OAuth2ServiceAbstractI
             " token revocation using password grant type.")
     public void resourceOwnerTokenRenewalTest() throws Exception {
 
+        refreshHTTPClient();
         JSONObject firstTokenRequest = getResourceOwnerAccessToken();
         String firstAccessToken = (String) firstTokenRequest.get(OAuth2Constant.ACCESS_TOKEN);
         String firstRefreshToken = (String) firstTokenRequest.get(OAuth2Constant.REFRESH_TOKEN);
 
         checkOldTokenRevocation(tempAccessToken);
 
+        refreshHTTPClient();
         JSONObject secondTokenRequest = getResourceOwnerAccessToken();
         String secondAccessToken = (String) secondTokenRequest.get(OAuth2Constant.ACCESS_TOKEN);
         String secondRefreshToken = (String) secondTokenRequest.get(OAuth2Constant.REFRESH_TOKEN);
@@ -136,9 +145,11 @@ public class Oauth2TokenRenewalPerRequestTestCase extends OAuth2ServiceAbstractI
             "old token revocation using client credentials grant type.")
     public void clientCredentialsTokenRenewalTest() throws Exception {
 
+        refreshHTTPClient();
         JSONObject firstTokenRequest = getClientCredentialsAccessToken();
         String firstAccessToken = (String) firstTokenRequest.get(OAuth2Constant.ACCESS_TOKEN);
 
+        refreshHTTPClient();
         JSONObject secondTokenRequest = getClientCredentialsAccessToken();
         String secondAccessToken = (String) secondTokenRequest.get(OAuth2Constant.ACCESS_TOKEN);
 
@@ -297,5 +308,14 @@ public class Oauth2TokenRenewalPerRequestTestCase extends OAuth2ServiceAbstractI
         serverConfigurationManager = new ServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartGracefully();
+    }
+
+    /**
+     * Refresh the cookie store and http client.
+     */
+    private void refreshHTTPClient() {
+
+        cookieStore.clear();
+        client = HttpClientBuilder.create().disableRedirectHandling().setDefaultCookieStore(cookieStore).build();
     }
 }
