@@ -54,6 +54,9 @@ import java.util.Map;
 
 import static org.wso2.identity.integration.test.utils.CommonConstants.DEFAULT_TOMCAT_PORT;
 
+/**
+ * Integration tests for OAuth2 Back-Channel Logout.
+ */
 public class OAuth2BackChannelLogoutTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
     private HttpClient client;
