@@ -30,6 +30,9 @@ import org.wso2.identity.integration.test.utils.DataExtractUtil;
 
 import java.io.IOException;
 
+/**
+ * Integration tests for Oauth2 JWKS endpoint.
+ */
 public class Oauth2JWKSEndpointTestCase {
 
     private static final String JKWS_URI_SUPER_TENANT = "https://localhost:9853/oauth2/jwks";
