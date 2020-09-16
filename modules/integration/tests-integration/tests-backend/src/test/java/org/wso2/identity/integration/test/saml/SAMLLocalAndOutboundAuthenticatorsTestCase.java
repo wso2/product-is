@@ -21,8 +21,11 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -91,6 +94,8 @@ public class SAMLLocalAndOutboundAuthenticatorsTestCase extends ISIntegrationTes
     private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
     private IdentityProviderMgtServiceClient identityProviderMgtServiceClient;
     private HttpClient httpClient;
+
+    CookieStore cookieStore = new BasicCookieStore();
 
     private enum User {
         SUPER_TENANT_USER("samluser1", "samluser1", "carbon.super", "samluser1@wso2.com", "samlnickuser1",
@@ -248,7 +253,7 @@ public class SAMLLocalAndOutboundAuthenticatorsTestCase extends ISIntegrationTes
         ssoConfigServiceClient = new SAMLSSOConfigServiceClient(backendURL, sessionCookie);
         remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
         identityProviderMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
-        httpClient = new DefaultHttpClient();
+        httpClient = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
 
         createIDP();
         createUser();
