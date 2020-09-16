@@ -37,6 +37,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+/**
+ * Integration tests for SAML artifact binding.
+ */
 public class SAMLARTRESOLVETestCase extends AbstractSAMLSSOTestCase {
 
     private static final Log log = LogFactory.getLog(SAMLSSOTestCase.class);
@@ -47,7 +50,7 @@ public class SAMLARTRESOLVETestCase extends AbstractSAMLSSOTestCase {
     public SAMLARTRESOLVETestCase(SAMLConfig config) {
 
         if (log.isDebugEnabled()) {
-            log.info("SAML Artifact Binding Test initialized for " + config);
+            log.debug("SAML Artifact Binding Test initialized for " + config.toString());
         }
         this.config = config;
     }
