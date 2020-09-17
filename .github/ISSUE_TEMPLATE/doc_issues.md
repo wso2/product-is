@@ -8,10 +8,10 @@ assignees: ''
 ---
 
 **Is your suggestion related to a missing or misleading document? Please describe.**
-<!-- A clear and concise description of what the problem is. Ex: I couldn't find how to do [...] -->
+<!-- A clear and concise description of what the problem is, e.g., I couldn't find how to do [...] -->
 
 **Describe the improvement**
-<!-- A clear and concise description of what you want to happen, what needs to be updated. -->
+<!-- A clear and concise description of what needs to be updated. -->
 
 ---
 
