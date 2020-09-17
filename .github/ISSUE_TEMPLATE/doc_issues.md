@@ -1,5 +1,5 @@
 ---
-name: Doc issues
+name: 📕 Doc issues
 about: Please report documentation issues here
 title: ''
 labels: 'docs'
