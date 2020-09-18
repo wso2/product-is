@@ -284,6 +284,13 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
         }
     }
 
+    /**
+     * Create application for SAML artifact resolve.
+     *
+     * @param config  SAML config.
+     * @param appName Application name.
+     * @throws Exception If error occurs while creating the application.
+     */
     public void createApplicationForSAMLArtResolve(SAMLConfig config, String appName) throws Exception {
 
         samlArtResolve = true;
@@ -421,6 +428,8 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
     }
 
     /**
+     * Create SAML SSO Service Provider DTO For SAML artifact binding.
+     *
      * @param config contains the details of the SAML artifact binding enabled service provider application.
      * @return the created SAMLSSOServiceProviderDTO.
      */
