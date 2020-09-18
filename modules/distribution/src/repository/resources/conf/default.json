@@ -33,5 +33,7 @@
   "system.parameter.\u0027org.wso2.CipherTransformation\u0027": "AES/GCM/NoPadding",
 
   "encryption.internal_crypto_provider": "org.wso2.carbon.crypto.provider.SymmetricKeyInternalCryptoProvider",
-  "encryption.key": "03BAFEB27A8E871CAD83C5CD4E771DAB"
+  "encryption.key": "03BAFEB27A8E871CAD83C5CD4E771DAB",
+
+  "authorization_manager.properties.GroupAndRoleSeparationEnabled": "true"
 }
