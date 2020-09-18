@@ -49,7 +49,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
  */
 public class IdentityGovernanceSuccessTest extends IdentityGovernanceTestBase {
 
-    private static final String CATEGORY_ACCOUNT_MANAGEMENT_PROPERTIES = "QWNjb3VudCBNYW5hZ2VtZW50IFBvbGljaWVz";
+    private static final String CATEGORY_ACCOUNT_MANAGEMENT_PROPERTIES = "QWNjb3VudCBNYW5hZ2VtZW50";
     private static final String CONNECTOR_LOCK_IDLE_ACCOUNTS = "c3VzcGVuc2lvbi5ub3RpZmljYXRpb24";
     private Map<String, CategoriesRes> categories;
 
