@@ -2031,7 +2031,7 @@
         <carbon.consent.mgt.version>2.2.12</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.4.39</identity.governance.version>
+        <identity.governance.version>1.4.40</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.5.1</identity.carbon.auth.saml2.version>
@@ -2042,7 +2042,7 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.8.13</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.4.71</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.4.72</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.6.0</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.6.3</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.6.1</identity.inbound.provisioning.scim.version>
@@ -2091,7 +2091,7 @@
         <social.authenticator.facebook.version>5.1.17</social.authenticator.facebook.version>
         <social.authenticator.google.version>5.1.8</social.authenticator.google.version>
         <social.authenticator.windowslive.version>5.1.4</social.authenticator.windowslive.version>
-        <social.authenticator.yahoo.version>5.1.6</social.authenticator.yahoo.version>
+        <social.authenticator.yahoo.version>5.1.7</social.authenticator.yahoo.version>
 
         <!-- Provisioning connector Versions -->
         <provisioning.connector.google.version>5.1.8</provisioning.connector.google.version>
@@ -2133,7 +2133,7 @@
         <carbon.identity.oauth.uma.version>1.2.4</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.0.409</identity.apps.version>
+        <identity.apps.version>1.0.412</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.3.0</charon.version>
