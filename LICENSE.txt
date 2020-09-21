@@ -529,7 +529,7 @@ org.wso2.carbon.authenticator.proxy_4.6.1.alpha.jar                             
 org.wso2.carbon.identity.data.publisher.authentication.analytics.login_5.3.18.jar                   bundle         apache2
 org.wso2.carbon.identity.claim.metadata.mgt_5.18.96.jar                                             bundle         apache2
 org.wso2.carbon.identity.conditional.auth.functions.analytics_0.1.40.jar                            bundle         apache2
-org.wso2.identity.apps.common_1.0.417.jar                                                           bundle         apache2
+org.wso2.identity.apps.common_1.0.418.jar                                                           bundle         apache2
 org.eclipse.equinox.frameworkadmin_2.0.300.v20160504-1450.jar                                       bundle         epl1
 org.wso2.carbon.identity.data.publisher.oauth_1.3.0.jar                                             bundle         apache2
 org.wso2.carbon.identity.application.authenticator.requestpath.oauth_5.3.1.jar                      bundle         apache2
