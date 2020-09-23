@@ -49,6 +49,9 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 
+/**
+ * Integration tests for SAML invalid issuer.
+ */
 public class SAMLInvalidIssuerTestCase extends AbstractSAMLSSOTestCase {
 
     private static final Log log = LogFactory.getLog(SAMLInvalidIssuerTestCase.class);
@@ -79,7 +82,7 @@ public class SAMLInvalidIssuerTestCase extends AbstractSAMLSSOTestCase {
     public SAMLInvalidIssuerTestCase(SAMLConfig config) {
 
         if (log.isDebugEnabled()){
-            log.info("SAML SSO Test initialized for " + config);
+            log.debug("SAML SSO Test initialized for " + config.toString());
         }
         this.config = config;
     }
