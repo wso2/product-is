@@ -24,9 +24,14 @@
 
     <test name="is-single-sign-on" preserve-order="true" parallel="false">
         <classes>
-            <class name="org.wso2.identity.scenarios.access.delegation.oauth2.selfcontainedtoken.OAuth2SelfContainedTokenCodeGrantTest"/>
-            <class name="org.wso2.identity.scenarios.access.delegation.oauth2.selfcontainedtoken.OAuth2SelfContainedTokenImplicitGrantTest"/>
-            <class name="org.wso2.identity.scenarios.access.delegation.oauth2.selfcontainedtoken.OAuth2SelfContainedTokenPasswordGrantTest"/>
+            <!--
+            The feature introduced with https://github.com/wso2/product-is/issues/3346 is not available in IS 5.6.0.
+            Following test cases are written with the use of above feature. Hence these will be commented until this
+            feature is introduced to IS 5.6.0.
+            -->
+            <!--<class name="org.wso2.identity.scenarios.access.delegation.oauth2.selfcontainedtoken.OAuth2SelfContainedTokenCodeGrantTest"/>-->
+            <!--<class name="org.wso2.identity.scenarios.access.delegation.oauth2.selfcontainedtoken.OAuth2SelfContainedTokenImplicitGrantTest"/>-->
+            <!--<class name="org.wso2.identity.scenarios.access.delegation.oauth2.selfcontainedtoken.OAuth2SelfContainedTokenPasswordGrantTest"/>-->
         </classes>
     </test>
 </suite>
