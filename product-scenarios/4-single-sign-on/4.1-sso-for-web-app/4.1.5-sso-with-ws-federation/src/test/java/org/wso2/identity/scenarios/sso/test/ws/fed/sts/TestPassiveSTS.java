@@ -218,8 +218,6 @@ public class TestPassiveSTS extends ScenarioTestBase {
         sessionDataKey = DataExtractUtil.getSessionDataKey(response);
         Assert.assertNotNull(sessionDataKey, "Session data key is null.");
         EntityUtils.consume(response.getEntity());
-        client.close();
-
     }
 
     @Test(alwaysRun = true, description = "4.1.5.5", dependsOnMethods =
