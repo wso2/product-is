@@ -317,9 +317,9 @@ public class DCRTestCase extends ScenarioTestBase {
     private String getDcrEndpoint() {
 
         if (tenantDomain == null || SUPER_TENANT_DOMAIN.equals(tenantDomain)) {
-            return getDeploymentProperty(IS_HTTPS_URL) + "/api/identity/oauth2/dcr/v1.1/register";
+            return getDeploymentProperty(IS_HTTPS_URL) + "/api/identity/oauth2/dcr/v1.0/register";
         }
-        return getDeploymentProperty(IS_HTTPS_URL) + "/t/" + tenantDomain + "/api/identity/oauth2/dcr/v1.1/register";
+        return getDeploymentProperty(IS_HTTPS_URL) + "/t/" + tenantDomain + "/api/identity/oauth2/dcr/v1.0/register";
     }
 
     private void validateResponse(JSONObject requestJSON, HttpResponse response, boolean isSetClientId)
