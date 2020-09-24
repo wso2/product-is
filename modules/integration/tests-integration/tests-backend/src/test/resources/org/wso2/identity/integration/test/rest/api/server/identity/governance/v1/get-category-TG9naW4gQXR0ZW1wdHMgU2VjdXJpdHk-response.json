@@ -59,7 +59,7 @@
           "name": "sso.login.recaptcha.enable",
           "value": "false",
           "displayName": "Prompt reCaptcha after max failed attempts",
-          "description": "Prompt reCaptcha verification during SSO login floe only after the max failed attempts exceeded."
+          "description": "Prompt reCaptcha verification during SSO login flow only after the max failed attempts exceeded."
         },
         {
           "name": "sso.login.recaptcha.on.max.failed.attempts",
