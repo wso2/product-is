@@ -19,7 +19,7 @@
           "name": "passwordHistory.count",
           "value": "5",
           "displayName": "Password history validation count",
-          "description": "Restrict reusing last n number of passwords during password update."
+          "description": "Restrict using this number of last used passwords during password update."
         }
       ]
     },
@@ -53,7 +53,7 @@
           "name": "passwordPolicy.pattern",
           "value": "^((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*])).{0,100}$",
           "displayName": "Password pattern regex",
-          "description": "A regex pattern to validate the password."
+          "description": "The regular expression pattern to validate the password."
         },
         {
           "name": "passwordPolicy.errorMsg",
