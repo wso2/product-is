@@ -126,24 +126,28 @@ public class DCRTestCase extends ScenarioTestBase {
         validateResponse(registerRequestJSON, response, true);
     }
 
-    @Test(description = "4.1.4.1.2",
-          dependsOnMethods = { "registerOAuth2Application" })
-    public void getOAuth2ApplicationByName() throws Exception {
-
-        Map<String, String> queryParams = new HashMap<>();
-        queryParams.put(Constants.RegistrationRequestElements.CLIENT_NAME,
-                registerRequestJSON.get(Constants.RegistrationRequestElements.CLIENT_NAME).toString());
-
-        HttpResponse response = httpCommonClient
-                .sendGetRequest(dcrEndpoint, queryParams, getCommonHeaders(username, password));
-
-        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK,
-                "Application retrieval failed for name: " + registerRequestJSON
-                        .get(Constants.RegistrationRequestElements.CLIENT_NAME).toString() + ", Request Object: "
-                        + registerRequestJSON.toJSONString());
-
-        validateResponse(registerRequestJSON, response, false);
-    }
+    /*
+     * IS 5.6.0 does not support the improvement to DCR introduced in https://github.com/wso2/product-is/issues/3446.
+     * This test case can be uncommented once that improvement is done for 5.6.0.
+     */
+//    @Test(description = "4.1.4.1.2",
+//          dependsOnMethods = { "registerOAuth2Application" })
+//    public void getOAuth2ApplicationByName() throws Exception {
+//
+//        Map<String, String> queryParams = new HashMap<>();
+//        queryParams.put(Constants.RegistrationRequestElements.CLIENT_NAME,
+//                registerRequestJSON.get(Constants.RegistrationRequestElements.CLIENT_NAME).toString());
+//
+//        HttpResponse response = httpCommonClient
+//                .sendGetRequest(dcrEndpoint, queryParams, getCommonHeaders(username, password));
+//
+//        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK,
+//                "Application retrieval failed for name: " + registerRequestJSON
+//                        .get(Constants.RegistrationRequestElements.CLIENT_NAME).toString() + ", Request Object: "
+//                        + registerRequestJSON.toJSONString());
+//
+//        validateResponse(registerRequestJSON, response, false);
+//    }
 
     @Test(description = "4.1.4.1.3",
           dependsOnMethods = { "registerOAuth2Application" })
@@ -160,7 +164,8 @@ public class DCRTestCase extends ScenarioTestBase {
     }
 
     @Test(description = "4.1.4.1.4",
-          dependsOnMethods = { "getOAuth2ApplicationByName", "getOAuth2ApplicationByClientId" })
+          dependsOnMethods = { "getOAuth2ApplicationByClientId" })
+//          dependsOnMethods = { "getOAuth2ApplicationByName", "getOAuth2ApplicationByClientId" })
     public void updateOAuth2Application() throws Exception {
 
         if (updateRequestJSON == null) {
@@ -177,28 +182,32 @@ public class DCRTestCase extends ScenarioTestBase {
         validateResponse(updateRequestJSON, response, false);
     }
 
-    @Test(description = "4.1.4.1.5",
-          dependsOnMethods = { "updateOAuth2Application" })
-    public void getUpdatedOAuth2ApplicationByName() throws Exception {
-
-        if (updateRequestJSON == null) {
-            return;
-        }
-
-        Map<String, String> queryParams = new HashMap<>();
-        queryParams.put(Constants.RegistrationRequestElements.CLIENT_NAME,
-                updateRequestJSON.get(Constants.RegistrationRequestElements.CLIENT_NAME).toString());
-
-        HttpResponse response = httpCommonClient
-                .sendGetRequest(dcrEndpoint, queryParams, getCommonHeaders(username, password));
-
-        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK,
-                "Update application retrieval failed for name: " + updateRequestJSON
-                        .get(Constants.RegistrationRequestElements.CLIENT_NAME).toString() + ", Request Object: "
-                        + updateRequestJSON.toJSONString());
-
-        validateResponse(updateRequestJSON, response, false);
-    }
+    /*
+     * IS 5.6.0 does not support the improvement to DCR introduced in https://github.com/wso2/product-is/issues/3446.
+     * This test case can be uncommented once that improvement is done for 5.6.0.
+     */
+//    @Test(description = "4.1.4.1.5",
+//          dependsOnMethods = { "updateOAuth2Application" })
+//    public void getUpdatedOAuth2ApplicationByName() throws Exception {
+//
+//        if (updateRequestJSON == null) {
+//            return;
+//        }
+//
+//        Map<String, String> queryParams = new HashMap<>();
+//        queryParams.put(Constants.RegistrationRequestElements.CLIENT_NAME,
+//                updateRequestJSON.get(Constants.RegistrationRequestElements.CLIENT_NAME).toString());
+//
+//        HttpResponse response = httpCommonClient
+//                .sendGetRequest(dcrEndpoint, queryParams, getCommonHeaders(username, password));
+//
+//        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK,
+//                "Update application retrieval failed for name: " + updateRequestJSON
+//                        .get(Constants.RegistrationRequestElements.CLIENT_NAME).toString() + ", Request Object: "
+//                        + updateRequestJSON.toJSONString());
+//
+//        validateResponse(updateRequestJSON, response, false);
+//    }
 
     @Test(description = "4.1.4.1.6",
           dependsOnMethods = { "updateOAuth2Application" })
@@ -219,7 +228,8 @@ public class DCRTestCase extends ScenarioTestBase {
     }
 
     @Test(description = "4.1.4.1.7",
-          dependsOnMethods = { "getUpdatedOAuth2ApplicationByName", "getUpdatedOAuth2ApplicationByClientId" })
+          dependsOnMethods = { "getUpdatedOAuth2ApplicationByClientId" })
+//          dependsOnMethods = { "getUpdatedOAuth2ApplicationByName", "getUpdatedOAuth2ApplicationByClientId" })
     public void deleteOAuth2ApplicationByClientId() throws Exception {
 
         HttpResponse response = httpCommonClient
@@ -307,9 +317,9 @@ public class DCRTestCase extends ScenarioTestBase {
     private String getDcrEndpoint() {
 
         if (tenantDomain == null || SUPER_TENANT_DOMAIN.equals(tenantDomain)) {
-            return getDeploymentProperty(IS_HTTPS_URL) + "/api/identity/oauth2/dcr/v1.1/register";
+            return getDeploymentProperty(IS_HTTPS_URL) + "/api/identity/oauth2/dcr/v1.0/register";
         }
-        return getDeploymentProperty(IS_HTTPS_URL) + "/t/" + tenantDomain + "/api/identity/oauth2/dcr/v1.1/register";
+        return getDeploymentProperty(IS_HTTPS_URL) + "/t/" + tenantDomain + "/api/identity/oauth2/dcr/v1.0/register";
     }
 
     private void validateResponse(JSONObject requestJSON, HttpResponse response, boolean isSetClientId)
