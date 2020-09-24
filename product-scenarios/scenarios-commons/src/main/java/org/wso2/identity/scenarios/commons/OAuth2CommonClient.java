@@ -504,10 +504,10 @@ public class OAuth2CommonClient {
         this.tokenEndpoint = serverHTTPsUrl + "/oauth2/token";
 
         if (tenantDomain == null || SUPER_TENANT_DOMAIN_NAME.equals(tenantDomain)) {
-            this.dcrEndpoint = serverHTTPsUrl + "/api/identity/oauth2/dcr/v1.1/register";
+            this.dcrEndpoint = serverHTTPsUrl + "/api/identity/oauth2/dcr/v1.0/register";
             this.introspectEndpoint = serverHTTPsUrl + "/oauth2/introspect";
         } else {
-            this.dcrEndpoint = serverHTTPsUrl + "/t/" + tenantDomain + "/api/identity/oauth2/dcr/v1.1/register";
+            this.dcrEndpoint = serverHTTPsUrl + "/t/" + tenantDomain + "/api/identity/oauth2/dcr/v1.0/register";
             this.introspectEndpoint = serverHTTPsUrl + "/t/" + tenantDomain + "/oauth2/introspect";
         }
     }
