@@ -1,10 +1,10 @@
 {
-  "name": "User Passwords",
+  "name": "Password Policies",
   "connectors": [
     {
       "id": "cGFzc3dvcmRIaXN0b3J5",
       "name": "passwordHistory",
-      "category": "User Passwords",
+      "category": "Password Policies",
       "friendlyName": "Password History",
       "order": 0,
       "subCategory": "DEFAULT",
@@ -26,7 +26,7 @@
     {
       "id": "cGFzc3dvcmRQb2xpY3k",
       "name": "passwordPolicy",
-      "category": "User Passwords",
+      "category": "Password Policies",
       "friendlyName": "Password Patterns",
       "order": 0,
       "subCategory": "DEFAULT",
