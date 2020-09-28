@@ -80,7 +80,7 @@
         {
           "name": "Recovery.Question.Password.MinAnswers",
           "value": "2",
-          "displayName": "Number of questions Required for password recovery",
+          "displayName": "Number of questions required for password recovery",
           "description": ""
         },
         {
