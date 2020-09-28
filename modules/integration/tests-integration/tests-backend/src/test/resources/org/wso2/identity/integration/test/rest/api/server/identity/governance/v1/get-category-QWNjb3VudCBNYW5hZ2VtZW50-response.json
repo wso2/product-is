@@ -2,6 +2,34 @@
   "name": "Account Management",
   "connectors": [
     {
+      "id": "c3VzcGVuc2lvbi5ub3RpZmljYXRpb24",
+      "name": "suspension.notification",
+      "category": "Account Management",
+      "friendlyName": "Idle Account Suspend",
+      "order": 0,
+      "subCategory": "DEFAULT",
+      "properties": [
+        {
+          "name": "suspension.notification.enable",
+          "value": "true",
+          "displayName": "Suspend idle user accounts",
+          "description": "Lock user account after a given idle period."
+        },
+        {
+          "name": "suspension.notification.account.disable.delay",
+          "value": "90",
+          "displayName": "Allowed idle time span in days",
+          "description": "Time period in days before locking the user account."
+        },
+        {
+          "name": "suspension.notification.delays",
+          "value": "30,45,60,75",
+          "displayName": "Alert sending time periods in days",
+          "description": "Send warning alerts to users before locking the account, after each period. Comma separated multiple values accepted."
+        }
+      ]
+    },
+    {
       "id": "YWNjb3VudC5kaXNhYmxlLmhhbmRsZXI",
       "name": "account.disable.handler",
       "category": "Account Management",
@@ -20,6 +48,152 @@
           "value": "true",
           "displayName": "Manage notification sending internally",
           "description": "Disable, if the client application handles notification sending"
+        }
+      ]
+    },
+    {
+      "id": "YWNjb3VudC1yZWNvdmVyeQ",
+      "name": "account-recovery",
+      "category": "Account Management",
+      "friendlyName": "Account Recovery",
+      "order": 0,
+      "subCategory": "DEFAULT",
+      "properties": [
+        {
+          "name": "Recovery.Notification.Password.Enable",
+          "value": "false",
+          "displayName": "Notification based password recovery",
+          "description": ""
+        },
+        {
+          "name": "Recovery.ReCaptcha.Password.Enable",
+          "value": "false",
+          "displayName": "Enable reCaptcha for password recovery",
+          "description": ""
+        },
+        {
+          "name": "Recovery.Question.Password.Enable",
+          "value": "false",
+          "displayName": "Security question based password recovery",
+          "description": ""
+        },
+        {
+          "name": "Recovery.Question.Password.MinAnswers",
+          "value": "2",
+          "displayName": "Number of questions required for password recovery",
+          "description": ""
+        },
+        {
+          "name": "Recovery.Question.Answer.Regex",
+          "value": ".*",
+          "displayName": "Security question answer regex",
+          "description": "Security question answer regex"
+        },
+        {
+          "name": "Recovery.Question.Answer.Uniqueness",
+          "value": "false",
+          "displayName": "Enforce security question answer uniqueness",
+          "description": "Enforce security question answer uniqueness"
+        },
+        {
+          "name": "Recovery.Question.Password.ReCaptcha.Enable",
+          "value": "true",
+          "displayName": "Enable reCaptcha for security questions based password recovery",
+          "description": "Prompt reCaptcha for security question based password recovery"
+        },
+        {
+          "name": "Recovery.Question.Password.ReCaptcha.MaxFailedAttempts",
+          "value": "2",
+          "displayName": "Max failed attempts for reCaptcha",
+          "description": ""
+        },
+        {
+          "name": "Recovery.Notification.Username.Enable",
+          "value": "false",
+          "displayName": "Username recovery",
+          "description": ""
+        },
+        {
+          "name": "Recovery.ReCaptcha.Username.Enable",
+          "value": "false",
+          "displayName": "Enable reCaptcha for username recovery",
+          "description": ""
+        },
+        {
+          "name": "Recovery.Notification.InternallyManage",
+          "value": "true",
+          "displayName": "Manage notifications sending internally",
+          "description": "Disable if the client application handles notification sending"
+        },
+        {
+          "name": "Recovery.NotifySuccess",
+          "value": "false",
+          "displayName": "Notify when recovery success",
+          "description": ""
+        },
+        {
+          "name": "Recovery.Question.Password.NotifyStart",
+          "value": "false",
+          "displayName": "Notify when security questions based recovery starts",
+          "description": ""
+        },
+        {
+          "name": "Recovery.ExpiryTime",
+          "value": "1440",
+          "displayName": "Recovery link expiry time",
+          "description": ""
+        },
+        {
+          "name": "Recovery.Notification.Password.ExpiryTime.smsOtp",
+          "value": "1",
+          "displayName": "SMS OTP expiry time",
+          "description": "Expiration time of the SMS OTP code for password recovery"
+        },
+        {
+          "name": "Recovery.Question.Password.Forced.Enable",
+          "value": "false",
+          "displayName": "Enable forced security questions",
+          "description": "Force users to provide answers to security questions during sign in"
+        },
+        {
+          "name": "Recovery.Question.MinQuestionsToAnswer",
+          "value": "",
+          "displayName": "Minimum number of forced security questions to be answered",
+          "description": "Force users to provide answers to security questions during sign in if user has answered lesser than this value"
+        },
+        {
+          "name": "Recovery.CallbackRegex",
+          "value": ".*",
+          "displayName": "Recovery callback URL regex",
+          "description": "Recovery callback URL regex"
+        }
+      ]
+    },
+    {
+      "id": "YWRtaW4tZm9yY2VkLXBhc3N3b3JkLXJlc2V0",
+      "name": "admin-forced-password-reset",
+      "category": "Account Management",
+      "friendlyName": "Password Reset",
+      "order": 0,
+      "subCategory": "DEFAULT",
+      "properties": [
+        {
+          "name": "Recovery.AdminPasswordReset.RecoveryLink",
+          "value": "false",
+          "displayName": "Enable password reset via recovery e-mail",
+          "description": "User gets notified with a link to reset password"
+        },
+        {
+          "name": "Recovery.AdminPasswordReset.OTP",
+          "value": "false",
+          "displayName": "Enable password reset via OTP",
+          "description": "User gets notified with a one time password to try with SSO login"
+        },
+        {
+          "name": "Recovery.AdminPasswordReset.Offline",
+          "value": "false",
+          "displayName": "Enable password reset offline",
+          "description": "An OTP generated and stored in users claims"
         }
       ]
     }

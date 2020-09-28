@@ -1,0 +1,173 @@
+{
+  "name": "User Onboarding",
+  "connectors": [
+    {
+      "id": "c2VsZi1zaWduLXVw",
+      "name": "self-sign-up",
+      "category": "User Onboarding",
+      "friendlyName": "Self Registration",
+      "order": 0,
+      "subCategory": "DEFAULT",
+      "properties": [
+        {
+          "name": "SelfRegistration.Enable",
+          "value": "false",
+          "displayName": "User self registration",
+          "description": "Allow user's to self register to the system."
+        },
+        {
+          "name": "SelfRegistration.LockOnCreation",
+          "value": "true",
+          "displayName": "Lock user account on creation",
+          "description": "Lock self registered user account until e-mail verification."
+        },
+        {
+          "name": "SelfRegistration.Notification.InternallyManage",
+          "value": "true",
+          "displayName": "Manage notifications sending internally",
+          "description": "Disable if the client application handles notification sending"
+        },
+        {
+          "name": "SelfRegistration.ReCaptcha",
+          "value": "true",
+          "displayName": "Prompt reCaptcha",
+          "description": "Enable reCaptcha verification during self registration."
+        },
+        {
+          "name": "SelfRegistration.VerificationCode.ExpiryTime",
+          "value": "1440",
+          "displayName": "User self registration verification link expiry time",
+          "description": "Specify the expiry time in minutes for the verification link."
+        },
+        {
+          "name": "SelfRegistration.VerificationCode.SMSOTP.ExpiryTime",
+          "value": "1",
+          "displayName": "User self registration SMS OTP expiry time",
+          "description": "Specify the expiry time in minutes for the SMS OTP."
+        },
+        {
+          "name": "SelfRegistration.CallbackRegex",
+          "value": "[https://localhost:9443].*[/authenticationendpoint/login.do]",
+          "displayName": "User self registration callback URL regex",
+          "description": "This prefix will be used to validate the callback URL."
+        },
+        {
+          "name": "_url_listPurposeSelfSignUp",
+          "value": "/carbon/consent/list-purposes.jsp?purposeGroup=SELF-SIGNUP&purposeGroupType=SYSTEM&callback=%2Fcarbon%2Fidpmgt%2Fidp-mgt-edit-local.jsp%3Fcategory%3DUser+Onboarding%26subCategory%3DSelf+Registration",
+          "displayName": "Manage Self-Sign-Up purposes",
+          "description": "Click here to manage Self-Sign-Up purposes"
+        }
+      ]
+    },
+    {
+      "id": "bGl0ZS11c2VyLXNpZ24tdXA",
+      "name": "lite-user-sign-up",
+      "category": "User Onboarding",
+      "friendlyName": "Lite User Registration",
+      "order": 0,
+      "subCategory": "DEFAULT",
+      "properties": [
+        {
+          "name": "LiteRegistration.Enable",
+          "value": "false",
+          "displayName": "Lite user registration",
+          "description": "Allow user's to self register to the system without a password."
+        },
+        {
+          "name": "LiteRegistration.LockOnCreation",
+          "value": "true",
+          "displayName": "Lock user account on creation",
+          "description": "Lock self registered user account until e-mail verification."
+        },
+        {
+          "name": "LiteRegistration.Notification.InternallyManage",
+          "value": "true",
+          "displayName": "Manage notifications sending internally",
+          "description": "Disable if the client application handles notification sending"
+        },
+        {
+          "name": "LiteRegistration.ReCaptcha",
+          "value": "true",
+          "displayName": "Prompt reCaptcha",
+          "description": "Enable reCaptcha verification during self registration."
+        },
+        {
+          "name": "LiteRegistration.VerificationCode.ExpiryTime",
+          "value": "1440",
+          "displayName": "Lite user registration verification link expiry time",
+          "description": "Specify the expiry time in minutes for the verification link."
+        },
+        {
+          "name": "LiteRegistration.VerificationCode.SMSOTP.ExpiryTime",
+          "value": "1",
+          "displayName": "Lite user registration SMS OTP expiry time",
+          "description": "Specify the expiry time in minutes for the SMS OTP."
+        },
+        {
+          "name": "LiteRegistration.CallbackRegex",
+          "value": ".*",
+          "displayName": "Lite user registration callback URL regex",
+          "description": "This prefix will be used to validate the callback URL."
+        },
+        {
+          "name": "_url_listPurposeLiteUserSignUp",
+          "value": "/carbon/consent/list-purposes.jsp?purposeGroup=LITE-SIGNUP&purposeGroupType=SYSTEM&callback=%2Fcarbon%2Fidpmgt%2Fidp-mgt-edit-local.jsp%3Fcategory%3DUser+Onboarding%26subCategory%3DLite+User+Registration",
+          "displayName": "Manage Lite-Sign-Up purposes",
+          "description": "Click here to manage Lite-Sign-Up purposes"
+        }
+      ]
+    },
+    {
+      "id": "dXNlci1lbWFpbC12ZXJpZmljYXRpb24",
+      "name": "user-email-verification",
+      "category": "User Onboarding",
+      "friendlyName": "Ask Password",
+      "order": 0,
+      "subCategory": "DEFAULT",
+      "properties": [
+        {
+          "name": "EmailVerification.Enable",
+          "value": "false",
+          "displayName": "Enable user email verification",
+          "description": "A verification notification will be triggered during user creation."
+        },
+        {
+          "name": "EmailVerification.LockOnCreation",
+          "value": "true",
+          "displayName": "Enable account lock on creation",
+          "description": "The user account will be locked during user creation."
+        },
+        {
+          "name": "EmailVerification.Notification.InternallyManage",
+          "value": "true",
+          "displayName": "Manage notifications sending internally",
+          "description": "Disable if the client application handles notification sending."
+        },
+        {
+          "name": "EmailVerification.ExpiryTime",
+          "value": "1440",
+          "displayName": "Email verification code expiry time",
+          "description": "Set the time span that the verification e-mail would be valid, in minutes. (For infinite validity period, set -1)"
+        },
+        {
+          "name": "EmailVerification.AskPassword.ExpiryTime",
+          "value": "1440",
+          "displayName": "Ask password code expiry time",
+          "description": "Set the time span that the ask password e-mail would be valid, in minutes. (For infinite validity period, set -1)"
+        },
+        {
+          "name": "EmailVerification.AskPassword.PasswordGenerator",
+          "value": "org.wso2.carbon.user.mgt.common.DefaultPasswordGenerator",
+          "displayName": "Temporary password generation extension class",
+          "description": "Temporary password generation extension point in ask password feature.)"
+        },
+        {
+          "name": "_url_listPurposeJITProvisioning",
+          "value": "/carbon/consent/list-purposes.jsp?purposeGroup=JIT&purposeGroupType=SYSTEM&callback=%2Fcarbon%2Fidpmgt%2Fidp-mgt-edit-local.jsp%3Fcategory%3DUser+Onboarding%26subCategory%3DAsk+Password",
+          "displayName": "Manage JIT provisioning purposes",
+          "description": "Click here to manage just in time provisioning purposes."
+        }
+      ]
+    }
+  ]
+}
