@@ -26,6 +26,8 @@ unzip apache-tomcat-8.5.35.zip
 
 wget http://maven.wso2.org/nexus/content/repositories/releases/org/wso2/is/org.wso2.sample.is.sso.agent/5.6.0/org.wso2.sample.is.sso.agent-5.6.0.war
 unzip org.wso2.sample.is.sso.agent-5.6.0.war -d travelocity.com
+rm -r travelocity.com/WEB-INF/lib/bcprov-jdk15-1.45.jar
+rm -r travelocity.com/WEB-INF/lib/bcprov-jdk15on-1.52.jar
 mv travelocity.com apache-tomcat-8.5.35/webapps/
 
 wget http://maven.wso2.org/nexus/content/repositories/releases/org/wso2/is/PassiveSTSSampleApp/5.6.0/PassiveSTSSampleApp-5.6.0.war
