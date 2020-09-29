@@ -30,6 +30,12 @@
         <dependency>
             <groupId>org.opensaml</groupId>
             <artifactId>xmltooling</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.bouncycastle</groupId>
+                    <artifactId>bcprov-jdk15</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.opensaml</groupId>
@@ -46,6 +52,10 @@
                 <exclusion>
                     <groupId>commons-collections.wso2</groupId>
                     <artifactId>commons-collections</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.bouncycastle</groupId>
+                    <artifactId>bcprov-jdk15on</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
