@@ -24,17 +24,16 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.dbutils.H2DataBaseManager;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.PropertyDTO;
+import org.wso2.carbon.identity.user.store.configuration.stub.dto.UserStoreDTO;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.identity.integration.common.clients.user.store.config.UserStoreConfigAdminServiceClient;
+import org.wso2.identity.integration.common.utils.UserStoreConfigUtils;
 import org.wso2.identity.integration.test.oidc.bean.OIDCApplication;
 import org.wso2.identity.integration.test.oidc.bean.OIDCUser;
-import org.wso2.identity.integration.test.scim2.rest.api.SCIMUtils;
 
 import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.IntStream;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -45,6 +44,12 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
     private static final String USER_STORE_DOMAIN = "WSO2TESTSTORE";
     private static final String OAUTH2_TOKEN_ENDPOINT_URI = "/oauth2/token";
     private static final String USER_INFO_ENDPOINT = "/oauth2/userinfo";
+    private static final String USER_STORE_DB_NAME = "JDBC_USER_STORE_DB";
+    private static final String DB_USER_NAME = "wso2automation";
+    private static final String DB_USER_PASSWORD = "wso2automation";
+    private UserStoreConfigAdminServiceClient userStoreConfigAdminServiceClient;
+    private UserStoreConfigUtils userStoreConfigUtils = new UserStoreConfigUtils();
+
 
     protected OIDCUser user;
     private OIDCApplication application;
@@ -59,8 +64,8 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
     public void testInit() throws Exception {
 
         super.init();
-        SCIMUtils.createSecondaryUserStore("org.wso2.carbon.user.core.jdbc.UniqueIDJDBCUserStoreManager",
-                USER_STORE_DOMAIN, populateSecondaryUserStorePropertiesForJDBC(), backendURL, sessionCookie);
+        userStoreConfigAdminServiceClient = new UserStoreConfigAdminServiceClient(backendURL, sessionCookie);
+        addSecondaryUserStore();
         // Wait till the user-store is deployed
         Thread.sleep(5000);
 
@@ -169,56 +174,40 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
                 .post(endpointUri);
     }
 
-    private PropertyDTO[] populateSecondaryUserStorePropertiesForJDBC() throws SQLException, ClassNotFoundException,
-            IOException {
+    private void addSecondaryUserStore() throws Exception {
 
-        H2DataBaseManager dataBaseManager = new H2DataBaseManager("jdbc:h2:" + ServerConfigurationManager
-                .getCarbonHome() + "/repository/database/JDBC_USER_STORE_DB",
-                "wso2automation", "wso2automation");
-        dataBaseManager.executeUpdate(new File(ServerConfigurationManager.getCarbonHome()
-                + "/dbscripts/h2.sql"));
+        String jdbcClass = "org.wso2.carbon.user.core.jdbc.UniqueIDJDBCUserStoreManager";
+        H2DataBaseManager dataBaseManager = new H2DataBaseManager(
+                "jdbc:h2:" + ServerConfigurationManager.getCarbonHome() + "/repository/database/" + USER_STORE_DB_NAME,
+                DB_USER_NAME, DB_USER_PASSWORD);
+        dataBaseManager.executeUpdate(new File(ServerConfigurationManager.getCarbonHome() + "/dbscripts/h2.sql"));
         dataBaseManager.disconnect();
 
-        PropertyDTO[] userStoreProperties = new PropertyDTO[11];
+        PropertyDTO[] propertyDTOs = new PropertyDTO[10];
+        for (int i = 0; i < 10; i++) {
+            propertyDTOs[i] = new PropertyDTO();
+        }
 
-        IntStream.range(0, userStoreProperties.length).forEach(index -> userStoreProperties[index] = new PropertyDTO());
+        propertyDTOs[0].setName("driverName");
+        propertyDTOs[0].setValue("org.h2.Driver");
 
-        userStoreProperties[0].setName("driverName");
-        userStoreProperties[0].setValue("org.h2.Driver");
+        propertyDTOs[1].setName("url");
+        propertyDTOs[1].setValue(
+                "jdbc:h2:" + ServerConfigurationManager.getCarbonHome() + "/repository/database/" + USER_STORE_DB_NAME);
 
-        userStoreProperties[1].setName("url");
-        userStoreProperties[1].setValue("jdbc:h2:./repository/database/JDBC_USER_STORE_DB");
+        propertyDTOs[2].setName("userName");
+        propertyDTOs[2].setValue(DB_USER_NAME);
 
-        userStoreProperties[2].setName("userName");
-        userStoreProperties[2].setValue("wso2automation");
+        propertyDTOs[3].setName("password");
+        propertyDTOs[3].setValue(DB_USER_PASSWORD);
 
-        userStoreProperties[3].setName("password");
-        userStoreProperties[3].setValue("wso2automation");
+        propertyDTOs[4].setName("UserIDEnabled");
+        propertyDTOs[4].setValue("true");
 
-        userStoreProperties[4].setName("PasswordJavaRegEx");
-        userStoreProperties[4].setValue("^[\\S]{5,30}$");
-
-        userStoreProperties[5].setName("UsernameJavaRegEx");
-        userStoreProperties[5].setValue("^[\\S]{5,30}$");
-
-        userStoreProperties[6].setName("Disabled");
-        userStoreProperties[6].setValue("false");
-
-        userStoreProperties[7].setName("PasswordDigest");
-        userStoreProperties[7].setValue("SHA-256");
-
-        userStoreProperties[8].setName("StoreSaltedPassword");
-        userStoreProperties[8].setValue("true");
-
-        userStoreProperties[9].setName("SCIMEnabled");
-        userStoreProperties[9].setValue("true");
-
-        userStoreProperties[9].setName("CountRetrieverClass");
-        userStoreProperties[9].setValue("org.wso2.carbon.identity.user.store.count.jdbc.JDBCUserStoreCountRetriever");
-
-        userStoreProperties[10].setName("UserIDEnabled");
-        userStoreProperties[10].setValue("true");
-
-        return userStoreProperties;
+        UserStoreDTO userStoreDTO = userStoreConfigAdminServiceClient
+                .createUserStoreDTO(jdbcClass, USER_STORE_DOMAIN, propertyDTOs);
+        userStoreConfigAdminServiceClient.addUserStore(userStoreDTO);
+        Thread.sleep(5000);
+        userStoreConfigUtils.waitForUserStoreDeployment(userStoreConfigAdminServiceClient, USER_STORE_DOMAIN);
     }
 }

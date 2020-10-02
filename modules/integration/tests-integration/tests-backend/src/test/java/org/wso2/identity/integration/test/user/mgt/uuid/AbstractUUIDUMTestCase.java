@@ -176,7 +176,7 @@ public abstract class AbstractUUIDUMTestCase extends ISIntegrationTest {
 
     public void testGetUserListOfRoleWithID() throws Exception {
 
-        String roleName = "admin";
+        String roleName = "Internal/admin";
         UserDTO[] userDTOs = userMgtClient.getUserListOfRoleWithID(roleName);
         Assert.assertNotNull(userDTOs);
         Assert.assertTrue(userDTOs.length > 0);
