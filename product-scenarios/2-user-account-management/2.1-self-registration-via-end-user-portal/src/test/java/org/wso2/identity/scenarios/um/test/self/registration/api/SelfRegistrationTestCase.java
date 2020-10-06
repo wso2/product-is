@@ -156,7 +156,8 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
     public void clear() throws Exception {
 
         userStoreManagerServiceClient.deleteUser(((JSONObject) registerRequestJSON.get(USER)).get(USERNAME).toString());
-
+        log.info("User with username: " + ((JSONObject) registerRequestJSON.get(USER)).get(USERNAME).toString() +
+                "is deleted.");
         httpCommonClient.closeHttpClient();
     }
 
@@ -190,14 +191,19 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
 
             if (SELF_REGISTRATION_ENABLE.equals(property.getName())) {
                 assertEquals(property.getValue(), "true");
+                log.info("Self registration is enabled.");
             } else if (SELF_REGISTRATION_LOCK_ON_CREATION.equals(property.getName())) {
                 assertEquals(property.getValue(), "true");
+                log.info("Self registration - Account lock on user creation is enabled.");
             } else if (SELF_REGISTRATION_NOTIFICATION_IM.equals(property.getName())) {
                 assertEquals(property.getValue(), "false");
+                log.info("Self registration - Notification internally managed is disabled.");
             } else if (SELF_REGISTRATION_RE_CAPTCHA.equals(property.getName())) {
                 assertEquals(property.getValue(), "false");
+                log.info("Self registration - ReCaptcha is disabled.");
             } else if (SELF_REGISTRATION_CODE_EXPIRY_TIME.equals(property.getName())) {
                 assertEquals(property.getValue(), "1440");
+                log.info("Self registration - Verification code expiry time is set to 1440 seconds.");
             }
         }
         // To sync the local caches.
@@ -212,8 +218,9 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
                 .sendPostRequestWithJSON(getEndPoint(ME), registerRequestJSON, getCommonHeaders(username, password));
 
         confirmationCode = httpCommonClient.getStringFromResponse(response);
-        log.info("Self registration result. Request Object: " + registerRequestJSON.toJSONString()
-                + " Response body (confirmation code): " + confirmationCode);
+        log.info("Self registration result for user: " +
+                ((JSONObject) registerRequestJSON.get(USER)).get(USERNAME).toString() + ". Request Object: " +
+                registerRequestJSON.toJSONString() + " Response body (confirmation code): " + confirmationCode);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED,
                 "Self registration failed. Request Object: " + registerRequestJSON.toJSONString() + " Response body: "
                         + confirmationCode);
