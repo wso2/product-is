@@ -123,6 +123,7 @@ public class TestPassiveSTS extends ScenarioTestBase {
         client = HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build();
         this.passiveStsURL = backendURL + PASSIVESTS_URI_CONTEXT;
         passiveStsSampleAppURL = String.format(PASSIVE_STS_SAMPLE_APP_URL, webAppHost);
+        log.info("---- PassiveStsSampleApp URL inside testInit method ---- " + passiveStsSampleAppURL);
         commonAuthUrl = backendURL + COMMONAUTH_URI_CONTEXT;
         super.createUser(this.config, remoteUSMServiceClient, "default");
         this.username = config.getUser().getUsername();
@@ -160,6 +161,7 @@ public class TestPassiveSTS extends ScenarioTestBase {
             opicAuthenticationRequest.setInboundAuthType("passivests");
             Property property = new Property();
             property.setName("passiveSTSWReply");
+            log.info("---- PassiveStsSampleApp URL inside testUpdateSP method ---- " + passiveStsSampleAppURL);
             property.setValue(passiveStsSampleAppURL);
             opicAuthenticationRequest.setProperties(new Property[]{property});
             authRequestList.add(opicAuthenticationRequest);
@@ -209,6 +211,8 @@ public class TestPassiveSTS extends ScenarioTestBase {
     public void testInvokePassiveSTSSampleApp() throws IOException, URISyntaxException {
 
         HttpResponse response;
+        log.info("---- PassiveStsSampleApp URL inside testInvokePassiveSTSSampleApp method ---- " +
+                passiveStsSampleAppURL);
         response = sendGetRequest(client, passiveStsSampleAppURL, null);
 
         Assert.assertNotNull(response, "PassiveSTSSampleApp invoke response is null");
@@ -225,7 +229,10 @@ public class TestPassiveSTS extends ScenarioTestBase {
     public void testSendLoginRequestPost() throws Exception {
 
         log.info("---- Common Auth URL inside testSendLoginRequestPost method --- " + commonAuthUrl);
+        log.info("---- PassiveStsSampleApp URL inside testSendLoginRequestPost method ---- " +
+                passiveStsSampleAppURL);
         HttpResponse response = sendLoginPost(client, sessionDataKey, commonAuthUrl, username, password);
+        log.info("---- Http Response received for testSendLoginRequestPost method ---- " + response.toString());
         Assert.assertNotNull(response, "Login response is null for: " + this.config);
         Assert.assertEquals(response.getStatusLine().getStatusCode(), 302, "Invalid Response for: " + this.config);
 
@@ -248,6 +255,8 @@ public class TestPassiveSTS extends ScenarioTestBase {
 
         // Following error log is added to analyze an intermittent error caught with Passive STS Login fail assertion.
         boolean successfullyRedirected = resultPage.contains("You are now redirected to " + passiveStsSampleAppURL);
+        log.info("---- PassiveStsSampleApp URL inside testSendLoginRequestPost method ---- " +
+                passiveStsSampleAppURL);
         if (!successfullyRedirected) {
             log.error(String.format("Could not find the successfully redirected message from the result page. " +
                     "Here are some helpful information to analyze the root cause. responseStatus: %s, " +
