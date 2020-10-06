@@ -224,6 +224,7 @@ public class TestPassiveSTS extends ScenarioTestBase {
             {"testInvokePassiveSTSSampleApp"})
     public void testSendLoginRequestPost() throws Exception {
 
+        log.info("---- Common Auth URL inside testSendLoginRequestPost method --- " + commonAuthUrl);
         HttpResponse response = sendLoginPost(client, sessionDataKey, commonAuthUrl, username, password);
         Assert.assertNotNull(response, "Login response is null for: " + this.config);
         Assert.assertEquals(response.getStatusLine().getStatusCode(), 302, "Invalid Response for: " + this.config);
@@ -243,6 +244,7 @@ public class TestPassiveSTS extends ScenarioTestBase {
         EntityUtils.consume(response.getEntity());
         response = sendGetRequest(client, locationHeader.getValue(), null);
         resultPage = extractFullContentFromResponse(response);
+        log.info("---- Result page received for testSendLoginRequestPost method --- " + resultPage);
 
         // Following error log is added to analyze an intermittent error caught with Passive STS Login fail assertion.
         boolean successfullyRedirected = resultPage.contains("You are now redirected to " + passiveStsSampleAppURL);
@@ -274,12 +276,14 @@ public class TestPassiveSTS extends ScenarioTestBase {
     @Test(alwaysRun = true, description = "4.1.5.6", dependsOnMethods = {"testSendLoginRequestPost"})
     public void testPassiveSAML2Assertion() throws Exception {
         String passiveParams = "?wa=wsignin1.0&wreply=" + passiveStsSampleAppURL + "&wtrealm=PassiveSTSSampleApp";
+        log.info("---- Passive Params inside testPassiveSAML2Assertion method --- " + passiveParams);
         String wreqParam = "&wreq=%3Cwst%3ARequestSecurityToken+xmlns%3Awst%3D%22http%3A%2F%2Fdocs.oasis-open.org"
                 + "%2Fws-sx%2Fws-trust%2F200512%22%3E%3Cwst%3ATokenType%3Ehttp%3A%2F%2Fdocs.oasis-open.org"
                 + "%2Fwss%2Foasis-wss-saml-token-profile-1.1%23SAMLV2.0%3C%2Fwst%3ATokenType%3E%3C%2Fwst"
                 + "%3ARequestSecurityToken%3E";
-
+        log.info("---- wreqParam inside testPassiveSAML2Assertion method --- " + wreqParam);
         String responseString = getResponsePageForPassiveSTSRequest(passiveParams, wreqParam);
+        log.info("---- Response String received for testPassiveSAML2Assertion method --- " + responseString);
         Assert.assertTrue(responseString.contains(URN_OASIS_NAMES_TC_SAML_2_0_ASSERTION),
                 "No SAML2 Assertion found for the SAML2 request.");
     }
