@@ -157,7 +157,7 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
 
         userStoreManagerServiceClient.deleteUser(((JSONObject) registerRequestJSON.get(USER)).get(USERNAME).toString());
         log.info("User with username: " + ((JSONObject) registerRequestJSON.get(USER)).get(USERNAME).toString() +
-                "is deleted.");
+                " is deleted.");
         httpCommonClient.closeHttpClient();
     }
 
@@ -207,7 +207,7 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
             }
         }
         // To sync the local caches.
-        Thread.sleep(20000);
+        Thread.sleep(40000);
     }
 
     @Test(description = "2.1.2",
