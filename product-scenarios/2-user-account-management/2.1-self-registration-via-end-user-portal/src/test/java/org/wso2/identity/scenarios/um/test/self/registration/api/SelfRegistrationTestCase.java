@@ -207,7 +207,7 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
             }
         }
         // To sync the local caches.
-        Thread.sleep(10000);
+        Thread.sleep(20000);
     }
 
     @Test(description = "2.1.2",
