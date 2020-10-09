@@ -1,0 +1,7 @@
+[
+  {
+    "path": "/maxAge",
+    "value": "1000.0",
+    "operation": "REPLACE"
+  }
+]

@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-integration-tests</artifactId>
-        <version>5.11.0-m27-SNAPSHOT</version>
+        <version>5.11.0-alpha4-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -159,6 +159,11 @@
             <version>${opensaml3.version}</version>
         </dependency>
         <dependency>
+            <groupId>javax.xml.soap</groupId>
+            <artifactId>javax.xml.soap-api</artifactId>
+            <version>${javax.xml.soap.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.opensaml</groupId>
             <artifactId>opensaml-soap-api</artifactId>
             <version>${opensaml3.version}</version>
@@ -266,6 +271,7 @@
     <properties>
         <java-support.version>7.3.0</java-support.version>
         <opensaml3.version>3.3.0</opensaml3.version>
+        <javax.xml.soap.version>1.4.0</javax.xml.soap.version>
     </properties>
 
 </project>

@@ -33,6 +33,9 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -70,9 +73,10 @@ public class SCIMUserUpdateReadOnlyTest extends SCIM2BaseTest {
     }
 
     @BeforeClass(alwaysRun = true)
-    public void init() throws RemoteException {
+    public void init() throws RemoteException, InterruptedException {
 
         super.testInit(swaggerDefinition, tenant);
+        Thread.sleep(20000);
     }
 
     @AfterClass(alwaysRun = true)
@@ -93,6 +97,9 @@ public class SCIMUserUpdateReadOnlyTest extends SCIM2BaseTest {
 
         endpointURL = USERS_ENDPOINT;
         Response response = getResponseOfGet(endpointURL, SCIM_CONTENT_TYPE);
+        if (HttpStatus.SC_INTERNAL_SERVER_ERROR == response.getStatusCode()) {
+            log.info(">>> Content: >>>" + response.getBody().prettyPrint());
+        }
         ExtractableResponse<Response> extractableResponse = response.then()
                 .log().ifValidationFails()
                 .assertThat()

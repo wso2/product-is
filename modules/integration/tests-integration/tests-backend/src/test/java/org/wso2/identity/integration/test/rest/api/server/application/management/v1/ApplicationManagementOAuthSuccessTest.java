@@ -22,6 +22,8 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 
+import java.io.IOException;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.Matchers.notNullValue;
@@ -160,10 +162,11 @@ public class ApplicationManagementOAuthSuccessTest extends ApplicationManagement
                 .body("accessToken.bindingType", equalTo("cookie"))
                 .body("grantTypes", containsInAnyOrder("refresh_token", "authorization_code", "account_switch",
                         "password"))
-                .body("callbackURLs" , hasItem("http://localhost:8080/playground2/oauth2client"))
+                .body("callbackURLs", hasItem("http://localhost:8080/playground2/oauth2client"))
                 .body("pkce.mandatory", equalTo(true))
                 .body("pkce.supportPlainTransformAlgorithm", equalTo(true))
-                .body("publicClient", equalTo(false));
+                .body("publicClient", equalTo(false))
+                .body("allowedOrigins", hasItem("http://wso2.is"));
     }
 
     @Test(dependsOnMethods = "testUpdateOAuthInboundDetailsOfSecondApp")

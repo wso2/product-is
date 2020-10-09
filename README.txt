@@ -47,7 +47,7 @@ Installation and Running
 1. Extract the downloaded zip file
 2. Run the wso2server.sh or wso2server.bat file in the /bin directory
 3. Once the server starts, point your Web browser to https://localhost:9443/carbon/
-4. User dashboard is available at https://localhost:9443/dashboard
+4. User dashboard is available at https://localhost:9443/myaccount
 5. For more information, see the Installation Guide
     https://is.docs.wso2.com/en/5.10.0/setup/installing-the-product
 

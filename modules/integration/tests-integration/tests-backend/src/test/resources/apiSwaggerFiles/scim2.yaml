@@ -830,6 +830,10 @@ paths:
           description: Valid users are not found
           schema:
             $ref: '#/definitions/GroupSearchErrorResponseObject'
+        500:
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorInternalServerError'
     post:
       tags:
         - Users Endpoint

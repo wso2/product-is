@@ -72,7 +72,7 @@ public class CARBON15051EmailLoginTestCase extends ISIntegrationTest {
     @AfterClass(alwaysRun = true)
     public void endTest() throws Exception {
 
-        serverConfigurationManager.restoreToLastConfiguration(false);
+        serverConfigurationManager.restoreToLastConfiguration();
     }
 
     @Test(groups = "wso2.is", description = "Trying to log in with email as the username")

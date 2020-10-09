@@ -352,36 +352,25 @@
             </includes>
         </fileSet>
 
-        <!--copy user-portal web app-->
+        <!--copy myaccount web app-->
         <fileSet>
             <directory>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
             </directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
             <includes>
-                <include>user-portal/</include>
+                <include>myaccount/</include>
             </includes>
         </fileSet>
 
-        <!--copy developer-portal web app-->
+        <!--copy console web app-->
         <fileSet>
             <directory>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
             </directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
             <includes>
-                <include>developer-portal/</include>
-            </includes>
-        </fileSet>
-
-        <!--copy admin-portal web app-->
-        <fileSet>
-            <directory>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
-            </directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
-            <includes>
-                <include>admin-portal/</include>
+                <include>console/</include>
             </includes>
         </fileSet>
 
@@ -1142,6 +1131,12 @@
         <file>
             <source>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/EndpointConfig.properties
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/identity</outputDirectory>
+        </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/RecoveryEndpointConfig.properties
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/identity</outputDirectory>
         </file>
