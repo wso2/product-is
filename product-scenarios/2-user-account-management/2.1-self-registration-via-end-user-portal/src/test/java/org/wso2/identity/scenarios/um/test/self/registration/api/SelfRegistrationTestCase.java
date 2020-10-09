@@ -206,8 +206,8 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
                 log.info("Self registration - Verification code expiry time is set to 1440 seconds.");
             }
         }
-        // To sync the local caches.
-        Thread.sleep(40000);
+        // Wait 2m to sync the local caches.
+        Thread.sleep(120000);
     }
 
     @Test(description = "2.1.2",
