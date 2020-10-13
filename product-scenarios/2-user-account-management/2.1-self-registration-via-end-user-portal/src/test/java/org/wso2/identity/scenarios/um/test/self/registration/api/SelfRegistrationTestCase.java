@@ -191,19 +191,24 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
 
             if (SELF_REGISTRATION_ENABLE.equals(property.getName())) {
                 assertEquals(property.getValue(), "true");
-                log.info("Self registration is enabled.");
+                log.info("Self registration is enabled for user: " +
+                        ((JSONObject) registerRequestJSON.get(USER)).get(USERNAME).toString());
             } else if (SELF_REGISTRATION_LOCK_ON_CREATION.equals(property.getName())) {
                 assertEquals(property.getValue(), "true");
-                log.info("Self registration - Account lock on user creation is enabled.");
+                log.info("Self registration - Account lock on user creation is enabled for user: " +
+                        ((JSONObject) registerRequestJSON.get(USER)).get(USERNAME).toString());
             } else if (SELF_REGISTRATION_NOTIFICATION_IM.equals(property.getName())) {
                 assertEquals(property.getValue(), "false");
-                log.info("Self registration - Notification internally managed is disabled.");
+                log.info("Self registration - Notification internally managed is disabled for user: " +
+                        ((JSONObject) registerRequestJSON.get(USER)).get(USERNAME).toString());
             } else if (SELF_REGISTRATION_RE_CAPTCHA.equals(property.getName())) {
                 assertEquals(property.getValue(), "false");
-                log.info("Self registration - ReCaptcha is disabled.");
+                log.info("Self registration - ReCaptcha is disabled for user: " +
+                        ((JSONObject) registerRequestJSON.get(USER)).get(USERNAME).toString());
             } else if (SELF_REGISTRATION_CODE_EXPIRY_TIME.equals(property.getName())) {
                 assertEquals(property.getValue(), "1440");
-                log.info("Self registration - Verification code expiry time is set to 1440 seconds.");
+                log.info("Self registration - Verification code expiry time is set to 1440 seconds for user: " +
+                        ((JSONObject) registerRequestJSON.get(USER)).get(USERNAME).toString());
             }
         }
         // Wait 2m to sync the local caches.
@@ -310,6 +315,8 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
                 "User confirmation failed. Confirmation code: " + confirmationCode + " Request Object: "
                         + registerRequestJSON.toJSONString());
 
+        // To sync the local caches after validation of confirmation code request sent.
+        Thread.sleep(5000);
         ClaimValue[] claimValues = userStoreManagerServiceClient
                 .getUserClaimValuesForClaims(((JSONObject) registerRequestJSON.get(USER)).get(USERNAME).toString(),
                         new String[] { ACCOUNT_LOCK_CLAIM }, "default");
