@@ -211,8 +211,8 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
                         ((JSONObject) registerRequestJSON.get(USER)).get(USERNAME).toString());
             }
         }
-        // Wait 2m to sync the local caches.
-        Thread.sleep(120000);
+        // Wait 2.5 minutes to sync the local caches.
+        Thread.sleep(150000);
     }
 
     @Test(description = "2.1.2",
@@ -315,8 +315,8 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
                 "User confirmation failed. Confirmation code: " + confirmationCode + " Request Object: "
                         + registerRequestJSON.toJSONString());
 
-        // To sync the local caches after validation of confirmation code request sent.
-        Thread.sleep(5000);
+        // Wait 1 minute to sync the local caches after validation of confirmation code request is sent.
+        Thread.sleep(60000);
         ClaimValue[] claimValues = userStoreManagerServiceClient
                 .getUserClaimValuesForClaims(((JSONObject) registerRequestJSON.get(USER)).get(USERNAME).toString(),
                         new String[] { ACCOUNT_LOCK_CLAIM }, "default");
