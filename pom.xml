@@ -2020,7 +2020,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.18.131</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.18.132</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2031,18 +2031,18 @@
         <carbon.consent.mgt.version>2.2.12</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.4.51</identity.governance.version>
+        <identity.governance.version>1.4.52</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.5.1</identity.carbon.auth.saml2.version>
         <identity.carbon.auth.mutual.ssl.version>5.4.1</identity.carbon.auth.mutual.ssl.version>
         <identity.carbon.auth.iwa.version>5.4.2</identity.carbon.auth.iwa.version>
-        <identity.carbon.auth.rest.version>1.4.19</identity.carbon.auth.rest.version>
+        <identity.carbon.auth.rest.version>1.4.20</identity.carbon.auth.rest.version>
 
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.8.15</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.4.84</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.4.86</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.6.0</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.6.3</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.6.1</identity.inbound.provisioning.scim.version>
@@ -2076,7 +2076,7 @@
         <!--<identity.userstore.cassandra.version>5.1.1</identity.userstore.cassandra.version>-->
         <!--<identity.agent-entitlement-filter.version>5.1.1</identity.agent-entitlement-filter.version>-->
         <org.wso2.carbon.identity.remotefetch.version>0.7.12</org.wso2.carbon.identity.remotefetch.version>
-        <org.wso2.carbon.identity.developer.version>0.5.9</org.wso2.carbon.identity.developer.version>
+        <org.wso2.carbon.identity.developer.version>0.5.10</org.wso2.carbon.identity.developer.version>
         <!-- CallHome version -->
         <callhome.version>4.5.x_1.0.8</callhome.version>
 
@@ -2100,7 +2100,7 @@
 
         <!-- Local Authenticator Versions -->
         <identity.local.auth.basicauth.version>6.3.10</identity.local.auth.basicauth.version>
-        <identity.local.auth.fido.version>5.2.7</identity.local.auth.fido.version>
+        <identity.local.auth.fido.version>5.2.8</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.3.14</identity.local.auth.iwa.version>
 
         <!-- Local Authentication API Connector Version -->
@@ -2133,7 +2133,7 @@
         <carbon.identity.oauth.uma.version>1.2.6</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.0.456</identity.apps.version>
+        <identity.apps.version>1.0.458</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.3.0</charon.version>
