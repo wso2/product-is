@@ -2037,7 +2037,7 @@
         <identity.carbon.auth.saml2.version>5.5.1</identity.carbon.auth.saml2.version>
         <identity.carbon.auth.mutual.ssl.version>5.4.1</identity.carbon.auth.mutual.ssl.version>
         <identity.carbon.auth.iwa.version>5.4.2</identity.carbon.auth.iwa.version>
-        <identity.carbon.auth.rest.version>1.4.19</identity.carbon.auth.rest.version>
+        <identity.carbon.auth.rest.version>1.4.20</identity.carbon.auth.rest.version>
 
 
         <!-- Identity Inbound Versions   -->
@@ -2076,7 +2076,7 @@
         <!--<identity.userstore.cassandra.version>5.1.1</identity.userstore.cassandra.version>-->
         <!--<identity.agent-entitlement-filter.version>5.1.1</identity.agent-entitlement-filter.version>-->
         <org.wso2.carbon.identity.remotefetch.version>0.7.12</org.wso2.carbon.identity.remotefetch.version>
-        <org.wso2.carbon.identity.developer.version>0.5.9</org.wso2.carbon.identity.developer.version>
+        <org.wso2.carbon.identity.developer.version>0.5.10</org.wso2.carbon.identity.developer.version>
         <!-- CallHome version -->
         <callhome.version>4.5.x_1.0.8</callhome.version>
 
