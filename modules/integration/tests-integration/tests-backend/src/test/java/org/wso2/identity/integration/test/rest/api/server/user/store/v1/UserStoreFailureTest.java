@@ -102,7 +102,11 @@ public class UserStoreFailureTest extends UserStoreTestBase {
         String body = readResource("user-store-add-secondary-user-store.json");
         Response response = getResponseOfPut(USER_STORE_PATH_COMPONENT + PATH_SEPARATOR +
                 INCORRECT_DOMAIN_ID, body);
-        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "SUS-60001");
+        /*
+        * When the domain name does not match with the domain name in the request, it should be a bad request since
+        * userstore domain name is not supported.
+        */
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "SUS-60009");
     }
 
     @Test
