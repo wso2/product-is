@@ -20,7 +20,6 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpStatus;
-import org.hamcrest.Matchers;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
@@ -34,7 +33,9 @@ import java.io.IOException;
 
 public class UserStoreFailureTest extends UserStoreTestBase {
 
-    private static final String INCORRECT_DOMAIN_ID = "SkRCQy0x";
+    private static final String INVALID_DOMAIN_ID = "SkRCQy0x";
+    private static final String INCORRECT_DOMAIN_ID = "SkRCQy0z";
+
     private static final String INCORRECT_TYPE_ID = "WSDFGHBCVNMLKI";
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
@@ -92,8 +93,21 @@ public class UserStoreFailureTest extends UserStoreTestBase {
     public void testGetUserStoreByDomainIdNegativeCase() {
 
         Response response = getResponseOfGet(USER_STORE_PATH_COMPONENT + PATH_SEPARATOR +
-                INCORRECT_DOMAIN_ID);
+                INVALID_DOMAIN_ID);
         validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "SUS-60003");
+    }
+
+    @Test
+    public void testUpdateUserStoreByInvalidIdNegativeCase() throws IOException {
+
+        String body = readResource("user-store-add-secondary-user-store.json");
+        Response response = getResponseOfPut(USER_STORE_PATH_COMPONENT + PATH_SEPARATOR +
+                INVALID_DOMAIN_ID, body);
+        /*
+         * When the domain name does not match with the domain name in the request, it should be a bad request since
+         * userstore domain name is not supported.
+         */
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "SUS-60009");
     }
 
     @Test
@@ -117,7 +131,7 @@ public class UserStoreFailureTest extends UserStoreTestBase {
     public void testDeleteUserStoreByIdNegativeCase() {
 
         Response response = getResponseOfDelete(USER_STORE_PATH_COMPONENT + PATH_SEPARATOR
-                + INCORRECT_DOMAIN_ID);
+                + INVALID_DOMAIN_ID);
         validateHttpStatusCode(response, HttpStatus.SC_NO_CONTENT);
     }
 }
