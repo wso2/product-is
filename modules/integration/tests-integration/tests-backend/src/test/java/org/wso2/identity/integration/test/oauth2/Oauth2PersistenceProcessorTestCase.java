@@ -35,7 +35,6 @@ import java.io.File;
 public class Oauth2PersistenceProcessorTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
     private ServerConfigurationManager serverConfigurationManager;
-    ;
     private String consumerKey1;
     private String consumerKey2;
 
