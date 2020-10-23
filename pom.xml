@@ -2020,7 +2020,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.18.136</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.18.137</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2034,19 +2034,19 @@
         <identity.governance.version>1.4.53</identity.governance.version>
 
         <!--Identity Carbon Versions-->
-        <identity.carbon.auth.saml2.version>5.5.1</identity.carbon.auth.saml2.version>
+        <identity.carbon.auth.saml2.version>5.5.2</identity.carbon.auth.saml2.version>
         <identity.carbon.auth.mutual.ssl.version>5.4.1</identity.carbon.auth.mutual.ssl.version>
         <identity.carbon.auth.iwa.version>5.4.2</identity.carbon.auth.iwa.version>
         <identity.carbon.auth.rest.version>1.4.20</identity.carbon.auth.rest.version>
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.saml.version>5.8.16</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.4.88</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.saml.version>5.8.17</identity.inbound.auth.saml.version>
+        <identity.inbound.auth.oauth.version>6.4.89</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.6.0</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.6.4</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.6.1</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>1.5.27</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim2.version>1.5.29</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity workflow Versions -->
         <identity.user.workflow.version>5.4.1</identity.user.workflow.version>
@@ -2059,7 +2059,7 @@
         <identity.user.ws.version>5.4.1</identity.user.ws.version>
 
         <!-- Identity Userstore Versions -->
-        <identity.userstore.ldap.version>6.2.2</identity.userstore.ldap.version>
+        <identity.userstore.ldap.version>6.2.3</identity.userstore.ldap.version>
         <identity.userstore.remote.version>5.2.5</identity.userstore.remote.version>
 
         <!-- Identity Data Publisher Versions -->
@@ -2083,7 +2083,7 @@
         <!-- Authenticator Versions -->
         <identity.outbound.auth.oidc.version>5.5.6</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.passive.sts.version>5.4.4</identity.outbound.auth.passive.sts.version>
-        <identity.outbound.auth.samlsso.version>5.3.15</identity.outbound.auth.samlsso.version>
+        <identity.outbound.auth.samlsso.version>5.3.16</identity.outbound.auth.samlsso.version>
         <identity.outbound.auth.requestpath.basicauth.version>5.4.1</identity.outbound.auth.requestpath.basicauth.version>
         <identity.outbound.auth.requestpath.oauth.version>5.3.1</identity.outbound.auth.requestpath.oauth.version>
 
@@ -2115,7 +2115,7 @@
         <!-- Connector Versions -->
         <authenticator.totp.version>2.2.4</authenticator.totp.version>
         <authenticator.office365.version>2.0.2</authenticator.office365.version>
-        <authenticator.smsotp.version>3.0.5</authenticator.smsotp.version>
+        <authenticator.smsotp.version>3.0.6</authenticator.smsotp.version>
         <authenticator.emailotp.version>3.0.9</authenticator.emailotp.version>
         <authenticator.twitter.version>1.0.11</authenticator.twitter.version>
         <authenticator.x509.version>3.0.3</authenticator.x509.version>
@@ -2133,7 +2133,7 @@
         <carbon.identity.oauth.uma.version>1.2.6</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.0.463</identity.apps.version>
+        <identity.apps.version>1.0.469</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.3.0</charon.version>
