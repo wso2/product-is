@@ -2020,7 +2020,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.18.137</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.18.139</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2031,7 +2031,7 @@
         <carbon.consent.mgt.version>2.2.12</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.4.53</identity.governance.version>
+        <identity.governance.version>1.4.55</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.5.2</identity.carbon.auth.saml2.version>
@@ -2042,7 +2042,7 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.8.17</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.4.89</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.4.90</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.6.0</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.6.4</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.6.1</identity.inbound.provisioning.scim.version>
@@ -2059,7 +2059,7 @@
         <identity.user.ws.version>5.4.1</identity.user.ws.version>
 
         <!-- Identity Userstore Versions -->
-        <identity.userstore.ldap.version>6.2.3</identity.userstore.ldap.version>
+        <identity.userstore.ldap.version>6.2.4</identity.userstore.ldap.version>
         <identity.userstore.remote.version>5.2.5</identity.userstore.remote.version>
 
         <!-- Identity Data Publisher Versions -->
@@ -2133,7 +2133,7 @@
         <carbon.identity.oauth.uma.version>1.2.6</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.0.469</identity.apps.version>
+        <identity.apps.version>1.0.471</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.3.0</charon.version>
