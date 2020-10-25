@@ -22,7 +22,9 @@ jobs:
       id: cache-maven-m2
       uses: actions/cache@v2
       with:
-       path: ~/.m2
+       path: |
+         ~/.m2
+         !~/.m2/repository/org/wso2/is/wso2is/
        key: ${{ runner.os }}-pr-builder-${{ hashFiles('cache-key-file.xml') }}
        restore-keys: |
          ${{ runner.os }}-pr-builder-
