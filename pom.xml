@@ -614,6 +614,11 @@
                 <version>${gdata.core.wso2.version}</version>
             </dependency>
             <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>${google.code.gson.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.axis2.wso2</groupId>
                 <artifactId>axis2-jibx</artifactId>
                 <version>${axis2.jibx.wso2.version}</version>
@@ -1915,6 +1920,32 @@
                 <version>${org.xmlunit.version}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.identity.apps</groupId>
+                <artifactId>identity-apps-cypress-tests</artifactId>
+                <version>${identity.apps.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${com.fasterxml.jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.jackson</groupId>
+                <artifactId>jackson-core-asl</artifactId>
+                <version>${jackson-core-asl.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.logging</artifactId>
+                <version>${carbon.logging.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${com.fasterxml.jackson.annotation.version}</version>
+            </dependency>
             <!-- Pax Logging -->
             <dependency>
                 <groupId>org.ops4j.pax.logging</groupId>
@@ -2209,6 +2240,7 @@
         <jstl.version>1.1.2</jstl.version>
         <taglibs.version>1.1.2</taglibs.version>
         <google.collect.wso2.version>1.0.0.wso2v2</google.collect.wso2.version>
+        <google.code.gson.version>2.3.1</google.code.gson.version>
         <oauth2.client.version>1.0.0</oauth2.client.version>
         <axiom.wso2.version>1.2.11-wso2v16</axiom.wso2.version>
         <commons.lang.version>2.6</commons.lang.version>
@@ -2254,6 +2286,11 @@
         <rest.assured.version>4.1.2</rest.assured.version>
         <swagger-core-version>1.5.22</swagger-core-version>
         <swagger-request-validator.version>2.6.0</swagger-request-validator.version>
+        <!--UI Cypress test -->
+        <com.fasterxml.jackson.version>2.10.5</com.fasterxml.jackson.version>
+        <jackson-core-asl.version>1.9.13</jackson-core-asl.version>
+        <carbon.logging.version>4.4.39</carbon.logging.version>
+        <com.fasterxml.jackson.annotation.version>2.10.5</com.fasterxml.jackson.annotation.version>
 
         <!--ws-trust-client-->
         <org.apache.velocity.version>1.7</org.apache.velocity.version>
