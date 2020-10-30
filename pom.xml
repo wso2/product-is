@@ -2032,7 +2032,7 @@
         <identity.carbon.auth.saml2.version>5.5.2</identity.carbon.auth.saml2.version>
         <identity.carbon.auth.mutual.ssl.version>5.4.1</identity.carbon.auth.mutual.ssl.version>
         <identity.carbon.auth.iwa.version>5.4.2</identity.carbon.auth.iwa.version>
-        <identity.carbon.auth.rest.version>1.4.20</identity.carbon.auth.rest.version>
+        <identity.carbon.auth.rest.version>1.4.21</identity.carbon.auth.rest.version>
 
 
         <!-- Identity Inbound Versions   -->
@@ -2128,7 +2128,7 @@
         <carbon.identity.oauth.uma.version>1.2.7</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.0.487</identity.apps.version>
+        <identity.apps.version>1.0.489</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.3.0</charon.version>
