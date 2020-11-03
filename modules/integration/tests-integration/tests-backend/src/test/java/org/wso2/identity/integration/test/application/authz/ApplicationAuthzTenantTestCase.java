@@ -24,9 +24,7 @@ import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.CookieStore;
 import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
@@ -87,9 +85,6 @@ public class ApplicationAuthzTenantTestCase extends AbstractApplicationAuthzTest
                     "    <Rule Effect=\"Deny\" RuleId=\"denyall\"/>\n" +
                     "</Policy>";
 
-    CookieStore cookieStore = new BasicCookieStore();
-    CookieStore cookieStoreUnAuthorized = new BasicCookieStore();
-
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
@@ -103,8 +98,8 @@ public class ApplicationAuthzTenantTestCase extends AbstractApplicationAuthzTest
         remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
         entitlementPolicyClient = new EntitlementPolicyServiceClient(backendURL, sessionCookie);
 
-        httpClientAzUser = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
-        httpClientNonAzUser = HttpClientBuilder.create().setDefaultCookieStore(cookieStoreUnAuthorized).build();
+        httpClientAzUser = HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build();
+        httpClientNonAzUser = HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build();
 
         createRole(AZ_TEST_TENANT_ROLE);
         createUser(AZ_TEST_TENANT_USER, AZ_TEST_TENANT_USER_PW, new String[]{AZ_TEST_TENANT_ROLE});

@@ -5,8 +5,6 @@ import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.CookieStore;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -72,8 +70,6 @@ public class TestPassiveSTS extends ISIntegrationTest {
     private ServiceProvider serviceProvider;
     private CloseableHttpClient client;
 
-    CookieStore cookieStore = new BasicCookieStore();
-
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
         return new Object[][]{
@@ -100,7 +96,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
 
         appMgtClient = new ApplicationManagementServiceClient(sessionCookie, backendURL, null);
 
-        client = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
+        client = HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build();
         String isURL = backendURL.substring(0, backendURL.indexOf("services/"));
         this.passiveStsURL = isURL + "passivests";
 

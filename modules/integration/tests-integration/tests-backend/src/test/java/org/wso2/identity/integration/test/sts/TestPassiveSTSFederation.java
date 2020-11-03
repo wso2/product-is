@@ -73,8 +73,6 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
     private String adminUsername;
     private String adminPassword;
 
-    CookieStore cookieStore = new BasicCookieStore();
-
     @BeforeClass(alwaysRun = true)
     public void initTest() throws Exception {
 
@@ -91,7 +89,7 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
                 new IdentityConstants.ServiceClientType[]{
                         IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT,
                         IdentityConstants.ServiceClientType.SAML_SSO_CONFIG});
-        client = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
+        client = HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build();
     }
 
     @AfterClass(alwaysRun = true)

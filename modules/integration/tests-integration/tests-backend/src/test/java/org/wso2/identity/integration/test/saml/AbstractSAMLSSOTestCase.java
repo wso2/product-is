@@ -24,23 +24,21 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.identity.application.common.model.xsd.Claim;
+import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.LocalAndOutboundAuthenticationConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.Property;
 import org.wso2.carbon.identity.application.common.model.xsd.RequestPathAuthenticatorConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
-import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
-import org.wso2.carbon.identity.application.common.model.xsd.Claim;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
@@ -85,7 +83,6 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
     protected SAMLSSOConfigServiceClient ssoConfigServiceClient;
     private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
     protected HttpClient httpClient;
-    CookieStore cookieStore = new BasicCookieStore();
 
     protected enum HttpBinding {
 
@@ -264,7 +261,7 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
                 configContext);
         ssoConfigServiceClient = new SAMLSSOConfigServiceClient(backendURL, sessionCookie);
         remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
-        httpClient = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
+        httpClient = HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build();
     }
 
     public void testClear() throws Exception {
