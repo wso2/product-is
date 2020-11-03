@@ -67,7 +67,7 @@ public class UMTestServiceComponent {
 
     @Deactivate
     protected void deactivate(ComponentContext ctxt) {
-        log.info("Test UUID User store manger deactivated.");;
+        log.info("Test UUID User store manger deactivated.");
     }
 
     protected void unsetRealmService(RealmService realmService) {

@@ -19,6 +19,7 @@ package org.wso2.identity.integration.test.oidc;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
+import org.json.simple.JSONObject;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -93,7 +94,6 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
 
     }
 
-
     @Test(groups = "wso2.is", description = "Get access token for playground.appone")
     public void testGetAccessTokenForPasswordGrant() throws Exception {
 
@@ -136,6 +136,32 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
                 .body("last_name", is(user.getUserClaims().get(OIDCUtilTest.lastName)));
     }
 
+    @Test(groups = "wso2.is", description = "Get access token with a JSON request", dependsOnMethods =
+            "testUserInfoEndpoint")
+    public void testGetAccessTokenForPasswordGrantJsonRequest() throws Exception {
+
+        Map<String, String> params = new HashMap<>();
+        params.put("grant_type", "password");
+        params.put("scope", "openid");
+        params.put("username", user.getUsername());
+        params.put("password", user.getPassword());
+
+        JSONObject jsonObject = new JSONObject(params);
+        String payload = jsonObject.toJSONString();
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Content-Type", "application/json;charset=UTF-8");
+
+        Response response = getResponseOfJsonPostWithAuth(OAUTH2_TOKEN_ENDPOINT_URI, payload, headers,
+                                                          application.getClientId(), application.getClientSecret());
+
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("access_token", notNullValue());
+    }
+
     /**
      * Invoke given endpointUri for Form POST request with given body, headers and Basic authentication credentials
      *
@@ -154,6 +180,26 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
                 .params(params)
                 .when()
                 .post(endpointUri);
+    }
+
+    /**
+     * Invoke given endpointUri for JSON POST request with given body, headers and Basic authentication credentials.
+     *
+     * @param endpointUri endpoint to be invoked
+     * @param payload     json payload
+     * @param headers     map of headers to be added to the request
+     * @param username    basic auth username
+     * @param password    basic auth password
+     * @return response
+     */
+    protected Response getResponseOfJsonPostWithAuth(String endpointUri, String payload, Map<String, String>
+            headers, String username, String password) {
+
+        return given().auth().preemptive().basic(username, password)
+                      .headers(headers)
+                      .body(payload)
+                      .when()
+                      .post(endpointUri);
     }
 
     /**

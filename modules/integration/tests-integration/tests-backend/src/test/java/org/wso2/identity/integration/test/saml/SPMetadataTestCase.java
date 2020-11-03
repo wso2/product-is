@@ -43,7 +43,7 @@ public class SPMetadataTestCase extends ISIntegrationTest {
     private static final String[] ACSs = {"https://metadata-sp:8080/federation/Consumer1/metaAlias/sp",
             "https://metadata-sp:8080/federation/Consumer2/metaAlias/sp"};
     private static String NAMEIDFORMAT = "urn/oasis/names/tc/SAML/2.0/nameid-format/persistent";
-    private static boolean WANTASSERTIONSSIGNED= false;
+    private static boolean WANTASSERTIONSSIGNED= true;
     private static boolean ISAAUTHNREQUESTSSIGNED = false;
     private static String SLOREQUESTURL = "https://metadata-sp:8080/federation/SPSloRedirect/metaAlias/sp";
     private static String SLORESPONSEURL = "https://metadata-sp:8080/federation/SPSloRedirect/metaAlias/sp";
