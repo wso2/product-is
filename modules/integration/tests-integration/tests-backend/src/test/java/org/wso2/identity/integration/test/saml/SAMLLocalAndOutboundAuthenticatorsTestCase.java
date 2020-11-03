@@ -24,7 +24,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
@@ -46,7 +45,6 @@ import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
-import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
@@ -94,8 +92,6 @@ public class SAMLLocalAndOutboundAuthenticatorsTestCase extends ISIntegrationTes
     private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
     private IdentityProviderMgtServiceClient identityProviderMgtServiceClient;
     private HttpClient httpClient;
-
-    CookieStore cookieStore = new BasicCookieStore();
 
     private enum User {
         SUPER_TENANT_USER("samluser1", "samluser1", "carbon.super", "samluser1@wso2.com", "samlnickuser1",
@@ -253,7 +249,7 @@ public class SAMLLocalAndOutboundAuthenticatorsTestCase extends ISIntegrationTes
         ssoConfigServiceClient = new SAMLSSOConfigServiceClient(backendURL, sessionCookie);
         remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
         identityProviderMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
-        httpClient = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
+        httpClient = HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build();
 
         createIDP();
         createUser();
