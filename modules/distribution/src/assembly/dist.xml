@@ -40,6 +40,10 @@
                 <exclude>features/org.wso2.carbon.as.runtimes.cxf_*/cxf3/*.jar</exclude>
                 <exclude>features/org.wso2.carbon.identity.oauth.server_*/runtimes/cxf3/*.jar</exclude>
                 <exclude>features/org.wso2.carbon.identity.oauth2.validators.xacml.server_*/dropins/*.jar</exclude>
+                <exclude>features/org.wso2.carbon.event.output.adapter.cassandra.server_*</exclude>
+                <exclude>plugins/cassandra-thrift_*.jar</exclude>
+                <exclude>plugins/org.wso2.carbon.event.output.adapter.cassandra_*.jar</exclude>
+                <exclude>plugins/org.wso2.carbon.identity.sso.agent_*.jar</exclude>
             </excludes>
         </fileSet>
         <!-- Creates an empty directory -->
