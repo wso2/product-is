@@ -23,7 +23,9 @@ import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.automation.extensions.servers.carbonserver.MultipleServersManager;
@@ -261,6 +263,11 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
 
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         bufferedReader.close();
+    }
+
+    public HttpClient getNewHttpClientWithCookieStore() {
+
+        return HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build();
     }
 
     private String getSecureServiceUrl(int portOffset, String baseUrl) {

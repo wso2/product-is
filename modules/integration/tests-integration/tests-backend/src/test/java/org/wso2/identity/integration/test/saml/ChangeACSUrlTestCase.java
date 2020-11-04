@@ -24,6 +24,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -157,7 +158,8 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
     @Test(groups = "wso2.is", description = "Check SAML To SAML fedaration flow")
     public void testChangeACSUrl() throws Exception {
 
-        try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
+        try (CloseableHttpClient client =
+                     HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build()) {
             String sessionId = sendSAMLRequestToPrimaryIS(client);
             Assert.assertNotNull(sessionId, "Unable to acquire 'sessionDataKey' value");
 
@@ -241,7 +243,7 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
         urlParameters.add(new BasicNameValuePair("RelayState", searchResults.get("RelayState")));
         request.setEntity(new UrlEncodedFormEntity(urlParameters));
 
-        HttpResponse response = new DefaultHttpClient().execute(request);
+        HttpResponse response = client.execute(request);
 
         if (Utils.requestMissingClaims(response)) {
             String pastrCookie = Utils.getPastreCookie(response);

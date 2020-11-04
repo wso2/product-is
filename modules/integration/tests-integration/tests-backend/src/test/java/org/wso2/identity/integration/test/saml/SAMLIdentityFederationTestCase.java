@@ -263,7 +263,7 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
 
     public void testSAMLToSAMLFederation() throws Exception {
 
-        HttpClient client = new DefaultHttpClient();
+        HttpClient client = getNewHttpClientWithCookieStore();
 
         String sessionId = sendSAMLRequestToPrimaryIS(client);
         Assert.assertNotNull(sessionId, "Unable to acquire 'sessionDataKey' value");
@@ -367,7 +367,7 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         urlParameters.add(new BasicNameValuePair("RelayState", searchResults.get("RelayState")));
         request.setEntity(new UrlEncodedFormEntity(urlParameters));
 
-        HttpResponse response = new DefaultHttpClient().execute(request);
+        HttpResponse response = client.execute(request);
         String locationHeader = getHeaderValue(response, "Location");
         String pastrCookie = Utils.getPastreCookie(response);
         if (Utils.requestMissingClaims(response)) {

@@ -24,7 +24,8 @@ import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -37,12 +38,9 @@ import org.wso2.identity.integration.common.clients.application.mgt.ApplicationM
 import org.wso2.identity.integration.common.clients.entitlement.EntitlementPolicyServiceClient;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
-import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 
-import java.io.File;
-import java.net.URL;
 import java.rmi.RemoteException;
 
 public class ApplicationAuthzTestCase extends AbstractApplicationAuthzTestCase {
@@ -97,8 +95,8 @@ public class ApplicationAuthzTestCase extends AbstractApplicationAuthzTestCase {
         remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
         entitlementPolicyClient = new EntitlementPolicyServiceClient(backendURL, sessionCookie);
 
-        httpClientAzUser = new DefaultHttpClient();
-        httpClientNonAzUser = new DefaultHttpClient();
+        httpClientAzUser = HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build();
+        httpClientNonAzUser = HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build();
 
         createRole(AZ_TEST_ROLE);
         createUser(AZ_TEST_USER, AZ_TEST_USER_PW, new String[]{AZ_TEST_ROLE});
