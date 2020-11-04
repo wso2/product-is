@@ -22,6 +22,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.identity.apps.test.container.CypressTestConstants;
 import org.wso2.identity.apps.test.container.CypressTestContainer;
+import org.wso2.identity.apps.test.container.exception.CypressContainerException;
 import org.wso2.identity.integration.common.utils.ISIntegrationUITest;
 
 import javax.xml.xpath.XPathExpressionException;
@@ -46,7 +47,8 @@ public class CypressTestRunnerTestCase extends ISIntegrationUITest {
     }
 
     @Test(description = "Execute identity apps cypress test suite.")
-    public void runCyPressTests() throws IOException, URISyntaxException, XPathExpressionException {
+    public void runCyPressTests() throws IOException, URISyntaxException, XPathExpressionException,
+            CypressContainerException {
 
         Path path = Paths
                 .get(new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI()).getPath());

@@ -216,7 +216,6 @@
             </extentionClasses>
         </platformExecutionManager>
 
-
         <PlatformSuiteManager>
             <extentionClasses>
                 <!--<className>org.wso2.carbon.automation.extensions.servers.carbonserver.CarbonServerExtension</className>-->

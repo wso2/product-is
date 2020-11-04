@@ -23,6 +23,7 @@ import com.google.gson.JsonObject;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.identity.apps.test.container.exception.CypressContainerException;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -63,10 +64,11 @@ public class CypressTestContainer {
      * @param propertyName Name of the cypress environment property.
      * @param propertyValue Value of the cypress environment property.
      */
-    public void addOrOverwriteTestConfigProperty(Path filePath, String propertyName, String propertyValue) {
+    public void addOrOverwriteTestConfigProperty(Path filePath, String propertyName, String propertyValue)
+            throws CypressContainerException {
 
         if (StringUtils.isBlank(propertyName)) {
-            throw new RuntimeException("Invalid config element propertyName.");
+            throw new CypressContainerException("Invalid config element propertyName.");
         }
 
         Gson gson = new Gson();
@@ -95,10 +97,11 @@ public class CypressTestContainer {
      * @param scriptPath Path of the script to run the test suite.
      * @throws IOException When character encoding is not supported.
      */
-    public void runTestSuite(Path scriptPath) throws IOException  {
+    public void runTestSuite(Path scriptPath) throws IOException, CypressContainerException {
 
         if (!Files.exists(scriptPath)) {
-            throw new RuntimeException("Script `" + scriptPath.toAbsolutePath().toString() + "` does not exists!");
+            throw new CypressContainerException("Script `" + scriptPath.toAbsolutePath().toString() +
+                    "` does not exists!");
         }
 
         Process process;
@@ -125,14 +128,14 @@ public class CypressTestContainer {
      * @return the Cypress test results.
      * @throws IOException
      */
-    public void endTestSuite(Path reportsPath) throws IOException {
+    public void endTestSuite(Path reportsPath) throws CypressContainerException, IOException {
 
         CypressTestUtils testUtils = new CypressTestUtils().withMochawesomeReportsAt(reportsPath);
         CypressTestResults testResults = testUtils.getTestResults();
 
         if (testResults.getNumberOfFailedTests() > 0) {
             LOG.error(testResults);
-            throw new RuntimeException("There was a failure running the Cypress tests!");
+            throw new CypressContainerException("There was a failure running the Cypress tests!");
         }
     }
 }
