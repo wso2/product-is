@@ -2015,7 +2015,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.18.167</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.18.170</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2070,7 +2070,7 @@
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
         <!--<identity.userstore.cassandra.version>5.1.1</identity.userstore.cassandra.version>-->
         <!--<identity.agent-entitlement-filter.version>5.1.1</identity.agent-entitlement-filter.version>-->
-        <org.wso2.carbon.identity.remotefetch.version>0.7.19</org.wso2.carbon.identity.remotefetch.version>
+        <org.wso2.carbon.identity.remotefetch.version>0.7.20</org.wso2.carbon.identity.remotefetch.version>
         <org.wso2.carbon.identity.developer.version>0.5.10</org.wso2.carbon.identity.developer.version>
         <!-- CallHome version -->
         <callhome.version>4.5.x_1.0.8</callhome.version>
