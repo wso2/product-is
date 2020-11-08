@@ -17,20 +17,17 @@
  */
 package org.wso2.identity.integration.test.encryption;
 
+import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
-import org.wso2.carbon.core.util.CryptoUtil;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
 import org.xml.sax.SAXException;
-
-import java.io.File;
-import java.io.IOException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -40,12 +37,16 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 public class EventPublisherPasswordEncryptionTestCase extends ISIntegrationTest {
 
     private ServerConfigurationManager serverConfigurationManager;
     private String eventPublisherDeploymentDirectory;
-    String eventPublisherFileName = "IsAnalytics-Publisher-wso2event-AuthenticationData.xml";
+    private String eventPublisherFileName = "IsAnalytics-Publisher-wso2event-AuthenticationData.xml";
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -64,10 +65,10 @@ public class EventPublisherPasswordEncryptionTestCase extends ISIntegrationTest 
     public void testCustomPasswordEncryptionOfEventPublishers() throws Exception {
 
         File eventPublisherFile = new File(eventPublisherDeploymentDirectory + File.separator + eventPublisherFileName);
-        decryptEventPublisherpassword(eventPublisherFile);
+        decryptEventPublisherPassword(eventPublisherFile);
     }
 
-    private void decryptEventPublisherpassword(File eventPublisherFile) throws Exception {
+    private void decryptEventPublisherPassword(File eventPublisherFile) throws Exception {
 
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setNamespaceAware(true);
@@ -83,20 +84,18 @@ public class EventPublisherPasswordEncryptionTestCase extends ISIntegrationTest 
             if (data.getLength() > 0) {
                 for (int i = 0; i < data.getLength(); i++) {
                     String newEncryptedPassword = data.item(i).getNodeValue();
-                    byte[] decryptedtext = CryptoUtil.getDefaultCryptoUtil()
-                            .base64DecodeAndDecrypt(newEncryptedPassword);
-                    String decryptedPasswordString = new String(decryptedtext);
-                    Assert.assertEquals(decryptedPasswordString, "admin", "Password encryption failed when adding" +
-                            " eventpublisher");
+                    String decodedPasswordData = new String(Base64.getDecoder().decode(newEncryptedPassword),
+                            StandardCharsets.UTF_8);
+                    JSONObject jsonObject = new JSONObject(decodedPasswordData);
+                    String tValue = jsonObject.getString("t");
+                    Assert.assertEquals(tValue, "AES/GCM/NoPadding", "Password encryption has used an unexpected " +
+                            "algorithm");
                 }
             }
-
         } catch (ParserConfigurationException | SAXException | IOException | XPathExpressionException e) {
-
             throw new Exception(
                     "Error occurred while decrypting event publisher password for " + eventPublisherFileName);
         }
-
     }
 
     private static NodeList getEncryptedPayload(Document doc, XPath xpath)
