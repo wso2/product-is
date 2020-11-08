@@ -60,7 +60,7 @@ public class EventPublisherPasswordEncryptionTestCase extends ISIntegrationTest 
     }
 
     @Test(groups = "wso2.is",
-            description = "Test encryption of password in user store configuration xml",
+            description = "Test encryption of password in authentication data publisher file",
             priority = 1)
     public void testCustomPasswordEncryptionOfEventPublishers() throws Exception {
 
