@@ -302,4 +302,9 @@
             <class name="org.wso2.identity.integration.test.saml.SAMLQueryProfileTestCase"/>
         </classes>
     </test>
+    <test name="is-tests-default-encryption" preserve-order="true" parallel="false" group-by-instances="true">
+        <classes>
+            <class name="org.wso2.identity.integration.test.encryption.EventPublisherPasswordEncryptionTestCase"/>
+        </classes>
+    </test>
 </suite>
