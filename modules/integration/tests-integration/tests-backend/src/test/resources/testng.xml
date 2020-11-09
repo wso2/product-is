@@ -129,6 +129,8 @@
             <class name="org.wso2.identity.integration.test.rest.api.user.approval.v1.UserMeApprovalTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.authorized.apps.v1.MeAuthorizedAppsNegativeTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.authorized.apps.v1.MeAuthorizedAppsSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.user.authorized.apps.v2.MeAuthorizedAppsSuccessTest"></class>
+            <class name="org.wso2.identity.integration.test.rest.api.user.authorized.apps.v2.MeAuthorizedAppsNegativeTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.session.v1.UserSessionTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.session.v1.UserSessionMeSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.application.v1.UserDiscoverableApplicationSuccessTest"/>
@@ -172,69 +174,6 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.cors.v1.CORSFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.tenant.management.v1.TenantSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.tenant.management.v1.TenantFailureTest"/>
-        </classes>
-    </test>
-
-    <test name="is-tests-scim2" preserve-order="true" parallel="false">
-        <classes>
-            <class name="org.wso2.identity.integration.test.scim2.SCIM2UserTestCase"/>
-            <class name="org.wso2.identity.integration.test.scim2.SCIM2GroupTestCase"/>
-            <class name="org.wso2.identity.integration.test.scim2.SCIM2MeTestCase"/>
-            <class name="org.wso2.identity.integration.test.scim2.SCIM2MultiAttributeUserFilterTestCase"/>
-            <class name="org.wso2.identity.integration.test.scim2.rest.api.SCIMUserUpdateTest"/>
-        </classes>
-    </test>
-
-    <test name="is-tests-uuid-user-store" preserve-order="true" parallel="false" group-by-instances="true">
-        <classes>
-            <!-- This initializer test should run before running other tests. This will copy the relevant services that
-                 needs to run the new test cases.-->
-            <class name="org.wso2.identity.integration.test.user.mgt.uuid.UUIDUserManagerInitializerTestCase"/>
-            <class name="org.wso2.identity.integration.test.user.mgt.uuid.ReadWriteLDAPUUIDUMTestCase"/>
-            <class name="org.wso2.identity.integration.test.user.mgt.uuid.JDBCUUIDUMTestCase"/>
-        </classes>
-    </test>
-
-    <!--
-    ====================================================================================================================
-        IMPORTANT : All the tests below this section, should be the ones that requires additional Identity Server
-        instance.
-
-        To minimize the number of restarts, at each test, additional instance is started before all the tests in the
-        below tag and stopped at the end.
-    ====================================================================================================================
-    -->
-
-    <test name="is-tests-federation" preserve-order="true" parallel="false" group-by-instances="true">
-        <classes>
-            <class name="org.wso2.identity.integration.test.base.SecondaryCarbonServerInitializerTestCase"/>
-            <class name="org.wso2.identity.integration.test.sts.TestPassiveSTSFederation"/>
-            <class name="org.wso2.identity.integration.test.auth.ConditionalAuthenticationTestCase" />
-            <class name="org.wso2.identity.integration.test.provisioning.ProvisioningTestCase"/>
-            <class name="org.wso2.identity.integration.test.workflow.mgt.WorkflowManagementTestCase"/>
-            <class name="org.wso2.identity.integration.test.provisioning.JustInTimeProvisioningTestCase"/>
-        </classes>
-    </test>
-
-    <!--
-    ====================================================================================================================
-        IMPORTANT : All the tests below this section, should be the ones that requires configuration changes and
-        restarts.
-
-        To minimize the number of restarts, at each test, do the configuration update and restart. Then do the test
-        and finally restore the configuration without restarting. The next test will perform the restart with the
-        configuration changes required for it.
-
-        If multiple tests can be run with one configuration change, group them into a test group and do the above at
-        @BeforeTest, and @AfterTest. See 'is-tests-jdbc-userstore' for example.
-    ====================================================================================================================
-    -->
-
-    <test name="is-tests-federation-restart" preserve-order="true" parallel="false" group-by-instances="true">
-        <classes>
-            <class name="org.wso2.identity.integration.test.base.SecondaryCarbonServerInitializerTestCase"/>
-            <class name="org.wso2.identity.integration.test.saml.SAMLFederationWithFileBasedSPAndIDPTestCase"/>
-            <class name="org.wso2.identity.integration.test.saml.ChangeACSUrlTestCase"/>
         </classes>
     </test>
     <test name="is-tests-jdbc-userstore" preserve-order="true" parallel="false" group-by-instances="true">
