@@ -1,0 +1,59 @@
+name: pr-builder-for-is-prs
+
+on:
+  pull_request_target:
+    types: [labeled]
+    branches:
+      - main
+      - master
+
+jobs:
+  build:
+    if: ${{ github.event.label.name == 'trigger-pr-builder' }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Build init
+      run: |
+        echo ${{github.event.pull_request.html_url}}
+        wget -c https://raw.githubusercontent.com/wso2/product-is/master/pom.xml -O cache-key-file.xml
+    - name: Cache maven packages
+      id: cache-maven-m2
+      uses: actions/cache@v2
+      with:
+       path: |
+         ~/.m2
+         !~/.m2/repository/org/wso2/is/wso2is
+       key: ${{ runner.os }}-pr-builder-${{ hashFiles('cache-key-file.xml') }}
+       restore-keys: |
+         ${{ runner.os }}-pr-builder-
+         ${{ runner.os }}-pr-builder
+    - name: Run PR builder
+      env:
+        PR_LINK: ${{github.event.pull_request.html_url}}
+      run: |
+        wget https://raw.githubusercontent.com/janakamarasena/is-pr-builder-workflow/main/builder_product_is.sh
+        bash builder_product_is.sh
+    - name: Archive PR diff file
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: pr-diff
+        path: |
+          product-is/diff.diff
+        if-no-files-found: warn
+    - name: Archive product-is mvn build log
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: product-is-mvn-build-log
+        path: |
+          product-is/mvn-build.log
+        if-no-files-found: warn
+    - name: Archive product-is surefire reports
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: product-is-surefire-report
+        path: |
+          product-is/**/surefire-reports
+        if-no-files-found: warn
