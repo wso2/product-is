@@ -21,24 +21,59 @@ import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Objects;
 import javax.validation.Valid;
+import javax.xml.bind.annotation.*;
 
 public class ApplicationListItem  {
-  
+
     private String id;
     private String name;
     private String description;
     private String image;
-    private String loginUrl;
+    private String accessUrl;
+
+    @XmlType(name="AccessEnum")
+    @XmlEnum(String.class)
+    public enum AccessEnum {
+
+        @XmlEnumValue("READ") READ(String.valueOf("READ")), @XmlEnumValue("WRITE") WRITE(String.valueOf("WRITE"));
+
+
+        private String value;
+
+        AccessEnum(String v) {
+            value = v;
+        }
+
+        public String value() {
+            return value;
+        }
+
+        @Override
+        public String toString() {
+            return String.valueOf(value);
+        }
+
+        public static AccessEnum fromValue(String value) {
+            for (AccessEnum b : AccessEnum.values()) {
+                if (b.value.equals(value)) {
+                    return b;
+                }
+            }
+            throw new IllegalArgumentException("Unexpected value '" + value + "'");
+        }
+    }
+
+    private AccessEnum access = AccessEnum.READ;
     private String self;
 
     /**
-    **/
+     **/
     public ApplicationListItem id(String id) {
 
         this.id = id;
         return this;
     }
-    
+
     @ApiModelProperty(example = "85e3f4b8-0d22-4181-b1e3-1651f71b88bd", value = "")
     @JsonProperty("id")
     @Valid
@@ -50,13 +85,13 @@ public class ApplicationListItem  {
     }
 
     /**
-    **/
+     **/
     public ApplicationListItem name(String name) {
 
         this.name = name;
         return this;
     }
-    
+
     @ApiModelProperty(example = "user-portal", value = "")
     @JsonProperty("name")
     @Valid
@@ -68,13 +103,13 @@ public class ApplicationListItem  {
     }
 
     /**
-    **/
+     **/
     public ApplicationListItem description(String description) {
 
         this.description = description;
         return this;
     }
-    
+
     @ApiModelProperty(example = "Application representing user portal", value = "")
     @JsonProperty("description")
     @Valid
@@ -86,13 +121,13 @@ public class ApplicationListItem  {
     }
 
     /**
-    **/
+     **/
     public ApplicationListItem image(String image) {
 
         this.image = image;
         return this;
     }
-    
+
     @ApiModelProperty(example = "https://example.com/logo/my-logo.png", value = "")
     @JsonProperty("image")
     @Valid
@@ -104,31 +139,49 @@ public class ApplicationListItem  {
     }
 
     /**
-    **/
-    public ApplicationListItem loginUrl(String loginUrl) {
+     **/
+    public ApplicationListItem accessUrl(String accessUrl) {
 
-        this.loginUrl = loginUrl;
+        this.accessUrl = accessUrl;
         return this;
     }
-    
+
     @ApiModelProperty(example = "https://example.com/app/login", value = "")
-    @JsonProperty("loginUrl")
+    @JsonProperty("accessUrl")
     @Valid
-    public String getLoginUrl() {
-        return loginUrl;
+    public String getAccessUrl() {
+        return accessUrl;
     }
-    public void setLoginUrl(String loginUrl) {
-        this.loginUrl = loginUrl;
+    public void setAccessUrl(String accessUrl) {
+        this.accessUrl = accessUrl;
     }
 
     /**
-    **/
+     **/
+    public ApplicationListItem access(AccessEnum access) {
+
+        this.access = access;
+        return this;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("access")
+    @Valid
+    public AccessEnum getAccess() {
+        return access;
+    }
+    public void setAccess(AccessEnum access) {
+        this.access = access;
+    }
+
+    /**
+     **/
     public ApplicationListItem self(String self) {
 
         this.self = self;
         return this;
     }
-    
+
     @ApiModelProperty(example = "/t/wso2.com/api/server/v1/applications/85e3f4b8-0d22-4181-b1e3-1651f71b88bd", value = "")
     @JsonProperty("self")
     @Valid
@@ -142,7 +195,7 @@ public class ApplicationListItem  {
 
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(java.lang.Object o) {
 
         if (this == o) {
             return true;
@@ -152,16 +205,17 @@ public class ApplicationListItem  {
         }
         ApplicationListItem applicationListItem = (ApplicationListItem) o;
         return Objects.equals(this.id, applicationListItem.id) &&
-            Objects.equals(this.name, applicationListItem.name) &&
-            Objects.equals(this.description, applicationListItem.description) &&
-            Objects.equals(this.image, applicationListItem.image) &&
-            Objects.equals(this.loginUrl, applicationListItem.loginUrl) &&
-            Objects.equals(this.self, applicationListItem.self);
+                Objects.equals(this.name, applicationListItem.name) &&
+                Objects.equals(this.description, applicationListItem.description) &&
+                Objects.equals(this.image, applicationListItem.image) &&
+                Objects.equals(this.accessUrl, applicationListItem.accessUrl) &&
+                Objects.equals(this.access, applicationListItem.access) &&
+                Objects.equals(this.self, applicationListItem.self);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, image, loginUrl, self);
+        return Objects.hash(id, name, description, image, accessUrl, access, self);
     }
 
     @Override
@@ -174,17 +228,18 @@ public class ApplicationListItem  {
         sb.append("    name: ").append(toIndentedString(name)).append("\n");
         sb.append("    description: ").append(toIndentedString(description)).append("\n");
         sb.append("    image: ").append(toIndentedString(image)).append("\n");
-        sb.append("    loginUrl: ").append(toIndentedString(loginUrl)).append("\n");
+        sb.append("    accessUrl: ").append(toIndentedString(accessUrl)).append("\n");
+        sb.append("    access: ").append(toIndentedString(access)).append("\n");
         sb.append("    self: ").append(toIndentedString(self)).append("\n");
         sb.append("}");
         return sb.toString();
     }
 
     /**
-    * Convert the given object to string with each line indented by 4 spaces
-    * (except the first line).
-    */
-    private String toIndentedString(Object o) {
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
+     */
+    private String toIndentedString(java.lang.Object o) {
 
         if (o == null) {
             return "null";
@@ -192,4 +247,3 @@ public class ApplicationListItem  {
         return o.toString().replace("\n", "\n");
     }
 }
-
