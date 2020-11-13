@@ -57,15 +57,15 @@ And a blind carbon copy of the same announcement email is sent to the following 
    </td>
    <td><i>digit-1</i>.<i>digit-2</i>.<i>digit-3</i> M <i>milestone</i>
    </td>
-   <td>5.10.0 M3
+   <td>5.11.0 M4
    </td>
   </tr>
   <tr>
    <td><i>IS_ARTIFACT_LOCATION</i>
    </td>
-   <td>The download location of the released IS pack for the milestone
+   <td>The download location of the released IS distribution for the milestone
    </td>
-   <td><a href="https://github.com/wso2/product-is/releases/download/v5.10.0-m2/wso2is-5.10.0-m2.zip">https://github.com/wso2/product-is/releases/download/v5.10.0-m2/wso2is-5.10.0-m2.zip</a>
+   <td><a href="https://github.com/wso2/product-is/releases/download/v5.11.0-m4/wso2is-5.11.0-m4.zip">https://github.com/wso2/product-is/releases/download/v5.11.0-m4/wso2is-5.11.0-m4.zip</a>
    </td>
   </tr>
   <tr>
@@ -76,7 +76,7 @@ And a blind carbon copy of the same announcement email is sent to the following 
    </td>
    <td>The URL to the closed milestone in the GitHub
    </td>
-   <td><a href="https://github.com/wso2/product-is/milestone/96?closed=1">https://github.com/wso2/product-is/milestone/96?closed=1</a>
+   <td><a href="https://github.com/wso2/product-is/milestone/133?closed=1">https://github.com/wso2/product-is/milestone/133?closed=1</a>
    </td>
   </tr>
 </table>
