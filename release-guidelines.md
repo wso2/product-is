@@ -63,7 +63,7 @@ And a blind carbon copy of the same announcement email is sent to the following 
   <tr>
    <td><i>IS_ARTIFACT_LOCATION</i>
    </td>
-   <td>The download location of the released IS pack for the milestone
+   <td>The download location of the released IS distribution for the milestone
    </td>
    <td><a href="https://github.com/wso2/product-is/releases/download/v5.11.0-m4/wso2is-5.11.0-m4.zip">https://github.com/wso2/product-is/releases/download/v5.11.0-m4/wso2is-5.11.0-m4.zip</a>
    </td>
