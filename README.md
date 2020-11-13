@@ -78,8 +78,9 @@ Installation and Running
 1. Extract the downloaded/built binary distribution zip file
 2. Run the wso2server.sh or wso2server.bat file in the /bin directory
 3. Once the server starts, point your Web browser to https://localhost:9443/carbon/
-4. User dashboard is available at https://localhost:9443/myaccount
-5. For more information, see the Installation Guide
+4. Developer and Administrator Console is available at https://localhost:9443/console
+5. End User Portal is available at https://localhost:9443/myaccount
+6. For more information, see the Installation Guide
 
 
 WSO2 Identity Server Distribution Directory Structure
@@ -201,7 +202,7 @@ By default mode, it would ask you to enter the master password
 > ciphertool -Dchange  (in UNIX)
 
 For more details see
-https://is.docs.wso2.com/en/5.10.0/administer/carbon-secure-vault-implementation
+https://is.docs.wso2.com/en/5.11.0/setup/encrypting-passwords-with-cipher-tool
 
 Support
 =======
