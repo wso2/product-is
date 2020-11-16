@@ -2128,7 +2128,7 @@
         <carbon.identity.oauth.uma.version>1.2.7</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.0.558</identity.apps.version>
+        <identity.apps.version>1.0.559</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.3.26</charon.version>
