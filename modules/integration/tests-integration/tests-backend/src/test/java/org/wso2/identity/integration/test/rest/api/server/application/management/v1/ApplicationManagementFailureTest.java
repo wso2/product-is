@@ -160,34 +160,6 @@ public class ApplicationManagementFailureTest extends ApplicationManagementBaseT
     }
 
     @Test
-    public void testDeleteResidentServiceProvider() throws Exception {
-
-        // First we need to find the id of the resident service provider.
-        String path = APPLICATION_MANAGEMENT_API_BASE_PATH + "?filter=name eq " + ApplicationConstants.LOCAL_SP;
-        Response response = getResponseOfGet(path);
-        response.then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK)
-                .body("totalResults", equalTo(1));
-
-        // Get the resident SPs id.
-        ApplicationListResponse listResponse = response.getBody().as(ApplicationListResponse.class);
-        List<ApplicationListItem> applications = listResponse.getApplications();
-        // assert the size.
-        assertEquals(applications.size(), 1);
-        assertNotNull(applications.get(0));
-        assertEquals(applications.get(0).getName(), ApplicationConstants.LOCAL_SP);
-
-        String id = applications.get(0).getId();
-        assertNotBlank(id);
-
-        String applicationPath = APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + id;
-        Response responseOfDelete = getResponseOfDelete(applicationPath);
-        validateErrorResponse(responseOfDelete, HttpStatus.SC_FORBIDDEN, "APP-60008");
-    }
-
-    @Test
     public void testUpdateAppNameToReservedResidentServiceProviderName() throws Exception {
 
         // Create an app first
