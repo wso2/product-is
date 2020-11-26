@@ -1,0 +1,78 @@
+name: pr-builder-test
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: "Enter PR link (ex: https://github.com/wso2-extensions/identity-inbound-auth-oauth/pull/1481)"
+        default: 
+        required: true
+
+jobs:   
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Print Input
+      run: echo Running the PR builder for PR - ${{ github.event.inputs.pr }}
+    - name: Build init
+      run: |
+        wget -c https://raw.githubusercontent.com/wso2/product-is/master/pom.xml -O cache-key-file.xml
+    - name: Cache maven packages
+      id: cache-maven-m2
+      uses: actions/cache@v2
+      with:
+       path: |
+         ~/.m2
+         !~/.m2/repository/org/wso2/is/wso2is
+       key: ${{ runner.os }}-pr-builder-${{ hashFiles('cache-key-file.xml') }}
+       restore-keys: |
+         ${{ runner.os }}-pr-builder-
+         ${{ runner.os }}-pr-builder
+    - name: Run PR builder
+      id: builder_step
+      env:
+        PR_LINK: ${{github.event.inputs.pr}}
+      run: |
+        wget https://raw.githubusercontent.com/wso2/product-is/master/.github/scripts/pr-builder.sh
+        bash pr-builder.sh
+    - name: Archive PR diff file
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: repo-pr-diff
+        path: |
+          ${{steps.builder_step.outputs.REPO_NAME}}/diff.diff
+        if-no-files-found: warn
+    - name: Archive repo mvn build log
+      if: always() && ${{steps.builder_step.outputs.REPO_NAME}} != 'product-is'
+      uses: actions/upload-artifact@v2
+      with:
+        name: repo-mvn-build-log
+        path: |
+          ${{steps.builder_step.outputs.REPO_NAME}}/mvn-build.log
+        if-no-files-found: warn
+    - name: Archive repo surefire reports
+      if: always() && ${{steps.builder_step.outputs.REPO_NAME}} != 'product-is'
+      uses: actions/upload-artifact@v2
+      with:
+        name: repo-surefire-report
+        path: |
+          ${{steps.builder_step.outputs.REPO_NAME}}/**/surefire-reports
+        if-no-files-found: warn
+    - name: Archive product-is mvn build log
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: product-is-mvn-build-log
+        path: |
+          product-is/mvn-build.log
+        if-no-files-found: warn
+    - name: Archive product-is surefire reports
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: product-is-surefire-report
+        path: |
+          product-is/**/surefire-reports
+        if-no-files-found: warn
