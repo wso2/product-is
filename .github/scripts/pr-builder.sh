@@ -1,5 +1,4 @@
 #!/bin/bash +x
-RTPP_FILE=/build/jenkins-home/jobs/DEV_PR_BUILDER/workspace/rtpp.txt
 MULTITENANCY_REPO=carbon-multitenancy
 MULTITENANCY_REPO_CLONE_LINK=https://github.com/wso2/carbon-multitenancy.git
 SCIM2_REPO=identity-inbound-provisioning-scim2
@@ -43,13 +42,13 @@ if [ "$REPO" = "product-is" ]; then
     exit 1
   }
 
-  echo "<h3>Last 3 changes:</h3><ul>" >>$RTPP_FILE
+  echo "Last 3 changes:"
   COMMIT1=$(git log --oneline -1)
   COMMIT2=$(git log --oneline -2 | tail -1)
   COMMIT3=$(git log --oneline -3 | tail -1)
-  echo "<li>$COMMIT1</li>" >>$RTPP_FILE
-  echo "<li>$COMMIT2</li>" >>$RTPP_FILE
-  echo "<li>$COMMIT3</li></ul>" >>$RTPP_FILE
+  echo "$COMMIT1"
+  echo "$COMMIT2"
+  echo "$COMMIT3"
 
   cat pom.xml
   mvn clean install --batch-mode | tee mvn-build.log
