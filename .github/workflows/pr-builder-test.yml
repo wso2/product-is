@@ -45,7 +45,7 @@ jobs:
           ${{steps.builder_step.outputs.REPO_NAME}}/diff.diff
         if-no-files-found: warn
     - name: Archive repo mvn build log
-      if: always() && ${{steps.builder_step.outputs.REPO_NAME}} != 'product-is'
+      if: always() && steps.builder_step.outputs.REPO_NAME != 'product-is'
       uses: actions/upload-artifact@v2
       with:
         name: repo-mvn-build-log
@@ -53,7 +53,7 @@ jobs:
           ${{steps.builder_step.outputs.REPO_NAME}}/mvn-build.log
         if-no-files-found: warn
     - name: Archive repo surefire reports
-      if: always() && ${{steps.builder_step.outputs.REPO_NAME}} != 'product-is'
+      if: always() && steps.builder_step.outputs.REPO_NAME != 'product-is'
       uses: actions/upload-artifact@v2
       with:
         name: repo-surefire-report
