@@ -32,6 +32,7 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import java.io.IOException;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.testng.Assert.assertNotNull;
 import static org.wso2.identity.integration.test.rest.api.server.application.management.v1.Utils.assertNotBlank;
@@ -64,10 +65,10 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
         ApplicationListResponse listResponse = jsonWriter.readValue(response.asString(), ApplicationListResponse.class);
 
         assertNotNull(listResponse);
-        Assert.assertTrue(listResponse.getApplications()
+        Assert.assertFalse(listResponse.getApplications()
                         .stream()
                         .anyMatch(appBasicInfo -> appBasicInfo.getName().equals(ApplicationConstants.LOCAL_SP)),
-                "Default resident service provider '" + ApplicationConstants.LOCAL_SP + "' is not listed by the API");
+                "Default resident service provider '" + ApplicationConstants.LOCAL_SP + "' is listed by the API");
 
         if (StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
             // Check whether the default "My Account" app exists.
@@ -76,6 +77,18 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
                             .anyMatch(appBasicInfo -> appBasicInfo.getName().equals(MY_ACCOUNT)),
                     "Default application 'My Account' is not listed by the API.");
         }
+    }
+
+    @Test
+    public void testGetResidentApplication() throws IOException {
+
+        Response response = getResponseOfGet(RESIDENT_APP_API_BASE_PATH);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .log().ifValidationFails()
+                .body("provisioningConfigurations", notNullValue());
     }
 
     @Test
