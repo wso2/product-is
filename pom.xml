@@ -28,7 +28,7 @@
     <artifactId>identity-server-parent</artifactId>
     <packaging>pom</packaging>
     <description>WSO2 Identity Server</description>
-    <version>5.12.0-m1-SNAPSHOT</version>
+    <version>5.12.0-m2-SNAPSHOT</version>
     <name>WSO2 Identity Server</name>
     <url>http://wso2.org/projects/identity</url>
 
@@ -2037,7 +2037,7 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.8.19</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.4.111</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.4.113</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.6.0</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.6.5</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.6.1</identity.inbound.provisioning.scim.version>
@@ -2076,7 +2076,7 @@
         <callhome.version>4.5.x_1.0.8</callhome.version>
 
         <!-- Authenticator Versions -->
-        <identity.outbound.auth.oidc.version>5.6.0</identity.outbound.auth.oidc.version>
+        <identity.outbound.auth.oidc.version>5.6.1</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.passive.sts.version>5.4.4</identity.outbound.auth.passive.sts.version>
         <identity.outbound.auth.samlsso.version>5.3.18</identity.outbound.auth.samlsso.version>
         <identity.outbound.auth.requestpath.basicauth.version>5.4.1</identity.outbound.auth.requestpath.basicauth.version>
@@ -2095,7 +2095,7 @@
 
         <!-- Local Authenticator Versions -->
         <identity.local.auth.basicauth.version>6.3.11</identity.local.auth.basicauth.version>
-        <identity.local.auth.fido.version>5.2.8</identity.local.auth.fido.version>
+        <identity.local.auth.fido.version>5.2.9</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.3.14</identity.local.auth.iwa.version>
 
         <!-- Local Authentication API Connector Version -->
@@ -2128,7 +2128,7 @@
         <carbon.identity.oauth.uma.version>1.2.7</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.0.559</identity.apps.version>
+        <identity.apps.version>1.0.567</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.3.26</charon.version>
