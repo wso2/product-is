@@ -212,6 +212,7 @@
             <class name="org.wso2.identity.integration.test.auth.ConditionalAuthenticationTestCase" />
             <class name="org.wso2.identity.integration.test.provisioning.ProvisioningTestCase"/>
             <class name="org.wso2.identity.integration.test.workflow.mgt.WorkflowManagementTestCase"/>
+            <class name="org.wso2.identity.integration.test.oidc.OIDCIdentityFederationTestCase"/>
             <class name="org.wso2.identity.integration.test.provisioning.JustInTimeProvisioningTestCase"/>
         </classes>
     </test>
