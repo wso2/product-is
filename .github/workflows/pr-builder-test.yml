@@ -15,6 +15,12 @@ jobs:
     steps:
     - name: Print Input
       run: echo Running the PR builder for PR - ${{ github.event.inputs.pr }}
+    - name: Comment build info
+      run: |
+        owner=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 4)
+        repo=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 5)
+        pr_number=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 7)
+        curl -X POST https://api.github.com/repos/$owner/$repo/issues/$pr_number/comments -H 'Authorization: token ${{secrets.PR_BUILDER_COMMENT}}' -d '{"body":"PR builder started \nLink: https://github.com/wso2/product-is/actions/runs/${{github.run_id}}"}'
     - name: Build init
       run: |
         wget -c https://raw.githubusercontent.com/wso2/product-is/master/pom.xml -O cache-key-file.xml
@@ -76,3 +82,17 @@ jobs:
         path: |
           product-is/**/surefire-reports
         if-no-files-found: warn
+    - name: Comment build status
+      if: always()
+      run: |
+        owner=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 4)
+        repo=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 5)
+        pr_number=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 7)
+        curl -X POST https://api.github.com/repos/$owner/$repo/issues/$pr_number/comments -H 'Authorization: token ${{secrets.PR_BUILDER_COMMENT}}' -d '{"body":"PR builder completed \nLink: https://github.com/wso2/product-is/actions/runs/${{github.run_id}} \nStatus: **${{job.status}}**"}'
+    - name: Approve PR
+      if: success()
+      run: |
+        owner=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 4)
+        repo=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 5)
+        pr_number=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 7)
+        curl -X POST https://api.github.com/repos/$owner/$repo/pulls/$pr_number/reviews -H 'Authorization:token ${{secrets.PR_BUILDER_COMMENT}}' -d '{"body":"Approving the pull request based on the successful pr build https://github.com/wso2/product-is/actions/runs/${{github.run_id}}","event":"APPROVE"}'
