@@ -1,0 +1,8 @@
+[
+  {
+    "connector-name": "self-sign-up"
+  },
+  {
+    "connector-name": "user-email-verification"
+  }
+]

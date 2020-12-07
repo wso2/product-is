@@ -1,0 +1,80 @@
+[
+  {
+    "connector-name": "self-sign-up",
+    "properties": [
+      {
+        "name": "SelfRegistration.Enable",
+        "value": "false"
+      },
+      {
+        "name": "SelfRegistration.LockOnCreation",
+        "value": "true"
+      },
+      {
+        "name": "SelfRegistration.Notification.InternallyManage",
+        "value": "true"
+      },
+      {
+        "name": "SelfRegistration.ReCaptcha",
+        "value": "true"
+      },
+      {
+        "name": "SelfRegistration.VerificationCode.ExpiryTime",
+        "value": "1440"
+      },
+      {
+        "name": "SelfRegistration.VerificationCode.SMSOTP.ExpiryTime",
+        "value": "1"
+      },
+      {
+        "name": "SelfRegistration.CallbackRegex",
+        "value": "[https://localhost:9853].*[/authenticationendpoint/login.do]"
+      },
+      {
+        "name": "_url_listPurposeSelfSignUp",
+        "value": "/carbon/consent/list-purposes.jsp?purposeGroup=SELF-SIGNUP&purposeGroupType=SYSTEM&callback=%2Fcarbon%2Fidpmgt%2Fidp-mgt-edit-local.jsp%3Fcategory%3DUser+Onboarding%26subCategory%3DSelf+Registration"
+      },
+      {
+        "name": "SelfRegistration.NotifyAccountConfirmation",
+        "value": "false"
+      },
+      {
+        "name": "SelfRegistration.ResendConfirmationReCaptcha",
+        "value": "false"
+      }
+    ]
+  },
+  {
+    "connector-name": "user-email-verification",
+    "properties": [
+      {
+        "name": "EmailVerification.Enable",
+        "value": "false"
+      },
+      {
+        "name": "EmailVerification.LockOnCreation",
+        "value": "true"
+      },
+      {
+        "name": "EmailVerification.Notification.InternallyManage",
+        "value": "true"
+      },
+      {
+        "name": "EmailVerification.ExpiryTime",
+        "value": "1440"
+      },
+      {
+        "name": "EmailVerification.AskPassword.ExpiryTime",
+        "value": "1440"
+      },
+      {
+        "name": "EmailVerification.AskPassword.PasswordGenerator",
+        "value": "org.wso2.carbon.user.mgt.common.DefaultPasswordGenerator"
+      },
+      {
+        "name": "_url_listPurposeJITProvisioning",
+        "value": "/carbon/consent/list-purposes.jsp?purposeGroup=JIT&purposeGroupType=SYSTEM&callback=%2Fcarbon%2Fidpmgt%2Fidp-mgt-edit-local.jsp%3Fcategory%3DUser+Onboarding%26subCategory%3DAsk+Password"
+      }
+    ]
+  }
+]
