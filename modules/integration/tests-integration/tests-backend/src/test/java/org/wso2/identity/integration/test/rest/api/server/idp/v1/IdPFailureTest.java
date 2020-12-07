@@ -111,6 +111,13 @@ public class IdPFailureTest extends IdPTestBase {
         validateErrorResponse(response, HttpStatus.SC_CONFLICT, "IDP-60001", "Google-2");
     }
 
+    @Test()
+    public void addIdPWithDuplicateProperties() throws IOException {
+
+        Response response = getResponseOfPost(IDP_API_BASE_PATH, readResource("add-idp-duplicate-properties.json"));
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "IDP-60025");
+    }
+
 
     @Test(dependsOnMethods = {"addIdPConflict"})
     public void testGetIdPFederatedAuthenticatorWithInvalidAuthId() {
