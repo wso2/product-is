@@ -125,7 +125,11 @@ else
   echo ""
   echo "Building dependency repo $REPO..."
   echo "=========================================================="
-  mvn clean install --batch-mode | tee mvn-build.log
+  if [ "$REPO" = "carbon-kernel" ]; then
+    mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
+  else 
+    mvn clean install --batch-mode | tee mvn-build.log
+  fi 
 
   echo ""
   echo "Dependency repo $REPO build complete."
