@@ -28,11 +28,13 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import java.io.IOException;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 
 /**
@@ -117,6 +119,8 @@ public class ConfigSuccessTest extends ConfigTestBase {
     public void testGetConfigs() throws Exception {
 
         Response response = getResponseOfGet(CONFIGS_API_BASE_PATH);
+        String adminUserName = MultitenantUtils.getTenantAwareUsername(context.getContextTenant().getTenantAdmin()
+                .getUserName());
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -126,7 +130,11 @@ public class ConfigSuccessTest extends ConfigTestBase {
                 .body("homeRealmIdentifiers", notNullValue())
                 .body("provisioning", notNullValue())
                 .body("authenticators", notNullValue())
-                .body("cors", notNullValue());
+                .body("cors", notNullValue())
+                .body("realmConfig", notNullValue())
+                .body("realmConfig.adminUser", is(adminUserName))
+                .body("realmConfig.adminRole", notNullValue())
+                .body("realmConfig.everyoneRole", notNullValue());
     }
 
     @Test(dependsOnMethods = {"testGetConfigs"})
