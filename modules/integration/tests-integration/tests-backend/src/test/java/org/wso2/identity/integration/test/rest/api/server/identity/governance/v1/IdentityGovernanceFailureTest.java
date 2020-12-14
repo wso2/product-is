@@ -101,4 +101,13 @@ public class IdentityGovernanceFailureTest extends IdentityGovernanceTestBase {
         Response response = getResponseOfPost(IDENTITY_GOVERNANCE_ENDPOINT_URI + "/preferences", body);
         validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "IDG-50011", "self-sin-up");
     }
+
+    @Test
+    public void testSearchInvalidGovernanceConnectorProperties() throws IOException {
+
+        String body = readResource("get-properties-with-invalid-property-name.json");
+        Response response = getResponseOfPost(IDENTITY_GOVERNANCE_ENDPOINT_URI + "/preferences", body);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "IDG-50012",
+                "SelfRegistration.Enble");
+    }
 }
