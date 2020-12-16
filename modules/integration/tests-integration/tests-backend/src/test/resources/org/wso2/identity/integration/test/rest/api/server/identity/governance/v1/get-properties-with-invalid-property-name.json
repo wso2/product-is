@@ -1,0 +1,16 @@
+[
+  {
+    "connector-name": "self-sign-up",
+    "properties": [
+      "SelfRegistration.Enble",
+      "SelfRegistration.LockOnCreation"
+    ]
+  },
+  {
+    "connector-name": "user-email-verification",
+    "properties": [
+      "EmailVerification.Enable",
+      "EmailVerification.LockOnCreation"
+    ]
+  }
+]

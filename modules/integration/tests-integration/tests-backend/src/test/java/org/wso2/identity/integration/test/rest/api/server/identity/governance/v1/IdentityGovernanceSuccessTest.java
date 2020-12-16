@@ -34,6 +34,8 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.CategoriesRes;
 import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.CategoryRes;
 import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.ConnectorRes;
+import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.PreferenceResp;
+import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.PropertyReq;
 import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.PropertyRes;
 
 import java.io.IOException;
@@ -43,6 +45,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.core.IsNull.notNullValue;
 
 /**
  * Test class for Claim Management REST APIs success path.
@@ -52,6 +55,8 @@ public class IdentityGovernanceSuccessTest extends IdentityGovernanceTestBase {
     private static final String CATEGORY_ACCOUNT_MANAGEMENT_PROPERTIES = "QWNjb3VudCBNYW5hZ2VtZW50";
     private static final String CONNECTOR_LOCK_IDLE_ACCOUNTS = "c3VzcGVuc2lvbi5ub3RpZmljYXRpb24";
     private Map<String, CategoriesRes> categories;
+    private static List<PreferenceResp> connectors;
+    private static List<PreferenceResp> connectorsWithAllProperties;
 
     @Factory(dataProvider = "restAPIServerConfigProvider")
     public IdentityGovernanceSuccessTest(TestUserMode userMode) throws Exception {
@@ -73,6 +78,15 @@ public class IdentityGovernanceSuccessTest extends IdentityGovernanceTestBase {
                 Arrays.asList(jsonWriter.readValue(expectedResponse, CategoriesRes[].class));
         categories = categoryList.stream().collect(Collectors.toMap(CategoriesRes::getId, c -> c));
 
+        String expectedResponseForConnectors = readResource("get-connector-properties-response.json");
+        ObjectMapper objectMapper = new ObjectMapper(new JsonFactory());
+        connectors = Arrays.asList(objectMapper.readValue(expectedResponseForConnectors, PreferenceResp[].class));
+
+        String expectedResponseForConnectorsWithoutProperty = readResource
+                ("get-properties-without-property-name-response.json");
+        ObjectMapper mapper = new ObjectMapper(new JsonFactory());
+        connectorsWithAllProperties = Arrays.asList(mapper.readValue(expectedResponseForConnectorsWithoutProperty,
+                        PreferenceResp[].class));
     }
 
     @AfterClass(alwaysRun = true)
@@ -99,6 +113,15 @@ public class IdentityGovernanceSuccessTest extends IdentityGovernanceTestBase {
         return new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
+        };
+    }
+
+    @DataProvider(name = "connectorPropertiesProvider")
+    public static Object[][] connectorPropertiesProvider() {
+
+        return new Object[][]{
+                {connectors, "get-connector-properties.json"},
+                {connectorsWithAllProperties, "get-properties-without-property-name.json"}
         };
     }
 
@@ -244,5 +267,30 @@ public class IdentityGovernanceSuccessTest extends IdentityGovernanceTestBase {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK);
+    }
+
+    @Test(dataProvider = "connectorPropertiesProvider")
+    public void testSearchGovernanceConnectorProperties(List<PreferenceResp> connectorList, String requestJson)
+            throws IOException {
+
+        String body = readResource(requestJson);
+        Response response = getResponseOfPost(IDENTITY_GOVERNANCE_ENDPOINT_URI + "/preferences", body);
+
+        for (PreferenceResp preferenceResp : connectorList) {
+            String baseIdentifier = "find{ it.('connector-name') == '" + preferenceResp.getConnectorName() + "' }.";
+            List<PropertyReq> properties = preferenceResp.getProperties();
+            int i = 0;
+            for (PropertyReq propertyReq : properties) {
+                ValidatableResponse validatableResponse = response.then()
+                        .log().ifValidationFails()
+                        .assertThat()
+                        .statusCode(HttpStatus.SC_OK);
+
+                validatableResponse.body(baseIdentifier + "properties", notNullValue())
+                        .body(baseIdentifier + "properties[" + i + "].name", equalTo(propertyReq.getName()))
+                        .body(baseIdentifier + "properties[" + i + "].value", equalTo(propertyReq.getValue()));
+                i++;
+            }
+        }
     }
 }
