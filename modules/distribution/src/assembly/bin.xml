@@ -991,6 +991,12 @@
             <fileMode>644</fileMode>
         </file>
         <file>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/identity/pages/oauth_response.html</source>
+            <outputDirectory>wso2is-${pom.version}/repository/resources/identity/pages</outputDirectory>
+            <destName>oauth_response.html</destName>
+            <filtered>true</filtered>
+        </file>
+        <file>
             <source>src/repository/resources/pages/samlsso_federate.html</source>
             <outputDirectory>wso2is-${pom.version}/repository/resources/identity/pages</outputDirectory>
             <destName>samlsso_federate.html</destName>
