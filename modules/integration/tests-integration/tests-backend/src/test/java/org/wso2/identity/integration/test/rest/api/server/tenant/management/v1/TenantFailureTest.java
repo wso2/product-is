@@ -50,7 +50,7 @@ public class TenantFailureTest extends TenantManagementBaseTest {
     @BeforeClass(alwaysRun = true)
     public void init() throws IOException {
 
-        super.testInit(API_VERSION, swaggerDefinition, tenant);
+        super.testInitWithoutTenantQualifiedPath(API_VERSION, swaggerDefinition);
     }
 
     @AfterClass(alwaysRun = true)

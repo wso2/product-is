@@ -40,4 +40,11 @@ public class RESTAPIServerTestBase extends RESTTestBase {
                 tenantDomain, apiVersion);
         super.init(apiDefinition, basePathInSwagger, basePath);
     }
+
+    protected void testInitWithoutTenantQualifiedPath(String apiVersion, String apiDefinition)
+            throws RemoteException {
+
+        String basePathInSwagger = String.format(API_SERVER_BASE_PATH, apiVersion);
+        super.init(apiDefinition, basePathInSwagger, basePathInSwagger);
+    }
 }
