@@ -2015,7 +2015,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.18.204</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.18.205</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2117,7 +2117,7 @@
         <identity.extension.utils>1.0.8</identity.extension.utils>
 
         <!-- Identity REST API feature -->
-        <identity.api.dispatcher.version>1.0.146</identity.api.dispatcher.version>
+        <identity.api.dispatcher.version>1.0.147</identity.api.dispatcher.version>
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
         <identity.tool.samlsso.validator.version>5.4.2</identity.tool.samlsso.validator.version>
