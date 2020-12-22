@@ -2,5 +2,6 @@
   "driverName": "org.h2.Driver",
   "connectionURL": "jdbc:h2:./repository/database/JDBC_H2_DB",
   "username": "wso2automation",
-  "connectionPassword": "wso2automation"
+  "connectionPassword": "wso2automation",
+  "domain": "JDBC-3"
 }
