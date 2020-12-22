@@ -66,11 +66,6 @@ public class CypressTestUtils {
     CypressTestResults getTestResults() throws IOException {
 
         CypressTestResults results = testResultsStrategy.gatherTestResults();
-        LOG.info(results);
-
-        if (results.getNumberOfFailedTests() > 0) {
-            LOG.warn(results);
-        }
 
         return results;
     }

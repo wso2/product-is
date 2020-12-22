@@ -137,5 +137,7 @@ public class CypressTestContainer {
             LOG.error(testResults);
             throw new CypressContainerException("There was a failure running the Cypress tests!");
         }
+
+        LOG.info("All specs have passed!!!" + testResults);
     }
 }

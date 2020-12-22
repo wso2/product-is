@@ -20,7 +20,11 @@ package org.wso2.identity.apps.test.container;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -38,6 +42,8 @@ public class MochawesomeResultsStrategy implements TestResultsStrategy {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private final Path jsonReportsPath;
+
+    private static final Log LOG = LogFactory.getLog(MochawesomeResultsStrategy.class);
 
     public MochawesomeResultsStrategy(Path jsonReportsPath) {
 
@@ -58,9 +64,13 @@ public class MochawesomeResultsStrategy implements TestResultsStrategy {
 
         try (DirectoryStream<Path> paths = Files.newDirectoryStream(jsonReportsPath, "*.json")) {
             for (Path path : paths) {
-                MochawesomeSpecRunReport specRunReport = objectMapper.readValue(path.toFile(),
-                        MochawesomeSpecRunReport.class);
-                specRunReport.fillInTestResults(results);
+                try {
+                    MochawesomeSpecRunReport specRunReport = objectMapper.readValue(path.toFile(),
+                            MochawesomeSpecRunReport.class);
+                    specRunReport.fillInTestResults(results);
+                } catch (JsonMappingException e) {
+                    LOG.warn("No test results were found in the report file:" + " " + path);
+                }
             }
 
             return results;
