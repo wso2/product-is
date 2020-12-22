@@ -93,4 +93,21 @@ public class IdentityGovernanceFailureTest extends IdentityGovernanceTestBase {
                 "connectors/randomConnector");
         validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "IDG-50009", "randomConnector");
     }
+
+    @Test
+    public void testSearchGovernanceConnectorProperties() throws IOException {
+
+        String body = readResource("get-properties-with-invalid-connector-name.json");
+        Response response = getResponseOfPost(IDENTITY_GOVERNANCE_ENDPOINT_URI + "/preferences", body);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "IDG-50011", "self-sin-up");
+    }
+
+    @Test
+    public void testSearchInvalidGovernanceConnectorProperties() throws IOException {
+
+        String body = readResource("get-properties-with-invalid-property-name.json");
+        Response response = getResponseOfPost(IDENTITY_GOVERNANCE_ENDPOINT_URI + "/preferences", body);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "IDG-50012",
+                "SelfRegistration.Enble");
+    }
 }
