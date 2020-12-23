@@ -120,12 +120,14 @@ public class UserStoreSuccessTest extends UserStoreTestBase {
     public void testCheckRDBMSConnection() throws IOException {
 
         String body = readResource("user-store-test-connection.json");
-        getResponseOfPost(USER_STORE_PATH_COMPONENT + USER_STORE_TEST_CONNECTION, body)
-                .then().log()
-                .ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK)
-                .body("connection", equalTo(true));
+        checkRDBMSConnection(body);
+    }
+
+    @Test(dependsOnMethods = {"testAddSecondaryUserStore"})
+    public void testCheckRDBMSConnectionWithMaskedPassword() throws IOException {
+
+        String body = readResource("user-store-test-connection-with-masked-password.json");
+        checkRDBMSConnection(body);
     }
 
     @Test(dependsOnMethods = {"testAddSecondaryUserStore"})
@@ -252,5 +254,15 @@ public class UserStoreSuccessTest extends UserStoreTestBase {
                     .assertThat()
                     .statusCode(HttpStatus.SC_NOT_FOUND);
         }
+    }
+
+    private void checkRDBMSConnection(String body) {
+
+        getResponseOfPost(USER_STORE_PATH_COMPONENT + USER_STORE_TEST_CONNECTION, body)
+                .then().log()
+                .ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("connection", equalTo(true));
     }
 }
