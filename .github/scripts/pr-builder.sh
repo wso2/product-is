@@ -83,7 +83,7 @@ else
   echo ""
   echo "Determining dependency version property key..."
   echo "=========================================================="
-  wget https://raw.githubusercontent.com/mevan-karu/pom_version_property_finder/master/src/version_property_finder.py
+  wget https://raw.githubusercontent.com/wso2/product-is/master/.github/scripts/version_property_finder.py
   VERSION_PROPERTY=$(python version_property_finder.py $REPO product-is 2>&1)
   VERSION_PROPERTY_KEY=""
   if [ "$VERSION_PROPERTY" != "invalid" ]; then
