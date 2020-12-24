@@ -78,7 +78,22 @@ public class NotificationSenderSuccessTest extends NotificationSenderTestBase {
     @Test
     public void testAddEmailSender() throws IOException {
 
-        String body = readResource("add-email-sender.json");
+//        String body = readResource("add-email-sender.json");
+        String body = "{\n" +
+                "  \"fromAddress\": \"iam@gmail.com\",\n" +
+                "  \"password\": \"iam123\",\n" +
+                "  \"userName\": \"iam\",\n" +
+                "  \"properties\": [\n" +
+                "    {\n" +
+                "      \"key\": \"mail.smtp.starttls.enable\",\n" +
+                "      \"value\": \"true\"\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"key\": \"minThread\",\n" +
+                "      \"value\": \"10\"\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}";
         Response response =
                 getResponseOfPost(NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + EMAIL_SENDERS_PATH, body);
         if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
@@ -127,7 +142,7 @@ public class NotificationSenderSuccessTest extends NotificationSenderTestBase {
     public void testGetEmailSenders() throws UnsupportedEncodingException {
 
         String baseIdentifier =
-                "find{ it.id == '" + URLDecoder.decode(emailNotificationSenderName, StandardCharsets.UTF_8.name()) +
+                "find{ it.name == '" + URLDecoder.decode(emailNotificationSenderName, StandardCharsets.UTF_8.name()) +
                         "' }.";
         Response response = getResponseOfGet(NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + EMAIL_SENDERS_PATH);
         if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
@@ -151,7 +166,24 @@ public class NotificationSenderSuccessTest extends NotificationSenderTestBase {
     @Test(dependsOnMethods = {"testGetEmailSenders"})
     public void testUpdateEmailSender() throws IOException {
 
-        String body = readResource("update-email-sender.json");
+//        String body = readResource("update-email-sender.json");
+        String body = "{\n" +
+                "  \"provider\": \"Vonage\",\n" +
+                "  \"providerURL\": \"https://webhook.site/9b79bebd-445a-4dec-ad5e-622b856fa184\",\n" +
+                "  \"key\": \"1234\",\n" +
+                "  \"secret\": \"12345\",\n" +
+                "  \"sender\": \"073923902\",\n" +
+                "  \"properties\": [\n" +
+                "    {\n" +
+                "      \"key\": \"body.scope\",\n" +
+                "      \"value\": \"scopeValue\"\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"key\" : \"http.headers\",\n" +
+                "      \"value\": \"X-Version: 1, Authorization: bearer ,Accept: application/json ,Content-Type: application/json\"\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}";
         Response response = getResponseOfPut(NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + EMAIL_SENDERS_PATH +
                 PATH_SEPARATOR + emailNotificationSenderName, body);
         if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
@@ -194,7 +226,24 @@ public class NotificationSenderSuccessTest extends NotificationSenderTestBase {
     @Test
     public void testAddSmsSender() throws IOException {
 
-        String body = readResource("add-sms-sender.json");
+//        String body = readResource("add-sms-sender.json");
+        String body = "{\n" +
+                "  \"provider\": \"Vonage\",\n" +
+                "  \"providerURL\": \"https://webhook.site/9b79bebd-445a-4dec-ad5e-622b856fa184\",\n" +
+                "  \"key\": \"1234\",\n" +
+                "  \"secret\": \"12345\",\n" +
+                "  \"sender\": \"073923902\",\n" +
+                "  \"properties\": [\n" +
+                "    {\n" +
+                "      \"key\": \"body.scope\",\n" +
+                "      \"value\": \"scopeValue\"\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"key\" : \"http.headers\",\n" +
+                "      \"value\": \"X-Version: 1, Authorization: bearer ,Accept: application/json ,Content-Type: application/json\"\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}";
         Response response =
                 getResponseOfPost(NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + SMS_SENDERS_PATH, body);
         if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
@@ -245,7 +294,7 @@ public class NotificationSenderSuccessTest extends NotificationSenderTestBase {
     public void testGetSMSSenders() throws UnsupportedEncodingException {
 
         String baseIdentifier =
-                "find{ it.id == '" + URLDecoder.decode(smsNotificationSenderName, StandardCharsets.UTF_8.name()) +
+                "find{ it.name == '" + URLDecoder.decode(smsNotificationSenderName, StandardCharsets.UTF_8.name()) +
                         "' }.";
         Response response = getResponseOfGet(NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + SMS_SENDERS_PATH);
         if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
