@@ -1,0 +1,17 @@
+{
+  "provider": "VonageSub",
+  "providerURL": "https://webhook.site/9b79bebd-445a-4dec-ad5e-622b856fa184",
+  "key": "1234",
+  "secret": "12345",
+  "sender": "073923902",
+  "properties": [
+    {
+      "key": "body.scope",
+      "value": "scopeValue"
+    },
+    {
+      "key" : "http.headers",
+      "value": "X-Version: 1, Authorization: bearer ,Accept: application/json ,Content-Type: application/json"
+    }
+  ]
+}
