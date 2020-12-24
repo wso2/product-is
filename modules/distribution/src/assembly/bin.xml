@@ -950,6 +950,13 @@
         </file>
         <file>
             <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/sms/sms-providers-api-body-templates.xml
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/sms</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/identity_log_tokens.properties
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/security</outputDirectory>
