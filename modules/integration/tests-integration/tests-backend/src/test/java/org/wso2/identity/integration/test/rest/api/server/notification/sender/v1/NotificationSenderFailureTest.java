@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2020, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 package org.wso2.identity.integration.test.rest.api.server.notification.sender.v1;
 
 import io.restassured.RestAssured;
@@ -74,8 +92,8 @@ public class NotificationSenderFailureTest extends NotificationSenderTestBase {
     @Test
     public void testAddEmailSenderConflict() throws IOException {
 
-//        String body = readResource("add-email-sender.json");
-        String body = "{\n" +
+        String body = readResource("add-email-sender.json");
+/*        String body = "{\n" +
                 "  \"fromAddress\": \"iam@gmail.com\",\n" +
                 "  \"password\": \"iam123\",\n" +
                 "  \"userName\": \"iam\",\n" +
@@ -89,7 +107,7 @@ public class NotificationSenderFailureTest extends NotificationSenderTestBase {
                 "      \"value\": \"10\"\n" +
                 "    }\n" +
                 "  ]\n" +
-                "}";
+                "}";*/
         Response response =
                 getResponseOfPost(NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + EMAIL_SENDERS_PATH, body);
         if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
@@ -115,8 +133,8 @@ public class NotificationSenderFailureTest extends NotificationSenderTestBase {
     @Test
     public void testAddEmailSenderWithNonExistingEventPublisherName() throws IOException {
 
-//        String body = readResource("add-email-sender-2.json");
-        String body = "{\n" +
+        String body = readResource("add-email-sender-2.json");
+        /*String body = "{\n" +
                 "  \"name\": \"CustomEmailPublisher\",\n" +
                 "  \"fromAddress\": \"iam@gmail.com\",\n" +
                 "  \"password\": \"iam123\",\n" +
@@ -131,11 +149,11 @@ public class NotificationSenderFailureTest extends NotificationSenderTestBase {
                 "      \"value\": \"10\"\n" +
                 "    }\n" +
                 "  ]\n" +
-                "}";
+                "}";*/
         Response response =
                 getResponseOfPost(NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + EMAIL_SENDERS_PATH, body);
         if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "NSM-60002");
+            validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "NSM-60001");
         } else {
             response.then()
                     .log().ifValidationFails()
@@ -151,7 +169,7 @@ public class NotificationSenderFailureTest extends NotificationSenderTestBase {
                 NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + EMAIL_SENDERS_PATH + PATH_SEPARATOR +
                         "randomName");
         if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "CONFIGM_00017");
+            validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "CONFIGM_00017");
         } else {
             response.then()
                     .log().ifValidationFails()
@@ -167,7 +185,7 @@ public class NotificationSenderFailureTest extends NotificationSenderTestBase {
                 NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + EMAIL_SENDERS_PATH + PATH_SEPARATOR +
                         "randomName");
         if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "CONFIGM_00017");
+            validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "CONFIGM_00017");
         } else {
             response.then()
                     .log().ifValidationFails()
@@ -179,8 +197,8 @@ public class NotificationSenderFailureTest extends NotificationSenderTestBase {
     @Test
     public void testAddSmsSenderConflict() throws IOException {
 
-//        String body = readResource("add-sms-sender.json");
-        String body = "{\n" +
+        String body = readResource("add-sms-sender.json");
+       /* String body = "{\n" +
                 "  \"provider\": \"Vonage\",\n" +
                 "  \"providerURL\": \"https://webhook.site/9b79bebd-445a-4dec-ad5e-622b856fa184\",\n" +
                 "  \"key\": \"1234\",\n" +
@@ -196,7 +214,7 @@ public class NotificationSenderFailureTest extends NotificationSenderTestBase {
                 "      \"value\": \"X-Version: 1, Authorization: bearer ,Accept: application/json ,Content-Type: application/json\"\n" +
                 "    }\n" +
                 "  ]\n" +
-                "}";
+                "}";*/
         Response response =
                 getResponseOfPost(NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + SMS_SENDERS_PATH, body);
         if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
@@ -222,8 +240,8 @@ public class NotificationSenderFailureTest extends NotificationSenderTestBase {
     @Test
     public void testAddSmsSenderWithNonExistingEventPublisherName() throws IOException {
 
-//        String body = readResource("add-sms-sender-2.json");
-        String body = "{\n" +
+        String body = readResource("add-sms-sender-2.json");
+        /*String body = "{\n" +
                 "  \"name\": \"CustomSMSPublisher\",\n" +
                 "  \"provider\": \"Vonage\",\n" +
                 "  \"providerURL\": \"https://webhook.site/9b79bebd-445a-4dec-ad5e-622b856fa184\",\n" +
@@ -240,11 +258,11 @@ public class NotificationSenderFailureTest extends NotificationSenderTestBase {
                 "      \"value\": \"X-Version: 1, Authorization: bearer ,Accept: application/json ,Content-Type: application/json\"\n" +
                 "    }\n" +
                 "  ]\n" +
-                "}";
+                "}";*/
         Response response =
                 getResponseOfPost(NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + SMS_SENDERS_PATH, body);
         if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "NSM-60001");
+            validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "NSM-60001");
         } else {
             response.then()
                     .log().ifValidationFails()
@@ -256,8 +274,8 @@ public class NotificationSenderFailureTest extends NotificationSenderTestBase {
     @Test
     public void testAddSmsSenderWithUndefinedSmsProvider() throws IOException {
 
-//        String body = readResource("add-sms-sender-invalid-provider.json");
-        String body = "{\n" +
+        String body = readResource("add-sms-sender-invalid-provider.json");
+   /*     String body = "{\n" +
                 "  \"provider\": \"VonageSub\",\n" +
                 "  \"providerURL\": \"https://webhook.site/9b79bebd-445a-4dec-ad5e-622b856fa184\",\n" +
                 "  \"key\": \"1234\",\n" +
@@ -273,7 +291,7 @@ public class NotificationSenderFailureTest extends NotificationSenderTestBase {
                 "      \"value\": \"X-Version: 1, Authorization: bearer ,Accept: application/json ,Content-Type: application/json\"\n" +
                 "    }\n" +
                 "  ]\n" +
-                "}";
+                "}";*/
         Response response =
                 getResponseOfPost(NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + SMS_SENDERS_PATH, body);
         if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
@@ -293,7 +311,7 @@ public class NotificationSenderFailureTest extends NotificationSenderTestBase {
                 NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + SMS_SENDERS_PATH + PATH_SEPARATOR +
                         "randomName");
         if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "CONFIGM_00017");
+            validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "CONFIGM_00017");
         } else {
             response.then()
                     .log().ifValidationFails()
@@ -309,7 +327,7 @@ public class NotificationSenderFailureTest extends NotificationSenderTestBase {
                 NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + SMS_SENDERS_PATH + PATH_SEPARATOR +
                         "randomName");
         if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "CONFIGM_00017");
+            validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "CONFIGM_00017");
         } else {
             response.then()
                     .log().ifValidationFails()
