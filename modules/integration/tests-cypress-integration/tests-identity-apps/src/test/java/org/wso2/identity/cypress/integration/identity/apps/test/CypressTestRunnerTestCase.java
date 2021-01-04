@@ -63,7 +63,14 @@ public class CypressTestRunnerTestCase extends ISIntegrationUITest {
 
         cypressTestContainer.addOrOverwriteTestConfigProperty(envConfigPath,
                 CypressTestConstants.EnvironmentConfigElements.SERVER_URL, serverUrl);
-        cypressTestContainer.runTestSuite(scriptPath);
+
+        try {
+            cypressTestContainer.runTestSuite(scriptPath);
+        } catch (InterruptedException e) {
+            throw new CypressContainerException("An error occurred while running the Cypress test suite. " +
+                    e.getMessage());
+        }
+
         cypressTestContainer.endTestSuite(reportsPath);
     }
 }

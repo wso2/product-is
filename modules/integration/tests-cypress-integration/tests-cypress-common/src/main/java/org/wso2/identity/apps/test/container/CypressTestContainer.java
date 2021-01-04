@@ -97,7 +97,7 @@ public class CypressTestContainer {
      * @param scriptPath Path of the script to run the test suite.
      * @throws IOException When character encoding is not supported.
      */
-    public void runTestSuite(Path scriptPath) throws IOException, CypressContainerException {
+    public void runTestSuite(Path scriptPath) throws IOException, CypressContainerException, InterruptedException {
 
         if (!Files.exists(scriptPath)) {
             throw new CypressContainerException("Script `" + scriptPath.toAbsolutePath().toString() +
@@ -120,6 +120,8 @@ public class CypressTestContainer {
                 LOG.info(line);
             }
         }
+
+        process.waitFor();
     }
 
     /**
