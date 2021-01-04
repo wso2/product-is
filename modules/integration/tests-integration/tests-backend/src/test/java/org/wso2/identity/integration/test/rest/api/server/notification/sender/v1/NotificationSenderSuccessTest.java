@@ -97,21 +97,6 @@ public class NotificationSenderSuccessTest extends NotificationSenderTestBase {
     public void testAddEmailSender() throws IOException {
 
         String body = readResource("add-email-sender.json");
-        /*String body = "{\n" +
-                "  \"fromAddress\": \"iam@gmail.com\",\n" +
-                "  \"password\": \"iam123\",\n" +
-                "  \"userName\": \"iam\",\n" +
-                "  \"properties\": [\n" +
-                "    {\n" +
-                "      \"key\": \"mail.smtp.starttls.enable\",\n" +
-                "      \"value\": \"true\"\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"key\": \"minThread\",\n" +
-                "      \"value\": \"10\"\n" +
-                "    }\n" +
-                "  ]\n" +
-                "}";*/
         Response response =
                 getResponseOfPost(NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + EMAIL_SENDERS_PATH, body);
         if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
@@ -185,21 +170,6 @@ public class NotificationSenderSuccessTest extends NotificationSenderTestBase {
     public void testUpdateEmailSender() throws IOException {
 
         String body = readResource("update-email-sender.json");
-        /*String body = "{\n" +
-                "  \"fromAddress\": \"iambu@gmail.com\",\n" +
-                "  \"password\": \"iambu123\",\n" +
-                "  \"userName\": \"iambu\",\n" +
-                "  \"properties\": [\n" +
-                "    {\n" +
-                "      \"key\": \"mail.smtp.starttls.enable\",\n" +
-                "      \"value\": \"true\"\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"key\": \"minThread\",\n" +
-                "      \"value\": \"10\"\n" +
-                "    }\n" +
-                "  ]\n" +
-                "}";*/
         Response response = getResponseOfPut(NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + EMAIL_SENDERS_PATH +
                 PATH_SEPARATOR + emailNotificationSenderName, body);
         if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
@@ -243,23 +213,6 @@ public class NotificationSenderSuccessTest extends NotificationSenderTestBase {
     public void testAddSmsSender() throws IOException {
 
         String body = readResource("add-sms-sender.json");
-        /*String body = "{\n" +
-                "  \"provider\": \"Vonage\",\n" +
-                "  \"providerURL\": \"https://webhook.site/9b79bebd-445a-4dec-ad5e-622b856fa184\",\n" +
-                "  \"key\": \"1234\",\n" +
-                "  \"secret\": \"12345\",\n" +
-                "  \"sender\": \"073923902\",\n" +
-                "  \"properties\": [\n" +
-                "    {\n" +
-                "      \"key\": \"body.scope\",\n" +
-                "      \"value\": \"scopeValue\"\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"key\" : \"http.headers\",\n" +
-                "      \"value\": \"X-Version: 1, Authorization: bearer ,Accept: application/json ,Content-Type: application/json\"\n" +
-                "    }\n" +
-                "  ]\n" +
-                "}";*/
         Response response =
                 getResponseOfPost(NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + SMS_SENDERS_PATH, body);
         if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
@@ -338,23 +291,6 @@ public class NotificationSenderSuccessTest extends NotificationSenderTestBase {
     public void testUpdateSMSSender() throws IOException {
 
         String body = readResource("update-sms-sender.json");
-        /*String body = "{\n" +
-                "  \"provider\": \"Clickatell\",\n" +
-                "  \"providerURL\": \"https://webhook.site/9b79bebd-445a-4dec-ad5e-622b856fa185\",\n" +
-                "  \"key\": \"123\",\n" +
-                "  \"secret\": \"123456\",\n" +
-                "  \"sender\": \"0773923902\",\n" +
-                "  \"properties\": [\n" +
-                "    {\n" +
-                "      \"key\": \"body.scope\",\n" +
-                "      \"value\": \"scopeValue\"\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"key\" : \"http.headers\",\n" +
-                "      \"value\": \"X-Version: 1, Authorization: bearer ,Accept: application/json ,Content-Type: application/json\"\n" +
-                "    }\n" +
-                "  ]\n" +
-                "}";*/
         Response response = getResponseOfPut(NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + SMS_SENDERS_PATH +
                 PATH_SEPARATOR + smsNotificationSenderName, body);
         if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
