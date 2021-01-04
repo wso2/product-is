@@ -1,0 +1,16 @@
+{
+  "name": "CustomEmailPublisher",
+  "fromAddress": "iam@gmail.com",
+  "password": "iam123",
+  "userName": "iam",
+  "properties": [
+    {
+      "key": "mail.smtp.starttls.enable",
+      "value": "true"
+    },
+    {
+      "key": "minThread",
+      "value": "10"
+    }
+  ]
+}

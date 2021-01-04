@@ -1,0 +1,15 @@
+{
+  "fromAddress": "iambu@gmail.com",
+  "password": "iambu123",
+  "userName": "iambu",
+  "properties": [
+    {
+      "key": "mail.smtp.starttls.enable",
+      "value": "true"
+    },
+    {
+      "key": "minThread",
+      "value": "10"
+    }
+  ]
+}
