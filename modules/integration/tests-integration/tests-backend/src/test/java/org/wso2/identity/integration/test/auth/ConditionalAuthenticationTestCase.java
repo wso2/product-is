@@ -67,7 +67,6 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
     private static final String IDENTITY_PROVIDER_ALIAS =
             "https://localhost:" + IS_DEFAULT_HTTPS_PORT + "/oauth2/token/";
     private static final String SECONDARY_IS_SAMLSSO_URL = "https://localhost:9854/samlsso";
-    private static final int PORT_OFFSET_1 = 1;
     private static final String SAML_NAME_ID_FORMAT = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
     private static final String PRIMARY_IS_APPLICATION_NAME = "testOauthApp";
     private static final String SECONDARY_IS_APPLICATION_NAME = "testSAMLApp";
@@ -396,8 +395,7 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
     private void startSecondaryIS() throws Exception {
 
         AutomationContext context = testDataHolder.getAutomationContext();
-        String serviceUrl = (context.getContextUrls().getSecureServiceUrl())
-                .replace("9853", String.valueOf(IS_DEFAULT_HTTPS_PORT + PORT_OFFSET_1)) + "/";
+        String serviceUrl = context.getContextUrls().getSecureServiceUrl() + "/";
 
         AuthenticatorClient authenticatorClient = new AuthenticatorClient(serviceUrl);
 
