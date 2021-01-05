@@ -11,7 +11,6 @@ import org.wso2.carbon.automation.engine.exceptions.AutomationFrameworkException
 import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.test.application.mgt.AbstractIdentityFederationTestCase;
-import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 
 import java.io.File;
@@ -91,12 +90,12 @@ public class SecondaryCarbonServerInitializerTestCase extends AbstractIdentityFe
     private void changeServerConfiguration(String fileName, AutomationContext server) throws IOException,
             XPathExpressionException, AutomationUtilException {
 
-        log.info("Using the embedded H2 database for the secondary server.");
-        String carbonHome = Utils.getResidentCarbonHome();
+        String carbonHome = System.getProperty("carbon.home");
+        log.info("Using the embedded H2 database for the secondary server. " + carbonHome);
         File defaultTomlFile = getDeploymentTomlFile(carbonHome);
         File configuredTomlFile = new File
                 (getISResourceLocation() + File.separator + "provisioning" + File.separator + fileName);
-        serverConfigurationManager = new ServerConfigurationManager(server);
+        ServerConfigurationManager serverConfigurationManager = new ServerConfigurationManager(server);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartGracefully();
     }
