@@ -522,7 +522,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		appDTO.setApplicationName(OAUTH_APPLICATION_NAME);
 		appDTO.setCallbackUrl(callBackURL);
 		appDTO.setOAuthVersion(OAuth2Constant.OAUTH_VERSION_2);
-		appDTO.setGrantTypes("authorization_code implicit password client_credentials");
+		appDTO.setGrantTypes("authorization_code implicit password client_credentials refresh_token");
 		return appDTO;
 	}
 

@@ -116,6 +116,7 @@
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2OPIframeTestCase" />
             <class name="org.wso2.identity.integration.test.CrossProtocolLogoutTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.SAMLARTRESOLVETestCase"/>
+            <class name="org.wso2.identity.integration.test.identityServlet.ExtendSessionEndpointAuthCodeGrantTestCase"/>
         </classes>
     </test>
 
@@ -172,6 +173,8 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.cors.v1.CORSFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.tenant.management.v1.TenantSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.tenant.management.v1.TenantFailureTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.notification.sender.v1.NotificationSenderSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.notification.sender.v1.NotificationSenderFailureTest"/>
         </classes>
     </test>
 
