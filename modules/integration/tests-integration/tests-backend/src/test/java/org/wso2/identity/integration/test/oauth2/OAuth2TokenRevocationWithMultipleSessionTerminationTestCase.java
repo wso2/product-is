@@ -56,20 +56,20 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.Is.is;
 
 /**
- * This test class is used to check the behaviour of token revocation when user session is terminated via Session
- * termination REST API. When the accesstoken is issued, we store a mapping to session to token (irrespective of
- * binding type). So when the session is terminated via REST API, the respective token should be revoked.
+ * This test class is used to check the behaviour of token revocation when all the user sessions are terminated via
+ * Session management REST API. So when all the sessions are terminated via REST API, the all the respective tokens
+ * should be revoked.
  */
-public class OAuth2TokenRevocationWithSessionTerminationTestCase extends OAuth2ServiceAbstractIntegrationTest {
+public class OAuth2TokenRevocationWithMultipleSessionTerminationTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
+    private String accessTokenInFirstSession;
+    private String accessTokenInSecondSession;
     private String consumerKey;
     private String consumerSecret;
     private String sessionDataKeyConsent;
     private String sessionDataKey;
-    private String authorizationCode;
-    private HttpClient client;
-    private String accessToken;
-    private List<String> sessionIdList;
+    private  HttpClient httpClientForFirstSession;
+    private  HttpClient httpClientForSecondSession;
     private static final String SESSION_API_ENDPOINT = "https://localhost:9853/t/carbon.super/api/users/v1/me/sessions";
 
     @BeforeClass(alwaysRun = true)
@@ -78,7 +78,8 @@ public class OAuth2TokenRevocationWithSessionTerminationTestCase extends OAuth2S
         super.init();
         setSystemproperties();
         super.init(TestUserMode.SUPER_TENANT_USER);
-        client = HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build();
+        httpClientForFirstSession = HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build();
+        httpClientForSecondSession = HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build();
     }
 
     @AfterClass(alwaysRun = true)
@@ -88,7 +89,7 @@ public class OAuth2TokenRevocationWithSessionTerminationTestCase extends OAuth2S
     }
 
     @Test(groups = "wso2.is", description = "Create OAuth2 application")
-    public void testRegisterApplication() throws Exception {
+    public void testCreateApplication() throws Exception {
 
         OAuthConsumerAppDTO appDto = createApplication();
         Assert.assertNotNull(appDto, "Application creation failed.");
@@ -97,19 +98,35 @@ public class OAuth2TokenRevocationWithSessionTerminationTestCase extends OAuth2S
         consumerSecret = appDto.getOauthConsumerSecret();
     }
 
-    @Test(groups = "wso2.is", dependsOnMethods = {"testRegisterApplication"}, description = "Test login using OpenId " +
-            "connect authorization code flow")
-    public void testOIDCLogin() throws Exception {
+    @Test(groups = "wso2.is", dependsOnMethods = {"testCreateApplication"},
+            description = "Test login using openId connect authorization code flow")
+    public void testMultipleOIDCLogins() throws Exception {
 
-        initiateAuthorizationRequest();
-        authenticateUser();
-        performConsentApproval();
-        generateAuthzCodeAccessToken();
-        introspectActiveAccessToken();
+        testLoginToFirstSession();
+        testLoginToSecondSession();
     }
 
-    @Test(groups = "wso2.is", dependsOnMethods = {"testOIDCLogin"}, description = "Get User session using session " +
-            "management REST API")
+    private void testLoginToFirstSession() throws Exception {
+
+        initiateAuthorizationRequest(httpClientForFirstSession, OAuth2Constant.OAUTH2_SCOPE_OPENID + " " + "random");
+        authenticateUser(httpClientForFirstSession);
+        String authorizationCode = performConsentApproval(httpClientForFirstSession);
+        accessTokenInFirstSession = generateAuthzCodeAccessToken(authorizationCode, httpClientForFirstSession);
+        introspectActiveAccessToken(accessTokenInFirstSession, httpClientForFirstSession);
+    }
+
+    private void testLoginToSecondSession() throws Exception {
+
+        initiateAuthorizationRequest(httpClientForSecondSession, OAuth2Constant.OAUTH2_SCOPE_OPENID);
+        authenticateUser(httpClientForSecondSession);
+        String authzCode = performConsentApproval(httpClientForSecondSession);
+        accessTokenInSecondSession = generateAuthzCodeAccessToken(authzCode, httpClientForSecondSession);
+        introspectActiveAccessToken(accessTokenInSecondSession, httpClientForSecondSession);
+
+    }
+
+    @Test(groups = "wso2.is", dependsOnMethods = {"testMultipleOIDCLogins"}, description = "Get all User sessions " +
+            "using session management REST API")
     public void testGetUserSessions() {
 
         Response response = getResponseOfGet(SESSION_API_ENDPOINT);
@@ -129,16 +146,16 @@ public class OAuth2TokenRevocationWithSessionTerminationTestCase extends OAuth2S
                 .body("sessions.loginTime", notNullValue())
                 .body("sessions.lastAccessTime", notNullValue())
                 .body("sessions.id", notNullValue());
-        sessionIdList = response.jsonPath().getList("sessions.id");
-        Assert.assertEquals(sessionIdList.size(), 1);
+        List<String> sessionIdsList = response.jsonPath().getList("sessions.id");
+        Assert.assertEquals(sessionIdsList.size(), 2);
     }
 
-    @Test(groups = "wso2.is", dependsOnMethods = {"testGetUserSessions"}, description = "Terminate User session using" +
-            " session management REST API")
-    public void testDeleteUserSessionById() {
+    @Test(groups = "wso2.is", dependsOnMethods = {"testGetUserSessions"}, description = "Terminate all the User " +
+            "sessions using session management REST API")
+    public void testDeleteUserSessions() {
 
-        String endpointURI = SESSION_API_ENDPOINT + "/" + sessionIdList.get(0);
-        // Delete the sessionId using session management api.
+        String endpointURI = SESSION_API_ENDPOINT;
+        // Delete all sessions using session management api.
         getResponseOfDelete(endpointURI).then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -152,42 +169,62 @@ public class OAuth2TokenRevocationWithSessionTerminationTestCase extends OAuth2S
                 .body("size()", is(0));
     }
 
-    @Test(groups = "wso2.is", dependsOnMethods = {"testDeleteUserSessionById"}, description = " The expected " +
-            "behaviour is, When the session is terminated via REST API, the corresponding mapped accesstoken " +
-            "should be revoked")
-    public void testTokenRevocationWhenSessionIsTerminated() throws Exception {
+    @Test(groups = "wso2.is", dependsOnMethods = {"testDeleteUserSessions"}, description = " The expected behaviour " +
+            "is, When all the sessions are terminated via REST API, the mapped accesstokens should be revoked")
+    public void testTokensRevocationSessionsAreTerminated() throws Exception {
 
-        JSONObject object = testIntrospectionEndpoint();
-        Assert.assertEquals(object.get("active"), false);
+        JSONObject object1 = testIntrospectionEndpoint(accessTokenInFirstSession, httpClientForFirstSession);
+        Assert.assertEquals(object1.get("active"), false);
+
+        JSONObject object2 = testIntrospectionEndpoint(accessTokenInSecondSession, httpClientForSecondSession);
+        Assert.assertEquals(object2.get("active"), false);
     }
 
     /**
-     * Playground app will initiate authorization request to IS and obtain session data key.
+     * Build post request and return json response object.
      *
-     * @throws IOException
+     * @param endpoint       Endpoint.
+     * @param postParameters postParameters.
+     * @param key            Basic authentication key.
+     * @param secret         Basic authentication secret.
+     * @return JSON object of the response.
+     * @throws Exception
      */
-    private void initiateAuthorizationRequest() throws IOException {
+    private JSONObject responseObject(HttpClient client, String endpoint, List<NameValuePair> postParameters,
+                                      String key, String secret) throws Exception {
 
-        List<NameValuePair> urlParameters = getOIDCInitiationRequestParams();
+        HttpPost httpPost = new HttpPost(endpoint);
+        httpPost.setHeader("Authorization", "Basic " + getBase64EncodedString(key, secret));
+        httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
+        httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
+        HttpResponse response = client.execute(httpPost);
+        String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
+        EntityUtils.consume(response.getEntity());
+        JSONParser parser = new JSONParser();
+        JSONObject json = (JSONObject) parser.parse(responseString);
+        if (json == null) {
+            throw new Exception("Error occurred while getting the response.");
+        }
+        return json;
+    }
+
+
+    private void initiateAuthorizationRequest(HttpClient client, String scope) throws IOException {
+
+        List<NameValuePair> urlParameters = getOIDCInitiationRequestParams(scope);
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters,
                 OAuth2Constant.AUTHORIZED_USER_URL);
         Assert.assertNotNull(response, "Authorization response is null");
 
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         Assert.assertNotNull(locationHeader, "Authorization response header is null.");
-
         EntityUtils.consume(response.getEntity());
         response = sendGetRequest(client, locationHeader.getValue());
         sessionDataKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
         EntityUtils.consume(response.getEntity());
     }
 
-    /**
-     * Provide user credentials and authenticate to the system.
-     *
-     * @throws IOException
-     */
-    private void authenticateUser() throws IOException {
+    private void authenticateUser(HttpClient client) throws IOException {
 
         // Pass user credentials to commonauth endpoint and authenticate the user.
         HttpResponse response = sendLoginPost(client, sessionDataKey);
@@ -207,12 +244,8 @@ public class OAuth2TokenRevocationWithSessionTerminationTestCase extends OAuth2S
         EntityUtils.consume(response.getEntity());
     }
 
-    /**
-     * Approve the consent.
-     *
-     * @throws IOException
-     */
-    private void performConsentApproval() throws IOException {
+
+    private String performConsentApproval(HttpClient client) throws IOException {
 
         HttpResponse response = sendApprovalPostWithConsent(client, sessionDataKeyConsent, null);
         Assert.assertNotNull(response, "OIDC consent approval request response is null.");
@@ -226,31 +259,27 @@ public class OAuth2TokenRevocationWithSessionTerminationTestCase extends OAuth2S
         List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil.extractTableRowDataFromResponse(response,
                 keyPositionMap);
         Assert.assertNotNull(keyValues, "Authorization code not received.");
-        authorizationCode = keyValues.get(0).getValue();
-        Assert.assertNotNull(authorizationCode, "Authorization code not received.");
+        String authzCode = keyValues.get(0).getValue();
+        Assert.assertNotNull(authzCode, "Authorization code not received.");
         EntityUtils.consume(response.getEntity());
+        return authzCode;
     }
 
-    /**
-     * Exchange authorization code and get accesstoken.
-     *
-     * @throws Exception
-     */
-    private void generateAuthzCodeAccessToken() throws Exception {
+    private String generateAuthzCodeAccessToken(String authorizationCode, HttpClient client) throws Exception {
 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.GRANT_TYPE_NAME,
                 OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE));
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_REDIRECT_URI, OAuth2Constant.CALLBACK_URL));
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.AUTHORIZATION_CODE_NAME, authorizationCode));
-        JSONObject jsonResponse = responseObject(OAuth2Constant.ACCESS_TOKEN_ENDPOINT, urlParameters, consumerKey,
-                consumerSecret);
+        JSONObject jsonResponse = responseObject(client, OAuth2Constant.ACCESS_TOKEN_ENDPOINT, urlParameters,
+                consumerKey, consumerSecret);
         Assert.assertNotNull(jsonResponse.get(OAuth2Constant.ACCESS_TOKEN), "Access token is null.");
         Assert.assertNotNull(jsonResponse.get(OAuth2Constant.REFRESH_TOKEN), "Refresh token is null.");
-        accessToken = (String) jsonResponse.get(OAuth2Constant.ACCESS_TOKEN);
+        return (String) jsonResponse.get(OAuth2Constant.ACCESS_TOKEN);
     }
 
-    private List<NameValuePair> getOIDCInitiationRequestParams() {
+    private List<NameValuePair> getOIDCInitiationRequestParams(String scope) {
 
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         urlParameters.add(new BasicNameValuePair("grantType", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
@@ -258,18 +287,13 @@ public class OAuth2TokenRevocationWithSessionTerminationTestCase extends OAuth2S
         urlParameters.add(new BasicNameValuePair("callbackurl", OAuth2Constant.CALLBACK_URL));
         urlParameters.add(new BasicNameValuePair("authorizeEndpoint", OAuth2Constant.APPROVAL_URL));
         urlParameters.add(new BasicNameValuePair("authorize", OAuth2Constant.AUTHORIZE_PARAM));
-        urlParameters.add(new BasicNameValuePair("scope", OAuth2Constant.OAUTH2_SCOPE_OPENID));
+        urlParameters.add(new BasicNameValuePair("scope", scope));
         return urlParameters;
     }
 
-    /**
-     * Introspect the obtained accesstoken and it should be an active token.
-     *
-     * @throws Exception
-     */
-    private void introspectActiveAccessToken() throws Exception {
+    private void introspectActiveAccessToken(String accessToken, HttpClient client) throws Exception {
 
-        JSONObject object = testIntrospectionEndpoint();
+        JSONObject object = testIntrospectionEndpoint(accessToken, client);
         Assert.assertEquals(object.get("active"), true);
     }
 
@@ -312,39 +336,11 @@ public class OAuth2TokenRevocationWithSessionTerminationTestCase extends OAuth2S
      * @return JSONObject
      * @throws Exception
      */
-    private JSONObject testIntrospectionEndpoint() throws Exception {
+    private JSONObject testIntrospectionEndpoint(String accessToken, HttpClient client) throws Exception {
 
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         urlParameters.add(new BasicNameValuePair("token", accessToken));
-        return responseObject(OAuth2Constant.INTRO_SPEC_ENDPOINT, urlParameters, userInfo.getUserName(),
+        return responseObject(client, OAuth2Constant.INTRO_SPEC_ENDPOINT, urlParameters, userInfo.getUserName(),
                 userInfo.getPassword());
-    }
-
-    /**
-     * Build post request and return json response object.
-     *
-     * @param endpoint       Endpoint.
-     * @param postParameters postParameters.
-     * @param key            Basic authentication key.
-     * @param secret         Basic authentication secret.
-     * @return JSON object of the response.
-     * @throws Exception
-     */
-    private JSONObject responseObject(String endpoint, List<NameValuePair> postParameters, String key, String secret)
-            throws Exception {
-
-        HttpPost httpPost = new HttpPost(endpoint);
-        httpPost.setHeader("Authorization", "Basic " + getBase64EncodedString(key, secret));
-        httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
-        httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
-        HttpResponse response = client.execute(httpPost);
-        String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
-        EntityUtils.consume(response.getEntity());
-        JSONParser parser = new JSONParser();
-        JSONObject json = (JSONObject) parser.parse(responseString);
-        if (json == null) {
-            throw new Exception("Error occurred while getting the response.");
-        }
-        return json;
     }
 }
