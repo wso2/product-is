@@ -117,6 +117,8 @@
             <class name="org.wso2.identity.integration.test.CrossProtocolLogoutTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.SAMLARTRESOLVETestCase"/>
             <class name="org.wso2.identity.integration.test.identityServlet.ExtendSessionEndpointAuthCodeGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenRevocationWithSessionTerminationTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenRevocationWithMultipleSessionTerminationTestCase"/>
         </classes>
     </test>
 
