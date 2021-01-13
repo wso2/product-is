@@ -23,23 +23,30 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.context.AutomationContext;
+import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.FederatedAuthenticatorConfig;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProviderProperty;
-import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
+import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.test.oauth2.OAuth2ServiceAbstractIntegrationTest;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.IOException;
 
+import static org.wso2.identity.integration.test.utils.CommonConstants.DEFAULT_TOMCAT_PORT;
+
 /**
- * This test class is to test Preference API integration with Login & Recovery Portals.
+ * Tests Preference API integration with Login & Recovery Portals.
  */
 public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractIntegrationTest {
 
@@ -54,11 +61,29 @@ public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractInt
     private static final String RECOVERY_ENDPOINT_QS_CONTENT = "name=\"recoveryOption\" value=\"SECURITY_QUESTIONS\"";
     private static final String RECOVERY_ENDPOINT_NOTIFICATION_CONTENT = "name=\"recoveryOption\" value=\"EMAIL\"";
     private static final String CREATE_ACCOUNT_CONTENT = "id=\"registerLink\"";
-    private static final String RECOVERY_ENDPOINT_URL =
-            "https://localhost:9853/accountrecoveryendpoint/recoveraccountrouter.do";
+    private static final String RECOVERY_ENDPOINT_URL = "/accountrecoveryendpoint/recoveraccountrouter.do";
 
     private IdentityProvider superTenantResidentIDP;
     private IdentityProviderMgtServiceClient superTenantIDPMgtClient;
+    private String recoveryEndpoint;
+    private final String activeTenant;
+    private final String OIDC_APP_NAME = "playground23";
+    private String oidcAppClientId = "";
+
+    @DataProvider(name = "configProvider")
+    public static Object[][] configProvider() {
+
+        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}};
+    }
+
+    @Factory(dataProvider = "configProvider")
+    public PreferenceAPIIntegrationUITestCase(TestUserMode userMode) throws Exception {
+
+        super.init(userMode);
+        AutomationContext context = new AutomationContext("IDENTITY", userMode);
+        this.activeTenant = context.getContextTenant().getDomain();
+
+    }
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -66,8 +91,31 @@ public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractInt
         super.init();
         superTenantIDPMgtClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
         superTenantResidentIDP = superTenantIDPMgtClient.getResidentIdP();
-        OAuthConsumerAppDTO oAuthConsumerAppDTO = getBasicOAuthApp(CALLBACK_URL);
-        ServiceProvider serviceProvider = registerServiceProviderWithOAuthInboundConfigs(oAuthConsumerAppDTO);
+        adminClient = new OauthAdminClient(backendURL, sessionCookie);
+        String isServerBackendUrl = isServer.getContextUrls().getWebAppURLHttps();
+        recoveryEndpoint = isServerBackendUrl +"/t/" + activeTenant + RECOVERY_ENDPOINT_URL;
+        createOIDCApplication();
+    }
+
+    private void createOIDCApplication() throws Exception {
+
+        OAuthConsumerAppDTO appDTO = new OAuthConsumerAppDTO();
+        appDTO.setApplicationName(OIDC_APP_NAME + activeTenant);
+        appDTO.setCallbackUrl(OAuth2Constant.CALLBACK_URL);
+        appDTO.setOAuthVersion(OAuth2Constant.OAUTH_VERSION_2);
+        appDTO.setGrantTypes(OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE);
+        appDTO.setBackChannelLogoutUrl("http://localhost:" + DEFAULT_TOMCAT_PORT + "/playground2/bclogout");
+
+        adminClient.registerOAuthApplicationData(appDTO);
+        OAuthConsumerAppDTO createdApp = adminClient.getOAuthAppByName(OIDC_APP_NAME + activeTenant);
+        Assert.assertNotNull(createdApp, "Adding OIDC app failed.");
+        oidcAppClientId = createdApp.getOauthConsumerKey();
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void atEnd() throws Exception {
+
+        adminClient.removeOAuthApplicationData(oidcAppClientId);
     }
 
     @AfterMethod
@@ -184,7 +232,7 @@ public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractInt
     private String sendAuthorizeRequest() throws IOException {
 
         HttpClient client = HttpClientBuilder.create().build();
-        HttpResponse response = sendGetRequest(client, getAuthzRequestUrl(consumerKey, CALLBACK_URL));
+        HttpResponse response = sendGetRequest(client, getAuthzRequestUrl(oidcAppClientId, OAuth2Constant.CALLBACK_URL));
         String content = DataExtractUtil.getContentData(response);
         Assert.assertNotNull(content);
         return content;
@@ -193,8 +241,7 @@ public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractInt
     private String sendRecoveryRequest() throws IOException {
 
         HttpClient client = HttpClientBuilder.create().build();
-
-        HttpResponse response = sendGetRequest(client, RECOVERY_ENDPOINT_URL);
+        HttpResponse response = sendGetRequest(client, recoveryEndpoint);
         String content = DataExtractUtil.getContentData(response);
         Assert.assertNotNull(content);
         return content;
