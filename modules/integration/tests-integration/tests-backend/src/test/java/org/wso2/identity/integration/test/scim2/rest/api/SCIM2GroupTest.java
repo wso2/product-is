@@ -61,7 +61,6 @@ public class SCIM2GroupTest extends SCIM2BaseTest {
 
     protected String endpointURL;
     protected String groupId = null;
-    private static final String SCIM_CONTENT_TYPE = "application/scim+json";
     private static final String USER_MGT_PERMISSION = "permission/admin/configure/security/usermgt";
     private static final String APPLICATION_NAME = "my-sp";
     private static final String APPLICATION_ROLE_NAME = "Application/" + APPLICATION_NAME;
