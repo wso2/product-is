@@ -436,15 +436,6 @@
             </includes>
         </fileSet>
 
-        <!--Copy web apps for for totp authenticators-->
-        <fileSet>
-            <directory>../connectors/target/authenticatorCopied/war</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
-            <includes>
-                <include>totpauthenticationendpoint.war</include>
-            </includes>
-        </fileSet>
-
         <!--Copy web apps for for emailotp authenticators-->
         <fileSet>
             <directory>../connectors/target/authenticatorCopied/war</directory>
@@ -752,7 +743,6 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
             <includes>
                 <include>smsotpauthenticationendpoint/</include>
-                <include>totpauthenticationendpoint/</include>
                 <include>emailotpauthenticationendpoint/</include>
                 <include>api#identity#auth#v1.1/</include>
                 <include>x509certificateauthenticationendpoint/</include>
