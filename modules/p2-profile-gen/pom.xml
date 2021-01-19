@@ -249,6 +249,12 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.carbon.auth.mutualssl:org.wso2.carbon.identity.authenticator.mutualssl.feature:${identity.carbon.auth.mutual.ssl.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.extension.identity.authenticator.utils:org.wso2.carbon.extension.identity.utils.helper.feature:${identity.extension.utils}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.extension.identity.authenticator.outbound.totp:org.wso2.carbon.extension.identity.authenticator.totp.feature:${authenticator.totp.version}
+                                </featureArtifactDef>
 
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.user.ws:org.wso2.carbon.um.ws.service.feature:${identity.user.ws.version}
@@ -945,6 +951,17 @@
                                     <id>org.wso2.carbon.identity.developer.language-server.feature.group</id>
                                     <version>${org.wso2.carbon.identity.developer.version}</version>
                                 </feature>
+
+
+                                <feature>
+                                    <id>org.wso2.carbon.extension.identity.helper.feature.group</id>
+                                    <version>${identity.extension.utils}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.extension.identity.authenticator.totp.connector.feature.group</id>
+                                    <version>${authenticator.totp.version}</version>
+                                </feature>
+
                             </features>
                         </configuration>
                     </execution>
@@ -1428,6 +1445,16 @@
                                     <id>org.wso2.carbon.identity.developer.language-server.feature.group</id>
                                     <version>${org.wso2.carbon.identity.developer.version}</version>
                                 </feature>
+
+                                <!-- Connectors -->
+                                <feature>
+                                    <id>org.wso2.carbon.extension.identity.helper.feature.group</id>
+                                    <version>${identity.extension.utils}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.extension.identity.authenticator.totp.connector.feature.group</id>
+                                    <version>${authenticator.totp.version}</version>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>
@@ -1848,6 +1875,16 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.developer.language-server.feature.group</id>
                                     <version>${org.wso2.carbon.identity.developer.version}</version>
+                                </feature>
+
+                                <!-- Connectors -->
+                                <feature>
+                                    <id>org.wso2.carbon.extension.identity.helper.feature.group</id>
+                                    <version>${identity.extension.utils}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.extension.identity.authenticator.totp.connector.feature.group</id>
+                                    <version>${authenticator.totp.version}</version>
                                 </feature>
                             </features>
                         </configuration>

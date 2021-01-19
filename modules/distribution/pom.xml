@@ -659,14 +659,6 @@
                                 </unzip>
                                 <delete file="../connectors/target/authenticatorCopied/war/smsotpauthenticationendpoint.war" />
 
-                                <!-- Explode the totpauthenticationendpoint.war -->
-                                <unzip dest="../connectors/target/authenticatorCopied/war/totpauthenticationendpoint">
-                                    <fileset dir="../connectors/target/authenticatorCopied/war">
-                                        <include name="totpauthenticationendpoint.war" />
-                                    </fileset>
-                                </unzip>
-                                <delete file="../connectors/target/authenticatorCopied/war/totpauthenticationendpoint.war" />
-
                                 <!-- Explode the emailotpauthenticationendpoint.war -->
                                 <unzip dest="../connectors/target/authenticatorCopied/war/emailotpauthenticationendpoint">
                                     <fileset dir="../connectors/target/authenticatorCopied/war">
