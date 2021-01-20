@@ -73,7 +73,6 @@ public class SCIM2SchemasTest extends SCIM2BaseTest {
     public void init() throws IOException, InterruptedException {
 
         super.testInit(swaggerDefinition, tenant);
-        Thread.sleep(20000);
     }
 
     @AfterClass(alwaysRun = true)
