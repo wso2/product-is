@@ -43,7 +43,6 @@ import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SCHEMAS
 
 public class SCIM2SchemasTest extends SCIM2BaseTest {
 
-
     private static final String CLAIM_DIALECTS_ENDPOINT_CONTEXT = "claim-dialects/";
     private static final String LOCAL_CLAIMS_ENDPOINT_CONTEXT = "local/claims/";
     private static final String API_SERVER_BASE_CONTEXT = "/api/server/v1/";
