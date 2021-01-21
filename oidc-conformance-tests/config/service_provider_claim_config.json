@@ -1,0 +1,129 @@
+{
+        "claimConfiguration": {
+            "dialect": "LOCAL",
+            "requestedClaims": [
+                {
+                    "claim": {
+                        "uri": "http://wso2.org/claims/organization"
+                    },
+                    "mandatory": true
+                },
+                {
+                    "claim": {
+                        "uri": "http://wso2.org/claims/emailaddress"
+                    },
+                    "mandatory": true
+                },
+                {
+                    "claim": {
+                        "uri": "http://wso2.org/claims/identity/emailVerified"
+                    },
+                    "mandatory": true
+                },
+                {
+                    "claim": {
+                        "uri": "http://wso2.org/claims/mobile"
+                    },
+                    "mandatory": true
+                },
+                {
+                    "claim": {
+                        "uri": "http://wso2.org/claims/identity/phoneVerified"
+                    },
+                    "mandatory": true
+                },
+                {
+                    "claim": {
+                        "uri": "http://wso2.org/claims/addresses"
+                    },
+                    "mandatory": true
+                },
+                {
+                    "claim": {
+                        "uri": "http://wso2.org/claims/fullname"
+                    },
+                    "mandatory": true
+                },
+                {
+                    "claim": {
+                        "uri": "http://wso2.org/claims/givenname"
+                    },
+                    "mandatory": true
+                },
+                {
+                    "claim": {
+                        "uri": "http://wso2.org/claims/lastname"
+                    },
+                    "mandatory": true
+                },
+                {
+                    "claim": {
+                        "uri": "http://wso2.org/claims/nickname"
+                    },
+                    "mandatory": true
+                },
+                {
+                    "claim": {
+                        "uri": "http://wso2.org/claims/url"
+                    },
+                    "mandatory": true
+                },
+                {
+                    "claim": {
+                        "uri": "http://wso2.org/claims/photourl"
+                    },
+                    "mandatory": true
+                },
+                {
+                    "claim": {
+                        "uri": "http://wso2.org/claims/gender"
+                    },
+                    "mandatory": true
+                },
+                {
+                    "claim": {
+                        "uri": "http://wso2.org/claims/dob"
+                    },
+                    "mandatory": true
+                },
+                {
+                    "claim": {
+                        "uri": "http://wso2.org/claims/timeZone"
+                    },
+                    "mandatory": true
+                },
+                {
+                    "claim": {
+                        "uri": "http://wso2.org/claims/local"
+                    },
+                    "mandatory": true
+                },
+                {
+                    "claim": {
+                        "uri": "http://wso2.org/claims/displayName"
+                    },
+                    "mandatory": true
+                },
+                {
+                    "claim": {
+                        "uri": "http://wso2.org/claims/modified"
+                    },
+                    "mandatory": true
+                }
+            ],
+            "role": {
+                "claim": {
+                    "uri": "http://wso2.org/claims/role"
+                },
+                "includeUserDomain": true
+            },
+            "subject": {
+                "claim": {
+                    "uri": "http://wso2.org/claims/username"
+                },
+                "includeTenantDomain": false,
+                "includeUserDomain": false,
+                "useMappedLocalSubject": false
+            }
+        }
+}

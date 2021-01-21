@@ -1,0 +1,19 @@
+{
+        "authenticationSequence": {
+            "attributeStepId": 1,
+            "steps": [
+                {
+                    "id": 1,
+                    "options": [
+                        {
+                            "authenticator": "BasicAuthenticator",
+                            "idp": "LOCAL"
+                        }
+                    ]
+                }
+            ],
+            "subjectStepId": 1,
+            "type": "USER_DEFINED",
+            "script": "// Define conditional authentication by passing one or many Authentication Context Class References \n// as comma separated values.\n\n// Specify the ordered list of ACR here.\nvar supportedAcrValues = ['acr1'];\n\nvar onLoginRequest = function(context) {\n    var selectedAcr = selectAcrFrom(context, supportedAcrValues);\n    Log.info('--------------- ACR selected: ' + selectedAcr);\n    context.selectedAcr = selectedAcr;\nswitch (selectedAcr) {\n        case supportedAcrValues[0] :\n            executeStep(1);\n            break;\ndefault :\n            executeStep(1);\n    }\n};"
+        }
+}
