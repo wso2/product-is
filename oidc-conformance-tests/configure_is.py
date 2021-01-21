@@ -280,25 +280,25 @@ edit_scope("openid", {
     "displayName": "openid"
 })
 
-generate_config_for_plan("./Basic_test_plan/config/service_provider1_config.json",
-                         "./Basic_test_plan/config/service_provider2_config.json",
-                         "./Basic_test_plan/IS_config_basic.json", "./Basic_test_plan/config/browser_config.json")
-generate_config_for_plan("./Implicit_test_plan/config/service_provider1_config.json",
-                         "./Implicit_test_plan/config/service_provider2_config.json",
-                         "./Implicit_test_plan/IS_config_implicit.json",
-                         "./Implicit_test_plan/config/browser_config.json")
-generate_config_for_plan("./Hybrid_test_plan/config/service_provider1_config.json",
-                         "./Hybrid_test_plan/config/service_provider2_config.json",
-                         "./Hybrid_test_plan/IS_config_hybrid.json", "./Hybrid_test_plan/config/browser_config.json")
-generate_config_for_plan("./Formpost_basic_test_plan/config/service_provider1_config.json",
-                         "./Formpost_basic_test_plan/config/service_provider2_config.json",
-                         "./Formpost_basic_test_plan/IS_config_formpost_basic.json",
-                         "./Formpost_basic_test_plan/config/browser_config.json")
-generate_config_for_plan("./Formpost_implicit_test_plan/config/service_provider1_config.json",
-                         "./Formpost_implicit_test_plan/config/service_provider2_config.json",
-                         "./Formpost_implicit_test_plan/IS_config_formpost_implicit.json",
-                         "./Formpost_implicit_test_plan/config/browser_config.json")
-generate_config_for_plan("./Formpost_hybrid_test_plan/config/service_provider1_config.json",
-                         "./Formpost_hybrid_test_plan/config/service_provider2_config.json",
-                         "./Formpost_hybrid_test_plan/IS_config_formpost_hybrid.json",
-                         "./Formpost_hybrid_test_plan/config/browser_config.json")
+generate_config_for_plan("./basic/config/service_provider1_config.json",
+                         "./basic/config/service_provider2_config.json",
+                         "basic/IS_config_basic.json", "./basic/config/browser_config.json")
+generate_config_for_plan("./implicit/config/service_provider1_config.json",
+                         "./implicit/config/service_provider2_config.json",
+                         "implicit/IS_config_implicit.json",
+                         "./implicit/config/browser_config.json")
+generate_config_for_plan("./hybrid/config/service_provider1_config.json",
+                         "./hybrid/config/service_provider2_config.json",
+                         "hybrid/IS_config_hybrid.json", "./hybrid/config/browser_config.json")
+generate_config_for_plan("./formpost-basic/config/service_provider1_config.json",
+                         "./formpost-basic/config/service_provider2_config.json",
+                         "formpost-basic/IS_config_formpost_basic.json",
+                         "./formpost-basic/config/browser_config.json")
+generate_config_for_plan("./formpost-implicit/config/service_provider1_config.json",
+                         "./formpost-implicit/config/service_provider2_config.json",
+                         "formpost-implicit/IS_config_formpost_implicit.json",
+                         "./formpost-implicit/config/browser_config.json")
+generate_config_for_plan("./formpost-hybrid/config/service_provider1_config.json",
+                         "./formpost-hybrid/config/service_provider2_config.json",
+                         "formpost-hybrid/IS_config_formpost_hybrid.json",
+                         "./formpost-hybrid/config/browser_config.json")
