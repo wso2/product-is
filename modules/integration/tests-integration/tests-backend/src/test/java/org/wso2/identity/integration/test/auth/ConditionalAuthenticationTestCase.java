@@ -412,13 +412,13 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
     private void startSecondaryIS() throws Exception {
 
         AutomationContext context = testDataHolder.getAutomationContext();
-        String serviceUrl = context.getContextUrls().getSecureServiceUrl() + "/";
         log.info("Number of ports for secondary IS: " + context.getInstance().getPorts().size());
         for (Map.Entry<String, String> entry : context.getInstance().getPorts().entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
             log.info("port name: " + key + ", value: " + value);
         }
+        String serviceUrl = context.getContextUrls().getSecureServiceUrl() + "/";
         log.info("Service url for secondary IS: " + serviceUrl);
 
         AuthenticatorClient authenticatorClient = new AuthenticatorClient(serviceUrl);
