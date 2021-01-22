@@ -409,8 +409,10 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
 
     private void startSecondaryIS() throws Exception {
 
+        log.info("Starting secondary IS");
         AutomationContext context = testDataHolder.getAutomationContext();
         String serviceUrl = context.getContextUrls().getSecureServiceUrl() + "/";
+        log.info("Service url for the secondary IS: " + serviceUrl);
 
         AuthenticatorClient authenticatorClient = new AuthenticatorClient(serviceUrl);
 
