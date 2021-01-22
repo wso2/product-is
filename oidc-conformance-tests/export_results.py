@@ -3,10 +3,12 @@ import warnings
 import requests
 import sys
 
+conformance_suite_url = sys.argv[1]
+
 
 # export test results of a given test plan
 def save_results(plan):
-    response = requests.get(url=sys.argv[1] + "/api/plan/exporthtml/" + plan['_id'], stream=True, verify=False)
+    response = requests.get(url=conformance_suite_url + "/api/plan/exporthtml/" + plan['_id'], stream=True, verify=False)
     with open("./" + plan['planName'] + "_test_results.zip", 'wb') as fileDir:
         for chunk in response.iter_content(chunk_size=128):
             fileDir.write(chunk)
@@ -17,7 +19,7 @@ def get_failed_tests(plan):
     test_fails = []
     test_warnings = []
     test_others = []
-    test_log = json.loads(requests.get(url=sys.argv[1] + "/api/log?length=100&search=" + plan['_id'], verify=False).content)
+    test_log = json.loads(requests.get(url=conformance_suite_url + "/api/log?length=100&search=" + plan['_id'], verify=False).content)
     for test in test_log['data']:
         if "result" in test and test['result'] == "FAILED":
             test_fails.append(test['testName'])
@@ -36,7 +38,7 @@ if __name__ == '__main__':
     failed_plan_details = dict()
     contains_fails = False
     warnings.filterwarnings("ignore")
-    plan_list = json.loads(requests.get(url=sys.argv[1] + "/api/plan?length=50", verify=False).content)
+    plan_list = json.loads(requests.get(url=conformance_suite_url + "/api/plan?length=50", verify=False).content)
     print("======================\nExporting test results\n======================")
     for test_plan in plan_list['data']:
         save_results(test_plan)

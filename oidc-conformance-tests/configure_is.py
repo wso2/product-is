@@ -15,6 +15,9 @@ headers = {
     'Connection': 'keep-alive',
     'Authorization': 'Bearer '
 }
+# path to product is zip file
+path_to_is_zip = str(sys.argv[1])
+
 
 # use dcr to register a client
 def dcr():
@@ -244,7 +247,7 @@ def generate_config_for_plan(service_provider1_config, service_provider2_config,
 
 warnings.filterwarnings("ignore")
 if not is_process_running("wso2server"):
-    unpack_and_run(str(sys.argv[1]))
+    unpack_and_run(path_to_is_zip)
 else:
     print("IS already running")
 
