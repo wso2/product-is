@@ -52,6 +52,8 @@ import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServic
 import org.wso2.identity.integration.test.base.TestDataHolder;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
 
+import java.util.Map;
+
 import static org.testng.Assert.assertTrue;
 import static org.wso2.identity.integration.test.utils.CommonConstants.IS_DEFAULT_HTTPS_PORT;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.CALLBACK_URL;
@@ -411,6 +413,13 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
 
         AutomationContext context = testDataHolder.getAutomationContext();
         String serviceUrl = context.getContextUrls().getSecureServiceUrl() + "/";
+        log.info("Number of ports for secondary IS: " + context.getInstance().getPorts().size());
+        for (Map.Entry<String, String> entry : context.getInstance().getPorts().entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            log.info("port name: " + key + ", value: " + value);
+        }
+        log.info("Service url for secondary IS: " + serviceUrl);
 
         AuthenticatorClient authenticatorClient = new AuthenticatorClient(serviceUrl);
 
