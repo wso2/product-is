@@ -148,6 +148,9 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
     public void testConditionalAuthentication() throws Exception {
 
         updateAuthScript("ConditionalAuthenticationTestCase.js");
+        log.info("Conditional Authentication userName: " + userInfo.getUserName());
+        log.info("Conditional Authentication userPassword: " + userInfo.getPassword());
+        log.info("Conditional Authentication userDomain: " + userInfo.getUserDomain());
         response = loginWithOIDC(PRIMARY_IS_APPLICATION_NAME, consumerKey, client);
         /* Here if the client is redirected to the secondary IS, it indicates that the conditional authentication steps
          has been successfully completed. */
@@ -395,7 +398,14 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
     private void startSecondaryIS() throws Exception {
 
         AutomationContext context = testDataHolder.getAutomationContext();
+        log.info("Number of ports for secondary IS: " + context.getInstance().getPorts().size());
+        for (Map.Entry<String, String> entry : context.getInstance().getPorts().entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            log.info("port name: " + key + ", value: " + value);
+        }
         String serviceUrl = context.getContextUrls().getSecureServiceUrl() + "/";
+        log.info("Service url for secondary IS: " + serviceUrl);
 
         AuthenticatorClient authenticatorClient = new AuthenticatorClient(serviceUrl);
 
