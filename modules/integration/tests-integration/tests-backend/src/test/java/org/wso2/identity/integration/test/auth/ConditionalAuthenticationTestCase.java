@@ -163,6 +163,9 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
     public void testConditionalAuthentication() throws Exception {
 
         updateAuthScript("ConditionalAuthenticationTestCase.js");
+        log.info("Conditional Authentication userName: " + userInfo.getUserName());
+        log.info("Conditional Authentication userPassword: " + userInfo.getPassword());
+        log.info("Conditional Authentication userDomain: " + userInfo.getUserDomain());
         response = loginWithOIDC(PRIMARY_IS_APPLICATION_NAME, consumerKey, client);
         /* Here if the client is redirected to the secondary IS, it indicates that the conditional authentication steps
          has been successfully completed. */
