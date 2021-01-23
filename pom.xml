@@ -2063,11 +2063,11 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.8.22</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.4.128</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.4.130</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.6.0</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.6.7</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.6.2</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>1.5.57</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim2.version>1.5.58</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity workflow Versions -->
         <identity.user.workflow.version>5.4.3</identity.user.workflow.version>
@@ -2120,7 +2120,7 @@
         <provisioning.connector.scim.version>5.2.2</provisioning.connector.scim.version>
 
         <!-- Local Authenticator Versions -->
-        <identity.local.auth.basicauth.version>6.3.15</identity.local.auth.basicauth.version>
+        <identity.local.auth.basicauth.version>6.3.16</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.2.9</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.3.14</identity.local.auth.iwa.version>
 
