@@ -30,7 +30,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.extensions.servers.carbonserver.MultipleServersManager;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.FederatedAuthenticatorConfig;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
@@ -46,13 +45,8 @@ import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServi
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
-import org.wso2.identity.integration.common.utils.CarbonTestServerManager;
 import org.wso2.identity.integration.test.base.TestDataHolder;
-import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.testng.Assert.assertTrue;
 import static org.wso2.identity.integration.test.utils.CommonConstants.IS_DEFAULT_HTTPS_PORT;
@@ -398,12 +392,7 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
     private void startSecondaryIS() throws Exception {
 
         AutomationContext context = testDataHolder.getAutomationContext();
-        log.info("Number of ports for secondary IS: " + context.getInstance().getPorts().size());
-        for (Map.Entry<String, String> entry : context.getInstance().getPorts().entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-            log.info("port name: " + key + ", value: " + value);
-        }
+
         String serviceUrl = context.getContextUrls().getSecureServiceUrl() + "/";
         log.info("Service url for secondary IS: " + serviceUrl);
 
