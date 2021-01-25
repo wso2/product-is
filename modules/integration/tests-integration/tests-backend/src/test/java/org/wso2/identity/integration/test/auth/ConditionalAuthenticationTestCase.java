@@ -177,6 +177,8 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
 
         updateAuthScript("ConditionalAuthenticationTestCase.js");
         response = loginWithOIDC(PRIMARY_IS_APPLICATION_NAME, consumerKey, client);
+        log.info("user name: " + userInfo.getUserName());
+        log.info("user domain: " + userInfo.getUserDomain());
         /* Here if the client is redirected to the secondary IS, it indicates that the conditional authentication steps
          has been successfully completed. */
         String locationHeader = response.getFirstHeader("location").getValue();
@@ -271,7 +273,6 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
     protected HttpResponse loginWithOIDC(String appName, String consumerKey, HttpClient client, User user) throws Exception {
 
         String sessionDataKey = redirectToLoginPage(appName, consumerKey, client, "sessionDataKey");
-
         return sendLoginPost(client, sessionDataKey, user);
     }
 
