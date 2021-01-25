@@ -2041,7 +2041,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.19.1</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.19.2</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2154,7 +2154,7 @@
         <carbon.identity.oauth.uma.version>1.2.7</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.1.15</identity.apps.version>
+        <identity.apps.version>1.1.21</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.3.31</charon.version>
