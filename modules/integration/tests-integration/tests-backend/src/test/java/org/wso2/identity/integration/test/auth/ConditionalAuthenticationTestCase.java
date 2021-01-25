@@ -22,10 +22,14 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
+import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -51,6 +55,12 @@ import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
 import org.wso2.identity.integration.test.base.TestDataHolder;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
+import org.wso2.carbon.automation.engine.context.beans.User;
+import org.wso2.identity.integration.test.utils.OAuth2Constant;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.testng.Assert.assertTrue;
 import static org.wso2.identity.integration.test.utils.CommonConstants.IS_DEFAULT_HTTPS_PORT;
@@ -86,6 +96,7 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
     private final AutomationContext context;
     private String backendURL;
     private String sessionCookie;
+    private User userInfo;
 
     private String initialCarbonHome;
 
@@ -101,6 +112,8 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
         context = new AutomationContext("IDENTITY", userMode);
         this.username = context.getContextTenant().getTenantAdmin().getUserName();
         this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
+        userInfo = context.getContextTenant().getTenantAdmin();
+        
     }
 
     @BeforeClass(alwaysRun = true)
@@ -180,7 +193,7 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
 
         // Update authentication script to handle authentication based on HTTP context.
         updateAuthScript("ConditionalAuthenticationHTTPCookieTestCase.js");
-        response = loginWithOIDC(PRIMARY_IS_APPLICATION_NAME, consumerKey, client);
+        response = loginWithOIDC(PRIMARY_IS_APPLICATION_NAME, consumerKey, client, userInfo);
 
         /* Here if the response headers contains the custom HTTP cookie we set from the authentication script, it
         indicates that the conditional authentication steps has been successfully completed. */
@@ -239,6 +252,27 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
         identityProvider.setFederatedAuthenticatorConfigs(new FederatedAuthenticatorConfig[] { saml2SSOAuthnConfig });
 
         identityProviderMgtServiceClient.addIdP(identityProvider);
+    }
+
+
+
+    private HttpResponse sendLoginPost(HttpClient client, String sessionDataKey, User user) throws IOException {
+
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair("username", user.getUserName()));
+        urlParameters.add(new BasicNameValuePair("password", user.getPassword()));
+        urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
+        log.info(">>> sendLoginPost:sessionDataKey: " + sessionDataKey);
+        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.COMMON_AUTH_URL);
+
+        return response;
+    }
+
+    protected HttpResponse loginWithOIDC(String appName, String consumerKey, HttpClient client, User user) throws Exception {
+
+        String sessionDataKey = redirectToLoginPage(appName, consumerKey, client, "sessionDataKey");
+
+        return sendLoginPost(client, sessionDataKey, user);
     }
 
     /**
