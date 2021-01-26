@@ -241,11 +241,13 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
     @Test(groups = "wso2.is", description = "Check update role name", dependsOnMethods = "testUpdateUsersOfRole")
     public void testUpdateRoleName() throws Exception {
 
-        userMgtClient.updateRoleName(userRoleTmp, userRoleTmp + "updated");
+        userMgtClient.updateRoleName(userRoleTmp, userRoleTmp + "new");
 
-        Assert.assertFalse(nameExists(userMgtClient.getAllRolesNames(userRoleTmp, 10), userRoleTmp), "Role update failed.");
-        Assert.assertTrue(nameExists(userMgtClient.getAllRolesNames(userRoleTmp + "updated", 10), userRoleTmp + "updated"), "Updating role has failed. Role not updated");
-        userRoleTmp = userRoleTmp + "updated";
+        Assert.assertFalse(nameExists(userMgtClient.getAllRolesNames(userRoleTmp, 10), userRoleTmp),
+                "Role update failed.");
+        Assert.assertTrue(nameExists(userMgtClient.getAllRolesNames(userRoleTmp + "new", 10), userRoleTmp + "update"),
+                "Updating role has failed. Role not updated");
+        userRoleTmp = userRoleTmp + "new";
 
     }
 
