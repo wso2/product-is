@@ -39,7 +39,7 @@ public class ConfigTestBase extends RESTAPIServerTestBase {
     public static final String CONFIGS_AUTHENTICATOR_API_BASE_PATH = "/configs/authenticators";
     public static final String CONFIGS_INBOUND_SCIM_API_BASE_PATH = "/configs/provisioning/inbound/scim";
     public static final String CORS_CONFIGS_API_BASE_PATH = "/configs/cors";
-    public static final String HOME_REALM_IDENTIFIERS_API_BASE_PATH = "/configs/homeRealmIdentifiers";
+    public static final String HOME_REALM_IDENTIFIERS_API_BASE_PATH = "/configs/home-realm-identifiers";
 
     public static final String PATH_SEPARATOR = "/";
     public static final String SAMPLE_AUTHENTICATOR_ID = "QmFzaWNBdXRoZW50aWNhdG9y";
