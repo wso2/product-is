@@ -243,10 +243,8 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
 
         userMgtClient.updateRoleName(userRoleTmp, userRoleTmp + "new");
 
-        Assert.assertFalse(nameExists(userMgtClient.getAllRolesNames(userRoleTmp, 10), userRoleTmp),
-                "Role update failed.");
-        Assert.assertTrue(nameExists(userMgtClient.getAllRolesNames(userRoleTmp + "new", 10), userRoleTmp + "update"),
-                "Updating role has failed. Role not updated");
+        Assert.assertFalse(nameExists(userMgtClient.getAllRolesNames(userRoleTmp, 10), userRoleTmp), "Role update failed.");
+        Assert.assertTrue(nameExists(userMgtClient.getAllRolesNames(userRoleTmp + "new", 10), userRoleTmp + "update"), "Updating role has failed. Role not updated");
         userRoleTmp = userRoleTmp + "new";
 
     }
