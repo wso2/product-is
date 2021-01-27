@@ -18,28 +18,18 @@ package org.wso2.identity.integration.test.rest.api.server.application.managemen
 import io.restassured.response.Response;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
-import org.fusesource.mqtt.codec.PUBACK;
-import org.hamcrest.Matchers;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.application.mgt.ApplicationConstants;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationListItem;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationListResponse;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
 import static org.wso2.identity.integration.test.rest.api.server.application.management.v1.Utils.assertNotBlank;
 import static org.wso2.identity.integration.test.rest.api.server.application.management.v1.Utils.extractApplicationIdFromLocationHeader;
 
@@ -237,22 +227,6 @@ public class ApplicationManagementFailureTest extends ApplicationManagementBaseT
 
         String location = createFirstAppResponse.getHeader(HttpHeaders.LOCATION);
         return extractApplicationIdFromLocationHeader(location);
-    }
-
-    private void cleanUpApplications(Set<String> appsToCleanUp) {
-
-        appsToCleanUp.forEach(appId -> {
-            String applicationPath = APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + appId;
-            Response responseOfDelete = getResponseOfDelete(applicationPath);
-            responseOfDelete.then()
-                    .log()
-                    .ifValidationFails()
-                    .assertThat()
-                    .statusCode(HttpStatus.SC_NO_CONTENT);
-
-            // Make sure we don't have deleted application details.
-            getResponseOfGet(applicationPath).then().assertThat().statusCode(HttpStatus.SC_NOT_FOUND);
-        });
     }
 
     private Response createApplication(String appName) throws JSONException {

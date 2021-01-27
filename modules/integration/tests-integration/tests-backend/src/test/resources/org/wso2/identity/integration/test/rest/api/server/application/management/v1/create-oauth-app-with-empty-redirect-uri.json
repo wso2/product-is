@@ -1,0 +1,15 @@
+{
+  "name": "OAuth Application",
+  "inboundProtocolConfiguration": {
+    "oidc": {
+      "grantTypes": [
+        "password",
+        "authorization_code"
+      ],
+      "callbackURLs": [
+        ""
+      ],
+      "publicClient": false
+    }
+  }
+}

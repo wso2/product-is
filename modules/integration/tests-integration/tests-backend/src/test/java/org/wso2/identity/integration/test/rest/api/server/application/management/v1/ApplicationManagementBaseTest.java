@@ -16,7 +16,9 @@
 package org.wso2.identity.integration.test.rest.api.server.application.management.v1;
 
 import io.restassured.RestAssured;
+import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpStatus;
 import org.json.JSONException;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -28,6 +30,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.common.RESTAPIServerTestBase;
 
 import java.io.IOException;
+import java.util.Set;
 
 /**
  * Base test class for Application Management REST APIs.
@@ -96,5 +99,21 @@ public class ApplicationManagementBaseTest extends RESTAPIServerTestBase {
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
         };
+    }
+
+    protected void cleanUpApplications(Set<String> appsToCleanUp) {
+
+        appsToCleanUp.forEach(appId -> {
+            String applicationPath = APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + appId;
+            Response responseOfDelete = getResponseOfDelete(applicationPath);
+            responseOfDelete.then()
+                    .log()
+                    .ifValidationFails()
+                    .assertThat()
+                    .statusCode(HttpStatus.SC_NO_CONTENT);
+
+            // Make sure we don't have deleted application details.
+            getResponseOfGet(applicationPath).then().assertThat().statusCode(HttpStatus.SC_NOT_FOUND);
+        });
     }
 }

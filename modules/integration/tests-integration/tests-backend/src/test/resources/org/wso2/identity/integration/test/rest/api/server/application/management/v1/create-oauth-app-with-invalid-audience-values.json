@@ -1,0 +1,23 @@
+{
+  "name": "OAuth Application",
+  "inboundProtocolConfiguration": {
+    "oidc": {
+      "grantTypes": [
+        "password",
+        "authorization_code"
+      ],
+      "callbackURLs": [
+        "https://localhost/callback"
+      ],
+      "publicClient": false,
+      "idToken": {
+        "audience": [
+          "",
+          "  ",
+          "duplicate",
+          "duplicate"
+        ]
+      }
+    }
+  }
+}
