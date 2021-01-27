@@ -183,33 +183,11 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
         changeCountryOIDDialect();
     }
 
-    @Test(description = "This test case tests the behaviour when ConvertToOIDCDialect is false in identity.xml, this "
-            + "is a pass through scenarios to send the claims as it is regardless of claim mapping in SP and IDP "
-            + "claim mapping", dependsOnMethods = "testPasswordGrantBasedSelfContainedAccessTokenGeneration")
-    public void testJWTGrantTypeWithConvertOIDCDialectFalse() throws Exception {
-
-        addFederatedIdentityProvider();
-        OIDCTokens oidcTokens = makeJWTBearerGrantRequest();
-        Assert.assertEquals(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(COUNTRY_OIDC_CLAIM),
-                COUNTRY_CLAIM_VALUE,
-                "User claims is not returned back as it is when ConvertToOIDCDialect is set to false");
-        updateIdentityProviderWithClaimMappings();
-        oidcTokens = makeJWTBearerGrantRequest();
-        Assert.assertEquals(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(EMAIL_OIDC_CLAIM), EMAIL_CLAIM_VALUE,
-                "User claims is not returned back as it is when ConvertToOIDCDialect is set to false");
-        identityProviderMgtServiceClient.deleteIdP(issuer);
-    }
-
     @Test(description = "This test case tests the behaviour when ConvertOIDCDialect is set to true in identity.xml "
             + "and when there is no mapping IDP side but with mapping in SP side and AddRemainingUserAttributes is "
-            + "false", dependsOnMethods = "testJWTGrantTypeWithConvertOIDCDialectFalse")
+            + "false", dependsOnMethods = "testPasswordGrantBasedSelfContainedAccessTokenGeneration")
     public void testJWTGrantTypeWithConvertOIDCDialectWithoutIDPMappingWithSPMapping() throws Exception {
 
-        resetISConfiguration();
-        super.init(TestUserMode.SUPER_TENANT_ADMIN);
-        changeISConfiguration("jwt_token_issuer_convert_to_oidc.toml");
-        super.init(TestUserMode.SUPER_TENANT_ADMIN);
-        identityProviderMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
         addFederatedIdentityProvider();
         OIDCTokens oidcTokens = makeJWTBearerGrantRequest();
         Assert.assertNull(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(COUNTRY_OIDC_CLAIM),
@@ -366,6 +344,28 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
 
         Assert.assertFalse(firstRefreshToken.toJSONString().equals(refreshToken.toJSONString()), "Same refresh " +
                 "token is returned even after the refresh token issued from JWT Bearer grant has been revoked ");
+    }
+
+    @Test(description = "This test case tests the behaviour when ConvertToOIDCDialect is false in identity.xml, this "
+            + "is a pass through scenarios to send the claims as it is regardless of claim mapping in SP and IDP "
+            + "claim mapping", dependsOnMethods = "testRefreshTokenRevokeFlow")
+    public void testJWTGrantTypeWithConvertOIDCDialectFalse() throws Exception {
+
+        resetISConfiguration();
+        super.init(TestUserMode.SUPER_TENANT_ADMIN);
+        changeISConfiguration("jwt_token_issuer_convert_to_oidc.toml");
+        super.init(TestUserMode.SUPER_TENANT_ADMIN);
+        identityProviderMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
+        identityProviderMgtServiceClient.deleteIdP(issuer);
+        addFederatedIdentityProvider();
+        OIDCTokens oidcTokens = makeJWTBearerGrantRequest();
+        Assert.assertEquals(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(COUNTRY_OIDC_CLAIM),
+                COUNTRY_CLAIM_VALUE,
+                "User claims are not returned back as it is when ConvertToOIDCDialect is set to false");
+        updateIdentityProviderWithClaimMappings();
+        oidcTokens = makeJWTBearerGrantRequest();
+        Assert.assertEquals(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(EMAIL_OIDC_CLAIM), EMAIL_CLAIM_VALUE,
+                "User claims are not returned back as it is when ConvertToOIDCDialect is set to false");
     }
 
     /**
