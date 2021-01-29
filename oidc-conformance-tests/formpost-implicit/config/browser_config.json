@@ -34,44 +34,19 @@
                     ]
                 },
                 {
-                    "task": "Consent",
-                    "match": "https://localhost:9443/authenticationendpoint/oauth2_consent*",
-                    "optional": true,
-                    "commands": [
-                        [
-                            "wait",
-                            "id",
-                            "approve",
-                            10
-                        ],
-                        [
-                            "click",
-                            "id",
-                            "approve"
-                        ],
-                        [
-                            "wait",
-                            "contains",
-                            "test/callback",
-                            10
-                        ]
-                    ]
-                },
-                {
-                    "task": "session",
-                    "match": "https://localhost:9443/oauth2/authorize?sessionDataKey*",
-                    "optional": true,
+                    "task": "Verify authorize",
+                    "match": "https://localhost:9443/oauth2/authorize*",
                     "commands": [
                         [
                             "wait",
                             "xpath",
-                            "/html/body/div/div/div/form/button",
+                            "/html/body/div/div/div/p/a",
                             10
                         ],
                         [
                             "click",
                             "xpath",
-                            "/html/body/div/div/div/form/button"
+                            "/html/body/div/div/div/p/a"
                         ]
                     ]
                 },
@@ -79,6 +54,7 @@
                     "task": "Verify callback",
                     "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback*"
                 }
+
             ]
         }
     ],
@@ -296,19 +272,19 @@
                             ]
                         },
                         {
-                            "task": "session",
-                            "match": "https://localhost:9443/oauth2/authorize?sessionDataKey*",
+                            "task": "Verify authorize",
+                            "match": "https://localhost:9443/oauth2/authorize*",
                             "commands": [
                                 [
                                     "wait",
                                     "xpath",
-                                    "/html/body/div/div/div/form/button",
+                                    "/html/body/div/div/div/p/a",
                                     10
                                 ],
                                 [
                                     "click",
                                     "xpath",
-                                    "/html/body/div/div/div/form/button"
+                                    "/html/body/div/div/div/p/a"
                                 ]
                             ]
                         },
@@ -394,19 +370,19 @@
                             ]
                         },
                         {
-                            "task": "session",
-                            "match": "https://localhost:9443/oauth2/authorize?sessionDataKey*",
+                            "task": "Verify authorize",
+                            "match": "https://localhost:9443/oauth2/authorize*",
                             "commands": [
                                 [
                                     "wait",
                                     "xpath",
-                                    "/html/body/div/div/div/form/button",
+                                    "/html/body/div/div/div/p/a",
                                     10
                                 ],
                                 [
                                     "click",
                                     "xpath",
-                                    "/html/body/div/div/div/form/button"
+                                    "/html/body/div/div/div/p/a"
                                 ]
                             ]
                         },
