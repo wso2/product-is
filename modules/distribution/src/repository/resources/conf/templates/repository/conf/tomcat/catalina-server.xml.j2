@@ -92,6 +92,7 @@
                 {% endif %}
                 <Valve className="org.wso2.carbon.tomcat.ext.valves.CarbonStuckThreadDetectionValve" threshold="600"/>
                 <Valve className="org.wso2.carbon.tomcat.ext.valves.CompositeValve"/>
+                <Valve className="org.wso2.carbon.tomcat.ext.valves.SameSiteCookieValve"/>
 
                 <!-- Authentication and Authorization valve for the rest apis and we can configure context for this in identity.xml.j2  -->
                 <Valve className="org.wso2.carbon.identity.auth.valve.AuthenticationValve"/>
