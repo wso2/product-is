@@ -136,7 +136,8 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
     /**
      * Test /userinfo endpoint for GET method.
      */
-    @Test(groups = "wso2.is", description = "Retrieve user claims from user-info endpoint", dependsOnMethods = "testGetAccessTokenForPasswordGrant")
+    @Test(groups = "wso2.is", description = "Retrieve user claims from user-info endpoint",
+            dependsOnMethods = "testGetAccessTokenForPasswordGrant")
     public void testHttpGetUserInfoEndpoint() {
 
         Map<String, String> headers = new HashMap<>();
@@ -203,7 +204,7 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
     }
 
     /**
-     * Invoke given endpointUri for Form POST request with given body, headers and Basic authentication credentials
+     * Invoke given endpointUri for Form POST request with given body, headers and Basic authentication credentials.
      *
      * @param endpointUri endpoint to be invoked
      * @param params      map of parameters to be added to the request
