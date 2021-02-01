@@ -18,8 +18,6 @@ package org.wso2.identity.integration.test.oidc;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpStatus;
 import org.json.simple.JSONObject;
 import org.testng.annotations.AfterClass;
