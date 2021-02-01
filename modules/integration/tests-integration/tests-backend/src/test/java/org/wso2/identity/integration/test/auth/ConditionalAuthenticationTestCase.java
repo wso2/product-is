@@ -112,8 +112,7 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
         context = new AutomationContext("IDENTITY", userMode);
         this.username = context.getContextTenant().getTenantAdmin().getUserName();
         this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
-        userInfo = context.getContextTenant().getTenantAdmin();
-        
+        userInfo = context.getContextTenant().getContextUser();
     }
 
     @BeforeClass(alwaysRun = true)
@@ -176,7 +175,7 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
     public void testConditionalAuthentication() throws Exception {
 
         updateAuthScript("ConditionalAuthenticationTestCase.js");
-        response = loginWithOIDC(PRIMARY_IS_APPLICATION_NAME, consumerKey, client);
+        response = loginWithOIDC(PRIMARY_IS_APPLICATION_NAME, consumerKey, client, userInfo);
         log.info("user name: " + userInfo.getUserName());
         log.info("user domain: " + userInfo.getUserDomain());
         /* Here if the client is redirected to the secondary IS, it indicates that the conditional authentication steps
