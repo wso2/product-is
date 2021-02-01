@@ -18,6 +18,8 @@ package org.wso2.identity.integration.test.oidc;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpStatus;
 import org.json.simple.JSONObject;
 import org.testng.annotations.AfterClass;
@@ -124,35 +126,48 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
     @DataProvider(name = "userInfoEndpointRequestDataProvider")
     public Object[][] userInfoEndpointRequestDataProvider() {
 
-        Map<String, String> getHeaders = new HashMap<>();
-        getHeaders.put("Authorization", "Bearer " + accessToken);
+        Map<String, String> contentTypeWithCharset = new HashMap<>();
+        contentTypeWithCharset.put("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
 
-        Map<String, String> postHeaders = new HashMap<>();
-        postHeaders.put("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+        Map<String, String> contentTypeWithoutCharset = new HashMap<>();
+        contentTypeWithoutCharset.put("Content-Type", "application/x-www-form-urlencoded");
 
-        Map<String, String> postFormParams = new HashMap<>();
-        postFormParams.put("access_token", accessToken);
-
-        return new Object[][]{{"GET", getHeaders, null}, {"POST", postHeaders, postFormParams}};
+        return new Object[][]{{contentTypeWithCharset}, {contentTypeWithoutCharset}};
     }
 
     /**
-     * Test /userinfo endpoint for GET and POST methods.
+     * Test /userinfo endpoint for GET method.
+     */
+    @Test(groups = "wso2.is", description = "Retrieve user claims from user-info endpoint", dependsOnMethods = "testGetAccessTokenForPasswordGrant")
+    public void testHttpGetUserInfoEndpoint() {
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Authorization", "Bearer " + accessToken);
+
+        Response response = getResponseOfGet(USER_INFO_ENDPOINT, headers);
+
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("email", is(user.getUserClaims().get(OIDCUtilTest.emailClaimUri)))
+                .body("given_name", is(user.getUserClaims().get(OIDCUtilTest.firstNameClaimUri)))
+                .body("last_name", is(user.getUserClaims().get(OIDCUtilTest.lastName)));
+    }
+
+    /**
+     * Test /userinfo endpoint for POST method.
      *
-     * @param method  Http method.
-     * @param headers Headers required for the api depending on method used.
-     * @param params  Form params required in POST method.
+     * @param headers Headers for http POST method.
      */
     @Test(groups = "wso2.is", description = "Retrieve user claims from user-info endpoint", dependsOnMethods =
             "testGetAccessTokenForPasswordGrant", dataProvider = "userInfoEndpointRequestDataProvider")
-    public void testUserInfoEndpoint(String method, Map<String, String> headers, Map<String, String> params) {
+    public void testHttpPostUserInfoEndpoint(Map<String, String> headers) {
 
-        Response response;
-        if (method.equals("GET")) {
-            response = getResponseOfGet(USER_INFO_ENDPOINT, headers);
-        } else {
-            response = getResponseOfFormPost(USER_INFO_ENDPOINT, params, headers);
-        }
+        Map<String, String> formParams = new HashMap<>();
+        formParams.put("access_token", accessToken);
+
+        Response response = getResponseOfFormPost(USER_INFO_ENDPOINT, formParams, headers);
 
         response.then()
                 .log().ifValidationFails()
@@ -164,7 +179,7 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
     }
 
     @Test(groups = "wso2.is", description = "Get access token with a JSON request", dependsOnMethods =
-            "testUserInfoEndpoint")
+            "testHttpGetUserInfoEndpoint")
     public void testGetAccessTokenForPasswordGrantJsonRequest() throws Exception {
 
         Map<String, String> params = new HashMap<>();
