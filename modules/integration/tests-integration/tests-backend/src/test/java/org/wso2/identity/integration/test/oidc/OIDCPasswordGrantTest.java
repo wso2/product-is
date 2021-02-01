@@ -117,8 +117,9 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
     }
 
     /**
-     * Provide request data to test userInfoEndpoint
-     * @return object with testUserInfoEndpoint method parameters
+     * Provide request data to test userInfoEndpoint.
+     *
+     * @return Object with testUserInfoEndpoint method parameters.
      */
     @DataProvider(name = "userInfoEndpointRequestDataProvider")
     public Object[][] userInfoEndpointRequestDataProvider() {
@@ -136,20 +137,20 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
     }
 
     /**
-     * test /userinfo endpoint for GET and POST methods
-     * @param method    GET/POST
-     * @param headers   headers required for the api depending on method used
-     * @param params    form params required in POST method
-     * @throws Exception
+     * Test /userinfo endpoint for GET and POST methods.
+     *
+     * @param method  Http method.
+     * @param headers Headers required for the api depending on method used.
+     * @param params  Form params required in POST method.
      */
     @Test(groups = "wso2.is", description = "Retrieve user claims from user-info endpoint", dependsOnMethods =
             "testGetAccessTokenForPasswordGrant", dataProvider = "userInfoEndpointRequestDataProvider")
-    public void testUserInfoEndpoint(String method, Map<String, String> headers, Map<String, String> params) throws Exception {
+    public void testUserInfoEndpoint(String method, Map<String, String> headers, Map<String, String> params) {
 
         Response response;
-        if(method.equals("GET")){
+        if (method.equals("GET")) {
             response = getResponseOfGet(USER_INFO_ENDPOINT, headers);
-        }else {
+        } else {
             response = getResponseOfFormPost(USER_INFO_ENDPOINT, params, headers);
         }
 
@@ -229,12 +230,12 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
     }
 
     /**
-     * Invoke given endpointUri for Form POST request with given formParams, headers
+     * Invoke given endpointUri for Form POST request with given formParams, headers.
      *
-     * @param endpointUri endpoint to be invoked
-     * @param formParams      map of form body to be added to the request
-     * @param headers     map of headers to be added to the request
-     * @return response
+     * @param endpointUri Endpoint to be invoked.
+     * @param formParams  Map of form body to be added to the request.
+     * @param headers     Map of headers to be added to the request.
+     * @return Http response from POST request.
      */
     protected Response getResponseOfFormPost(String endpointUri, Map<String, String> formParams, Map<String, String>
             headers) {
@@ -246,16 +247,14 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
                 .post(endpointUri);
     }
 
-
     /**
-     * Invoke given endpointUri for GET request with given params, headers
+     * Invoke given endpointUri for GET request with given params, headers.
      *
-     * @param endpointUri endpoint to be invoked
-     * @param headers     map of headers to be added to the request
-     * @return response
+     * @param endpointUri Endpoint to be invoked.
+     * @param headers     Map of headers to be added to the request.
+     * @return Http response from GET request.
      */
-    protected Response getResponseOfGet(String endpointUri, Map<String, String>
-            headers) {
+    protected Response getResponseOfGet(String endpointUri, Map<String, String> headers) {
 
         return given()
                 .headers(headers)
