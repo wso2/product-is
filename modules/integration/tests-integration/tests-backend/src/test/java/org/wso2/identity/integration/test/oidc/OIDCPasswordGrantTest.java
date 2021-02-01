@@ -22,6 +22,7 @@ import org.apache.http.HttpStatus;
 import org.json.simple.JSONObject;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.dbutils.H2DataBaseManager;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.PropertyDTO;
@@ -115,18 +116,43 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
         accessToken = response.then().extract().path("access_token");
     }
 
+    /**
+     * Provide request data to test userInfoEndpoint
+     * @return object with testUserInfoEndpoint method parameters
+     */
+    @DataProvider(name = "userInfoEndpointRequestDataProvider")
+    public Object[][] userInfoEndpointRequestDataProvider() {
+
+        Map<String, String> getHeaders = new HashMap<>();
+        getHeaders.put("Authorization", "Bearer " + accessToken);
+
+        Map<String, String> postHeaders = new HashMap<>();
+        postHeaders.put("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+
+        Map<String, String> postFormParams = new HashMap<>();
+        postFormParams.put("access_token", accessToken);
+
+        return new Object[][]{{"GET", getHeaders, null}, {"POST", postHeaders, postFormParams}};
+    }
+
+    /**
+     * test /userinfo endpoint for GET and POST methods
+     * @param method    GET/POST
+     * @param headers   headers required for the api depending on method used
+     * @param params    form params required in POST method
+     * @throws Exception
+     */
     @Test(groups = "wso2.is", description = "Retrieve user claims from user-info endpoint", dependsOnMethods =
-            "testGetAccessTokenForPasswordGrant")
-    public void testUserInfoEndpoint() throws Exception {
+            "testGetAccessTokenForPasswordGrant", dataProvider = "userInfoEndpointRequestDataProvider")
+    public void testUserInfoEndpoint(String method, Map<String, String> headers, Map<String, String> params) throws Exception {
 
-        Map<String, String> params = new HashMap<>();
-        params.put("scope", "openid");
+        Response response;
+        if(method.equals("GET")){
+            response = getResponseOfGet(USER_INFO_ENDPOINT, headers);
+        }else {
+            response = getResponseOfFormPost(USER_INFO_ENDPOINT, params, headers);
+        }
 
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Authorization", "Bearer " + accessToken);
-        headers.put("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-
-        Response response = getResponseOfFormPost(USER_INFO_ENDPOINT, params, headers);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -203,21 +229,38 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
     }
 
     /**
-     * Invoke given endpointUri for Form POST request with given body, headers
+     * Invoke given endpointUri for Form POST request with given formParams, headers
      *
      * @param endpointUri endpoint to be invoked
-     * @param params      map of parameters to be added to the request
+     * @param formParams      map of form body to be added to the request
      * @param headers     map of headers to be added to the request
      * @return response
      */
-    protected Response getResponseOfFormPost(String endpointUri, Map<String, String> params, Map<String, String>
+    protected Response getResponseOfFormPost(String endpointUri, Map<String, String> formParams, Map<String, String>
             headers) {
 
         return given()
                 .headers(headers)
-                .params(params)
+                .formParams(formParams)
                 .when()
                 .post(endpointUri);
+    }
+
+
+    /**
+     * Invoke given endpointUri for GET request with given params, headers
+     *
+     * @param endpointUri endpoint to be invoked
+     * @param headers     map of headers to be added to the request
+     * @return response
+     */
+    protected Response getResponseOfGet(String endpointUri, Map<String, String>
+            headers) {
+
+        return given()
+                .headers(headers)
+                .when()
+                .get(endpointUri);
     }
 
     private void addSecondaryUserStore() throws Exception {
