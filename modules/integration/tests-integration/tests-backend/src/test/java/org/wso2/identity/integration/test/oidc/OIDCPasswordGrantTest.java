@@ -22,6 +22,7 @@ import org.apache.http.HttpStatus;
 import org.json.simple.JSONObject;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.dbutils.H2DataBaseManager;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.PropertyDTO;
@@ -115,18 +116,58 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
         accessToken = response.then().extract().path("access_token");
     }
 
-    @Test(groups = "wso2.is", description = "Retrieve user claims from user-info endpoint", dependsOnMethods =
-            "testGetAccessTokenForPasswordGrant")
-    public void testUserInfoEndpoint() throws Exception {
+    /**
+     * Provide request data to test userInfoEndpoint.
+     *
+     * @return Object with testUserInfoEndpoint method parameters.
+     */
+    @DataProvider(name = "userInfoEndpointRequestDataProvider")
+    public Object[][] userInfoEndpointRequestDataProvider() {
 
-        Map<String, String> params = new HashMap<>();
-        params.put("scope", "openid");
+        Map<String, String> contentTypeWithCharset = new HashMap<>();
+        contentTypeWithCharset.put("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+
+        Map<String, String> contentTypeWithoutCharset = new HashMap<>();
+        contentTypeWithoutCharset.put("Content-Type", "application/x-www-form-urlencoded");
+
+        return new Object[][]{{contentTypeWithCharset}, {contentTypeWithoutCharset}};
+    }
+
+    /**
+     * Test /userinfo endpoint for GET method.
+     */
+    @Test(groups = "wso2.is", description = "Retrieve user claims from user-info endpoint",
+            dependsOnMethods = "testGetAccessTokenForPasswordGrant")
+    public void testHttpGetUserInfoEndpoint() {
 
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", "Bearer " + accessToken);
-        headers.put("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
 
-        Response response = getResponseOfFormPost(USER_INFO_ENDPOINT, params, headers);
+        Response response = getResponseOfGet(USER_INFO_ENDPOINT, headers);
+
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("email", is(user.getUserClaims().get(OIDCUtilTest.emailClaimUri)))
+                .body("given_name", is(user.getUserClaims().get(OIDCUtilTest.firstNameClaimUri)))
+                .body("last_name", is(user.getUserClaims().get(OIDCUtilTest.lastName)));
+    }
+
+    /**
+     * Test /userinfo endpoint for POST method.
+     *
+     * @param headers Headers for http POST method.
+     */
+    @Test(groups = "wso2.is", description = "Retrieve user claims from user-info endpoint", dependsOnMethods =
+            "testGetAccessTokenForPasswordGrant", dataProvider = "userInfoEndpointRequestDataProvider")
+    public void testHttpPostUserInfoEndpoint(Map<String, String> headers) {
+
+        Map<String, String> formParams = new HashMap<>();
+        formParams.put("access_token", accessToken);
+
+        Response response = getResponseOfFormPost(USER_INFO_ENDPOINT, formParams, headers);
+
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -137,7 +178,7 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
     }
 
     @Test(groups = "wso2.is", description = "Get access token with a JSON request", dependsOnMethods =
-            "testUserInfoEndpoint")
+            "testHttpGetUserInfoEndpoint")
     public void testGetAccessTokenForPasswordGrantJsonRequest() throws Exception {
 
         Map<String, String> params = new HashMap<>();
@@ -163,7 +204,7 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
     }
 
     /**
-     * Invoke given endpointUri for Form POST request with given body, headers and Basic authentication credentials
+     * Invoke given endpointUri for Form POST request with given body, headers and Basic authentication credentials.
      *
      * @param endpointUri endpoint to be invoked
      * @param params      map of parameters to be added to the request
@@ -203,21 +244,36 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
     }
 
     /**
-     * Invoke given endpointUri for Form POST request with given body, headers
+     * Invoke given endpointUri for Form POST request with given formParams, headers.
      *
-     * @param endpointUri endpoint to be invoked
-     * @param params      map of parameters to be added to the request
-     * @param headers     map of headers to be added to the request
-     * @return response
+     * @param endpointUri Endpoint to be invoked.
+     * @param formParams  Map of form body to be added to the request.
+     * @param headers     Map of headers to be added to the request.
+     * @return Http response from POST request.
      */
-    protected Response getResponseOfFormPost(String endpointUri, Map<String, String> params, Map<String, String>
+    protected Response getResponseOfFormPost(String endpointUri, Map<String, String> formParams, Map<String, String>
             headers) {
 
         return given()
                 .headers(headers)
-                .params(params)
+                .formParams(formParams)
                 .when()
                 .post(endpointUri);
+    }
+
+    /**
+     * Invoke given endpointUri for GET request with given params, headers.
+     *
+     * @param endpointUri Endpoint to be invoked.
+     * @param headers     Map of headers to be added to the request.
+     * @return Http response from GET request.
+     */
+    protected Response getResponseOfGet(String endpointUri, Map<String, String> headers) {
+
+        return given()
+                .headers(headers)
+                .when()
+                .get(endpointUri);
     }
 
     private void addSecondaryUserStore() throws Exception {
