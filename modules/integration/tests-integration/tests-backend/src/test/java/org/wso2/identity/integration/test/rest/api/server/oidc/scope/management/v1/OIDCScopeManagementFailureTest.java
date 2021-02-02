@@ -121,12 +121,14 @@ public class OIDCScopeManagementFailureTest extends OIDCScopeManagementBaseTest 
     @Test(dependsOnMethods = "testAddInvalidOIDCScope")
     public void testDeleteOIDCScope() {
 
+        // Delete an existing scope by id.
         Response response = getResponseOfDelete(OIDC_SCOPE_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + scopeId);
         validateHttpStatusCode(response, HttpStatus.SC_NO_CONTENT);
 
+        // Try to delete the same scope again. DELETE should be idempotent.
         Response responseOfDeleteFailure =
                 getResponseOfDelete(OIDC_SCOPE_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + scopeId);
-        validateHttpStatusCode(responseOfDeleteFailure, HttpStatus.SC_NOT_FOUND);
+        validateHttpStatusCode(responseOfDeleteFailure, HttpStatus.SC_NO_CONTENT);
     }
 
     @Test(dependsOnMethods = "testDeleteOIDCScope")
