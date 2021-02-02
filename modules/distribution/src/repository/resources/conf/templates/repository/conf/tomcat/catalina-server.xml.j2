@@ -92,7 +92,6 @@
                 {% endif %}
                 <Valve className="org.wso2.carbon.tomcat.ext.valves.CarbonStuckThreadDetectionValve" threshold="600"/>
                 <Valve className="org.wso2.carbon.tomcat.ext.valves.CompositeValve"/>
-                <Valve className="org.wso2.carbon.tomcat.ext.valves.SameSiteCookieValve"/>
 
                 <!-- Authentication and Authorization valve for the rest apis and we can configure context for this in identity.xml.j2  -->
                 <Valve className="org.wso2.carbon.identity.auth.valve.AuthenticationValve"/>
@@ -101,6 +100,10 @@
                 <Valve className="org.wso2.carbon.identity.context.rewrite.valve.TenantContextRewriteValve"/>
                 <!--Error pages -->
                 <Valve className="org.apache.catalina.valves.ErrorReportValve" showServerInfo="false" showReport="false"/>
+
+                <!-- Same-site valve to handle the same-site attribute in cookies -->
+                <Valve className="org.wso2.carbon.tomcat.ext.valves.SameSiteCookieValve"/>
+
                 {% for valve in catalina.valves %}
                 <Valve
                     {% for property,value in valve.properties.items() %}
