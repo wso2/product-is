@@ -2143,7 +2143,7 @@
         <identity.extension.utils>1.0.8</identity.extension.utils>
 
         <!-- Identity REST API feature -->
-        <identity.api.dispatcher.version>1.0.155</identity.api.dispatcher.version>
+        <identity.api.dispatcher.version>1.0.156</identity.api.dispatcher.version>
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
         <identity.tool.samlsso.validator.version>5.4.2</identity.tool.samlsso.validator.version>
@@ -2154,7 +2154,7 @@
         <carbon.identity.oauth.uma.version>1.2.7</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.1.69</identity.apps.version>
+        <identity.apps.version>1.1.75</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.3.31</charon.version>
