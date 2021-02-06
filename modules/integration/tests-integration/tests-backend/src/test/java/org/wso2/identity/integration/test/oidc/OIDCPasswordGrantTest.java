@@ -117,23 +117,6 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
     }
 
     /**
-     * Provide request data to test userInfoEndpoint.
-     *
-     * @return Object with testUserInfoEndpoint method parameters.
-     */
-    @DataProvider(name = "userInfoEndpointRequestDataProvider")
-    public Object[][] userInfoEndpointRequestDataProvider() {
-
-        Map<String, String> contentTypeWithCharset = new HashMap<>();
-        contentTypeWithCharset.put("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-
-        Map<String, String> contentTypeWithoutCharset = new HashMap<>();
-        contentTypeWithoutCharset.put("Content-Type", "application/x-www-form-urlencoded");
-
-        return new Object[][]{{contentTypeWithCharset}, {contentTypeWithoutCharset}};
-    }
-
-    /**
      * Test /userinfo endpoint for GET method.
      */
     @Test(groups = "wso2.is", description = "Retrieve user claims from user-info endpoint",
@@ -160,7 +143,7 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
      * @param headers Headers for http POST method.
      */
     @Test(groups = "wso2.is", description = "Retrieve user claims from user-info endpoint", dependsOnMethods =
-            "testGetAccessTokenForPasswordGrant", dataProvider = "userInfoEndpointRequestDataProvider")
+            "testHttpGetUserInfoEndpoint", dataProvider = "userInfoEndpointRequestDataProvider")
     public void testHttpPostUserInfoEndpoint(Map<String, String> headers) {
 
         Map<String, String> formParams = new HashMap<>();
@@ -178,7 +161,7 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
     }
 
     @Test(groups = "wso2.is", description = "Get access token with a JSON request", dependsOnMethods =
-            "testHttpGetUserInfoEndpoint")
+            "testHttpPostUserInfoEndpoint")
     public void testGetAccessTokenForPasswordGrantJsonRequest() throws Exception {
 
         Map<String, String> params = new HashMap<>();
@@ -274,6 +257,23 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
                 .headers(headers)
                 .when()
                 .get(endpointUri);
+    }
+
+    /**
+     * Provide request data to test userInfoEndpoint.
+     *
+     * @return Object with testUserInfoEndpoint method parameters.
+     */
+    @DataProvider(name = "userInfoEndpointRequestDataProvider")
+    private Object[][] userInfoEndpointRequestDataProvider() {
+
+        Map<String, String> contentTypeWithCharset = new HashMap<>();
+        contentTypeWithCharset.put("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+
+        Map<String, String> contentTypeWithoutCharset = new HashMap<>();
+        contentTypeWithoutCharset.put("Content-Type", "application/x-www-form-urlencoded");
+
+        return new Object[][]{{contentTypeWithCharset}, {contentTypeWithoutCharset}};
     }
 
     private void addSecondaryUserStore() throws Exception {
