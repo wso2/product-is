@@ -32,6 +32,7 @@ import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import java.io.IOException;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
@@ -135,6 +136,17 @@ public class ConfigSuccessTest extends ConfigTestBase {
                 .body("realmConfig.adminUser", is(adminUserName))
                 .body("realmConfig.adminRole", notNullValue())
                 .body("realmConfig.everyoneRole", notNullValue());
+    }
+
+    @Test(dependsOnMethods = {"testGetConfigs"})
+    public void testGetHomeRealmIdentifiers() throws Exception {
+
+        Response response = getResponseOfGet(HOME_REALM_IDENTIFIERS_API_BASE_PATH);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body(containsString("\"localhost\""));
     }
 
     @Test(dependsOnMethods = {"testGetConfigs"})
