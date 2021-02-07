@@ -2041,7 +2041,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.19.14</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.19.17</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2063,7 +2063,7 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.8.23</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.4.138</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.4.139</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.6.0</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.6.7</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.6.2</identity.inbound.provisioning.scim.version>
@@ -2090,7 +2090,7 @@
 
         <!-- Identity Event Handler Versions -->
         <identity.event.handler.account.lock.version>1.4.16</identity.event.handler.account.lock.version>
-        <identity.event.handler.notification.version>1.3.15</identity.event.handler.notification.version>
+        <identity.event.handler.notification.version>1.3.16</identity.event.handler.notification.version>
 
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
@@ -2135,7 +2135,7 @@
 
         <!-- Connector Versions -->
         <authenticator.totp.version>3.0.2</authenticator.totp.version>
-        <authenticator.office365.version>2.0.2</authenticator.office365.version>
+        <authenticator.office365.version>2.0.3</authenticator.office365.version>
         <authenticator.smsotp.version>3.0.13</authenticator.smsotp.version>
         <authenticator.emailotp.version>3.1.2</authenticator.emailotp.version>
         <authenticator.twitter.version>1.0.11</authenticator.twitter.version>
@@ -2154,7 +2154,7 @@
         <carbon.identity.oauth.uma.version>1.2.7</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.1.77</identity.apps.version>
+        <identity.apps.version>1.1.83</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.3.31</charon.version>
