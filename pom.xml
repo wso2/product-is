@@ -2120,7 +2120,7 @@
         <provisioning.connector.scim.version>5.2.2</provisioning.connector.scim.version>
 
         <!-- Local Authenticator Versions -->
-        <identity.local.auth.basicauth.version>6.3.21</identity.local.auth.basicauth.version>
+        <identity.local.auth.basicauth.version>6.3.22</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.2.9</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.3.14</identity.local.auth.iwa.version>
 
