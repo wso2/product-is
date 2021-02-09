@@ -2041,7 +2041,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.19.19</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.19.20</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2052,13 +2052,13 @@
         <carbon.consent.mgt.version>2.2.14</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.4.86</identity.governance.version>
+        <identity.governance.version>1.4.87</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.5.2</identity.carbon.auth.saml2.version>
         <identity.carbon.auth.mutual.ssl.version>5.4.1</identity.carbon.auth.mutual.ssl.version>
         <identity.carbon.auth.iwa.version>5.4.2</identity.carbon.auth.iwa.version>
-        <identity.carbon.auth.rest.version>1.4.33</identity.carbon.auth.rest.version>
+        <identity.carbon.auth.rest.version>1.4.34</identity.carbon.auth.rest.version>
 
 
         <!-- Identity Inbound Versions   -->
@@ -2067,7 +2067,7 @@
         <identity.inbound.auth.openid.version>5.6.0</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.6.7</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.6.2</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>1.5.59</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim2.version>1.5.61</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity workflow Versions -->
         <identity.user.workflow.version>5.4.3</identity.user.workflow.version>
@@ -2120,7 +2120,7 @@
         <provisioning.connector.scim.version>5.2.2</provisioning.connector.scim.version>
 
         <!-- Local Authenticator Versions -->
-        <identity.local.auth.basicauth.version>6.3.22</identity.local.auth.basicauth.version>
+        <identity.local.auth.basicauth.version>6.3.23</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.2.9</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.3.14</identity.local.auth.iwa.version>
 
