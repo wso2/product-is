@@ -19,7 +19,7 @@
   ],
   "idToken": {
     "audience": [
-      ""
+      "a_valid_audience_value"
     ],
     "encryption": {
       "algorithm": "RSA-OAEP",
