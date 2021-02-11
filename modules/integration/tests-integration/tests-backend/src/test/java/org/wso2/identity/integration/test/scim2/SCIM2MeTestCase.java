@@ -250,7 +250,7 @@ public class SCIM2MeTestCase extends ISIntegrationTest {
         request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
 
         HttpResponse response = client.execute(request);
-        assertEquals(response.getStatusLine().getStatusCode(), 501);
+        assertEquals(response.getStatusLine().getStatusCode(), 204);
     }
 
     private String getPath() {

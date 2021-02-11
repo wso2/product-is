@@ -72,8 +72,8 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
         if (userMgtClient.roleNameExists(newUserRole)) {
             userMgtClient.deleteRole(newUserRole);
         }
-        if (userMgtClient.roleNameExists(newUserRole + "tmpupdated")) {
-            userMgtClient.deleteRole(newUserRole + "tmpupdated");
+        if (userMgtClient.roleNameExists(newUserRole + "tmpupdate")) {
+            userMgtClient.deleteRole(newUserRole + "tmpupdate");
         }
         if (userMgtClient.roleNameExists(newUserRole + "tmp")) {
             userMgtClient.deleteRole(newUserRole + "tmp");
@@ -241,11 +241,11 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
     @Test(groups = "wso2.is", description = "Check update role name", dependsOnMethods = "testUpdateUsersOfRole")
     public void testUpdateRoleName() throws Exception {
 
-        userMgtClient.updateRoleName(userRoleTmp, userRoleTmp + "updated");
+        userMgtClient.updateRoleName(userRoleTmp, userRoleTmp + "update");
 
         Assert.assertFalse(nameExists(userMgtClient.getAllRolesNames(userRoleTmp, 10), userRoleTmp), "Role update failed.");
-        Assert.assertTrue(nameExists(userMgtClient.getAllRolesNames(userRoleTmp + "updated", 10), userRoleTmp + "updated"), "Updating role has failed. Role not updated");
-        userRoleTmp = userRoleTmp + "updated";
+        Assert.assertTrue(nameExists(userMgtClient.getAllRolesNames(userRoleTmp + "update", 10), userRoleTmp + "update"), "Updating role has failed. Role not updated");
+        userRoleTmp = userRoleTmp + "update";
 
     }
 

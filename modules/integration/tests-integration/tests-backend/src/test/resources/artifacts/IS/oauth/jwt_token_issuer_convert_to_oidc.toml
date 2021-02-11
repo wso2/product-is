@@ -32,7 +32,7 @@ file_name = "wso2carbon.jks"
 password = "wso2carbon"
 
 [oauth.oidc.claims]
-enable_oidc_dialect = true
+enable_oidc_dialect = false
 enable_unmapped_user_attributes = false
 
 [oauth.token_generation]

@@ -24,10 +24,13 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.CookieStore;
 import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.extensions.servers.carbonserver.MultipleServersManager;
@@ -72,26 +75,44 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
     private IdentityProviderMgtServiceClient identityProviderMgtServiceClient;
     private MultipleServersManager manager;
     private SAMLSSOConfigServiceClient samlSSOConfigServiceClient;
-    private DefaultHttpClient client;
+    private CloseableHttpClient client;
     private ServiceProvider serviceProvider;
     private HttpResponse response;
     private CookieStore cookieStore;
     private TestDataHolder testDataHolder;
+    private final String username;
+    private final String userPassword;
+    private final AutomationContext context;
+    private String backendURL;
+    private String sessionCookie;
 
     private String initialCarbonHome;
 
+    @DataProvider(name = "configProvider")
+    public static Object[][] configProvider() {
+
+        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}};
+    }
+
+    @Factory(dataProvider = "configProvider")
+    public ConditionalAuthenticationTestCase(TestUserMode userMode) throws Exception {
+
+        context = new AutomationContext("IDENTITY", userMode);
+        this.username = context.getContextTenant().getTenantAdmin().getUserName();
+        this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
+    }
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
         super.init();
+        backendURL = context.getContextUrls().getBackEndUrl();
+        logManger = new AuthenticatorClient(backendURL);
+        sessionCookie = logManger.login(username, userPassword, context.getInstance().getHosts().get("default"));
         testDataHolder = TestDataHolder.getInstance();
         initialCarbonHome = System.getProperty("carbon.home");
         logManger = new AuthenticatorClient(backendURL);
-        String cookie = this.logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
-                isServer.getSuperTenant().getTenantAdmin().getPassword(),
-                isServer.getInstance().getHosts().get("default"));
-        oauthAdminClient = new OauthAdminClient(backendURL, cookie);
+        oauthAdminClient = new OauthAdminClient(backendURL, sessionCookie);
         ConfigurationContext configContext = ConfigurationContextFactory
                 .createConfigurationContextFromFileSystem(null, null);
         applicationManagementServiceClient = new ApplicationManagementServiceClient(sessionCookie, backendURL,
@@ -99,9 +120,8 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
         identityProviderMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
         manager = testDataHolder.getManager();
 
-        client = new DefaultHttpClient();
         cookieStore = new BasicCookieStore();
-        client.setCookieStore(cookieStore);
+        client = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
 
         startSecondaryIS();
         String script = getConditionalAuthScript("ConditionalAuthenticationTestCase.js");
