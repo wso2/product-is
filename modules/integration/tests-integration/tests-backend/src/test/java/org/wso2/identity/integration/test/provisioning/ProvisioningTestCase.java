@@ -117,6 +117,15 @@ public class ProvisioningTestCase extends ISIntegrationTest {
 
         startOtherCarbonServers();
 
+        automationContextMap.forEach((key, value) -> {
+            try {
+                log.info("port name: " + key + ", value: " + value.getContextUrls().getSecureServiceUrl());
+            } catch (XPathExpressionException e) {
+                //
+            }
+
+        });
+
         createServiceClientsForServers(sessionCookie, PORT_OFFSET_0, new CommonConstants.AdminClients[]{
                 CommonConstants.AdminClients.APPLICATION_MANAGEMENT_SERVICE_CLIENT, CommonConstants.AdminClients
                 .IDENTITY_PROVIDER_MGT_SERVICE_CLIENT});
@@ -129,13 +138,12 @@ public class ProvisioningTestCase extends ISIntegrationTest {
         createServiceClientsForServers(null, PORT_OFFSET_2, new CommonConstants.AdminClients[]{CommonConstants
                 .AdminClients.USER_MANAGEMENT_CLIENT});
 
-        // TODO: port offset will no longer needed if TAF 4.3.1 issue get fixed
-        scim_url_0 = getSCIMUrl(PORT_OFFSET_0, automationContextMap.get(PORT_OFFSET_0).getContextUrls()
-                .getSecureServiceUrl());
-        scim_url_1 = getSCIMUrl(PORT_OFFSET_1, automationContextMap.get(PORT_OFFSET_1).getContextUrls()
-                .getSecureServiceUrl());
-        scim_url_2 = getSCIMUrl(PORT_OFFSET_2, automationContextMap.get(PORT_OFFSET_2).getContextUrls()
-                .getSecureServiceUrl());
+        scim_url_0 = getSCIMUrl(automationContextMap.get(PORT_OFFSET_0).getContextUrls().getSecureServiceUrl());
+        scim_url_1 = getSCIMUrl(automationContextMap.get(PORT_OFFSET_1).getContextUrls().getSecureServiceUrl());
+        scim_url_2 = getSCIMUrl(automationContextMap.get(PORT_OFFSET_2).getContextUrls().getSecureServiceUrl());
+        log.info("scim_url_0 " + scim_url_0);
+        log.info("scim_url_1 " + scim_url_1);
+        log.info("scim_url_2 " + scim_url_2);
     }
 
     @AfterClass(alwaysRun = true)
@@ -310,10 +318,7 @@ public class ProvisioningTestCase extends ISIntegrationTest {
             return;
         }
 
-        //TODO: Need to remove getSecureServiceUrl method when server start issue got fixed / TAF 4.3.1
-        String serviceUrl = getSecureServiceUrl(portOffset,
-                automationContextMap.get(portOffset).getContextUrls()
-                        .getSecureServiceUrl());
+        String serviceUrl = automationContextMap.get(portOffset).getContextUrls().getSecureServiceUrl() + "/";;
 
         if (sessionCookie == null) {
 
@@ -427,15 +432,8 @@ public class ProvisioningTestCase extends ISIntegrationTest {
         manager.startServers(server2);
     }
 
-    //TODO: Need to remove
+    private String getSCIMUrl(String baseUrl) {
 
-    private String getSecureServiceUrl(int portOffset, String baseUrl) {
-
-        return baseUrl.replace("9853", String.valueOf(DEFAULT_PORT + portOffset)) + "/";
-    }
-
-    private String getSCIMUrl(int portOffset, String baseUrl) {
-
-        return baseUrl.replace("9853/services", String.valueOf(DEFAULT_PORT + portOffset)) + "/wso2/scim/";
+        return baseUrl.replace("/services", "/wso2/scim/");
     }
 }
