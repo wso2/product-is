@@ -81,7 +81,7 @@ public class RESTTestBase extends ISIntegrationTest {
             + "lib" + File.separator;
     protected static final String TENANT_CONTEXT_IN_URL = "/t/%s";
     private static final String JAR_EXTENSION = ".jar";
-    private static final String SERVICES = "/services";
+    protected static final String SERVICES = "/services";
 
     private static final String BUNDLE = "RESTAPIErrors";
     private static ResourceBundle errorProperties = ResourceBundle.getBundle(BUNDLE);

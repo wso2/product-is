@@ -36,6 +36,7 @@ public class SCIM2BaseTest extends RESTTestBase {
     private static final String API_DEFINITION_FILE_NAME = "scim2.yaml";
 
     protected static String swaggerDefinition;
+    protected static final String SCIM_CONTENT_TYPE = "application/scim+json";
     protected static final String SCIM2_BASE_PATH_IN_SWAGGER = "/t/\\{tenant-domain\\}" + SCIM2_ENDPOINT;
     protected static final String SCIM2_BASE_PATH_WITH_TENANT_CONTEXT = TENANT_CONTEXT_IN_URL + SCIM2_ENDPOINT;
     public static final String FILE_BASE_PATH = (System.getProperty("basedir", "."))
