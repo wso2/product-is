@@ -180,8 +180,8 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body("properties", notNullValue())
                 .body("properties.find{ it.key == 'AdditionalQueryParameters' }.displayName", equalTo("Additional " +
                         "Query Parameters"))
-                .body("properties.find{ it.key == 'AdditionalQueryParameters' }.description", equalTo("Additional " +
-                        "query parameters. e.g: paramName1=value1"))
+                .body("properties.find{ it.key == 'AdditionalQueryParameters' }.description", equalTo("Additional" +
+                        " query parameters to be sent to Google."))
                 .body("properties.find{ it.key == 'AdditionalQueryParameters' }.type", equalTo("STRING"))
                 .body("properties.find{ it.key == 'AdditionalQueryParameters' }.displayOrder", equalTo(4))
                 .body("properties.find{ it.key == 'AdditionalQueryParameters' }.regex", equalTo(".*"))
@@ -189,9 +189,9 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body("properties.find{ it.key == 'AdditionalQueryParameters' }.isConfidential", equalTo(false))
                 .body("properties.find{ it.key == 'AdditionalQueryParameters' }.defaultValue", equalTo(""))
 
-                .body("properties.find{ it.key == 'callbackUrl' }.displayName", equalTo("Callback Url"))
-                .body("properties.find{ it.key == 'callbackUrl' }.description", equalTo("Enter value corresponding " +
-                        "to callback url."))
+                .body("properties.find{ it.key == 'callbackUrl' }.displayName", equalTo("Callback URL"))
+                .body("properties.find{ it.key == 'callbackUrl' }.description", equalTo("The callback URL " +
+                        "used to obtain Google credentials."))
                 .body("properties.find{ it.key == 'callbackUrl' }.type", equalTo("STRING"))
                 .body("properties.find{ it.key == 'callbackUrl' }.displayOrder", equalTo(3))
                 .body("properties.find{ it.key == 'callbackUrl' }.regex", equalTo(".*"))
@@ -199,9 +199,9 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body("properties.find{ it.key == 'callbackUrl' }.isConfidential", equalTo(false))
                 .body("properties.find{ it.key == 'callbackUrl' }.defaultValue", equalTo(""))
 
-                .body("properties.find{ it.key == 'ClientId' }.displayName", equalTo("Client Id"))
-                .body("properties.find{ it.key == 'ClientId' }.description", equalTo("Enter Google IDP client " +
-                        "identifier value"))
+                .body("properties.find{ it.key == 'ClientId' }.displayName", equalTo("Client ID"))
+                .body("properties.find{ it.key == 'ClientId' }.description", equalTo("The client identifier " +
+                        "value of the Google identity provider."))
                 .body("properties.find{ it.key == 'ClientId' }.type", equalTo("STRING"))
                 .body("properties.find{ it.key == 'ClientId' }.displayOrder", equalTo(1))
                 .body("properties.find{ it.key == 'ClientId' }.regex", equalTo(".*"))
@@ -209,9 +209,9 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body("properties.find{ it.key == 'ClientId' }.isConfidential", equalTo(false))
                 .body("properties.find{ it.key == 'ClientId' }.defaultValue", equalTo(""))
 
-                .body("properties.find{ it.key == 'ClientSecret' }.displayName", equalTo("Client Secret"))
-                .body("properties.find{ it.key == 'ClientSecret' }.description", equalTo("Enter Google IDP client " +
-                        "secret value"))
+                .body("properties.find{ it.key == 'ClientSecret' }.displayName", equalTo("Client secret"))
+                .body("properties.find{ it.key == 'ClientSecret' }.description", equalTo("The client secret " +
+                        "value of the Google identity provider."))
                 .body("properties.find{ it.key == 'ClientSecret' }.type", equalTo("STRING"))
                 .body("properties.find{ it.key == 'ClientSecret' }.displayOrder", equalTo(2))
                 .body("properties.find{ it.key == 'ClientSecret' }.regex", equalTo(".*"))
