@@ -446,7 +446,7 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
 
     private Property[] getOIDCAuthnConfigProperties() {
 
-        Property[] properties = new Property[7];
+        Property[] properties = new Property[8];
         Property property = new Property();
         property.setName(IdentityConstants.Authenticator.OIDC.IDP_NAME);
         property.setValue("oidcFedIdP");
@@ -481,6 +481,11 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
         property.setName(IdentityConstants.Authenticator.OIDC.OIDC_LOGOUT_URL);
         property.setValue(SECONDARY_IS_LOGOUT_ENDPOINT);
         properties[6] = property;
+
+        property = new Property();
+        property.setName("commonAuthQueryParams");
+        property.setValue("scope=" + OAuth2Constant.OAUTH2_SCOPE_OPENID_WITH_INTERNAL_LOGIN);
+        properties[7] = property;
         return properties;
     }
 

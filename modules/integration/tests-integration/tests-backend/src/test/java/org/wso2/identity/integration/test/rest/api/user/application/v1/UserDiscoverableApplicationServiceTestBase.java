@@ -115,7 +115,7 @@ public class UserDiscoverableApplicationServiceTestBase extends RESTAPIUserTestB
             ServiceProvider serviceProvider = appMgtclient.getApplication(APP_NAME_PREFIX + i);
             if (serviceProvider != null) {
                 appMgtclient.deleteApplication(serviceProvider.getApplicationName());
-                System.out.println("Deleted app: " + serviceProvider.getApplicationName());
+                log.info("############## " + "Deleted app: " + serviceProvider.getApplicationName());
             }
         }
 

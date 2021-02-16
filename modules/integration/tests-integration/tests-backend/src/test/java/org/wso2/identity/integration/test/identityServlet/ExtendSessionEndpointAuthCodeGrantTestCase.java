@@ -79,6 +79,7 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_RED
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_RESPONSE_TYPE;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_SCOPE;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_SCOPE_OPENID;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_SCOPE_OPENID_WITH_INTERNAL_LOGIN;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.SESSION_DATA_KEY;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZATION_CODE_NAME;
@@ -151,7 +152,7 @@ public class ExtendSessionEndpointAuthCodeGrantTestCase extends OAuth2ServiceAbs
         urlParameters.add(new BasicNameValuePair(OAUTH2_RESPONSE_TYPE, OAUTH2_GRANT_TYPE_CODE));
         urlParameters.add(new BasicNameValuePair(OAUTH2_CLIENT_ID, consumerKey));
         urlParameters.add(new BasicNameValuePair(OAUTH2_REDIRECT_URI, CALLBACK_URL));
-        urlParameters.add(new BasicNameValuePair(OAUTH2_SCOPE, OAUTH2_SCOPE_OPENID));
+        urlParameters.add(new BasicNameValuePair(OAUTH2_SCOPE, OAUTH2_SCOPE_OPENID_WITH_INTERNAL_LOGIN));
 
         HttpResponse response = sendPostRequestWithParameters(firstPartyClient, urlParameters, AUTHORIZE_ENDPOINT_URL);
         Assert.assertNotNull(response, "Authorization request failed. Authorized response is null");

@@ -218,7 +218,7 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
     private String getAuthzRequestUrl(String clientId, String callbackUrl) {
 
         return OAuth2Constant.AUTHORIZE_ENDPOINT_URL + "?" + "client_id=" + clientId + "&redirect_uri=" + callbackUrl +
-                "&response_type=code&scope=openid";
+                "&response_type=code&scope=openid%20internal_login";
     }
 
     private String buildPlainJWT(String consumerKey) {
