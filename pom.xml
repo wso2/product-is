@@ -2110,7 +2110,7 @@
 
         <!-- Social Authenticator Versions -->
         <social.authenticator.facebook.version>5.1.18</social.authenticator.facebook.version>
-        <social.authenticator.google.version>5.1.9</social.authenticator.google.version>
+        <social.authenticator.google.version>5.1.10</social.authenticator.google.version>
         <social.authenticator.windowslive.version>5.1.5</social.authenticator.windowslive.version>
         <social.authenticator.yahoo.version>5.1.8</social.authenticator.yahoo.version>
 
