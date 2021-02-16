@@ -255,6 +255,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.extension.identity.authenticator.outbound.totp:org.wso2.carbon.extension.identity.authenticator.totp.feature:${authenticator.totp.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.extension.identity.authenticator.outbound.emailotp:org.wso2.carbon.identity.authenticator.emailotp.feature:${authenticator.emailotp.version}
+                                </featureArtifactDef>
 
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.user.ws:org.wso2.carbon.um.ws.service.feature:${identity.user.ws.version}
@@ -961,6 +964,10 @@
                                     <id>org.wso2.carbon.extension.identity.authenticator.totp.connector.feature.group</id>
                                     <version>${authenticator.totp.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.authenticator.emailotp.feature.group</id>
+                                    <version>${authenticator.emailotp.version}</version>
+                                </feature>
 
                             </features>
                         </configuration>
@@ -1455,6 +1462,10 @@
                                     <id>org.wso2.carbon.extension.identity.authenticator.totp.connector.feature.group</id>
                                     <version>${authenticator.totp.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.authenticator.emailotp.feature.group</id>
+                                    <version>${authenticator.emailotp.version}</version>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>
@@ -1885,6 +1896,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.extension.identity.authenticator.totp.connector.feature.group</id>
                                     <version>${authenticator.totp.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.authenticator.emailotp.feature.group</id>
+                                    <version>${authenticator.emailotp.version}</version>
                                 </feature>
                             </features>
                         </configuration>

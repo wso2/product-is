@@ -1657,7 +1657,7 @@
             <!-- Other Connectors packed with IS -->
             <dependency>
                 <groupId>org.wso2.carbon.extension.identity.authenticator.outbound.emailotp</groupId>
-                <artifactId>org.wso2.carbon.extension.identity.authenticator.emailotp.connector</artifactId>
+                <artifactId>org.wso2.carbon.identity.authenticator.emailotp</artifactId>
                 <version>${authenticator.emailotp.version}</version>
             </dependency>
             <dependency>
@@ -2137,7 +2137,7 @@
         <authenticator.totp.version>3.0.3</authenticator.totp.version>
         <authenticator.office365.version>2.0.3</authenticator.office365.version>
         <authenticator.smsotp.version>3.0.13</authenticator.smsotp.version>
-        <authenticator.emailotp.version>3.1.2</authenticator.emailotp.version>
+        <authenticator.emailotp.version>4.0.0</authenticator.emailotp.version>
         <authenticator.twitter.version>1.0.11</authenticator.twitter.version>
         <authenticator.x509.version>3.0.3</authenticator.x509.version>
         <identity.extension.utils>1.0.8</identity.extension.utils>

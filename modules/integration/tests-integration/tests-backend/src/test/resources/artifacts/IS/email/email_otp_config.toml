@@ -32,13 +32,7 @@ password = "$env{SHARED_DATABASE_PASSWORD}"
 name = "wso2carbon.jks"
 password = "wso2carbon"
 
-[authentication.authenticator.email_otp]
-name ="EmailOTP"
-enable=true
 [authentication.authenticator.email_otp.parameters]
-EMAILOTPAuthenticationEndpointURL = "https://localhost:9853/emailotpauthenticationendpoint/emailotp.jsp"
-EmailOTPAuthenticationEndpointErrorPage = "https://localhost:9853/emailotpauthenticationendpoint/emailotpError.jsp"
-EmailAddressRequestPage = "https://localhost:9853/emailotpauthenticationendpoint/emailAddress.jsp"
 usecase = "local"
 secondaryUserstore = "primary"
 EMAILOTPMandatory = false
