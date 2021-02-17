@@ -97,7 +97,7 @@ public class EmailOTPTestCase extends ISIntegrationTest {
     private String SAML_SSO_URL = "https://localhost:9853/samlsso";
     private static final String COMMON_AUTH_URL = "https://localhost:9853/commonauth";
     private static final String EMAIL_OTP_AUTHENTICATION_ENDPOINT_URL = "https://localhost:" +
-            CommonConstants.IS_DEFAULT_HTTPS_PORT + "/emailotpauthenticationendpoint/emailotp.jsp";
+            CommonConstants.IS_DEFAULT_HTTPS_PORT + "/authenticationendpoint/email_otp.do";
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
     private static final String profileName = "default";
     private static final String TENANT_DOMAIN_PARAM = "tenantDomain";
