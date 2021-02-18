@@ -235,7 +235,7 @@ public class AdaptiveScriptTemporaryClaimPersistenceTestCase extends AbstractAda
 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("response_type", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
-        urlParameters.add(new BasicNameValuePair("scope", "openid"));
+        urlParameters.add(new BasicNameValuePair("scope", OAuth2Constant.OAUTH2_SCOPE_OPENID_WITH_INTERNAL_LOGIN));
         urlParameters.add(new BasicNameValuePair("redirect_uri", CALLBACK_URL));
         urlParameters.add(new BasicNameValuePair("client_id", consumerKey));
         urlParameters.add(new BasicNameValuePair("acr_values", "acr1"));
