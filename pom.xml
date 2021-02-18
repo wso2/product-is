@@ -2058,7 +2058,7 @@
         <identity.carbon.auth.saml2.version>5.5.2</identity.carbon.auth.saml2.version>
         <identity.carbon.auth.mutual.ssl.version>5.4.1</identity.carbon.auth.mutual.ssl.version>
         <identity.carbon.auth.iwa.version>5.4.2</identity.carbon.auth.iwa.version>
-        <identity.carbon.auth.rest.version>1.4.35</identity.carbon.auth.rest.version>
+        <identity.carbon.auth.rest.version>1.4.36</identity.carbon.auth.rest.version>
 
 
         <!-- Identity Inbound Versions   -->
@@ -2143,7 +2143,7 @@
         <identity.extension.utils>1.0.8</identity.extension.utils>
 
         <!-- Identity REST API feature -->
-        <identity.api.dispatcher.version>1.0.158</identity.api.dispatcher.version>
+        <identity.api.dispatcher.version>1.0.159</identity.api.dispatcher.version>
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
         <identity.tool.samlsso.validator.version>5.4.2</identity.tool.samlsso.validator.version>
@@ -2154,7 +2154,7 @@
         <carbon.identity.oauth.uma.version>1.2.7</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.1.164</identity.apps.version>
+        <identity.apps.version>1.2.6</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.3.31</charon.version>
