@@ -285,7 +285,7 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
         StringBuffer buffer = new StringBuffer();
         String line = "";
         while ((line = bufferedReader.readLine()) != null) {
-            System.out.println(line);
+            log.info("############## " + line);
             buffer.append(line);
         }
         bufferedReader.close();

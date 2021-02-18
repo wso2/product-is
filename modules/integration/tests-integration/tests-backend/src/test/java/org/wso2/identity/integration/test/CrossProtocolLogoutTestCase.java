@@ -32,8 +32,13 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationConfig;
+import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
+import org.wso2.carbon.identity.application.common.model.xsd.Property;
+import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
+import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
@@ -64,7 +69,9 @@ public class CrossProtocolLogoutTestCase extends ISIntegrationTest {
     private final String OIDC_APP_NAME = "playground2";
     private final String SAML_ISSUER = "travelocity.com";
     private String oidcAppClientId = "";
+    private String oidcAppClientSecret = "";
     private OauthAdminClient adminClient;
+    private ApplicationManagementServiceClient applicationManagementServiceClient;
     private String sessionDataKeyConsent;
     private String sessionDataKey;
     private final String SAML_SSO_LOGIN_URL =
@@ -83,6 +90,7 @@ public class CrossProtocolLogoutTestCase extends ISIntegrationTest {
 
         init();
         createOIDCApplication();
+        createServiceProvider();
         createSAMLApplication();
 
         client = HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build();
@@ -100,6 +108,7 @@ public class CrossProtocolLogoutTestCase extends ISIntegrationTest {
         super.init();
         adminClient = new OauthAdminClient(backendURL, sessionCookie);
         ssoConfigServiceClient = new SAMLSSOConfigServiceClient(backendURL, sessionCookie);
+        applicationManagementServiceClient = new ApplicationManagementServiceClient(sessionCookie, backendURL, null);
     }
 
     @Test(groups = "wso2.is", description = "Test cross protocol logout for SAML.")
@@ -148,6 +157,7 @@ public class CrossProtocolLogoutTestCase extends ISIntegrationTest {
             OAuthConsumerAppDTO createdApp = adminClient.getOAuthAppByName(OIDC_APP_NAME);
             Assert.assertNotNull(createdApp, "Adding OIDC app failed.");
             oidcAppClientId = createdApp.getOauthConsumerKey();
+            oidcAppClientSecret = createdApp.getOauthConsumerSecret();
         } catch (Exception e) {
             Assert.fail("Adding OIDC app failed.", e);
         }
@@ -177,6 +187,7 @@ public class CrossProtocolLogoutTestCase extends ISIntegrationTest {
     private void removeApplications() throws Exception {
 
         adminClient.removeOAuthApplicationData(oidcAppClientId);
+        applicationManagementServiceClient.deleteApplication(OIDC_APP_NAME);
         ssoConfigServiceClient.removeServiceProvider(SAML_ISSUER);
     }
 
@@ -406,7 +417,34 @@ public class CrossProtocolLogoutTestCase extends ISIntegrationTest {
         urlParameters.add(new BasicNameValuePair("callbackurl", OAuth2Constant.CALLBACK_URL));
         urlParameters.add(new BasicNameValuePair("authorizeEndpoint", OAuth2Constant.APPROVAL_URL));
         urlParameters.add(new BasicNameValuePair("authorize", OAuth2Constant.AUTHORIZE_PARAM));
-        urlParameters.add(new BasicNameValuePair("scope", OAuth2Constant.OAUTH2_SCOPE_OPENID));
+        urlParameters.add(new BasicNameValuePair("scope", OAuth2Constant.OAUTH2_SCOPE_OPENID_WITH_INTERNAL_LOGIN));
         return urlParameters;
+    }
+
+    private ServiceProvider createServiceProvider() throws Exception {
+
+        ServiceProvider serviceProvider = new ServiceProvider();
+        serviceProvider.setApplicationName(OIDC_APP_NAME);
+        applicationManagementServiceClient.createApplication(serviceProvider);
+        serviceProvider = applicationManagementServiceClient.getApplication(OIDC_APP_NAME);
+        serviceProvider.getApplicationID();
+
+        InboundAuthenticationRequestConfig requestConfig = new InboundAuthenticationRequestConfig();
+        requestConfig.setInboundAuthKey(oidcAppClientId);
+        requestConfig.setInboundAuthType("oauth2");
+        if (StringUtils.isNotBlank(oidcAppClientSecret)) {
+            Property property = new Property();
+            property.setName("oauthConsumerSecret");
+            property.setValue(oidcAppClientSecret);
+            Property[] properties = {property};
+            requestConfig.setProperties(properties);
+        }
+
+        InboundAuthenticationConfig inboundAuthenticationConfig = new InboundAuthenticationConfig();
+        inboundAuthenticationConfig
+                .setInboundAuthenticationRequestConfigs(new InboundAuthenticationRequestConfig[]{requestConfig});
+        serviceProvider.setInboundAuthenticationConfig(inboundAuthenticationConfig);
+        applicationManagementServiceClient.updateApplicationData(serviceProvider);
+        return serviceProvider;
     }
 }

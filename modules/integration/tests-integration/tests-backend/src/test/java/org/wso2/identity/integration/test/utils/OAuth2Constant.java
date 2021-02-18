@@ -54,6 +54,7 @@ public final class OAuth2Constant {
     public final static String TOKEN_VALIDATION_SERVICE_URL = CommonConstants.DEFAULT_SERVICE_URL + "OAuth2TokenValidationService";
     public final static String HTTP_RESPONSE_HEADER_LOCATION = "location";
     public final static String OAUTH2_SCOPE_OPENID = "openid";
+    public static final String OAUTH2_SCOPE_OPENID_WITH_INTERNAL_LOGIN = "openid internal_login";
     public final static String OAUTH2_SCOPE_EMAIL = "email";
     public final static String OAUTH2_SCOPE_DEFAULT = "";
     public final static String OAUTH_APPLICATION_NAME = "oauthTestApplication";
