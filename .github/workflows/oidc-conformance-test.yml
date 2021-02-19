@@ -1,0 +1,126 @@
+# This workflow will test IS for OIDC conformance
+# 
+
+name: OIDC Conformance Test
+
+on:
+  # Allows the workflow to run automatically after a release
+  release:
+    types: [published]
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'product-is tag name'
+        required: true
+        default: 'v5.12.0-m6'
+      send-notification:
+        description: 'send google chat notification'
+        required: true
+        default: true
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        path: './product-is'
+      
+    - name: Set up JDK 11
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11
+    
+    - name: Setup Python
+      run: |
+        sudo pip3 install --upgrade pip setuptools wheel
+        sudo pip3 install psutil
+        
+    - name: Download IS zip
+      run: |
+        owner="wso2"
+        repo="product-is"
+        INPUT_TAG=${{github.event.inputs.tag}}
+        if [[ -z "${INPUT_TAG}" ]]; then
+          tag=${GITHUB_REF:10}
+          tag_trimmed=${tag// }
+        else
+          tag=${{github.event.inputs.tag}}
+          tag_trimmed=${tag// }
+        fi
+      
+        artifact="wso2is-${tag_trimmed:1}.zip"
+        echo "Tag=$tag"
+        echo "Artifact=$artifact"
+        list_asset_url="https://api.github.com/repos/${owner}/${repo}/releases/tags/${tag_trimmed}"
+        asset_url=$(curl "${list_asset_url}" | jq ".assets[] | select(.name==\"${artifact}\") | .url" | sed 's/\"//g')
+        curl -vLJO -H 'Accept: application/octet-stream' \
+         "${asset_url}"
+      
+    - name: Clone conformance suite
+      run: git clone --depth 1 --branch release-v4.1.4 https://github.com/openid-certification/conformance-suite.git
+         
+    - name: Adding extra hosts to docker-compose-dev.yml
+      run: sed -i '/^    volumes.*/i \ \ \ \ extra_hosts:\n \ \ \ \ - "localhost:\$IP\"' ./conformance-suite/docker-compose-dev.yml
+        
+    - name: Run IS
+      run: |
+        PRODUCT_IS_ZIP=$(find ./ -name wso2is* -type f -printf "%f\n")
+        cd ./product-is/oidc-conformance-tests
+        sudo python3 ./configure_is.py ../../$PRODUCT_IS_ZIP
+        
+    - name: Run Conformance Suite
+      run: |
+        DOCKER_COMPOSE_FILE=./docker-compose-dev.yml
+        cd conformance-suite
+        IP=$(/sbin/ip -o -4 addr list eth0 | awk '{print $4}' | cut -d/ -f1)
+        export IP
+        echo "Host ip: " 
+        printenv IP
+        mvn clean package
+        sudo -E python3 ../product-is/oidc-conformance-tests/start_conformance_suite.py $DOCKER_COMPOSE_FILE
+        
+    - name: Run Tests
+      run: sudo bash ./product-is/oidc-conformance-tests/test_runner.sh 
+      
+    - name: Archive test results
+      uses: actions/upload-artifact@v2
+      if: always()
+      with:
+        name: test-results
+        path: ./*test_results.zip
+        
+    - name: Archive test logs
+      uses: actions/upload-artifact@v2
+      if: always()
+      with:
+        name: test-logs
+        path: ./*log.txt
+    
+    - name: Send Email Notification
+      if: always()
+      run: |
+        INPUT=${{github.event.inputs.send-notification}}
+        if [[ -z "${INPUT}" ]]; then
+          INPUT="true"
+        fi
+        SEND_NOTIFICATION=${INPUT^^}
+        if [ $SEND_NOTIFICATION == "TRUE" ]; then
+          CONFORMANCE_SUITE_URL=https://localhost:8443
+          sudo python3 ./product-is/oidc-conformance-tests/send_notification.py $CONFORMANCE_SUITE_URL $GITHUB_RUN_NUMBER ${{job.status}} ${{github.repository}} ${{github.run_id}} ${{secrets.SENDER_EMAIL}} ${{secrets.PASSWORD}} ${{secrets.RECEIVER_LIST}}
+        elif [ $SEND_NOTIFICATION == "FALSE" ]; then
+          echo "========================================"
+          echo "Skipped sending google chat notification"
+          echo "========================================"
+        else
+          echo "================================================================="
+          echo "Invalid parameter value. Skipped sending google chat notification"
+          echo "================================================================="
+        fi
+       
+   
+    
+
+
