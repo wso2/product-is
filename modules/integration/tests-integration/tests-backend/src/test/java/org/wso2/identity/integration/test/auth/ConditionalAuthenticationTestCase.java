@@ -111,7 +111,6 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
         context = new AutomationContext("IDENTITY", userMode);
         this.username = context.getContextTenant().getTenantAdmin().getUserName();
         this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
-        userInfo = context.getContextTenant().getTenantAdmin();
     }
 
     @BeforeClass(alwaysRun = true)
@@ -120,6 +119,7 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
         super.init();
         backendURL = context.getContextUrls().getBackEndUrl();
         logManger = new AuthenticatorClient(backendURL);
+        userInfo = context.getSuperTenant().getTenantAdmin();
         sessionCookie = logManger.login(username, userPassword, context.getInstance().getHosts().get("default"));
         log.info("Host : " + context.getInstance().getHosts().get("default"));
         testDataHolder = TestDataHolder.getInstance();
