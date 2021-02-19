@@ -4,6 +4,9 @@
 name: OIDC Conformance Test
 
 on:
+  # Allows the workflow to run automatically after a release
+  release:
+    types: [published]
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
     inputs:
@@ -24,7 +27,7 @@ jobs:
     - uses: actions/checkout@v2
       with:
         path: './product-is'
-        
+      
     - name: Set up JDK 11
       uses: actions/setup-java@v1
       with:
@@ -39,9 +42,19 @@ jobs:
       run: |
         owner="wso2"
         repo="product-is"
-        tag=${{github.event.inputs.tag}}
-        artifact="wso2is-${tag:1}.zip"
-        list_asset_url="https://api.github.com/repos/${owner}/${repo}/releases/tags/${tag}"
+        INPUT_TAG=${{github.event.inputs.tag}}
+        if [[ -z "${INPUT_TAG}" ]]; then
+          tag=${GITHUB_REF:10}
+          tag_trimmed=${tag// }
+        else
+          tag=${{github.event.inputs.tag}}
+          tag_trimmed=${tag// }
+        fi
+      
+        artifact="wso2is-${tag_trimmed:1}.zip"
+        echo "Tag=$tag"
+        echo "Artifact=$artifact"
+        list_asset_url="https://api.github.com/repos/${owner}/${repo}/releases/tags/${tag_trimmed}"
         asset_url=$(curl "${list_asset_url}" | jq ".assets[] | select(.name==\"${artifact}\") | .url" | sed 's/\"//g')
         curl -vLJO -H 'Accept: application/octet-stream' \
          "${asset_url}"
@@ -86,14 +99,17 @@ jobs:
         name: test-logs
         path: ./*log.txt
     
-    - name: Send Google Chat Notification
+    - name: Send Email Notification
       if: always()
       run: |
         INPUT=${{github.event.inputs.send-notification}}
+        if [[ -z "${INPUT}" ]]; then
+          INPUT="true"
+        fi
         SEND_NOTIFICATION=${INPUT^^}
         if [ $SEND_NOTIFICATION == "TRUE" ]; then
           CONFORMANCE_SUITE_URL=https://localhost:8443
-          sudo python3 ./product-is/oidc-conformance-tests/send_notification.py $CONFORMANCE_SUITE_URL $GITHUB_RUN_NUMBER ${{job.status}} ${{github.repository}} ${{github.run_id}} ${{secrets.GOOGLE_WEBHOOK}}
+          sudo python3 ./product-is/oidc-conformance-tests/send_notification.py $CONFORMANCE_SUITE_URL $GITHUB_RUN_NUMBER ${{job.status}} ${{github.repository}} ${{github.run_id}} ${{secrets.SENDER_EMAIL}} ${{secrets.PASSWORD}} ${{secrets.RECEIVER_LIST}}
         elif [ $SEND_NOTIFICATION == "FALSE" ]; then
           echo "========================================"
           echo "Skipped sending google chat notification"
@@ -106,4 +122,5 @@ jobs:
        
    
     
+
 

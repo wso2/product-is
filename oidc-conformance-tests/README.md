@@ -21,6 +21,8 @@ OIDC conformance test workflow can be used to for this purpose.
 4. add the webhook url for value
 5. Click add secret
 
+This workflow will also automatically trigger after a release or a pre-release
+
 ## Testing locally
 
 ### Prerequisites 
@@ -32,6 +34,7 @@ You can use test_runner.sh script to start and configure identity server locally
 1. open test_runner.sh using a text editor and make the following modifications
    - assign url of conformance suite to CONFORMANCE_SUITE_URL. default is https://localhost:8443
    - assign the path of conformance-suite folder to CONFORMANCE_SUITE_PATH
+   - assign the path to identity server zip file to PRODUCT_IS_ZIP_PATH
    - set IS_LOCAL to true. default is false
 2. Save and exit
 3. Run the script using ```sudo bash test_runner.sh```
@@ -73,9 +76,9 @@ This script use OIDC conformance suite APIs to export results of completed test 
 
 ### send_notification.py
 
-**Inputs** - Url of conformance suite(running locally), GitHub workflow run number, GitHub workflow status, GitHub repository name, GitHub workflow run id, google chat web hook url
+**Inputs** - Url of conformance suite(running locally), GitHub workflow run number, GitHub workflow status, GitHub repository name, GitHub workflow run id, Gmail credentials to send emails
 
-This script will obtain counts of test cases with failures and warnings using the API of OIDC conformance. Then send a notification with test summary to google chat using provided webhook
+This script will obtain counts of test cases with failures and warnings using the API of OIDC conformance. Then send emails with the summary of test results to provided email addresses
 
 ### test_runner.sh
 

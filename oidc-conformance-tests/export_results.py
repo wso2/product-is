@@ -1,3 +1,18 @@
+# ----------------------------------------------------------------------------
+#  Copyright 2021 WSO2, Inc. http://www.wso2.org
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
 import json
 import warnings
 import requests
@@ -22,11 +37,11 @@ def get_failed_tests(plan):
     test_log = json.loads(requests.get(url=conformance_suite_url + "/api/log?length=100&search=" + plan['_id'], verify=False).content)
     for test in test_log['data']:
         if "result" in test and test['result'] == "FAILED":
-            test_fails.append(test['testName'])
+            test_fails.append('Test Name: ' + test['testName'] + '  id: ' + test['testId'])
         elif "result" in test and test['result'] == "WARNING":
-            test_warnings.append(test['testName'])
+            test_warnings.append('Test Name: ' + test['testName'] + '  id: ' + test['testId'])
         else:
-            test_others.append(test['testName'])
+            test_others.append('Test Name: ' + test['testName'] + '  id: ' + test['testId'])
     return {
         'fails': test_fails,
         'warnings': test_warnings,
@@ -41,7 +56,7 @@ if __name__ == '__main__':
     plan_list = json.loads(requests.get(url=conformance_suite_url + "/api/plan?length=50", verify=False).content)
     print("======================\nExporting test results\n======================")
     for test_plan in plan_list['data']:
-        save_results(test_plan)
+        #save_results(test_plan)
         failed_tests_list = get_failed_tests(test_plan)
         if len(failed_tests_list['fails']) > 0 or len(failed_tests_list['warnings']) > 0:
             failed_plan_details[test_plan['planName']] = failed_tests_list
