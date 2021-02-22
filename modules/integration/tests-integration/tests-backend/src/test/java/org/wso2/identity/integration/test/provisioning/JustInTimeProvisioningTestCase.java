@@ -131,7 +131,7 @@ public class JustInTimeProvisioningTestCase extends SAMLIdentityFederationTestCa
         try {
             super.endTest();
             userStoreConfigAdminServiceClient.deleteUserStore(DOMAIN_ID);
-
+            userStoreConfigUtils.waitForUserStoreUnDeployment(userStoreConfigAdminServiceClient, DOMAIN_ID);
         } catch (AutomationFrameworkException e) {
             log.error("Error while shutting down the server. ", e);
         }
