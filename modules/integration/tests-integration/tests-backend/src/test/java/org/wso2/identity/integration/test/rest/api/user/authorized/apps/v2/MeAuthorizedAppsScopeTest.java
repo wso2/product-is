@@ -435,7 +435,7 @@ public class MeAuthorizedAppsScopeTest extends UserAuthorizedAppsBaseTest {
         urlParameters.add(new BasicNameValuePair("username", userInfo.getUserName()));
         urlParameters.add(new BasicNameValuePair("password", userInfo.getPassword()));
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
-        log.info("Found sessionDataKey: " + sessionDataKey + "during login post.");
+        log.info("Found sessionDataKey: " + sessionDataKey + " during login post.");
         return sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.COMMON_AUTH_URL);
     }
 
