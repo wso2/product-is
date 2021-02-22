@@ -155,7 +155,6 @@ public class MeAuthorizedAppsScopeTest extends UserAuthorizedAppsBaseTest {
         this.clientIdApp2 = APP_ID_PREFIX + userMode + APP_ID_SUFFIX_2;
         this.appName1 = APP_NAME_PREFIX + userMode + APP_ID_SUFFIX_1;
         this.appName2 = APP_NAME_PREFIX + userMode + APP_ID_SUFFIX_2;
-
     }
 
     @AfterClass(alwaysRun = true)
@@ -260,10 +259,8 @@ public class MeAuthorizedAppsScopeTest extends UserAuthorizedAppsBaseTest {
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters,
                 OAuth2Constant.AUTHORIZED_USER_URL);
         Assert.assertNotNull(response, "Authorization response is null");
-
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         Assert.assertNotNull(locationHeader, "Authorization response header is null.");
-
         EntityUtils.consume(response.getEntity());
         response = sendGetRequest(client, locationHeader.getValue());
         sessionDataKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
@@ -410,11 +407,9 @@ public class MeAuthorizedAppsScopeTest extends UserAuthorizedAppsBaseTest {
         urlParameters.add(new BasicNameValuePair("consent", "approveAlways"));
         urlParameters.add(new BasicNameValuePair("scope-approval", "approveAlways"));
         urlParameters.add(new BasicNameValuePair("sessionDataKeyConsent", sessionDataKeyConsent));
-
         if (consentClaims != null) {
             urlParameters.addAll(consentClaims);
         }
-
         return sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.APPROVAL_URL);
     }
 
@@ -424,7 +419,6 @@ public class MeAuthorizedAppsScopeTest extends UserAuthorizedAppsBaseTest {
         HttpPost request = new HttpPost(url);
         request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
         request.setEntity(new UrlEncodedFormEntity(urlParameters));
-
         return client.execute(request);
     }
 
@@ -432,7 +426,6 @@ public class MeAuthorizedAppsScopeTest extends UserAuthorizedAppsBaseTest {
 
         HttpGet getRequest = new HttpGet(locationURL);
         getRequest.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
-
         return client.execute(getRequest);
     }
 
@@ -442,8 +435,7 @@ public class MeAuthorizedAppsScopeTest extends UserAuthorizedAppsBaseTest {
         urlParameters.add(new BasicNameValuePair("username", userInfo.getUserName()));
         urlParameters.add(new BasicNameValuePair("password", userInfo.getPassword()));
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
-        log.info(">>> sendLoginPost:sessionDataKey: " + sessionDataKey);
-
+        log.info("Found sessionDataKey: " + sessionDataKey + "during login post.");
         return sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.COMMON_AUTH_URL);
     }
 
