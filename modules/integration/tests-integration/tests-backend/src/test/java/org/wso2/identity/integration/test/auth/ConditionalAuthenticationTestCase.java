@@ -99,18 +99,19 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
     private User userInfo;
     private String initialCarbonHome;
 
-    @DataProvider(name = "configProvider")
-    public static Object[][] configProvider() {
-
-        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}};
-    }
-
     @Factory(dataProvider = "configProvider")
     public ConditionalAuthenticationTestCase(TestUserMode userMode) throws Exception {
 
         context = new AutomationContext("IDENTITY", userMode);
         this.username = context.getContextTenant().getTenantAdmin().getUserName();
         this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
+        this.userInfo = context.getContextTenant().getTenantAdmin();
+    }
+
+    @DataProvider(name = "configProvider")
+    public static Object[][] configProvider() {
+
+        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}};
     }
 
     @BeforeClass(alwaysRun = true)
@@ -119,7 +120,6 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
         super.init();
         backendURL = context.getContextUrls().getBackEndUrl();
         logManger = new AuthenticatorClient(backendURL);
-        userInfo = context.getSuperTenant().getTenantAdmin();
         sessionCookie = logManger.login(username, userPassword, context.getInstance().getHosts().get("default"));
         log.info("Host : " + context.getInstance().getHosts().get("default"));
         testDataHolder = TestDataHolder.getInstance();
