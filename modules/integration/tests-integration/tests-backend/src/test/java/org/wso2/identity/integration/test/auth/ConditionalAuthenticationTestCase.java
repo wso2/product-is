@@ -57,7 +57,6 @@ import org.wso2.identity.integration.test.base.TestDataHolder;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
-import java.util.Map;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -75,6 +74,7 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
     private static final String IDENTITY_PROVIDER_ALIAS =
             "https://localhost:" + IS_DEFAULT_HTTPS_PORT + "/oauth2/token/";
     private static final String SECONDARY_IS_SAMLSSO_URL = "https://localhost:9854/samlsso";
+    private static final int PORT_OFFSET_1 = 1;
     private static final String SAML_NAME_ID_FORMAT = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
     private static final String PRIMARY_IS_APPLICATION_NAME = "testOauthApp";
     private static final String SECONDARY_IS_APPLICATION_NAME = "testSAMLApp";
@@ -121,7 +121,6 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
         logManger = new AuthenticatorClient(backendURL);
         userInfo = context.getSuperTenant().getTenantAdmin();
         sessionCookie = logManger.login(username, userPassword, context.getInstance().getHosts().get("default"));
-        log.info("Host : " + context.getInstance().getHosts().get("default"));
         testDataHolder = TestDataHolder.getInstance();
         initialCarbonHome = System.getProperty("carbon.home");
         logManger = new AuthenticatorClient(backendURL);
@@ -422,16 +421,9 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
     private void startSecondaryIS() throws Exception {
 
         AutomationContext context = testDataHolder.getAutomationContext();
+        String serviceUrl = (context.getContextUrls().getSecureServiceUrl())
+                .replace("9853", String.valueOf(IS_DEFAULT_HTTPS_PORT + PORT_OFFSET_1)) + "/";
 
-        String serviceUrl = context.getContextUrls().getSecureServiceUrl() + "/";
-        log.info("Service url for secondary IS: " + serviceUrl);
-
-        log.info("Number of ports for secondary IS: " + context.getInstance().getPorts().size());
-        for (Map.Entry<String, String> entry : context.getInstance().getPorts().entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-            log.info("port name: " + key + ", value: " + value);
-        }
         AuthenticatorClient authenticatorClient = new AuthenticatorClient(serviceUrl);
 
         sessionCookie = authenticatorClient.login(context.getSuperTenant().getTenantAdmin().getUserName(),

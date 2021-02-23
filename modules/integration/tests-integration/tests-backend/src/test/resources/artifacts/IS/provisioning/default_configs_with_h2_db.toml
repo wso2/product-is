@@ -30,7 +30,3 @@ password = "wso2carbon"
 [keystore.primary]
 file_name = "wso2carbon.jks"
 password = "wso2carbon"
-
-# Disable the session cookie validation in the secondary IS as it is conflicting with the primary IS nonce Cookie
-[session.nonce.cookie]
-enabled = false
