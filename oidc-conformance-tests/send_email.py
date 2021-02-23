@@ -29,6 +29,7 @@ sender_email = str(sys.argv[6])
 password = str(sys.argv[7])
 receiver_list = sys.argv[8].split(',')
 
+
 failed_count = 0
 warnings_count = 0
 total_tests_count = 0

@@ -14,7 +14,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-CONFORMANCE_SUITE_URL=https://localhost:8443
+
 CONFORMANCE_SUITE_PATH=./conformance-suite
 PATH_TO_SCRIPTS=./product-is/oidc-conformance-tests
 IS_SUCCESSFUL=false
@@ -64,18 +64,8 @@ echo
 sudo python3 $CONFORMANCE_SUITE_PATH/scripts/run-test-plan.py oidcc-formpost-hybrid-certification-test-plan[server_metadata=static][client_registration=static_client] $PATH_TO_SCRIPTS/formpost-hybrid/IS_config_formpost_hybrid.json 2>&1 | tee formpost-hybrid-certification-test-plan-log.txt
 echo
 
-if sudo python3 $PATH_TO_SCRIPTS/export_results.py $CONFORMANCE_SUITE_URL
-then
-  IS_SUCCESSFUL=true
-fi
 
 if $IS_LOCAL; then
   sudo pkill -f wso2
 fi
 
-if $IS_SUCCESSFUL
-then
-  exit 0
-else
-	exit 1
-fi
