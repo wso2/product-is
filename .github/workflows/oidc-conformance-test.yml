@@ -39,8 +39,8 @@ jobs:
     
     - name: Setup Python
       run: |
-        sudo pip3 install --upgrade pip setuptools wheel
-        sudo pip3 install psutil
+        pip3 install --upgrade pip setuptools wheel
+        pip3 install psutil
         
     - name: Download IS zip
       run: |
@@ -73,7 +73,7 @@ jobs:
       run: |
         PRODUCT_IS_ZIP=$(find ./ -name wso2is* -type f -printf "%f\n")
         cd ./product-is/oidc-conformance-tests
-        sudo python3 ./configure_is.py ../../$PRODUCT_IS_ZIP
+        python3 ./configure_is.py ../../$PRODUCT_IS_ZIP
         
     - name: Run Conformance Suite
       run: |
@@ -84,15 +84,15 @@ jobs:
         echo "Host ip: " 
         printenv IP
         mvn clean package
-        sudo -E python3 ../product-is/oidc-conformance-tests/start_conformance_suite.py $DOCKER_COMPOSE_FILE
+        python3 ../product-is/oidc-conformance-tests/start_conformance_suite.py $DOCKER_COMPOSE_FILE
         
     - name: Run Tests
-      run: sudo bash ./product-is/oidc-conformance-tests/test_runner.sh
+      run: bash ./product-is/oidc-conformance-tests/test_runner.sh
       
     - name: Test Results
       run: |
         IS_SUCCESSFUL=false
-        if sudo python3 ./product-is/oidc-conformance-tests/export_results.py https://localhost:8443
+        if python3 ./product-is/oidc-conformance-tests/export_results.py https://localhost:8443
         then
           IS_SUCCESSFUL=true
         fi
@@ -136,7 +136,7 @@ jobs:
           echo "Sending Email"
           echo "============="
           CONFORMANCE_SUITE_URL=https://localhost:8443
-          sudo python3 ./product-is/oidc-conformance-tests/send_email.py $CONFORMANCE_SUITE_URL $GITHUB_RUN_NUMBER ${{job.status}} ${{github.repository}} ${{github.run_id}} ${{secrets.SENDER_EMAIL}} ${{secrets.PASSWORD}} ${{secrets.RECEIVER_LIST}}
+          python3 ./product-is/oidc-conformance-tests/send_email.py $CONFORMANCE_SUITE_URL $GITHUB_RUN_NUMBER ${{job.status}} ${{github.repository}} ${{github.run_id}} ${{secrets.SENDER_EMAIL}} ${{secrets.PASSWORD}} ${{secrets.RECEIVER_LIST}}
         elif [ $SEND_EMAIL == "NO" ]; then
           echo "========================================"
           echo "Skipped Sending Email"
@@ -160,7 +160,7 @@ jobs:
           echo "Sending Google Chat Message"
           echo "==========================="
           CONFORMANCE_SUITE_URL=https://localhost:8443
-          sudo python3 ./product-is/oidc-conformance-tests/send_chat.py $CONFORMANCE_SUITE_URL $GITHUB_RUN_NUMBER ${{job.status}} ${{github.repository}} ${{github.run_id}} ${{secrets.GOOGLE_WEBHOOK}}
+          python3 ./product-is/oidc-conformance-tests/send_chat.py $CONFORMANCE_SUITE_URL $GITHUB_RUN_NUMBER ${{job.status}} ${{github.repository}} ${{github.run_id}} ${{secrets.GOOGLE_WEBHOOK}}
         elif [ $SEND_CHAT == "NO" ]; then
           echo "========================================"
           echo "Skipped Sending Google Chat Message"
