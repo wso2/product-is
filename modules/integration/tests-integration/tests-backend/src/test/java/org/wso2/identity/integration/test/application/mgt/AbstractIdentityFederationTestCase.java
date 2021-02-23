@@ -99,7 +99,9 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
             return;
         }
 
-        String serviceUrl = automationContextMap.get(portOffset).getContextUrls().getSecureServiceUrl() + "/";;
+        String serviceUrl = getSecureServiceUrl(portOffset,
+                automationContextMap.get(portOffset).getContextUrls()
+                        .getSecureServiceUrl());
 
         if (sessionCookie == null) {
             AuthenticatorClient authenticatorClient = new AuthenticatorClient(serviceUrl);
@@ -285,4 +287,10 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
 
         return HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build();
     }
+
+    private String getSecureServiceUrl(int portOffset, String baseUrl) {
+
+        return baseUrl.replace("9853", String.valueOf(DEFAULT_PORT + portOffset)) + "/";
+    }
+
 }
