@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2021, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -46,6 +46,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -65,6 +66,9 @@ import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.TYPE_PA
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.USER_NAME_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.VALUE_PARAM;
 
+/**
+ * Test class to test the SCIM2 pagination.
+ */
 public class SCIM2PaginationTestCase extends ISIntegrationTest {
 
     public static final String TOTAL_RESULTS_ATTRIBUTE = "totalResults";
@@ -124,22 +128,22 @@ public class SCIM2PaginationTestCase extends ISIntegrationTest {
 
         HttpResponse response = client.execute(request);
         assertEquals(response.getStatusLine().getStatusCode(), 200, "Users " +
-                "has not been retrieved successfully");
+                "has not been retrieved successfully.");
 
         Object responseObj = JSONValue.parse(EntityUtils.toString(response.getEntity()));
         EntityUtils.consume(response.getEntity());
 
         String totalResults = ((JSONObject) responseObj).get(TOTAL_RESULTS_ATTRIBUTE).toString();
-        assertEquals(totalResults, COUNT, "total results in pagination listing is incorrect");
+        assertEquals(totalResults, COUNT, "Total results in pagination listing is incorrect.");
 
         String startIndex = ((JSONObject) responseObj).get(START_INDEX_ATTRIBUTE).toString();
-        assertEquals(startIndex, START_INDEX, "startIndex in pagination listing is incorrect");
+        assertEquals(startIndex, START_INDEX, "StartIndex in pagination listing is incorrect.");
 
         String itemsPerPage = ((JSONObject) responseObj).get(ITEMS_PER_PAGE_ATTRIBUTE).toString();
-        assertEquals(itemsPerPage, COUNT, "itemsPerPage in pagination listing is incorrect");
+        assertEquals(itemsPerPage, COUNT, "ItemsPerPage in pagination listing is incorrect.");
 
         int resourcesSize = ((JSONArray) ((JSONObject) responseObj).get(RESOURCES_ATTRIBUTE)).size();
-        assertEquals(String.valueOf(resourcesSize), COUNT, "resources size in pagination listing is incorrect");
+        assertEquals(String.valueOf(resourcesSize), COUNT, "Resources size in pagination listing is incorrect.");
 
     }
 
@@ -157,7 +161,7 @@ public class SCIM2PaginationTestCase extends ISIntegrationTest {
 
         HttpResponse response = client.execute(request);
         assertEquals(response.getStatusLine().getStatusCode(), 200, "Users " +
-                "has not been retrieved successfully");
+                "has not been retrieved successfully.");
 
         Object responseObj = JSONValue.parse(EntityUtils.toString(response.getEntity()));
         EntityUtils.consume(response.getEntity());
@@ -165,16 +169,16 @@ public class SCIM2PaginationTestCase extends ISIntegrationTest {
         JSONArray resourcesResponse = (JSONArray) ((JSONObject) ((Object) responseObj)).get(RESOURCES_ATTRIBUTE);
 
         String totalResults = ((JSONObject) responseObj).get(TOTAL_RESULTS_ATTRIBUTE).toString();
-        assertEquals(totalResults, String.valueOf(currentUsers), "total results in pagination listing is incorrect");
+        assertEquals(totalResults, String.valueOf(currentUsers), "Total results in pagination listing is incorrect.");
 
         String startIndex = ((JSONObject) responseObj).get(START_INDEX_ATTRIBUTE).toString();
-        assertEquals(startIndex, "1", "startIndex in pagination listing is incorrect");
+        assertEquals(startIndex, "1", "StartIndex in pagination listing is incorrect.");
 
         String itemsPerPage = ((JSONObject) responseObj).get(ITEMS_PER_PAGE_ATTRIBUTE).toString();
-        assertEquals(itemsPerPage, String.valueOf(currentUsers), "itemsPerPage in pagination listing is incorrect");
+        assertEquals(itemsPerPage, String.valueOf(currentUsers), "ItemsPerPage in pagination listing is incorrect.");
 
         int resourcesSize = ((JSONArray) ((JSONObject) responseObj).get(RESOURCES_ATTRIBUTE)).size();
-        assertEquals(resourcesSize, currentUsers, "resources size in pagination listing is incorrect");
+        assertEquals(resourcesSize, currentUsers, "Resources size in pagination listing is incorrect.");
 
         assertTrue(isAllUsersExists(resourcesResponse));
 
@@ -184,8 +188,8 @@ public class SCIM2PaginationTestCase extends ISIntegrationTest {
     public void testCreateUser() throws Exception {
 
         for (int i = 0; i < 10; i++) {
-            createUser("Family" + i, "user" + i, "user" + i,
-                    "user" + i + "@gmail.com", "user" + i + "@gmail.com", "dummyPW" + i);
+            createUser(String.format("Family%s", i), String.format("user%s", i), String.format("user%s", i),
+                    String.format("user%s@gmail.com", i), String.format("user%s@gmail.com", i), String.format("dummyPW%s", i));
         }
     }
 
@@ -228,7 +232,7 @@ public class SCIM2PaginationTestCase extends ISIntegrationTest {
         request.setEntity(entity);
 
         HttpResponse response = client.execute(request);
-        assertEquals(response.getStatusLine().getStatusCode(), 201, "User has not been created successfully");
+        assertEquals(response.getStatusLine().getStatusCode(), 201, "User has not been created successfully.");
 
         Object responseObj = JSONValue.parse(EntityUtils.toString(response.getEntity()));
         EntityUtils.consume(response.getEntity());
@@ -258,7 +262,7 @@ public class SCIM2PaginationTestCase extends ISIntegrationTest {
         request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
 
         HttpResponse response = client.execute(request);
-        assertEquals(response.getStatusLine().getStatusCode(), 204, "User has not been retrieved successfully");
+        assertEquals(response.getStatusLine().getStatusCode(), 204, "User has not been retrieved successfully.");
 
         EntityUtils.consume(response.getEntity());
 
@@ -268,7 +272,7 @@ public class SCIM2PaginationTestCase extends ISIntegrationTest {
         getRequest.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
 
         response = client.execute(request);
-        assertEquals(response.getStatusLine().getStatusCode(), 404, "User has not been deleted successfully");
+        assertEquals(response.getStatusLine().getStatusCode(), 404, "User has not been deleted successfully.");
         EntityUtils.consume(response.getEntity());
     }
 
@@ -279,21 +283,20 @@ public class SCIM2PaginationTestCase extends ISIntegrationTest {
 
     private boolean isAllUsersExists(JSONArray response) throws Exception {
 
-        boolean usersExists = false;
-        HashSet<String> usersList = new HashSet<>();
-        for (Object user : response
-        ) {
+        boolean isUsersExists = false;
+        Set<String> usersList = new HashSet<>();
+        for (Object user : response) {
             usersList.add(((JSONObject) user).get(USER_NAME_ATTRIBUTE).toString());
         }
         if (userMgtClient.getUserList().equals(usersList)) {
-            usersExists = true;
+            isUsersExists = true;
         }
-        return usersExists;
+        return isUsersExists;
     }
 
     private String getUserPath() {
 
-        if (tenant.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+        if (MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(tenant)) {
             return SERVER_URL + SCIM2_USERS_ENDPOINT;
         } else {
             return SERVER_URL + "/t/" + tenant + SCIM2_USERS_ENDPOINT;
