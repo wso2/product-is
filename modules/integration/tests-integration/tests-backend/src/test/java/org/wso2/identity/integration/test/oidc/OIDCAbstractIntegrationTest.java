@@ -130,6 +130,13 @@ public class OIDCAbstractIntegrationTest extends OAuth2ServiceAbstractIntegratio
      */
     public void createApplication(OIDCApplication application) throws Exception {
 
+        ServiceProvider serviceProvider = new ServiceProvider();
+        createApplication(serviceProvider, application);
+    }
+
+    public ServiceProvider createApplication(ServiceProvider serviceProvider, OIDCApplication application)
+            throws Exception {
+
         log.info("Creating application " + application.getApplicationName());
 
         OAuthConsumerAppDTO appDTO = new OAuthConsumerAppDTO();
@@ -149,7 +156,6 @@ public class OIDCAbstractIntegrationTest extends OAuth2ServiceAbstractIntegratio
             }
         }
 
-        ServiceProvider serviceProvider = new ServiceProvider();
         serviceProvider.setApplicationName(application.getApplicationName());
         serviceProvider.setDescription(application.getApplicationName());
         appMgtclient.createApplication(serviceProvider);
@@ -192,6 +198,12 @@ public class OIDCAbstractIntegrationTest extends OAuth2ServiceAbstractIntegratio
             serviceProvider.getInboundAuthenticationConfig().setInboundAuthenticationRequestConfigs(authRequestList
                     .toArray(new InboundAuthenticationRequestConfig[authRequestList.size()]));
         }
+
+        appMgtclient.updateApplicationData(serviceProvider);
+        return serviceProvider;
+    }
+
+    public void updateApplication(ServiceProvider serviceProvider) throws Exception {
 
         appMgtclient.updateApplicationData(serviceProvider);
     }
