@@ -17,7 +17,7 @@ on:
       send-email:
         description: 'Send test results to email'
         required: true
-        default: 'yes'
+        default: 'no'
       send-chat:
         description: 'Send test results to google chat'
         required: true
@@ -128,7 +128,7 @@ jobs:
       run: |
         INPUT=${{github.event.inputs.send-email}}
         if [[ -z "${INPUT}" ]]; then
-          INPUT="yes"
+          INPUT="no"
         fi
         SEND_EMAIL=${INPUT^^}
         if [ $SEND_EMAIL == "YES" ]; then

@@ -7,7 +7,7 @@ OIDC conformance test workflow can be used to for this purpose.
 2. Click on OIDC conformance test workflow
 3. Click on Run workflow
 4. You need to provide the tag name of the product-is version you want to test (default value is "v5.12.0-m6")
-5. Set 'Send test results to email' to 'no' if you don't want to send test summary to a list of pre-configured email addresses. (default is 'yes')
+5. Set 'Send test results to email' to 'yes' if you want to send test summary to a list of pre-configured email addresses. (default is 'no')
 6. Set 'Send test results to google chat' to 'yes' if you also want to send test summary to a pre-configured google chat group. (default is 'no')
 7. Click on Run workflow
 8. After tests are completed you can view test results on the test summary page
