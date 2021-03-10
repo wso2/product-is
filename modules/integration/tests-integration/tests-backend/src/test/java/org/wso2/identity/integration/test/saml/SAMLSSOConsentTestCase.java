@@ -127,8 +127,8 @@ public class SAMLSSOConsentTestCase extends AbstractSAMLSSOTestCase{
             Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
             EntityUtils.consume(response.getEntity());
 
-            response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT, String.format(ACS_URL, config.getApp()
-                    .getArtifact()), httpClient, pastrCookie);
+            response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT, String.format(ACS_URL,
+                    config.getApp().getArtifact()), httpClient, pastrCookie);
             EntityUtils.consume(response.getEntity());
 
             String redirectUrl = Utils.getRedirectUrl(response);

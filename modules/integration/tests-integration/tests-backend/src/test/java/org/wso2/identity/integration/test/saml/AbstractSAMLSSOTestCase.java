@@ -420,6 +420,14 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
         lastNameClaimMapping.setRemoteClaim(lastNameClaim);
         claimMappingList.add(lastNameClaimMapping);
 
+        Claim emailClaim = new Claim();
+        emailClaim.setClaimUri(emailClaimURI);
+        ClaimMapping emailClaimMapping = new ClaimMapping();
+        emailClaimMapping.setRequested(true);
+        emailClaimMapping.setLocalClaim(emailClaim);
+        emailClaimMapping.setRemoteClaim(emailClaim);
+        claimMappingList.add(emailClaimMapping);
+
         return claimMappingList.toArray(new ClaimMapping[claimMappingList.size()]);
     }
 

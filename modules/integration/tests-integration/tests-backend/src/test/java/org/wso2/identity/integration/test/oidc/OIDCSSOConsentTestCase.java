@@ -96,10 +96,9 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
         testSendAuthenticationRequest(playgroundApp, client);
         testAuthentication(playgroundApp);
         Assert.assertEquals(claimsToGetConsent, "0_Email,1_First Name",
-                "Incorrect claims to request the consent");
+                "Requested claims were not prompted to ask the consent.");
         testConsentApproval(playgroundApp);
         testGetAccessToken(playgroundApp);
-        testUserClaims();
 
         performOIDCLogout();
         updateApplication(playgroundApp, serviceProvider);
@@ -108,7 +107,8 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
         testSendAuthenticationRequest(playgroundApp, client);
         testAuthentication(playgroundApp);
         Assert.assertEquals(claimsToGetConsent, "0_Last Name",
-                "Incorrect claims to request the consent");
+                "Requested claims which were updated after the first login, " +
+                        "were not prompted to ask the consent.");
     }
 
     public void testSendAuthenticationRequest(OIDCApplication application, HttpClient client)
@@ -116,26 +116,27 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
 
         List<NameValuePair> urlParameters = OIDCUtilTest.getNameValuePairs(application);
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters, String.format
-                (OIDCUtilTest.targetApplicationUrl, application.getApplicationContext() + OAuth2Constant.PlaygroundAppPaths
-                        .appUserAuthorizePath));
-        Assert.assertNotNull(response, "Authorization request failed for " + application.getApplicationName() + ". "
-                + "Authorized response is null");
+                (OIDCUtilTest.targetApplicationUrl, application.getApplicationContext() +
+                        OAuth2Constant.PlaygroundAppPaths.appUserAuthorizePath));
+        Assert.assertNotNull(response, "Authorization request failed for " + application.getApplicationName() +
+                ". Authorized response is null.");
 
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
 
-        Assert.assertNotNull(locationHeader, "Authorization request failed for " + application.getApplicationName() +
-                ". Authorized response header is null");
+        Assert.assertNotNull(locationHeader, "Authorization request failed for " +
+                application.getApplicationName() + ". Authorized response header is null.");
         EntityUtils.consume(response.getEntity());
 
         response = sendGetRequest(client, locationHeader.getValue());
-        Assert.assertNotNull(response, "Authorization request failed for " + application.getApplicationName() + ". "
-                + "Authorized user response is null.");
+        Assert.assertNotNull(response, "Authorization request failed for " +
+                application.getApplicationName() + ". Authorized user response is null.");
 
         Map<String, Integer> keyPositionMap = new HashMap<>(1);
         keyPositionMap.put("name=\"sessionDataKey\"", 1);
         List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil.extractDataFromResponse(response,
                 keyPositionMap);
-        Assert.assertNotNull(keyValues, "sessionDataKey key value is null for " + application.getApplicationName());
+        Assert.assertNotNull(keyValues, "The sessionDataKey value is null for " +
+                application.getApplicationName());
 
         sessionDataKey = keyValues.get(0).getValue();
         Assert.assertNotNull(sessionDataKey, "Invalid sessionDataKey for " + application.getApplicationName());
@@ -146,11 +147,12 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
     private void testAuthentication(OIDCApplication application) throws Exception {
 
         HttpResponse response = sendLoginPost(client, sessionDataKey);
-        Assert.assertNotNull(response, "Login request failed for " + application.getApplicationName() + ". response "
-                + "is null.");
+        Assert.assertNotNull(response, "Login request failed for " + application.getApplicationName() +
+                ". response is null.");
 
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
-        Assert.assertNotNull(locationHeader, "Login response header is null for " + application.getApplicationName());
+        Assert.assertNotNull(locationHeader, "Login response header is null for " +
+                application.getApplicationName());
         EntityUtils.consume(response.getEntity());
 
         HttpClient httpClientWithoutAutoRedirections = HttpClientBuilder.create().disableRedirectHandling()
@@ -181,23 +183,24 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
     private void testConsentApproval(OIDCApplication application) throws Exception {
 
         HttpResponse response = sendApprovalPostWithConsent(client, sessionDataKeyConsent, consentParameters);
-        Assert.assertNotNull(response, "Approval request failed for " + application.getApplicationName() + ". " +
-                "response is invalid.");
+        Assert.assertNotNull(response, "Approval request failed for " + application.getApplicationName() + ". "
+                + "response is invalid.");
 
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
-        Assert.assertNotNull(locationHeader, "Approval request failed for " + application.getApplicationName() + ". "
-                + "Location header is null.");
+        Assert.assertNotNull(locationHeader, "Approval request failed for " + application.getApplicationName()
+                + ". Location header is null.");
         EntityUtils.consume(response.getEntity());
 
         response = sendPostRequest(client, locationHeader.getValue());
-        Assert.assertNotNull(response, "Authorization code response is invalid for " + application.getApplicationName
-                ());
+        Assert.assertNotNull(response, "Authorization code response is invalid for " +
+                application.getApplicationName());
 
         Map<String, Integer> keyPositionMap = new HashMap<>(1);
         keyPositionMap.put("Authorization Code", 1);
         List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil.extractTableRowDataFromResponse(response,
                 keyPositionMap);
-        Assert.assertNotNull(keyValues, "Authorization code not received for " + application.getApplicationName());
+        Assert.assertNotNull(keyValues, "Authorization code not received for " +
+                application.getApplicationName());
 
         authorizationCode = keyValues.get(0).getValue();
         Assert.assertNotNull(authorizationCode, "Authorization code not received for " + application
@@ -208,11 +211,12 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
     private void testGetAccessToken(OIDCApplication application) throws Exception {
 
         HttpResponse response = sendGetAccessTokenPost(client, application);
-        Assert.assertNotNull(response, "Access token response is invalid for " + application.getApplicationName());
+        Assert.assertNotNull(response, "Access token response is invalid for " +
+                application.getApplicationName());
         EntityUtils.consume(response.getEntity());
 
-        response = sendPostRequest(client, String.format(OIDCUtilTest.targetApplicationUrl, application.getApplicationContext() +
-                OAuth2Constant.PlaygroundAppPaths.appAuthorizePath));
+        response = sendPostRequest(client, String.format(OIDCUtilTest.targetApplicationUrl,
+                application.getApplicationContext() + OAuth2Constant.PlaygroundAppPaths.appAuthorizePath));
 
         Map<String, Integer> keyPositionMap = new HashMap<>(1);
         keyPositionMap.put("name=\"accessToken\"", 1);
@@ -224,8 +228,8 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
         Assert.assertNotNull(accessToken, "Access token not received for " + application.getApplicationName());
         EntityUtils.consume(response.getEntity());
 
-        response = sendPostRequest(client, String.format(OIDCUtilTest.targetApplicationUrl, application.getApplicationContext() +
-                OAuth2Constant.PlaygroundAppPaths.appAuthorizePath));
+        response = sendPostRequest(client, String.format(OIDCUtilTest.targetApplicationUrl,
+                application.getApplicationContext() + OAuth2Constant.PlaygroundAppPaths.appAuthorizePath));
 
         keyPositionMap = new HashMap<>(1);
         keyPositionMap.put("id=\"loggedUser\"", 1);
@@ -235,24 +239,6 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
         String loggedUser = keyValues.get(0).getValue();
         Assert.assertNotNull(loggedUser, "Logged user is null for " + application.getApplicationName());
         EntityUtils.consume(response.getEntity());
-    }
-
-    private void testUserClaims() throws Exception {
-
-        HttpGet request = new HttpGet(OAuth2Constant.USER_INFO_ENDPOINT);
-
-        request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
-        request.setHeader("Authorization", "Bearer " + accessToken);
-        request.setHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-
-        HttpResponse response = client.execute(request);
-        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-
-        Object obj = JSONValue.parse(rd);
-        String claim = ((org.json.simple.JSONObject) obj).get("email").toString();
-
-        EntityUtils.consume(response.getEntity());
-        Assert.assertEquals("admin@wso2.com", claim, "Incorrect claim value");
     }
 
     protected void initUser() throws Exception {

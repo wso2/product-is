@@ -199,7 +199,7 @@ public class OIDCAbstractIntegrationTest extends OAuth2ServiceAbstractIntegratio
                     .toArray(new InboundAuthenticationRequestConfig[authRequestList.size()]));
         }
 
-        appMgtclient.updateApplicationData(serviceProvider);
+        updateApplication(serviceProvider);
         return serviceProvider;
     }
 

@@ -2041,7 +2041,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.19.48</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.19.51</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2049,7 +2049,7 @@
         <saml.common.util.version.range>[1.0.0,2.0.0)</saml.common.util.version.range>
 
         <!--Carbon Consent Version-->
-        <carbon.consent.mgt.version>2.2.15</carbon.consent.mgt.version>
+        <carbon.consent.mgt.version>2.2.16</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
         <identity.governance.version>1.4.92</identity.governance.version>
