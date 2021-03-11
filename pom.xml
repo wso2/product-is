@@ -2163,7 +2163,7 @@
         <carbon.kernel.version>4.6.2-m7</carbon.kernel.version>
 
         <!-- Carbon Repo Versions -->
-        <carbon.deployment.version>4.10.4</carbon.deployment.version>
+        <carbon.deployment.version>4.11.1</carbon.deployment.version>
         <carbon.commons.version>4.7.35</carbon.commons.version>
         <carbon.registry.version>4.7.33</carbon.registry.version>
         <carbon.multitenancy.version>4.9.10</carbon.multitenancy.version>
