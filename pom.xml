@@ -28,7 +28,7 @@
     <artifactId>identity-server-parent</artifactId>
     <packaging>pom</packaging>
     <description>WSO2 Identity Server</description>
-    <version>5.12.0-m12-SNAPSHOT</version>
+    <version>5.12.0-m13-SNAPSHOT</version>
     <name>WSO2 Identity Server</name>
     <url>http://wso2.org/projects/identity</url>
 
@@ -2041,7 +2041,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.19.51</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.19.48</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2049,7 +2049,7 @@
         <saml.common.util.version.range>[1.0.0,2.0.0)</saml.common.util.version.range>
 
         <!--Carbon Consent Version-->
-        <carbon.consent.mgt.version>2.2.16</carbon.consent.mgt.version>
+        <carbon.consent.mgt.version>2.2.15</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
         <identity.governance.version>1.4.92</identity.governance.version>
@@ -2063,7 +2063,7 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.8.24</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.4.155</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.4.158</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.6.0</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.6.8</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.6.3</identity.inbound.provisioning.scim.version>
