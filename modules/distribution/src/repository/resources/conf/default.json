@@ -35,5 +35,6 @@
   "encryption.internal_crypto_provider": "org.wso2.carbon.crypto.provider.SymmetricKeyInternalCryptoProvider",
   "encryption.key": "03BAFEB27A8E871CAD83C5CD4E771DAB",
 
-  "authorization_manager.properties.GroupAndRoleSeparationEnabled": "true"
+  "authorization_manager.properties.GroupAndRoleSeparationEnabled": "true",
+  "authorization_manager.properties.GroupAndRoleSeparationImprovementsEnabled": "true"
 }
