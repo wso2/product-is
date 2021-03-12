@@ -55,8 +55,8 @@ public class ConsentMgtTestCase extends ISIntegrationTest {
     @Test(alwaysRun = true, groups = "wso2.is", description = "Add PII Category test")
     public void testAddPIICategory() {
 
-        String name = "http://wso2.org/claims/country";
-        String description = "Country";
+        String name = "http://wso2.org/claims/organization";
+        String description = "Organization";
         JSONObject response = addPIICategory(name, description);
 
         Assert.assertEquals(name, response.get("piiCategory"));
