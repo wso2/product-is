@@ -20,10 +20,10 @@
 
     <!--Disabling since the WS-Trust functionality is provided as a connector and it does not exist in the product by default.-->
     <!--<test name="is-tests-default-configuration-sts" preserve-order="true" parallel="false" group-by-instances="true">-->
-        <!--&lt;!&ndash; Active sts test case needs to run before passive sts test case&ndash;&gt;-->
-        <!--<classes>-->
-            <!--<class name="org.wso2.identity.integration.test.sts.ActiveSTSTestCase"/>-->
-        <!--</classes>-->
+    <!--&lt;!&ndash; Active sts test case needs to run before passive sts test case&ndash;&gt;-->
+    <!--<classes>-->
+    <!--<class name="org.wso2.identity.integration.test.sts.ActiveSTSTestCase"/>-->
+    <!--</classes>-->
     <!--</test>-->
 
     <test name="is-tests-default-configuration" preserve-order="true" parallel="false" group-by-instances="true">
@@ -304,6 +304,22 @@
             <class name="org.wso2.identity.integration.test.EmailOTPTestCase"/>
         </classes>
     </test>
+
+    <test name="graaljs-with-individual-restarts" preserve-order="true" parallel="false" group-by-instances="true">
+        <parameter name="scriptEngine" value="graaljs"></parameter>
+        <classes>
+            <class name="org.wso2.identity.integration.test.auth.RiskBasedLoginTestCase" />
+        </classes>
+    </test>
+
+    <test name="graaljs-without-restarts" preserve-order="true" parallel="false" group-by-instances="true">
+        <classes>
+            <class name="org.wso2.identity.integration.test.base.GraalJsScriptEngineInitializerTestCase"/>
+            <class name="org.wso2.identity.integration.test.base.SecondaryCarbonServerInitializerTestCase"/>
+            <class name="org.wso2.identity.integration.test.auth.ConditionalAuthenticationTestCase" />
+        </classes>
+    </test>
+
     <test name="is-tests-saml-query-profile" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
             <class name="org.wso2.identity.integration.test.saml.SAMLQueryProfileTestBase"/>
