@@ -301,6 +301,12 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
     public void createApplication(SAMLConfig config, String appName) throws Exception {
 
         ServiceProvider serviceProvider = new ServiceProvider();
+        createApplication(serviceProvider, config, appName);
+    }
+
+    public ServiceProvider createApplication(ServiceProvider serviceProvider,
+                                             SAMLConfig config, String appName) throws Exception {
+
         serviceProvider.setApplicationName(appName);
         serviceProvider.setDescription("This is a test Service Provider");
         applicationManagementServiceClient.createApplication(serviceProvider);
@@ -336,6 +342,13 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
         serviceProvider.setLocalAndOutBoundAuthenticationConfig(localAndOutboundAuthenticationConfig);
         }
         serviceProvider.setInboundAuthenticationConfig(inboundAuthenticationConfig);
+        applicationManagementServiceClient.updateApplicationData(serviceProvider);
+        return serviceProvider;
+    }
+
+    public void updateServiceProvider(ServiceProvider serviceProvider, ClaimMapping[] claimMappings) throws Exception {
+
+        serviceProvider.getClaimConfig().setClaimMappings(claimMappings);
         applicationManagementServiceClient.updateApplicationData(serviceProvider);
     }
 
