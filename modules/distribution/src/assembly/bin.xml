@@ -421,7 +421,7 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
         </fileSet>
 
-        <!--copy the authentication jars for totp, x509, emailotp, smsotp, office365 and twitter authenticators-->
+        <!--copy the authentication jars for x509, smsotp, office365 and twitter authenticators-->
         <fileSet>
             <directory>../connectors/target/authenticatorCopied/jar</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
@@ -433,15 +433,6 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
             <includes>
                 <include>smsotpauthenticationendpoint.war</include>
-            </includes>
-        </fileSet>
-
-        <!--Copy web apps for for emailotp authenticators-->
-        <fileSet>
-            <directory>../connectors/target/authenticatorCopied/war</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
-            <includes>
-                <include>emailotpauthenticationendpoint.war</include>
             </includes>
         </fileSet>
 
@@ -743,7 +734,6 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
             <includes>
                 <include>smsotpauthenticationendpoint/</include>
-                <include>emailotpauthenticationendpoint/</include>
                 <include>api#identity#auth#v1.1/</include>
                 <include>x509certificateauthenticationendpoint/</include>
             </includes>

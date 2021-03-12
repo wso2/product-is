@@ -1,0 +1,17 @@
+{
+  "name": "Duplicate OAuth Application With ClientId",
+  "inboundProtocolConfiguration": {
+    "oidc": {
+      "clientId": "my_custom_client_id",
+      "clientSecret": "my_custom_client_secret",
+      "grantTypes": [
+        "password",
+        "authorization_code"
+      ],
+      "callbackURLs": [
+        "https://localhost/callback"
+      ],
+      "publicClient": true
+    }
+  }
+}

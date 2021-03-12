@@ -35,7 +35,11 @@ import org.opensaml.xml.util.Base64;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.context.AutomationContext;
+import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.FederatedAuthenticatorConfig;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.JustInTimeProvisioningConfig;
@@ -49,6 +53,7 @@ import org.wso2.carbon.identity.application.common.model.xsd.OutboundProvisionin
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
+import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.user.mgt.stub.UserAdminUserAdminException;
 import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
@@ -105,6 +110,12 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
     protected OauthAdminClient adminClient;
     private String secondaryISClientID;
     private String secondaryISClientSecret;
+    private AuthenticatorClient logManger;
+    private final String username;
+    private final String userPassword;
+    private final AutomationContext context;
+    private String backendURL;
+    private String sessionCookie;
 
     private static final int PORT_OFFSET_0 = 0;
     private static final int PORT_OFFSET_1 = 1;
@@ -112,10 +123,26 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
     CookieStore cookieStore;
     private CloseableHttpClient client;
 
+    @DataProvider(name = "configProvider")
+    public static Object[][] configProvider() {
+        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}};
+    }
+
+    @Factory(dataProvider = "configProvider")
+    public OIDCIdentityFederationTestCase(TestUserMode userMode) throws Exception {
+
+        context = new AutomationContext("IDENTITY", userMode);
+        this.username = context.getContextTenant().getTenantAdmin().getUserName();
+        this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
+    }
+
     @BeforeClass(alwaysRun = true)
     public void initTest() throws Exception {
 
         super.initTest();
+        backendURL = context.getContextUrls().getBackEndUrl();
+        logManger = new AuthenticatorClient(backendURL);
+        sessionCookie = logManger.login(username, userPassword, context.getInstance().getHosts().get("default"));
 
         adminClient = new OauthAdminClient(backendURL, sessionCookie);
 
@@ -419,7 +446,7 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
 
     private Property[] getOIDCAuthnConfigProperties() {
 
-        Property[] properties = new Property[7];
+        Property[] properties = new Property[8];
         Property property = new Property();
         property.setName(IdentityConstants.Authenticator.OIDC.IDP_NAME);
         property.setValue("oidcFedIdP");
@@ -454,6 +481,11 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
         property.setName(IdentityConstants.Authenticator.OIDC.OIDC_LOGOUT_URL);
         property.setValue(SECONDARY_IS_LOGOUT_ENDPOINT);
         properties[6] = property;
+
+        property = new Property();
+        property.setName("commonAuthQueryParams");
+        property.setValue("scope=" + OAuth2Constant.OAUTH2_SCOPE_OPENID_WITH_INTERNAL_LOGIN);
+        properties[7] = property;
         return properties;
     }
 

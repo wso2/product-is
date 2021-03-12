@@ -1,0 +1,17 @@
+{
+  "claimURI": "http://wso2.org/claims/identity/emailVerified",
+  "description": "Email Verified",
+  "displayOrder": 0,
+  "displayName": "Email Verified",
+  "readOnly": false,
+  "regEx": "",
+  "required": false,
+  "supportedByDefault": %b,
+  "attributeMapping": [
+    {
+      "mappedAttribute": "emailVerified",
+      "userstore": "PRIMARY"
+    }
+  ],
+  "properties": []
+}

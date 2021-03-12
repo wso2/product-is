@@ -86,6 +86,7 @@
             <class name="org.wso2.identity.integration.test.requestPathAuthenticator.RequestPathBasicAuthenticationSSOTest" />
             <class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderMgtServiceTestCase" />
             <class name="org.wso2.identity.integration.test.idp.mgt.ResidentIDPConfigsTestCase" />
+            <class name="org.wso2.identity.integration.test.idp.mgt.PreferenceAPIIntegrationUITestCase" />
 
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceSAML2BearerGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.application.authz.ApplicationAuthzTestCase"/>
@@ -119,6 +120,7 @@
             <class name="org.wso2.identity.integration.test.identityServlet.ExtendSessionEndpointAuthCodeGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenRevocationWithSessionTerminationTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenRevocationWithMultipleSessionTerminationTestCase"/>
+            <class name="org.wso2.identity.integration.test.auth.AdaptiveScriptTemporaryClaimPersistenceTestCase"/>
         </classes>
     </test>
 
@@ -132,8 +134,9 @@
             <class name="org.wso2.identity.integration.test.rest.api.user.approval.v1.UserMeApprovalTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.authorized.apps.v1.MeAuthorizedAppsNegativeTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.authorized.apps.v1.MeAuthorizedAppsSuccessTest"/>
-            <class name="org.wso2.identity.integration.test.rest.api.user.authorized.apps.v2.MeAuthorizedAppsSuccessTest"></class>
+            <class name="org.wso2.identity.integration.test.rest.api.user.authorized.apps.v2.MeAuthorizedAppsSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.authorized.apps.v2.MeAuthorizedAppsNegativeTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.user.authorized.apps.v2.MeAuthorizedAppsScopeTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.session.v1.UserSessionTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.session.v1.UserSessionMeSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.application.v1.UserDiscoverableApplicationSuccessTest"/>
@@ -163,6 +166,7 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationPatchTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementSAMLSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementOAuthSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementOAuthFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementPassiveStsSuccessTest"/>
             <!--Disabling since the WS-Trust functionality is provided as a connector and it does not exist in the product by default.-->
             <!--<class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementWSTrustTest"/>-->
@@ -171,6 +175,8 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationTemplateManagementFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.script.library.v1.ScriptLibrarySuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.script.library.v1.ScriptLibraryFailureTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.oidc.scope.management.v1.OIDCScopeManagementSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.oidc.scope.management.v1.OIDCScopeManagementFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.configs.v1.ConfigSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.configs.v1.ConfigFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.cors.v1.CORSSuccessTest"/>
@@ -184,11 +190,13 @@
 
     <test name="is-tests-scim2" preserve-order="true" parallel="false">
         <classes>
+            <class name="org.wso2.identity.integration.test.scim2.SCIM2PaginationTestCase"/>
             <class name="org.wso2.identity.integration.test.scim2.SCIM2UserTestCase"/>
             <class name="org.wso2.identity.integration.test.scim2.SCIM2GroupTestCase"/>
             <class name="org.wso2.identity.integration.test.scim2.SCIM2MeTestCase"/>
             <class name="org.wso2.identity.integration.test.scim2.SCIM2MultiAttributeUserFilterTestCase"/>
             <class name="org.wso2.identity.integration.test.scim2.rest.api.SCIMUserUpdateTest"/>
+            <class name="org.wso2.identity.integration.test.scim2.rest.api.SCIM2SchemasTest"/>
         </classes>
     </test>
 

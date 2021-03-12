@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.oauth2;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -37,8 +38,13 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.identity.oauth.stub.OAuthAdminServiceIdentityOAuthAdminException;
+import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationConfig;
+import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
+import org.wso2.carbon.identity.application.common.model.xsd.Property;
+import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
+import org.wso2.carbon.um.ws.api.stub.ClaimValue;
+import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
@@ -46,7 +52,6 @@ import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.IOException;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,7 +67,9 @@ public class OAuth2BackChannelLogoutTestCase extends OAuth2ServiceAbstractIntegr
     private HttpClient client;
     private final String OIDC_APP_NAME = "playground2";
     private String oidcAppClientId = "";
+    private String oidcAppClientSecret = "";
     private OauthAdminClient adminClient;
+    private ApplicationManagementServiceClient applicationManagementServiceClient;
     private String sessionDataKeyConsent;
     private String sessionDataKey;
     private final String CONSENT = "consent";
@@ -72,6 +79,10 @@ public class OAuth2BackChannelLogoutTestCase extends OAuth2ServiceAbstractIntegr
     private final String username;
     private final String userPassword;
     private final String activeTenant;
+
+    private static final String USER_EMAIL = "abc@wso2.com";
+    private static final String USERNAME = "testUser";
+    private static final String PASSWORD = "pass123";
 
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
@@ -92,20 +103,28 @@ public class OAuth2BackChannelLogoutTestCase extends OAuth2ServiceAbstractIntegr
     public void testInit() throws Exception {
 
         init();
-        createOIDCApplication();
         client = HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build();
+        createOIDCApplication();
+        createServiceProvider();
+
+        remoteUSMServiceClient.addUser(USERNAME, PASSWORD, new String[]{"admin"},
+                getUserClaims(), "default", true);
+
     }
 
     @AfterClass(alwaysRun = true)
     public void testCleanUp() throws Exception {
 
         removeApplications();
+
+        remoteUSMServiceClient.deleteUser(USERNAME);
     }
 
     protected void init() throws Exception {
 
         super.init();
         adminClient = new OauthAdminClient(backendURL, sessionCookie);
+        applicationManagementServiceClient = new ApplicationManagementServiceClient(sessionCookie, backendURL, null);
     }
 
     @Test(groups = "wso2.is", description = "Test back channel logout for OIDC.")
@@ -133,11 +152,13 @@ public class OAuth2BackChannelLogoutTestCase extends OAuth2ServiceAbstractIntegr
         OAuthConsumerAppDTO createdApp = adminClient.getOAuthAppByName(OIDC_APP_NAME);
         Assert.assertNotNull(createdApp, "Adding OIDC app failed.");
         oidcAppClientId = createdApp.getOauthConsumerKey();
+        oidcAppClientSecret = createdApp.getOauthConsumerSecret();
     }
 
     private void removeApplications() throws Exception {
 
         adminClient.removeOAuthApplicationData(oidcAppClientId);
+        applicationManagementServiceClient.deleteApplication(OIDC_APP_NAME);
     }
 
     private void initiateOIDCRequest(boolean isCheckLogoutConfirmation) throws IOException {
@@ -243,8 +264,8 @@ public class OAuth2BackChannelLogoutTestCase extends OAuth2ServiceAbstractIntegr
     public HttpResponse sendLoginPost(String sessionDataKey) throws IOException {
 
         List<NameValuePair> urlParameters = new ArrayList<>();
-        urlParameters.add(new BasicNameValuePair("username", username));
-        urlParameters.add(new BasicNameValuePair("password", userPassword));
+        urlParameters.add(new BasicNameValuePair("username", USERNAME));
+        urlParameters.add(new BasicNameValuePair("password", PASSWORD));
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
         return sendPostRequestWithParameters(urlParameters, OAuth2Constant.COMMON_AUTH_URL);
     }
@@ -266,7 +287,43 @@ public class OAuth2BackChannelLogoutTestCase extends OAuth2ServiceAbstractIntegr
         urlParameters.add(new BasicNameValuePair("callbackurl", OAuth2Constant.CALLBACK_URL));
         urlParameters.add(new BasicNameValuePair("authorizeEndpoint", OAuth2Constant.APPROVAL_URL));
         urlParameters.add(new BasicNameValuePair("authorize", OAuth2Constant.AUTHORIZE_PARAM));
-        urlParameters.add(new BasicNameValuePair("scope", OAuth2Constant.OAUTH2_SCOPE_OPENID));
+        urlParameters.add(new BasicNameValuePair("scope", OAuth2Constant.OAUTH2_SCOPE_OPENID_WITH_INTERNAL_LOGIN));
         return urlParameters;
+    }
+
+    private ServiceProvider createServiceProvider() throws Exception {
+
+        ServiceProvider serviceProvider = new ServiceProvider();
+        serviceProvider.setApplicationName(OIDC_APP_NAME);
+        applicationManagementServiceClient.createApplication(serviceProvider);
+        serviceProvider = applicationManagementServiceClient.getApplication(OIDC_APP_NAME);
+
+        InboundAuthenticationRequestConfig requestConfig = new InboundAuthenticationRequestConfig();
+        requestConfig.setInboundAuthKey(oidcAppClientId);
+        requestConfig.setInboundAuthType("oauth2");
+        if (StringUtils.isNotBlank(oidcAppClientSecret)) {
+            Property property = new Property();
+            property.setName("oauthConsumerSecret");
+            property.setValue(oidcAppClientSecret);
+            Property[] properties = {property};
+            requestConfig.setProperties(properties);
+        }
+
+        InboundAuthenticationConfig inboundAuthenticationConfig = new InboundAuthenticationConfig();
+        inboundAuthenticationConfig
+                .setInboundAuthenticationRequestConfigs(new InboundAuthenticationRequestConfig[]{requestConfig});
+        serviceProvider.setInboundAuthenticationConfig(inboundAuthenticationConfig);
+        applicationManagementServiceClient.updateApplicationData(serviceProvider);
+        return serviceProvider;
+    }
+
+    protected ClaimValue[] getUserClaims() {
+
+        ClaimValue[] claimValues = new ClaimValue[1];
+        ClaimValue email = new ClaimValue();
+        email.setClaimURI(EMAIL_CLAIM_URI);
+        email.setValue(USER_EMAIL);
+        claimValues[0] = email;
+        return claimValues;
     }
 }

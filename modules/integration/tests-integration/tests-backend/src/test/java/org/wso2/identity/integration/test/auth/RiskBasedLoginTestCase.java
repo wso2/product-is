@@ -284,7 +284,11 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
 
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         Assert.assertNotNull(locationHeader, "Login response header is null");
-        locationHeader = handleConsent(locationHeader);
+        response = sendGetRequest(client, locationHeader.getValue());
+        EntityUtils.consume(response.getEntity());
+        locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+
+        log.info("############## " + "testAuthenticationForNoRisk - location header " + locationHeader.getValue());
 
         URL clientUrl = new URL(locationHeader.getValue());
         Assert.assertTrue(clientUrl.getQuery().contains("code="), "Authentication flow was un-successful with " +
@@ -312,15 +316,20 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
         urlParameters.add(new BasicNameValuePair("callbackUrl", callbackUrl));
 
         response = sendPostRequestWithParameters(client, urlParameters, urlParts[0]);
-        locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         EntityUtils.consume(response.getEntity());
+        locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        log.info("############## " + "testAuthenticationForRisk - location header 1 " + locationHeader.getValue());
+
 
         response = sendGetRequest(client, locationHeader.getValue());
-        locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         EntityUtils.consume(response.getEntity());
+        locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        log.info("############## " + "testAuthenticationForRisk - location header 2 " + locationHeader.getValue());
 
-        Assert.assertNotNull(locationHeader, "Login response header is null");
-        locationHeader = handleConsent(locationHeader);
+        response = sendGetRequest(client, locationHeader.getValue());
+        EntityUtils.consume(response.getEntity());
+        locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        log.info("############## " + "testAuthenticationForRisk - location header 3 " + locationHeader.getValue());
 
         URL clientUrl = new URL(locationHeader.getValue());
         Assert.assertTrue(clientUrl.getQuery().contains("code="), "Authentication flow was un-successful with " +
@@ -364,29 +373,5 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
         localAndOutboundAuthenticationConfig.addAuthenticationSteps(authenticationStep2);
 
         return localAndOutboundAuthenticationConfig;
-    }
-
-    private Header handleConsent(Header locationHeader) throws Exception {
-
-        response = sendConsentGetRequest(locationHeader.getValue(), cookieStore, consentParameters);
-        Map<String, Integer> keyPositionMap = new HashMap<>(1);
-        keyPositionMap.put("name=\"sessionDataKeyConsent\"", 1);
-        List<DataExtractUtil.KeyValue> keyValues =
-                DataExtractUtil.extractSessionConsentDataFromResponse(response,
-                        keyPositionMap);
-        Assert.assertNotNull(keyValues, "SessionDataKeyConsent key value is null");
-
-        String sessionDataKeyConsent = keyValues.get(0).getValue();
-        Assert.assertNotNull(sessionDataKeyConsent, "Invalid session key consent.");
-        EntityUtils.consume(response.getEntity());
-
-        HttpResponse response = sendApprovalPostWithConsent(client, sessionDataKeyConsent, consentParameters);
-        Assert.assertNotNull(response, "Approval request failed. response is invalid.");
-
-        locationHeader =
-                response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
-        Assert.assertNotNull(locationHeader, "Approval request failed. Location header is null.");
-        EntityUtils.consume(response.getEntity());
-        return locationHeader;
     }
 }

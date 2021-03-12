@@ -21,15 +21,20 @@ package org.wso2.identity.integration.test.provisioning;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
+import org.wso2.carbon.automation.engine.context.AutomationContext;
+import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.exceptions.AutomationFrameworkException;
 import org.wso2.carbon.automation.test.utils.dbutils.H2DataBaseManager;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.JustInTimeProvisioningConfig;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.PropertyDTO;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.UserStoreDTO;
+import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.um.ws.api.stub.RemoteUserStoreManagerServiceUserStoreExceptionException;
 import org.wso2.carbon.user.core.UserCoreConstants;
@@ -58,32 +63,57 @@ public class JustInTimeProvisioningTestCase extends SAMLIdentityFederationTestCa
     private UserStoreConfigAdminServiceClient userStoreConfigAdminServiceClient;
     private UserStoreConfigUtils userStoreConfigUtils = new UserStoreConfigUtils();
 
+    private AuthenticatorClient logManger;
+    private final String username;
+    private final String userPassword;
+    private final AutomationContext context;
+    private String backendURL;
+    private String sessionCookie;
+
+    @DataProvider(name = "configProvider")
+    public static Object[][] configProvider() {
+
+        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}};
+    }
+
+    @Factory(dataProvider = "configProvider")
+    public JustInTimeProvisioningTestCase(TestUserMode userMode) throws Exception {
+
+        context = new AutomationContext("IDENTITY", userMode);
+        this.username = context.getContextTenant().getTenantAdmin().getUserName();
+        this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
+    }
+
     @BeforeClass(alwaysRun = true)
     public void initTest() throws Exception {
 
         try {
             super.initTest();
-            userMgtClient = new UserManagementClient(backendURL, getSessionCookie());
-            userStoreClient = new RemoteUserStoreManagerServiceClient(getBackendURL(), getSessionCookie());
-            userStoreConfigAdminServiceClient = new UserStoreConfigAdminServiceClient(getBackendURL(), sessionCookie);
-            RemoteAuthorizationManagerServiceClient remoteAuthorizationManagerServiceClient =
-                    new RemoteAuthorizationManagerServiceClient(getBackendURL(), getSessionCookie());
+            backendURL = context.getContextUrls().getBackEndUrl();
+            logManger = new AuthenticatorClient(backendURL);
+            sessionCookie = logManger.login(username, userPassword, context.getInstance().getHosts().get("default"));
 
-            log.info("login user name : " + isServer.getSuperTenant().getTenantAdmin().getUserName());
-            log.info("login password : " + isServer.getSuperTenant().getTenantAdmin().getPassword());
-            for (String role : userStoreClient.getRoleListOfUser(isServer.getSuperTenant().getTenantAdmin().getUserName())) {
+            userMgtClient = new UserManagementClient(backendURL, sessionCookie);
+            userStoreClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
+            userStoreConfigAdminServiceClient = new UserStoreConfigAdminServiceClient(backendURL, sessionCookie);
+            RemoteAuthorizationManagerServiceClient remoteAuthorizationManagerServiceClient =
+                    new RemoteAuthorizationManagerServiceClient(backendURL, sessionCookie);
+
+            log.info("login user name : " + username);
+            log.info("login password : " + userPassword);
+            for (String role : userStoreClient.getRoleListOfUser(username)) {
                 boolean roleAuthorized = remoteAuthorizationManagerServiceClient.isRoleAuthorized(role,
                         "/permission/admin/manage/identity/rolemgt/create", "ui.execute");
                 log.info("Role Authorization :" + roleAuthorized + " role: " + role);
             }
 
-            boolean isUserAuthorized = remoteAuthorizationManagerServiceClient.isUserAuthorized(isServer.getSuperTenant().getTenantAdmin()
-                    .getUserName(), "/permission/admin/manage/identity/rolemgt/create", "ui.execute");
+            boolean isUserAuthorized =
+                    remoteAuthorizationManagerServiceClient.isUserAuthorized(username, "/permission" +
+                            "/admin/manage/identity/rolemgt/create", "ui.execute");
             log.info("User Authorization :" + isUserAuthorized);
-            remoteAuthorizationManagerServiceClient.authorizeUser(isServer.getSuperTenant().getTenantAdmin().
-                    getUserName(), "/permission/admin/", "ui.execute");
-            boolean isAuthorized = remoteAuthorizationManagerServiceClient.isUserAuthorized(isServer.getSuperTenant().getTenantAdmin()
-                    .getUserName(), "/permission/admin/manage/identity/rolemgt/create", "ui.execute");
+            remoteAuthorizationManagerServiceClient.authorizeUser(username, "/permission/admin/", "ui.execute");
+            boolean isAuthorized = remoteAuthorizationManagerServiceClient.isUserAuthorized(username, "/permission" +
+                    "/admin/manage/identity/rolemgt/create", "ui.execute");
             log.info("User Authorization details :" + isAuthorized);
 
             userMgtClient.addInternalRole("loginJIT", null, new String[]{"/permission/admin/login"});
@@ -101,7 +131,7 @@ public class JustInTimeProvisioningTestCase extends SAMLIdentityFederationTestCa
         try {
             super.endTest();
             userStoreConfigAdminServiceClient.deleteUserStore(DOMAIN_ID);
-
+            userStoreConfigUtils.waitForUserStoreUnDeployment(userStoreConfigAdminServiceClient, DOMAIN_ID);
         } catch (AutomationFrameworkException e) {
             log.error("Error while shutting down the server. ", e);
         }
@@ -212,10 +242,10 @@ public class JustInTimeProvisioningTestCase extends SAMLIdentityFederationTestCa
      * @throws LoginAuthenticationExceptionException Login Authentication Exception.
      */
     private void checkNewlyCreatedUserLogin(String userName)
-            throws XPathExpressionException, RemoteException, LoginAuthenticationExceptionException {
+            throws RemoteException, LoginAuthenticationExceptionException {
 
         AuthenticationAdminStub authenticationAdminStub = new AuthenticationAdminStub(
-                getBackendURL() + "AuthenticationAdmin");
+                backendURL + "AuthenticationAdmin");
         boolean loginStatus = authenticationAdminStub.login(userName, Utils.PASSWORD, "localhost");
         Assert.assertTrue(loginStatus, "Login failed for newly created user");
     }
