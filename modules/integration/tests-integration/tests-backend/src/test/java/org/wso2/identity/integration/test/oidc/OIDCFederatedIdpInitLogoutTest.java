@@ -14,13 +14,19 @@ import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.openid.connect.sdk.OIDCTokenResponse;
 import com.nimbusds.openid.connect.sdk.OIDCTokenResponseParser;
 import com.nimbusds.openid.connect.sdk.token.OIDCTokens;
+import io.restassured.http.ContentType;
+import io.restassured.response.Response;
+import net.minidev.json.JSONObject;
+import net.minidev.json.parser.JSONParser;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
@@ -61,10 +67,8 @@ import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.rmi.RemoteException;
@@ -74,6 +78,9 @@ import java.util.List;
 import java.util.Map;
 
 import javax.xml.xpath.XPathExpressionException;
+
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.notNullValue;
 
 public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
 
@@ -88,21 +95,26 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
     // Name of the primary Is configured in federated Is as a service provider.
     private static final String FEDERATED_IS_PRIMARY_SP_NAME = "PrimaryIS";
     // Primary idp related urls.
-    private static final String PRIMARY_IS_IDP_NAME = "PrimaryIS";
-    private static final String PRIMARY_IS_IDP_AUTHENTICATOR_NAME_OIDC = "OpenIDConnectAuthenticator";
+    private static final String PRIMARY_IS_NAME = "PrimaryIS";
+    private static final String PRIMARY_IS_AUTHENTICATOR_NAME_OIDC = "OpenIDConnectAuthenticator";
     private static final String PRIMARY_IS_AUTHORIZE_ENDPOINT = "https://localhost:9853/t/primary" +
             ".com/oauth2/authorize";
-    private static final String PRIMARY_IS_IDP_CALLBACK_URL = "https://localhost:9853/t/primary.com/commonauth";
+    private static final String PRIMARY_IS_TOKEN_ENDPOINT = "https://localhost:9853/t/primary.com/oauth2/token";
+    private static final String PRIMARY_IS_CALLBACK_URL = "https://localhost:9853/t/primary.com/commonauth";
     //TODO: Enable endpoint in framework.
     private static final String PRIMARY_IS_BACK_CHANNEL_LOGOUT_ENDPOINT = "https://localhost:9853/t/primary" +
             ".com/identity/oidc/slo";
+    private static final String PRIMARY_ME_SESSIONS_ENDPOINT =
+            "https://localhost:9853/t/primary.com/api/users/v1/me/sessions";
     // Federated idp related urls.
     private static final String FEDERATED_IS_AUTHORIZE_ENDPOINT = "https://localhost:9853/t/federated" +
             ".com/oauth2/authorize";
-    private static final String FEDERATED_IS_IDP_CALLBACK_URL = "https://localhost:9853/t/federated.com/commonauth";
+    private static final String FEDERATED_IS_CALLBACK_URL = "https://localhost:9853/t/federated.com/commonauth";
     private static final String FEDERATED_IS_TOKEN_ENDPOINT = "https://localhost:9853/t/federated.com/oauth2/token";
     private static final String FEDERATED_IS_LOGOUT_ENDPOINT = "https://localhost:9853/t/federated.com/oidc/logout";
     private static final String FEDERATED_IS_SERVICES_URI = "https://localhost:9853/t/federated.com/services/";
+    private static final String FEDERATED_ME_SESSIONS_ENDPOINT =
+            "https://localhost:9853/t/federated.com/api/users/v1/me/sessions";
 
     // Urls related to service provider configured in Primary IS.
     private static final String PRIMARY_IS_SP_NAME = "playground2";
@@ -129,6 +141,7 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
     private Map<Integer, OauthAdminClient> oAuthAdminClients;
     private IdentityProviderMgtServiceClient identityProviderMgtServiceClient;
     private TenantManagementServiceClient tenantServiceClient;
+    private UserManagementClient usrMgtClient;
     private ServerConfigurationManager serverConfigurationManager;
     private final AutomationContext context;
     // Client Id and Secret of primary Is service provider configured in federated idp.
@@ -142,11 +155,14 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
     private String fedSP_ClientSecret;
     // Data related to the login flow.
     private String username;
-    private String isk;
-    private String userId;
+    private String primaryIsk;
+    private String federatedIsk;
+    private String primaryUserId;
+    private String federatedUserId;
     private CookieStore cookieStore;
-    private HttpClient httpClientWithoutAutoRedirections;
     private CloseableHttpClient client;
+    private HttpClient httpClientWithoutAutoRedirections;
+    private JSONParser jsonParser;
 
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
@@ -179,61 +195,94 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
         createServiceClients(primaryTenantCookie, federatedTenantCookie);
         createPrimaryServiceProviderInSecondaryTenant();
         createIdentityProviderInPrimaryTenant();
-        createServiceProviderInPrimaryTenant();
-        createServiceProviderInSecondaryTenant();
+        createServiceProviderInPrimaryIdp();
+        createServiceProviderInSecondaryIdp();
         cookieStore = new BasicCookieStore();
         client = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
         httpClientWithoutAutoRedirections = HttpClientBuilder.create().disableRedirectHandling()
                 .setDefaultCookieStore(cookieStore).build();
-        addUserToSecondaryIS();
+        Assert.assertTrue(addUserToSecondaryIS(), "Adding user to federated idp failed.");
+        jsonParser = new JSONParser(JSONParser.MODE_JSON_SIMPLE);
     }
 
     @Test(alwaysRun = true, groups = "wso2.is", description = "Testing federated idp login.")
     private void testFederatedLogin() throws Exception {
 
-        String locationValue = authCodeGrantSendAuthRequestPost(FEDERATED_IS_SP_CALLBACK_URL, fedSP_ClientID,
+        // Make the authorize call to federated idp.
+        String authCall = authorizeCallToIdp(client, FEDERATED_IS_SP_CALLBACK_URL, fedSP_ClientID,
                 FEDERATED_IS_AUTHORIZE_ENDPOINT);
-        Assert.assertTrue(locationValue.contains(OAuth2Constant.SESSION_DATA_KEY),
+        Assert.assertTrue(authCall.contains(OAuth2Constant.SESSION_DATA_KEY),
                 "sessionDataKey not found in response.");
-        String sessionDataKey = DataExtractUtil.getParamFromURIString(locationValue, OAuth2Constant.SESSION_DATA_KEY);
+        String sessionDataKey = DataExtractUtil.getParamFromURIString(authCall, OAuth2Constant.SESSION_DATA_KEY);
         Assert.assertNotNull(sessionDataKey, "Session data key is null.");
-
+        // Get session data key consent from federated idp.
         String sessionDataKeyConsent = getSessionDataKeyConsent(client, sessionDataKey);
         Assert.assertNotNull(sessionDataKeyConsent, "Invalid session key consent.");
-
-        AuthorizationCode authorizationCode = authCodeGrantSendApprovalPost(sessionDataKeyConsent);
+        // Get authorization code from federated idp.
+        AuthorizationCode authorizationCode =
+                getAuthCodeFromIdp(sessionDataKeyConsent, FEDERATED_IS_AUTHORIZE_ENDPOINT);
         Assert.assertNotNull(authorizationCode, "Authorization code is null.");
-
-        String idToken = authCodeGrantSendGetTokensPost(authorizationCode);
+        // Get the id token from the federated idp.
+        OIDCTokens tokens = getIdTokenFromIdp(authorizationCode, fedSP_ClientID, fedSP_ClientSecret,
+                FEDERATED_IS_SP_CALLBACK_URL, FEDERATED_IS_TOKEN_ENDPOINT);
+        String idToken = tokens.getIDTokenString();
+        String federatedAccessToken = tokens.getAccessToken().getValue();
         Assert.assertNotNull(idToken, "ID token is null");
+        // Extract the claims from id token.
         SignedJWT signedJWT = SignedJWT.parse(idToken);
         JWTClaimsSet jwtClaimsSet = signedJWT.getJWTClaimsSet();
         username = jwtClaimsSet.getSubject();
-        isk = (String) jwtClaimsSet.getClaim("isk");
+        federatedIsk = (String) jwtClaimsSet.getClaim("isk");
+        HttpResponse response = sendGetRequest(client, FEDERATED_ME_SESSIONS_ENDPOINT, federatedAccessToken);
+        JSONObject jsonObject = (JSONObject) jsonParser.parse(response.getEntity().getContent());
+        federatedUserId = (String) jsonObject.get("userId");
     }
 
     @Test(alwaysRun = true, groups = "wso2.is", description = "Testing primary idp login.", dependsOnMethods = "testFederatedLogin")
     private void testPrimaryLogin() throws Exception {
 
-        String authorizeCall = authCodeGrantSendAuthRequestPost(PRIMARY_IS_SP_CALLBACK_URL, primSPClientID,
-                PRIMARY_IS_AUTHORIZE_ENDPOINT);
+        // Make the authorize call to primary idp.
+        String authorizeCall = authorizeCallToIdp(httpClientWithoutAutoRedirections,
+                PRIMARY_IS_SP_CALLBACK_URL, primSPClientID, PRIMARY_IS_AUTHORIZE_ENDPOINT);
         Assert.assertNotNull(authorizeCall, "Location value is null.");
-        HttpResponse authorizeResponse = sendGetRequest(httpClientWithoutAutoRedirections, authorizeCall);
-        String commonAuthCall = getLocationHeaderValue(authorizeResponse);
-        HttpResponse commonAuthResponse = sendGetRequest(client, commonAuthCall);
-        String authorizeCall2 = getLocationHeaderValue(commonAuthResponse);
-        HttpResponse authorizeCall2Response = sendGetRequest(client, authorizeCall2);
-        String authCode = getLocationHeaderValue(authorizeCall2Response);
-        AuthorizationCode authorizationCode = new AuthorizationCode(DataExtractUtil.getParamFromURIString(authCode,
-                OAuth2Constant.AUTHORIZATION_CODE_NAME));
-        String idToken = authCodeGrantSendGetTokensPost(authorizationCode);
+        String state = DataExtractUtil.getParamFromURIString(authorizeCall, "state");
+        // Send authorize call from primary idp to federated idp.
+        String commonAuthCall = authenticatePrimaryIsFromFed(state);
+        String authCode = DataExtractUtil.getParamFromURIString(commonAuthCall, OAuth2Constant.AUTHORIZATION_CODE_NAME);
+        String sessionState = DataExtractUtil.getParamFromURIString(commonAuthCall, "session_state");
+        // Get the session data key consent from primary idp.
+        String sessionDataKeyConsent = getSessionDataKeyConsentFromPrimaryIs(authCode, state, sessionState);
+        // Get authorization code from idp.
+        AuthorizationCode authorizationCode =
+                getAuthCodeFromIdp(sessionDataKeyConsent, PRIMARY_IS_AUTHORIZE_ENDPOINT);
+        // Get the id token from the primary is.
+        OIDCTokens tokens = getIdTokenFromIdp(authorizationCode, primSPClientID, primSPClientSecret,
+                PRIMARY_IS_SP_CALLBACK_URL, PRIMARY_IS_TOKEN_ENDPOINT);
+        String idToken = tokens.getIDTokenString();
+        String primaryAccessToken = tokens.getAccessToken().getValue();
         Assert.assertNotNull(idToken, "ID token is null");
+        // Extract claims from id token.
         SignedJWT signedJWT = SignedJWT.parse(idToken);
         JWTClaimsSet jwtClaimsSet = signedJWT.getJWTClaimsSet();
+        primaryIsk = (String) jwtClaimsSet.getClaim("isk");
+        // Get the userId of the user.
+        HttpResponse response = sendGetRequest(client, PRIMARY_ME_SESSIONS_ENDPOINT, primaryAccessToken);
+        JSONObject jsonObject = (JSONObject) jsonParser.parse(response.getEntity().getContent());
+        primaryUserId = (String) jsonObject.get("userId");
     }
 
-    public String authCodeGrantSendAuthRequestPost(String callbackUrl, String spClientId,
-                                                   String authorizeEndpoint)
+    /**
+     * First authorization call to the idp.
+     *
+     * @param client            - http client.
+     * @param callbackUrl       - callback url of the service provider.
+     * @param spClientId        - client id of the service provider.
+     * @param authorizeEndpoint - authorization endpoint of the idp.
+     * @return - location header value in the response.
+     * @throws Exception - Exception.
+     */
+    public String authorizeCallToIdp(HttpClient client, String callbackUrl, String spClientId,
+                                     String authorizeEndpoint)
             throws Exception {
 
         List<NameValuePair> urlParameters = new ArrayList<>();
@@ -249,13 +298,38 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
     }
 
     /**
+     * Send authentication request to federated idp from primary is.
+     *
+     * @param state - state received during the authorization call.
+     * @return - location value of the response containing authCode and sessionState.
+     * @throws Exception - Exception.
+     */
+    public String authenticatePrimaryIsFromFed(String state)
+            throws Exception {
+
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair("scope", OAuth2Constant.OAUTH2_SCOPE_OPENID));
+        urlParameters.add(new BasicNameValuePair("response_type", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
+        urlParameters.add(new BasicNameValuePair("redirect_uri", PRIMARY_IS_CALLBACK_URL));
+        urlParameters.add(new BasicNameValuePair("client_id", fedISClientID));
+        urlParameters.add(new BasicNameValuePair("state", state));
+        HttpResponse response =
+                sendPostRequestWithParameters(client, urlParameters,
+                        FEDERATED_IS_AUTHORIZE_ENDPOINT);
+        Assert.assertNotNull(response, "Authorization request failed. Authorized response is null");
+        String locationValue = getLocationHeaderValue(response);
+        EntityUtils.consume(response.getEntity());
+        return locationValue;
+    }
+
+    /**
      * Sends a log in post to the IS instance and extract and return the sessionDataKeyConsent from the response.
      *
-     * @param client         CloseableHttpClient object to send the login post.
-     * @param sessionDataKey String sessionDataKey obtained.
-     * @return Extracted sessionDataKeyConsent.
-     * @throws IOException
-     * @throws URISyntaxException
+     * @param client         - CloseableHttpClient object to send the login post.
+     * @param sessionDataKey - String sessionDataKey obtained.
+     * @return - Extracted sessionDataKeyConsent.
+     * @throws IOException        - IOException.
+     * @throws URISyntaxException - URISyntaxException.
      */
     private String getSessionDataKeyConsent(CloseableHttpClient client, String sessionDataKey)
             throws IOException, URISyntaxException {
@@ -279,9 +353,18 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
         return DataExtractUtil.getParamFromURIString(locationValue, OAuth2Constant.SESSION_DATA_KEY_CONSENT);
     }
 
-    public AuthorizationCode authCodeGrantSendApprovalPost(String sessionDataKeyConsent) throws Exception {
+    /**
+     * Get the authorization code from the idp.
+     *
+     * @param sessionDataKeyConsent - sessionDataKeyConsent received after consent approval.
+     * @param authorizeEndpoint     - authorization endpoint of the idp.
+     * @return - AuthorizationCode object containing authCode.
+     * @throws Exception - Exception.
+     */
+    public AuthorizationCode getAuthCodeFromIdp(String sessionDataKeyConsent, String authorizeEndpoint)
+            throws Exception {
 
-        HttpResponse response = sendApprovalPost(client, sessionDataKeyConsent);
+        HttpResponse response = sendApprovalPost(client, sessionDataKeyConsent, authorizeEndpoint);
         Assert.assertNotNull(response, "Approval request failed. response is invalid.");
 
         Header locationHeader =
@@ -298,38 +381,82 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
     }
 
     /**
-     * Send approval post request
+     * Send approval post request.
      *
-     * @param client                - http client
-     * @param sessionDataKeyConsent - session consent data
-     * @return http response
-     * @throws ClientProtocolException
-     * @throws java.io.IOException
+     * @param client                - http client.
+     * @param sessionDataKeyConsent - session consent data.
+     * @return - http response.
+     * @throws ClientProtocolException - ClientProtocolException
+     * @throws IOException             - IOException.
      */
-    public HttpResponse sendApprovalPost(HttpClient client, String sessionDataKeyConsent)
+    public HttpResponse sendApprovalPost(HttpClient client, String sessionDataKeyConsent, String authorizeEndpoint)
             throws ClientProtocolException,
             IOException {
 
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         urlParameters.add(new BasicNameValuePair("consent", "approve"));
         urlParameters.add(new BasicNameValuePair("sessionDataKeyConsent", sessionDataKeyConsent));
-
-        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, FEDERATED_IS_AUTHORIZE_ENDPOINT);
-
-        return response;
+        return sendPostRequestWithParameters(client, urlParameters, authorizeEndpoint);
     }
 
-    public String authCodeGrantSendGetTokensPost(AuthorizationCode authorizationCode) throws Exception {
+    /**
+     * Get the sessionDataKeyConsent value from the primary idp.
+     *
+     * @param authCode     - authorization code received from federated idp.
+     * @param state        - state received during authorization call.
+     * @param sessionState - session state received from federated idp.
+     * @return - sessionDataKeyConsent.
+     * @throws URISyntaxException - URISyntaxException.
+     * @throws IOException        - IOException.
+     */
+    private String getSessionDataKeyConsentFromPrimaryIs(String authCode, String state, String sessionState)
+            throws URISyntaxException,
+            IOException {
 
-        ClientID clientID = new ClientID(fedSP_ClientID);
-        Secret clientSecret = new Secret(fedSP_ClientSecret);
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair("code", authCode));
+        urlParameters.add(new BasicNameValuePair("state", state));
+        urlParameters.add(new BasicNameValuePair("session_state", sessionState));
+        HttpResponse response =
+                sendPostRequestWithParameters(client, urlParameters,
+                        PRIMARY_IS_CALLBACK_URL);
+        Assert.assertNotNull(response, "CommonAuth request to primary idp failed. CommonAuth response is null");
+        String locationValue = getLocationHeaderValue(response);
+        EntityUtils.consume(response.getEntity());
+        response = sendGetRequest(httpClientWithoutAutoRedirections, locationValue);
+        Header locationHeader =
+                response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        EntityUtils.consume(response.getEntity());
+        Assert.assertTrue(locationHeader.getValue().contains(OAuth2Constant.SESSION_DATA_KEY_CONSENT),
+                "SessionDataKeyConsent not found in response of the primary idp.");
+        return DataExtractUtil.getParamFromURIString(locationHeader.getValue(),
+                OAuth2Constant.SESSION_DATA_KEY_CONSENT);
+    }
+
+    /**
+     * Get the id token from the idp.
+     *
+     * @param authorizationCode - authorizationCode.
+     * @param clientId          - clientId of the service provider.
+     * @param clientSec         - clientSecret of the service provider.
+     * @param spCallbackUrl     - callback url of the service provider.
+     * @param tokenEndpoint     - token endpoint of the idp.
+     * @return -  id token string.
+     * @throws Exception - Exception.
+     */
+    public OIDCTokens getIdTokenFromIdp(AuthorizationCode authorizationCode, String clientId, String clientSec,
+                                        String spCallbackUrl, String tokenEndpoint)
+            throws Exception {
+
+        ClientID clientID = new ClientID(clientId);
+        Secret clientSecret = new Secret(clientSec);
         ClientSecretBasic clientSecretBasic = new ClientSecretBasic(clientID, clientSecret);
 
-        URI callbackURI = new URI(FEDERATED_IS_SP_CALLBACK_URL);
+        URI callbackURI = new URI(spCallbackUrl);
         AuthorizationCodeGrant authorizationCodeGrant =
                 new AuthorizationCodeGrant(authorizationCode, callbackURI);
 
-        TokenRequest tokenReq = new TokenRequest(new URI(FEDERATED_IS_TOKEN_ENDPOINT), clientSecretBasic,
+        TokenRequest tokenReq = new TokenRequest(new URI(tokenEndpoint), clientSecretBasic,
                 authorizationCodeGrant);
 
         HTTPResponse tokenHTTPResp = tokenReq.toHTTPRequest().send();
@@ -344,8 +471,7 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
         OIDCTokenResponse oidcTokenResponse = (OIDCTokenResponse) tokenResponse;
         OIDCTokens oidcTokens = oidcTokenResponse.getOIDCTokens();
         Assert.assertNotNull(oidcTokens, "OIDC Tokens object is null.");
-
-        return oidcTokens.getIDTokenString();
+        return oidcTokens;
 
     }
 
@@ -389,6 +515,9 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
                 primaryTenantCookie));
         oAuthAdminClients.put(FEDERATED_TENANT, new OauthAdminClient(isServer.getContextUrls().getBackEndUrl(),
                 federatedTenantCookie));
+        usrMgtClient = new UserManagementClient(FEDERATED_IS_SERVICES_URI, "federatedAdmin" +
+                "@federated.com",
+                "password");
     }
 
     /**
@@ -403,7 +532,7 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
         ServiceProvider serviceProvider = getServiceProvider(FEDERATED_TENANT, FEDERATED_IS_PRIMARY_SP_NAME);
         HashMap<String, String> credentials =
                 updateServiceProviderWithOIDCConfigs(FEDERATED_TENANT, FEDERATED_IS_PRIMARY_SP_NAME,
-                        PRIMARY_IS_IDP_CALLBACK_URL, PRIMARY_IS_BACK_CHANNEL_LOGOUT_ENDPOINT, serviceProvider);
+                        PRIMARY_IS_CALLBACK_URL, PRIMARY_IS_BACK_CHANNEL_LOGOUT_ENDPOINT, serviceProvider);
         fedISClientID = credentials.get(OIDC_APP_CLIENT_ID);
         fedISClientSecret = credentials.get(OIDC_APP_CLIENT_SECRET);
         updateServiceProvider(FEDERATED_TENANT, serviceProvider);
@@ -433,9 +562,9 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
     private void createIdentityProviderInPrimaryTenant() throws Exception {
 
         IdentityProvider identityProvider = new IdentityProvider();
-        identityProvider.setIdentityProviderName(PRIMARY_IS_IDP_NAME);
+        identityProvider.setIdentityProviderName(PRIMARY_IS_NAME);
         FederatedAuthenticatorConfig oidcAuthnConfig = new FederatedAuthenticatorConfig();
-        oidcAuthnConfig.setName(PRIMARY_IS_IDP_AUTHENTICATOR_NAME_OIDC);
+        oidcAuthnConfig.setName(PRIMARY_IS_AUTHENTICATOR_NAME_OIDC);
         oidcAuthnConfig.setDisplayName("openidconnect");
         oidcAuthnConfig.setEnabled(true);
         oidcAuthnConfig.setProperties(getOIDCAuthnConfigProperties());
@@ -446,17 +575,16 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
         jitConfig.setProvisioningUserStore("PRIMARY");
         identityProvider.setJustInTimeProvisioningConfig(jitConfig);
         identityProviderMgtServiceClient.addIdP(identityProvider);
-        Assert.assertNotNull(identityProviderMgtServiceClient.getIdPByName(PRIMARY_IS_IDP_NAME), "Failed to " +
-                "create " +
-                "Identity Provider 'trustedIdP' in primary IS");
+        Assert.assertNotNull(identityProviderMgtServiceClient.getIdPByName(PRIMARY_IS_NAME), "Failed to " +
+                "create Identity Provider 'trustedIdP' in primary IS");
     }
 
     /**
-     * Creates 'playground2' service provider in the primary tenant.
+     * Creates 'playground2' service provider in the primary idp.
      *
      * @throws Exception - Throw Exception if failed.
      */
-    private void createServiceProviderInPrimaryTenant() throws Exception {
+    private void createServiceProviderInPrimaryIdp() throws Exception {
 
         addServiceProvider(PRIMARY_TENANT, PRIMARY_IS_SP_NAME);
         ServiceProvider serviceProvider = getServiceProvider(PRIMARY_TENANT, PRIMARY_IS_SP_NAME);
@@ -467,10 +595,10 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
         AuthenticationStep authStep = new AuthenticationStep();
         org.wso2.carbon.identity.application.common.model.xsd.IdentityProvider idP = new org.wso2.carbon.identity.
                 application.common.model.xsd.IdentityProvider();
-        idP.setIdentityProviderName(PRIMARY_IS_IDP_NAME);
+        idP.setIdentityProviderName(PRIMARY_IS_NAME);
         org.wso2.carbon.identity.application.common.model.xsd.FederatedAuthenticatorConfig oidcAuthnConfig = new
                 org.wso2.carbon.identity.application.common.model.xsd.FederatedAuthenticatorConfig();
-        oidcAuthnConfig.setName(PRIMARY_IS_IDP_AUTHENTICATOR_NAME_OIDC);
+        oidcAuthnConfig.setName(PRIMARY_IS_AUTHENTICATOR_NAME_OIDC);
         oidcAuthnConfig.setDisplayName("openidconnect");
         idP.setFederatedAuthenticatorConfigs(new org.wso2.carbon.identity.application.common.model.xsd.
                 FederatedAuthenticatorConfig[]{oidcAuthnConfig});
@@ -502,7 +630,12 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
                 "configs in ");
     }
 
-    private void createServiceProviderInSecondaryTenant() throws Exception {
+    /**
+     * Create service provider, "travelocity" in the secondary idp.
+     *
+     * @throws Exception - Exception.
+     */
+    private void createServiceProviderInSecondaryIdp() throws Exception {
 
         addServiceProvider(FEDERATED_TENANT, FEDERATED_IS_SP_NAME);
         ServiceProvider serviceProvider = getServiceProvider(FEDERATED_TENANT, FEDERATED_IS_SP_NAME);
@@ -530,21 +663,20 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
                 "configs in ");
     }
 
+    /**
+     * Add a user to federated idp.
+     *
+     * @return - boolean value indicating success.
+     * @throws Exception - Exception.
+     */
     private boolean addUserToSecondaryIS() throws Exception {
 
-        UserManagementClient usrMgtClient = new UserManagementClient(FEDERATED_IS_SERVICES_URI, "federatedAdmin" +
-                "@federated.com",
-                "password");
         if (usrMgtClient == null) {
             return false;
         } else {
             String[] roles = {FEDERATED_IS_TEST_USER_ROLES};
             usrMgtClient.addUser(FEDERATED_IS_TEST_USERNAME, FEDERATED_IS_TEST_PASSWORD, roles, null);
-            if (usrMgtClient.userNameExists(FEDERATED_IS_TEST_USER_ROLES, FEDERATED_IS_TEST_USERNAME)) {
-                return true;
-            } else {
-                return false;
-            }
+            return usrMgtClient.userNameExists(FEDERATED_IS_TEST_USER_ROLES, FEDERATED_IS_TEST_USERNAME);
         }
     }
 
@@ -683,7 +815,7 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
 
         property = new Property();
         property.setName(IdentityConstants.Authenticator.OIDC.CALLBACK_URL);
-        property.setValue(PRIMARY_IS_IDP_CALLBACK_URL);
+        property.setValue(PRIMARY_IS_CALLBACK_URL);
         properties[5] = property;
 
         property = new Property();
@@ -698,23 +830,14 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
         return properties;
     }
 
-    public String extractValueFromResponse(HttpResponse response, String key, int token)
-            throws IOException {
-
-        String value = null;
-        String line;
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-        while ((line = bufferedReader.readLine()) != null) {
-            if (line.contains(key)) {
-                String[] tokens = line.split("'");
-                value = tokens[token];
-                break;
-            }
-        }
-        bufferedReader.close();
-        return value;
-    }
-
+    /**
+     * Send login credentials to federated idp.
+     *
+     * @param client         - http client.
+     * @param sessionDataKey - sessionDataKey.
+     * @return - http response of the login request.
+     * @throws IOException - IOException.
+     */
     private HttpResponse sendLoginPost(HttpClient client, String sessionDataKey) throws IOException {
 
         List<NameValuePair> urlParameters = new ArrayList<>();
@@ -722,9 +845,17 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
         urlParameters.add(new BasicNameValuePair("password", FEDERATED_IS_TEST_PASSWORD));
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
 
-        return sendPostRequestWithParameters(client, urlParameters, FEDERATED_IS_IDP_CALLBACK_URL);
+        return sendPostRequestWithParameters(client, urlParameters, FEDERATED_IS_CALLBACK_URL);
     }
 
+    /**
+     * Make a get request to the given url.
+     *
+     * @param client      - http client.
+     * @param locationURL - url to make the request.
+     * @return - http response of the request.
+     * @throws IOException - IOException.
+     */
     private HttpResponse sendGetRequest(HttpClient client, String locationURL) throws IOException {
 
         HttpGet getRequest = new HttpGet(locationURL);
@@ -733,6 +864,32 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
         return client.execute(getRequest);
     }
 
+    /**
+     * Make a get request to the given url.
+     *
+     * @param client      - http client.
+     * @param locationURL - url to make the request.
+     * @return - http response of the request.
+     * @throws IOException - IOException.
+     */
+    private HttpResponse sendGetRequest(HttpClient client, String locationURL, String token) throws IOException {
+
+        HttpGet getRequest = new HttpGet(locationURL);
+        getRequest.addHeader("User-Agent", OAuth2Constant.USER_AGENT);
+        getRequest.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+        getRequest.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
+        return client.execute(getRequest);
+    }
+
+    /**
+     * Send a POST request with url parameters.
+     *
+     * @param client        - http client.
+     * @param urlParameters - url parameters list.
+     * @param url           - url to send the POST request.
+     * @return - http response of the request.
+     * @throws IOException - IOException.
+     */
     private HttpResponse sendPostRequestWithParameters(HttpClient client, List<NameValuePair> urlParameters, String url)
             throws IOException {
 
@@ -743,6 +900,12 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
         return client.execute(request);
     }
 
+    /**
+     * Replace existing deployment.toml file with a file containing the configs to enable the tenant qualified urls
+     * session.
+     *
+     * @throws Exception - Exception.
+     */
     private void changeISConfiguration() throws Exception {
 
         log.info("Replacing deployment.toml to enable tenant qualified url.");
