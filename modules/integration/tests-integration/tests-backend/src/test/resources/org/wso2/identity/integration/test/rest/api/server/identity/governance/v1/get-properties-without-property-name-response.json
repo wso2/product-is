@@ -11,6 +11,10 @@
         "value": "true"
       },
       {
+        "name": "SelfRegistration.SendConfirmationOnCreation",
+        "value": "false"
+      },
+      {
         "name": "SelfRegistration.Notification.InternallyManage",
         "value": "true"
       },
