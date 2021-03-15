@@ -92,6 +92,12 @@ public abstract class UserMgtServiceAbstractTestCase extends ISIntegrationTest {
 
         userMgtClient.addRole("umRole2", null, new String[]{"login"}, false);
         Assert.assertTrue(nameExists(userMgtClient.listRoles("umRole2", 100), "umRole2"), "Adding a user role has failed");
+        try {
+            userMgtClient.addRole("UMROLE2", null, new String[]{"login"}, false);
+        } catch (UserAdminUserAdminException e) {
+            Assert.assertFalse(nameExists(userMgtClient.listRoles("UMROLE2", 100), "UMROLE2"),
+                    "Incorrectly added UMROLE2 while umRole2 exists");
+        }
     }
 
     public void testDeleteRole() throws Exception {
