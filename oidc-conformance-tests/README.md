@@ -11,7 +11,7 @@ OIDC conformance test workflow can be used to for this purpose.
 6. Set 'Send test results to google chat' to 'yes' if you also want to send test summary to a pre-configured google chat group. (default is 'no')
 7. Click on Run workflow
 8. After tests are completed you can view test results on the test summary page
-9. Two types of artifacts are saved after the test is completed
+9. Two types of artifacts are saved after the test execution is completed
    - test-logs - a log file is generated for each test plan. This log contains a summary of test cases with failures and warnings
    - test-results - a zip file is generated for each test plan. You can use a web browser to view a detailed report of the test plan by extracting this zip file
 
