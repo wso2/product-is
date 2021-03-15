@@ -22,6 +22,12 @@
           "description": "Lock self registered user account until e-mail verification."
         },
         {
+          "name": "SelfRegistration.SendConfirmationOnCreation",
+          "value": "false",
+          "displayName": "Enable Account Confirmation On Creation",
+          "description": "Enable user account confirmation when the user account is not locked on creation"
+        },
+        {
           "name": "SelfRegistration.Notification.InternallyManage",
           "value": "true",
           "displayName": "Manage notifications sending internally",

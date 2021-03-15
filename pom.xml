@@ -2057,7 +2057,7 @@
         <carbon.consent.mgt.version>2.2.16</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.4.92</identity.governance.version>
+        <identity.governance.version>1.4.93</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.5.2</identity.carbon.auth.saml2.version>
@@ -2068,10 +2068,10 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.8.24</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.4.157</identity.inbound.auth.oauth.version>
-        <identity.inbound.auth.openid.version>5.6.0</identity.inbound.auth.openid.version>
+        <identity.inbound.auth.oauth.version>6.4.158</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.openid.version>5.6.1</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.6.8</identity.inbound.auth.sts.version>
-        <identity.inbound.provisioning.scim.version>5.6.3</identity.inbound.provisioning.scim.version>
+        <identity.inbound.provisioning.scim.version>5.6.4</identity.inbound.provisioning.scim.version>
         <identity.inbound.provisioning.scim2.version>1.5.70</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity workflow Versions -->
@@ -2120,13 +2120,13 @@
         <social.authenticator.yahoo.version>5.1.8</social.authenticator.yahoo.version>
 
         <!-- Provisioning connector Versions -->
-        <provisioning.connector.google.version>5.1.8</provisioning.connector.google.version>
+        <provisioning.connector.google.version>5.1.9</provisioning.connector.google.version>
         <provisioning.connector.salesforce.version>5.1.8</provisioning.connector.salesforce.version>
         <provisioning.connector.scim.version>5.2.4</provisioning.connector.scim.version>
 
         <!-- Local Authenticator Versions -->
         <identity.local.auth.basicauth.version>6.3.25</identity.local.auth.basicauth.version>
-        <identity.local.auth.fido.version>5.2.9</identity.local.auth.fido.version>
+        <identity.local.auth.fido.version>5.2.10</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.3.14</identity.local.auth.iwa.version>
 
         <!-- Local Authentication API Connector Version -->
@@ -2161,7 +2161,7 @@
         <carbon.identity.oauth.uma.version>1.2.7</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.2.71</identity.apps.version>
+        <identity.apps.version>1.2.74</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.3.31</charon.version>

@@ -117,7 +117,8 @@ public class OAuth2TokenRevocationWithMultipleSessionTerminationTestCase extends
 
     private void testLoginToSecondSession() throws Exception {
 
-        initiateAuthorizationRequest(httpClientForSecondSession, OAuth2Constant.OAUTH2_SCOPE_OPENID);
+        initiateAuthorizationRequest(httpClientForSecondSession, OAuth2Constant.OAUTH2_SCOPE_OPENID
+                + " " + "internal_login");
         authenticateUser(httpClientForSecondSession);
         String authzCode = performConsentApproval(httpClientForSecondSession);
         accessTokenInSecondSession = generateAuthzCodeAccessToken(authzCode, httpClientForSecondSession);
