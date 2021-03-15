@@ -20,10 +20,10 @@
 
     <!--Disabling since the WS-Trust functionality is provided as a connector and it does not exist in the product by default.-->
     <!--<test name="is-tests-default-configuration-sts" preserve-order="true" parallel="false" group-by-instances="true">-->
-    <!--&lt;!&ndash; Active sts test case needs to run before passive sts test case&ndash;&gt;-->
-    <!--<classes>-->
-    <!--<class name="org.wso2.identity.integration.test.sts.ActiveSTSTestCase"/>-->
-    <!--</classes>-->
+        <!--&lt;!&ndash; Active sts test case needs to run before passive sts test case&ndash;&gt;-->
+        <!--<classes>-->
+            <!--<class name="org.wso2.identity.integration.test.sts.ActiveSTSTestCase"/>-->
+        <!--</classes>-->
     <!--</test>-->
 
     <test name="is-tests-default-configuration" preserve-order="true" parallel="false" group-by-instances="true">
