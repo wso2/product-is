@@ -2057,7 +2057,7 @@
         <carbon.consent.mgt.version>2.2.16</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.4.93</identity.governance.version>
+        <identity.governance.version>1.4.94</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.5.2</identity.carbon.auth.saml2.version>
@@ -2157,7 +2157,6 @@
         <org.wso2.carbon.extension.identity.x509certificate.version>1.0.8</org.wso2.carbon.extension.identity.x509certificate.version>
         <conditional.authentication.functions.version>1.1.7-SNAPSHOT</conditional.authentication.functions.version>
         <org.wso2.carbon.extension.identity.x509certificate.version>1.0.9</org.wso2.carbon.extension.identity.x509certificate.version>
-<!--        <conditional.authentication.functions.version>1.1.6</conditional.authentication.functions.version>-->
         <carbon.identity.oauth.uma.version>1.2.7</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
