@@ -191,6 +191,7 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
         super.init();
         applicationManagementServiceClients = new HashMap<>();
         oAuthAdminClients = new HashMap<>();
+        serverConfigurationManager = new ServerConfigurationManager(isServer);
         tenantServiceClient = new TenantManagementServiceClient(isServer.getContextUrls().getBackEndUrl(),
                 sessionCookie);
         createTenants();
@@ -217,10 +218,10 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
     public void endTest() throws Exception {
 
         try {
+            removeServiceProviders();
             tenantServiceClient.deleteTenant(PRIMARY_TENANT_NAME);
             tenantServiceClient.deleteTenant(FEDERATED_TENANT_NAME);
             client.close();
-            removeServiceProviders();
             resetISConfiguration();
         } catch (Exception e) {
             log.error("Failure occured due to :" + e.getMessage(), e);
@@ -1007,7 +1008,6 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
         File defaultTomlFile = getDeploymentTomlFile(carbonHome);
         File configuredTomlFile = new File(getISResourceLocation() + File.separator + "oidc" +
                 File.separator + "tenant_qualified_paths_enabled.toml");
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartGracefully();
     }
@@ -1026,8 +1026,8 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
     private void removeServiceProviders()
             throws Exception {
 
-        applicationManagementServiceClients.get(PRIMARY_TENANT).deleteApplication(primSPClientID);
-        applicationManagementServiceClients.get(FEDERATED_TENANT).deleteApplication(fedSP_ClientID);
+        applicationManagementServiceClients.get(PRIMARY_TENANT).deleteApplication(PRIMARY_IS_SP_NAME);
+        applicationManagementServiceClients.get(FEDERATED_TENANT).deleteApplication(FEDERATED_IS_SP_NAME);
         identityProviderMgtServiceClient.deleteIdP(FEDERATED_IS_NAME);
         oAuthAdminClients.get(PRIMARY_TENANT).removeOAuthApplicationData(primSPClientID);
         oAuthAdminClients.get(FEDERATED_TENANT).removeOAuthApplicationData(fedSP_ClientID);
@@ -1046,5 +1046,4 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
         Assert.assertNotNull(location);
         return location.getValue();
     }
-
 }
