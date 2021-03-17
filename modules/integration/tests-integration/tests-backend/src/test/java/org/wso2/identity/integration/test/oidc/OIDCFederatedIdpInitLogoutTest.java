@@ -163,8 +163,6 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
     private String username;
     private String primaryIsk;
     private String federatedIsk;
-    private String primaryUserId;
-    private String federatedUserId;
     private String federatedSpSessionState;
     private CookieStore cookieStore;
     private CloseableHttpClient client;
@@ -224,7 +222,7 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
             client.close();
             resetISConfiguration();
         } catch (Exception e) {
-            log.error("Failure occured due to :" + e.getMessage(), e);
+            log.error("Failed to end test due to :" + e.getMessage(), e);
             throw e;
         }
     }
@@ -259,7 +257,6 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
         federatedIsk = (String) jwtClaimsSet.getClaim("isk");
         HttpResponse response = sendGetRequest(client, FEDERATED_ME_SESSIONS_ENDPOINT, federatedAccessToken);
         JSONObject jsonObject = (JSONObject) jsonParser.parse(response.getEntity().getContent());
-        federatedUserId = (String) jsonObject.get("userId");
         Assert.assertNotNull(jsonObject.get("sessions"), "No sessions found in the federated idp for the user.");
     }
 
@@ -285,7 +282,7 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
                 PRIMARY_IS_SP_CALLBACK_URL, PRIMARY_IS_TOKEN_ENDPOINT);
         primaryIdToken = tokens.getIDTokenString();
         String primaryAccessToken = tokens.getAccessToken().getValue();
-        Assert.assertNotNull(primaryIdToken, "ID token is null");
+        Assert.assertNotNull(primaryIdToken, "Primary sp Id token is null.");
         // Extract claims from id token.
         SignedJWT signedJWT = SignedJWT.parse(primaryIdToken);
         JWTClaimsSet jwtClaimsSet = signedJWT.getJWTClaimsSet();
@@ -315,20 +312,22 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
         logoutUrlParameters.add(new BasicNameValuePair("consent", "approve"));
         sendGetRequestWithParameters(httpClientWithoutAutoRedirections, logoutUrlParameters,
                 FEDERATED_IS_LOGOUT_ENDPOINT);
-        // Check for session existence in federaated idp.
+        // Check for session existence in federated idp.
         List<NameValuePair> sessionExtensionParams = new ArrayList<>();
         sessionExtensionParams.add(new BasicNameValuePair("idpSessionKey", federatedIsk));
         response = sendGetRequestWithParameters(client,
                 sessionExtensionParams, FEDERATED_IS_SESSIONS_EXTENSION_ENDPOINT);
         Assert.assertEquals(response.getStatusLine().getStatusCode(), FAILURE_STATUS_CODE,
                 "Logout failure in federated idp.");
-        // Check for session existence in primary idp
+        // Wait until back-channel logout is completed in primary idp.
+        Thread.sleep(5 * 1000);
+        // Check for session existence in primary idp.
         sessionExtensionParams = new ArrayList<>();
         sessionExtensionParams.add(new BasicNameValuePair("idpSessionKey", primaryIsk));
         response = sendGetRequestWithParameters(client,
                 sessionExtensionParams, PRIMARY_IS_SESSIONS_EXTENSION_ENDPOINT);
         Assert.assertEquals(response.getStatusLine().getStatusCode(), FAILURE_STATUS_CODE, "OIDC federated idp " +
-                "back-channel logout failed for the federated user in primary idp.");
+                "initiated back-channel logout failed for the federated user in primary idp.");
     }
 
     /**
@@ -376,7 +375,7 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
         HttpResponse response =
                 sendPostRequestWithParameters(client, urlParameters,
                         FEDERATED_IS_AUTHORIZE_ENDPOINT);
-        Assert.assertNotNull(response, "Authorization request failed. Authorized response is null");
+        Assert.assertNotNull(response, "Authorization request failed. Authorized response is null.");
         String locationValue = getLocationHeaderValue(response);
         EntityUtils.consume(response.getEntity());
         return locationValue;
@@ -399,10 +398,10 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
 
         Header locationHeader =
                 response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
-        Assert.assertNotNull(locationHeader, "Login response header is null");
+        Assert.assertNotNull(locationHeader, "Login response header is null.");
         EntityUtils.consume(response.getEntity());
 
-        // Request will return with a 302 to the authorize end point. Doing a GET will give the sessionDataKeyConsent
+        // Request will return with a 302 to the authorize end point. Doing a GET will give the sessionDataKeyConsent.
         HttpResponse response2 = sendGetRequest(httpClientWithoutAutoRedirections, locationHeader.getValue());
 
         String locationValue = getLocationHeaderValue(response2);
@@ -456,7 +455,7 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
             throws ClientProtocolException,
             IOException {
 
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("consent", "approve"));
         urlParameters.add(new BasicNameValuePair("sessionDataKeyConsent", sessionDataKeyConsent));
         return sendPostRequestWithParameters(client, urlParameters, authorizeEndpoint);
@@ -483,7 +482,7 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
         HttpResponse response =
                 sendPostRequestWithParameters(client, urlParameters,
                         PRIMARY_IS_CALLBACK_URL);
-        Assert.assertNotNull(response, "CommonAuth request to primary idp failed. CommonAuth response is null");
+        Assert.assertNotNull(response, "CommonAuth request to primary idp failed. CommonAuth response is null.");
         String locationValue = getLocationHeaderValue(response);
         EntityUtils.consume(response.getEntity());
         response = sendGetRequest(httpClientWithoutAutoRedirections, locationValue);
@@ -535,7 +534,6 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
         OIDCTokens oidcTokens = oidcTokenResponse.getOIDCTokens();
         Assert.assertNotNull(oidcTokens, "OIDC Tokens object is null.");
         return oidcTokens;
-
     }
 
     /**
@@ -578,9 +576,8 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
                 primaryTenantCookie));
         oAuthAdminClients.put(FEDERATED_TENANT, new OauthAdminClient(isServer.getContextUrls().getBackEndUrl(),
                 federatedTenantCookie));
-        usrMgtClient = new UserManagementClient(FEDERATED_IS_SERVICES_URI, "federatedAdmin" +
-                "@federated.com",
-                "password");
+        usrMgtClient =
+                new UserManagementClient(FEDERATED_IS_SERVICES_URI, "federatedAdmin" + "@federated.com", "password");
     }
 
     /**
@@ -613,7 +610,7 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
             }
         }
         Assert.assertTrue(success, "Failed to update PrimaryIS service provider with inbound OIDC configs in " +
-                "secondary IS");
+                "secondary IS.");
 
     }
 
@@ -650,11 +647,11 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
         identityProvider.setJustInTimeProvisioningConfig(jitConfig);
         identityProviderMgtServiceClient.addIdP(identityProvider);
         Assert.assertNotNull(identityProviderMgtServiceClient.getIdPByName(FEDERATED_IS_NAME), "Failed to " +
-                "create Identity Provider 'trustedIdP' in primary IS");
+                "create Identity Provider 'trustedIdP' in primary IS.");
     }
 
     /**
-     * Creates 'playground2' service provider in the primary idp.
+     * Creates 'application1' service provider in the primary idp.
      *
      * @throws Exception - Throw Exception if failed.
      */
@@ -700,12 +697,12 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
                 }
             }
         }
-        Assert.assertTrue(success, "Failed to update Playground2 service provider in primaryIS with inbound OIDC " +
-                "configs in ");
+        Assert.assertTrue(success, "Failed to update service provider in primaryIS with inbound OIDC " +
+                "configs.");
     }
 
     /**
-     * Create service provider, "travelocity" in the secondary idp.
+     * Create service provider, "application2" in the secondary idp.
      *
      * @throws Exception - Exception.
      */
@@ -733,7 +730,7 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
                 }
             }
         }
-        Assert.assertTrue(success, "Failed to update Playground2 service provider in primaryIS with inbound OIDC " +
+        Assert.assertTrue(success, "Failed to update service provider in FederatedIS with inbound OIDC " +
                 "configs in ");
     }
 
@@ -1012,6 +1009,11 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
         serverConfigurationManager.restartGracefully();
     }
 
+    /**
+     * Reset IS Configuration.
+     *
+     * @throws Exception
+     */
     private void resetISConfiguration() throws Exception {
 
         serverConfigurationManager.restoreToLastConfiguration(false);
