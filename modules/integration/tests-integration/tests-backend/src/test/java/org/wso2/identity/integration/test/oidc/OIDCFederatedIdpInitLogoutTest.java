@@ -38,6 +38,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
@@ -91,8 +92,6 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
     // Name of the primary Is configured in federated Is as a service provider.
     private static final String FEDERATED_IS_PRIMARY_SP_NAME = "PrimaryIS";
     // Primary idp related urls.
-    private static final String PRIMARY_IS_NAME = "PrimaryIS";
-    private static final String PRIMARY_IS_AUTHENTICATOR_NAME_OIDC = "OpenIDConnectAuthenticator";
     private static final String PRIMARY_IS_AUTHORIZE_ENDPOINT = "https://localhost:9853/t/primary" +
             ".com/oauth2/authorize";
     private static final String PRIMARY_IS_TOKEN_ENDPOINT = "https://localhost:9853/t/primary.com/oauth2/token";
@@ -100,31 +99,33 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
     //TODO: Enable endpoint in framework.
     private static final String PRIMARY_IS_BACK_CHANNEL_LOGOUT_ENDPOINT = "https://localhost:9853/t/primary" +
             ".com/identity/oidc/slo";
-    private static final String PRIMARY_IS_JWKS_URI = "https://localhost:9853/t/primary.com/oauth2/jwks";
     private static final String PRIMARY_IS_SESSIONS_EXTENSION_ENDPOINT =
             "https://localhost:9853/t/primary.com/identity/extend-session";
     // Federated idp related urls.
+    private static final String FEDERATED_IS_NAME = "FederatedIS";
+    private static final String FEDERATED_IS_AUTHENTICATOR_NAME_OIDC = "OpenIDConnectAuthenticator";
     private static final String FEDERATED_IS_AUTHORIZE_ENDPOINT = "https://localhost:9853/t/federated" +
             ".com/oauth2/authorize";
     private static final String FEDERATED_IS_CALLBACK_URL = "https://localhost:9853/t/federated.com/commonauth";
     private static final String FEDERATED_IS_TOKEN_ENDPOINT = "https://localhost:9853/t/federated.com/oauth2/token";
     private static final String FEDERATED_IS_LOGOUT_ENDPOINT = "https://localhost:9853/t/federated.com/oidc/logout";
     private static final String FEDERATED_IS_SERVICES_URI = "https://localhost:9853/t/federated.com/services/";
+    private static final String FEDERATED_IS_JWKS_URI = "https://localhost:9853/t/federated.com/oauth2/jwks";
     private static final String FEDERATED_ME_SESSIONS_ENDPOINT =
             "https://localhost:9853/t/federated.com/api/users/v1/me/sessions";
+    private static final String FEDERATED_IS_SESSIONS_EXTENSION_ENDPOINT =
+            "https://localhost:9853/t/federated.com/identity/extend-session";
 
     // Urls related to service provider configured in Primary IS.
-    private static final String PRIMARY_IS_SP_NAME = "playground2";
+    private static final String PRIMARY_IS_SP_NAME = "application1";
     private static final String PRIMARY_IS_SP_AUTHENTICATION_TYPE = "federated";
-    private static final String PRIMARY_IS_SP_CALLBACK_URL =
-            "http://localhost:8490/playground2/oauth2-authorize-user.jsp";
-    private static final String PRIMARY_IS_SP_BACK_CHANNEL_LOGOUT_URL = "http://localhost:8490/playground2/bclogout";
+    private static final String PRIMARY_IS_SP_CALLBACK_URL = "http://localhost/";
+    private static final String PRIMARY_IS_SP_BACK_CHANNEL_LOGOUT_URL = "http://localhost/";
 
     // Urls related to service provider configured in Federated IS.
-    private static final String FEDERATED_IS_SP_NAME = "travelocity";
-    private static final String FEDERATED_IS_SP_CALLBACK_URL = "http://localhost:8490/travelocity.com/home.jsp";
-    private static final String FEDERATED_IS_SP_BACK_CHANNEL_LOGOUT_URL =
-            "http://localhost:8490/travelocity.com/bclogout";
+    private static final String FEDERATED_IS_SP_NAME = "application2";
+    private static final String FEDERATED_IS_SP_CALLBACK_URL = "http://localhost/";
+    private static final String FEDERATED_IS_SP_BACK_CHANNEL_LOGOUT_URL = "http://localhost/";
 
     private static final String OIDC_APP_CLIENT_ID = "ClientID";
     private static final String OIDC_APP_CLIENT_SECRET = "ClientSecret";
@@ -144,6 +145,9 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
     private UserManagementClient usrMgtClient;
     private ServerConfigurationManager serverConfigurationManager;
     private final AutomationContext context;
+    // Usernames of the tenants.
+    private String PrimaryTenantUsername = "primaryAdmin@primary.com";
+    private String FederatedTenantUsername = "federatedAdmin@federated.com";
     // Client Id and Secret of primary Is service provider configured in federated idp.
     private String fedISClientID;
     private String fedISClientSecret;
@@ -182,8 +186,8 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void initTest() throws Exception {
 
-//        super.init();
-//        changeISConfiguration();
+        super.init();
+        changeISConfiguration();
         super.init();
         applicationManagementServiceClients = new HashMap<>();
         oAuthAdminClients = new HashMap<>();
@@ -193,9 +197,9 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
         backendURL = context.getContextUrls().getBackEndUrl();
         AuthenticatorClient logManger = new AuthenticatorClient(backendURL);
         String primaryTenantCookie = logManger
-                .login("primaryAdmin@primary.com", "password", isServer.getInstance().getHosts().get("default"));
+                .login(PrimaryTenantUsername, "password", isServer.getInstance().getHosts().get("default"));
         String federatedTenantCookie = logManger
-                .login("federatedAdmin@federated.com", "password", isServer.getInstance().getHosts().get("default"));
+                .login(FederatedTenantUsername, "password", isServer.getInstance().getHosts().get("default"));
         createServiceClients(primaryTenantCookie, federatedTenantCookie);
         createPrimaryServiceProviderInSecondaryTenant();
         createIdentityProviderInPrimaryTenant();
@@ -207,6 +211,21 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
                 .setDefaultCookieStore(cookieStore).build();
         Assert.assertTrue(addUserToSecondaryIS(), "Adding user to federated idp failed.");
         jsonParser = new JSONParser(JSONParser.MODE_JSON_SIMPLE);
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void endTest() throws Exception {
+
+        try {
+            tenantServiceClient.deleteTenant(PRIMARY_TENANT_NAME);
+            tenantServiceClient.deleteTenant(FEDERATED_TENANT_NAME);
+            client.close();
+            removeServiceProviders();
+            resetISConfiguration();
+        } catch (Exception e) {
+            log.error("Failure occured due to :" + e.getMessage(), e);
+            throw e;
+        }
     }
 
     @Test(alwaysRun = true, groups = "wso2.is", description = "Testing federated idp login.")
@@ -283,20 +302,27 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
             "testPrimaryLogin")
     private void testFederatedIdpInitLogout() throws Exception {
 
+        // Do logout in federated idp.
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("post_logout_redirect_uri", FEDERATED_IS_SP_CALLBACK_URL));
         urlParameters.add(new BasicNameValuePair("id_token_hint", federatedIdToken));
         urlParameters.add(new BasicNameValuePair("session_state", federatedSpSessionState));
-
-        HttpResponse response = sendGetRequestWithParameters(httpClientWithoutAutoRedirections, urlParameters,
+        HttpResponse response;
+        sendGetRequestWithParameters(httpClientWithoutAutoRedirections, urlParameters,
                 FEDERATED_IS_LOGOUT_ENDPOINT);
         List<NameValuePair> logoutUrlParameters = new ArrayList<>();
         logoutUrlParameters.add(new BasicNameValuePair("consent", "approve"));
-        response = sendGetRequestWithParameters(httpClientWithoutAutoRedirections, logoutUrlParameters,
+        sendGetRequestWithParameters(httpClientWithoutAutoRedirections, logoutUrlParameters,
                 FEDERATED_IS_LOGOUT_ENDPOINT);
-        String redirectUrl = "http://localhost:8490/travelocity.com/home.jsp?sp=travelocity";
-        Assert.assertEquals(getLocationHeaderValue(response), redirectUrl, "Logout failure in federated idp.");
+        // Check for session existence in federaated idp.
         List<NameValuePair> sessionExtensionParams = new ArrayList<>();
+        sessionExtensionParams.add(new BasicNameValuePair("idpSessionKey", federatedIsk));
+        response = sendGetRequestWithParameters(client,
+                sessionExtensionParams, FEDERATED_IS_SESSIONS_EXTENSION_ENDPOINT);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), FAILURE_STATUS_CODE,
+                "Logout failure in federated idp.");
+        // Check for session existence in primary idp
+        sessionExtensionParams = new ArrayList<>();
         sessionExtensionParams.add(new BasicNameValuePair("idpSessionKey", primaryIsk));
         response = sendGetRequestWithParameters(client,
                 sessionExtensionParams, PRIMARY_IS_SESSIONS_EXTENSION_ENDPOINT);
@@ -598,16 +624,20 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
     private void createIdentityProviderInPrimaryTenant() throws Exception {
 
         IdentityProvider identityProvider = new IdentityProvider();
-        identityProvider.setIdentityProviderName(PRIMARY_IS_NAME);
+        identityProvider.setIdentityProviderName(FEDERATED_IS_NAME);
+
         // Set JWKS Uri to identity provider.
-        IdentityProviderProperty property = new IdentityProviderProperty();
-        property.setName("jwksUri");
-        property.setValue(PRIMARY_IS_JWKS_URI);
-        IdentityProviderProperty[] properties = {property};
+        IdentityProviderProperty jwksUriProperty = new IdentityProviderProperty();
+        jwksUriProperty.setName("jwksUri");
+        jwksUriProperty.setValue(FEDERATED_IS_JWKS_URI);
+        IdentityProviderProperty issuerProperty = new IdentityProviderProperty();
+        issuerProperty.setName("idpIssuerName");
+        issuerProperty.setValue(FEDERATED_IS_TOKEN_ENDPOINT);
+        IdentityProviderProperty[] properties = {jwksUriProperty, issuerProperty};
         identityProvider.setIdpProperties(properties);
         // Set federated auth configs.
         FederatedAuthenticatorConfig oidcAuthnConfig = new FederatedAuthenticatorConfig();
-        oidcAuthnConfig.setName(PRIMARY_IS_AUTHENTICATOR_NAME_OIDC);
+        oidcAuthnConfig.setName(FEDERATED_IS_AUTHENTICATOR_NAME_OIDC);
         oidcAuthnConfig.setDisplayName("openidconnect");
         oidcAuthnConfig.setEnabled(true);
         oidcAuthnConfig.setProperties(getOIDCAuthnConfigProperties());
@@ -618,7 +648,7 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
         jitConfig.setProvisioningUserStore("PRIMARY");
         identityProvider.setJustInTimeProvisioningConfig(jitConfig);
         identityProviderMgtServiceClient.addIdP(identityProvider);
-        Assert.assertNotNull(identityProviderMgtServiceClient.getIdPByName(PRIMARY_IS_NAME), "Failed to " +
+        Assert.assertNotNull(identityProviderMgtServiceClient.getIdPByName(FEDERATED_IS_NAME), "Failed to " +
                 "create Identity Provider 'trustedIdP' in primary IS");
     }
 
@@ -638,10 +668,10 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
         AuthenticationStep authStep = new AuthenticationStep();
         org.wso2.carbon.identity.application.common.model.xsd.IdentityProvider idP = new org.wso2.carbon.identity.
                 application.common.model.xsd.IdentityProvider();
-        idP.setIdentityProviderName(PRIMARY_IS_NAME);
+        idP.setIdentityProviderName(FEDERATED_IS_NAME);
         org.wso2.carbon.identity.application.common.model.xsd.FederatedAuthenticatorConfig oidcAuthnConfig = new
                 org.wso2.carbon.identity.application.common.model.xsd.FederatedAuthenticatorConfig();
-        oidcAuthnConfig.setName(PRIMARY_IS_AUTHENTICATOR_NAME_OIDC);
+        oidcAuthnConfig.setName(FEDERATED_IS_AUTHENTICATOR_NAME_OIDC);
         oidcAuthnConfig.setDisplayName("openidconnect");
         idP.setFederatedAuthenticatorConfigs(new org.wso2.carbon.identity.application.common.model.xsd.
                 FederatedAuthenticatorConfig[]{oidcAuthnConfig});
@@ -980,6 +1010,28 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
         serverConfigurationManager = new ServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartGracefully();
+    }
+
+    private void resetISConfiguration() throws Exception {
+
+        serverConfigurationManager.restoreToLastConfiguration(false);
+    }
+
+    /**
+     * Create service clients for the tenants.
+     *
+     * @throws XPathExpressionException - Exception if failed.
+     * @throws RemoteException          - Exception if failed.
+     */
+    private void removeServiceProviders()
+            throws Exception {
+
+        applicationManagementServiceClients.get(PRIMARY_TENANT).deleteApplication(primSPClientID);
+        applicationManagementServiceClients.get(FEDERATED_TENANT).deleteApplication(fedSP_ClientID);
+        identityProviderMgtServiceClient.deleteIdP(FEDERATED_IS_NAME);
+        oAuthAdminClients.get(PRIMARY_TENANT).removeOAuthApplicationData(primSPClientID);
+        oAuthAdminClients.get(FEDERATED_TENANT).removeOAuthApplicationData(fedSP_ClientID);
+        usrMgtClient.deleteUser(FEDERATED_IS_TEST_USERNAME);
     }
 
     /**
