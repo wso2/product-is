@@ -14,8 +14,6 @@ import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.openid.connect.sdk.OIDCTokenResponse;
 import com.nimbusds.openid.connect.sdk.OIDCTokenResponseParser;
 import com.nimbusds.openid.connect.sdk.token.OIDCTokens;
-import io.restassured.http.ContentType;
-import io.restassured.response.Response;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import org.apache.axis2.context.ConfigurationContext;
@@ -26,7 +24,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
@@ -34,6 +31,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -46,6 +44,7 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProviderProperty;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.FederatedAuthenticatorConfig;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.JustInTimeProvisioningConfig;
@@ -79,9 +78,6 @@ import java.util.Map;
 
 import javax.xml.xpath.XPathExpressionException;
 
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.notNullValue;
-
 public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
 
     protected Log log = LogFactory.getLog(OIDCFederatedIdpInitLogoutTest.class);
@@ -104,8 +100,9 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
     //TODO: Enable endpoint in framework.
     private static final String PRIMARY_IS_BACK_CHANNEL_LOGOUT_ENDPOINT = "https://localhost:9853/t/primary" +
             ".com/identity/oidc/slo";
-    private static final String PRIMARY_ME_SESSIONS_ENDPOINT =
-            "https://localhost:9853/t/primary.com/api/users/v1/me/sessions";
+    private static final String PRIMARY_IS_JWKS_URI = "https://localhost:9853/t/primary.com/oauth2/jwks";
+    private static final String PRIMARY_IS_SESSIONS_EXTENSION_ENDPOINT =
+            "https://localhost:9853/t/primary.com/identity/extend-session";
     // Federated idp related urls.
     private static final String FEDERATED_IS_AUTHORIZE_ENDPOINT = "https://localhost:9853/t/federated" +
             ".com/oauth2/authorize";
@@ -137,6 +134,9 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
     private static final String FEDERATED_IS_TEST_PASSWORD = "testFederatePassword";
     private static final String FEDERATED_IS_TEST_USER_ROLES = "admin";
 
+    private static final int SUCCESS_STATUS_CODE = 200;
+    private static final int FAILURE_STATUS_CODE = 400;
+
     private Map<Integer, ApplicationManagementServiceClient> applicationManagementServiceClients;
     private Map<Integer, OauthAdminClient> oAuthAdminClients;
     private IdentityProviderMgtServiceClient identityProviderMgtServiceClient;
@@ -154,11 +154,14 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
     private String fedSP_ClientID;
     private String fedSP_ClientSecret;
     // Data related to the login flow.
+    private String primaryIdToken;
+    private String federatedIdToken;
     private String username;
     private String primaryIsk;
     private String federatedIsk;
     private String primaryUserId;
     private String federatedUserId;
+    private String federatedSpSessionState;
     private CookieStore cookieStore;
     private CloseableHttpClient client;
     private HttpClient httpClientWithoutAutoRedirections;
@@ -179,8 +182,9 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void initTest() throws Exception {
 
-        super.init();
+//        super.init();
 //        changeISConfiguration();
+        super.init();
         applicationManagementServiceClients = new HashMap<>();
         oAuthAdminClients = new HashMap<>();
         tenantServiceClient = new TenantManagementServiceClient(isServer.getContextUrls().getBackEndUrl(),
@@ -225,17 +229,18 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
         // Get the id token from the federated idp.
         OIDCTokens tokens = getIdTokenFromIdp(authorizationCode, fedSP_ClientID, fedSP_ClientSecret,
                 FEDERATED_IS_SP_CALLBACK_URL, FEDERATED_IS_TOKEN_ENDPOINT);
-        String idToken = tokens.getIDTokenString();
+        federatedIdToken = tokens.getIDTokenString();
         String federatedAccessToken = tokens.getAccessToken().getValue();
-        Assert.assertNotNull(idToken, "ID token is null");
+        Assert.assertNotNull(federatedIdToken, "ID token is null");
         // Extract the claims from id token.
-        SignedJWT signedJWT = SignedJWT.parse(idToken);
+        SignedJWT signedJWT = SignedJWT.parse(federatedIdToken);
         JWTClaimsSet jwtClaimsSet = signedJWT.getJWTClaimsSet();
         username = jwtClaimsSet.getSubject();
         federatedIsk = (String) jwtClaimsSet.getClaim("isk");
         HttpResponse response = sendGetRequest(client, FEDERATED_ME_SESSIONS_ENDPOINT, federatedAccessToken);
         JSONObject jsonObject = (JSONObject) jsonParser.parse(response.getEntity().getContent());
         federatedUserId = (String) jsonObject.get("userId");
+        Assert.assertNotNull(jsonObject.get("sessions"), "No sessions found in the federated idp for the user.");
     }
 
     @Test(alwaysRun = true, groups = "wso2.is", description = "Testing primary idp login.", dependsOnMethods = "testFederatedLogin")
@@ -258,17 +263,45 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
         // Get the id token from the primary is.
         OIDCTokens tokens = getIdTokenFromIdp(authorizationCode, primSPClientID, primSPClientSecret,
                 PRIMARY_IS_SP_CALLBACK_URL, PRIMARY_IS_TOKEN_ENDPOINT);
-        String idToken = tokens.getIDTokenString();
+        primaryIdToken = tokens.getIDTokenString();
         String primaryAccessToken = tokens.getAccessToken().getValue();
-        Assert.assertNotNull(idToken, "ID token is null");
+        Assert.assertNotNull(primaryIdToken, "ID token is null");
         // Extract claims from id token.
-        SignedJWT signedJWT = SignedJWT.parse(idToken);
+        SignedJWT signedJWT = SignedJWT.parse(primaryIdToken);
         JWTClaimsSet jwtClaimsSet = signedJWT.getJWTClaimsSet();
         primaryIsk = (String) jwtClaimsSet.getClaim("isk");
         // Get the userId of the user.
-        HttpResponse response = sendGetRequest(client, PRIMARY_ME_SESSIONS_ENDPOINT, primaryAccessToken);
-        JSONObject jsonObject = (JSONObject) jsonParser.parse(response.getEntity().getContent());
-        primaryUserId = (String) jsonObject.get("userId");
+        List<NameValuePair> sessionExtensionParams = new ArrayList<>();
+        sessionExtensionParams.add(new BasicNameValuePair("idpSessionKey", primaryIsk));
+        HttpResponse response = sendGetRequestWithParameters(client,
+                sessionExtensionParams, PRIMARY_IS_SESSIONS_EXTENSION_ENDPOINT);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), SUCCESS_STATUS_CODE, "Session doesn't exists " +
+                "for the federated user in the primary idp.");
+    }
+
+    @Test(alwaysRun = true, groups = "wso2.is", description = "Testing federated idp init logout.", dependsOnMethods =
+            "testPrimaryLogin")
+    private void testFederatedIdpInitLogout() throws Exception {
+
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair("post_logout_redirect_uri", FEDERATED_IS_SP_CALLBACK_URL));
+        urlParameters.add(new BasicNameValuePair("id_token_hint", federatedIdToken));
+        urlParameters.add(new BasicNameValuePair("session_state", federatedSpSessionState));
+
+        HttpResponse response = sendGetRequestWithParameters(httpClientWithoutAutoRedirections, urlParameters,
+                FEDERATED_IS_LOGOUT_ENDPOINT);
+        List<NameValuePair> logoutUrlParameters = new ArrayList<>();
+        logoutUrlParameters.add(new BasicNameValuePair("consent", "approve"));
+        response = sendGetRequestWithParameters(httpClientWithoutAutoRedirections, logoutUrlParameters,
+                FEDERATED_IS_LOGOUT_ENDPOINT);
+        String redirectUrl = "http://localhost:8490/travelocity.com/home.jsp?sp=travelocity";
+        Assert.assertEquals(getLocationHeaderValue(response), redirectUrl, "Logout failure in federated idp.");
+        List<NameValuePair> sessionExtensionParams = new ArrayList<>();
+        sessionExtensionParams.add(new BasicNameValuePair("idpSessionKey", primaryIsk));
+        response = sendGetRequestWithParameters(client,
+                sessionExtensionParams, PRIMARY_IS_SESSIONS_EXTENSION_ENDPOINT);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), FAILURE_STATUS_CODE, "OIDC federated idp " +
+                "back-channel logout failed for the federated user in primary idp.");
     }
 
     /**
@@ -375,6 +408,9 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
         Assert.assertTrue(locationValue.contains(OAuth2Constant.AUTHORIZATION_CODE_NAME),
                 "Authorization code not found in the response.");
         EntityUtils.consume(response.getEntity());
+        federatedSpSessionState = DataExtractUtil.getParamFromURIString(locationValue,
+                "session_state");
+
         // Extract authorization code from the location value.
         return new AuthorizationCode(DataExtractUtil.getParamFromURIString(locationValue,
                 OAuth2Constant.AUTHORIZATION_CODE_NAME));
@@ -563,6 +599,13 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
 
         IdentityProvider identityProvider = new IdentityProvider();
         identityProvider.setIdentityProviderName(PRIMARY_IS_NAME);
+        // Set JWKS Uri to identity provider.
+        IdentityProviderProperty property = new IdentityProviderProperty();
+        property.setName("jwksUri");
+        property.setValue(PRIMARY_IS_JWKS_URI);
+        IdentityProviderProperty[] properties = {property};
+        identityProvider.setIdpProperties(properties);
+        // Set federated auth configs.
         FederatedAuthenticatorConfig oidcAuthnConfig = new FederatedAuthenticatorConfig();
         oidcAuthnConfig.setName(PRIMARY_IS_AUTHENTICATOR_NAME_OIDC);
         oidcAuthnConfig.setDisplayName("openidconnect");
@@ -879,6 +922,27 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
         getRequest.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
         getRequest.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token);
         return client.execute(getRequest);
+    }
+
+    /**
+     * Send a GET request with url parameters.
+     *
+     * @param client        - http client.
+     * @param urlParameters - url parameters list.
+     * @param url           - url to send the POST request.
+     * @return - http response of the request.
+     * @throws IOException - IOException.
+     */
+    private HttpResponse sendGetRequestWithParameters(HttpClient client, List<NameValuePair> urlParameters, String url)
+            throws IOException, URISyntaxException {
+
+        HttpGet request = new HttpGet(url);
+        request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
+        URI uri = new URIBuilder(request.getURI())
+                .addParameters(urlParameters)
+                .build();
+        request.setURI(uri);
+        return client.execute(request);
     }
 
     /**
