@@ -477,6 +477,18 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.developer:org.wso2.carbon.identity.developer.language-server.feature:${org.wso2.carbon.identity.developer.version}
                                 </featureArtifactDef>
+                                <!-- Unique Claim Management feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.unique.claim.mgt.server.feature:${carbon.identity.framework.version}
+                                </featureArtifactDef>
+                                <!-- Multi Attribute Login feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.multi.attribute.login.mgt.server.feature:${carbon.identity.framework.version}
+                                </featureArtifactDef>
+                                <!-- Multi Attribute Login (osgi service impl)feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.governance:org.wso2.carbon.identity.multi.attribute.login.server.feature:${identity.governance.version}
+                                </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
