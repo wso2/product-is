@@ -138,6 +138,8 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
     private static final int SUCCESS_STATUS_CODE = 200;
     private static final int FAILURE_STATUS_CODE = 400;
 
+    private static final String ISK_CLAIM = "isk";
+
     private Map<Integer, ApplicationManagementServiceClient> applicationManagementServiceClients;
     private Map<Integer, OauthAdminClient> oAuthAdminClients;
     private IdentityProviderMgtServiceClient identityProviderMgtServiceClient;
@@ -254,7 +256,7 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
         SignedJWT signedJWT = SignedJWT.parse(federatedIdToken);
         JWTClaimsSet jwtClaimsSet = signedJWT.getJWTClaimsSet();
         username = jwtClaimsSet.getSubject();
-        federatedIsk = (String) jwtClaimsSet.getClaim("isk");
+        federatedIsk = (String) jwtClaimsSet.getClaim(ISK_CLAIM);
         HttpResponse response = sendGetRequest(client, FEDERATED_ME_SESSIONS_ENDPOINT, federatedAccessToken);
         JSONObject jsonObject = (JSONObject) jsonParser.parse(response.getEntity().getContent());
         Assert.assertNotNull(jsonObject.get("sessions"), "No sessions found in the federated idp for the user.");
@@ -286,7 +288,7 @@ public class OIDCFederatedIdpInitLogoutTest extends ISIntegrationTest {
         // Extract claims from id token.
         SignedJWT signedJWT = SignedJWT.parse(primaryIdToken);
         JWTClaimsSet jwtClaimsSet = signedJWT.getJWTClaimsSet();
-        primaryIsk = (String) jwtClaimsSet.getClaim("isk");
+        primaryIsk = (String) jwtClaimsSet.getClaim(ISK_CLAIM);
         // Get the userId of the user.
         List<NameValuePair> sessionExtensionParams = new ArrayList<>();
         sessionExtensionParams.add(new BasicNameValuePair("idpSessionKey", primaryIsk));
