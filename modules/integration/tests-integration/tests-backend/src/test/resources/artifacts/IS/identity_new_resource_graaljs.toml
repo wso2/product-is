@@ -36,5 +36,6 @@ context = "(.*)/sample-auth/(.*)"
 secure = false
 http_method = "all"
 
+#configuration to add graaljs as Authentication Script Executor
 [authentication.adaptive]
 script_engine= "graaljs"

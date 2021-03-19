@@ -31,5 +31,4 @@ public class GraalJsScriptEngineInitializerTestCase extends ISIntegrationTest {
         super.init();
         scm.restoreToLastConfiguration(false);
     }
-
 }

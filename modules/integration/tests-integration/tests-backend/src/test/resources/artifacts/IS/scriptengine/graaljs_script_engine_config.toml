@@ -1,6 +1,3 @@
-[authentication.adaptive]
-script_engine= "graaljs"
-
 [server]
 hostname = "localhost"
 node_ip = "127.0.0.1"
@@ -44,6 +41,10 @@ hash= "66cd9688a2ae068244ea01e70f0e230f5623b7fa4cdecb65070a09ec06452262"
 
 [identity.auth_framework.endpoint]
 app_password= "dashboard"
+
+#configuration to add graaljs as Authentication Script Executor
+[authentication.adaptive]
+script_engine= "graaljs"
 
 # The KeyStore which is used for encrypting/decrypting internal data. By default the primary keystore is used as the internal keystore.
 
