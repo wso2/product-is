@@ -14,10 +14,14 @@ on:
         description: 'product-is tag name'
         required: true
         default: 'v5.12.0-m6'
-      send-notification:
-        description: 'send google chat notification'
+      send-email:
+        description: 'Send test results to email'
         required: true
-        default: true
+        default: 'no'
+      send-chat:
+        description: 'Send test results to google chat'
+        required: true
+        default: 'no'
 
 jobs:
   build:
@@ -35,8 +39,8 @@ jobs:
     
     - name: Setup Python
       run: |
-        sudo pip3 install --upgrade pip setuptools wheel
-        sudo pip3 install psutil
+        pip3 install --upgrade pip setuptools wheel
+        pip3 install psutil
         
     - name: Download IS zip
       run: |
@@ -69,7 +73,7 @@ jobs:
       run: |
         PRODUCT_IS_ZIP=$(find ./ -name wso2is* -type f -printf "%f\n")
         cd ./product-is/oidc-conformance-tests
-        sudo python3 ./configure_is.py ../../$PRODUCT_IS_ZIP
+        python3 ./configure_is.py ../../$PRODUCT_IS_ZIP
         
     - name: Run Conformance Suite
       run: |
@@ -80,10 +84,30 @@ jobs:
         echo "Host ip: " 
         printenv IP
         mvn clean package
-        sudo -E python3 ../product-is/oidc-conformance-tests/start_conformance_suite.py $DOCKER_COMPOSE_FILE
+        python3 ../product-is/oidc-conformance-tests/start_conformance_suite.py $DOCKER_COMPOSE_FILE
         
     - name: Run Tests
-      run: sudo bash ./product-is/oidc-conformance-tests/test_runner.sh 
+      run: bash ./product-is/oidc-conformance-tests/test_runner.sh
+      
+    - name: Test Results
+      run: |
+        IS_SUCCESSFUL=false
+        if python3 ./product-is/oidc-conformance-tests/export_results.py https://localhost:8443
+        then
+          IS_SUCCESSFUL=true
+        fi
+        if $IS_SUCCESSFUL
+        then
+          echo "======================"
+          echo "All Test Cases Passed!"
+          echo "======================"
+          exit 0
+        else      
+          echo "============================================="
+          echo "Failed Test Cases Found. Exiting with Failure"
+          echo "============================================="
+          exit 1
+        fi
       
     - name: Archive test results
       uses: actions/upload-artifact@v2
@@ -99,28 +123,54 @@ jobs:
         name: test-logs
         path: ./*log.txt
     
-    - name: Send Email Notification
+    - name: Send Email
       if: always()
       run: |
-        INPUT=${{github.event.inputs.send-notification}}
+        INPUT=${{github.event.inputs.send-email}}
         if [[ -z "${INPUT}" ]]; then
-          INPUT="true"
+          INPUT="no"
         fi
-        SEND_NOTIFICATION=${INPUT^^}
-        if [ $SEND_NOTIFICATION == "TRUE" ]; then
+        SEND_EMAIL=${INPUT^^}
+        if [ $SEND_EMAIL == "YES" ]; then
+          echo "============="
+          echo "Sending Email"
+          echo "============="
           CONFORMANCE_SUITE_URL=https://localhost:8443
-          sudo python3 ./product-is/oidc-conformance-tests/send_notification.py $CONFORMANCE_SUITE_URL $GITHUB_RUN_NUMBER ${{job.status}} ${{github.repository}} ${{github.run_id}} ${{secrets.SENDER_EMAIL}} ${{secrets.PASSWORD}} ${{secrets.RECEIVER_LIST}}
-        elif [ $SEND_NOTIFICATION == "FALSE" ]; then
+          python3 ./product-is/oidc-conformance-tests/send_email.py $CONFORMANCE_SUITE_URL $GITHUB_RUN_NUMBER ${{job.status}} ${{github.repository}} ${{github.run_id}} ${{secrets.SENDER_EMAIL}} ${{secrets.PASSWORD}} ${{secrets.RECEIVER_LIST}}
+        elif [ $SEND_EMAIL == "NO" ]; then
           echo "========================================"
-          echo "Skipped sending google chat notification"
+          echo "Skipped Sending Email"
           echo "========================================"
         else
           echo "================================================================="
-          echo "Invalid parameter value. Skipped sending google chat notification"
+          echo "Invalid parameter value. Skipped sending email"
+          echo "================================================================="
+        fi
+        
+    - name: Send Chat message
+      if: always()
+      run: |
+        INPUT=${{github.event.inputs.send-chat}}
+        if [[ -z "${INPUT}" ]]; then
+          INPUT="no"
+        fi
+        SEND_CHAT=${INPUT^^}
+        if [ $SEND_CHAT == "YES" ]; then
+          echo "==========================="
+          echo "Sending Google Chat Message"
+          echo "==========================="
+          CONFORMANCE_SUITE_URL=https://localhost:8443
+          python3 ./product-is/oidc-conformance-tests/send_chat.py $CONFORMANCE_SUITE_URL $GITHUB_RUN_NUMBER ${{job.status}} ${{github.repository}} ${{github.run_id}} ${{secrets.GOOGLE_WEBHOOK}}
+        elif [ $SEND_CHAT == "NO" ]; then
+          echo "========================================"
+          echo "Skipped Sending Google Chat Message"
+          echo "========================================"
+        else
+          echo "================================================================="
+          echo "Invalid parameter value. Skipped sending google chat message"
           echo "================================================================="
         fi
        
    
     
-
 

@@ -223,6 +223,16 @@ public class ApplicationManagementFailureTest extends ApplicationManagementBaseT
 
     }
 
+    @Test(description = "Tests whether the allowed CORS origins are validated during application creation.")
+    public void testCreateApplicationsWithInvalidAllowedOrigins() throws Exception {
+
+        // Payload with an invalid URI: https//localhost.com, the colon is missing.
+        String payload = readResource("create-oauth-app-with-invalid-allowed-origins.json");
+        Response createAppResponse = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, payload);
+
+        validateErrorResponse(createAppResponse, HttpStatus.SC_BAD_REQUEST, "APP-60001");
+    }
+
     private String getApplicationId(Response createFirstAppResponse) {
 
         String location = createFirstAppResponse.getHeader(HttpHeaders.LOCATION);

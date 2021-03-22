@@ -28,7 +28,7 @@
     <artifactId>identity-server-parent</artifactId>
     <packaging>pom</packaging>
     <description>WSO2 Identity Server</description>
-    <version>5.12.0-m13-SNAPSHOT</version>
+    <version>5.12.0-m14-SNAPSHOT</version>
     <name>WSO2 Identity Server</name>
     <url>http://wso2.org/projects/identity</url>
 
@@ -2052,7 +2052,7 @@
         <carbon.consent.mgt.version>2.2.16</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.4.94</identity.governance.version>
+        <identity.governance.version>1.4.95</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.5.2</identity.carbon.auth.saml2.version>
@@ -2063,7 +2063,7 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.8.24</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.4.159</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.4.163</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.6.1</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.6.8</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.6.4</identity.inbound.provisioning.scim.version>
@@ -2090,7 +2090,7 @@
 
         <!-- Identity Event Handler Versions -->
         <identity.event.handler.account.lock.version>1.4.19</identity.event.handler.account.lock.version>
-        <identity.event.handler.notification.version>1.3.16</identity.event.handler.notification.version>
+        <identity.event.handler.notification.version>1.3.17</identity.event.handler.notification.version>
 
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
@@ -2102,7 +2102,7 @@
         <callhome.version>4.5.x_1.0.8</callhome.version>
 
         <!-- Authenticator Versions -->
-        <identity.outbound.auth.oidc.version>5.6.4</identity.outbound.auth.oidc.version>
+        <identity.outbound.auth.oidc.version>5.6.5</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.passive.sts.version>5.4.4</identity.outbound.auth.passive.sts.version>
         <identity.outbound.auth.samlsso.version>5.3.22</identity.outbound.auth.samlsso.version>
         <identity.outbound.auth.requestpath.basicauth.version>5.4.1</identity.outbound.auth.requestpath.basicauth.version>
@@ -2134,7 +2134,7 @@
         <identity.metadata.saml.version>1.4.3</identity.metadata.saml.version>
 
         <!-- Connector Versions -->
-        <authenticator.totp.version>3.0.4</authenticator.totp.version>
+        <authenticator.totp.version>3.0.5</authenticator.totp.version>
         <authenticator.office365.version>2.0.3</authenticator.office365.version>
         <authenticator.smsotp.version>3.0.13</authenticator.smsotp.version>
         <authenticator.emailotp.version>4.0.0</authenticator.emailotp.version>
@@ -2149,12 +2149,12 @@
         <identity.tool.samlsso.validator.version>5.4.3</identity.tool.samlsso.validator.version>
         <identity.app.authz.xacml.version>2.2.2</identity.app.authz.xacml.version>
         <identity.oauth.addons.version>2.3.5</identity.oauth.addons.version>
-        <org.wso2.carbon.extension.identity.x509certificate.version>1.0.9</org.wso2.carbon.extension.identity.x509certificate.version>
+        <org.wso2.carbon.extension.identity.x509certificate.version>1.0.10</org.wso2.carbon.extension.identity.x509certificate.version>
         <conditional.authentication.functions.version>1.1.6</conditional.authentication.functions.version>
         <carbon.identity.oauth.uma.version>1.2.7</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.2.76</identity.apps.version>
+        <identity.apps.version>1.2.93</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.3.31</charon.version>
@@ -2163,12 +2163,12 @@
         <carbon.kernel.version>4.6.2-m7</carbon.kernel.version>
 
         <!-- Carbon Repo Versions -->
-        <carbon.deployment.version>4.12.1</carbon.deployment.version>
+        <carbon.deployment.version>4.12.2</carbon.deployment.version>
         <carbon.commons.version>4.7.35</carbon.commons.version>
         <carbon.registry.version>4.7.33</carbon.registry.version>
         <carbon.multitenancy.version>4.9.10</carbon.multitenancy.version>
         <carbon.metrics.version>1.3.7</carbon.metrics.version>
-        <carbon.business-process.version>4.5.37</carbon.business-process.version>
+        <carbon.business-process.version>4.5.40</carbon.business-process.version>
         <carbon.analytics-common.version>5.2.27</carbon.analytics-common.version>
         <carbon.dashboards.version>2.0.26</carbon.dashboards.version>
         <carbon.database.utils.version>2.0.13</carbon.database.utils.version>

@@ -71,7 +71,7 @@
                       [
                         "wait",
                         "contains",
-                        "oauth2_consent",
+                        "test/callback",
                         10
                       ]
                     ]

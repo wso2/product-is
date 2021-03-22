@@ -60,6 +60,7 @@
                 {
                     "task": "Verify authorize",
                     "match": "https://localhost:9443/oauth2/authorize*",
+                    "optional": true,
                     "commands": [
                         [
                             "wait",
@@ -200,6 +201,29 @@
                         {
                             "task": "Verify error page",
                             "match": "https://localhost:9443/authenticationendpoint/oauth2_error.do*",
+                            "commands": [
+                                [
+                                    "wait",
+                                    "xpath",
+                                    "//*",
+                                    10,
+                                    "Identity Server",
+                                    "update-image-placeholder"
+                                ]
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "oidcc-ensure-request-without-nonce-fails": {
+            "browser": [
+                {
+                    "match": "https://localhost:9443/oauth2/authorize*",
+                    "tasks": [
+                        {
+                            "task": "Verify error page",
+                            "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback*",
                             "commands": [
                                 [
                                     "wait",
@@ -412,6 +436,7 @@
                         {
                             "task": "Verify authorize",
                             "match": "https://localhost:9443/oauth2/authorize*",
+                            "optional": true,
                             "commands": [
                                 [
                                     "wait",
