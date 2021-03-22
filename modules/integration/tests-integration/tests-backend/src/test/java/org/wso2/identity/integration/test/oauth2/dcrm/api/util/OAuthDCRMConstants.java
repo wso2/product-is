@@ -27,6 +27,12 @@ public class OAuthDCRMConstants {
     public static final String CLIENT_SECRET = "client_secret";
     public static final String ERROR = "error";
     public static final String ERROR_DESCRIPTION = "error_description";
+    public static final String AUD = "aud";
+    public static final String SOFTWARE_ID = "software_id";
+    public static final String TOKEN_ENDPOINT_AUTH_METHOD = "token_endpoint_auth_method";
+    public static final String ID_TOKEN_ENCRYPTED_RESPONSE_ALG= "id_token_encrypted_response_alg";
+    public static final String ID_TOKEN_ENCRYPTED_RESPONSE_ENC= "id_token_encrypted_response_enc";
+
 
     public static final String BACKEND_FAILED = "backend_failed";
 
@@ -36,9 +42,18 @@ public class OAuthDCRMConstants {
 
     public static final String INVALID_CLIENT_ID = "invalid_client_id";
     public static final String INVALID_CLIENT_SECRET = "invalid_client_secret";
+    public static final String INVALID_TOKEN_ENDPOINT_AUTH_METHOD_VALUE = "invalid_token_endpoint_auth_method";
+    public static final String INVALID_ID_TOKEN_ENCRYPTED_RESPONSE_ALG_VALUE = "invalid_id_token_encryption_alg";
+    public static final String INVALID_ID_TOKEN_ENCRYPTED_RESPONSE_ENC_VALUE = "invalid_id_token_encryption_method";
 
     public static final String APPLICATION_NAME = "TestApp";
+    public static final String APPLICATION_NAME_OPTIONAL_ATTRIBUTES = "TestApp2";
     public static final String REDIRECT_URI = "http://TestApp.com";
+    public static final String AUD_VALUE = "testAud";
+    public static final String SOFTWARE_ID_VALUE = "testId";
+    public static final String TOKEN_ENDPOINT_AUTH_METHOD_VALUE = "none";
+    public static final String ID_TOKEN_ENCRYPTED_RESPONSE_ALG_VALUE = "RSA-OAEP";
+    public static final String ID_TOKEN_ENCRYPTED_RESPONSE_ENC_VALUE = "A128GCM";
 
     public static final String OAUTH_VERSION = "OAuth-2.0";
 
