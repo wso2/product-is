@@ -37,7 +37,6 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
-import org.wso2.identity.integration.test.oauth2.Oauth2HashAlgorithmTestCase;
 import org.wso2.identity.integration.test.oauth2.dcrm.api.util.OAuthDCRMConstants;
 
 import java.io.BufferedReader;
