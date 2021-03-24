@@ -78,7 +78,7 @@ public class ApplicationAuthzTenantTestCase extends AbstractApplicationAuthzTest
                     "            <Apply FunctionId=\"urn:oasis:names:tc:xacml:1.0:function:string-is-in\">\n" +
                     "                <AttributeValue DataType=\"http://www.w3.org/2001/XMLSchema#string\">" +
                     AZ_TEST_TENANT_ROLE + "</AttributeValue>\n" +
-                    "                <AttributeDesignator AttributeId=\"http://wso2.org/claims/role\" Category=\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\" DataType=\"http://www.w3.org/2001/XMLSchema#string\" MustBePresent=\"true\"/>\n" +
+                    "                <AttributeDesignator AttributeId=\"http://wso2.org/claims/groups\" Category=\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\" DataType=\"http://www.w3.org/2001/XMLSchema#string\" MustBePresent=\"true\"/>\n" +
                     "            </Apply>\n" +
                     "        </Condition>\n" +
                     "    </Rule>\n" +
