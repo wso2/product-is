@@ -473,10 +473,6 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.fetch.remote:org.wso2.carbon.identity.remotefetch.core.feature:${org.wso2.carbon.identity.remotefetch.version}
                                 </featureArtifactDef>
-                                <!--  LSP-Debugger feature -->
-                                <featureArtifactDef>
-                                    org.wso2.carbon.identity.developer:org.wso2.carbon.identity.developer.language-server.feature:${org.wso2.carbon.identity.developer.version}
-                                </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -949,10 +945,6 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.remotefetch.core.feature.group</id>
                                     <version>${org.wso2.carbon.identity.remotefetch.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.developer.language-server.feature.group</id>
-                                    <version>${org.wso2.carbon.identity.developer.version}</version>
                                 </feature>
 
 
@@ -1448,10 +1440,6 @@
                                     <id>org.wso2.carbon.identity.remotefetch.core.feature.group</id>
                                     <version>${org.wso2.carbon.identity.remotefetch.version}</version>
                                 </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.developer.language-server.feature.group</id>
-                                    <version>${org.wso2.carbon.identity.developer.version}</version>
-                                </feature>
 
                                 <!-- Connectors -->
                                 <feature>
@@ -1883,10 +1871,6 @@
                                     <id>org.wso2.carbon.identity.remotefetch.core.feature.group</id>
                                     <version>${org.wso2.carbon.identity.remotefetch.version}</version>
                                 </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.developer.language-server.feature.group</id>
-                                    <version>${org.wso2.carbon.identity.developer.version}</version>
-                                </feature>
 
                                 <!-- Connectors -->
                                 <feature>
@@ -2145,10 +2129,6 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.remotefetch.core.feature.group</id>
                                     <version>${org.wso2.carbon.identity.remotefetch.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.developer.language-server.feature.group</id>
-                                    <version>${org.wso2.carbon.identity.developer.version}</version>
                                 </feature>
                             </features>
                         </configuration>

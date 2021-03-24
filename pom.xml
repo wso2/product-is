@@ -1341,11 +1341,6 @@
                 <version>${org.wso2.carbon.identity.remotefetch.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.identity.developer</groupId>
-                <artifactId>org.wso2.carbon.identity.developer.language-server.feature</artifactId>
-                <version>${org.wso2.carbon.identity.developer.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.eclipse.jgit</groupId>
                 <artifactId>org.eclipse.jgit</artifactId>
                 <version>${org.jgit.version}</version>
@@ -2097,7 +2092,7 @@
         <!--<identity.userstore.cassandra.version>5.1.1</identity.userstore.cassandra.version>-->
         <!--<identity.agent-entitlement-filter.version>5.1.1</identity.agent-entitlement-filter.version>-->
         <org.wso2.carbon.identity.remotefetch.version>0.7.20</org.wso2.carbon.identity.remotefetch.version>
-        <org.wso2.carbon.identity.developer.version>0.5.10</org.wso2.carbon.identity.developer.version>
+
         <!-- CallHome version -->
         <callhome.version>4.5.x_1.0.8</callhome.version>
 
