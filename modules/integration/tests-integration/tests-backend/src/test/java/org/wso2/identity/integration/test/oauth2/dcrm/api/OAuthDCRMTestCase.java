@@ -158,8 +158,15 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
         Object responseObj = JSONValue.parse(rd);
         EntityUtils.consume(response.getEntity());
         client_id = ((JSONObject) responseObj).get("client_id").toString();
-
         assertNotNull(client_id, "client_id cannot be null");
+        assertNotNull(((JSONObject) responseObj).get(OAuthDCRMConstants.AUD), "aud cannot be null");
+        assertNotNull(((JSONObject) responseObj).get(OAuthDCRMConstants.TOKEN_ENDPOINT_AUTH_METHOD),
+                "token_endpoint_auth_method cannot be null");
+        assertNotNull(((JSONObject) responseObj).get(OAuthDCRMConstants.ID_TOKEN_ENCRYPTED_RESPONSE_ALG),
+                "id_token_encrypted_response_alg cannot be null");
+        assertNotNull(((JSONObject) responseObj).get(OAuthDCRMConstants.ID_TOKEN_ENCRYPTED_RESPONSE_ENC),
+                "id_token_encrypted_response_enc cannot be null");
+        assertNotNull(((JSONObject) responseObj).get(OAuthDCRMConstants.SOFTWARE_ID), "software_id cannot be null");
     }
 
     @Test(alwaysRun = true, groups = "wso2.is", priority = 2, description =
