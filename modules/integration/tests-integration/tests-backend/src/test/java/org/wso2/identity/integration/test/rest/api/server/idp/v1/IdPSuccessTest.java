@@ -453,7 +453,7 @@ public class IdPSuccessTest extends IdPTestBase {
                 .statusCode(HttpStatus.SC_OK)
                 .body("userIdClaim", notNullValue())
                 .body("userIdClaim.uri", equalTo("country"))
-                .body("roleClaim.uri", equalTo("role"));
+                .body("roleClaim.uri", equalTo("roles"));
     }
 
     @Test(dependsOnMethods = {"testUpdateIdPClaims"})
@@ -468,16 +468,16 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body("userIdClaim", notNullValue())
                 .body("userIdClaim.uri", equalTo("country"))
                 .body("roleClaim", notNullValue())
-                .body("roleClaim.uri", equalTo("role"))
+                .body("roleClaim.uri", equalTo("roles"))
                 .body("mappings", notNullValue())
                 .body("mappings[0].idpClaim", equalTo("country"))
                 .body("mappings[0].localClaim.id", equalTo("aHR0cDovL3dzbzIub3JnL2NsYWltcy91c2VybmFtZQ"))
                 .body("mappings[0].localClaim.uri", equalTo("http://wso2.org/claims/username"))
                 .body("mappings[0].localClaim.displayName", equalTo("Username"))
-                .body("mappings[1].idpClaim", equalTo("role"))
-                .body("mappings[1].localClaim.id", equalTo("aHR0cDovL3dzbzIub3JnL2NsYWltcy9yb2xl"))
-                .body("mappings[1].localClaim.uri", equalTo("http://wso2.org/claims/role"))
-                .body("mappings[1].localClaim.displayName", equalTo("Role"))
+                .body("mappings[1].idpClaim", equalTo("roles"))
+                .body("mappings[1].localClaim.id", equalTo("aHR0cDovL3dzbzIub3JnL2NsYWltcy9ncm91cHM"))
+                .body("mappings[1].localClaim.uri", equalTo("http://wso2.org/claims/roles"))
+                .body("mappings[1].localClaim.displayName", equalTo("Roles"))
                 .body("provisioningClaims", notNullValue())
                 .body("provisioningClaims[0].claim.uri", equalTo("country"))
                 .body("provisioningClaims[0].defaultValue", equalTo("sathya"));
