@@ -2115,7 +2115,7 @@
         <identity.outbound.auth.oidc.version>5.6.5</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.passive.sts.version>5.4.4</identity.outbound.auth.passive.sts.version>
         <identity.outbound.auth.samlsso.version>5.3.22</identity.outbound.auth.samlsso.version>
-        <identity.outbound.auth.requestpath.basicauth.version>5.4.1</identity.outbound.auth.requestpath.basicauth.version>
+        <identity.outbound.auth.requestpath.basicauth.version>5.4.2</identity.outbound.auth.requestpath.basicauth.version>
         <identity.outbound.auth.requestpath.oauth.version>5.3.1</identity.outbound.auth.requestpath.oauth.version>
 
         <!-- Social Authenticator Versions -->
@@ -2130,7 +2130,7 @@
         <provisioning.connector.scim.version>5.2.4</provisioning.connector.scim.version>
 
         <!-- Local Authenticator Versions -->
-        <identity.local.auth.basicauth.version>6.3.27</identity.local.auth.basicauth.version>
+        <identity.local.auth.basicauth.version>6.3.28</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.3.0</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.3.14</identity.local.auth.iwa.version>
 
