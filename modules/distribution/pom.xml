@@ -549,25 +549,8 @@
 
                                 <!-- Delete the api#identity#recovery#v0.9.war -->
                                 <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#identity#recovery#v0.9.war" />
-
-                                <!-- Explode the api#identity#template#mgt#v1.0.0.war -->
-                                <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#identity#template#mgt#v1.0.0">
-                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
-                                        <include name="api#identity#template#mgt#v1.0.0.war" />
-                                    </fileset>
-                                </unzip>
-                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#identity#template#mgt#v1.0.0.war" />
-
                                 <!-- Delete the api#identity#user#v1.0.war -->
                                 <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#identity#user#v1.0.war" />
-
-                                <!-- Explode the api#users#v2#me#webauthn.war -->
-                                <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#users#v2#me#webauthn">
-                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
-                                        <include name="api#users#v2#me#webauthn.war" />
-                                    </fileset>
-                                </unzip>
-                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#users#v2#me#webauthn.war" />
 
                                 <!-- Explode the mexut.war -->
                                 <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/mexut">
