@@ -56,7 +56,7 @@ if __name__ == '__main__':
     plan_list = json.loads(requests.get(url=conformance_suite_url + "/api/plan?length=50", verify=False).content)
     print("======================\nExporting test results\n======================")
     for test_plan in plan_list['data']:
-        #save_results(test_plan)
+        save_results(test_plan)
         failed_tests_list = get_failed_tests(test_plan)
         if len(failed_tests_list['fails']) > 0 or len(failed_tests_list['warnings']) > 0:
             failed_plan_details[test_plan['planName']] = failed_tests_list

@@ -36,6 +36,7 @@
                 {
                     "task": "Verify authorize",
                     "match": "https://localhost:9443/oauth2/authorize*",
+                    "optional": true,
                     "commands": [
                         [
                             "wait",

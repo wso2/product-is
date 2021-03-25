@@ -264,17 +264,6 @@
             </includes>
         </fileSet>
 
-        <!--copy jaxrs web app for Configuration Management feature-->
-        <fileSet>
-            <directory>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
-            </directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
-            <includes>
-                <include>api#identity#config-mgt#v1.0.war</include>
-            </includes>
-        </fileSet>
-
 
         <!--copy jaxrs web app for Mex feature-->
         <fileSet>
@@ -298,17 +287,6 @@
             </includes>
         </fileSet>
 
-        <!--copy web app for entitlement endpoint feature -->
-        <fileSet>
-            <directory>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
-            </directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
-            <includes>
-                <include>api#identity#entitlement.war</include>
-            </includes>
-        </fileSet>
-
         <!--copy jaxrs web app for consent management feature-->
         <fileSet>
             <directory>
@@ -317,28 +295,6 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
             <includes>
                 <include>api#identity#consent-mgt#v1.0.war</include>
-            </includes>
-        </fileSet>
-
-        <!--copy  web app for UMA 2.0 permission endpoint feature-->
-        <fileSet>
-            <directory>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
-            </directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
-            <includes>
-                <include>api#identity#oauth2#uma#permission#v1.0.war</include>
-            </includes>
-        </fileSet>
-
-        <!--copy  web app for UMA 2.0 resource endpoint feature-->
-        <fileSet>
-            <directory>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
-            </directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
-            <includes>
-                <include>api#identity#oauth2#uma#resourceregistration#v1.0.war</include>
             </includes>
         </fileSet>
 
@@ -371,17 +327,6 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
             <includes>
                 <include>console/</include>
-            </includes>
-        </fileSet>
-
-        <!--Copy the lsp-debug webapp -->
-        <fileSet>
-            <directory>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
-            </directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
-            <includes>
-                <include>lsp.war</include>
             </includes>
         </fileSet>
 
@@ -462,29 +407,6 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
             <includes>
                 <include>accountrecoveryendpoint.war</include>
-            </includes>
-        </fileSet>
-
-
-        <!--Copy web app api#identity#recovery#v0.9 -->
-        <fileSet>
-            <directory>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
-            </directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
-            <includes>
-                <include>api#identity#recovery#v0.9.war</include>
-            </includes>
-        </fileSet>
-
-        <!--Copy web app api#identity#user#v1.0 -->
-        <fileSet>
-            <directory>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
-            </directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
-            <includes>
-                <include>api#identity#user#v1.0.war</include>
             </includes>
         </fileSet>
 
@@ -714,17 +636,10 @@
                 <include>api#identity#oauth2#v1.0/</include>
                 <include>api#identity#oauth2#dcr#v1.1/</include>
                 <include>api#identity#template#mgt#v1.0.0/</include>
-                <include>api#identity#config-mgt#v1.0/</include>
-                <include>api#identity#entitlement/</include>
                 <include>api#identity#consent-mgt#v1.0/</include>
-                <include>api#identity#oauth2#uma#permission#v1.0/</include>
-                <include>api#identity#oauth2#uma#resourceregistration#v1.0/</include>
                 <include>api#health-check#v1.0/</include>
                 <include>lsp/</include>
                 <include>accountrecoveryendpoint/</include>
-                <include>api#identity#recovery#v0.9/</include>
-                <include>api#identity#user#v1.0/</include>
-                <include>api#identity#oauth2#uma#resourceregistration#v1.0/</include>
                 <include>api#users#v2#me#webauthn/</include>
             </includes>
         </fileSet>
