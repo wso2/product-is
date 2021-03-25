@@ -473,6 +473,18 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.fetch.remote:org.wso2.carbon.identity.remotefetch.core.feature:${org.wso2.carbon.identity.remotefetch.version}
                                 </featureArtifactDef>
+                                <!-- Unique Claim Management feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.unique.claim.mgt.server.feature:${carbon.identity.framework.version}
+                                </featureArtifactDef>
+                                <!-- Multi Attribute Login feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.multi.attribute.login.mgt.server.feature:${carbon.identity.framework.version}
+                                </featureArtifactDef>
+                                <!-- Multi Attribute Login (osgi service impl)feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.governance:org.wso2.carbon.identity.multi.attribute.login.service.server.feature:${identity.governance.version}
+                                </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -735,7 +747,22 @@
                                     </id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
-
+                                <feature>
+                                    <id>
+                                        org.wso2.carbon.identity.unique.claim.mgt.server.feature.group
+                                    </id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>
+                                        org.wso2.carbon.identity.multi.attribute.login.mgt.server.feature.group
+                                    </id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.multi.attribute.login.service.server.feature.group</id>
+                                    <version>${identity.governance.version}</version>
+                                </feature>
                                 <feature>
                                     <id>
                                         org.wso2.identity.apps.feature.group
@@ -1248,7 +1275,22 @@
                                     </id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
-
+                                <feature>
+                                    <id>
+                                        org.wso2.carbon.identity.unique.claim.mgt.server.feature.group
+                                    </id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>
+                                        org.wso2.carbon.identity.multi.attribute.login.mgt.server.feature.group
+                                    </id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.multi.attribute.login.service.server.feature.group</id>
+                                    <version>${identity.governance.version}</version>
+                                </feature>
                                 <feature>
                                     <id>org.wso2.identity.apps.common.server.feature.group</id>
                                     <version>${identity.apps.version}</version>
@@ -1701,7 +1743,22 @@
                                     </id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
-
+                                <feature>
+                                    <id>
+                                        org.wso2.carbon.identity.unique.claim.mgt.server.feature.group
+                                    </id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>
+                                        org.wso2.carbon.identity.multi.attribute.login.mgt.server.feature.group
+                                    </id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.multi.attribute.login.service.server.feature.group</id>
+                                    <version>${identity.governance.version}</version>
+                                </feature>
                                 <feature>
                                     <id>
                                         org.wso2.identity.apps.feature.group
