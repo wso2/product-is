@@ -57,7 +57,7 @@
                             <directory>src/main/webapp</directory>
                         </resource>
                     </webResources>
-                    <warName>api-resources-full</warName>
+                    <warName>api-resources-full-${project.version}</warName>
                     <packagingIncludes>
                         META-INF/webapp-classloading.xml,
                         WEB-INF/beans.xml,

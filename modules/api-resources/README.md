@@ -4,7 +4,7 @@ Aggregates the API implementations from [identity-api-user](https://github.com/w
 to expose the multiple API endpoints in WSO2 Identity Server depending on the profile.
 
 Current profiles,
-1. full (api-respources-full.war)
+1. full (api-resources-full-<version>.war)
 
 
 #### Exposing a new API in specific profile
@@ -66,14 +66,14 @@ Or if adding new resource create `jaxrs:server` configuration.
 
 #### Deploy and test
 
-1. Once the build completed, rename the `api-respources-<profile>.war` in the `components/<profile-module>/target/` 
+1. Once the build completed, rename the `api-respources-<profile>-<version>.war` in the `components/<profile-module>/target/` 
 into `api.war` and copy to`[IS_HOME]/repository/deployment/server/webapps/` location and restart the server. (If already exploded `api` 
 folder exists in the location, remove it before restarting)
 
     ```
         ── <profile-module>
            └── target
-               ├── api-respources-<profile>.war
+               ├── api-resources-<profile>.war
     ```
 2. Access the API 
 
