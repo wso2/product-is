@@ -455,11 +455,6 @@
                                     org.wso2.identity.apps:org.wso2.identity.apps.recovery.portal.server.feature:${identity.apps.version}
                                 </featureArtifactDef>
 
-                                <!-- REST APIs -->
-                                <featureArtifactDef>
-                                    org.wso2.carbon.identity.rest.dispatcher:org.wso2.carbon.identity.rest.api.dispatcher.feature:${identity.api.dispatcher.version}
-                                </featureArtifactDef>
-
                                 <!-- FIDO2/WebAuthn feature -->
                                 <featureArtifactDef>
                                    org.wso2.carbon.identity.local.auth.fido:org.wso2.carbon.identity.application.authenticator.fido2.server.feature:${identity.local.auth.fido.version}
@@ -947,11 +942,6 @@
                                 <feature>
                                     <id>org.wso2.carbon.healthcheck.server.feature.group</id>
                                     <version>${carbon.healthcheck.version}</version>
-                                </feature>
-                                <!--REST API feature-->
-                                <feature>
-                                    <id>org.wso2.carbon.identity.rest.api.dispatcher.feature.group</id>
-                                    <version>${identity.api.dispatcher.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.template.mgt.feature.group</id>
@@ -1460,11 +1450,6 @@
                                     <id>org.wso2.carbon.healthcheck.server.feature.group</id>
                                     <version>${carbon.healthcheck.version}</version>
                                 </feature>
-                                <!--REST API feature-->
-                                <feature>
-                                    <id>org.wso2.carbon.identity.rest.api.dispatcher.feature.group</id>
-                                    <version>${identity.api.dispatcher.version}</version>
-                                </feature>
                                 <!--FIDO2/Webauthn feature-->
                                 <feature>
                                     <id>org.wso2.carbon.identity.application.authenticator.fido2.server.feature.group</id>
@@ -1906,11 +1891,6 @@
                                     <id>org.wso2.carbon.healthcheck.server.feature.group</id>
                                     <version>${carbon.healthcheck.version}</version>
                                 </feature>
-                                <!--REST API feature-->
-                                <feature>
-                                    <id>org.wso2.carbon.identity.rest.api.dispatcher.feature.group</id>
-                                    <version>${identity.api.dispatcher.version}</version>
-                                </feature>
                                 <!--FIDO2/Webauthn feature-->
                                 <feature>
                                     <id>org.wso2.carbon.identity.application.authenticator.fido2.server.feature.group</id>
@@ -2160,11 +2140,6 @@
                                 <feature>
                                     <id>org.wso2.carbon.healthcheck.server.feature.group</id>
                                     <version>${carbon.healthcheck.version}</version>
-                                </feature>
-                                <!--REST API feature-->
-                                <feature>
-                                    <id>org.wso2.carbon.identity.rest.api.dispatcher.feature.group</id>
-                                    <version>${identity.api.dispatcher.version}</version>
                                 </feature>
                                 <!--FIDO2/Webauthn feature-->
                                 <feature>

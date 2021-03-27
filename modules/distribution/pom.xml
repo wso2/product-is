@@ -84,6 +84,27 @@
                 <version>2.0-alpha-4</version>
                 <inherited>false</inherited>
                 <executions>
+                    <!-- Add Rest API Resources web application-->
+                    <execution>
+                        <id>add-rest-api-resources-all</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.is</groupId>
+                                    <artifactId>api-resources-full</artifactId>
+                                    <version>${project.version}</version>
+                                    <type>war</type>
+                                    <overWrite>true</overWrite>
+                                    <destFileName>api.war</destFileName>
+                                    <outputDirectory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
                     <execution>
                         <id>unpack-wso2carbon</id>
                         <phase>package</phase>

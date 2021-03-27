@@ -37,6 +37,7 @@
         <module>modules/p2-profile-gen</module>
         <module>modules/callhome</module>
         <module>modules/connectors</module>
+        <module>modules/api-resources</module>
         <module>modules/authenticators</module>
         <module>modules/social-authenticators</module>
         <module>modules/provisioning-connectors</module>
@@ -552,11 +553,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>org.wso2.carbon.identity.rest.dispatcher</groupId>
-                <artifactId>org.wso2.carbon.identity.rest.api.dispatcher.feature</artifactId>
-                <version>${identity.api.dispatcher.version}</version>
-            </dependency>
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.ui</artifactId>
@@ -2153,7 +2149,9 @@
         <identity.extension.utils>1.0.8</identity.extension.utils>
 
         <!-- Identity REST API feature -->
-        <identity.api.dispatcher.version>1.0.164</identity.api.dispatcher.version>
+        <identity.api.dispatcher.version>2.0.0</identity.api.dispatcher.version>
+        <identity.user.api.version>1.1.22</identity.user.api.version>
+        <identity.server.api.version>1.0.225</identity.server.api.version>
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
         <identity.tool.samlsso.validator.version>5.4.3</identity.tool.samlsso.validator.version>
@@ -2173,7 +2171,7 @@
         <carbon.kernel.version>4.6.2-m8</carbon.kernel.version>
 
         <!-- Carbon Repo Versions -->
-        <carbon.deployment.version>4.12.2</carbon.deployment.version>
+        <carbon.deployment.version>4.12.4</carbon.deployment.version>
         <carbon.commons.version>4.7.36</carbon.commons.version>
         <carbon.registry.version>4.7.33</carbon.registry.version>
         <carbon.multitenancy.version>4.9.11</carbon.multitenancy.version>
