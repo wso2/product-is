@@ -310,5 +310,9 @@
             <groupId>org.wso2.carbon.identity.server.api</groupId>
             <artifactId>org.wso2.carbon.identity.api.server.notification.sender.common</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.local.auth.fido</groupId>
+            <artifactId>org.wso2.carbon.identity.api.user.fido2</artifactId>
+        </dependency>
     </dependencies>
 </project>

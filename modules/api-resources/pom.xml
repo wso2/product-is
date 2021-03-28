@@ -327,6 +327,13 @@
                 <artifactId>org.wso2.carbon.identity.api.server.notification.sender.common</artifactId>
                 <version>${identity.server.api.version}</version>
             </dependency>
+
+            <!-- Legacy API dependencies -->
+            <dependency>
+                <groupId>org.wso2.carbon.identity.local.auth.fido</groupId>
+                <artifactId>org.wso2.carbon.identity.api.user.fido2</artifactId>
+                <version>${identity.local.auth.fido.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>
