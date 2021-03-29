@@ -235,24 +235,6 @@
                 <include>oauth2.war</include>
             </includes>
         </fileSet>
-        <fileSet>
-            <directory>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
-            </directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
-            <includes>
-                <include>api#identity#oauth2#v1.0.war</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
-            </directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
-            <includes>
-                <include>api#identity#oauth2#dcr#v1.1.war</include>
-            </includes>
-        </fileSet>
 
         <!--copy jaxrs web app for Mex feature-->
         <fileSet>
@@ -273,17 +255,6 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
             <includes>
                 <include>authenticationendpoint.war</include>
-            </includes>
-        </fileSet>
-
-        <!--copy jaxrs web app for consent management feature-->
-        <fileSet>
-            <directory>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps
-            </directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
-            <includes>
-                <include>api#identity#consent-mgt#v1.0.war</include>
             </includes>
         </fileSet>
 
@@ -367,15 +338,6 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
             <includes>
                 <include>smsotpauthenticationendpoint.war</include>
-            </includes>
-        </fileSet>
-
-        <!--Copy web apps api#identity#auth#v1.1 -->
-        <fileSet>
-            <directory>../connectors/target/authenticatorCopied/war</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
-            <includes>
-                <include>api#identity#auth#v1.1.war</include>
             </includes>
         </fileSet>
 
@@ -611,22 +573,9 @@
                 <include>oauth2/</include>
                 <include>scim2/</include>
                 <include>wso2/</include>
-                <include>api#identity#oauth2#v1.0/</include>
-                <include>api#identity#oauth2#dcr#v1.1/</include>
-                <include>api#identity#consent-mgt#v1.0/</include>
                 <include>api#health-check#v1.0/</include>
                 <include>lsp/</include>
                 <include>accountrecoveryendpoint/</include>
-            </includes>
-        </fileSet>
-
-        <fileSet>
-            <directory>../connectors/target/authenticatorCopied/war</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
-            <includes>
-                <include>smsotpauthenticationendpoint/</include>
-                <include>api#identity#auth#v1.1/</include>
-                <include>x509certificateauthenticationendpoint/</include>
             </includes>
         </fileSet>
     </fileSets>
