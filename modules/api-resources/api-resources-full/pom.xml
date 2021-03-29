@@ -63,7 +63,9 @@
                         WEB-INF/beans.xml,
                         WEB-INF/web.xml,
                         WEB-INF/lib/org.wso2.carbon.identity.api.*.jar,
-                        WEB-INF/lib/org.wso2.carbon.identity.rest.api.*.jar
+                        WEB-INF/lib/org.wso2.carbon.identity.rest.api.*.jar,
+                        WEB-INF/lib/org.wso2.carbon.api.*.jar,
+                        WEB-INF/lib/org.wso2.carbon.rest.api.*.jar
                     </packagingIncludes>
                 </configuration>
             </plugin>
@@ -313,6 +315,38 @@
         <dependency>
             <groupId>org.wso2.carbon.identity.local.auth.fido</groupId>
             <artifactId>org.wso2.carbon.identity.api.user.fido2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.governance</groupId>
+            <artifactId>org.wso2.carbon.identity.api.user.recovery</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.governance</groupId>
+            <artifactId>org.wso2.carbon.identity.api.user.governance</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.framework</groupId>
+            <artifactId>org.wso2.carbon.identity.api.server.entitlement</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.framework</groupId>
+            <artifactId>org.wso2.carbon.identity.api.server.configuration.mgt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.inbound.auth.oauth2</groupId>
+            <artifactId>org.wso2.carbon.identity.api.server.oauth.scope</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.inbound.auth.oauth2</groupId>
+            <artifactId>org.wso2.carbon.identity.api.server.dcr</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.consent.mgt</groupId>
+            <artifactId>org.wso2.carbon.api.server.consent.mgt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.local.auth.api</groupId>
+            <artifactId>org.wso2.carbon.api.server.local.auth.api</artifactId>
         </dependency>
     </dependencies>
 </project>
