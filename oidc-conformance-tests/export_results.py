@@ -66,10 +66,18 @@ if __name__ == '__main__':
     if failed_plan_details:
         print("Following tests have fails/warnings\n===========================")
         for test_plan in failed_plan_details:
+            failed_count = len(failed_plan_details[test_plan]['fails'])
+            warnings_count = len(failed_plan_details[test_plan]['warnings'])
+            success_count = len(failed_plan_details[test_plan]['others'])
+            total_count = failed_count + warnings_count + success_count
             print("\n"+test_plan+"\n-----------------------------------")
-            print("\nFails\n-----")
+            print("Total Test Cases: " + str(total_count))
+            print("Successful: " + str(success_count))
+            print("Warnings: " + str(warnings_count))
+            print("Failures: " + str(failed_count))
+            print("\nFailed Test Cases\n-----")
             print(*failed_plan_details[test_plan]['fails'], sep="\n")
-            print("\nWarnings\n--------")
+            print("\nTest Cases with Warnings\n--------")
             print(*failed_plan_details[test_plan]['warnings'], sep="\n")
         if contains_fails:
             sys.exit(1)
