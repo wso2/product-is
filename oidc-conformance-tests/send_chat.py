@@ -26,7 +26,7 @@ workflow_status = sys.argv[3]
 github_repository_name = sys.argv[4]
 github_run_id = str(sys.argv[5])
 google_chat_webhook = sys.argv[6]
-IS_version = sys.argv[7]
+wso2_is_version = sys.argv[7]
 
 
 failed_count = 0
@@ -49,8 +49,8 @@ for test_plan in plan_list['data']:
 
 # send google chat notification
 request_body = {
-    'text': 'Hi all, OIDC conformance test run #' + github_run_number + ' for IS ' + str(IS_version) +
-            ' completed with status: '+ workflow_status +
+    'text': 'Hi all, OIDC conformance test run #' + github_run_number + ' for IS ' + str(wso2_is_version) +
+            ' completed with status: ' + workflow_status +
             ' \n Total test cases: ' + str(total_tests_count) +
             ' \n Failed test cases: ' + str(failed_count) +
             ' \n Test cases with warnings: ' + str(warnings_count) +

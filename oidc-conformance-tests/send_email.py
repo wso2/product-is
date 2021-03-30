@@ -29,7 +29,7 @@ github_run_id = str(sys.argv[5])
 sender_email = str(sys.argv[6])
 password = str(sys.argv[7])
 receiver_list = sys.argv[8].split(',')
-IS_version = str(sys.argv[9])
+wso2_is_version = str(sys.argv[9])
 
 
 failed_count = 0
@@ -57,7 +57,7 @@ From: """ + sender_email + """
 To: """ + sys.argv[8] + """
 
 OIDC conformance  test run # """ + github_run_number + """ completed with status: """ + workflow_status + """
-Identity Server Version: """ + IS_version + """
+Identity Server Version: """ + wso2_is_version + """
 Total test cases:""" + str(total_tests_count) + """
 Failed test cases: """ + str(failed_count) + """
 Test cases with warnings: """ + str(warnings_count) + """
