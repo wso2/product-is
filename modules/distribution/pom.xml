@@ -505,14 +505,6 @@
                                 </unzip>
                                 <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api.war" />
 
-                                <!-- Copy api_resources to /repository/deployment/server/webapps/api/WEB-INF/lib/  -->
-                                <copy todir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api/WEB-INF/lib/" overwrite="false">
-                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api_resources/">
-                                        <include name="*.jar" />
-                                    </fileset>
-                                </copy>
-                                <delete dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api_resources" />
-
                                 <!-- Explode the authenticationendpoint.war -->
                                 <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/authenticationendpoint">
                                     <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
