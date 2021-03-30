@@ -19,11 +19,11 @@ CONFIG = {
     "basic": {
         "browser": [
             {
-                "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                "match": constants.BASE_URL + "/oauth2/authorize*",
                 "tasks": [
                     {
                         "task": "Login",
-                        "match": constants.IS_HOSTNAME + "/authenticationendpoint/login*",
+                        "match": constants.BASE_URL + "/authenticationendpoint/login*",
                         "optional": True,
                         "commands": [
                             [
@@ -62,11 +62,11 @@ CONFIG = {
             "oidcc-refresh-token": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Login",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/login*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
                                 "optional": True,
                                 "commands": [
                                     [
@@ -96,7 +96,7 @@ CONFIG = {
                             },
                             {
                                 "task": "Consent",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/oauth2_consent*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_consent*",
                                 "optional": True,
                                 "commands": [
                                     [
@@ -129,11 +129,11 @@ CONFIG = {
             "oidcc-ensure-registered-redirect-uri": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Verify error page",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/oauth2_error.do*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_error.do*",
                                 "commands": [
                                     [
                                         "wait",
@@ -152,11 +152,11 @@ CONFIG = {
             "oidcc-ensure-request-object-with-redirect-uri": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Verify error",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/oauth2_error.do*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_error.do*",
                                 "commands": [
                                     [
                                         "wait",
@@ -175,11 +175,11 @@ CONFIG = {
             "oidcc-prompt-login": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Login",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/login*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
                                 "optional": True,
                                 "commands": [
                                     [
@@ -217,7 +217,7 @@ CONFIG = {
                             },
                             {
                                 "task": "Consent",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/oauth2_consent*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_consent*",
                                 "optional": True,
                                 "commands": [
                                     [
@@ -256,11 +256,11 @@ CONFIG = {
             "oidcc-max-age-1": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Login",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/login*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
                                 "optional": True,
                                 "commands": [
                                     [
@@ -298,7 +298,7 @@ CONFIG = {
                             },
                             {
                                 "task": "Consent",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/oauth2_consent*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_consent*",
                                 "optional": True,
                                 "commands": [
                                     [
@@ -339,11 +339,11 @@ CONFIG = {
     "implicit": {
         "browser": [
             {
-                "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                "match": constants.BASE_URL + "/oauth2/authorize*",
                 "tasks": [
                     {
                         "task": "Login",
-                        "match": constants.IS_HOSTNAME + "/authenticationendpoint/login*",
+                        "match": constants.BASE_URL + "/authenticationendpoint/login*",
                         "optional": True,
                         "commands": [
                             [
@@ -382,11 +382,11 @@ CONFIG = {
             "oidcc-ensure-request-with-valid-pkce-succeeds": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Login",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/login*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
                                 "optional": True,
                                 "commands": [
                                     [
@@ -416,7 +416,7 @@ CONFIG = {
                             },
                             {
                                 "task": "Consent",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/oauth2_consent*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_consent*",
                                 "optional": True,
                                 "commands": [
                                     [
@@ -449,11 +449,11 @@ CONFIG = {
             "oidcc-refresh-token": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Login",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/login*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
                                 "optional": True,
                                 "commands": [
                                     [
@@ -483,7 +483,7 @@ CONFIG = {
                             },
                             {
                                 "task": "Consent",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/oauth2_consent*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_consent*",
                                 "optional": True,
                                 "commands": [
                                     [
@@ -516,11 +516,11 @@ CONFIG = {
             "oidcc-ensure-registered-redirect-uri": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Verify error page",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/oauth2_error.do*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_error.do*",
                                 "commands": [
                                     [
                                         "wait",
@@ -539,11 +539,11 @@ CONFIG = {
             "oidcc-ensure-request-object-with-redirect-uri": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Verify error",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/oauth2_error.do*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_error.do*",
                                 "commands": [
                                     [
                                         "wait",
@@ -562,11 +562,11 @@ CONFIG = {
             "oidcc-prompt-login": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Login",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/login*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
                                 "optional": True,
                                 "commands": [
                                     [
@@ -604,7 +604,7 @@ CONFIG = {
                             },
                             {
                                 "task": "Consent",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/oauth2_consent*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_consent*",
                                 "optional": True,
                                 "commands": [
                                     [
@@ -643,11 +643,11 @@ CONFIG = {
             "oidcc-max-age-1": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Login",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/login*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
                                 "optional": True,
                                 "commands": [
                                     [
@@ -685,7 +685,7 @@ CONFIG = {
                             },
                             {
                                 "task": "Consent",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/oauth2_consent*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_consent*",
                                 "optional": True,
                                 "commands": [
                                     [
@@ -726,11 +726,11 @@ CONFIG = {
     "hybrid": {
         "browser": [
             {
-                "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                "match": constants.BASE_URL + "/oauth2/authorize*",
                 "tasks": [
                     {
                         "task": "Login",
-                        "match": constants.IS_HOSTNAME + "/authenticationendpoint/login*",
+                        "match": constants.BASE_URL + "/authenticationendpoint/login*",
                         "optional": True,
                         "commands": [
                             [
@@ -769,11 +769,11 @@ CONFIG = {
             "oidcc-ensure-request-with-valid-pkce-succeeds": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Login",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/login*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
                                 "optional": True,
                                 "commands": [
                                     [
@@ -803,7 +803,7 @@ CONFIG = {
                             },
                             {
                                 "task": "Consent",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/oauth2_consent*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_consent*",
                                 "optional": True,
                                 "commands": [
                                     [
@@ -836,11 +836,11 @@ CONFIG = {
             "oidcc-refresh-token": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Login",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/login*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
                                 "optional": True,
                                 "commands": [
                                     [
@@ -870,7 +870,7 @@ CONFIG = {
                             },
                             {
                                 "task": "Consent",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/oauth2_consent*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_consent*",
                                 "optional": True,
                                 "commands": [
                                     [
@@ -903,11 +903,11 @@ CONFIG = {
             "oidcc-ensure-registered-redirect-uri": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Verify error page",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/oauth2_error.do*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_error.do*",
                                 "commands": [
                                     [
                                         "wait",
@@ -926,11 +926,11 @@ CONFIG = {
             "oidcc-ensure-request-object-with-redirect-uri": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Verify error",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/oauth2_error.do*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_error.do*",
                                 "commands": [
                                     [
                                         "wait",
@@ -949,11 +949,11 @@ CONFIG = {
             "oidcc-prompt-login": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Login",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/login*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
                                 "optional": True,
                                 "commands": [
                                     [
@@ -991,7 +991,7 @@ CONFIG = {
                             },
                             {
                                 "task": "Consent",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/oauth2_consent*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_consent*",
                                 "optional": True,
                                 "commands": [
                                     [
@@ -1030,11 +1030,11 @@ CONFIG = {
             "oidcc-max-age-1": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Login",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/login*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
                                 "optional": True,
                                 "commands": [
                                     [
@@ -1072,7 +1072,7 @@ CONFIG = {
                             },
                             {
                                 "task": "Consent",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/oauth2_consent*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_consent*",
                                 "optional": True,
                                 "commands": [
                                     [
@@ -1113,11 +1113,11 @@ CONFIG = {
     "formpost-basic": {
         "browser": [
             {
-                "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                "match": constants.BASE_URL + "/oauth2/authorize*",
                 "tasks": [
                     {
                         "task": "Login",
-                        "match": constants.IS_HOSTNAME + "/authenticationendpoint/login*",
+                        "match": constants.BASE_URL + "/authenticationendpoint/login*",
                         "optional": True,
                         "commands": [
                             [
@@ -1146,7 +1146,7 @@ CONFIG = {
             "oidcc-prompt-none-not-logged-in": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Verify error page",
@@ -1159,7 +1159,7 @@ CONFIG = {
             "oidcc-response-type-missing": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Verify error page",
@@ -1172,11 +1172,11 @@ CONFIG = {
             "oidcc-refresh-token": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Login",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/login*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
                                 "optional": True,
                                 "commands": [
                                     [
@@ -1206,7 +1206,7 @@ CONFIG = {
                             },
                             {
                                 "task": "Consent",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/oauth2_consent*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_consent*",
                                 "optional": True,
                                 "commands": [
                                     [
@@ -1229,11 +1229,11 @@ CONFIG = {
             "oidcc-ensure-registered-redirect-uri": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Verify error page",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/oauth2_error.do*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_error.do*",
                                 "commands": [
                                     [
                                         "wait",
@@ -1252,11 +1252,11 @@ CONFIG = {
             "oidcc-ensure-request-object-with-redirect-uri": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Verify error",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/oauth2_error.do*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_error.do*",
                                 "commands": [
                                     [
                                         "wait",
@@ -1275,11 +1275,11 @@ CONFIG = {
             "oidcc-prompt-login": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Login",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/login*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
                                 "optional": True,
                                 "commands": [
                                     [
@@ -1316,11 +1316,11 @@ CONFIG = {
             "oidcc-max-age-1": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Login",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/login*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
                                 "optional": True,
                                 "commands": [
                                     [
@@ -1359,11 +1359,11 @@ CONFIG = {
     "formpost-implicit": {
         "browser": [
             {
-                "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                "match": constants.BASE_URL + "/oauth2/authorize*",
                 "tasks": [
                     {
                         "task": "Login",
-                        "match": constants.IS_HOSTNAME + "/authenticationendpoint/login*",
+                        "match": constants.BASE_URL + "/authenticationendpoint/login*",
                         "optional": True,
                         "commands": [
                             [
@@ -1392,7 +1392,7 @@ CONFIG = {
             "oidcc-prompt-none-not-logged-in": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Verify error page",
@@ -1405,7 +1405,7 @@ CONFIG = {
             "oidcc-response-type-missing": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Verify error page",
@@ -1418,11 +1418,11 @@ CONFIG = {
             "oidcc-refresh-token": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Login",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/login*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
                                 "optional": True,
                                 "commands": [
                                     [
@@ -1451,11 +1451,11 @@ CONFIG = {
             "oidcc-ensure-registered-redirect-uri": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Verify error page",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/oauth2_error.do*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_error.do*",
                                 "commands": [
                                     [
                                         "wait",
@@ -1474,7 +1474,7 @@ CONFIG = {
             "oidcc-ensure-request-without-nonce-fails": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Verify error page",
@@ -1497,11 +1497,11 @@ CONFIG = {
             "oidcc-ensure-request-object-with-redirect-uri": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Verify error",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/oauth2_error.do*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_error.do*",
                                 "commands": [
                                     [
                                         "wait",
@@ -1520,11 +1520,11 @@ CONFIG = {
             "oidcc-prompt-login": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Login",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/login*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
                                 "optional": True,
                                 "commands": [
                                     [
@@ -1561,11 +1561,11 @@ CONFIG = {
             "oidcc-max-age-1": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Login",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/login*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
                                 "optional": True,
                                 "commands": [
                                     [
@@ -1604,11 +1604,11 @@ CONFIG = {
     "formpost-hybrid": {
         "browser": [
             {
-                "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                "match": constants.BASE_URL + "/oauth2/authorize*",
                 "tasks": [
                     {
                         "task": "Login",
-                        "match": constants.IS_HOSTNAME + "/authenticationendpoint/login*",
+                        "match": constants.BASE_URL + "/authenticationendpoint/login*",
                         "optional": True,
                         "commands": [
                             [
@@ -1637,7 +1637,7 @@ CONFIG = {
             "oidcc-prompt-none-not-logged-in": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Verify error page",
@@ -1650,7 +1650,7 @@ CONFIG = {
             "oidcc-response-type-missing": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Verify error page",
@@ -1663,11 +1663,11 @@ CONFIG = {
             "oidcc-refresh-token": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Login",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/login*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
                                 "optional": True,
                                 "commands": [
                                     [
@@ -1697,7 +1697,7 @@ CONFIG = {
                             },
                             {
                                 "task": "Consent",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/oauth2_consent*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_consent*",
                                 "optional": True,
                                 "commands": [
                                     [
@@ -1720,11 +1720,11 @@ CONFIG = {
             "oidcc-ensure-registered-redirect-uri": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Verify error page",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/oauth2_error.do*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_error.do*",
                                 "commands": [
                                     [
                                         "wait",
@@ -1743,7 +1743,7 @@ CONFIG = {
             "oidcc-ensure-request-without-nonce-fails": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Verify error page",
@@ -1766,11 +1766,11 @@ CONFIG = {
             "oidcc-ensure-request-object-with-redirect-uri": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Verify error",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/oauth2_error.do*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_error.do*",
                                 "commands": [
                                     [
                                         "wait",
@@ -1789,11 +1789,11 @@ CONFIG = {
             "oidcc-prompt-login": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Login",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/login*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
                                 "optional": True,
                                 "commands": [
                                     [
@@ -1830,11 +1830,11 @@ CONFIG = {
             "oidcc-max-age-1": {
                 "browser": [
                     {
-                        "match": constants.IS_HOSTNAME + "/oauth2/authorize*",
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             {
                                 "task": "Login",
-                                "match": constants.IS_HOSTNAME + "/authenticationendpoint/login*",
+                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
                                 "optional": True,
                                 "commands": [
                                     [

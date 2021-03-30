@@ -142,7 +142,7 @@ def set_user_claim_values(config_file_path):
 
     print("\nSetting user claim values")
     try:
-        response = requests.patch(url=constants.IS_HOSTNAME + "/scim2/Me", headers=headers, data=json.dumps(body), verify=False)
+        response = requests.patch(url=constants.BASE_URL + "/scim2/Me", headers=headers, data=json.dumps(body), verify=False)
         response.raise_for_status()
     except HTTPError as http_error:
         print(http_error)
@@ -224,7 +224,7 @@ def edit_scope(scope_id, body):
     print("\nChanging scope: " + scope_id)
     json_body = json.dumps(body)
     try:
-        response = requests.put(url=constants.IS_HOSTNAME + "/api/server/v1/oidc/scopes/" + scope_id, headers=headers,
+        response = requests.put(url=constants.BASE_URL + "/api/server/v1/oidc/scopes/" + scope_id, headers=headers,
                                 data=json_body, verify=False)
         response.raise_for_status()
     except HTTPError as http_error:
@@ -247,16 +247,13 @@ def unpack_and_run(zip_file_name):
             print("Extracting " + zip_file_name)
             zip_file.extractall()
 
-        # temporary fix to resolve a issue in a test case -
-        # manually add JQuery import to oauth_response.html file before starting IS
+        # HtmlUnit web browser used by the conformance suite will throw a JQuery not defined error
+        # when trying to load oauth_response.html page.
+        # Deleting oauth_response.html file before testing as a temporary solution to this issue
         print(zip_file_name)
         match = re.search('\.\./\.\./(.*)\.zip', zip_file_name)
         product_is_folder_name = match.group(1)
-        # os.system("sed -i '/^    <script src=\"https:\/\/cdnjs.cloudflare.com\/ajax\/libs\/semantic-ui\/2.4.1\/semantic.min.js\"><\/script>.*/i \ \ \ \ <script src=\"https:\/\/code.jquery.com\/jquery-3.2.1.min.js\"><\/script>' ./" + product_is_folder_name + "/repository/resources/identity/pages/oauth_response.html")
         os.system("rm -rf ./" + product_is_folder_name + "/repository/resources/identity/pages/oauth_response.html")
-        # output file content to stdout to verify
-        # with open("./" + product_is_folder_name + "/repository/resources/identity/pages/oauth_response.html", 'r') as file:
-        #    print(file.read())
 
         dir_name = ''
         # start identity server
@@ -290,11 +287,11 @@ def json_config_builder(service_provider_1, service_provider_2, output_file_path
     config = {
         "alias": constants.ALIAS,
         "server": {
-            "issuer": constants.IS_HOSTNAME + "/oauth2/token",
-            "jwks_uri": constants.IS_HOSTNAME + "/oauth2/jwks",
-            "authorization_endpoint": constants.IS_HOSTNAME + "/oauth2/authorize",
-            "token_endpoint": constants.IS_HOSTNAME + "/oauth2/token",
-            "userinfo_endpoint": constants.IS_HOSTNAME + "/oauth2/userinfo",
+            "issuer": constants.BASE_URL + "/oauth2/token",
+            "jwks_uri": constants.BASE_URL + "/oauth2/jwks",
+            "authorization_endpoint": constants.BASE_URL + "/oauth2/authorize",
+            "token_endpoint": constants.BASE_URL + "/oauth2/token",
+            "userinfo_endpoint": constants.BASE_URL + "/oauth2/userinfo",
             "acr_values": "acr1"
         },
         "client": {
@@ -375,7 +372,7 @@ change_local_claim_mapping(
         "claimURI": "phone_number",
         "mappedLocalClaimURI": "http://wso2.org/claims/mobile"
     },
-    constants.IS_HOSTNAME + "/api/server/v1/claim-dialects/aHR0cDovL3dzbzIub3JnL29pZGMvY2xhaW0/claims/cGhvbmVfbnVtYmVy")
+    constants.BASE_URL + "/api/server/v1/claim-dialects/aHR0cDovL3dzbzIub3JnL29pZGMvY2xhaW0/claims/cGhvbmVfbnVtYmVy")
 
 #change website from url to organization
 change_local_claim_mapping(
@@ -383,7 +380,7 @@ change_local_claim_mapping(
         "claimURI": "website",
         "mappedLocalClaimURI": "http://wso2.org/claims/organization"
     },
-    constants.IS_HOSTNAME + "/api/server/v1/claim-dialects/aHR0cDovL3dzbzIub3JnL29pZGMvY2xhaW0/claims/d2Vic2l0ZQ")
+    constants.BASE_URL + "/api/server/v1/claim-dialects/aHR0cDovL3dzbzIub3JnL29pZGMvY2xhaW0/claims/d2Vic2l0ZQ")
 
 edit_scope("openid", {
     "claims": [

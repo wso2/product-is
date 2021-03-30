@@ -15,17 +15,17 @@
 
 ALIAS = "test"
 
-IS_HOSTNAME = "https://localhost:9443"
+BASE_URL = "https://localhost:9443"
 
-DCR_ENDPOINT = IS_HOSTNAME + "/api/identity/oauth2/dcr/v1.1/register"
+DCR_ENDPOINT = BASE_URL + "/api/identity/oauth2/dcr/v1.1/register"
 
-TOKEN_ENDPOINT = IS_HOSTNAME + "/oauth2/token"
+TOKEN_ENDPOINT = BASE_URL + "/oauth2/token"
 
 DCR_CLIENT_ID = "oidc_test_clientid001"
 
 DCR_CLIENT_SECRET = "oidc_test_client_secret001"
 
-APPLICATION_ENDPOINT = IS_HOSTNAME + "/api/server/v1/applications"
+APPLICATION_ENDPOINT = BASE_URL + "/api/server/v1/applications"
 
 SCOPES = "internal_user_mgt_update internal_application_mgt_create internal_application_mgt_view internal_login " \
          "internal_claim_meta_update internal_application_mgt_update internal_scope_mgt_create"
