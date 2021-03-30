@@ -2068,10 +2068,10 @@
         <identity.inbound.auth.openid.version>5.6.1</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.6.8</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.6.4</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>1.5.72</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim2.version>1.5.74</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity workflow Versions -->
-        <identity.user.workflow.version>5.4.4</identity.user.workflow.version>
+        <identity.user.workflow.version>5.4.5</identity.user.workflow.version>
         <identity.workflow.impl.bps.version>5.4.5</identity.workflow.impl.bps.version>
         <identity.workflow.template.multisteps.version>5.4.1</identity.workflow.template.multisteps.version>
 
@@ -2081,7 +2081,7 @@
         <identity.user.ws.version>5.4.2</identity.user.ws.version>
 
         <!-- Identity Userstore Versions -->
-        <identity.userstore.ldap.version>6.2.7</identity.userstore.ldap.version>
+        <identity.userstore.ldap.version>6.2.8</identity.userstore.ldap.version>
         <identity.userstore.remote.version>5.2.5</identity.userstore.remote.version>
 
         <!-- Identity Data Publisher Versions -->
@@ -2157,7 +2157,7 @@
         <carbon.identity.oauth.uma.version>1.3.1</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.2.112</identity.apps.version>
+        <identity.apps.version>1.2.116</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.3.31</charon.version>
