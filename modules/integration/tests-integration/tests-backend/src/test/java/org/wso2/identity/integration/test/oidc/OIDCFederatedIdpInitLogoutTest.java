@@ -329,6 +329,7 @@ public class OIDCFederatedIdpInitLogoutTest extends AbstractIdentityFederationTe
 
         javax.servlet.http.Cookie primCookie = new javax.servlet.http.Cookie(federatedCommonAuthCookie.getName(),
                 primaryCommonAuthCookie.getValue());
+        Thread.sleep(5 * 1000);
         response = Utils.sendGetRequest(
                 PRIMARY_IS_SESSION_EXTENSION_ENDPOINT + FrameworkUtils.getHashOfCookie(primCookie), USER_AGENT, client);
         Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_BAD_REQUEST);
