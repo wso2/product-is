@@ -56,7 +56,7 @@ if __name__ == '__main__':
     plan_list = json.loads(requests.get(url=conformance_suite_url + "/api/plan?length=50", verify=False).content)
     print("======================\nExporting test results\n======================")
     for test_plan in plan_list['data']:
-        #save_results(test_plan)
+        save_results(test_plan)
         failed_tests_list = get_failed_tests(test_plan)
         if len(failed_tests_list['fails']) > 0 or len(failed_tests_list['warnings']) > 0:
             failed_plan_details[test_plan['planName']] = failed_tests_list
@@ -66,10 +66,18 @@ if __name__ == '__main__':
     if failed_plan_details:
         print("Following tests have fails/warnings\n===========================")
         for test_plan in failed_plan_details:
+            failed_count = len(failed_plan_details[test_plan]['fails'])
+            warnings_count = len(failed_plan_details[test_plan]['warnings'])
+            success_count = len(failed_plan_details[test_plan]['others'])
+            total_count = failed_count + warnings_count + success_count
             print("\n"+test_plan+"\n-----------------------------------")
-            print("\nFails\n-----")
+            print("Total Test Cases: " + str(total_count))
+            print("Successful: " + str(success_count))
+            print("Warnings: " + str(warnings_count))
+            print("Failures: " + str(failed_count))
+            print("\nFailed Test Cases\n-----")
             print(*failed_plan_details[test_plan]['fails'], sep="\n")
-            print("\nWarnings\n--------")
+            print("\nTest Cases with Warnings\n--------")
             print(*failed_plan_details[test_plan]['warnings'], sep="\n")
         if contains_fails:
             sys.exit(1)

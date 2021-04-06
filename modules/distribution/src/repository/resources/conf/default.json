@@ -16,6 +16,7 @@
 
   "server.hide_menu_items": [
     "claim_mgt_menu",
+    "remote_fetch_providers_menu",
     "identity_mgt_emailtemplate_menu",
     "identity_security_questions_menu",
     "metrics_menu"
@@ -35,5 +36,6 @@
   "encryption.internal_crypto_provider": "org.wso2.carbon.crypto.provider.SymmetricKeyInternalCryptoProvider",
   "encryption.key": "03BAFEB27A8E871CAD83C5CD4E771DAB",
 
-  "authorization_manager.properties.GroupAndRoleSeparationEnabled": "true"
+  "authorization_manager.properties.GroupAndRoleSeparationEnabled": "true",
+  "authorization_manager.properties.GroupAndRoleSeparationImprovementsEnabled": "true"
 }

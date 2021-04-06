@@ -23,7 +23,9 @@ from zipfile import ZipFile
 import subprocess
 import os
 import sys
+from requests.exceptions import HTTPError
 import constants
+from config import browser_configuration
 
 headers = {
     'Content-Type': 'application/json',
@@ -36,10 +38,22 @@ path_to_is_zip = str(sys.argv[1])
 
 # use dcr to register a client
 def dcr():
-    print("Dynamic Client Registration")
-    response = requests.post(url=constants.DCR_ENDPOINT, headers=constants.DCR_HEADERS,
+    print("\nDynamic Client Registration")
+    try:
+        response = requests.post(url=constants.DCR_ENDPOINT, headers=constants.DCR_HEADERS,
                              data=json.dumps(constants.DCR_BODY), verify=False)
-    print(response.status_code)
+        response.raise_for_status()
+    except HTTPError as http_error:
+        print(http_error)
+        print(response.text)
+        exit(1)
+    except Exception as error:
+        print("\nError occurred: " + str(error))
+        exit(1)
+    else:
+        print("\nCompleted with status: " + str(response.status_code))
+        print(response.text)
+
 
 # obtain an access token with given client details and scope
 def get_access_token(client_id, client_secret, scope, url):
@@ -56,21 +70,40 @@ def get_access_token(client_id, client_secret, scope, url):
         'Content-Type': 'application/x-www-form-urlencoded',
         'Connection': 'keep-alive',
     }
-    print("Getting access token")
-    response_map = json.loads(requests.post(url=url, headers=token_headers, data=urlencode(body), verify=False).content)
-    print(response_map)
-    if response_map['access_token']:
-        return response_map['access_token']
-    else:
-        print("Error: No access token found")
+    print("\nGetting access token")
+    try:
+        response = requests.post(url=url, headers=token_headers, data=urlencode(body), verify=False)
+        response.raise_for_status()
+        response_map = json.loads(response.content)
+        print(response_map)
+        if response_map['access_token']:
+            return response_map['access_token']
+        else:
+            print("\nError: No access token found")
+    except HTTPError as http_error:
+        print(http_error)
+        print(response.text)
+        exit(1)
+    except Exception as error:
+        print("\nError occurred: " + str(error))
+        exit(1)
 
 
 # returns service provider details with given application id
 def get_service_provider_details(application_id):
-    response = json.loads(
-        requests.get(url=constants.APPLICATION_ENDPOINT + "/" + application_id + "/inbound-protocols/oidc",
-                     headers=headers, verify=False).content)
-    return {"clientId": response['clientId'], "clientSecret": response['clientSecret'], "applicationId": application_id}
+    try:
+        response = requests.get(url=constants.APPLICATION_ENDPOINT + "/" + application_id + "/inbound-protocols/oidc",
+                                headers=headers, verify=False)
+        response.raise_for_status()
+        response_json = json.loads(response.content)
+        return {"clientId": response_json['clientId'], "clientSecret": response_json['clientSecret'], "applicationId": application_id}
+    except HTTPError as http_error:
+        print(http_error)
+        print(response.text)
+        exit(1)
+    except Exception as error:
+        print("Error occurred: " + str(error))
+        exit(1)
 
 
 # register a service provider with given configuration
@@ -79,22 +112,27 @@ def register_service_provider(config_file_path):
         body = json.load(file)
     name = body["name"]
 
-    print("Registering service provider " + name)
-    response = requests.post(url=constants.APPLICATION_ENDPOINT, headers=headers, data=json.dumps(body), verify=False)
-    print(response.content)
-    if response.content and json.loads(response.content)['code'] == "APP-65001":
-        print("Application already registered, getting details")
-    else:
+    print("\nRegistering service provider " + name)
+    try:
+        response = requests.post(url=constants.APPLICATION_ENDPOINT, headers=headers, data=json.dumps(body), verify=False)
+        response.raise_for_status()
         print("Service provider " + name + " registered")
-    response = requests.get(url=constants.APPLICATION_ENDPOINT + "?filter=name+eq+" + name, headers=headers,
+        response = requests.get(url=constants.APPLICATION_ENDPOINT + "?filter=name+eq+" + name, headers=headers,
                             verify=False)
-    print(response.status_code)
-    response_map = json.loads(response.content)
-    print(response_map)
-    if response_map['count'] == 0:
-        print("error application not found")
-    else:
-        return get_service_provider_details(response_map['applications'][0]['id'])
+        response.raise_for_status()
+        response_map = json.loads(response.content)
+        print(response_map)
+        if response_map['count'] == 0:
+            print("error application not found")
+        else:
+            return get_service_provider_details(response_map['applications'][0]['id'])
+    except HTTPError as http_error:
+        print(http_error)
+        print(response.text)
+        exit(1)
+    except Exception as error:
+        print("\nError occurred: " + str(error))
+        exit(1)
 
 
 # set values for user claims using given config file
@@ -102,19 +140,39 @@ def set_user_claim_values(config_file_path):
     with open(config_file_path) as file:
         body = json.load(file)
 
-    print("Setting user claim values")
-    response = requests.patch(url="https://localhost:9443/scim2/Me", headers=headers, data=json.dumps(body), verify=False)
-    print(response.status_code)
-    print(response.text)
+    print("\nSetting user claim values")
+    try:
+        response = requests.patch(url=constants.BASE_URL + "/scim2/Me", headers=headers, data=json.dumps(body), verify=False)
+        response.raise_for_status()
+    except HTTPError as http_error:
+        print(http_error)
+        print(response.text)
+        exit(1)
+    except Exception as error:
+        print("\nError occurred: " + str(error))
+        exit(1)
+    else:
+        print("\nCompleted with status: " + str(response.status_code))
+        print(response.text)
 
 
 # change the local mapping of a given claim
 def change_local_claim_mapping(body, url):
-    print("changing local claim mapping for " + body['claimURI'])
+    print("\nChanging local claim mapping for " + body['claimURI'])
     json_body = json.dumps(body)
-    response = requests.put(url=url, headers=headers, data=json_body, verify=False)
-    print(response.status_code)
-    print(response.text)
+    try:
+        response = requests.put(url=url, headers=headers, data=json_body, verify=False)
+        response.raise_for_status()
+    except HTTPError as http_error:
+        print(http_error)
+        print(response.text)
+        exit(1)
+    except Exception as error:
+        print("\nError occurred: " + str(error))
+        exit(1)
+    else:
+        print("\nCompleted successfully with status: " + str(response.status_code))
+        print(response.text)
 
 
 # add claims to the service provider with given id using given claims config file
@@ -122,11 +180,21 @@ def add_claim_service_provider(application_id, config_file_path):
     with open(config_file_path) as file:
         body = json.load(file)
 
-    print("Adding claims to service provider")
-    response = requests.patch(url=constants.APPLICATION_ENDPOINT + "/" + application_id, headers=headers, data=json.dumps(body),
-                              verify=False)
-    print(response.status_code)
-    print(response.text)
+    print("\nAdding claims to service provider")
+    try:
+        response = requests.patch(url=constants.APPLICATION_ENDPOINT + "/" + application_id, headers=headers, data=json.dumps(body),
+                                verify=False)
+        response.raise_for_status()
+    except HTTPError as http_error:
+        print(http_error)
+        print(response.text)
+        exit(1)
+    except Exception as error:
+        print("\nError occurred: "+ str(error))
+        exit(1)
+    else:
+        print("\nCompleted successfully with status: " + str(response.status_code))
+        print(response.text)
 
 
 # perform advanced authentication configuration for given service provider using given config file
@@ -134,21 +202,42 @@ def configure_acr(application_id, config_file_path):
     with open(config_file_path) as file:
         body = json.load(file)
 
-    print("Setup advanced authentication scripts")
-    response = requests.patch(url=constants.APPLICATION_ENDPOINT + "/" + application_id, headers=headers, data=json.dumps(body),
-                              verify=False)
-    print(response.status_code)
-    print(response.text)
+    print("\nSetup advanced authentication scripts")
+    try:
+        response = requests.patch(url=constants.APPLICATION_ENDPOINT + "/" + application_id, headers=headers,
+                                  data=json.dumps(body), verify=False)
+        response.raise_for_status()
+    except HTTPError as http_error:
+        print(http_error)
+        print(response.text)
+        exit(1)
+    except Exception as error:
+        print("\nError occurred: " + str(error))
+        exit(1)
+    else:
+        print("\nCompleted successfully with status: " + str(response.status_code))
+        print(response.text)
 
 
 # update the scope with given scope id
 def edit_scope(scope_id, body):
-    print("Changing scope: " + scope_id)
+    print("\nChanging scope: " + scope_id)
     json_body = json.dumps(body)
-    response = requests.put(url="https://localhost:9443/api/server/v1/oidc/scopes/" + scope_id, headers=headers,
-                            data=json_body, verify=False)
-    print(response.status_code)
-    print(response.text)
+    try:
+        response = requests.put(url=constants.BASE_URL + "/api/server/v1/oidc/scopes/" + scope_id, headers=headers,
+                                data=json_body, verify=False)
+        response.raise_for_status()
+    except HTTPError as http_error:
+        print(http_error)
+        print(response.text)
+        exit(1)
+    except Exception as error:
+        print("\nError occurred: " + str(error))
+        exit(1)
+    else:
+        print("\nCompleted successfully with status: " + str(response.status_code))
+        print(response.text)
+
 
 # unpack product-is zip file and run
 def unpack_and_run(zip_file_name):
@@ -158,13 +247,21 @@ def unpack_and_run(zip_file_name):
             print("Extracting " + zip_file_name)
             zip_file.extractall()
 
+        # HtmlUnit web browser used by the conformance suite will throw a JQuery not defined error
+        # when trying to load oauth_response.html page.
+        # Deleting oauth_response.html file before testing as a temporary solution to this issue
+        print(zip_file_name)
+        match = re.search('\.\./\.\./(.*)\.zip', zip_file_name)
+        product_is_folder_name = match.group(1)
+        os.system("rm -rf ./" + product_is_folder_name + "/repository/resources/identity/pages/oauth_response.html")
+
         dir_name = ''
         # start identity server
-        print("Starting Server")
+        print("\nStarting Server")
         dir_list = os.listdir()
         r = re.compile('(?=^wso2is)(?=^((?!zip).)*$)')
         for line in dir_list:
-            if r.match(line):
+           if r.match(line):
                 print(line)
                 dir_name = line
                 break
@@ -174,7 +271,7 @@ def unpack_and_run(zip_file_name):
         while True:
             output = process.stdout.readline()
             if b'..................................' in output:
-                print("Server Started")
+                print("\nServer Started")
                 break
             if output:
                 print(output.strip())
@@ -186,15 +283,15 @@ def unpack_and_run(zip_file_name):
 
 
 # creates the IS_config.json file needed to run OIDC test plans and save in the given path
-def json_config_builder(service_provider_1, service_provider_2, output_file_path, config_file_path):
+def json_config_builder(service_provider_1, service_provider_2, output_file_path, plan_name):
     config = {
         "alias": constants.ALIAS,
         "server": {
-            "issuer": "https://localhost:9443/oauth2/token",
-            "jwks_uri": "https://localhost:9443/oauth2/jwks",
-            "authorization_endpoint": "https://localhost:9443/oauth2/authorize",
-            "token_endpoint": "https://localhost:9443/oauth2/token",
-            "userinfo_endpoint": "https://localhost:9443/oauth2/userinfo",
+            "issuer": constants.BASE_URL + "/oauth2/token",
+            "jwks_uri": constants.BASE_URL + "/oauth2/jwks",
+            "authorization_endpoint": constants.BASE_URL + "/oauth2/authorize",
+            "token_endpoint": constants.BASE_URL + "/oauth2/token",
+            "userinfo_endpoint": constants.BASE_URL + "/oauth2/userinfo",
             "acr_values": "acr1"
         },
         "client": {
@@ -209,15 +306,10 @@ def json_config_builder(service_provider_1, service_provider_2, output_file_path
             "client_id": service_provider_1['clientId'],
             "client_secret": service_provider_1['clientSecret']
         },
-        "browser": [],
-        "override": ''
+        "browser": browser_configuration.CONFIG[plan_name]["browser"],
+        "override": browser_configuration.CONFIG[plan_name]["override"]
     }
 
-    with open(config_file_path) as file:
-        browser_config = json.load(file)
-
-    config["browser"] = browser_config["browser"]
-    config["override"] = browser_config["override"]
     json_config = json.dumps(config, indent=4)
     f = open(output_file_path, "w")
     f.write(json_config)
@@ -245,7 +337,7 @@ def is_process_running(process_name):
 
 
 # perform all configurations and generate config file for a single OIDC test plan
-def generate_config_for_plan(service_provider1_config, service_provider2_config, output_file_path, browser_config):
+def generate_config_for_plan(service_provider1_config, service_provider2_config, output_file_path, plan_name):
     service_provider_1 = register_service_provider(service_provider1_config)
     service_provider_2 = register_service_provider(service_provider2_config)
     print(service_provider_1)
@@ -257,7 +349,7 @@ def generate_config_for_plan(service_provider1_config, service_provider2_config,
     configure_acr(service_provider_1['applicationId'], "./config/acr_config.json")
     configure_acr(service_provider_2['applicationId'], "./config/acr_config.json")
 
-    json_config_builder(service_provider_1, service_provider_2, output_file_path, browser_config)
+    json_config_builder(service_provider_1, service_provider_2, output_file_path, plan_name)
 
 
 warnings.filterwarnings("ignore")
@@ -280,15 +372,15 @@ change_local_claim_mapping(
         "claimURI": "phone_number",
         "mappedLocalClaimURI": "http://wso2.org/claims/mobile"
     },
-    "https://localhost:9443/api/server/v1/claim-dialects/aHR0cDovL3dzbzIub3JnL29pZGMvY2xhaW0/claims/cGhvbmVfbnVtYmVy")
+    constants.BASE_URL + "/api/server/v1/claim-dialects/aHR0cDovL3dzbzIub3JnL29pZGMvY2xhaW0/claims/cGhvbmVfbnVtYmVy")
 
-# change website from url to organization
+#change website from url to organization
 change_local_claim_mapping(
     {
         "claimURI": "website",
         "mappedLocalClaimURI": "http://wso2.org/claims/organization"
     },
-    "https://localhost:9443/api/server/v1/claim-dialects/aHR0cDovL3dzbzIub3JnL29pZGMvY2xhaW0/claims/d2Vic2l0ZQ")
+    constants.BASE_URL + "/api/server/v1/claim-dialects/aHR0cDovL3dzbzIub3JnL29pZGMvY2xhaW0/claims/d2Vic2l0ZQ")
 
 edit_scope("openid", {
     "claims": [
@@ -300,23 +392,30 @@ edit_scope("openid", {
 
 generate_config_for_plan("./basic/config/service_provider1_config.json",
                          "./basic/config/service_provider2_config.json",
-                         "basic/IS_config_basic.json", "./basic/config/browser_config.json")
+                         "basic/IS_config_basic.json",
+                         "basic")
+
 generate_config_for_plan("./implicit/config/service_provider1_config.json",
                          "./implicit/config/service_provider2_config.json",
                          "implicit/IS_config_implicit.json",
-                         "./implicit/config/browser_config.json")
+                         "implicit")
+
 generate_config_for_plan("./hybrid/config/service_provider1_config.json",
                          "./hybrid/config/service_provider2_config.json",
-                         "hybrid/IS_config_hybrid.json", "./hybrid/config/browser_config.json")
+                         "hybrid/IS_config_hybrid.json",
+                         "hybrid")
+
 generate_config_for_plan("./formpost-basic/config/service_provider1_config.json",
                          "./formpost-basic/config/service_provider2_config.json",
                          "formpost-basic/IS_config_formpost_basic.json",
-                         "./formpost-basic/config/browser_config.json")
+                         "formpost-basic")
+
 generate_config_for_plan("./formpost-implicit/config/service_provider1_config.json",
                          "./formpost-implicit/config/service_provider2_config.json",
                          "formpost-implicit/IS_config_formpost_implicit.json",
-                         "./formpost-implicit/config/browser_config.json")
+                         "formpost-implicit")
+
 generate_config_for_plan("./formpost-hybrid/config/service_provider1_config.json",
                          "./formpost-hybrid/config/service_provider2_config.json",
                          "formpost-hybrid/IS_config_formpost_hybrid.json",
-                         "./formpost-hybrid/config/browser_config.json")
+                         "formpost-hybrid")

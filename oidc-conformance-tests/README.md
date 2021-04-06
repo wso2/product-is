@@ -7,10 +7,11 @@ OIDC conformance test workflow can be used to for this purpose.
 2. Click on OIDC conformance test workflow
 3. Click on Run workflow
 4. You need to provide the tag name of the product-is version you want to test (default value is "v5.12.0-m6")
-5. Set send google chat notification to false if you don't want a summary of test results to be sent to a configured google chat group. (default value is true)
-6. Click on Run workflow
-7. After tests are completed you can view test results on the test summary page
-8. Two types of artifacts are saved after the test is completed
+5. Set 'Send test results to email' to 'yes' if you want to send test summary to a list of pre-configured email addresses. (default is 'no')
+6. Set 'Send test results to google chat' to 'yes' if you also want to send test summary to a pre-configured google chat group. (default is 'no')
+7. Click on Run workflow
+8. After tests are completed you can view test results on the test summary page
+9. Two types of artifacts are saved after the test execution is completed
    - test-logs - a log file is generated for each test plan. This log contains a summary of test cases with failures and warnings
    - test-results - a zip file is generated for each test plan. You can use a web browser to view a detailed report of the test plan by extracting this zip file
 
@@ -20,6 +21,14 @@ OIDC conformance test workflow can be used to for this purpose.
 3. for name add "GOOGLE_WEBHOOK"
 4. add the webhook url for value
 5. Click add secret
+
+An email containing the same test summary will also be sent to a pre-configured list of email addresses. To configure this save sender email credentials and list of receiver emails as repository secrets
+* Save sender email as 'SENDER_EMAIL'
+* Save password as 'PASSWORD'
+* Save the list of receiver email as 'RECEIVER_LIST'. Save these as a string of comma separated email addresses
+* You need to enable less secure application access in your email account
+
+Default configuration is to use Gmail SMTP server. You can change that by modifying `SMTP_SERVER` and `SMTP_SERVER_PORT` in `constants.py`
 
 This workflow will also automatically trigger after a release or a pre-release
 
@@ -39,7 +48,9 @@ You can use test_runner.sh script to start and configure identity server locally
 2. Save and exit
 3. Run the script using ```sudo bash test_runner.sh```
 
-By default this script will run following test plans
+If the identity server is not running on the default port, you need to change `IS_HOSTNAME` in `constants.py` to reflect the correct address. Default is set to `https://localhost:9443`
+
+By default, this script will run following test plans
 * Basic certification test plan
 * Implicit certification test plan
 * Hybrid certification test plan
@@ -47,7 +58,8 @@ By default this script will run following test plans
 * Form post implicit certification test plan
 * Form post hybrid certification test plan
 
-After testing is completed test-logs and test-results files will be generated same as when running using GitHub actions.
+After testing is completed, test-logs and test-results files will be generated same as when running using GitHub
+ actions.
 
 Following is a description of what each script does
 ### configure_is.py
@@ -74,11 +86,17 @@ This script will start OIDC conformance suite using docker-compose locally
 
 This script use OIDC conformance suite APIs to export results of completed test plans as zip files
 
-### send_notification.py
+### send_email.py
 
-**Inputs** - Url of conformance suite(running locally), GitHub workflow run number, GitHub workflow status, GitHub repository name, GitHub workflow run id, Gmail credentials to send emails
+**Inputs** - Url of conformance suite(running locally), GitHub workflow run number, GitHub workflow status, GitHub repository name, GitHub workflow run id, email credentials, List of receiver email addresses
 
-This script will obtain counts of test cases with failures and warnings using the API of OIDC conformance. Then send emails with the summary of test results to provided email addresses
+This script will obtain counts of test cases with failures and warnings using the API of OIDC conformance suite. Then send emails with the summary of test results to provided email addresses
+
+## send_chat.py
+
+**Inputs** - Url of conformance suite(running locally), GitHub workflow run number, GitHub workflow status, GitHub repository name, GitHub workflow run id, Google chat webhook url
+
+This script will obtain counts of test cases with failures and warnings using the API of OIDC conformance suite. Then send the test summary to a pre-configured google chat group
 
 ### test_runner.sh
 

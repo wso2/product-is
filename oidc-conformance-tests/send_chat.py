@@ -25,9 +25,9 @@ github_run_number = str(sys.argv[2])
 workflow_status = sys.argv[3]
 github_repository_name = sys.argv[4]
 github_run_id = str(sys.argv[5])
-sender_email = str(sys.argv[6])
-password = str(sys.argv[7])
-receiver_list = sys.argv[8].split(',')
+google_chat_webhook = sys.argv[6]
+wso2_is_version = sys.argv[7]
+
 
 failed_count = 0
 warnings_count = 0
@@ -46,21 +46,20 @@ for test_plan in plan_list['data']:
     if len(failed_tests_list['others']) > 0:
         total_tests_count += len(failed_tests_list['others'])
 
-port = 465
-smtp_server = "smtp.gmail.com"
-message = """\
-Subject: OIDC Conformance Test #""" + github_run_number + """ Summary
-From: """ + sender_email + """
-To: """ + sys.argv[8] + """
 
-OIDC conformance  test run # """ + github_run_number + """ completed with status: """ + workflow_status + """
-Total test cases:""" + str(total_tests_count) + """
-Failed test cases: """ + str(failed_count) + """
-Test cases with warnings: """ + str(warnings_count) + """
-https://github.com/""" + github_repository_name + """/actions/runs/""" + github_run_id
+# send google chat notification
+request_body = {
+    'text': 'Hi all, OIDC conformance test run #' + github_run_number + ' for IS ' + str(wso2_is_version) +
+            ' completed with status: ' + workflow_status +
+            ' \n Total test cases: ' + str(total_tests_count) +
+            ' \n Failed test cases: ' + str(failed_count) +
+            ' \n Test cases with warnings: ' + str(warnings_count) +
+            ' \n https://github.com/' + github_repository_name + '/actions/runs/' + github_run_id
+}
+try:
+    response = requests.post(google_chat_webhook, json=request_body)
+    print(response.text)
+    response.raise_for_status()
+except Exception as error:
+    print(error)
 
-context = ssl.create_default_context()
-with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
-    server.login(sender_email, password)
-    server.sendmail(sender_email, receiver_list, message)
-    server.close()
