@@ -2103,7 +2103,7 @@
         <callhome.version>4.5.x_1.0.8</callhome.version>
 
         <!-- Authenticator Versions -->
-        <identity.outbound.auth.oidc.version>5.6.5</identity.outbound.auth.oidc.version>
+        <identity.outbound.auth.oidc.version>5.6.6</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.passive.sts.version>5.4.4</identity.outbound.auth.passive.sts.version>
         <identity.outbound.auth.samlsso.version>5.3.22</identity.outbound.auth.samlsso.version>
         <identity.outbound.auth.requestpath.basicauth.version>5.4.2</identity.outbound.auth.requestpath.basicauth.version>
