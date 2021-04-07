@@ -140,8 +140,6 @@ public class OIDCFederatedIdpInitLogoutTest extends AbstractIdentityFederationTe
 
     private static final String TENANT_DOMAIN_PARAM = "tenantDomain";
 
-    private static final String HTTP_REDIRECT_BINDING = "HTTPRedirectBinding";
-
     protected OauthAdminClient adminClient;
     private String secondaryISClientID;
     private String secondaryISClientSecret;
@@ -213,10 +211,9 @@ public class OIDCFederatedIdpInitLogoutTest extends AbstractIdentityFederationTe
 
         try {
             super.deleteServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SP_NAME);
+            super.deleteServiceProvider(PORT_OFFSET_1, FEDERATED_IS_SP_NAME);
             super.deleteIdentityProvider(PORT_OFFSET_0, PRIMARY_IS_IDP_NAME);
-
             super.deleteServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SP_NAME);
-
             deleteAddedUsersInSecondaryIS();
 
             client.close();
