@@ -139,7 +139,6 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
         dcrRequest.put(OAuthDCRMConstants.REDIRECT_URIS, redirectURI);
         dcrRequest.put(OAuthDCRMConstants.AUD, audience);
         dcrRequest.put(OAuthDCRMConstants.SOFTWARE_ID, OAuthDCRMConstants.SOFTWARE_ID_VALUE);
-        dcrRequest.put(OAuthDCRMConstants.TOKEN_ENDPOINT_AUTH_METHOD, OAuthDCRMConstants.TOKEN_ENDPOINT_AUTH_METHOD_VALUE);
         dcrRequest.put(OAuthDCRMConstants.ID_TOKEN_ENCRYPTED_RESPONSE_ALG,
                 OAuthDCRMConstants.ID_TOKEN_ENCRYPTED_RESPONSE_ALG_VALUE);
         dcrRequest.put(OAuthDCRMConstants.ID_TOKEN_ENCRYPTED_RESPONSE_ENC,
@@ -160,8 +159,6 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
         client_id = ((JSONObject) responseObj).get("client_id").toString();
         assertNotNull(client_id, "client_id cannot be null");
         assertNotNull(((JSONObject) responseObj).get(OAuthDCRMConstants.AUD), "aud cannot be null");
-        assertNotNull(((JSONObject) responseObj).get(OAuthDCRMConstants.TOKEN_ENDPOINT_AUTH_METHOD),
-                "token_endpoint_auth_method cannot be null");
         assertNotNull(((JSONObject) responseObj).get(OAuthDCRMConstants.ID_TOKEN_ENCRYPTED_RESPONSE_ALG),
                 "id_token_encrypted_response_alg cannot be null");
         assertNotNull(((JSONObject) responseObj).get(OAuthDCRMConstants.ID_TOKEN_ENCRYPTED_RESPONSE_ENC),
@@ -342,43 +339,6 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
         EntityUtils.consume(successResponse.getEntity());
         client_id = ((JSONObject) responseObj).get("client_id").toString();
         assertNotNull(client_id, "client_id cannot be null");
-    }
-
-    @Test(alwaysRun = true, groups = "wso2.is", priority = 7, description = "Try to register service provider with " +
-            "invalid token_endpoint_auth_method")
-    public void testCreateServiceProviderRequestWithInvalidTokenEndpointAuthMethod() throws IOException {
-        HttpPost request = new HttpPost(getPath());
-        setRequestHeaders(request);
-
-        JSONArray grantTypes = new JSONArray();
-        grantTypes.add(OAuthDCRMConstants.GRANT_TYPE_AUTHORIZATION_CODE);
-        grantTypes.add(OAuthDCRMConstants.GRANT_TYPE_IMPLICIT);
-
-        JSONArray redirectURI = new JSONArray();
-        redirectURI.add(OAuthDCRMConstants.REDIRECT_URI);
-
-        JSONObject dcrRequest = new JSONObject();
-        dcrRequest.put(OAuthDCRMConstants.CLIENT_NAME, DUMMY_DCR_APP);
-        dcrRequest.put(OAuthDCRMConstants.GRANT_TYPES, grantTypes);
-        dcrRequest.put(OAuthDCRMConstants.REDIRECT_URIS, redirectURI);
-        dcrRequest.put(OAuthDCRMConstants.TOKEN_ENDPOINT_AUTH_METHOD,
-                OAuthDCRMConstants.INVALID_TOKEN_ENDPOINT_AUTH_METHOD_VALUE);
-
-        StringEntity entity = new StringEntity(dcrRequest.toJSONString());
-
-        request.setEntity(entity);
-
-        HttpResponse response = client.execute(request);
-        assertEquals(response.getStatusLine().getStatusCode(), 400, "Service Provider " +
-                "creation request with invalid token_endpoint_auth_method should have returned a bad request");
-
-        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-        Object responseObj = JSONValue.parse(rd);
-        EntityUtils.consume(response.getEntity());
-
-        String errorMsg = ((JSONObject) responseObj).get("error").toString();
-
-        assertEquals(errorMsg, "invalid_client_metadata", "Invalid error message");
     }
 
     @Test(alwaysRun = true, groups = "wso2.is", priority = 8, description = "Try to register service provider with " +

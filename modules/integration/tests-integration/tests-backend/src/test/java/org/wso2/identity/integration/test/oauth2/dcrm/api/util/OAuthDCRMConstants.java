@@ -42,7 +42,6 @@ public class OAuthDCRMConstants {
 
     public static final String INVALID_CLIENT_ID = "invalid_client_id";
     public static final String INVALID_CLIENT_SECRET = "invalid_client_secret";
-    public static final String INVALID_TOKEN_ENDPOINT_AUTH_METHOD_VALUE = "invalid_token_endpoint_auth_method";
     public static final String INVALID_ID_TOKEN_ENCRYPTED_RESPONSE_ALG_VALUE = "invalid_id_token_encryption_alg";
     public static final String INVALID_ID_TOKEN_ENCRYPTED_RESPONSE_ENC_VALUE = "invalid_id_token_encryption_method";
 
@@ -51,7 +50,6 @@ public class OAuthDCRMConstants {
     public static final String REDIRECT_URI = "http://TestApp.com";
     public static final String AUD_VALUE = "testAud";
     public static final String SOFTWARE_ID_VALUE = "testId";
-    public static final String TOKEN_ENDPOINT_AUTH_METHOD_VALUE = "none";
     public static final String ID_TOKEN_ENCRYPTED_RESPONSE_ALG_VALUE = "RSA-OAEP";
     public static final String ID_TOKEN_ENCRYPTED_RESPONSE_ENC_VALUE = "A128GCM";
 
