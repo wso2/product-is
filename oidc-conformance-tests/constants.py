@@ -14,11 +14,19 @@
 #  limitations under the License.
 
 ALIAS = "test"
-DCR_ENDPOINT = "https://localhost:9443/api/identity/oauth2/dcr/v1.1/register"
-TOKEN_ENDPOINT = "https://localhost:9443/oauth2/token"
+
+BASE_URL = "https://localhost:9443"
+
+DCR_ENDPOINT = BASE_URL + "/api/identity/oauth2/dcr/v1.1/register"
+
+TOKEN_ENDPOINT = BASE_URL + "/oauth2/token"
+
 DCR_CLIENT_ID = "oidc_test_clientid001"
+
 DCR_CLIENT_SECRET = "oidc_test_client_secret001"
-APPLICATION_ENDPOINT = "https://localhost:9443/api/server/v1/applications"
+
+APPLICATION_ENDPOINT = BASE_URL + "/api/server/v1/applications"
+
 SCOPES = "internal_user_mgt_update internal_application_mgt_create internal_application_mgt_view internal_login " \
          "internal_claim_meta_update internal_application_mgt_update internal_scope_mgt_create"
 
@@ -30,3 +38,7 @@ DCR_BODY = {
     "ext_param_client_id": DCR_CLIENT_ID,
     "ext_param_client_secret": DCR_CLIENT_SECRET
 }
+
+SMTP_SERVER = "smtp.gmail.com"
+
+SMTP_SERVER_PORT = 465
