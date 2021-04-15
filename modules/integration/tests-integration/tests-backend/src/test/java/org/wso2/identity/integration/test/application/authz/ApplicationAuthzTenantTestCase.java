@@ -48,7 +48,7 @@ import java.net.URL;
  */
 public class ApplicationAuthzTenantTestCase extends AbstractApplicationAuthzTestCase {
 
-    private static final String AZ_TEST_TENANT_ROLE = "azTestTenantRole";
+    private static final String AZ_TEST_TENANT_ROLE = "Internal/azTestTenantRole";
     private static final String HTTP_REDIRECT = "HTTP-Redirect";
     private static final String AZ_TEST_TENANT_USER = "azTestTenantUser";
     private static final String AZ_TEST_TENANT_USER_PW = "azTest123";

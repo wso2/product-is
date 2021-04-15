@@ -45,7 +45,7 @@ import java.rmi.RemoteException;
 
 public class ApplicationAuthzTestCase extends AbstractApplicationAuthzTestCase {
 
-    private static final String AZ_TEST_ROLE = "azTestRole";
+    private static final String AZ_TEST_ROLE = "Internal/azTestRole";
     private static final String HTTP_REDIRECT = "HTTP-Redirect";
     private static final String AZ_TEST_USER = "azTestUser";
     private static final String AZ_TEST_USER_PW = "azTest123";
