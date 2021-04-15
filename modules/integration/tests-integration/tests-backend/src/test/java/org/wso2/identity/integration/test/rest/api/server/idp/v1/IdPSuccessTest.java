@@ -475,7 +475,7 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body("mappings[0].localClaim.uri", equalTo("http://wso2.org/claims/username"))
                 .body("mappings[0].localClaim.displayName", equalTo("Username"))
                 .body("mappings[1].idpClaim", equalTo("roles"))
-                .body("mappings[1].localClaim.id", equalTo("aHR0cDovL3dzbzIub3JnL2NsYWltcy9ncm91cHM"))
+                .body("mappings[1].localClaim.id", equalTo("aHR0cDovL3dzbzIub3JnL2NsYWltcy9yb2xlcw"))
                 .body("mappings[1].localClaim.uri", equalTo("http://wso2.org/claims/roles"))
                 .body("mappings[1].localClaim.displayName", equalTo("Roles"))
                 .body("provisioningClaims", notNullValue())
@@ -508,9 +508,9 @@ public class IdPSuccessTest extends IdPTestBase {
                 .statusCode(HttpStatus.SC_OK)
                 .body("mappings", notNullValue())
                 .body("mappings[0].idpRole", equalTo("google-admin"))
-                .body("mappings[0].localRole", equalTo("admin"))
+                .body("mappings[0].localRole", equalTo("Internal/admin"))
                 .body("outboundProvisioningRoles", notNullValue())
-                .body("outboundProvisioningRoles[0]", equalTo("admin"));
+                .body("outboundProvisioningRoles[0]", equalTo("Internal/admin"));
     }
 
     @Test(dependsOnMethods = {"testGetIdPRoles"})
