@@ -37,5 +37,5 @@
   "encryption.key": "03BAFEB27A8E871CAD83C5CD4E771DAB",
 
   "authorization_manager.properties.GroupAndRoleSeparationEnabled": "true",
-  "authorization_manager.properties.GroupAndRoleSeparationImprovementsEnabled": "false"
+  "authorization_manager.properties.GroupAndRoleSeparationImprovementsEnabled": "true"
 }
