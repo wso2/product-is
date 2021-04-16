@@ -172,7 +172,7 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
         String encodedIdToken = ((JSONObject) obj).get("id_token").toString().split("\\.")[1];
         Object idToken = JSONValue.parse(new String(Base64.decodeBase64(encodedIdToken)));
         Object roles = ((JSONObject) idToken).get(OIDC_ROLES_CLAIM_URI);
-        Assert.assertTrue(((JSONArray) roles).contains(OAUTH_ROLE)), "Id token does not contain updated role claim");
+        Assert.assertTrue((((JSONArray) roles).contains(OAUTH_ROLE)), "Id token does not contain updated role claim");
     }
 
     private ClaimValue[] getUserClaims() {
