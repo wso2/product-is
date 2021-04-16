@@ -157,7 +157,7 @@ function onLoginRequest(context) {
         <RoleMappings>
             <RoleMapping>
                 <localRole>
-                    <LocalRoleName>admin</LocalRoleName>
+                    <LocalRoleName>Internal/admin</LocalRoleName>
                 </localRole>
                 <remoteRole>role1</remoteRole>
             </RoleMapping>
