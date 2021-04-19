@@ -2175,7 +2175,7 @@
         <carbon.analytics-common.version>5.2.27</carbon.analytics-common.version>
         <carbon.dashboards.version>2.0.26</carbon.dashboards.version>
         <carbon.database.utils.version>2.0.13</carbon.database.utils.version>
-        <carbon.healthcheck.version>1.2.5</carbon.healthcheck.version>
+        <carbon.healthcheck.version>1.2.8</carbon.healthcheck.version>
 
         <!-- Common tool Versions -->
         <cipher-tool.version>1.1.9</cipher-tool.version>
