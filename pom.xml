@@ -2053,7 +2053,7 @@
         <carbon.consent.mgt.version>2.3.1</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.5.2</identity.governance.version>
+        <identity.governance.version>1.5.3</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.5.2</identity.carbon.auth.saml2.version>
@@ -2121,7 +2121,7 @@
         <provisioning.connector.scim.version>5.2.4</provisioning.connector.scim.version>
 
         <!-- Local Authenticator Versions -->
-        <identity.local.auth.basicauth.version>6.3.28</identity.local.auth.basicauth.version>
+        <identity.local.auth.basicauth.version>6.3.29</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.3.1</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.3.14</identity.local.auth.iwa.version>
 
