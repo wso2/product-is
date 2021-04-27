@@ -2267,7 +2267,7 @@
 
         <!--  Test dependencies -->
         <carbon.automation.version>4.4.3</carbon.automation.version>
-        <carbon.automationutils.version>4.5.1</carbon.automationutils.version>
+        <carbon.automationutils.version>4.5.4</carbon.automationutils.version>
         <selenium.version>2.40.0</selenium.version>
         <testng.version>6.1.1</testng.version>
         <junit.version>4.12</junit.version>
