@@ -140,7 +140,7 @@
         {
           "name": "Recovery.ExpiryTime",
           "value": "1440",
-          "displayName": "Recovery link expiry time",
+          "displayName": "Recovery link expiry time in minutes",
           "description": ""
         },
         {
