@@ -614,6 +614,11 @@
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.wso2.scim2.testsuite</groupId>-->
+<!--            <artifactId>org.wso2.scim2.testsuite.core</artifactId>-->
+<!--            <version>1.0</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>

@@ -14,7 +14,8 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <parent>
         <groupId>org.wso2.is</groupId>
@@ -39,7 +40,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <inherited>false</inherited>
                 <configuration>
-                        <systemProperties>
+                    <systemProperties>
                         <maven.test.haltafterfailure>false</maven.test.haltafterfailure>
                         <carbon.zip>
                             ${basedir}/../distribution/target/wso2is-${project.version}.zip
@@ -50,7 +51,7 @@
                         <!--<emma.home>${basedir}/target/emma</emma.home>-->
                         <samples.dir>${basedir}/../samples/product</samples.dir>
                         <extracted.dir>wso2is-${project.version}</extracted.dir>
-                            <java.util.logging.manager>org.apache.logging.log4j.jul.LogManager</java.util.logging.manager>
+                        <java.util.logging.manager>org.apache.logging.log4j.jul.LogManager</java.util.logging.manager>
                     </systemProperties>
                     <classpathDependencyExcludes>
                         <classpathDependencyExclude>org.ops4j.pax.logging:pax-logging-api</classpathDependencyExclude>
@@ -112,6 +113,11 @@
         <dependency>
             <groupId>org.wso2.carbon.identity.inbound.auth.sts</groupId>
             <artifactId>org.wso2.carbon.identity.sts.passive.stub</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.scim2.testsuite</groupId>
+            <artifactId>org.wso2.scim2.testsuite.core</artifactId>
+            <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.automationutils</groupId>
