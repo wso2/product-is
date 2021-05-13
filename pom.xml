@@ -2270,7 +2270,7 @@
         <carbon.automationutils.version>4.5.4</carbon.automationutils.version>
         <selenium.version>2.40.0</selenium.version>
         <testng.version>6.1.1</testng.version>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
         <org.apache.tomcat.wso2.version>7.0.52.wso2v5</org.apache.tomcat.wso2.version>
         <msf4j.version>2.6.2</msf4j.version>
         <jacoco.agent.version>0.8.4</jacoco.agent.version>
