@@ -2224,7 +2224,7 @@
         <opensaml2.wso2.version>2.6.6.wso2v3</opensaml2.wso2.version>
         <opensaml3.version>3.3.1</opensaml3.version>
         <shibboleth.version>7.3.0</shibboleth.version>
-        <google.guava.version>27.0.1-jre</google.guava.version>
+        <google.guava.version>29.0-jre</google.guava.version>
         <joda.wso2.version>2.9.4.wso2v1</joda.wso2.version>
         <wss4j.wso2.version>1.5.11-wso2v21</wss4j.wso2.version>
         <openws.version>1.5.4</openws.version>
