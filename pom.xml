@@ -2287,7 +2287,7 @@
         <!--UI Cypress test -->
         <com.fasterxml.jackson.version>2.10.5</com.fasterxml.jackson.version>
         <jackson-core-asl.version>1.9.13</jackson-core-asl.version>
-        <com.fasterxml.jackson.annotation.version>2.10.5</com.fasterxml.jackson.annotation.version>
+        <com.fasterxml.jackson.annotation.version>2.10.5.1</com.fasterxml.jackson.annotation.version>
         <!--ws-trust-client-->
         <org.apache.velocity.version>1.7</org.apache.velocity.version>
         <org.xmlunit.version>2.6.3</org.xmlunit.version>
