@@ -98,7 +98,7 @@ public class RESTTestBase extends ISIntegrationTest {
 
     protected String basePath = StringUtils.EMPTY;
 
-    private OpenApiValidationFilter validationFilter;
+    protected OpenApiValidationFilter validationFilter;
     private EncoderConfig encoderconfig = new EncoderConfig();
 
     /**
@@ -706,6 +706,25 @@ public class RESTTestBase extends ISIntegrationTest {
         return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
                 .contentType(ContentType.JSON)
                 .header(HttpHeaders.ACCEPT, ContentType.JSON)
+                .log().ifValidationFails()
+                .filter(validationFilter)
+                .log().ifValidationFails()
+                .when()
+                .log().ifValidationFails()
+                .delete(endpointURI);
+    }
+
+    /**
+     * Invoke given endpointUri for DELETE with given body and Basic authentication, authentication credential being
+     * the authenticatingUserName and authenticatingCredential
+     *
+     * @return response
+     */
+    protected Response getResponseOfDelete(String endpointURI, String contentType) {
+
+        return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.ACCEPT, contentType)
                 .log().ifValidationFails()
                 .filter(validationFilter)
                 .log().ifValidationFails()

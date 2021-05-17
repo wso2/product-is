@@ -1,0 +1,18 @@
+{
+  "schemas": [
+    "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+  ],
+  "Operations": [
+    {
+      "op": "replace",
+      "value": {
+        "urn:scim:custom:schema": {
+          "country": "Sri Lanka",
+          "manager": {
+            "email": "piraveenaReplace@gmail.com"
+          }
+        }
+      }
+    }
+  ]
+}
