@@ -611,6 +611,28 @@
     <dependencies>
         <!-- Rest assured dependency requires the http client 4.5.1 or above. -->
         <dependency>
+            <groupId>org.wso2.carbon.identity.framework</groupId>
+            <artifactId>org.wso2.carbon.identity.application.mgt.stub</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-codec.wso2</groupId>
+                    <artifactId>commons-codec</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.axis2.wso2</groupId>
+                    <artifactId>axis2</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.axis2.wso2</groupId>
+                    <artifactId>axis2-client</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.wso2.orbit.javax.activation</groupId>
+                    <artifactId>activation</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
         </dependency>
@@ -775,10 +797,6 @@
         <dependency>
             <groupId>org.wso2.carbon.identity.framework</groupId>
             <artifactId>org.wso2.carbon.user.mgt.stub</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.identity.framework</groupId>
-            <artifactId>org.wso2.carbon.identity.application.mgt.stub</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.framework</groupId>

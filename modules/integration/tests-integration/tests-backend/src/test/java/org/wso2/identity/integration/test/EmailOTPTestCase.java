@@ -94,7 +94,7 @@ public class EmailOTPTestCase extends ISIntegrationTest {
     private static final String EMAIL_OTP_TEMPLATE_CONFIGURED_XML = "emailOTP-email-template.xml";
     private static final String SAML_SSO_LOGIN_URL = "http://localhost:" + DEFAULT_TOMCAT_PORT +
             "/%s/samlsso?SAML2.HTTPBinding=HTTP-POST";
-    private String SAML_SSO_URL = "https://localhost:9853/samlsso";
+    private static final String SAML_SSO_URL = "https://localhost:9853/samlsso";
     private static final String COMMON_AUTH_URL = "https://localhost:9853/commonauth";
     private static final String EMAIL_OTP_AUTHENTICATION_ENDPOINT_URL = "https://localhost:" +
             CommonConstants.IS_DEFAULT_HTTPS_PORT + "/authenticationendpoint/email_otp.do";
