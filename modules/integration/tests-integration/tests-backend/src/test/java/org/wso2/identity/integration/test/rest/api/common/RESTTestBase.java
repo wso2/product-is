@@ -98,7 +98,7 @@ public class RESTTestBase extends ISIntegrationTest {
 
     protected String basePath = StringUtils.EMPTY;
 
-    protected OpenApiValidationFilter validationFilter;
+    private OpenApiValidationFilter validationFilter;
     private EncoderConfig encoderconfig = new EncoderConfig();
 
     /**
@@ -716,7 +716,7 @@ public class RESTTestBase extends ISIntegrationTest {
 
     /**
      * Invoke given endpointUri for DELETE with given body and Basic authentication, authentication credential being
-     * the authenticatingUserName and authenticatingCredential
+     * the authenticatingUserName and authenticatingCredential.
      *
      * @return response
      */

@@ -57,9 +57,8 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.USERS_ENDPOINT;
 
-
 /**
- * Test cases for SCIM2 user operations with custom schema related claims.
+ * Test cases for SCIM2 /Users api relates operations with custom schema related claims.
  */
 public class SCIM2CustomSchemaUserTestCase extends SCIM2BaseTest {
 
@@ -132,7 +131,6 @@ public class SCIM2CustomSchemaUserTestCase extends SCIM2BaseTest {
         super.conclude();
     }
 
-
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
@@ -195,8 +193,7 @@ public class SCIM2CustomSchemaUserTestCase extends SCIM2BaseTest {
 
         String managerEMail = manager.get(MANAGER_EMAIL_CLAIM_ATTRIBUTE_NAME).toString();
         assertEquals(managerEMail, MANAGER_EMAIL_LOCAL_CLAIM_VALUE);
-        }
-
+    }
 
     @Test(dependsOnMethods = "testCreateUser", description = "Tests get users and check for claims with /Users api.")
     public void testGetUsers() throws Exception {
@@ -223,7 +220,6 @@ public class SCIM2CustomSchemaUserTestCase extends SCIM2BaseTest {
             if (StringUtils.equalsIgnoreCase(userId, userIdResponse)) {
                 customSchema = userResourcesResponse.get(CUSTOM_SCHEMA_URI);
                 countryValue = ((LinkedHashMap) customSchema).get(COUNTRY_CLAIM_ATTRIBUTE_NAME).toString();
-
             }
         }
         assertNotNull(customSchema);
@@ -313,7 +309,6 @@ public class SCIM2CustomSchemaUserTestCase extends SCIM2BaseTest {
         assertNull(manager);
     }
 
-
     @Test(dependsOnMethods = "testPutUserAttributes", description = "Tests patch add operation with custom schema " +
             "attributes using /Users api.")
     public void testPatchAddUserAttributes() throws Exception {
@@ -350,9 +345,7 @@ public class SCIM2CustomSchemaUserTestCase extends SCIM2BaseTest {
                 .statusCode(HttpStatus.SC_NO_CONTENT);
 
         getResponseOfGet(userIdEndpointURL, SCIM_CONTENT_TYPE).then().assertThat().statusCode(HttpStatus.SC_NOT_FOUND);
-
     }
-
 
     private void setSimpleAttribute() throws Exception {
 

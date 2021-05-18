@@ -55,6 +55,9 @@ import static org.testng.Assert.assertNull;
 
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.USERS_ENDPOINT;
 
+/**
+ * Test cases for SCIM2 /Me api relates operations with custom schema related claims.
+ */
 public class SCIM2CustomSchemaMeTestCase extends SCIM2BaseTest {
 
     private static final Log log = LogFactory.getLog(SCIM2CustomSchemaMeTestCase.class);
@@ -130,7 +133,6 @@ public class SCIM2CustomSchemaMeTestCase extends SCIM2BaseTest {
         super.conclude();
     }
 
-
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
@@ -192,7 +194,6 @@ public class SCIM2CustomSchemaMeTestCase extends SCIM2BaseTest {
         String managerEMail = manager.get(MANAGER_EMAIL_CLAIM_ATTRIBUTE_NAME).toString();
         assertEquals(managerEMail, MANAGER_EMAIL_LOCAL_CLAIM_VALUE);
     }
-
 
     @Test(dependsOnMethods = "testCreateUser", description = "Tests get users and check for claims with /Me api")
     public void testGetMe() throws Exception {
@@ -307,7 +308,6 @@ public class SCIM2CustomSchemaMeTestCase extends SCIM2BaseTest {
         assertNull(manager);
     }
 
-
     @Test(dependsOnMethods = "testPutMyAttributes", description = "Tests patch add operation with custom schema " +
             "attributes using /Me api.")
     public void testPatchAddMyAttributes() throws Exception {
@@ -345,8 +345,8 @@ public class SCIM2CustomSchemaMeTestCase extends SCIM2BaseTest {
                 .statusCode(HttpStatus.SC_NO_CONTENT);
 
         getResponseOfGet(userIdEndpointURL, SCIM_CONTENT_TYPE).then().assertThat().statusCode(HttpStatus.SC_NOT_FOUND);
-
     }
+
     private void setSimpleAttribute() throws Exception {
 
         // Create country claim- simple attribute
