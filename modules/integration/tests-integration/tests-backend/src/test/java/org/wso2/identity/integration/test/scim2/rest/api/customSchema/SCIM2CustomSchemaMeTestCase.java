@@ -118,7 +118,7 @@ public class SCIM2CustomSchemaMeTestCase extends SCIM2BaseTest {
     public void init() throws RemoteException, InterruptedException {
 
         super.testInit(swaggerDefinition, tenant);
-        Thread.sleep(20000);
+        Thread.sleep(5000);
     }
 
     @AfterClass(alwaysRun = true)
