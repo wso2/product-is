@@ -1359,6 +1359,7 @@ definitions:
           example:
             - urn:ietf:params:scim:schemas:core:2.0:User
             - urn:ietf:params:scim:schemas:extension:enterprise:2.0:User
+            - urn:scim:custom:schema
       username:
         type: string
         example: "PRIMARY/kim"
@@ -1511,6 +1512,7 @@ definitions:
           example:
             - urn:ietf:params:scim:schemas:core:2.0:User
             - urn:ietf:params:scim:schemas:extension:enterprise:2.0:User
+            - urn:scim:custom:schema
       username:
         type: string
         example: "kim"

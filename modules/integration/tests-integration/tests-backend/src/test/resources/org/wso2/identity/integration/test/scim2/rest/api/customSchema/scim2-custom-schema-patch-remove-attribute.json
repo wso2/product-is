@@ -1,0 +1,15 @@
+{
+  "schemas": [
+    "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+  ],
+  "Operations": [
+    {
+      "op": "remove",
+      "path": "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User:country"
+    },
+    {
+      "op": "remove",
+      "path": "urn:scim:custom:schema:country"
+    }
+  ]
+}
