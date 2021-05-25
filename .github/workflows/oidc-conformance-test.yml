@@ -64,7 +64,9 @@ jobs:
          "${asset_url}"
       
     - name: Clone conformance suite
-      run: git clone --depth 1 --branch release-v4.1.4 https://github.com/openid-certification/conformance-suite.git
+      run: |
+        CONFORMANCE_SUITE_VERSION=v4.1.8
+        git clone --depth 1 --branch release-${CONFORMANCE_SUITE_VERSION} https://github.com/openid-certification/conformance-suite.git
          
     - name: Adding extra hosts to docker-compose-dev.yml
       run: sed -i '/^    volumes.*/i \ \ \ \ extra_hosts:\n \ \ \ \ - "localhost:\$IP\"' ./conformance-suite/docker-compose-dev.yml
@@ -136,7 +138,7 @@ jobs:
           echo "Sending Email"
           echo "============="
           CONFORMANCE_SUITE_URL=https://localhost:8443
-          python3 ./product-is/oidc-conformance-tests/send_email.py $CONFORMANCE_SUITE_URL $GITHUB_RUN_NUMBER ${{job.status}} ${{github.repository}} ${{github.run_id}} ${{secrets.SENDER_EMAIL}} ${{secrets.PASSWORD}} ${{secrets.RECEIVER_LIST}}
+          python3 ./product-is/oidc-conformance-tests/send_email.py $CONFORMANCE_SUITE_URL $GITHUB_RUN_NUMBER ${{job.status}} ${{github.repository}} ${{github.run_id}} ${{secrets.SENDER_EMAIL}} ${{secrets.PASSWORD}} ${{secrets.RECEIVER_LIST}} ${{github.event.inputs.tag}}
         elif [ $SEND_EMAIL == "NO" ]; then
           echo "========================================"
           echo "Skipped Sending Email"
@@ -160,7 +162,7 @@ jobs:
           echo "Sending Google Chat Message"
           echo "==========================="
           CONFORMANCE_SUITE_URL=https://localhost:8443
-          python3 ./product-is/oidc-conformance-tests/send_chat.py $CONFORMANCE_SUITE_URL $GITHUB_RUN_NUMBER ${{job.status}} ${{github.repository}} ${{github.run_id}} ${{secrets.GOOGLE_WEBHOOK}}
+          python3 ./product-is/oidc-conformance-tests/send_chat.py $CONFORMANCE_SUITE_URL $GITHUB_RUN_NUMBER ${{job.status}} ${{github.repository}} ${{github.run_id}} ${{secrets.GOOGLE_WEBHOOK}} ${{github.event.inputs.tag}}
         elif [ $SEND_CHAT == "NO" ]; then
           echo "========================================"
           echo "Skipped Sending Google Chat Message"

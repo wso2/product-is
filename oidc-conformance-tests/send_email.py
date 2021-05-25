@@ -19,6 +19,7 @@ import json
 import warnings
 import sys
 import smtplib, ssl
+import constants
 
 conformance_suite_url = sys.argv[1]
 github_run_number = str(sys.argv[2])
@@ -28,6 +29,7 @@ github_run_id = str(sys.argv[5])
 sender_email = str(sys.argv[6])
 password = str(sys.argv[7])
 receiver_list = sys.argv[8].split(',')
+wso2_is_version = str(sys.argv[9])
 
 
 failed_count = 0
@@ -47,14 +49,15 @@ for test_plan in plan_list['data']:
     if len(failed_tests_list['others']) > 0:
         total_tests_count += len(failed_tests_list['others'])
 
-port = 465
-smtp_server = "smtp.gmail.com"
+port = constants.SMTP_SERVER_PORT
+smtp_server = constants.SMTP_SERVER
 message = """\
 Subject: OIDC Conformance Test #""" + github_run_number + """ Summary
 From: """ + sender_email + """
 To: """ + sys.argv[8] + """
 
 OIDC conformance  test run # """ + github_run_number + """ completed with status: """ + workflow_status + """
+Identity Server Version: """ + wso2_is_version + """
 Total test cases:""" + str(total_tests_count) + """
 Failed test cases: """ + str(failed_count) + """
 Test cases with warnings: """ + str(warnings_count) + """

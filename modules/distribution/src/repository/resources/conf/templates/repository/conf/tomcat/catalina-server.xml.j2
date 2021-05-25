@@ -22,6 +22,15 @@
 
     <Service className="org.wso2.carbon.tomcat.ext.service.ExtendedStandardService" name="Catalina">
 
+
+       {% for transport in custom_transport %}
+        <Connector
+            {% for property_name,property_value in transport.properties.items() %}
+                {{property_name}}="{{property_value}}"
+            {% endfor %}
+        >
+        </Connector>
+       {% endfor %}
        <!--
             optional attributes:
             proxyPort="80"

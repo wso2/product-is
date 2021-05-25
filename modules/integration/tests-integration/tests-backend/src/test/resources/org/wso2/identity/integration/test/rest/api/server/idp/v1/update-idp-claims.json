@@ -3,7 +3,7 @@
     "uri": "country"
   },
   "roleClaim": {
-    "uri": "role"
+    "uri": "roles"
   },
   "mappings": [
     {
@@ -13,9 +13,9 @@
       }
     },
     {
-      "idpClaim": "role",
+      "idpClaim": "roles",
       "localClaim": {
-        "uri": "http://wso2.org/claims/role"
+        "uri": "http://wso2.org/claims/roles"
       }
     }
   ],

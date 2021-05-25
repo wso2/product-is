@@ -45,7 +45,7 @@ import java.rmi.RemoteException;
 
 public class ApplicationAuthzTestCase extends AbstractApplicationAuthzTestCase {
 
-    private static final String AZ_TEST_ROLE = "azTestRole";
+    private static final String AZ_TEST_ROLE = "Internal/azTestRole";
     private static final String HTTP_REDIRECT = "HTTP-Redirect";
     private static final String AZ_TEST_USER = "azTestUser";
     private static final String AZ_TEST_USER_PW = "azTest123";
@@ -74,7 +74,7 @@ public class ApplicationAuthzTestCase extends AbstractApplicationAuthzTestCase {
                     "            <Apply FunctionId=\"urn:oasis:names:tc:xacml:1.0:function:string-is-in\">\n" +
                     "                <AttributeValue DataType=\"http://www.w3.org/2001/XMLSchema#string\">" +
                     AZ_TEST_ROLE + "</AttributeValue>\n" +
-                    "                <AttributeDesignator AttributeId=\"http://wso2.org/claims/role\" Category=\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\" DataType=\"http://www.w3.org/2001/XMLSchema#string\" MustBePresent=\"true\"/>\n" +
+                    "                <AttributeDesignator AttributeId=\"http://wso2.org/claims/roles\" Category=\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\" DataType=\"http://www.w3.org/2001/XMLSchema#string\" MustBePresent=\"true\"/>\n" +
                     "            </Apply>\n" +
                     "        </Condition>\n" +
                     "    </Rule>\n" +

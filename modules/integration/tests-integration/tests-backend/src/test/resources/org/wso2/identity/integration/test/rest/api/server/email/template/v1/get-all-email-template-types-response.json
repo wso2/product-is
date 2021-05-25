@@ -85,6 +85,11 @@
     "self": "/t/carbon.super/api/server/v1/email/template-types/cmVzZW5kQWRtaW5Gb3JjZWRQYXNzd29yZFJlc2V0V2l0aE9UUA"
   },
   {
+    "id": "bm90aWZ5T25FeGlzdGluZ0VtYWlsVXBkYXRl",
+    "displayName": "notifyOnExistingEmailUpdate",
+    "self": "/t/carbon.super/api/server/v1/email/template-types/bm90aWZ5T25FeGlzdGluZ0VtYWlsVXBkYXRl"
+  },
+  {
     "id": "QWNjb3VudExvY2tBZG1pbg",
     "displayName": "AccountLockAdmin",
     "self": "/t/carbon.super/api/server/v1/email/template-types/QWNjb3VudExvY2tBZG1pbg"
@@ -133,10 +138,5 @@
     "id": "UGFzc3dvcmRSZXNldA",
     "displayName": "PasswordReset",
     "self": "/t/carbon.super/api/server/v1/email/template-types/UGFzc3dvcmRSZXNldA"
-  },
-  {
-    "id":"bm90aWZ5T25FeGlzdGluZ0VtYWlsVXBkYXRl",
-    "displayName":"notifyOnExistingEmailUpdate",
-    "self":"/t/carbon.super/api/server/v1/email/template-types/bm90aWZ5T25FeGlzdGluZ0VtYWlsVXBkYXRl"
   }
 ]

@@ -26,9 +26,9 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
+import org.json.simple.JSONArray;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -43,25 +43,25 @@ import org.wso2.carbon.identity.application.common.model.xsd.Property;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
-import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
-import org.wso2.identity.integration.common.clients.claim.metadata.mgt.ClaimMetadataManagementServiceClient;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
-    private static final String OAUTH_ROLE = "oauthRole";
-    private static final String ROLE_CLAIM_URI = "http://wso2.org/claims/role";
-    private static final String OIDC_GROUP_CLAIM_URI = "groups";
+    private static final String OAUTH_ROLE = "Internal/oauthRole";
+    private static final String ROLES_CLAIM_URI = "http://wso2.org/claims/roles";
+    private static final String OIDC_ROLES_CLAIM_URI = "roles";
     private static final String FIRST_NAME_VALUE = "FirstName";
     private static final String LAST_NAME_VALUE = "LastName";
     private static final String EMAIL_VALUE = "email@wso2.com";
     private static final String OPENID_SCOPE_PROPERTY = "openid";
     private static final String OPENID_SCOPE_RESOURCE = "/_system/config/oidc";
+    private static final String MULTI_ATTRIBUTE_SEPARATOR = ",";
 
     private String consumerKey;
     private String consumerSecret;
@@ -135,7 +135,7 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
 
         String encodedIdToken = ((JSONObject) obj).get("id_token").toString().split("\\.")[1];
         Object idToken = JSONValue.parse(new String(Base64.decodeBase64(encodedIdToken)));
-        Object roles = ((JSONObject) idToken).get(OIDC_GROUP_CLAIM_URI);
+        Object roles = ((JSONObject) idToken).get(OIDC_ROLES_CLAIM_URI);
         Assert.assertNotNull(roles, "Id token should contain at least one role");
         if (!(roles instanceof String)) {
             Assert.fail("Id token should contain Internal/everyone role only");
@@ -171,12 +171,8 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
 
         String encodedIdToken = ((JSONObject) obj).get("id_token").toString().split("\\.")[1];
         Object idToken = JSONValue.parse(new String(Base64.decodeBase64(encodedIdToken)));
-        Object roles = ((JSONObject) idToken).get(OIDC_GROUP_CLAIM_URI);
-        ArrayList<String> roleList = new ArrayList<>();
-        for (int i = 0; i < ((JSONArray) roles).size(); i++) {
-            roleList.add(((JSONArray) roles).get(i).toString());
-        }
-        Assert.assertTrue(roleList.contains(OAUTH_ROLE), "Id token does not contain updated role claim");
+        Object roles = ((JSONObject) idToken).get(OIDC_ROLES_CLAIM_URI);
+        Assert.assertTrue((((JSONArray) roles).contains(OAUTH_ROLE)), "Id token does not contain updated role claim");
     }
 
     private ClaimValue[] getUserClaims() {
@@ -232,7 +228,7 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
         emailClaimMapping.setRemoteClaim(emailClaim);
 
         Claim roleClaim = new Claim();
-        roleClaim.setClaimUri(ROLE_CLAIM_URI);
+        roleClaim.setClaimUri(ROLES_CLAIM_URI);
         ClaimMapping roleClaimMapping = new ClaimMapping();
         roleClaimMapping.setRequested(true);
         roleClaimMapping.setLocalClaim(roleClaim);

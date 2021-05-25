@@ -113,7 +113,7 @@
             ],
             "role": {
                 "claim": {
-                    "uri": "http://wso2.org/claims/role"
+                    "uri": "http://wso2.org/claims/roles"
                 },
                 "includeUserDomain": true
             },

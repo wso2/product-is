@@ -48,7 +48,7 @@ import java.net.URL;
  */
 public class ApplicationAuthzTenantTestCase extends AbstractApplicationAuthzTestCase {
 
-    private static final String AZ_TEST_TENANT_ROLE = "azTestTenantRole";
+    private static final String AZ_TEST_TENANT_ROLE = "Internal/azTestTenantRole";
     private static final String HTTP_REDIRECT = "HTTP-Redirect";
     private static final String AZ_TEST_TENANT_USER = "azTestTenantUser";
     private static final String AZ_TEST_TENANT_USER_PW = "azTest123";
@@ -78,7 +78,7 @@ public class ApplicationAuthzTenantTestCase extends AbstractApplicationAuthzTest
                     "            <Apply FunctionId=\"urn:oasis:names:tc:xacml:1.0:function:string-is-in\">\n" +
                     "                <AttributeValue DataType=\"http://www.w3.org/2001/XMLSchema#string\">" +
                     AZ_TEST_TENANT_ROLE + "</AttributeValue>\n" +
-                    "                <AttributeDesignator AttributeId=\"http://wso2.org/claims/role\" Category=\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\" DataType=\"http://www.w3.org/2001/XMLSchema#string\" MustBePresent=\"true\"/>\n" +
+                    "                <AttributeDesignator AttributeId=\"http://wso2.org/claims/roles\" Category=\"urn:oasis:names:tc:xacml:1.0:subject-category:access-subject\" DataType=\"http://www.w3.org/2001/XMLSchema#string\" MustBePresent=\"true\"/>\n" +
                     "            </Apply>\n" +
                     "        </Condition>\n" +
                     "    </Rule>\n" +

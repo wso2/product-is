@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>5.12.0-m15-SNAPSHOT</version>
+        <version>5.12.0-m22-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -455,11 +455,6 @@
                                     org.wso2.identity.apps:org.wso2.identity.apps.recovery.portal.server.feature:${identity.apps.version}
                                 </featureArtifactDef>
 
-                                <!-- REST APIs -->
-                                <featureArtifactDef>
-                                    org.wso2.carbon.identity.rest.dispatcher:org.wso2.carbon.identity.rest.api.dispatcher.feature:${identity.api.dispatcher.version}
-                                </featureArtifactDef>
-
                                 <!-- FIDO2/WebAuthn feature -->
                                 <featureArtifactDef>
                                    org.wso2.carbon.identity.local.auth.fido:org.wso2.carbon.identity.application.authenticator.fido2.server.feature:${identity.local.auth.fido.version}
@@ -472,6 +467,18 @@
                                 <!--  RemoteFetch feature -->
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.fetch.remote:org.wso2.carbon.identity.remotefetch.core.feature:${org.wso2.carbon.identity.remotefetch.version}
+                                </featureArtifactDef>
+                                <!-- Unique Claim Management feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.unique.claim.mgt.server.feature:${carbon.identity.framework.version}
+                                </featureArtifactDef>
+                                <!-- Multi Attribute Login feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.multi.attribute.login.mgt.server.feature:${carbon.identity.framework.version}
+                                </featureArtifactDef>
+                                <!-- Multi Attribute Login (osgi service impl)feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.governance:org.wso2.carbon.identity.multi.attribute.login.service.server.feature:${identity.governance.version}
                                 </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
@@ -735,7 +742,22 @@
                                     </id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
-
+                                <feature>
+                                    <id>
+                                        org.wso2.carbon.identity.unique.claim.mgt.server.feature.group
+                                    </id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>
+                                        org.wso2.carbon.identity.multi.attribute.login.mgt.server.feature.group
+                                    </id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.multi.attribute.login.service.server.feature.group</id>
+                                    <version>${identity.governance.version}</version>
+                                </feature>
                                 <feature>
                                     <id>
                                         org.wso2.identity.apps.feature.group
@@ -920,11 +942,6 @@
                                 <feature>
                                     <id>org.wso2.carbon.healthcheck.server.feature.group</id>
                                     <version>${carbon.healthcheck.version}</version>
-                                </feature>
-                                <!--REST API feature-->
-                                <feature>
-                                    <id>org.wso2.carbon.identity.rest.api.dispatcher.feature.group</id>
-                                    <version>${identity.api.dispatcher.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.template.mgt.feature.group</id>
@@ -1248,7 +1265,22 @@
                                     </id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
-
+                                <feature>
+                                    <id>
+                                        org.wso2.carbon.identity.unique.claim.mgt.server.feature.group
+                                    </id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>
+                                        org.wso2.carbon.identity.multi.attribute.login.mgt.server.feature.group
+                                    </id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.multi.attribute.login.service.server.feature.group</id>
+                                    <version>${identity.governance.version}</version>
+                                </feature>
                                 <feature>
                                     <id>org.wso2.identity.apps.common.server.feature.group</id>
                                     <version>${identity.apps.version}</version>
@@ -1417,11 +1449,6 @@
                                 <feature>
                                     <id>org.wso2.carbon.healthcheck.server.feature.group</id>
                                     <version>${carbon.healthcheck.version}</version>
-                                </feature>
-                                <!--REST API feature-->
-                                <feature>
-                                    <id>org.wso2.carbon.identity.rest.api.dispatcher.feature.group</id>
-                                    <version>${identity.api.dispatcher.version}</version>
                                 </feature>
                                 <!--FIDO2/Webauthn feature-->
                                 <feature>
@@ -1701,7 +1728,22 @@
                                     </id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
-
+                                <feature>
+                                    <id>
+                                        org.wso2.carbon.identity.unique.claim.mgt.server.feature.group
+                                    </id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>
+                                        org.wso2.carbon.identity.multi.attribute.login.mgt.server.feature.group
+                                    </id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.multi.attribute.login.service.server.feature.group</id>
+                                    <version>${identity.governance.version}</version>
+                                </feature>
                                 <feature>
                                     <id>
                                         org.wso2.identity.apps.feature.group
@@ -1848,11 +1890,6 @@
                                 <feature>
                                     <id>org.wso2.carbon.healthcheck.server.feature.group</id>
                                     <version>${carbon.healthcheck.version}</version>
-                                </feature>
-                                <!--REST API feature-->
-                                <feature>
-                                    <id>org.wso2.carbon.identity.rest.api.dispatcher.feature.group</id>
-                                    <version>${identity.api.dispatcher.version}</version>
                                 </feature>
                                 <!--FIDO2/Webauthn feature-->
                                 <feature>
@@ -2103,11 +2140,6 @@
                                 <feature>
                                     <id>org.wso2.carbon.healthcheck.server.feature.group</id>
                                     <version>${carbon.healthcheck.version}</version>
-                                </feature>
-                                <!--REST API feature-->
-                                <feature>
-                                    <id>org.wso2.carbon.identity.rest.api.dispatcher.feature.group</id>
-                                    <version>${identity.api.dispatcher.version}</version>
                                 </feature>
                                 <!--FIDO2/Webauthn feature-->
                                 <feature>

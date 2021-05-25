@@ -2,10 +2,10 @@
   "mappings": [
     {
       "idpRole": "google-admin",
-      "localRole": "admin"
+      "localRole": "Internal/admin"
     }
   ],
   "outboundProvisioningRoles": [
-    "admin"
+    "Internal/admin"
   ]
 }

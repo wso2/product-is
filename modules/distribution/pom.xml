@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>5.12.0-m15-SNAPSHOT</version>
+        <version>5.12.0-m22-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -84,6 +84,27 @@
                 <version>2.0-alpha-4</version>
                 <inherited>false</inherited>
                 <executions>
+                    <!-- Add Rest API Resources web application-->
+                    <execution>
+                        <id>add-rest-api-resources-all</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.is</groupId>
+                                    <artifactId>api-resources-full</artifactId>
+                                    <version>${project.version}</version>
+                                    <type>war</type>
+                                    <overWrite>true</overWrite>
+                                    <destFileName>api.war</destFileName>
+                                    <outputDirectory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
                     <execution>
                         <id>unpack-wso2carbon</id>
                         <phase>package</phase>
@@ -241,7 +262,7 @@
                                 <property name="identity-db" value="${4-space-tab}&lt;datasource&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}&lt;name&gt;WSO2_IDENTITY_DB&lt;/name&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}&lt;description&gt;The datasource used for identity data&lt;/description&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}&lt;jndiConfig&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;name&gt;jdbc/WSO2IdentityDB&lt;/name&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}&lt;/jndiConfig&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}&lt;definition type=&quot;RDBMS&quot;&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;configuration&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;url&gt;jdbc:h2:./repository/database/WSO2IDENTITY_DB;DB_CLOSE_ON_EXIT=FALSE&lt;/url&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;username&gt;wso2carbon&lt;/username&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;password&gt;wso2carbon&lt;/password&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;driverClassName&gt;org.h2.Driver&lt;/driverClassName&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;maxActive&gt;50&lt;/maxActive&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;maxWait&gt;60000&lt;/maxWait&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;testOnBorrow&gt;true&lt;/testOnBorrow&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;validationQuery&gt;SELECT 1&lt;/validationQuery&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;validationInterval&gt;30000&lt;/validationInterval&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;defaultAutoCommit&gt;true&lt;/defaultAutoCommit&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;/configuration&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}&lt;/definition&gt;${line.separator}${4-space-tab}${4-space-tab}&lt;/datasource&gt;${line.separator}${4-space-tab}&lt;/datasources&gt;" />
                                 <property name="identity-db-template" value="${4-space-tab}&lt;datasource&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}&lt;name&gt;WSO2_IDENTITY_DB&lt;/name&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}&lt;description&gt;Shared database for identity data&lt;/description&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}&lt;jndiConfig&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;name&gt;jdbc/WSO2IdentityDB&lt;/name&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}&lt;/jndiConfig&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}&lt;definition type=&quot;RDBMS&quot;&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;configuration&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;url&gt;{{database.identity_db.url}}&lt;/url&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;username&gt;{{database.identity_db.username}}&lt;/username&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;password&gt;{{database.identity_db.password}}&lt;/password&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;driverClassName&gt;{{database.identity_db.driver}}&lt;/driverClassName&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}{% for property_name,property_value in database.identity_db.pool_options.items() %}${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;{{property_name}}&gt;{{property_value}}&lt;/{{property_name}}&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}{% endfor %}${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;/configuration&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}&lt;/definition&gt;${line.separator}${4-space-tab}${4-space-tab}&lt;/datasource&gt;${line.separator}${4-space-tab}&lt;/datasources&gt;" />
 
-                                <property name="captcha-filter-is-token" value="&lt;filter&gt;${line.separator} &lt;filter-name&gt;CaptchaFilter&lt;/filter-name&gt;${line.separator} &lt;filter-class&gt;org.wso2.carbon.identity.captcha.filter.CaptchaFilter&lt;/filter-class&gt;${line.separator} &lt;/filter&gt;${line.separator}${line.separator} &lt;filter-mapping&gt;${line.separator} &lt;filter-name&gt;CaptchaFilter&lt;/filter-name&gt;${line.separator} &lt;url-pattern&gt;/samlsso&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/oauth2&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/commonauth&lt;/url-pattern&gt;${line.separator} &lt;dispatcher&gt;FORWARD&lt;/dispatcher&gt;${line.separator} &lt;dispatcher&gt;REQUEST&lt;/dispatcher&gt;${line.separator} &lt;/filter-mapping&gt;${line.separator}${line.separator} &lt;session-config&gt;" />
+                                <property name="captcha-filter-is-token" value="{% if recaptcha.enabled is sameas true %}${line.separator}&lt;filter&gt;${line.separator} &lt;filter-name&gt;CaptchaFilter&lt;/filter-name&gt;${line.separator} &lt;filter-class&gt;org.wso2.carbon.identity.captcha.filter.CaptchaFilter&lt;/filter-class&gt;${line.separator} &lt;/filter&gt;${line.separator}${line.separator} &lt;filter-mapping&gt;${line.separator} &lt;filter-name&gt;CaptchaFilter&lt;/filter-name&gt;${line.separator} &lt;url-pattern&gt;/samlsso&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/oauth2&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/commonauth&lt;/url-pattern&gt;${line.separator}&lt;url-pattern&gt;/identity/recovery/v0.9/recover-password&lt;/url-pattern&gt;${line.separator} &lt;dispatcher&gt;FORWARD&lt;/dispatcher&gt;${line.separator} &lt;dispatcher&gt;REQUEST&lt;/dispatcher&gt;${line.separator} &lt;/filter-mapping&gt;${line.separator}${line.separator}{% endif %}${line.separator}&lt;/web-app&gt;" />
 
                                 <mkdir dir="${tempdir}" />
                                 <unzip dest="${tempdir}">
@@ -327,7 +348,7 @@
 
                                 <replaceregexp file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/carbon/WEB-INF/web.xml" match="(?s)&lt;filter-mapping&gt;\s+&lt;filter-name&gt;HttpHeaderSecurityFilter&lt;/filter-name&gt;.*&lt;/filter-mapping&gt;" replace="${security-header-filter-mapping-is-token}" />
 
-                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/carbon/WEB-INF/web.xml" token="&lt;session-config&gt;" value="${captcha-filter-is-token}" />
+                                <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/tomcat/web.xml.j2" token="&lt;/web-app&gt;" value="${captcha-filter-is-token}" />
 
                                 <!-- Update Owasp.CsrfGuard.properties file location to fix IBM JDK and DevStudio issue-->
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/carbon/WEB-INF/web.xml" token="/repository/conf/security/Owasp.CsrfGuard.Carbon.properties" value="repository/conf/security/Owasp.CsrfGuard.Carbon.properties" />
@@ -484,14 +505,6 @@
                                 </unzip>
                                 <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api.war" />
 
-                                <!-- Copy api_resources to /repository/deployment/server/webapps/api/WEB-INF/lib/  -->
-                                <copy todir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api/WEB-INF/lib/" overwrite="false">
-                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api_resources/">
-                                        <include name="*.jar" />
-                                    </fileset>
-                                </copy>
-                                <delete dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api_resources" />
-
                                 <!-- Explode the authenticationendpoint.war -->
                                 <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/authenticationendpoint">
                                     <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
@@ -523,51 +536,6 @@
                                     </fileset>
                                 </unzip>
                                 <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#health-check#v1.0.war" />
-                                <!-- Explode the api#identity#consent-mgt#v1.0.war -->
-                                <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#identity#consent-mgt#v1.0">
-                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
-                                        <include name="api#identity#consent-mgt#v1.0.war" />
-                                    </fileset>
-                                </unzip>
-                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#identity#consent-mgt#v1.0.war" />
-
-                                <!-- Explode the api#identity#oauth2#dcr#v1.1.war -->
-                                <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#identity#oauth2#dcr#v1.1">
-                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
-                                        <include name="api#identity#oauth2#dcr#v1.1.war" />
-                                    </fileset>
-                                </unzip>
-                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#identity#oauth2#dcr#v1.1.war" />
-
-                                <!-- Explode the api#identity#oauth2#v1.0.war-->
-                                <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#identity#oauth2#v1.0">
-                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
-                                        <include name="api#identity#oauth2#v1.0.war" />
-                                    </fileset>
-                                </unzip>
-                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#identity#oauth2#v1.0.war" />
-
-                                <!-- Delete the api#identity#recovery#v0.9.war -->
-                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#identity#recovery#v0.9.war" />
-
-                                <!-- Explode the api#identity#template#mgt#v1.0.0.war -->
-                                <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#identity#template#mgt#v1.0.0">
-                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
-                                        <include name="api#identity#template#mgt#v1.0.0.war" />
-                                    </fileset>
-                                </unzip>
-                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#identity#template#mgt#v1.0.0.war" />
-
-                                <!-- Delete the api#identity#user#v1.0.war -->
-                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#identity#user#v1.0.war" />
-
-                                <!-- Explode the api#users#v2#me#webauthn.war -->
-                                <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#users#v2#me#webauthn">
-                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
-                                        <include name="api#users#v2#me#webauthn.war" />
-                                    </fileset>
-                                </unzip>
-                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api#users#v2#me#webauthn.war" />
 
                                 <!-- Explode the mexut.war -->
                                 <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/mexut">
@@ -624,14 +592,6 @@
                                     </fileset>
                                 </unzip>
                                 <delete file="../connectors/target/authenticatorCopied/war/x509certificateauthenticationendpoint.war" />
-
-                                <!-- Explode the api#identity#auth#v1.1.war -->
-                                <unzip dest="../connectors/target/authenticatorCopied/war/api#identity#auth#v1.1">
-                                    <fileset dir="../connectors/target/authenticatorCopied/war/">
-                                        <include name="api#identity#auth#v1.1.war" />
-                                    </fileset>
-                                </unzip>
-                                <delete file="../connectors/target/authenticatorCopied/war/api#identity#auth#v1.1.war" />
                             </tasks>
                         </configuration>
                     </execution>

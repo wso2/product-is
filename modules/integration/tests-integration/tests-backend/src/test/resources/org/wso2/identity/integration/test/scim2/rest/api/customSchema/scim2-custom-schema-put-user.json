@@ -1,0 +1,11 @@
+{
+  "schemas": [],
+  "userName": "userkim",
+  "name": {
+    "familyName": "jackson",
+    "givenName": "kim"
+  },
+  "urn:scim:custom:schema": {
+    "country": "India"
+  }
+}
