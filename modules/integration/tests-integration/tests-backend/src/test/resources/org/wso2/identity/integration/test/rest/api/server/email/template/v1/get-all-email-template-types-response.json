@@ -133,5 +133,10 @@
     "id": "UGFzc3dvcmRSZXNldA",
     "displayName": "PasswordReset",
     "self": "/t/carbon.super/api/server/v1/email/template-types/UGFzc3dvcmRSZXNldA"
+  },
+  {
+    "id":"bm90aWZ5T25FeGlzdGluZ0VtYWlsVXBkYXRl",
+    "displayName":"notifyOnExistingEmailUpdate",
+    "self":"/t/carbon.super/api/server/v1/email/template-types/bm90aWZ5T25FeGlzdGluZ0VtYWlsVXBkYXRl"
   }
 ]
