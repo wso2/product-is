@@ -2053,7 +2053,7 @@
         <carbon.consent.mgt.version>2.3.3</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.5.14</identity.governance.version>
+        <identity.governance.version>1.5.15</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.5.2</identity.carbon.auth.saml2.version>
