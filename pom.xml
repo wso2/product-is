@@ -1382,11 +1382,6 @@
                 <version>${org.apache.tomcat.wso2.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.santuario</groupId>
-                <artifactId>xmlsec</artifactId>
-                <version>${xmlsec.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.opensaml</groupId>
                 <artifactId>xmltooling</artifactId>
                 <version>${xmltooling.version}</version>
@@ -1927,11 +1922,6 @@
                 <version>${identity.apps.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-core</artifactId>
-                <version>${com.fasterxml.jackson.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.codehaus.jackson</groupId>
                 <artifactId>jackson-core-asl</artifactId>
                 <version>${jackson-core-asl.version}</version>
@@ -1939,8 +1929,13 @@
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${com.fasterxml.jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
-                <version>${com.fasterxml.jackson.annotation.version}</version>
+                <version>${com.fasterxml.jackson.version}</version>
             </dependency>
             <!-- Pax Logging -->
             <dependency>
@@ -1951,13 +1946,13 @@
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-jul</artifactId>
-                <version>2.8.2</version>
+                <version>${org.apache.logging.log4j.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-core</artifactId>
-                <version>2.8.2</version>
+                <version>${org.apache.logging.log4j.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -1971,12 +1966,6 @@
                 <artifactId>commons-lang</artifactId>
                 <version>${commons-lang.wso2.version}</version>
                 <scope>test</scope>
-            </dependency>
-            <dependency>
-                <artifactId>guava</artifactId>
-                <groupId>com.google.guava</groupId>
-                <type>jar</type>
-                <version>${google.guava.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.is</groupId>
@@ -2224,7 +2213,6 @@
         <opensaml2.wso2.version>2.6.6.wso2v3</opensaml2.wso2.version>
         <opensaml3.version>3.3.1</opensaml3.version>
         <shibboleth.version>7.3.0</shibboleth.version>
-        <google.guava.version>27.0.1-jre</google.guava.version>
         <joda.wso2.version>2.9.4.wso2v1</joda.wso2.version>
         <wss4j.wso2.version>1.5.11-wso2v21</wss4j.wso2.version>
         <openws.version>1.5.4</openws.version>
@@ -2249,7 +2237,6 @@
         <nimbusds.version>7.3.0.wso2v1</nimbusds.version>
         <commons-codec.version>1.14.0.wso2v1</commons-codec.version>
         <eclipse.microprofile.version>1.2</eclipse.microprofile.version>
-        <xmlsec.version>2.1.3</xmlsec.version>
         <xmltooling.version>1.3.1</xmltooling.version>
         <xercesImpl.version>2.12.0</xercesImpl.version>
         <commons.codec.version>1.8</commons.codec.version>
@@ -2287,10 +2274,10 @@
         <!--UI Cypress test -->
         <com.fasterxml.jackson.version>2.10.5</com.fasterxml.jackson.version>
         <jackson-core-asl.version>1.9.13</jackson-core-asl.version>
-        <com.fasterxml.jackson.annotation.version>2.10.5</com.fasterxml.jackson.annotation.version>
         <!--ws-trust-client-->
         <org.apache.velocity.version>1.7</org.apache.velocity.version>
         <org.xmlunit.version>2.6.3</org.xmlunit.version>
+        <org.apache.logging.log4j.version>2.13.2</org.apache.logging.log4j.version>
 
         <project.scm.id>my-scm-server</project.scm.id>
 
