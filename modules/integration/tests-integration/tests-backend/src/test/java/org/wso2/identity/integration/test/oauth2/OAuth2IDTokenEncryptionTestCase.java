@@ -478,7 +478,7 @@ public class OAuth2IDTokenEncryptionTestCase extends OAuth2ServiceAbstractIntegr
         RSADecrypter decrypter = new RSADecrypter(spPrivateKey);
         jwt.decrypt(decrypter);
 
-        JWTClaimsSet claims = jwt.getJWTClaimsSet();
+        JWTClaimsSet claims = jwt.getPayload().toSignedJWT().getJWTClaimsSet();
         Assert.assertNotNull(claims, "ID token claim set is null");
 
         String aud = claims.getAudience().get(0);
