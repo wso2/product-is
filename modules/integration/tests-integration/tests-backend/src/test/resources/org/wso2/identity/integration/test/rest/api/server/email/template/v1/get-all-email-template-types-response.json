@@ -95,6 +95,11 @@
     "self": "/t/carbon.super/api/server/v1/email/template-types/QWNjb3VudExvY2tBZG1pbg"
   },
   {
+    "id": "bm90aWZ5T25FeGlzdGluZ0VtYWlsVXBkYXRlV2l0aG91dFZlcmlmaWNhdGlvbg",
+    "displayName": "notifyOnExistingEmailUpdateWithoutVerification",
+    "self": "/t/carbon.super/api/server/v1/email/template-types/bm90aWZ5T25FeGlzdGluZ0VtYWlsVXBkYXRlV2l0aG91dFZlcmlmaWNhdGlvbg"
+  },
+  {
     "id": "QWNjb3VudEVuYWJsZQ",
     "displayName": "AccountEnable",
     "self": "/t/carbon.super/api/server/v1/email/template-types/QWNjb3VudEVuYWJsZQ"
