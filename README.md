@@ -75,12 +75,12 @@ Building the distribution from source
 Installation and Running
 ========================
 
-1. Extract the downloaded/built binary distribution zip file
-2. Run the wso2server.sh or wso2server.bat file in the /bin directory
-3. Once the server starts, point your Web browser to https://localhost:9443/carbon/
-4. Developer and Administrator Console is available at https://localhost:9443/console
-5. End User Portal is available at https://localhost:9443/myaccount
-6. For more information, see the Installation Guide
+1. Extract the downloaded/built binary distribution zip file.
+2. Run the wso2server.sh or wso2server.bat file in the /bin directory.
+3. Once the server starts, point your Web browser to https://localhost:9443/carbon/.
+4. Developer and Administrator Console is available at https://localhost:9443/console.
+5. End User Portal is available at https://localhost:9443/myaccount.
+6. For more information, see the Installation Guide.
 
 
 WSO2 Identity Server Distribution Directory Structure
