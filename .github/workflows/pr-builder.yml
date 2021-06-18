@@ -17,7 +17,7 @@ jobs:
       run: echo Running the PR builder for PR - ${{ github.event.inputs.pr }}
     - name: Build init
       run: |
-        wget -c https://raw.githubusercontent.com/wso2/product-is/master/pom.xml -O cache-key-file.xml
+        echo "CURRENT_MONTH=$(date +%Y-%m)" >> ${GITHUB_ENV}
     - name: Cache maven packages
       id: cache-maven-m2
       uses: actions/cache@v2
@@ -25,10 +25,7 @@ jobs:
        path: |
          ~/.m2
          !~/.m2/repository/org/wso2/is/wso2is/
-       key: ${{ runner.os }}-pr-builder-${{ hashFiles('cache-key-file.xml') }}
-       restore-keys: |
-         ${{ runner.os }}-pr-builder-
-         ${{ runner.os }}-pr-builder
+       key: ${{ runner.os }}-pr-builder-${{ env.CURRENT_MONTH }}
     - name: Run PR builder
       id: builder_step
       env:
