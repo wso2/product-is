@@ -132,7 +132,7 @@ public class OAuth2SigningEnabledIDTokenEncryptionTestCase extends OAuth2Service
             throws AutomationUtilException, XPathExpressionException, IOException {
 
         File defaultTomlFile = getDeploymentTomlFile(carbonHome);
-        File configuredTomlFile = new File(getISResourceLocation() + File.separator + "ocid"
+        File configuredTomlFile = new File(getISResourceLocation() + File.separator + "oidc"
                 + File.separator + "id_token_signing_before_encryption.toml");
 
         log.info("Applying configured toml file.");
