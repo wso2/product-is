@@ -2042,7 +2042,7 @@
         <carbon.consent.mgt.version>2.3.5</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.5.23</identity.governance.version>
+        <identity.governance.version>1.5.24</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.5.4</identity.carbon.auth.saml2.version>
@@ -2053,11 +2053,11 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.8.32</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.6.27</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.6.29</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.6.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.6.11</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.6.6</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>1.5.89</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim2.version>1.5.90</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity workflow Versions -->
         <identity.user.workflow.version>5.4.7</identity.user.workflow.version>
@@ -2146,7 +2146,7 @@
         <carbon.identity.oauth.uma.version>1.3.5</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.2.300</identity.apps.version>
+        <identity.apps.version>1.2.304</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
