@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2021, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -20,9 +20,11 @@ package org.wso2.identity.integration.test.oidc;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWEHeader;
+import com.nimbusds.jose.Payload;
 import com.nimbusds.jose.crypto.RSADecrypter;
 import com.nimbusds.jwt.EncryptedJWT;
 import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.oauth2.sdk.AuthorizationCode;
 import com.nimbusds.oauth2.sdk.AuthorizationCodeGrant;
 import com.nimbusds.oauth2.sdk.AuthorizationGrant;
@@ -78,7 +80,8 @@ import java.util.UUID;
 import javax.xml.xpath.XPathExpressionException;
 
 /**
- * Integration test cases for id token encryption.
+ * Integration test cases for validate encrypted ID token complies with openId spec.
+ * See {@link <a href="https://openid.net/specs/openid-connect-core-1_0.html#IDToken">OpenId spec ID Token</a>}.
  */
 public class OAuth2SigningEnabledIDTokenEncryptionTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
@@ -108,12 +111,13 @@ public class OAuth2SigningEnabledIDTokenEncryptionTestCase extends OAuth2Service
         String carbonHome = Utils.getResidentCarbonHome();
         configureServerWithRestart(carbonHome);
 
-        //Initiating after the restart.
+        // Initiating after the restart.
         super.init(TestUserMode.SUPER_TENANT_USER);
     }
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
+
         deleteApplication();
         removeOAuthApplicationData();
 
@@ -507,8 +511,9 @@ public class OAuth2SigningEnabledIDTokenEncryptionTestCase extends OAuth2Service
         // Create a decrypter with the specified private RSA key.
         RSADecrypter decrypter = new RSADecrypter(spPrivateKey);
         jwt.decrypt(decrypter);
-
-        JWTClaimsSet claims = jwt.getPayload().toSignedJWT().getJWTClaimsSet();
+        SignedJWT decryptedSignedJwt = jwt.getPayload().toSignedJWT();
+        Assert.assertNotNull(decryptedSignedJwt, "ID token should be signed before encrypting");
+        JWTClaimsSet claims = decryptedSignedJwt.getJWTClaimsSet();
         Assert.assertNotNull(claims, "ID token claim set is null");
 
         String aud = claims.getAudience().get(0);
