@@ -59,6 +59,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.wso2.identity.integration.test.utils.CommonConstants.USER_IS_LOCKED;
 import static org.wso2.identity.integration.test.utils.DataExtractUtil.KeyValue;
 
 public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractIntegrationTest {
@@ -368,7 +369,8 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 			String errormsg = ((JSONObject) obj).get("error_description").toString();
 
 			EntityUtils.consume(response.getEntity());
-			Assert.assertTrue(errormsg.contains("17003 Account is locked for user " ));
+			// Validate the error code of the scenario.
+			Assert.assertTrue(errormsg.contains(USER_IS_LOCKED));
 		}
 	}
 
