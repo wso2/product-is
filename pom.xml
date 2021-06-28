@@ -1935,7 +1935,7 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
-                <version>${com.fasterxml.jackson.version}</version>
+                <version>${com.fasterxml.jackson.databind.version}</version>
             </dependency>
             <!-- Pax Logging -->
             <dependency>
@@ -2273,6 +2273,7 @@
         <swagger-request-validator.version>2.6.0</swagger-request-validator.version>
         <!--UI Cypress test -->
         <com.fasterxml.jackson.version>2.10.5</com.fasterxml.jackson.version>
+        <com.fasterxml.jackson.databind.version>2.10.5.1</com.fasterxml.jackson.databind.version>
         <jackson-core-asl.version>1.9.13</jackson-core-asl.version>
         <!--ws-trust-client-->
         <org.apache.velocity.version>1.7</org.apache.velocity.version>
