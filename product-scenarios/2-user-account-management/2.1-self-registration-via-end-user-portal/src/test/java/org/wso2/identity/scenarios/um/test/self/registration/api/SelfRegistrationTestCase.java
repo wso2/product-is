@@ -282,9 +282,24 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
           dependsOnMethods = { "resendCodeForUser" })
     public void verifyPreviousConfirmationCode() throws Exception {
 
+        log.info("Verifying previously sent confirmation code for " +
+                ((JSONObject) registerRequestJSON.get(USER)).get(USERNAME).toString());
         if (!resendCode) {
+            log.info("There is no previously sent confirmation code for " +
+                    ((JSONObject) registerRequestJSON.get(USER)).get(USERNAME).toString() + "." +
+                    " Skipping previous confirmation code verification.");
             return;
         }
+
+        log.info("There is a previously sent confirmation code for " +
+                ((JSONObject) registerRequestJSON.get(USER)).get(USERNAME).toString() + "." +
+                " Proceeding with previous confirmation code verification.");
+
+        log.info("Previously sent confirmation code for " +
+                ((JSONObject) registerRequestJSON.get(USER)).get(USERNAME).toString() + ": " + confirmationCode);
+
+        log.info("New confirmation code for " + ((JSONObject) registerRequestJSON.get(USER)).get(USERNAME).toString() +
+                ": " + newConfirmationCode);
 
         JSONObject confirmRequestJSON = new JSONObject();
         confirmRequestJSON.put(CODE, confirmationCode);
@@ -302,12 +317,17 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
 
         JSONObject confirmRequestJSON = new JSONObject();
         if (resendCode) {
-            log.info("Resend code scenario. Confirmation code: " + newConfirmationCode);
+            log.info("Resend code scenario. Confirmation code: " + newConfirmationCode + " for user " +
+                    ((JSONObject) registerRequestJSON.get(USER)).get(USERNAME).toString());
             confirmRequestJSON.put(CODE, newConfirmationCode);
         } else {
-            log.info("Confirmation code: " + confirmationCode);
+            log.info("Confirmation code: " + confirmationCode + " for user " +
+                    ((JSONObject) registerRequestJSON.get(USER)).get(USERNAME).toString());
             confirmRequestJSON.put(CODE, confirmationCode);
         }
+        log.info("Validating confirmation code for user " +
+                ((JSONObject) registerRequestJSON.get(USER)).get(USERNAME).toString() + "\n Confirm request: " +
+                confirmRequestJSON.toJSONString());
         HttpResponse response = httpCommonClient.sendPostRequestWithJSON(getEndPoint(VALIDATE_CODE), confirmRequestJSON,
                 getCommonHeaders(username, password));
 
@@ -333,9 +353,15 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
         if (ArrayUtils.isNotEmpty(claimValues)) {
             log.info("Claim: " + claimValues[0].getClaimURI() + " value: " + claimValues[0].getValue());
         }
-        assertEquals(claimValues[0].getValue(), "false",
-                "Failed to unlock the user account upon confirmation. Confirmation code: " + confirmationCode
-                        + " Request Object: " + registerRequestJSON.toJSONString());
+        StringBuilder message = new StringBuilder("Failed to unlock the user account upon confirmation. " +
+                "Confirmation code: ");
+        if (resendCode) {
+            message.append(newConfirmationCode);
+        } else {
+            message.append(confirmationCode);
+        }
+        message.append("Request Object: ").append(registerRequestJSON.toJSONString());
+        assertEquals(claimValues[0].getValue(), "false", message.toString());
     }
 
     private String getEndPoint(String path) {
