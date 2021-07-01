@@ -2057,7 +2057,7 @@
         <identity.inbound.auth.openid.version>5.6.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.6.11</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.6.7</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>1.5.93</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim2.version>1.5.91</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity workflow Versions -->
         <identity.user.workflow.version>5.4.7</identity.user.workflow.version>

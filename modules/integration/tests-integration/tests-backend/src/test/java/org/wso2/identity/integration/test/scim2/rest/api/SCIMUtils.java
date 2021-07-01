@@ -40,7 +40,7 @@ import java.util.LinkedHashMap;
 public class SCIMUtils {
 
     private static final String SCIM_USER_SCHEMAS = "[urn:ietf:params:scim:schemas:core:2.0:User, " +
-            "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User, urn:scim:wso2:schema]";
+            "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User, urn:scim:custom:schema]";
     private static final UserStoreConfigUtils userStoreConfigUtils = new UserStoreConfigUtils();
 
     /**

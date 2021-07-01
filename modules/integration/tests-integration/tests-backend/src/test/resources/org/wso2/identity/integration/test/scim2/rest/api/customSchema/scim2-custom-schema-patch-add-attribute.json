@@ -6,7 +6,7 @@
     {
       "op": "add",
       "value": {
-        "urn:scim:wso2:schema": {
+        "urn:scim:custom:schema": {
           "manager": {
             "email": "piraveenaAdd@gmail.com"
           }
