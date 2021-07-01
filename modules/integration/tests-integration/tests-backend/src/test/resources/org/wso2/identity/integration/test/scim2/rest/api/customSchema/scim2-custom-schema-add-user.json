@@ -17,7 +17,7 @@
       "value": "kim@wso2.com"
     }
   ],
-  "urn:scim:custom:schema": {
+  "urn:scim:wso2:schema": {
     "country": "France",
     "manager": {
       "email": "piraveena@gmail.com"
