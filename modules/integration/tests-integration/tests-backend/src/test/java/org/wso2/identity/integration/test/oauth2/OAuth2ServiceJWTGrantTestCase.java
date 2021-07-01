@@ -151,7 +151,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
         ClientAuthentication clientAuth = new ClientSecretBasic(clientID, clientSecret);
         URI tokenEndpoint = new URI(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
         TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, passwordGrant,
-                new Scope(OAuth2Constant.OAUTH2_SCOPE_OPENID));
+                new Scope(OAuth2Constant.OAUTH2_SCOPE_OPENID + " " + OAuth2Constant.OAUTH2_SCOPE_EMAIL));
 
         HTTPResponse tokenHTTPResp = request.toHTTPRequest().send();
         Assert.assertNotNull(tokenHTTPResp, "JWT access token http response is null.");
@@ -167,7 +167,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
         jwtAssertion = oidcTokens.getIDTokenString();
         alias = oidcTokens.getIDToken().getJWTClaimsSet().getAudience().get(0);
         issuer = oidcTokens.getIDToken().getJWTClaimsSet().getIssuer();
-        Assert.assertEquals(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(COUNTRY_OIDC_CLAIM), COUNTRY_CLAIM_VALUE,
+        Assert.assertNull(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(COUNTRY_OIDC_CLAIM),
                 "Requested user claims is not returned back in self contained access token based on password "
                         + "claim.");
         Assert.assertEquals(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(EMAIL_OIDC_CLAIM), EMAIL_CLAIM_VALUE,
@@ -180,7 +180,6 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
         Assert.assertNull(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(EMAIL_LOCAL_CLAIM_URI),
                 "User claim " + EMAIL_LOCAL_CLAIM_URI + " is not returned in local claim uri format without being "
                         + "converted to OIDC claim");
-        changeCountryOIDDialect();
     }
 
     @Test(description = "This test case tests the behaviour when ConvertOIDCDialect is set to true in identity.xml "
@@ -213,8 +212,8 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
         Assert.assertNull(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(EMAIL_OIDC_CLAIM),
                 "User claims is returned back without mappings in SP and IDP side when ConvertToOIDCDialect is "
                         + "set to true in identity.xml");
-        Assert.assertEquals(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(COUNTRY_NEW_OIDC_CLAIM),
-                COUNTRY_CLAIM_VALUE, "User claims is not returned back with proper mappings in SP and IDP side when "
+        Assert.assertNull(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(COUNTRY_NEW_OIDC_CLAIM),
+                "User claims is not returned back with proper mappings in SP and IDP side when "
                         + "ConvertToOIDCDialect is set to true in identity.xml");
         Assert.assertNull(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(EMAIL_LOCAL_CLAIM_URI),
                 "User claims conversion is wrong as per the claim mapping in SP and IDP");
@@ -259,7 +258,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
         Assert.assertEquals(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(EMAIL_OIDC_CLAIM), EMAIL_CLAIM_VALUE,
                 "User claims are not proxied when there are no SP and IDP Claim mappings "
                         + "returned when ConvertToOIDCDialect is set to true in identity.xml");
-        Assert.assertEquals(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(COUNTRY_OIDC_CLAIM), COUNTRY_CLAIM_VALUE,
+        Assert.assertNull(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(COUNTRY_OIDC_CLAIM),
                 "User claims are not proxied when there are no SP and IDP Claim mappings "
                         + "returned when ConvertToOIDCDialect is set to true in identity.xml");
         Assert.assertNull(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(COUNTRY_LOCAL_CLAIM_URI),
@@ -359,8 +358,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
         identityProviderMgtServiceClient.deleteIdP(issuer);
         addFederatedIdentityProvider();
         OIDCTokens oidcTokens = makeJWTBearerGrantRequest();
-        Assert.assertEquals(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(COUNTRY_OIDC_CLAIM),
-                COUNTRY_CLAIM_VALUE,
+        Assert.assertNull(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(COUNTRY_OIDC_CLAIM),
                 "User claims are not returned back as it is when ConvertToOIDCDialect is set to false");
         updateIdentityProviderWithClaimMappings();
         oidcTokens = makeJWTBearerGrantRequest();
@@ -402,7 +400,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
         ClientAuthentication clientAuth = new ClientSecretBasic(clientID, clientSecret);
         URI tokenEndpoint = new URI(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
         TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, authorizationGrant,
-                new Scope(OAuth2Constant.OAUTH2_SCOPE_OPENID));
+                new Scope(OAuth2Constant.OAUTH2_SCOPE_OPENID + " " + OAuth2Constant.OAUTH2_SCOPE_EMAIL));
 
         HTTPResponse tokenHTTPResp = request.toHTTPRequest().send();
         Assert.assertNotNull(tokenHTTPResp, "JWT access token http response is null.");
