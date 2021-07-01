@@ -168,8 +168,8 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
         alias = oidcTokens.getIDToken().getJWTClaimsSet().getAudience().get(0);
         issuer = oidcTokens.getIDToken().getJWTClaimsSet().getIssuer();
         Assert.assertNull(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(COUNTRY_OIDC_CLAIM),
-                "Requested user claims is not returned back in self contained access token based on password "
-                        + "claim.");
+                "Requested user claims contains claims which are not configured in requested scopes in self contained "
+                        + "access token based on password claim");
         Assert.assertEquals(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(EMAIL_OIDC_CLAIM), EMAIL_CLAIM_VALUE,
                 "Requested user claims is not returned back in self contained access token based on password "
                         + "claim.");
@@ -213,8 +213,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
                 "User claims is returned back without mappings in SP and IDP side when ConvertToOIDCDialect is "
                         + "set to true in identity.xml");
         Assert.assertNull(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(COUNTRY_NEW_OIDC_CLAIM),
-                "User claims is not returned back with proper mappings in SP and IDP side when "
-                        + "ConvertToOIDCDialect is set to true in identity.xml");
+                "User claims contains claims which are not configured in requested scopes");
         Assert.assertNull(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(EMAIL_LOCAL_CLAIM_URI),
                 "User claims conversion is wrong as per the claim mapping in SP and IDP");
     }
@@ -259,8 +258,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
                 "User claims are not proxied when there are no SP and IDP Claim mappings "
                         + "returned when ConvertToOIDCDialect is set to true in identity.xml");
         Assert.assertNull(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(COUNTRY_OIDC_CLAIM),
-                "User claims are not proxied when there are no SP and IDP Claim mappings "
-                        + "returned when ConvertToOIDCDialect is set to true in identity.xml");
+                "User claims contains claims which are not configured in requested scopes");
         Assert.assertNull(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(COUNTRY_LOCAL_CLAIM_URI),
                 "User claims conversion happened wrongly.");
         Assert.assertNotNull(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(COUNTRY_NEW_OIDC_CLAIM),
@@ -359,7 +357,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
         addFederatedIdentityProvider();
         OIDCTokens oidcTokens = makeJWTBearerGrantRequest();
         Assert.assertNull(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(COUNTRY_OIDC_CLAIM),
-                "User claims are not returned back as it is when ConvertToOIDCDialect is set to false");
+                "User claims contains claims which are not configured in requested scopes");
         updateIdentityProviderWithClaimMappings();
         oidcTokens = makeJWTBearerGrantRequest();
         Assert.assertEquals(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(EMAIL_OIDC_CLAIM), EMAIL_CLAIM_VALUE,
