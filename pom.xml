@@ -2058,11 +2058,11 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.8.32</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.6.31</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.6.32</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.6.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.6.11</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.6.7</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>1.5.91</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim2.version>1.5.95</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity workflow Versions -->
         <identity.user.workflow.version>5.4.7</identity.user.workflow.version>
@@ -2091,7 +2091,7 @@
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
         <!--<identity.userstore.cassandra.version>5.1.1</identity.userstore.cassandra.version>-->
         <!--<identity.agent-entitlement-filter.version>5.1.1</identity.agent-entitlement-filter.version>-->
-        <org.wso2.carbon.identity.remotefetch.version>0.7.23</org.wso2.carbon.identity.remotefetch.version>
+        <org.wso2.carbon.identity.remotefetch.version>0.7.24</org.wso2.carbon.identity.remotefetch.version>
 
         <!-- CallHome version -->
         <callhome.version>4.5.x_1.0.8</callhome.version>
@@ -2151,7 +2151,7 @@
         <carbon.identity.oauth.uma.version>1.3.5</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.2.315</identity.apps.version>
+        <identity.apps.version>1.2.318</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
