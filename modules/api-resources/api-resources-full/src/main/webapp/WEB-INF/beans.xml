@@ -41,6 +41,7 @@
     <import resource="classpath:META-INF/cxf/script-libraries-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/configs-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/notification-sender-server-v1-cxf.xml"/>
+    <import resource="classpath:META-INF/cxf/authenticators-server-v1-cxf.xml"/>
 
     <import resource="classpath:META-INF/cxf/identity-governance-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-store-v1-cxf.xml"/>
@@ -90,6 +91,7 @@
             <bean class="org.wso2.carbon.identity.api.server.cors.v1.CorsApi"/>
             <bean class="org.wso2.carbon.identity.api.server.fetch.remote.v1.RemoteFetchApi"/>
             <bean class="org.wso2.carbon.identity.api.server.notification.sender.v1.NotificationSendersApi"/>
+            <bean class="org.wso2.carbon.identity.api.server.authenticators.v1.AuthenticatorsApi"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">
