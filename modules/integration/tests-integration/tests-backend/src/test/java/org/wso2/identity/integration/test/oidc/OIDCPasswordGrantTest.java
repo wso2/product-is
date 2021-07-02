@@ -100,7 +100,7 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
 
         Map<String, String> params = new HashMap<>();
         params.put("grant_type", "password");
-        params.put("scope", "openid");
+        params.put("scope", "openid email profile");
         params.put("username", user.getUsername());
         params.put("password", user.getPassword());
 

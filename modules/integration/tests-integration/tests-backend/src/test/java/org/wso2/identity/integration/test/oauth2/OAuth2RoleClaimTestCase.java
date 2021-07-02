@@ -135,11 +135,8 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
 
         String encodedIdToken = ((JSONObject) obj).get("id_token").toString().split("\\.")[1];
         Object idToken = JSONValue.parse(new String(Base64.decodeBase64(encodedIdToken)));
-        Object roles = ((JSONObject) idToken).get(OIDC_ROLES_CLAIM_URI);
-        Assert.assertNotNull(roles, "Id token should contain at least one role");
-        if (!(roles instanceof String)) {
-            Assert.fail("Id token should contain Internal/everyone role only");
-        }
+        Assert.assertNull(((JSONObject) idToken).get(OIDC_ROLES_CLAIM_URI), 
+                "Id token must not contain role claim which is not configured for the requested scope.");
     }
 
     @Test(groups = "wso2.is", description = "Check id_token after updating roles", dependsOnMethods =
@@ -171,8 +168,8 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
 
         String encodedIdToken = ((JSONObject) obj).get("id_token").toString().split("\\.")[1];
         Object idToken = JSONValue.parse(new String(Base64.decodeBase64(encodedIdToken)));
-        Object roles = ((JSONObject) idToken).get(OIDC_ROLES_CLAIM_URI);
-        Assert.assertTrue((((JSONArray) roles).contains(OAUTH_ROLE)), "Id token does not contain updated role claim");
+        Assert.assertNull(((JSONObject) idToken).get(OIDC_ROLES_CLAIM_URI), 
+                "Id token must not contain role claim which is not configured for the requested scope.");
     }
 
     private ClaimValue[] getUserClaims() {
