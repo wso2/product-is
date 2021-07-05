@@ -934,9 +934,6 @@ paths:
           description: Valid users are not found
           schema:
             $ref: '#/definitions/GroupSearchErrorResponseObject'
-        409:
-          description: Users already exists
-
   '/Users/{id}':
     get:
       tags:
