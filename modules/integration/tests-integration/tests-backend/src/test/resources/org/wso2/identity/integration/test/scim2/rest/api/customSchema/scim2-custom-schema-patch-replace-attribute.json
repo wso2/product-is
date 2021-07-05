@@ -6,7 +6,7 @@
     {
       "op": "replace",
       "value": {
-        "urn:scim:custom:schema": {
+        "urn:scim:wso2:schema": {
           "country": "Sri Lanka",
           "manager": {
             "email": "piraveenaReplace@gmail.com"

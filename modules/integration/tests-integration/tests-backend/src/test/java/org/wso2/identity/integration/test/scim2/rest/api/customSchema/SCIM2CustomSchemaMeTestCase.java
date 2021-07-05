@@ -69,8 +69,8 @@ public class SCIM2CustomSchemaMeTestCase extends SCIM2BaseTest {
     private ClaimMetadataManagementServiceClient claimMetadataManagementServiceClient = null;
 
     // Custom schema related constants.
-    private static final String CUSTOM_SCHEMA_URI = "urn:scim:custom:schema";
-    private static final String CUSTOM_SCHEMA_URI_WITH_ESCAPE_CHARS = "\"urn:scim:custom:schema\"";
+    private static final String CUSTOM_SCHEMA_URI = "urn:scim:wso2:schema";
+    private static final String CUSTOM_SCHEMA_URI_WITH_ESCAPE_CHARS = "\"urn:scim:wso2:schema\"";
     // Country claim related constants.
     private static final String COUNTRY_CLAIM_ATTRIBUTE_NAME = "country";
     private static final String COUNTRY_CLAIM_ATTRIBUTE_URI = CUSTOM_SCHEMA_URI + ":" + COUNTRY_CLAIM_ATTRIBUTE_NAME;
@@ -80,7 +80,7 @@ public class SCIM2CustomSchemaMeTestCase extends SCIM2BaseTest {
     private static final String COUNTRY_LOCAL_CLAIM_VALUE_AFTER_PUT = "India";
     // Manager claim related constants.
     private static final String MANAGER_CLAIM_ATTRIBUTE_NAME = "manager";
-    private static final String MANAGER_CLAIM_ATTRIBUTE_URI = "urn:scim:custom:schema:manager";
+    private static final String MANAGER_CLAIM_ATTRIBUTE_URI = "urn:scim:wso2:schema:manager";
     private static final String MANAGER_EMAIL_CLAIM_ATTRIBUTE_NAME = "email";
     private static final String MANAGER_EMAIL_CLAIM_ATTRIBUTE_URI =
             MANAGER_CLAIM_ATTRIBUTE_URI + "." + MANAGER_EMAIL_CLAIM_ATTRIBUTE_NAME;

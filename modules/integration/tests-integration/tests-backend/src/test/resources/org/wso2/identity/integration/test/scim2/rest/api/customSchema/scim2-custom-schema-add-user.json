@@ -6,18 +6,7 @@
   },
   "userName": "userkim",
   "password": "abc123",
-  "emails": [
-    {
-      "type": "home",
-      "value": "kim@gmail.com",
-      "primary": true
-    },
-    {
-      "type": "work",
-      "value": "kim@wso2.com"
-    }
-  ],
-  "urn:scim:custom:schema": {
+  "urn:scim:wso2:schema": {
     "country": "France",
     "manager": {
       "email": "piraveena@gmail.com"

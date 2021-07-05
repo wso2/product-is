@@ -9,7 +9,7 @@
     },
     {
       "op": "remove",
-      "path": "urn:scim:custom:schema:country"
+      "path": "urn:scim:wso2:schema:country"
     }
   ]
 }
