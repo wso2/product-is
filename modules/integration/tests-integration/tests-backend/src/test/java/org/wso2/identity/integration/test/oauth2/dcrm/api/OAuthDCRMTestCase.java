@@ -117,6 +117,55 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
 
     }
 
+    @Test(alwaysRun = true, groups = "wso2.is", priority = 1, description = "Create a service provider with optional " +
+            "client metadata values successfully")
+    public void testCreateServiceProviderRequestWithOptionalAttributes() throws IOException {
+        HttpPost request = new HttpPost(getPath());
+        setRequestHeaders(request);
+
+        JSONArray grantTypes = new JSONArray();
+        grantTypes.add(OAuthDCRMConstants.GRANT_TYPE_AUTHORIZATION_CODE);
+        grantTypes.add(OAuthDCRMConstants.GRANT_TYPE_IMPLICIT);
+
+        JSONArray redirectURI = new JSONArray();
+        redirectURI.add(OAuthDCRMConstants.REDIRECT_URI);
+
+        JSONArray audience = new JSONArray();
+        audience.add(OAuthDCRMConstants.AUD_VALUE);
+
+        JSONObject dcrRequest = new JSONObject();
+        dcrRequest.put(OAuthDCRMConstants.CLIENT_NAME, OAuthDCRMConstants.APPLICATION_NAME_OPTIONAL_ATTRIBUTES);
+        dcrRequest.put(OAuthDCRMConstants.GRANT_TYPES, grantTypes);
+        dcrRequest.put(OAuthDCRMConstants.REDIRECT_URIS, redirectURI);
+        dcrRequest.put(OAuthDCRMConstants.AUD, audience);
+        dcrRequest.put(OAuthDCRMConstants.SOFTWARE_ID, OAuthDCRMConstants.SOFTWARE_ID_VALUE);
+        dcrRequest.put(OAuthDCRMConstants.ID_TOKEN_ENCRYPTED_RESPONSE_ALG,
+                OAuthDCRMConstants.ID_TOKEN_ENCRYPTED_RESPONSE_ALG_VALUE);
+        dcrRequest.put(OAuthDCRMConstants.ID_TOKEN_ENCRYPTED_RESPONSE_ENC,
+                OAuthDCRMConstants.ID_TOKEN_ENCRYPTED_RESPONSE_ENC_VALUE);
+
+        StringEntity entity = new StringEntity(dcrRequest.toJSONString());
+
+        request.setEntity(entity);
+
+        HttpResponse response = client.execute(request);
+        assertEquals(response.getStatusLine().getStatusCode(), 201, "Service Provider " +
+                "has not been created successfully");
+
+        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+
+        Object responseObj = JSONValue.parse(rd);
+        EntityUtils.consume(response.getEntity());
+        client_id = ((JSONObject) responseObj).get("client_id").toString();
+        assertNotNull(client_id, "client_id cannot be null");
+        assertNotNull(((JSONObject) responseObj).get(OAuthDCRMConstants.AUD), "aud cannot be null");
+        assertNotNull(((JSONObject) responseObj).get(OAuthDCRMConstants.ID_TOKEN_ENCRYPTED_RESPONSE_ALG),
+                "id_token_encrypted_response_alg cannot be null");
+        assertNotNull(((JSONObject) responseObj).get(OAuthDCRMConstants.ID_TOKEN_ENCRYPTED_RESPONSE_ENC),
+                "id_token_encrypted_response_enc cannot be null");
+        assertNotNull(((JSONObject) responseObj).get(OAuthDCRMConstants.SOFTWARE_ID), "software_id cannot be null");
+    }
+
     @Test(alwaysRun = true, groups = "wso2.is", priority = 2, description =
             "Create a service provider with already registered client name")
     public void testCreateServiceProviderRequestWithExistingClientName() throws IOException {
@@ -290,6 +339,116 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
         EntityUtils.consume(successResponse.getEntity());
         client_id = ((JSONObject) responseObj).get("client_id").toString();
         assertNotNull(client_id, "client_id cannot be null");
+    }
+
+    @Test(alwaysRun = true, groups = "wso2.is", priority = 8, description = "Try to register service provider with " +
+            "invalid id_token_encrypted_response_alg")
+    public void testCreateServiceProviderRequestWithInvalidIdTokenEncryptedResponseAlg() throws IOException {
+        HttpPost request = new HttpPost(getPath());
+        setRequestHeaders(request);
+
+        JSONArray grantTypes = new JSONArray();
+        grantTypes.add(OAuthDCRMConstants.GRANT_TYPE_AUTHORIZATION_CODE);
+        grantTypes.add(OAuthDCRMConstants.GRANT_TYPE_IMPLICIT);
+
+        JSONArray redirectURI = new JSONArray();
+        redirectURI.add(OAuthDCRMConstants.REDIRECT_URI);
+
+        JSONObject dcrRequest = new JSONObject();
+        dcrRequest.put(OAuthDCRMConstants.CLIENT_NAME, DUMMY_DCR_APP);
+        dcrRequest.put(OAuthDCRMConstants.GRANT_TYPES, grantTypes);
+        dcrRequest.put(OAuthDCRMConstants.REDIRECT_URIS, redirectURI);
+        dcrRequest.put(OAuthDCRMConstants.ID_TOKEN_ENCRYPTED_RESPONSE_ALG,
+                OAuthDCRMConstants.INVALID_ID_TOKEN_ENCRYPTED_RESPONSE_ALG_VALUE);
+
+
+        StringEntity entity = new StringEntity(dcrRequest.toJSONString());
+
+        request.setEntity(entity);
+
+        HttpResponse response = client.execute(request);
+        assertEquals(response.getStatusLine().getStatusCode(), 500, "Service Provider " +
+                "creation request with invalid id_token_encrypted_response_alg should have returned an internal " +
+                "server error");
+
+        EntityUtils.consume(response.getEntity());
+
+    }
+
+    @Test(alwaysRun = true, groups = "wso2.is", priority = 9, description = "Try to register service provider with " +
+            "invalid id_token_encrypted_response_enc")
+    public void testCreateServiceProviderRequestWithInvalidIdTokenEncryptedResponseEnc() throws IOException {
+        HttpPost request = new HttpPost(getPath());
+        setRequestHeaders(request);
+
+        JSONArray grantTypes = new JSONArray();
+        grantTypes.add(OAuthDCRMConstants.GRANT_TYPE_AUTHORIZATION_CODE);
+        grantTypes.add(OAuthDCRMConstants.GRANT_TYPE_IMPLICIT);
+
+        JSONArray redirectURI = new JSONArray();
+        redirectURI.add(OAuthDCRMConstants.REDIRECT_URI);
+
+        JSONObject dcrRequest = new JSONObject();
+        dcrRequest.put(OAuthDCRMConstants.CLIENT_NAME, DUMMY_DCR_APP);
+        dcrRequest.put(OAuthDCRMConstants.GRANT_TYPES, grantTypes);
+        dcrRequest.put(OAuthDCRMConstants.REDIRECT_URIS, redirectURI);
+        dcrRequest.put(OAuthDCRMConstants.ID_TOKEN_ENCRYPTED_RESPONSE_ALG,
+                OAuthDCRMConstants.ID_TOKEN_ENCRYPTED_RESPONSE_ALG_VALUE);
+        dcrRequest.put(OAuthDCRMConstants.ID_TOKEN_ENCRYPTED_RESPONSE_ENC,
+                OAuthDCRMConstants.INVALID_ID_TOKEN_ENCRYPTED_RESPONSE_ENC_VALUE);
+
+
+        StringEntity entity = new StringEntity(dcrRequest.toJSONString());
+
+        request.setEntity(entity);
+
+        HttpResponse response = client.execute(request);
+        assertEquals(response.getStatusLine().getStatusCode(), 500, "Service Provider " +
+                "creation request with invalid id_token_encrypted_response_enc should have returned an internal " +
+                "server error");
+
+        EntityUtils.consume(response.getEntity());
+
+    }
+
+    @Test(alwaysRun = true, groups = "wso2.is", priority = 10, description = "Try to register service provider with " +
+            "id_token_encrypted_response_enc without id_token_encrypted_response_alg")
+    public void testCreateServiceProviderRequestWithoutIdTokenEncryptedResponseAlg() throws IOException {
+        HttpPost request = new HttpPost(getPath());
+        setRequestHeaders(request);
+
+        JSONArray grantTypes = new JSONArray();
+        grantTypes.add(OAuthDCRMConstants.GRANT_TYPE_AUTHORIZATION_CODE);
+        grantTypes.add(OAuthDCRMConstants.GRANT_TYPE_IMPLICIT);
+
+        JSONArray redirectURI = new JSONArray();
+        redirectURI.add(OAuthDCRMConstants.REDIRECT_URI);
+
+        JSONObject dcrRequest = new JSONObject();
+        dcrRequest.put(OAuthDCRMConstants.CLIENT_NAME, DUMMY_DCR_APP);
+        dcrRequest.put(OAuthDCRMConstants.GRANT_TYPES, grantTypes);
+        dcrRequest.put(OAuthDCRMConstants.REDIRECT_URIS, redirectURI);
+        dcrRequest.put(OAuthDCRMConstants.ID_TOKEN_ENCRYPTED_RESPONSE_ENC,
+                OAuthDCRMConstants.ID_TOKEN_ENCRYPTED_RESPONSE_ENC_VALUE);
+
+
+        StringEntity entity = new StringEntity(dcrRequest.toJSONString());
+
+        request.setEntity(entity);
+
+        HttpResponse response = client.execute(request);
+        assertEquals(response.getStatusLine().getStatusCode(), 400, "Service Provider " +
+                "creation request with id_token_encrypted_response_enc and without id_token_encrypted_response_alg  " +
+                "should have returned a bad request");
+
+        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+        Object responseObj = JSONValue.parse(rd);
+        EntityUtils.consume(response.getEntity());
+
+        String errorMsg = ((JSONObject) responseObj).get("error").toString();
+
+        assertEquals(errorMsg, "invalid_client_metadata", "Invalid error message");
+
     }
 
     private void setRequestHeaders(HttpPost request) {
