@@ -314,6 +314,12 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
         </fileSet>
 
+        <!--Copy the hash provider jars-->
+        <fileSet>
+            <directory>../hash-providers/target/hashProviderCopied/jar</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
+        </fileSet>
+
         <!--copy provisioning-connector jars Google,Salesforce,SCIM .-->
         <fileSet>
             <directory>../provisioning-connectors/target/provisioningconnectorCopied/jar</directory>
