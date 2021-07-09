@@ -47,6 +47,7 @@
         <module>modules/styles</module>
         <module>modules/tests-utils</module>
         <module>modules/integration</module>
+        <module>modules/hash-providers</module>
     </modules>
 
     <licenses>
@@ -1672,6 +1673,13 @@
                 <version>${authenticator.x509.version}</version>
             </dependency>
 
+            <!--Hash provider connectors-->
+            <dependency>
+                <groupId>org.wso2.carbon.hash.provider.pbkdf2</groupId>
+                <artifactId>org.wso2.carbon.hash.provider.pbkdf2</artifactId>
+                <version>${hashprovider.pbkdf2.version}</version>
+            </dependency>
+
             <!--
                 Dependencies from this point is used in p2 profile gen, added here to get them updated along with
                 versions plugin (version plugin only reads the dependencies in dependencyManagement,
@@ -2136,6 +2144,9 @@
         <authenticator.twitter.version>1.0.11</authenticator.twitter.version>
         <authenticator.x509.version>3.1.0</authenticator.x509.version>
         <identity.extension.utils>1.0.8</identity.extension.utils>
+
+        <!-- Hash Provider Versions-->
+        <hashprovider.pbkdf2.version>0.1.0</hashprovider.pbkdf2.version>
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.0</identity.api.dispatcher.version>
