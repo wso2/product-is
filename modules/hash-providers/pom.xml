@@ -26,7 +26,7 @@
                         </goals>
                         <configuration>
                             <artifactItems>
-                                <artifactItem>org.wso2.carbon.hash.provider.pbkdf2-0.1.0-SNAPSHOT.jar
+                                <artifactItem>
                                     <groupId>org.wso2.carbon.hash.provider.pbkdf2</groupId>
                                     <artifactId>org.wso2.carbon.hash.provider.pbkdf2
                                     </artifactId>
