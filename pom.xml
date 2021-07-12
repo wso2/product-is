@@ -38,6 +38,7 @@
         <module>modules/callhome</module>
         <module>modules/connectors</module>
         <module>modules/api-resources</module>
+        <module>modules/hash-providers</module>
         <module>modules/authenticators</module>
         <module>modules/social-authenticators</module>
         <module>modules/provisioning-connectors</module>
@@ -47,7 +48,6 @@
         <module>modules/styles</module>
         <module>modules/tests-utils</module>
         <module>modules/integration</module>
-        <module>modules/hash-providers</module>
     </modules>
 
     <licenses>
