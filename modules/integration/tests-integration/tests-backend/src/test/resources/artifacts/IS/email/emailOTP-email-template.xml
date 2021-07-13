@@ -1145,7 +1145,7 @@
                             Hi {{user.claim.givenname}},
                         </p>
                         <p style="font-size: 18px; margin: 0; line-height: 24px; font-family: 'Nunito Sans', Arial, Verdana, Helvetica, sans-serif; color: #666; text-align: left; padding-bottom: 3%;">
-                            Please note that the account registered with the user name <b>{{user-name}}</b> has been locked. Please try again later.<br>
+                            Please note that the account registered with the user name <b>{{user-name}}</b> has been locked. Please try again in {{lock-duration}} minutes.<br>
                         </p>
                     </td>
                 </tr>
