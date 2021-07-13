@@ -1,0 +1,98 @@
+# This workflow will update dependencies for product-is.
+name: Dependency Updater
+on:
+  workflow_dispatch:
+  schedule:
+    # Everyday at 15:00 - 15:15 UTC (8.30-8.45 PM SL time)
+    - cron:  '0-15 15 * * *'
+
+env:
+  MAVEN_OPTS: -Xmx4g -Xms1g
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Adopt JDK 8
+        uses: actions/setup-java@v2
+        with:
+          java-version: "8"
+          distribution: "adopt"
+      - name: Cache local Maven repository
+        id: cache-maven-m2
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-m2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ env.cache-name }}-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-${{ env.cache-name }}-
+            ${{ runner.os }}-maven-
+            ${{ runner.os }}-
+      - name: Update Dependencies
+        run: |
+          mvn versions:update-properties -DgenerateBackupPoms=false -Dincludes=org.wso2.carbon.identity.*,org.wso2.carbon.extension.identity.*,org.wso2.charon,org.apache.rampart.wso2,org.apache.ws.security.wso2,org.wso2.carbon.consent.*,org.wso2.carbon.database.utils -U
+      - name: Show Dependency Updates
+        run: |
+          git diff --color > dependency_updates.diff
+          cat dependency_updates.diff
+      - name: Build
+        run: |
+          mvn clean install -Dmaven.test.failure.ignore=false | tee mvn-build.log
+          PR_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
+          PR_TEST_RESULT=$(sed -n -e '/\[INFO\] Results:/,/\[INFO\] Tests run:/ p' mvn-build.log)
+
+          PR_BUILD_FINAL_RESULT=$(
+            echo "==========================================================="
+            echo "product-is BUILD $PR_BUILD_STATUS"
+            echo "=========================================================="
+            echo ""
+            echo "$PR_TEST_RESULT"
+          )
+
+          PR_BUILD_RESULT_LOG_TEMP=$(echo "$PR_BUILD_FINAL_RESULT" | sed 's/$/%0A/')
+          PR_BUILD_RESULT_LOG=$(echo $PR_BUILD_RESULT_LOG_TEMP)
+          echo "::warning::$PR_BUILD_RESULT_LOG"
+
+          if [ "$PR_BUILD_STATUS" != "SUCCESS" ]; then
+            echo "PR BUILD not successfull. Aborting."
+            echo "::error::PR BUILD not successfull. Check artifacts for logs."
+            exit 1
+          fi
+      - name: Archive dependency diff file
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: dependency-updates-diff
+          path: |
+            dependency_updates.diff
+      - name: Archive maven-build-log file
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: mvn-build.log
+          path: |
+            mvn-build.log
+          if-no-files-found: warn
+      - name: Clean untracked files
+        run: |
+          git clean -f -d
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.PAT }}
+          commit-message: Bump dependencies from IS_dependency_updater_github_action/${{github.run_id}}
+          title: Bump Dependencies - ${{github.run_id}}
+          body: |
+            - Bumps dependencies for product-is. Link: https://github.com/wso2/product-is/actions/runs/${{github.run_id}}
+          branch: IS_dependency_updater_github_action/${{github.run_id}}
+      - name: Google Chat Notification
+        uses: Co-qn/google-chat-notification@releases/v1
+        with:
+          name: Dependency Updater
+          url: ${{ secrets.GOOGLE_CHAT_WEBHOOK }}
+          status: ${{ job.status }}
+        if: always()
