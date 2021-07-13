@@ -61,7 +61,7 @@ public class IdentityGovernanceTestCase extends ISIntegrationTest {
         boolean accountLockingAvailable = false;
         for (ConnectorConfig connector : connectors) {
             if (connector.getFriendlyName().equals(CONNECTOR_FRIENDLY_NAME)) {
-                Assert.assertEquals(connector.getProperties().length, 5,
+                Assert.assertEquals(connector.getProperties().length, 6,
                         "Account locking feature properties not received properly.");
                 accountLockingAvailable = true;
                 break;
