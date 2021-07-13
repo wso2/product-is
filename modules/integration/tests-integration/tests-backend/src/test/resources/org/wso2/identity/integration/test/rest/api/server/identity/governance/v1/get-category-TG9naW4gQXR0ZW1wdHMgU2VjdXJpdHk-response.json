@@ -38,6 +38,12 @@
           "value": "true",
           "displayName": "Manage notification sending internally",
           "description": "Disable if the client application handles notification sending"
+        },
+        {
+          "name": "account.lock.handler.notification.notifyOnLockIncrement",
+          "value": "false",
+          "displayName": "Notify user when lock time is increased",
+          "description": "Notify user when the account lock duration is increased due to continuous failed login attempts."
         }
       ]
     },
