@@ -2065,7 +2065,7 @@
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.saml.version>5.8.34</identity.inbound.auth.saml.version>
+        <identity.inbound.auth.saml.version>5.8.35</identity.inbound.auth.saml.version>
         <identity.inbound.auth.oauth.version>6.7.6</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.6.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.6.12</identity.inbound.auth.sts.version>
@@ -2112,8 +2112,8 @@
         <identity.outbound.auth.requestpath.oauth.version>5.3.3</identity.outbound.auth.requestpath.oauth.version>
 
         <!-- Social Authenticator Versions -->
-        <social.authenticator.facebook.version>5.1.20</social.authenticator.facebook.version>
-        <social.authenticator.google.version>5.1.12</social.authenticator.google.version>
+        <social.authenticator.facebook.version>5.1.21</social.authenticator.facebook.version>
+        <social.authenticator.google.version>5.1.13</social.authenticator.google.version>
         <social.authenticator.windowslive.version>5.1.6</social.authenticator.windowslive.version>
         <social.authenticator.yahoo.version>5.1.9</social.authenticator.yahoo.version>
 
@@ -2137,7 +2137,7 @@
         <identity.metadata.saml.version>1.4.8</identity.metadata.saml.version>
 
         <!-- Connector Versions -->
-        <authenticator.totp.version>3.0.13</authenticator.totp.version>
+        <authenticator.totp.version>3.0.14</authenticator.totp.version>
         <authenticator.office365.version>2.0.4</authenticator.office365.version>
         <authenticator.smsotp.version>3.0.14</authenticator.smsotp.version>
         <authenticator.emailotp.version>4.0.4</authenticator.emailotp.version>
@@ -2162,7 +2162,7 @@
         <carbon.identity.oauth.uma.version>1.3.7</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.2.356</identity.apps.version>
+        <identity.apps.version>1.2.360</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
