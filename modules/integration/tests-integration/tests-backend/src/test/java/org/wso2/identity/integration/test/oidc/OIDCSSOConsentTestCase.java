@@ -75,6 +75,8 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
 
         initUser();
         createUser(user);
+        userInfo.setUserName(user.getUsername());
+        userInfo.setPassword(user.getPassword());
 
         playgroundApp = initApplication();
         serviceProvider = createApplication(new ServiceProvider(), playgroundApp);
