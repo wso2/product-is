@@ -3,7 +3,7 @@
     <parent>
         <artifactId>identity-server-parent</artifactId>
         <groupId>org.wso2.is</groupId>
-        <version>5.12.0-m30-SNAPSHOT</version>
+        <version>5.12.0-m30</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
