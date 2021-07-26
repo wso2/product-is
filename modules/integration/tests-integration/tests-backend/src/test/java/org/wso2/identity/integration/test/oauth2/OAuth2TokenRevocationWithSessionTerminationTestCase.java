@@ -361,6 +361,7 @@ public class OAuth2TokenRevocationWithSessionTerminationTestCase extends OAuth2S
      * @return Array of claim values.
      */
     protected ClaimValue[] getUserClaims() {
+
         ClaimValue[] claimValues = new ClaimValue[1];
 
         ClaimValue email = new ClaimValue();
