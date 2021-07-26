@@ -40,6 +40,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
+import org.wso2.carbon.um.ws.api.stub.ClaimValue;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
@@ -71,13 +72,18 @@ public class OAuth2TokenRevocationWithSessionTerminationTestCase extends OAuth2S
     private String accessToken;
     private List<String> sessionIdList;
     private static final String SESSION_API_ENDPOINT = "https://localhost:9853/t/carbon.super/api/users/v1/me/sessions";
+    private static final String USER_EMAIL = "authTokenRevokeUser@wso2.com";
+    private static final String USERNAME = "authTokenRevokeUser";
+    private static final String PASSWORD = "AuthTokenRevokeUser@123";
+    private static final String emailClaimURI = "http://wso2.org/claims/emailaddress";
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
         super.init();
         setSystemproperties();
-        super.init(TestUserMode.SUPER_TENANT_USER);
+        remoteUSMServiceClient.addUser(USERNAME, PASSWORD, new String[]{"admin"},
+                getUserClaims(), "default", true);
         client = HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build();
     }
 
@@ -347,5 +353,22 @@ public class OAuth2TokenRevocationWithSessionTerminationTestCase extends OAuth2S
             throw new Exception("Error occurred while getting the response.");
         }
         return json;
+    }
+
+    /**
+     * Crete claim values array.
+     *
+     * @return Array of claim values.
+     */
+    protected ClaimValue[] getUserClaims() {
+
+        ClaimValue[] claimValues = new ClaimValue[1];
+
+        ClaimValue email = new ClaimValue();
+        email.setClaimURI(emailClaimURI);
+        email.setValue(USER_EMAIL);
+        claimValues[0] = email;
+
+        return claimValues;
     }
 }
