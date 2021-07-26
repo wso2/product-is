@@ -28,7 +28,7 @@
     <artifactId>identity-server-parent</artifactId>
     <packaging>pom</packaging>
     <description>WSO2 Identity Server</description>
-    <version>5.12.0-m30-SNAPSHOT</version>
+    <version>5.12.0-m31-SNAPSHOT</version>
     <name>WSO2 Identity Server</name>
     <url>http://wso2.org/projects/identity</url>
 
@@ -2044,7 +2044,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.20.120</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.20.124</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2065,12 +2065,12 @@
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.saml.version>5.8.35</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.7.6</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.saml.version>5.8.36</identity.inbound.auth.saml.version>
+        <identity.inbound.auth.oauth.version>6.7.7</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.6.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.6.12</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.6.8</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>1.5.101</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim2.version>1.5.102</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity workflow Versions -->
         <identity.user.workflow.version>5.4.7</identity.user.workflow.version>
@@ -2105,7 +2105,7 @@
         <callhome.version>4.5.x_1.0.8</callhome.version>
 
         <!-- Authenticator Versions -->
-        <identity.outbound.auth.oidc.version>5.6.10</identity.outbound.auth.oidc.version>
+        <identity.outbound.auth.oidc.version>5.6.11</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.passive.sts.version>5.4.5</identity.outbound.auth.passive.sts.version>
         <identity.outbound.auth.samlsso.version>5.3.27</identity.outbound.auth.samlsso.version>
         <identity.outbound.auth.requestpath.basicauth.version>5.4.3</identity.outbound.auth.requestpath.basicauth.version>
@@ -2137,7 +2137,7 @@
         <identity.metadata.saml.version>1.4.8</identity.metadata.saml.version>
 
         <!-- Connector Versions -->
-        <authenticator.totp.version>3.0.14</authenticator.totp.version>
+        <authenticator.totp.version>3.0.16</authenticator.totp.version>
         <authenticator.office365.version>2.0.4</authenticator.office365.version>
         <authenticator.smsotp.version>3.0.14</authenticator.smsotp.version>
         <authenticator.emailotp.version>4.0.4</authenticator.emailotp.version>
@@ -2162,7 +2162,7 @@
         <carbon.identity.oauth.uma.version>1.3.7</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.2.360</identity.apps.version>
+        <identity.apps.version>1.2.366</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
