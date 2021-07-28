@@ -2145,7 +2145,7 @@
         <identity.extension.utils>1.0.8</identity.extension.utils>
 
         <!-- Hash Provider Versions-->
-        <hashprovider.pbkdf2.version>0.1.2-SNAPSHOT</hashprovider.pbkdf2.version>
+        <hashprovider.pbkdf2.version>0.1.2</hashprovider.pbkdf2.version>
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.0</identity.api.dispatcher.version>
