@@ -38,7 +38,6 @@
         <module>modules/callhome</module>
         <module>modules/connectors</module>
         <module>modules/api-resources</module>
-        <module>modules/hash-providers</module>
         <module>modules/authenticators</module>
         <module>modules/social-authenticators</module>
         <module>modules/provisioning-connectors</module>
@@ -1673,10 +1672,10 @@
                 <version>${authenticator.x509.version}</version>
             </dependency>
 
-            <!--Hash provider connectors-->
+            <!--Hash providers-->
             <dependency>
-                <groupId>org.wso2.carbon.hash.provider.pbkdf2</groupId>
-                <artifactId>org.wso2.carbon.hash.provider.pbkdf2</artifactId>
+                <groupId>org.wso2.carbon.identity.hash.provider.pbkdf2</groupId>
+                <artifactId>org.wso2.carbon.identity.hash.provider.pbkdf2.server.feature</artifactId>
                 <version>${hashprovider.pbkdf2.version}</version>
             </dependency>
 
@@ -2146,7 +2145,7 @@
         <identity.extension.utils>1.0.8</identity.extension.utils>
 
         <!-- Hash Provider Versions-->
-        <hashprovider.pbkdf2.version>0.1.1</hashprovider.pbkdf2.version>
+        <hashprovider.pbkdf2.version>0.1.2-SNAPSHOT</hashprovider.pbkdf2.version>
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.0</identity.api.dispatcher.version>

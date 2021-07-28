@@ -480,6 +480,10 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.governance:org.wso2.carbon.identity.multi.attribute.login.service.server.feature:${identity.governance.version}
                                 </featureArtifactDef>
+                                <!-- PBKDF2 feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.hash.provider.pbkdf2:org.wso2.carbon.identity.hash.provider.pbkdf2.server.feature:${hashprovider.pbkdf2.version}
+                                </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -963,7 +967,10 @@
                                     <id>org.wso2.carbon.identity.remotefetch.core.feature.group</id>
                                     <version>${org.wso2.carbon.identity.remotefetch.version}</version>
                                 </feature>
-
+                                <feature>
+                                    <id>org.wso2.carbon.identity.hash.provider.pbkdf2.server.feature.group</id>
+                                    <version>${hashprovider.pbkdf2.version}</version>
+                                </feature>
 
                                 <feature>
                                     <id>org.wso2.carbon.extension.identity.helper.feature.group</id>
@@ -1467,6 +1474,10 @@
                                     <id>org.wso2.carbon.identity.remotefetch.core.feature.group</id>
                                     <version>${org.wso2.carbon.identity.remotefetch.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.hash.provider.pbkdf2.server.feature.group</id>
+                                    <version>${hashprovider.pbkdf2.version}</version>
+                                </feature>
 
                                 <!-- Connectors -->
                                 <feature>
@@ -1907,6 +1918,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.remotefetch.core.feature.group</id>
                                     <version>${org.wso2.carbon.identity.remotefetch.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.hash.provider.pbkdf2.server.feature.group</id>
+                                    <version>${hashprovider.pbkdf2.version}</version>
                                 </feature>
 
                                 <!-- Connectors -->
