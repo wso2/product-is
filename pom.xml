@@ -1679,6 +1679,18 @@
                 <version>${hashprovider.pbkdf2.version}</version>
             </dependency>
 
+            <!-- API server and API user common dependencies -->
+            <dependency>
+                <groupId>org.wso2.carbon.identity.server.api</groupId>
+                <artifactId>org.wso2.carbon.identity.api.server.common</artifactId>
+                <version>${identity.server.api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.user.api</groupId>
+                <artifactId>org.wso2.carbon.identity.api.user.common</artifactId>
+                <version>${identity.user.api.version}</version>
+            </dependency>
+
             <!--
                 Dependencies from this point is used in p2 profile gen, added here to get them updated along with
                 versions plugin (version plugin only reads the dependencies in dependencyManagement,
