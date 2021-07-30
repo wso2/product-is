@@ -17,6 +17,7 @@ package org.wso2.identity.integration.test.rest.api.server.application.managemen
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nimbusds.oauth2.sdk.util.URLUtils;
 import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpHeaders;
@@ -30,6 +31,9 @@ import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationListResponse;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.Is.is;
@@ -116,6 +120,33 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .body("name", equalTo(CREATED_APP_NAME));
+    }
+
+    @Test(dependsOnMethods = {"createApplication"})
+    public void testGetBasicApplicationDetailsWithFilter() throws Exception {
+
+        // Create another application with name sample.
+        String body = readResource("create-sample-basic-application.json");
+        Response responseOfPost = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, body);
+        responseOfPost.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .header(HttpHeaders.LOCATION, notNullValue());
+
+        String location = responseOfPost.getHeader(HttpHeaders.LOCATION);
+        createdAppId = extractApplicationIdFromLocationHeader(location);
+        assertNotBlank(createdAppId);
+
+        // Perform an eq with filter.
+        Map<String, Object> params = new HashMap<>();
+        params.put("filter", "name eq SAMPLE");
+        getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH, params)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("totalResults", equalTo(1));
     }
 
     @Test(dependsOnMethods = {"testGetApplicationById"})
