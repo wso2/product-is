@@ -1,9 +1,7 @@
 {
-  "realm_manager": {
-    "properties": {
-      "isCascadeDeleteEnabled": true,
-      "initializeNewClaimManager": true
-    }
+  "realm_manager.properties": {
+    "isCascadeDeleteEnabled": true,
+    "initializeNewClaimManager": true
   },
   "user_store.type": "read_write_ldap",
   "keystore.primary.type" : "JKS",
