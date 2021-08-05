@@ -489,6 +489,10 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.hash.provider.pbkdf2:org.wso2.carbon.identity.hash.provider.pbkdf2.server.feature:${hashprovider.pbkdf2.version}
                                 </featureArtifactDef>
+                                <!-- Central Logger (osgi service impl)feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.central.log.mgt.server.feature:${carbon.identity.framework.version}
+                                </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -774,6 +778,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.multi.attribute.login.service.server.feature.group</id>
                                     <version>${identity.governance.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.central.log.mgt.server.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
                                     <id>
@@ -1306,6 +1314,10 @@
                                     <version>${identity.governance.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.identity.central.log.mgt.server.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.identity.apps.common.server.feature.group</id>
                                     <version>${identity.apps.version}</version>
                                 </feature>
@@ -1771,6 +1783,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.multi.attribute.login.service.server.feature.group</id>
                                     <version>${identity.governance.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.central.log.mgt.server.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
                                     <id>
