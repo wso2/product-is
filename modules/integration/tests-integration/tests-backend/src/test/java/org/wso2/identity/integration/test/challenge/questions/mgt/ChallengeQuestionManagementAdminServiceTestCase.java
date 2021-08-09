@@ -20,6 +20,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.identity.application.common.model.xsd.User;
+import org.wso2.carbon.identity.core.util.IdentityUtil;
 import org.wso2.carbon.identity.recovery.stub.model.ChallengeQuestion;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.identity.integration.common.clients.UserManagementClient;
@@ -53,7 +54,7 @@ public class ChallengeQuestionManagementAdminServiceTestCase extends ISIntegrati
     private static final String SUPER_TENANT = "carbon.super";
     private static final String WSO2_TENANT = "wso2.com";
 
-    private static final String LOCALITY_CLAIM_URI = "http://wso2.org/claims/locality";
+    private static final String LOCALITY_CLAIM_URI = IdentityUtil.getClaimUriLocale();
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
