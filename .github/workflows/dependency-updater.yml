@@ -71,7 +71,7 @@ jobs:
           echo ""
           echo 'Updating dependencies'
           echo "=========================================================="
-          mvn versions:update-properties -DgenerateBackupPoms=false -Dincludes=org.wso2.carbon.identity.*,org.wso2.carbon.extension.identity.*,org.wso2.charon,org.apache.rampart.wso2,org.apache.ws.security.wso2,org.wso2.carbon.consent.*,org.wso2.carbon.database.utils -U
+          mvn versions:update-properties -U -DgenerateBackupPoms=false -Dincludes=org.wso2.carbon.identity.*,org.wso2.carbon.extension.identity.*,org.wso2.identity.*,org.wso2.carbon.consent.*,org.wso2.carbon.healthcheck.*,org.wso2.carbon.utils,org.wso2.charon,org.apache.rampart.wso2,org.apache.ws.security.wso2
           echo ""
           echo 'Available updates'
           echo "=========================================================="
@@ -100,29 +100,37 @@ jobs:
             exit 1
           fi
 
-          echo ""
-          echo 'Commit Changes'
-          echo "=========================================================="
-          git config --global user.name ${{ env.GIT_USERNAME }}
-          git commit -a -m 'Bump dependencies from '${{ env.DEPENDENCY_UPGRADE_BRANCH_NAME }}
-          git remote rm origin
-          git remote add origin 'https://'${{ secrets.PAT }}'@github.com/'${{ env.PRODUCT_REPOSITORY_FORKED }}
+          if [ -s dependency_updates.diff ]
+          then
+            echo ""
+            echo 'Commit Changes'
+            echo "=========================================================="
+            git config --global user.name ${{ env.GIT_USERNAME }}
+            git commit -a -m 'Bump dependencies from '${{ env.DEPENDENCY_UPGRADE_BRANCH_NAME }}
+            git remote rm origin
+            git remote add origin 'https://'${{ secrets.PAT }}'@github.com/'${{ env.PRODUCT_REPOSITORY_FORKED }}
 
-          echo ""
-          echo 'Push Changes'
-          echo "=========================================================="
-          git push -u origin ${{ env.DEPENDENCY_UPGRADE_BRANCH_NAME }}
+            echo ""
+            echo 'Push Changes'
+            echo "=========================================================="
+            git push -u origin ${{ env.DEPENDENCY_UPGRADE_BRANCH_NAME }}
 
-          echo ""
-          echo 'Send Pull Request'
-          echo "=========================================================="
+            echo ""
+            echo 'Send Pull Request'
+            echo "=========================================================="
 
-          TITLE="Bump Dependencies #"${{ env.BUILD_NUMBER }}
-          STATUS=$(curl --silent --write-out "HTTPSTATUS:%{http_code}" -k -X \
-          POST https://api.github.com/repos/${{ env.PRODUCT_REPOSITORY_PUBLIC }}/pulls \
-          -H "Authorization: Bearer "${{ secrets.PAT }}"" \
-          -H "Content-Type: application/json" \
-          -d '{ "title": "'"${TITLE}"'","body": "Bumps dependencies for product-is. Link : https://github.com/wso2/product-is/actions/runs/${{github.run_id}}","head": "'"${{ env.GIT_USERNAME }}:${{ env.DEPENDENCY_UPGRADE_BRANCH_NAME }}"'","base":"master"}')
+            TITLE="Bump Dependencies #"${{ env.BUILD_NUMBER }}
+            STATUS=$(curl --silent --write-out "HTTPSTATUS:%{http_code}" -k -X \
+            POST https://api.github.com/repos/${{ env.PRODUCT_REPOSITORY_PUBLIC }}/pulls \
+            -H "Authorization: Bearer "${{ secrets.PAT }}"" \
+            -H "Content-Type: application/json" \
+            -d '{ "title": "'"${TITLE}"'","body": "Bumps dependencies for product-is. Link : https://github.com/wso2/product-is/actions/runs/${{github.run_id}}","head": "'"${{ env.GIT_USERNAME }}:${{ env.DEPENDENCY_UPGRADE_BRANCH_NAME }}"'","base":"master"}')
+          else
+            echo ""
+            echo "There are no dependency updates available"
+            echo "=========================================================="
+            exit 0
+          fi
       - name: Archive dependency diff file
         if: always()
         uses: actions/upload-artifact@v2
