@@ -29,6 +29,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.automation.test.utils.common.TestConfigurationProvider;
+import org.wso2.carbon.identity.core.util.IdentityUtil;
 import org.wso2.carbon.identity.governance.stub.bean.Property;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
@@ -41,7 +42,7 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
 
     private static final Log log = LogFactory.getLog(AccountLockEnabledTestCase.class.getName());
 
-    private String defaultLocalityClaimUri = "http://wso2.org/claims/locality";
+    private String defaultLocalityClaimUri = IdentityUtil.getClaimUriLocale();
     private String accountLockClaimUri = "http://wso2.org/claims/identity/accountLocked";
     private String defaultLocalityClaimValue = "en_us";
     private String registryResourcePath = "/_system/config/identity/email/";
