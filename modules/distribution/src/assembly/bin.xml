@@ -40,6 +40,7 @@
                 <exclude>**/LICENSE.txt</exclude>
                 <exclude>**/release-notes.html</exclude>
                 <exclude>**/claim-config.xml</exclude>
+                <exclude>**/attributes/userstore/**.xml</exclude>
                 <exclude>**/tomcat/catalina-server.xml</exclude>
                 <exclude>**/registry.xml</exclude>
                 <exclude>**/email/email-admin-config.xml</exclude>
@@ -746,6 +747,30 @@
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/claim-config.xml
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf</outputDirectory>
+        </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/attributes/userstore/unique-id-active-directory.xml
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/attributes/userstore</outputDirectory>
+        </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/attributes/userstore/unique-id-jdbc.xml
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/attributes/userstore</outputDirectory>
+        </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/attributes/userstore/unique-id-read-only-ldap.xml
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/attributes/userstore</outputDirectory>
+        </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/attributes/userstore/unique-id-read-write-ldap.xml
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/attributes/userstore</outputDirectory>
         </file>
 
         <file>
