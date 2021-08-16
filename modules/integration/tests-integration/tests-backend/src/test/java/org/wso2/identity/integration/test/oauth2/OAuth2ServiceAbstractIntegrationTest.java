@@ -555,7 +555,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		return getServiceProvider(serviceProvider);
 	}
 
-	private ServiceProvider generateServiceProvider(OAuthConsumerAppDTO appDTO) throws Exception {
+	protected ServiceProvider generateServiceProvider(OAuthConsumerAppDTO appDTO) throws Exception {
 
 		adminClient.registerOAuthApplicationData(appDTO);
 
@@ -580,7 +580,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		return serviceProvider;
 	}
 
-	private ServiceProvider getServiceProvider(ServiceProvider serviceProvider) throws Exception {
+	protected ServiceProvider getServiceProvider(ServiceProvider serviceProvider) throws Exception {
 
 		appMgtclient.updateApplicationData(serviceProvider);
 		return appMgtclient.getApplication(SERVICE_PROVIDER_NAME);

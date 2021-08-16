@@ -2360,7 +2360,7 @@
             <url>https://maven.wso2.org/nexus/content/repositories/snapshots/</url>
             <snapshots>
                 <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
+                <updatePolicy>never</updatePolicy>
             </snapshots>
             <releases>
                 <enabled>false</enabled>

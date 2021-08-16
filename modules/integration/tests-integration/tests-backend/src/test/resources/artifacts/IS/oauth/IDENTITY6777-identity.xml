@@ -167,7 +167,7 @@
         <SupportedResponseTypes>
             <SupportedResponseType>
                 <ResponseTypeName>token</ResponseTypeName>
-                <ResponseTypeHandlerImplClass>org.wso2.carbon.identity.oauth2.authz.handlers.TokenResponseTypeHandler</ResponseTypeHandlerImplClass>
+                <ResponseTypeHandlerImplClass>org.wso2.carbon.identity.oauth2.authz.handlers.AccessTokenResponseTypeHandler</ResponseTypeHandlerImplClass>
             </SupportedResponseType>
             <SupportedResponseType>
                 <ResponseTypeName>code</ResponseTypeName>
@@ -175,11 +175,28 @@
             </SupportedResponseType>
             <SupportedResponseType>
                 <ResponseTypeName>id_token</ResponseTypeName>
-                <ResponseTypeHandlerImplClass>org.wso2.carbon.identity.oauth2.authz.handlers.TokenResponseTypeHandler</ResponseTypeHandlerImplClass>
+                <ResponseTypeHandlerImplClass>org.wso2.carbon.identity.oauth2.authz.handlers.IDTokenResponseTypeHandler</ResponseTypeHandlerImplClass>
             </SupportedResponseType>
             <SupportedResponseType>
                 <ResponseTypeName>id_token token</ResponseTypeName>
-                <ResponseTypeHandlerImplClass>org.wso2.carbon.identity.oauth2.authz.handlers.TokenResponseTypeHandler</ResponseTypeHandlerImplClass>
+                <ResponseTypeHandlerImplClass>org.wso2.carbon.identity.oauth2.authz.handlers.IDTokenTokenResponseTypeHandler</ResponseTypeHandlerImplClass>
+            </SupportedResponseType>
+            <SupportedResponseType>
+                <ResponseTypeName>code token</ResponseTypeName>
+                <ResponseTypeHandlerImplClass>org.wso2.carbon.identity.oauth2.authz.handlers.HybridResponseTypeHandler</ResponseTypeHandlerImplClass>
+            </SupportedResponseType>
+            <SupportedResponseType>
+                <ResponseTypeName>code id_token</ResponseTypeName>
+                <ResponseTypeHandlerImplClass>org.wso2.carbon.identity.oauth2.authz.handlers.HybridResponseTypeHandler</ResponseTypeHandlerImplClass>
+            </SupportedResponseType>
+            <SupportedResponseType>
+                <ResponseTypeName>code id_token token</ResponseTypeName>
+                <ResponseTypeHandlerImplClass>org.wso2.carbon.identity.oauth2.authz.handlers.HybridResponseTypeHandler</ResponseTypeHandlerImplClass>
+            </SupportedResponseType>
+            <SupportedResponseType>
+                <ResponseTypeName>none</ResponseTypeName>
+                <ResponseTypeHandlerImplClass>org.wso2.carbon.identity.oauth2.authz.handlers.NoneResponseTypeHandler</ResponseTypeHandlerImplClass>
+                <ResponseTypeValidatorImplClass>org.wso2.carbon.identity.oauth.common.NoneResponseTypeValidator</ResponseTypeValidatorImplClass>
             </SupportedResponseType>
         </SupportedResponseTypes>
         <!-- Supported Grant Types -->
@@ -199,6 +216,8 @@
             <SupportedGrantType>
                 <GrantTypeName>client_credentials</GrantTypeName>
                 <GrantTypeHandlerImplClass>org.wso2.carbon.identity.oauth2.token.handlers.grant.ClientCredentialsGrantHandler</GrantTypeHandlerImplClass>
+                <IsRefreshTokenAllowed>false</IsRefreshTokenAllowed>
+                <IdTokenAllowed>false</IdTokenAllowed>
             </SupportedGrantType>
             <SupportedGrantType>
                 <GrantTypeName>urn:ietf:params:oauth:grant-type:saml2-bearer</GrantTypeName>
@@ -207,6 +226,24 @@
             <SupportedGrantType>
                 <GrantTypeName>iwa:ntlm</GrantTypeName>
                 <GrantTypeHandlerImplClass>org.wso2.carbon.identity.oauth2.token.handlers.grant.iwa.ntlm.NTLMAuthenticationGrantHandler</GrantTypeHandlerImplClass>
+            </SupportedGrantType>
+            <SupportedGrantType>
+                <GrantTypeName>urn:ietf:params:oauth:grant-type:jwt-bearer</GrantTypeName>
+                <GrantTypeHandlerImplClass>org.wso2.carbon.identity.oauth2.grant.jwt.JWTBearerGrantHandler</GrantTypeHandlerImplClass>
+                <GrantTypeValidatorImplClass>org.wso2.carbon.identity.oauth2.grant.jwt.JWTGrantValidator</GrantTypeValidatorImplClass>
+                <IsRefreshTokenAllowed>true</IsRefreshTokenAllowed>
+            </SupportedGrantType>
+            <!-- Supported versions: IS 5.7.0 onwards.-->
+            <SupportedGrantType>
+                <GrantTypeName>urn:ietf:params:oauth:grant-type:uma-ticket</GrantTypeName>
+                <GrantTypeHandlerImplClass>org.wso2.carbon.identity.oauth.uma.grant.UMA2GrantHandler</GrantTypeHandlerImplClass>
+                <GrantTypeValidatorImplClass>org.wso2.carbon.identity.oauth.uma.grant.GrantValidator</GrantTypeValidatorImplClass>
+            </SupportedGrantType>
+            <!-- Supported versions: IS 5.10.0 onwards.-->
+            <SupportedGrantType>
+                <GrantTypeName>account_switch</GrantTypeName>
+                <GrantTypeHandlerImplClass>org.wso2.carbon.identity.user.account.association.handler.grant.AccountSwitchGrantHandler</GrantTypeHandlerImplClass>
+                <GrantTypeValidatorImplClass>org.wso2.carbon.identity.user.account.association.validator.grant.AccountSwitchGrantValidator</GrantTypeValidatorImplClass>
             </SupportedGrantType>
         </SupportedGrantTypes>
         <OAuthCallbackHandlers>
