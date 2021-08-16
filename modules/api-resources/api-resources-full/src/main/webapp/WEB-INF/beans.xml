@@ -42,6 +42,7 @@
     <import resource="classpath:META-INF/cxf/configs-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/notification-sender-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/authenticators-server-v1-cxf.xml"/>
+    <import resource="classpath:META-INF/cxf/secret-management-server-v1-cxf.xml"/>
 
     <import resource="classpath:META-INF/cxf/identity-governance-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-store-v1-cxf.xml"/>
@@ -92,6 +93,8 @@
             <bean class="org.wso2.carbon.identity.api.server.fetch.remote.v1.RemoteFetchApi"/>
             <bean class="org.wso2.carbon.identity.api.server.notification.sender.v1.NotificationSendersApi"/>
             <bean class="org.wso2.carbon.identity.api.server.authenticators.v1.AuthenticatorsApi"/>
+            <bean class="org.wso2.carbon.identity.api.server.secret.management.v1.SecretsApi"/>
+            <bean class="org.wso2.carbon.identity.api.server.secret.management.v1.SecretTypeApi"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">
@@ -191,7 +194,7 @@
             <bean class="org.wso2.carbon.identity.entitlement.endpoint.filter.EntitlementExceptionMapper"/>
         </jaxrs:providers>
     </jaxrs:server>
-   <jaxrs:server id="umaPermission" address="/identity/oauth2/uma/permission/v1.0">
+    <jaxrs:server id="umaPermission" address="/identity/oauth2/uma/permission/v1.0">
         <jaxrs:serviceBeans>
             <bean class="org.wso2.carbon.identity.oauth.uma.permission.endpoint.PermissionApi"/>
         </jaxrs:serviceBeans>
