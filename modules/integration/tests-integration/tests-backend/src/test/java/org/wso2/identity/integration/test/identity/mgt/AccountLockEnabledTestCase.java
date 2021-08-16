@@ -65,7 +65,7 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
     private RemoteUserStoreManagerServiceClient usmClient;
     private IdentityGovernanceServiceClient identityGovernanceServiceClient;
 
-    private static final String ENABLE_ACCOUNT_LOCK = "account.lock.handler.enable";
+    private static final String ENABLE_ACCOUNT_LOCK = "account.lock.handler.lock.on.max.failed.attempts.enable";
     private static final String TRUE_STRING = "true";
     private static final String DEFAULT = "default";
 
