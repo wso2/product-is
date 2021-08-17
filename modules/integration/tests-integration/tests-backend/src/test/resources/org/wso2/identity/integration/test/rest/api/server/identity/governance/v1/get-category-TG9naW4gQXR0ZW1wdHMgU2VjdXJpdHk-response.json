@@ -10,9 +10,9 @@
       "subCategory": "DEFAULT",
       "properties": [
         {
-          "name": "account.lock.handler.lock.on.max.failed.attempts.enable",
-          "value": "false",
-          "displayName": "Lock user accounts on maximum failed attempts",
+          "name": "account.lock.handler.enable",
+          "value": "true",
+          "displayName": "Lock user accounts",
           "description": "Lock user accounts on failed login attempts"
         },
         {
