@@ -121,14 +121,12 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 		client = HttpClientBuilder.create().build();
 
         identityGovernanceServiceClient = new IdentityGovernanceServiceClient(sessionCookie, backendURL);
-        setAccountLocking("true");
         createLockedUser(lockedUser, lockedUserPassword);
 	}
 
 	@AfterClass(alwaysRun = true)
 	public void atEnd() throws Exception {
 
-		setAccountLocking("false");
 		deleteUser(lockedUser);
 
 		appMgtclient.deleteApplication(SERVICE_PROVIDER_NAME);
@@ -371,23 +369,6 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 			EntityUtils.consume(response.getEntity());
 			// Validate the error code of the scenario.
 			Assert.assertTrue(errormsg.contains(USER_IS_LOCKED));
-		}
-	}
-
-	private void setAccountLocking(String value) {
-
-		log.info("Set account locking: " + value);
-
-		Property[] newProperties = new Property[1];
-		Property prop = new Property();
-		prop.setName("account.lock.handler.enable");
-		prop.setValue(value);
-		newProperties[0] = prop;
-
-		try {
-			identityGovernanceServiceClient.updateConfigurations(newProperties);
-		} catch (Exception e) {
-			Assert.fail("Error while updating resident idp", e);
 		}
 	}
 
