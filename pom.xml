@@ -1861,11 +1861,11 @@
                 <artifactId>org.wso2.carbon.identity.oauth.uma.server.feature</artifactId>
                 <version>${carbon.identity.oauth.uma.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.extension.identity.x509certificate</groupId>
-                <artifactId>org.wso2.carbon.extension.identity.x509Certificate.validation.server.feature</artifactId>
-                <version>${org.wso2.carbon.extension.identity.x509certificate.version}</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>org.wso2.carbon.extension.identity.x509certificate</groupId>-->
+<!--                <artifactId>org.wso2.carbon.extension.identity.x509Certificate.validation.server.feature</artifactId>-->
+<!--                <version>${org.wso2.carbon.extension.identity.x509certificate.version}</version>-->
+<!--            </dependency>-->
             <dependency>
                 <groupId>org.wso2.carbon.identity.conditional.auth.functions</groupId>
                 <artifactId>org.wso2.carbon.identity.conditional.auth.functions.server.feature</artifactId>
