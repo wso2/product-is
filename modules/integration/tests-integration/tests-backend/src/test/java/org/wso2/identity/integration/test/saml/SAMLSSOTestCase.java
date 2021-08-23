@@ -33,6 +33,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
+import org.wso2.identity.integration.test.utils.UserUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -57,6 +58,7 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
     private static final String emailClaimURI = "http://wso2.org/claims/emailaddress";
 
     private SAMLConfig config;
+    private String userId;
 
     private String resultPage;
 
@@ -74,6 +76,8 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
 
         super.testInit();
         super.createUser(config);
+        userId = UserUtil.getUserId(config.getUser().getTenantAwareUsername(), isServer.getContextTenant());
+
         super.createApplication(config, APPLICATION_NAME);
     }
 
@@ -165,7 +169,7 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
                     .SAML_RESPONSE_PARAM, samlResponse, config);
             resultPage = extractDataFromResponse(response);
 
-            Assert.assertTrue(resultPage.contains("You are logged in as " + config.getUser().getTenantAwareUsername()),
+            Assert.assertTrue(resultPage.contains("You are logged in as " + userId),
                               "SAML SSO Login failed for " + config);
         } catch (Exception e) {
             Assert.fail("SAML SSO Login test failed for " + config, e);

@@ -47,9 +47,11 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.test.utils.common.TestConfigurationProvider;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 import org.wso2.identity.integration.test.oauth2.OAuth2ServiceAbstractIntegrationTest;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
+import org.wso2.identity.integration.test.utils.UserUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -77,12 +79,16 @@ public class OIDCAuthzCodeIdTokenValidationTestCase extends OAuth2ServiceAbstrac
     private String sessionDataKeyConsent;
     private AuthorizationCode authorizationCode;
     private String idToken;
+    private String userId;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
         super.init(TestUserMode.SUPER_TENANT_USER);
         client = HttpClientBuilder.create().disableRedirectHandling().build();
+
+        userId = UserUtil.getUserId(MultitenantUtils.getTenantAwareUsername(userInfo.getUserName()),
+                isServer.getContextTenant()) + "@" + isServer.getContextTenant().getDomain();
     }
 
     @AfterClass(alwaysRun = true)
@@ -209,7 +215,7 @@ public class OIDCAuthzCodeIdTokenValidationTestCase extends OAuth2ServiceAbstrac
         Assert.assertNotNull(idToken, "ID token is null");
         JWTClaimsSet jwtClaimsSet = SignedJWT.parse(idToken).getJWTClaimsSet();
         Assert.assertEquals(jwtClaimsSet.getClaim("nonce"), TEST_NONCE, "Invalid nonce received.");
-        Assert.assertEquals(jwtClaimsSet.getSubject(), "testuser11@carbon.super", "Invalid subject received.");
+        Assert.assertEquals(jwtClaimsSet.getSubject(), userId, "Invalid subject received.");
         Assert.assertEquals(jwtClaimsSet.getIssuer(), "https://localhost:9853/oauth2/token", "Invalid issuer received.");
     }
 

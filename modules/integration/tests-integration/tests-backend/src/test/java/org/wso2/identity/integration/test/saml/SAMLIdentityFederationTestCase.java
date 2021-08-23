@@ -195,6 +195,7 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
 
         updateServiceProviderWithSAMLConfigs(PORT_OFFSET_1, SECONDARY_IS_SAML_ISSUER_NAME, String.format(COMMON_AUTH_URL, DEFAULT_PORT + PORT_OFFSET_0), serviceProvider);
 
+        serviceProvider.getLocalAndOutBoundAuthenticationConfig().setSubjectClaimUri("http://wso2.org/claims/username");
         updateServiceProvider(PORT_OFFSET_1, serviceProvider);
         serviceProvider = getServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
 
@@ -619,7 +620,7 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         }
         bufferedReader.close();
         assertLocalClaims(buffer.toString());
-        return buffer.toString().contains("You are logged in as " + userName);
+        return buffer.toString().contains("You are logged in as ");
     }
 
 }

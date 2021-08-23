@@ -45,11 +45,13 @@ import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 import org.wso2.identity.integration.common.clients.TenantManagementServiceClient;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
+import org.wso2.identity.integration.test.utils.UserUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -99,6 +101,7 @@ public class RegistryMountTestCase extends ISIntegrationTest {
     private HttpClient httpClient;
 
     private String resultPage;
+    private String userId;
 
     ConfigurationContext configContext;
 
@@ -129,6 +132,9 @@ public class RegistryMountTestCase extends ISIntegrationTest {
 
         ssoConfigServiceClient
                 .addServiceProvider(createSsoServiceProviderDTO());
+
+        userId = UserUtil.getUserId(MultitenantUtils.getTenantAwareUsername(TENANT_ADMIN_USERNAME),
+                isServer.getContextTenant());
     }
 
     @AfterClass(alwaysRun = true)
@@ -172,7 +178,7 @@ public class RegistryMountTestCase extends ISIntegrationTest {
                     samlResponse);
             resultPage = extractDataFromResponse(response);
 
-            Assert.assertTrue(resultPage.contains("You are logged in as " + "admin"),
+            Assert.assertTrue(resultPage.contains("You are logged in as " + userId),
                     "SAML SSO Login failed for " + artifact);
         } catch (Exception e) {
             Assert.fail("SAML SSO Login test failed for " + artifact, e);

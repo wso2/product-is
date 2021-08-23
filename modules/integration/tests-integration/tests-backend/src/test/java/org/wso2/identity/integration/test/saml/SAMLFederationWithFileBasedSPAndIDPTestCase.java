@@ -290,7 +290,7 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
         }
         bufferedReader.close();
         assertLocalClaims(buffer.toString());
-        return buffer.toString().contains("You are logged in as " + userName);
+        return buffer.toString().contains("You are logged in as ");
     }
 
     protected void assertLocalClaims(String resultPage) {
