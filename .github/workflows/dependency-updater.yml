@@ -150,6 +150,6 @@ jobs:
         uses: Co-qn/google-chat-notification@releases/v1
         with:
           name: Dependency Updater
-          url: ${{ secrets.GOOGLE_CHAT_WEBHOOK }}
+          url: ${{ secrets.GOOGLE_CHAT_WEBHOOK }}&threadKey=dep_updater
           status: ${{ job.status }}
         if: always()
