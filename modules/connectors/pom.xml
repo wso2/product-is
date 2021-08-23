@@ -54,29 +54,29 @@
                         </configuration>
                     </execution>
                     <!-- Download x509 authenticator jar from nexus and copy to the authenticatorCopied/jar folder-->
-                    <execution>
-                        <id>download_x509</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.wso2.carbon.extension.identity.authenticator.outbound.x509Certificate</groupId>
-                                    <artifactId>
-                                        org.wso2.carbon.extension.identity.authenticator.x509Certificate.connector
-                                    </artifactId>
-                                    <version>${authenticator.x509.version}</version>
-                                    <type>jar</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${basedir}/target/authenticatorCopied/jar
-                                    </outputDirectory>
-                                    <includes>**/*.jar</includes>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
+<!--                    <execution>-->
+<!--                        <id>download_x509</id>-->
+<!--                        <phase>compile</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>copy</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <artifactItems>-->
+<!--                                <artifactItem>-->
+<!--                                    <groupId>org.wso2.carbon.extension.identity.authenticator.outbound.x509Certificate</groupId>-->
+<!--                                    <artifactId>-->
+<!--                                        org.wso2.carbon.extension.identity.authenticator.x509Certificate.connector-->
+<!--                                    </artifactId>-->
+<!--                                    <version>${authenticator.x509.version}</version>-->
+<!--                                    <type>jar</type>-->
+<!--                                    <overWrite>true</overWrite>-->
+<!--                                    <outputDirectory>${basedir}/target/authenticatorCopied/jar-->
+<!--                                    </outputDirectory>-->
+<!--                                    <includes>**/*.jar</includes>-->
+<!--                                </artifactItem>-->
+<!--                            </artifactItems>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
                     <!-- Download smsotp authenticator jar from nexus and copy to the authenticatorCopied/jar folder-->
                     <execution>
                         <id>download_smsotp</id>
@@ -169,28 +169,28 @@
                             </artifactItems>
                         </configuration>
                     </execution>
-                    <execution>
-                        <id>download_x509certificateauthenticationendpoint_war</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.wso2.identity.apps</groupId>
-                                    <artifactId>x509-certificate-authentication-portal</artifactId>
-                                    <version>${identity.apps.version}</version>
-                                    <type>war</type>
-                                    <overWrite>true</overWrite>
-                                    <destFileName>x509certificateauthenticationendpoint.war</destFileName>
-                                    <outputDirectory>${basedir}/target/authenticatorCopied/war
-                                    </outputDirectory>
-                                    <includes>**/*.war</includes>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
+<!--                    <execution>-->
+<!--                        <id>download_x509certificateauthenticationendpoint_war</id>-->
+<!--                        <phase>compile</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>copy</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <artifactItems>-->
+<!--                                <artifactItem>-->
+<!--                                    <groupId>org.wso2.identity.apps</groupId>-->
+<!--                                    <artifactId>x509-certificate-authentication-portal</artifactId>-->
+<!--                                    <version>${identity.apps.version}</version>-->
+<!--                                    <type>war</type>-->
+<!--                                    <overWrite>true</overWrite>-->
+<!--                                    <destFileName>x509certificateauthenticationendpoint.war</destFileName>-->
+<!--                                    <outputDirectory>${basedir}/target/authenticatorCopied/war-->
+<!--                                    </outputDirectory>-->
+<!--                                    <includes>**/*.war</includes>-->
+<!--                                </artifactItem>-->
+<!--                            </artifactItems>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
                 </executions>
             </plugin>
         </plugins>
