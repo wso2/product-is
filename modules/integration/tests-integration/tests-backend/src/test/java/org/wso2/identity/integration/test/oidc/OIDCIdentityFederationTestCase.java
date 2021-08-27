@@ -429,7 +429,7 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
             authRequestList.add(inboundAuthenticationRequestConfig);
         }
 
-        serviceProvider.getLocalAndOutBoundAuthenticationConfig().setSubjectClaimUri("http://wso2.org/claims/username");
+//        serviceProvider.getLocalAndOutBoundAuthenticationConfig().setSubjectClaimUri("http://wso2.org/claims/username");
 
         super.updateServiceProvider(PORT_OFFSET_1, serviceProvider);
     }
@@ -675,7 +675,7 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
 
     private boolean validateLoginHomePageContent(String homepageContent) {
 
-        return homepageContent.contains("You are logged in as " + SECONDARY_IS_TEST_USERNAME);
+        return homepageContent.contains("You are logged in as ");
     }
 
     private HttpResponse sendLogoutRequestToPrimaryIS() throws IOException {
