@@ -104,9 +104,9 @@ else
   cd $REPO
   if [ "$REPO" = "carbon-kernel" ]; then
     echo ""
-    echo "Checking out for 4.6.x branch..."
+    echo "Checking out for 4.7.x branch..."
     echo "=========================================================="
-    git checkout 4.6.x
+    git checkout 4.7.x
   fi
   DEPENDENCY_VERSION=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
   echo "Dependency Version: $DEPENDENCY_VERSION"
@@ -290,7 +290,7 @@ else
       echo ""
       KERNEL_DEPENDENCY_VERSION=$(echo $DEPENDENCY_VERSION | sed -e "s/-/./g")
       echo "Dependency version for carbon.product : $KERNEL_DEPENDENCY_VERSION"
-      sed -i "s/version=\"4.6.*\"/version=\"$KERNEL_DEPENDENCY_VERSION\"/g" modules/p2-profile-gen/carbon.product
+      sed -i "s/version=\"4.7.*\"/version=\"$KERNEL_DEPENDENCY_VERSION\"/g" modules/p2-profile-gen/carbon.product
     fi
   fi
 
