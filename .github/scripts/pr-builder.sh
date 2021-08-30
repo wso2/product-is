@@ -104,9 +104,9 @@ else
   cd $REPO
   if [ "$REPO" = "carbon-kernel" ]; then
     echo ""
-    echo "Checking out for 4.6.x branch..."
+    echo "Checking out for 4.7.x branch..."
     echo "=========================================================="
-    git checkout 4.6.x
+    git checkout 4.7.x
   fi
   DEPENDENCY_VERSION=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
   echo "Dependency Version: $DEPENDENCY_VERSION"
