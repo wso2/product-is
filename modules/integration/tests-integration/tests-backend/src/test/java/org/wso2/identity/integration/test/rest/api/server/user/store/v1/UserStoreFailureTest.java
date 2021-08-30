@@ -86,7 +86,7 @@ public class UserStoreFailureTest extends UserStoreTestBase {
 
         String body = readResource("add-secondary-user-store-negative.json");
         Response response = getResponseOfPost(USER_STORE_PATH_COMPONENT, body);
-        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "SUS-65001");
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "SUS-60015");
     }
 
     @Test
