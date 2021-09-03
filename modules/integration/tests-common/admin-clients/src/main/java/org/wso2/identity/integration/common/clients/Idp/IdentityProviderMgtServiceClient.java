@@ -322,10 +322,10 @@ public class IdentityProviderMgtServiceClient {
 
             if (fedAuthConfigs != null && fedAuthConfigs.length > 0) {
                 for (FederatedAuthenticatorConfig config : fedAuthConfigs) {
-                    if (!(config.getDisplayName().equals("facebook")
+                    if (!(config.getDisplayName().equals("Facebook")
                             || config.getDisplayName().equals("openid")
-                            || config.getDisplayName().equals("openidconnect")
-                            || config.getDisplayName().equals("samlsso") || config.getDisplayName()
+                            || config.getDisplayName().equals("OpenID Connect")
+                            || config.getDisplayName().equals("SAML SSO") || config.getDisplayName()
                             .equals("passovests")))
                         configMap.put(config.getName(), config);
                 }

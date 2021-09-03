@@ -106,7 +106,7 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
 
         FederatedAuthenticatorConfig saml2SSOAuthnConfig = new FederatedAuthenticatorConfig();
         saml2SSOAuthnConfig.setName("SAMLSSOAuthenticator");
-        saml2SSOAuthnConfig.setDisplayName("samlsso");
+        saml2SSOAuthnConfig.setDisplayName("SAML SSO");
         saml2SSOAuthnConfig.setEnabled(true);
         saml2SSOAuthnConfig.setProperties(getSAML2SSOAuthnConfigProperties());
         identityProvider.setDefaultAuthenticatorConfig(saml2SSOAuthnConfig);
@@ -126,7 +126,7 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
         idP.setIdentityProviderName(IDENTITY_PROVIDER_NAME);
         org.wso2.carbon.identity.application.common.model.xsd.FederatedAuthenticatorConfig saml2SSOAuthnConfigXsd = new org.wso2.carbon.identity.application.common.model.xsd.FederatedAuthenticatorConfig();
         saml2SSOAuthnConfigXsd.setName("SAMLSSOAuthenticator");
-        saml2SSOAuthnConfigXsd.setDisplayName("samlsso");
+        saml2SSOAuthnConfigXsd.setDisplayName("SAML SSO");
         idP.setFederatedAuthenticatorConfigs(new org.wso2.carbon.identity.application.common.model.xsd.FederatedAuthenticatorConfig[]{saml2SSOAuthnConfigXsd});
         authStep.setFederatedIdentityProviders(new org.wso2.carbon.identity.application.common.model.xsd.IdentityProvider[]{idP});
         serviceProvider.getLocalAndOutBoundAuthenticationConfig().setAuthenticationSteps(new AuthenticationStep[]{authStep});

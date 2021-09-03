@@ -57,7 +57,7 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
     private IdentityProviderProperty[] idpProperties;
 
     private String defaultSamlSSOEntityID = "localhost";
-    private final String SAML2SSO_NAME = "samlsso";
+    private final String SAML2SSO_NAME = "SAML SSO";
     private final String SAML2SSO_IDP_ENTITY_ID = "IdPEntityId";
 
     private static final String RANDOM_PASSWORD_GENERATED = "random-password-generated";
@@ -140,8 +140,8 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
             fedAuthConfigMap.put(config.getName(), config);
         }
 
-        Assert.assertEquals(fedAuthConfigMap.containsKey("openidconnect"), true, "Default auth config not found");
-        Assert.assertEquals(fedAuthConfigMap.containsKey("samlsso"), true, "Default auth config not found");
+        Assert.assertEquals(fedAuthConfigMap.containsKey("OpenID Connect"), true, "Default auth config not found");
+        Assert.assertEquals(fedAuthConfigMap.containsKey("SAML SSO"), true, "Default auth config not found");
         Assert.assertEquals(fedAuthConfigMap.containsKey("openid"), true, "Default auth config not found");
         Assert.assertEquals(fedAuthConfigMap.containsKey("passivests"), true, "Default auth config not found");
 

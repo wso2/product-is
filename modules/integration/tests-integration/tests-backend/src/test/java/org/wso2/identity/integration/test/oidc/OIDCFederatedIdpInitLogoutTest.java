@@ -399,7 +399,7 @@ public class OIDCFederatedIdpInitLogoutTest extends AbstractIdentityFederationTe
         org.wso2.carbon.identity.application.common.model.xsd.FederatedAuthenticatorConfig oidcAuthnConfig = new
                 org.wso2.carbon.identity.application.common.model.xsd.FederatedAuthenticatorConfig();
         oidcAuthnConfig.setName(PRIMARY_IS_IDP_AUTHENTICATOR_NAME_OIDC);
-        oidcAuthnConfig.setDisplayName("openidconnect");
+        oidcAuthnConfig.setDisplayName("OpenID Connect");
         idP.setFederatedAuthenticatorConfigs(new org.wso2.carbon.identity.application.common.model.xsd.
                 FederatedAuthenticatorConfig[]{oidcAuthnConfig});
 
@@ -509,7 +509,7 @@ public class OIDCFederatedIdpInitLogoutTest extends AbstractIdentityFederationTe
 
         FederatedAuthenticatorConfig oidcAuthnConfig = new FederatedAuthenticatorConfig();
         oidcAuthnConfig.setName(PRIMARY_IS_IDP_AUTHENTICATOR_NAME_OIDC);
-        oidcAuthnConfig.setDisplayName("openidconnect");
+        oidcAuthnConfig.setDisplayName("OpenID Connect");
         oidcAuthnConfig.setEnabled(true);
         oidcAuthnConfig.setProperties(getOIDCAuthnConfigProperties());
         identityProvider.setDefaultAuthenticatorConfig(oidcAuthnConfig);

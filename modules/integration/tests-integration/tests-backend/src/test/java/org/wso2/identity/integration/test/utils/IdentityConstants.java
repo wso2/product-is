@@ -4,7 +4,7 @@ public class IdentityConstants {
 
     public static class Authenticator {
         public static class SAML2SSO {
-            public static final String NAME = "samlsso";
+            public static final String NAME = "SAML SSO";
             public static final String FED_AUTH_NAME = "SAMLSSOAuthenticator";
             public static final String IDP_ENTITY_ID = "IdPEntityId";
             public static final String SP_ENTITY_ID = "SPEntityId";
@@ -41,7 +41,7 @@ public class IdentityConstants {
         public static class OIDC extends OAuth2 {
 
             public static final String IDP_NAME = "IdPName";
-            public static final String NAME = "openidconnect";
+            public static final String NAME = "OpenID Connect";
             public static final String USER_INFO_URL = "UserInfoUrl";
             public static final String OIDC_CHECK_SESSION_URL = "OIDCCheckSessionEPUrl";
             public static final String OIDC_LOGOUT_URL = "OIDCLogoutEPUrl";

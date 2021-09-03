@@ -560,7 +560,7 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
         FederatedAuthenticatorConfig[] federatedAuthenticatorConfigs =
                 residentIdentityProvider.getFederatedAuthenticatorConfigs();
         for (FederatedAuthenticatorConfig authenticatorConfig : federatedAuthenticatorConfigs) {
-            if (!authenticatorConfig.getName().equalsIgnoreCase("samlsso")) {
+            if (!authenticatorConfig.getName().equalsIgnoreCase("SAML SSO")) {
                 federatedAuthenticatorConfigs = (FederatedAuthenticatorConfig[])
                         ArrayUtils.removeElement(federatedAuthenticatorConfigs,
                                 authenticatorConfig);

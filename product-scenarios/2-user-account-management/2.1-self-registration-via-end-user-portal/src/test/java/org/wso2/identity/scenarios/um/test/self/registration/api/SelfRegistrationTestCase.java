@@ -353,9 +353,9 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
 
         List<FederatedAuthenticatorConfig> updatedConfigs = new ArrayList<>();
         for (FederatedAuthenticatorConfig config : identityProvider.getFederatedAuthenticatorConfigs()) {
-            if ("samlsso".equals(config.getName())) {
+            if ("SAML SSO".equals(config.getName())) {
                 updatedConfigs.add(config);
-            } else if ("openidconnect".equals(config.getName())) {
+            } else if ("OpenID Connect".equals(config.getName())) {
                 updatedConfigs.add(config);
             } else if ("passivests".equals(config.getName())) {
                 updatedConfigs.add(config);

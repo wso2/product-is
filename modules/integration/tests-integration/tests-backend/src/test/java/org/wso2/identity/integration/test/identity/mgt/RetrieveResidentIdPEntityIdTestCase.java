@@ -39,7 +39,7 @@ import java.io.File;
 public class RetrieveResidentIdPEntityIdTestCase extends ISIntegrationTest {
 
     public static final String IDP_ENTITY_ID = "IdPEntityId";
-    public static final String AUTHENTICATOR_NAME = "samlsso";
+    public static final String AUTHENTICATOR_NAME = "SAML SSO";
 
     private IdentityProviderMgtServiceClient idpMgtServiceClient;
     private ServerConfigurationManager serverConfigurationManager;

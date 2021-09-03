@@ -36,7 +36,7 @@ public class IDPMetadataTestCase extends ISIntegrationTest {
     private static final String IS_ENABLE_ASSERTION_ENCRYPTION = "true";
     private static final String IS_ENABLE_ASSERTION_SIGNING = "true";
     private static final String SAML_SSO_CONFIG_NAME = "SAMLSSOAuthenticator";
-    private static final String SAML_SSO = "samlsso";
+    private static final String SAML_SSO = "SAML SSO";
 
 
     @BeforeClass(alwaysRun = true)

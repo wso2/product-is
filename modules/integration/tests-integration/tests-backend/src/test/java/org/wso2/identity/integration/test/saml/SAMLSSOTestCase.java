@@ -164,7 +164,8 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
             response = super.sendSAMLMessage(String.format(ACS_URL, config.getApp().getArtifact()), CommonConstants
                     .SAML_RESPONSE_PARAM, samlResponse, config);
             resultPage = extractDataFromResponse(response);
-
+            System.out.println("------------resultPage: " + resultPage);
+            System.out.println("--------------------------");
             Assert.assertTrue(resultPage.contains("You are logged in as " + config.getUser().getTenantAwareUsername()),
                               "SAML SSO Login failed for " + config);
         } catch (Exception e) {

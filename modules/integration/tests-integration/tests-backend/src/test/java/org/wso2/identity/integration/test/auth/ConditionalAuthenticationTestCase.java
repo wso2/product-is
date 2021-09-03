@@ -243,7 +243,7 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
 
         FederatedAuthenticatorConfig saml2SSOAuthnConfig = new FederatedAuthenticatorConfig();
         saml2SSOAuthnConfig.setName("SAMLSSOAuthenticator");
-        saml2SSOAuthnConfig.setDisplayName("samlsso");
+        saml2SSOAuthnConfig.setDisplayName("SAML SSO");
         saml2SSOAuthnConfig.setEnabled(true);
         saml2SSOAuthnConfig.setProperties(getSAML2SSOAuthnConfigProperties());
         identityProvider.setDefaultAuthenticatorConfig(saml2SSOAuthnConfig);
@@ -409,7 +409,7 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
         org.wso2.carbon.identity.application.common.model.xsd.FederatedAuthenticatorConfig federatedAuthenticatorConfig = new org.wso2.carbon.identity.application.common.model.xsd.FederatedAuthenticatorConfig();
         federatedAuthenticatorConfig.setProperties(getSAMLSSOConfigurationPropertiesForXSD());
         federatedAuthenticatorConfig.setName("SAMLSSOAuthenticator");
-        federatedAuthenticatorConfig.setDisplayName("samlsso");
+        federatedAuthenticatorConfig.setDisplayName("SAML SSO");
         federatedAuthenticatorConfig.setEnabled(true);
         identityProvider.setDefaultAuthenticatorConfig(federatedAuthenticatorConfig);
         identityProvider.setFederatedAuthenticatorConfigs(
