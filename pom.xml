@@ -596,8 +596,8 @@
             </dependency>
             <dependency>
                 <groupId>org.ow2.asm</groupId>
-                <artifactId>asm-all</artifactId>
-                <version>${asm-all.version}</version>
+                <artifactId>asm</artifactId>
+                <version>${asm.version}</version>
             </dependency>
             <dependency>
                 <groupId>cglib.wso2</groupId>
@@ -2217,7 +2217,7 @@
         <stratos.version.221>2.2.1</stratos.version.221>
         <ehcache.version>1.5.0.wso2v3</ehcache.version>
         <bcel.wso2.version>5.2.0.wso2v1</bcel.wso2.version>
-        <asm-all.version>5.2</asm-all.version>
+        <asm.version>9.2</asm.version>
         <cglib.wso2.version>2.2.wso2v1</cglib.wso2.version>
         <jibx.wso2.version>1.2.1.wso2v1</jibx.wso2.version>
         <axis2.jibx.wso2.version>1.6.1.wso2v11</axis2.jibx.wso2.version>

@@ -41,7 +41,7 @@
 			</dependency>
 			<dependency>
 				<groupId>org.ow2.asm</groupId>
-				<artifactId>asm-all</artifactId>
+				<artifactId>asm</artifactId>
 			</dependency>
 			<dependency>
 				<groupId>cglib.wso2</groupId>
@@ -85,7 +85,7 @@
 							<bundles>
 								<bundleDef>net.sf.ehcache.wso2:ehcache</bundleDef>
 								<bundleDef>org.apache.bcel.wso2:bcel</bundleDef>
-								<bundleDef>org.ow2.asm:asm-all</bundleDef>
+								<bundleDef>org.ow2.asm:asm</bundleDef>
 								<bundleDef>cglib.wso2:cglib</bundleDef>
 								<bundleDef>cglib.wso2:cglib</bundleDef>
 								<bundleDef>org.apache.axis2.wso2:axis2-jibx</bundleDef>
