@@ -158,14 +158,14 @@ public abstract class UserMgtServiceAbstractTestCase extends ISIntegrationTest {
         String[] newUsers = new String[]{"user1"};
         String[] deletedUsers = new String[]{"user2"};
 
-        userMgtClient.updateUserListOfRole("admin", newUsers, deletedUsers);
+        userMgtClient.updateUserListOfRole("Internal/admin", newUsers, deletedUsers);
 
-        Assert.assertTrue(nameExists(userMgtClient.getUsersOfRole("admin", "user1", 0), "user1"), "Getting user added to admin role failed");
-        Assert.assertFalse(nameExists(userMgtClient.getUsersOfRole("admin", "user2", 0), "user2"), "User user2 still exists in the admin role");
+        Assert.assertTrue(nameExists(userMgtClient.getUsersOfRole("Internal/admin", "user1", 0), "user1"), "Getting user added to admin role failed");
+        Assert.assertFalse(nameExists(userMgtClient.getUsersOfRole("Internal/admin", "user2", 0), "user2"), "User user2 still exists in the admin role");
 
 //    	Clean up the modified users of role and test it.
-        userMgtClient.updateUserListOfRole("admin", null, newUsers);
-        Assert.assertFalse(nameExists(userMgtClient.getUsersOfRole("admin", "user1", 0), "user1"), "User user1 still exists in the admin role");
+        userMgtClient.updateUserListOfRole("Internal/admin", null, newUsers);
+        Assert.assertFalse(nameExists(userMgtClient.getUsersOfRole("Internal/admin", "user1", 0), "user1"), "User user1 still exists in the admin role");
     }
 
     public void testAddRemoveRolesOfUser() throws Exception {

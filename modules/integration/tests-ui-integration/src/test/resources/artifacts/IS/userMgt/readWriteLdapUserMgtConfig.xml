@@ -39,8 +39,8 @@
 			<Property name="PasswordJavaScriptRegEx">^[\S]{5,30}$</Property>
 			<Property name="ServicePasswordJavaRegEx">^[\\S]{5,30}$</Property>
 			<Property name="ServiceNameJavaRegEx">^[\\S]{2,30}/[\\S]{2,30}$</Property>
-			<Property name="UsernameJavaScriptRegEx">^[\S]{3,30}$</Property>
-			<Property name="UsernameJavaRegEx">[a-zA-Z0-9._-|//]{3,30}$</Property>
+			<Property name="UsernameJavaScriptRegEx">^[\S]{3,36}$</Property>
+			<Property name="UsernameJavaRegEx">[a-zA-Z0-9._-|//]{3,36}$</Property>
 			<Property name="RolenameJavaScriptRegEx">^[\S]{3,30}$</Property>
 			<Property name="RolenameJavaRegEx">[a-zA-Z0-9._-|//]{3,30}$</Property>
 			<Property name="ReadGroups">true</Property>

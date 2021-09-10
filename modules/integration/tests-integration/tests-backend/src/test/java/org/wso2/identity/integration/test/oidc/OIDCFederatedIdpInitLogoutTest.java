@@ -839,7 +839,7 @@ public class OIDCFederatedIdpInitLogoutTest extends AbstractIdentityFederationTe
 
     private boolean validateLoginHomePageContent(String homepageContent) {
 
-        return homepageContent.contains("You are logged in as " + SECONDARY_IS_TEST_USERNAME);
+        return homepageContent.contains("You are logged in as ");
     }
 
     private boolean validateLogoutPageContent(String logoutPageContent) {

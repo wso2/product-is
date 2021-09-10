@@ -7,6 +7,7 @@ base_path = "https://$ref{server.hostname}:${carbon.management.port}"
 username = "admin"
 password = "admin"
 create_admin_account = true
+# admin_role = "admin"
 
 [database.identity_db]
 driver = "$env{IDENTITY_DATABASE_DRIVER}"
@@ -22,10 +23,6 @@ password = "$env{SHARED_DATABASE_PASSWORD}"
 
 [user_store]
 type = "database_unique_id"
-connection_url = "ldap://localhost:${Ports.EmbeddedLDAP.LDAPServerPort}"
-connection_name = "uid=admin,ou=system"
-connection_password = "admin"
-base_dn = "dc=wso2,dc=org"      #refers the base dn on which the user and group search bases will be generated
 
 [keystore.primary]
 file_name = "wso2carbon.jks"
