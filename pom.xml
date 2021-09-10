@@ -2092,7 +2092,7 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.8.43</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.7.35</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.7.37</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.6.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.6.13</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.6.8</identity.inbound.provisioning.scim.version>
@@ -2188,7 +2188,7 @@
         <carbon.identity.oauth.uma.version>1.3.7</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.2.505</identity.apps.version>
+        <identity.apps.version>1.2.509</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
