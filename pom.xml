@@ -2252,7 +2252,7 @@
         <json.simple.version>1.1.1</json.simple.version>
         <openid4java.consumer.version>1.0.0</openid4java.consumer.version>
         <opensaml.version>2.6.6</opensaml.version>
-        <opensaml2.wso2.version>2.6.6.wso2v3</opensaml2.wso2.version>
+        <opensaml2.wso2.version>3.3.1.wso2v3</opensaml2.wso2.version>
         <opensaml3.version>3.3.1</opensaml3.version>
         <shibboleth.version>7.3.0</shibboleth.version>
         <joda.wso2.version>2.9.4.wso2v1</joda.wso2.version>
