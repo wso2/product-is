@@ -134,7 +134,7 @@ public class RegistryMountTestCase extends ISIntegrationTest {
                 .addServiceProvider(createSsoServiceProviderDTO());
 
         userId = UserUtil.getUserId(MultitenantUtils.getTenantAwareUsername(TENANT_ADMIN_USERNAME),
-                isServer.getContextTenant());
+                TENANT_DOMAIN, TENANT_ADMIN_USERNAME, TENANT_ADMIN_PASSWORD);
     }
 
     @AfterClass(alwaysRun = true)
@@ -333,7 +333,6 @@ public class RegistryMountTestCase extends ISIntegrationTest {
         emailClaimMapping.setRemoteClaim(emailClaim);
         claimMappingList.add(emailClaimMapping);
 
-        return claimMappingList.toArray(new ClaimMapping[claimMappingList.size()]);
+        return claimMappingList.toArray(new ClaimMapping[0]);
     }
-
 }

@@ -187,8 +187,8 @@
             <Property name="GroupNameListFilter">(objectClass=groupOfNames)</Property>
             <Property name="MembershipAttribute">member</Property>
             <Property name="BackLinksEnabled">false</Property>
-            <Property name="UsernameJavaRegEx">[a-zA-Z0-9._-|//]{3,36}$</Property>
-            <Property name="UsernameJavaScriptRegEx">^[\S]{3,36}$</Property>
+            <Property name="UsernameJavaRegEx">[a-zA-Z0-9._-|//]{3,50}$</Property>
+            <Property name="UsernameJavaScriptRegEx">^[\S]{3,50}$</Property>
             <Property name="UsernameJavaRegExViolationErrorMsg">Username pattern policy violated</Property>
             <Property name="PasswordJavaRegEx">^[\S]{5,30}$</Property>
             <Property name="PasswordJavaScriptRegEx">^[\S]{5,30}$</Property>

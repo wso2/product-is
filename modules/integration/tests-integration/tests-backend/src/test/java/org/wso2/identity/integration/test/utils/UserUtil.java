@@ -18,7 +18,6 @@
 
 package org.wso2.identity.integration.test.utils;
 
-import java.io.IOException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
@@ -30,8 +29,10 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
-import org.wso2.carbon.automation.engine.context.beans.User;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+
+import java.io.IOException;
+
 import static org.testng.Assert.assertEquals;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.ID_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SCIM2_USERS_ENDPOINT;
@@ -39,12 +40,12 @@ import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SERVER_
 
 public class UserUtil {
 
-    public static String getUserId(String username, Tenant contextTenant) throws IOException {
+    public static String getUserId(String username, String tenantDomain, String tenantAdminUsername,
+                                   String tenantAdminPassword) throws IOException {
 
-        String userResourcePath = getPath(contextTenant.getDomain()) + "?filter=username+EQ+" + username;
-        System.out.println("=============== userResourcePath: " + userResourcePath);
+        String userResourcePath = getPath(tenantDomain) + "?filter=username+EQ+" + username;
         HttpGet request = new HttpGet(userResourcePath);
-        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader(contextTenant.getTenantAdmin()));
+        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader(tenantAdminUsername, tenantAdminPassword));
         request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
         request.addHeader(HttpHeaders.ACCEPT, "application/scim+json");
 
@@ -54,14 +55,18 @@ public class UserUtil {
                     "has not been retrieved successfully");
 
             String responseString = EntityUtils.toString(response.getEntity());
-            System.out.println("======================== responseString: " + responseString);
             Object responseObj = JSONValue.parse(responseString);
             EntityUtils.consume(response.getEntity());
 
-            String userId = ((JSONObject) ((JSONArray) ((JSONObject) responseObj).get("Resources")).get(0)).get
+            return ((JSONObject) ((JSONArray) ((JSONObject) responseObj).get("Resources")).get(0)).get
                     (ID_ATTRIBUTE).toString();
-            return userId;
         }
+    }
+
+    public static String getUserId(String username, Tenant contextTenant) throws IOException {
+
+        return getUserId(username, contextTenant.getDomain(), contextTenant.getTenantAdmin().getUserName(),
+                contextTenant.getTenantAdmin().getPassword());
     }
 
     private static String getPath(String tenantDomain) {
@@ -73,9 +78,8 @@ public class UserUtil {
         }
     }
 
-    private static String getAuthzHeader(User tenantAdmin) {
+    private static String getAuthzHeader(String adminUsername, String adminPassword) {
 
-        return "Basic " + Base64.encodeBase64String(
-                (tenantAdmin.getUserName() + ":" + tenantAdmin.getPassword()).getBytes()).trim();
+        return "Basic " + Base64.encodeBase64String((adminUsername + ":" + adminPassword).getBytes()).trim();
     }
 }

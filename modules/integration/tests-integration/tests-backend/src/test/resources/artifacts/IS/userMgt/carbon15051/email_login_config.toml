@@ -15,7 +15,7 @@ connection_name = "uid=admin,ou=system"
 connection_password = "admin"
 base_dn = "dc=wso2,dc=org"      #refers the base dn on which the user and group search bases will be generated
 [user_store.properties]
-UsernameJavaRegEx = "^[\\S]{3,36}$"
+UsernameJavaRegEx = "^[\\S]{3,50}$"
 
 [database.identity_db]
 driver = "$env{IDENTITY_DATABASE_DRIVER}"
