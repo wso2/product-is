@@ -133,6 +133,41 @@ public class OAuth2TokenRevocationWithRevokedAccessToken extends OAuth2ServiceAb
                 "an already revoked access token has been failed.");
     }
 
+    @Test(dependsOnMethods = {"testRevokedAccessTokenRevocation"},
+            description = "Call revocation request with a revoked access token but invalid auth credentials")
+    public void testRevokedAccessTokenRevocationWithInvalidClientCredentials() throws Exception {
+
+        // Request an access token
+        AccessToken accessToken = requestAccessToken();
+        AccessToken privilegedAccessToken = requestPrivilegedAccessToken();
+
+        // Introspect the returned access token to verify the validity before revoking
+        TokenIntrospectionResponse activeTokenIntrospectionResponse = introspectAccessToken(accessToken, privilegedAccessToken);
+        Assert.assertTrue(activeTokenIntrospectionResponse.indicatesSuccess(), "Failed to receive a success response.");
+        Assert.assertTrue(activeTokenIntrospectionResponse.toSuccessResponse().isActive(),
+                "Introspection response of an active access token is unsuccessful.");
+
+        // Revoke the access token returned above
+        HTTPResponse activeTokenRevocationResponse = revokeAccessToken(accessToken);
+        Assert.assertEquals(activeTokenRevocationResponse.getStatusCode(), 200, "Revocation request with " +
+                "an active access token has been failed.");
+
+        // Introspect the revoked access token to verify the token has been revoked
+        TokenIntrospectionResponse revokedTokenIntrospectionResponse = introspectAccessToken(accessToken, privilegedAccessToken);
+        Assert.assertTrue(activeTokenIntrospectionResponse.indicatesSuccess(), "Failed to receive a success response.");
+        // According to the spec 200 status code will be returned when when token is has been revoked or is otherwise
+        // invalid. Need to check token active status here.
+        Assert.assertFalse(revokedTokenIntrospectionResponse.toSuccessResponse().isActive(),
+                "Introspection response of a revoked access token is successful.");
+
+        // Make a revocation request with the same access token which has been revoked already and verify the authentication failure error response
+        Secret invalidConsumerSecret = new Secret("dummyConsumerSecret");
+        ClientAuthentication clientAuth = new ClientSecretBasic(consumerKey, invalidConsumerSecret);
+        HTTPResponse revokedTokenRevocationResponse = revokeAccessToken(accessToken, clientAuth);
+        Assert.assertEquals(revokedTokenRevocationResponse.getStatusCode(), 401,
+                "Client credentials are invalid.");
+    }
+
     private AccessToken requestAccessToken() throws Exception {
 
         ClientAuthentication clientAuth = new ClientSecretBasic(consumerKey, consumerSecret);
@@ -166,6 +201,15 @@ public class OAuth2TokenRevocationWithRevokedAccessToken extends OAuth2ServiceAb
     private HTTPResponse revokeAccessToken(AccessToken accessToken) throws Exception {
 
         ClientAuthentication clientAuth = new ClientSecretBasic(consumerKey, consumerSecret);
+        URI tokenRevokeEndpoint = new URI(OAuth2Constant.TOKEN_REVOKE_ENDPOINT);
+
+        TokenRevocationRequest revocationRequest =
+                new TokenRevocationRequest(tokenRevokeEndpoint, clientAuth, accessToken);
+        return revocationRequest.toHTTPRequest().send();
+    }
+
+        private HTTPResponse revokeAccessToken(AccessToken accessToken, ClientAuthentication clientAuth) throws Exception {
+
         URI tokenRevokeEndpoint = new URI(OAuth2Constant.TOKEN_REVOKE_ENDPOINT);
 
         TokenRevocationRequest revocationRequest =
