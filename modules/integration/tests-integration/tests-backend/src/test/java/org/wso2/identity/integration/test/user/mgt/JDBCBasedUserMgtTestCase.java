@@ -28,7 +28,7 @@ import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 
 public class JDBCBasedUserMgtTestCase extends UserMgtServiceAbstractTestCase {
 
-    private static final Log log = LogFactory.getLog(JDBCBasedUserMgtTestCase.class);
+    private static final Log log = LogFactory.getLog(UserMgtServiceAbstractTestCase.class);
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     @BeforeClass(alwaysRun = true)
@@ -38,8 +38,8 @@ public class JDBCBasedUserMgtTestCase extends UserMgtServiceAbstractTestCase {
 
         userMgtClient.addUser("user1", "passWord1@", null, "default");
         userMgtClient.addUser("user2", "passWord1@", null, "default");
-        userMgtClient.addUser("user3", "passWord1@", new String[]{"Internal/admin"}, "default");
-        userMgtClient.addUser("user4", "passWord1@", new String[]{"Internal/admin"}, "default");
+        userMgtClient.addUser("user3", "passWord1@", new String[]{"admin"}, "default");
+        userMgtClient.addUser("user4", "passWord1@", new String[]{"admin"}, "default");
 
         userMgtClient.addRole("umRole1", null, new String[]{"/permission/admin/login"}, false);
         userMgtClient.addRole("umRole3", new String[]{"user1"}, new String[]{"login"}, false);
