@@ -195,7 +195,6 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
 
         updateServiceProviderWithSAMLConfigs(PORT_OFFSET_1, SECONDARY_IS_SAML_ISSUER_NAME, String.format(COMMON_AUTH_URL, DEFAULT_PORT + PORT_OFFSET_0), serviceProvider);
 
-        serviceProvider.getLocalAndOutBoundAuthenticationConfig().setSubjectClaimUri("http://wso2.org/claims/username");
         updateServiceProvider(PORT_OFFSET_1, serviceProvider);
         serviceProvider = getServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
 

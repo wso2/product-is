@@ -429,8 +429,6 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
             authRequestList.add(inboundAuthenticationRequestConfig);
         }
 
-//        serviceProvider.getLocalAndOutBoundAuthenticationConfig().setSubjectClaimUri("http://wso2.org/claims/username");
-
         super.updateServiceProvider(PORT_OFFSET_1, serviceProvider);
     }
 

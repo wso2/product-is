@@ -663,9 +663,6 @@ public class OIDCFederatedIdpInitLogoutTest extends AbstractIdentityFederationTe
 
         serviceProvider.getInboundAuthenticationConfig().setInboundAuthenticationRequestConfigs(new
                 InboundAuthenticationRequestConfig[]{samlAuthenticationRequestConfig});
-
-        serviceProvider.getLocalAndOutBoundAuthenticationConfig().setSubjectClaimUri("http://wso2.org/claims/username");
-
     }
 
     private SAMLSSOServiceProviderDTO getSAMLSSOServiceProviderDTO(String issuerName, String acsUrl) {

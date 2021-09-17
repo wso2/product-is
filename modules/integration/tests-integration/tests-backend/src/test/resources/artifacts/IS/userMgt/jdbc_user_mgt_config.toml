@@ -7,7 +7,6 @@ base_path = "https://$ref{server.hostname}:${carbon.management.port}"
 username = "admin"
 password = "admin"
 create_admin_account = true
-# admin_role = "admin"
 
 [database.identity_db]
 driver = "$env{IDENTITY_DATABASE_DRIVER}"
