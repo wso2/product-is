@@ -536,7 +536,7 @@ public class OIDCSubAttributeTestCase extends OAuth2ServiceAbstractIntegrationTe
 
             boolean containsUseUserIdForSubjectProp = false;
             for (ServiceProviderProperty prop: serviceProviderProperties) {
-                if ("useUserIdForSubject".equals(prop.getName())) {
+                if ("useUserIdForDefaultSubject".equals(prop.getName())) {
                     containsUseUserIdForSubjectProp = true;
                     prop.setValue("false");
                     break;
@@ -545,7 +545,7 @@ public class OIDCSubAttributeTestCase extends OAuth2ServiceAbstractIntegrationTe
 
             if (!containsUseUserIdForSubjectProp) {
                 ServiceProviderProperty useUserIdForSubject = new ServiceProviderProperty();
-                useUserIdForSubject.setName("useUserIdForSubject");
+                useUserIdForSubject.setName("useUserIdForDefaultSubject");
                 useUserIdForSubject.setValue("false");
                 serviceProviderProperties.add(useUserIdForSubject);
             }
@@ -575,10 +575,6 @@ public class OIDCSubAttributeTestCase extends OAuth2ServiceAbstractIntegrationTe
             throws URISyntaxException, IOException, ParseException {
         // The introspection endpoint
         URI introspectionEndpoint = new URI(OAuth2Constant.INTRO_SPEC_ENDPOINT);
-
-        // The registered client credentials of the protected resource
-//        ClientID clientID = new ClientID(consumerKey);
-//        Secret clientSecret = new Secret(consumerSecret);
 
         ClientID clientID = new ClientID(tenantAwareUsername);
         Secret clientSecret = new Secret(userInfo.getPassword());
