@@ -32,7 +32,6 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
-
 import java.io.IOException;
 
 import static org.hamcrest.core.IsNull.notNullValue;
@@ -117,7 +116,6 @@ public class SecretManagementFailureTest extends SecretManagementTestBase {
         Response response = getResponseOfGet(SECRET_TYPE_API_BASE_PATH + PATH_SEPARATOR + "randomName");
 
         validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "SECRETM_00021");
-
     }
 
     @Test
@@ -161,7 +159,6 @@ public class SecretManagementFailureTest extends SecretManagementTestBase {
         assertNotNull(secretName);
         response = getResponseOfPost(SECRET_API_BASE_PATH + PATH_SEPARATOR + SECRET_TYPE, body);
         validateErrorResponse(response, HttpStatus.SC_CONFLICT, "SECRETM_00006");
-
     }
 
     @Test
