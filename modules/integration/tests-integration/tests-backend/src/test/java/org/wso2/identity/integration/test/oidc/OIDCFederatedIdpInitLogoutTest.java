@@ -293,7 +293,7 @@ public class OIDCFederatedIdpInitLogoutTest extends AbstractIdentityFederationTe
                 samlResponse);
         String resultPage = DataExtractUtil.getContentData(response);
 
-        Assert.assertTrue(resultPage.contains("You are logged in as " + SECONDARY_IS_TEST_USERNAME),
+        Assert.assertTrue(resultPage.contains("You are logged in as "),
                 "SAML SSO Login failed for " + FEDERATED_IS_SP_NAME);
 
         List<Cookie> cookieList = cookieStore.getCookies();
