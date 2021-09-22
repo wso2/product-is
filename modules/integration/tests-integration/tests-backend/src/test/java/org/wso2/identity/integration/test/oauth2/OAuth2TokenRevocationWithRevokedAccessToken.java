@@ -208,7 +208,7 @@ public class OAuth2TokenRevocationWithRevokedAccessToken extends OAuth2ServiceAb
         return revocationRequest.toHTTPRequest().send();
     }
 
-        private HTTPResponse revokeAccessToken(AccessToken accessToken, ClientAuthentication clientAuth) throws Exception {
+    private HTTPResponse revokeAccessToken(AccessToken accessToken, ClientAuthentication clientAuth) throws Exception {
 
         URI tokenRevokeEndpoint = new URI(OAuth2Constant.TOKEN_REVOKE_ENDPOINT);
 
