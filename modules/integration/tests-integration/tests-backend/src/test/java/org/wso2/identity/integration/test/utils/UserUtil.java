@@ -38,8 +38,21 @@ import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.ID_ATTR
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SCIM2_USERS_ENDPOINT;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SERVER_URL;
 
+/**
+ * Utility class to retrieve user information using the product REST APIs.
+ */
 public class UserUtil {
 
+    /**
+     * Retrieve the user id of a user by filtering with the username.
+     *
+     * @param username            username of the user that user id is required
+     * @param tenantDomain        tenant domain of the user
+     * @param tenantAdminUsername admin user of the user's tenant
+     * @param tenantAdminPassword admin user password
+     * @return user id of the user
+     * @throws IOException
+     */
     public static String getUserId(String username, String tenantDomain, String tenantAdminUsername,
                                    String tenantAdminPassword) throws IOException {
 
@@ -63,6 +76,14 @@ public class UserUtil {
         }
     }
 
+    /**
+     * Retrieve the user id of a user by filtering with the username.
+     *
+     * @param username      username of the user that user id is required
+     * @param contextTenant tenant context object of the user
+     * @return user id of the user
+     * @throws IOException
+     */
     public static String getUserId(String username, Tenant contextTenant) throws IOException {
 
         return getUserId(username, contextTenant.getDomain(), contextTenant.getTenantAdmin().getUserName(),

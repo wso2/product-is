@@ -74,7 +74,7 @@ import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import org.wso2.identity.integration.test.utils.UserUtil;
 
 /**
- * Integration test cases for id token encryption.
+ * Integration test cases for sub attribute of the OIDC responses (id_token and JWT access token).
  */
 public class OIDCSubAttributeTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
