@@ -32,6 +32,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
+import org.wso2.identity.integration.test.utils.UserUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -45,6 +46,7 @@ public class SAMLARTRESOLVETestCase extends AbstractSAMLSSOTestCase {
     private static final Log log = LogFactory.getLog(SAMLSSOTestCase.class);
 
     private SAMLConfig config;
+    String userId;
 
     @Factory(dataProvider = "samlConfigProvider")
     public SAMLARTRESOLVETestCase(SAMLConfig config) {
@@ -61,6 +63,8 @@ public class SAMLARTRESOLVETestCase extends AbstractSAMLSSOTestCase {
         super.init(config.getUserMode());
         super.testInit();
         super.createUser(config);
+        userId = UserUtil.getUserId(config.getUser().getTenantAwareUsername(), isServer.getContextTenant());
+
         super.createApplicationForSAMLArtResolve(config, config.getApp().getArtifact());
     }
 
@@ -99,11 +103,10 @@ public class SAMLARTRESOLVETestCase extends AbstractSAMLSSOTestCase {
             String samlRedirectPage = extractDataFromResponse(response);
             EntityUtils.consume(response.getEntity());
 
-            Assert.assertTrue(samlRedirectPage.contains("You are logged in as " +
-                            config.getUser().getTenantAwareUsername()),
+            Assert.assertTrue(samlRedirectPage.contains("You are logged in as " + userId),
                     "SAML artifact binding failed for " + config);
 
-            Boolean isRemoveSuccess = ssoConfigServiceClient.removeServiceProvider(config.getApp().getArtifact());
+            boolean isRemoveSuccess = ssoConfigServiceClient.removeServiceProvider(config.getApp().getArtifact());
             Assert.assertTrue(isRemoveSuccess, "Removing a service provider has failed for " + config);
 
         } catch (Exception e) {

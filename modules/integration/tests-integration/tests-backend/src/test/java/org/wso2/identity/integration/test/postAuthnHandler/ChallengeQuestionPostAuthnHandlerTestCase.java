@@ -51,6 +51,7 @@ import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
@@ -58,6 +59,7 @@ import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserSto
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
+import org.wso2.identity.integration.test.utils.UserUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -104,6 +106,7 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
     private IdentityProviderMgtServiceClient tenantIDPMgtClient;
     private IdentityProvider superTenantResidentIDP;
     private String resultPage;
+    private String userId;
 
     @Factory(dataProvider = "samlConfigProvider")
     public ChallengeQuestionPostAuthnHandlerTestCase(SAMLConfig config) {
@@ -133,6 +136,7 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
         remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
 
         createUser();
+        userId = UserUtil.getUserId(config.getUser().getTenantAwareUsername(), isServer.getContextTenant());
         createApplication();
 
         AuthenticatorClient logManager = new AuthenticatorClient(backendURL);
@@ -213,7 +217,7 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
             response = sendSAMLMessage(String.format(ACS_URL, config.getApp().getArtifact()), CommonConstants
                     .SAML_RESPONSE_PARAM, samlResponse, httpClient);
             resultPage = extractDataFromResponse(response);
-            Assert.assertTrue(resultPage.contains("You are logged in as " + config.getUser().getTenantAwareUsername()),
+            Assert.assertTrue(resultPage.contains("You are logged in as " + userId),
                     "SAML SSO Login failed for " + config);
             EntityUtils.consume(response.getEntity());
         } catch (Exception e) {
@@ -264,7 +268,7 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
             response = sendSAMLMessage(String.format(ACS_URL, config.getApp().getArtifact()), CommonConstants
                     .SAML_RESPONSE_PARAM, samlResponse, httpClient);
             resultPage = extractDataFromResponse(response);
-            Assert.assertTrue(resultPage.contains("You are logged in as " + config.getUser().getTenantAwareUsername()),
+            Assert.assertTrue(resultPage.contains("You are logged in as " + userId),
                     "SAML SSO Login failed for " + config);
             EntityUtils.consume(response.getEntity());
         } catch (Exception e) {
@@ -322,7 +326,7 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
             response = sendSAMLMessage(String.format(ACS_URL, config.getApp().getArtifact()), CommonConstants
                     .SAML_RESPONSE_PARAM, samlResponse, httpClient);
             resultPage = extractDataFromResponse(response);
-            Assert.assertTrue(resultPage.contains("You are logged in as " + config.getUser().getTenantAwareUsername()),
+            Assert.assertTrue(resultPage.contains("You are logged in as " + userId),
                     "SAML SSO Login failed for " + config);
             EntityUtils.consume(response.getEntity());
 
@@ -374,7 +378,7 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
             response = sendSAMLMessage(String.format(ACS_URL, config.getApp().getArtifact()), CommonConstants
                     .SAML_RESPONSE_PARAM, samlResponse, httpClient);
             resultPage = extractDataFromResponse(response);
-            Assert.assertTrue(resultPage.contains("You are logged in as " + config.getUser().getTenantAwareUsername()),
+            Assert.assertTrue(resultPage.contains("You are logged in as " + userId),
                     "Missing Challenge Question post authentication handler failed for " + config);
             EntityUtils.consume(response.getEntity());
 

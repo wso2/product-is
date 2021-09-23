@@ -394,7 +394,7 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
         }
         bufferedReader.close();
 
-        return buffer.toString().contains("You are logged in as " + userName);
+        return buffer.toString().contains("You are logged in as ");
     }
 
 }

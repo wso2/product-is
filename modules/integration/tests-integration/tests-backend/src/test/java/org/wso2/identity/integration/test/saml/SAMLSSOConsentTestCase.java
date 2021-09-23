@@ -31,6 +31,7 @@ import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
+import org.wso2.identity.integration.test.utils.UserUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -57,6 +58,7 @@ public class SAMLSSOConsentTestCase extends AbstractSAMLSSOTestCase{
     private SAMLConfig config;
     private String resultPage;
     private ServiceProvider serviceProvider;
+    private String userId;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -66,6 +68,8 @@ public class SAMLSSOConsentTestCase extends AbstractSAMLSSOTestCase{
         super.init(config.getUserMode());
         super.testInit();
         super.createUser(config);
+        userId = UserUtil.getUserId(config.getUser().getTenantAwareUsername(), isServer.getContextTenant());
+
         serviceProvider = new ServiceProvider();
         serviceProvider = createApplication(serviceProvider, config, APPLICATION_NAME);
     }
@@ -143,7 +147,7 @@ public class SAMLSSOConsentTestCase extends AbstractSAMLSSOTestCase{
                     .SAML_RESPONSE_PARAM, samlResponse, config);
             resultPage = extractDataFromResponse(response);
 
-            Assert.assertTrue(resultPage.contains("You are logged in as " + config.getUser().getTenantAwareUsername()),
+            Assert.assertTrue(resultPage.contains("You are logged in as " + userId),
                     "SAML SSO Login failed for " + config);
         } catch (Exception e) {
             Assert.fail("SAML SSO Login test failed for " + config, e);
