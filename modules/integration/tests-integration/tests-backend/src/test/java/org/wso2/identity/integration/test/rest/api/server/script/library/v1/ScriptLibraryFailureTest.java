@@ -106,16 +106,6 @@ public class ScriptLibraryFailureTest extends ScriptLibraryTestBase {
     }
 
     @Test
-    public void testAddScriptLibraryWithInvalidScript() throws IOException {
-
-        String content = readResource("sample-script-library-bad-content.js");
-        Response response =
-                getResponseOfMultipartPost(SCRIPT_LIBRARY_API_BASE_PATH, content, VALID_SCRIPT_LIBRARY_NAME,
-                        SCRIPT_LIBRARY_DESCRIPTION);
-        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "SCL-60002", VALID_SCRIPT_LIBRARY_NAME);
-    }
-
-    @Test(dependsOnMethods = {"testAddScriptLibraryWithInvalidScript"})
     public void testAddScriptLibraryConflict() throws IOException {
 
         String content = readResource("sample-script-library.js");
@@ -132,15 +122,4 @@ public class ScriptLibraryFailureTest extends ScriptLibraryTestBase {
                         SCRIPT_LIBRARY_DESCRIPTION);
         validateErrorResponse(response, HttpStatus.SC_CONFLICT, "SCL-60007", VALID_SCRIPT_LIBRARY_NAME);
     }
-
-    @Test(dependsOnMethods = {"testAddScriptLibraryConflict"})
-    public void testUpdateScriptLibraryInvalidScript() throws IOException {
-
-        String content = readResource("sample-script-library-bad-content.js");
-        String endpoint = SCRIPT_LIBRARY_API_BASE_PATH + PATH_SEPARATOR + VALID_SCRIPT_LIBRARY_NAME;
-        Response response =
-                getResponseOfMultipartPut(endpoint, content, SCRIPT_LIBRARY_DESCRIPTION);
-        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "SCL-60002", VALID_SCRIPT_LIBRARY_NAME);
-    }
-
 }
