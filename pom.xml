@@ -2070,7 +2070,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.20.200</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.20.186</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2175,8 +2175,8 @@
         <hashprovider.pbkdf2.version>0.1.2</hashprovider.pbkdf2.version>
 
         <!-- Identity REST API feature -->
-        <identity.api.dispatcher.version>2.0.0</identity.api.dispatcher.version>
-        <identity.user.api.version>1.1.30</identity.user.api.version>
+        <identity.api.dispatcher.version>2.0.6</identity.api.dispatcher.version>
+        <identity.user.api.version>1.1.31</identity.user.api.version>
         <identity.server.api.version>1.0.258</identity.server.api.version>
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
