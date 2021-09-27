@@ -1,0 +1,7 @@
+[
+  {
+    "operation": "ADD",
+    "path": "/certificate/jwksUri",
+    "value": "http://SAMPLE.JWKS.URI/"
+  }
+]
