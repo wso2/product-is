@@ -40,6 +40,7 @@ import org.wso2.identity.integration.common.clients.sso.saml.query.SAMLQueryClie
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
+import org.wso2.identity.integration.test.utils.UserUtil;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -78,6 +79,7 @@ public class SAMLQueryProfileTestCase extends AbstractSAMLSSOTestCase {
     private SAMLConfig config;
     private String resultPage;
     private String samlResponse;
+    private String userId;
 
     @Factory(dataProvider = "samlConfigProvider")
     public SAMLQueryProfileTestCase(SAMLConfig config) {
@@ -131,6 +133,8 @@ public class SAMLQueryProfileTestCase extends AbstractSAMLSSOTestCase {
 
         super.testInit();
         super.createUser(config);
+        userId = UserUtil.getUserId(config.getUser().getTenantAwareUsername(), isServer.getContextTenant());
+
         super.createApplication(config, APPLICATION_NAME);
     }
 
@@ -209,7 +213,7 @@ public class SAMLQueryProfileTestCase extends AbstractSAMLSSOTestCase {
                     .SAML_RESPONSE_PARAM, samlResponse, config);
             resultPage = extractDataFromResponse(response);
 
-            Assert.assertTrue(resultPage.contains("You are logged in as " + config.getUser().getTenantAwareUsername()),
+            Assert.assertTrue(resultPage.contains("You are logged in as " + userId),
                     "SAML SSO Login failed for " + config);
             this.samlResponse = new String(Base64.decode(samlResponse));
 

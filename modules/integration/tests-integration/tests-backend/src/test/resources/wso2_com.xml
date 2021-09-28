@@ -18,8 +18,8 @@
     <Property name="UserNameUniqueAcrossTenants">false</Property>
     <Property name="PasswordJavaRegEx">^[\S]{5,30}$</Property>
     <Property name="PasswordJavaScriptRegEx">^[\S]{5,30}$</Property>
-    <Property name="UsernameJavaRegEx">^[\S]{5,30}$</Property>
-    <Property name="UsernameJavaScriptRegEx">^[\S]{5,30}$</Property>
+    <Property name="UsernameJavaRegEx">^[\S]{5,50}$</Property>
+    <Property name="UsernameJavaScriptRegEx">^[\S]{5,50}$</Property>
     <Property name="RolenameJavaRegEx">^[\S]{5,30}$</Property>
     <Property name="RolenameJavaScriptRegEx">^[\S]{5,30}$</Property>
     <Property name="SCIMEnabled">false</Property>

@@ -34,12 +34,14 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.entitlement.stub.EntitlementPolicyAdminServiceEntitlementException;
 import org.wso2.carbon.identity.entitlement.stub.dto.PolicyDTO;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.entitlement.EntitlementPolicyServiceClient;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
+import org.wso2.identity.integration.test.utils.UserUtil;
 
 import java.rmi.RemoteException;
 
@@ -81,6 +83,8 @@ public class ApplicationAuthzTestCase extends AbstractApplicationAuthzTestCase {
                     "    <Rule Effect=\"Deny\" RuleId=\"denyall\"/>\n" +
                     "</Policy>";
 
+    private String userId;
+
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
@@ -100,6 +104,8 @@ public class ApplicationAuthzTestCase extends AbstractApplicationAuthzTestCase {
 
         createRole(AZ_TEST_ROLE);
         createUser(AZ_TEST_USER, AZ_TEST_USER_PW, new String[]{AZ_TEST_ROLE});
+        userId = UserUtil.getUserId(MultitenantUtils.getTenantAwareUsername(AZ_TEST_USER), isServer.getContextTenant());
+
         createUser(NON_AZ_TEST_USER, NON_AZ_TEST_USER_PW, new String[0]);
         createApplication(APPLICATION_NAME);
         createSAMLApp(APPLICATION_NAME, true, true, true);
@@ -180,8 +186,8 @@ public class ApplicationAuthzTestCase extends AbstractApplicationAuthzTestCase {
                 .SAML_RESPONSE_PARAM, samlResponse);
         String resultPage = extractDataFromResponse(response);
 
-        Assert.assertTrue(resultPage.contains("You are logged in as " + AZ_TEST_USER),
-                "SAML SSO Login should be successful and page should have a message \"You are logged in as\" " + AZ_TEST_USER);
+        Assert.assertTrue(resultPage.contains("You are logged in as " + userId),
+                "SAML SSO Login should be successful and page should have a message \"You are logged in as\" " + userId);
 
     }
 

@@ -673,7 +673,7 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
 
     private boolean validateLoginHomePageContent(String homepageContent) {
 
-        return homepageContent.contains("You are logged in as " + SECONDARY_IS_TEST_USERNAME);
+        return homepageContent.contains("You are logged in as ");
     }
 
     private HttpResponse sendLogoutRequestToPrimaryIS() throws IOException {
