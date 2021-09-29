@@ -32,6 +32,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.entitlement.EntitlementPolicyServiceClient;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
@@ -39,6 +40,7 @@ import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserSto
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
+import org.wso2.identity.integration.test.utils.UserUtil;
 
 import java.io.File;
 import java.net.URL;
@@ -85,6 +87,8 @@ public class ApplicationAuthzTenantTestCase extends AbstractApplicationAuthzTest
                     "    <Rule Effect=\"Deny\" RuleId=\"denyall\"/>\n" +
                     "</Policy>";
 
+    private String userId;
+
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
@@ -103,6 +107,8 @@ public class ApplicationAuthzTenantTestCase extends AbstractApplicationAuthzTest
 
         createRole(AZ_TEST_TENANT_ROLE);
         createUser(AZ_TEST_TENANT_USER, AZ_TEST_TENANT_USER_PW, new String[]{AZ_TEST_TENANT_ROLE});
+        userId = UserUtil.getUserId(MultitenantUtils.getTenantAwareUsername(AZ_TEST_TENANT_USER), isServer.getContextTenant());
+
         createUser(NON_AZ_TEST_TENANT_USER, NON_AZ_TEST_TENANT_USER_PW, new String[0]);
         createApplication(APPLICATION_NAME);
         createSAMLApp(APPLICATION_NAME, true, false, false);
@@ -165,8 +171,8 @@ public class ApplicationAuthzTenantTestCase extends AbstractApplicationAuthzTest
         response = sendSAMLMessage(String.format(ACS_URL, APPLICATION_NAME), CommonConstants
                 .SAML_RESPONSE_PARAM, samlResponse);
         String resultPage = extractDataFromResponse(response);
-        Assert.assertTrue(resultPage.contains("You are logged in as " + AZ_TEST_TENANT_USER),
-                "SAML SSO Login should be successful and page should have a message \"You are logged in as " + AZ_TEST_TENANT_USER + "\"");
+        Assert.assertTrue(resultPage.contains("You are logged in as " + userId),
+                "SAML SSO Login should be successful and page should have a message \"You are logged in as " + userId + "\"");
     }
 
     @Test(alwaysRun = true, description = "Test unauthorized tenant user login by evaluating the policy", groups = "wso2.is")

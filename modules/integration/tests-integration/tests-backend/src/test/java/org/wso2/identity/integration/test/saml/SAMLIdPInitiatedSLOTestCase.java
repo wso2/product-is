@@ -38,6 +38,7 @@ import org.wso2.carbon.logging.view.data.xsd.LogEvent;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
+import org.wso2.identity.integration.test.utils.UserUtil;
 
 import java.io.File;
 import java.rmi.RemoteException;
@@ -62,6 +63,7 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
     private String resultPage;
     private SAMLSSOServiceProviderDTO samlssoServiceProviderDTO;
     private ServerConfigurationManager serverConfigurationManager;
+    private String userId;
 
     private LogViewerClient logViewer;
 
@@ -95,6 +97,8 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
         super.testInit();
 
         super.createUser(samlConfigOne);
+        userId = UserUtil.getUserId(samlConfigOne.getUser().getTenantAwareUsername(), isServer.getContextTenant());
+
         super.createApplication(samlConfigOne, APPLICATION_ONE);
         super.createApplication(samlConfigTwo, APPLICATION_TWO);
 
@@ -195,9 +199,8 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
                     CommonConstants.SAML_RESPONSE_PARAM, samlResponse, samlConfigOne);
             resultPage = DataExtractUtil.getContentData(response);
 
-            Assert.assertTrue(resultPage.contains("You are logged in as " + samlConfigOne.getUser().
-                    getTenantAwareUsername()), "SAML SSO Login failed for " + samlConfigOne.getApp().
-                    getArtifact());
+            Assert.assertTrue(resultPage.contains("You are logged in as " + userId),
+                    "SAML SSO Login failed for " + samlConfigOne.getApp().getArtifact());
 
         } catch (Exception e) {
             Assert.fail("SAML SSO Login test failed for " + samlConfigOne.getApp().getArtifact(), e);
@@ -278,8 +281,8 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
                     CommonConstants.SAML_RESPONSE_PARAM, samlResponse, samlConfigTwo);
             resultPage = DataExtractUtil.getContentData(response);
 
-            Assert.assertTrue(resultPage.contains("You are logged in as " + samlConfigOne.getUser().
-                    getTenantAwareUsername()), "SAML SSO Login failed for " + samlConfigTwo.getApp().
+            Assert.assertTrue(resultPage.contains("You are logged in as " + userId),
+                    "SAML SSO Login failed for " + samlConfigTwo.getApp().
                     getArtifact());
         } catch (Exception e) {
             Assert.fail("SAML SSO Login test failed for " + samlConfigTwo.getApp().getArtifact(), e);

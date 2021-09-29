@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>5.12.0-m34-SNAPSHOT</version>
+        <version>5.12.0-alpha5-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -189,8 +189,9 @@
                                     <mergeChildren>true</mergeChildren>
                                 </task>
                                 <task>
-                                    <base>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/infer.json</base>
+                                    <base>${basedir}/src/repository/resources/conf/infer.json</base>
                                     <include>
+                                        <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/infer.json</param>
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.core.server.feature.infer.json</param>
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.event.server.feature.infer.json</param>
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.scim2.common.feature.infer.json</param>
