@@ -41,7 +41,6 @@ public class SecretManagementTestBase extends RESTAPIServerTestBase {
     public static final String PATH_SEPARATOR = "/";
     public static final String SECRET_TYPE = "ADAPTIVE_AUTH_CALL_CHOREO";
 
-
     protected static String swaggerDefinition;
 
     static {
