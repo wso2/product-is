@@ -140,6 +140,8 @@
             <class name="org.wso2.identity.integration.test.rest.api.user.authorized.apps.v2.MeAuthorizedAppsSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.authorized.apps.v2.MeAuthorizedAppsNegativeTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.authorized.apps.v2.MeAuthorizedAppsScopeTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.user.authorized.apps.v2.ApplicationAuthorizedAppsNegativeTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.user.authorized.apps.v2.ApplicationAuthorizedAppsSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.session.v1.UserSessionTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.session.v1.UserSessionMeSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.application.v1.UserDiscoverableApplicationSuccessTest"/>

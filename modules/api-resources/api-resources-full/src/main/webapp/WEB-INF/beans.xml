@@ -154,7 +154,7 @@
         <jaxrs:serviceBeans>
             <bean class="org.wso2.carbon.identity.rest.api.user.authorized.apps.v2.MeApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.authorized.apps.v2.UserIdApi"/>
-            <bean class="org.wso2.carbon.identity.rest.api.user.authorized.apps.v2.ApplicationsApi"/>
+            <bean class="org.wso2.carbon.identity.rest.api.user.authorized.apps.v2.AuthorizedAppsApi"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">
