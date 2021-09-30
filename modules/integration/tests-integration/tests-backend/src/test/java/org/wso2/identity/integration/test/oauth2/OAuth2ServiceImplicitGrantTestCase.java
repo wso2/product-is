@@ -58,6 +58,7 @@ public class OAuth2ServiceImplicitGrantTestCase extends OAuth2ServiceAbstractInt
 
 	private AuthenticatorClient logManger;
 	private String accessToken;
+	private String scopes;
 	private String sessionDataKeyConsent;
 	private String sessionDataKey;
 
@@ -106,6 +107,7 @@ public class OAuth2ServiceImplicitGrantTestCase extends OAuth2ServiceAbstractInt
 
 		setSystemproperties();
 		client = HttpClientBuilder.create().build();
+		scopes = "abc";
 	}
 
 	@AfterClass(alwaysRun = true)
@@ -135,6 +137,7 @@ public class OAuth2ServiceImplicitGrantTestCase extends OAuth2ServiceAbstractInt
 		urlParameters.add(new BasicNameValuePair("grantType",
 		                                         OAuth2Constant.OAUTH2_GRANT_TYPE_IMPLICIT));
 		urlParameters.add(new BasicNameValuePair("consumerKey", consumerKey));
+		urlParameters.add(new BasicNameValuePair("scope", scopes));
 		urlParameters.add(new BasicNameValuePair("callbackurl", OAuth2Constant.CALLBACK_URL));
 		urlParameters.add(new BasicNameValuePair("authorizeEndpoint", OAuth2Constant.APPROVAL_URL));
 		urlParameters.add(new BasicNameValuePair("authorize", OAuth2Constant.AUTHORIZE_PARAM));
@@ -214,7 +217,10 @@ public class OAuth2ServiceImplicitGrantTestCase extends OAuth2ServiceAbstractInt
 
 		accessToken = DataExtractUtil.extractParamFromURIFragment(locationHeader.getValue(),
 				OAuth2Constant.ACCESS_TOKEN);
+		String urlScopes = DataExtractUtil.extractParamFromURIFragment(locationHeader.getValue(),
+				OAuth2Constant.OAUTH2_SCOPE);
 		Assert.assertNotNull(accessToken, "Access token is null.");
+		Assert.assertEquals(urlScopes, scopes, "Scopes are not equal.");
 		EntityUtils.consume(response.getEntity());
 	}
 
