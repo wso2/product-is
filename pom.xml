@@ -2070,7 +2070,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.20.211</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.20.216</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2149,7 +2149,7 @@
         <provisioning.connector.scim.version>5.2.7</provisioning.connector.scim.version>
 
         <!-- Local Authenticator Versions -->
-        <identity.local.auth.basicauth.version>6.3.47</identity.local.auth.basicauth.version>
+        <identity.local.auth.basicauth.version>6.3.48</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.3.10</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.3.16</identity.local.auth.iwa.version>
 
