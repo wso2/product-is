@@ -177,6 +177,6 @@ public class IdPFailureTest extends IdPTestBase {
         // Test patch REMOVE operation for non-existent JWKS URI property.
         String body = readResource("patch-remove-jwks-uri.json");
         Response response = getResponseOfPatch(IDP_API_BASE_PATH + PATH_SEPARATOR + idPId, body);
-        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "IDP-65005", "JWKS URI");
+        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "IDP-65005", "JWKS URI");
     }
 }
