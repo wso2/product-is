@@ -1,0 +1,8 @@
+{
+  "advancedConfigurations": {
+    "certificate": {
+      "type": "JWKS",
+      "value": "test_jwks_uri"
+    }
+  }
+}
