@@ -18,11 +18,14 @@
 
 package org.wso2.identity.integration.test.rest.api.server.secret.management.v1;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
@@ -31,7 +34,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+import org.wso2.identity.integration.test.rest.api.server.secret.management.v1.model.SecretListResponse;
 
 import java.io.IOException;
 
@@ -44,8 +47,8 @@ import static org.testng.Assert.assertNotNull;
  */
 public class SecretManagementSuccessTest extends SecretManagementTestBase {
 
-    private String secretTypeName = "sample-secret-type";
     private String secretName = "sample-secret";
+    private String secretId;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public SecretManagementSuccessTest(TestUserMode userMode) throws Exception {
@@ -91,74 +94,10 @@ public class SecretManagementSuccessTest extends SecretManagementTestBase {
     }
 
     @Test
-    public void testAddSecretType() throws IOException {
-
-        if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            String body = readResource("add-secret-type.json");
-            Response response =
-                    getResponseOfPost(SECRET_TYPE_API_BASE_PATH, body);
-
-            response.then()
-                    .log().ifValidationFails()
-                    .assertThat()
-                    .statusCode(HttpStatus.SC_CREATED)
-                    .header(HttpHeaders.LOCATION, notNullValue());
-            String location = response.getHeader(HttpHeaders.LOCATION);
-            assertNotNull(location);
-            secretTypeName = location.substring(location.lastIndexOf("/") + 1);
-            assertNotNull(secretTypeName);
-        }
-    }
-
-    @Test(dependsOnMethods = {"testAddSecretType"})
-    public void testGetSecretType() throws IOException {
-
-        if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            Response response = getResponseOfGet(SECRET_TYPE_API_BASE_PATH + PATH_SEPARATOR + secretTypeName);
-            response.then()
-                    .log().ifValidationFails()
-                    .assertThat()
-                    .statusCode(HttpStatus.SC_OK)
-                    .body("name", equalTo(secretTypeName))
-                    .body("description", equalTo("sample secret type"));
-        }
-    }
-
-    @Test(dependsOnMethods = {"testGetSecretType"})
-    public void testUpdateSecretType() throws IOException {
-
-        if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            String body = readResource("update-secret-type.json");
-            Response response = getResponseOfPut(SECRET_TYPE_API_BASE_PATH + PATH_SEPARATOR + secretTypeName, body);
-
-            response.then()
-                    .log().ifValidationFails()
-                    .assertThat()
-                    .statusCode(HttpStatus.SC_OK)
-                    .body("name", equalTo(secretTypeName))
-                    .body("description", equalTo("updated secret type"));
-        }
-    }
-
-    @Test(dependsOnMethods = {"testUpdateSecretType"})
-    public void testDeleteSecretType() throws IOException {
-
-        if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            Response response =
-                    getResponseOfDelete(SECRET_TYPE_API_BASE_PATH + PATH_SEPARATOR + secretTypeName);
-            response.then()
-                    .log().ifValidationFails()
-                    .assertThat()
-                    .statusCode(HttpStatus.SC_NO_CONTENT);
-        }
-    }
-
-    @Test
     public void testAddSecret() throws IOException {
 
         String body = readResource("add-secret.json");
-        Response response =
-                getResponseOfPost(SECRET_API_BASE_PATH + PATH_SEPARATOR + SECRET_TYPE, body);
+        Response response = getResponseOfPost(SECRET_API_BASE_PATH, body);
 
         response.then()
                 .log().ifValidationFails()
@@ -167,18 +106,38 @@ public class SecretManagementSuccessTest extends SecretManagementTestBase {
                 .header(HttpHeaders.LOCATION, notNullValue());
         String location = response.getHeader(HttpHeaders.LOCATION);
         assertNotNull(location);
-        secretName = location.substring(location.lastIndexOf("/") + 1);
-        assertNotNull(secretName);
+        secretId = location.substring(location.lastIndexOf("/") + 1);
+        assertNotNull(secretId);
     }
 
     @Test(dependsOnMethods = {"testAddSecret"})
+    public void testGetAllSecrets() throws IOException {
+
+        Response response = getResponseOfGet(SECRET_API_BASE_PATH);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK);
+
+        ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+        SecretListResponse listResponse = jsonWriter.readValue(response.asString(), SecretListResponse.class);
+
+        assertNotNull(listResponse);
+        Assert.assertTrue(listResponse.getSecrets()
+                        .stream().
+                        anyMatch(secret -> secret.getSecretId().equals(secretId)),
+                "Created secret by the test suite is listed by the API");
+    }
+
+    @Test(dependsOnMethods = {"testGetAllSecrets"})
     public void testGetSecret() throws IOException {
 
-        Response response = getResponseOfGet(SECRET_API_BASE_PATH + PATH_SEPARATOR + SECRET_TYPE + PATH_SEPARATOR + secretName);
+        Response response = getResponseOfGet(SECRET_API_BASE_PATH + PATH_SEPARATOR + secretId);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
+                .body("secretId", equalTo(secretId))
                 .body("secretName", equalTo(secretName))
                 .body("description", equalTo("This is a sample secret"));
     }
@@ -187,22 +146,51 @@ public class SecretManagementSuccessTest extends SecretManagementTestBase {
     public void testUpdateSecret() throws IOException {
 
         String body = readResource("update-secret.json");
-        Response response = getResponseOfPut(SECRET_API_BASE_PATH + PATH_SEPARATOR + SECRET_TYPE + PATH_SEPARATOR + secretName, body);
+        Response response = getResponseOfPut(SECRET_API_BASE_PATH + PATH_SEPARATOR + secretId, body);
 
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
+                .body("secretId", equalTo(secretId))
                 .body("secretName", equalTo(secretName))
                 .body("description", equalTo("This is a updated sample secret"));
     }
 
     @Test(dependsOnMethods = {"testUpdateSecret"})
+    public void testPatchSecretValue() throws IOException {
+
+        String body = readResource("patch-secret-value.json");
+        Response response = getResponseOfPatch(SECRET_API_BASE_PATH + PATH_SEPARATOR + secretId, body);
+
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("secretId", equalTo(secretId))
+                .body("secretName", equalTo(secretName));
+    }
+
+    @Test(dependsOnMethods = {"testPatchSecretValue"})
+    public void testPatchSecretDescription() throws IOException {
+
+        String body = readResource("patch-secret-description.json");
+        Response response = getResponseOfPatch(SECRET_API_BASE_PATH + PATH_SEPARATOR + secretId, body);
+
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("secretId", equalTo(secretId))
+                .body("secretName", equalTo(secretName))
+                .body("description", equalTo("This is a updated description through patch"));
+    }
+
+    @Test(dependsOnMethods = {"testPatchSecretDescription"})
     public void testDeleteSecret() throws IOException {
 
         Response response =
-                getResponseOfDelete(SECRET_API_BASE_PATH + PATH_SEPARATOR + SECRET_TYPE +
-                        PATH_SEPARATOR + secretName);
+                getResponseOfDelete(SECRET_API_BASE_PATH + PATH_SEPARATOR + secretId);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()

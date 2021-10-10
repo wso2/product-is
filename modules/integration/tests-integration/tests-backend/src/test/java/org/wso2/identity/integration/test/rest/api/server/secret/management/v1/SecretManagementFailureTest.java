@@ -31,7 +31,6 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import java.io.IOException;
 
@@ -43,8 +42,10 @@ import static org.testng.Assert.assertNotNull;
  */
 public class SecretManagementFailureTest extends SecretManagementTestBase {
 
-    private String secretTypeName = "sample-secret-type";
-    private String secretName = "sample-secret";
+    public static final String INCORRECT_SECRET_TYPE = "INCORRECT_TYPE";
+    public static final String SECRET_API_INCORRECT_BASE_PATH = "/secret-mgt/types/"
+            + INCORRECT_SECRET_TYPE + "/secrets";
+    private String secretId;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public SecretManagementFailureTest(TestUserMode userMode) throws Exception {
@@ -90,64 +91,17 @@ public class SecretManagementFailureTest extends SecretManagementTestBase {
     }
 
     @Test
-    public void testAddSecretTypeConflict() throws IOException {
+    public void testGetSecretsByInvalidTypeName() {
 
-        if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            String body = readResource("add-secret-type.json");
-            Response response =
-                    getResponseOfPost(SECRET_TYPE_API_BASE_PATH, body);
-
-            response.then()
-                    .log().ifValidationFails()
-                    .assertThat()
-                    .statusCode(HttpStatus.SC_CREATED)
-                    .header(HttpHeaders.LOCATION, notNullValue());
-            String location = response.getHeader(HttpHeaders.LOCATION);
-            assertNotNull(location);
-            secretTypeName = location.substring(location.lastIndexOf("/") + 1);
-            assertNotNull(secretTypeName);
-            response = getResponseOfPost(SECRET_TYPE_API_BASE_PATH, body);
-            validateErrorResponse(response, HttpStatus.SC_CONFLICT, "SECRETM_00019");
-        }
-    }
-
-    @Test
-    public void testGetSecretTypeByInvalidName() {
-
-        Response response = getResponseOfGet(SECRET_TYPE_API_BASE_PATH + PATH_SEPARATOR + "randomName");
-
-        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "SECRETM_00021");
-    }
-
-    @Test
-    public void testUpdateSecretTypeByInvalidName() throws IOException {
-
-        if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            String body = readResource("update-secret-type.json");
-            Response response = getResponseOfPut(
-                    SECRET_TYPE_API_BASE_PATH + PATH_SEPARATOR + "randomName", body);
-
-            validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "SECRETM_00021");
-        }
-    }
-
-    @Test
-    public void testDeleteSecretTypeByInvalidName() {
-
-        if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            Response response = getResponseOfDelete(
-                    SECRET_TYPE_API_BASE_PATH + PATH_SEPARATOR + "randomName");
-
-            validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "SECRETM_00021");
-        }
+        Response response = getResponseOfGet(SECRET_API_INCORRECT_BASE_PATH);
+        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "SECRETM_00019");
     }
 
     @Test
     public void testAddSecretConflict() throws IOException {
 
         String body = readResource("add-secret.json");
-        Response response =
-                getResponseOfPost(SECRET_API_BASE_PATH + PATH_SEPARATOR + SECRET_TYPE, body);
+        Response response = getResponseOfPost(SECRET_API_BASE_PATH, body);
 
         response.then()
                 .log().ifValidationFails()
@@ -156,9 +110,10 @@ public class SecretManagementFailureTest extends SecretManagementTestBase {
                 .header(HttpHeaders.LOCATION, notNullValue());
         String location = response.getHeader(HttpHeaders.LOCATION);
         assertNotNull(location);
-        secretName = location.substring(location.lastIndexOf("/") + 1);
-        assertNotNull(secretName);
-        response = getResponseOfPost(SECRET_API_BASE_PATH + PATH_SEPARATOR + SECRET_TYPE, body);
+        secretId = location.substring(location.lastIndexOf("/") + 1);
+        assertNotNull(secretId);
+
+        response = getResponseOfPost(SECRET_API_BASE_PATH, body);
         validateErrorResponse(response, HttpStatus.SC_CONFLICT, "SECRETM_00006");
     }
 
@@ -166,38 +121,104 @@ public class SecretManagementFailureTest extends SecretManagementTestBase {
     public void testAddSecretWithNonExistingSecretTypeName() throws IOException {
 
         String body = readResource("add-secret.json");
-        Response response =
-                getResponseOfPost(SECRET_API_BASE_PATH + PATH_SEPARATOR + "EMAIL_SENDERS_PATH", body);
+        Response response = getResponseOfPost(SECRET_API_INCORRECT_BASE_PATH, body);
 
-        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "SECRETM_00021");
+        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "SECRETM_00019");
     }
 
     @Test
-    public void testGetSecretByNonExistingSecretName() {
+    public void testGetSecretByNonExistingSecretTypeName() {
 
         Response response = getResponseOfGet(
-                SECRET_API_BASE_PATH + PATH_SEPARATOR + SECRET_TYPE + PATH_SEPARATOR + "randomName");
+                SECRET_API_INCORRECT_BASE_PATH + PATH_SEPARATOR + secretId);
 
-        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "SECRETM_00009");
+        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "SECRETM_00019");
     }
 
     @Test
-    public void testUpdateSecretByNonExistingSecretName() throws IOException {
+    public void testGetSecretByNonExistingSecretId() {
+
+        Response response = getResponseOfGet(SECRET_API_BASE_PATH
+                + PATH_SEPARATOR + "0273-2933-2132-3321");
+
+        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "SECRETM_00013");
+    }
+
+    @Test
+    public void testUpdateSecretByNonExistingSecretTypeName() throws IOException {
 
         String body = readResource("update-secret.json");
         Response response = getResponseOfPut(
-                SECRET_API_BASE_PATH + PATH_SEPARATOR + SECRET_TYPE + PATH_SEPARATOR + "randomName", body);
+                SECRET_API_INCORRECT_BASE_PATH + PATH_SEPARATOR + secretId, body);
 
-        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "SECRETM_00009");
+        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "SECRETM_00019");
     }
 
     @Test
-    public void testDeleteSecretByNonExistingSecretName() {
+    public void testUpdateSecretByNonExistingSecretId() throws IOException {
 
-        Response response = getResponseOfDelete(
-                SECRET_API_BASE_PATH + PATH_SEPARATOR + SECRET_TYPE + PATH_SEPARATOR + "randomName");
+        String body = readResource("update-secret.json");
+        Response response = getResponseOfPut(
+                SECRET_API_BASE_PATH + PATH_SEPARATOR + "0273-2933-2132-3321", body);
 
-        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "SECRETM_00009");
+        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "SECRETM_00013");
     }
 
+    @Test
+    public void testPatchSecretValueByNonExistingSecretTypeName() throws IOException {
+
+        String body = readResource("patch-secret-value.json");
+        Response response = getResponseOfPatch(
+                SECRET_API_INCORRECT_BASE_PATH + PATH_SEPARATOR + secretId, body);
+
+        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "SECRETM_00019");
+    }
+
+    @Test
+    public void testPatchSecretValueByNonExistingSecretId() throws IOException {
+
+        String body = readResource("patch-secret-value.json");
+        Response response = getResponseOfPatch(
+                SECRET_API_BASE_PATH + PATH_SEPARATOR + "0273-2933-2132-3321", body);
+
+        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "SECRETM_00013");
+    }
+
+    @Test
+    public void testPatchSecretDescriptionByNonExistingSecretTypeName() throws IOException {
+
+        String body = readResource("patch-secret-description.json");
+        Response response = getResponseOfPatch(
+                SECRET_API_INCORRECT_BASE_PATH + PATH_SEPARATOR + secretId, body);
+
+        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "SECRETM_00019");
+    }
+
+    @Test
+    public void testPatchSecretDescriptionByNonExistingSecretId() throws IOException {
+
+        String body = readResource("patch-secret-description.json");
+        Response response = getResponseOfPatch(
+                SECRET_API_BASE_PATH + PATH_SEPARATOR + "0273-2933-2132-3321", body);
+
+        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "SECRETM_00013");
+    }
+
+    @Test
+    public void testDeleteSecretByNonExistingSecretTypeName() {
+
+        Response response = getResponseOfDelete(
+                SECRET_API_INCORRECT_BASE_PATH + PATH_SEPARATOR + secretId);
+
+        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "SECRETM_00019");
+    }
+
+    @Test
+    public void testDeleteSecretByNonExistingSecretId() {
+
+        Response response = getResponseOfDelete(
+                SECRET_API_BASE_PATH + PATH_SEPARATOR + "0273-2933-2132-3321");
+
+        validateHttpStatusCode(response, HttpStatus.SC_NO_CONTENT);
+    }
 }

@@ -36,10 +36,9 @@ public class SecretManagementTestBase extends RESTAPIServerTestBase {
     public static final String API_DEFINITION_NAME = "secretManager.yaml";
     public static final String API_VERSION = "v1";
     public static final String API_PACKAGE_NAME = "org.wso2.carbon.identity.api.server.secret.management.v1";
-    public static final String SECRET_TYPE_API_BASE_PATH = "/secret-type";
-    public static final String SECRET_API_BASE_PATH = "/secrets";
+    public static final String SECRET_TYPE = "ADAPTIVE_AUTH";
     public static final String PATH_SEPARATOR = "/";
-    public static final String SECRET_TYPE = "ADAPTIVE_AUTH_CALL_CHOREO";
+    public static final String SECRET_API_BASE_PATH = "/secret-mgt/types/" + SECRET_TYPE + "/secrets";
 
     protected static String swaggerDefinition;
 
