@@ -100,7 +100,7 @@ public class SecretManagementFailureTest extends SecretManagementTestBase {
     @Test
     public void testAddSecretConflict() throws IOException {
 
-        String body = readResource("add-secret.json");
+        String body = readResource("add-secret-2.json");
         Response response = getResponseOfPost(SECRET_API_BASE_PATH, body);
 
         response.then()
@@ -126,7 +126,7 @@ public class SecretManagementFailureTest extends SecretManagementTestBase {
         validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "SECRETM_00019");
     }
 
-    @Test
+    @Test(dependsOnMethods = {"testAddSecretConflict"})
     public void testGetSecretByNonExistingSecretTypeName() {
 
         Response response = getResponseOfGet(
@@ -144,7 +144,7 @@ public class SecretManagementFailureTest extends SecretManagementTestBase {
         validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "SECRETM_00013");
     }
 
-    @Test
+    @Test(dependsOnMethods = {"testAddSecretConflict"})
     public void testUpdateSecretByNonExistingSecretTypeName() throws IOException {
 
         String body = readResource("update-secret.json");
@@ -164,7 +164,7 @@ public class SecretManagementFailureTest extends SecretManagementTestBase {
         validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "SECRETM_00013");
     }
 
-    @Test
+    @Test(dependsOnMethods = {"testAddSecretConflict"})
     public void testPatchSecretValueByNonExistingSecretTypeName() throws IOException {
 
         String body = readResource("patch-secret-value.json");
@@ -184,7 +184,7 @@ public class SecretManagementFailureTest extends SecretManagementTestBase {
         validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "SECRETM_00013");
     }
 
-    @Test
+    @Test(dependsOnMethods = {"testAddSecretConflict"})
     public void testPatchSecretDescriptionByNonExistingSecretTypeName() throws IOException {
 
         String body = readResource("patch-secret-description.json");
@@ -204,7 +204,7 @@ public class SecretManagementFailureTest extends SecretManagementTestBase {
         validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "SECRETM_00013");
     }
 
-    @Test
+    @Test(dependsOnMethods = {"testAddSecretConflict"})
     public void testDeleteSecretByNonExistingSecretTypeName() {
 
         Response response = getResponseOfDelete(
