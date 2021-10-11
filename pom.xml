@@ -2184,7 +2184,7 @@
         <identity.app.authz.xacml.version>2.2.4</identity.app.authz.xacml.version>
         <identity.oauth.addons.version>2.4.2</identity.oauth.addons.version>
         <org.wso2.carbon.extension.identity.x509certificate.version>1.0.15</org.wso2.carbon.extension.identity.x509certificate.version>
-        <conditional.authentication.functions.version>1.1.21</conditional.authentication.functions.version>
+        <conditional.authentication.functions.version>1.1.22</conditional.authentication.functions.version>
         <carbon.identity.oauth.uma.version>1.3.7</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
