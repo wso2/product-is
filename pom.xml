@@ -2092,7 +2092,7 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.8.48</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.7.69</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.7.70</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.6.5</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.6.14</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.6.8</identity.inbound.provisioning.scim.version>
@@ -2146,7 +2146,7 @@
         <!-- Provisioning connector Versions -->
         <provisioning.connector.google.version>5.1.12</provisioning.connector.google.version>
         <provisioning.connector.salesforce.version>5.1.10</provisioning.connector.salesforce.version>
-        <provisioning.connector.scim.version>5.2.7</provisioning.connector.scim.version>
+        <provisioning.connector.scim.version>5.2.8</provisioning.connector.scim.version>
 
         <!-- Local Authenticator Versions -->
         <identity.local.auth.basicauth.version>6.3.49</identity.local.auth.basicauth.version>
@@ -2188,7 +2188,7 @@
         <carbon.identity.oauth.uma.version>1.3.7</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.2.667</identity.apps.version>
+        <identity.apps.version>1.2.671</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
