@@ -42,18 +42,14 @@ import static org.wso2.carbon.automation.engine.context.TestUserMode.SUPER_TENAN
  * Test class for authorized apps application REST APIs success paths.
  */
 public class ApplicationAuthorizedAppsSuccessTest extends UserAuthorizedAppsBaseTest {
+
     private String clientIdApp1;
-    private String clientIdApp2;
     private String appName1;
-    private String appName2;
     private String appId1;
-    private String appId2;
     private static final String APP_ID_PREFIX = "CLIENT_";
     private static final String APP_NAME_PREFIX = "APP_";
     private static final String APP_ID_SUFFIX_1 = "_1";
-    private static final String APP_ID_SUFFIX_2 = "_2";
     private static final String CLIENT_SECRET = "TEST_CLIENT_SECRET";
-
 
     @BeforeClass(alwaysRun = true)
     public void init() throws XPathExpressionException, RemoteException {
@@ -61,9 +57,7 @@ public class ApplicationAuthorizedAppsSuccessTest extends UserAuthorizedAppsBase
         super.testInit(API_VERSION, swaggerDefinition, tenant);
         initUrls("me");
         registerApplication(appName1, clientIdApp1, CLIENT_SECRET);
-        registerApplication(appName2, clientIdApp2, CLIENT_SECRET);
         getTokenFromPasswordGrant(clientIdApp1, CLIENT_SECRET);
-        getTokenFromPasswordGrant(clientIdApp2, CLIENT_SECRET);
     }
 
     @BeforeMethod(alwaysRun = true)
@@ -77,7 +71,6 @@ public class ApplicationAuthorizedAppsSuccessTest extends UserAuthorizedAppsBase
 
         RestAssured.basePath = StringUtils.EMPTY;
     }
-
 
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
@@ -98,9 +91,7 @@ public class ApplicationAuthorizedAppsSuccessTest extends UserAuthorizedAppsBase
         this.tenant = context.getContextTenant().getDomain();
 
         this.clientIdApp1 = APP_ID_PREFIX + userMode + APP_ID_SUFFIX_1;
-        this.clientIdApp2 = APP_ID_PREFIX + userMode + APP_ID_SUFFIX_2;
         this.appName1 = APP_NAME_PREFIX + userMode + APP_ID_SUFFIX_1;
-        this.appName2 = APP_NAME_PREFIX + userMode + APP_ID_SUFFIX_2;
     }
 
     @Test
@@ -115,9 +106,6 @@ public class ApplicationAuthorizedAppsSuccessTest extends UserAuthorizedAppsBase
         for (HashMap application : jresponse) {
             if (this.appName1.equals(application.get("name"))) {
                 this.appId1 = (String) application.get("id");
-            }
-            if (this.appName2.equals(application.get("name"))) {
-                this.appId2 = (String) application.get("id");
             }
         }
     }
@@ -138,7 +126,6 @@ public class ApplicationAuthorizedAppsSuccessTest extends UserAuthorizedAppsBase
     public void testConclude() throws Exception {
 
         deleteApplication(clientIdApp1);
-        deleteApplication(clientIdApp2);
         super.conclude();
     }
 }
