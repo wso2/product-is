@@ -73,7 +73,7 @@ jobs:
 
     # HtmlUnitDriver used by the conformance suite will throw JS errors when trying to load the login page. 
     # Skipping these errors before testing as a temporary solution to this issue.
-    - name: Add configs to conformance suite
+    - name: Suppress JS errors thrown by HtmlUnitDriver used by the conformance suite
       run: sed -i '/^\t\t\tclient.setCookieManager(cookieManager);.*/a \\t\t\tclient.getOptions().setThrowExceptionOnScriptError(false);' ./conformance-suite/src/main/java/net/openid/conformance/frontchannel/BrowserControl.java
          
     - name: Run IS
