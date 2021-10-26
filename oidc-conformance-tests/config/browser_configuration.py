@@ -29,7 +29,7 @@ CONFIG = {
                             [
                                 "text",
                                 "id",
-                                "usernameUserInput",
+                                "username",
                                 "admin"
                             ],
                             [
@@ -72,7 +72,7 @@ CONFIG = {
                                     [
                                         "text",
                                         "id",
-                                        "usernameUserInput",
+                                        "username",
                                         "admin"
                                     ],
                                     [
@@ -193,7 +193,7 @@ CONFIG = {
                                     [
                                         "text",
                                         "id",
-                                        "usernameUserInput",
+                                        "username",
                                         "admin"
                                     ],
                                     [
@@ -274,7 +274,7 @@ CONFIG = {
                                     [
                                         "text",
                                         "id",
-                                        "usernameUserInput",
+                                        "username",
                                         "admin"
                                     ],
                                     [
@@ -349,7 +349,7 @@ CONFIG = {
                             [
                                 "text",
                                 "id",
-                                "usernameUserInput",
+                                "username",
                                 "admin"
                             ],
                             [
@@ -392,7 +392,7 @@ CONFIG = {
                                     [
                                         "text",
                                         "id",
-                                        "usernameUserInput",
+                                        "username",
                                         "admin"
                                     ],
                                     [
@@ -459,7 +459,7 @@ CONFIG = {
                                     [
                                         "text",
                                         "id",
-                                        "usernameUserInput",
+                                        "username",
                                         "admin"
                                     ],
                                     [
@@ -580,7 +580,7 @@ CONFIG = {
                                     [
                                         "text",
                                         "id",
-                                        "usernameUserInput",
+                                        "username",
                                         "admin"
                                     ],
                                     [
@@ -661,7 +661,7 @@ CONFIG = {
                                     [
                                         "text",
                                         "id",
-                                        "usernameUserInput",
+                                        "username",
                                         "admin"
                                     ],
                                     [
@@ -736,7 +736,7 @@ CONFIG = {
                             [
                                 "text",
                                 "id",
-                                "usernameUserInput",
+                                "username",
                                 "admin"
                             ],
                             [
@@ -779,7 +779,7 @@ CONFIG = {
                                     [
                                         "text",
                                         "id",
-                                        "usernameUserInput",
+                                        "username",
                                         "admin"
                                     ],
                                     [
@@ -846,7 +846,7 @@ CONFIG = {
                                     [
                                         "text",
                                         "id",
-                                        "usernameUserInput",
+                                        "username",
                                         "admin"
                                     ],
                                     [
@@ -967,7 +967,7 @@ CONFIG = {
                                     [
                                         "text",
                                         "id",
-                                        "usernameUserInput",
+                                        "username",
                                         "admin"
                                     ],
                                     [
@@ -1048,7 +1048,7 @@ CONFIG = {
                                     [
                                         "text",
                                         "id",
-                                        "usernameUserInput",
+                                        "username",
                                         "admin"
                                     ],
                                     [
@@ -1123,7 +1123,7 @@ CONFIG = {
                             [
                                 "text",
                                 "id",
-                                "usernameUserInput",
+                                "username",
                                 "admin"
                             ],
                             [
@@ -1150,7 +1150,7 @@ CONFIG = {
                         "tasks": [
                             {
                                 "task": "Verify error page",
-                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback?error*"
+                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback"
                             }
                         ]
                     }
@@ -1182,7 +1182,7 @@ CONFIG = {
                                     [
                                         "text",
                                         "id",
-                                        "usernameUserInput",
+                                        "username",
                                         "admin"
                                     ],
                                     [
@@ -1293,7 +1293,7 @@ CONFIG = {
                                     [
                                         "text",
                                         "id",
-                                        "usernameUserInput",
+                                        "username",
                                         "admin"
                                     ],
                                     [
@@ -1334,7 +1334,7 @@ CONFIG = {
                                     [
                                         "text",
                                         "id",
-                                        "usernameUserInput",
+                                        "username",
                                         "admin"
                                     ],
                                     [
@@ -1369,7 +1369,7 @@ CONFIG = {
                             [
                                 "text",
                                 "id",
-                                "usernameUserInput",
+                                "username",
                                 "admin"
                             ],
                             [
@@ -1396,7 +1396,7 @@ CONFIG = {
                         "tasks": [
                             {
                                 "task": "Verify error page",
-                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback#error*"
+                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback"
                             }
                         ]
                     }
@@ -1428,7 +1428,7 @@ CONFIG = {
                                     [
                                         "text",
                                         "id",
-                                        "usernameUserInput",
+                                        "username",
                                         "admin"
                                     ],
                                     [
@@ -1538,7 +1538,7 @@ CONFIG = {
                                     [
                                         "text",
                                         "id",
-                                        "usernameUserInput",
+                                        "username",
                                         "admin"
                                     ],
                                     [
@@ -1579,7 +1579,7 @@ CONFIG = {
                                     [
                                         "text",
                                         "id",
-                                        "usernameUserInput",
+                                        "username",
                                         "admin"
                                     ],
                                     [
@@ -1614,7 +1614,7 @@ CONFIG = {
                             [
                                 "text",
                                 "id",
-                                "usernameUserInput",
+                                "username",
                                 "admin"
                             ],
                             [
@@ -1641,7 +1641,7 @@ CONFIG = {
                         "tasks": [
                             {
                                 "task": "Verify error page",
-                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback#error*"
+                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback"
                             }
                         ]
                     }
@@ -1673,7 +1673,7 @@ CONFIG = {
                                     [
                                         "text",
                                         "id",
-                                        "usernameUserInput",
+                                        "username",
                                         "admin"
                                     ],
                                     [
@@ -1807,7 +1807,7 @@ CONFIG = {
                                     [
                                         "text",
                                         "id",
-                                        "usernameUserInput",
+                                        "username",
                                         "admin"
                                     ],
                                     [
@@ -1848,7 +1848,7 @@ CONFIG = {
                                     [
                                         "text",
                                         "id",
-                                        "usernameUserInput",
+                                        "username",
                                         "admin"
                                     ],
                                     [

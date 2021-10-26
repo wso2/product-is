@@ -247,14 +247,6 @@ def unpack_and_run(zip_file_name):
             print("Extracting " + zip_file_name)
             zip_file.extractall()
 
-        # HtmlUnit web browser used by the conformance suite will throw a JQuery not defined error
-        # when trying to load oauth_response.html page.
-        # Deleting oauth_response.html file before testing as a temporary solution to this issue
-        print(zip_file_name)
-        match = re.search('\.\./\.\./(.*)\.zip', zip_file_name)
-        product_is_folder_name = match.group(1)
-        os.system("rm -rf ./" + product_is_folder_name + "/repository/resources/identity/pages/oauth_response.html")
-
         dir_name = ''
         # start identity server
         print("\nStarting Server")

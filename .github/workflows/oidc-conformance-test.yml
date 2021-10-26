@@ -65,12 +65,17 @@ jobs:
       
     - name: Clone conformance suite
       run: |
-        CONFORMANCE_SUITE_VERSION=v4.1.8
+        CONFORMANCE_SUITE_VERSION=v4.1.29
         git clone --depth 1 --branch release-${CONFORMANCE_SUITE_VERSION} https://github.com/openid-certification/conformance-suite.git
-         
+    
     - name: Adding extra hosts to docker-compose-dev.yml
       run: sed -i '/^    volumes.*/i \ \ \ \ extra_hosts:\n \ \ \ \ - "localhost:\$IP\"' ./conformance-suite/docker-compose-dev.yml
-        
+
+    # HtmlUnitDriver used by the conformance suite will throw JS errors when trying to load the login page. 
+    # Skipping these errors before testing as a temporary solution to this issue.
+    - name: Suppress JS errors thrown by HtmlUnitDriver used by the conformance suite
+      run: sed -i '/^\t\t\tclient.setCookieManager(cookieManager);.*/a \\t\t\tclient.getOptions().setThrowExceptionOnScriptError(false);' ./conformance-suite/src/main/java/net/openid/conformance/frontchannel/BrowserControl.java
+         
     - name: Run IS
       run: |
         PRODUCT_IS_ZIP=$(find ./ -name wso2is* -type f -printf "%f\n")
