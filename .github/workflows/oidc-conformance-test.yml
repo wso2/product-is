@@ -71,7 +71,8 @@ jobs:
     - name: Adding extra hosts to docker-compose-dev.yml
       run: sed -i '/^    volumes.*/i \ \ \ \ extra_hosts:\n \ \ \ \ - "localhost:\$IP\"' ./conformance-suite/docker-compose-dev.yml
 
-    # HtmlUnitDriver used by the conformance suite will throw JS errors when trying to load the login page. Skipping these errors before testing as a temporary solution to this issue.
+    # HtmlUnitDriver used by the conformance suite will throw JS errors when trying to load the login page. 
+    # Skipping these errors before testing as a temporary solution to this issue.
     - name: Add configs to conformance suite
       run: sed -i '/^\t\t\tclient.setCookieManager(cookieManager);.*/a \\t\t\tclient.getOptions().setThrowExceptionOnScriptError(false);' ./conformance-suite/src/main/java/net/openid/conformance/frontchannel/BrowserControl.java
          
