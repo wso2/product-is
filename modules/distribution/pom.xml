@@ -417,9 +417,6 @@
 
                                 <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/registry.xml" token="&lt;versioningRatings&gt;true&lt;/versioningRatings&gt;" value="&lt;versioningRatings&gt;false&lt;/versioningRatings&gt;" />
 
-                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/tomcat/carbon/WEB-INF/web.xml.j2" />
-                                <delete dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/tomcat/carbon/WEB-INF/" />
-
                                 <!-- Add org.wso2.carbon.identity.entitlement.policy.finder.registry.RegistryPolicyHandler to IS -->
 
                                 <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/registry.xml" token="&lt;!--&lt;handler class=&quot;org.wso2.carbon.registry.extensions.handlers.SynapseRepositoryHandler&quot;&gt;" value="${registryPolicyHandler}" />
