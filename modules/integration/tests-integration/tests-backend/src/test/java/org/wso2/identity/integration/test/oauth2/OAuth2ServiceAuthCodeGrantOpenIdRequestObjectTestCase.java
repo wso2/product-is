@@ -183,7 +183,8 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
         urlParameters.add(new BasicNameValuePair("authorizeEndpoint", OAuth2Constant.APPROVAL_URL
                 + "?request=" + REQUEST));
         urlParameters.add(new BasicNameValuePair("authorize", OAuth2Constant.AUTHORIZE_PARAM));
-        urlParameters.add(new BasicNameValuePair("scope", OAuth2Constant.OAUTH2_SCOPE_OPENID));
+        urlParameters.add(new BasicNameValuePair("scope", OAuth2Constant.OAUTH2_SCOPE_OPENID + " " +
+                OAuth2Constant.OAUTH2_SCOPE_EMAIL + " " + OAuth2Constant.OAUTH2_SCOPE_PROFILE));
 
         HttpResponse response =
                 sendPostRequestWithParameters(client, urlParameters,
@@ -323,14 +324,13 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
         Object obj = JSONValue.parse(rd);
         String email = ((org.json.simple.JSONObject) obj).get("email").toString();
         String givenName = ((org.json.simple.JSONObject) obj).get("given_name").toString();
-        Object externalClaim1 = ((org.json.simple.JSONObject) obj).get("externalClaim1");
-        Object externalClaim2 = ((org.json.simple.JSONObject) obj).get("externalClaim2");
 
         EntityUtils.consume(response.getEntity());
         Assert.assertEquals(USER_EMAIL, email, "Incorrect email claim value");
         Assert.assertEquals(GIVEN_NAME, givenName, "Incorrect given_name claim value");
-        Assert.assertEquals(CUSTOM_CLAIM1, externalClaim1, "Incorrect externalClaim1 claim value");
-        Assert.assertNull(externalClaim2, "A value for externalClaim2 claim is present in the response.");
+        // externalClaim1 and externalClaim2 are not included in the requested scopes.
+        Assert.assertNull(((org.json.simple.JSONObject) obj).get("externalClaim1"));
+        Assert.assertNull(((org.json.simple.JSONObject) obj).get("externalClaim2"));
     }
 
     @Test(groups = "wso2.is", description = "Validate Token Expiration Time",
