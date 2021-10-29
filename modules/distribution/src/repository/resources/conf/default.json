@@ -38,5 +38,38 @@
   "authorization_manager.properties.GroupAndRoleSeparationEnabled": "true",
   "authorization_manager.properties.GroupAndRoleSeparationImprovementsEnabled": "true",
 
-  "user_store.properties.UsernameJavaScriptRegEx": "^[\\S]{3,50}$"
+  "user_store.properties.UsernameJavaScriptRegEx": "^[\\S]{3,50}$",
+
+  "http_header_security_filter.hsts.enabled": false,
+  "http_header_security_filter.anti_click_jacking.enabled": false,
+  "http_header_security_filter.anti_click_jacking.hsts.enabled": false,
+  "http_header_security_filter.anti_click_jacking.block_content_type_sniffing.enabled": false,
+  "http_header_security_filter.anti_click_jacking.xss_protection.enabled": false,
+  "http_header_security_filter.anti_click_jacking.urls": [
+    "/carbon/*",
+    "/services/*",
+    "/samlsso/*",
+    "/openid/*",
+    "/openidserver/*",
+    "/passivests/*",
+    "/acs/*",
+    "/iwa/*",
+    "/identity/*",
+    "/thriftAuthenticator/*"
+  ],
+
+  "tomcat.session_config.error_page.error_400": "/carbon/errors/error_400.html",
+  "tomcat.session_config.error_page.error_401": "/carbon/errors/error_401.html",
+  "tomcat.session_config.error_page.error_403": "/carbon/errors/error_403.html",
+  "tomcat.session_config.error_page.error_404": "/carbon/errors/error_404.html",
+  "tomcat.session_config.error_page.error_405": "/carbon/errors/error_405.html",
+  "tomcat.session_config.error_page.error_408": "/carbon/errors/error_408.html",
+  "tomcat.session_config.error_page.error_410": "/carbon/errors/error_410.html",
+  "tomcat.session_config.error_page.error_500": "/carbon/errors/error_500.html",
+  "tomcat.session_config.error_page.error_502": "/carbon/errors/error_502.html",
+  "tomcat.session_config.error_page.error_503": "/carbon/errors/error_503.html",
+  "tomcat.session_config.error_page.error_504": "/carbon/errors/error_504.html",
+  "tomcat.session_config.error_page.error_default": "/carbon/errors/error.html",
+  "tomcat.session_config.cookie_config.secure" : true,
+  "tomcat.session_config.tracking_mode" : "COOKIE"
 }
