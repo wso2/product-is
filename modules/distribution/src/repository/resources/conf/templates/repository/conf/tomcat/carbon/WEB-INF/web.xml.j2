@@ -133,7 +133,6 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-
     <!-- OWASP CSRFGuard context listener used to read CSRF configuration -->
     <listener>
         <listener-class>org.owasp.csrfguard.CsrfGuardServletContextListener</listener-class>
@@ -153,7 +152,6 @@
     </session-config>
 
     <!-- custom error pages -->
-
     {% for error_page in tomcat.session_config.custom_error_pages %}
     <error-page>
         {% if error_page.code is defined %}
