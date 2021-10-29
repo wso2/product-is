@@ -139,6 +139,7 @@
                 <exclude>*.validator.json</exclude>
                 <exclude>*.key-mappings.json</exclude>
                 <exclude>*.unit-resolve.json</exclude>
+                <exclude>**/carbon/WEB-INF/web.xml.j2</exclude>
             </excludes>
         </fileSet>
 
