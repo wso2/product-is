@@ -47,7 +47,7 @@ import static org.testng.Assert.assertNotNull;
  */
 public class SecretManagementSuccessTest extends SecretManagementTestBase {
 
-    private String secretName = "sample-secret";
+    private final String secretName = "sample-secret";
     private String secretId;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
