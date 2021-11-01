@@ -39,7 +39,7 @@ jobs:
     
     - name: Setup Python
       run: |
-        pip3 install --upgrade pip setuptools wheel
+        python3 -m pip install --upgrade pip setuptools wheel
         pip3 install psutil
         
     - name: Download IS zip
