@@ -2070,7 +2070,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.20.245</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.20.246</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2092,8 +2092,8 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.8.50</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.7.81</identity.inbound.auth.oauth.version>
-        <identity.inbound.auth.openid.version>5.6.5</identity.inbound.auth.openid.version>
+        <identity.inbound.auth.oauth.version>6.7.82</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.openid.version>5.6.6</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.6.14</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.6.8</identity.inbound.provisioning.scim.version>
         <identity.inbound.provisioning.scim2.version>1.5.123</identity.inbound.provisioning.scim2.version>
@@ -2149,7 +2149,7 @@
         <provisioning.connector.scim.version>5.2.8</provisioning.connector.scim.version>
 
         <!-- Local Authenticator Versions -->
-        <identity.local.auth.basicauth.version>6.3.49</identity.local.auth.basicauth.version>
+        <identity.local.auth.basicauth.version>6.3.50</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.3.12</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.3.16</identity.local.auth.iwa.version>
 
@@ -2188,7 +2188,7 @@
         <carbon.identity.oauth.uma.version>1.3.7</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.2.704</identity.apps.version>
+        <identity.apps.version>1.2.705</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
