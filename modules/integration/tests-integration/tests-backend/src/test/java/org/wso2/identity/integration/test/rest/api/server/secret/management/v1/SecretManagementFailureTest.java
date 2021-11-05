@@ -114,7 +114,7 @@ public class SecretManagementFailureTest extends SecretManagementTestBase {
         assertNotNull(secretId);
 
         response = getResponseOfPost(SECRET_API_BASE_PATH, body);
-        validateErrorResponse(response, HttpStatus.SC_CONFLICT, "SECRETM_00006");
+        validateErrorResponse(response, HttpStatus.SC_CONFLICT, "SECRETM_60006");
     }
 
     @Test
@@ -161,7 +161,7 @@ public class SecretManagementFailureTest extends SecretManagementTestBase {
         Response response = getResponseOfPut(
                 SECRET_API_BASE_PATH + PATH_SEPARATOR + "0273-2933-2132-3321", body);
 
-        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "SECRETM_00013");
+        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "SECRETM_60003");
     }
 
     @Test(dependsOnMethods = {"testAddSecretConflict"})
@@ -181,7 +181,7 @@ public class SecretManagementFailureTest extends SecretManagementTestBase {
         Response response = getResponseOfPatch(
                 SECRET_API_BASE_PATH + PATH_SEPARATOR + "0273-2933-2132-3321", body);
 
-        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "SECRETM_00013");
+        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "SECRETM_60003");
     }
 
     @Test(dependsOnMethods = {"testAddSecretConflict"})
@@ -201,7 +201,7 @@ public class SecretManagementFailureTest extends SecretManagementTestBase {
         Response response = getResponseOfPatch(
                 SECRET_API_BASE_PATH + PATH_SEPARATOR + "0273-2933-2132-3321", body);
 
-        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "SECRETM_00013");
+        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "SECRETM_60003");
     }
 
     @Test(dependsOnMethods = {"testAddSecretConflict"})
