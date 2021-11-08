@@ -2160,10 +2160,10 @@
         <identity.oauth2.jwt.bearer.grant.version>2.0.4</identity.oauth2.jwt.bearer.grant.version>
 
         <!--SAML Metadata-->
-        <identity.metadata.saml.version>1.4.10</identity.metadata.saml.version>
+        <identity.metadata.saml.version>1.4.11</identity.metadata.saml.version>
 
         <!-- Connector Versions -->
-        <authenticator.totp.version>3.0.21</authenticator.totp.version>
+        <authenticator.totp.version>3.0.22</authenticator.totp.version>
         <authenticator.office365.version>2.0.5</authenticator.office365.version>
         <authenticator.smsotp.version>3.0.17</authenticator.smsotp.version>
         <authenticator.emailotp.version>4.0.6</authenticator.emailotp.version>
