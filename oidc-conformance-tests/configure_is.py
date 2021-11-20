@@ -374,6 +374,14 @@ change_local_claim_mapping(
     },
     constants.BASE_URL + "/api/server/v1/claim-dialects/aHR0cDovL3dzbzIub3JnL29pZGMvY2xhaW0/claims/d2Vic2l0ZQ")
 
+#change middle_name from middleName to formattedName
+change_local_claim_mapping(
+    {
+        "claimURI": "middle_name",
+        "mappedLocalClaimURI": "http://wso2.org/claims/formattedName"
+    },
+    constants.BASE_URL + "/api/server/v1/claim-dialects/aHR0cDovL3dzbzIub3JnL29pZGMvY2xhaW0/claims/bWlkZGxlX25hbWU")
+
 edit_scope("openid", {
     "claims": [
         "sub"
