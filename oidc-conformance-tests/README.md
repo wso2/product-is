@@ -36,7 +36,7 @@ This workflow will also automatically trigger after a release or a pre-release
 
 ### Prerequisites 
 
-* OIDC conformance suite should be running locally before testing can begin
+* OIDC conformance suite running locally (See the steps for [setting up the conformance suite](conformance-suite-setup-guidelines.md))
 * product-is zip file
 
 You can use test_runner.sh script to start and configure identity server locally and run OIDC conformence tests
