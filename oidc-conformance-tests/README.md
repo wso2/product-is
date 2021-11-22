@@ -38,6 +38,7 @@ This workflow will also automatically trigger after a release or a pre-release
 
 * OIDC conformance suite running locally (See the steps for [setting up the conformance suite](conformance-suite-setup-guidelines.md))
 * product-is zip file
+* Python 3 installed with requests, psutil libraries
 
 You can use test_runner.sh script to start and configure identity server locally and run OIDC conformence tests
 1. open test_runner.sh using a text editor and make the following modifications
@@ -45,8 +46,11 @@ You can use test_runner.sh script to start and configure identity server locally
    - assign the path of conformance-suite folder to CONFORMANCE_SUITE_PATH
    - assign the path to identity server zip file to PRODUCT_IS_ZIP_PATH
    - set IS_LOCAL to true. default is false
+   - Remove the `sudo` keyword from the following line 
+
+     ```sudo python3 ./configure_is.py $PRODUCT_IS_ZIP_PATH```
 2. Save and exit
-3. Run the script using ```sudo bash test_runner.sh```
+3. Run the script using ```bash test_runner.sh```
 
 If the identity server is not running on the default port, you need to change `IS_HOSTNAME` in `constants.py` to reflect the correct address. Default is set to `https://localhost:9443`
 

@@ -22,7 +22,7 @@
     ```
 
 3. Configure docker to resolve internal host name of wso2 identity server
-   (Find out the IP address of your host machine and add it as extra hosts under the `mongodb`, `httpd` and `server` sections as follows in the docker-compose-dev.yml file).
+   (Add `"localhost:host-gateway"` as extra hosts under the `mongodb`, `httpd` and `server` sections as follows in the docker-compose-dev.yml file).
 
     ```
     version: '3'`
@@ -30,9 +30,9 @@
     mongodb:
         image: mongo:4.2
         volumes:
-        - ./mongo/data:/data/db
+         - ./mongo/data:/data/db
         extra_hosts:
-        - "localhost.com:<HOST_MACHINE_IP>"
+         - "localhost:host-gateway"
 
     httpd:
         build:
@@ -41,7 +41,7 @@
         ports:
          - "8443:8443"
         extra_hosts:
-         - "localhost.com:<HOST_MACHINE_IP>"
+         - "localhost:host-gateway"
         volumes:
          - ./src/main/resources/:/usr/local/apache2/htdocs/
         depends_on:
@@ -52,7 +52,7 @@
         ports:
          - "9999:9999"
         extra_hosts:
-         - "localhost.com:<HOST_MACHINE_IP>"
+         - "localhost:host-gateway"
     ```
 4. Start the conformance suite in development mode
     
