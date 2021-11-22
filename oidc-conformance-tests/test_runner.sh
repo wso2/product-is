@@ -27,7 +27,7 @@ if $IS_LOCAL; then
   echo "Identity Server Setup"
   echo "====================="
   echo
-  sudo python3 ./configure_is.py $PRODUCT_IS_ZIP_PATH
+  python3 ./configure_is.py $PRODUCT_IS_ZIP_PATH
 fi
 echo "========================"
 echo "Running Tests"
@@ -66,6 +66,6 @@ echo
 
 
 if $IS_LOCAL; then
-  sudo pkill -f wso2
+  pkill -f wso2
 fi
 

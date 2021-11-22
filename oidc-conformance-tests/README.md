@@ -46,9 +46,7 @@ You can use test_runner.sh script to start and configure identity server locally
    - assign the path of conformance-suite folder to CONFORMANCE_SUITE_PATH
    - assign the path to identity server zip file to PRODUCT_IS_ZIP_PATH
    - set IS_LOCAL to true. default is false
-   - Remove the `sudo` keyword from the following line 
 
-     ```sudo python3 ./configure_is.py $PRODUCT_IS_ZIP_PATH```
 2. Save and exit
 3. Run the script using ```bash test_runner.sh```
 
