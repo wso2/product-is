@@ -106,6 +106,12 @@
                 },
                 {
                     "claim": {
+                        "uri": "http://wso2.org/claims/formattedName"
+                    },
+                    "mandatory": true
+                },
+                {
+                    "claim": {
                         "uri": "http://wso2.org/claims/modified"
                     },
                     "mandatory": true
