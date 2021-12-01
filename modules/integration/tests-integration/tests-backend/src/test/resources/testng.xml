@@ -192,6 +192,8 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.notification.sender.v1.NotificationSenderFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.secret.management.v1.SecretManagementSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.secret.management.v1.SecretManagementFailureTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.branding.preference.management.v1.BrandingPreferenceManagementSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.branding.preference.management.v1.BrandingPreferenceManagementFailureTest"/>
         </classes>
     </test>
 
