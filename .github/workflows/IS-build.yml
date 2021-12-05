@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: IS-build
 
 # Controls when the workflow will run
 on:
@@ -12,6 +12,11 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+    inputs:
+      repo-branch:
+        description: "Enter carbon-kernel branch name to test"
+        default: master
+        required: true
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -24,13 +29,19 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+      
+      - name: Clone carbon-kernel
+        run: git clone https://github.com/ImalshaG/carbon-kernel.git
+        
+      - name: Build carbon-kernel
+        run: | 
+          cd carbon-kernel
+          git checkout origin/${{github.event.inputs.repo-branch}}
+          mvn clean install -Dmaven.test.skip=true
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: mvn clean install -Dmaven.test.skip=true
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          cd ..
+          mvn clean install -Dmaven.test.skip=true
+
