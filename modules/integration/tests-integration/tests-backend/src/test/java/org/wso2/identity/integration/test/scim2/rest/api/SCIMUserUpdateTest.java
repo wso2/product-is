@@ -48,6 +48,7 @@ import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.USERS_E
 public class SCIMUserUpdateTest extends SCIM2BaseTest {
 
     private static final Log log = LogFactory.getLog(SCIMUserUpdateTest.class);
+    private static final String DEFAULT_CORRELATION_HEADER = "X-WSO2-traceId";
 
     private String endpointURL;
     private String userId = null;
@@ -107,6 +108,8 @@ public class SCIMUserUpdateTest extends SCIM2BaseTest {
                 .and()
                 .assertThat()
                 .header(HttpHeaders.CONTENT_TYPE, SCIM_CONTENT_TYPE);
+
+        Assert.assertNotNull(response.header(DEFAULT_CORRELATION_HEADER));
     }
 
     @Test(dependsOnMethods = "testGetUsers")
