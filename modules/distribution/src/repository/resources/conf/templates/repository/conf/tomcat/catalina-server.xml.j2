@@ -89,7 +89,11 @@
                 {% endif %}
                 <Valve className="org.wso2.carbon.tomcat.ext.valves.RequestCorrelationIdValve"
                        headerToCorrelationIdMapping="{{log_correlation.header_config}}"
-                       queryToCorrelationIdMapping="{'RelayState':'Correlation-ID'}"/>
+                       queryToCorrelationIdMapping="{'RelayState':'Correlation-ID'}"
+                       {% if correlation.response.header is defined %}
+                            responseCorrelationIdHeader= "{{correlation.response.header}}"
+                       {% endif %}
+                       />
                 <Valve className="org.wso2.carbon.tomcat.ext.valves.RequestEncodingValve" encoding="UTF-8"/>
                 <Valve className="org.wso2.carbon.tomcat.ext.valves.CarbonContextCreatorValve"/>
                 {% if http_access_log.useLogger is sameas true %}
