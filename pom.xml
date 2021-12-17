@@ -2087,7 +2087,7 @@
         <identity.carbon.auth.saml2.version>5.5.5</identity.carbon.auth.saml2.version>
         <identity.carbon.auth.mutual.ssl.version>5.4.2</identity.carbon.auth.mutual.ssl.version>
         <identity.carbon.auth.iwa.version>5.4.3</identity.carbon.auth.iwa.version>
-        <identity.carbon.auth.rest.version>1.4.47</identity.carbon.auth.rest.version>
+        <identity.carbon.auth.rest.version>1.4.48</identity.carbon.auth.rest.version>
 
 
         <!-- Identity Inbound Versions   -->
