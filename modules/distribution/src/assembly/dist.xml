@@ -35,7 +35,8 @@
                 <exclude>**/*.lock</exclude>
                 <exclude>**/.data</exclude>
                 <exclude>**/.settings</exclude>
-                <!--removing jars,json, j2 and wars from repository/components/feature folder-->
+                <!--removing jars, json, j2 and wars from repository/components/feature folder-->
+
                 <exclude>features/**/*.war</exclude>
                 <exclude>features/**/*.jar</exclude>
                 <exclude>features/**/*.zip</exclude>
