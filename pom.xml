@@ -2074,8 +2074,8 @@
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
-        <saml.common.util.version>1.0.8</saml.common.util.version>
-        <saml.common.util.version.range>[1.0.0,3.0.0)</saml.common.util.version.range>
+        <saml.common.util.version>1.1.0</saml.common.util.version>
+        <saml.common.util.version.range>[1.0.0,2.0.0)</saml.common.util.version.range>
 
         <!--Carbon Consent Version-->
         <carbon.consent.mgt.version>2.3.13</carbon.consent.mgt.version>
