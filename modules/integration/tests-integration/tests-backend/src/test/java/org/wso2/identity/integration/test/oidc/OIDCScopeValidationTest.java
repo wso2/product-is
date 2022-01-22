@@ -15,6 +15,7 @@ import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.identity.integration.test.oidc.bean.OIDCApplication;
@@ -77,46 +78,84 @@ public class OIDCScopeValidationTest extends OIDCAbstractIntegrationTest {
         clear();
     }
 
+    @DataProvider(name = "provideScopeDataForNormalUser")
+    public Object[][] provideScopeDataForNormalUser() {
+
+        // Requested scopes, scopes returns after validation, ignored scopes after validation
+        return new Object[][] {
+                {OAuth2Constant.OAUTH2_SCOPE_OPENID + " " + OAuth2Constant.OAUTH2_SCOPE_EMAIL + " " +
+                        OAuth2Constant.OAUTH2_SCOPE_PROFILE, null, null},
+                {OAuth2Constant.OAUTH2_SCOPE_OPENID + " " + OAuth2Constant.OAUTH2_SCOPE_EMAIL + " " +
+                        OAuth2Constant.OAUTH2_SCOPE_PROFILE + " " + INTERNAL_LOGIN_SCOPE,
+                        INTERNAL_LOGIN_SCOPE, null},
+                {OAuth2Constant.OAUTH2_SCOPE_OPENID + " " + OAuth2Constant.OAUTH2_SCOPE_EMAIL + " " +
+                        OAuth2Constant.OAUTH2_SCOPE_PROFILE + " " + INTERNAL_LOGIN_SCOPE + " " +
+                        INTERNAL_USER_MGT_UPDATE_SCOPE, INTERNAL_LOGIN_SCOPE, INTERNAL_USER_MGT_UPDATE_SCOPE},
+                {OAuth2Constant.OAUTH2_SCOPE_OPENID + " " + OAuth2Constant.OAUTH2_SCOPE_EMAIL + " " +
+                        OAuth2Constant.OAUTH2_SCOPE_PROFILE + " " + INTERNAL_LOGIN_SCOPE + " " +
+                        INTERNAL_USER_MGT_UPDATE_SCOPE + " " + INVALID_SCOPE, INTERNAL_LOGIN_SCOPE,
+                        INTERNAL_USER_MGT_UPDATE_SCOPE + " " + INVALID_SCOPE},
+                {OAuth2Constant.OAUTH2_SCOPE_OPENID + " " + OAuth2Constant.OAUTH2_SCOPE_EMAIL + " " +
+                        OAuth2Constant.OAUTH2_SCOPE_PROFILE + " " + INTERNAL_LOGIN_SCOPE + " " +
+                        INTERNAL_USER_MGT_UPDATE_SCOPE + " " + INVALID_SCOPE + " " + SYSTEM_SCOPE,
+                        INTERNAL_LOGIN_SCOPE, INTERNAL_USER_MGT_UPDATE_SCOPE + " " + INVALID_SCOPE + " " + SYSTEM_SCOPE}
+        };
+    }
 
 
-    @Test(groups = "wso2.is", description = "Test scope validation with a user which has 'internal/everyone' role.")
-    public void testScopeValidationWithNormalUser() throws Exception {
+    @Test(groups = "wso2.is", description = "Test scope validation with a user which has 'internal/everyone' role.",
+            dataProvider = "provideScopeDataForNormalUser")
+    public void testScopeValidationWithNormalUser(String requestingScopes, String expectedScopes, String ignoredScopes)
+            throws Exception {
 
-        sendAuthenticationRequest(playgroundApp, client);
+        sendAuthenticationRequest(playgroundApp, client, requestingScopes);
         authentication(playgroundApp);
         Assert.assertEquals(claimsToGetConsent, "0_Email,1_First Name",
                 "Requested claims were not prompted to ask the consent.");
         Assert.assertNotNull(scopes);
-        Assert.assertEquals(INTERNAL_LOGIN_SCOPE, scopes, "'" + INTERNAL_LOGIN_SCOPE + "' should return " +
-                "with the redirect URL");
-        Assert.assertFalse(scopes.contains(SYSTEM_SCOPE), "'" + SYSTEM_SCOPE + "' scopes should not exist " +
-                "after the validation.");
-        Assert.assertFalse(scopes.contains(INTERNAL_USER_MGT_UPDATE_SCOPE),
-                "'" + INTERNAL_USER_MGT_UPDATE_SCOPE + "' scopes should not exist after the validation. " +
-                        "Since user does not have permission for this scope.");
-        Assert.assertFalse(scopes.contains(INVALID_SCOPE), "'" + INVALID_SCOPE + "' scopes should not exist" +
-                " after the validation. This scope does not exist.");
+        String[] returnedScopes = scopes.split(" ");
+        assertExpectedScopes(returnedScopes, expectedScopes);
+        assertIgnoredScopes(returnedScopes, ignoredScopes);
+    }
 
+    @DataProvider(name = "provideScopeDataForAdminUser")
+    public Object[][] provideScopeDataForAdminUser() {
+
+        // Requested scopes, scopes returns after validation, ignored scopes after validation
+        return new Object[][] {
+                {OAuth2Constant.OAUTH2_SCOPE_OPENID + " " + OAuth2Constant.OAUTH2_SCOPE_EMAIL + " " +
+                        OAuth2Constant.OAUTH2_SCOPE_PROFILE, null, null},
+                {OAuth2Constant.OAUTH2_SCOPE_OPENID + " " + OAuth2Constant.OAUTH2_SCOPE_EMAIL + " " +
+                        OAuth2Constant.OAUTH2_SCOPE_PROFILE + " " + INTERNAL_LOGIN_SCOPE,
+                        INTERNAL_LOGIN_SCOPE, null},
+                {OAuth2Constant.OAUTH2_SCOPE_OPENID + " " + OAuth2Constant.OAUTH2_SCOPE_EMAIL + " " +
+                        OAuth2Constant.OAUTH2_SCOPE_PROFILE + " " + INTERNAL_LOGIN_SCOPE + " " +
+                        INTERNAL_USER_MGT_UPDATE_SCOPE, INTERNAL_LOGIN_SCOPE + " " + INTERNAL_USER_MGT_UPDATE_SCOPE,
+                        null},
+                {OAuth2Constant.OAUTH2_SCOPE_OPENID + " " + OAuth2Constant.OAUTH2_SCOPE_EMAIL + " " +
+                        OAuth2Constant.OAUTH2_SCOPE_PROFILE + " " + INTERNAL_LOGIN_SCOPE + " " +
+                        INTERNAL_USER_MGT_UPDATE_SCOPE + " " + INVALID_SCOPE, INTERNAL_LOGIN_SCOPE + " " +
+                        INTERNAL_USER_MGT_UPDATE_SCOPE, INVALID_SCOPE},
+                {OAuth2Constant.OAUTH2_SCOPE_OPENID + " " + OAuth2Constant.OAUTH2_SCOPE_EMAIL + " " +
+                        OAuth2Constant.OAUTH2_SCOPE_PROFILE + " " + INTERNAL_LOGIN_SCOPE + " " +
+                        INTERNAL_USER_MGT_UPDATE_SCOPE + " " + INVALID_SCOPE + " " + SYSTEM_SCOPE,
+                        INTERNAL_LOGIN_SCOPE + " " + INTERNAL_USER_MGT_UPDATE_SCOPE, INVALID_SCOPE + " " + SYSTEM_SCOPE}
+        };
     }
 
     @Test(groups = "wso2.is", dependsOnMethods = {"testScopeValidationWithNormalUser"}, description = "Test scope" +
-            " validation with an admin user.")
-    public void testScopeValidationWithAdminUser() throws Exception {
+            " validation with an admin user.", dataProvider = "provideScopeDataForAdminUser")
+    public void testScopeValidationWithAdminUser(String requestingScopes, String expectedScopes, String ignoredScopes)
+            throws Exception {
 
-        sendAuthenticationRequest(playgroundApp, client);
+        sendAuthenticationRequest(playgroundApp, client, requestingScopes);
         authentication(playgroundApp);
         Assert.assertEquals(claimsToGetConsent, "0_Email,1_First Name",
                 "Requested claims were not prompted to ask the consent.");
         Assert.assertNotNull(scopes);
-        String[] scopesArray = scopes.split(" ");
-        Assert.assertTrue(ArrayUtils.contains(scopesArray, INTERNAL_LOGIN_SCOPE), "'" + INTERNAL_LOGIN_SCOPE +
-                "' should return with the redirect URL");
-        Assert.assertTrue(ArrayUtils.contains(scopesArray, INTERNAL_USER_MGT_UPDATE_SCOPE),
-                "'" + INTERNAL_USER_MGT_UPDATE_SCOPE + "' should return with the redirect URL.");
-        Assert.assertFalse(ArrayUtils.contains(scopesArray, SYSTEM_SCOPE), "'" + SYSTEM_SCOPE + "' scopes " +
-                "should not exist after the validation.");
-        Assert.assertFalse(ArrayUtils.contains(scopesArray, INVALID_SCOPE), "'" + INVALID_SCOPE +
-                "' scopes should not exist after the validation. This scope does not exist.");
+        String[] returnedScopes = scopes.split(" ");
+        assertExpectedScopes(returnedScopes, expectedScopes);
+        assertIgnoredScopes(returnedScopes, ignoredScopes);
     }
 
     private void initUser(String role) {
@@ -138,10 +177,10 @@ public class OIDCScopeValidationTest extends OIDCAbstractIntegrationTest {
         return playgroundApp;
     }
 
-    private void sendAuthenticationRequest(OIDCApplication application, HttpClient client)
+    private void sendAuthenticationRequest(OIDCApplication application, HttpClient client, String scopes)
             throws Exception {
 
-        List<NameValuePair> urlParameters = getNameValuePairs(application);
+        List<NameValuePair> urlParameters = getNameValuePairs(application, scopes);
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters, String.format
                 (OIDCUtilTest.targetApplicationUrl, application.getApplicationContext() +
                         OAuth2Constant.PlaygroundAppPaths.appUserAuthorizePath));
@@ -221,20 +260,36 @@ public class OIDCScopeValidationTest extends OIDCAbstractIntegrationTest {
         return queryParams.get("scope");
     }
 
+    private static List<NameValuePair> getNameValuePairs(OIDCApplication application, String scopes) {
 
-    private static List<NameValuePair> getNameValuePairs(OIDCApplication application) {
-
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("grantType", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
         urlParameters.add(new BasicNameValuePair("consumerKey", application.getClientId()));
         urlParameters.add(new BasicNameValuePair("callbackurl", application.getCallBackURL()));
         urlParameters.add(new BasicNameValuePair("authorizeEndpoint", OAuth2Constant.APPROVAL_URL));
         urlParameters.add(new BasicNameValuePair("authorize", OAuth2Constant.AUTHORIZE_PARAM));
-        urlParameters.add(new BasicNameValuePair("scope", OAuth2Constant.OAUTH2_SCOPE_OPENID + " " +
-                OAuth2Constant.OAUTH2_SCOPE_EMAIL + " " + OAuth2Constant.OAUTH2_SCOPE_PROFILE + " " +
-                INTERNAL_LOGIN_SCOPE + " " + INTERNAL_USER_MGT_UPDATE_SCOPE + " " + INVALID_SCOPE + " " +
-                SYSTEM_SCOPE));
+        urlParameters.add(new BasicNameValuePair("scope", scopes));
         return urlParameters;
+    }
+
+    private void assertExpectedScopes(String[] returnedScopes, String expectedScopes) {
+
+        if (expectedScopes != null) {
+            for (String scope : expectedScopes.split(" ")) {
+                Assert.assertTrue(ArrayUtils.contains(returnedScopes, scope), "'" + scope + "' should return" +
+                        " with the redirect URL");
+            }
+        }
+    }
+
+    private void assertIgnoredScopes(String[] returnedScopes, String ignoredScopes) {
+
+        if (ignoredScopes != null) {
+            for (String scope : ignoredScopes.split(" ")) {
+                Assert.assertFalse(ArrayUtils.contains(returnedScopes, scope), "'" + scope + "' scopes " +
+                        "should not exist after the validation.");
+            }
+        }
     }
 
 }
