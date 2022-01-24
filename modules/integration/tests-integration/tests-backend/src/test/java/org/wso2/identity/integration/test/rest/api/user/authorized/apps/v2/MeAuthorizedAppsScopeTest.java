@@ -87,7 +87,7 @@ public class MeAuthorizedAppsScopeTest extends UserAuthorizedAppsBaseTest {
 
     private static final String AUTHORIZED_API_ENDPOINT = "https://localhost:9853/t/carbon" +
             ".super/api/users/v2/me/authorized-apps";
-    private String requestedScopes = "openid internal_login internal_user_update SYSTEM";
+    private String requestedScopes = "openid internal_login internal_user_mgt_update SYSTEM";
 
     @BeforeClass(alwaysRun = true)
     public void init() throws XPathExpressionException, RemoteException {
@@ -202,14 +202,19 @@ public class MeAuthorizedAppsScopeTest extends UserAuthorizedAppsBaseTest {
             if (this.clientIdApp1.equals(application.get("clientId"))) {
                 this.appId1 = (String) application.get("id");
                 List<String> approvedScopesForApp1 = (ArrayList<String>) application.get("approvedScopes");
-                Assert.assertEquals(approvedScopesForApp1.size(), 3,
-                        "This authorized app should have allowed " + requestedScopes + "scopes");
+                Assert.assertEquals(approvedScopesForApp1.size(), 2,
+                        "This authorized app should have allowed 'internal_login', " +
+                                "'internal_user_mgt_update' scopes");
+                Assert.assertFalse(approvedScopesForApp1.contains("SYSTEM"), "'SYSTEM' scope should not " +
+                        "exist after the validation.");
             }
             if (this.clientIdApp2.equals(application.get("clientId"))) {
                 this.appId2 = (String) application.get("id");
                 List<String> approvedScopesForApp2 = (ArrayList<String>) application.get("approvedScopes");
-                Assert.assertEquals(approvedScopesForApp2.size(), 3, "This authorized app should have allowed " +
-                        "'internal_login', 'internal_user_update'," + " 'SYSTEM' scopes");
+                Assert.assertEquals(approvedScopesForApp2.size(), 2, "This authorized app should " +
+                        "have allowed 'internal_login', 'internal_user_mgt_update' scopes");
+                Assert.assertFalse(approvedScopesForApp2.contains("SYSTEM"), "'SYSTEM' scope should not" +
+                        " exist after the validation.");
             }
         }
     }
@@ -217,7 +222,7 @@ public class MeAuthorizedAppsScopeTest extends UserAuthorizedAppsBaseTest {
     @Test(dependsOnMethods = {"testGetAuthorizedApps"}, description = "Get User authorized app by appId")
     public void testGetAuthorizedAppById() throws Exception {
 
-        String[] approvedScopesForApp1 = new String[]{"internal_login", "internal_user_update", "SYSTEM"};
+        String[] approvedScopesForApp1 = new String[]{"internal_login", "internal_user_mgt_update"};
         Response response = getResponseOfGet(this.userAuthorizedAppsEndpointUri + appId1);
         response.then()
                 .assertThat()
