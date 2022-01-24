@@ -2160,7 +2160,7 @@
         <identity.oauth2.jwt.bearer.grant.version>2.0.4</identity.oauth2.jwt.bearer.grant.version>
 
         <!--SAML Metadata-->
-        <identity.metadata.saml.version>1.4.12</identity.metadata.saml.version>
+        <identity.metadata.saml.version>1.5.1</identity.metadata.saml.version>
 
         <!-- Connector Versions -->
         <authenticator.totp.version>3.0.22</authenticator.totp.version>
