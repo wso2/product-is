@@ -60,6 +60,7 @@ import javax.xml.xpath.XPathExpressionException;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.core.Is.is;
 import static org.wso2.carbon.automation.engine.context.TestUserMode.SUPER_TENANT_ADMIN;
 
@@ -202,19 +203,23 @@ public class MeAuthorizedAppsScopeTest extends UserAuthorizedAppsBaseTest {
             if (this.clientIdApp1.equals(application.get("clientId"))) {
                 this.appId1 = (String) application.get("id");
                 List<String> approvedScopesForApp1 = (ArrayList<String>) application.get("approvedScopes");
-                Assert.assertEquals(approvedScopesForApp1.size(), 2,
+                Assert.assertEquals(approvedScopesForApp1.size(), 1,
                         "This authorized app should have allowed 'internal_login', " +
                                 "'internal_user_mgt_update' scopes");
+                Assert.assertFalse(approvedScopesForApp1.contains("internal_login"), "'internal_login' scope" +
+                        " should not exist after the validation.");
                 Assert.assertFalse(approvedScopesForApp1.contains("SYSTEM"), "'SYSTEM' scope should not " +
                         "exist after the validation.");
             }
             if (this.clientIdApp2.equals(application.get("clientId"))) {
                 this.appId2 = (String) application.get("id");
                 List<String> approvedScopesForApp2 = (ArrayList<String>) application.get("approvedScopes");
-                Assert.assertEquals(approvedScopesForApp2.size(), 2, "This authorized app should " +
-                        "have allowed 'internal_login', 'internal_user_mgt_update' scopes");
+                Assert.assertEquals(approvedScopesForApp2.size(), 1, "This authorized app should " +
+                        "have allowed 'internal_user_mgt_update' scopes");
                 Assert.assertFalse(approvedScopesForApp2.contains("SYSTEM"), "'SYSTEM' scope should not" +
                         " exist after the validation.");
+                Assert.assertFalse(approvedScopesForApp2.contains("internal_login"), "'internal_login' scope" +
+                        " should not exist after the validation.");
             }
         }
     }
@@ -222,7 +227,8 @@ public class MeAuthorizedAppsScopeTest extends UserAuthorizedAppsBaseTest {
     @Test(dependsOnMethods = {"testGetAuthorizedApps"}, description = "Get User authorized app by appId")
     public void testGetAuthorizedAppById() throws Exception {
 
-        String[] approvedScopesForApp1 = new String[]{"internal_login", "internal_user_mgt_update"};
+        String[] approvedScopesForApp1 = new String[]{"internal_user_mgt_update"};
+        String[] rejectedScopesForApp1 = new String[]{"internal_login"};
         Response response = getResponseOfGet(this.userAuthorizedAppsEndpointUri + appId1);
         response.then()
                 .assertThat()
@@ -230,6 +236,7 @@ public class MeAuthorizedAppsScopeTest extends UserAuthorizedAppsBaseTest {
                 .body("id", equalTo(appId1))
                 .body("clientId", equalTo(clientIdApp1))
                 .body("approvedScopes", hasItems(approvedScopesForApp1))
+                .body("approvedScopes", not(hasItems(rejectedScopesForApp1)))
                 .log().ifValidationFails();
     }
 
