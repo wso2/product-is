@@ -2078,7 +2078,7 @@
         <saml.common.util.version.range>[1.0.0,2.0.0)</saml.common.util.version.range>
 
         <!--Carbon Consent Version-->
-        <carbon.consent.mgt.version>2.3.13</carbon.consent.mgt.version>
+        <carbon.consent.mgt.version>2.3.14</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
         <identity.governance.version>1.5.58</identity.governance.version>
