@@ -2195,7 +2195,7 @@
         <charon.version>3.4.1</charon.version>
 
         <!-- Carbon Kernel -->
-        <carbon.kernel.version>4.7.0-m9</carbon.kernel.version>
+        <carbon.kernel.version>4.7.0-m10</carbon.kernel.version>
 
         <!-- Carbon Repo Versions -->
         <carbon.deployment.version>4.12.8</carbon.deployment.version>
@@ -2243,7 +2243,7 @@
         <maven.checkstyle.plugin.version>3.1.1</maven.checkstyle.plugin.version>
 
         <!-- Sample dependency Versions -->
-        <samples.is.version>4.3.7</samples.is.version>
+        <samples.is.version>4.3.8</samples.is.version>
         <sevlet.api.version>2.5</sevlet.api.version>
         <jsp.api.version>2.0</jsp.api.version>
         <neethi.wso2.version>2.0.4.wso2v5</neethi.wso2.version>
