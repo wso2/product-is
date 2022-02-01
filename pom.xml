@@ -2109,7 +2109,7 @@
         <identity.user.ws.version>5.5.0</identity.user.ws.version>
 
         <!-- Identity Userstore Versions -->
-        <identity.userstore.ldap.version>6.3.0</identity.userstore.ldap.version>
+        <identity.userstore.ldap.version>6.3.1</identity.userstore.ldap.version>
         <identity.userstore.remote.version>5.2.5</identity.userstore.remote.version>
 
         <!-- Identity Data Publisher Versions -->
@@ -2133,7 +2133,7 @@
         <!-- Authenticator Versions -->
         <identity.outbound.auth.oidc.version>5.7.0</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.passive.sts.version>5.5.0</identity.outbound.auth.passive.sts.version>
-        <identity.outbound.auth.samlsso.version>5.4.0</identity.outbound.auth.samlsso.version>
+        <identity.outbound.auth.samlsso.version>5.4.1</identity.outbound.auth.samlsso.version>
         <identity.outbound.auth.requestpath.basicauth.version>5.5.0</identity.outbound.auth.requestpath.basicauth.version>
         <identity.outbound.auth.requestpath.oauth.version>5.4.0</identity.outbound.auth.requestpath.oauth.version>
 
@@ -2150,7 +2150,7 @@
 
         <!-- Local Authenticator Versions -->
         <identity.local.auth.basicauth.version>6.4.1</identity.local.auth.basicauth.version>
-        <identity.local.auth.fido.version>5.3.14</identity.local.auth.fido.version>
+        <identity.local.auth.fido.version>5.3.16</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.4.0</identity.local.auth.iwa.version>
 
         <!-- Local Authentication API Connector Version -->
@@ -2189,7 +2189,7 @@
         <carbon.identity.oauth.uma.version>1.3.7</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.2.781</identity.apps.version>
+        <identity.apps.version>1.2.785</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
