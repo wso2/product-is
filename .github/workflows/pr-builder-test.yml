@@ -40,7 +40,7 @@ jobs:
         env:
           PR_LINK: ${{github.event.inputs.pr}}
         run: |
-          wget https://raw.githubusercontent.com/wso2/product-is/master/.github/scripts/pr-builder.sh
+          wget https://raw.githubusercontent.com/wso2/product-is/5.12.x/.github/scripts/pr-builder.sh
           bash pr-builder.sh
       - name: Archive PR diff file
         if: always()
