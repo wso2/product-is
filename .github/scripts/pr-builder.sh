@@ -23,7 +23,9 @@ echo "Cloning product-is"
 echo "=========================================================="
 git clone https://github.com/wso2/product-is
 echo "Checking out to 5.12.x branch..."
+cd product-is
 git checkout 5.12.x
+cd ..
 
 if [ "$REPO" = "product-is" ]; then
 
