@@ -36,7 +36,6 @@ import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
-import static org.hamcrest.core.IsNull.nullValue;
 import static org.testng.Assert.assertNotNull;
 
 /**
@@ -552,64 +551,6 @@ public class IdPSuccessTest extends IdPTestBase {
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .body("homeRealmIdentifier", equalTo("google"));
-
-        // Test patch ADD operation for JWKS URI property.
-        body = readResource("patch-add-jwks-uri.json");
-        response = getResponseOfPatch(IDP_API_BASE_PATH + PATH_SEPARATOR + idPId, body);
-        response.then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK)
-                .body("certificate.jwksUri", equalTo("http://SAMPLE.JWKS.URI/"))
-                .body("certificate.certificates", nullValue());
-
-        // Test patch REMOVE operation for JWKS URI property.
-        body = readResource("patch-remove-jwks-uri.json");
-        response = getResponseOfPatch(IDP_API_BASE_PATH + PATH_SEPARATOR + idPId, body);
-        response.then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK)
-                .body("certificate.jwksUri", nullValue());
-
-        // Test patch ADD operation for certificates.
-        body = readResource("patch-add-certificate.json");
-        response = getResponseOfPatch(IDP_API_BASE_PATH + PATH_SEPARATOR + idPId, body);
-        response.then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK)
-                .body("certificate.certificates[0]", equalTo("LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUR" +
-                        "zRENDQXBpZ0F3SUJBZ0lKQUs0eml2ckVsYzBJTUEwR0NTcUdTSWIzRFFFQkN3VUFNSUdETVJFd0R3WUQKVlFRRERBaE" +
-                        "NkV1JrYUdsdFlURUxNQWtHQTFVRUJoTUNVMHd4RURBT0JnTlZCQWdNQjFkbGMzUmxjbTR4RURBTwpCZ05WQkFjTUIwT" +
-                        "nZiRzl0WW04eERUQUxCZ05WQkFvTUJGZFRUekl4Q3pBSkJnTlZCQXNNQWxGQk1TRXdId1lKCktvWklodmNOQVFrQkZo" +
-                        "SmlkV1JrYUdsdFlYVkFkM052TWk1amIyMHdJQmNOTVRrd056RTJNRFF5TXpFd1doZ1AKTXpBeE9ERXhNVFl3TkRJek1" +
-                        "UQmFNSUdETVJFd0R3WURWUVFEREFoQ2RXUmthR2x0WVRFTE1Ba0dBMVVFQmhNQwpVMHd4RURBT0JnTlZCQWdNQjFkbG" +
-                        "MzUmxjbTR4RURBT0JnTlZCQWNNQjBOdmJHOXRZbTh4RFRBTEJnTlZCQW9NCkJGZFRUekl4Q3pBSkJnTlZCQXNNQWxGQ" +
-                        "k1TRXdId1lKS29aSWh2Y05BUWtCRmhKaWRXUmthR2x0WVhWQWQzTnYKTWk1amIyMHdnZ0VpTUEwR0NTcUdTSWIzRFFF" +
-                        "QkFRVUFBNElCRHdBd2dnRUtBb0lCQVFDcFo3V09VMTZpeGpiQwpiWGR3R3JhTW5xbmxnb2kzMDN5aVFxbHAySzlWTmZ" +
-                        "HT21nTlFhdFdlbjB0MVVWcjYxd0Y4eVlHaDJyc1lnbithCjhwYXVmUVVQQ1laeFRFR1FpT2RPZ0RNcE5tWW82ZHU2K2" +
-                        "MvenJqcHNncGh5SHIxNEZPVHAxaVRDSXBmanVwVjEKd1BUeXJveURySGRvMkpuOHI3V3F1cklJVTRBYllBN2NrdVVqL" +
-                        "0tqYUovTTZrZitwRFd5SVJvaDBKTFJlWWM4UQp5bmhYcjdrQWp5RnFqNitnWndBYkh4ckhrckVzYTJoVjQ0UFJXWjFQ" +
-                        "UERxTCswVU8veE1hQW5udndsdGd4QlVpCkhLUTFXWDVwdVVPaC9kQTQ5b0RsbEpraHpxd2d5eDQxc1FYbFNhVmdKakl" +
-                        "UZVdSQmdvNnh6ajNmd3VvenBGS1gKbzRaeXBITDNBZ01CQUFHakl6QWhNQjhHQTFVZEVRUVlNQmFDQkhkemJ6S0NDSG" +
-                        "R6YnpJdVkyOXRnZ1IzYzI4eQpNQTBHQ1NxR1NJYjNEUUVCQ3dVQUE0SUJBUUJTSzBKa1pyYlpvYmRDNHhZSG1IcnlVb" +
-                        "kZVbkZZWUFvZmc0TFVGCkJRbWxDY0NKR0ZwR1BtN2ZDWHM0Y0h4Z0hPVTN5SkhtQ2pYaU9FRTc2dzhIU0NRcVhkNmRO" +
-                        "SEwxRkxtN0pqQTUKTEZmbHhiWXNOcmVVNVpJTmREVGZvWmxSSXR0Mkd4MlpIa3pjQVRJZm1yUFNwODV2WDhGem1mbTN" +
-                        "BVTVpM3FXZQo4a2YyZk5nQjlMbE5XRFk1V09paVlHUWMrRk13WWdLcDJkNGM3dzMrWnRTUXJWRy9YdGpqYTJYV09Xdm" +
-                        "1sV3dLCnB4b3pyNjIvTTdUUmVkc3hJNU90bzJvWExGZXp1MUdCWHdpNEFaempMSFVsNWpSR2hMbkNZa05qdWZGZi9EQ" +
-                        "0cKeUFWdnpMVXQwZ2F0b0dJdTV2eG9la05JVWV5YTZpRzJBaG9jSmM0SEJMT3l4TXE3Ci0tLS0tRU5EIENFUlRJRklD" +
-                        "QVRFLS0tLS0K"))
-                .body("certificate.jwksUri", nullValue());
-
-        // Test patch REMOVE operation for certificates.
-        body = readResource("patch-remove-certificate.json");
-        response = getResponseOfPatch(IDP_API_BASE_PATH + PATH_SEPARATOR + idPId, body);
-        response.then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK)
-                .body("certificate.certificates", nullValue());
     }
 
     @Test(dependsOnMethods = {"testPatchIdP"})
