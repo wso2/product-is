@@ -163,4 +163,13 @@ public class IdPFailureTest extends IdPTestBase {
         Response response = getResponseOfGetWithQueryParams(url, filterParam);
         validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "IDP-65055", "Invalid search filter");
     }
+
+    @Test(dependsOnMethods = {"addIdPConflict"})
+    public void testPatchIdPNonExistentProperties() throws IOException {
+
+        // Test patch REMOVE operation for non-existent JWKS URI property.
+        String body = readResource("patch-remove-jwks-uri.json");
+        Response response = getResponseOfPatch(IDP_API_BASE_PATH + PATH_SEPARATOR + idPId, body);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "IDP-65005", "JWKS URI");
+    }
 }
