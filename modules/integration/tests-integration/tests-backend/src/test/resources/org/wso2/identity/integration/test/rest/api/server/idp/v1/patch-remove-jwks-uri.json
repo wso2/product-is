@@ -1,6 +1,0 @@
-[
-  {
-    "operation": "REMOVE",
-    "path": "/certificate/jwksUri"
-  }
-]

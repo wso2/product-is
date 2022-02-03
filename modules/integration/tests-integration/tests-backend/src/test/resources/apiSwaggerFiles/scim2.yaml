@@ -7,8 +7,8 @@ info:
     It is written with [swagger 2](http://swagger.io/).
   contact:
     name: WSO2 Identity Server Team
-    url: 'http://wso2.com/products/identity-server'
-    email: "iam-dev@wso2.org"
+    url: 'http://wso2.com'
+    email: "architecture@wso2.org"
   license:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0'
@@ -1226,33 +1226,7 @@ paths:
           description: Schema not found
           schema:
             $ref: '#/definitions/ErrorSchemaNotFound'
-  /Schemas:
-    get:
-      tags:
-        - Schemas Endpoint
-      summary: Get Schema Information
-      description: |
-        This API returns the schema details.
-        <b>Permission required:</b>
-            * No permissions required
-      operationId: getSchemas
-      produces:
-        - application/scim+json
-        - application/json
-      parameters: [ ]
-      responses:
-        200:
-          description: Schema is found
-          schema:
-            $ref: '#/definitions/SchemasResponse'
-        401:
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/ErrorUnauthorized'
-        404:
-          description: Schema not found
-          schema:
-            $ref: '#/definitions/ErrorSchemaNotFound'
+
 
 
 #-----------------------------------------------------
@@ -2437,83 +2411,3 @@ definitions:
         items:
           type: string
           example: "/permission/admin/configure/security/usermgt"
-
-  #-----------------------------------------------------
-  # The Schemas Response
-  #-----------------------------------------------------
-  SchemasResponse:
-    type: array
-    properties:
-      name:
-        type: string
-        example: "User"
-      id:
-        type: string
-        example: "urn:ietf:params:scim:schemas:core:2.0:User"
-      description:
-        type: string
-        example: "User Account"
-      attributes:
-        type: array
-        items:
-          $ref: '#/definitions/SchemasAttributeResponse'
-
-  SchemasAttributeResponse:
-    type: object
-    properties:
-      displayName:
-        type: string
-      displayOrder:
-        type: string
-      description:
-        type: string
-      type:
-        type: string
-      required:
-        type: boolean
-      regEx:
-        type: string
-      uniqueness:
-        type: string
-      name:
-        type: string
-      mutability:
-        type: string
-      multiValued:
-        type: boolean
-      caseExact:
-        type: boolean
-      returned:
-        type: string
-      subAttributes:
-        type: array
-        items:
-          $ref: '#/definitions/SchemasSubAttributeResponse'
-
-  SchemasSubAttributeResponse:
-    type: object
-    properties:
-      displayName:
-        type: string
-      displayOrder:
-        type: string
-      description:
-        type: string
-      type:
-        type: string
-      required:
-        type: boolean
-      regEx:
-        type: string
-      uniqueness:
-        type: string
-      name:
-        type: string
-      mutability:
-        type: string
-      multiValued:
-        type: boolean
-      caseExact:
-        type: boolean
-      returned:
-        type: string
