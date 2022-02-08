@@ -2375,6 +2375,4 @@
         <connection>scm:git:https://github.com/wso2/product-is.git</connection>
         <tag>HEAD</tag>
     </scm>
-
-
 </project>
