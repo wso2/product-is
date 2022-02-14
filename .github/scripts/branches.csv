@@ -69,7 +69,6 @@ samples-is,4.3.x
 carbon-deployment,4.10.x
 carbon-commons,4.7.x
 carbon-registry,4.7.x
-carbon-multitenancy,4.9.x
 carbon-metrics,1.3.x
 carbon-business-process,4.5.x
 carbon-analytics-common,5.2.x
