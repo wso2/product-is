@@ -2131,7 +2131,7 @@
         <callhome.version>4.5.x_1.0.11</callhome.version>
 
         <!-- Authenticator Versions -->
-        <identity.outbound.auth.oidc.version>5.7.0</identity.outbound.auth.oidc.version>
+        <identity.outbound.auth.oidc.version>5.7.1</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.passive.sts.version>5.5.0</identity.outbound.auth.passive.sts.version>
         <identity.outbound.auth.samlsso.version>5.4.1</identity.outbound.auth.samlsso.version>
         <identity.outbound.auth.requestpath.basicauth.version>5.5.0</identity.outbound.auth.requestpath.basicauth.version>
@@ -2149,12 +2149,12 @@
         <provisioning.connector.scim.version>5.3.0</provisioning.connector.scim.version>
 
         <!-- Local Authenticator Versions -->
-        <identity.local.auth.basicauth.version>6.4.2</identity.local.auth.basicauth.version>
+        <identity.local.auth.basicauth.version>6.4.3</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.3.19</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.4.0</identity.local.auth.iwa.version>
 
         <!-- Local Authentication API Connector Version -->
-        <identity.local.auth.api.version>2.5.3</identity.local.auth.api.version>
+        <identity.local.auth.api.version>2.5.4</identity.local.auth.api.version>
 
         <!-- OAuth2 Grant Type extensions -->
         <identity.oauth2.jwt.bearer.grant.version>2.0.4</identity.oauth2.jwt.bearer.grant.version>
