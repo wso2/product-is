@@ -31,6 +31,7 @@
   "transport.https.enabled" : true,
 
   "system.parameter.\u0027org.wso2.CipherTransformation\u0027": "AES/GCM/NoPadding",
+  "system.parameter.\u0027org.apache.xml.security.ignoreLineBreaks\u0027": "true",
 
   "encryption.internal_crypto_provider": "org.wso2.carbon.crypto.provider.SymmetricKeyInternalCryptoProvider",
   "encryption.key": "03BAFEB27A8E871CAD83C5CD4E771DAB",
