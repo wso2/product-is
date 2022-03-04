@@ -117,6 +117,8 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
         addNewUserWithClaims();
         claimMetadataManagementServiceClient = new ClaimMetadataManagementServiceClient(backendURL, sessionCookie);
 
+        changeCountryOIDDialect();
+
         ExternalClaimDTO externalClaimDTO = new ExternalClaimDTO();
         externalClaimDTO
                 .setExternalClaimDialectURI(OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase.OIDC_CLAIM_DIALECT);
@@ -167,9 +169,9 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
         jwtAssertion = oidcTokens.getIDTokenString();
         alias = oidcTokens.getIDToken().getJWTClaimsSet().getAudience().get(0);
         issuer = oidcTokens.getIDToken().getJWTClaimsSet().getIssuer();
-        Assert.assertNull(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(COUNTRY_OIDC_CLAIM),
-                "Requested user claims contains claims which are not configured in requested scopes in self contained "
-                        + "access token based on password claim");
+        Assert.assertEquals(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(COUNTRY_NEW_OIDC_CLAIM),
+                COUNTRY_CLAIM_VALUE, "Requested user claims is not returned back in self contained access token based" +
+                        " on password claim.");
         Assert.assertEquals(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(EMAIL_OIDC_CLAIM), EMAIL_CLAIM_VALUE,
                 "Requested user claims is not returned back in self contained access token based on password "
                         + "claim.");
@@ -189,7 +191,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
 
         addFederatedIdentityProvider();
         OIDCTokens oidcTokens = makeJWTBearerGrantRequest();
-        Assert.assertNull(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(COUNTRY_OIDC_CLAIM),
+        Assert.assertNull(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(COUNTRY_NEW_OIDC_CLAIM),
                 "User claims is returned back without mappings in SP and IDP side when ConvertToOIDCDialect is "
                         + "set to true in identity.xml");
         Assert.assertNull(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(EMAIL_OIDC_CLAIM),
@@ -212,8 +214,9 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
         Assert.assertNull(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(EMAIL_OIDC_CLAIM),
                 "User claims is returned back without mappings in SP and IDP side when ConvertToOIDCDialect is "
                         + "set to true in identity.xml");
-        Assert.assertNull(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(COUNTRY_NEW_OIDC_CLAIM),
-                "User claims contains claims which are not configured in requested scopes");
+        Assert.assertEquals(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(COUNTRY_NEW_OIDC_CLAIM),
+                COUNTRY_CLAIM_VALUE, "User claims is not returned back with proper mappings in SP and IDP side when "
+                        + "ConvertToOIDCDialect is set to true in identity.xml");
         Assert.assertNull(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(EMAIL_LOCAL_CLAIM_URI),
                 "User claims conversion is wrong as per the claim mapping in SP and IDP");
     }
@@ -485,7 +488,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
         Claim emailClaim = new Claim();
         emailClaim.setClaimUri(COUNTRY_LOCAL_CLAIM_URI);
         Claim emailRemoteClaim = new Claim();
-        emailRemoteClaim.setClaimUri(COUNTRY_OIDC_CLAIM);
+        emailRemoteClaim.setClaimUri(COUNTRY_NEW_OIDC_CLAIM);
         ClaimMapping emailClaimMapping = new ClaimMapping();
         emailClaimMapping.setLocalClaim(emailClaim);
         emailClaimMapping.setRemoteClaim(emailRemoteClaim);
