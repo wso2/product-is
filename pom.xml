@@ -1917,6 +1917,11 @@
                 <version>${carbon.identity.framework.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.identity.branding.preference.management</groupId>
+                <artifactId>org.wso2.carbon.identity.branding.preference.management.core</artifactId>
+                <version>${identity.branding.preference.management.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.msf4j</groupId>
                 <artifactId>msf4j-core</artifactId>
                 <version>${msf4j.version}</version>
@@ -2173,6 +2178,9 @@
 
         <!-- Hash Provider Versions-->
         <hashprovider.pbkdf2.version>0.1.4</hashprovider.pbkdf2.version>
+
+        <!-- Identity Branding Preference Management Versions -->
+        <identity.branding.preference.management.version>1.0.1</identity.branding.preference.management.version>
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.0</identity.api.dispatcher.version>

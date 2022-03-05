@@ -493,6 +493,10 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.central.log.mgt.server.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
+                                <!-- Identity Branding Preference Management feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.branding.preference.management:org.wso2.carbon.identity.branding.preference.management.core.server.feature:${identity.branding.preference.management.version}
+                                </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -991,6 +995,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.hash.provider.pbkdf2.server.feature.group</id>
                                     <version>${hashprovider.pbkdf2.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.branding.preference.management.core.server.feature.group</id>
+                                    <version>${identity.branding.preference.management.version}</version>
                                 </feature>
 
                                 <feature>
