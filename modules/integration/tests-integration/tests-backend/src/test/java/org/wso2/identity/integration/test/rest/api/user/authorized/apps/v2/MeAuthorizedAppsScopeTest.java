@@ -241,6 +241,7 @@ public class MeAuthorizedAppsScopeTest extends UserAuthorizedAppsBaseTest {
                 .assertThat()
                 .statusCode(HttpStatus.SC_NO_CONTENT)
                 .log().ifValidationFails();
+        Thread.sleep(1000);
     }
 
     @Test(groups = "wso2.is", dependsOnMethods = {"testDeleteAuthorizedApps"}, description = " The expected " +
