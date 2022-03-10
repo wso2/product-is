@@ -35,11 +35,13 @@
                 <exclude>**/*.lock</exclude>
                 <exclude>**/.data</exclude>
                 <exclude>**/.settings</exclude>
-                <!--removing jars and wars from repository/components/feature folder-->
+                <!--removing jars, json, j2 and wars from repository/components/feature folder-->
+
                 <exclude>features/**/*.war</exclude>
-                <exclude>features/org.wso2.carbon.as.runtimes.cxf_*/cxf3/*.jar</exclude>
-                <exclude>features/org.wso2.carbon.identity.oauth.server_*/runtimes/cxf3/*.jar</exclude>
-                <exclude>features/org.wso2.carbon.identity.oauth2.validators.xacml.server_*/dropins/*.jar</exclude>
+                <exclude>features/**/*.jar</exclude>
+                <exclude>features/**/*.zip</exclude>
+                <exclude>features/**/*.json</exclude>
+                <exclude>features/**/*.j2</exclude>
                 <exclude>features/org.wso2.carbon.event.output.adapter.cassandra.server_*</exclude>
                 <exclude>plugins/cassandra-thrift_*.jar</exclude>
                 <exclude>plugins/org.wso2.carbon.event.output.adapter.cassandra_*.jar</exclude>

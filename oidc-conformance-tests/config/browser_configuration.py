@@ -1150,7 +1150,7 @@ CONFIG = {
                         "tasks": [
                             {
                                 "task": "Verify error page",
-                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback"
+                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback*"
                             }
                         ]
                     }
@@ -1163,7 +1163,7 @@ CONFIG = {
                         "tasks": [
                             {
                                 "task": "Verify error page",
-                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback?error*"
+                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback*"
                             }
                         ]
                     }
@@ -1396,7 +1396,7 @@ CONFIG = {
                         "tasks": [
                             {
                                 "task": "Verify error page",
-                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback"
+                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback*"
                             }
                         ]
                     }
@@ -1409,7 +1409,7 @@ CONFIG = {
                         "tasks": [
                             {
                                 "task": "Verify error page",
-                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback?error*"
+                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback*"
                             }
                         ]
                     }
@@ -1478,17 +1478,7 @@ CONFIG = {
                         "tasks": [
                             {
                                 "task": "Verify error page",
-                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback#error_description*",
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "xpath",
-                                        "//*",
-                                        10,
-                                        "Identity Server",
-                                        "update-image-placeholder"
-                                    ]
-                                ]
+                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback*"
                             }
                         ]
                     }
@@ -1641,7 +1631,7 @@ CONFIG = {
                         "tasks": [
                             {
                                 "task": "Verify error page",
-                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback"
+                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback*"
                             }
                         ]
                     }
@@ -1654,7 +1644,7 @@ CONFIG = {
                         "tasks": [
                             {
                                 "task": "Verify error page",
-                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback?error*"
+                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback*"
                             }
                         ]
                     }
@@ -1747,17 +1737,7 @@ CONFIG = {
                         "tasks": [
                             {
                                 "task": "Verify error page",
-                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback*",
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "xpath",
-                                        "//*",
-                                        10,
-                                        "Identity Server",
-                                        "update-image-placeholder"
-                                    ]
-                                ]
+                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback*"
                             }
                         ]
                     }

@@ -1245,7 +1245,7 @@
       },
       {
         "name": "GetRoleListSQL",
-        "defaultValue": "SELECT UM_ROLE_NAME, UM_TENANT_ID, UM_SHARED_ROLE FROM UM_ROLE WHERE UM_ROLE_NAME LIKE ? AND UM_TENANT_ID=? AND UM_SHARED_ROLE ='0' ORDER BY UM_ROLE_NAME",
+        "defaultValue": "SELECT UM_ROLE_NAME, UM_TENANT_ID, UM_SHARED_ROLE FROM UM_ROLE WHERE UM_ROLE_NAME LIKE ? AND UM_TENANT_ID=? AND UM_SHARED_ROLE = FALSE ORDER BY UM_ROLE_NAME",
         "description": "Get Group List SQL#",
         "attributes": [
           {
@@ -1264,7 +1264,7 @@
       },
       {
         "name": "GetSharedRoleListSQL",
-        "defaultValue": "SELECT UM_ROLE_NAME, UM_TENANT_ID, UM_SHARED_ROLE FROM UM_ROLE WHERE UM_ROLE_NAME LIKE ? AND UM_SHARED_ROLE ='1' ORDER BY UM_ROLE_NAME",
+        "defaultValue": "SELECT UM_ROLE_NAME, UM_TENANT_ID, UM_SHARED_ROLE FROM UM_ROLE WHERE UM_ROLE_NAME LIKE ? AND UM_SHARED_ROLE =TRUE ORDER BY UM_ROLE_NAME",
         "description": "Get Shared Group List SQP#",
         "attributes": [
           {

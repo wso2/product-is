@@ -83,6 +83,14 @@
             {
                 "op": "replace",
                 "value": {
+                    "name": {
+                        "formatted": "Rangika"
+                    }
+                }
+            },
+            {
+                "op": "replace",
+                "value": {
                     "emails": [
                         "admin@wso2.com"
                     ]

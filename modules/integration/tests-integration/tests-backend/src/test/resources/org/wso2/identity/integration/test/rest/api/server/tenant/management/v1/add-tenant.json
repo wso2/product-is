@@ -11,7 +11,7 @@
       "additionalClaims": [
         {
           "claim": "http://wso2.org/claims/telephone",
-          "value": "+94 562 8723"
+          "value": "+94 77 123 4567"
         },
         {
           "claim": "http://wso2.org/claims/country",
