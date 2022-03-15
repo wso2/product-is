@@ -164,6 +164,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		ServiceProvider serviceProvider = new ServiceProvider();
 		serviceProvider.setApplicationName(SERVICE_PROVIDER_NAME);
 		serviceProvider.setDescription(SERVICE_PROVIDER_DESC);
+		serviceProvider.setManagementApp(true);
 		appMgtclient.createApplication(serviceProvider);
 
 		serviceProvider = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
@@ -565,6 +566,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 
 		ServiceProvider serviceProvider = new ServiceProvider();
 		serviceProvider.setApplicationName(SERVICE_PROVIDER_NAME);
+		serviceProvider.setManagementApp(true);
 		appMgtclient.createApplication(serviceProvider);
 
 		serviceProvider = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
