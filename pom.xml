@@ -2288,7 +2288,7 @@
         <commons-codec.version>1.14.0.wso2v1</commons-codec.version>
         <eclipse.microprofile.version>1.2</eclipse.microprofile.version>
         <xmltooling.version>1.3.1</xmltooling.version>
-        <xercesImpl.version>2.12.0</xercesImpl.version>
+        <xercesImpl.version>2.12.2</xercesImpl.version>
         <commons.codec.version>1.8</commons.codec.version>
         <XmlSchema.version>1.4.7-wso2v5</XmlSchema.version>
         <wsdl4j.version>1.6.2.wso2v2</wsdl4j.version>
