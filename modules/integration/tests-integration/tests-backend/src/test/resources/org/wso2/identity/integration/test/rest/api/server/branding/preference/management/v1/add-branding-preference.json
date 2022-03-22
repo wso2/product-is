@@ -1,0 +1,32 @@
+{
+  "type": "ORG",
+  "name": "organization-name",
+  "locale": "en-US",
+  "preference": {
+    "organizationDetails": {
+      "siteTitle": "IAM by WSO2",
+      "copyrightText": "© 2021 WSO2 Inc. All Rights Reserved",
+      "supportEmail" : "iam-help@asgardeo.io"
+    },
+    "images": {
+      "logo": {
+        "imgURL": "https://accounts.iam/asgardeo-logo.svg",
+        "altText": "IAM Logo"
+      },
+      "favicon": {
+        "imgURL": "https://iam.io/favicon.ico"
+      }
+    },
+    "urls": {
+      "privacyPolicyURL": "https://wso2.com/privacy-policy",
+      "termsOfUseURL": "https://wso2.com/terms-of-use",
+      "cookiePolicyURL": "https://wso2.com/cookie-policy"
+    },
+    "stylesheets": {
+      "accountApp": "https://iam-branding/login-portal.css"
+    },
+    "configs": {
+      "isBrandingEnabled": true
+    }
+  }
+}
