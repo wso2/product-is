@@ -153,6 +153,39 @@ public class ApplicationManagementServiceClient {
     }
 
     /**
+     * Get count of all basic applications.
+     *
+     * @return Count of applications.
+     * @throws Exception if there is an error while retrieve the application count.
+     */
+    public int getCountOfAllApplications() throws Exception {
+
+        try {
+            return stub.getCountOfAllApplications();
+        } catch (RemoteException | IdentityApplicationManagementServiceIdentityApplicationManagementException e) {
+            handleException(e);
+        }
+        return 0;
+    }
+
+    /**
+     * Get count of all basic applications for a matching filter.
+     *
+     * @param filter Application name filter.
+     * @return Count of applications match the filter.
+     * @throws Exception if there is an error while retrieve the application count.
+     */
+    public int getCountOfApplications(String filter) throws Exception {
+
+        try {
+            return stub.getCountOfApplications(filter);
+        } catch (RemoteException | IdentityApplicationManagementServiceIdentityApplicationManagementException e) {
+            handleException(e);
+        }
+        return 0;
+    }
+
+    /**
      *
      * @param applicationName
      * @return
