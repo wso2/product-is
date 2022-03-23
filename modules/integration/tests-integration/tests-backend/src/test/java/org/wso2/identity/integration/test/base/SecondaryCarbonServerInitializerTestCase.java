@@ -56,6 +56,7 @@ public class SecondaryCarbonServerInitializerTestCase extends AbstractIdentityFe
         TestDataHolder testDataHolder = TestDataHolder.getInstance();
         Map<String, String> startupParameters = new HashMap<>();
         startupParameters.put("-DportOffset", String.valueOf(PORT_OFFSET_1 + CommonConstants.IS_DEFAULT_OFFSET));
+        startupParameters.put("-DenableRemoteShutdownAndRestart", String.valueOf(true));
         testDataHolder.setAutomationContext(new AutomationContext("IDENTITY", "identity002", TestUserMode
                 .SUPER_TENANT_ADMIN));
         startCarbonServer(PORT_OFFSET_1, testDataHolder.getAutomationContext(), startupParameters);
