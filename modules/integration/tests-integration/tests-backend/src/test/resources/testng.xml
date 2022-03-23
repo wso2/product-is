@@ -77,11 +77,17 @@
             <class name="org.wso2.identity.integration.test.openid.OpenIDRPManagementTestCase"/>
             <!--TODO End of openid tests-->
 
-<!--            &lt;!&ndash;TODO Remove following open id tests since deprecated&ndash;&gt;-->
-<!--            <class name="org.wso2.identity.integration.test.openid.OpenIDAuthenticationTestCase" />-->
-<!--            <class name="org.wso2.identity.integration.test.openid.OpenIDProviderServerConfigTestCase" />-->
-<!--            <class name="org.wso2.identity.integration.test.openid.OpenIDRPManagementTestCase"/>-->
-<!--            &lt;!&ndash;TODO End of openid tests&ndash;&gt;-->
+            <class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileMgtTestCase"/>
+            <class name="org.wso2.identity.integration.test.saml.SPMetadataTestCase"/>
+            <class name="org.wso2.identity.integration.test.saml.IDPMetadataTestCase"/>
+            <class name="org.wso2.identity.integration.test.saml.SAMLMetadataTestCase"/>
+            <class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderManagementTestCase" />
+            <class name="org.wso2.identity.integration.test.entitlement.EntitlementSecurityTestCase"/>
+            <class name="org.wso2.identity.integration.test.entitlement.EntitlementRestServiceTestCase"/>
+            <class name="org.wso2.identity.integration.test.requestPathAuthenticator.RequestPathBasicAuthenticationSSOTest" />
+            <class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderMgtServiceTestCase" />
+            <class name="org.wso2.identity.integration.test.idp.mgt.ResidentIDPConfigsTestCase" />
+            <class name="org.wso2.identity.integration.test.idp.mgt.PreferenceAPIIntegrationUITestCase" />
 
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceSAML2BearerGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.application.authz.ApplicationAuthzTestCase"/>
