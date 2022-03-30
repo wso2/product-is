@@ -85,6 +85,9 @@
                     protocolHeader="{{catalinaValves.remoteIpValve.protocolHeader}}"
                     proxiesHeader="{{catalinaValves.remoteIpValve.proxiesHeader}}"
                     trustedProxies="{{catalinaValves.remoteIpValve.trustedProxies}}"
+                    {% for property,value in catalinaValves.remoteIpValve.properties.items() %}
+                        {{property}}="{{value}}"
+                    {% endfor %}
                 />
                 {% endif %}
                 <Valve className="org.wso2.carbon.tomcat.ext.valves.RequestCorrelationIdValve"
