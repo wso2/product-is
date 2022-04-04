@@ -52,6 +52,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.COMMON_AUTH_URL;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.SCOPE_PLAYGROUND_NAME;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT;
 
 public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTest {
@@ -106,6 +107,7 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(CLIENT_ID_PARAM, consumerKey));
+        urlParameters.add(new BasicNameValuePair(SCOPE_PLAYGROUND_NAME, "device"));
         AutomationContext automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
         String deviceAuthEndpoint = automationContext.getContextUrls().getBackEndUrl()
                 .replace("services/", "oauth2/device_authorize");
