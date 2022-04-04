@@ -28,8 +28,7 @@
 
     <test name="is-tests-default-configuration" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
-            <!--Disabling the test as the grant type is disabled by default.-->
-            <!--<class name="org.wso2.identity.integration.test.oauth2.OAuth2DeviceFlowTestCase"/>-->
+            <class name="org.wso2.identity.integration.test.oauth2.OAuth2DeviceFlowTestCase"/>
 
             <class name="org.wso2.identity.integration.test.consent.ConsentMgtTestCase"/>
             <class name="org.wso2.identity.integration.test.user.export.UserInfoExportTestCase" />
