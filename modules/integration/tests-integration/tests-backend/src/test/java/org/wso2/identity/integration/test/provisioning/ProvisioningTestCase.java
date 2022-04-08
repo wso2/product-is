@@ -92,6 +92,7 @@ public class ProvisioningTestCase extends ISIntegrationTest {
 
     public static final String SAMPLE_IDENTITY_PROVIDER_NAME = "sample";
     public static final String PORT_OFFSET_PARAM = "-DportOffset";
+    public static final String ENABLE_REMOTE_SHUTDOWN_RESTART_PARAM = "-DenableRemoteShutdownAndRestart";
 
     public static final int DEFAULT_PORT = 9853;
     public static final int adminUserId = 0;
@@ -417,6 +418,7 @@ public class ProvisioningTestCase extends ISIntegrationTest {
 
         Map<String, String> startupParameterMap2 = new HashMap<String, String>();
         startupParameterMap2.put(PORT_OFFSET_PARAM, String.valueOf(CommonConstants.IS_DEFAULT_OFFSET + PORT_OFFSET_2));
+        startupParameterMap2.put(ENABLE_REMOTE_SHUTDOWN_RESTART_PARAM, String.valueOf(true));
 
         AutomationContext context2 = new AutomationContext("IDENTITY", "identity003", TestUserMode.SUPER_TENANT_ADMIN);
         automationContextMap.put(PORT_OFFSET_2, context2);

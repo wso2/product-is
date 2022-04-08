@@ -23,11 +23,11 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>api-resources</artifactId>
-        <version>5.12.0-alpha19-SNAPSHOT</version>
+        <version>5.12.0-alpha20-SNAPSHOT</version>
     </parent>
 
     <artifactId>api-resources-full</artifactId>
-    <version>5.12.0-alpha19-SNAPSHOT</version>
+    <version>5.12.0-alpha20-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <name>WSO2 Identity Server - All Rest API</name>
