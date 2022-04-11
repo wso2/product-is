@@ -26,6 +26,7 @@ import org.wso2.identity.integration.common.clients.AuthenticateStub;
 
 import java.rmi.RemoteException;
 
+@Deprecated
 public class UserIdentityManagementAdminServiceClient {
 
     private UserIdentityManagementAdminServiceStub userIdentityManagementAdminServicestub;

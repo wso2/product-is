@@ -30,6 +30,7 @@ import java.rmi.RemoteException;
 /**
  * Service client for AccountCredentialMgtConfigService
  */
+@Deprecated
 public class AccountCredentialMgtConfigServiceClient {
 
     private AccountCredentialMgtConfigServiceStub accCredentialMgtConfigStub;

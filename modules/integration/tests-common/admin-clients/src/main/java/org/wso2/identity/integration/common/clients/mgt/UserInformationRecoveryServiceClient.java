@@ -32,7 +32,7 @@ import org.wso2.carbon.identity.mgt.stub.UserInformationRecoveryServiceIdentityM
 import org.wso2.carbon.identity.mgt.stub.UserInformationRecoveryServiceStub;
 import org.wso2.identity.integration.common.clients.AuthenticateStub;
 
-
+@Deprecated
 public class UserInformationRecoveryServiceClient {
 
 	private UserInformationRecoveryServiceStub infoRecoveryStub;
