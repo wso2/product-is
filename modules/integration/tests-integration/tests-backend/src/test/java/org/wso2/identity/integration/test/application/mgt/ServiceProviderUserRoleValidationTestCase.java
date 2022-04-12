@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2022, WSO2 Inc. (http://www.wso2.org).
+ *
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 package org.wso2.identity.integration.test.application.mgt;
 
 import org.apache.axis2.context.ConfigurationContext;
@@ -17,12 +35,18 @@ import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserSto
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
 
-import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
 import java.io.IOException;
+import javax.xml.xpath.XPathExpressionException;
 
+/**
+ * This test ensures that the service provider count is maintained properly for a given user so that there would be no
+ * service provider pagination issues. A detailed explanation is provided in the GitHub issue
+ * (https://github.com/wso2/product-is/issues/13292).
+ */
 public class ServiceProviderUserRoleValidationTestCase extends ISIntegrationTest {
 
+    private ServerConfigurationManager serverConfigurationManager;
     private static final String ROLE_VALIDATION_ENABLED_TOML = "role_validation_enabled.toml";
     private static final String APPLICATION_PREFIX = "app";
     private static final String SERVICE_PROVIDER_DESCRIPTION = "This is a test Service Provider for AZ test.";
@@ -62,7 +86,7 @@ public class ServiceProviderUserRoleValidationTestCase extends ISIntegrationTest
         File configuredTomlFile = new File
                 (getISResourceLocation() + File.separator + "application" + File.separator + "mgt" +
                         File.separator + ROLE_VALIDATION_ENABLED_TOML);
-        ServerConfigurationManager serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartForcefully();
     }
@@ -135,6 +159,7 @@ public class ServiceProviderUserRoleValidationTestCase extends ISIntegrationTest
 
         deleteObjects();
         clear();
+        serverConfigurationManager.restoreToLastConfiguration(false);
     }
 
     private void deleteObjects() throws Exception {
