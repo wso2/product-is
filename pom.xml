@@ -2114,7 +2114,7 @@
         <identity.user.ws.version>5.5.0</identity.user.ws.version>
 
         <!-- Identity Userstore Versions -->
-        <identity.userstore.ldap.version>6.3.2</identity.userstore.ldap.version>
+        <identity.userstore.ldap.version>6.3.3</identity.userstore.ldap.version>
         <identity.userstore.remote.version>5.2.5</identity.userstore.remote.version>
 
         <!-- Identity Data Publisher Versions -->
@@ -2196,7 +2196,7 @@
         <carbon.identity.oauth.uma.version>1.3.8</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.2.881</identity.apps.version>
+        <identity.apps.version>1.2.883</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
