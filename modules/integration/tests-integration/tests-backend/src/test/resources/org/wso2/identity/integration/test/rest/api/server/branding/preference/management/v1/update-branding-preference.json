@@ -1,0 +1,32 @@
+{
+  "type": "ORG",
+  "name": "organization-name",
+  "locale": "en-US",
+  "preference": {
+    "organizationDetails": {
+      "siteTitle": "IAM by WSO2 - Update",
+      "copyrightText": "© 2021 WSO2 Inc. All Rights Reserved. Updated",
+      "supportEmail" : "iam-help-update@asgardeo.io"
+    },
+    "images": {
+      "logo": {
+        "imgURL": "https://accounts.iam/update/asgardeo-logo.svg",
+        "altText": "IAM Update Logo"
+      },
+      "favicon": {
+        "imgURL": "https://iam.io/update/favicon.ico"
+      }
+    },
+    "urls": {
+      "privacyPolicyURL": "https://wso2.com/update/privacy-policy",
+      "termsOfUseURL": "https://wso2.com/update/terms-of-use",
+      "cookiePolicyURL": "https://wso2.com/update/cookie-policy"
+    },
+    "stylesheets": {
+      "accountApp": "https://iam-branding/update/login-portal.css"
+    },
+    "configs": {
+      "isBrandingEnabled": false
+    }
+  }
+}

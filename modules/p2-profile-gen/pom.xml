@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>5.12.0-alpha17-SNAPSHOT</version>
+        <version>5.12.0-alpha20-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -109,9 +109,6 @@
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.commons:org.wso2.carbon.system.statistics.feature:${carbon.commons.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon.commons:org.wso2.carbon.soaptracer.feature:${carbon.commons.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.analytics-common:org.wso2.carbon.databridge.datapublisher.feature:${carbon.analytics-common.version}
@@ -552,10 +549,6 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.system.statistics.feature.group</id>
-                                    <version>${carbon.commons.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.soaptracer.feature.group</id>
                                     <version>${carbon.commons.version}</version>
                                 </feature>
                                 <feature>
@@ -1113,10 +1106,6 @@
                                     <version>${carbon.commons.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.soaptracer.feature.group</id>
-                                    <version>${carbon.commons.version}</version>
-                                </feature>
-                                <feature>
                                     <id>org.wso2.carbon.security.mgt.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
@@ -1612,10 +1601,6 @@
                                     <version>${carbon.commons.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.soaptracer.server.feature.group</id>
-                                    <version>${carbon.commons.version}</version>
-                                </feature>
-                                <feature>
                                     <id>org.wso2.carbon.security.mgt.server.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
@@ -2100,10 +2085,6 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.system.statistics.server.feature.group</id>
-                                    <version>${carbon.commons.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.soaptracer.server.feature.group</id>
                                     <version>${carbon.commons.version}</version>
                                 </feature>
 

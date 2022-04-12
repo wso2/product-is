@@ -85,7 +85,8 @@
     "options": [
       "None",
       "cookie",
-      "sso-session"
+      "sso-session",
+      "device-flow"
     ],
     "defaultValue": "None"
   }
