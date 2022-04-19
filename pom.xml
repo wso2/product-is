@@ -2275,7 +2275,7 @@
         <xalan.wso2.version>2.7.0.wso2v1</xalan.wso2.version>
         <rampart.wso2.version>1.6.1-wso2v43</rampart.wso2.version>
         <orbit.version.commons.httpclient>4.5.13.wso2v1</orbit.version.commons.httpclient>
-        <httpcore.wso2.version>4.3.3.wso2v1</httpcore.wso2.version>
+        <httpcore.wso2.version>4.4.15.wso2v1</httpcore.wso2.version>
         <httpclient.version>4.5.13</httpclient.version>
         <commons.httpclient.version>3.1</commons.httpclient.version>
         <jstl.version>1.1.2</jstl.version>
