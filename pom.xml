@@ -2213,7 +2213,7 @@
         <carbon.business-process.version>4.5.51</carbon.business-process.version>
         <carbon.analytics-common.version>5.2.41</carbon.analytics-common.version>
         <carbon.dashboards.version>2.0.26</carbon.dashboards.version>
-        <carbon.database.utils.version>2.1.2</carbon.database.utils.version>
+        <carbon.database.utils.version>2.1.3</carbon.database.utils.version>
         <carbon.healthcheck.version>1.2.8</carbon.healthcheck.version>
 
         <!-- Common tool Versions -->
