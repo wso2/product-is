@@ -2183,7 +2183,7 @@
         <identity.branding.preference.management.version>1.0.1</identity.branding.preference.management.version>
 
         <!-- Identity REST API feature -->
-        <identity.api.dispatcher.version>2.0.8</identity.api.dispatcher.version>
+        <identity.api.dispatcher.version>2.0.9</identity.api.dispatcher.version>
         <identity.user.api.version>1.2.3</identity.user.api.version>
         <identity.server.api.version>1.1.10</identity.server.api.version>
 
@@ -2205,7 +2205,7 @@
         <carbon.kernel.version>4.7.0-beta</carbon.kernel.version>
 
         <!-- Carbon Repo Versions -->
-        <carbon.deployment.version>4.12.12</carbon.deployment.version>
+        <carbon.deployment.version>4.12.13</carbon.deployment.version>
         <carbon.commons.version>4.8.7</carbon.commons.version>
         <carbon.registry.version>4.8.4</carbon.registry.version>
         <carbon.multitenancy.version>4.9.17</carbon.multitenancy.version>
