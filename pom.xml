@@ -2196,7 +2196,7 @@
         <carbon.identity.oauth.uma.version>1.3.8</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.2.895</identity.apps.version>
+        <identity.apps.version>1.2.897</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
@@ -2213,7 +2213,7 @@
         <carbon.business-process.version>4.5.51</carbon.business-process.version>
         <carbon.analytics-common.version>5.2.41</carbon.analytics-common.version>
         <carbon.dashboards.version>2.0.26</carbon.dashboards.version>
-        <carbon.database.utils.version>2.1.3</carbon.database.utils.version>
+        <carbon.database.utils.version>2.1.4</carbon.database.utils.version>
         <carbon.healthcheck.version>1.2.8</carbon.healthcheck.version>
 
         <!-- Common tool Versions -->
