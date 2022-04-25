@@ -1282,7 +1282,7 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.apache.httpcomponents.wso2</groupId>
+                <groupId>org.wso2.orbit.org.apache.httpcomponents</groupId>
                 <artifactId>httpclient</artifactId>
                 <version>${orbit.version.commons.httpclient}</version>
             </dependency>
@@ -1978,6 +1978,11 @@
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${com.fasterxml.jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
                 <version>${com.fasterxml.jackson.databind.version}</version>
             </dependency>
@@ -2269,8 +2274,8 @@
         <xalan.version>2.7.1</xalan.version>
         <xalan.wso2.version>2.7.0.wso2v1</xalan.wso2.version>
         <rampart.wso2.version>1.6.1-wso2v43</rampart.wso2.version>
-        <orbit.version.commons.httpclient>4.2.5.wso2v1</orbit.version.commons.httpclient>
-        <httpcore.wso2.version>4.3.3.wso2v1</httpcore.wso2.version>
+        <orbit.version.commons.httpclient>4.5.13.wso2v1</orbit.version.commons.httpclient>
+        <httpcore.wso2.version>4.4.15.wso2v1</httpcore.wso2.version>
         <httpclient.version>4.5.13</httpclient.version>
         <commons.httpclient.version>3.1</commons.httpclient.version>
         <jstl.version>1.1.2</jstl.version>
@@ -2323,7 +2328,7 @@
         <swagger-request-validator.version>2.6.0</swagger-request-validator.version>
         <!--UI Cypress test -->
         <com.fasterxml.jackson.version>2.13.2</com.fasterxml.jackson.version>
-        <com.fasterxml.jackson.databind.version>2.13.2.1</com.fasterxml.jackson.databind.version>
+        <com.fasterxml.jackson.databind.version>2.13.2.2</com.fasterxml.jackson.databind.version>
         <jackson-core-asl.version>1.9.13</jackson-core-asl.version>
         <!--ws-trust-client-->
         <org.apache.velocity.version>1.7</org.apache.velocity.version>
