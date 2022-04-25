@@ -2084,7 +2084,7 @@
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
-        <saml.common.util.version>1.1.0</saml.common.util.version>
+        <saml.common.util.version>1.1.1</saml.common.util.version>
         <saml.common.util.version.range>[1.0.0,2.0.0)</saml.common.util.version.range>
 
         <!--Carbon Consent Version-->
@@ -2094,14 +2094,14 @@
         <identity.governance.version>1.5.70</identity.governance.version>
 
         <!--Identity Carbon Versions-->
-        <identity.carbon.auth.saml2.version>5.6.2</identity.carbon.auth.saml2.version>
+        <identity.carbon.auth.saml2.version>5.6.3</identity.carbon.auth.saml2.version>
         <identity.carbon.auth.mutual.ssl.version>5.5.0</identity.carbon.auth.mutual.ssl.version>
         <identity.carbon.auth.iwa.version>5.5.0</identity.carbon.auth.iwa.version>
         <identity.carbon.auth.rest.version>1.5.5</identity.carbon.auth.rest.version>
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.saml.version>5.9.5</identity.inbound.auth.saml.version>
+        <identity.inbound.auth.saml.version>5.9.6</identity.inbound.auth.saml.version>
         <identity.inbound.auth.oauth.version>6.7.140</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.7.0</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.7.1</identity.inbound.auth.sts.version>
@@ -2115,7 +2115,7 @@
 
 
         <!-- Identity User Versions -->
-        <identity.user.account.association.version>5.5.0</identity.user.account.association.version>
+        <identity.user.account.association.version>5.5.1</identity.user.account.association.version>
         <identity.user.ws.version>5.5.0</identity.user.ws.version>
 
         <!-- Identity Userstore Versions -->
@@ -2170,7 +2170,7 @@
         <identity.oauth2.jwt.bearer.grant.version>2.0.4</identity.oauth2.jwt.bearer.grant.version>
 
         <!--SAML Metadata-->
-        <identity.metadata.saml.version>1.5.2</identity.metadata.saml.version>
+        <identity.metadata.saml.version>1.5.3</identity.metadata.saml.version>
 
         <!-- Connector Versions -->
         <authenticator.totp.version>3.0.23</authenticator.totp.version>
