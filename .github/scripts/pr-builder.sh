@@ -33,7 +33,7 @@ if [ "$REPO" = "product-is" ]; then
   echo ""
   echo "Applying PR $PULL_NUMBER as a diff..."
   echo "=========================================================="
-  wget -q --output-document=diff.diff $PR_LINK.patch
+  wget -q --output-document=diff.diff $PR_LINK.diff
   cat diff.diff
   echo "=========================================================="
   git apply diff.diff || {
@@ -118,7 +118,7 @@ else
   echo ""
   echo "Applying PR $PULL_NUMBER as a diff..."
   echo "=========================================================="
-  wget -q --output-document=diff.diff $PR_LINK.patch
+  wget -q --output-document=diff.diff $PR_LINK.diff
   cat diff.diff
   echo "=========================================================="
   git apply diff.diff || {
