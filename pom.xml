@@ -2080,7 +2080,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.20.384</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.20.385</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2160,7 +2160,7 @@
 
         <!-- Local Authenticator Versions -->
         <identity.local.auth.basicauth.version>6.4.3</identity.local.auth.basicauth.version>
-        <identity.local.auth.fido.version>5.3.21</identity.local.auth.fido.version>
+        <identity.local.auth.fido.version>5.3.22</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.4.0</identity.local.auth.iwa.version>
 
         <!-- Local Authentication API Connector Version -->
@@ -2190,7 +2190,7 @@
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.9</identity.api.dispatcher.version>
         <identity.user.api.version>1.2.3</identity.user.api.version>
-        <identity.server.api.version>1.1.10</identity.server.api.version>
+        <identity.server.api.version>1.1.11</identity.server.api.version>
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
         <identity.tool.samlsso.validator.version>5.5.0</identity.tool.samlsso.validator.version>
