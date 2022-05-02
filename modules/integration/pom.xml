@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>5.12.0-alpha20-SNAPSHOT</version>
+        <version>5.12.0-beta2-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -54,6 +54,7 @@
                             <java.util.logging.manager>org.apache.logging.log4j.jul.LogManager</java.util.logging.manager>
                     </systemProperties>
                     <classpathDependencyExcludes>
+                        <classpathDependencyExclude>org.wso2.org.ops4j.pax.logging:pax-logging-api</classpathDependencyExclude>
                         <classpathDependencyExclude>org.ops4j.pax.logging:pax-logging-api</classpathDependencyExclude>
                     </classpathDependencyExcludes>
                     <workingDirectory>${basedir}/target</workingDirectory>
