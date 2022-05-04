@@ -218,18 +218,21 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
         EntityUtils.consume(response.getEntity());
     }
 
-    @Test(groups = "wso2.is", description = "Send approval post request", dependsOnMethods = "testSendApprovalPost")
+    @Test(groups = "wso2.is", description = "Send token post request", dependsOnMethods = "testSendApprovalPost")
     public void testTokenRequest() throws Exception {
 
-        Thread.sleep(5000); // Sleep 5 seconds before sending the token request
+        // Wait 5 seconds because of the token polling interval.
+        Thread.sleep(5000);
         JSONObject obj = fireTokenRequest();
         String accessToken = obj.get("access_token").toString();
         Assert.assertNotNull(accessToken, "Assess token is null");
     }
 
-    @Test(groups = "wso2.is", description = "Send approval post request", dependsOnMethods = "testTokenRequest")
+    @Test(groups = "wso2.is", description = "Send token post request with used code", dependsOnMethods = "testTokenRequest")
     public void testExpiredDeviceTokenRequest() throws Exception {
 
+        // Wait 5 seconds because of the token polling interval.
+        Thread.sleep(5000);
         JSONObject obj = fireTokenRequest();
         String error = obj.get("error").toString();
         Assert.assertEquals(error, "expired_token");
