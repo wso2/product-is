@@ -2184,7 +2184,7 @@
         <authenticator.smsotp.version>3.1.6</authenticator.smsotp.version>
         <authenticator.emailotp.version>4.0.8</authenticator.emailotp.version>
         <authenticator.twitter.version>1.1.0</authenticator.twitter.version>
-        <authenticator.x509.version>3.1.1</authenticator.x509.version>
+        <authenticator.x509.version>3.1.2</authenticator.x509.version>
         <identity.extension.utils>1.0.8</identity.extension.utils>
 
         <!-- Hash Provider Versions-->
