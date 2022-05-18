@@ -22,3 +22,6 @@ target
 *.ipr
 .idea
 .DS_Store
+
+# Ignore version backup files.
+*pom.xml.versionsBackup
