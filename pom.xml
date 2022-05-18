@@ -2102,7 +2102,7 @@
         <identity.carbon.auth.saml2.version>5.6.4</identity.carbon.auth.saml2.version>
         <identity.carbon.auth.mutual.ssl.version>5.5.0</identity.carbon.auth.mutual.ssl.version>
         <identity.carbon.auth.iwa.version>5.5.0</identity.carbon.auth.iwa.version>
-        <identity.carbon.auth.rest.version>1.5.6</identity.carbon.auth.rest.version>
+        <identity.carbon.auth.rest.version>1.5.7</identity.carbon.auth.rest.version>
 
 
         <!-- Identity Inbound Versions   -->
@@ -2179,7 +2179,7 @@
 
         <!-- Connector Versions -->
         <authenticator.totp.version>3.0.25</authenticator.totp.version>
-        <authenticator.backupcode.version>0.0.2</authenticator.backupcode.version>
+        <authenticator.backupcode.version>0.0.3</authenticator.backupcode.version>
         <authenticator.office365.version>2.1.0</authenticator.office365.version>
         <authenticator.smsotp.version>3.1.7</authenticator.smsotp.version>
         <authenticator.emailotp.version>4.0.8</authenticator.emailotp.version>
@@ -2195,7 +2195,7 @@
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.9</identity.api.dispatcher.version>
-        <identity.user.api.version>1.2.5</identity.user.api.version>
+        <identity.user.api.version>1.2.6</identity.user.api.version>
         <identity.server.api.version>1.1.14</identity.server.api.version>
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
