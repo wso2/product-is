@@ -50,7 +50,7 @@ Project Resources
 =================
 
 * Home page          : http://wso2.com/products/identity-server
-* Library            : http://wso2.org/library/identity
+* Library            : https://wso2.com/library/identity-and-access-management
 * Wiki 
     * Latest released version     : https://is.docs.wso2.com/en/latest/
     * Current development version : https://is.docs.wso2.com/en/next/
