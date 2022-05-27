@@ -1,6 +1,6 @@
-<Policy xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" PolicyId="authn_role_based_policy_template"
+<Policy xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" PolicyId="authn_group_based_policy_template"
         RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:first-applicable" Version="1.0">
-    <Description>This policy template provides ability to authorize users to a given service provider(defined by SP_NAME) in the authentication flow based on the roles of the user (defined by ROLE_1 and ROLE_2). Users who have at least one of the given roles, will be allowed and any others will be denied.</Description>
+    <Description>This policy template provides ability to authorize users to a given service provider(defined by SP_NAME) in the authentication flow based on the groups of the user (defined by GROUP_1 and GROUP_2). Users who are in at least one of the given groups, will be allowed and any others will be denied.</Description>
     <Target>
         <AnyOf>
             <AllOf>
@@ -19,12 +19,12 @@
         <Condition>
             <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:or">
                 <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
-                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Internal/ROLE_1</AttributeValue>
-                    <AttributeDesignator AttributeId="http://wso2.org/claims/roles" Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"/>
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">GROUP_1</AttributeValue>
+                    <AttributeDesignator AttributeId="http://wso2.org/claims/groups" Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"/>
                 </Apply>
                 <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
-                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Internal/ROLE_2</AttributeValue>
-                    <AttributeDesignator AttributeId="http://wso2.org/claims/roles" Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"/>
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">GROUP_2</AttributeValue>
+                    <AttributeDesignator AttributeId="http://wso2.org/claims/groups" Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"/>
                 </Apply>
             </Apply>
         </Condition>
