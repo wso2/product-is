@@ -17,7 +17,7 @@ All WSO2 products are based on a common platform called WSO2 Carbon. It is there
 
 1. Import source code of carbon-kernel from GitHub: You need to import carbon-kernel code into the Eclipse IDE from GitHub. Follow the steps below to achieve this:
    *	Open Eclipse.
-   *	Select workspace for carbon-identity-framework.
+   *	Select workspace for carbon-kernel.
    *	Click on **File** - **Import** - **Projects from Git** - **Clone URI** - Enter URI for carbon-identity-framework i.e., https://github.com/wso2/carbon-kernel.git and click on **Next** - **Next** - Enter Directory and click **Next** - Click **Cancel**.
    *	Again click on the **Import** option from the file menu. Select **Existing Maven Projects** and click on **Next** - click on **Finish**.
 2. Import source code of carbon-identity-framework from GitHub: We have to import carbon-identity-framework code into Eclipse from GitHub. For this we have to follow the steps below:
