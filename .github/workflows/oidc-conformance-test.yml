@@ -65,7 +65,7 @@ jobs:
       
     - name: Clone conformance suite
       run: |
-        CONFORMANCE_SUITE_VERSION=v4.1.37
+        CONFORMANCE_SUITE_VERSION=v4.1.42
         git clone --depth 1 --branch release-${CONFORMANCE_SUITE_VERSION} https://github.com/openid-certification/conformance-suite.git
     
     - name: Adding extra hosts to docker-compose-dev.yml
