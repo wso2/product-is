@@ -51,7 +51,7 @@ font_color = '#009944'
 if workflow_status == 'failure':
     font_color = '#ff0000'
 
-messege_headers = message_headers = {'Content-Type': 'application/json; charset=UTF-8'}
+message_headers = {'Content-Type': 'application/json; charset=UTF-8'}
 message = {
     "cards": [
         {
