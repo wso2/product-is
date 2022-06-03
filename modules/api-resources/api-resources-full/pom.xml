@@ -23,11 +23,11 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>api-resources</artifactId>
-        <version>5.12.0-beta2-SNAPSHOT</version>
+        <version>6.0.0-m4-SNAPSHOT</version>
     </parent>
 
     <artifactId>api-resources-full</artifactId>
-    <version>5.12.0-beta2-SNAPSHOT</version>
+    <version>6.0.0-m4-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <name>WSO2 Identity Server - All Rest API</name>
@@ -155,6 +155,22 @@
         <dependency>
             <groupId>org.wso2.carbon.identity.user.api</groupId>
             <artifactId>org.wso2.carbon.identity.rest.api.user.totp.common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.user.api</groupId>
+            <artifactId>org.wso2.carbon.identity.rest.api.user.backupcode.v1</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.user.api</groupId>
+            <artifactId>org.wso2.carbon.identity.rest.api.user.backupcode.common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.user.api</groupId>
+            <artifactId>org.wso2.carbon.identity.rest.api.user.mfa.v1</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.user.api</groupId>
+            <artifactId>org.wso2.carbon.identity.rest.api.user.mfa.common</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.user.api</groupId>

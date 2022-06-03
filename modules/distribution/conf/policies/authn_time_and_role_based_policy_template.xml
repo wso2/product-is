@@ -27,12 +27,12 @@
                 </Apply>
                 <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:or">
                     <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
-                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">ROLE_1</AttributeValue>
-                        <AttributeDesignator AttributeId="http://wso2.org/claims/role" Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"/>
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Internal/ROLE_1</AttributeValue>
+                        <AttributeDesignator AttributeId="http://wso2.org/claims/roles" Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"/>
                     </Apply>
                     <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
-                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">ROLE_2</AttributeValue>
-                        <AttributeDesignator AttributeId="http://wso2.org/claims/role" Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"/>
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Internal/ROLE_2</AttributeValue>
+                        <AttributeDesignator AttributeId="http://wso2.org/claims/roles" Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"/>
                     </Apply>
                 </Apply>
             </Apply>

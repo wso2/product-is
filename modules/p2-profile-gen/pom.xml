@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>5.12.0-beta2-SNAPSHOT</version>
+        <version>6.0.0-m4-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -253,6 +253,9 @@
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.extension.identity.authenticator.outbound.totp:org.wso2.carbon.extension.identity.authenticator.totp.feature:${authenticator.totp.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.extension.identity.authenticator.outbound.backupcode:org.wso2.carbon.extension.identity.authenticator.backupcode.feature:${authenticator.backupcode.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.extension.identity.authenticator.outbound.emailotp:org.wso2.carbon.identity.authenticator.emailotp.feature:${authenticator.emailotp.version}
@@ -1003,6 +1006,10 @@
                                     <version>${authenticator.totp.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.extension.identity.authenticator.backupcode.connector.feature.group</id>
+                                    <version>${authenticator.backupcode.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.identity.authenticator.emailotp.feature.group</id>
                                     <version>${authenticator.emailotp.version}</version>
                                 </feature>
@@ -1515,6 +1522,10 @@
                                     <version>${authenticator.totp.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.extension.identity.authenticator.backupcode.connector.feature.group</id>
+                                    <version>${authenticator.backupcode.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.identity.authenticator.emailotp.feature.group</id>
                                     <version>${authenticator.emailotp.version}</version>
                                 </feature>
@@ -1958,6 +1969,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.extension.identity.authenticator.totp.connector.feature.group</id>
                                     <version>${authenticator.totp.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.extension.identity.authenticator.backupcode.connector.feature.group</id>
+                                    <version>${authenticator.backupcode.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.authenticator.emailotp.feature.group</id>

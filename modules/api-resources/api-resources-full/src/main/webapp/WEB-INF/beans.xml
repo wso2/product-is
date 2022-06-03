@@ -27,6 +27,8 @@
     <import resource="classpath:META-INF/cxf/session-user-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-fido2-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-totp-v1-cxf.xml"/>
+    <import resource="classpath:META-INF/cxf/user-backupcode-v1-cxf.xml"/>
+    <import resource="classpath:META-INF/cxf/user-mfa-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/permission-management-v1-cxf.xml"/>
     <!--<import resource="classpath:META-INF/cxf/workflow-engine-server-v1-cxf.xml"/>-->
     <import resource="classpath:META-INF/cxf/claim-management-server-v1-cxf.xml"/>
@@ -126,6 +128,8 @@
             <bean class="org.wso2.carbon.identity.rest.api.user.session.v1.MeApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.fido2.v1.MeApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.totp.v1.MeApi"/>
+            <bean class="org.wso2.carbon.identity.rest.api.user.backupcode.v1.MeApi"/>
+            <bean class="org.wso2.carbon.identity.rest.api.user.mfa.v1.MeApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.application.v1.MeApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.recovery.v1.RecoveryApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.challenge.v1.UserIdApi"/>
