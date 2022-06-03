@@ -14,11 +14,11 @@
 #  limitations under the License.
 
 import export_results
+from httplib2 import Http
 import requests
 import json
 import warnings
 import sys
-import smtplib, ssl
 
 conformance_suite_url = sys.argv[1]
 github_run_number = str(sys.argv[2])
@@ -28,12 +28,13 @@ github_run_id = str(sys.argv[5])
 google_chat_webhook = sys.argv[6]
 wso2_is_version = sys.argv[7]
 
-
 failed_count = 0
 warnings_count = 0
 total_tests_count = 0
+
 warnings.filterwarnings("ignore")
 plan_list = json.loads(requests.get(url=conformance_suite_url + "/api/plan?length=50", verify=False).content)
+
 # loop through all test plans and count fails, warnings and total test cases
 for test_plan in plan_list['data']:
     failed_tests_list = export_results.get_failed_tests(test_plan)
@@ -46,20 +47,72 @@ for test_plan in plan_list['data']:
     if len(failed_tests_list['others']) > 0:
         total_tests_count += len(failed_tests_list['others'])
 
+font_color = '#009944'
+if workflow_status == 'failure':
+    font_color = '#ff0000'
 
-# send google chat notification
-request_body = {
-    'text': 'Hi all, OIDC conformance test run #' + github_run_number + ' for IS ' + str(wso2_is_version) +
-            ' completed with status: ' + workflow_status +
-            ' \n Total test cases: ' + str(total_tests_count) +
-            ' \n Failed test cases: ' + str(failed_count) +
-            ' \n Test cases with warnings: ' + str(warnings_count) +
-            ' \n https://github.com/' + github_repository_name + '/actions/runs/' + github_run_id
+message_headers = {'Content-Type': 'application/json; charset=UTF-8'}
+message = {
+    "cards": [
+        {
+            "header": {
+                "title": "OIDC Conformance Test",
+                "subtitle": "GitHub Action #" + github_run_number
+
+            },
+            "sections": [
+                {
+                    "widgets": [
+                        {
+                            "textParagraph": {
+                                "text": "<b>Identity Server " + str(wso2_is_version) + "</b>"
+                            }
+                        },
+                        {
+                            "textParagraph": {
+                                "text": "Status: <b><font color=" + font_color + ">" + workflow_status +
+                                        "</font></b></br>\nTotal test cases: " + str(total_tests_count) +
+                                        "\nFailed test cases: " + str(failed_count) +
+                                        "\nTest cases with warnings: " + str(warnings_count)
+                            }
+                        },
+                        {
+                            "keyValue": {
+                                "topLabel": "Build Job:",
+                                "content": "GitHub Action",
+                                "contentMultiline": "false",
+                                "bottomLabel": "",
+                                "button": {
+                                    "textButton": {
+                                        "text": "VIEW",
+                                        "onClick": {
+                                            "openLink": {
+                                                "url": "https://github.com/" + github_repository_name + "/actions/runs/"
+                                                       + github_run_id
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
 }
+
+http_obj = Http()
+
 try:
-    response = requests.post(google_chat_webhook, json=request_body)
-    print(response.text)
+    # send google chat notification
+    response = http_obj.request(
+        uri=google_chat_webhook,
+        method='POST',
+        headers=message_headers,
+        body=json.dumps(message),
+    )
+    print(response)
     response.raise_for_status()
 except Exception as error:
     print(error)
-

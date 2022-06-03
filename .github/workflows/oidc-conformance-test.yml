@@ -21,7 +21,7 @@ on:
       send-chat:
         description: 'Send test results to google chat'
         required: true
-        default: 'no'
+        default: 'yes'
 
 jobs:
   build:
@@ -42,6 +42,7 @@ jobs:
         python3 -m pip install --upgrade pip setuptools wheel
         pip3 install psutil
         pip3 install httpx
+        pip3 install httplib2
         
     - name: Download IS zip
       run: |
@@ -163,7 +164,7 @@ jobs:
           echo "Sending Google Chat Message"
           echo "==========================="
           CONFORMANCE_SUITE_URL=https://localhost:8443
-          python3 ./product-is/oidc-conformance-tests/send_chat.py $CONFORMANCE_SUITE_URL $GITHUB_RUN_NUMBER ${{job.status}} ${{github.repository}} ${{github.run_id}} ${{secrets.GOOGLE_WEBHOOK}} ${{github.event.inputs.tag}}
+          python3 ./product-is/oidc-conformance-tests/send_chat.py "$CONFORMANCE_SUITE_URL" "$GITHUB_RUN_NUMBER" "${{job.status}}" "${{github.repository}}" "${{github.run_id}}" "${{secrets.GOOGLE_CHAT_WEBHOOK_OIDC_TEST}}" "${{github.event.inputs.tag}}"
         elif [ $SEND_CHAT == "NO" ]; then
           echo "========================================"
           echo "Skipped Sending Google Chat Message"
