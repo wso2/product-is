@@ -21,6 +21,7 @@ package org.wso2.identity.integration.test.user.mgt;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -42,6 +43,8 @@ public class UserMgtTestCase extends ISIntegrationTest {
 	private UserManagementClient userMgtClient;
 	private AuthenticatorClient logManger;
 
+    //Claim Uris
+    private static final String lastNameClaimURI = "http://wso2.org/claims/lastname";
 
 	@BeforeClass(alwaysRun = true)
 	public void testInit() throws Exception {
@@ -56,9 +59,15 @@ public class UserMgtTestCase extends ISIntegrationTest {
 			                      "default");
 		}
 
+		ClaimValue[] claims = new ClaimValue[1];
+		ClaimValue claimValue = new ClaimValue();
+		claimValue.setClaimURI(lastNameClaimURI);
+		claimValue.setValue("user3");
+		claims[0] = claimValue;
+
 		userMgtClient.addUser("user1", "passWord1@", null, "default");
 		userMgtClient.addUser("user2", "passWord1@", null, "default");
-		userMgtClient.addUser("user3", "passWord1@", new String[] { "admin" }, "default");
+		userMgtClient.addUser("user3", "passWord1@", new String[] { "admin" }, "default", claims);
 
 		userMgtClient.addRole("umRole1", null, new String[] { "login" }, false);
 		userMgtClient.addRole("umRole2", new String[] { "user1" }, new String[] { "login" }, false);
@@ -369,7 +378,7 @@ public class UserMgtTestCase extends ISIntegrationTest {
 	public void testListUserByClaim() throws Exception {
 
 		ClaimValue claimValue = new ClaimValue();
-		claimValue.setClaimURI("http://wso2.org/claims/lastname");
+		claimValue.setClaimURI(lastNameClaimURI);
 		claimValue.setValue("user3");
 
 		FlaggedName[] allNames = userMgtClient.listUserByClaim(claimValue, "user*", 10);
