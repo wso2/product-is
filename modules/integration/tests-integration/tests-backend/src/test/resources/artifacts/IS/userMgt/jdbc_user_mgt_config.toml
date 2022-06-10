@@ -23,6 +23,9 @@ password = "$env{SHARED_DATABASE_PASSWORD}"
 [user_store]
 type = "database_unique_id"
 
+[embedded_ldap]
+enable = false
+
 [keystore.primary]
 file_name = "wso2carbon.jks"
 password = "wso2carbon"
