@@ -21,7 +21,6 @@ package org.wso2.identity.integration.test.user.mgt;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -43,8 +42,8 @@ public class UserMgtTestCase extends ISIntegrationTest {
 	private UserManagementClient userMgtClient;
 	private AuthenticatorClient logManger;
 
-    //Claim Uris
-    private static final String lastNameClaimURI = "http://wso2.org/claims/lastname";
+	//Claim Uris
+	private static final String lastNameClaimURI = "http://wso2.org/claims/lastname";
 
 	@BeforeClass(alwaysRun = true)
 	public void testInit() throws Exception {

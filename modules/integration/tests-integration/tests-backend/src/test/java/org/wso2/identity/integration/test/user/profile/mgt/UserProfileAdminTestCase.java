@@ -70,7 +70,6 @@ public class UserProfileAdminTestCase extends ISIntegrationTest {
         userProfileMgtClient = new UserProfileMgtServiceClient(backendURL, sessionCookie);
         userMgtClient = new UserManagementClient(backendURL, sessionCookie);
 
-
         ClaimValue[] claimValues = new ClaimValue[1];
         ClaimValue lastName = new ClaimValue();
         lastName.setClaimURI(lastNameClaimURI);

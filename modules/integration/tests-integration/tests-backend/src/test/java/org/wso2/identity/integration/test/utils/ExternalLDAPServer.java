@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2022, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 package org.wso2.identity.integration.test.utils;
 
 import org.apache.axiom.om.util.Base64;
@@ -62,7 +80,7 @@ public class ExternalLDAPServer {
 
     public static final String ADMIN_PASSWORD_ALGORITHM = "SHA";
 
-    public ExternalLDAPServer (String workingDirectory, String schemaZipFile, int serverPort) {
+    public ExternalLDAPServer(String workingDirectory, String schemaZipFile, int serverPort) {
 
         this.workingDirectoryPath = workingDirectory;
         this.schemaZipFilePath = schemaZipFile;
@@ -457,7 +475,6 @@ public class ExternalLDAPServer {
         }
     }
 
-
     private void addAdminGroup(String adminRoleName, String adminUsername, String partitionSuffix,
                                List<String> objectClasses) throws Exception {
 
@@ -524,7 +541,6 @@ public class ExternalLDAPServer {
             adminEntry.add("cn", adminUsername);
             adminEntry.add("mail", adminEmail);
 
-
             String principal = adminUsername + "/" + "carbon.super" + "@" + realm;
             adminEntry.put(KerberosAttribute.KRB5_PRINCIPAL_NAME_AT, principal);
             adminEntry.put(KerberosAttribute.KRB5_KEY_VERSION_NUMBER_AT, "0");
@@ -566,6 +582,7 @@ public class ExternalLDAPServer {
     }
 
     private void unzipSchemaFile(File zipSchemaStore, File outputDirectory) throws IOException {
+
         ZipInputStream zipFileStream = null;
 
         try {
@@ -605,7 +622,7 @@ public class ExternalLDAPServer {
                     outputDirectory.getAbsolutePath() + " from " +
                     zipSchemaStore.getAbsolutePath();
             throw new IOException(msg, e);
-        } finally{
+        } finally {
             if (zipFileStream != null) {
                 zipFileStream.close();
             }
