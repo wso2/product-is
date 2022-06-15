@@ -28,6 +28,9 @@ import org.apache.commons.logging.LogFactory;
 
 import java.io.File;
 
+/**
+ * Test class that will start and stop external ldap server for the tests in the test suite.
+ */
 public class LDAPServerInitializerTestCase extends ISIntegrationTest {
 
     private static final Log LOG = LogFactory.getLog(LDAPServerInitializerTestCase.class);
@@ -45,16 +48,12 @@ public class LDAPServerInitializerTestCase extends ISIntegrationTest {
                 FileUtils.deleteDirectory(workDir);
             }
             workDir.mkdir();
-
             String schemaZipFilePath = getISResourceLocation() + File.separator + "is-default-schema.zip";
-
             ldapServer = new ExternalLDAPServer(workingDirectoryPath, schemaZipFilePath,
                     ldapServerPort + offset);
             ldapServer.init();
             ldapServer.startServer(true);
-
             LOG.info("External LDAP is started.");
-
         } catch (Exception e) {
             throw new Exception("Failed to start external LDAP.", e);
         }
@@ -65,6 +64,7 @@ public class LDAPServerInitializerTestCase extends ISIntegrationTest {
 
         try {
             ldapServer.stopServer();
+            LOG.info("External LDAP is stopped.");
         } catch (Exception e) {
             throw new Exception("Failed to stop external LDAP.", e);
         }

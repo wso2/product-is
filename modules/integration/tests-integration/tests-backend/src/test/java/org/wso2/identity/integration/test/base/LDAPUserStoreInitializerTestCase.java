@@ -26,6 +26,9 @@ import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 import java.io.File;
 
+/**
+ * Initialize a read-write LDAP user store for the tests in the test suite.
+ */
 public class LDAPUserStoreInitializerTestCase extends ISIntegrationTest {
 
     private ServerConfigurationManager scm;

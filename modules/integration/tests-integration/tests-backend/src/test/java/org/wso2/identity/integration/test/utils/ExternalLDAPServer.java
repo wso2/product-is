@@ -70,6 +70,9 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+/**
+ * External LDAP implementation for the LDAP user store related tests.
+ */
 public class ExternalLDAPServer {
 
     private DirectoryService directoryService;
@@ -97,7 +100,6 @@ public class ExternalLDAPServer {
 
         server.start();
         changeConnectionUserPassword("admin");
-
         if (addDefaultPartition) {
             addPartition(workingDirectoryPath);
         }
@@ -111,17 +113,12 @@ public class ExternalLDAPServer {
     private void initiateDirectoryService() throws Exception {
 
         directoryService = new DefaultDirectoryService();
-
         InstanceLayout instanceLayout = new InstanceLayout(workingDirectoryPath);
         directoryService.setInstanceLayout(instanceLayout);
-
         initiateSchema();
-
         directoryService.getChangeLog().setEnabled(false);
         directoryService.setDenormalizeOpAttrsEnabled(true);
-
         initSystemPartition();
-
         directoryService.startup();
     }
 
@@ -137,22 +134,16 @@ public class ExternalLDAPServer {
         File schemaZipFile = new File(schemaZipFilePath);
         File schemaPartitionDirectory = new File(directoryService.getInstanceLayout().getPartitionsDirectory(),
                 "schema");
-
         unzipSchemaFile(schemaZipFile, schemaPartitionDirectory);
-
         SchemaLoader loader = new LdifSchemaLoader(schemaPartitionDirectory);
         SchemaManager schemaManager = new DefaultSchemaManager(loader);
-
         schemaManager.loadAllEnabled();
-
         ComparatorRegistry comparatorRegistry = schemaManager.getComparatorRegistry();
-
         for (LdapComparator<?> comparator : comparatorRegistry) {
             if (comparator instanceof NormalizingComparator) {
                 ((NormalizingComparator) comparator).setOnServer();
             }
         }
-
         directoryService.setSchemaManager(schemaManager);
 
         LdifPartition ldifPartition = new LdifPartition(directoryService.getSchemaManager(), directoryService
@@ -160,7 +151,6 @@ public class ExternalLDAPServer {
         ldifPartition.setId("schema");
         ldifPartition.setPartitionPath(new File(directoryService.getInstanceLayout().getPartitionsDirectory(),
                 ldifPartition.getId()).toURI());
-
         SchemaPartition schemaPartition = new SchemaPartition(schemaManager);
         schemaPartition.setWrappedPartition(ldifPartition);
         directoryService.setSchemaPartition(schemaPartition);
@@ -179,7 +169,6 @@ public class ExternalLDAPServer {
         Set indexedAttributes = new HashSet();
         indexedAttributes.add(new JdbmIndex(SchemaConstants.OBJECT_CLASS_AT, false));
         systemPartition.setIndexedAttributes(indexedAttributes);
-
         directoryService.setSystemPartition(systemPartition);
     }
 
@@ -196,9 +185,7 @@ public class ExternalLDAPServer {
             if (adminSession != null) {
                 LdapPrincipal adminPrincipal = adminSession.getAuthenticatedPrincipal();
                 if (adminPrincipal != null) {
-
                     String passwordToStore = "{" + ADMIN_PASSWORD_ALGORITHM + "}";
-
                     MessageDigest messageDigest;
                     try {
                         messageDigest = MessageDigest.getInstance(ADMIN_PASSWORD_ALGORITHM);
@@ -210,7 +197,6 @@ public class ExternalLDAPServer {
                     byte[] bytes = messageDigest.digest();
                     String hash = Base64.encode(bytes);
                     passwordToStore = passwordToStore + hash;
-
                     adminPrincipal.setUserPassword(passwordToStore.getBytes());
                     Attribute passwordAttribute = new DefaultAttribute(getAttributeType("userPassword"));
                     try {
@@ -223,17 +209,14 @@ public class ExternalLDAPServer {
                     Modification serverModification = new DefaultModification();
                     serverModification.setOperation(ModificationOperation.REPLACE_ATTRIBUTE);
                     serverModification.setAttribute(passwordAttribute);
-
                     List<Modification> modifiedList = new ArrayList<>();
                     modifiedList.add(serverModification);
-
                     try {
                         adminSession.modify(adminPrincipal.getDn(), modifiedList);
                     } catch (Exception e) {
                         String msg = "Failed changing connection user password.";
                         throw new Exception(msg, e);
                     }
-
                 } else {
                     String msg = "Could not retrieve admin principle. Failed changing connection " +
                             "user password.";
@@ -284,17 +267,14 @@ public class ExternalLDAPServer {
         try {
             JdbmPartition partition = createNewPartition("root", "dc=WSO2,dc=ORG", workingDirectory);
             this.directoryService.addPartition(partition);
-
             CoreSession adminSession = this.directoryService.getAdminSession();
 
             if (!adminSession.exists(partition.getSuffixDn())) {
-
                 List<String> objectClasses = new ArrayList<>();
                 objectClasses.add("dcObject");
                 objectClasses.add("extensibleObject");
                 objectClasses.add("organization");
                 objectClasses.add("top");
-
                 addPartitionAttributes("dc=WSO2,dc=ORG", objectClasses, "WSO2.ORG", "WSO2");
 
                 addUserStoreToPartition(partition.getSuffixDn().getName());
@@ -309,7 +289,6 @@ public class ExternalLDAPServer {
                 objectClassesAdmin.add("wso2Person");
                 objectClassesAdmin.add("scimPerson");
                 objectClassesAdmin.add("person");
-
                 addAdmin("admin", "Administrator", "admin",
                         "admin@wso2.com", "admin", "dc=WSO2,dc=ORG",
                         "WSO2.ORG", objectClassesAdmin);
@@ -317,10 +296,8 @@ public class ExternalLDAPServer {
                 List<String> objectClassesAdminGroup = new ArrayList<>();
                 objectClassesAdminGroup.add("groupOfNames");
                 objectClassesAdminGroup.add("top");
-
                 addAdminGroup("admin", "admin", "dc=WSO2,dc=ORG",
                         objectClassesAdminGroup);
-
                 this.directoryService.sync();
             }
 
@@ -338,19 +315,16 @@ public class ExternalLDAPServer {
             JdbmPartition partition = new JdbmPartition(directoryService.getSchemaManager(), directoryService
                     .getDnFactory());
             String partitionDirectoryName = workingDirectory + File.separator + partitionId;
-
             partition.setId(partitionId);
             partition.setSuffixDn(new Dn(partitionSuffix));
             partition.setPartitionPath(new File(partitionDirectoryName).toURI());
 
             Set<Index<?, String>> indexedAttrs = new HashSet<>();
-
             indexedAttrs.add(new JdbmIndex<Entry>("1.3.6.1.4.1.18060.0.4.1.2.3", true));
             indexedAttrs.add(new JdbmIndex<Entry>("1.3.6.1.4.1.18060.0.4.1.2.4", true));
             indexedAttrs.add(new JdbmIndex<Entry>("1.3.6.1.4.1.18060.0.4.1.2.5", true));
             indexedAttrs.add(new JdbmIndex<Entry>("1.3.6.1.4.1.18060.0.4.1.2.6", true));
             indexedAttrs.add(new JdbmIndex<Entry>("1.3.6.1.4.1.18060.0.4.1.2.7", true));
-
             indexedAttrs.add(new JdbmIndex<Entry>("ou", true));
             indexedAttrs.add(new JdbmIndex<Entry>("dc", true));
             indexedAttrs.add(new JdbmIndex<Entry>("objectClass", true));
@@ -359,7 +333,6 @@ public class ExternalLDAPServer {
             partition.setIndexedAttributes(indexedAttrs);
 
             return partition;
-
         } catch (LdapInvalidDnException e) {
             String msg = "Could not add a new partition with partition id " + partitionId +
                     " and suffix " + partitionSuffix;
@@ -373,22 +346,16 @@ public class ExternalLDAPServer {
         try {
             Dn adminDN = new Dn(partitionDN);
             Entry serverEntry = this.directoryService.newEntry(adminDN);
-
             addObjectClasses(serverEntry, objectClasses);
-
             serverEntry.add("o", realm);
-
             if (dc == null) {
                 System.out.println("Domain component not found for partition with DN - " + partitionDN +
                         ". Not setting domain component.");
             } else {
                 serverEntry.add("dc", dc);
             }
-
             serverEntry.add("administrativeRole", "accessControlSpecificArea");
-
             this.directoryService.getAdminSession().add(serverEntry);
-
         } catch (Exception e) {
             String msg = "Could not add partition attributes for partition - " + partitionDN;
             throw new Exception(msg, e);
@@ -413,14 +380,11 @@ public class ExternalLDAPServer {
             Entry usersEntry = this.directoryService.newEntry(usersDN);
             usersEntry.add("objectClass", "organizationalUnit", "top");
             usersEntry.add("ou", "Users");
-
             this.directoryService.getAdminSession().add(usersEntry);
-
         } catch (LdapInvalidDnException e) {
             String msg = "Could not add user store to partition - " + partitionSuffixDn +
                     ". Cause - partition domain name is not valid.";
             throw new Exception(msg, e);
-
         } catch (LdapException e) {
             String msg = "Could not add user store to partition - " + partitionSuffixDn;
             throw new Exception(msg, e);
@@ -435,13 +399,10 @@ public class ExternalLDAPServer {
 
         Entry groupsEntry;
         try {
-
             Dn groupsDN = new Dn("ou=Groups," + partitionSuffixDn);
-
             groupsEntry = this.directoryService.newEntry(groupsDN);
             groupsEntry.add("objectClass", "organizationalUnit", "top");
             groupsEntry.add("ou", "Groups");
-
             this.directoryService.getAdminSession().add(groupsEntry);
         } catch (LdapException e) {
             String msg = "Could not add group store to partition - " + partitionSuffixDn;
@@ -457,13 +418,10 @@ public class ExternalLDAPServer {
 
         Entry groupsEntry;
         try {
-
             Dn groupsDN = new Dn("ou=SharedGroups," + partitionSuffixDn);
-
             groupsEntry = this.directoryService.newEntry(groupsDN);
             groupsEntry.add("objectClass", "organizationalUnit", "top");
             groupsEntry.add("ou", "SharedGroups");
-
             this.directoryService.getAdminSession().add(groupsEntry);
         } catch (LdapException e) {
             String msg = "Could not add shared group store to partition - " + partitionSuffixDn;
@@ -483,24 +441,18 @@ public class ExternalLDAPServer {
             adminRole = adminRole.substring(adminRole.indexOf("/") + 1);
             adminRoleName = adminRole;
         }
-
         String domainName = "";
         try {
-
             if (adminRoleName != null) {
-
                 domainName = "cn" + "=" + adminRoleName + "," + "ou=Groups," + partitionSuffix;
-
                 Dn adminGroup = new Dn(domainName);
                 Entry adminGroupEntry = directoryService.newEntry(adminGroup);
                 addObjectClasses(adminGroupEntry, objectClasses);
-
                 adminGroupEntry.add("cn", adminRoleName);
                 adminGroupEntry.add("member", "uid" + "=" + adminUsername + "," + "ou=Users," +
                         partitionSuffix);
                 directoryService.getAdminSession().add(adminGroupEntry);
             }
-
         } catch (LdapInvalidDnException e) {
             String msg = "Domain name invalid " + domainName;
             throw new Exception(msg, e);
@@ -521,18 +473,13 @@ public class ExternalLDAPServer {
             admin = admin.substring(admin.indexOf("/") + 1);
             adminUsername = admin;
         }
-
         String domainName = "uid" + "=" + adminUsername + "," + "ou=Users,"
                 + partitionSuffix;
-
         try {
             Dn adminDn = new Dn(domainName);
-
             Entry adminEntry = directoryService.newEntry(adminDn);
-
             objectClasses.add("krb5principal");
             objectClasses.add("krb5kdcentry");
-
             addObjectClasses(adminEntry, objectClasses);
 
             adminEntry.add("uid", adminUsername);
@@ -547,9 +494,7 @@ public class ExternalLDAPServer {
 
             PasswordAlgorithm passwordAlgorithm = PasswordAlgorithm.SHA;
             addAdminPassword(adminEntry, adminPassword, passwordAlgorithm);
-
             directoryService.getAdminSession().add(adminEntry);
-
         } catch (LdapInvalidDnException e) {
             throw new Exception("Domain name invalid " + domainName, e);
         } catch (LdapException e) {
@@ -569,13 +514,10 @@ public class ExternalLDAPServer {
                 byte[] bytes = md.digest();
                 String hash = Base64.encode(bytes);
                 passwordToStore = passwordToStore + hash;
-
             } else {
                 passwordToStore = password;
             }
-
             adminEntry.put("userPassword", passwordToStore.getBytes());
-
         } catch (NoSuchAlgorithmException e) {
             throw new Exception("Could not find matching hash algorithm - " + algorithm.getAlgorithmName(), e);
         }
@@ -584,14 +526,11 @@ public class ExternalLDAPServer {
     private void unzipSchemaFile(File zipSchemaStore, File outputDirectory) throws IOException {
 
         ZipInputStream zipFileStream = null;
-
         try {
             FileInputStream schemaFileStream = new FileInputStream(zipSchemaStore);
             zipFileStream = new ZipInputStream(new BufferedInputStream(schemaFileStream));
             ZipEntry entry;
-
             while ((entry = zipFileStream.getNextEntry()) != null) {
-
                 if (entry.isDirectory()) {
                     File newDirectory = new File(outputDirectory, entry.getName());
                     if (!newDirectory.mkdirs()) {
@@ -602,7 +541,6 @@ public class ExternalLDAPServer {
 
                 int size;
                 byte[] buffer = new byte[2048];
-
                 FileOutputStream extractedSchemaFile = new FileOutputStream(new File(outputDirectory, entry.getName()));
                 BufferedOutputStream extractingBufferedStream =
                         new BufferedOutputStream(extractedSchemaFile, buffer.length);
@@ -628,5 +566,4 @@ public class ExternalLDAPServer {
             }
         }
     }
-
 }
