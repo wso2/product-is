@@ -441,6 +441,11 @@
                 <artifactId>org.wso2.carbon.identity.organization.management.endpoint</artifactId>
                 <version>${identity.org.mgt.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.organization.management</groupId>
+                <artifactId>org.wso2.carbon.identity.organization.management.role.management.endpoint</artifactId>
+                <version>${identity.org.mgt.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>
