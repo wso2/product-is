@@ -198,8 +198,7 @@
 
     <test name="is-tests-scim2" preserve-order="true" parallel="false">
         <classes>
-            <!--TODO: Enable after fixing the issues - https://github.com/wso2/product-is/issues/13772 -->
-            <!--<class name="org.wso2.identity.integration.test.scim2.SCIM2PaginationTestCase"/> -->
+            <class name="org.wso2.identity.integration.test.scim2.SCIM2PaginationTestCase"/>
             <class name="org.wso2.identity.integration.test.scim2.SCIM2UserTestCase"/>
             <class name="org.wso2.identity.integration.test.scim2.SCIM2GroupTestCase"/>
             <class name="org.wso2.identity.integration.test.scim2.SCIM2MeTestCase"/>
