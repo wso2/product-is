@@ -31,28 +31,6 @@
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
-                    <!-- Download OIDC jar from nexus and copy to the authenticatoroutbound/jar folder-->
-                    <execution>
-                        <id>download_oidc_jar</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.wso2.carbon.identity.outbound.auth.oidc</groupId>
-                                    <artifactId>org.wso2.carbon.identity.application.authenticator.oidc</artifactId>
-                                    <version>${identity.outbound.auth.oidc.version}</version>
-                                    <type>jar</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${basedir}/target/authenticatoroutboundCopied/jar
-                                    </outputDirectory>
-                                    <includes>**/*.jar</includes>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
                     <!-- Download PassiveSTS jar from nexus and copy to the  authenticatoroutbound/jar folder-->
                     <execution>
                         <id>download_passivests_jar</id>
