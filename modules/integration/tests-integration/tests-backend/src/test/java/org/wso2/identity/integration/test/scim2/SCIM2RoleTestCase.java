@@ -68,6 +68,7 @@ public class SCIM2RoleTestCase extends ISIntegrationTest {
 
     private static final String ROLE_NAME_1 = "testRole1";
     private static final String PRE_ROLE_NAME = "testRole";
+    private static final int ROLE_COUNT = 7; // Number of roles created in the test case.
 
     private CloseableHttpClient client;
     private String userId1;
@@ -78,7 +79,7 @@ public class SCIM2RoleTestCase extends ISIntegrationTest {
     private final String adminUsername;
     private final String password;
     private final String tenant;
-    private int totalRolesCount;
+    private int totalRolesCount; // To count the number of roles in the pack.
     private List<String> roleIdList;
 
     @Factory(dataProvider = "SCIM2MeConfigProvider")
@@ -149,7 +150,7 @@ public class SCIM2RoleTestCase extends ISIntegrationTest {
         EntityUtils.consume(rolesGetResponse.getEntity());
         assertEquals(rolesGetResponse.getStatusLine().getStatusCode(), 200, "Roles have not been "
                 + "retrieved successfully");
-        totalRolesCount = rolesResponseObj.getInt(TOTAL_COUNT_ATTRIBUTE);
+        totalRolesCount = rolesResponseObj.getInt(TOTAL_COUNT_ATTRIBUTE); // To get already existing roles count.
     }
 
     @AfterClass(alwaysRun = true)
@@ -232,7 +233,7 @@ public class SCIM2RoleTestCase extends ISIntegrationTest {
     @Test(dependsOnMethods = "testCreateRoleWithUsers")
     public void createRolesWithoutUsers() throws Exception {
 
-        for (int i = 2; i < 8; i++) {
+        for (int i = 2; i <= ROLE_COUNT; i++) { // Starting with 2 since 'testRole1' has already been created.
             JSONObject rootObject = new JSONObject();
             String roleDisplayName = PRE_ROLE_NAME + i;
             rootObject.put(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE, roleDisplayName);
@@ -432,7 +433,6 @@ public class SCIM2RoleTestCase extends ISIntegrationTest {
         HttpResponse response = client.execute(request);
         EntityUtils.consume(response.getEntity());
         assertEquals(response.getStatusLine().getStatusCode(), 200, "Role has not been updated successfully.");
-
 
         HttpResponse response2 = sendGetRoleRequest(roleIdList.get(0));
         JSONObject responseObj2 = new JSONObject(EntityUtils.toString(response2.getEntity()));
