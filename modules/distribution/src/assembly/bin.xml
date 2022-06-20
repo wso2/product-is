@@ -56,7 +56,6 @@
                 <exclude>**/datasources/master-datasources.xml</exclude>
                 <exclude>**/repository/resources/conf/**</exclude>
                 <exclude>**/deployment.toml</exclude>
-                <exclude>**/metrics.xml</exclude>
                 <exclude>**/log4j2.properties</exclude>
                 <exclude>**/catalina.properties</exclude>
                 <exclude>**/carbon.properties</exclude>
@@ -453,17 +452,6 @@
         </fileSet>
         <fileSet>
             <directory>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/dbscripts/metrics/
-            </directory>
-            <outputDirectory>wso2is-${pom.version}/dbscripts/metrics</outputDirectory>
-            <includes>
-                <include>**/*.sql</include>
-            </includes>
-            <fileMode>644</fileMode>
-            <directoryMode>775</directoryMode>
-        </fileSet>
-        <fileSet>
-            <directory>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/data-bridge
             </directory>
             <outputDirectory>wso2is-${pom.version}/repository/conf/data-bridge</outputDirectory>
@@ -630,12 +618,6 @@
                 target/wso2carbon-core-${carbon.kernel.version}/repository/conf/datasources/master-datasources.xml
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/datasources/</outputDirectory>
-            <filtered>true</filtered>
-        </file>
-        <file>
-            <source>src/repository/resources/conf/metrics.xml</source>
-            <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
-            <destName>metrics.xml</destName>
             <filtered>true</filtered>
         </file>
         <file>
@@ -1065,36 +1047,6 @@
                 conf/bps/bps.xml
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
-        </file>
-
-        <file>
-            <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/metrics.properties
-            </source>
-            <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
-            <filtered>false</filtered>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/metrics.xml
-            </source>
-            <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
-            <filtered>false</filtered>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/datasources/metrics-datasources.xml
-            </source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/datasources/</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/database/WSO2METRICS_DB.mv.db
-            </source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/database/</outputDirectory>
-            <fileMode>644</fileMode>
         </file>
         <file>
             <source>

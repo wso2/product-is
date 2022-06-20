@@ -391,9 +391,6 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.analytics-common:org.wso2.carbon.event.stream.server.feature:${carbon.analytics-common.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon.metrics:org.wso2.carbon.metrics.feature:${carbon.metrics.version}
-                                </featureArtifactDef>
 
                                 <!--Auth/Authz for Rest API-->
                                 <featureArtifactDef>
@@ -918,10 +915,6 @@
                                     <id>org.wso2.carbon.databridge.commons.server.feature.group</id>
                                     <version>${carbon.analytics-common.version}</version>
                                 </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.metrics.feature.group</id>
-                                    <version>${carbon.metrics.version}</version>
-                                </feature>
 
                                 <!-- Auth/Authz for Rest API  -->
                                 <feature>
@@ -1438,10 +1431,6 @@
                                     <id>org.wso2.carbon.user.mgt.workflow.feature.group</id>
                                     <version>${identity.user.workflow.version}</version>
                                 </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.metrics.feature.group</id>
-                                    <version>${carbon.metrics.version}</version>
-                                </feature>
 
                                 <!-- Auth/Authz for Rest API  -->
                                 <feature>
@@ -1882,10 +1871,6 @@
                                     <id>org.wso2.carbon.user.mgt.workflow.server.feature.group</id>
                                     <version>${identity.user.workflow.version}</version>
                                 </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.metrics.server.feature.group</id>
-                                    <version>${carbon.metrics.version}</version>
-                                </feature>
 
                                 <!-- Auth/Authz for Rest API  -->
                                 <feature>
@@ -2171,10 +2156,6 @@
                                 <feature>
                                     <id>org.wso2.carbon.registry.contentsearch.feature.group</id>
                                     <version>${carbon.registry.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.metrics.feature.group</id>
-                                    <version>${carbon.metrics.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.event.stream.server.feature.group</id>
