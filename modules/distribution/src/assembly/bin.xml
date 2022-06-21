@@ -510,35 +510,6 @@
             <directoryMode>775</directoryMode>
         </fileSet>
 
-        <fileSet>
-            <directory>target/forget-me/identity-anonymization-tool-${forgetme.tool.version}</directory>
-            <outputDirectory>wso2is-${pom.version}/repository/components/tools/forget-me</outputDirectory>
-            <excludes>
-                <exclude>**/forgetme.sh</exclude>
-                <exclude>**/forgetme.bat</exclude>
-                <exclude>**/config.json</exclude>
-                <exclude>conf/sql/**</exclude>
-                <exclude>conf/datasources/**</exclude>
-                <exclude>conf/product-config/**</exclude>
-                <exclude>conf/streams/**</exclude>
-                <exclude>conf/extensions/**</exclude>
-            </excludes>
-            <fileMode>644</fileMode>
-        </fileSet>
-        <fileSet>
-            <directory>target/forget-me/identity-anonymization-tool-${forgetme.tool.version}/conf/sql/identity/
-            </directory>
-            <outputDirectory>wso2is-${pom.version}/repository/components/tools/forget-me/conf/sql/identity
-            </outputDirectory>
-            <fileMode>644</fileMode>
-        </fileSet>
-        <fileSet>
-            <directory>target/forget-me/identity-anonymization-tool-${forgetme.tool.version}/conf/extensions/identity/
-            </directory>
-            <outputDirectory>wso2is-${pom.version}/repository/components/tools/forget-me/extensions/</outputDirectory>
-            <fileMode>644</fileMode>
-        </fileSet>
-
         <!--Copy scope validator to dropins dropins.-->
         <fileSet>
             <directory>
@@ -1067,34 +1038,6 @@
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/consent-mgt-config.xml
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>src/bin/forgetme/forgetme.sh</source>
-            <outputDirectory>wso2is-${pom.version}/bin/</outputDirectory>
-            <fileMode>744</fileMode>
-        </file>
-        <file>
-            <source>src/bin/forgetme/forgetme.bat</source>
-            <outputDirectory>wso2is-${pom.version}/bin/</outputDirectory>
-            <fileMode>744</fileMode>
-        </file>
-        <file>
-            <source>target/forget-me/identity-anonymization-tool-${forgetme.tool.version}/bin/forgetme.sh</source>
-            <outputDirectory>wso2is-${pom.version}/repository/components/tools/forget-me/bin/</outputDirectory>
-            <fileMode>744</fileMode>
-        </file>
-        <file>
-            <source>target/forget-me/identity-anonymization-tool-${forgetme.tool.version}/bin/forgetme.bat</source>
-            <outputDirectory>wso2is-${pom.version}/repository/components/tools/forget-me/bin/</outputDirectory>
-            <fileMode>744</fileMode>
-        </file>
-        <file>
-            <source>
-                target/forget-me/identity-anonymization-tool-${forgetme.tool.version}/conf/product-config/config-identity.json
-            </source>
-            <outputDirectory>wso2is-${pom.version}/repository/components/tools/forget-me/conf/</outputDirectory>
-            <destName>config.json</destName>
             <fileMode>644</fileMode>
         </file>
         <file>
