@@ -100,7 +100,7 @@
             <bean class="org.wso2.carbon.identity.api.server.secret.management.v1.SecretsApi"/>
             <bean class="org.wso2.carbon.identity.api.server.secret.management.v1.SecretTypeApi"/>
             <bean class="org.wso2.carbon.identity.api.server.branding.preference.management.v1.BrandingPreferenceApi"/>
-            <bean class="org.wso2.carbon.identity.organization.management.endpoint.OrganizationsApi" />
+            <bean class="org.wso2.carbon.identity.organization.management.endpoint.OrganizationsApi"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">
