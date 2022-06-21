@@ -2158,7 +2158,6 @@
 
         <!-- Authenticator Versions -->
         <identity.outbound.auth.oidc.version>5.7.3</identity.outbound.auth.oidc.version>
-
         <identity.outbound.auth.passive.sts.version>5.5.0</identity.outbound.auth.passive.sts.version>
         <identity.outbound.auth.samlsso.version>5.4.4</identity.outbound.auth.samlsso.version>
         <identity.outbound.auth.requestpath.basicauth.version>5.5.0</identity.outbound.auth.requestpath.basicauth.version>
