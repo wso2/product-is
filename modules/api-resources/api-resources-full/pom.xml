@@ -65,7 +65,8 @@
                         WEB-INF/lib/org.wso2.carbon.identity.rest.api.*.jar,
                         WEB-INF/lib/org.wso2.carbon.api.*.jar,
                         WEB-INF/lib/org.wso2.carbon.rest.api.*.jar,
-                        WEB-INF/lib/org.wso2.carbon.identity.organization.management.endpoint-*.jar
+                        WEB-INF/lib/org.wso2.carbon.identity.organization.management.endpoint-*.jar,
+                        WEB-INF/lib/org.wso2.carbon.identity.organization.management.role.management.endpoint-*.jar
                     </packagingIncludes>
                 </configuration>
             </plugin>
@@ -399,6 +400,10 @@
         <dependency>
             <groupId>org.wso2.carbon.identity.organization.management</groupId>
             <artifactId>org.wso2.carbon.identity.organization.management.endpoint</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.organization.management</groupId>
+            <artifactId>org.wso2.carbon.identity.organization.management.role.management.endpoint</artifactId>
         </dependency>
     </dependencies>
 </project>
