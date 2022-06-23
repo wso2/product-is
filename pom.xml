@@ -2287,7 +2287,7 @@
         <jstl.version>1.1.2</jstl.version>
         <taglibs.version>1.1.2</taglibs.version>
         <google.collect.wso2.version>1.0.0.wso2v2</google.collect.wso2.version>
-        <google.code.gson.version>2.3.1</google.code.gson.version>
+        <google.code.gson.version>2.9.0</google.code.gson.version>
         <oauth2.client.version>1.0.0</oauth2.client.version>
         <axiom.wso2.version>1.2.11-wso2v16</axiom.wso2.version>
         <commons.lang.version>2.6</commons.lang.version>
