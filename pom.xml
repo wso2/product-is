@@ -2088,20 +2088,20 @@
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
-        <saml.common.util.version>1.1.1</saml.common.util.version>
+        <saml.common.util.version>1.1.2</saml.common.util.version>
         <saml.common.util.version.range>[1.0.0,2.0.0)</saml.common.util.version.range>
 
         <!--Carbon Consent Version-->
         <carbon.consent.mgt.version>2.3.18</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.5.81</identity.governance.version>
+        <identity.governance.version>1.5.82</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.6.4</identity.carbon.auth.saml2.version>
         <identity.carbon.auth.mutual.ssl.version>5.5.0</identity.carbon.auth.mutual.ssl.version>
         <identity.carbon.auth.iwa.version>5.5.0</identity.carbon.auth.iwa.version>
-        <identity.carbon.auth.rest.version>1.5.14</identity.carbon.auth.rest.version>
+        <identity.carbon.auth.rest.version>1.5.15</identity.carbon.auth.rest.version>
 
 
         <!-- Identity Inbound Versions   -->
