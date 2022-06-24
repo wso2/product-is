@@ -107,7 +107,7 @@ http_obj = Http()
 try:
     # send google chat notification
     response = http_obj.request(
-        uri=google_chat_webhook,
+        uri=google_chat_webhook + "&threadKey=oidc-conformance-test",
         method='POST',
         headers=message_headers,
         body=json.dumps(message),
