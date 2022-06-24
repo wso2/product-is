@@ -2095,7 +2095,7 @@
         <carbon.consent.mgt.version>2.3.18</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.5.82</identity.governance.version>
+        <identity.governance.version>1.5.83</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.6.4</identity.carbon.auth.saml2.version>
@@ -2106,7 +2106,7 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.9.10</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.7.165</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.7.166</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.7.0</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.7.4</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.0</identity.inbound.provisioning.scim.version>
@@ -2133,7 +2133,7 @@
 
         <!-- Identity Event Handler Versions -->
         <identity.event.handler.account.lock.version>1.5.0</identity.event.handler.account.lock.version>
-        <identity.event.handler.notification.version>1.4.2</identity.event.handler.notification.version>
+        <identity.event.handler.notification.version>1.4.3</identity.event.handler.notification.version>
 
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
@@ -2147,7 +2147,7 @@
         <!-- Authenticator Versions -->
         <identity.outbound.auth.oidc.version>5.7.3</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.passive.sts.version>5.5.0</identity.outbound.auth.passive.sts.version>
-        <identity.outbound.auth.samlsso.version>5.4.4</identity.outbound.auth.samlsso.version>
+        <identity.outbound.auth.samlsso.version>5.4.5</identity.outbound.auth.samlsso.version>
         <identity.outbound.auth.requestpath.basicauth.version>5.5.0</identity.outbound.auth.requestpath.basicauth.version>
         <identity.outbound.auth.requestpath.oauth.version>5.4.0</identity.outbound.auth.requestpath.oauth.version>
 
