@@ -146,29 +146,6 @@
                             </artifactItems>
                         </configuration>
                     </execution>
-                    <!-- Download smsOTP endpoint war from nexus and copy to the authenticatorCopied/war folder-->
-                    <execution>
-                        <id>download_smsotp_war</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.wso2.identity.apps</groupId>
-                                    <artifactId>sms-otp-authentication-portal</artifactId>
-                                    <version>${identity.apps.version}</version>
-                                    <type>war</type>
-                                    <overWrite>true</overWrite>
-                                    <destFileName>smsotpauthenticationendpoint.war</destFileName>
-                                    <outputDirectory>${basedir}/target/authenticatorCopied/war
-                                    </outputDirectory>
-                                    <includes>**/*.war</includes>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
                     <execution>
                         <id>download_x509certificateauthenticationendpoint_war</id>
                         <phase>compile</phase>

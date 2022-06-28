@@ -332,15 +332,6 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
         </fileSet>
 
-        <!--Copy web apps for for smsotp authenticators-->
-        <fileSet>
-            <directory>../connectors/target/authenticatorCopied/war</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
-            <includes>
-                <include>smsotpauthenticationendpoint.war</include>
-            </includes>
-        </fileSet>
-
         <!--Copy web apps for for x509 certificate authenticators-->
         <fileSet>
             <directory>../connectors/target/authenticatorCopied/war</directory>
@@ -542,7 +533,6 @@
             <directory>../connectors/target/authenticatorCopied/war</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
             <includes>
-                <include>smsotpauthenticationendpoint/</include>
                 <include>x509certificateauthenticationendpoint/</include>
             </includes>
         </fileSet>
