@@ -1523,11 +1523,6 @@
                 <artifactId>org.wso2.carbon.identity.application.authenticator.live</artifactId>
                 <version>${social.authenticator.windowslive.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.identity.outbound.auth.yahoo</groupId>
-                <artifactId>org.wso2.carbon.identity.application.authenticator.yahoo</artifactId>
-                <version>${social.authenticator.yahoo.version}</version>
-            </dependency>
 
             <!-- Provisioning Connectors -->
             <dependency>
@@ -2155,7 +2150,6 @@
         <social.authenticator.facebook.version>5.2.0</social.authenticator.facebook.version>
         <social.authenticator.google.version>5.2.0</social.authenticator.google.version>
         <social.authenticator.windowslive.version>5.2.0</social.authenticator.windowslive.version>
-        <social.authenticator.yahoo.version>5.2.0</social.authenticator.yahoo.version>
 
         <!-- Provisioning connector Versions -->
         <provisioning.connector.google.version>5.2.2</provisioning.connector.google.version>

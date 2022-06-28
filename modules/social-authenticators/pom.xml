@@ -102,29 +102,6 @@
                             </artifactItems>
                         </configuration>
                     </execution>
-                    <!-- Download Yahoo authenticator jar from nexus and copy to the socialauthenticatorCopied/jar folder-->
-                    <execution>
-                        <id>download_yahoo_jar</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.wso2.carbon.identity.outbound.auth.yahoo</groupId>
-                                    <artifactId>org.wso2.carbon.identity.application.authenticator.yahoo
-                                    </artifactId>
-                                    <version>${social.authenticator.yahoo.version}</version>
-                                    <type>jar</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${basedir}/target/socialauthenticatorCopied/jar
-                                    </outputDirectory>
-                                    <includes>**/*.jar</includes>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
                 </executions>
             </plugin>
         </plugins>
