@@ -64,8 +64,6 @@ import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
-import javax.xml.xpath.XPathExpressionException;
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -105,9 +103,6 @@ public class AdaptiveScriptTemporaryClaimPersistenceTestCase extends AbstractAda
     public void testInit() throws Exception {
 
         super.init();
-//        runAdaptiveAuthenticationDependencyScript();
-//         //Re-initiating after the restart.
-//        super.init();
         logManager = new AuthenticatorClient(backendURL);
         String cookie = this.logManager.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
                 isServer.getSuperTenant().getTenantAdmin().getPassword(),

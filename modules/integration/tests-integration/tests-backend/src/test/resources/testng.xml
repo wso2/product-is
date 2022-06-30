@@ -326,7 +326,7 @@
         <classes>
             <class name="org.wso2.identity.integration.test.auth.AdaptiveScriptInitializerTestCase"/>
             <class name="org.wso2.identity.integration.test.auth.AdaptiveScriptTemporaryClaimPersistenceTestCase"/>
-            <!-- TODO this test has a restart-->
+            <!-- This test has a restart-->
             <class name="org.wso2.identity.integration.test.auth.RiskBasedLoginTestCase" />
         </classes>
     </test>

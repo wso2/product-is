@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2021 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *  Copyright (c) 2022 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
@@ -18,20 +18,18 @@
 
 package org.wso2.identity.integration.test.auth;
 
+import java.io.File;
+import java.io.IOException;
+import javax.xml.xpath.XPathExpressionException;
+
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.wso2.carbon.automation.extensions.servers.utils.ServerLogReader;
 import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 
-import javax.xml.xpath.XPathExpressionException;
-import java.io.File;
-import java.io.IOException;
-
-import static org.testng.Assert.assertTrue;
-
 /**
- * Test for temporary claim persistence with adaptive authentication scripts.
+ * Initiation Test for adaptive authentication.
  */
 public class AdaptiveScriptInitializerTestCase extends AbstractAdaptiveAuthenticationTestCase {
 
@@ -51,16 +49,16 @@ public class AdaptiveScriptInitializerTestCase extends AbstractAdaptiveAuthentic
         String targetFolder = System.getProperty("carbon.home");
         String scriptFolder =  getTestArtifactLocation() + File.separator;
         Process tempProcess = null;
-        File shFile = new File(scriptFolder);
-        Runtime rt = Runtime.getRuntime();
+        File scriptFile = new File(scriptFolder);
+        Runtime runtime = Runtime.getRuntime();
 
         try {
             if (System.getProperty("os.name").toLowerCase().contains("windows")) {
                 log.warn("Operating System is Windows, skipping execution");
             } else {
                 log.info("Operating system is not windows. Executing shell script");
-                tempProcess = rt.getRuntime().exec(
-                        new String[] { "/bin/bash", "dependencydownloader.sh", targetFolder }, null, shFile);
+                tempProcess = runtime.getRuntime().exec(
+                        new String[] { "/bin/bash", "enableadaptive.sh", targetFolder }, null, scriptFile);
                 errorStreamHandler = new ServerLogReader("errorStream",
                         tempProcess.getErrorStream());
                 inputStreamHandler = new ServerLogReader("inputStream",
@@ -96,11 +94,12 @@ public class AdaptiveScriptInitializerTestCase extends AbstractAdaptiveAuthentic
         }
         return false;
     }
+
     @AfterTest(alwaysRun = true)
     public void resetUserstoreConfig() throws Exception {
 
         super.init();
+        // TODO: delete - downloaded jars
         serverConfigurationManager.restoreToLastConfiguration(false);
-        // TODO: delete - jars
     }
 }
