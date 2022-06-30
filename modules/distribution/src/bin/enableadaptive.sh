@@ -89,4 +89,4 @@ else
    echo "ASM-Util download completed. Downloaded version : asm-util-${ASM_VERSION}"
 fi
 
-echo "Updating Adaptive Authentication Dependencies finished."
+echo "Enable Adaptive Script successfully finished."

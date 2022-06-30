@@ -65,7 +65,7 @@ public class AdaptiveScriptInitializerTestCase extends AbstractAdaptiveAuthentic
                         tempProcess.getInputStream());
                 inputStreamHandler.start();
                 errorStreamHandler.start();
-                boolean runStatus = waitForMessage(inputStreamHandler, "Updating Adaptive Authentication Dependencies finished.");
+                boolean runStatus = waitForMessage(inputStreamHandler, "Enable Adaptive Script successfully finished.");
                 log.info("Status Message : " + runStatus);
                 restartServer();
             }
