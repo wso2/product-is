@@ -40,15 +40,18 @@ if compgen -G "$CARBON_HOME/repository/components/lib/nashorn-core-*.jar" > /dev
     artifact_name=$(echo "$full_artifact_name" | awk -F'-' '{print $3}')
     LOCAL_NASHORN_VERSION=$(echo "$artifact_name" | awk -F'.' '{print $1 "." $2}')
     if [ "$NASHORN_VERSION" = "$LOCAL_NASHORN_VERSION" ]; then
-    	echo "Updated nashorn exists. No need to download."
+    	echo "Nashorn library exists. No need to download."
     else
-    	echo "Updated nashorn not found. Updating OpenJDK Nashorn."
+    	echo "Required Nashorn library not found. Remove existing library : ${full_artifact_name}"
     	rm $location
+    	echo "Downloading required Nashorn library : nashorn-core-${NASHORN_VERSION}"
     	mvn dependency:get -Dartifact=org.openjdk.nashorn:nashorn-core:$NASHORN_VERSION -Ddest=$LIB_REPO
+    	echo "Nashorn library updated."
     fi
 else
-   echo "OpenJDK Nashorn not found. Downloading OpenJDK Nashorn."
+   echo "Nashorn library not found. Starting to download....."
    mvn dependency:get -Dartifact=org.openjdk.nashorn:nashorn-core:$NASHORN_VERSION -Ddest=$LIB_REPO
+   echo "Nashorn download completed. Downloaded version : nashorn-core-${NASHORN_VERSION}"
 fi
 
 if compgen -G "$CARBON_HOME/repository/components/lib/asm-util-*.jar" > /dev/null; then
@@ -57,15 +60,17 @@ if compgen -G "$CARBON_HOME/repository/components/lib/asm-util-*.jar" > /dev/nul
     artifact_name=$(echo "$full_artifact_name" | awk -F'-' '{print $3}')
     LOCAL_ASM_VERSION=$(echo "$artifact_name" | awk -F'.' '{print $1 "." $2}')
     if [ "$ASM_VERSION" = "$LOCAL_ASM_VERSION" ]; then
-    	echo "Updated asm util exists. No need to download."
+    	echo "ASM-Util library exists. No need to download."
     else
-    	echo "Updated asm util not found. Updating asm."
+    	echo "Required ASM-Util library not found. Remove existing library : ${full_artifact_name}"
     	rm $location
+    	echo "Downloading required ASM-Util library : asm-util-${ASM_VERSION}"
     	mvn dependency:get -Dartifact=org.ow2.asm:asm-util:$ASM_VERSION -Ddest=$LIB_REPO
+    	echo "ASM-Util library updated."
     fi
 else
-   echo "asm util not found. Downloading asm."
-  mvn dependency:get -Dartifact=org.ow2.asm:asm-util:$ASM_VERSION -Ddest=$LIB_REPO
+   echo "ASM-Util library not found. Starting to download....."
+   mvn dependency:get -Dartifact=org.ow2.asm:asm-util:$ASM_VERSION -Ddest=$LIB_REPO
+   echo "ASM-Util download completed. Downloaded version : asm-util-${ASM_VERSION}"
 fi
-
-echo "Updating Adaptive Authentication Dependencies finished."
+echo "Enable Adaptive Script successfully finished."

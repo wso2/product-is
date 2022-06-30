@@ -88,5 +88,4 @@ else
    curl https://repo1.maven.org/maven2/org/ow2/asm/asm-util/$ASM_VERSION/asm-util-$ASM_VERSION.jar -o $CARBON_HOME/repository/components/lib/asm-util-$ASM_VERSION.jar
    echo "ASM-Util download completed. Downloaded version : asm-util-${ASM_VERSION}"
 fi
-
 echo "Enable Adaptive Script successfully finished."
