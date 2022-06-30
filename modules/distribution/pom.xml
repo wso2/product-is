@@ -347,9 +347,9 @@
 
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.bat" token="set CARBON_CLASSPATH=.\lib\*;%CARBON_CLASSPATH%" value="set CARBON_CLASSPATH=.\lib\*;%CARBON_CLASSPATH% ${line.separator}if %JAVA_VERSION% GEQ 110 set NASHRON_ARGS=--no-deprecation-warning" />
 
-                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.sh" token="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot; \" value="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot; \${line.separator} -Dorg.apache.xml.security.ignoreLineBreaks=false \${line.separator} -Dnashorn.args=&quot;$NASHRON_ARGS&quot; \" />
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.sh" token="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot; \" value="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot; \${line.separator} -Dorg.apache.xml.security.ignoreLineBreaks=false \${line.separator}" />
 
-                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.bat" token="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot;" value="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot; -Dnashorn.args=&quot;%NASHRON_ARGS%&quot;" />
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.bat" token="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot;" value="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot;" />
 
                                 <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/authenticators.xml" token="&lt;!--Authenticator name=&quot;MutualSSLAuthenticator&quot; disabled=&quot;false&quot;&gt;" value="&lt;Authenticator name=&quot;MutualSSLAuthenticator&quot;&gt;" />
 
