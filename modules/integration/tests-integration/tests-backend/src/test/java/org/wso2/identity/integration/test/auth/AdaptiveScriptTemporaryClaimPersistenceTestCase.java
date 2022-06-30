@@ -52,17 +52,22 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.extensions.servers.utils.ServerLogReader;
 import org.wso2.carbon.identity.application.common.model.xsd.Claim;
 import org.wso2.carbon.identity.application.common.model.xsd.ClaimConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
+import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
+import javax.xml.xpath.XPathExpressionException;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -89,6 +94,7 @@ public class AdaptiveScriptTemporaryClaimPersistenceTestCase extends AbstractAda
     private AuthorizationCode authorizationCode;
     private Header locationHeader;
     private List<NameValuePair> consentParameters = new ArrayList<>();
+    private ServerConfigurationManager serverConfigurationManager;
 
     private static final String APPLICATION_NAME = "testOauthApp";
     // Nickname, which is an already existing OIDC claim, used as the temporary claim for ease of implementation.
@@ -101,6 +107,9 @@ public class AdaptiveScriptTemporaryClaimPersistenceTestCase extends AbstractAda
     public void testInit() throws Exception {
 
         super.init();
+//        runAdaptiveAuthenticationDependencyScript();
+//         //Re-initiating after the restart.
+//        super.init();
         logManager = new AuthenticatorClient(backendURL);
         String cookie = this.logManager.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
                 isServer.getSuperTenant().getTenantAdmin().getPassword(),
@@ -122,6 +131,59 @@ public class AdaptiveScriptTemporaryClaimPersistenceTestCase extends AbstractAda
         ServiceProvider serviceProvider = createServiceProvider(APPLICATION_NAME,
                 applicationManagementServiceClient, oauthAdminClient, script);
         setClaimConfigsToServiceProvider(serviceProvider);
+    }
+
+    private void runAdaptiveAuthenticationDependencyScript() {
+
+        ServerLogReader inputStreamHandler;
+        ServerLogReader errorStreamHandler;
+        String scriptFolder = (System.getProperty("carbon.home"))
+                + File.separator + "bin" + File.separator;
+        Process tempProcess = null;
+        File shFile = new File(scriptFolder);
+        java.lang.Runtime rt = java.lang.Runtime.getRuntime();
+
+        try {
+            if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+                log.warn("Operating System is Windows, skipping execution");
+            } else {
+                log.info("Operating system is not windows. Executing shell script");
+                tempProcess = rt.getRuntime().exec(
+                        new String[] { "/bin/bash", "dwNashorn.sh" }, null, shFile);
+                errorStreamHandler = new ServerLogReader("errorStream",
+                        tempProcess.getErrorStream());
+                inputStreamHandler = new ServerLogReader("inputStream",
+                        tempProcess.getInputStream());
+                inputStreamHandler.start();
+                errorStreamHandler.start();
+                boolean runStatus = waitForMessage(inputStreamHandler, "Updating Adaptive Authentication finished.");
+                log.info("Status Message : " + runStatus);
+                restartServer();
+            }
+        } catch (Exception e) {
+            log.error("Failed to execute adaptive authentication dependency script", e);
+        } finally {
+            if (tempProcess != null) {
+                tempProcess.destroy();
+            }
+        }
+    }
+
+    private void restartServer() throws AutomationUtilException, IOException, XPathExpressionException {
+
+        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager.restartGracefully();
+    }
+
+    private boolean waitForMessage(ServerLogReader inputStreamHandler,
+                                  String message) {
+        long time = System.currentTimeMillis() + 60 * 1000;
+        while (System.currentTimeMillis() < time) {
+            if (inputStreamHandler.getOutput().contains(message)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @AfterClass(alwaysRun = true)
