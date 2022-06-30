@@ -1069,7 +1069,7 @@
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>src/dependencydownloader.sh</source>
+            <source>bin/dependencydownloader.sh</source>
             <outputDirectory>wso2is-${pom.version}/bin/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
