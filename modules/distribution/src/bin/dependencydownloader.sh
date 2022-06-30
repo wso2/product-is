@@ -49,8 +49,8 @@ PRGDIR=`dirname "$PRG"`
 # Only set CARBON_HOME if not already set
 [ -z "$CARBON_HOME" ] && CARBON_HOME=`cd "$PRGDIR/.." ; pwd`
 
-if compgen -G "$CARBON_HOME/components/lib/nashorn-core-*.jar" > /dev/null; then
-    location=$(find "$CARBON_HOME/components/lib/" ~+ -type f -name "nashorn-core-*.jar" | head -1)
+if compgen -G "$CARBON_HOME/repository/components/lib/nashorn-core-*.jar" > /dev/null; then
+    location=$(find "$CARBON_HOME/repository/components/lib/" ~+ -type f -name "nashorn-core-*.jar" | head -1)
     full_artifact_name=$(basename ${location})
     artifact_name=$(echo "$full_artifact_name" | awk -F'-' '{print $3}')
     LOCAL_NASHORN_VERSION=$(echo "$artifact_name" | awk -F'.' '{print $1 "." $2}')
@@ -59,15 +59,15 @@ if compgen -G "$CARBON_HOME/components/lib/nashorn-core-*.jar" > /dev/null; then
     else
     	echo "Updated nashorn not found. Updating OpenJDK Nashorn."
     	rm $location
-    	wget -P $CARBON_HOME/components/lib https://repo1.maven.org/maven2/org/openjdk/nashorn/nashorn-core/$NASHORN_VERSION/nashorn-core-$NASHORN_VERSION.jar
+    	wget -P $CARBON_HOME/repository/components/lib https://repo1.maven.org/maven2/org/openjdk/nashorn/nashorn-core/$NASHORN_VERSION/nashorn-core-$NASHORN_VERSION.jar
     fi
 else
    echo "OpenJDK Nashorn not found. Downloading OpenJDK Nashorn."
-   wget -P $CARBON_HOME/components/lib https://repo1.maven.org/maven2/org/openjdk/nashorn/nashorn-core/$NASHORN_VERSION/nashorn-core-$NASHORN_VERSION.jar
+   wget -P $CARBON_HOME/repository/components/lib https://repo1.maven.org/maven2/org/openjdk/nashorn/nashorn-core/$NASHORN_VERSION/nashorn-core-$NASHORN_VERSION.jar
 fi
 
-if compgen -G "$CARBON_HOME/components/lib/asm-util-*.jar" > /dev/null; then
-    location=$(find "$CARBON_HOME/components/lib/" ~+ -type f -name "asm-util-*.jar" | head -1)
+if compgen -G "$CARBON_HOME/repository/components/lib/asm-util-*.jar" > /dev/null; then
+    location=$(find "$CARBON_HOME/repository/components/lib/" ~+ -type f -name "asm-util-*.jar" | head -1)
     full_artifact_name=$(basename ${location})
     artifact_name=$(echo "$full_artifact_name" | awk -F'-' '{print $3}')
     LOCAL_ASM_VERSION=$(echo "$artifact_name" | awk -F'.' '{print $1 "." $2}')
@@ -76,11 +76,11 @@ if compgen -G "$CARBON_HOME/components/lib/asm-util-*.jar" > /dev/null; then
     else
     	echo "Updated asm util not found. Updating asm."
     	rm $location
-        wget -P $CARBON_HOME/components/lib https://repo1.maven.org/maven2/org/ow2/asm/asm-util/$ASM_VERSION/asm-util-$ASM_VERSION.jar
+        wget -P $CARBON_HOME/repository/components/lib https://repo1.maven.org/maven2/org/ow2/asm/asm-util/$ASM_VERSION/asm-util-$ASM_VERSION.jar
     fi
 else
    echo "asm util not found. Downloading asm."
-   wget -P $CARBON_HOME/components/lib https://repo1.maven.org/maven2/org/ow2/asm/asm-util/$ASM_VERSION/asm-util-$ASM_VERSION.jar
+   wget -P $CARBON_HOME/repository/components/lib https://repo1.maven.org/maven2/org/ow2/asm/asm-util/$ASM_VERSION/asm-util-$ASM_VERSION.jar
 fi
 
 echo "Updating Adaptive Authentication Dependencies finished."
