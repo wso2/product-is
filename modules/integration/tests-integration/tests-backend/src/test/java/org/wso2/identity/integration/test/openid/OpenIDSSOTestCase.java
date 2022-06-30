@@ -66,6 +66,7 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
     //Claim Uris
     private static final String firstNameClaimURI = "http://axschema.org/namePerson/first";
     private static final String emailClaimURI = "http://axschema.org/contact/email";
+    private static final String lastNameClaimURI = "http://wso2.org/claims/lastname";
     private static final String profileName = "default";
 
     private OpenIDUtils.OpenIDConfig config;
@@ -110,12 +111,17 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
 
         log.info("Creating User " + user.getUsername());
 
-        ClaimValue[] claimValues = new ClaimValue[2];
+        ClaimValue[] claimValues = new ClaimValue[3];
 
         ClaimValue firstName = new ClaimValue();
         firstName.setClaimURI(firstNameClaimURI);
         firstName.setValue(user.getUsername());
         claimValues[1] = firstName;
+
+        ClaimValue lastName = new ClaimValue();
+        lastName.setClaimURI(lastNameClaimURI);
+        lastName.setValue(user.getUsername());
+        claimValues[2] = lastName;
 
         ClaimValue email = new ClaimValue();
         email.setClaimURI(emailClaimURI);

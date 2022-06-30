@@ -72,6 +72,12 @@ public class UserManagementClient {
         userAdminStub.addUser(userName, password, roles, null, profileName);
     }
 
+    public void addUser(String userName, String password, String[] roles,
+                        String profileName, ClaimValue[] claims) throws RemoteException, UserAdminUserAdminException {
+
+        userAdminStub.addUser(userName, password, roles, claims, profileName);
+    }
+
     public void deleteRole(String roleName) throws RemoteException, UserAdminUserAdminException {
         userAdminStub.deleteRole(roleName);
     }

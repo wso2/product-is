@@ -21,11 +21,7 @@ username = "$env{SHARED_DATABASE_USERNAME}"
 password = "$env{SHARED_DATABASE_PASSWORD}"
 
 [user_store]
-type = "read_write_ldap_unique_id"
-connection_url = "ldap://localhost:${Ports.EmbeddedLDAP.LDAPServerPort}"
-connection_name = "uid=admin,ou=system"
-connection_password = "admin"
-base_dn = "dc=wso2,dc=org"      #refers the base dn on which the user and group search bases will be generated
+type = "database_unique_id"
 
 [keystore.primary]
 name = "wso2carbon.jks"

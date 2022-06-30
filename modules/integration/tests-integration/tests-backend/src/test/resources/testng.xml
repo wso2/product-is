@@ -15,6 +15,7 @@
         <classes>
             <class name="org.wso2.identity.integration.test.IdentityServerTestSuitInitializerTestCase"/>
             <class name="org.wso2.identity.integration.test.base.TomcatInitializerTestCase"/>
+            <class name="org.wso2.identity.integration.test.base.LDAPServerInitializerTestCase"/>
         </classes>
     </test>
 
@@ -110,8 +111,6 @@
             <class name="org.wso2.identity.integration.test.saml.SAMLIdPInitiatedSSOTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.SAMLSSOConsentTestCase"/>
             <class name="org.wso2.identity.integration.test.postAuthnHandler.ChallengeQuestionPostAuthnHandlerTestCase"/>
-            <class name="org.wso2.identity.integration.test.user.mgt.ReadWriteLdapBasedUserMgtTestCase"/>
-            <class name="org.wso2.identity.integration.test.user.mgt.ReadWriteLDAPUserStoreManagerTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.dcrm.api.OAuthDCRMTestCase"/>
             <class name="org.wso2.identity.integration.test.functions.library.mgt.FunctionLibraryManagementTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenRevocationWithRevokedAccessToken" />
@@ -211,6 +210,14 @@
             <class name="org.wso2.identity.integration.test.scim2.rest.api.SCIM2SchemasTest"/>
             <class name="org.wso2.identity.integration.test.scim2.rest.api.customSchema.SCIM2CustomSchemaUserTestCase"/>
             <class name="org.wso2.identity.integration.test.scim2.rest.api.customSchema.SCIM2CustomSchemaMeTestCase"/>
+        </classes>
+    </test>
+
+    <test name="is-tests-default-configuration-ldap" preserve-order="true" parallel="false" group-by-instances="true">
+        <classes>
+            <class name="org.wso2.identity.integration.test.base.LDAPUserStoreInitializerTestCase"/>
+            <class name="org.wso2.identity.integration.test.user.mgt.ReadWriteLdapBasedUserMgtTestCase"/>
+            <class name="org.wso2.identity.integration.test.user.mgt.ReadWriteLDAPUserStoreManagerTestCase"/>
         </classes>
     </test>
 

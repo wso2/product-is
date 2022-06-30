@@ -26,6 +26,7 @@ import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.identity.integration.common.clients.UserProfileMgtServiceClient;
 import org.wso2.carbon.identity.user.profile.stub.types.UserFieldDTO;
 import org.wso2.carbon.identity.user.profile.stub.types.UserProfileDTO;
+import org.wso2.carbon.user.mgt.stub.types.carbon.ClaimValue;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 public class UserProfileMgtTestCase extends ISIntegrationTest {
@@ -34,11 +35,21 @@ public class UserProfileMgtTestCase extends ISIntegrationTest {
     private UserProfileMgtServiceClient userProfileMgtClient;
     private UserManagementClient userMgtClient;
 
+    //Claim Uris
+    private static final String lastNameClaimURI = "http://wso2.org/claims/lastname";
+
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
         super.init();
         userMgtClient = new UserManagementClient(backendURL, sessionCookie);
-        userMgtClient.addUser(userId1, "passWord1@", new String[]{"admin"}, "default");
+
+        ClaimValue[] claimValues = new ClaimValue[1];
+        ClaimValue lastName = new ClaimValue();
+        lastName.setClaimURI(lastNameClaimURI);
+        lastName.setValue(userId1);
+        claimValues[0] = lastName;
+
+        userMgtClient.addUser(userId1, "passWord1@", new String[]{"admin"}, "default", claimValues);
         userProfileMgtClient = new UserProfileMgtServiceClient(backendURL, sessionCookie);
     }
 
@@ -71,7 +82,7 @@ public class UserProfileMgtTestCase extends ISIntegrationTest {
     @Test(groups = "wso2.is", description = "Check is add profile enabled")
     public void testIsAddProfileEnabled() throws Exception {
         boolean isAddProfileEnabled = userProfileMgtClient.isAddProfileEnabled();
-        Assert.assertFalse(isAddProfileEnabled, "Getting is add profile enabled has failed.");
+        Assert.assertTrue(isAddProfileEnabled, "Getting is add profile enabled has failed.");
     }
 
     @Test(groups = "wso2.is", description = "Check is add profile enabled")

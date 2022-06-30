@@ -343,6 +343,31 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	}
 
 	/**
+	 * Send login post request with given username and password credentials.
+	 *
+	 * @param client         Http client.
+	 * @param sessionDataKey Session data key.
+	 * @param username       Username.
+	 * @param password       Password.
+	 * @return Http response.
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+	public HttpResponse sendLoginPostForCustomUsers(HttpClient client, String sessionDataKey, String username,
+													String password)
+			throws ClientProtocolException, IOException {
+
+		List<NameValuePair> urlParameters = new ArrayList<>();
+		urlParameters.add(new BasicNameValuePair("username", username));
+		urlParameters.add(new BasicNameValuePair("password", password));
+		urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
+		log.info(">>> sendLoginPost:sessionDataKey: " + sessionDataKey);
+		HttpResponse response = sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.COMMON_AUTH_URL);
+
+		return response;
+	}
+
+	/**
 	 * Send approval post request
 	 *
 	 * @param client

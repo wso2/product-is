@@ -240,7 +240,7 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
 
     private void testAuthentication(OIDCApplication application) throws Exception {
 
-        HttpResponse response = sendLoginPost(client, sessionDataKey);
+        HttpResponse response = sendLoginPostForCustomUsers(client, sessionDataKey, user.getUsername(), user.getPassword());
         Assert.assertNotNull(response, "Login request failed for " + application.getApplicationName() + ". response "
                 + "is null.");
 
@@ -338,7 +338,7 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
         String email = ((org.json.simple.JSONObject) obj).get("email").toString();
 
         EntityUtils.consume(response.getEntity());
-        Assert.assertEquals("admin@wso2.com", email, "Incorrect email claim value");
+        Assert.assertEquals(OIDCUtilTest.email, email, "Incorrect email claim value");
     }
 
     protected void initUser() throws Exception {

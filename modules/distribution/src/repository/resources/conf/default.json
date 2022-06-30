@@ -3,7 +3,9 @@
     "isCascadeDeleteEnabled": true,
     "initializeNewClaimManager": true
   },
-  "user_store.type": "read_write_ldap",
+  "user_store.type": "database_unique_id",
+  "embedded_ldap.enable": false,
+
   "keystore.primary.type" : "JKS",
   "keystore.userstore_password_encryption": "",
   "truststore.type" : "JKS",
