@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>6.0.0-m5-SNAPSHOT</version>
+        <version>6.0.0-alpha2-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -31,28 +31,6 @@
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
-                    <!-- Download OIDC jar from nexus and copy to the authenticatoroutbound/jar folder-->
-                    <execution>
-                        <id>download_oidc_jar</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.wso2.carbon.identity.outbound.auth.oidc</groupId>
-                                    <artifactId>org.wso2.carbon.identity.application.authenticator.oidc</artifactId>
-                                    <version>${identity.outbound.auth.oidc.version}</version>
-                                    <type>jar</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${basedir}/target/authenticatoroutboundCopied/jar
-                                    </outputDirectory>
-                                    <includes>**/*.jar</includes>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
                     <!-- Download PassiveSTS jar from nexus and copy to the  authenticatoroutbound/jar folder-->
                     <execution>
                         <id>download_passivests_jar</id>
