@@ -57,7 +57,6 @@ import org.wso2.carbon.identity.application.common.model.xsd.ClaimConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
-import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.test.util.Utils;
@@ -90,8 +89,6 @@ public class AdaptiveScriptTemporaryClaimPersistenceTestCase extends AbstractAda
     private AuthorizationCode authorizationCode;
     private Header locationHeader;
     private List<NameValuePair> consentParameters = new ArrayList<>();
-    private ServerConfigurationManager serverConfigurationManager;
-
     private static final String APPLICATION_NAME = "testOauthApp";
     // Nickname, which is an already existing OIDC claim, used as the temporary claim for ease of implementation.
     private static final String TEMPORARY_CLAIM_URI = "http://wso2.org/claims/nickname";
