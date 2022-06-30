@@ -48,8 +48,8 @@ public class AdaptiveScriptInitializerTestCase extends AbstractAdaptiveAuthentic
 
         ServerLogReader inputStreamHandler;
         ServerLogReader errorStreamHandler;
-        String scriptFolder = (System.getProperty("carbon.home"))
-                + File.separator + "bin" + File.separator;
+        String targetFolder = System.getProperty("carbon.home");
+        String scriptFolder =  getTestArtifactLocation() + File.separator;
         Process tempProcess = null;
         File shFile = new File(scriptFolder);
         Runtime rt = Runtime.getRuntime();
@@ -60,7 +60,7 @@ public class AdaptiveScriptInitializerTestCase extends AbstractAdaptiveAuthentic
             } else {
                 log.info("Operating system is not windows. Executing shell script");
                 tempProcess = rt.getRuntime().exec(
-                        new String[] { "/bin/bash", "dependencydownloader.sh" }, null, shFile);
+                        new String[] { "/bin/bash", "dependencydownloader.sh", targetFolder }, null, shFile);
                 errorStreamHandler = new ServerLogReader("errorStream",
                         tempProcess.getErrorStream());
                 inputStreamHandler = new ServerLogReader("inputStream",

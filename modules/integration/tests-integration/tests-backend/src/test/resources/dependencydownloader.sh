@@ -22,32 +22,17 @@
 #   CARBON_HOME   	Home of WSO2 Carbon installation. If not set I will  try
 #                   	to figure it out.
 #   NASHORN_VERSION   	OpenJDK Nashorn Version
-#                   	
+#
 #   ASM_VERSION   	ASM Util, Commons Version.
 #
 # -----------------------------------------------------------------------------
 
+CARBON_HOME=$1
+
 NASHORN_VERSION=15.3;
 ASM_VERSION=9.2;
 
-# resolve links - $0 may be a softlink
-PRG="$0"
-
-while [ -h "$PRG" ]; do
-  ls=`ls -ld "$PRG"`
-  link=`expr "$ls" : '.*-> \(.*\)$'`
-  if expr "$link" : '.*/.*' > /dev/null; then
-    PRG="$link"
-  else
-    PRG=`dirname "$PRG"`/"$link"
-  fi
-done
-
-# Get standard environment variables
-PRGDIR=`dirname "$PRG"`
-
-# Only set CARBON_HOME if not already set
-[ -z "$CARBON_HOME" ] && CARBON_HOME=`cd "$PRGDIR/.." ; pwd`
+LIB_REPO=$CARBON_HOME/repository/components/lib
 
 if compgen -G "$CARBON_HOME/repository/components/lib/nashorn-core-*.jar" > /dev/null; then
     location=$(find "$CARBON_HOME/repository/components/lib/" ~+ -type f -name "nashorn-core-*.jar" | head -1)
@@ -59,11 +44,11 @@ if compgen -G "$CARBON_HOME/repository/components/lib/nashorn-core-*.jar" > /dev
     else
     	echo "Updated nashorn not found. Updating OpenJDK Nashorn."
     	rm $location
-	    curl https://repo1.maven.org/maven2/org/openjdk/nashorn/nashorn-core/$NASHORN_VERSION/nashorn-core-$NASHORN_VERSION.jar -o $CARBON_HOME/repository/components/lib/nashorn-core-$NASHORN_VERSION.jar
+    	mvn dependency:get -Dartifact=org.openjdk.nashorn:nashorn-core:$NASHORN_VERSION -Ddest=$LIB_REPO
     fi
 else
    echo "OpenJDK Nashorn not found. Downloading OpenJDK Nashorn."
-   curl https://repo1.maven.org/maven2/org/openjdk/nashorn/nashorn-core/$NASHORN_VERSION/nashorn-core-$NASHORN_VERSION.jar -o $CARBON_HOME/repository/components/lib/nashorn-core-$NASHORN_VERSION.jar
+   mvn dependency:get -Dartifact=org.openjdk.nashorn:nashorn-core:$NASHORN_VERSION -Ddest=$LIB_REPO
 fi
 
 if compgen -G "$CARBON_HOME/repository/components/lib/asm-util-*.jar" > /dev/null; then
@@ -76,11 +61,11 @@ if compgen -G "$CARBON_HOME/repository/components/lib/asm-util-*.jar" > /dev/nul
     else
     	echo "Updated asm util not found. Updating asm."
     	rm $location
-      curl https://repo1.maven.org/maven2/org/ow2/asm/asm-util/$ASM_VERSION/asm-util-$ASM_VERSION.jar -o $CARBON_HOME/repository/components/lib/asm-util-$ASM_VERSION.jar
+    	mvn dependency:get -Dartifact=org.ow2.asm:asm-util:$ASM_VERSION -Ddest=$LIB_REPO
     fi
 else
    echo "asm util not found. Downloading asm."
-   curl https://repo1.maven.org/maven2/org/ow2/asm/asm-util/$ASM_VERSION/asm-util-$ASM_VERSION.jar -o $CARBON_HOME/repository/components/lib/asm-util-$ASM_VERSION.jar
+  mvn dependency:get -Dartifact=org.ow2.asm:asm-util:$ASM_VERSION -Ddest=$LIB_REPO
 fi
 
 echo "Updating Adaptive Authentication Dependencies finished."
