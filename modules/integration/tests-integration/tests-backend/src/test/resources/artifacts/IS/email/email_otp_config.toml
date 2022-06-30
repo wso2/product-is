@@ -12,9 +12,6 @@ create_admin_account = true
 [user_store]
 type = "database_unique_id"
 
-[embedded_ldap]
-enable = false
-
 [database.identity_db]
 driver = "$env{IDENTITY_DATABASE_DRIVER}"
 url = "$env{IDENTITY_DATABASE_URL}"

@@ -15,9 +15,6 @@ connection_name = "uid=admin,ou=system"
 connection_password = "admin"
 base_dn = "dc=wso2,dc=org"
 
-[embedded_ldap]
-enable = false
-
 [database.identity_db]
 type = "h2"
 url = "jdbc:h2:./repository/database/WSO2IDENTITY_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000"
