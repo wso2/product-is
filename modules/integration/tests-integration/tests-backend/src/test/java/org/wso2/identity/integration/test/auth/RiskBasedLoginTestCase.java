@@ -34,7 +34,6 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.extensions.servers.utils.ServerLogReader;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.application.common.model.xsd.AuthenticationStep;
 import org.wso2.carbon.identity.application.common.model.xsd.LocalAndOutboundAuthenticationConfig;
@@ -173,7 +172,6 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
 
     private void changeISConfiguration() throws Exception {
 
-//        runAdaptiveAuthenticationDependencyScript();
         String carbonHome = Utils.getResidentCarbonHome();
         File defaultTomlFile = getDeploymentTomlFile(carbonHome);
         File configuredTomlFile = new File(getISResourceLocation() + File.separator
@@ -181,51 +179,6 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
         serverConfigurationManager = new ServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartGracefully();
-    }
-
-    private void runAdaptiveAuthenticationDependencyScript() {
-
-        ServerLogReader inputStreamHandler;
-        ServerLogReader errorStreamHandler;
-        String scriptFolder = (System.getProperty("carbon.home"))
-                + File.separator + "bin" + File.separator;
-        Process tempProcess = null;
-        File shFile = new File(scriptFolder);
-        java.lang.Runtime rt = java.lang.Runtime.getRuntime();
-
-        try {
-            if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-                log.warn("Operating System is Windows, skipping execution");
-            } else {
-                log.info("Operating system is not windows. Executing shell script");
-                tempProcess = rt.getRuntime().exec(
-                        new String[] { "/bin/bash", "dwNashorn.sh" }, null, shFile);
-                errorStreamHandler = new ServerLogReader("errorStream",
-                        tempProcess.getErrorStream());
-                inputStreamHandler = new ServerLogReader("inputStream",
-                        tempProcess.getInputStream());
-                inputStreamHandler.start();
-                errorStreamHandler.start();
-                boolean runStatus = waitForMessage(inputStreamHandler, "Updating Adaptive Authentication finished.");
-                log.info("Status Message : " + runStatus);
-            }
-        } catch (Exception e) {
-            log.error("Failed to execute adaptive authentication dependency script", e);
-        } finally {
-            if (tempProcess != null) {
-                tempProcess.destroy();
-            }
-        }
-    }
-    private boolean waitForMessage(ServerLogReader inputStreamHandler,
-                                   String message) {
-        long time = System.currentTimeMillis() + 60 * 1000;
-        while (System.currentTimeMillis() < time) {
-            if (inputStreamHandler.getOutput().contains(message)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private void resetISConfiguration() throws Exception {
