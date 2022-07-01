@@ -19,8 +19,6 @@
 package org.wso2.identity.integration.test.auth;
 
 import java.io.File;
-import java.io.IOException;
-import javax.xml.xpath.XPathExpressionException;
 
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
@@ -39,6 +37,7 @@ public class AdaptiveScriptInitializerTestCase extends AbstractAdaptiveAuthentic
     public void testInit() throws Exception {
 
         super.init();
+        serverConfigurationManager = new ServerConfigurationManager(isServer);
         runAdaptiveAuthenticationDependencyScript();
     }
 
@@ -78,9 +77,8 @@ public class AdaptiveScriptInitializerTestCase extends AbstractAdaptiveAuthentic
         }
     }
 
-    private void restartServer() throws AutomationUtilException, IOException, XPathExpressionException {
+    private void restartServer() throws AutomationUtilException {
 
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
         serverConfigurationManager.restartGracefully();
     }
 
