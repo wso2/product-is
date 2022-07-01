@@ -35,7 +35,7 @@ System Requirements
 
 2. Processor - 2 Core/vCPU 1.1GHz or higher
 
-3. Java SE Development Kit 1.8
+3. Java SE Development Kit 11
 
 4. The Management Console requires full Javascript enablement of the Web browser.
 
@@ -62,7 +62,7 @@ Project Resources
 Building the distribution from source
 =========================================
 
-1. Install Java SE Development Kit 1.8
+1. Install Java SE Development Kit 11
 2. Install Apache Maven 3.x.x(https://maven.apache.org/download.cgi#)
 3. Get a clone from https://github.com/wso2/product-is.git or download the source 
 4. Run the one of the below maven commands from product-is directory, 
