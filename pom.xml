@@ -2120,6 +2120,7 @@
                                 </goals>
                                 <configuration> <!-- add this to disable checking -->
                                     <additionalparam>-Xdoclint:none</additionalparam>
+                                    <source>8</source>
                                 </configuration>
                             </execution>
                         </executions>
