@@ -23,7 +23,8 @@ echo "Cloning product-is"
 echo "=========================================================="
 
 JAVA_11_HOME=${JAVA_11_HOME%/}
-echo "$JAVA_11_HOME"
+echo "Java Home"
+echo $JAVA_11_HOME
 #git clone https://github.com/wso2/product-is
 #
 #if [ "$REPO" = "product-is" ]; then
