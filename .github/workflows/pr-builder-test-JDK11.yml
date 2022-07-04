@@ -5,7 +5,7 @@ on:
     inputs:
       pr:
         description: "Enter PR link (ex: https://github.com/wso2-extensions/identity-inbound-auth-oauth/pull/1481)"
-        default: 
+        default:
         required: true
 
 env:
@@ -14,7 +14,7 @@ env:
 jobs:
   build:
     runs-on: ubuntu-18.04
-    
+
     steps:
     - name: Print Input
       run: echo Running the PR builder for PR - ${{ github.event.inputs.pr }}
@@ -24,6 +24,9 @@ jobs:
      with:
        java-version: "11"
        distribution: "adopt"
+    - name: Build init
+      run: |
+        echo "CURRENT_MONTH=$(date +%Y-%m)" >> ${GITHUB_ENV}
     - name: Comment build info
       run: |
         owner=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 4)
