@@ -27,14 +27,14 @@ jobs:
     - name: Build init
       run: |
         echo $JAVA_HOME
-#    - name: Set up Adopt JDK 11
-#     uses: actions/setup-java@v2
-#     with:
-#       java-version: "11"
-#       distribution: "adopt"
-#    - name: Build init
-#      run: |
-#        echo $JAVA_HOME
+    - name: Set up Adopt JDK 11
+     uses: actions/setup-java@v2
+     with:
+       java-version: "11"
+       distribution: "adopt"
+    - name: Build init
+      run: |
+        echo $JAVA_HOME
 #    - name: Comment build info
 #      run: |
 #        owner=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 4)
