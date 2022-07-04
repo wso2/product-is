@@ -40,7 +40,9 @@ jobs:
           distribution: "adopt"
       - name: Build init
         run: |
-          echo $JAVA_HOME
+          echo "JAVA 11"
+        env:
+          JAVA_11_HOME: $JAVA_HOME
       - name: Build init
         run: |
           echo "CURRENT_MONTH=$(date +%Y-%m)" >> ${GITHUB_ENV}
@@ -57,7 +59,7 @@ jobs:
         env:
           PR_LINK: ${{github.event.inputs.pr}}
         run: |
-          wget https://raw.githubusercontent.com/wso2/product-is/master/.github/scripts/pr-builder.sh
+          wget https://raw.githubusercontent.com/nirmal101/product-is/master/.github/scripts/pr-builder.sh
           bash pr-builder.sh
       - name: Archive PR diff file
         if: always()
