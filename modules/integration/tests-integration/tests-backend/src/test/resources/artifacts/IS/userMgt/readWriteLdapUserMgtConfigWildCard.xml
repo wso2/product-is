@@ -35,7 +35,7 @@
             <Property name="defaultRealmName">WSO2.ORG</Property>
             <Property name="kdcEnabled">false</Property>
             <Property name="Disabled">false</Property>
-            <Property name="ConnectionURL">ldap://localhost:${Ports.EmbeddedLDAP.LDAPServerPort}</Property>
+            <Property name="ConnectionURL">ldap://localhost:10799</Property>
             <Property name="ConnectionName">uid=admin,ou=system</Property>
             <Property name="ConnectionPassword">admin</Property>
             <Property name="LDAPConnectionTimeout">5000</Property>
