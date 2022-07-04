@@ -24,7 +24,7 @@ jobs:
      with:
        java-version: "8"
        distribution: "adopt"
-    - name: Build init
+    - name: echo Java 8 home
       run: |
         echo $JAVA_HOME
     - name: Set up Adopt JDK 11
@@ -32,7 +32,7 @@ jobs:
      with:
        java-version: "11"
        distribution: "adopt"
-    - name: Build init
+    - name: Echo Java 11 home
       run: |
         echo $JAVA_HOME
     - name: Comment build info
