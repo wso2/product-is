@@ -25,11 +25,22 @@ jobs:
           pr_number=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 7)
           curl -X POST https://api.github.com/repos/$owner/$repo/issues/$pr_number/comments -H 'Authorization: token ${{secrets.PR_BUILDER_COMMENT}}' -d '{"body":"PR builder started \nLink: https://github.com/wso2/product-is/actions/runs/${{github.run_id}}"}'
       - uses: actions/checkout@v2
+      - name: Set up Adopt JDK 8
+        uses: actions/setup-java@v2
+        with:
+          java-version: "8"
+          distribution: "adopt"
+      - name: Build init
+        run: |
+          echo $JAVA_HOME
       - name: Set up Adopt JDK 11
         uses: actions/setup-java@v2
         with:
           java-version: "11"
           distribution: "adopt"
+      - name: Build init
+        run: |
+          echo $JAVA_HOME
       - name: Build init
         run: |
           echo "CURRENT_MONTH=$(date +%Y-%m)" >> ${GITHUB_ENV}
