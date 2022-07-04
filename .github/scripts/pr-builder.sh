@@ -22,8 +22,7 @@ echo "=========================================================="
 echo "Cloning product-is"
 echo "=========================================================="
 
-echo "Java Home"
-printenv | grep JAVA_11_HOME
+echo $JAVA_HOME
 #git clone https://github.com/wso2/product-is
 #
 #if [ "$REPO" = "product-is" ]; then
