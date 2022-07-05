@@ -33,6 +33,8 @@ jobs:
       - name: echo java 8 home
         run: |
           export JAVA_8_HOME=$JAVA_HOME
+        env:
+          JAVA_8_HOME: $JAVA_HOME
       - name: Set up Adopt JDK 11
         uses: actions/setup-java@v2
         with:
@@ -58,7 +60,7 @@ jobs:
           PR_LINK: ${{github.event.inputs.pr}}
           JHOME: $JAVA_HOME
         run: |
-          echo $JAVA_HOME
+          echo "$JAVA_8_HOME"
           wget https://raw.githubusercontent.com/nirmal101/product-is/master/.github/scripts/pr-builder.sh
           bash pr-builder.sh $JAVA_HOME $JAVA_HOME
       - name: Archive PR diff file
