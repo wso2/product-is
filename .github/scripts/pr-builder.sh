@@ -26,6 +26,8 @@ echo "=========================================================="
 echo "Cloning product-is"
 echo "=========================================================="
 
+export $JAVA_HOME=$JAVA_8_HOME
+echo $JAVA_HOME
 #git clone https://github.com/wso2/product-is
 #
 #if [ "$REPO" = "product-is" ]; then
@@ -56,6 +58,7 @@ echo "=========================================================="
 #  echo "$COMMIT3"
 #
 #  cat pom.xml
+# #java 11
 #  mvn clean install --batch-mode | tee mvn-build.log
 #
 #  PR_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
@@ -140,7 +143,9 @@ echo "=========================================================="
 #  echo ""
 #  echo "Building dependency repo $REPO..."
 #  echo "=========================================================="
+# #check the version
 #  if [ "$REPO" = "carbon-kernel" ]; then
+#    #java 11
 #    mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
 #  else
 #    mvn clean install --batch-mode | tee mvn-build.log
@@ -213,6 +218,7 @@ echo "=========================================================="
 #    echo ""
 #    echo "Building repo $MULTITENANCY_REPO..."
 #    echo "=========================================================="
+#    #java 11
 #    mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
 #
 #    echo "Repo $MULTITENANCY_REPO build complete."
@@ -265,6 +271,7 @@ echo "=========================================================="
 #    echo ""
 #    echo "Building $SCIM2_REPO repo..."
 #    echo "=========================================================="
+#    #java 8
 #    mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
 #
 #    echo "Repo $SCIM2_REPO build complete."
@@ -310,6 +317,7 @@ echo "=========================================================="
 #  fi
 #
 #  cat pom.xml
+#  #java 11
 #  mvn clean install --batch-mode | tee mvn-build.log
 #
 #  PR_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')

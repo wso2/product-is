@@ -7,6 +7,10 @@ on:
         description: "Enter PR link (ex: https://github.com/wso2-extensions/identity-inbound-auth-oauth/pull/1481)"
         default:
         required: true
+      jdk:
+        description: "Enter Java version (ex: 8,11)"
+        default:
+        required: true
 
 env:
   MAVEN_OPTS: -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.http.retryHandler.class=standard -Dmaven.wagon.http.retryHandler.count=3
@@ -34,9 +38,6 @@ jobs:
       - name: echo java 8 home
         run: |
           echo "J8HOME=$JAVA_HOME" >> ${GITHUB_ENV}
-#          export JAVA_8_HOME="java 8"
-#          echo $JAVA_8_HOME
-#          echo '::set-output name=JAVA_8::$JAVA_8_HOME'
         id: java-8-setup
       - name: Set up Adopt JDK 11
         uses: actions/setup-java@v2
@@ -45,9 +46,7 @@ jobs:
           distribution: "adopt"
       - name: echo java 11 home
         run: |
-          echo "java home is: ${{env.J8HOME}}"
           echo "J11HOME=$JAVA_HOME" >> ${GITHUB_ENV}
-      #          echo "The selected color is ${{ steps.java-8-setup.outputs.JAVA_8 }}"
       - name: Build init
         run: |
           echo "CURRENT_MONTH=$(date +%Y-%m)" >> ${GITHUB_ENV}
@@ -63,6 +62,7 @@ jobs:
         id: builder_step
         env:
           PR_LINK: ${{github.event.inputs.pr}}
+          JDK_VERSION: ${{github.event.inputs.jdk}}
           JAVA_8_HOME: ${{env.J8HOME}}
           JAVA_11_HOME: ${{env.J11HOME}}
         run: |
