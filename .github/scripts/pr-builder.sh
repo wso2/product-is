@@ -27,7 +27,7 @@ echo "::set-output name=REPO_NAME::$REPO"
 echo "=========================================================="
 echo "Cloning product-is"
 echo "=========================================================="
-
+echo "here"
 export JAVA_HOME=$JAVA_8_HOME
 echo $JAVA_HOME
 export JAVA_HOME=$JAVA_11_HOME
