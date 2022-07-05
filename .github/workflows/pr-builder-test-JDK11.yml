@@ -33,6 +33,7 @@ jobs:
       - name: echo java 8 home
         run: |
           export JAVA_8_HOME=$JAVA_HOME
+          echo $JAVA_8_HOME
         env:
           JAVA_8_HOME: $JAVA_HOME
       - name: Set up Adopt JDK 11
