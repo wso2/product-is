@@ -32,7 +32,7 @@ jobs:
           distribution: "adopt"
       - name: echo java 8 home
         run: |
-          export JAVA_8_HOME=$JAVA_HOME
+          export JAVA_8_HOME="java 8"
           echo $JAVA_8_HOME
           echo '::set-output name=JAVA_8::$JAVA_8_HOME'
         id: java-8-setup
