@@ -28,7 +28,7 @@ echo "=========================================================="
 echo "Cloning product-is"
 echo "=========================================================="
 
-export $JAVA_HOME=$JAVA_8_HOME
+export JAVA_HOME=$JAVA_8_HOME
 echo $JAVA_HOME
 #git clone https://github.com/wso2/product-is
 #
