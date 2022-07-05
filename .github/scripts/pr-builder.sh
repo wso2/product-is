@@ -23,7 +23,7 @@ echo "::set-output name=REPO_NAME::$REPO"
 echo "=========================================================="
 echo "Cloning product-is"
 echo "=========================================================="
-echo "java home $1"
+echo $JAVA_HOME
 
 #git clone https://github.com/wso2/product-is
 #
