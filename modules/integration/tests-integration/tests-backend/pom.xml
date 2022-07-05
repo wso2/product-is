@@ -46,9 +46,15 @@
                         <inherited>false</inherited>
                         <version>2.22.1</version>
                         <configuration>
-                            <!--<argLine>-Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006</argLine>-->
-                            <argLine>-Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m
+                            <!--<argLine>-Xmx1024m -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006</argLine>-->
+                            <argLine>-Xmx1024m
                                 -Dorg.apache.jasper.compiler.disablejsr199=true
+                                --add-opens=java.base/java.lang=ALL-UNNAMED
+                                --add-opens=java.base/java.util=ALL-UNNAMED
+                                --add-opens java.xml/jdk.xml.internal=ALL-UNNAMED
+                                --add-opens=java.base/java.io=ALL-UNNAMED
+                                --add-opens=java.base/sun.nio.fs=ALL-UNNAMED
+                                --add-opens=java.naming/com.sun.jndi.ldap=ALL-UNNAMED
                             </argLine>
                             <suiteXmlFiles>
                                 <!--<suiteXmlFile>src/test/resources/testng-server-mgt.xml</suiteXmlFile>-->
@@ -135,8 +141,8 @@
                         <inherited>false</inherited>
                         <version>2.22.1</version>
                         <configuration>
-                            <!--<argLine>-Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006</argLine>-->
-                            <argLine>-Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m
+                            <!--<argLine>-Xmx1024m -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006</argLine>-->
+                            <argLine>-Xmx1024m
                                 -Dorg.apache.jasper.compiler.disablejsr199=true
                             </argLine>
                             <suiteXmlFiles>
@@ -643,6 +649,21 @@
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>json-path</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>xml-path</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured-all</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

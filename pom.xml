@@ -1931,6 +1931,24 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
+                <groupId>io.rest-assured</groupId>
+                <artifactId>json-path</artifactId>
+                <version>${rest.assured.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.rest-assured</groupId>
+                <artifactId>xml-path</artifactId>
+                <version>${rest.assured.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.rest-assured</groupId>
+                <artifactId>rest-assured-all</artifactId>
+                <version>${rest.assured.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
                 <groupId>io.swagger</groupId>
                 <artifactId>swagger-annotations</artifactId>
                 <version>${swagger-core-version}</version>
@@ -2263,7 +2281,7 @@
         <charon.version>3.4.1</charon.version>
 
         <!-- Carbon Kernel -->
-        <carbon.kernel.version>4.7.0-beta7</carbon.kernel.version>
+        <carbon.kernel.version>4.7.0-beta8</carbon.kernel.version>
 
         <!-- Carbon Repo Versions -->
         <carbon.deployment.version>4.12.14</carbon.deployment.version>
@@ -2380,7 +2398,7 @@
         <apacheds.core.version>2.0.0.AM26</apacheds.core.version>
         <apacheds.api.version>2.0.0.AM4</apacheds.api.version>
         <!--Rest API test -->
-        <rest.assured.version>4.1.2</rest.assured.version>
+        <rest.assured.version>5.0.0</rest.assured.version>
         <swagger-core-version>1.5.22</swagger-core-version>
         <swagger-request-validator.version>2.6.0</swagger-request-validator.version>
         <!--UI Cypress test -->
