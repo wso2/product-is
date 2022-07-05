@@ -57,7 +57,7 @@ jobs:
         env:
           PR_LINK: ${{github.event.inputs.pr}}
         run: |
-          echo $JAVA_HOME
+          echo JAVA_11_HOME
           wget https://raw.githubusercontent.com/nirmal101/product-is/master/.github/scripts/pr-builder.sh
           bash pr-builder.sh
       - name: Archive PR diff file
