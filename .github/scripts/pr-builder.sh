@@ -144,11 +144,12 @@ else
   echo ""
   echo "Building dependency repo $REPO..."
   echo "=========================================================="
-  if [ "$JDK_VERSION" = "8" ]; then
-    export JAVA_HOME=$JAVA_8_HOME
+
+  if [ "$JDK_VERSION" = "11" ]; then
+    export JAVA_HOME=$JAVA_11_HOME
     echo $JAVA_HOME
   else
-    export JAVA_HOME=$JAVA_11_HOME
+    export JAVA_HOME=$JAVA_8_HOME
     echo $JAVA_HOME
   fi
 
