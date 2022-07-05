@@ -7,7 +7,9 @@ SCIM2_REPO_CLONE_LINK=https://github.com/wso2-extensions/identity-inbound-provis
 echo ""
 echo "=========================================================="
 PR_LINK=${PR_LINK%/}
+JHome=${JAVA_11_HOME%/}
 echo "    PR_LINK: $PR_LINK"
+echo "    JHome: JHome"
 echo "::warning::Build ran for PR $PR_LINK"
 
 USER=$(echo $PR_LINK | awk -F'/' '{print $4}')
