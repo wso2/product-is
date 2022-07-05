@@ -59,7 +59,7 @@ jobs:
         run: |
           echo $JAVA_11_HOME
           wget https://raw.githubusercontent.com/nirmal101/product-is/master/.github/scripts/pr-builder.sh
-          bash pr-builder.sh
+          bash pr-builder.sh $JAVA_11_HOME
       - name: Archive PR diff file
         if: always()
         uses: actions/upload-artifact@v2
