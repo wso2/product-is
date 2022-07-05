@@ -56,11 +56,11 @@ jobs:
         id: builder_step
         env:
           PR_LINK: ${{github.event.inputs.pr}}
-          JHOME: "$JAVA_HOME"
+          JHOME: $JAVA_HOME
         run: |
           echo $JAVA_HOME
           wget https://raw.githubusercontent.com/nirmal101/product-is/master/.github/scripts/pr-builder.sh
-          bash pr-builder.sh $JAVA_11_HOME $JAVA_8_HOME
+          bash pr-builder.sh $JAVA_HOME $JAVA_HOME
       - name: Archive PR diff file
         if: always()
         uses: actions/upload-artifact@v2
