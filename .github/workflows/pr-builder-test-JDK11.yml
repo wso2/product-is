@@ -11,6 +11,7 @@ on:
 env:
   MAVEN_OPTS: -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.http.retryHandler.class=standard -Dmaven.wagon.http.retryHandler.count=3
 
+
 jobs:
   build:
     runs-on: ubuntu-18.04
@@ -31,10 +32,8 @@ jobs:
           java-version: "8"
           distribution: "adopt"
       - name: echo java 8 home
-        env:
-          JAVA_8: JAVAHOME8
         run: |
-          echo "java home is: ${{env.JAVA_8}}"
+          echo "J8HOME=FIRE" >> ${GITHUB_ENV}
 #          export JAVA_8_HOME="java 8"
 #          echo $JAVA_8_HOME
 #          echo '::set-output name=JAVA_8::$JAVA_8_HOME'
@@ -46,7 +45,7 @@ jobs:
           distribution: "adopt"
       - name: echo java 11 home
         run: |
-          echo "java home is: ${{env.JAVA_8}}"
+          echo "java home is: ${{env.J8HOME}}"
 #          echo "The selected color is ${{ steps.java-8-setup.outputs.JAVA_8 }}"
       - name: Build init
         run: |
