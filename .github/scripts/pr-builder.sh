@@ -28,40 +28,39 @@ echo "=========================================================="
 echo "Cloning product-is"
 echo "=========================================================="
 
-export JAVA_HOME=$JAVA_8_HOME
-echo $JAVA_HOME
-#git clone https://github.com/wso2/product-is
-#
-#if [ "$REPO" = "product-is" ]; then
-#
-#  echo ""
-#  echo "PR is for the product-is itself. Start building with test..."
-#  echo "=========================================================="
-#  cd product-is
-#
-#  echo ""
-#  echo "Applying PR $PULL_NUMBER as a diff..."
-#  echo "=========================================================="
-#  wget -q --output-document=diff.diff $PR_LINK.diff
-#  cat diff.diff
-#  echo "=========================================================="
-#  git apply diff.diff || {
-#    echo 'Applying diff failed. Exiting...'
-#    echo "::error::Applying diff failed."
-#    exit 1
-#  }
-#
-#  echo "Last 3 changes:"
-#  COMMIT1=$(git log --oneline -1)
-#  COMMIT2=$(git log --oneline -2 | tail -1)
-#  COMMIT3=$(git log --oneline -3 | tail -1)
-#  echo "$COMMIT1"
-#  echo "$COMMIT2"
-#  echo "$COMMIT3"
-#
-#  cat pom.xml
-# #java 11
-#  mvn clean install --batch-mode | tee mvn-build.log
+git clone https://github.com/wso2/product-is
+
+if [ "$REPO" = "product-is" ]; then
+
+  echo ""
+  echo "PR is for the product-is itself. Start building with test..."
+  echo "=========================================================="
+  cd product-is
+
+  echo ""
+  echo "Applying PR $PULL_NUMBER as a diff..."
+  echo "=========================================================="
+  wget -q --output-document=diff.diff $PR_LINK.diff
+  cat diff.diff
+  echo "=========================================================="
+  git apply diff.diff || {
+    echo 'Applying diff failed. Exiting...'
+    echo "::error::Applying diff failed."
+    exit 1
+  }
+
+  echo "Last 3 changes:"
+  COMMIT1=$(git log --oneline -1)
+  COMMIT2=$(git log --oneline -2 | tail -1)
+  COMMIT3=$(git log --oneline -3 | tail -1)
+  echo "$COMMIT1"
+  echo "$COMMIT2"
+  echo "$COMMIT3"
+
+  cat pom.xml
+  export JAVA_HOME=$JAVA_8_HOME
+  echo $JAVA_HOME
+  mvn clean install --batch-mode | tee mvn-build.log
 #
 #  PR_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
 #  PR_TEST_RESULT=$(sed -n -e '/\[INFO\] Results:/,/\[INFO\] Tests run:/ p' mvn-build.log)
