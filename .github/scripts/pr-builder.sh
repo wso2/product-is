@@ -61,28 +61,28 @@ if [ "$REPO" = "product-is" ]; then
   export JAVA_HOME=$JAVA_8_HOME
   echo $JAVA_HOME
   mvn clean install --batch-mode | tee mvn-build.log
-#
-#  PR_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
-#  PR_TEST_RESULT=$(sed -n -e '/\[INFO\] Results:/,/\[INFO\] Tests run:/ p' mvn-build.log)
-#
-#  PR_BUILD_FINAL_RESULT=$(
-#    echo "==========================================================="
-#    echo "product-is BUILD $PR_BUILD_STATUS"
-#    echo "=========================================================="
-#    echo ""
-#    echo "$PR_TEST_RESULT"
-#  )
-#
-#  PR_BUILD_RESULT_LOG_TEMP=$(echo "$PR_BUILD_FINAL_RESULT" | sed 's/$/%0A/')
-#  PR_BUILD_RESULT_LOG=$(echo $PR_BUILD_RESULT_LOG_TEMP)
-#  echo "::warning::$PR_BUILD_RESULT_LOG"
-#
-#  if [ "$PR_BUILD_STATUS" != "SUCCESS" ]; then
-#    echo "PR BUILD not successfull. Aborting."
-#    echo "::error::PR BUILD not successfull. Check artifacts for logs."
-#    exit 1
-#  fi
-#else
+
+  PR_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
+  PR_TEST_RESULT=$(sed -n -e '/\[INFO\] Results:/,/\[INFO\] Tests run:/ p' mvn-build.log)
+
+  PR_BUILD_FINAL_RESULT=$(
+    echo "==========================================================="
+    echo "product-is BUILD $PR_BUILD_STATUS"
+    echo "=========================================================="
+    echo ""
+    echo "$PR_TEST_RESULT"
+  )
+
+  PR_BUILD_RESULT_LOG_TEMP=$(echo "$PR_BUILD_FINAL_RESULT" | sed 's/$/%0A/')
+  PR_BUILD_RESULT_LOG=$(echo $PR_BUILD_RESULT_LOG_TEMP)
+  echo "::warning::$PR_BUILD_RESULT_LOG"
+
+  if [ "$PR_BUILD_STATUS" != "SUCCESS" ]; then
+    echo "PR BUILD not successfull. Aborting."
+    echo "::error::PR BUILD not successfull. Check artifacts for logs."
+    exit 1
+  fi
+else
 #  echo ""
 #  echo "PR is for the dependency repository $REPO."
 #  echo ""
@@ -341,7 +341,7 @@ if [ "$REPO" = "product-is" ]; then
 #    echo "::error::PR BUILD not successfull. Check artifacts for logs."
 #    exit 1
 #  fi
-#fi
+fi
 #
 #echo ""
 #echo "=========================================================="
