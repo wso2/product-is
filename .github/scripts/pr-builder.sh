@@ -82,7 +82,7 @@ if [ "$REPO" = "product-is" ]; then
     echo "::error::PR BUILD not successfull. Check artifacts for logs."
     exit 1
   fi
-else
+#else
 #  echo ""
 #  echo "PR is for the dependency repository $REPO."
 #  echo ""
