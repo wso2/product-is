@@ -33,7 +33,7 @@ jobs:
           distribution: "adopt"
       - name: echo java 8 home
         run: |
-          echo "J8HOME=FIRE" >> ${GITHUB_ENV}
+          echo "J8HOME=$JAVA_HOME" >> ${GITHUB_ENV}
 #          export JAVA_8_HOME="java 8"
 #          echo $JAVA_8_HOME
 #          echo '::set-output name=JAVA_8::$JAVA_8_HOME'
