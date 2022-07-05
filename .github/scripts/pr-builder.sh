@@ -21,8 +21,8 @@ echo "::set-output name=REPO_NAME::$REPO"
 echo "=========================================================="
 echo "Cloning product-is"
 echo "=========================================================="
-echo " java home"
-echo $1
+echo "java home $1"
+
 #git clone https://github.com/wso2/product-is
 #
 #if [ "$REPO" = "product-is" ]; then
