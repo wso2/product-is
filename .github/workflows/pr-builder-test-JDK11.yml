@@ -40,7 +40,7 @@ jobs:
           distribution: "adopt"
       - name: echo java 11 home
         run: |
-          echo "$JAVA_HOME" >> ${GITHUB_ENV}
+          echo "$JAVA_HOME"
       - name: Build init
         run: |
           echo "CURRENT_MONTH=$(date +%Y-%m)" >> ${GITHUB_ENV}
