@@ -27,12 +27,11 @@ echo "::set-output name=REPO_NAME::$REPO"
 echo "=========================================================="
 echo "Cloning product-is"
 echo "=========================================================="
-echo "here"
-export JAVA_HOME=$JAVA_8_HOME
-echo $JAVA_HOME
-export JAVA_HOME=$JAVA_11_HOME
-echo $JAVA_HOME
-
+if [ "$JDK_VERSION" = "8" ]; then
+    echo "java 8"
+  else
+    echo "java 11"
+fi
 #git clone https://github.com/wso2/product-is
 #
 #if [ "$REPO" = "product-is" ]; then
@@ -63,7 +62,7 @@ echo $JAVA_HOME
 #  echo "$COMMIT3"
 #
 #  cat pom.xml
-#  export JAVA_HOME=$JAVA_8_HOME
+#  export JAVA_HOME=$JAVA_11_HOME
 #  echo $JAVA_HOME
 #  mvn clean install --batch-mode | tee mvn-build.log
 #
@@ -149,9 +148,15 @@ echo $JAVA_HOME
 #  echo ""
 #  echo "Building dependency repo $REPO..."
 #  echo "=========================================================="
-# #check the version
+#  if [ "$JDK_VERSION" = "8" ]; then
+#    export JAVA_HOME=$JAVA_8_HOME
+#    echo $JAVA_HOME
+#  else
+#    export JAVA_HOME=$JAVA_11_HOME
+#    echo $JAVA_HOME
+#  fi
+#
 #  if [ "$REPO" = "carbon-kernel" ]; then
-#    #java 11
 #    mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
 #  else
 #    mvn clean install --batch-mode | tee mvn-build.log
@@ -224,7 +229,10 @@ echo $JAVA_HOME
 #    echo ""
 #    echo "Building repo $MULTITENANCY_REPO..."
 #    echo "=========================================================="
-#    #java 11
+#
+#
+#    export JAVA_HOME=$JAVA_11_HOME
+#    echo $JAVA_HOME
 #    mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
 #
 #    echo "Repo $MULTITENANCY_REPO build complete."
@@ -277,7 +285,9 @@ echo $JAVA_HOME
 #    echo ""
 #    echo "Building $SCIM2_REPO repo..."
 #    echo "=========================================================="
-#    #java 8
+#
+#    export JAVA_HOME=$JAVA_8_HOME
+#    echo $JAVA_HOME
 #    mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
 #
 #    echo "Repo $SCIM2_REPO build complete."
@@ -322,8 +332,9 @@ echo $JAVA_HOME
 #    fi
 #  fi
 #
+#  export JAVA_HOME=$JAVA_11_HOME
+#  echo $JAVA_HOME
 #  cat pom.xml
-#  #java 11
 #  mvn clean install --batch-mode | tee mvn-build.log
 #
 #  PR_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
