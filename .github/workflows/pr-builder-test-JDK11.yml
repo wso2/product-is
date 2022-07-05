@@ -40,7 +40,7 @@ jobs:
           distribution: "adopt"
       - name: echo java 11 home
         run: |
-          export JAVA_11_HOME=$JAVA_HOME
+          echo "$JAVA_HOME" >> ${GITHUB_ENV}
       - name: Build init
         run: |
           echo "CURRENT_MONTH=$(date +%Y-%m)" >> ${GITHUB_ENV}
@@ -56,10 +56,9 @@ jobs:
         id: builder_step
         env:
           PR_LINK: ${{github.event.inputs.pr}}
-          JHOME: ${$JAVA_11_HOME}
+          JHOME: "$JAVA_HOME"
         run: |
-          echo $JAVA_11_HOME
-          echo $JAVA_8_HOME
+          echo $JAVA_HOME
           wget https://raw.githubusercontent.com/nirmal101/product-is/master/.github/scripts/pr-builder.sh
           bash pr-builder.sh $JAVA_11_HOME $JAVA_8_HOME
       - name: Archive PR diff file
