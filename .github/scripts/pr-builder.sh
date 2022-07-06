@@ -59,7 +59,6 @@ if [ "$REPO" = "product-is" ]; then
 
   cat pom.xml
   export JAVA_HOME=$JAVA_11_HOME
-  echo $JAVA_HOME
   mvn clean install --batch-mode | tee mvn-build.log
 
   PR_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
@@ -147,10 +146,8 @@ else
 
   if [ "$JDK_VERSION" = "11" ]; then
     export JAVA_HOME=$JAVA_11_HOME
-    echo $JAVA_HOME
   else
     export JAVA_HOME=$JAVA_8_HOME
-    echo $JAVA_HOME
   fi
 
   if [ "$REPO" = "carbon-kernel" ]; then
@@ -229,7 +226,6 @@ else
 
 
     export JAVA_HOME=$JAVA_11_HOME
-    echo $JAVA_HOME
     mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
 
     echo "Repo $MULTITENANCY_REPO build complete."
@@ -284,7 +280,6 @@ else
     echo "=========================================================="
 
     export JAVA_HOME=$JAVA_8_HOME
-    echo $JAVA_HOME
     mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
 
     echo "Repo $SCIM2_REPO build complete."
@@ -330,7 +325,6 @@ else
   fi
 
   export JAVA_HOME=$JAVA_11_HOME
-  echo $JAVA_HOME
   cat pom.xml
   mvn clean install --batch-mode | tee mvn-build.log
 
