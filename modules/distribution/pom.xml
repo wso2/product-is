@@ -343,9 +343,7 @@
 
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml" token="&lt;Property name=&quot;isCascadeDeleteEnabled&quot;&gt;true&lt;/Property&gt;" value="&lt;Property name=&quot;isCascadeDeleteEnabled&quot;&gt;true&lt;/Property&gt;${line.separator} &lt;Property name=&quot;initializeNewClaimManager&quot;&gt;true&lt;/Property&gt;" />
 
-                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.sh" token="if [ $java_version_formatted -ge 1100 ]; then" value="NASHRON_ARGS=&quot;&quot; ${line.separator} ${line.separator}if [ $java_version_formatted -ge 1100 ]; then${line.separator} NASHRON_ARGS=&quot;--no-deprecation-warning&quot;" />
-
-                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.bat" token="set CARBON_CLASSPATH=.\lib\*;%CARBON_CLASSPATH%" value="set CARBON_CLASSPATH=.\lib\*;%CARBON_CLASSPATH% ${line.separator}if %JAVA_VERSION% GEQ 110 set NASHRON_ARGS=--no-deprecation-warning" />
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.bat" token="set CARBON_CLASSPATH=.\lib\*;%CARBON_CLASSPATH%" value="set CARBON_CLASSPATH=.\lib\*;%CARBON_CLASSPATH%" />
 
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.sh" token="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot; \" value="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot; \${line.separator} -Dorg.apache.xml.security.ignoreLineBreaks=false \" />
 
