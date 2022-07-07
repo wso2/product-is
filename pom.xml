@@ -1717,11 +1717,6 @@
                 <version>${identity.user.workflow.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.identity.userstore.ldap</groupId>
-                <artifactId>org.wso2.carbon.ldap.server.feature</artifactId>
-                <version>${identity.userstore.ldap.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.wso2.carbon.identity.userstore.remote</groupId>
                 <artifactId>org.wso2.carbon.identity.user.store.remote.feature</artifactId>
                 <version>${identity.userstore.remote.version}</version>
@@ -2196,7 +2191,6 @@
         <identity.user.ws.version>5.5.0</identity.user.ws.version>
 
         <!-- Identity Userstore Versions -->
-        <identity.userstore.ldap.version>6.3.4</identity.userstore.ldap.version>
         <identity.userstore.remote.version>5.2.5</identity.userstore.remote.version>
 
         <!-- Identity Data Publisher Versions -->

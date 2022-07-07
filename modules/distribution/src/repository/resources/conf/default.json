@@ -4,7 +4,6 @@
     "initializeNewClaimManager": true
   },
   "user_store.type": "database_unique_id",
-  "embedded_ldap.enable": false,
 
   "keystore.primary.type" : "JKS",
   "keystore.userstore_password_encryption": "",

@@ -31,7 +31,7 @@
 		<!--  This is the default configuration -->
 		<UserStoreManager class="org.wso2.carbon.user.core.ldap.ReadWriteLDAPUserStoreManager">
 			<Property name="TenantManager">org.wso2.carbon.user.core.tenant.CommonHybridLDAPTenantManager</Property>
-			<Property name="ConnectionURL">ldap://localhost:${Ports.EmbeddedLDAP.LDAPServerPort}</Property>
+			<Property name="ConnectionURL">ldap://localhost:10799</Property>
 			<Property name="ConnectionName">uid=admin,ou=system</Property>
 			<Property name="ConnectionPassword">admin</Property>
 			<Property name="AnonymousBind">false</Property>

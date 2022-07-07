@@ -145,7 +145,6 @@
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.scim.common.feature.default.json</param>
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.consent.mgt.server.feature.default.json</param>
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.humantask.server.feature.default.json</param>
-                                        <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.ldap.server.server.feature.default.json</param>
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.tenant.common.server.default.json</param>
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.extension.identity.x509Certificate.validation.server.feature.default.json</param>
                                     </include>
@@ -261,6 +260,15 @@
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;!--MgtHostName&gt;mgt.wso2.org&lt;/MgtHostName--&gt;" value="&lt;MgtHostName&gt;localhost&lt;/MgtHostName&gt;" />
 
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;!--HostName&gt;www.wso2.org&lt;/HostName--&gt;" value="&lt;HostName&gt;localhost&lt;/HostName&gt;" />
+
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;EmbeddedLDAP&gt;" value="&lt;!--EmbeddedLDAP--&gt;" />
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;LDAPServerPort&gt;10389&lt;/LDAPServerPort&gt;" value="&lt;!--LDAPServerPort&gt;10389&lt;/LDAPServerPort--&gt;" />
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;KDCServerPort&gt;8000&lt;/KDCServerPort&gt;" value="&lt;!--KDCServerPort&gt;8000&lt;/KDCServerPort--&gt;" />
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;/EmbeddedLDAP&gt;" value="&lt;!--/EmbeddedLDAP--&gt;" />
+                                <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/carbon.xml.j2" token="&lt;EmbeddedLDAP&gt;" value="&lt;!--EmbeddedLDAP--&gt;" />
+                                <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/carbon.xml.j2" token="&lt;LDAPServerPort&gt;10389&lt;/LDAPServerPort&gt;" value="&lt;!--LDAPServerPort&gt;10389&lt;/LDAPServerPort--&gt;" />
+                                <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/carbon.xml.j2" token="&lt;KDCServerPort&gt;8000&lt;/KDCServerPort&gt;" value="&lt;!--KDCServerPort&gt;8000&lt;/KDCServerPort--&gt;" />
+                                <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/carbon.xml.j2" token="&lt;/EmbeddedLDAP&gt;" value="&lt;!--/EmbeddedLDAP--&gt;" />
 
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;!--LdapServer&gt;" value="&lt;LdapServer&gt;" />
                                 <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/carbon.xml.j2" token="&lt;!--LdapServer&gt;" value="&lt;LdapServer&gt;" />

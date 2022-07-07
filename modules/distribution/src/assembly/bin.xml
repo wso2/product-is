@@ -153,17 +153,6 @@
 
         <fileSet>
             <directory>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/identity/ldif
-            </directory>
-            <outputDirectory>wso2is-${pom.version}/repository/resources/identity/ldif</outputDirectory>
-            <includes>
-                <include>identityPerson.ldif</include>
-                <include>scimPerson.ldif</include>
-                <include>wso2Person.ldif</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/identity/authntemplates
             </directory>
             <outputDirectory>wso2is-${pom.version}/repository/resources/identity/authntemplates</outputDirectory>
@@ -871,18 +860,6 @@
             <outputDirectory>wso2is-${pom.version}/repository/conf/tomcat</outputDirectory>
             <destName>catalina-server.xml</destName>
             <filtered>true</filtered>
-        </file>
-        <file>
-            <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/data/is-default-schema.zip
-            </source>
-            <outputDirectory>wso2is-${pom.version}/repository/data</outputDirectory>
-        </file>
-        <file>
-            <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/embedded-ldap.xml
-            </source>
-            <outputDirectory>wso2is-${pom.version}/repository/conf/identity</outputDirectory>
         </file>
         <file>
             <source>
