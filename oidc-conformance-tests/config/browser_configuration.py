@@ -15,46 +15,292 @@
 
 import constants
 
+FORMPOST_PROMPT_LOGIN = {
+    "task": "Login",
+    "match": constants.BASE_URL + "/authenticationendpoint/login*",
+    "optional": True,
+    "commands": [
+        [
+            "wait",
+            "xpath",
+            "/html/body/main/div/div[2]/h3",
+            10,
+            "Sign In",
+            "update-image-placeholder-optional"
+        ],
+        [
+            "text",
+            "id",
+            "username",
+            "admin"
+        ],
+        [
+            "text",
+            "id",
+            "password",
+            "admin"
+        ],
+        [
+            "click",
+            "xpath",
+            "/html/body/main/div/div[2]/div/form/div[9]/div[2]/button"
+        ]
+    ]
+}
+
+FORMPOST_CONSENT = {
+    "task": "Consent",
+    "match": constants.BASE_URL + "/authenticationendpoint/oauth2_consent*",
+    "optional": True,
+    "commands": [
+        [
+            "wait",
+            "id",
+            "approve",
+            10
+        ],
+        [
+            "click",
+            "id",
+            "approve"
+        ]
+    ]
+}
+
+FORMPOST_LOGIN = {
+    "task": "Login",
+    "match": constants.BASE_URL + "/authenticationendpoint/login*",
+    "optional": True,
+    "commands": [
+        [
+            "text",
+            "id",
+            "username",
+            "admin"
+        ],
+        [
+            "text",
+            "id",
+            "password",
+            "admin"
+        ],
+        [
+            "click",
+            "xpath",
+            "/html/body/main/div/div[2]/div/form/div[9]/div[2]/button"
+        ]
+    ]
+}
+
+PROMPT_CONSENT = {
+    "task": "Consent",
+    "match": constants.BASE_URL + "/authenticationendpoint/oauth2_consent*",
+    "optional": True,
+    "commands": [
+        [
+            "wait",
+            "id",
+            "approve",
+            10
+        ],
+        [
+            "click",
+            "id",
+            "rememberApproval",
+            "optional"
+        ],
+        [
+            "click",
+            "id",
+            "approve"
+        ],
+        [
+            "wait",
+            "contains",
+            "callback",
+            10
+        ]
+    ]
+}
+
+PROMPT_LOGIN = {
+    "task": "Login",
+    "match": constants.BASE_URL + "/authenticationendpoint/login*",
+    "optional": True,
+    "commands": [
+        [
+            "wait",
+            "xpath",
+            "/html/body/main/div/div[2]/h3",
+            10,
+            "Sign In",
+            "update-image-placeholder-optional"
+        ],
+        [
+            "text",
+            "id",
+            "username",
+            "admin"
+        ],
+        [
+            "text",
+            "id",
+            "password",
+            "admin"
+        ],
+        [
+            "click",
+            "xpath",
+            "/html/body/main/div/div[2]/div/form/div[9]/div[2]/button"
+        ],
+        [
+            "wait",
+            "contains",
+            "test/callback",
+            10
+        ]
+    ]
+}
+
+VERIFY_ERROR = {
+    "task": "Verify error page",
+    "match": constants.BASE_URL + "/authenticationendpoint/oauth2_error.do*",
+    "commands": [
+        [
+            "wait",
+            "xpath",
+            "//*",
+            10,
+            "Identity Server",
+            "update-image-placeholder"
+        ]
+    ]
+}
+
+VERIFY_COMPLETE_FORMPOST = {
+    "task": "Verify Complete",
+    "match": "*",
+    "optional": True,
+    "commands": [
+        [
+            "wait",
+            "id",
+            "submission_complete",
+            10
+        ]
+    ]
+}
+
+LOGIN_REFRESH_TOKEN = {
+    "task": "Login",
+    "match": constants.BASE_URL + "/authenticationendpoint/login*",
+    "optional": True,
+    "commands": [
+        [
+            "text",
+            "id",
+            "username",
+            "admin"
+        ],
+        [
+            "text",
+            "id",
+            "password",
+            "admin"
+        ],
+        [
+            "click",
+            "xpath",
+            "/html/body/main/div/div[2]/div/form/div[9]/div[2]/button"
+        ],
+        [
+            "wait",
+            "contains",
+            "oauth2_consent",
+            10
+        ]
+    ]
+}
+
+CONSENT = {
+    "task": "Consent",
+    "match": constants.BASE_URL + "/authenticationendpoint/oauth2_consent*",
+    "optional": True,
+    "commands": [
+        [
+            "wait",
+            "id",
+            "approve",
+            10
+        ],
+        [
+            "click",
+            "id",
+            "approve"
+        ],
+        [
+            "wait",
+            "contains",
+            "callback",
+            10
+        ]
+    ]
+}
+
+LOGIN_BASIC = {
+    "task": "Login",
+    "match": constants.BASE_URL + "/authenticationendpoint/login*",
+    "optional": True,
+    "commands": [
+        [
+            "text",
+            "id",
+            "username",
+            "admin"
+        ],
+        [
+            "text",
+            "id",
+            "password",
+            "admin"
+        ],
+        [
+            "click",
+            "xpath",
+            "/html/body/main/div/div[2]/div/form/div[9]/div[2]/button"
+        ],
+        [
+            "wait",
+            "contains",
+            "test/callback",
+            10
+        ]
+    ]
+}
+
+VERIFY_COMPLETE = {
+    "task": "Verify Complete",
+    "match": "https://*/test/a/*/callback*",
+    "optional": True,
+    "commands": [
+        [
+            "wait",
+            "id",
+            "submission_complete",
+            10
+        ]
+    ]
+}
+
 CONFIG = {
     "basic": {
         "browser": [
             {
                 "match": constants.BASE_URL + "/oauth2/authorize*",
                 "tasks": [
-                    {
-                        "task": "Login",
-                        "match": constants.BASE_URL + "/authenticationendpoint/login*",
-                        "optional": True,
-                        "commands": [
-                            [
-                                "text",
-                                "id",
-                                "username",
-                                "admin"
-                            ],
-                            [
-                                "text",
-                                "id",
-                                "password",
-                                "admin"
-                            ],
-                            [
-                                "click",
-                                "xpath",
-                                "/html/body/main/div/div[2]/div/form/div[9]/div[2]/button"
-                            ],
-                            [
-                                "wait",
-                                "contains",
-                                "test/callback",
-                                10
-                            ]
-                        ]
-                    },
-                    {
-                        "task": "Verify",
-                        "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback*"
-                    }
+                    LOGIN_BASIC,
+                    VERIFY_COMPLETE
+
                 ]
             }
         ],
@@ -64,64 +310,10 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Login",
-                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
-                                "optional": True,
-                                "commands": [
-                                    [
-                                        "text",
-                                        "id",
-                                        "username",
-                                        "admin"
-                                    ],
-                                    [
-                                        "text",
-                                        "id",
-                                        "password",
-                                        "admin"
-                                    ],
-                                    [
-                                        "click",
-                                        "xpath",
-                                        "/html/body/main/div/div[2]/div/form/div[9]/div[2]/button"
-                                    ],
-                                    [
-                                        "wait",
-                                        "contains",
-                                        "oauth2_consent",
-                                        10
-                                    ]
-                                ]
-                            },
-                            {
-                                "task": "Consent",
-                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_consent*",
-                                "optional": True,
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "id",
-                                        "approve",
-                                        10
-                                    ],
-                                    [
-                                        "click",
-                                        "id",
-                                        "approve"
-                                    ],
-                                    [
-                                        "wait",
-                                        "contains",
-                                        "callback",
-                                        10
-                                    ]
-                                ]
-                            },
-                            {
-                                "task": "Verify",
-                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback*"
-                            }
+                            LOGIN_REFRESH_TOKEN,
+                            CONSENT,
+                            VERIFY_COMPLETE
+
                         ]
                     }
                 ]
@@ -131,20 +323,7 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Verify error page",
-                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_error.do*",
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "xpath",
-                                        "//*",
-                                        10,
-                                        "Identity Server",
-                                        "update-image-placeholder"
-                                    ]
-                                ]
-                            }
+                            VERIFY_ERROR
                         ]
                     }
                 ]
@@ -154,20 +333,7 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Verify error",
-                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_error.do*",
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "xpath",
-                                        "//*",
-                                        10,
-                                        "Identity Server",
-                                        "update-image-placeholder"
-                                    ]
-                                ]
-                            }
+                            VERIFY_ERROR
                         ]
                     }
                 ]
@@ -177,78 +343,10 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Login",
-                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
-                                "optional": True,
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "xpath",
-                                        "/html/body/main/div/div[2]/h3",
-                                        10,
-                                        "Sign In",
-                                        "update-image-placeholder-optional"
-                                    ],
-                                    [
-                                        "text",
-                                        "id",
-                                        "username",
-                                        "admin"
-                                    ],
-                                    [
-                                        "text",
-                                        "id",
-                                        "password",
-                                        "admin"
-                                    ],
-                                    [
-                                        "click",
-                                        "xpath",
-                                        "/html/body/main/div/div[2]/div/form/div[9]/div[2]/button"
-                                    ],
-                                    [
-                                        "wait",
-                                        "contains",
-                                        "test/callback",
-                                        10
-                                    ]
-                                ]
-                            },
-                            {
-                                "task": "Consent",
-                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_consent*",
-                                "optional": True,
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "id",
-                                        "approve",
-                                        10
-                                    ],
-                                    [
-                                        "click",
-                                        "id",
-                                        "rememberApproval",
-                                        "optional"
-                                    ],
-                                    [
-                                        "click",
-                                        "id",
-                                        "approve"
-                                    ],
-                                    [
-                                        "wait",
-                                        "contains",
-                                        "callback",
-                                        10
-                                    ]
-                                ]
-                            },
-                            {
-                                "task": "Verify",
-                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback*"
-                            }
+                            PROMPT_LOGIN,
+                            PROMPT_CONSENT,
+                            VERIFY_COMPLETE
+
                         ]
                     }
                 ]
@@ -258,78 +356,10 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Login",
-                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
-                                "optional": True,
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "xpath",
-                                        "/html/body/main/div/div[2]/h3",
-                                        10,
-                                        "Sign In",
-                                        "update-image-placeholder-optional"
-                                    ],
-                                    [
-                                        "text",
-                                        "id",
-                                        "username",
-                                        "admin"
-                                    ],
-                                    [
-                                        "text",
-                                        "id",
-                                        "password",
-                                        "admin"
-                                    ],
-                                    [
-                                        "click",
-                                        "xpath",
-                                        "/html/body/main/div/div[2]/div/form/div[9]/div[2]/button"
-                                    ],
-                                    [
-                                        "wait",
-                                        "contains",
-                                        "test/callback",
-                                        10
-                                    ]
-                                ]
-                            },
-                            {
-                                "task": "Consent",
-                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_consent*",
-                                "optional": True,
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "id",
-                                        "approve",
-                                        10
-                                    ],
-                                    [
-                                        "click",
-                                        "id",
-                                        "rememberApproval",
-                                        "optional"
-                                    ],
-                                    [
-                                        "click",
-                                        "id",
-                                        "approve"
-                                    ],
-                                    [
-                                        "wait",
-                                        "contains",
-                                        "callback",
-                                        10
-                                    ]
-                                ]
-                            },
-                            {
-                                "task": "Verify",
-                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback*"
-                            }
+                            PROMPT_LOGIN,
+                            PROMPT_CONSENT,
+                            VERIFY_COMPLETE
+
                         ]
                     }
                 ]
@@ -341,40 +371,8 @@ CONFIG = {
             {
                 "match": constants.BASE_URL + "/oauth2/authorize*",
                 "tasks": [
-                    {
-                        "task": "Login",
-                        "match": constants.BASE_URL + "/authenticationendpoint/login*",
-                        "optional": True,
-                        "commands": [
-                            [
-                                "text",
-                                "id",
-                                "username",
-                                "admin"
-                            ],
-                            [
-                                "text",
-                                "id",
-                                "password",
-                                "admin"
-                            ],
-                            [
-                                "click",
-                                "xpath",
-                                "/html/body/main/div/div[2]/div/form/div[9]/div[2]/button"
-                            ],
-                            [
-                                "wait",
-                                "contains",
-                                "test/callback",
-                                10
-                            ]
-                        ]
-                    },
-                    {
-                        "task": "Verify",
-                        "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback*"
-                    }
+                    LOGIN_BASIC,
+                    VERIFY_COMPLETE
                 ]
             }
         ],
@@ -384,64 +382,9 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Login",
-                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
-                                "optional": True,
-                                "commands": [
-                                    [
-                                        "text",
-                                        "id",
-                                        "username",
-                                        "admin"
-                                    ],
-                                    [
-                                        "text",
-                                        "id",
-                                        "password",
-                                        "admin"
-                                    ],
-                                    [
-                                        "click",
-                                        "xpath",
-                                        "/html/body/main/div/div[2]/div/form/div[9]/div[2]/button"
-                                    ],
-                                    [
-                                        "wait",
-                                        "contains",
-                                        "test/callback",
-                                        10
-                                    ]
-                                ]
-                            },
-                            {
-                                "task": "Consent",
-                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_consent*",
-                                "optional": True,
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "id",
-                                        "approve",
-                                        10
-                                    ],
-                                    [
-                                        "click",
-                                        "id",
-                                        "approve"
-                                    ],
-                                    [
-                                        "wait",
-                                        "contains",
-                                        "callback",
-                                        10
-                                    ]
-                                ]
-                            },
-                            {
-                                "task": "Verify",
-                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback*"
-                            }
+                            LOGIN_BASIC,
+                            CONSENT,
+                            VERIFY_COMPLETE
                         ]
                     }
                 ]
@@ -451,64 +394,9 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Login",
-                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
-                                "optional": True,
-                                "commands": [
-                                    [
-                                        "text",
-                                        "id",
-                                        "username",
-                                        "admin"
-                                    ],
-                                    [
-                                        "text",
-                                        "id",
-                                        "password",
-                                        "admin"
-                                    ],
-                                    [
-                                        "click",
-                                        "xpath",
-                                        "/html/body/main/div/div[2]/div/form/div[9]/div[2]/button"
-                                    ],
-                                    [
-                                        "wait",
-                                        "contains",
-                                        "test/callback",
-                                        10
-                                    ]
-                                ]
-                            },
-                            {
-                                "task": "Consent",
-                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_consent*",
-                                "optional": True,
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "id",
-                                        "approve",
-                                        10
-                                    ],
-                                    [
-                                        "click",
-                                        "id",
-                                        "approve"
-                                    ],
-                                    [
-                                        "wait",
-                                        "contains",
-                                        "callback",
-                                        10
-                                    ]
-                                ]
-                            },
-                            {
-                                "task": "Verify",
-                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback*"
-                            }
+                            LOGIN_BASIC,
+                            CONSENT,
+                            VERIFY_COMPLETE
                         ]
                     }
                 ]
@@ -518,20 +406,7 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Verify error page",
-                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_error.do*",
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "xpath",
-                                        "//*",
-                                        10,
-                                        "Identity Server",
-                                        "update-image-placeholder"
-                                    ]
-                                ]
-                            }
+                            VERIFY_ERROR
                         ]
                     }
                 ]
@@ -541,20 +416,7 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Verify error",
-                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_error.do*",
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "xpath",
-                                        "//*",
-                                        10,
-                                        "Identity Server",
-                                        "update-image-placeholder"
-                                    ]
-                                ]
-                            }
+                            VERIFY_ERROR
                         ]
                     }
                 ]
@@ -564,78 +426,9 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Login",
-                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
-                                "optional": True,
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "xpath",
-                                        "/html/body/main/div/div[2]/h3",
-                                        10,
-                                        "Sign In",
-                                        "update-image-placeholder-optional"
-                                    ],
-                                    [
-                                        "text",
-                                        "id",
-                                        "username",
-                                        "admin"
-                                    ],
-                                    [
-                                        "text",
-                                        "id",
-                                        "password",
-                                        "admin"
-                                    ],
-                                    [
-                                        "click",
-                                        "xpath",
-                                        "/html/body/main/div/div[2]/div/form/div[9]/div[2]/button"
-                                    ],
-                                    [
-                                        "wait",
-                                        "contains",
-                                        "test/callback",
-                                        10
-                                    ]
-                                ]
-                            },
-                            {
-                                "task": "Consent",
-                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_consent*",
-                                "optional": True,
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "id",
-                                        "approve",
-                                        10
-                                    ],
-                                    [
-                                        "click",
-                                        "id",
-                                        "rememberApproval",
-                                        "optional"
-                                    ],
-                                    [
-                                        "click",
-                                        "id",
-                                        "approve"
-                                    ],
-                                    [
-                                        "wait",
-                                        "contains",
-                                        "callback",
-                                        10
-                                    ]
-                                ]
-                            },
-                            {
-                                "task": "Verify",
-                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback*"
-                            }
+                            PROMPT_LOGIN,
+                            PROMPT_CONSENT,
+                            VERIFY_COMPLETE
                         ]
                     }
                 ]
@@ -645,78 +438,9 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Login",
-                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
-                                "optional": True,
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "xpath",
-                                        "/html/body/main/div/div[2]/h3",
-                                        10,
-                                        "Sign In",
-                                        "update-image-placeholder-optional"
-                                    ],
-                                    [
-                                        "text",
-                                        "id",
-                                        "username",
-                                        "admin"
-                                    ],
-                                    [
-                                        "text",
-                                        "id",
-                                        "password",
-                                        "admin"
-                                    ],
-                                    [
-                                        "click",
-                                        "xpath",
-                                        "/html/body/main/div/div[2]/div/form/div[9]/div[2]/button"
-                                    ],
-                                    [
-                                        "wait",
-                                        "contains",
-                                        "test/callback",
-                                        10
-                                    ]
-                                ]
-                            },
-                            {
-                                "task": "Consent",
-                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_consent*",
-                                "optional": True,
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "id",
-                                        "approve",
-                                        10
-                                    ],
-                                    [
-                                        "click",
-                                        "id",
-                                        "rememberApproval",
-                                        "optional"
-                                    ],
-                                    [
-                                        "click",
-                                        "id",
-                                        "approve"
-                                    ],
-                                    [
-                                        "wait",
-                                        "contains",
-                                        "callback",
-                                        10
-                                    ]
-                                ]
-                            },
-                            {
-                                "task": "Verify",
-                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback*"
-                            }
+                            PROMPT_LOGIN,
+                            PROMPT_CONSENT,
+                            VERIFY_COMPLETE
                         ]
                     }
                 ]
@@ -728,40 +452,8 @@ CONFIG = {
             {
                 "match": constants.BASE_URL + "/oauth2/authorize*",
                 "tasks": [
-                    {
-                        "task": "Login",
-                        "match": constants.BASE_URL + "/authenticationendpoint/login*",
-                        "optional": True,
-                        "commands": [
-                            [
-                                "text",
-                                "id",
-                                "username",
-                                "admin"
-                            ],
-                            [
-                                "text",
-                                "id",
-                                "password",
-                                "admin"
-                            ],
-                            [
-                                "click",
-                                "xpath",
-                                "/html/body/main/div/div[2]/div/form/div[9]/div[2]/button"
-                            ],
-                            [
-                                "wait",
-                                "contains",
-                                "test/callback",
-                                10
-                            ]
-                        ]
-                    },
-                    {
-                        "task": "Verify",
-                        "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback*"
-                    }
+                    LOGIN_BASIC,
+                    VERIFY_COMPLETE
                 ]
             }
         ],
@@ -771,64 +463,9 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Login",
-                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
-                                "optional": True,
-                                "commands": [
-                                    [
-                                        "text",
-                                        "id",
-                                        "username",
-                                        "admin"
-                                    ],
-                                    [
-                                        "text",
-                                        "id",
-                                        "password",
-                                        "admin"
-                                    ],
-                                    [
-                                        "click",
-                                        "xpath",
-                                        "/html/body/main/div/div[2]/div/form/div[9]/div[2]/button"
-                                    ],
-                                    [
-                                        "wait",
-                                        "contains",
-                                        "test/callback",
-                                        10
-                                    ]
-                                ]
-                            },
-                            {
-                                "task": "Consent",
-                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_consent*",
-                                "optional": True,
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "id",
-                                        "approve",
-                                        10
-                                    ],
-                                    [
-                                        "click",
-                                        "id",
-                                        "approve"
-                                    ],
-                                    [
-                                        "wait",
-                                        "contains",
-                                        "callback",
-                                        10
-                                    ]
-                                ]
-                            },
-                            {
-                                "task": "Verify",
-                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback*"
-                            }
+                            LOGIN_BASIC,
+                            CONSENT,
+                            VERIFY_COMPLETE
                         ]
                     }
                 ]
@@ -838,64 +475,9 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Login",
-                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
-                                "optional": True,
-                                "commands": [
-                                    [
-                                        "text",
-                                        "id",
-                                        "username",
-                                        "admin"
-                                    ],
-                                    [
-                                        "text",
-                                        "id",
-                                        "password",
-                                        "admin"
-                                    ],
-                                    [
-                                        "click",
-                                        "xpath",
-                                        "/html/body/main/div/div[2]/div/form/div[9]/div[2]/button"
-                                    ],
-                                    [
-                                        "wait",
-                                        "contains",
-                                        "oauth2_consent",
-                                        10
-                                    ]
-                                ]
-                            },
-                            {
-                                "task": "Consent",
-                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_consent*",
-                                "optional": True,
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "id",
-                                        "approve",
-                                        10
-                                    ],
-                                    [
-                                        "click",
-                                        "id",
-                                        "approve"
-                                    ],
-                                    [
-                                        "wait",
-                                        "contains",
-                                        "callback",
-                                        10
-                                    ]
-                                ]
-                            },
-                            {
-                                "task": "Verify",
-                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback*"
-                            }
+                            LOGIN_REFRESH_TOKEN,
+                            CONSENT,
+                            VERIFY_COMPLETE
                         ]
                     }
                 ]
@@ -905,20 +487,7 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Verify error page",
-                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_error.do*",
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "xpath",
-                                        "//*",
-                                        10,
-                                        "Identity Server",
-                                        "update-image-placeholder"
-                                    ]
-                                ]
-                            }
+                            VERIFY_ERROR
                         ]
                     }
                 ]
@@ -928,20 +497,7 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Verify error",
-                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_error.do*",
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "xpath",
-                                        "//*",
-                                        10,
-                                        "Identity Server",
-                                        "update-image-placeholder"
-                                    ]
-                                ]
-                            }
+                            VERIFY_ERROR
                         ]
                     }
                 ]
@@ -951,78 +507,9 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Login",
-                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
-                                "optional": True,
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "xpath",
-                                        "/html/body/main/div/div[2]/h3",
-                                        10,
-                                        "Sign In",
-                                        "update-image-placeholder-optional"
-                                    ],
-                                    [
-                                        "text",
-                                        "id",
-                                        "username",
-                                        "admin"
-                                    ],
-                                    [
-                                        "text",
-                                        "id",
-                                        "password",
-                                        "admin"
-                                    ],
-                                    [
-                                        "click",
-                                        "xpath",
-                                        "/html/body/main/div/div[2]/div/form/div[9]/div[2]/button"
-                                    ],
-                                    [
-                                        "wait",
-                                        "contains",
-                                        "test/callback",
-                                        10
-                                    ]
-                                ]
-                            },
-                            {
-                                "task": "Consent",
-                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_consent*",
-                                "optional": True,
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "id",
-                                        "approve",
-                                        10
-                                    ],
-                                    [
-                                        "click",
-                                        "id",
-                                        "rememberApproval",
-                                        "optional"
-                                    ],
-                                    [
-                                        "click",
-                                        "id",
-                                        "approve"
-                                    ],
-                                    [
-                                        "wait",
-                                        "contains",
-                                        "callback",
-                                        10
-                                    ]
-                                ]
-                            },
-                            {
-                                "task": "Verify",
-                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback*"
-                            }
+                            PROMPT_LOGIN,
+                            PROMPT_CONSENT,
+                            VERIFY_COMPLETE
                         ]
                     }
                 ]
@@ -1032,78 +519,9 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Login",
-                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
-                                "optional": True,
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "xpath",
-                                        "/html/body/main/div/div[2]/h3",
-                                        10,
-                                        "Sign In",
-                                        "update-image-placeholder-optional"
-                                    ],
-                                    [
-                                        "text",
-                                        "id",
-                                        "username",
-                                        "admin"
-                                    ],
-                                    [
-                                        "text",
-                                        "id",
-                                        "password",
-                                        "admin"
-                                    ],
-                                    [
-                                        "click",
-                                        "xpath",
-                                        "/html/body/main/div/div[2]/div/form/div[9]/div[2]/button"
-                                    ],
-                                    [
-                                        "wait",
-                                        "contains",
-                                        "test/callback",
-                                        10
-                                    ]
-                                ]
-                            },
-                            {
-                                "task": "Consent",
-                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_consent*",
-                                "optional": True,
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "id",
-                                        "approve",
-                                        10
-                                    ],
-                                    [
-                                        "click",
-                                        "id",
-                                        "rememberApproval",
-                                        "optional"
-                                    ],
-                                    [
-                                        "click",
-                                        "id",
-                                        "approve"
-                                    ],
-                                    [
-                                        "wait",
-                                        "contains",
-                                        "callback",
-                                        10
-                                    ]
-                                ]
-                            },
-                            {
-                                "task": "Verify",
-                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback*"
-                            }
+                            PROMPT_LOGIN,
+                            PROMPT_CONSENT,
+                            VERIFY_COMPLETE
                         ]
                     }
                 ]
@@ -1115,30 +533,8 @@ CONFIG = {
             {
                 "match": constants.BASE_URL + "/oauth2/authorize*",
                 "tasks": [
-                    {
-                        "task": "Login",
-                        "match": constants.BASE_URL + "/authenticationendpoint/login*",
-                        "optional": True,
-                        "commands": [
-                            [
-                                "text",
-                                "id",
-                                "username",
-                                "admin"
-                            ],
-                            [
-                                "text",
-                                "id",
-                                "password",
-                                "admin"
-                            ],
-                            [
-                                "click",
-                                "xpath",
-                                "/html/body/main/div/div[2]/div/form/div[9]/div[2]/button"
-                            ]
-                        ]
-                    }
+                    FORMPOST_LOGIN,
+                    VERIFY_COMPLETE_FORMPOST
                 ]
             }
         ],
@@ -1148,10 +544,18 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Verify error page",
-                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback*"
-                            }
+                            VERIFY_COMPLETE_FORMPOST
+                        ]
+                    }
+                ]
+            },
+            "oidcc-prompt-none-logged-in": {
+                "browser": [
+                    {
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
+                        "tasks": [
+                            FORMPOST_LOGIN,
+                            VERIFY_COMPLETE_FORMPOST
                         ]
                     }
                 ]
@@ -1161,10 +565,7 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Verify error page",
-                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback*"
-                            }
+                            VERIFY_COMPLETE_FORMPOST
                         ]
                     }
                 ]
@@ -1174,54 +575,9 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Login",
-                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
-                                "optional": True,
-                                "commands": [
-                                    [
-                                        "text",
-                                        "id",
-                                        "username",
-                                        "admin"
-                                    ],
-                                    [
-                                        "text",
-                                        "id",
-                                        "password",
-                                        "admin"
-                                    ],
-                                    [
-                                        "click",
-                                        "xpath",
-                                        "/html/body/main/div/div[2]/div/form/div[9]/div[2]/button"
-                                    ],
-                                    [
-                                        "wait",
-                                        "contains",
-                                        "oauth2_consent",
-                                        10
-                                    ]
-                                ]
-                            },
-                            {
-                                "task": "Consent",
-                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_consent*",
-                                "optional": True,
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "id",
-                                        "approve",
-                                        10
-                                    ],
-                                    [
-                                        "click",
-                                        "id",
-                                        "approve"
-                                    ]
-                                ]
-                            }
+                            LOGIN_REFRESH_TOKEN,
+                            FORMPOST_CONSENT,
+                            VERIFY_COMPLETE_FORMPOST
                         ]
                     }
                 ]
@@ -1231,20 +587,7 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Verify error page",
-                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_error.do*",
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "xpath",
-                                        "//*",
-                                        10,
-                                        "Identity Server",
-                                        "update-image-placeholder"
-                                    ]
-                                ]
-                            }
+                            VERIFY_ERROR
                         ]
                     }
                 ]
@@ -1254,20 +597,7 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Verify error",
-                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_error.do*",
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "xpath",
-                                        "//*",
-                                        10,
-                                        "Identity Server",
-                                        "update-image-placeholder"
-                                    ]
-                                ]
-                            }
+                            VERIFY_ERROR
                         ]
                     }
                 ]
@@ -1277,38 +607,8 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Login",
-                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
-                                "optional": True,
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "xpath",
-                                        "/html/body/main/div/div[2]/h3",
-                                        10,
-                                        "Sign In",
-                                        "update-image-placeholder-optional"
-                                    ],
-                                    [
-                                        "text",
-                                        "id",
-                                        "username",
-                                        "admin"
-                                    ],
-                                    [
-                                        "text",
-                                        "id",
-                                        "password",
-                                        "admin"
-                                    ],
-                                    [
-                                        "click",
-                                        "xpath",
-                                        "/html/body/main/div/div[2]/div/form/div[9]/div[2]/button"
-                                    ]
-                                ]
-                            }
+                            FORMPOST_PROMPT_LOGIN,
+                            VERIFY_COMPLETE_FORMPOST
                         ]
                     }
                 ]
@@ -1318,38 +618,19 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Login",
-                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
-                                "optional": True,
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "xpath",
-                                        "/html/body/main/div/div[2]/h3",
-                                        10,
-                                        "Sign In",
-                                        "update-image-placeholder-optional"
-                                    ],
-                                    [
-                                        "text",
-                                        "id",
-                                        "username",
-                                        "admin"
-                                    ],
-                                    [
-                                        "text",
-                                        "id",
-                                        "password",
-                                        "admin"
-                                    ],
-                                    [
-                                        "click",
-                                        "xpath",
-                                        "/html/body/main/div/div[2]/div/form/div[9]/div[2]/button"
-                                    ]
-                                ]
-                            }
+                            FORMPOST_PROMPT_LOGIN,
+                            VERIFY_COMPLETE_FORMPOST
+                        ]
+                    }
+                ]
+            },
+            "oidcc-max-age-10000": {
+                "browser": [
+                    {
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
+                        "tasks": [
+                            FORMPOST_LOGIN,
+                            VERIFY_COMPLETE_FORMPOST
                         ]
                     }
                 ]
@@ -1361,30 +642,8 @@ CONFIG = {
             {
                 "match": constants.BASE_URL + "/oauth2/authorize*",
                 "tasks": [
-                    {
-                        "task": "Login",
-                        "match": constants.BASE_URL + "/authenticationendpoint/login*",
-                        "optional": True,
-                        "commands": [
-                            [
-                                "text",
-                                "id",
-                                "username",
-                                "admin"
-                            ],
-                            [
-                                "text",
-                                "id",
-                                "password",
-                                "admin"
-                            ],
-                            [
-                                "click",
-                                "xpath",
-                                "/html/body/main/div/div[2]/div/form/div[9]/div[2]/button"
-                            ]
-                        ]
-                    }
+                    FORMPOST_LOGIN,
+                    VERIFY_COMPLETE_FORMPOST
                 ]
             }
         ],
@@ -1394,10 +653,18 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Verify error page",
-                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback*"
-                            }
+                            VERIFY_COMPLETE
+                        ]
+                    }
+                ]
+            },
+            "oidcc-prompt-none-logged-in": {
+                "browser": [
+                    {
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
+                        "tasks": [
+                            FORMPOST_LOGIN,
+                            VERIFY_COMPLETE_FORMPOST
                         ]
                     }
                 ]
@@ -1407,10 +674,7 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Verify error page",
-                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback*"
-                            }
+                            VERIFY_COMPLETE_FORMPOST
                         ]
                     }
                 ]
@@ -1420,30 +684,8 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Login",
-                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
-                                "optional": True,
-                                "commands": [
-                                    [
-                                        "text",
-                                        "id",
-                                        "username",
-                                        "admin"
-                                    ],
-                                    [
-                                        "text",
-                                        "id",
-                                        "password",
-                                        "admin"
-                                    ],
-                                    [
-                                        "click",
-                                        "xpath",
-                                        "/html/body/main/div/div[2]/div/form/div[9]/div[2]/button"
-                                    ]
-                                ]
-                            }
+                            FORMPOST_LOGIN,
+                            VERIFY_COMPLETE_FORMPOST
                         ]
                     }
                 ]
@@ -1453,20 +695,7 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Verify error page",
-                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_error.do*",
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "xpath",
-                                        "//*",
-                                        10,
-                                        "Identity Server",
-                                        "update-image-placeholder"
-                                    ]
-                                ]
-                            }
+                            VERIFY_ERROR
                         ]
                     }
                 ]
@@ -1476,10 +705,7 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Verify error page",
-                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback*"
-                            }
+                           VERIFY_COMPLETE_FORMPOST
                         ]
                     }
                 ]
@@ -1489,20 +715,7 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Verify error",
-                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_error.do*",
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "xpath",
-                                        "//*",
-                                        10,
-                                        "Identity Server",
-                                        "update-image-placeholder"
-                                    ]
-                                ]
-                            }
+                            VERIFY_ERROR
                         ]
                     }
                 ]
@@ -1512,38 +725,8 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Login",
-                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
-                                "optional": True,
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "xpath",
-                                        "/html/body/main/div/div[2]/h3",
-                                        10,
-                                        "Sign In",
-                                        "update-image-placeholder-optional"
-                                    ],
-                                    [
-                                        "text",
-                                        "id",
-                                        "username",
-                                        "admin"
-                                    ],
-                                    [
-                                        "text",
-                                        "id",
-                                        "password",
-                                        "admin"
-                                    ],
-                                    [
-                                        "click",
-                                        "xpath",
-                                        "/html/body/main/div/div[2]/div/form/div[9]/div[2]/button"
-                                    ]
-                                ]
-                            }
+                            FORMPOST_PROMPT_LOGIN,
+                            VERIFY_COMPLETE_FORMPOST
                         ]
                     }
                 ]
@@ -1553,38 +736,31 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Login",
-                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
-                                "optional": True,
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "xpath",
-                                        "/html/body/main/div/div[2]/h3",
-                                        10,
-                                        "Sign In",
-                                        "update-image-placeholder-optional"
-                                    ],
-                                    [
-                                        "text",
-                                        "id",
-                                        "username",
-                                        "admin"
-                                    ],
-                                    [
-                                        "text",
-                                        "id",
-                                        "password",
-                                        "admin"
-                                    ],
-                                    [
-                                        "click",
-                                        "xpath",
-                                        "/html/body/main/div/div[2]/div/form/div[9]/div[2]/button"
-                                    ]
-                                ]
-                            }
+                            FORMPOST_PROMPT_LOGIN,
+                            VERIFY_COMPLETE_FORMPOST
+                        ]
+                    }
+                ]
+            },
+            "oidcc-max-age-10000": {
+                "browser": [
+                    {
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
+                        "tasks": [
+                            FORMPOST_LOGIN,
+                            VERIFY_COMPLETE_FORMPOST
+
+                        ]
+                    }
+                ]
+            },
+            "oidcc-id-token-hint": {
+                "browser": [
+                    {
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
+                        "tasks": [
+                            FORMPOST_LOGIN,
+                            VERIFY_COMPLETE_FORMPOST
                         ]
                     }
                 ]
@@ -1596,30 +772,8 @@ CONFIG = {
             {
                 "match": constants.BASE_URL + "/oauth2/authorize*",
                 "tasks": [
-                    {
-                        "task": "Login",
-                        "match": constants.BASE_URL + "/authenticationendpoint/login*",
-                        "optional": True,
-                        "commands": [
-                            [
-                                "text",
-                                "id",
-                                "username",
-                                "admin"
-                            ],
-                            [
-                                "text",
-                                "id",
-                                "password",
-                                "admin"
-                            ],
-                            [
-                                "click",
-                                "xpath",
-                                "/html/body/main/div/div[2]/div/form/div[9]/div[2]/button"
-                            ]
-                        ]
-                    }
+                    FORMPOST_LOGIN,
+                    VERIFY_COMPLETE_FORMPOST
                 ]
             }
         ],
@@ -1629,10 +783,18 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Verify error page",
-                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback*"
-                            }
+                            VERIFY_COMPLETE_FORMPOST
+                        ]
+                    }
+                ]
+            },
+            "oidcc-prompt-none-logged-in": {
+                "browser": [
+                    {
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
+                        "tasks": [
+                            FORMPOST_LOGIN,
+                            VERIFY_COMPLETE_FORMPOST
                         ]
                     }
                 ]
@@ -1642,10 +804,7 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Verify error page",
-                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback*"
-                            }
+                            VERIFY_COMPLETE_FORMPOST
                         ]
                     }
                 ]
@@ -1655,54 +814,9 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Login",
-                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
-                                "optional": True,
-                                "commands": [
-                                    [
-                                        "text",
-                                        "id",
-                                        "username",
-                                        "admin"
-                                    ],
-                                    [
-                                        "text",
-                                        "id",
-                                        "password",
-                                        "admin"
-                                    ],
-                                    [
-                                        "click",
-                                        "xpath",
-                                        "/html/body/main/div/div[2]/div/form/div[9]/div[2]/button"
-                                    ],
-                                    [
-                                        "wait",
-                                        "contains",
-                                        "oauth2_consent",
-                                        10
-                                    ]
-                                ]
-                            },
-                            {
-                                "task": "Consent",
-                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_consent*",
-                                "optional": True,
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "id",
-                                        "approve",
-                                        10
-                                    ],
-                                    [
-                                        "click",
-                                        "id",
-                                        "approve"
-                                    ]
-                                ]
-                            }
+                            LOGIN_REFRESH_TOKEN,
+                            FORMPOST_CONSENT,
+                            VERIFY_COMPLETE_FORMPOST
                         ]
                     }
                 ]
@@ -1712,20 +826,7 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Verify error page",
-                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_error.do*",
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "xpath",
-                                        "//*",
-                                        10,
-                                        "Identity Server",
-                                        "update-image-placeholder"
-                                    ]
-                                ]
-                            }
+                            VERIFY_ERROR
                         ]
                     }
                 ]
@@ -1735,10 +836,7 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Verify error page",
-                                "match": "https://localhost.emobix.co.uk:8443/test/a/test/callback*"
-                            }
+                            VERIFY_COMPLETE_FORMPOST
                         ]
                     }
                 ]
@@ -1748,20 +846,7 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Verify error",
-                                "match": constants.BASE_URL + "/authenticationendpoint/oauth2_error.do*",
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "xpath",
-                                        "//*",
-                                        10,
-                                        "Identity Server",
-                                        "update-image-placeholder"
-                                    ]
-                                ]
-                            }
+                            VERIFY_ERROR
                         ]
                     }
                 ]
@@ -1771,38 +856,8 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Login",
-                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
-                                "optional": True,
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "xpath",
-                                        "/html/body/main/div/div[2]/h3",
-                                        10,
-                                        "Sign In",
-                                        "update-image-placeholder-optional"
-                                    ],
-                                    [
-                                        "text",
-                                        "id",
-                                        "username",
-                                        "admin"
-                                    ],
-                                    [
-                                        "text",
-                                        "id",
-                                        "password",
-                                        "admin"
-                                    ],
-                                    [
-                                        "click",
-                                        "xpath",
-                                        "/html/body/main/div/div[2]/div/form/div[9]/div[2]/button"
-                                    ]
-                                ]
-                            }
+                            FORMPOST_PROMPT_LOGIN,
+                            VERIFY_COMPLETE_FORMPOST
                         ]
                     }
                 ]
@@ -1812,38 +867,31 @@ CONFIG = {
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
-                            {
-                                "task": "Login",
-                                "match": constants.BASE_URL + "/authenticationendpoint/login*",
-                                "optional": True,
-                                "commands": [
-                                    [
-                                        "wait",
-                                        "xpath",
-                                        "/html/body/main/div/div[2]/h3",
-                                        10,
-                                        "Sign In",
-                                        "update-image-placeholder-optional"
-                                    ],
-                                    [
-                                        "text",
-                                        "id",
-                                        "username",
-                                        "admin"
-                                    ],
-                                    [
-                                        "text",
-                                        "id",
-                                        "password",
-                                        "admin"
-                                    ],
-                                    [
-                                        "click",
-                                        "xpath",
-                                        "/html/body/main/div/div[2]/div/form/div[9]/div[2]/button"
-                                    ]
-                                ]
-                            }
+                            FORMPOST_PROMPT_LOGIN,
+                            VERIFY_COMPLETE_FORMPOST
+                        ]
+                    }
+                ]
+            },
+            "oidcc-max-age-10000": {
+                "browser": [
+                    {
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
+                        "tasks": [
+                            FORMPOST_LOGIN,
+                            VERIFY_COMPLETE_FORMPOST
+
+                        ]
+                    }
+                ]
+            },
+            "oidcc-id-token-hint": {
+                "browser": [
+                    {
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
+                        "tasks": [
+                            FORMPOST_LOGIN,
+                            VERIFY_COMPLETE_FORMPOST
                         ]
                     }
                 ]

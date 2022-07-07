@@ -44,6 +44,7 @@ import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
+import org.wso2.carbon.user.mgt.stub.types.carbon.ClaimValue;
 import org.wso2.carbon.user.mgt.stub.UserAdminUserAdminException;
 import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.identity.integration.test.application.mgt.AbstractIdentityFederationTestCase;
@@ -464,7 +465,14 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
             return false;
         } else {
             String[] roles = {usrRole};
-            usrMgtClient.addUser(usrName, usrPwd, roles, null);
+
+            ClaimValue[] claimValues = new ClaimValue[1];
+            ClaimValue lastName = new ClaimValue();
+            lastName.setClaimURI(lastNameClaimURI);
+            lastName.setValue(usrName);
+            claimValues[0] = lastName;
+
+            usrMgtClient.addUser(usrName, usrPwd, roles, null, claimValues);
             if (usrMgtClient.userNameExists(usrRole, usrName)) {
                 return true;
             } else {

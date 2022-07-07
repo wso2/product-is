@@ -18,7 +18,7 @@ OIDC conformance test workflow can be used to for this purpose.
 **Note** : this workflow uses google chat API to send test summary details to a specified google chat. To configure this,
 1. Obtain the webhook url of the desired group
 2. Go to Settings => Secrets and click New Repository Secret
-3. for name add "GOOGLE_WEBHOOK"
+3. for name add "GOOGLE_CHAT_WEBHOOK_OIDC_TEST"
 4. add the webhook url for value
 5. Click add secret
 

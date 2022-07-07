@@ -28,7 +28,7 @@
     <artifactId>identity-server-parent</artifactId>
     <packaging>pom</packaging>
     <description>WSO2 Identity Server</description>
-    <version>6.0.0-m2-SNAPSHOT</version>
+    <version>6.0.0-alpha3-SNAPSHOT</version>
     <name>WSO2 Identity Server</name>
     <url>http://wso2.org/projects/identity</url>
 
@@ -1523,11 +1523,6 @@
                 <artifactId>org.wso2.carbon.identity.application.authenticator.live</artifactId>
                 <version>${social.authenticator.windowslive.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.identity.outbound.auth.yahoo</groupId>
-                <artifactId>org.wso2.carbon.identity.application.authenticator.yahoo</artifactId>
-                <version>${social.authenticator.yahoo.version}</version>
-            </dependency>
 
             <!-- Provisioning Connectors -->
             <dependency>
@@ -1605,18 +1600,6 @@
                 <groupId>org.wso2.carbon.extension.identity.oauth2.grantType.jwt</groupId>
                 <artifactId>org.wso2.carbon.identity.oauth2.grant.jwt</artifactId>
                 <version>${identity.oauth2.jwt.bearer.grant.version}</version>
-            </dependency>
-
-            <!-- Forget-me tool. -->
-            <dependency>
-                <groupId>org.wso2.carbon.privacy</groupId>
-                <artifactId>org.wso2.carbon.privacy.forgetme.conf</artifactId>
-                <version>${forgetme.tool.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.privacy</groupId>
-                <artifactId>org.wso2.carbon.privacy.forgetme.tool</artifactId>
-                <version>${forgetme.tool.version}</version>
             </dependency>
 
             <!--Conditional authenticator functions-->
@@ -1948,6 +1931,24 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
+                <groupId>io.rest-assured</groupId>
+                <artifactId>json-path</artifactId>
+                <version>${rest.assured.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.rest-assured</groupId>
+                <artifactId>xml-path</artifactId>
+                <version>${rest.assured.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.rest-assured</groupId>
+                <artifactId>rest-assured-all</artifactId>
+                <version>${rest.assured.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
                 <groupId>io.swagger</groupId>
                 <artifactId>swagger-annotations</artifactId>
                 <version>${swagger-core-version}</version>
@@ -2037,6 +2038,60 @@
                 <artifactId>org.wso2.carbon.identity.test.integration.service</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.directory.server</groupId>
+                <artifactId>apacheds-core-constants</artifactId>
+                <version>${apacheds.core.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.directory.server</groupId>
+                <artifactId>apacheds-core</artifactId>
+                <version>${apacheds.core.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.directory.server</groupId>
+                <artifactId>apacheds-core-api</artifactId>
+                <version>${apacheds.core.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.directory.server</groupId>
+                <artifactId>apacheds-jdbm-partition</artifactId>
+                <version>${apacheds.core.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.directory.server</groupId>
+                <artifactId>apacheds-ldif-partition</artifactId>
+                <version>${apacheds.core.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.directory.server</groupId>
+                <artifactId>apacheds-protocol-ldap</artifactId>
+                <version>${apacheds.core.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.directory.server</groupId>
+                <artifactId>apacheds-protocol-shared</artifactId>
+                <version>${apacheds.core.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.directory.server</groupId>
+                <artifactId>apacheds-xdbm-partition</artifactId>
+                <version>${apacheds.core.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.directory.api</groupId>
+                <artifactId>api-all</artifactId>
+                <version>${apacheds.api.version}</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -2083,6 +2138,7 @@
                                 </goals>
                                 <configuration> <!-- add this to disable checking -->
                                     <additionalparam>-Xdoclint:none</additionalparam>
+                                    <source>8</source>
                                 </configuration>
                             </execution>
                         </executions>
@@ -2096,33 +2152,33 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.20.400</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.21.0</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
-        <saml.common.util.version>1.1.1</saml.common.util.version>
+        <saml.common.util.version>1.1.2</saml.common.util.version>
         <saml.common.util.version.range>[1.0.0,2.0.0)</saml.common.util.version.range>
 
         <!--Carbon Consent Version-->
-        <carbon.consent.mgt.version>2.3.18</carbon.consent.mgt.version>
+        <carbon.consent.mgt.version>2.3.19</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.5.76</identity.governance.version>
+        <identity.governance.version>1.5.83</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.6.4</identity.carbon.auth.saml2.version>
         <identity.carbon.auth.mutual.ssl.version>5.5.0</identity.carbon.auth.mutual.ssl.version>
         <identity.carbon.auth.iwa.version>5.5.0</identity.carbon.auth.iwa.version>
-        <identity.carbon.auth.rest.version>1.5.7</identity.carbon.auth.rest.version>
+        <identity.carbon.auth.rest.version>1.5.16</identity.carbon.auth.rest.version>
 
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.9.10</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.7.151</identity.inbound.auth.oauth.version>
-        <identity.inbound.auth.openid.version>5.7.0</identity.inbound.auth.openid.version>
-        <identity.inbound.auth.sts.version>5.7.3</identity.inbound.auth.sts.version>
+        <identity.inbound.auth.oauth.version>6.7.169</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.openid.version>5.7.1</identity.inbound.auth.openid.version>
+        <identity.inbound.auth.sts.version>5.7.4</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.0</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>1.6.10</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim2.version>1.6.17</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity workflow Versions -->
         <identity.user.workflow.version>5.5.2</identity.user.workflow.version>
@@ -2139,13 +2195,13 @@
         <identity.userstore.remote.version>5.2.5</identity.userstore.remote.version>
 
         <!-- Identity Data Publisher Versions -->
-        <identity.data.publisher.authentication.version>5.4.3</identity.data.publisher.authentication.version>
+        <identity.data.publisher.authentication.version>5.4.4</identity.data.publisher.authentication.version>
         <identity.data.publisher.oauth.version>1.4.0</identity.data.publisher.oauth.version>
         <identity.data.publisher.audit.version>1.4.0</identity.data.publisher.audit.version>
 
         <!-- Identity Event Handler Versions -->
         <identity.event.handler.account.lock.version>1.5.0</identity.event.handler.account.lock.version>
-        <identity.event.handler.notification.version>1.4.1</identity.event.handler.notification.version>
+        <identity.event.handler.notification.version>1.4.4</identity.event.handler.notification.version>
 
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
@@ -2157,9 +2213,9 @@
         <callhome.version>4.5.x_1.0.11</callhome.version>
 
         <!-- Authenticator Versions -->
-        <identity.outbound.auth.oidc.version>5.7.2</identity.outbound.auth.oidc.version>
+        <identity.outbound.auth.oidc.version>5.7.3</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.passive.sts.version>5.5.0</identity.outbound.auth.passive.sts.version>
-        <identity.outbound.auth.samlsso.version>5.4.3</identity.outbound.auth.samlsso.version>
+        <identity.outbound.auth.samlsso.version>5.4.5</identity.outbound.auth.samlsso.version>
         <identity.outbound.auth.requestpath.basicauth.version>5.5.0</identity.outbound.auth.requestpath.basicauth.version>
         <identity.outbound.auth.requestpath.oauth.version>5.4.0</identity.outbound.auth.requestpath.oauth.version>
 
@@ -2167,16 +2223,15 @@
         <social.authenticator.facebook.version>5.2.0</social.authenticator.facebook.version>
         <social.authenticator.google.version>5.2.0</social.authenticator.google.version>
         <social.authenticator.windowslive.version>5.2.0</social.authenticator.windowslive.version>
-        <social.authenticator.yahoo.version>5.2.0</social.authenticator.yahoo.version>
 
         <!-- Provisioning connector Versions -->
-        <provisioning.connector.google.version>5.2.1</provisioning.connector.google.version>
+        <provisioning.connector.google.version>5.2.2</provisioning.connector.google.version>
         <provisioning.connector.salesforce.version>5.2.0</provisioning.connector.salesforce.version>
         <provisioning.connector.scim.version>5.3.0</provisioning.connector.scim.version>
 
         <!-- Local Authenticator Versions -->
-        <identity.local.auth.basicauth.version>6.4.5</identity.local.auth.basicauth.version>
-        <identity.local.auth.fido.version>5.3.23</identity.local.auth.fido.version>
+        <identity.local.auth.basicauth.version>6.4.6</identity.local.auth.basicauth.version>
+        <identity.local.auth.fido.version>5.3.24</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.4.0</identity.local.auth.iwa.version>
 
         <!-- Local Authentication API Connector Version -->
@@ -2189,14 +2244,16 @@
         <identity.metadata.saml.version>1.5.3</identity.metadata.saml.version>
 
         <!-- Connector Versions -->
-        <authenticator.totp.version>3.0.25</authenticator.totp.version>
+        <authenticator.totp.version>3.0.26</authenticator.totp.version>
         <authenticator.backupcode.version>0.0.3</authenticator.backupcode.version>
-        <authenticator.office365.version>2.1.0</authenticator.office365.version>
-        <authenticator.smsotp.version>3.1.7</authenticator.smsotp.version>
+        <authenticator.office365.version>2.1.1</authenticator.office365.version>
+        <authenticator.smsotp.version>3.1.10</authenticator.smsotp.version>
         <authenticator.emailotp.version>4.0.8</authenticator.emailotp.version>
         <authenticator.twitter.version>1.1.0</authenticator.twitter.version>
         <authenticator.x509.version>3.1.2</authenticator.x509.version>
         <identity.extension.utils>1.0.8</identity.extension.utils>
+
+        <identity.org.mgt.version>1.0.28</identity.org.mgt.version>
 
         <!-- Hash Provider Versions-->
         <hashprovider.pbkdf2.version>0.1.4</hashprovider.pbkdf2.version>
@@ -2207,33 +2264,33 @@
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.9</identity.api.dispatcher.version>
         <identity.user.api.version>1.2.6</identity.user.api.version>
-        <identity.server.api.version>1.1.14</identity.server.api.version>
+        <identity.server.api.version>1.1.19</identity.server.api.version>
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
         <identity.tool.samlsso.validator.version>5.5.0</identity.tool.samlsso.validator.version>
-        <identity.app.authz.xacml.version>2.3.0</identity.app.authz.xacml.version>
-        <identity.oauth.addons.version>2.4.7</identity.oauth.addons.version>
+        <identity.app.authz.xacml.version>2.3.1</identity.app.authz.xacml.version>
+        <identity.oauth.addons.version>2.4.8</identity.oauth.addons.version>
         <org.wso2.carbon.extension.identity.x509certificate.version>1.1.0</org.wso2.carbon.extension.identity.x509certificate.version>
-        <conditional.authentication.functions.version>1.2.4</conditional.authentication.functions.version>
+        <conditional.authentication.functions.version>1.2.7</conditional.authentication.functions.version>
         <carbon.identity.oauth.uma.version>1.3.9</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.2.957</identity.apps.version>
+        <identity.apps.version>1.2.1023</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
 
         <!-- Carbon Kernel -->
-        <carbon.kernel.version>4.7.0-beta2</carbon.kernel.version>
+        <carbon.kernel.version>4.7.0-beta8</carbon.kernel.version>
 
         <!-- Carbon Repo Versions -->
-        <carbon.deployment.version>4.12.13</carbon.deployment.version>
+        <carbon.deployment.version>4.12.14</carbon.deployment.version>
         <carbon.commons.version>4.8.7</carbon.commons.version>
-        <carbon.registry.version>4.8.4</carbon.registry.version>
-        <carbon.multitenancy.version>4.10.1</carbon.multitenancy.version>
+        <carbon.registry.version>4.8.6</carbon.registry.version>
+        <carbon.multitenancy.version>4.10.2</carbon.multitenancy.version>
         <carbon.metrics.version>1.3.12</carbon.metrics.version>
-        <carbon.business-process.version>4.5.57</carbon.business-process.version>
-        <carbon.analytics-common.version>5.2.41</carbon.analytics-common.version>
+        <carbon.business-process.version>4.5.59</carbon.business-process.version>
+        <carbon.analytics-common.version>5.2.42</carbon.analytics-common.version>
         <carbon.dashboards.version>2.0.26</carbon.dashboards.version>
         <carbon.database.utils.version>2.1.4</carbon.database.utils.version>
         <carbon.healthcheck.version>1.2.8</carbon.healthcheck.version>
@@ -2241,7 +2298,6 @@
         <!-- Common tool Versions -->
         <cipher-tool.version>1.1.9</cipher-tool.version>
         <securevault.wso2.version>1.1.4</securevault.wso2.version>
-        <forgetme.tool.version>1.3.9</forgetme.tool.version>
 
         <!-- Feature dependency Versions -->
         <stratos.version.221>2.2.1</stratos.version.221>
@@ -2298,7 +2354,7 @@
         <jstl.version>1.1.2</jstl.version>
         <taglibs.version>1.1.2</taglibs.version>
         <google.collect.wso2.version>1.0.0.wso2v2</google.collect.wso2.version>
-        <google.code.gson.version>2.3.1</google.code.gson.version>
+        <google.code.gson.version>2.9.0</google.code.gson.version>
         <oauth2.client.version>1.0.0</oauth2.client.version>
         <axiom.wso2.version>1.2.11-wso2v16</axiom.wso2.version>
         <commons.lang.version>2.6</commons.lang.version>
@@ -2339,8 +2395,10 @@
         <apache.ws.security.version>1.6.9</apache.ws.security.version>
         <apache.openejb.version>4.5.2</apache.openejb.version>
         <nimbus.oidc.sdk.version>6.13</nimbus.oidc.sdk.version>
+        <apacheds.core.version>2.0.0.AM26</apacheds.core.version>
+        <apacheds.api.version>2.0.0.AM4</apacheds.api.version>
         <!--Rest API test -->
-        <rest.assured.version>4.1.2</rest.assured.version>
+        <rest.assured.version>5.0.0</rest.assured.version>
         <swagger-core-version>1.5.22</swagger-core-version>
         <swagger-request-validator.version>2.6.0</swagger-request-validator.version>
         <!--UI Cypress test -->

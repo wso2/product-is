@@ -56,12 +56,12 @@
         <Condition>
             <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:or">
                 <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
-                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">ROLE_1</AttributeValue>
-                    <AttributeDesignator AttributeId="http://wso2.org/claims/role" Category="http://wso2.org/identity/user" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Internal/ROLE_1</AttributeValue>
+                    <AttributeDesignator AttributeId="http://wso2.org/claims/roles" Category="http://wso2.org/identity/user" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
                 </Apply>
                 <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
-                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">ROLE_2</AttributeValue>
-                    <AttributeDesignator AttributeId="http://wso2.org/claims/role" Category="http://wso2.org/identity/user" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Internal/ROLE_2</AttributeValue>
+                    <AttributeDesignator AttributeId="http://wso2.org/claims/roles" Category="http://wso2.org/identity/user" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
                 </Apply>
             </Apply>
         </Condition>

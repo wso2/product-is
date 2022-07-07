@@ -56,7 +56,6 @@
                 <exclude>**/datasources/master-datasources.xml</exclude>
                 <exclude>**/repository/resources/conf/**</exclude>
                 <exclude>**/deployment.toml</exclude>
-                <exclude>**/metrics.xml</exclude>
                 <exclude>**/log4j2.properties</exclude>
                 <exclude>**/catalina.properties</exclude>
                 <exclude>**/carbon.properties</exclude>
@@ -333,15 +332,6 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
         </fileSet>
 
-        <!--Copy web apps for for smsotp authenticators-->
-        <fileSet>
-            <directory>../connectors/target/authenticatorCopied/war</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
-            <includes>
-                <include>smsotpauthenticationendpoint.war</include>
-            </includes>
-        </fileSet>
-
         <!--Copy web apps for for x509 certificate authenticators-->
         <fileSet>
             <directory>../connectors/target/authenticatorCopied/war</directory>
@@ -453,17 +443,6 @@
         </fileSet>
         <fileSet>
             <directory>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/dbscripts/metrics/
-            </directory>
-            <outputDirectory>wso2is-${pom.version}/dbscripts/metrics</outputDirectory>
-            <includes>
-                <include>**/*.sql</include>
-            </includes>
-            <fileMode>644</fileMode>
-            <directoryMode>775</directoryMode>
-        </fileSet>
-        <fileSet>
-            <directory>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/data-bridge
             </directory>
             <outputDirectory>wso2is-${pom.version}/repository/conf/data-bridge</outputDirectory>
@@ -522,35 +501,6 @@
             <directoryMode>775</directoryMode>
         </fileSet>
 
-        <fileSet>
-            <directory>target/forget-me/identity-anonymization-tool-${forgetme.tool.version}</directory>
-            <outputDirectory>wso2is-${pom.version}/repository/components/tools/forget-me</outputDirectory>
-            <excludes>
-                <exclude>**/forgetme.sh</exclude>
-                <exclude>**/forgetme.bat</exclude>
-                <exclude>**/config.json</exclude>
-                <exclude>conf/sql/**</exclude>
-                <exclude>conf/datasources/**</exclude>
-                <exclude>conf/product-config/**</exclude>
-                <exclude>conf/streams/**</exclude>
-                <exclude>conf/extensions/**</exclude>
-            </excludes>
-            <fileMode>644</fileMode>
-        </fileSet>
-        <fileSet>
-            <directory>target/forget-me/identity-anonymization-tool-${forgetme.tool.version}/conf/sql/identity/
-            </directory>
-            <outputDirectory>wso2is-${pom.version}/repository/components/tools/forget-me/conf/sql/identity
-            </outputDirectory>
-            <fileMode>644</fileMode>
-        </fileSet>
-        <fileSet>
-            <directory>target/forget-me/identity-anonymization-tool-${forgetme.tool.version}/conf/extensions/identity/
-            </directory>
-            <outputDirectory>wso2is-${pom.version}/repository/components/tools/forget-me/extensions/</outputDirectory>
-            <fileMode>644</fileMode>
-        </fileSet>
-
         <!--Copy scope validator to dropins dropins.-->
         <fileSet>
             <directory>
@@ -583,7 +533,6 @@
             <directory>../connectors/target/authenticatorCopied/war</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
             <includes>
-                <include>smsotpauthenticationendpoint/</include>
                 <include>x509certificateauthenticationendpoint/</include>
             </includes>
         </fileSet>
@@ -630,12 +579,6 @@
                 target/wso2carbon-core-${carbon.kernel.version}/repository/conf/datasources/master-datasources.xml
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/datasources/</outputDirectory>
-            <filtered>true</filtered>
-        </file>
-        <file>
-            <source>src/repository/resources/conf/metrics.xml</source>
-            <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
-            <destName>metrics.xml</destName>
             <filtered>true</filtered>
         </file>
         <file>
@@ -1066,36 +1009,6 @@
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
         </file>
-
-        <file>
-            <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/metrics.properties
-            </source>
-            <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
-            <filtered>false</filtered>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/metrics.xml
-            </source>
-            <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
-            <filtered>false</filtered>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/datasources/metrics-datasources.xml
-            </source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/datasources/</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/database/WSO2METRICS_DB.mv.db
-            </source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/database/</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
         <file>
             <source>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/oidc-scope-config.xml
@@ -1115,34 +1028,6 @@
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/consent-mgt-config.xml
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>src/bin/forgetme/forgetme.sh</source>
-            <outputDirectory>wso2is-${pom.version}/bin/</outputDirectory>
-            <fileMode>744</fileMode>
-        </file>
-        <file>
-            <source>src/bin/forgetme/forgetme.bat</source>
-            <outputDirectory>wso2is-${pom.version}/bin/</outputDirectory>
-            <fileMode>744</fileMode>
-        </file>
-        <file>
-            <source>target/forget-me/identity-anonymization-tool-${forgetme.tool.version}/bin/forgetme.sh</source>
-            <outputDirectory>wso2is-${pom.version}/repository/components/tools/forget-me/bin/</outputDirectory>
-            <fileMode>744</fileMode>
-        </file>
-        <file>
-            <source>target/forget-me/identity-anonymization-tool-${forgetme.tool.version}/bin/forgetme.bat</source>
-            <outputDirectory>wso2is-${pom.version}/repository/components/tools/forget-me/bin/</outputDirectory>
-            <fileMode>744</fileMode>
-        </file>
-        <file>
-            <source>
-                target/forget-me/identity-anonymization-tool-${forgetme.tool.version}/conf/product-config/config-identity.json
-            </source>
-            <outputDirectory>wso2is-${pom.version}/repository/components/tools/forget-me/conf/</outputDirectory>
-            <destName>config.json</destName>
             <fileMode>644</fileMode>
         </file>
         <file>
@@ -1180,6 +1065,12 @@
         <file>
             <source>updates/product.txt</source>
             <outputDirectory>wso2is-${pom.version}/updates/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>src/bin/enableadaptive.sh</source>
+            <outputDirectory>wso2is-${pom.version}/bin/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>

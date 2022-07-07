@@ -36,7 +36,8 @@ DCR_BODY = {
     'client_name': 'python_script',
     "grant_types": ["password"],
     "ext_param_client_id": DCR_CLIENT_ID,
-    "ext_param_client_secret": DCR_CLIENT_SECRET
+    "ext_param_client_secret": DCR_CLIENT_SECRET,
+    "is_management_app": True
 }
 
 SMTP_SERVER = "smtp.gmail.com"

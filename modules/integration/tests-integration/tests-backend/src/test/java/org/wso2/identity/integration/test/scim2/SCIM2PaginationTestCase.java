@@ -122,6 +122,7 @@ public class SCIM2PaginationTestCase extends ISIntegrationTest {
     @Test(dependsOnMethods = "testCreateUser")
     public void testUserListingPagination() throws Exception {
 
+        int currentUsers = getCurrentUsersCount();
         HttpGet request = new HttpGet(getUserPath() + "?startIndex=" + START_INDEX + "&count=" + COUNT);
         request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
         request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
@@ -134,7 +135,7 @@ public class SCIM2PaginationTestCase extends ISIntegrationTest {
         EntityUtils.consume(response.getEntity());
 
         String totalResults = ((JSONObject) responseObj).get(TOTAL_RESULTS_ATTRIBUTE).toString();
-        assertEquals(totalResults, COUNT, "Total results in pagination listing is incorrect.");
+        assertEquals(totalResults, String.valueOf(currentUsers), "Total results in pagination listing is incorrect.");
 
         String startIndex = ((JSONObject) responseObj).get(START_INDEX_ATTRIBUTE).toString();
         assertEquals(startIndex, START_INDEX, "StartIndex in pagination listing is incorrect.");

@@ -4,6 +4,7 @@
   "key": "1234",
   "secret": "12345",
   "sender": "073923902",
+  "contentType":"JSON",
   "properties": [
     {
       "key": "body.scope",

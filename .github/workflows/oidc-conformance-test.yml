@@ -21,7 +21,7 @@ on:
       send-chat:
         description: 'Send test results to google chat'
         required: true
-        default: 'no'
+        default: 'yes'
 
 jobs:
   build:
@@ -41,6 +41,8 @@ jobs:
       run: |
         python3 -m pip install --upgrade pip setuptools wheel
         pip3 install psutil
+        pip3 install httpx
+        pip3 install httplib2
         
     - name: Download IS zip
       run: |
@@ -65,7 +67,7 @@ jobs:
       
     - name: Clone conformance suite
       run: |
-        CONFORMANCE_SUITE_VERSION=v4.1.37
+        CONFORMANCE_SUITE_VERSION=v4.1.42
         git clone --depth 1 --branch release-${CONFORMANCE_SUITE_VERSION} https://github.com/openid-certification/conformance-suite.git
     
     - name: Adding extra hosts to docker-compose-dev.yml
@@ -153,8 +155,12 @@ jobs:
       if: always()
       run: |
         INPUT=${{github.event.inputs.send-chat}}
+        TAG=${{github.event.inputs.tag}}
         if [[ -z "${INPUT}" ]]; then
-          INPUT="no"
+          INPUT="yes"
+        fi
+        if [[ -z "${TAG}" ]]; then
+          TAG=${GITHUB_REF:10}
         fi
         SEND_CHAT=${INPUT^^}
         if [ $SEND_CHAT == "YES" ]; then
@@ -162,7 +168,7 @@ jobs:
           echo "Sending Google Chat Message"
           echo "==========================="
           CONFORMANCE_SUITE_URL=https://localhost:8443
-          python3 ./product-is/oidc-conformance-tests/send_chat.py $CONFORMANCE_SUITE_URL $GITHUB_RUN_NUMBER ${{job.status}} ${{github.repository}} ${{github.run_id}} ${{secrets.GOOGLE_WEBHOOK}} ${{github.event.inputs.tag}}
+          python3 ./product-is/oidc-conformance-tests/send_chat.py "$CONFORMANCE_SUITE_URL" "$GITHUB_RUN_NUMBER" "${{job.status}}" "${{github.repository}}" "${{github.run_id}}" "${{secrets.GOOGLE_CHAT_WEBHOOK_OIDC_TEST}}" "$TAG"
         elif [ $SEND_CHAT == "NO" ]; then
           echo "========================================"
           echo "Skipped Sending Google Chat Message"
