@@ -162,6 +162,6 @@ else
   echo "Adaptive authentication successfully enabled."
 fi
 
-if [ "sever_restart_required_required" = true ] ; then
+if [ "$sever_restart_required" = true ] ; then
     echo "Please restart the server."
 fi
