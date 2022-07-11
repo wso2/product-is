@@ -34,6 +34,8 @@ set ASM_VERSION=9.2
 
 set SERVER_RESTART_REQUIRED="false"
 
+set DISABLE=%1
+
 rem ----- Only set CARBON_HOME if not already set ----------------------------
 :checkServer
 setlocal enabledelayedexpansion
@@ -47,6 +49,70 @@ rem find CARBON_HOME if it does not exist due to either an invalid value passed
 rem by the user or the %0 problem on Windows 9x
 if not exist "%CARBON_HOME%\bin\version.txt" goto noServerHome
 
+rem commandline arguement 'DISABLE' or 'disable' is passed
+if "%DISABLE%"=="DISABLE" goto disableAdaptiveAuth
+if "%DISABLE%"=="disable" goto disableAdaptiveAuth
+rem no commandline arguements are passed
+goto enableAdaptiveAuth
+
+:disableAdaptiveAuth
+echo ^^!^^!^^!This command will remove required libraries for adaptive authentication.^^!^^!^^!
+echo ^^!^^!^^!If you disable it Adaptive Authentication feature will be disabled from the whole system^^!^^!^^!
+echo ^^!^^!^^!Existing applications created with Adaptive Scripts may not work as expected^^!^^!^^!
+set /p DECISION=^^!^^!^^!Please confirm the action, Are you going to disable Adaptive authentication(y/n)?^^!^^!^^!
+
+if "%DECISION%"=="Y" goto proceedDisableAdaptiveAuth
+if "%DECISION%"=="y" goto proceedDisableAdaptiveAuth
+goto abortDisableAdaptiveAuth
+
+:proceedDisableAdaptiveAuth
+set LOCAL_NASHORN_VERSION=""
+set LOCAL_ASM_VERSION=""
+if exist "%CARBON_HOME%\repository\components\lib\nashorn-core-*.jar" (
+  set SERVER_RESTART_REQUIRED="true"
+  for /f "delims=" %%i in ('dir /s /b %CARBON_HOME%\repository\components\lib\nashorn-core-*.jar') do set "location=%%i"
+  for %%j in (!location!!) do set "full_artifact_name=%%~nxj"
+  for /f "tokens=3 delims=-" %%k in ("!full_artifact_name!") do set "artifact_name=%%k"
+  for /f "tokens=1,2 delims=." %%l in ("!artifact_name!") do set "LOCAL_NASHORN_VERSION=%%l.%%m"
+  echo Remove existing Nashorn library from lib folder: !full_artifact_name!
+  del !location!
+  echo Nashorn library Removed from components\lib.
+)
+if exist "%CARBON_HOME%\repository\components\dropins\nashorn_core_*.jar" (
+  set SERVER_RESTART_REQUIRED="true"
+  for /f "delims=" %%i in ('dir /s /b %CARBON_HOME%\repository\components\dropins\nashorn_core_!LOCAL_NASHORN_VERSION!*.jar') do set "location=%%i"
+  for %%j in (!location!!) do set "full_artifact_name=%%~nxj"
+  echo Remove existing Nashorn library from dropins: !full_artifact_name!
+  del !location!
+  echo Nashorn library Removed from components\dropins.
+)
+if exist "%CARBON_HOME%\repository\components\lib\asm-util-*.jar" (
+  set SERVER_RESTART_REQUIRED="true"
+  for /f "delims=" %%i in ('dir /s /b %CARBON_HOME%\repository\components\lib\asm-util-*.jar') do set "location=%%i"
+  for %%j in (!location!!) do set "full_artifact_name=%%~nxj"
+  for /f "tokens=3 delims=-" %%k in ("!full_artifact_name!") do set "artifact_name=%%k"
+  for /f "tokens=1,2 delims=." %%l in ("!artifact_name!") do set "LOCAL_ASM_VERSION=%%l.%%m"
+  echo Remove existing ASM Util library from lib folder: !full_artifact_name!
+  del !location!
+  echo ASM Util library Removed from components\lib.
+)
+if exist "%CARBON_HOME%\repository\components\dropins\asm_util_*.jar" (
+  set SERVER_RESTART_REQUIRED="true"
+  for /f "delims=" %%i in ('dir /s /b %CARBON_HOME%\repository\components\dropins\asm_util_!LOCAL_ASM_VERSION!*.jar') do set "location=%%i"
+  for %%j in (!location!!) do set "full_artifact_name=%%~nxj"
+  echo Remove existing ASM Util library from dropins: !full_artifact_name!
+  del !location!
+  echo ASM Util library Removed from components\dropins.
+)
+echo Adaptive authentication successfully disabled.
+goto printRestartMsg
+
+:abortDisableAdaptiveAuth
+echo Disabling Adaptive authentication is terminated.
+goto printRestartMsg
+
+
+:enableAdaptiveAuth
 if exist "%CARBON_HOME%\repository\components\lib\nashorn-core-*.jar" (
   for /f "delims=" %%i in ('dir /s /b %CARBON_HOME%\repository\components\lib\nashorn-core-*.jar') do set "location=%%i"
   for %%j in (!location!!) do set "full_artifact_name=%%~nxj"
@@ -59,8 +125,15 @@ if exist "%CARBON_HOME%\repository\components\lib\nashorn-core-*.jar" (
     set SERVER_RESTART_REQUIRED="true"
     echo Required Nashorn library not found. Remove existing library : !full_artifact_name!
     del !location!
+    if exist "%CARBON_HOME%\repository\components\dropins\nashorn_core_*.jar" (
+       for /f "delims=" %%i in ('dir /s /b %CARBON_HOME%\repository\components\dropins\nashorn_core_!LOCAL_NASHORN_VERSION!*.jar') do set "location=%%i"
+       for %%j in (!location!!) do set "full_artifact_name=%%~nxj"
+       echo Remove existing Nashorn library from dropins: !full_artifact_name!
+       del !location!
+       echo Nashorn library Removed from components\dropins.
+    )
     echo Downloading required Nashorn library : nashorn-core-%NASHORN_VERSION%
-	curl https://repo1.maven.org/maven2/org/openjdk/nashorn/nashorn-core/%NASHORN_VERSION%/nashorn-core-%NASHORN_VERSION%.jar -o %CARBON_HOME%/repository/components/lib/nashorn-core-%NASHORN_VERSION%.jar
+	  curl https://repo1.maven.org/maven2/org/openjdk/nashorn/nashorn-core/%NASHORN_VERSION%/nashorn-core-%NASHORN_VERSION%.jar -o %CARBON_HOME%/repository/components/lib/nashorn-core-%NASHORN_VERSION%.jar
     echo Nashorn library updated.
   )
 ) else (
@@ -82,6 +155,13 @@ if exist "%CARBON_HOME%\repository\components\lib\asm-util-*.jar" (
     set SERVER_RESTART_REQUIRED="true"
     echo Required ASM-Util library not found. Remove existing library : !full_artifact_name!
     del !location!
+    if exist "%CARBON_HOME%\repository\components\dropins\asm_util_*.jar" (
+       for /f "delims=" %%i in ('dir /s /b %CARBON_HOME%\repository\components\dropins\asm_util_!LOCAL_ASM_VERSION!*.jar') do set "location=%%i"
+       for %%j in (!location!!) do set "full_artifact_name=%%~nxj"
+       echo Remove existing ASM Util library from dropins: !full_artifact_name!
+       del !location!
+       echo ASM Util library Removed from components\dropins.
+    )
     echo Downloading required ASM-Util library : asm-util-%ASM_VERSION%
 	  curl https://repo1.maven.org/maven2/org/ow2/asm/asm-util/%ASM_VERSION%/asm-util-%ASM_VERSION%.jar -o %CARBON_HOME%/repository/components/lib/asm-util-%ASM_VERSION%.jar
     echo ASM-Util library updated.
@@ -93,11 +173,12 @@ if exist "%CARBON_HOME%\repository\components\lib\asm-util-*.jar" (
   echo ASM-Util download completed. Downloaded version : asm-util-%ASM_VERSION%%
 )
 echo Adaptive authentication successfully enabled.
+goto printRestartMsg
 
+:printRestartMsg
 if %SERVER_RESTART_REQUIRED%=="true" (
   echo Please restart the server.
 )
-
 goto end
 
 :noServerHome
