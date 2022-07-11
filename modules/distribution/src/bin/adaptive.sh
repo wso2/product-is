@@ -33,7 +33,6 @@ ASM_VERSION=9.2;
 sever_restart_required=false
 
 DISABLE=$1;
-echo $DISABLE;
 # resolve links - $0 may be a softlink
 PRG="$0"
 
