@@ -2244,7 +2244,7 @@
 
         <!-- Connector Versions -->
         <authenticator.totp.version>3.0.26</authenticator.totp.version>
-        <authenticator.backupcode.version>0.0.4</authenticator.backupcode.version>
+        <authenticator.backupcode.version>0.0.5</authenticator.backupcode.version>
         <authenticator.office365.version>2.1.1</authenticator.office365.version>
         <authenticator.smsotp.version>3.1.10</authenticator.smsotp.version>
         <authenticator.emailotp.version>4.0.8</authenticator.emailotp.version>
