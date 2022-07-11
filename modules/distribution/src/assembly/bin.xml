@@ -1046,7 +1046,7 @@
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>src/bin/enableadaptive.sh</source>
+            <source>src/bin/adaptive.sh</source>
             <outputDirectory>wso2is-${pom.version}/bin/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
