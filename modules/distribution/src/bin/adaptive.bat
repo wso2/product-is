@@ -18,21 +18,21 @@ rem under the License.
 
 rem ----------------------------------------------------------------------------
 rem Adaptive Authentication Script for the WSO2 Carbon Server
-
+rem
 rem Environment Variable Prequisites
-
+rem
 rem    CARBON_HOME   	Home of WSO2 Carbon installation. If not set I will  try
 rem                    	to figure it out.
 rem    NASHORN_VERSION   	OpenJDK Nashorn Version
-                   	
+rem
 rem    ASM_VERSION   	ASM Util, Commons Version.
-
+rem
 rem -----------------------------------------------------------------------------
 
 set NASHORN_VERSION=15.3
 set ASM_VERSION=9.2
 
-SETLOCAL ENABLEDELAYEDEXPANSION
+set SERVER_RESTART_REQUIRED="false"
 
 rem ----- Only set CARBON_HOME if not already set ----------------------------
 :checkServer
@@ -47,48 +47,57 @@ rem find CARBON_HOME if it does not exist due to either an invalid value passed
 rem by the user or the %0 problem on Windows 9x
 if not exist "%CARBON_HOME%\bin\version.txt" goto noServerHome
 
-IF EXIST "%CARBON_HOME%\repository\components\lib\nashorn-core-*.jar" (
+if exist "%CARBON_HOME%\repository\components\lib\nashorn-core-*.jar" (
   for /f "delims=" %%i in ('dir /s /b %CARBON_HOME%\repository\components\lib\nashorn-core-*.jar') do set "location=%%i"
-  for %%j in (!location!!) do set "full_artifact_name=%%~nxj" 
+  for %%j in (!location!!) do set "full_artifact_name=%%~nxj"
   for /f "tokens=3 delims=-" %%k in ("!full_artifact_name!") do set "artifact_name=%%k"
   for /f "tokens=1,2 delims=." %%l in ("!artifact_name!") do set "LOCAL_NASHORN_VERSION=%%l.%%m"
 
-  IF %NASHORN_VERSION%==!LOCAL_NASHORN_VERSION!  (
+  if %NASHORN_VERSION%==!LOCAL_NASHORN_VERSION!  (
     echo Nashorn library exists. No need to download.
-  ) ELSE (
+  ) else (
+    set SERVER_RESTART_REQUIRED="true"
     echo Required Nashorn library not found. Remove existing library : !full_artifact_name!
     del !location!
     echo Downloading required Nashorn library : nashorn-core-%NASHORN_VERSION%
 	curl https://repo1.maven.org/maven2/org/openjdk/nashorn/nashorn-core/%NASHORN_VERSION%/nashorn-core-%NASHORN_VERSION%.jar -o %CARBON_HOME%/repository/components/lib/nashorn-core-%NASHORN_VERSION%.jar
     echo Nashorn library updated.
   )
-) ELSE (
+) else (
+  set SERVER_RESTART_REQUIRED="true"
   echo Nashorn library not found. Starting to download.....
   curl https://repo1.maven.org/maven2/org/openjdk/nashorn/nashorn-core/%NASHORN_VERSION%/nashorn-core-%NASHORN_VERSION%.jar -o %CARBON_HOME%/repository/components/lib/nashorn-core-%NASHORN_VERSION%.jar
   echo Nashorn download completed. Downloaded version : nashorn-core-%NASHORN_VERSION%
 )
 
-IF EXIST "%CARBON_HOME%\repository\components\lib\asm-util-*.jar" (
+if exist "%CARBON_HOME%\repository\components\lib\asm-util-*.jar" (
   for /f "delims=" %%i in ('dir /s /b %CARBON_HOME%\repository\components\lib\asm-util-*.jar') do set "location=%%i"
-  for %%j in (!location!!) do set "full_artifact_name=%%~nxj" 
+  for %%j in (!location!!) do set "full_artifact_name=%%~nxj"
   for /f "tokens=3 delims=-" %%k in ("!full_artifact_name!") do set "artifact_name=%%k"
   for /f "tokens=1,2 delims=." %%l in ("!artifact_name!") do set "LOCAL_ASM_VERSION=%%l.%%m"
 
-  IF %ASM_VERSION%==!LOCAL_ASM_VERSION!  (
+  if %ASM_VERSION%==!LOCAL_ASM_VERSION!  (
     echo ASM-Util library exists. No need to download.
-  ) ELSE (
+  ) else (
+    set SERVER_RESTART_REQUIRED="true"
     echo Required ASM-Util library not found. Remove existing library : !full_artifact_name!
     del !location!
     echo Downloading required ASM-Util library : asm-util-%ASM_VERSION%
 	  curl https://repo1.maven.org/maven2/org/ow2/asm/asm-util/%ASM_VERSION%/asm-util-%ASM_VERSION%.jar -o %CARBON_HOME%/repository/components/lib/asm-util-%ASM_VERSION%.jar
     echo ASM-Util library updated.
   )
-) ELSE (
+) else (
+  set SERVER_RESTART_REQUIRED="true"
   echo ASM-Util library not found. Starting to download.....
   curl https://repo1.maven.org/maven2/org/ow2/asm/asm-util/%ASM_VERSION%/asm-util-%ASM_VERSION%.jar -o %CARBON_HOME%/repository/components/lib/asm-util-%ASM_VERSION%.jar
   echo ASM-Util download completed. Downloaded version : asm-util-%ASM_VERSION%%
 )
-echo Enable Adaptive Script successfully finished.
+echo Adaptive authentication successfully enabled.
+
+if %SERVER_RESTART_REQUIRED%=="true" (
+  echo Please restart the server.
+)
+
 goto end
 
 :noServerHome
@@ -96,5 +105,4 @@ echo CARBON_HOME is set incorrectly or CARBON could not be located. Please set C
 goto end
 
 :end
-ENDLOCAL
-
+endlocal
