@@ -10,11 +10,10 @@ PR_LINK=${PR_LINK%/}
 JDK_VERSION=${JDK_VERSION%/}
 JAVA_8_HOME=${JAVA_8_HOME%/}
 JAVA_11_HOME=${JAVA_11_HOME%/}
-JAVA_17_HOME=${JAVA_17_HOME%/}
 echo "    PR_LINK: $PR_LINK"
 echo "    JAVA 8 Home: $JAVA_8_HOME"
 echo "    JAVA 11 Home: $JAVA_11_HOME"
-echo "    User Input: $JDK_VERSION"
+echo "    User Input Java version: $JDK_VERSION"
 echo "::warning::Build ran for PR $PR_LINK"
 
 USER=$(echo $PR_LINK | awk -F'/' '{print $4}')
@@ -28,7 +27,6 @@ echo "::set-output name=REPO_NAME::$REPO"
 echo "=========================================================="
 echo "Cloning product-is"
 echo "=========================================================="
-echo $JAVA_17_HOME
 git clone https://github.com/wso2/product-is
 
 if [ "$REPO" = "product-is" ]; then
