@@ -47,6 +47,14 @@ jobs:
       - name: Echo java 11 home
         run: |
           echo "J11HOME=$JAVA_HOME" >> ${GITHUB_ENV}
+      - name: Set up Adopt JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: "17"
+          distribution: "adopt"
+      - name: Echo java 17 home
+        run: |
+          echo "J17HOME=$JAVA_HOME" >> ${GITHUB_ENV}
       - name: Build init
         run: |
           echo "CURRENT_MONTH=$(date +%Y-%m)" >> ${GITHUB_ENV}
@@ -65,6 +73,7 @@ jobs:
           JDK_VERSION: ${{github.event.inputs.jdk}}
           JAVA_8_HOME: ${{env.J8HOME}}
           JAVA_11_HOME: ${{env.J11HOME}}
+          JAVA_17_HOME: ${{env.J17HOME}}
         run: |
           wget https://raw.githubusercontent.com/nirmal101/product-is/master/.github/scripts/pr-builder.sh
           bash pr-builder.sh
