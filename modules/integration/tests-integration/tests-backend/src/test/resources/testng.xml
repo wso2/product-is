@@ -239,6 +239,14 @@
         </classes>
     </test>
 
+    <test name="is-tests-oauth-consented-token-enabled" preserve-order="true" parallel="false" group-by-instances="true">
+        <classes>
+            <class name="org.wso2.identity.integration.test.oauth2.consented.token.JWTAccessTokenWithConsentedTokenColumnInitializerTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.consented.token.OAuth2ServiceAuthCodeGrantJWTAccessTokenWithConsentedTokenColumnTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.consented.token.OAuth2ServicePasswordGrantJWTAccessTokenWithConsentedTokenColumnTestCase"/>
+        </classes>
+    </test>
+
     <!--
     ====================================================================================================================
         IMPORTANT : All the tests below this section, should be the ones that requires additional Identity Server
@@ -340,14 +348,6 @@
     <test name="is-tests-default-encryption" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
             <class name="org.wso2.identity.integration.test.encryption.EventPublisherPasswordEncryptionTestCase"/>
-        </classes>
-    </test>
-
-    <test name="is-tests-oauth-consented-token-enabled" preserve-order="true" parallel="false" group-by-instances="true">
-        <classes>
-            <class name="org.wso2.identity.integration.test.oauth2.consented.token.JWTAccessTokenWithConsentedTokenColumnInitializerTestCase"/>
-            <class name="org.wso2.identity.integration.test.oauth2.consented.token.OAuth2ServiceAuthCodeGrantJWTAccessTokenWithConsentedTokenColumnTestCase"/>
-            <class name="org.wso2.identity.integration.test.oauth2.consented.token.OAuth2ServicePasswordGrantJWTAccessTokenWithConsentedTokenColumnTestCase"/>
         </classes>
     </test>
 </suite>
