@@ -106,7 +106,7 @@ public class UserApprovalTestBase extends RESTAPIUserTestBase {
         log.info("Adding workflow " + addUserWorkflowName + " to tenant:" + this.tenant);
         this.client.addWorkflow(workflowDTO);
 
-        WorkflowWizard[] workflows = this.client.listWorkflows();
+        WorkflowWizard[] workflows = this.client.listAllWorkflows();
         for (WorkflowWizard workflow : workflows) {
             if (this.addUserWorkflowName.equals(workflow.getWorkflowName()) && workflowDescription.equals(workflow
                     .getWorkflowDescription())) {

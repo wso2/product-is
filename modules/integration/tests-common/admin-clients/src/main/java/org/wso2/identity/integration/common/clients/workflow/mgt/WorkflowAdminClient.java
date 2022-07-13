@@ -193,13 +193,52 @@ public class WorkflowAdminClient {
      * @throws RemoteException
      * @throws WorkflowAdminServiceWorkflowException
      */
-    public WorkflowWizard[] listWorkflows() throws RemoteException, WorkflowAdminServiceWorkflowException {
+    public WorkflowWizard[] listWorkflows(String filter) throws RemoteException, WorkflowAdminServiceWorkflowException {
 
-        WorkflowWizard[] workflows = stub.listWorkflows();
+        WorkflowWizard[] workflows = stub.listWorkflows(filter);
         if (workflows == null) {
             workflows = new WorkflowWizard[0];
         }
         return workflows;
+    }
+
+    public WorkflowWizard[] listAllWorkflows() throws RemoteException, WorkflowAdminServiceWorkflowException {
+
+        WorkflowWizard[] workflows = stub.listAllWorkflows();
+        if (workflows == null) {
+            workflows = new WorkflowWizard[0];
+        }
+        return workflows;
+    }
+
+    public WorkflowWizard[] listAllPaginatedWorkflows(int pageNumber)
+            throws RemoteException, WorkflowAdminServiceWorkflowException {
+
+        WorkflowWizard[] workflows = stub.listAllPaginatedWorkflows(pageNumber);
+        if (workflows == null) {
+            workflows = new WorkflowWizard[0];
+        }
+        return workflows;
+    }
+
+    public WorkflowWizard[] listPaginatedWorkflows(int pageNumber, String filter)
+            throws RemoteException, WorkflowAdminServiceWorkflowException {
+
+        WorkflowWizard[] workflows = stub.listPaginatedWorkflows(pageNumber, filter);
+        if (workflows == null) {
+            workflows = new WorkflowWizard[0];
+        }
+        return workflows;
+    }
+
+    public int getCountOfAllWorkflows() throws RemoteException, WorkflowAdminServiceWorkflowException {
+
+        return stub.getCountOfAllWorkflows();
+    }
+
+    public int getCountOfWorkflows(String filter) throws RemoteException, WorkflowAdminServiceWorkflowException {
+
+        return stub.getCountOfWorkflows(filter);
     }
 
     public void deleteWorkflow(String workflowId) throws RemoteException, WorkflowAdminServiceWorkflowException {
@@ -223,6 +262,46 @@ public class WorkflowAdminClient {
             associations = new Association[0];
         }
         return associations;
+    }
+
+    public Association[] listAssociationsWithFilter(String filter)
+            throws RemoteException, WorkflowAdminServiceWorkflowException {
+
+        Association[] associations = stub.listAssociationsWithFilter(filter);
+        if (associations == null) {
+            associations = new Association[0];
+        }
+        return associations;
+    }
+
+    public Association[] listAllPaginatedAssociations(int pageNumber)
+            throws RemoteException, WorkflowAdminServiceWorkflowException {
+
+        Association[] associations = stub.listAllPaginatedAssociations(pageNumber);
+        if (associations == null) {
+            associations = new Association[0];
+        }
+        return associations;
+    }
+
+    public Association[] listPaginatedAssociations(int pageNumber, String filter)
+            throws RemoteException, WorkflowAdminServiceWorkflowException {
+
+        Association[] associations = stub.listPaginatedAssociations(pageNumber, filter);
+        if (associations == null) {
+            associations = new Association[0];
+        }
+        return associations;
+    }
+
+    public int getCountOfAllAssociations() throws RemoteException, WorkflowAdminServiceWorkflowException {
+
+        return stub.getCountOfAllAssociations();
+    }
+
+    public int getCountOfAssociations(String filter) throws RemoteException, WorkflowAdminServiceWorkflowException {
+
+        return stub.getCountOfAssociations(filter);
     }
 
     public void deleteAssociation(String associationId) throws RemoteException, WorkflowAdminServiceWorkflowException {
