@@ -32,7 +32,6 @@ import com.nimbusds.openid.connect.sdk.OIDCTokenResponse;
 import com.nimbusds.openid.connect.sdk.OIDCTokenResponseParser;
 import com.nimbusds.openid.connect.sdk.token.OIDCTokens;
 
-import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
@@ -53,7 +52,6 @@ import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
 import org.wso2.identity.integration.test.oauth2.OAuth2ServiceAbstractIntegrationTest;
-import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.BufferedReader;
@@ -70,12 +68,12 @@ import java.util.List;
 public class OAuth2ServiceWithConsentedTokenColumnAbstractIntegrationTest extends
         OAuth2ServiceAbstractIntegrationTest {
 
-    protected static final String GIVEN_NAME_CLAIM_URI = "http://wso2.org/claims/givenname";
+    protected static final String TELEPHONE_CLAIM_URI = "http://wso2.org/claims/telephone";
     protected static final String USERNAME = "TestUser_1";
     protected static final String PASSWORD = "pass123";
-    protected static final String GIVEN_NAME = "TestName";
+    protected static final String PHONE_NUMBER = "0123456789";
     protected static final String USER_EMAIL = "abcrqo@wso2.com";
-    protected static final String GIVEN_NAME_OIDC_CLAIM = "given_name";
+    protected static final String TELEPHONE_OIDC_CLAIM = "phone_number";
     protected static final String EMAIL_OIDC_CLAIM = "email";
 
     protected CookieStore cookieStore = new BasicCookieStore();
@@ -146,8 +144,8 @@ public class OAuth2ServiceWithConsentedTokenColumnAbstractIntegrationTest extend
     protected ClaimValue[] getUserClaims() {
 
         ClaimValue emailClaim = getClaimValue(EMAIL_CLAIM_URI, USER_EMAIL);
-        ClaimValue givenNameClaim = getClaimValue(GIVEN_NAME_CLAIM_URI, GIVEN_NAME);
-        return new ClaimValue[] {emailClaim, givenNameClaim};
+        ClaimValue telephone = getClaimValue(TELEPHONE_CLAIM_URI, PHONE_NUMBER);
+        return new ClaimValue[] {emailClaim, telephone};
     }
 
     private ClaimValue getClaimValue(String claimURL, String claimVal) {
@@ -166,10 +164,10 @@ public class OAuth2ServiceWithConsentedTokenColumnAbstractIntegrationTest extend
         ClientAuthentication clientAuth = new ClientSecretBasic(clientID, clientSecret);
         URI tokenEndpoint = new URI(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
         // email scope is to retrieve the email address of the user.
-        // profile scope is to retrieve the given_name of the user.
+        // phone scope is to retrieve the phone number of the user.
         TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, authorizationGrant,
                 new Scope(OAuth2Constant.OAUTH2_SCOPE_OPENID, OAuth2Constant.OAUTH2_SCOPE_EMAIL,
-                        OAuth2Constant.OAUTH2_SCOPE_PROFILE));
+                        OAuth2Constant.OAUTH2_SCOPE_PHONE));
 
         HTTPResponse tokenHTTPResp = request.toHTTPRequest().send();
         Assert.assertNotNull(tokenHTTPResp, "JWT access token http response is null.");
@@ -195,16 +193,16 @@ public class OAuth2ServiceWithConsentedTokenColumnAbstractIntegrationTest extend
         emailClaimMapping.setLocalClaim(emailClaim);
         emailClaimMapping.setRemoteClaim(emailClaim);
 
-        Claim givenNameClaim = new Claim();
-        givenNameClaim.setClaimUri(GIVEN_NAME_CLAIM_URI);
-        ClaimMapping givenNameClaimMapping = new ClaimMapping();
-        givenNameClaimMapping.setRequested(true);
-        givenNameClaimMapping.setLocalClaim(givenNameClaim);
-        givenNameClaimMapping.setRemoteClaim(givenNameClaim);
+        Claim phoneNumberClaim = new Claim();
+        phoneNumberClaim.setClaimUri(TELEPHONE_CLAIM_URI);
+        ClaimMapping phoneNumberClaimMapping = new ClaimMapping();
+        phoneNumberClaimMapping.setRequested(true);
+        phoneNumberClaimMapping.setLocalClaim(phoneNumberClaim);
+        phoneNumberClaimMapping.setRemoteClaim(phoneNumberClaim);
 
         claimConfig.setClaimMappings(
                 new org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping[] { emailClaimMapping,
-                        givenNameClaimMapping});
+                        phoneNumberClaimMapping});
         serviceProvider.setClaimConfig(claimConfig);
     }
 

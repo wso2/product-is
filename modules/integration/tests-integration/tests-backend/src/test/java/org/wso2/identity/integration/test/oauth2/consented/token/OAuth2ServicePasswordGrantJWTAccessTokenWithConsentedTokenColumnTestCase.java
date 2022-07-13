@@ -89,10 +89,10 @@ public class OAuth2ServicePasswordGrantJWTAccessTokenWithConsentedTokenColumnTes
         ClientAuthentication clientAuth = new ClientSecretBasic(clientID, clientSecret);
         URI tokenEndpoint = new URI(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
         // email scope is to retrieve the email address of the user.
-        // profile scope is to retrieve the given_name of the user.
+        // phone scope is to retrieve the phone number of the user.
         TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, passwordGrant,
                 new Scope(OAuth2Constant.OAUTH2_SCOPE_OPENID, OAuth2Constant.OAUTH2_SCOPE_EMAIL,
-                        OAuth2Constant.OAUTH2_SCOPE_PROFILE));
+                        OAuth2Constant.OAUTH2_SCOPE_PHONE));
 
         HTTPResponse tokenHTTPResp = request.toHTTPRequest().send();
         Assert.assertNotNull(tokenHTTPResp, "JWT access token http response is null.");
@@ -122,9 +122,9 @@ public class OAuth2ServicePasswordGrantJWTAccessTokenWithConsentedTokenColumnTes
 
         org.json.simple.JSONObject userInfoEndpointResponse = sendRequestToUserInfoEndpoint();
         String email = userInfoEndpointResponse.get(EMAIL_OIDC_CLAIM).toString();
-        String givenName = userInfoEndpointResponse.get(GIVEN_NAME_OIDC_CLAIM).toString();
+        String phoneNumber = userInfoEndpointResponse.get(TELEPHONE_OIDC_CLAIM).toString();
 
-        Assert.assertEquals(GIVEN_NAME, givenName, "Incorrect given name claim value");
+        Assert.assertEquals(PHONE_NUMBER, phoneNumber, "Incorrect phone number name claim value");
         Assert.assertEquals(USER_EMAIL, email, "Incorrect email claim value");
     }
 
@@ -138,16 +138,16 @@ public class OAuth2ServicePasswordGrantJWTAccessTokenWithConsentedTokenColumnTes
         org.json.JSONObject jwtJsonObject = new org.json.JSONObject(new String(Base64.decodeBase64(accessToken.split(
                 "\\.")[1])));
         String email = jwtJsonObject.get(EMAIL_OIDC_CLAIM).toString();
-        String givenName = jwtJsonObject.get(GIVEN_NAME_OIDC_CLAIM).toString();
+        String phoneNumber = jwtJsonObject.get(TELEPHONE_OIDC_CLAIM).toString();
 
         // Check the user info of the JWT access token.
         Assert.assertEquals(USER_EMAIL, email, "Requested user claim (email) is not present in the JWT access token.");
-        Assert.assertEquals(GIVEN_NAME, givenName, "Requested user claim (given_name) is not present in the JWT "
+        Assert.assertEquals(PHONE_NUMBER, phoneNumber, "Requested user claim (phone_number) is not present in the JWT "
                 + "access token.");
 
         Assert.assertEquals(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(EMAIL_OIDC_CLAIM), USER_EMAIL,
                 "Requested user claims is not returned back with the ID token.");
-        Assert.assertEquals(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(GIVEN_NAME_OIDC_CLAIM), GIVEN_NAME,
+        Assert.assertEquals(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(TELEPHONE_OIDC_CLAIM), PHONE_NUMBER,
                 "Requested user claims is not returned back with the ID token.");
     }
 }
