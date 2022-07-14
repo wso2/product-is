@@ -1497,6 +1497,11 @@
                 <version>${identity.outbound.auth.oidc.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.identity.outbound.auth.oauth2</groupId>
+                <artifactId>org.wso2.carbon.identity.application.authenticator.oauth2</artifactId>
+                <version>${identity.outbound.auth.oauth2.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.identity.outbound.auth.sts.passive</groupId>
                 <artifactId>org.wso2.carbon.identity.application.authenticator.passive.sts</artifactId>
                 <version>${identity.outbound.auth.passive.sts.version}</version>
@@ -1813,6 +1818,11 @@
                 <groupId>org.wso2.carbon.extension.identity.oauth.addons</groupId>
                 <artifactId>org.wso2.carbon.identity.oauth2.validators.xacml.server.feature</artifactId>
                 <version>${identity.oauth.addons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.outbound.auth.oauth2</groupId>
+                <artifactId>org.wso2.carbon.identity.outbound.auth.oauth2.server.feature</artifactId>
+                <version>${identity.outbound.auth.oauth2.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.felix</groupId>
@@ -2213,6 +2223,7 @@
 
         <!-- Authenticator Versions -->
         <identity.outbound.auth.oidc.version>5.7.3</identity.outbound.auth.oidc.version>
+        <identity.outbound.auth.oauth2.version>1.0.5</identity.outbound.auth.oauth2.version>
         <identity.outbound.auth.passive.sts.version>5.5.0</identity.outbound.auth.passive.sts.version>
         <identity.outbound.auth.samlsso.version>5.4.5</identity.outbound.auth.samlsso.version>
         <identity.outbound.auth.requestpath.basicauth.version>5.5.0</identity.outbound.auth.requestpath.basicauth.version>
