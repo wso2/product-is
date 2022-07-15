@@ -3,8 +3,7 @@ name: product-is-builder-jdk17
 on:
   workflow_dispatch:
   schedule:
-    # First day of each month at 15:00 UTC (8.30PM SL time)
-    - cron:  '0 15 1 * *'
+    - cron:  '0 15 0 1 *'
 
 env:
   MAVEN_OPTS: -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.http.retryHandler.class=standard -Dmaven.wagon.http.retryHandler.count=3
