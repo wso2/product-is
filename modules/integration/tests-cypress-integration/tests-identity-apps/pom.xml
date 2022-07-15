@@ -38,7 +38,7 @@
                 <version>2.22.2</version>
                 <configuration>
                     <argLine>
-                        -Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m
+                        -Xmx1024m
                         -Dorg.apache.jasper.compiler.disablejsr199=true
                     </argLine>
                     <testFailureIgnore>false</testFailureIgnore>

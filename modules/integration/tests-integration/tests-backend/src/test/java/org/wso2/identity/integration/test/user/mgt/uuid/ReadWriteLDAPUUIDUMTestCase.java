@@ -16,19 +16,37 @@
 
 package org.wso2.identity.integration.test.user.mgt.uuid;
 
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.carbon.utils.CarbonUtils;
+
+import java.io.File;
 
 public class ReadWriteLDAPUUIDUMTestCase extends AbstractUUIDUMTestCase {
+
+    private ServerConfigurationManager scm;
 
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
 
         super.init();
-        ServerConfigurationManager scm = new ServerConfigurationManager(isServer);
+        String carbonHome = CarbonUtils.getCarbonHome();
+        File defaultConfigFile = getDeploymentTomlFile(carbonHome);
+        File userMgtConfigFile = new File(getISResourceLocation() + File.separator + "userMgt"
+                + File.separator + "ldap_user_mgt_config.toml");
+        scm = new ServerConfigurationManager(isServer);
+        scm.applyConfiguration(userMgtConfigFile, defaultConfigFile, true, true);
         scm.restartGracefully();
         super.init();
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void resetUserstoreConfig() throws Exception {
+
+        super.init();
+        scm.restoreToLastConfiguration(false);
     }
 
     @Test

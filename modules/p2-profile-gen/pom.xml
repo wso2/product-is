@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>6.0.0-alpha2-SNAPSHOT</version>
+        <version>6.0.0-alpha3-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -278,9 +278,6 @@
 
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.inbound.auth.sts:org.wso2.carbon.identity.sts.passive.feature:${identity.inbound.auth.sts.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon.identity.userstore.ldap:org.wso2.carbon.ldap.server.feature:${identity.userstore.ldap.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.userstore.remote:org.wso2.carbon.identity.user.store.remote.feature:${identity.userstore.remote.version}
@@ -544,10 +541,6 @@
                                 <feature>
                                     <id>org.wso2.carbon.event.publisher.aggregate.feature.group</id>
                                     <version>${carbon.analytics-common.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.ldap.server.feature.group</id>
-                                    <version>${identity.userstore.ldap.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.user.store.remote.feature.group</id>
@@ -1109,10 +1102,6 @@
                                     <version>${carbon.analytics-common.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.ldap.server.feature.group</id>
-                                    <version>${identity.userstore.ldap.version}</version>
-                                </feature>
-                                <feature>
                                     <id>org.wso2.carbon.identity.user.store.remote.feature.group</id>
                                     <version>${identity.userstore.remote.version}</version>
                                 </feature>
@@ -1602,10 +1591,6 @@
                                 <feature>
                                     <id>org.wso2.carbon.databridge.commons.server.feature.group</id>
                                     <version>${carbon.analytics-common.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.ldap.server.feature.group</id>
-                                    <version>${identity.userstore.ldap.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.user.store.remote.feature.group</id>
@@ -2127,10 +2112,6 @@
                                 <feature>
                                     <id>org.wso2.carbon.user.mgt.server.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.ldap.server.feature.group</id>
-                                    <version>${identity.userstore.ldap.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.user.store.remote.feature.group</id>
