@@ -131,6 +131,9 @@
         <AuthenticatorConfig name="FIDOAuthenticator" enabled="true">
             <Parameter name="FidoAuth">/authenticationendpoint/fido-auth.jsp</Parameter>
         </AuthenticatorConfig>
+        <AuthenticatorConfig name="MagicLinkAuthenticator" enabled="true">
+            <Parameter name="ExpiryTime">300</Parameter>
+        </AuthenticatorConfig>
     </AuthenticatorConfigs>
 
     <!--
