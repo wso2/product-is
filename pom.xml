@@ -2209,7 +2209,7 @@
         <org.wso2.carbon.identity.remotefetch.version>0.8.2</org.wso2.carbon.identity.remotefetch.version>
 
         <!-- CallHome version -->
-        <callhome.version>4.5.x_1.0.11</callhome.version>
+        <callhome.version>4.5.x_1.0.13</callhome.version>
 
         <!-- Authenticator Versions -->
         <identity.outbound.auth.oidc.version>5.7.3</identity.outbound.auth.oidc.version>
