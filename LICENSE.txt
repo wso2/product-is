@@ -40,7 +40,7 @@ jackson-core-2.9.9.jar                                                          
 grpc-context-1.43.2.jar                                                                             jarinbundle    apache2
 org.wso2.carbon.identity.application.authentication.handler.session-6.4.6.jar                       bundle         apache2
 org.wso2.carbon.identity.application.authenticator.basicauth.jwt-6.4.6.jar                          bundle         apache2
-callhome-4.5.x_1.0.11.jar                                                                           bundle         apache2
+callhome-4.5.x_1.0.13.jar                                                                           bundle         apache2
 core-1.0.11.jar                                                                                     jarinbundle    apache2
 org.wso2.carbon.identity.application.authenticator.passive.sts-5.5.0.jar                            bundle         apache2
 org.wso2.carbon.extension.identity.authenticator.office365.connector-2.1.1.jar                      bundle         apache2
