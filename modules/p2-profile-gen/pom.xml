@@ -495,6 +495,9 @@
                                     org.wso2.carbon.identity.outbound.auth.oidc:org.wso2.carbon.identity.application.authenticator.oidc.server.feature:${identity.outbound.auth.oidc.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
+                                    org.wso2.carbon.identity.outbound.auth.oauth2:org.wso2.carbon.identity.outbound.auth.oauth2.server.feature:${identity.outbound.auth.oauth2.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon.identity.organization.management:org.wso2.carbon.identity.organization.management.server.feature:${identity.org.mgt.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -1012,6 +1015,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.application.authenticator.oidc.server.feature.group</id>
                                     <version>${identity.outbound.auth.oidc.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.outbound.auth.oauth2.server.feature.group</id>
+                                    <version>${identity.outbound.auth.oauth2.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.organization.management.server.feature.group</id>

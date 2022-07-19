@@ -40,3 +40,6 @@ app_password= "dashboard"
 
 [application_mgt]
 enable_role_validation = true
+
+[multi_tenancy.stratos]
+public_cloud_setup=false
