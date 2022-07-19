@@ -165,28 +165,6 @@
                             </artifactItems>
                         </configuration>
                     </execution>
-                    <!-- Download magiclink authenticator jar from nexus and copy to the localauthenticator/jar folder-->
-                    <execution>
-                        <id>download_magiclink</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.wso2.carbon.identity.local.auth.magiclink</groupId>
-                                    <artifactId>org.wso2.carbon.identity.application.authenticator.magiclink</artifactId>
-                                    <version>${authenticator.magiclink.version}</version>
-                                    <type>jar</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${basedir}/target/localauthenticatorCopied/jar
-                                    </outputDirectory>
-                                    <includes>**/*.jar</includes>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
                 </executions>
             </plugin>
         </plugins>

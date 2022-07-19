@@ -1645,6 +1645,11 @@
                 <version>${authenticator.magiclink.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.identity.local.auth.magiclink</groupId>
+                <artifactId>org.wso2.carbon.identity.local.auth.magiclink.server.feature</artifactId>
+                <version>${authenticator.magiclink.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.extension.identity.authenticator.outbound.twitter</groupId>
                 <artifactId>org.wso2.carbon.extension.identity.authenticator.twitter.connector</artifactId>
                 <version>${authenticator.twitter.version}</version>
