@@ -51,7 +51,7 @@ public class UserMeApprovalTest extends UserApprovalTestBase {
     private static final String TEST_WORKFLOW_ADD_USER_FOR_REST_TASK = addUserWorkflowName + "Task";
     private static final String JSON_PATH_MATCHING_REST_API_TEST_APPROVAL_TASK = "findAll{ it.presentationName == '"
             + TEST_WORKFLOW_ADD_USER_FOR_REST_TASK + "' }";
-    private static final int MAX_WAIT_ITERATIONS_TILL_WORKFLOW_DEPLOYMENT = 12;
+    private static final int MAX_WAIT_ITERATIONS_TILL_WORKFLOW_DEPLOYMENT = 15;
 
     private static String swaggerDefinition;
     private String taskIdToApprove;
