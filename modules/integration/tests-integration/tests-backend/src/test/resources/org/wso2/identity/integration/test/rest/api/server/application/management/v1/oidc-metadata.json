@@ -42,6 +42,10 @@
         "displayName": "account_switch"
       },
       {
+        "name": "organization_switch",
+        "displayName": "organization_switch"
+      },
+      {
         "name": "urn:ietf:params:oauth:grant-type:jwt-bearer",
         "displayName": "urn:ietf:params:oauth:grant-type:jwt-bearer"
       }
