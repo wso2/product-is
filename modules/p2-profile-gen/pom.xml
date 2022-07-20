@@ -1027,6 +1027,7 @@
                                     <id>org.wso2.carbon.identity.organization.management.server.feature.group</id>
                                     <version>${identity.org.mgt.version}</version>
                                 </feature>
+                                <feature>
                                     <id>org.wso2.carbon.identity.local.auth.magiclink.server.feature.group</id>
                                     <version>${authenticator.magiclink.version}</version>
                                 </feature>
