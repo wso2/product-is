@@ -35,16 +35,16 @@
     <modules>
         <module>scenarios-commons</module>
         <module>1-manage-users-and-roles</module>
-<!--        <module>2-user-account-management</module>-->
-<!--        <module>3-identity-provisioning</module>-->
-<!--        <module>4-single-sign-on</module>-->
-<!--        <module>5-sso-with-identity-federation</module>-->
-<!--        <module>6-adaptive-and-strong-authentication</module>-->
-<!--        <module>7-single-sign-on-with-controlled-access</module>-->
-<!--        <module>8-single-sign-on-with-delegated-access-control</module>-->
-<!--        <module>9-access-delegation</module>-->
-<!--        <module>10-fine-grained-access-control</module>-->
-<!--        <module>11-monitor-user-logins-and-sessions</module>-->
+        <module>2-user-account-management</module>
+        <module>3-identity-provisioning</module>
+        <module>4-single-sign-on</module>
+        <module>5-sso-with-identity-federation</module>
+        <module>6-adaptive-and-strong-authentication</module>
+        <module>7-single-sign-on-with-controlled-access</module>
+        <module>8-single-sign-on-with-delegated-access-control</module>
+        <module>9-access-delegation</module>
+        <module>10-fine-grained-access-control</module>
+        <module>11-monitor-user-logins-and-sessions</module>
     </modules>
 
     <build>
@@ -82,7 +82,7 @@
     <properties>
         <json.simple.version>1.1.1</json.simple.version>
         <httpcore.version>4.4.14</httpcore.version>
-<!--        <commons.httpclient.version>3.1</commons.httpclient.version>-->
+        <commons.httpclient.version>3.1</commons.httpclient.version>
         <httpclient.version>4.5.13</httpclient.version>
         <commons.codec.version>1.8</commons.codec.version>
         <testng.version>6.9.10</testng.version>
@@ -115,15 +115,15 @@
                 <version>${httpcore.version}</version>
             </dependency>
             <dependency>
+                <groupId>commons-httpclient</groupId>
+                <artifactId>commons-httpclient</artifactId>
+                <version>${commons.httpclient.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.googlecode.json-simple</groupId>
                 <artifactId>json-simple</artifactId>
                 <version>${json.simple.version}</version>
             </dependency>
-<!--            <dependency>-->
-<!--                <groupId>commons-httpclient</groupId>-->
-<!--                <artifactId>commons-httpclient</artifactId>-->
-<!--                <version>${commons.httpclient.version}</version>-->
-<!--            </dependency>-->
             <dependency>
                 <groupId>org.wso2.is</groupId>
                 <artifactId>scenarios-commons</artifactId>

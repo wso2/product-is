@@ -141,7 +141,15 @@
                     <groupId>commons-codec.wso2</groupId>
                     <artifactId>commons-codec</artifactId>
                 </exclusion>
-            </exclusions>
+                    <exclusion>
+                        <groupId>org.apache.axis2.wso2</groupId>
+                        <artifactId>axis2-client</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.axis2.wso2</groupId>
+                        <artifactId>axis2</artifactId>
+                    </exclusion>
+         </exclusions>
             <scope>test</scope>
         </dependency>
         <dependency>

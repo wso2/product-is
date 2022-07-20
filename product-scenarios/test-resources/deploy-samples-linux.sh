@@ -23,15 +23,13 @@ cd target
 wget archive.apache.org/dist/tomcat/tomcat-8/v8.5.35/bin/apache-tomcat-8.5.35.zip
 unzip apache-tomcat-8.5.35.zip
 
-#wget https://maven.wso2.org/nexus/content/repositories/releases/org/wso2/is/org.wso2.sample.is.sso.agent/5.11
-# .0-m33/org.wso2.sample.is.sso.agent-5.11.0-m33.war
-cp /home/vivek/Documents/temp/ssoIssue/org.wso2.sample.is.sso.agent-5.11.0-m33.war .
+wget https://github.com/wso2/samples-is/releases/latest/download/travelocity.war
 rm -rf apache-tomcat-8.5.35/webapps/travelocity.com
-unzip org.wso2.sample.is.sso.agent-5.11.0-m33.war -d travelocity.com
+unzip travelocity.war -d travelocity.com
 mv travelocity.com apache-tomcat-8.5.35/webapps/
 
-wget https://maven.wso2.org/nexus/content/repositories/releases/org/wso2/is/PassiveSTSSampleApp/5.11.0-m33/PassiveSTSSampleApp-5.11.0-m33.war
-unzip PassiveSTSSampleApp-5.11.0-m33.war -d PassiveSTSSampleApp
+wget https://github.com/wso2/samples-is/releases/latest/download/PassiveSTSSampleApp.war
+unzip PassiveSTSSampleApp.war -d PassiveSTSSampleApp
 mv PassiveSTSSampleApp apache-tomcat-8.5.35/webapps/
 
 cd apache-tomcat-8.5.35/

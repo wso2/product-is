@@ -143,25 +143,24 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.wso2.is</groupId>
             <artifactId>scenarios-commons</artifactId>
             <exclusions>
+<!--                <exclusion>-->
+<!--                    <groupId>org.wso2.orbit.commons-httpclient</groupId>-->
+<!--                    <artifactId>commons-httpclient</artifactId>-->
+<!--                </exclusion>-->
+<!--                <exclusion>-->
+<!--                    <groupId>commons-httpclient</groupId>-->
+<!--                    <artifactId>commons-httpclient</artifactId>-->
+<!--                </exclusion>-->
                 <exclusion>
-                    <groupId>org.wso2.orbit.commons-httpclient</groupId>
-                    <artifactId>commons-httpclient</artifactId>
+                    <groupId>org.apache.axis2.wso2</groupId>
+                    <artifactId>axis2-client</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>commons-httpclient</groupId>
-                    <artifactId>commons-httpclient</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId> org.apache.httpcomponents.wso2</groupId>
-                    <artifactId>httpcore</artifactId>
+                    <groupId>org.apache.axis2.wso2</groupId>
+                    <artifactId>axis2</artifactId>
                 </exclusion>
             </exclusions>
             <scope>test</scope>
@@ -176,11 +175,6 @@
             <artifactId>json-simple</artifactId>
             <scope>test</scope>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>commons-httpclient</groupId>-->
-<!--            <artifactId>commons-httpclient</artifactId>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>

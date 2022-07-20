@@ -133,10 +133,6 @@
                     <groupId>org.wso2.orbit.commons-httpclient</groupId>
                     <artifactId>commons-httpclient</artifactId>
                 </exclusion>
-                <exclusion>
-                    <groupId>org.apache.httpcomponents.wso2</groupId>
-                    <artifactId>httpcore</artifactId>
-                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
