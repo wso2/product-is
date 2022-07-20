@@ -1915,6 +1915,11 @@
                 <version>${identity.org.mgt.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.identity.outbound.provisioning.scim2</groupId>
+                <artifactId>org.wso2.carbon.identity.provisioning.connector.scim2.server.feature</artifactId>
+                <version>${provisioning.connector.scim2.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.msf4j</groupId>
                 <artifactId>msf4j-core</artifactId>
                 <version>${msf4j.version}</version>
@@ -2232,7 +2237,7 @@
         <provisioning.connector.google.version>5.2.2</provisioning.connector.google.version>
         <provisioning.connector.salesforce.version>5.2.0</provisioning.connector.salesforce.version>
         <provisioning.connector.scim.version>5.3.0</provisioning.connector.scim.version>
-        <provisioning.connector.scim2.version>1.0.8</provisioning.connector.scim2.version>
+        <provisioning.connector.scim2.version>1.0.7-SNAPSHOT</provisioning.connector.scim2.version>
 
         <!-- Local Authenticator Versions -->
         <identity.local.auth.basicauth.version>6.4.6</identity.local.auth.basicauth.version>

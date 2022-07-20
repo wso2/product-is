@@ -101,28 +101,6 @@
                             </artifactItems>
                         </configuration>
                     </execution>
-                    <execution>
-                        <id>download_scim2_provisioning_jar</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.wso2.carbon.identity.outbound.provisioning.scim2</groupId>
-                                    <artifactId>org.wso2.carbon.identity.provisioning.connector.scim2
-                                    </artifactId>
-                                    <version>${provisioning.connector.scim2.version}</version>
-                                    <type>jar</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${basedir}/target/provisioningconnectorCopied/jar
-                                    </outputDirectory>
-                                    <includes>**/*.jar</includes>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
                 </executions>
             </plugin>
         </plugins>

@@ -289,6 +289,9 @@
                                     org.wso2.carbon.identity.inbound.provisioning.scim2:org.wso2.carbon.identity.scim2.server.feature:${identity.inbound.provisioning.scim2.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
+                                    org.wso2.carbon.identity.outbound.provisioning.scim2:org.wso2.carbon.identity.provisioning.connector.scim2.server.feature:${provisioning.connector.scim2.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.role.mgt.core.server.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -1014,7 +1017,10 @@
                                     <id>org.wso2.carbon.identity.organization.management.server.feature.group</id>
                                     <version>${identity.org.mgt.version}</version>
                                 </feature>
-
+                                <feature>
+                                    <id>org.wso2.carbon.identity.provisioning.connector.scim2.server.feature.group</id>
+                                    <version>${provisioning.connector.scim2.version}</version>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>
