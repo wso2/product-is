@@ -56,7 +56,25 @@ public class AdaptiveScriptInitializerTestCase extends AbstractAdaptiveAuthentic
 
         try {
             if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-                log.warn("Operating System is Windows, skipping execution");
+                log.info("Operating System is Windows. Executing batch script");
+                if (disable) {
+                    // TODO https://github.com/wso2/product-is/issues/14301
+                    restartServer();
+                    tempProcess = runtime.exec(
+                            new String[] { "cmd", "/c", "adaptive.bat", targetFolder, "DISABLE" }, null, scriptFile);
+                } else {
+                    tempProcess = runtime.exec(
+                            new String[] { "cmd", "/c", "adaptive.bat", targetFolder }, null, scriptFile);
+                }
+                errorStreamHandler = new ServerLogReader("errorStream",
+                        tempProcess.getErrorStream());
+                inputStreamHandler = new ServerLogReader("inputStream",
+                        tempProcess.getInputStream());
+                inputStreamHandler.start();
+                errorStreamHandler.start();
+                boolean runStatus = waitForMessage(inputStreamHandler, disable);
+                log.info("Status Message : " + runStatus);
+                restartServer();
             } else {
                 log.info("Operating system is not windows. Executing shell script");
                 if (disable) {
