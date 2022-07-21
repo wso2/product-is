@@ -196,7 +196,7 @@ public class OAuth2TokenRevocationWithSessionTerminationTestCase extends OAuth2S
     private void authenticateUser() throws IOException {
 
         // Pass user credentials to commonauth endpoint and authenticate the user.
-        HttpResponse response = sendLoginPost(client, sessionDataKey);
+        HttpResponse response = sendLoginPostForCustomUsers(client, sessionDataKey, USERNAME, PASSWORD);
         Assert.assertNotNull(response, "OIDC login request response is null.");
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         Assert.assertNotNull(locationHeader, "OIDC login response header is null.");
@@ -288,7 +288,7 @@ public class OAuth2TokenRevocationWithSessionTerminationTestCase extends OAuth2S
      */
     private Response getResponseOfGet(String endpointURI) {
 
-        return given().auth().preemptive().basic(userInfo.getUserName(), userInfo.getPassword())
+        return given().auth().preemptive().basic(USERNAME, PASSWORD)
                 .contentType(ContentType.JSON)
                 .header(HttpHeaders.ACCEPT, ContentType.JSON)
                 .log().ifValidationFails()
@@ -305,7 +305,7 @@ public class OAuth2TokenRevocationWithSessionTerminationTestCase extends OAuth2S
      */
     private Response getResponseOfDelete(String endpointURI) {
 
-        return given().auth().preemptive().basic(userInfo.getUserName(), userInfo.getPassword())
+        return given().auth().preemptive().basic(USERNAME, PASSWORD)
                 .contentType(ContentType.JSON)
                 .header(HttpHeaders.ACCEPT, ContentType.JSON)
                 .log().ifValidationFails().log().ifValidationFails()
@@ -323,8 +323,7 @@ public class OAuth2TokenRevocationWithSessionTerminationTestCase extends OAuth2S
 
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         urlParameters.add(new BasicNameValuePair("token", accessToken));
-        return responseObject(OAuth2Constant.INTRO_SPEC_ENDPOINT, urlParameters, userInfo.getUserName(),
-                userInfo.getPassword());
+        return responseObject(OAuth2Constant.INTRO_SPEC_ENDPOINT, urlParameters, USERNAME, PASSWORD);
     }
 
     /**

@@ -35,7 +35,7 @@
                 <version>2.12.4</version>
                 <configuration>
 
-                    <argLine>-Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m -Dorg.apache.jasper.compiler.disablejsr199=true</argLine>
+                    <argLine>-Xmx1024m -Dorg.apache.jasper.compiler.disablejsr199=true</argLine>
                     <systemProperties>
                         <property>
                             <name>maven.test.haltafterfailure</name>
