@@ -2182,7 +2182,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.21.24-SNAPSHOT</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.21.30</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2258,7 +2258,7 @@
         <provisioning.connector.google.version>5.2.2</provisioning.connector.google.version>
         <provisioning.connector.salesforce.version>5.2.0</provisioning.connector.salesforce.version>
         <provisioning.connector.scim.version>5.3.0</provisioning.connector.scim.version>
-        <provisioning.connector.scim2.version>1.0.7-SNAPSHOT</provisioning.connector.scim2.version>
+        <provisioning.connector.scim2.version>2.0.0</provisioning.connector.scim2.version>
 
         <!-- Local Authenticator Versions -->
         <identity.local.auth.basicauth.version>6.4.7</identity.local.auth.basicauth.version>
