@@ -81,7 +81,7 @@ public class ApplicationManagementFailureTest extends ApplicationManagementBaseT
     public void testGetApplicationsWithAttributesQueryParam() {
 
         Response response = getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH + "?attributes=name,imageUrl");
-        validateErrorResponse(response, HttpStatus.SC_NOT_IMPLEMENTED, "APP-65003");
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "APP-60505");
     }
 
     @Test
