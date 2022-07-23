@@ -1545,6 +1545,11 @@
                 <artifactId>org.wso2.carbon.identity.provisioning.connector.scim</artifactId>
                 <version>${provisioning.connector.scim.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.outbound.provisioning.scim2</groupId>
+                <artifactId>org.wso2.carbon.identity.provisioning.connector.scim2</artifactId>
+                <version>${provisioning.connector.scim2.version}</version>
+            </dependency>
 
             <!-- Local Authenticators -->
             <dependency>
@@ -1930,6 +1935,11 @@
                 <version>${identity.org.mgt.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.identity.outbound.provisioning.scim2</groupId>
+                <artifactId>org.wso2.carbon.identity.provisioning.connector.scim2.server.feature</artifactId>
+                <version>${provisioning.connector.scim2.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.msf4j</groupId>
                 <artifactId>msf4j-core</artifactId>
                 <version>${msf4j.version}</version>
@@ -2172,7 +2182,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.21.29</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.21.30</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2248,6 +2258,7 @@
         <provisioning.connector.google.version>5.2.2</provisioning.connector.google.version>
         <provisioning.connector.salesforce.version>5.2.0</provisioning.connector.salesforce.version>
         <provisioning.connector.scim.version>5.3.0</provisioning.connector.scim.version>
+        <provisioning.connector.scim2.version>2.0.0</provisioning.connector.scim2.version>
 
         <!-- Local Authenticator Versions -->
         <identity.local.auth.basicauth.version>6.4.7</identity.local.auth.basicauth.version>

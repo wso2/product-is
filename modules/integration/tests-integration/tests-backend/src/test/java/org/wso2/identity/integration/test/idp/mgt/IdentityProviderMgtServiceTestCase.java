@@ -613,6 +613,7 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
         Assert.assertEquals(provisioningCons.containsKey("googleapps"), true, "Default provisioning connector googleapps not found");
         Assert.assertEquals(provisioningCons.containsKey("salesforce"), true, "Default provisioning connector salesforce not found");
         Assert.assertEquals(provisioningCons.containsKey("scim"), true, "Default provisioning connector scim not found");
+        Assert.assertEquals(provisioningCons.containsKey("SCIM2"), true, "Default provisioning connector scim2 not found");
     }
 
 
