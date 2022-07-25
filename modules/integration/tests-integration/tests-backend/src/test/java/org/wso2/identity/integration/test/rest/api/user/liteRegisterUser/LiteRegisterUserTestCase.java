@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.identity.integration.test.rest.api.user.liteUserRegister;
+package org.wso2.identity.integration.test.rest.api.user.liteRegisterUser;
 
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -49,7 +49,7 @@ import java.io.IOException;
 
 import static io.restassured.RestAssured.given;
 
-public class LiteUserRegisterTestCase extends RESTTestBase {
+public class LiteRegisterUserTestCase extends RESTTestBase {
     public static final String LITE_USER_REGISTRATION_ENDPOINT = "/api/identity/user/v1.0/lite";
     private static final String ADMIN = "admin";
     public static final String ENABLE_LITE_SIGN_UP = "LiteRegistration.Enable";
@@ -115,10 +115,10 @@ public class LiteUserRegisterTestCase extends RESTTestBase {
 
         updateResidentIDPProperty(superTenantResidentIDP, ENABLE_LITE_SIGN_UP, "true", true);
 
-        String updateLiteUserRegistrationClaimRequestBody = readResource("lite-user-register-claim.json");
+        String updateLiteUserRegistrationClaimRequestBody = readResource("lite-register-user-claim.json");
         getResponseOfPut(isServerBackendUrl + UPDATE_CLAIM_URI + "/" + LITE_USER_CLAIM_ID, updateLiteUserRegistrationClaimRequestBody);
 
-        String updateEmailAsUsernameClaimRequestBody = readResource("lite-user-register-claim-email-as-username.json");
+        String updateEmailAsUsernameClaimRequestBody = readResource("lite-register-user-claim-email-as-username.json");
         getResponseOfPut(isServerBackendUrl + UPDATE_CLAIM_URI + "/" + USERNAME_CLAIM_ID, updateEmailAsUsernameClaimRequestBody);
 
         String data = "{\"email\": \"testlitteuser@wso2.com\",\"realm\": \"PRIMARY\",\"preferredChannel\":\"Email\",\"claims\":[], \"properties\": []}";
