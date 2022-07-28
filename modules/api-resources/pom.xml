@@ -436,16 +436,6 @@
                 <artifactId>org.wso2.carbon.identity.api.server.oauth.uma.resource</artifactId>
                 <version>${carbon.identity.oauth.uma.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.identity.organization.management</groupId>
-                <artifactId>org.wso2.carbon.identity.organization.management.endpoint</artifactId>
-                <version>${identity.org.mgt.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.identity.organization.management</groupId>
-                <artifactId>org.wso2.carbon.identity.organization.management.role.management.endpoint</artifactId>
-                <version>${identity.org.mgt.version}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>
