@@ -70,6 +70,9 @@
             <class name="org.wso2.identity.integration.test.oidc.OIDCAuthzCodeIdTokenValidationTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCSPWiseSkipLoginConsentTestCase"/>
 
+            <class name="org.wso2.identity.integration.test.oauth2.consented.token.OAuth2ServiceAuthCodeGrantJWTAccessTokenWithConsentedTokenColumnTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.consented.token.OAuth2ServicePasswordGrantJWTAccessTokenWithConsentedTokenColumnTestCase"/>
+
             <!--TODO Remove following open id tests since deprecated-->
             <class name="org.wso2.identity.integration.test.openid.OpenIDAuthenticationTestCase" />
             <class name="org.wso2.identity.integration.test.openid.OpenIDProviderServerConfigTestCase" />
