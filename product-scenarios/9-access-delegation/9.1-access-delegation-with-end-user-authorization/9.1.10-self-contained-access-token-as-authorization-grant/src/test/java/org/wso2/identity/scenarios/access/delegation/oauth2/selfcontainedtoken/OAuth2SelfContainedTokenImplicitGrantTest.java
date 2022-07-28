@@ -140,7 +140,7 @@ public class OAuth2SelfContainedTokenImplicitGrantTest extends ScenarioTestBase 
     public void intiAuthorizeRequest() throws Exception {
 
         HttpResponse response = oAuth2CommonClient
-                .sendAuthorizeGet(clientId, null, redirectUri, OAuth2Constants.ResponseTypes.TOKEN, null);
+                .sendAuthorizeGet(clientId, "openid profile", redirectUri, OAuth2Constants.ResponseTypes.TOKEN, null);
         sessionDataKey = ssoCommonClient.getSessionDataKey(response);
         assertNotNull(sessionDataKey, "sessionDataKey parameter value is null.");
 

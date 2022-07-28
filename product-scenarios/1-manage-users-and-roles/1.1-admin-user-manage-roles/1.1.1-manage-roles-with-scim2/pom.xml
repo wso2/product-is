@@ -146,21 +146,17 @@
             <groupId>org.wso2.is</groupId>
             <artifactId>scenarios-commons</artifactId>
             <exclusions>
-<!--                <exclusion>-->
-<!--                    <groupId>org.wso2.orbit.commons-httpclient</groupId>-->
-<!--                    <artifactId>commons-httpclient</artifactId>-->
-<!--                </exclusion>-->
-<!--                <exclusion>-->
-<!--                    <groupId>commons-httpclient</groupId>-->
-<!--                    <artifactId>commons-httpclient</artifactId>-->
-<!--                </exclusion>-->
                 <exclusion>
                     <groupId>org.apache.axis2.wso2</groupId>
                     <artifactId>axis2-client</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>org.apache.axis2.wso2</groupId>
-                    <artifactId>axis2</artifactId>
+                    <groupId>org.wso2.org.ops4j.pax.logging</groupId>
+                    <artifactId>pax-logging-log4j2</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.wso2.org.ops4j.pax.logging</groupId>
+                    <artifactId>pax-logging-api</artifactId>
                 </exclusion>
             </exclusions>
             <scope>test</scope>
@@ -173,6 +169,11 @@
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
             <artifactId>json-simple</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
