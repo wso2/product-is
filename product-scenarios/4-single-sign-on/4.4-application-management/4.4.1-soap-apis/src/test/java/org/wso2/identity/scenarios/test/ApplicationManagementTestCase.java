@@ -68,6 +68,7 @@ public class ApplicationManagementTestCase extends ScenarioTestBase {
     private static final String IDP_CLAIM_1 = "idpClaim_1";
     private static final String TEST_ASSOCIATION_USERNAME_1 = "testAssociationUser";
     private static final String TEST_ASSOCIATION_PASSWORD_1 = "testAssociationPass";
+    private static final String INTERNAL_ADMIN = "Internal/admin";
     private ApplicationManagementServiceClient applicationManagementServiceClient;
     private UserManagementClient userMgtClient;
     private IdentityProviderMgtServiceClient identityProviderMgtServiceClient;
@@ -472,7 +473,7 @@ public class ApplicationManagementTestCase extends ScenarioTestBase {
 
             RoleMapping mapping = new RoleMapping();
             LocalRole localRole = new LocalRole();
-            localRole.setLocalRoleName("Internal/admin");
+            localRole.setLocalRoleName(INTERNAL_ADMIN);
             mapping.setLocalRole(localRole);
             mapping.setRemoteRole("spRole_1");
             roleMappingList.add(mapping);

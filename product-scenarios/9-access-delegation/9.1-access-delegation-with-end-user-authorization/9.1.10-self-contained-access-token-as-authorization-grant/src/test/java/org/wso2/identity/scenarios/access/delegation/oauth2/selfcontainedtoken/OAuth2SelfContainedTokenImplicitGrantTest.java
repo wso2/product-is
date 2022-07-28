@@ -44,6 +44,7 @@ import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
  */
 public class OAuth2SelfContainedTokenImplicitGrantTest extends ScenarioTestBase {
 
+    private static final String OPENID_PROFILE = "openid profile";
     private String username;
 
     private String password;
@@ -140,7 +141,8 @@ public class OAuth2SelfContainedTokenImplicitGrantTest extends ScenarioTestBase 
     public void intiAuthorizeRequest() throws Exception {
 
         HttpResponse response = oAuth2CommonClient
-                .sendAuthorizeGet(clientId, "openid profile", redirectUri, OAuth2Constants.ResponseTypes.TOKEN, null);
+                .sendAuthorizeGet(clientId, OPENID_PROFILE, redirectUri, OAuth2Constants.ResponseTypes.TOKEN,
+                        null);
         sessionDataKey = ssoCommonClient.getSessionDataKey(response);
         assertNotNull(sessionDataKey, "sessionDataKey parameter value is null.");
 
