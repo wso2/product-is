@@ -34,10 +34,12 @@ public class TenantManagementBaseTest extends RESTAPIServerTestBase {
     public static final String API_VERSION = "v1";
     public static final String API_PACKAGE_NAME = "org.wso2.carbon.identity.api.server.tenant.management.v1";
     public static final String TENANT_API_BASE_PATH = "/tenants";
+    public static final String TENANT_DOMAIN_BASE_PATH = "/domain";
     public static final String TENANT_API_OWNER_PATH = "/owners";
     public static final String TENANT_API_LIFECYCLE_PATH = "/lifecycle-status";
 
     public static final String PATH_SEPARATOR = "/";
+    public static final String TENANT_DOMAIN_NAME = "abc1.com";
 
     protected static String swaggerDefinition;
 
