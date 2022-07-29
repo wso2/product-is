@@ -23,12 +23,12 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>api-resources</artifactId>
-        <version>6.0.0-alpha2-SNAPSHOT</version>
+        <version>6.0.0-alpha4-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>api-resources-full</artifactId>
-    <version>6.0.0-alpha2-SNAPSHOT</version>
+    <version>6.0.0-alpha4-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <name>WSO2 Identity Server - All Rest API</name>
@@ -64,9 +64,7 @@
                         WEB-INF/lib/org.wso2.carbon.identity.api.*.jar,
                         WEB-INF/lib/org.wso2.carbon.identity.rest.api.*.jar,
                         WEB-INF/lib/org.wso2.carbon.api.*.jar,
-                        WEB-INF/lib/org.wso2.carbon.rest.api.*.jar,
-                        WEB-INF/lib/org.wso2.carbon.identity.organization.management.endpoint-*.jar,
-                        WEB-INF/lib/org.wso2.carbon.identity.organization.management.role.management.endpoint-*.jar
+                        WEB-INF/lib/org.wso2.carbon.rest.api.*.jar
                     </packagingIncludes>
                 </configuration>
             </plugin>
@@ -396,14 +394,6 @@
         <dependency>
             <groupId>org.wso2.carbon.identity.oauth.uma</groupId>
             <artifactId>org.wso2.carbon.identity.api.server.oauth.uma.resource</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.identity.organization.management</groupId>
-            <artifactId>org.wso2.carbon.identity.organization.management.endpoint</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.identity.organization.management</groupId>
-            <artifactId>org.wso2.carbon.identity.organization.management.role.management.endpoint</artifactId>
         </dependency>
     </dependencies>
 </project>

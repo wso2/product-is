@@ -15,6 +15,7 @@
         <classes>
             <class name="org.wso2.identity.integration.test.IdentityServerTestSuitInitializerTestCase"/>
             <class name="org.wso2.identity.integration.test.base.TomcatInitializerTestCase"/>
+            <class name="org.wso2.identity.integration.test.base.LDAPServerInitializerTestCase"/>
         </classes>
     </test>
 
@@ -69,6 +70,9 @@
             <class name="org.wso2.identity.integration.test.oidc.OIDCAuthzCodeIdTokenValidationTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCSPWiseSkipLoginConsentTestCase"/>
 
+            <class name="org.wso2.identity.integration.test.oauth2.consented.token.OAuth2ServiceAuthCodeGrantJWTAccessTokenWithConsentedTokenColumnTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.consented.token.OAuth2ServicePasswordGrantJWTAccessTokenWithConsentedTokenColumnTestCase"/>
+
             <!--TODO Remove following open id tests since deprecated-->
             <class name="org.wso2.identity.integration.test.openid.OpenIDAuthenticationTestCase" />
             <class name="org.wso2.identity.integration.test.openid.OpenIDProviderServerConfigTestCase" />
@@ -110,8 +114,6 @@
             <class name="org.wso2.identity.integration.test.saml.SAMLIdPInitiatedSSOTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.SAMLSSOConsentTestCase"/>
             <class name="org.wso2.identity.integration.test.postAuthnHandler.ChallengeQuestionPostAuthnHandlerTestCase"/>
-            <class name="org.wso2.identity.integration.test.user.mgt.ReadWriteLdapBasedUserMgtTestCase"/>
-            <class name="org.wso2.identity.integration.test.user.mgt.ReadWriteLDAPUserStoreManagerTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.dcrm.api.OAuthDCRMTestCase"/>
             <class name="org.wso2.identity.integration.test.functions.library.mgt.FunctionLibraryManagementTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenRevocationWithRevokedAccessToken" />
@@ -119,11 +121,12 @@
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2BackChannelLogoutTestCase" />
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2OPIframeTestCase" />
             <class name="org.wso2.identity.integration.test.CrossProtocolLogoutTestCase"/>
-            <class name="org.wso2.identity.integration.test.saml.SAMLARTRESOLVETestCase"/>
+<!--            Temporarily Coomenting out following test case cause, its not running on JDK 11-->
+<!--            Ref : https://github.com/wso2/product-is/issues/14041-->
+<!--            <class name="org.wso2.identity.integration.test.saml.SAMLARTRESOLVETestCase"/>-->
             <class name="org.wso2.identity.integration.test.identityServlet.ExtendSessionEndpointAuthCodeGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenRevocationWithSessionTerminationTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenRevocationWithMultipleSessionTerminationTestCase"/>
-            <class name="org.wso2.identity.integration.test.auth.AdaptiveScriptTemporaryClaimPersistenceTestCase"/>
         </classes>
     </test>
 
@@ -210,6 +213,23 @@
             <class name="org.wso2.identity.integration.test.scim2.rest.api.SCIM2SchemasTest"/>
             <class name="org.wso2.identity.integration.test.scim2.rest.api.customSchema.SCIM2CustomSchemaUserTestCase"/>
             <class name="org.wso2.identity.integration.test.scim2.rest.api.customSchema.SCIM2CustomSchemaMeTestCase"/>
+        </classes>
+    </test>
+
+    <test name="is-test-adaptive-authentication" preserve-order="true" parallel="false" group-by-instances="true">
+        <classes>
+            <class name="org.wso2.identity.integration.test.auth.AdaptiveScriptInitializerTestCase"/>
+            <class name="org.wso2.identity.integration.test.auth.AdaptiveScriptTemporaryClaimPersistenceTestCase"/>
+            <!-- This test has a restart-->
+            <class name="org.wso2.identity.integration.test.auth.RiskBasedLoginTestCase" />
+        </classes>
+    </test>
+
+    <test name="is-tests-default-configuration-ldap" preserve-order="true" parallel="false" group-by-instances="true">
+        <classes>
+            <class name="org.wso2.identity.integration.test.base.LDAPUserStoreInitializerTestCase"/>
+            <class name="org.wso2.identity.integration.test.user.mgt.ReadWriteLdapBasedUserMgtTestCase"/>
+            <class name="org.wso2.identity.integration.test.user.mgt.ReadWriteLDAPUserStoreManagerTestCase"/>
         </classes>
     </test>
 
@@ -310,12 +330,11 @@
             <class name="org.wso2.identity.integration.test.oidc.OIDCPasswordGrantTest"/>
             <!--<class name="org.wso2.identity.integration.test.saml.SAMLECPSSOTestCase"/>-->
             <class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileAdminTestCase"/>
-            <!-- TODO this test has a restart-->
-            <class name="org.wso2.identity.integration.test.auth.RiskBasedLoginTestCase" />
             <class name="org.wso2.identity.integration.test.identity.mgt.AccountLockWhileCaseInsensitiveUserFalseTestCase"/>
             <class name="org.wso2.identity.integration.test.EmailOTPTestCase"/>
         </classes>
     </test>
+
     <test name="is-tests-saml-query-profile" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
             <class name="org.wso2.identity.integration.test.saml.SAMLQueryProfileTestBase"/>

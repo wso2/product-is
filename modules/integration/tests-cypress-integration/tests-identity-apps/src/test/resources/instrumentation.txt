@@ -35,6 +35,7 @@ org.wso2.carbon.identity.provisioning*
 org.wso2.carbon.identity.provisioning.connector.google*
 org.wso2.carbon.identity.provisioning.connector.salesforce*
 org.wso2.carbon.identity.provisioning.connector.scim*
+org.wso2.carbon.identity.provisioning.connector.scim2*
 org.wso2.carbon.identity.relyingparty*
 org.wso2.carbon.identity.scim.common*
 org.wso2.carbon.identity.sso.saml*
