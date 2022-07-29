@@ -82,7 +82,6 @@ public class ApplicationManagementTestCase extends ScenarioTestBase {
         applicationManagementServiceClient = new ApplicationManagementServiceClient(sessionCookie, backendServiceURL,
                 configContext);
         userMgtClient = new UserManagementClient(backendServiceURL, sessionCookie);
-//        userMgtClient.addRole("Internal/"+IDP_ROLE_1, new String[0], new String[]{PERMISSION_ADMIN_LOGIN});
         identityProviderMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendServiceURL);
         claimMetadataManagementServiceClient = new ClaimMetadataManagementServiceClient(backendServiceURL, sessionCookie);
         populateData();
@@ -92,7 +91,6 @@ public class ApplicationManagementTestCase extends ScenarioTestBase {
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
         applicationManagementServiceClient = null;
-//        userMgtClient.deleteRole(IDP_ROLE_1);
 //        userMgtClient.deleteRole(LOGIN_ROLE);
 //        userMgtClient.deleteUser(TEST_ASSOCIATION_USERNAME_1);
         claimMetadataManagementServiceClient.removeLocalClaim(SUBJECT_CLAIM_URI);
