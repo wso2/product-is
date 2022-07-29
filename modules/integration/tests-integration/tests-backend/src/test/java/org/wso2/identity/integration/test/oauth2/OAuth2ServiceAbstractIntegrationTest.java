@@ -210,6 +210,72 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		return appDtoResult;
 	}
 
+	/**
+	 * Create Application with a given appDTO and service provider name
+	 *
+	 * @return OAuthConsumerAppDTO
+	 * @throws Exception
+	 */
+	public OAuthConsumerAppDTO createApplication(OAuthConsumerAppDTO appDTO, String serviceProviderName) throws Exception {
+		OAuthConsumerAppDTO appDtoResult = null;
+
+		adminClient.registerOAuthApplicationData(appDTO);
+		OAuthConsumerAppDTO[] appDtos = adminClient.getAllOAuthApplicationData();
+
+		for (OAuthConsumerAppDTO appDto : appDtos) {
+			appDtoResult = appDto;
+			consumerKey = appDto.getOauthConsumerKey();
+			consumerSecret = appDto.getOauthConsumerSecret();
+		}
+		ServiceProvider serviceProvider = new ServiceProvider();
+		serviceProvider.setApplicationName(serviceProviderName);
+		serviceProvider.setDescription(SERVICE_PROVIDER_DESC);
+		serviceProvider.setManagementApp(true);
+		appMgtclient.createApplication(serviceProvider);
+
+		serviceProvider = appMgtclient.getApplication(serviceProviderName);
+		serviceProvider = setServiceProviderClaimConfig(serviceProvider);
+		serviceProvider.setOutboundProvisioningConfig(new OutboundProvisioningConfig());
+		List<InboundAuthenticationRequestConfig> authRequestList = new ArrayList<>();
+
+		if (consumerKey != null) {
+			InboundAuthenticationRequestConfig opicAuthenticationRequest = new InboundAuthenticationRequestConfig();
+			opicAuthenticationRequest.setInboundAuthKey(consumerKey);
+			opicAuthenticationRequest.setInboundAuthType("oauth2");
+			if (consumerSecret != null && !consumerSecret.isEmpty()) {
+				Property property = new Property();
+				property.setName("oauthConsumerSecret");
+				property.setValue(consumerSecret);
+				Property[] properties = { property };
+				opicAuthenticationRequest.setProperties(properties);
+			}
+			authRequestList.add(opicAuthenticationRequest);
+		}
+
+		String passiveSTSRealm = serviceProviderName;
+		if (passiveSTSRealm != null) {
+			InboundAuthenticationRequestConfig opicAuthenticationRequest = new InboundAuthenticationRequestConfig();
+			opicAuthenticationRequest.setInboundAuthKey(passiveSTSRealm);
+			opicAuthenticationRequest.setInboundAuthType("passivests");
+			authRequestList.add(opicAuthenticationRequest);
+		}
+
+		String openidRealm = serviceProviderName;
+		if (openidRealm != null) {
+			InboundAuthenticationRequestConfig opicAuthenticationRequest = new InboundAuthenticationRequestConfig();
+			opicAuthenticationRequest.setInboundAuthKey(openidRealm);
+			opicAuthenticationRequest.setInboundAuthType("openid");
+			authRequestList.add(opicAuthenticationRequest);
+		}
+
+		if (authRequestList.size() > 0) {
+			serviceProvider.getInboundAuthenticationConfig()
+					.setInboundAuthenticationRequestConfigs(authRequestList.toArray(new InboundAuthenticationRequestConfig[authRequestList.size()]));
+		}
+		appMgtclient.updateApplicationData(serviceProvider);
+		return appDtoResult;
+	}
+
 	public void UpdateApplicationClaimConfig() throws Exception {
 		ServiceProvider serviceProvider = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
 		ClaimConfig claimConfig = getClaimConfig();
