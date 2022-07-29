@@ -366,7 +366,7 @@ change_local_claim_mapping(
     },
     constants.BASE_URL + "/api/server/v1/claim-dialects/aHR0cDovL3dzbzIub3JnL29pZGMvY2xhaW0/claims/cGhvbmVfbnVtYmVy")
 
-#change website from url to organization
+# change website from url to organization
 change_local_claim_mapping(
     {
         "claimURI": "website",
@@ -374,13 +374,13 @@ change_local_claim_mapping(
     },
     constants.BASE_URL + "/api/server/v1/claim-dialects/aHR0cDovL3dzbzIub3JnL29pZGMvY2xhaW0/claims/d2Vic2l0ZQ")
 
-#change middle_name from middleName to formattedName
+# change name from fullname to formatted
 change_local_claim_mapping(
     {
-        "claimURI": "middle_name",
+        "claimURI": "name",
         "mappedLocalClaimURI": "http://wso2.org/claims/formattedName"
     },
-    constants.BASE_URL + "/api/server/v1/claim-dialects/aHR0cDovL3dzbzIub3JnL29pZGMvY2xhaW0/claims/bWlkZGxlX25hbWU")
+    constants.BASE_URL + "/api/server/v1/claim-dialects/aHR0cDovL3dzbzIub3JnL29pZGMvY2xhaW0/claims/bmFtZQ")
 
 edit_scope("openid", {
     "claims": [
