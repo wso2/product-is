@@ -64,6 +64,7 @@ app_password= "dashboard"
 #verify_url = "https://www.google.com/recaptcha/api/siteverify"
 #site_key = ""
 #secret_key = ""
+#threshold = "0.5"
 
 # SMTP email sender settings.
 #[output_adapter.email]
