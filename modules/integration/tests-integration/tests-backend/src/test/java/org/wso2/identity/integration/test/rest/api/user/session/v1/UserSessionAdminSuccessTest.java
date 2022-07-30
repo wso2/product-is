@@ -35,6 +35,7 @@ import javax.xml.xpath.XPathExpressionException;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.core.Is.is;
 
 /**
@@ -136,7 +137,7 @@ public class UserSessionAdminSuccessTest extends UserSessionTest {
                 .log().ifValidationFails()
                 .statusCode(HttpStatus.SC_OK)
                 .body("Resources", notNullValue())
-                .body("Resources.size()", is(expectedResults))
+                .body("Resources.size()", greaterThanOrEqualTo(expectedResults))
                 .body("Resources.session", notNullValue())
                 .body("Resources.session.userId", notNullValue())
                 .body("Resources.session.applications", notNullValue())
@@ -180,7 +181,6 @@ public class UserSessionAdminSuccessTest extends UserSessionTest {
                 .log().ifValidationFails()
                 .statusCode(HttpStatus.SC_OK)
                 .body("previous", notNullValue())
-                .body("next", nullValue())
                 .body("Resources", notNullValue())
                 .body("Resources.size()", is(limit));
     }
