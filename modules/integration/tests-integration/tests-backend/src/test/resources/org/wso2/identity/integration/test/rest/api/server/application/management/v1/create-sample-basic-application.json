@@ -10,7 +10,7 @@
         "password"
       ],
       "callbackURLs": [
-        "regexp=(https://app.example.com/callback1|https://app.example.com/callback2)"
+        "https://app.example.com/callback1"
       ]
     }
   }
