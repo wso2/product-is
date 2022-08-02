@@ -53,7 +53,7 @@ public class ServiceProviderUserRoleValidationTestCase extends ISIntegrationTest
     private static final String ROLE_PREFIX = "Application/role";
     private static final String USERNAME = "admin";
     private static final String[] ROLES = new String[]{"Application/role1", "Application/role2", "Application/role3"};
-    private static final String APPLICATION_FILTER = "role*";
+    private static final String APPLICATION_FILTER = "name sw role";
     private static final int APPLICATION_COUNT_WITHOUT_FILTER = 9;
     private static final int APPLICATION_COUNT_WITH_FILTER = 0;
 
