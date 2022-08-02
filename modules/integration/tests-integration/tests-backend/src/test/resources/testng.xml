@@ -194,7 +194,8 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.secret.management.v1.SecretManagementFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.branding.preference.management.v1.BrandingPreferenceManagementSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.branding.preference.management.v1.BrandingPreferenceManagementFailureTest"/>
-            <class name="org.wso2.identity.integration.test.rest.api.user.liteRegisterUser.LiteRegisterUserTestCase"/>
+            <class name="org.wso2.identity.integration.test.rest.api.user.liteUserRegister.LiteUserRegisterClaims"/>
+            <class name="org.wso2.identity.integration.test.rest.api.user.liteUserRegister.LiteUserRegisterTestCase"/>
         </classes>
     </test>
 
