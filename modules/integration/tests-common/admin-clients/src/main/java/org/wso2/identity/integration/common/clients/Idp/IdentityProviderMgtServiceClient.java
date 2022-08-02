@@ -41,6 +41,11 @@ public class IdentityProviderMgtServiceClient {
 
     private UserAdminStub userAdminStub;
 
+    private final String SALESFORCE = "salesforce";
+    private final String GOOGLE = "googleapps";
+    private final String SCIM = "scim";
+    private final String SCIM2 = "SCIM2";
+
     /**
      *
      * @param userName User name
@@ -378,10 +383,10 @@ public class IdentityProviderMgtServiceClient {
             if (provisioningConnectorConfigs != null && provisioningConnectorConfigs.length > 0
                     && provisioningConnectorConfigs[0] != null) {
                 for (ProvisioningConnectorConfig config : provisioningConnectorConfigs) {
-                    if (!(config.getName().equals("scim") || config.getName().equals("salesforce")
-                            || config.getName().equals("googleapps")))
+                    if (!(config.getName().equals(SCIM) || config.getName().equals(SALESFORCE)
+                            || config.getName().equals(GOOGLE) || config.getName().equals(SCIM2))) {
                         provisioningConnectors.put(config.getName(), config);
-
+                    }
                 }
             }
         } catch (Exception e) {

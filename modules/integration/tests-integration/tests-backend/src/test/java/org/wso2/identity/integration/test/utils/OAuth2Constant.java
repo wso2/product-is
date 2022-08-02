@@ -56,6 +56,7 @@ public final class OAuth2Constant {
     public final static String OAUTH2_SCOPE_OPENID = "openid";
     public static final String OAUTH2_SCOPE_OPENID_WITH_INTERNAL_LOGIN = "openid internal_login";
     public final static String OAUTH2_SCOPE_EMAIL = "email";
+    public final static String OAUTH2_SCOPE_PHONE = "phone";
     public final static String OAUTH2_SCOPE_PROFILE = "profile";
     public final static String OAUTH2_SCOPE_DEFAULT = "";
     public final static String OAUTH_APPLICATION_NAME = "oauthTestApplication";
