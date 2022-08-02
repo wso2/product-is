@@ -102,6 +102,7 @@ public final class OAuth2Constant {
     public static final String OAUTH2_NONCE = "nonce";
     public static final String INTRO_SPEC_ENDPOINT = "https://localhost:9853/oauth2/introspect";
     public static final String TENANT_INTRO_SPEC_ENDPOINT = "https://localhost:9853/t/wso2.com/oauth2/introspect";
+    public static final String TENANT_USER_INFO_ENDPOINT = "https://localhost:9853/t/wso2.com/oauth2/userinfo?schema=openid";
 
     public static final class PlaygroundAppPaths {
 
