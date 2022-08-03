@@ -52,6 +52,12 @@
           "description": "Specify the expiry time in minutes for the SMS OTP."
         },
         {
+          "name": "SelfRegistration.SMSOTP.Regex",
+          "value": "[a-zA-Z0-9]{6}",
+          "displayName": "User self registration SMS OTP regex.",
+          "description": "Specify the regex for the SMS OTP."
+        },
+        {
           "name": "SelfRegistration.CallbackRegex",
           "value": "[https://localhost:9443].*[/authenticationendpoint/login.do]",
           "displayName": "User self registration callback URL regex",
@@ -108,6 +114,12 @@
           "value": "1",
           "displayName": "Lite user registration SMS OTP expiry time",
           "description": "Specify the expiry time in minutes for the SMS OTP."
+        },
+        {
+          "name": "LiteRegistration.SMSOTP.Regex",
+          "value": "[a-zA-Z0-9]{6}",
+          "displayName": "User self registration SMS OTP regex.",
+          "description": "Specify the regex for the SMS OTP."
         },
         {
           "name": "LiteRegistration.CallbackRegex",
