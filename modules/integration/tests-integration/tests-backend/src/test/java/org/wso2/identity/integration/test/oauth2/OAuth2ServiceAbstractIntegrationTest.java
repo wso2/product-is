@@ -464,12 +464,12 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	 * @return JSON object of the response.
 	 * @throws Exception
 	 */
-	public JSONObject introspectTokenWithTenant(HttpClient client, String accessToken, String endpoint)
-			throws Exception {
+	public JSONObject introspectTokenWithTenant(HttpClient client, String accessToken, String endpoint, String key,
+												String secret) throws Exception {
 
 		List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
 		urlParameters.add(new BasicNameValuePair("token", accessToken));
-		return responseObject(client, endpoint, urlParameters, userInfo.getUserName(), userInfo.getPassword());
+		return responseObject(client, endpoint, urlParameters, "Basic " + getBase64EncodedString(key, secret));
 	}
 
 	/**
@@ -663,10 +663,10 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	 * @throws Exception
 	 */
 	private JSONObject responseObject(HttpClient client, String endpoint, List<NameValuePair> postParameters,
-									  String key, String secret) throws Exception {
+									  String authorizationHeader) throws Exception {
 
 		HttpPost httpPost = new HttpPost(endpoint);
-		httpPost.setHeader("Authorization", "Basic " + getBase64EncodedString(key, secret));
+		httpPost.setHeader("Authorization", authorizationHeader);
 		httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
 		httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
 		HttpResponse response = client.execute(httpPost);

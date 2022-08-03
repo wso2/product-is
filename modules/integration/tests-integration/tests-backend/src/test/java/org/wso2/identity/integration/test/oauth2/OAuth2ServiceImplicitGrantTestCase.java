@@ -226,20 +226,12 @@ public class OAuth2ServiceImplicitGrantTestCase extends OAuth2ServiceAbstractInt
 
 	@Test(groups = "wso2.is", description = "Validate access token", dependsOnMethods = "testSendApprovalPost")
 	public void testValidateAccessToken() throws Exception {
-		HttpResponse response = sendValidateAccessTokenPost(client, accessToken);
-		Assert.assertNotNull(response, "Validate access token response is invalid.");
 
-		Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
-		keyPositionMap.put("name=\"valid\"", 1);
-
-		List<KeyValue> keyValues =
-		                           DataExtractUtil.extractInputValueFromResponse(response,
-		                                                                         keyPositionMap);
-		Assert.assertNotNull(keyValues, "Access token Key value is null.");
-		String valid = keyValues.get(0).getValue();
-		EntityUtils.consume(response.getEntity());
-		Assert.assertEquals(valid, "true", "Token Validation failed");
-		EntityUtils.consume(response.getEntity());
+		String introspectionUrl = tenantInfo.getDomain().equalsIgnoreCase("carbon.super") ?
+				OAuth2Constant.INTRO_SPEC_ENDPOINT : OAuth2Constant.TENANT_INTRO_SPEC_ENDPOINT;
+		org.json.simple.JSONObject responseObj = introspectTokenWithTenant(client, accessToken, introspectionUrl,
+				username, userPassword);
+		Assert.assertNotNull(responseObj, "Validate access token failed. response is invalid.");
+		Assert.assertEquals(responseObj.get("active"), true, "Token Validation failed");
 	}
-
 }

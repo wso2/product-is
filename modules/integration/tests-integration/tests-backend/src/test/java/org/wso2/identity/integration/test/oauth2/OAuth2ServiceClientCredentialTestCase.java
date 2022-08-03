@@ -161,7 +161,8 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
 
 		String introspectionUrl = tenantInfo.getDomain().equalsIgnoreCase("carbon.super") ?
 				OAuth2Constant.INTRO_SPEC_ENDPOINT : OAuth2Constant.TENANT_INTRO_SPEC_ENDPOINT;
-		org.json.simple.JSONObject responseObj = introspectTokenWithTenant(client, accessToken, introspectionUrl);
+		org.json.simple.JSONObject responseObj = introspectTokenWithTenant(client, accessToken, introspectionUrl,
+				username, userPassword);
 		Assert.assertNotNull(responseObj, "Validate access token failed. response is invalid.");
 		Assert.assertEquals(responseObj.get("active"), true, "Token Validation failed");
 	}

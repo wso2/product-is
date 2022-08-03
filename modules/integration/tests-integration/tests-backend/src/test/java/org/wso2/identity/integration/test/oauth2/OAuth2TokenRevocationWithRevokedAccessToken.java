@@ -201,7 +201,9 @@ public class OAuth2TokenRevocationWithRevokedAccessToken extends OAuth2ServiceAb
     private HTTPResponse revokeAccessToken(AccessToken accessToken) throws Exception {
 
         ClientAuthentication clientAuth = new ClientSecretBasic(consumerKey, consumerSecret);
-        URI tokenRevokeEndpoint = new URI(OAuth2Constant.TOKEN_REVOKE_ENDPOINT);
+        String tokenRevokeUrl = activeTenant.equalsIgnoreCase("carbon.super") ?
+                OAuth2Constant.TOKEN_REVOKE_ENDPOINT : OAuth2Constant.TENANT_TOKEN_REVOKE_ENDPOINT;
+        URI tokenRevokeEndpoint = new URI(tokenRevokeUrl);
 
         TokenRevocationRequest revocationRequest =
                 new TokenRevocationRequest(tokenRevokeEndpoint, clientAuth, accessToken);
