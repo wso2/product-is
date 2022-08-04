@@ -52,8 +52,6 @@ import org.wso2.identity.scenarios.commons.clients.claims.ClaimMetadataManagemen
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.fail;
-
 public class ApplicationManagementTestCase extends ScenarioTestBase {
 
     private static final String PERMISSION_ADMIN_LOGIN = "/permission/admin/login";

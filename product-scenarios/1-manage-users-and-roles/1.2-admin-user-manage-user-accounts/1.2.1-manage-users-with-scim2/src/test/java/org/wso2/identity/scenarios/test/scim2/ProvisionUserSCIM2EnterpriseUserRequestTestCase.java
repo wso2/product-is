@@ -38,6 +38,7 @@ import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJ
 
 public class ProvisionUserSCIM2EnterpriseUserRequestTestCase extends ScenarioTestBase {
 
+    private static final String TEST_USER_NAME = "scim2CreateEnterpriseUserRequest";
     private CloseableHttpClient client;
     private String userNameResponse;
     private String userId;
@@ -67,10 +68,7 @@ public class ProvisionUserSCIM2EnterpriseUserRequestTestCase extends ScenarioTes
             "C4+dx8oU6Za+4NJXUjlL5CvV6BEYb1+QAEJwitTVvxB/A67g42/vzgAtoRUeDov1\n" +
             "GFiBZ+GNF/cAYKcMtGcrs2i97ZkJMo=";
 
-
-
     HttpResponse response;
-
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -89,7 +87,7 @@ public class ProvisionUserSCIM2EnterpriseUserRequestTestCase extends ScenarioTes
         rootObject.put(SCIMConstants.SCHEMAS_ATTRIBUTE,schemas);
         rootObject.put(SCIMConstants.ID_ATTRIBUTE,SCIMConstants.ID_ATTRIBUTE_VALUE);
         rootObject.put(SCIMConstants.EXTERNAL_ID_ATTRIBUTE,SCIMConstants.EXTERNAL_ID_ATTRIBUTE_VALUE);
-        rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, SCIMConstants.USERNAME);
+        rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, TEST_USER_NAME);
         rootObject.put(SCIMConstants.PASSWORD_ATTRIBUTE, SCIMConstants.PASSWORD);
 
         JSONObject names = new JSONObject();
@@ -212,7 +210,7 @@ public class ProvisionUserSCIM2EnterpriseUserRequestTestCase extends ScenarioTes
                 "created successfully");
 
         userNameResponse = rootObject.get(SCIMConstants.USER_NAME_ATTRIBUTE).toString();
-        assertEquals(userNameResponse, SCIMConstants.USERNAME, "username not found");
+        assertEquals(userNameResponse, TEST_USER_NAME, "username not found");
    }
 
     @AfterClass(alwaysRun = true)

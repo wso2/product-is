@@ -88,15 +88,15 @@
         <testng.version>6.9.10</testng.version>
         <commons.lang.version>2.6</commons.lang.version>
         <carbon.kernel.version>4.7.0-beta7</carbon.kernel.version>
-        <carbon.identity.framework.version>5.21.0</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.21.62</carbon.identity.framework.version>
         <identity.inbound.provisioning.scim.version>5.7.0</identity.inbound.provisioning.scim.version>
         <identity.user.ws.version>5.5.0</identity.user.ws.version>
         <axis2.wso2.version>1.6.1-wso2v76</axis2.wso2.version>
         <rampart.wso2.version>1.6.1-wso2v43</rampart.wso2.version>
         <slf4j.version>1.7.25</slf4j.version>
-        <identity.inbound.auth.saml.version>5.9.10</identity.inbound.auth.saml.version>
+        <identity.inbound.auth.saml.version>5.9.11</identity.inbound.auth.saml.version>
         <identity.user.ws.version>5.5.0</identity.user.ws.version>
-        <identity.inbound.auth.oauth.version>6.7.168</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.7.187</identity.inbound.auth.oauth.version>
         <opensaml.version>2.6.4</opensaml.version>
         <nimbusds.version>7.3.0.wso2v1</nimbusds.version>
         <nimbus.oidc.sdk.version>6.13</nimbus.oidc.sdk.version>
