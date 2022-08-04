@@ -18,8 +18,6 @@
 
 package org.wso2.identity.scenarios.test.scim2;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
@@ -34,19 +32,18 @@ import org.json.simple.JSONValue;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.identity.scenarios.commons.SCIM2CommonClient;
 import org.wso2.identity.scenarios.commons.ScenarioTestBase;
 import org.wso2.identity.scenarios.commons.util.Constants;
 import org.wso2.identity.scenarios.commons.util.SCIMProvisioningUtil;
 
-import static org.testng.Assert.*;
-import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
+import static org.testng.Assert.assertEquals;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.constructBasicAuthzHeader;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJSONFromResponse;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendPostRequestWithJSON;
 
 public class UserProvisionWithInsufficientPrivilegesSCIM2TestCase extends ScenarioTestBase {
 
+    private static final String TEST_USER_NAME = "scim2";
     private CloseableHttpClient client;
     private String scimUsersEndpoint;
     private final String SEPERATOR = "/";
@@ -55,41 +52,15 @@ public class UserProvisionWithInsufficientPrivilegesSCIM2TestCase extends Scenar
     private String userId;
     HttpResponse response;
     JSONObject rootObject;
-    private SCIM2CommonClient scim2Client;
-    private static final Log log = LogFactory.getLog(UserProvisionWithInsufficientPrivilegesSCIM2TestCase.class);
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
         client = HttpClients.createDefault();
         super.init();
-        scim2Client = new SCIM2CommonClient(getDeploymentProperty(IS_HTTPS_URL));
-        cleanUpUser();
         scimUsersEndpoint = backendURL + SEPERATOR +  Constants.SCIMEndpoints.SCIM2_ENDPOINT + SEPERATOR +
                 Constants.SCIMEndpoints.SCIM_ENDPOINT_USER;
         testSCIMCreateFirstUser();
-    }
-
-    private void cleanUpUser() {
-
-        try {
-            HttpResponse user = scim2Client.filterUserByAttribute(
-                    client, "username", "Eq", SCIMConstants.USERNAME, ADMIN_USERNAME, ADMIN_PASSWORD);
-            assertEquals(user.getStatusLine().getStatusCode(), HttpStatus.SC_OK, "Failed to retrieve the user");
-            JSONObject list = getJSONFromResponse(user);
-            if (list.get("totalResults").toString().equals("1")) {
-                JSONArray resourcesArray = (JSONArray) list.get("Resources");
-                JSONObject userObject = (JSONObject) resourcesArray.get(0);
-                String userIdentifier = userObject.get(SCIMConstants.ID_ATTRIBUTE).toString();
-                assertNotNull(userIdentifier);
-                SCIMProvisioningUtil.deleteUser(backendURL, userIdentifier, Constants.SCIMEndpoints.SCIM2_ENDPOINT,
-                        Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
-                log.info("Deleted existing user.");
-            } // it is already cleared.
-            Thread.sleep(5000);
-        } catch (Exception e) {
-            fail("Failed when trying to delete existing user.");
-        }
     }
 
     private void testSCIMCreateFirstUser() throws Exception {
@@ -100,7 +71,7 @@ public class UserProvisionWithInsufficientPrivilegesSCIM2TestCase extends Scenar
         JSONObject names = new JSONObject();
         names.put(SCIMConstants.GIVEN_NAME_ATTRIBUTE, SCIMConstants.GIVEN_NAME_CLAIM_VALUE);
         rootObject.put(SCIMConstants.NAME_ATTRIBUTE, names);
-        rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, SCIMConstants.USERNAME);
+        rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, TEST_USER_NAME);
         rootObject.put(SCIMConstants.PASSWORD_ATTRIBUTE, SCIMConstants.PASSWORD);
 
         response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, rootObject,
@@ -144,7 +115,7 @@ public class UserProvisionWithInsufficientPrivilegesSCIM2TestCase extends Scenar
 
     private Header getFaultyAuthzHeader() {
 
-        return new BasicHeader(HttpHeaders.AUTHORIZATION, constructBasicAuthzHeader(SCIMConstants.USERNAME,
+        return new BasicHeader(HttpHeaders.AUTHORIZATION, constructBasicAuthzHeader(TEST_USER_NAME,
                 SCIMConstants.PASSWORD));
     }
 
