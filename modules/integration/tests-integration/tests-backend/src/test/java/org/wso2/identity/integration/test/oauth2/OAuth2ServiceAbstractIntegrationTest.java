@@ -457,6 +457,22 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	}
 
 	/**
+	 * Send token introspection post request according to the tenant domain.
+	 * @param client - http client
+	 * @param accessToken - access token
+	 * @param endpoint - Introspection URL of the tenant domain.
+	 * @return JSON object of the response.
+	 * @throws Exception
+	 */
+	public JSONObject introspectTokenWithTenant(HttpClient client, String accessToken, String endpoint, String key,
+												String secret) throws Exception {
+
+		List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+		urlParameters.add(new BasicNameValuePair("token", accessToken));
+		return responseObject(client, endpoint, urlParameters, "Basic " + getBase64EncodedString(key, secret));
+	}
+
+	/**
 	 * Delete Application
 	 *
 	 * @throws Exception
@@ -634,5 +650,33 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 			}
 			authRequestList.add(opicAuthenticationRequest);
 		}
+	}
+
+	/**
+	 * Build post request and return json response object.
+	 *
+	 * @param endpoint       Endpoint.
+	 * @param postParameters postParameters.
+	 * @param key            Basic authentication key.
+	 * @param secret         Basic authentication secret.
+	 * @return JSON object of the response.
+	 * @throws Exception
+	 */
+	private JSONObject responseObject(HttpClient client, String endpoint, List<NameValuePair> postParameters,
+									  String authorizationHeader) throws Exception {
+
+		HttpPost httpPost = new HttpPost(endpoint);
+		httpPost.setHeader("Authorization", authorizationHeader);
+		httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
+		httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
+		HttpResponse response = client.execute(httpPost);
+		String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
+		EntityUtils.consume(response.getEntity());
+		JSONParser parser = new JSONParser();
+		JSONObject json = (JSONObject) parser.parse(responseString);
+		if (json == null) {
+			throw new Exception("Error occurred while getting the response.");
+		}
+		return json;
 	}
 }
