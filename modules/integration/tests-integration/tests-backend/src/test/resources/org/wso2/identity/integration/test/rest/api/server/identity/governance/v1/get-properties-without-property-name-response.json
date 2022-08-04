@@ -32,7 +32,7 @@
       },
       {
         "name": "SelfRegistration.CallbackRegex",
-        "value": "[https://localhost:9853].*[/authenticationendpoint/login.do]"
+        "value": "[https://localhost:9853].*[/authenticationendpoint/login.do]*"
       },
       {
         "name": "_url_listPurposeSelfSignUp",
