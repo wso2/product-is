@@ -33,6 +33,7 @@ public class AdaptiveScriptInitializerTestCase extends AbstractAdaptiveAuthentic
 
     private ServerConfigurationManager serverConfigurationManager;
 
+    private int javaVersion;
     private static String enableInfo = "Adaptive authentication successfully enabled.";
     private static String disableInfo = "Adaptive authentication successfully disabled.";
 
@@ -41,7 +42,26 @@ public class AdaptiveScriptInitializerTestCase extends AbstractAdaptiveAuthentic
 
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(isServer);
-        runAdaptiveAuthenticationDependencyScript(false);
+        javaVersion = getJavaVersion();
+        // Download OpenJDK Nashorn only if the JDK version is Higher or Equal to 15.
+        if (javaVersion >= 15) {
+            runAdaptiveAuthenticationDependencyScript(false);
+        }
+    }
+
+    /**
+     * Get Java Major Version from System Property.
+     * @return Java Major Version
+     */
+    private int getJavaVersion() {
+        String version = System.getProperty("java.version");
+        if(version.startsWith("1.")) {
+            version = version.substring(2, 3);
+        } else {
+            int dot = version.indexOf(".");
+            if(dot != -1) { version = version.substring(0, dot); }
+        }
+        return Integer.parseInt(version);
     }
 
     private void runAdaptiveAuthenticationDependencyScript(boolean disable) {
@@ -126,7 +146,10 @@ public class AdaptiveScriptInitializerTestCase extends AbstractAdaptiveAuthentic
     public void resetUserstoreConfig() throws Exception {
 
         super.init();
-        runAdaptiveAuthenticationDependencyScript(true);
+        javaVersion = (javaVersion == 0) ? getJavaVersion() : javaVersion;
+        if (javaVersion >= 15) {
+            runAdaptiveAuthenticationDependencyScript(false);
+        }
         serverConfigurationManager.restoreToLastConfiguration(false);
     }
 }
