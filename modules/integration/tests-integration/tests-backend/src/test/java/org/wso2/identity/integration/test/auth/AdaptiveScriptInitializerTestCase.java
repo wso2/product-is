@@ -55,6 +55,7 @@ public class AdaptiveScriptInitializerTestCase extends AbstractAdaptiveAuthentic
      * @return Java Major Version
      */
     private int getJavaVersion() {
+
         String version = System.getProperty("java.version");
         if (version.startsWith("1.")) {
             version = version.substring(2, 3);
