@@ -62,9 +62,9 @@
   "basic": {
     "http://wso2.org/claims/organization": "WSO2",
     "http://wso2.org/claims/username": "testuser2",
-    "http://wso2.org/claims/mobile": "71",
+    "http://wso2.org/claims/mobile": "+6506952324",
     "http://wso2.org/claims/givenname": "Ayesha",
-    "http://wso2.org/claims/telephone": "6506952324",
+    "http://wso2.org/claims/telephone": "+6506952324",
     "http://wso2.org/claims/fullname": "aysh",
     "http://wso2.org/claims/country": "United States",
     "http://wso2.org/claims/emailaddress": "ayesha@wso2.com",
