@@ -54,8 +54,8 @@
         {
           "name": "SelfRegistration.SMSOTP.Regex",
           "value": "[a-zA-Z0-9]{6}",
-          "displayName": "User self registration SMS OTP regex.",
-          "description": "Specify the regex for the SMS OTP."
+          "displayName": "User self registration SMS OTP regex",
+          "description": "Regex for SMS OTP in format [allowed characters]{length}. Supported character ranges are a-z, A-Z, 0-9. Minimum OTP length is 4"
         },
         {
           "name": "SelfRegistration.CallbackRegex",
