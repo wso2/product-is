@@ -133,6 +133,12 @@
         <dependency>
             <groupId>org.wso2.is</groupId>
             <artifactId>scenarios-commons</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.axis2.wso2</groupId>
+                    <artifactId>axis2-client</artifactId>
+                </exclusion>
+            </exclusions>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -153,11 +159,6 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.is</groupId>
-            <artifactId>scenarios-commons</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
