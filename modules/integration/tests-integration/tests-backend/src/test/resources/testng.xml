@@ -147,6 +147,7 @@
             <class name="org.wso2.identity.integration.test.rest.api.user.authorized.apps.v2.ApplicationAuthorizedAppsSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.session.v1.UserSessionTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.session.v1.UserSessionMeSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.user.session.v1.UserSessionAdminSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.application.v1.UserDiscoverableApplicationSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.application.v1.UserDiscoverableApplicationFailureTest"/>
             <!--Test cases for server REST APIs-->
@@ -314,7 +315,8 @@
     </test>
     <test name="is-tests-with-individual-configuration-changes" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
-            <class name="org.wso2.identity.integration.test.application.mgt.ServiceProviderUserRoleValidationTestCase"/>
+            <!--TODO: Temporary disabled ServiceProviderUserRoleValidationTestCase. Enable after fixing the issues. -->
+            <!--<class name="org.wso2.identity.integration.test.application.mgt.ServiceProviderUserRoleValidationTestCase"/>-->
             <class name="org.wso2.identity.integration.test.saml.RegistryMountTestCase"/>
             <class name="org.wso2.identity.integration.test.provisioning.DBSeperationTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceAuthCodeGrantTestCase"/>

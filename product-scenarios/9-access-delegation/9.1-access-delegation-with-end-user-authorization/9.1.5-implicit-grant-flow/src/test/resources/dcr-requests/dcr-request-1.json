@@ -4,6 +4,6 @@
     "implicit"
   ],
   "redirect_uris": [
-    "https://dcr-app-implicit-grant.com/callback"
+    "http://localhost"
   ]
 }

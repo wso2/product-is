@@ -4,6 +4,6 @@
     "authorization_code"
   ],
   "redirect_uris": [
-    "https://sso-app-oidc-code-grant-2.com/callback"
+    "http://localhost"
   ]
 }
