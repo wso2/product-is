@@ -51,15 +51,18 @@ public class AdaptiveScriptInitializerTestCase extends AbstractAdaptiveAuthentic
 
     /**
      * Get Java Major Version from System Property.
+     *
      * @return Java Major Version
      */
     private int getJavaVersion() {
         String version = System.getProperty("java.version");
-        if(version.startsWith("1.")) {
+        if (version.startsWith("1.")) {
             version = version.substring(2, 3);
         } else {
             int dot = version.indexOf(".");
-            if(dot != -1) { version = version.substring(0, dot); }
+            if (dot != -1) {
+                version = version.substring(0, dot);
+            }
         }
         return Integer.parseInt(version);
     }
@@ -69,7 +72,7 @@ public class AdaptiveScriptInitializerTestCase extends AbstractAdaptiveAuthentic
         ServerLogReader inputStreamHandler;
         ServerLogReader errorStreamHandler;
         String targetFolder = System.getProperty("carbon.home");
-        String scriptFolder =  getTestArtifactLocation() + File.separator;
+        String scriptFolder = getTestArtifactLocation() + File.separator;
         Process tempProcess = null;
         File scriptFile = new File(scriptFolder);
         Runtime runtime = Runtime.getRuntime();
