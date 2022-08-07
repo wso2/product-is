@@ -1,8 +1,8 @@
 @echo off
 rem ----------------------------------------------------------------------------
-rem Copyright (c) 2022, WSO2 Inc. (http://www.wso2.com).
+rem Copyright (c) 2022, WSO2 LLC. (http://www.wso2.com).
 rem
-rem WSO2 Inc. licenses this file to you under the Apache License,
+rem WSO2 LLC. licenses this file to you under the Apache License,
 rem Version 2.0 (the "License"); you may not use this file except
 rem in compliance with the License.
 rem You may obtain a copy of the License at
