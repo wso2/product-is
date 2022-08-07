@@ -2182,7 +2182,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.22.3</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.23.0</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2204,7 +2204,7 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.10.0</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.7.191</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.8.0</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.7.1</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.8.0</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.0</identity.inbound.provisioning.scim.version>
@@ -2230,7 +2230,7 @@
 
         <!-- Identity Event Handler Versions -->
         <identity.event.handler.account.lock.version>1.6.0</identity.event.handler.account.lock.version>
-        <identity.event.handler.notification.version>1.4.8</identity.event.handler.notification.version>
+        <identity.event.handler.notification.version>1.5.1</identity.event.handler.notification.version>
 
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
@@ -2285,7 +2285,7 @@
         <authenticator.x509.version>3.1.5</authenticator.x509.version>
         <identity.extension.utils>1.0.8</identity.extension.utils>
 
-        <identity.org.mgt.version>1.1.0</identity.org.mgt.version>
+        <identity.org.mgt.version>1.1.1</identity.org.mgt.version>
 
         <!-- Hash Provider Versions-->
         <hashprovider.pbkdf2.version>0.1.4</hashprovider.pbkdf2.version>
@@ -2307,7 +2307,7 @@
         <carbon.identity.oauth.uma.version>1.3.9</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.4.4</identity.apps.version>
+        <identity.apps.version>1.4.6</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
