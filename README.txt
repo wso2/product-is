@@ -6,7 +6,7 @@ Welcome to the WSO2 Identity Server ${product.version} release.
 
 WSO2 Identity Server is an open source Identity and Access Management solution federating and managing identities across
 both enterprise and cloud service environments. It supports a wide array of authentication protocols such as
-SAML 2.0 Web SSO, OAuth 2.0/1.0a, OpenID Connect and WS-Federation Passive. It supports role based authorization and
+SAML 2.0 Web SSO, OAuth 2.0, OpenID Connect and WS-Federation Passive. It supports role based authorization and
 fine grained authorization with XACML 2.0/3.0 while inbound/outbound provisioning is supported through SCIM.
 
 WSO2 Identity Server is developed on top of the revolutionary WSO2 Carbon platform, an OSGi based framework that provides
@@ -20,14 +20,14 @@ System Requirements
 
 2. Processor - 2 Core/vCPU 1.1GHz or higher.
 
-3. Java SE Development Kit 1.8
+3. Java SE Development Kit 11
 
 4. The Management Console requires full Javascript enablement of the Web browser.
 
 5. To build WSO2 Identity Server from the Source distribution, it is also necessary that you have Maven 3 or later.
 
 For more details see
-   https://is.docs.wso2.com/en/5.11.0/setup/installation-prerequisites
+    https://is.docs.wso2.com/en/6.0.0/setup/installation-prerequisites
 
 
 Project Resources
@@ -35,10 +35,10 @@ Project Resources
 
 * Home page          : http://wso2.com/products/identity-server
 * Library            : http://wso2.org/library/identity
-* Wiki               : https://is.docs.wso2.com/en/5.11.0
+* Wiki               : https://is.docs.wso2.com/en/6.0.0
 * Issue Tracker      : https://github.com/wso2/product-is/issues
 * Forums             : http://stackoverflow.com/questions/tagged/wso2is/
-* WSO2 Developer List: dev@wso2.org
+* WSO2 Developer List: iam-dev@wso2.org
 
     
 Installation and Running
@@ -49,7 +49,7 @@ Installation and Running
 3. Once the server starts, point your Web browser to https://localhost:9443/carbon/
 4. User dashboard is available at https://localhost:9443/myaccount
 5. For more information, see the Installation Guide
-    https://is.docs.wso2.com/en/5.11.0/setup/installing-the-product
+    https://is.docs.wso2.com/en/6.0.0/deploy/get-started/install/
 
 
 WSO2 Identity Server Distribution Directory Structure
@@ -172,7 +172,7 @@ By default mode, it would ask you to enter the master password
 > ciphertool -Dchange  (in UNIX)
 
 For more details see
-https://is.docs.wso2.com/en/5.11.0/setup/encrypting-passwords-with-cipher-tool
+https://is.docs.wso2.com/en/6.0.0/deploy/security/encrypt-passwords-with-cipher-tool/
 
 Support
 =======
@@ -220,7 +220,7 @@ For more information about WSO2 Identity Server please see http://wso2.org/proje
 WSO2 Oxygen Tank developer portal for addition resources.
 
 For further details, see the WSO2 Identity Server documentation at
-https://is.docs.wso2.com/en/5.11.0
+https://is.docs.wso2.com/en/6.0.0
 
 ---------------------------------------------------------------------------
-(c) Copyright 2020 WSO2 Inc.
+(c) Copyright 2022 WSO2 LLC.

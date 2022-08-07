@@ -28,18 +28,18 @@
 * Create a new release draft on the tag created by a successful Jenkins release.
 * Download the distributions from Jenkins and upload them to release draft.
 * Publish the release draft.
-* Make the public announcement (@architecture + dev).
+* Make the public announcement (@iam-dev).
 
 ### Public announcement guidelines for milestone releases
 
 The following Email template is used to announce Identity Server milestone releases to the following groups.
 
-*   [dev@wso2.org](mailto:dev@wso2.org)
-*   [architecture@wso2.org](mailto:architecture@wso2.org)
+*   [iam-dev@wso2.org](mailto:iam-dev@wso2.org)
 
 And a blind carbon copy of the same announcement email is sent to the following group.
 
-*   [iam-group@wso2.com](mailto:iam-group@wso2.com)
+*  [iam-engineering-group@wso2.com](mailto:iam-engineering-group@wso2.com)
+*  [engineering-group@wso2.com](mailto:engineering-group@wso2.com)
 
 #### Placeholders
 
@@ -116,8 +116,7 @@ All the open issues pertaining to WSO2 Identity Server are reported at the follo
 
 Join our mailing lists and correspond with the developers directly. We also encourage you to take part in discussions related to the product in the architecture mailing list. If you have any questions regarding the product you can use our StackOverflow forum to raise them as well.
 
-*   Developer List: dev@wso2.org
-*   Architecture List: architecture@wso2.org
+*   Developer List: iam-dev@wso2.org
 *   User Forum: [StackOverflow](http://stackoverflow.com/questions/tagged/wso2is)
 
 ## **Slack Channels**

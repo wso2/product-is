@@ -22,7 +22,7 @@ Welcome to WSO2 Identity Server
 
 WSO2 Identity Server is an open source Identity and Access Management solution federating and managing identities across 
 both enterprise and cloud service environments. It supports a wide array of authentication 
-protocols such as SAML 2.0 Web SSO, OpenID, OAuth 2.0/1.0a, OpenID Connect and WS-Federation Passive. 
+protocols such as SAML 2.0 Web SSO, OpenID, OAuth 2.0, OpenID Connect and WS-Federation Passive. 
 It supports role based authorization and fined grained authorization with XACML 2.0/3.0 while inbound/outbound provisioning is 
 supported through SCIM.
 
@@ -56,7 +56,7 @@ Project Resources
     * Current development version : https://is.docs.wso2.com/en/next/
 * Issue Tracker      : https://github.com/wso2/product-is/issues      
 * Forums             : http://stackoverflow.com/questions/tagged/wso2is/
-* WSO2 Developer List: dev@wso2.org
+* IAM Developer List: iam-dev@wso2.org
 
 
 Building the distribution from source
@@ -202,7 +202,7 @@ By default mode, it would ask you to enter the master password
 > ciphertool -Dchange  (in UNIX)
 
 For more details see
-https://is.docs.wso2.com/en/5.11.0/setup/encrypting-passwords-with-cipher-tool
+https://is.docs.wso2.com/en/6.0.0/deploy/security/encrypt-passwords-with-cipher-tool/
 
 Support
 =======
@@ -222,4 +222,4 @@ For further details, see the WSO2 Carbon documentation at
 https://docs.wso2.com/display/Carbon4411/WSO2+Carbon+Documentation
 
 ---------------------------------------------------------------------------
-(c) Copyright 2020 WSO2 Inc.
+(c) Copyright 2022 WSO2 LLC.
