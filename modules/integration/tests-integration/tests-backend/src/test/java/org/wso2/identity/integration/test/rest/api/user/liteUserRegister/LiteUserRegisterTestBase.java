@@ -49,7 +49,7 @@ public class LiteUserRegisterTestBase extends RESTAPIUserTestBase {
     }
 
     @BeforeClass(alwaysRun = true)
-    protected void restartServerWithRequiredConfigForLiteUserRegistration() throws Exception {
+    protected void restartServerAndInitialiseLiteUserRegistration() throws Exception {
 
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         String carbonHome = Utils.getResidentCarbonHome();
@@ -61,6 +61,8 @@ public class LiteUserRegisterTestBase extends RESTAPIUserTestBase {
         serverConfigurationManager.restartGracefully();
 
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
+
+        //initialise required properties to update IDP properties
         initUpdateIDPProperty();
 
         this.context = isServer;

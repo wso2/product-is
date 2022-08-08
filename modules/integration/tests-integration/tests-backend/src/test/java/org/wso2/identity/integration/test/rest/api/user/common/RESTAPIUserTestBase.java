@@ -39,7 +39,7 @@ public class RESTAPIUserTestBase extends RESTTestBase {
     private static final String ADMIN = "admin";
     private IdentityProviderMgtServiceClient superTenantIDPMgtClient;
     private IdentityProviderMgtServiceClient tenantIDPMgtClient;
-    private AuthenticatorClient logManager;
+    private AuthenticatorClient authenticatorClient;
     private IdentityProvider superTenantResidentIDP;
 
     protected void testInit(String apiVersion, String apiDefinition, String tenantDomain)
@@ -71,8 +71,8 @@ public class RESTAPIUserTestBase extends RESTTestBase {
 
     protected void initUpdateIDPProperty() throws Exception {
 
-        this.logManager = new AuthenticatorClient(backendURL);
-        String tenantCookie = this.logManager.login(ADMIN, ADMIN, isServer.getInstance().getHosts().get("default"));
+        this.authenticatorClient = new AuthenticatorClient(backendURL);
+        String tenantCookie = this.authenticatorClient.login(ADMIN, ADMIN, isServer.getInstance().getHosts().get("default"));
         superTenantIDPMgtClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
         tenantIDPMgtClient = new IdentityProviderMgtServiceClient(tenantCookie, backendURL);
         superTenantResidentIDP = superTenantIDPMgtClient.getResidentIdP();

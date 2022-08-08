@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
 /**
  * Update the claims required to enable email as username and lite user registration
  */
-public class LiteUserRegisterClaims extends LiteUserRegisterTestBase {
+public class LiteUserRegisterClaimsTestCase extends LiteUserRegisterTestBase {
 
     protected static final String API_CLAIM_UPDATE_BASE_PATH = "/api/server/%s";
     protected static final String API_CLAIM_UPDATE_BASE_PATH_IN_SWAGGER = "/t/\\{tenant-domain\\}" + API_CLAIM_UPDATE_BASE_PATH;

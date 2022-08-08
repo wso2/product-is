@@ -59,14 +59,6 @@ public class LiteUserRegisterTestCase extends LiteUserRegisterTestBase {
         RestAssured.basePath = StringUtils.EMPTY;
     }
 
-    @Test(alwaysRun = true, groups = "wso2.is", description = "Lite user registration endpoint test before enabling the lite user register functionality")
-    public void testLiteUserRegistrationBeforeEnabling() {
-
-        String data = "{\"email\": \"lanka@wso2.com\",\"realm\": \"PRIMARY\",\"preferredChannel\":\"Email\",\"claims\":[], \"properties\": []}";
-        Response responseOfPost = getResponseOfPost(LITE_USER_REGISTRATION_ENDPOINT, data);
-        Assert.assertEquals(responseOfPost.getStatusCode(), HttpStatus.SC_BAD_REQUEST, "Error while testing request without authorization");
-    }
-
     @Test(alwaysRun = true, groups = "wso2.is", description = "Lite user registration endpoint test after enabling the lite user register functionality")
     public void testLiteUserRegistration() throws Exception {
 
@@ -83,5 +75,14 @@ public class LiteUserRegisterTestCase extends LiteUserRegisterTestBase {
         String data = "{\"email\": \"testlitteuser@wso2.com\",\"realm\": \"PRIMARY\",\"preferredChannel\":\"Email\",\"claims\":[], \"properties\": []}";
         Response responseOfPost = getResponseOfPost(LITE_USER_REGISTRATION_ENDPOINT, data);
         Assert.assertEquals(responseOfPost.statusCode(), HttpStatus.SC_CONFLICT, "Username already exist");
+    }
+
+    @Test(alwaysRun = true, groups = "wso2.is", description = "Lite user registration endpoint test before enabling the lite user register functionality")
+    public void testLiteUserRegistrationBeforeEnabling() throws Exception {
+
+        updateResidentIDPProperty(ENABLE_LITE_SIGN_UP, "false", true);
+        String data = "{\"email\": \"lanka@wso2.com\",\"realm\": \"PRIMARY\",\"preferredChannel\":\"Email\",\"claims\":[], \"properties\": []}";
+        Response responseOfPost = getResponseOfPost(LITE_USER_REGISTRATION_ENDPOINT, data);
+        Assert.assertEquals(responseOfPost.getStatusCode(), HttpStatus.SC_BAD_REQUEST, "Error while testing request without authorization");
     }
 }
