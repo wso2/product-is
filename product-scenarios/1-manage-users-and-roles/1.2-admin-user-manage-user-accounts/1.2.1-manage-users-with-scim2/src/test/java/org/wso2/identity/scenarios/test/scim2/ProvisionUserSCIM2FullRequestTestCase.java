@@ -142,7 +142,7 @@ public class ProvisionUserSCIM2FullRequestTestCase extends ScenarioTestBase {
         rootObject.put(SCIMConstants.IMS_TYPE_ATTRIBUTE,SCIMConstants.IMS_TYPE_ATTRIBUTE_VALUE);
 
         JSONArray photo = new JSONArray();
-        phone.add(SCIMConstants.PHOTO_VALUE);
+        photo.add(SCIMConstants.PHOTO_VALUE);
         rootObject.put(SCIMConstants.PHOTO_ATTIBUTE,photo);
         rootObject.put(SCIMConstants.PHOTO_VALUE_ATTRIBUTE,SCIMConstants.PHOTO_VALUE);
         rootObject.put(SCIMConstants.PHOTO_TYPE_ATTRIBUTE,SCIMConstants.PHOTO_TYPE_ATTRIBUTE_VALUE);

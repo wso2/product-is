@@ -4,6 +4,6 @@
     "authorization_code"
   ],
   "redirect_uris": [
-    "https://dcr-app-code-grant-with-pkce-s256.com/callback"
+    "http://localhost"
   ]
 }

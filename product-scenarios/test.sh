@@ -18,6 +18,7 @@ set -o xtrace
 
 HOME=`pwd`
 TEST_SCRIPT=test.sh
+MVNSTATE=1
 
 function usage()
 {
@@ -87,6 +88,7 @@ export DATA_BUCKET_LOCATION=${INPUT_DIR}
 
 mvn clean install -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
 -fae -B -f ./pom.xml
+MVNSTATE=$?
 
 
 #=============== Copy Surefire Reports ===========================================
