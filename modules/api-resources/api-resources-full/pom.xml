@@ -59,6 +59,7 @@
                     <warName>api-resources-full-${project.version}</warName>
                     <packagingIncludes>
                         META-INF/webapp-classloading.xml,
+                        META-INF/context.xml,
                         WEB-INF/beans.xml,
                         WEB-INF/web.xml,
                         WEB-INF/lib/org.wso2.carbon.identity.api.*.jar,
