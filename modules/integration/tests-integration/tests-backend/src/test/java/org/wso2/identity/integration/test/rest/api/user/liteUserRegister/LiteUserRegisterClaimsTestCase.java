@@ -36,6 +36,7 @@ public class LiteUserRegisterClaimsTestCase extends LiteUserRegisterTestBase {
     private static final String LITE_USER_CLAIM_ID = "aHR0cDovL3dzbzIub3JnL2NsYWltcy9pZGVudGl0eS9pc0xpdGVVc2Vy";
     private static final String USERNAME_CLAIM_ID = "aHR0cDovL3dzbzIub3JnL2NsYWltcy91c2VybmFtZQ";
     static final String API_VERSION_CLAIM = "v1";
+    protected static final String API_CLAIMS_BASE_PATH = "/claim-dialects/local/claims/";
 
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
@@ -59,9 +60,9 @@ public class LiteUserRegisterClaimsTestCase extends LiteUserRegisterTestBase {
     public void liteUserRegistrationClaimsUpdate() throws Exception {
 
         String updateLiteUserRegistrationClaimRequestBody = readResource("lite-user-register-claim.json");
-        getResponseOfPut("/claim-dialects/local/claims/" + LITE_USER_CLAIM_ID, updateLiteUserRegistrationClaimRequestBody);
+        getResponseOfPut(API_CLAIMS_BASE_PATH + LITE_USER_CLAIM_ID, updateLiteUserRegistrationClaimRequestBody);
 
         String updateEmailAsUsernameClaimRequestBody = readResource("lite-user-register-claim-email-as-username.json");
-        getResponseOfPut("/claim-dialects/local/claims/" + USERNAME_CLAIM_ID, updateEmailAsUsernameClaimRequestBody);
+        getResponseOfPut(API_CLAIMS_BASE_PATH + USERNAME_CLAIM_ID, updateEmailAsUsernameClaimRequestBody);
     }
 }
