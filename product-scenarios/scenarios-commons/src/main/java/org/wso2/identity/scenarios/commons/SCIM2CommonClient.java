@@ -28,6 +28,8 @@ import java.io.FileReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendDeleteRequest;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendGetRequest;
@@ -138,6 +140,14 @@ public class SCIM2CommonClient {
 
         return sendGetRequest(client, getSCIM2UsersEndpoint() + "/" + userId, null,
                 getCommonHeaders(username, password));
+    }
+
+    public HttpResponse filterUserByAttribute(HttpClient client, String attribute, String operation, String value,
+                                              String admin, String password) throws Exception {
+
+        Map<String, String> params = new HashMap<>();
+        params.put("filter", attribute + " " + operation + " " + value);
+        return sendGetRequest(client, getSCIM2UsersEndpoint() + "/", params, getCommonHeaders(admin, password));
     }
 
     /**

@@ -265,6 +265,8 @@ public class OAuth2CommonClient {
 
         List<NameValuePair> requestParameters = new ArrayList<>();
         requestParameters.add(new BasicNameValuePair(OAuth2Constants.RequestParams.CONSENT, approveType));
+        requestParameters.add(new BasicNameValuePair("consent_0", "on"));
+        requestParameters.add(new BasicNameValuePair("user_claims_consent", "true"));
         requestParameters.add(new BasicNameValuePair(SSOConstants.CommonAuthParams.SESSION_DATA_KEY_CONSENT,
                 sessionDataKeyConsent));
 

@@ -59,7 +59,7 @@ app_password= "dashboard"
 #Google reCAPTCHA settings.
 
 #[recaptcha]
-#enabled = "true"
+#enabled = true
 #api_url = "https://www.google.com/recaptcha/api.js"
 #verify_url = "https://www.google.com/recaptcha/api/siteverify"
 #site_key = ""
