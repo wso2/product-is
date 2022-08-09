@@ -2285,7 +2285,7 @@
         <authenticator.x509.version>3.1.5</authenticator.x509.version>
         <identity.extension.utils>1.0.8</identity.extension.utils>
 
-        <identity.org.mgt.version>1.1.2</identity.org.mgt.version>
+        <identity.org.mgt.version>1.1.4</identity.org.mgt.version>
 
         <!-- Hash Provider Versions-->
         <hashprovider.pbkdf2.version>0.1.4</hashprovider.pbkdf2.version>
