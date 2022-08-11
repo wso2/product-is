@@ -40,9 +40,9 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.constructBasicAuthzHeader;
 
-
 public class AnonymousProvisioningTestCase extends ScenarioTestBase {
 
+    private static final String TEST_USER_NAME = "scim2selfRegister";
     private CloseableHttpClient client;
     private String scimUsersEndpoint;
     private String userNameResponse;
@@ -51,7 +51,6 @@ public class AnonymousProvisioningTestCase extends ScenarioTestBase {
     private String WORKEMAIL = "scimwrk@test.com";
     private String HOMEEMAIL = "scimhome@test.com";
     private String PRIMARYSTATE = "true";
-
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -78,7 +77,7 @@ public class AnonymousProvisioningTestCase extends ScenarioTestBase {
         names.put(SCIMConstants.FAMILY_NAME_ATTRIBUTE, SCIMConstants.FAMILY_NAME_CLAIM_VALUE);
         names.put(SCIMConstants.GIVEN_NAME_ATTRIBUTE, SCIMConstants.GIVEN_NAME_CLAIM_VALUE);
         rootObject.put(SCIMConstants.NAME_ATTRIBUTE, names);
-        rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, SCIMConstants.USERNAME);
+        rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, TEST_USER_NAME);
         rootObject.put(SCIMConstants.PASSWORD_ATTRIBUTE, SCIMConstants.PASSWORD);
 
         JSONObject emailWork = new JSONObject();
@@ -106,7 +105,7 @@ public class AnonymousProvisioningTestCase extends ScenarioTestBase {
         EntityUtils.consume(response.getEntity());
 
         userNameResponse = ((JSONObject) responseObj).get(SCIMConstants.USER_NAME_ATTRIBUTE).toString();
-        assertEquals(userNameResponse, SCIMConstants.USERNAME);
+        assertEquals(userNameResponse, TEST_USER_NAME);
 
         userId = ((JSONObject) responseObj).get(SCIMConstants.ID_ATTRIBUTE).toString();
         assertNotNull(userId);

@@ -28,6 +28,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.identity.scenarios.commons.SCIM2CommonClient;
 import org.wso2.identity.scenarios.commons.ScenarioTestBase;
 import org.wso2.identity.scenarios.commons.util.Constants;
 import org.wso2.identity.scenarios.commons.util.SCIMProvisioningUtil;
@@ -38,6 +39,7 @@ import static org.testng.Assert.assertTrue;
 
 public class ProvisionUserWithValidationFailuresTestCase extends ScenarioTestBase {
 
+    private static final String USER_NAME_FOR_TEST = "scim2InvalidSCIMUserCreate";
     private CloseableHttpClient client;
     private String PASSWORD = "ab";
     private String scimUsersEndpoint;
@@ -45,6 +47,7 @@ public class ProvisionUserWithValidationFailuresTestCase extends ScenarioTestBas
     JSONArray schemasArray;
 
     HttpResponse response;
+    private SCIM2CommonClient scim2Client;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -63,7 +66,7 @@ public class ProvisionUserWithValidationFailuresTestCase extends ScenarioTestBas
         JSONObject names = new JSONObject();
         names.put(SCIMConstants.GIVEN_NAME_ATTRIBUTE, SCIMConstants.GIVEN_NAME_CLAIM_VALUE);
         rootObject.put(SCIMConstants.NAME_ATTRIBUTE, names);
-        rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, SCIMConstants.USERNAME);
+        rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, USER_NAME_FOR_TEST);
         rootObject.put(SCIMConstants.PASSWORD_ATTRIBUTE, PASSWORD);
 
         response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, rootObject, Constants.SCIMEndpoints.SCIM2_ENDPOINT,

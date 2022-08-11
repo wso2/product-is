@@ -17,8 +17,13 @@
 package org.wso2.identity.scenarios.access.delegation.oauth2.code.pkce;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.testng.annotations.AfterClass;
@@ -42,6 +47,7 @@ import java.util.UUID;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static org.wso2.identity.scenarios.commons.util.Constants.HTTP_RESPONSE_HEADER_LOCATION;
 import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
 import static org.wso2.identity.scenarios.commons.util.OAuth2Constants.DCRResponseElements.CLIENT_ID;
 import static org.wso2.identity.scenarios.commons.util.OAuth2Constants.DCRResponseElements.CLIENT_SECRET;
@@ -88,6 +94,7 @@ public class OAuth2AuthorizationCodeGrantWithPKCES256Test extends ScenarioTestBa
     private OAuth2CommonClient oAuth2CommonClient;
 
     private SSOCommonClient ssoCommonClient;
+    private String authzSessionURL;
 
     @Factory(dataProvider = "oAuth2AuthorizationCodeGrantWithPKCES256ConfigProvider")
     public OAuth2AuthorizationCodeGrantWithPKCES256Test(String dcrRequestFile, String appCreatorUsername,
@@ -169,37 +176,29 @@ public class OAuth2AuthorizationCodeGrantWithPKCES256Test extends ScenarioTestBa
     public void authenticate() throws Exception {
 
         HttpResponse response = ssoCommonClient.sendLoginPost(sessionDataKey, username, password);
-        consentUrl = ssoCommonClient.getLocationHeader(response);
-        assertNotNull(consentUrl, "Location header is null. Invalid consent page url.");
-
-        httpCommonClient.consume(response);
+        authzSessionURL = ssoCommonClient.getLocationHeader(response);
+        assertNotNull(authzSessionURL, "Location header is null.");
     }
 
-    @Test(description = "9.1.2.3",
-          dependsOnMethods = "authenticate")
-    public void initOAuthConsent() throws Exception {
+    @Test(description = "9.1.1.3",
+            dependsOnMethods = "authenticate")
+    public void obtainAuthzCode() throws Exception {
 
-        HttpResponse response = httpCommonClient.sendGetRequest(consentUrl, null, null);
-        sessionDataKeyConsent = ssoCommonClient.getSessionDataKeyConsent(response);
-        assertNotNull(sessionDataKeyConsent, "sessionDataKeyConsent parameter value is null");
-
-        httpCommonClient.consume(response);
-    }
-
-    @Test(description = "9.1.2.4",
-          dependsOnMethods = "initOAuthConsent")
-    public void submitOAuthConsent() throws Exception {
-
-        HttpResponse response = oAuth2CommonClient
-                .sendOAuthConsentApprovePost(sessionDataKeyConsent, SSOConstants.ApprovalType.APPROVE_ONCE);
-        authorizeCode = oAuth2CommonClient.getAuthorizeCode(response);
+        HttpClient httpClient = HttpClientBuilder.create().disableRedirectHandling().build();
+        URIBuilder uriBuilder = new URIBuilder(authzSessionURL);
+        HttpGet getRequest = new HttpGet(uriBuilder.build());
+        HttpResponse response = httpClient.execute(getRequest);
+        Header locationHeader = response.getFirstHeader(HTTP_RESPONSE_HEADER_LOCATION);
+        if (locationHeader != null) {
+            authorizeCode = oAuth2CommonClient.getAuthorizeCode(response);
+        }
         assertNotNull(authorizeCode, "code parameter value is null. Invalid authorization code.");
 
         httpCommonClient.consume(response);
     }
 
-    @Test(description = "9.1.2.5",
-          dependsOnMethods = "submitOAuthConsent")
+    @Test(description = "9.1.2.4",
+            dependsOnMethods = "obtainAuthzCode")
     public void getOAccessToken() throws Exception {
 
         HttpResponse response = oAuth2CommonClient
@@ -211,7 +210,7 @@ public class OAuth2AuthorizationCodeGrantWithPKCES256Test extends ScenarioTestBa
         httpCommonClient.consume(response);
     }
 
-    @Test(description = "9.1.2.6",
+    @Test(description = "9.1.2.5",
           dependsOnMethods = "getOAccessToken")
     public void introspectAccessToken() throws Exception {
 

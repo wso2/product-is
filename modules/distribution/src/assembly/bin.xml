@@ -184,14 +184,6 @@
             </includes>
         </fileSet>
 
-        <!-- copy the landing page webapp -->
-        <fileSet>
-            <directory>lib/home</directory>
-            <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/deployment/server/webapps/STRATOS_ROOT
-            </outputDirectory>
-        </fileSet>
-
         <!--copy jaxrs web app for SCIM feature-->
         <fileSet>
             <directory>

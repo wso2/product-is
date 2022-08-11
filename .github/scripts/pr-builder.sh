@@ -77,7 +77,7 @@ if [ "$REPO" = "product-is" ]; then
   echo "::warning::$PR_BUILD_RESULT_LOG"
 
   PR_BUILD_SUCCESS_COUNT=$(grep -o -i "\[INFO\] BUILD SUCCESS" mvn-build.log | wc -l)
-  if [ "$PR_BUILD_SUCCESS_COUNT" != "3" ]; then
+  if [ "$PR_BUILD_SUCCESS_COUNT" != "1" ]; then
     echo "PR BUILD not successfull. Aborting."
     echo "::error::PR BUILD not successfull. Check artifacts for logs."
     exit 1
@@ -345,7 +345,7 @@ else
   echo "::warning::$PR_BUILD_RESULT_LOG"
 
   PR_BUILD_SUCCESS_COUNT=$(grep -o -i "\[INFO\] BUILD SUCCESS" mvn-build.log | wc -l)
-  if [ "$PR_BUILD_SUCCESS_COUNT" != "3" ]; then
+  if [ "$PR_BUILD_SUCCESS_COUNT" != "1" ]; then
     echo "PR BUILD not successfull. Aborting."
     echo "::error::PR BUILD not successfull. Check artifacts for logs."
     exit 1

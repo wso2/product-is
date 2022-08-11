@@ -325,7 +325,7 @@ public class DataExtractUtil {
 
         Map<String, Integer> keyPositionMap = new HashMap<>(1);
         keyPositionMap.put("name=\"" + PARAM_SESSION_DATA_KEY + "\"", 1);
-        List<DataExtractUtil.KeyValue> keyValues = extractDataFromResponse(response, keyPositionMap);
+        List<KeyValue> keyValues = extractDataFromResponse(response, keyPositionMap);
         if (keyValues != null && keyValues.size() > 0) {
             String sessionDataKey = keyValues.get(0).getValue();
             EntityUtils.consume(response.getEntity());
@@ -421,7 +421,7 @@ public class DataExtractUtil {
             IOException {
         Map<String, Integer> keyPositionMap = new HashMap<>(1);
         keyPositionMap.put(Key, position);
-        List<DataExtractUtil.KeyValue> extracted = extractDataFromResponse(response, keyPositionMap);
+        List<KeyValue> extracted = extractDataFromResponse(response, keyPositionMap);
         if (!extracted.isEmpty()) {
             return extracted.get(0).getValue();
         }

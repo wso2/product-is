@@ -110,7 +110,7 @@ public class RenameExistingRoleToNameOfAnExistingRoleSCIM2TestCase extends Scena
 
         JSONObject groupJSON = scim2Client.getRoleJSON(inputFileName[1]);
         HttpResponse response = scim2Client.updateGroup(client, groupJSON, groupId[0], username, password);
-        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_INTERNAL_SERVER_ERROR,
+        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CONFLICT,
                 "Group has been updated successfully");
         EntityUtils.consume(response.getEntity());
     }

@@ -43,6 +43,7 @@ import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.send
 
 public class UserProvisionWithInsufficientPrivilegesSCIM2TestCase extends ScenarioTestBase {
 
+    private static final String TEST_USER_NAME = "scim2";
     private CloseableHttpClient client;
     private String scimUsersEndpoint;
     private final String SEPERATOR = "/";
@@ -70,7 +71,7 @@ public class UserProvisionWithInsufficientPrivilegesSCIM2TestCase extends Scenar
         JSONObject names = new JSONObject();
         names.put(SCIMConstants.GIVEN_NAME_ATTRIBUTE, SCIMConstants.GIVEN_NAME_CLAIM_VALUE);
         rootObject.put(SCIMConstants.NAME_ATTRIBUTE, names);
-        rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, SCIMConstants.USERNAME);
+        rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, TEST_USER_NAME);
         rootObject.put(SCIMConstants.PASSWORD_ATTRIBUTE, SCIMConstants.PASSWORD);
 
         response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, rootObject,
@@ -114,7 +115,7 @@ public class UserProvisionWithInsufficientPrivilegesSCIM2TestCase extends Scenar
 
     private Header getFaultyAuthzHeader() {
 
-        return new BasicHeader(HttpHeaders.AUTHORIZATION, constructBasicAuthzHeader(SCIMConstants.USERNAME,
+        return new BasicHeader(HttpHeaders.AUTHORIZATION, constructBasicAuthzHeader(TEST_USER_NAME,
                 SCIMConstants.PASSWORD));
     }
 

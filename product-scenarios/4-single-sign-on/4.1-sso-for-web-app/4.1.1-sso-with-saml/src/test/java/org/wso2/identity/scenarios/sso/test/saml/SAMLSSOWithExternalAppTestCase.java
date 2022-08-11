@@ -21,10 +21,13 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.apache.xml.security.signature.XMLSignature;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.testng.Assert;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterClass;
@@ -37,6 +40,7 @@ import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.identity.scenarios.commons.SAML2SSOTestBase;
 import org.wso2.identity.scenarios.commons.SAMLConfig;
 import org.wso2.identity.scenarios.commons.SAMLSSOExternalAppTestClient;
+import org.wso2.identity.scenarios.commons.SCIM2CommonClient;
 import org.wso2.identity.scenarios.commons.ScenarioTestBase;
 import org.wso2.identity.scenarios.commons.TestConfig;
 import org.wso2.identity.scenarios.commons.TestUserMode;
@@ -46,15 +50,17 @@ import org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
 import static org.testng.AssertJUnit.assertNotNull;
 import static org.wso2.carbon.utils.multitenancy.MultitenantConstants.SUPER_TENANT_DOMAIN_NAME;
 import static org.wso2.identity.scenarios.commons.util.Constants.ClaimURIs.EMAIL_CLAIM_URI;
 import static org.wso2.identity.scenarios.commons.util.Constants.ClaimURIs.FIRST_NAME_CLAIM_URI;
 import static org.wso2.identity.scenarios.commons.util.Constants.ClaimURIs.LAST_NAME_CLAIM_URI;
-import static org.wso2.identity.scenarios.commons.util.Constants.DEFAULT_PROFILE_NAME;
 import static org.wso2.identity.scenarios.commons.util.Constants.HttpBinding.HTTP_POST;
 import static org.wso2.identity.scenarios.commons.util.Constants.HttpBinding.HTTP_REDIRECT;
+import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
 import static org.wso2.identity.scenarios.commons.util.Constants.SAML_REQUEST_PARAM;
 import static org.wso2.identity.scenarios.commons.util.Constants.SAML_RESPONSE_PARAM;
 import static org.wso2.identity.scenarios.commons.util.DataExtractUtil.extractFullContentFromResponse;
@@ -63,6 +69,7 @@ import static org.wso2.identity.scenarios.commons.util.DataExtractUtil.getRedire
 import static org.wso2.identity.scenarios.commons.util.DataExtractUtil.getSessionDataKey;
 import static org.wso2.identity.scenarios.commons.util.DataExtractUtil.getTestUser;
 import static org.wso2.identity.scenarios.commons.util.DataExtractUtil.isConsentRequested;
+import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJSONFromResponse;
 import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.sendGetRequest;
 import static org.wso2.identity.scenarios.commons.util.SAMLSSOUtil.sendLoginPostMessage;
 import static org.wso2.identity.scenarios.commons.util.SSOUtil.sendPOSTConsentMessage;
@@ -86,6 +93,7 @@ public class SAMLSSOWithExternalAppTestCase extends ScenarioTestBase {
     private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
     private CloseableHttpClient httpClient;
 
+    private SCIM2CommonClient scim2Client;
 
     @Factory(dataProvider = "samlSSOConfigProvider")
     public SAMLSSOWithExternalAppTestCase(SAMLConfig config, String testScenarioIdentifier) {
@@ -100,6 +108,7 @@ public class SAMLSSOWithExternalAppTestCase extends ScenarioTestBase {
     public void testInit() throws Exception {
         userAgentHeader = new BasicHeader(HttpHeaders.USER_AGENT, USER_AGENT);
         httpClient = createHttpClient();
+        scim2Client = new SCIM2CommonClient(getDeploymentProperty(IS_HTTPS_URL));
         super.init();
         loginAndObtainSessionCookie();
         remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendServiceURL, sessionCookie);
@@ -194,9 +203,20 @@ public class SAMLSSOWithExternalAppTestCase extends ScenarioTestBase {
             response = samlssoExternalAppClient.sendSAMLMessage(samlssoExternalAppClient.getAcsUrl(),
                     SAML_RESPONSE_PARAM, samlResponse, config, httpClient);
             String resultPage = extractFullContentFromResponse(response);
-
-            assertTrue(resultPage.contains("You are logged in as " + config.getUser().getTenantAwareUsername()),
-                    "SAML SSO Login failed for " + config);
+            if (resultPage.contains("You are logged in as")) {
+                HttpResponse user = scim2Client.filterUserByAttribute(
+                        httpClient, "username", "Eq" , config.getUser().getTenantAwareUsername() ,
+                        ADMIN_USERNAME, ADMIN_PASSWORD);
+                assertEquals(user.getStatusLine().getStatusCode(), HttpStatus.SC_OK,
+                        "Failed to retrieve the user");
+                JSONObject list = getJSONFromResponse(user);
+                JSONArray resourcesArray = (JSONArray) list.get("Resources");
+                JSONObject userObject = (JSONObject) resourcesArray.get(0);
+                assertTrue(resultPage.contains("You are logged in as " + userObject.get("id")),
+                        "SAML SSO Login failed for " + config);
+            } else {
+                fail("SAML SSO Login failed for" + config);
+            }
             samlssoExternalAppClient.clear();
             httpClient.close();
         } catch (Exception e) {

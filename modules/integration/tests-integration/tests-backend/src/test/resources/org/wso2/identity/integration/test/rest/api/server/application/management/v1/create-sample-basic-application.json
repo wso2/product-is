@@ -2,5 +2,16 @@
   "name": "SAMPLE",
   "description": "my application 2",
   "imageUrl": "https://localhost/image",
-  "accessUrl": "https://localhost/accessUrl"
+  "accessUrl": "https://localhost/accessUrl",
+  "inboundProtocolConfiguration": {
+    "oidc": {
+      "grantTypes": [
+        "authorization_code",
+        "password"
+      ],
+      "callbackURLs": [
+        "https://app.example.com/callback1"
+      ]
+    }
+  }
 }
