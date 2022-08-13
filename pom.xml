@@ -2199,7 +2199,7 @@
         <identity.carbon.auth.saml2.version>5.6.4</identity.carbon.auth.saml2.version>
         <identity.carbon.auth.mutual.ssl.version>5.5.0</identity.carbon.auth.mutual.ssl.version>
         <identity.carbon.auth.iwa.version>5.5.0</identity.carbon.auth.iwa.version>
-        <identity.carbon.auth.rest.version>1.6.1</identity.carbon.auth.rest.version>
+        <identity.carbon.auth.rest.version>1.6.2</identity.carbon.auth.rest.version>
 
 
         <!-- Identity Inbound Versions   -->
@@ -2261,7 +2261,7 @@
         <provisioning.connector.scim2.version>2.0.1</provisioning.connector.scim2.version>
 
         <!-- Local Authenticator Versions -->
-        <identity.local.auth.basicauth.version>6.5.0</identity.local.auth.basicauth.version>
+        <identity.local.auth.basicauth.version>6.5.2</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.3.26</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.4.0</identity.local.auth.iwa.version>
 
@@ -2285,7 +2285,7 @@
         <authenticator.x509.version>3.1.5</authenticator.x509.version>
         <identity.extension.utils>1.0.8</identity.extension.utils>
 
-        <identity.org.mgt.version>1.1.4</identity.org.mgt.version>
+        <identity.org.mgt.version>1.1.6</identity.org.mgt.version>
 
         <!-- Hash Provider Versions-->
         <hashprovider.pbkdf2.version>0.1.4</hashprovider.pbkdf2.version>
@@ -2307,7 +2307,7 @@
         <carbon.identity.oauth.uma.version>1.3.9</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.4.28</identity.apps.version>
+        <identity.apps.version>1.4.30</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
