@@ -43,7 +43,7 @@ FORMPOST_PROMPT_LOGIN = {
         [
             "click",
             "xpath",
-            "/html/body/main/div/div[2]/div/form/div[9]/div[2]/button"
+            "//*[@id=\"loginForm\"]/div[9]/div[1]/button"
         ]
     ]
 }
@@ -87,7 +87,7 @@ FORMPOST_LOGIN = {
         [
             "click",
             "xpath",
-            "/html/body/main/div/div[2]/div/form/div[9]/div[2]/button"
+            "//*[@id=\"loginForm\"]/div[9]/div[1]/button"
         ]
     ]
 }
@@ -151,7 +151,7 @@ PROMPT_LOGIN = {
         [
             "click",
             "xpath",
-            "/html/body/main/div/div[2]/div/form/div[9]/div[2]/button"
+            "//*[@id=\"loginForm\"]/div[9]/div[1]/button"
         ],
         [
             "wait",
@@ -180,8 +180,14 @@ VERIFY_ERROR = {
 VERIFY_COMPLETE_FORMPOST = {
     "task": "Verify Complete",
     "match": "*",
-    "optional": True,
+    "optional": False,
     "commands": [
+         [
+            "click",
+            "id",
+            "approve",
+            "optional"
+        ],
         [
             "wait",
             "id",
@@ -211,7 +217,7 @@ LOGIN_REFRESH_TOKEN = {
         [
             "click",
             "xpath",
-            "/html/body/main/div/div[2]/div/form/div[9]/div[2]/button"
+            "//*[@id=\"loginForm\"]/div[9]/div[1]/button"
         ],
         [
             "wait",
@@ -267,7 +273,7 @@ LOGIN_BASIC = {
         [
             "click",
             "xpath",
-            "/html/body/main/div/div[2]/div/form/div[9]/div[2]/button"
+            "//*[@id=\"loginForm\"]/div[9]/div[1]/button"
         ],
         [
             "wait",
@@ -278,11 +284,43 @@ LOGIN_BASIC = {
     ]
 }
 
-VERIFY_COMPLETE = {
-    "task": "Verify Complete",
-    "match": "https://*/test/a/*/callback*",
+WAIT_CONSENT = {
+    "task": "Waiting for consent button",
+    "match": constants.BASE_URL + "/authenticationendpoint/oauth2_consent*",
     "optional": True,
     "commands": [
+        [
+            "wait",
+            "id",
+            "approve",
+            10
+        ],
+        [
+            "click",
+            "id",
+            "approve",
+            "optional"
+        ],
+        [
+            "wait",
+            "contains",
+            "callback",
+            10
+        ]
+    ]
+}
+
+VERIFY_COMPLETE = {
+    "task": "Verify Complete",
+    "match": "*",
+    "optional": False,
+    "commands": [
+        [
+            "click",
+            "id",
+            "approve",
+            "optional"
+        ],
         [
             "wait",
             "id",
@@ -312,6 +350,9 @@ CONFIG = {
                         "tasks": [
                             LOGIN_REFRESH_TOKEN,
                             CONSENT,
+                            WAIT_CONSENT,
+                            WAIT_CONSENT,
+                            WAIT_CONSENT,
                             VERIFY_COMPLETE
 
                         ]
@@ -396,6 +437,9 @@ CONFIG = {
                         "tasks": [
                             LOGIN_BASIC,
                             CONSENT,
+                            WAIT_CONSENT,
+                            WAIT_CONSENT,
+                            WAIT_CONSENT,
                             VERIFY_COMPLETE
                         ]
                     }
@@ -477,6 +521,9 @@ CONFIG = {
                         "tasks": [
                             LOGIN_REFRESH_TOKEN,
                             CONSENT,
+                            WAIT_CONSENT,
+                            WAIT_CONSENT,
+                            WAIT_CONSENT,
                             VERIFY_COMPLETE
                         ]
                     }
@@ -577,6 +624,9 @@ CONFIG = {
                         "tasks": [
                             LOGIN_REFRESH_TOKEN,
                             FORMPOST_CONSENT,
+                            WAIT_CONSENT,
+                            WAIT_CONSENT,
+                            WAIT_CONSENT,
                             VERIFY_COMPLETE_FORMPOST
                         ]
                     }
@@ -816,6 +866,9 @@ CONFIG = {
                         "tasks": [
                             LOGIN_REFRESH_TOKEN,
                             FORMPOST_CONSENT,
+                            WAIT_CONSENT,
+                            WAIT_CONSENT,
+                            WAIT_CONSENT,
                             VERIFY_COMPLETE_FORMPOST
                         ]
                     }

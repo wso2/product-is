@@ -79,7 +79,7 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
     private static final String FINANCIAL = "Financial";
     private static final String ERROR_MESSAGE_SELF_REGISTRATION_DISABLED = "Self registration is disabled for tenant" +
             " - %s";
-    private static final String ERROR_MESSAGE_INVALID_TENANT = "Invalid tenant domain - %s";
+    private static final String ERROR_MESSAGE_INVALID_TENANT = "%s is an invalid tenant domain";
     private static final String ERROR_MESSAGE_USERNAME_TAKEN = "Username &#39;%s&#39; is already taken. Please pick a " +
             "different username";
 

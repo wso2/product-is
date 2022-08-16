@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~ Copyright (c) 2014, WSO2 LLC. (http://www.wso2.org) All Rights Reserved.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@
     <artifactId>identity-server-parent</artifactId>
     <packaging>pom</packaging>
     <description>WSO2 Identity Server</description>
-    <version>6.0.0-beta2-SNAPSHOT</version>
+    <version>6.1.0-m1-SNAPSHOT</version>
     <name>WSO2 Identity Server</name>
     <url>http://wso2.org/projects/identity</url>
 
@@ -2182,7 +2182,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.23.5</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.23.8</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2193,13 +2193,13 @@
         <carbon.consent.mgt.version>2.3.21</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.6.2</identity.governance.version>
+        <identity.governance.version>1.6.3</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.6.4</identity.carbon.auth.saml2.version>
         <identity.carbon.auth.mutual.ssl.version>5.5.0</identity.carbon.auth.mutual.ssl.version>
         <identity.carbon.auth.iwa.version>5.5.0</identity.carbon.auth.iwa.version>
-        <identity.carbon.auth.rest.version>1.6.0</identity.carbon.auth.rest.version>
+        <identity.carbon.auth.rest.version>1.6.1</identity.carbon.auth.rest.version>
 
 
         <!-- Identity Inbound Versions   -->
@@ -2229,7 +2229,7 @@
         <identity.data.publisher.audit.version>1.4.1</identity.data.publisher.audit.version>
 
         <!-- Identity Event Handler Versions -->
-        <identity.event.handler.account.lock.version>1.6.0</identity.event.handler.account.lock.version>
+        <identity.event.handler.account.lock.version>1.6.1</identity.event.handler.account.lock.version>
         <identity.event.handler.notification.version>1.5.1</identity.event.handler.notification.version>
 
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
@@ -2285,7 +2285,7 @@
         <authenticator.x509.version>3.1.5</authenticator.x509.version>
         <identity.extension.utils>1.0.8</identity.extension.utils>
 
-        <identity.org.mgt.version>1.1.2</identity.org.mgt.version>
+        <identity.org.mgt.version>1.1.4</identity.org.mgt.version>
 
         <!-- Hash Provider Versions-->
         <hashprovider.pbkdf2.version>0.1.4</hashprovider.pbkdf2.version>
@@ -2296,24 +2296,24 @@
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.9</identity.api.dispatcher.version>
         <identity.user.api.version>1.3.0</identity.user.api.version>
-        <identity.server.api.version>1.2.0</identity.server.api.version>
+        <identity.server.api.version>1.2.3</identity.server.api.version>
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
         <identity.tool.samlsso.validator.version>5.5.0</identity.tool.samlsso.validator.version>
         <identity.app.authz.xacml.version>2.3.1</identity.app.authz.xacml.version>
         <identity.oauth.addons.version>2.4.8</identity.oauth.addons.version>
         <org.wso2.carbon.extension.identity.x509certificate.version>1.1.0</org.wso2.carbon.extension.identity.x509certificate.version>
-        <conditional.authentication.functions.version>1.2.9</conditional.authentication.functions.version>
+        <conditional.authentication.functions.version>1.2.10</conditional.authentication.functions.version>
         <carbon.identity.oauth.uma.version>1.3.9</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.4.15</identity.apps.version>
+        <identity.apps.version>1.4.28</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
 
         <!-- Carbon Kernel -->
-        <carbon.kernel.version>4.7.0</carbon.kernel.version>
+        <carbon.kernel.version>4.7.1</carbon.kernel.version>
 
         <!-- Carbon Repo Versions -->
         <carbon.deployment.version>4.12.15</carbon.deployment.version>

@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>6.0.0-beta2-SNAPSHOT</version>
+        <version>6.1.0-m1-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -357,7 +357,7 @@
 
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.sh" token="--add-opens=java.xml/com.sun.org.apache.xerces.internal.dom=ALL-UNNAMED" value="--add-opens=java.xml/com.sun.org.apache.xerces.internal.dom=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED" />
 
-                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.bat" token="--add-opens=java.xml/com.sun.org.apache.xerces.internal.dom=ALL-UNNAMED" value="--add-opens=java.xml/com.sun.org.apache.xerces.internal.dom=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED"  />
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.bat" token="--add-opens=java.xml/com.sun.org.apache.xerces.internal.dom=ALL-UNNAMED" value="--add-opens=java.xml/com.sun.org.apache.xerces.internal.dom=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED" />
 
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.bat" token="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot;" value="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot;" />
 
