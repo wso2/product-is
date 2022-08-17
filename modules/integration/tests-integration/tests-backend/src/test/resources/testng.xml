@@ -200,6 +200,7 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.branding.preference.management.v1.BrandingPreferenceManagementFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.liteUserRegister.LiteUserRegisterClaimsTestCase"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.liteUserRegister.LiteUserRegisterTestCase"/>
+            <class name="org.wso2.identity.integration.test.rest.api.user.liteUserRegister.LiteUserRegisterClaimsRevertTestCase"/>
         </classes>
     </test>
 

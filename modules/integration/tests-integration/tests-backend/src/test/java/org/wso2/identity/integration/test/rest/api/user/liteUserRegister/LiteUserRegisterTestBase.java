@@ -74,6 +74,6 @@ public class LiteUserRegisterTestBase extends RESTAPIUserTestBase {
     @AfterClass(alwaysRun = true)
     protected void restoreServerConfig() throws Exception {
 
-        serverConfigurationManager.restoreToLastConfiguration();
+        serverConfigurationManager.restoreToLastConfiguration(true);
     }
 }

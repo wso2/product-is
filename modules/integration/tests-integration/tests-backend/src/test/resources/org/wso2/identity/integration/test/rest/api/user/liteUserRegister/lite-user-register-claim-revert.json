@@ -1,0 +1,15 @@
+{
+  "claimURI": "http://wso2.org/claims/identity/isLiteUser",
+  "description": "Claim to store if this is a lite user account.",
+  "displayOrder": 0,
+  "displayName": "Lite User",
+  "readOnly": false,
+  "required": false,
+  "supportedByDefault": false,
+  "attributeMapping": [
+    {
+      "mappedAttribute": "isLiteUser",
+      "userstore": "PRIMARY"
+    }
+  ]
+}
