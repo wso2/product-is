@@ -257,8 +257,8 @@ public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2Se
         remoteUSMServiceClient.addUser(TEST_USER_USERNAME, TEST_USER_PASSWORD, null, null,
                 PROFILE_NAME, false);
         userMgtClient = new UserManagementClient(backendURL, sessionCookie);
-        userMgtClient.addRole(TEST_ROLE, new String[]{TEST_USER_USERNAME},
-                new String[]{"/permission/admin/login"}, false);
+        userMgtClient.addRole(TEST_ROLE, new String[] {TEST_USER_USERNAME},
+                new String[] {"/permission/admin/login"}, false);
     }
 
     protected void setUserClaim(String claimURI, String claimValue) throws Exception {
@@ -414,10 +414,12 @@ public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2Se
     }
 
     private void deleteSpApplication(String applicationName) throws Exception {
+
         applicationManagementServiceClient.deleteApplication(applicationName);
     }
 
     private void deleteUser() {
+
         try {
             remoteUSMServiceClient.deleteUser(TEST_USER_USERNAME);
         } catch (Exception e) {
@@ -427,6 +429,7 @@ public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2Se
 
     @AfterClass(alwaysRun = true)
     public void testClear() throws Exception {
+
         deleteUser();
         deleteSpApplication(SERVICE_PROVIDER_1_NAME);
         deleteSpApplication(SERVICE_PROVIDER_2_NAME);

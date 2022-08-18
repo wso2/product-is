@@ -107,7 +107,7 @@ public class OAuth2ServiceWithConsentedTokenColumnAbstractIntegrationTest extend
         appDTO.setGrantTypes("authorization_code implicit password client_credentials refresh_token urn:ietf"
                 + ":params:oauth:grant-type:saml2-bearer iwa:ntlm");
         appDTO.setTokenType("JWT"); // To get access token in JWT format.
-        appDTO = createApplication(appDTO);
+        appDTO = createApplication(appDTO, SERVICE_PROVIDER_NAME);
         updateApplicationClaimConfig();
         Assert.assertNotNull(appDTO, "Application creation failed.");
 
