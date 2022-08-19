@@ -169,14 +169,14 @@ public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2Se
     public void testCreateAccessTokens() throws Exception {
 
         Set<String> appKeys = applications.keySet();
-        for (String app : appKeys) {
-            OAuthConsumerAppDTO appDTO = applications.get(app);
+        for (String appName : appKeys) {
+            OAuthConsumerAppDTO appDTO = applications.get(appName);
             ClientID consumerKey = new ClientID(appDTO.getOauthConsumerKey());
             Secret consumerSecret = new Secret(appDTO.getOauthConsumerSecret());
             AccessToken accessToken = requestAccessToken(consumerKey, consumerSecret);
-            accessTokens.put(app, accessToken);
+            accessTokens.put(appName, accessToken);
             AccessToken privilegedAccessToken = requestPrivilegedAccessToken(consumerKey, consumerSecret);
-            privilegedAccessTokens.put(app, privilegedAccessToken);
+            privilegedAccessTokens.put(appName, privilegedAccessToken);
 
             // Introspect the returned access token to verify the validity.
             TokenIntrospectionResponse activeTokenIntrospectionResponse = introspectAccessToken(accessToken,
@@ -219,9 +219,10 @@ public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2Se
     private void introspectAccessTokenOfDisabledAccount() throws Exception {
 
         Set<String> appKeys = applications.keySet();
-        for (String app : appKeys) {
-            TokenIntrospectionResponse revokedTokenIntrospectionResponse = introspectAccessToken(accessTokens.get(app),
-                    privilegedAccessTokens.get(app));
+        for (String appName : appKeys) {
+            TokenIntrospectionResponse revokedTokenIntrospectionResponse =
+                    introspectAccessToken(accessTokens.get(appName),
+                            privilegedAccessTokens.get(appName));
             Assert.assertTrue(revokedTokenIntrospectionResponse.indicatesSuccess(),
                     "Failed to receive a success response.");
             Assert.assertFalse(revokedTokenIntrospectionResponse.toSuccessResponse().isActive(),

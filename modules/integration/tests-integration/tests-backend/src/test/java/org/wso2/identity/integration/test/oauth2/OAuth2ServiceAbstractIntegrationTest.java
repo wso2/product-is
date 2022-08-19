@@ -156,7 +156,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		OAuthConsumerAppDTO[] appDtos = adminClient.getAllOAuthApplicationData();
 
 		for (OAuthConsumerAppDTO appDto : appDtos) {
-			if (appDto.getApplicationName().equals(appDto.getApplicationName())) {
+			if (appDto.getApplicationName().equals(appDTO.getApplicationName())) {
 				appDtoResult = appDto;
 				consumerKey = appDto.getOauthConsumerKey();
 				consumerSecret = appDto.getOauthConsumerSecret();
