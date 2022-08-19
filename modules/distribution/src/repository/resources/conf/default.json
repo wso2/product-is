@@ -45,5 +45,5 @@
   "authorization_manager.properties.GroupAndRoleSeparationEnabled": "true",
   "authorization_manager.properties.GroupAndRoleSeparationImprovementsEnabled": "true",
 
-  "user_store.properties.UsernameJavaScriptRegEx": "^[\\S]{3,50}$"
+  "user_store.properties.UsernameJavaScriptRegEx": "^(?!.*[/\\!()*~])[\\S]{5,30}$"
 }
