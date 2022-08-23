@@ -2261,8 +2261,8 @@
         <provisioning.connector.scim2.version>2.0.1</provisioning.connector.scim2.version>
 
         <!-- Local Authenticator Versions -->
-        <identity.local.auth.basicauth.version>6.5.2</identity.local.auth.basicauth.version>
-        <identity.local.auth.fido.version>5.3.26</identity.local.auth.fido.version>
+        <identity.local.auth.basicauth.version>6.5.3</identity.local.auth.basicauth.version>
+        <identity.local.auth.fido.version>5.3.27</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.4.0</identity.local.auth.iwa.version>
 
         <!-- Local Authentication API Connector Version -->
@@ -2279,7 +2279,7 @@
         <authenticator.backupcode.version>0.0.8</authenticator.backupcode.version>
         <authenticator.office365.version>2.1.1</authenticator.office365.version>
         <authenticator.smsotp.version>3.2.0</authenticator.smsotp.version>
-        <authenticator.magiclink.version>1.1.1</authenticator.magiclink.version>
+        <authenticator.magiclink.version>1.1.2</authenticator.magiclink.version>
         <authenticator.emailotp.version>4.1.0</authenticator.emailotp.version>
         <authenticator.twitter.version>1.1.0</authenticator.twitter.version>
         <authenticator.x509.version>3.1.6</authenticator.x509.version>
