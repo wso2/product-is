@@ -36,14 +36,17 @@ public class LiteUserRegisterTestCase extends LiteUserRegisterTestBase {
     public static final String LITE_USER_REGISTRATION_ENDPOINT = "/lite";
     public static final String ENABLE_LITE_SIGN_UP = "LiteRegistration.Enable";
     protected static final String API_LITE_USER_REGISTER_BASE_PATH = "/api/identity/user/%s";
-    protected static final String API_LITE_USER_REGISTER_BASE_PATH_IN_SWAGGER = "/t/\\{tenant-domain\\}" + API_LITE_USER_REGISTER_BASE_PATH;
-    protected static final String API_LITE_USER_REGISTER_BASE_PATH_WITH_TENANT_CONTEXT = TENANT_CONTEXT_IN_URL + API_LITE_USER_REGISTER_BASE_PATH;
-    static final String API_VERSION_LITE_USER = "v1.0";
+    protected static final String API_LITE_USER_REGISTER_BASE_PATH_IN_SWAGGER =
+            "/t/\\{tenant-domain\\}" + API_LITE_USER_REGISTER_BASE_PATH;
+    protected static final String API_LITE_USER_REGISTER_BASE_PATH_WITH_TENANT_CONTEXT =
+            TENANT_CONTEXT_IN_URL + API_LITE_USER_REGISTER_BASE_PATH;
+    protected static final String API_VERSION_LITE_USER = "v1.0";
 
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
 
-        super.testInit(API_VERSION_LITE_USER, swaggerDefinitionLiteUserRegister, tenant, API_LITE_USER_REGISTER_BASE_PATH_IN_SWAGGER, API_LITE_USER_REGISTER_BASE_PATH_WITH_TENANT_CONTEXT);
+        super.testInit(API_VERSION_LITE_USER, swaggerDefinitionLiteUserRegister, tenant,
+                API_LITE_USER_REGISTER_BASE_PATH_IN_SWAGGER, API_LITE_USER_REGISTER_BASE_PATH_WITH_TENANT_CONTEXT);
     }
 
     @BeforeMethod(alwaysRun = true)
@@ -63,7 +66,8 @@ public class LiteUserRegisterTestCase extends LiteUserRegisterTestBase {
     public void testLiteUserRegistration() throws Exception {
 
         updateResidentIDPProperty(ENABLE_LITE_SIGN_UP, "true", true);
-        String data = "{\"email\": \"testlitteuser@wso2.com\",\"realm\": \"PRIMARY\",\"preferredChannel\":\"Email\",\"claims\":[], \"properties\": []}";
+        String data =
+                "{\"email\": \"testlitteuser@wso2.com\",\"realm\": \"PRIMARY\",\"preferredChannel\":\"Email\",\"claims\":[], \"properties\": []}";
         Response responseOfPost = getResponseOfPost(LITE_USER_REGISTRATION_ENDPOINT, data);
         Assert.assertEquals(responseOfPost.statusCode(), HttpStatus.SC_CREATED, "Lite user registration unsuccessful");
     }
@@ -72,7 +76,8 @@ public class LiteUserRegisterTestCase extends LiteUserRegisterTestBase {
     public void testLiteUserRegistrationWithExistingUser() throws Exception {
 
         updateResidentIDPProperty(ENABLE_LITE_SIGN_UP, "true", true);
-        String data = "{\"email\": \"testlitteuser@wso2.com\",\"realm\": \"PRIMARY\",\"preferredChannel\":\"Email\",\"claims\":[], \"properties\": []}";
+        String data =
+                "{\"email\": \"testlitteuser@wso2.com\",\"realm\": \"PRIMARY\",\"preferredChannel\":\"Email\",\"claims\":[], \"properties\": []}";
         Response responseOfPost = getResponseOfPost(LITE_USER_REGISTRATION_ENDPOINT, data);
         Assert.assertEquals(responseOfPost.statusCode(), HttpStatus.SC_CONFLICT, "Username already exist");
     }
@@ -81,8 +86,10 @@ public class LiteUserRegisterTestCase extends LiteUserRegisterTestBase {
     public void testLiteUserRegistrationBeforeEnabling() throws Exception {
 
         updateResidentIDPProperty(ENABLE_LITE_SIGN_UP, "false", true);
-        String data = "{\"email\": \"lanka@wso2.com\",\"realm\": \"PRIMARY\",\"preferredChannel\":\"Email\",\"claims\":[], \"properties\": []}";
+        String data =
+                "{\"email\": \"lanka@wso2.com\",\"realm\": \"PRIMARY\",\"preferredChannel\":\"Email\",\"claims\":[], \"properties\": []}";
         Response responseOfPost = getResponseOfPost(LITE_USER_REGISTRATION_ENDPOINT, data);
-        Assert.assertEquals(responseOfPost.getStatusCode(), HttpStatus.SC_BAD_REQUEST, "Error while testing request without authorization");
+        Assert.assertEquals(responseOfPost.getStatusCode(), HttpStatus.SC_BAD_REQUEST,
+                "Error while testing request without authorization");
     }
 }
