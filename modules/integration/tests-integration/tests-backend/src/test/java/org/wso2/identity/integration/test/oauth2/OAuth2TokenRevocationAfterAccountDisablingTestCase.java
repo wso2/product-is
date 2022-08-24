@@ -101,7 +101,6 @@ public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2Se
     private static final String PROFILE_NAME = "default";
     private static final String TEST_USER_USERNAME = "testUser";
     private static final String TEST_USER_PASSWORD = "Ab@123";
-    private static final String TEST_ROLE = "testRole";
     private static final String ADMIN = "admin";
 
     private static final String ACCOUNT_DISABLED_CLAIM_URI = "http://wso2.org/claims/identity/accountDisabled";
@@ -146,7 +145,8 @@ public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2Se
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
-        createServiceProviderApplication();
+        createServiceProviderApplication(OAUTH_APPLICATION_NAME_1, SERVICE_PROVIDER_1_NAME);
+        createServiceProviderApplication(OAUTH_APPLICATION_NAME_2, SERVICE_PROVIDER_2_NAME);
         addNewTestUserWithRole();
         ConfigurationContext configContext = ConfigurationContextFactory
                 .createConfigurationContextFromFileSystem(null, null);
@@ -202,7 +202,7 @@ public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2Se
     }
 
     @Test(description = "Disabling the test user account", dependsOnMethods = "enableUserAccountDisablingFeature")
-    private void disableUserAccount() throws Exception {
+    private void testDisableUserAccount() throws Exception {
 
         setUserClaim(ACCOUNT_DISABLED_CLAIM_URI, "true");
         ClaimValue[] claimValues = usmClient.getUserClaimValuesForClaims(TEST_USER_USERNAME, new String[]
@@ -215,8 +215,8 @@ public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2Se
     }
 
     @Test(description = "Check whether access token is revoked after disabling the account",
-            dependsOnMethods = "disableUserAccount")
-    private void introspectAccessTokenOfDisabledAccount() throws Exception {
+            dependsOnMethods = "testDisableUserAccount")
+    private void testIntrospectAccessTokenOfDisabledAccount() throws Exception {
 
         Set<String> appKeys = applications.keySet();
         for (String appName : appKeys) {
@@ -230,36 +230,23 @@ public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2Se
         }
     }
 
-    private void createServiceProviderApplication() throws Exception {
+    private void createServiceProviderApplication(String oAuthAppName, String serviceProviderName) throws Exception {
 
         OAuthConsumerAppDTO appDTO = new OAuthConsumerAppDTO();
-        appDTO.setApplicationName(OAUTH_APPLICATION_NAME_1);
+        appDTO.setApplicationName(oAuthAppName);
         appDTO.setCallbackUrl(OAuth2Constant.CALLBACK_URL);
         appDTO.setOAuthVersion(OAuth2Constant.OAUTH_VERSION_2);
         appDTO.setTokenType(tokenType);
         appDTO.setGrantTypes("authorization_code implicit password client_credentials refresh_token "
                 + "urn:ietf:params:oauth:grant-type:saml2-bearer iwa:ntlm");
-        OAuthConsumerAppDTO oAuthConsumerAppDTO = createApplication(appDTO, SERVICE_PROVIDER_1_NAME);
-        applications.put(SERVICE_PROVIDER_1_NAME, oAuthConsumerAppDTO);
-
-        OAuthConsumerAppDTO appDTO2 = new OAuthConsumerAppDTO();
-        appDTO2.setApplicationName(OAUTH_APPLICATION_NAME_2);
-        appDTO2.setCallbackUrl(OAuth2Constant.CALLBACK_URL);
-        appDTO2.setOAuthVersion(OAuth2Constant.OAUTH_VERSION_2);
-        appDTO2.setTokenType(tokenType);
-        appDTO2.setGrantTypes("authorization_code implicit password client_credentials refresh_token "
-                + "urn:ietf:params:oauth:grant-type:saml2-bearer iwa:ntlm");
-        OAuthConsumerAppDTO oAuthConsumerAppDTO2 = createApplication(appDTO2, SERVICE_PROVIDER_2_NAME);
-        applications.put(SERVICE_PROVIDER_2_NAME, oAuthConsumerAppDTO2);
+        OAuthConsumerAppDTO oAuthConsumerAppDTO = createApplication(appDTO, serviceProviderName);
+        applications.put(serviceProviderName, oAuthConsumerAppDTO);
     }
 
     private void addNewTestUserWithRole() throws Exception {
 
         remoteUSMServiceClient.addUser(TEST_USER_USERNAME, TEST_USER_PASSWORD, null, null,
                 PROFILE_NAME, false);
-        userMgtClient = new UserManagementClient(backendURL, sessionCookie);
-        userMgtClient.addRole(TEST_ROLE, new String[] {TEST_USER_USERNAME},
-                new String[] {"/permission/admin/login"}, false);
     }
 
     protected void setUserClaim(String claimURI, String claimValue) throws Exception {
