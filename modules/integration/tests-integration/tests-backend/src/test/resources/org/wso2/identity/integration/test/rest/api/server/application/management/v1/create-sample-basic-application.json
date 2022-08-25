@@ -5,8 +5,6 @@
   "accessUrl": "https://localhost/accessUrl",
   "inboundProtocolConfiguration": {
     "oidc": {
-      "clientId": "sample_client_id",
-      "clientSecret": "sample_client_secret",
       "grantTypes": [
         "authorization_code",
         "password"

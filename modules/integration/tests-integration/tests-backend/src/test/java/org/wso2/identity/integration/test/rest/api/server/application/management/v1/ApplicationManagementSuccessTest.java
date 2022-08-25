@@ -147,41 +147,6 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .body("totalResults", equalTo(1));
-
-        // Perform the eq operation with clientId filter.
-        params.put("filter", "clientId eq sample_client_id");
-        getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH, params)
-                .then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK)
-                .body("totalResults", equalTo(1));
-
-        // Perform the eq operation with clientId or name filter.
-        params.put("filter", "name eq app or clientId eq sample_client_id");
-        getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH, params)
-                .then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK)
-                .body("totalResults", equalTo(1));
-
-        // Perform the eq operation with clientId and name filter.
-        params.put("filter", "name eq app and clientId eq sample_client_id");
-        getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH, params)
-                .then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK)
-                .body("totalResults", equalTo(0));
-
-        params.put("filter", "name eq SAMPLE and clientId eq sample_client_id");
-        getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH, params)
-                .then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK)
-                .body("totalResults", equalTo(1));
     }
 
     @Test(dependsOnMethods = {"testGetApplicationById"})
