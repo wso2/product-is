@@ -147,6 +147,9 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .body("totalResults", equalTo(1));
+
+        // Deleting created Service Provider application.
+        testDeleteApplicationById();
     }
 
     @Test(dependsOnMethods = {"testGetApplicationById"})
