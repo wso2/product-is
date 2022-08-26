@@ -58,8 +58,8 @@ public class LiteUserRegisterTestBase extends RESTAPIUserTestBase {
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         String carbonHome = Utils.getResidentCarbonHome();
         File defaultTomlFile = getDeploymentTomlFile(carbonHome);
-        File emailLoginConfigFile = new File(getISResourceLocation() + File.separator + "user"
-                + File.separator + "enable_email_username_deployment.toml");
+        File emailLoginConfigFile = new File(getISResourceLocation() + File.separator + "user" + File.separator +
+                "enable_email_username_deployment.toml");
         serverConfigurationManager = new ServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(emailLoginConfigFile, defaultTomlFile, true);
         serverConfigurationManager.restartGracefully();
@@ -92,9 +92,6 @@ public class LiteUserRegisterTestBase extends RESTAPIUserTestBase {
     protected Response sendPutRequest(String endpointUri, String body) {
 
         return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
-                .contentType(ContentType.JSON)
-                .header(HttpHeaders.ACCEPT, ContentType.JSON)
-                .body(body)
-                .put(endpointUri);
+                .contentType(ContentType.JSON).header(HttpHeaders.ACCEPT, ContentType.JSON).body(body).put(endpointUri);
     }
 }
