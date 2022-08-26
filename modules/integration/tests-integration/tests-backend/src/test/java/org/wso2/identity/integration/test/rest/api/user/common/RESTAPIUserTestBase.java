@@ -16,16 +16,15 @@
 
 package org.wso2.identity.integration.test.rest.api.user.common;
 
-import org.apache.commons.lang.ArrayUtils;
+import java.rmi.RemoteException;
+import java.util.Arrays;
+import javax.xml.xpath.XPathExpressionException;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.FederatedAuthenticatorConfig;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProviderProperty;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.test.rest.api.common.RESTTestBase;
-
-import javax.xml.xpath.XPathExpressionException;
-import java.rmi.RemoteException;
 
 /**
  * Base Test Class for user based REST API test cases
@@ -60,7 +59,8 @@ public class RESTAPIUserTestBase extends RESTTestBase {
      * @throws XPathExpressionException
      * @throws RemoteException
      */
-    protected void testInit(String apiVersion, String apiDefinition, String tenantDomain, String apiUserBasePathInSwagger, String apiUserBasePathWithTenantContext)
+    protected void testInit(String apiVersion, String apiDefinition, String tenantDomain,
+                            String apiUserBasePathInSwagger, String apiUserBasePathWithTenantContext)
             throws XPathExpressionException, RemoteException {
 
         String basePathInSwagger = String.format(apiUserBasePathInSwagger, apiVersion);
@@ -72,15 +72,14 @@ public class RESTAPIUserTestBase extends RESTTestBase {
     protected void initUpdateIDPProperty() throws Exception {
 
         this.authenticatorClient = new AuthenticatorClient(backendURL);
-        String tenantCookie = this.authenticatorClient.login(ADMIN, ADMIN, isServer.getInstance().getHosts().get("default"));
+        String tenantCookie = this.authenticatorClient.login(ADMIN, ADMIN, isServer.getInstance()
+                .getHosts().get("default"));
         superTenantIDPMgtClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
         tenantIDPMgtClient = new IdentityProviderMgtServiceClient(tenantCookie, backendURL);
         superTenantResidentIDP = superTenantIDPMgtClient.getResidentIdP();
     }
 
-    protected void updateResidentIDPProperty(String propertyKey, String value, boolean
-            isSuperTenant)
-            throws Exception {
+    protected void updateResidentIDPProperty(String propertyKey, String value, boolean isSuperTenant) throws Exception {
 
         IdentityProviderProperty[] idpProperties = superTenantResidentIDP.getIdpProperties();
         for (IdentityProviderProperty providerProperty : idpProperties) {
@@ -95,13 +94,9 @@ public class RESTAPIUserTestBase extends RESTTestBase {
 
         FederatedAuthenticatorConfig[] federatedAuthenticatorConfigs =
                 residentIdentityProvider.getFederatedAuthenticatorConfigs();
-        for (FederatedAuthenticatorConfig authenticatorConfig : federatedAuthenticatorConfigs) {
-            if (!authenticatorConfig.getName().equalsIgnoreCase("samlsso")) {
-                federatedAuthenticatorConfigs = (FederatedAuthenticatorConfig[])
-                        ArrayUtils.removeElement(federatedAuthenticatorConfigs,
-                                authenticatorConfig);
-            }
-        }
+        federatedAuthenticatorConfigs = Arrays.stream(federatedAuthenticatorConfigs)
+                .filter(config -> config.getName().equalsIgnoreCase("samlsso"))
+                .toArray(FederatedAuthenticatorConfig[]::new);
         residentIdentityProvider.setFederatedAuthenticatorConfigs(federatedAuthenticatorConfigs);
         if (isSuperTenant) {
             superTenantIDPMgtClient.updateResidentIdP(residentIdentityProvider);
@@ -109,5 +104,4 @@ public class RESTAPIUserTestBase extends RESTTestBase {
             tenantIDPMgtClient.updateResidentIdP(residentIdentityProvider);
         }
     }
-
 }

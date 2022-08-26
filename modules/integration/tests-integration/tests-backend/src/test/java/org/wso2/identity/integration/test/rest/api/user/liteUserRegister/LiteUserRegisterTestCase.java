@@ -33,8 +33,8 @@ import org.testng.annotations.Test;
  */
 public class LiteUserRegisterTestCase extends LiteUserRegisterTestBase {
 
-    public static final String LITE_USER_REGISTRATION_ENDPOINT = "/lite";
-    public static final String ENABLE_LITE_SIGN_UP = "LiteRegistration.Enable";
+    protected static final String LITE_USER_REGISTRATION_ENDPOINT = "/lite";
+    protected static final String ENABLE_LITE_SIGN_UP = "LiteRegistration.Enable";
     protected static final String API_LITE_USER_REGISTER_BASE_PATH = "/api/identity/user/%s";
     protected static final String API_LITE_USER_REGISTER_BASE_PATH_IN_SWAGGER =
             "/t/\\{tenant-domain\\}" + API_LITE_USER_REGISTER_BASE_PATH;
@@ -62,32 +62,44 @@ public class LiteUserRegisterTestCase extends LiteUserRegisterTestBase {
         RestAssured.basePath = StringUtils.EMPTY;
     }
 
-    @Test(alwaysRun = true, groups = "wso2.is", description = "Lite user registration endpoint test after enabling the lite user register functionality")
+    @Test(
+            alwaysRun = true,
+            groups = "wso2.is",
+            description = "Lite user registration endpoint test after enabling the lite user register functionality"
+    )
     public void testLiteUserRegistration() throws Exception {
 
         updateResidentIDPProperty(ENABLE_LITE_SIGN_UP, "true", true);
-        String data =
-                "{\"email\": \"testlitteuser@wso2.com\",\"realm\": \"PRIMARY\",\"preferredChannel\":\"Email\",\"claims\":[], \"properties\": []}";
+        String data = "{\"email\": \"testlitteuser@wso2.com\",\"realm\": \"PRIMARY\"," +
+                "\"preferredChannel\":\"Email\",\"claims\":[], \"properties\": []}";
         Response responseOfPost = getResponseOfPost(LITE_USER_REGISTRATION_ENDPOINT, data);
         Assert.assertEquals(responseOfPost.statusCode(), HttpStatus.SC_CREATED, "Lite user registration unsuccessful");
     }
 
-    @Test(alwaysRun = true, groups = "wso2.is", description = "Lite user registration endpoint test with existing username")
+    @Test(
+            alwaysRun = true,
+            groups = "wso2.is",
+            description = "Lite user registration endpoint test with existing username"
+    )
     public void testLiteUserRegistrationWithExistingUser() throws Exception {
 
         updateResidentIDPProperty(ENABLE_LITE_SIGN_UP, "true", true);
-        String data =
-                "{\"email\": \"testlitteuser@wso2.com\",\"realm\": \"PRIMARY\",\"preferredChannel\":\"Email\",\"claims\":[], \"properties\": []}";
+        String data = "{\"email\": \"testlitteuser@wso2.com\",\"realm\": \"PRIMARY\",\"preferredChannel\":" +
+                "\"Email\",\"claims\":[], \"properties\": []}";
         Response responseOfPost = getResponseOfPost(LITE_USER_REGISTRATION_ENDPOINT, data);
         Assert.assertEquals(responseOfPost.statusCode(), HttpStatus.SC_CONFLICT, "Username already exist");
     }
 
-    @Test(alwaysRun = true, groups = "wso2.is", description = "Lite user registration endpoint test before enabling the lite user register functionality")
+    @Test(
+            alwaysRun = true,
+            groups = "wso2.is",
+            description = "Lite user registration endpoint test before enabling the lite user register functionality"
+    )
     public void testLiteUserRegistrationBeforeEnabling() throws Exception {
 
         updateResidentIDPProperty(ENABLE_LITE_SIGN_UP, "false", true);
-        String data =
-                "{\"email\": \"lanka@wso2.com\",\"realm\": \"PRIMARY\",\"preferredChannel\":\"Email\",\"claims\":[], \"properties\": []}";
+        String data = "{\"email\": \"lanka@wso2.com\",\"realm\": \"PRIMARY\",\"preferredChannel\":\"Email\"," +
+                "\"claims\":[], \"properties\": []}";
         Response responseOfPost = getResponseOfPost(LITE_USER_REGISTRATION_ENDPOINT, data);
         Assert.assertEquals(responseOfPost.getStatusCode(), HttpStatus.SC_BAD_REQUEST,
                 "Error while testing request without authorization");

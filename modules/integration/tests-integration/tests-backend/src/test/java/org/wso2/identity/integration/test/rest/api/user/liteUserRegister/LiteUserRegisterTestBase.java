@@ -32,24 +32,33 @@ import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.test.rest.api.user.common.RESTAPIUserTestBase;
 import org.wso2.identity.integration.test.util.Utils;
 
+/**
+ * Base class for lite user register REST endpoint integration tests
+ */
 public class LiteUserRegisterTestBase extends RESTAPIUserTestBase {
 
     protected static final String API_USERNAME_CLAIM_PATH =
             "/t/carbon.super/api/server/v1/claim-dialects/local/claims/aHR0cDovL3dzbzIub3JnL2NsYWltcy91c2VybmFtZQ";
-    static final String API_DEFINITION_NAME_LITE_USER_REGISTER = "api.identity.user.yaml";
+    protected static final String API_DEFINITION_NAME_LITE_USER_REGISTER = "api.identity.user.yaml";
+    protected static final String ENABLE_EMAIL_USERNAME_DEPLOYMENT_CONFIG = "enable_email_username_deployment.toml";
+    protected static final String LITE_USER_REGISTER_CLAIM_EMAIL_AS_USERNAME_JSON =
+            "lite-user-register-claim-email-as-username.json";
+    protected static final String LITE_USER_REGISTER_CLAIM_EMAIL_AS_USERNAME_REVERT_JSON =
+            "lite-user-register-claim-email-as-username-revert.json";
     protected static String swaggerDefinitionLiteUserRegister;
-    static String API_PACKAGE_NAME_LITE_USER_REGISTER = "org.wso2.carbon.identity.api.user.governance";
+    protected static String API_PACKAGE_NAME_LITE_USER_REGISTER = "org.wso2.carbon.identity.api.user.governance";
 
     static {
         try {
             swaggerDefinitionLiteUserRegister = getAPISwaggerDefinition(API_PACKAGE_NAME_LITE_USER_REGISTER,
                     API_DEFINITION_NAME_LITE_USER_REGISTER);
         } catch (IOException e) {
-            Assert.fail(String.format("Unable to read the swagger definition"), e);
+            Assert.fail(String.format("Unable to read the swagger definition %s from %s",
+                    API_DEFINITION_NAME_LITE_USER_REGISTER, API_PACKAGE_NAME_LITE_USER_REGISTER), e);
         }
     }
 
-    protected String serverBackendUrl;
+    private String serverBackendUrl;
     private ServerConfigurationManager serverConfigurationManager;
 
     @BeforeClass(alwaysRun = true)
@@ -57,16 +66,16 @@ public class LiteUserRegisterTestBase extends RESTAPIUserTestBase {
 
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         String carbonHome = Utils.getResidentCarbonHome();
-        File defaultTomlFile = getDeploymentTomlFile(carbonHome);
+        File defaultConfigFile = getDeploymentTomlFile(carbonHome);
         File emailLoginConfigFile = new File(getISResourceLocation() + File.separator + "user" + File.separator +
-                "enable_email_username_deployment.toml");
+                ENABLE_EMAIL_USERNAME_DEPLOYMENT_CONFIG);
         serverConfigurationManager = new ServerConfigurationManager(isServer);
-        serverConfigurationManager.applyConfigurationWithoutRestart(emailLoginConfigFile, defaultTomlFile, true);
+        serverConfigurationManager.applyConfigurationWithoutRestart(emailLoginConfigFile, defaultConfigFile, true);
         serverConfigurationManager.restartGracefully();
 
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
 
-        //initialise required properties to update IDP properties
+        // Initialise required properties to update IDP properties.
         initUpdateIDPProperty();
 
         this.context = isServer;
@@ -74,9 +83,9 @@ public class LiteUserRegisterTestBase extends RESTAPIUserTestBase {
         this.authenticatingCredential = context.getContextTenant().getTenantAdmin().getPassword();
         this.tenant = context.getContextTenant().getDomain();
 
-        //update username related claim
+        // Update username related claim.
         serverBackendUrl = isServer.getContextUrls().getWebAppURLHttps();
-        String updateEmailAsUsernameClaimRequestBody = readResource("lite-user-register-claim-email-as-username.json");
+        String updateEmailAsUsernameClaimRequestBody = readResource(LITE_USER_REGISTER_CLAIM_EMAIL_AS_USERNAME_JSON);
         sendPutRequest(serverBackendUrl + API_USERNAME_CLAIM_PATH, updateEmailAsUsernameClaimRequestBody);
     }
 
@@ -84,7 +93,7 @@ public class LiteUserRegisterTestBase extends RESTAPIUserTestBase {
     protected void restoreServerConfig() throws Exception {
 
         String revertEmailAsUsernameClaimRequestBody =
-                readResource("lite-user-register-claim-email-as-username-revert.json");
+                readResource(LITE_USER_REGISTER_CLAIM_EMAIL_AS_USERNAME_REVERT_JSON);
         sendPutRequest(serverBackendUrl + API_USERNAME_CLAIM_PATH, revertEmailAsUsernameClaimRequestBody);
         serverConfigurationManager.restoreToLastConfiguration(false);
     }
