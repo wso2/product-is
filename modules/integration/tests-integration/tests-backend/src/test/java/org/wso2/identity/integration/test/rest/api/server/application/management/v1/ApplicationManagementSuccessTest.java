@@ -138,7 +138,7 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
         createdAppId = extractApplicationIdFromLocationHeader(location);
         assertNotBlank(createdAppId);
 
-        // Perform an eq with filter.
+        // Perform the eq operation with name filter.
         Map<String, Object> params = new HashMap<>();
         params.put("filter", "name eq SAMPLE");
         getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH, params)
