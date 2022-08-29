@@ -21,6 +21,9 @@
     "metrics_menu",
     "shutdown_restart_menu"
   ],
+  "http_access_log.directory": "${carbon.home}/repository/logs",
+  "http_access_log.prefix": "http_access_",
+  "http_access_log.suffix": ".log",
   "http_access_log.pattern": "%h %l %u %t %r %s %b &quot;%{Referer}i&quot; &quot;%{User-Agent}i&quot; %T",
 
   "log_correlation.header_config": "{'activityid':'Correlation-ID'}",
