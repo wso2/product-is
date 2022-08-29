@@ -2193,7 +2193,7 @@
         <carbon.consent.mgt.version>2.3.21</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.6.3</identity.governance.version>
+        <identity.governance.version>1.6.4</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.6.4</identity.carbon.auth.saml2.version>
@@ -2278,14 +2278,14 @@
         <authenticator.totp.version>3.1.1</authenticator.totp.version>
         <authenticator.backupcode.version>0.0.10</authenticator.backupcode.version>
         <authenticator.office365.version>2.1.1</authenticator.office365.version>
-        <authenticator.smsotp.version>3.2.0</authenticator.smsotp.version>
+        <authenticator.smsotp.version>3.2.1</authenticator.smsotp.version>
         <authenticator.magiclink.version>1.1.2</authenticator.magiclink.version>
         <authenticator.emailotp.version>4.1.0</authenticator.emailotp.version>
         <authenticator.twitter.version>1.1.0</authenticator.twitter.version>
         <authenticator.x509.version>3.1.7</authenticator.x509.version>
         <identity.extension.utils>1.0.8</identity.extension.utils>
 
-        <identity.org.mgt.version>1.1.9</identity.org.mgt.version>
+        <identity.org.mgt.version>1.1.11</identity.org.mgt.version>
 
         <!-- Hash Provider Versions-->
         <hashprovider.pbkdf2.version>0.1.4</hashprovider.pbkdf2.version>
@@ -2307,7 +2307,7 @@
         <carbon.identity.oauth.uma.version>1.3.9</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.4.63</identity.apps.version>
+        <identity.apps.version>1.4.66</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
