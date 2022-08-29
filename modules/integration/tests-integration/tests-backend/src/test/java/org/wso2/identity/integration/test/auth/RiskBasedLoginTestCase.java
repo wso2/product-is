@@ -68,6 +68,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.CALLBACK_URL;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.COMMON_AUTH_URL;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.SESSION_DATA_KEY;
 
 @Path("/")
 public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCase {
@@ -301,6 +303,11 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
 
         String callbackUrl = DataExtractUtil.getParamFromURIString(locationHeader.getValue(), "callbackUrl");
+        if(callbackUrl.isEmpty()){
+            callbackUrl = COMMON_AUTH_URL  + String.format("?sessionDataKey=%s&authenticatorName=%s",
+                    DataExtractUtil.getParamFromURIString(locationHeader.getValue(), SESSION_DATA_KEY),
+                    "DemoFingerprintAuthenticator");
+        }
         String[] urlParts = locationHeader.getValue().split("\\?");
 
         List<NameValuePair> urlParameters = new ArrayList<>();

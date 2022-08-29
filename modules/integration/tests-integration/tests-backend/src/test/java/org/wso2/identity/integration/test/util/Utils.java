@@ -55,11 +55,14 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
+import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 
 public class Utils {
@@ -299,10 +302,34 @@ public class Utils {
                 }
             }
         }
+
+        // This block fetches the claims when the enable_shortened_urls is true.
+        if (isBlank(mandatoryClaims) && isBlank(requestedClaims)) {
+            HttpGet get = new HttpGet(redirectUrl);
+            get.setHeader("User-Agent", userAgent);
+            get.addHeader("Referer", referer);
+            get.addHeader("Cookie", pastreCookie);
+            HttpResponse consentPageResponse = httpClient.execute(get);
+            List<String> fetchedClaims = extractClaims(consentPageResponse);
+            for (String claimConsent: fetchedClaims) {
+                urlParameters.add(new BasicNameValuePair(claimConsent, "on"));
+            }
+        }
+
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionKey));
         urlParameters.add(new BasicNameValuePair("consent", "approve"));
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
         return httpClient.execute(post);
+    }
+
+    private static List<String> extractClaims(HttpResponse response) throws IOException {
+        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+        String resultPage = rd.lines().collect(Collectors.joining());
+        String claimString = resultPage.substring(resultPage.lastIndexOf("<div class=\"claim-list\">"));
+        String[] dataArray = StringUtils.substringsBetween(claimString, "<label for=\"", "\"");
+        List<String> attributeList = new ArrayList<>();
+        Collections.addAll(attributeList, dataArray);
+        return attributeList;
     }
 
     public static boolean requestMissingClaims(HttpResponse response) {
