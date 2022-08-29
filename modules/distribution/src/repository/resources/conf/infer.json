@@ -24,5 +24,12 @@
     "active_directory_unique_id": {
       "user_store.properties.UsernameJavaRegEx": "[a-zA-Z0-9._\\-|//]{3,50}$"
     }
+  },
+  "endpoint_urls.enable_shortened_urls": {
+    "true": {
+      "authentication.endpoint.redirect_params.filter_policy": "include",
+      "authentication.endpoint.redirect_params.parameters": ["sessionDataKey","sessionDataKeyConsent", "errorKey", "sp", "isSaaSApp", "tenantDomain"],
+      "authentication.endpoint.redirect_params.remove_on_consume_from_api": "false"
+    }
   }
 }
