@@ -167,14 +167,14 @@ public class ServiceProviderUserRoleValidationTestCase extends ISIntegrationTest
         if (enableRoleValidation) {
             Assert.assertEquals(count, APPLICATION_COUNT_WITHOUT_FILTER,
                     String.format("The expected application count without a filter does not match the actual " +
-                                    "application count: Expected Application Count: %d Actual Application Count: %d.",
-                            APPLICATION_COUNT_WITHOUT_FILTER, count)
+                                  "application count: Expected Application Count: %d Actual Application Count: %d.",
+                                  APPLICATION_COUNT_WITHOUT_FILTER, count)
             );
         } else {
             Assert.assertEquals(count, APPLICATION_COUNT_WITHOUT_FILTER_AND_ROLE_VALIDATION,
                     String.format("The expected application count without a filter does not match the actual " +
-                                    "application count: Expected Application Count: %d Actual Application Count: %d.",
-                            APPLICATION_COUNT_WITHOUT_FILTER_AND_ROLE_VALIDATION, count)
+                                  "application count: Expected Application Count: %d Actual Application Count: %d.",
+                                  APPLICATION_COUNT_WITHOUT_FILTER_AND_ROLE_VALIDATION, count)
             );
         }
     }
@@ -186,8 +186,8 @@ public class ServiceProviderUserRoleValidationTestCase extends ISIntegrationTest
         int count = applicationManagementServiceClient.getCountOfApplications(APPLICATION_FILTER);
         Assert.assertEquals(count, APPLICATION_COUNT_WITH_FILTER,
                 String.format("The expected application count with a filter does not match the actual application " +
-                                "count: Expected Application Count: %d Actual Application Count: %d.",
-                        APPLICATION_COUNT_WITH_FILTER, count)
+                              "count: Expected Application Count: %d Actual Application Count: %d.",
+                              APPLICATION_COUNT_WITH_FILTER, count)
         );
     }
 
