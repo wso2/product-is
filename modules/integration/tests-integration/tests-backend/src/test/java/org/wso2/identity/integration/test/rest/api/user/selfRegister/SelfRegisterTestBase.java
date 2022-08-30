@@ -27,9 +27,9 @@ import java.io.IOException;
 
 public class SelfRegisterTestBase extends RESTAPIUserTestBase {
 
-    static final String API_DEFINITION_NAME_SELF_REGISTER = "api.identity.user.yaml";
+    protected static final String API_DEFINITION_NAME_SELF_REGISTER = "api.identity.user.yaml";
     protected static String swaggerDefinitionSelfRegister;
-    static String API_PACKAGE_NAME_SELF_REGISTER = "org.wso2.carbon.identity.api.user.governance";
+    protected static String API_PACKAGE_NAME_SELF_REGISTER = "org.wso2.carbon.identity.api.user.governance";
 
     static {
         try {

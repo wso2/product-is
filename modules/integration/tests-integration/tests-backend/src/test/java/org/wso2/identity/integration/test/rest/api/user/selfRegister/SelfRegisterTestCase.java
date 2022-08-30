@@ -37,7 +37,7 @@ public class SelfRegisterTestCase extends SelfRegisterTestBase {
             "/t/\\{tenant-domain\\}" + API_SELF_REGISTER_BASE_PATH;
     protected static final String API_SELF_REGISTER_BASE_PATH_WITH_TENANT_CONTEXT =
             TENANT_CONTEXT_IN_URL + API_SELF_REGISTER_BASE_PATH;
-    static final String API_VERSION_SELF_REGISTER = "v1.0";
+    protected static final String API_VERSION_SELF_REGISTER = "v1.0";
     private String selfRegisterUserInfo;
 
     @BeforeClass(alwaysRun = true)
