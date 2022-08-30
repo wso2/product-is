@@ -1935,6 +1935,11 @@
                 <version>${identity.org.mgt.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.identity.organization.management.core</groupId>
+                <artifactId>org.wso2.carbon.identity.organization.management.core.server.feature</artifactId>
+                <version>${identity.org.mgt.core.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.identity.outbound.provisioning.scim2</groupId>
                 <artifactId>org.wso2.carbon.identity.provisioning.connector.scim2.server.feature</artifactId>
                 <version>${provisioning.connector.scim2.version}</version>
@@ -2286,6 +2291,7 @@
         <identity.extension.utils>1.0.8</identity.extension.utils>
 
         <identity.org.mgt.version>1.1.9</identity.org.mgt.version>
+        <identity.org.mgt.core.version>1.0.2</identity.org.mgt.core.version>
 
         <!-- Hash Provider Versions-->
         <hashprovider.pbkdf2.version>0.1.4</hashprovider.pbkdf2.version>
