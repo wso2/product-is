@@ -303,7 +303,7 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
 
         String callbackUrl = DataExtractUtil.getParamFromURIString(locationHeader.getValue(), "callbackUrl");
-        if (callbackUrl.isEmpty()) {
+        if (callbackUrl==null) {
             callbackUrl = COMMON_AUTH_URL + String.format("?sessionDataKey=%s&authenticatorName=%s",
                     DataExtractUtil.getParamFromURIString(locationHeader.getValue(), SESSION_DATA_KEY),
                     "DemoFingerprintAuthenticator");

@@ -228,6 +228,16 @@ public class Utils {
         String[] questionSets = null;
         if (urlData != null) {
             questionSets = urlData.split("&");
+        } else {
+            HttpGet get = new HttpGet(redirectUrl);
+            get.setHeader(USER_AGENT, userAgent);
+            get.addHeader(REFERER, referer);
+            get.addHeader(SET_COOKIE, pastreCookie);
+            HttpResponse questionPageResponse = httpClient.execute(get);
+            List<String> questionList = extractSecurityQuestions(questionPageResponse);
+            questionSets = new String[questionList.size()];
+            questionSets = questionList.toArray(questionSets);
+            get.releaseConnection();
         }
 
         if (questionSets != null) {
@@ -255,6 +265,20 @@ public class Utils {
 
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
         return httpClient.execute(post);
+    }
+
+    private static List<String> extractSecurityQuestions(HttpResponse response) throws IOException {
+        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+        String resultPage = rd.lines().collect(Collectors.joining());
+        String questionString = resultPage.substring(resultPage.lastIndexOf("<h3>"));
+        String[] dataArray = StringUtils.substringsBetween(questionString, "name=Q-", "</option>");
+        List<String> questionList = new ArrayList<>();
+        for (String dataString : dataArray) {
+            String[] splitString = dataString.split("\\s{2,}");
+            String qString = splitString[0].substring(0,splitString[0].length()-1) + "| |" + splitString[2];
+            questionList.add(qString);
+        }
+        return questionList;
     }
 
     public static HttpResponse sendPOSTConsentMessage(HttpResponse response, String commonAuthUrl, String userAgent,
@@ -314,6 +338,7 @@ public class Utils {
             for (String claimConsent: fetchedClaims) {
                 urlParameters.add(new BasicNameValuePair(claimConsent, "on"));
             }
+            get.releaseConnection();
         }
 
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionKey));

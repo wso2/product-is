@@ -32,5 +32,5 @@ context = "(.*)/sample-auth/(.*)"
 secure = false
 http_method = "all"
 
-[endpoint_urls]
+[authenticationendpoint]
 enable_shortened_urls = "true"
