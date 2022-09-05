@@ -504,6 +504,9 @@
                                     org.wso2.carbon.identity.organization.management:org.wso2.carbon.identity.organization.management.server.feature:${identity.org.mgt.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
+                                    org.wso2.carbon.identity.organization.management.core:org.wso2.carbon.identity.organization.management.core.server.feature:${identity.org.mgt.core.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon.identity.local.auth.magiclink:org.wso2.carbon.identity.local.auth.magiclink.server.feature:${authenticator.magiclink.version}
                                 </featureArtifactDef>
                             </featureArtifacts>
@@ -1026,6 +1029,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.organization.management.server.feature.group</id>
                                     <version>${identity.org.mgt.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.organization.management.core.server.feature.group</id>
+                                    <version>${identity.org.mgt.core.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.local.auth.magiclink.server.feature.group</id>

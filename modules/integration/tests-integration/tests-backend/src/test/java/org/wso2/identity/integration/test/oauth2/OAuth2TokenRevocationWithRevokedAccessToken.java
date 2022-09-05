@@ -95,7 +95,7 @@ public class OAuth2TokenRevocationWithRevokedAccessToken extends OAuth2ServiceAb
         appDTO.setGrantTypes("authorization_code implicit password client_credentials refresh_token "
                 + "urn:ietf:params:oauth:grant-type:saml2-bearer iwa:ntlm");
 
-        OAuthConsumerAppDTO oAuthConsumerAppDTO = createApplication(appDTO);
+        OAuthConsumerAppDTO oAuthConsumerAppDTO = createApplication(appDTO, SERVICE_PROVIDER_NAME);
 
         consumerKey = new ClientID(oAuthConsumerAppDTO.getOauthConsumerKey());
         consumerSecret = new Secret(oAuthConsumerAppDTO.getOauthConsumerSecret());

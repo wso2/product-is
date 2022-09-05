@@ -86,8 +86,7 @@ public class OAuth2ServiceErrorResponseTest extends OAuth2ServiceAbstractIntegra
         String locationURI = locationHeader.getValue();
 
         Assert.assertTrue(locationURI.contains(OAuth2Constant.UNAUTHORIZED_CLIENT));
-        Assert.assertTrue(locationURI.contains("The+authenticated+client+is+not+authorized+to+use+this+authorization+" +
-                "grant+type"));
+        Assert.assertTrue(locationURI.contains("not.authorized.to.use.requested.grant.type"));
     }
 
     public OAuthConsumerAppDTO createApplication() throws Exception {
