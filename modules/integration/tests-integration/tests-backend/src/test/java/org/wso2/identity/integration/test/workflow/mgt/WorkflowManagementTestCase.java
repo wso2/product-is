@@ -63,6 +63,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
     private String templateId = "MultiStepApprovalTemplate";
     private String workflowImplId = "ApprovalWorkflow";
     private final String WORKFLOW_NAME = "TestWorkflowAddUser";
+    private final String ASSOCIATION_WORKFLOW_NAME = "TestAssociationWorkflow";
     private final String WORKFLOW_DESCRIPTION = "TestWorkflowDescription";
     private final String ASSOCIATION_NAME = "TestAddUserAssociation";
     private final String ASSOCIATION_CONDITION = "//*[local-name()='parameter'][@name='Roles']/*[local-name()='value']/*[local-name()" +
@@ -177,7 +178,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
             WorkflowWizard workflowDTO = getWorkflowDTO(WORKFLOW_NAME, WORKFLOW_DESCRIPTION);
             client.addWorkflow(workflowDTO);
 
-            WorkflowWizard[] workflows = client.listAllWorkflows();
+            WorkflowWizard[] workflows = client.listWorkflows();
             if (workflows == null || workflows.length == 0) {
                 Assert.fail("Workflow list is empty, new workflow is not added.");
             }
@@ -207,7 +208,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         }
         try {
             client.addAssociation(workflowId, ASSOCIATION_NAME, WorkflowConstants.ADD_USER_EVENT, ASSOCIATION_CONDITION);
-            Association[] associations = client.listAssociationsForWorkflow(workflowId);
+            Association[] associations = client.listAssociations(workflowId);
             if (associations == null || associations.length == 0) {
                 Assert.fail("Association list is empty, new association is not added.");
             }
@@ -352,7 +353,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
             // test passed
         }
         try {
-            Association[] associations = client.listAssociationsForWorkflow(workflowId);
+            Association[] associations = client.listAssociations(workflowId);
             for (Association association : associations) {
                 if ("TestDeleteRoleAssociation".equals(association.getAssociationName())) {
                     associationId = association.getAssociationId();
@@ -432,7 +433,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
             //test pass
         }
         try {
-            Association[] associations = client.listAssociationsForWorkflow(workflowId);
+            Association[] associations = client.listAssociations(workflowId);
             for (Association association : associations) {
                 if ("TestAddRoleAssociation".equals(association.getAssociationName())) {
                     associationId = association.getAssociationId();
@@ -470,7 +471,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         }
 
         try {
-            Association[] associations = client.listAssociationsForWorkflow(workflowId);
+            Association[] associations = client.listAssociations(workflowId);
             for (Association association : associations) {
                 if ("TestUpdateUserListOfRoleAssociation".equals(association.getAssociationName())) {
                     associationId = association.getAssociationId();
@@ -502,7 +503,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         }
 
         try {
-            Association[] associations = client.listAssociationsForWorkflow(workflowId);
+            Association[] associations = client.listAssociations(workflowId);
             for (Association association : associations) {
                 if ("TestUpdateRoleListOfUserAssociation".equals(association.getAssociationName())) {
                     associationId = association.getAssociationId();
@@ -534,7 +535,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         }
 
         try {
-            Association[] associations = client.listAssociationsForWorkflow(workflowId);
+            Association[] associations = client.listAssociations(workflowId);
             for (Association association : associations) {
                 if ("TestDeleteUserAssociation".equals(association.getAssociationName())) {
                     associationId = association.getAssociationId();
@@ -610,7 +611,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
             //test pass
         }
         try {
-            Association[] associations = client.listAssociationsForWorkflow(workflowId);
+            Association[] associations = client.listAssociations(workflowId);
             for (Association association : associations) {
                 if ("TestUpdateRoleNameAssociation".equals(association.getAssociationName())) {
                     associationId = association.getAssociationId();
@@ -640,7 +641,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
             //test pass
         }
         try {
-            Association[] associations = client.listAssociationsForWorkflow(workflowId);
+            Association[] associations = client.listAssociations(workflowId);
             for (Association association : associations) {
                 if ("TestAddRoleAssociation".equals(association.getAssociationName())) {
                     associationId = association.getAssociationId();
@@ -653,7 +654,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         }
 
         try {
-            Association[] associations = client.listAssociationsForWorkflow(workflowId);
+            Association[] associations = client.listAssociations(workflowId);
             for (Association association : associations) {
                 if ("TestDeleteRoleAssociation".equals(association.getAssociationName())) {
                     associationId = association.getAssociationId();
@@ -728,7 +729,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
             //test pass
         }
         try {
-            Association[] associations = client.listAssociationsForWorkflow(workflowId);
+            Association[] associations = client.listAssociations(workflowId);
             for (Association association : associations) {
                 if ("TestUpdateUserListOfRoleAssociation".equals(association.getAssociationName())) {
                     associationId = association.getAssociationId();
@@ -758,7 +759,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
             //test pass
         }
         try {
-            Association[] associations = client.listAssociationsForWorkflow(workflowId);
+            Association[] associations = client.listAssociations(workflowId);
             for (Association association : associations) {
                 if ("TestUpdateRoleListOfUserAssociation".equals(association.getAssociationName())) {
                     associationId = association.getAssociationId();
@@ -788,7 +789,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
             //test pass
         }
         try {
-            Association[] associations = client.listAssociationsForWorkflow(workflowId);
+            Association[] associations = client.listAssociations(workflowId);
             for (Association association : associations) {
                 if ("TestUpdateRoleNameAssociation".equals(association.getAssociationName())) {
                     associationId = association.getAssociationId();
@@ -801,7 +802,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         }
 
         try {
-            Association[] associations = client.listAssociationsForWorkflow(workflowId);
+            Association[] associations = client.listAssociations(workflowId);
             for (Association association : associations) {
                 if ("TestDeleteRoleAssociation".equals(association.getAssociationName())) {
                     associationId = association.getAssociationId();
@@ -859,7 +860,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
             //test pass
         }
         try {
-            Association[] associations = client.listAssociationsForWorkflow(workflowId);
+            Association[] associations = client.listAssociations(workflowId);
             for (Association association : associations) {
                 if ("TestDeleteUserAssociation".equals(association.getAssociationName())) {
                     associationId = association.getAssociationId();
@@ -885,7 +886,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
             //test pass
         }
         try {
-            Association[] associations = client.listAssociationsForWorkflow(workflowId);
+            Association[] associations = client.listAssociations(workflowId);
             for (Association association : associations) {
                 if ("TestDeleteRoleAssociation".equals(association.getAssociationName())) {
                     associationId = association.getAssociationId();
@@ -911,7 +912,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
             //test pass
         }
         try {
-            Association[] associations = client.listAssociationsForWorkflow(workflowId);
+            Association[] associations = client.listAssociations(workflowId);
             for (Association association : associations) {
                 if ("TestRenameRoleAssociation".equals(association.getAssociationName())) {
                     associationId = association.getAssociationId();
@@ -924,7 +925,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         }
 
         try {
-            Association[] associations = client.listAssociationsForWorkflow(workflowId);
+            Association[] associations = client.listAssociations(workflowId);
             for (Association association : associations) {
                 if ("TestUpdateUserListOfRoleAssociation".equals(association.getAssociationName())) {
                     associationId = association.getAssociationId();
@@ -978,7 +979,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
             //test pass
         }
         try {
-            Association[] associations = client.listAssociationsForWorkflow(workflowId);
+            Association[] associations = client.listAssociations(workflowId);
             for (Association association : associations) {
                 if ("TestDeleteUserAssociation".equals(association.getAssociationName())) {
                     associationId = association.getAssociationId();
@@ -1004,7 +1005,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
             //test pass
         }
         try {
-            Association[] associations = client.listAssociationsForWorkflow(workflowId);
+            Association[] associations = client.listAssociations(workflowId);
             for (Association association : associations) {
                 if ("TestDeleteRoleAssociation".equals(association.getAssociationName())) {
                     associationId = association.getAssociationId();
@@ -1030,7 +1031,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
             //test pass
         }
         try {
-            Association[] associations = client.listAssociationsForWorkflow(workflowId);
+            Association[] associations = client.listAssociations(workflowId);
             for (Association association : associations) {
                 if ("TestRenameRoleAssociation".equals(association.getAssociationName())) {
                     associationId = association.getAssociationId();
@@ -1043,7 +1044,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         }
 
         try {
-            Association[] associations = client.listAssociationsForWorkflow(workflowId);
+            Association[] associations = client.listAssociations(workflowId);
             for (Association association : associations) {
                 if ("TestUpdateRoleListOfUserAssociation".equals(association.getAssociationName())) {
                     associationId = association.getAssociationId();
@@ -1099,7 +1100,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         }
 
         try {
-            Association[] associations = client.listAssociationsForWorkflow(workflowId);
+            Association[] associations = client.listAssociations(workflowId);
             for (Association association : associations) {
                 if ("TestAddUserAssociationForRoleRename".equals(association.getAssociationName())) {
                     associationId = association.getAssociationId();
@@ -1126,7 +1127,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         }
 
         try {
-            Association[] associations = client.listAssociationsForWorkflow(workflowId);
+            Association[] associations = client.listAssociations(workflowId);
             for (Association association : associations) {
                 if ("TestDeleteRoleAssociation".equals(association.getAssociationName())) {
                     associationId = association.getAssociationId();
@@ -1153,7 +1154,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         }
 
         try {
-            Association[] associations = client.listAssociationsForWorkflow(workflowId);
+            Association[] associations = client.listAssociations(workflowId);
             for (Association association : associations) {
                 if ("TestUpdateUserListAssociationForRename".equals(association.getAssociationName())) {
                     associationId = association.getAssociationId();
@@ -1180,7 +1181,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         }
 
         try {
-            Association[] associations = client.listAssociationsForWorkflow(workflowId);
+            Association[] associations = client.listAssociations(workflowId);
             for (Association association : associations) {
                 if ("TestUpdateRoleListAssociationForRename".equals(association.getAssociationName())) {
                     associationId = association.getAssociationId();
@@ -1205,7 +1206,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         }
 
         try {
-            Association[] associations = client.listAssociationsForWorkflow(workflowId);
+            Association[] associations = client.listAssociations(workflowId);
             for (Association association : associations) {
                 if ("TestUpdateRoleNameAssociation".equals(association.getAssociationName())) {
                     associationId = association.getAssociationId();
@@ -1252,7 +1253,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         }
 
         try {
-            Association[] associations = client.listAssociationsForWorkflow(workflowId);
+            Association[] associations = client.listAssociations(workflowId);
             for (Association association : associations) {
                 if ("TestDeleteUserAssociation".equals(association.getAssociationName())) {
                     associationId = association.getAssociationId();
@@ -1264,7 +1265,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
             log.error("Error while cleaning up testUpdateRoleListOfUser.", e);
         }
         try {
-            Association[] associations = client.listAssociationsForWorkflow(workflowId);
+            Association[] associations = client.listAssociations(workflowId);
             for (Association association : associations) {
                 if ("TestDeleteUserClaimValueAssociation".equals(association.getAssociationName())) {
                     associationId = association.getAssociationId();
@@ -1288,7 +1289,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         }
         try {
             client.deleteAssociation(associationId);
-            Association[] associations = client.listAssociationsForWorkflow(workflowId);
+            Association[] associations = client.listAssociations(workflowId);
             if (associations != null) {
                 for (Association association : associations) {
                     if (associationId.equals(association.getAssociationId())) {
@@ -1368,7 +1369,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
     @AfterGroups("ListWorkflowsTests")
     public void deleteWorkflowsForListing() throws RemoteException, WorkflowAdminServiceWorkflowException {
 
-        WorkflowWizard[] workflows = client.listAllWorkflows();
+        WorkflowWizard[] workflows = client.listWorkflows();
         for (index = 0; index < ITERATIONS; index++) {
             String workflowName = WORKFLOW_NAME + index;
             String workflowDescription = WORKFLOW_DESCRIPTION + index;
@@ -1386,12 +1387,13 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         workflowsForListTesting = new WorkflowWizard[ITERATIONS];
     }
 
-    @Test(alwaysRun = true, description = "Testing listing workflows.", groups = {
+    @Test(alwaysRun = true, description = "Testing listing workflows with filter.", groups = {
             "ListWorkflowsTests"}, dependsOnMethods = {"testRemoveWorkflow", "deleteAssociationsForListing"})
-    public void testListWorkflows() throws RemoteException, WorkflowAdminServiceWorkflowException {
+    public void testListPaginatedWorkflowsWithFilter() throws RemoteException, WorkflowAdminServiceWorkflowException {
 
         String workflowName = WORKFLOW_NAME + index;
-        WorkflowWizard[] workflows = client.listWorkflows(workflowName);
+        WorkflowWizard[] workflows = client.listPaginatedWorkflows(ITERATIONS * 2, 0, workflowName);
+        workflows = removeAssociationWorkflow(workflows);
         Assert.assertEquals(workflows.length, 1, "Results are not filtered");
 
         Assert.assertEquals(workflows[0].getWorkflowName(), workflowName,
@@ -1400,36 +1402,50 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
 
     @Test(alwaysRun = true, description = "Testing listing workflows with wildcard.", groups = {
             "ListWorkflowsTests"}, dependsOnMethods = {"testRemoveWorkflow", "deleteAssociationsForListing"})
-    public void testListWorkflowsWithWildcard() throws RemoteException, WorkflowAdminServiceWorkflowException {
+    public void testListPaginatedWorkflowsWithWildcard() throws RemoteException, WorkflowAdminServiceWorkflowException {
 
-        WorkflowWizard[] workflows = client.listWorkflows(DEFAULT_FILTER);
+        WorkflowWizard[] workflows = client.listPaginatedWorkflows(ITERATIONS * 2, 0, DEFAULT_FILTER);
+        workflows = removeAssociationWorkflow(workflows);
         Assert.assertTrue(compareWorkflowArrays(workflows, workflowsForListTesting),
                 "Received workflows array is different");
     }
 
     @Test(alwaysRun = true, description = "Testing listing workflows with non existing filter.", groups = {
             "ListWorkflowsTests"}, dependsOnMethods = {"testRemoveWorkflow", "deleteAssociationsForListing"})
-    public void testListWorkflowsWithNonExisting() throws RemoteException, WorkflowAdminServiceWorkflowException {
+    public void testListPaginatedWorkflowsWithNonExisting()
+            throws RemoteException, WorkflowAdminServiceWorkflowException {
 
-        WorkflowWizard[] workflows = client.listWorkflows("NonExisting");
+        WorkflowWizard[] workflows = client.listPaginatedWorkflows(ITERATIONS * 2, 0, "NonExisting");
         Assert.assertEquals(workflows.length, 0, "Results are received for non existing filter");
     }
 
     @Test(alwaysRun = true, description = "Testing listing all workflows.", groups = {
             "ListWorkflowsTests"}, dependsOnMethods = {"testRemoveWorkflow", "deleteAssociationsForListing"})
-    public void testListAllWorkflows() throws RemoteException, WorkflowAdminServiceWorkflowException {
+    public void testListWorkflows() throws RemoteException, WorkflowAdminServiceWorkflowException {
 
-        WorkflowWizard[] workflows = client.listAllWorkflows();
-        Assert.assertTrue(compareWorkflowArrays(workflows, workflowsForListTesting),
+        WorkflowWizard[] workflows = client.listWorkflows();
+        workflows = removeAssociationWorkflow(workflows);
+        WorkflowWizard[] orderedWorkflowsForListTesting = Arrays.stream(workflowsForListTesting)
+                .sorted((o1, o2) -> o1.getWorkflowName().compareTo(o2.getWorkflowName()))
+                .toArray(WorkflowWizard[]::new);
+
+        Assert.assertTrue(compareWorkflowArrays(workflows, orderedWorkflowsForListTesting),
                 "Received workflows array is different");
 
     }
 
+    private WorkflowWizard[] removeAssociationWorkflow(WorkflowWizard[] workflows) {
+
+        return Arrays.stream(workflows)
+                .filter(e -> !e.getWorkflowName().equals(ASSOCIATION_WORKFLOW_NAME)).toArray(WorkflowWizard[]::new);
+    }
+
     @Test(alwaysRun = true, description = "Testing listing all paginated workflows for first page.", groups = {
             "ListWorkflowsTests"}, dependsOnMethods = {"testRemoveWorkflow", "deleteAssociationsForListing"})
-    public void testListAllPaginatedWorkflowsFirstPage() throws RemoteException, WorkflowAdminServiceWorkflowException {
+    public void testListPaginatedWorkflowsFirstPage() throws RemoteException, WorkflowAdminServiceWorkflowException {
 
-        WorkflowWizard[] workflows = client.listAllPaginatedWorkflows(1);
+        WorkflowWizard[] workflows =
+                client.listPaginatedWorkflows(DEFAULT_RESULTS_PER_PAGE, 0, WORKFLOW_NAME + DEFAULT_FILTER);
         Assert.assertEquals(workflows.length, DEFAULT_RESULTS_PER_PAGE, "Results are not paginated");
 
         WorkflowWizard[] page1Workflows = Arrays.copyOf(workflowsForListTesting, DEFAULT_RESULTS_PER_PAGE);
@@ -1440,10 +1456,11 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
 
     @Test(alwaysRun = true, description = "Testing listing all paginated workflows for second page.", groups = {
             "ListWorkflowsTests"}, dependsOnMethods = {"testRemoveWorkflow", "deleteAssociationsForListing"})
-    public void testListAllPaginatedWorkflowsSecondPage()
+    public void testListPaginatedWorkflowsSecondPage()
             throws RemoteException, WorkflowAdminServiceWorkflowException {
 
-        WorkflowWizard[] workflows = client.listAllPaginatedWorkflows(2);
+        WorkflowWizard[] workflows = client.listPaginatedWorkflows(DEFAULT_RESULTS_PER_PAGE, DEFAULT_RESULTS_PER_PAGE,
+                WORKFLOW_NAME + DEFAULT_FILTER);
         Assert.assertEquals(workflows.length, workflowsForListTesting.length - DEFAULT_RESULTS_PER_PAGE,
                 "Results are not paginated");
 
@@ -1455,57 +1472,21 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
 
     }
 
-    @Test(alwaysRun = true, description = "Testing listing paginated workflows.", groups = {
-            "ListWorkflowsTests"}, dependsOnMethods = {"testRemoveWorkflow", "deleteAssociationsForListing"})
-    public void testListPaginatedWorkflows() throws RemoteException, WorkflowAdminServiceWorkflowException {
-
-        String workflowName = WORKFLOW_NAME + index;
-        WorkflowWizard[] workflows = client.listPaginatedWorkflows(1, workflowName);
-        Assert.assertEquals(workflows.length, 1, "Results are not filtered");
-
-        Assert.assertEquals(workflows[0].getWorkflowName(), workflowName,
-                "Results are not filtered");
-
-    }
-
-    @Test(alwaysRun = true, description = "Testing listing paginated workflows with wildcard.", groups = {
-            "ListWorkflowsTests"}, dependsOnMethods = {"testRemoveWorkflow", "deleteAssociationsForListing"})
-    public void testListPaginatedWorkflowsWithWildcard() throws RemoteException, WorkflowAdminServiceWorkflowException {
-
-        WorkflowWizard[] workflows = client.listPaginatedWorkflows(1, DEFAULT_FILTER);
-        Assert.assertEquals(workflows.length, DEFAULT_RESULTS_PER_PAGE, "Results are not paginated");
-
-        WorkflowWizard[] page1Workflows = Arrays.copyOf(workflowsForListTesting, DEFAULT_RESULTS_PER_PAGE);
-        Assert.assertTrue(compareWorkflowArrays(workflows, page1Workflows),
-                "Received workflows array is different");
-
-    }
-
-    @Test(alwaysRun = true, description = "Testing listing paginated workflows with non existing filter.", groups = {
-            "ListWorkflowsTests"}, dependsOnMethods = {"testRemoveWorkflow", "deleteAssociationsForListing"})
-    public void testListPaginatedWorkflowsWithNonExisting()
-            throws RemoteException, WorkflowAdminServiceWorkflowException {
-
-        WorkflowWizard[] workflows = client.listPaginatedWorkflows(1, "NonExisting");
-        Assert.assertEquals(workflows.length, 0, "Results are received for non existing filter");
-
-    }
-
     @Test(alwaysRun = true, description = "Testing getting count of all workflows.", groups = {
             "ListWorkflowsTests"}, dependsOnMethods = {"testRemoveWorkflow", "deleteAssociationsForListing"})
-    public void testGetCountOfAllWorkflows() throws RemoteException, WorkflowAdminServiceWorkflowException {
+    public void testGetWorkflowsCountWithWildcard() throws RemoteException, WorkflowAdminServiceWorkflowException {
 
-        int workflowsCount = client.getCountOfAllWorkflows();
+        int workflowsCount = client.getWorkflowsCount(WORKFLOW_NAME + DEFAULT_FILTER);
         Assert.assertEquals(workflowsCount, ITERATIONS, "Count is incorrect");
 
     }
 
     @Test(alwaysRun = true, description = "Testing getting count of workflows.", groups = {
             "ListWorkflowsTests"}, dependsOnMethods = {"testRemoveWorkflow", "deleteAssociationsForListing"})
-    public void testGetCountOfWorkflows() throws RemoteException, WorkflowAdminServiceWorkflowException {
+    public void testGetWorkflowsCountWithFilter() throws RemoteException, WorkflowAdminServiceWorkflowException {
 
         String workflowName = WORKFLOW_NAME + index;
-        int workflowsCount = client.getCountOfWorkflows(workflowName);
+        int workflowsCount = client.getWorkflowsCount(workflowName);
         Assert.assertEquals(workflowsCount, 1, "Count is incorrect");
 
     }
@@ -1581,7 +1562,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
 
     private boolean isWorkflowPresent(String workflowIdentity) throws RemoteException, WorkflowAdminServiceWorkflowException {
 
-        WorkflowWizard[] workflows = client.listAllWorkflows();
+        WorkflowWizard[] workflows = client.listWorkflows();
 
         if (workflows != null) {
             for (WorkflowWizard workflow : workflows) {
@@ -1601,12 +1582,12 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
             client.deleteAssociation(associationId);
         }
 
-        String workflowName = WORKFLOW_NAME + index;
-        String workflowDescription = WORKFLOW_DESCRIPTION + index;
+        String workflowName = ASSOCIATION_WORKFLOW_NAME;
+        String workflowDescription = WORKFLOW_DESCRIPTION + ITERATIONS;
 
         WorkflowWizard workflowDTO = getWorkflowDTO(workflowName, workflowDescription);
         client.addWorkflow(workflowDTO);
-        WorkflowWizard[] workflows = client.listWorkflows(workflowName);
+        WorkflowWizard[] workflows = client.listPaginatedWorkflows(ITERATIONS * 2, 0, workflowName);
 
         if (Arrays.stream(workflows).findFirst().isPresent()) {
             String testWorkflowId = Arrays.stream(workflows).findFirst().get().getWorkflowId();
@@ -1650,13 +1631,16 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         }
 
         associationNamesForListTesting = new String[ITERATIONS];
+        index = 0;
     }
 
-    @Test(alwaysRun = true, description = "Testing listing associations.", groups = {"ListAssociationsTests"})
-    public void testListAssociationsWithFilter() throws RemoteException, WorkflowAdminServiceWorkflowException {
+    @Test(alwaysRun = true, description = "Testing listing associations.", groups = {
+            "ListAssociationsTests"}, dependsOnMethods = {"testRemoveWorkflow", "testRemoveAssociation"})
+    public void testListPaginatedAssociationsWithFilter()
+            throws RemoteException, WorkflowAdminServiceWorkflowException {
 
         String associationName = ASSOCIATION_NAME + index;
-        Association[] associations = client.listAssociationsWithFilter(associationName);
+        Association[] associations = client.listPaginatedAssociations(ITERATIONS * 2, 0, associationName);
         Assert.assertEquals(associations.length, 1, "Results are not filtered");
 
         Assert.assertEquals(associations[0].getAssociationName(), associationName,
@@ -1664,23 +1648,39 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
     }
 
     @Test(alwaysRun = true, description = "Testing listing associations with wildcard.", groups = {
-            "ListAssociationsTests"})
-    public void testListAssociationsWithWildcard() throws RemoteException, WorkflowAdminServiceWorkflowException {
+            "ListAssociationsTests"}, dependsOnMethods = {"testRemoveWorkflow", "testRemoveAssociation"})
+    public void testListPaginatedAssociationsWithWildcard()
+            throws RemoteException, WorkflowAdminServiceWorkflowException {
 
-        Association[] associations = client.listAssociationsWithFilter(DEFAULT_FILTER);
+        Association[] associations = client.listPaginatedAssociations(ITERATIONS * 2, 0, DEFAULT_FILTER);
         Assert.assertTrue(compareAssociationArrays(associations, associationNamesForListTesting),
                 "Received associations array is different");
     }
 
     @Test(alwaysRun = true, description = "Testing listing associations with non existing filter.", groups = {
-            "ListAssociationsTests"})
-    public void testListAssociationsWithNonExisting() throws RemoteException, WorkflowAdminServiceWorkflowException {
+            "ListAssociationsTests"}, dependsOnMethods = {"testRemoveWorkflow", "testRemoveAssociation"})
+    public void testListPaginatedAssociationsWithNonExisting()
+            throws RemoteException, WorkflowAdminServiceWorkflowException {
 
-        Association[] associations = client.listAssociationsWithFilter("NonExisting");
+        Association[] associations = client.listPaginatedAssociations(ITERATIONS * 2, 0, "NonExisting");
         Assert.assertEquals(associations.length, 0, "Results are received for non existing filter");
     }
 
-    @Test(alwaysRun = true, description = "Testing listing all associations.", groups = {"ListAssociationsTests"})
+    @Test(alwaysRun = true, description = "Testing listing all associations for workflow.", groups = {
+            "ListAssociationsTests"}, dependsOnMethods = {"testRemoveWorkflow", "testRemoveAssociation"})
+    public void testListAssociations() throws RemoteException, WorkflowAdminServiceWorkflowException {
+
+        WorkflowWizard[] workflows = client.listPaginatedWorkflows(ITERATIONS * 2, 0, ASSOCIATION_WORKFLOW_NAME);
+        if (Arrays.stream(workflows).findFirst().isPresent()) {
+            String workflowId = Arrays.stream(workflows).findFirst().get().getWorkflowId();
+            Association[] associations = client.listAssociations(workflowId);
+            Assert.assertTrue(compareAssociationArrays(associations, associationNamesForListTesting),
+                    "Received associations array is different");
+        }
+    }
+
+    @Test(alwaysRun = true, description = "Testing listing all associations.", groups = {
+            "ListAssociationsTests"}, dependsOnMethods = {"testRemoveWorkflow", "testRemoveAssociation"})
     public void testListAllAssociations() throws RemoteException, WorkflowAdminServiceWorkflowException {
 
         Association[] associations = client.listAllAssociations();
@@ -1690,11 +1690,11 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
     }
 
     @Test(alwaysRun = true, description = "Testing listing all paginated associations for first page.", groups = {
-            "ListAssociationsTests"})
-    public void testListAllPaginatedAssociationsFirstPage()
+            "ListAssociationsTests"}, dependsOnMethods = {"testRemoveWorkflow", "testRemoveAssociation"})
+    public void testListPaginatedAssociationsFirstPage()
             throws RemoteException, WorkflowAdminServiceWorkflowException {
 
-        Association[] associations = client.listAllPaginatedAssociations(1);
+        Association[] associations = client.listPaginatedAssociations(DEFAULT_RESULTS_PER_PAGE, 0, DEFAULT_FILTER);
         Assert.assertEquals(associations.length, DEFAULT_RESULTS_PER_PAGE, "Results are not paginated");
 
         String[] page1Associations = Arrays.copyOf(associationNamesForListTesting, DEFAULT_RESULTS_PER_PAGE);
@@ -1704,11 +1704,12 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
     }
 
     @Test(alwaysRun = true, description = "Testing listing all paginated associations for second page.", groups = {
-            "ListAssociationsTests"})
-    public void testListAllPaginatedAssociationsSecondPage()
+            "ListAssociationsTests"}, dependsOnMethods = {"testRemoveWorkflow", "testRemoveAssociation"})
+    public void testListPaginatedAssociationsSecondPage()
             throws RemoteException, WorkflowAdminServiceWorkflowException {
 
-        Association[] associations = client.listAllPaginatedAssociations(2);
+        Association[] associations =
+                client.listPaginatedAssociations(DEFAULT_RESULTS_PER_PAGE, DEFAULT_RESULTS_PER_PAGE, DEFAULT_FILTER);
         Assert.assertEquals(associations.length, associationNamesForListTesting.length - DEFAULT_RESULTS_PER_PAGE,
                 "Results are not paginated");
 
@@ -1719,56 +1720,21 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
 
     }
 
-    @Test(alwaysRun = true, description = "Testing listing paginated associations.", groups = {"ListAssociationsTests"})
-    public void testListPaginatedAssociations() throws RemoteException, WorkflowAdminServiceWorkflowException {
-
-        String associationName = ASSOCIATION_NAME + index;
-        Association[] associations = client.listPaginatedAssociations(1, associationName);
-        Assert.assertEquals(associations.length, 1, "Results are not filtered");
-
-        Assert.assertEquals(associations[0].getAssociationName(), associationName,
-                "Results are not filtered");
-
-    }
-
-    @Test(alwaysRun = true, description = "Testing listing paginated associations with wildcard.", groups = {
-            "ListAssociationsTests"})
-    public void testListPaginatedAssociationsWithWildcard()
-            throws RemoteException, WorkflowAdminServiceWorkflowException {
-
-        Association[] associations = client.listPaginatedAssociations(1, DEFAULT_FILTER);
-        Assert.assertEquals(associations.length, DEFAULT_RESULTS_PER_PAGE, "Results are not paginated");
-
-        String[] page1Associations = Arrays.copyOf(associationNamesForListTesting, DEFAULT_RESULTS_PER_PAGE);
-        Assert.assertTrue(compareAssociationArrays(associations, page1Associations),
-                "Received associations array is different");
-
-    }
-
-    @Test(alwaysRun = true, description = "Testing listing paginated associations with non existing filter.", groups = {
-            "ListAssociationsTests"})
-    public void testListPaginatedAssociationsWithNonExisting()
-            throws RemoteException, WorkflowAdminServiceWorkflowException {
-
-        Association[] associations = client.listPaginatedAssociations(1, "NonExisting");
-        Assert.assertEquals(associations.length, 0, "Results are received for non existing filter");
-
-    }
-
     @Test(alwaysRun = true, description = "Testing getting count of all associations.", groups = {
-            "ListAssociationsTests"})
-    public void testGetCountOfAllAssociations() throws RemoteException, WorkflowAdminServiceWorkflowException {
+            "ListAssociationsTests"}, dependsOnMethods = {"testRemoveWorkflow", "testRemoveAssociation"})
+    public void testGetAssociationsCountWithWildcard() throws RemoteException, WorkflowAdminServiceWorkflowException {
 
-        int associationsCount = client.getCountOfAllAssociations();
+        int associationsCount = client.getAssociationsCount(DEFAULT_FILTER);
         Assert.assertEquals(associationsCount, ITERATIONS, "Count is incorrect");
 
     }
 
-    @Test(alwaysRun = true, description = "Testing getting count of associations.", groups = {"ListAssociationsTests"})
-    public void testGetCountOfAssociations() throws RemoteException, WorkflowAdminServiceWorkflowException {
+    @Test(alwaysRun = true, description = "Testing getting count of associations.", groups = {
+            "ListAssociationsTests"}, dependsOnMethods = {"testRemoveWorkflow", "testRemoveAssociation"})
+    public void testGetAssociationsCountWithFilter() throws RemoteException, WorkflowAdminServiceWorkflowException {
 
         String associationName = ASSOCIATION_NAME + index;
-        int associationsCount = client.getCountOfAssociations(associationName);
+        int associationsCount = client.getAssociationsCount(associationName);
         Assert.assertEquals(associationsCount, 1, "Count is incorrect");
 
     }

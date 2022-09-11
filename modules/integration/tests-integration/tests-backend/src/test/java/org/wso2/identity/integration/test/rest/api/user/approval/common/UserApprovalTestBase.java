@@ -106,7 +106,7 @@ public class UserApprovalTestBase extends RESTAPIUserTestBase {
         log.info("Adding workflow " + addUserWorkflowName + " to tenant:" + this.tenant);
         this.client.addWorkflow(workflowDTO);
 
-        WorkflowWizard[] workflows = this.client.listAllWorkflows();
+        WorkflowWizard[] workflows = this.client.listWorkflows();
         for (WorkflowWizard workflow : workflows) {
             if (this.addUserWorkflowName.equals(workflow.getWorkflowName()) && workflowDescription.equals(workflow
                     .getWorkflowDescription())) {
@@ -172,7 +172,7 @@ public class UserApprovalTestBase extends RESTAPIUserTestBase {
 
         log.info("Adding Association " + associationName + " to tenant:" + this.tenant);
         this.client.addAssociation(this.workflowId, associationName, WorkflowConstants.ADD_USER_EVENT, condition);
-        Association[] associations = this.client.listAssociationsForWorkflow(this.workflowId);
+        Association[] associations = this.client.listAssociations(this.workflowId);
 
         for (Association association : associations) {
             if (associationName.equals(association.getAssociationName())) {
