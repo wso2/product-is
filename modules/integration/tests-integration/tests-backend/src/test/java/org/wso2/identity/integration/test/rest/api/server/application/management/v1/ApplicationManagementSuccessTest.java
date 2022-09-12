@@ -271,7 +271,7 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
                 .statusCode(HttpStatus.SC_NO_CONTENT);
     }
 
-    @Test(dependsOnMethods = {"testGetApplicationById"})
+    @Test(dependsOnMethods = {"testGetApplicationById", "testGetConfiguredAuthenticatorsOfApplication"})
     public void testDeleteApplicationById() throws Exception {
 
         getResponseOfDelete(APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId)
