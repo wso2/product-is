@@ -31,6 +31,3 @@ password = "wso2carbon"
 context = "(.*)/sample-auth/(.*)"
 secure = false
 http_method = "all"
-
-[authenticationendpoint]
-enable_shortened_urls = "true"

@@ -26,14 +26,9 @@
     }
   },
   "authenticationendpoint.enable_shortened_urls": {
-    "true": {
-      "authentication.endpoint.redirect_params.filter_policy": "include",
-      "authentication.endpoint.redirect_params.parameters": ["sessionDataKey","sessionDataKeyConsent", "errorKey", "sp", "isSaaSApp", "tenantDomain"],
-      "authentication.endpoint.redirect_params.remove_on_consume_from_api": "false"
-    },
     "false": {
       "authentication.endpoint.redirect_params.filter_policy": "exclude",
-      "authentication.endpoint.redirect_params.parameters": []
+      "authentication.endpoint.redirect_params.parameters": ["loggedInUser"]
     }
   }
 }
