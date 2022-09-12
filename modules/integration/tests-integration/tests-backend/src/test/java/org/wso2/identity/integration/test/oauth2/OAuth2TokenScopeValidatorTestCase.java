@@ -79,7 +79,7 @@ public class OAuth2TokenScopeValidatorTestCase extends OAuth2ServiceAbstractInte
         appDTO.setTokenType(tokenType);
         appDTO.setGrantTypes("client_credentials");
 
-        OAuthConsumerAppDTO oAuthConsumerAppDTO = createApplication(appDTO);
+        OAuthConsumerAppDTO oAuthConsumerAppDTO = createApplication(appDTO, SERVICE_PROVIDER_NAME);
 
         consumerKey = new ClientID(oAuthConsumerAppDTO.getOauthConsumerKey());
         consumerSecret = new Secret(oAuthConsumerAppDTO.getOauthConsumerSecret());
