@@ -75,8 +75,10 @@ public class ApplicationTemplateMgtTestCase extends ISIntegrationTest {
     }
 
     @AfterClass(alwaysRun = true)
-    public void atEnd() {
+    public void atEnd() throws Exception {
 
+        applicationManagementServiceClient.deleteApplication(applicationName1);
+        applicationManagementServiceClient.deleteApplication(applicationName2);
         applicationManagementServiceClient = null;
     }
 
