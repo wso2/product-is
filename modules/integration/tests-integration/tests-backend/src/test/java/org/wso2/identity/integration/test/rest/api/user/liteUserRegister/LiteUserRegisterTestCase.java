@@ -79,7 +79,8 @@ public class LiteUserRegisterTestCase extends LiteUserRegisterTestBase {
     @Test(
             alwaysRun = true,
             groups = "wso2.is",
-            description = "Lite user registration endpoint test with existing username"
+            description = "Lite user registration endpoint test with existing username",
+            dependsOnMethods = { "testLiteUserRegistration" }
     )
     public void testLiteUserRegistrationWithExistingUser() throws Exception {
 
