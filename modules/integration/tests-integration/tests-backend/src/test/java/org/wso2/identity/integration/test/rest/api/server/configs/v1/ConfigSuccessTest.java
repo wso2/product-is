@@ -97,7 +97,7 @@ public class ConfigSuccessTest extends ConfigTestBase {
                 .statusCode(HttpStatus.SC_OK)
                 .body("id", equalTo(SAMPLE_AUTHENTICATOR_ID))
                 .body("name", equalTo("BasicAuthenticator"))
-                .body("displayName", equalTo("basic"))
+                .body("displayName", equalTo("Username & Password"))
                 .body("isEnabled", equalTo(true))
                 .body("properties", notNullValue());
     }
@@ -112,7 +112,7 @@ public class ConfigSuccessTest extends ConfigTestBase {
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .body(baseIdentifier + "name", equalTo("BasicAuthenticator"))
-                .body(baseIdentifier + "displayName", equalTo("basic"))
+                .body(baseIdentifier + "displayName", equalTo("Username & Password"))
                 .body(baseIdentifier + "isEnabled", equalTo(true));
     }
 
