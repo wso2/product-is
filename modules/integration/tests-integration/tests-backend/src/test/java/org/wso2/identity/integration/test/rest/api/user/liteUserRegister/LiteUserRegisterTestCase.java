@@ -23,6 +23,7 @@ import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpStatus;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -58,8 +59,13 @@ public class LiteUserRegisterTestCase extends LiteUserRegisterTestBase {
     @AfterMethod(alwaysRun = true)
     public void endTest() throws Exception {
 
-        updateResidentIDPProperty(ENABLE_LITE_SIGN_UP, "false", true);
         RestAssured.basePath = StringUtils.EMPTY;
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void endTestClass() throws Exception {
+
+        updateResidentIDPProperty(ENABLE_LITE_SIGN_UP, "false", true);
     }
 
     @Test(
@@ -82,9 +88,8 @@ public class LiteUserRegisterTestCase extends LiteUserRegisterTestBase {
             description = "Lite user registration endpoint test with existing username",
             dependsOnMethods = { "testLiteUserRegistration" }
     )
-    public void testLiteUserRegistrationWithExistingUser() throws Exception {
+    public void testLiteUserRegistrationWithExistingUser() {
 
-        updateResidentIDPProperty(ENABLE_LITE_SIGN_UP, "true", true);
         String data = "{\"email\": \"testlitteuser@wso2.com\",\"realm\": \"PRIMARY\",\"preferredChannel\":" +
                 "\"Email\",\"claims\":[], \"properties\": []}";
         Response responseOfPost = getResponseOfPost(LITE_USER_REGISTRATION_ENDPOINT, data);
