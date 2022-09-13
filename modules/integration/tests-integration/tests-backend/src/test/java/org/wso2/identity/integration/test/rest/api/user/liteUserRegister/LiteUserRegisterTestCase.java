@@ -71,7 +71,7 @@ public class LiteUserRegisterTestCase extends LiteUserRegisterTestBase {
     @Test(
             alwaysRun = true,
             groups = "wso2.is",
-            description = "Lite user registration endpoint test after enabling the lite user register functionality"
+            description = "Lite user registration with new and existing usernames"
     )
     public void testLiteUserRegistration() throws Exception {
 
@@ -80,20 +80,9 @@ public class LiteUserRegisterTestCase extends LiteUserRegisterTestBase {
                 "\"preferredChannel\":\"Email\",\"claims\":[], \"properties\": []}";
         Response responseOfPost = getResponseOfPost(LITE_USER_REGISTRATION_ENDPOINT, data);
         Assert.assertEquals(responseOfPost.statusCode(), HttpStatus.SC_CREATED, "Lite user registration unsuccessful");
-    }
 
-    @Test(
-            alwaysRun = true,
-            groups = "wso2.is",
-            description = "Lite user registration endpoint test with existing username",
-            dependsOnMethods = { "testLiteUserRegistration" }
-    )
-    public void testLiteUserRegistrationWithExistingUser() {
-
-        String data = "{\"email\": \"testlitteuser@wso2.com\",\"realm\": \"PRIMARY\",\"preferredChannel\":" +
-                "\"Email\",\"claims\":[], \"properties\": []}";
-        Response responseOfPost = getResponseOfPost(LITE_USER_REGISTRATION_ENDPOINT, data);
-        Assert.assertEquals(responseOfPost.statusCode(), HttpStatus.SC_CONFLICT, "Username already exist");
+        Response responseOfPostConflict = getResponseOfPost(LITE_USER_REGISTRATION_ENDPOINT, data);
+        Assert.assertEquals(responseOfPostConflict.statusCode(), HttpStatus.SC_CONFLICT, "Username already exist");
     }
 
     @Test(
