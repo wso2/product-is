@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2021, WSO2 LLC. (http://www.wso2.org) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -87,14 +87,19 @@ public class ApplicationManagementOAuthFailureTest extends ApplicationManagement
         String location = responseOfPost.getHeader(HttpHeaders.LOCATION);
         String createdAppId = extractApplicationIdFromLocationHeader(location);
         assertNotBlank(createdAppId);
-        // Mark for cleanup.
-        createdApps.add(createdAppId);
 
         // Try to create the application using the same name again.
         String secondRequest = readResource("create-duplicate-oauth-app-with-predefined-clientid.json");
         Response responseOfSecondCreateAttempt = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, secondRequest);
 
         validateErrorResponse(responseOfSecondCreateAttempt, HttpStatus.SC_CONFLICT, "OAUTH-60008");
+
+        // Delete the OAuth2 application to release the clientId for other testcases.
+        getResponseOfDelete(APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
     }
 
     @Test (description = "Tests error scenario when an OIDC application is created with invalid audience values.")
