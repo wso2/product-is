@@ -107,7 +107,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         changeISConfiguration("jwt_token_issuer_enabled.toml");
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
-        OAuthConsumerAppDTO appDto = createApplication(createApplicationWithJWTGrantType());
+        OAuthConsumerAppDTO appDto = createApplication(createApplicationWithJWTGrantType(), SERVICE_PROVIDER_NAME);
         consumerKey = appDto.getOauthConsumerKey();
         consumerSecret = appDto.getOauthConsumerSecret();
         userManagementClient = new UserManagementClient(backendURL, sessionCookie);

@@ -194,7 +194,7 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
         appDTO.setCallbackUrl(OAuth2Constant.AUTHORIZED_URL);
         appDTO.setOAuthVersion(OAuth2Constant.OAUTH_VERSION_2);
         appDTO.setGrantTypes("urn:ietf:params:oauth:grant-type:saml2-bearer");
-        return createApplication(appDTO);
+        return createApplication(appDTO, SERVICE_PROVIDER_NAME);
     }
 
     /**

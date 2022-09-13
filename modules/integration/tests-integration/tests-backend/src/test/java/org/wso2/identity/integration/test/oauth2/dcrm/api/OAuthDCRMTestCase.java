@@ -30,6 +30,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
@@ -222,7 +223,7 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
     }
 
     @Test(alwaysRun = true, groups = "wso2.is", description = "Try to register an OAuth app with authorization_code " +
-            "grant without any redirect uris.")
+            "grant without any redirect uris.", priority = 7)
     public void testRegisterAppWithAuthzCodeGrantAndNoRedirectUris() throws IOException {
         HttpPost request = new HttpPost(getPath());
         setRequestHeaders(request);
@@ -245,7 +246,7 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
         EntityUtils.consume(failedResponse.getEntity());
     }
 
-    @Test(alwaysRun = true, groups = "wso2.is", priority = 1, description = "Check whether created service providers " +
+    @Test(alwaysRun = true, groups = "wso2.is", priority = 8, description = "Check whether created service providers " +
             "are cleaned up when OAuth app creation fails.")
     public void testRollbackOnInvalidRequest() throws IOException {
         // Basic Request
@@ -290,6 +291,9 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
         EntityUtils.consume(successResponse.getEntity());
         client_id = ((JSONObject) responseObj).get("client_id").toString();
         assertNotNull(client_id, "client_id cannot be null");
+
+        // Deleting created application.
+        testDeleteServiceProvider();
     }
 
     private void setRequestHeaders(HttpPost request) {
