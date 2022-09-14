@@ -23,6 +23,7 @@ import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpStatus;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -58,14 +59,19 @@ public class LiteUserRegisterTestCase extends LiteUserRegisterTestBase {
     @AfterMethod(alwaysRun = true)
     public void endTest() throws Exception {
 
-        updateResidentIDPProperty(ENABLE_LITE_SIGN_UP, "false", true);
         RestAssured.basePath = StringUtils.EMPTY;
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void endTestClass() throws Exception {
+
+        updateResidentIDPProperty(ENABLE_LITE_SIGN_UP, "false", true);
     }
 
     @Test(
             alwaysRun = true,
             groups = "wso2.is",
-            description = "Lite user registration endpoint test after enabling the lite user register functionality"
+            description = "Lite user registration with new and existing usernames"
     )
     public void testLiteUserRegistration() throws Exception {
 
@@ -74,20 +80,9 @@ public class LiteUserRegisterTestCase extends LiteUserRegisterTestBase {
                 "\"preferredChannel\":\"Email\",\"claims\":[], \"properties\": []}";
         Response responseOfPost = getResponseOfPost(LITE_USER_REGISTRATION_ENDPOINT, data);
         Assert.assertEquals(responseOfPost.statusCode(), HttpStatus.SC_CREATED, "Lite user registration unsuccessful");
-    }
 
-    @Test(
-            alwaysRun = true,
-            groups = "wso2.is",
-            description = "Lite user registration endpoint test with existing username"
-    )
-    public void testLiteUserRegistrationWithExistingUser() throws Exception {
-
-        updateResidentIDPProperty(ENABLE_LITE_SIGN_UP, "true", true);
-        String data = "{\"email\": \"testlitteuser@wso2.com\",\"realm\": \"PRIMARY\",\"preferredChannel\":" +
-                "\"Email\",\"claims\":[], \"properties\": []}";
-        Response responseOfPost = getResponseOfPost(LITE_USER_REGISTRATION_ENDPOINT, data);
-        Assert.assertEquals(responseOfPost.statusCode(), HttpStatus.SC_CONFLICT, "Username already exist");
+        Response responseOfPostConflict = getResponseOfPost(LITE_USER_REGISTRATION_ENDPOINT, data);
+        Assert.assertEquals(responseOfPostConflict.statusCode(), HttpStatus.SC_CONFLICT, "Username already exist");
     }
 
     @Test(
