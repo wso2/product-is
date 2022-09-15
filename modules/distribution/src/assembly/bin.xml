@@ -417,10 +417,6 @@
             <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/lib/</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/lib/</outputDirectory>
         </fileSet>
-<!--        <fileSet>-->
-<!--            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/dbscripts/bps</directory>-->
-<!--            <outputDirectory>${pom.artifactId}-${pom.version}/dbscripts/bps</outputDirectory>-->
-<!--        </fileSet>-->
         <fileSet>
             <directory>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/data-bridge
