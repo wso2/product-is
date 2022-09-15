@@ -113,14 +113,6 @@
             <artifactId>org.wso2.carbon.identity.user.account.association.stub</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.identity.framework</groupId>
-            <artifactId>org.wso2.carbon.identity.workflow.mgt.stub</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.identity.workflow.impl.bps</groupId>
-            <artifactId>org.wso2.carbon.identity.workflow.impl.stub</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.wso2.carbon.deployment</groupId>
             <artifactId>org.wso2.carbon.service.mgt.stub</artifactId>
             <scope>compile</scope>
