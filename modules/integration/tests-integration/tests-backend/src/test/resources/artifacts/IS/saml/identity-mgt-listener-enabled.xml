@@ -470,9 +470,6 @@
 
     <EventListeners>
         <EventListener type="org.wso2.carbon.user.core.listener.UserOperationEventListener"
-                       name="org.wso2.carbon.user.mgt.workflow.userstore.UserStoreActionListener"
-                       orderId="10" enable="true"/>
-        <EventListener type="org.wso2.carbon.user.core.listener.UserOperationEventListener"
                        name="org.wso2.carbon.identity.mgt.IdentityMgtEventListener"
                        orderId="50" enable="true"/>
         <EventListener type="org.wso2.carbon.user.core.listener.UserOperationEventListener"
