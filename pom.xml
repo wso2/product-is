@@ -2209,7 +2209,7 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.10.1</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.8.9</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.8.10</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.7.1</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.8.0</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.0</identity.inbound.provisioning.scim.version>
@@ -2235,7 +2235,7 @@
 
         <!-- Identity Event Handler Versions -->
         <identity.event.handler.account.lock.version>1.6.1</identity.event.handler.account.lock.version>
-        <identity.event.handler.notification.version>1.5.2</identity.event.handler.notification.version>
+        <identity.event.handler.notification.version>1.5.3</identity.event.handler.notification.version>
 
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
@@ -2266,7 +2266,7 @@
         <provisioning.connector.scim2.version>2.0.1</provisioning.connector.scim2.version>
 
         <!-- Local Authenticator Versions -->
-        <identity.local.auth.basicauth.version>6.5.5</identity.local.auth.basicauth.version>
+        <identity.local.auth.basicauth.version>6.5.6</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.3.28</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.4.0</identity.local.auth.iwa.version>
 
@@ -2290,8 +2290,8 @@
         <authenticator.x509.version>3.1.8</authenticator.x509.version>
         <identity.extension.utils>1.0.8</identity.extension.utils>
 
-        <identity.org.mgt.version>1.1.16</identity.org.mgt.version>
-        <identity.org.mgt.core.version>1.0.3</identity.org.mgt.core.version>
+        <identity.org.mgt.version>1.1.18</identity.org.mgt.version>
+        <identity.org.mgt.core.version>1.0.6</identity.org.mgt.core.version>
 
         <!-- Hash Provider Versions-->
         <hashprovider.pbkdf2.version>0.1.4</hashprovider.pbkdf2.version>
@@ -2313,7 +2313,7 @@
         <carbon.identity.oauth.uma.version>1.3.9</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.4.104</identity.apps.version>
+        <identity.apps.version>1.4.110</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
