@@ -416,7 +416,6 @@ org.wso2.carbon.identity.remotefetch.common_0.8.2.jar                           
 org.wso2.identity.styles_6.0.0.jar                                                                  bundle         apache2
 org.wso2.carbon.attachment.mgt_4.5.59.jar                                                           bundle         apache2
 org.wso2.carbon.identity.conditional.auth.functions.analytics_1.2.10.jar                            bundle         apache2
-org.wso2.carbon.identity.application.authz.xacml_2.3.1.jar                                          bundle         apache2
 org.wso2.carbon.uuid.generator_4.8.7.jar                                                            bundle         apache2
 org.wso2.carbon.tenant.redirector.servlet.stub_4.11.0.jar                                           bundle         apache2
 org.wso2.carbon.feature.mgt.services_4.7.1.jar                                                      bundle         apache2

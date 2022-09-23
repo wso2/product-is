@@ -1825,11 +1825,6 @@
             </dependency>
 
             <dependency>
-                <groupId>org.wso2.carbon.identity.application.authz.xacml</groupId>
-                <artifactId>org.wso2.carbon.identity.application.authz.xacml.server.feature</artifactId>
-                <version>${identity.app.authz.xacml.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.wso2.carbon.identity.outbound.auth.oauth2</groupId>
                 <artifactId>org.wso2.carbon.identity.outbound.auth.oauth2.server.feature</artifactId>
                 <version>${identity.outbound.auth.oauth2.version}</version>
