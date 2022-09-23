@@ -296,7 +296,6 @@
         <!-- Scope validators list. The validators registered here wil be executed during token validation. -->
         <ScopeValidators>
             <ScopeValidator class="org.wso2.carbon.identity.oauth2.validators.JDBCScopeValidator" />
-            <ScopeValidator class="org.wso2.carbon.identity.oauth2.validators.xacml.XACMLScopeValidator"/>
         </ScopeValidators>
 
         <!-- Scope handlers list. The handlers registered here will be executed at the scope validation phase while

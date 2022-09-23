@@ -15,7 +15,6 @@ below is and where the actual text of the license can be found.
 Name                                                                                                Type           License
 _________________________________________________________________________________________________________________________________________________
 org.wso2.carbon.identity.provisioning.connector.scim-5.3.0.jar                                      bundle         apache2
-org.wso2.carbon.identity.oauth2.validators.xacml-2.4.8.jar                                          bundle         apache2
 org.wso2.carbon.identity.application.authenticator.facebook-5.2.0.jar                               bundle         apache2
 org.wso2.carbon.identity.local.auth.api.core-2.5.5.jar                                              bundle         apache2
 org.wso2.carbon.identity.application.authenticator.google-5.2.2.jar                                 bundle         apache2

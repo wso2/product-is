@@ -220,9 +220,6 @@
                                     org.wso2.carbon.identity.application.authz.xacml:org.wso2.carbon.identity.application.authz.xacml.server.feature:${identity.app.authz.xacml.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.extension.identity.oauth.addons:org.wso2.carbon.identity.oauth2.validators.xacml.server.feature:${identity.oauth.addons.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
                                     org.wso2.carbon.identity.datapublisher.authentication:org.wso2.carbon.identity.data.publisher.application.authentication.server.feature:${identity.data.publisher.authentication.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -820,12 +817,6 @@
                                 </feature>
                                 <feature>
                                     <id>
-                                        org.wso2.carbon.identity.oauth2.validators.xacml.server.feature.group
-                                    </id>
-                                    <version>${identity.oauth.addons.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>
                                         org.wso2.carbon.identity.data.publisher.application.authentication.server.feature.group
                                     </id>
                                     <version>${identity.data.publisher.authentication.version}</version>
@@ -1383,12 +1374,6 @@
                                 </feature>
                                 <feature>
                                     <id>
-                                        org.wso2.carbon.identity.oauth2.validators.xacml.server.feature.group
-                                    </id>
-                                    <version>${identity.oauth.addons.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>
                                         org.wso2.carbon.identity.data.publisher.application.authentication.server.feature.group
                                     </id>
                                     <version>${identity.data.publisher.authentication.version}</version>
@@ -1820,12 +1805,6 @@
                                         org.wso2.carbon.identity.application.authz.xacml.server.feature.group
                                     </id>
                                     <version>${identity.app.authz.xacml.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>
-                                        org.wso2.carbon.identity.oauth2.validators.xacml.server.feature.group
-                                    </id>
-                                    <version>${identity.oauth.addons.version}</version>
                                 </feature>
                                 <feature>
                                     <id>
