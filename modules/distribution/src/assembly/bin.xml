@@ -464,18 +464,6 @@
             <directoryMode>775</directoryMode>
         </fileSet>
 
-        <fileSet>
-            <directory>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/dbscripts/identity/uma/
-            </directory>
-            <outputDirectory>wso2is-${pom.version}/dbscripts/identity/uma</outputDirectory>
-            <includes>
-                <include>**/*.sql</include>
-            </includes>
-            <fileMode>644</fileMode>
-            <directoryMode>775</directoryMode>
-        </fileSet>
-
         <!--Copy scope validator to dropins dropins.-->
         <fileSet>
             <directory>

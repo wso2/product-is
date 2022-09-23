@@ -388,13 +388,5 @@
             <groupId>org.wso2.carbon.identity.local.auth.api</groupId>
             <artifactId>org.wso2.carbon.api.server.local.auth.api</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.identity.oauth.uma</groupId>
-            <artifactId>org.wso2.carbon.identity.api.server.oauth.uma.permission</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.identity.oauth.uma</groupId>
-            <artifactId>org.wso2.carbon.identity.api.server.oauth.uma.resource</artifactId>
-        </dependency>
     </dependencies>
 </project>

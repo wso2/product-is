@@ -15,7 +15,7 @@
         <applicationName>SampleAppTenant</applicationName>
         <callbackUrl>http://localhost.com:8080/pickup-dispatch/oauth2client</callbackUrl>
         <oauthVersion>OAuth-2.0</oauthVersion>
-        <grantTypes>refresh_token urn:ietf:params:oauth:grant-type:saml2-bearer implicit password client_credentials iwa:ntlm authorization_code urn:ietf:params:oauth:grant-type:uma-ticket account_switch urn:ietf:params:oauth:grant-type:jwt-bearer </grantTypes>
+        <grantTypes>refresh_token urn:ietf:params:oauth:grant-type:saml2-bearer implicit password client_credentials iwa:ntlm authorization_code account_switch urn:ietf:params:oauth:grant-type:jwt-bearer </grantTypes>
         <scopeValidators/>
         <pkceSupportPlain>true</pkceSupportPlain>
         <pkceMandatory>false</pkceMandatory>

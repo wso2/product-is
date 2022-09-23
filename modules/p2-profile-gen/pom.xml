@@ -414,9 +414,6 @@
                                 </featureArtifactDef>
 
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity.oauth.uma:org.wso2.carbon.identity.oauth.uma.server.feature:${carbon.identity.oauth.uma.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
                                     org.wso2.carbon.extension.identity.x509certificate:org.wso2.carbon.extension.identity.x509Certificate.validation.server.feature:${org.wso2.carbon.extension.identity.x509certificate.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -937,10 +934,6 @@
                                 <feature>
                                     <id>org.wso2.carbon.database.utils.feature.group</id>
                                     <version>${carbon.database.utils.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.oauth.uma.server.feature.group</id>
-                                    <version>${carbon.identity.oauth.uma.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.extension.identity.x509Certificate.validation.server.feature.group</id>
@@ -1465,10 +1458,6 @@
                                 </feature>
 
                                 <feature>
-                                    <id>org.wso2.carbon.identity.oauth.uma.server.feature.group</id>
-                                    <version>${carbon.identity.oauth.uma.version}</version>
-                                </feature>
-                                <feature>
                                     <id>org.wso2.carbon.extension.identity.x509Certificate.validation.server.feature.group</id>
                                     <version>${org.wso2.carbon.extension.identity.x509certificate.version}</version>
                                 </feature>
@@ -1892,10 +1881,6 @@
                                 <feature>
                                     <id>org.wso2.carbon.database.utils.feature.group</id>
                                     <version>${carbon.database.utils.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.oauth.uma.server.feature.group</id>
-                                    <version>${carbon.identity.oauth.uma.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.extension.identity.x509Certificate.validation.server.feature.group</id>
