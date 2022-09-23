@@ -2300,7 +2300,7 @@
         <identity.branding.preference.management.version>1.0.1</identity.branding.preference.management.version>
 
         <!-- Identity REST API feature -->
-        <identity.api.dispatcher.version>2.0.9</identity.api.dispatcher.version>
+        <identity.api.dispatcher.version>2.0.11</identity.api.dispatcher.version>
         <identity.user.api.version>1.3.2</identity.user.api.version>
         <identity.server.api.version>1.2.11</identity.server.api.version>
 
