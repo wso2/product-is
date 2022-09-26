@@ -233,29 +233,6 @@
                 <UseAuthenticatedUserDomain>false</UseAuthenticatedUserDomain>
 	</SSOService>
 
-	<EntitlementSettings>
-		<!-- Uncomment this to enable on-demand policy loading -->
-		<!--OnDemandPolicyLoading> <Enable>true</Enable> <MaxInMemoryPolicies>100</MaxInMemoryPolicies>
-			</OnDemandPolicyLoading -->
-		<DecisionCaching>
-			<Enable>true</Enable>
-			<CachingInterval>36000</CachingInterval>
-		</DecisionCaching>
-		<AttributeCaching>
-			<Enable>true</Enable>
-		</AttributeCaching>
-		<ThirftBasedEntitlementConfig>
-			<EnableThriftService>true</EnableThriftService>
-			<!--<ThriftHostName>localhost</ThriftHostName>-->
-			<ReceivePort>${Ports.ThriftEntitlementReceivePort}</ReceivePort>
-			<ClientTimeout>10000</ClientTimeout>
-			<KeyStore>
-				<Location>${carbon.home}/repository/resources/security/wso2carbon.jks</Location>
-				<Password>wso2carbon</Password>
-			</KeyStore>
-		</ThirftBasedEntitlementConfig>
-	</EntitlementSettings>
-
 	<Recovery>
 		<Notification>
 			<Password>

@@ -31,12 +31,9 @@ import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticati
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.LocalAndOutboundAuthenticationConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
-import org.wso2.carbon.identity.entitlement.stub.EntitlementPolicyAdminServiceEntitlementException;
-import org.wso2.carbon.identity.entitlement.stub.dto.PolicyDTO;
 import org.wso2.carbon.identity.sso.saml.stub.IdentitySAMLSSOConfigServiceIdentityException;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
-import org.wso2.identity.integration.common.clients.entitlement.EntitlementPolicyServiceClient;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
@@ -67,7 +64,6 @@ public class AbstractApplicationAuthzTestCase extends ISIntegrationTest {
     protected ApplicationManagementServiceClient applicationManagementServiceClient;
     protected SAMLSSOConfigServiceClient ssoConfigServiceClient;
     protected RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
-    protected EntitlementPolicyServiceClient entitlementPolicyClient;
 
     protected HttpClient httpClientAzUser;
     protected HttpClient httpClientNonAzUser;
@@ -165,19 +161,5 @@ public class AbstractApplicationAuthzTestCase extends ISIntegrationTest {
         samlssoServiceProviderDTO.setDoSignResponse(signResponse);
         samlssoServiceProviderDTO.setDoSignAssertions(signAssertion);
         ssoConfigServiceClient.addServiceProvider(samlssoServiceProviderDTO);
-    }
-
-    protected void setupXACMLPolicy(String policyId, String xacmlPolicy)
-            throws InterruptedException, RemoteException, EntitlementPolicyAdminServiceEntitlementException {
-
-        PolicyDTO policy = new PolicyDTO();
-        policy.setPolicy(xacmlPolicy);
-        policy.setPolicy(policy.getPolicy().replaceAll(">\\s+<", "><").trim());
-        policy.setVersion("3.0");
-        policy.setPolicyId(policyId);
-        entitlementPolicyClient.addPolicy(policy);
-        Thread.sleep(5000); // waiting for the policy to deploy
-        entitlementPolicyClient
-                .publishPolicies(new String[]{policyId}, new String[]{"PDP Subscriber"}, "CREATE", true, null, 1);
     }
 }

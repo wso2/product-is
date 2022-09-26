@@ -350,20 +350,6 @@
         <SLOHostNameVerificationEnabled>true</SLOHostNameVerificationEnabled>
     </PassiveSTS>
 
-    <EntitlementSettings>
-        <ThirftBasedEntitlementConfig>
-            <EnableThriftService>false</EnableThriftService>
-            <ReceivePort>${Ports.ThriftEntitlementReceivePort}</ReceivePort>
-            <ClientTimeout>10000</ClientTimeout>
-            <KeyStore>
-                <Location>${carbon.home}/repository/resources/security/wso2carbon.jks</Location>
-                <Password>wso2carbon</Password>
-            </KeyStore>
-            <!-- Enable this element to mention the host-name of your IS machine -->
-            <ThriftHostName>${carbon.host}</ThriftHostName>
-        </ThirftBasedEntitlementConfig>
-    </EntitlementSettings>
-
     <SCIM>
         <!--
             Default value for UserEPUrl and GroupEPUrl are built in following format
@@ -502,9 +488,6 @@
         <Resource context="(.*)/oauth2/introspect(.*)" secured="true" http-method="all">
             <Permissions>/permission/admin/manage/identity/applicationmgt/view</Permissions>
         </Resource>
-        <Resource context="(.*)/api/identity/entitlement/(.*)" secured="true" http-method="all">
-            <Permissions>/permission/admin/manage/identity/pep</Permissions>
-        </Resource>
         <Resource context="/scim2/Users" secured="true" http-method="all">
             <Permissions>/permission/admin/manage/identity/usermgt</Permissions>
         </Resource>
@@ -553,7 +536,6 @@
             <Context>/api/identity/recovery/v0.9/</Context>
             <Context>/oauth2/</Context>
             <Context>/scim2/</Context>
-            <Context>/api/identity/entitlement/</Context>
             <Context>/api/identity/oauth2/dcr/v1.1/</Context>
         </WebApp>
         <Servlet>

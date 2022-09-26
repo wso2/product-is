@@ -208,7 +208,6 @@
                         <configuration>
                             <tasks>
                                 <property name="tempdir" value="target/docs-temp" />
-                                <property name="registryPolicyHandler" value="&lt;handler class=&quot;org.wso2.carbon.identity.entitlement.policy.finder.registry.RegistryPolicyHandler&quot;&gt;${line.separator} &lt;filter class=&quot;org.wso2.carbon.identity.entitlement.policy.finder.registry.RegistryPolicyMediaTypeMatcher&quot;&gt;${line.separator} &lt;property name=&quot;mediaType&quot;&gt;application/xacml-policy+xml&lt;/property&gt;${line.separator} &lt;/filter&gt;${line.separator} &lt;/handler&gt;${line.separator}${line.separator} &lt;!--&lt;handler class=&quot;org.wso2.carbon.registry.extensions.handlers.SynapseRepositoryHandler&quot;&gt;" />
 
                                 <property name="xss-kernel-token" value="&lt;XSSPreventionConfig&gt;${line.separator} &lt;Enabled&gt;true&lt;/Enabled&gt;${line.separator} &lt;Rule&gt;allow&lt;/Rule&gt;${line.separator} &lt;Patterns&gt;${line.separator} &lt;!--Pattern&gt;&lt;/Pattern--&gt;${line.separator} &lt;/Patterns&gt;${line.separator} &lt;/XSSPreventionConfig&gt;" />
 
@@ -366,10 +365,6 @@
                                 <!-- turn off Registry Indexing -->
                                 <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/registry.xml" token="&lt;startIndexing&gt;true&lt;/startIndexing&gt;" value="&lt;startIndexing&gt;false&lt;/startIndexing&gt;" />
 
-                                <!-- update ciphertool properties to enable securevault on thrift server keystore password-->
-                                <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/cipher-text.properties" token="Server.Service.Connector.keystorePass=[wso2carbon]" value="Server.Service.Connector.keystorePass=[wso2carbon]${line.separator}ThirftBasedEntitlementConfig.KeyStore.Password=[wso2carbon]" />
-                                <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/cipher-tool.properties" token="Server.Service.Connector.keystorePass=repository/conf/tomcat/catalina-server.xml//Server/Service/Connector[@keystorePass],true" value="Server.Service.Connector.keystorePass=repository/conf/tomcat/catalina-server.xml//Server/Service/Connector[@keystorePass],true${line.separator}ThirftBasedEntitlementConfig.KeyStore.Password=repository/conf/identity/identity.xml//Server/EntitlementSettings/ThirftBasedEntitlementConfig/KeyStore/Password,true" />
-
                                 <!-- Update the README.txt inside the bin folder about forgetme execution scripts. -->
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/bin/README.txt" token="10. carbondump.sh &amp; carbondump.bat - Carbondump is a tool for collecting all the necessary data from a running Carbon instance at the time of an error. The carbondump generates a zip archive with the collected data, which can be used to analyze your system and determine the problem which caused the error." value="10. carbondump.sh &amp; carbondump.bat - Carbondump is a tool for collecting all the necessary data from a running Carbon instance at the time of an error. The carbondump generates a zip archive with the collected data, which can be used to analyze your system and determine the problem which caused the error.${line.separator}${line.separator}11. forgetme.sh &amp; forgetme.bat - Forgetme is a tool to anonymize deleted user information from metadata tables and log files. This tool will replace the given user name with a given or random pseudonym.${line.separator}" />
 
@@ -391,10 +386,6 @@
 
                                 <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/tomcat/carbon/WEB-INF/web.xml.j2" />
                                 <delete dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/tomcat/carbon/WEB-INF/" />
-
-                                <!-- Add org.wso2.carbon.identity.entitlement.policy.finder.registry.RegistryPolicyHandler to IS -->
-
-                                <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/registry.xml" token="&lt;!--&lt;handler class=&quot;org.wso2.carbon.registry.extensions.handlers.SynapseRepositoryHandler&quot;&gt;" value="${registryPolicyHandler}" />
 
                                 <!-- Enable KDC for IS -->
 

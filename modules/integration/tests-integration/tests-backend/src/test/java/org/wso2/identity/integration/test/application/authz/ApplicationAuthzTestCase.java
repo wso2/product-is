@@ -32,11 +32,8 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.identity.entitlement.stub.EntitlementPolicyAdminServiceEntitlementException;
-import org.wso2.carbon.identity.entitlement.stub.dto.PolicyDTO;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
-import org.wso2.identity.integration.common.clients.entitlement.EntitlementPolicyServiceClient;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.test.util.Utils;
@@ -97,7 +94,6 @@ public class ApplicationAuthzTestCase extends AbstractApplicationAuthzTestCase {
         ssoConfigServiceClient =
                 new SAMLSSOConfigServiceClient(backendURL, sessionCookie);
         remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
-        entitlementPolicyClient = new EntitlementPolicyServiceClient(backendURL, sessionCookie);
 
         httpClientAzUser = HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build();
         httpClientNonAzUser = HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build();
@@ -109,22 +105,6 @@ public class ApplicationAuthzTestCase extends AbstractApplicationAuthzTestCase {
         createUser(NON_AZ_TEST_USER, NON_AZ_TEST_USER_PW, new String[0]);
         createApplication(APPLICATION_NAME);
         createSAMLApp(APPLICATION_NAME, true, true, true);
-        setupXACMLPolicy(POLICY_ID, POLICY);
-    }
-
-    protected void setupXACMLPolicy(String policyId, String xacmlPolicy)
-            throws InterruptedException, RemoteException, EntitlementPolicyAdminServiceEntitlementException {
-
-        PolicyDTO policy = new PolicyDTO();
-        policy.setPolicy(xacmlPolicy);
-        policy.setPolicy(policy.getPolicy().replaceAll(">\\s+<", "><").trim());
-        policy.setVersion("3.0");
-        policy.setPolicyId(policyId);
-        entitlementPolicyClient.addPolicy(policy);
-        Thread.sleep(5000); // waiting for the policy to deploy
-        entitlementPolicyClient
-                .publishPolicies(new String[]{policyId}, new String[]{"PDP Subscriber"}, "CREATE", true, null, 1);
-
     }
 
     @AfterClass(alwaysRun = true)
@@ -134,9 +114,6 @@ public class ApplicationAuthzTestCase extends AbstractApplicationAuthzTestCase {
         deleteUser(NON_AZ_TEST_USER);
         deleteRole(AZ_TEST_ROLE);
         deleteApplication(APPLICATION_NAME);
-        entitlementPolicyClient.publishPolicies(new String[]{POLICY_ID}, new String[]{"PDP " +
-                "Subscriber"}, "DELETE", true, null, 1);
-        entitlementPolicyClient.removePolicy(POLICY_ID);
 
         ssoConfigServiceClient = null;
         applicationManagementServiceClient = null;

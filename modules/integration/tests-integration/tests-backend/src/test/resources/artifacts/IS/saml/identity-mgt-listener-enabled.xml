@@ -377,20 +377,6 @@
         <TokenStoreClassName>org.wso2.carbon.identity.sts.passive.utils.NoPersistenceTokenStore</TokenStoreClassName>
     </PassiveSTS>
 
-    <EntitlementSettings>
-        <ThirftBasedEntitlementConfig>
-            <EnableThriftService>false</EnableThriftService>
-            <ReceivePort>${Ports.ThriftEntitlementReceivePort}</ReceivePort>
-            <ClientTimeout>10000</ClientTimeout>
-            <KeyStore>
-                <Location>${carbon.home}/repository/resources/security/wso2carbon.jks</Location>
-                <Password>wso2carbon</Password>
-            </KeyStore>
-            <!-- Enable this element to mention the host-name of your IS machine -->
-            <ThriftHostName>${carbon.host}</ThriftHostName>
-        </ThirftBasedEntitlementConfig>
-    </EntitlementSettings>
-
     <SCIM>
         <!--
             Default value for UserEPUrl and GroupEPUrl are built in following format

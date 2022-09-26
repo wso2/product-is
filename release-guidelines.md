@@ -9,13 +9,11 @@
 
 `mvn versions:update-properties -DgenerateBackupPoms=false -Dincludes=org.wso2.carbon.identity.*,org.wso2.carbon.extension.identity.*,org.wso2.charon,org.apache.rampart.wso2,org.apache.ws.security.wso2,org.wso2.carbon.consent.*,org.wso2.carbon.database.utils -U`
 
-* Need to update charon , balana, rampart, wss4j and sso-agent separately.
+* Need to update charon , rampart, wss4j and sso-agent separately.
 * These components are packed into the product-is by:
    
    charon       : [identity-inbound-provisioning-scim2](https://github.com/wso2-extensions/identity-inbound-provisioning-scim2/)
-   
-   balana       : [carbon-identity-framework](https://github.com/wso2/carbon-identity-framework)
-   
+
    rampart      : [identity-inbound-auth-sts](https://github.com/wso2-extensions/identity-inbound-auth-sts/)
    
    wss4j        : [carbon-identity-framework](https://github.com/wso2/carbon-identity-framework)

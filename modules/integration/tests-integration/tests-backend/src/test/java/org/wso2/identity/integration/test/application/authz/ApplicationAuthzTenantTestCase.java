@@ -34,7 +34,6 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
-import org.wso2.identity.integration.common.clients.entitlement.EntitlementPolicyServiceClient;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
@@ -100,7 +99,6 @@ public class ApplicationAuthzTenantTestCase extends AbstractApplicationAuthzTest
         ssoConfigServiceClient =
                 new SAMLSSOConfigServiceClient(backendURL, sessionCookie);
         remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
-        entitlementPolicyClient = new EntitlementPolicyServiceClient(backendURL, sessionCookie);
 
         httpClientAzUser = HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build();
         httpClientNonAzUser = HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build();
@@ -112,7 +110,6 @@ public class ApplicationAuthzTenantTestCase extends AbstractApplicationAuthzTest
         createUser(NON_AZ_TEST_TENANT_USER, NON_AZ_TEST_TENANT_USER_PW, new String[0]);
         createApplication(APPLICATION_NAME);
         createSAMLApp(APPLICATION_NAME, true, false, false);
-        setupXACMLPolicy(POLICY_ID, POLICY);
     }
 
     @AfterClass(alwaysRun = true)
@@ -122,9 +119,6 @@ public class ApplicationAuthzTenantTestCase extends AbstractApplicationAuthzTest
         deleteUser(NON_AZ_TEST_TENANT_USER);
         deleteRole(AZ_TEST_TENANT_ROLE);
         deleteApplication(APPLICATION_NAME);
-        entitlementPolicyClient.publishPolicies(new String[]{POLICY_ID}, new String[]{"PDP " +
-                "Subscriber"}, "DELETE", true, null, 1);
-        entitlementPolicyClient.removePolicy(POLICY_ID);
 
         ssoConfigServiceClient = null;
         applicationManagementServiceClient = null;
