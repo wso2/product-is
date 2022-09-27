@@ -214,26 +214,6 @@
         </dependency>
         <dependency>
             <groupId>org.opensaml</groupId>
-            <artifactId>opensaml-xacml-api</artifactId>
-            <version>${opensaml3.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.opensaml</groupId>
-            <artifactId>opensaml-xacml-impl</artifactId>
-            <version>${opensaml3.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.opensaml</groupId>
-            <artifactId>opensaml-xacml-saml-api</artifactId>
-            <version>${opensaml3.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.opensaml</groupId>
-            <artifactId>opensaml-xacml-saml-impl</artifactId>
-            <version>${opensaml3.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.opensaml</groupId>
             <artifactId>opensaml-xmlsec-api</artifactId>
             <version>${opensaml3.version}</version>
         </dependency>

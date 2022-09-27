@@ -840,26 +840,6 @@
             </dependency>
             <dependency>
                 <groupId>org.opensaml</groupId>
-                <artifactId>opensaml-xacml-api</artifactId>
-                <version>${opensaml3.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.opensaml</groupId>
-                <artifactId>opensaml-xacml-impl</artifactId>
-                <version>${opensaml3.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.opensaml</groupId>
-                <artifactId>opensaml-xacml-saml-api</artifactId>
-                <version>${opensaml3.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.opensaml</groupId>
-                <artifactId>opensaml-xacml-saml-impl</artifactId>
-                <version>${opensaml3.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.opensaml</groupId>
                 <artifactId>opensaml-xmlsec-api</artifactId>
                 <version>${opensaml3.version}</version>
             </dependency>
@@ -2143,7 +2123,7 @@
         <carbon.consent.mgt.version>2.3.21</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.6.5</identity.governance.version>
+        <identity.governance.version>1.6.6-SNAPSHOT</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.6.4</identity.carbon.auth.saml2.version>
@@ -2241,7 +2221,6 @@
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
         <identity.tool.samlsso.validator.version>5.5.0</identity.tool.samlsso.validator.version>
-        <identity.app.authz.xacml.version>2.3.1</identity.app.authz.xacml.version>
         <identity.oauth.addons.version>2.4.8</identity.oauth.addons.version>
         <org.wso2.carbon.extension.identity.x509certificate.version>1.1.0</org.wso2.carbon.extension.identity.x509certificate.version>
         <conditional.authentication.functions.version>1.2.11</conditional.authentication.functions.version>

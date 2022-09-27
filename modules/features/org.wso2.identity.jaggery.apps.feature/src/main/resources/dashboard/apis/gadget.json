@@ -98,22 +98,6 @@
       "id": "my_login_sessions"
     },
     {
-      "wid": "45",
-      "x": "1",
-      "y": "4",
-      "title": "Pending Approvals",
-      "width": "2",
-      "height": "1",
-      "prefs": "{}",
-      "wclass": "",
-      "url": "/portal/gadgets/approvals/gadget.xml",
-      "permissions": [
-        "/permission/admin/manage/humantask/viewtasks"
-      ],
-      "authorized": "true",
-      "id": "approvals"
-    },
-    {
       "wid": "46",
       "x": "3",
       "y": "4",

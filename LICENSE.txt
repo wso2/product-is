@@ -101,7 +101,6 @@ svn-client-adapter_1.10.9.wso2v1.jar                                            
 org.wso2.carbon.identity.organization.management.tenant.association_1.1.4.jar                       bundle         apache2
 org.eclipse.equinox.p2.director.app_1.0.300.v20150129-0838.jar                                      bundle         epl1
 org.wso2.carbon.identity.recovery.ui_1.6.3.jar                                                      bundle         apache2
-org.wso2.carbon.policyeditor_5.23.8.jar                                                             bundle         apache2
 csrfguard_3.1.0.wso2v4.jar                                                                          bundle         apache2
 org.wso2.carbon.bpel.deployer_4.5.59.jar                                                            bundle         apache2
 org.eclipse.equinox.frameworkadmin.equinox_1.0.700.v20160102-2223.jar                               bundle         epl1
@@ -527,7 +526,6 @@ org.wso2.carbon.addressing_4.7.1.jar                                            
 axis2_1.6.1.wso2v76.jar                                                                             bundle         apache2
 xmlbeans-3.1.0.jar                                                                                  jarinbundle    apache2
 org.wso2.carbon.identity.application.authenticator.oidc_5.8.1.jar                                   bundle         apache2
-org.wso2.carbon.policyeditor.ui_5.23.8.jar                                                          bundle         apache2
 axis2-json_1.6.1.wso2v76.jar                                                                        bundle         apache2
 com.googlecode.javaewah.JavaEWAH_1.1.6.jar                                                          bundle         apache2
 org.wso2.carbon.identity.sso.saml.ui_5.10.0.jar                                                     bundle         apache2
