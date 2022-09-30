@@ -2291,7 +2291,7 @@
         <identity.extension.utils>1.0.8</identity.extension.utils>
 
         <identity.org.mgt.version>1.3.1</identity.org.mgt.version>
-        <identity.org.mgt.core.version>1.0.14</identity.org.mgt.core.version>
+        <identity.org.mgt.core.version>1.0.15</identity.org.mgt.core.version>
 
         <!-- Hash Provider Versions-->
         <hashprovider.pbkdf2.version>0.1.4</hashprovider.pbkdf2.version>
@@ -2313,7 +2313,7 @@
         <carbon.identity.oauth.uma.version>1.3.9</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.6.5</identity.apps.version>
+        <identity.apps.version>1.6.6</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
@@ -2380,7 +2380,7 @@
         <opensaml3.version>3.3.1</opensaml3.version>
         <shibboleth.version>7.3.0</shibboleth.version>
         <joda.wso2.version>2.9.4.wso2v1</joda.wso2.version>
-        <wss4j.wso2.version>1.6.0-wso2v3</wss4j.wso2.version>
+        <wss4j.wso2.version>1.6.0-wso2v4</wss4j.wso2.version>
         <openws.version>1.5.4</openws.version>
         <xalan.version>2.7.2</xalan.version>
         <xalan.wso2.version>2.7.0.wso2v1</xalan.wso2.version>
