@@ -201,8 +201,6 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
     @Test(alwaysRun = true, description = "Testing adding a new association.", dependsOnMethods = "testAddWorkflow")
     public void testAddAssociation() {
 
-        //the following xpath is valid for user with the role "wfRole1"
-
         if (workflowId == null) {
             Assert.fail("Workflow has not been added in the previous test.");
         }
