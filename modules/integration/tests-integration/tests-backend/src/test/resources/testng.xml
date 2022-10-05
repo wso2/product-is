@@ -8,7 +8,6 @@
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestReportListener"/>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestSuiteListener"/>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestTransformerListener"/>
-        <listener class-name="org.wso2.identity.integration.test.listeners.IdentityTestListener"/>
     </listeners>
 
     <test name="is-tests-initialize" preserve-order="true" parallel="false" group-by-instances="true">
