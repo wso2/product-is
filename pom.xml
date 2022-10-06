@@ -2256,11 +2256,11 @@
 
         <!-- Social Authenticator Versions -->
         <social.authenticator.facebook.version>5.2.0</social.authenticator.facebook.version>
-        <social.authenticator.google.version>5.2.2</social.authenticator.google.version>
+        <social.authenticator.google.version>5.2.3</social.authenticator.google.version>
         <social.authenticator.windowslive.version>5.2.0</social.authenticator.windowslive.version>
 
         <!-- Provisioning connector Versions -->
-        <provisioning.connector.google.version>5.2.2</provisioning.connector.google.version>
+        <provisioning.connector.google.version>5.2.3</provisioning.connector.google.version>
         <provisioning.connector.salesforce.version>5.2.0</provisioning.connector.salesforce.version>
         <provisioning.connector.scim.version>5.3.0</provisioning.connector.scim.version>
         <provisioning.connector.scim2.version>2.0.1</provisioning.connector.scim2.version>
