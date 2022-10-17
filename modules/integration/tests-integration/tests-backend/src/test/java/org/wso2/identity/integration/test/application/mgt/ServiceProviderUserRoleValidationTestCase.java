@@ -25,6 +25,8 @@ import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
@@ -48,18 +50,37 @@ public class ServiceProviderUserRoleValidationTestCase extends ISIntegrationTest
 
     private ServerConfigurationManager serverConfigurationManager;
     private static final String ROLE_VALIDATION_ENABLED_TOML = "role_validation_enabled.toml";
+    private static final String ROLE_VALIDATION_DISABLED_TOML = "role_validation_disabled.toml";
     private static final String APPLICATION_PREFIX = "app";
     private static final String SERVICE_PROVIDER_DESCRIPTION = "This is a test Service Provider for AZ test.";
     private static final String ROLE_PREFIX = "Application/role";
     private static final String USERNAME = "admin";
-    private static final String[] ROLES = new String[]{"Application/role1", "Application/role2", "Application/role3"};
+    private static final String[] ROLES = new String[] {"Application/role1", "Application/role2", "Application/role3"};
     private static final String APPLICATION_FILTER = "role*";
     private static final int APPLICATION_COUNT_WITHOUT_FILTER = 9;
+    private static final int APPLICATION_COUNT_WITHOUT_FILTER_AND_ROLE_VALIDATION = 11;
     private static final int APPLICATION_COUNT_WITH_FILTER = 0;
 
     protected Log log = LogFactory.getLog(getClass());
     protected ApplicationManagementServiceClient applicationManagementServiceClient;
     protected RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
+
+    private final boolean enableRoleValidation;
+
+    @DataProvider
+    public static Object[][] roleValidationPropertyData() {
+
+        return new Object[][] {
+                {false},
+                {true}
+        };
+    }
+
+    @Factory(dataProvider = "roleValidationPropertyData")
+    public ServiceProviderUserRoleValidationTestCase(boolean roleValidation) {
+
+        this.enableRoleValidation = roleValidation;
+    }
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -83,9 +104,16 @@ public class ServiceProviderUserRoleValidationTestCase extends ISIntegrationTest
         log.info("Replacing the deployment.toml file to reduce items per page and to enable role validation.");
         String carbonHome = Utils.getResidentCarbonHome();
         File defaultTomlFile = getDeploymentTomlFile(carbonHome);
-        File configuredTomlFile = new File
-                (getISResourceLocation() + File.separator + "application" + File.separator + "mgt" +
-                        File.separator + ROLE_VALIDATION_ENABLED_TOML);
+        File configuredTomlFile;
+        if (enableRoleValidation) {
+            configuredTomlFile = new File
+                    (getISResourceLocation() + File.separator + "application" + File.separator + "mgt" +
+                            File.separator + ROLE_VALIDATION_ENABLED_TOML);
+        } else {
+            configuredTomlFile = new File
+                    (getISResourceLocation() + File.separator + "application" + File.separator + "mgt" +
+                            File.separator + ROLE_VALIDATION_DISABLED_TOML);
+        }
         serverConfigurationManager = new ServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartForcefully();
@@ -136,21 +164,30 @@ public class ServiceProviderUserRoleValidationTestCase extends ISIntegrationTest
     public void testApplicationCountForUserWithoutFilter() throws Exception {
 
         int count = applicationManagementServiceClient.getCountOfAllApplications();
-        Assert.assertEquals(count, APPLICATION_COUNT_WITHOUT_FILTER,
-                String.format("The expected application count without a filter does not match the actual application " +
-                                "count: Expected Application Count: %d Actual Application Count: %d.",
-                        APPLICATION_COUNT_WITHOUT_FILTER, count)
-        );
+        if (enableRoleValidation) {
+            Assert.assertEquals(count, APPLICATION_COUNT_WITHOUT_FILTER,
+                    String.format("The expected application count without a filter does not match the actual " +
+                                  "application count: Expected Application Count: %d Actual Application Count: %d.",
+                                  APPLICATION_COUNT_WITHOUT_FILTER, count)
+            );
+        } else {
+            Assert.assertEquals(count, APPLICATION_COUNT_WITHOUT_FILTER_AND_ROLE_VALIDATION,
+                    String.format("The expected application count without a filter does not match the actual " +
+                                  "application count: Expected Application Count: %d Actual Application Count: %d.",
+                                  APPLICATION_COUNT_WITHOUT_FILTER_AND_ROLE_VALIDATION, count)
+            );
+        }
     }
 
-    @Test(description = "Retrieve application count for the admin user with filter.")
+    @Test(description = "Retrieve application count for the admin user with filter.",
+            dependsOnMethods = "testApplicationCountForUserWithoutFilter")
     public void testApplicationCountForUserWithFilter() throws Exception {
 
         int count = applicationManagementServiceClient.getCountOfApplications(APPLICATION_FILTER);
         Assert.assertEquals(count, APPLICATION_COUNT_WITH_FILTER,
                 String.format("The expected application count with a filter does not match the actual application " +
-                                "count: Expected Application Count: %d Actual Application Count: %d.",
-                        APPLICATION_COUNT_WITH_FILTER, count)
+                              "count: Expected Application Count: %d Actual Application Count: %d.",
+                              APPLICATION_COUNT_WITH_FILTER, count)
         );
     }
 

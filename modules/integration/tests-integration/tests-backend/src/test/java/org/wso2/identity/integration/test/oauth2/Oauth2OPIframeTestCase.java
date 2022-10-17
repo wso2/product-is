@@ -113,7 +113,7 @@ public class Oauth2OPIframeTestCase extends OAuth2ServiceAbstractIntegrationTest
         appConfigData.setGrantTypes("authorization_code implicit password client_credentials refresh_token "
                 + "urn:ietf:params:oauth:grant-type:saml2-bearer iwa:ntlm");
 
-        OAuthConsumerAppDTO appDto = createApplication(appConfigData);
+        OAuthConsumerAppDTO appDto = createApplication(appConfigData, SERVICE_PROVIDER_NAME);
         Assert.assertNotNull(appDto, "Application creation failed.");
 
         consumerKey = appDto.getOauthConsumerKey();

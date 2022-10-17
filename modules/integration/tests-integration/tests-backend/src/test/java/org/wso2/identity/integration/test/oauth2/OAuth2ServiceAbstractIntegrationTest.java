@@ -108,7 +108,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		appDTO.setOAuthVersion(OAuth2Constant.OAUTH_VERSION_2);
 		appDTO.setGrantTypes("authorization_code implicit password client_credentials refresh_token "
 				+ "urn:ietf:params:oauth:grant-type:saml2-bearer iwa:ntlm");
-		return createApplication(appDTO);
+		return createApplication(appDTO, SERVICE_PROVIDER_NAME);
 	}
 
     /**
@@ -148,26 +148,27 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	 * @return OAuthConsumerAppDTO
 	 * @throws Exception
 	 */
-	public OAuthConsumerAppDTO createApplication(OAuthConsumerAppDTO appDTO) throws Exception {
+	public OAuthConsumerAppDTO createApplication(OAuthConsumerAppDTO appDTO, String serviceProviderName)
+			throws Exception {
 		OAuthConsumerAppDTO appDtoResult = null;
 
 		adminClient.registerOAuthApplicationData(appDTO);
 		OAuthConsumerAppDTO[] appDtos = adminClient.getAllOAuthApplicationData();
 
 		for (OAuthConsumerAppDTO appDto : appDtos) {
-			if (appDto.getApplicationName().equals(OAuth2Constant.OAUTH_APPLICATION_NAME)) {
+			if (appDto.getApplicationName().equals(appDTO.getApplicationName())) {
 				appDtoResult = appDto;
 				consumerKey = appDto.getOauthConsumerKey();
 				consumerSecret = appDto.getOauthConsumerSecret();
 			}
 		}
 		ServiceProvider serviceProvider = new ServiceProvider();
-		serviceProvider.setApplicationName(SERVICE_PROVIDER_NAME);
+		serviceProvider.setApplicationName(serviceProviderName);
 		serviceProvider.setDescription(SERVICE_PROVIDER_DESC);
 		serviceProvider.setManagementApp(true);
 		appMgtclient.createApplication(serviceProvider);
 
-		serviceProvider = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
+		serviceProvider = appMgtclient.getApplication(serviceProviderName);
 		serviceProvider = setServiceProviderClaimConfig(serviceProvider);
 		serviceProvider.setOutboundProvisioningConfig(new OutboundProvisioningConfig());
 		List<InboundAuthenticationRequestConfig> authRequestList = new ArrayList<>();
@@ -186,7 +187,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 			authRequestList.add(opicAuthenticationRequest);
 		}
 
-		String passiveSTSRealm = SERVICE_PROVIDER_NAME;
+		String passiveSTSRealm = serviceProviderName;
 		if (passiveSTSRealm != null) {
 			InboundAuthenticationRequestConfig opicAuthenticationRequest = new InboundAuthenticationRequestConfig();
 			opicAuthenticationRequest.setInboundAuthKey(passiveSTSRealm);
@@ -194,7 +195,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 			authRequestList.add(opicAuthenticationRequest);
 		}
 
-		String openidRealm = SERVICE_PROVIDER_NAME;
+		String openidRealm = serviceProviderName;
 		if (openidRealm != null) {
 			InboundAuthenticationRequestConfig opicAuthenticationRequest = new InboundAuthenticationRequestConfig();
 			opicAuthenticationRequest.setInboundAuthKey(openidRealm);
