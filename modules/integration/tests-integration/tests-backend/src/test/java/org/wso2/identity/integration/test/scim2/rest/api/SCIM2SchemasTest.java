@@ -136,13 +136,13 @@ public class SCIM2SchemasTest extends SCIM2BaseTest {
     @Test(dependsOnMethods = "getSchemas")
     public void validateUserExtensionSchemaElement() {
 
-        String baseIdentifier = "find{ it.name == 'EnterpriseUser' }.attributes.find {it.name == 'organization'}.";
+        String baseIdentifier = "find{ it.name == 'EnterpriseUser' }.attributes.find {it.name == 'country'}.";
         this.response.then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .body(baseIdentifier + "type", is("STRING"))
-                .body(baseIdentifier + "displayName", is("Organization"));
+                .body(baseIdentifier + "displayName", is("Country"));
 
     }
 

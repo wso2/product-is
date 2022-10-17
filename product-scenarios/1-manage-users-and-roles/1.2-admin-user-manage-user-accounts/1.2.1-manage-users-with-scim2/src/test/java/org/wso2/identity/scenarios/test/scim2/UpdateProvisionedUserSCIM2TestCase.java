@@ -46,6 +46,7 @@ import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJ
 
 public class UpdateProvisionedUserSCIM2TestCase extends ScenarioTestBase {
 
+    private static final String TEST_USER_NAME = "scim2UpdateProvisionedUser";
     private CloseableHttpClient client;
     private String userNameResponse;
     private String userId;
@@ -78,7 +79,7 @@ public class UpdateProvisionedUserSCIM2TestCase extends ScenarioTestBase {
         names.put(SCIMConstants.FAMILY_NAME_ATTRIBUTE,SCIMConstants.FAMILY_NAME_CLAIM_VALUE);
         rootObject.put(SCIMConstants.NAME_ATTRIBUTE, names);
 
-        rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, SCIMConstants.USERNAME);
+        rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, TEST_USER_NAME);
         rootObject.put(SCIMConstants.PASSWORD_ATTRIBUTE, SCIMConstants.PASSWORD);
 
         response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, rootObject, Constants.SCIMEndpoints.SCIM2_ENDPOINT,
@@ -87,7 +88,7 @@ public class UpdateProvisionedUserSCIM2TestCase extends ScenarioTestBase {
                 "successfully");
 
         userNameResponse = rootObject.get(SCIMConstants.USER_NAME_ATTRIBUTE).toString();
-        assertEquals(userNameResponse, SCIMConstants.USERNAME, "username not found");
+        assertEquals(userNameResponse, TEST_USER_NAME, "username not found");
 
         firstName = rootObject.get(SCIMConstants.NAME_ATTRIBUTE).toString();
         assertEquals(firstName.substring(14,19),SCIMConstants.GIVEN_NAME_CLAIM_VALUE,"The given first name " +
@@ -111,12 +112,12 @@ public class UpdateProvisionedUserSCIM2TestCase extends ScenarioTestBase {
         names.put(SCIMConstants.GIVEN_NAME_ATTRIBUTE, NEW_NAME);
         names.put(SCIMConstants.FAMILY_NAME_ATTRIBUTE,NEW_LAST_NAME);
         updateUserObject.put(SCIMConstants.NAME_ATTRIBUTE, names);
-        updateUserObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, SCIMConstants.USERNAME);
+        updateUserObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, TEST_USER_NAME);
         updateUserObject.put(SCIMConstants.PASSWORD_ATTRIBUTE, SCIMConstants.PASSWORD);
 
         updateUserRequest(client, updateURL, updateUserObject, getCommonHeaders());
         userNameResponse = updateUserObject.get(SCIMConstants.USER_NAME_ATTRIBUTE).toString();
-        assertEquals(userNameResponse, SCIMConstants.USERNAME, "username not found");
+        assertEquals(userNameResponse, TEST_USER_NAME, "username not found");
 
         firstName = updateUserObject.get(SCIMConstants.NAME_ATTRIBUTE).toString();
         assertEquals(firstName.substring(14,22),NEW_NAME,"The given first name " +

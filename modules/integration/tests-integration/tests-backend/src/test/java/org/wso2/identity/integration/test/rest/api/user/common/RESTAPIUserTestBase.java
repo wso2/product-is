@@ -16,11 +16,15 @@
 
 package org.wso2.identity.integration.test.rest.api.user.common;
 
-import org.apache.axis2.AxisFault;
-import org.wso2.identity.integration.test.rest.api.common.RESTTestBase;
-
 import java.rmi.RemoteException;
+import java.util.Arrays;
 import javax.xml.xpath.XPathExpressionException;
+import org.wso2.carbon.identity.application.common.model.idp.xsd.FederatedAuthenticatorConfig;
+import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
+import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProviderProperty;
+import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
+import org.wso2.identity.integration.test.rest.api.common.RESTTestBase;
 
 /**
  * Base Test Class for user based REST API test cases
@@ -31,6 +35,11 @@ public class RESTAPIUserTestBase extends RESTTestBase {
     protected static final String API_USERS_BASE_PATH = "/api/users/%s";
     protected static final String API_USERS_BASE_PATH_IN_SWAGGER = "/t/\\{tenant-domain\\}" + API_USERS_BASE_PATH;
     protected static final String API_USERS_BASE_PATH_WITH_TENANT_CONTEXT = TENANT_CONTEXT_IN_URL + API_USERS_BASE_PATH;
+    private static final String ADMIN = "admin";
+    private IdentityProviderMgtServiceClient superTenantIDPMgtClient;
+    private IdentityProviderMgtServiceClient tenantIDPMgtClient;
+    private AuthenticatorClient authenticatorClient;
+    private IdentityProvider superTenantResidentIDP;
 
     protected void testInit(String apiVersion, String apiDefinition, String tenantDomain)
             throws XPathExpressionException, RemoteException {
@@ -41,4 +50,58 @@ public class RESTAPIUserTestBase extends RESTTestBase {
         super.init(apiDefinition, basePathInSwagger, basePath);
     }
 
+    /**
+     * @param apiVersion                       api version
+     * @param apiDefinition                    swagger definition of api
+     * @param tenantDomain                     tenant
+     * @param apiUserBasePathInSwagger         base path of endpoint in swagger
+     * @param apiUserBasePathWithTenantContext base path of endpoint with tenant context
+     * @throws XPathExpressionException
+     * @throws RemoteException
+     */
+    protected void testInit(String apiVersion, String apiDefinition, String tenantDomain,
+                            String apiUserBasePathInSwagger, String apiUserBasePathWithTenantContext)
+            throws XPathExpressionException, RemoteException {
+
+        String basePathInSwagger = String.format(apiUserBasePathInSwagger, apiVersion);
+        String basePath = String.format(apiUserBasePathWithTenantContext,
+                tenantDomain, apiVersion);
+        super.init(apiDefinition, basePathInSwagger, basePath);
+    }
+
+    protected void initUpdateIDPProperty() throws Exception {
+
+        this.authenticatorClient = new AuthenticatorClient(backendURL);
+        String tenantCookie = this.authenticatorClient.login(ADMIN, ADMIN, isServer.getInstance()
+                .getHosts().get("default"));
+        superTenantIDPMgtClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
+        tenantIDPMgtClient = new IdentityProviderMgtServiceClient(tenantCookie, backendURL);
+        superTenantResidentIDP = superTenantIDPMgtClient.getResidentIdP();
+    }
+
+    protected void updateResidentIDPProperty(String propertyKey, String value, boolean isSuperTenant) throws Exception {
+
+        IdentityProviderProperty[] idpProperties = superTenantResidentIDP.getIdpProperties();
+        for (IdentityProviderProperty providerProperty : idpProperties) {
+            if (propertyKey.equalsIgnoreCase(providerProperty.getName())) {
+                providerProperty.setValue(value);
+            }
+        }
+        updateResidentIDP(superTenantResidentIDP, isSuperTenant);
+    }
+
+    private void updateResidentIDP(IdentityProvider residentIdentityProvider, boolean isSuperTenant) throws Exception {
+
+        FederatedAuthenticatorConfig[] federatedAuthenticatorConfigs =
+                residentIdentityProvider.getFederatedAuthenticatorConfigs();
+        federatedAuthenticatorConfigs = Arrays.stream(federatedAuthenticatorConfigs)
+                .filter(config -> config.getName().equalsIgnoreCase("samlsso"))
+                .toArray(FederatedAuthenticatorConfig[]::new);
+        residentIdentityProvider.setFederatedAuthenticatorConfigs(federatedAuthenticatorConfigs);
+        if (isSuperTenant) {
+            superTenantIDPMgtClient.updateResidentIdP(residentIdentityProvider);
+        } else {
+            tenantIDPMgtClient.updateResidentIdP(residentIdentityProvider);
+        }
+    }
 }

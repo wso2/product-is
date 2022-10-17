@@ -51,19 +51,25 @@ public class ReadOnlyUserStoreInitializerTestCase extends ISIntegrationTest {
     public void initUserStoreConfig() throws Exception {
 
         super.init();
+        applyTomlConfigsAndRestart("ldap_user_mgt_config.toml");
+        scm.restoreToLastConfiguration(false);
+
+        super.init(TestUserMode.SUPER_TENANT_ADMIN);
         userMgtClient = new UserManagementClient(backendURL, getSessionCookie());
         authenticatorClient = new AuthenticatorClient(backendURL);
 
         userMgtClient.addRole(newUserRole, null, new String[]{"/permission/admin/login"});
         userMgtClient.addUser(newUserName, newUserPassword, new String[]{newUserRole}, null);
 
-        applyTomlConfigsAndRestart();
+        applyTomlConfigsAndRestart("read_only_ldap_user_mgt_config.toml");
     }
 
     @AfterTest(alwaysRun = true)
     public void resetUserStoreConfig() throws Exception {
 
-        scm.restoreToLastConfiguration(true);
+        scm.restoreToLastConfiguration(false);
+        applyTomlConfigsAndRestart("ldap_user_mgt_config.toml");
+
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         userMgtClient = new UserManagementClient(backendURL, getSessionCookie());
 
@@ -74,15 +80,16 @@ public class ReadOnlyUserStoreInitializerTestCase extends ISIntegrationTest {
         if (userMgtClient.roleNameExists(newUserRole)) {
             userMgtClient.deleteRole(newUserRole);
         }
+        scm.restoreToLastConfiguration(true);
     }
 
-    private void applyTomlConfigsAndRestart() throws AutomationUtilException, XPathExpressionException, IOException {
+    private void applyTomlConfigsAndRestart(String deploymentTomlFile) throws AutomationUtilException, XPathExpressionException, IOException {
 
         String carbonHome = Utils.getResidentCarbonHome();
         defaultConfigFile = getDeploymentTomlFile(carbonHome);
         log.info("Default TOML: " + defaultConfigFile.toString());
         File userMgtConfigFile = new File(getISResourceLocation() + File.separator + "userMgt"
-                + File.separator + "read_only_ldap_user_mgt_config.toml");
+                + File.separator + deploymentTomlFile);
         scm = new ServerConfigurationManager(isServer);
         scm.applyConfigurationWithoutRestart(userMgtConfigFile, defaultConfigFile, true);
         scm.restartGracefully();

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019, WSO2 LLC. (http://www.wso2.org) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -123,10 +123,10 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
     }
 
     @Test(dependsOnMethods = {"createApplication"})
-    public void testGetBasicApplicationDetailsWithFilter() throws Exception {
+    public void testGetBasicOAuth2ApplicationDetailsWithFilter() throws Exception {
 
-        // Create another application with name sample.
-        String body = readResource("create-sample-basic-application.json");
+        // Create application with predefined clientId.
+        String body = readResource("create-oauth-app-with-predefined-clientid.json");
         Response responseOfPost = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, body);
         responseOfPost.then()
                 .log().ifValidationFails()
@@ -135,18 +135,129 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
                 .header(HttpHeaders.LOCATION, notNullValue());
 
         String location = responseOfPost.getHeader(HttpHeaders.LOCATION);
-        createdAppId = extractApplicationIdFromLocationHeader(location);
-        assertNotBlank(createdAppId);
+        String createdOAuth2AppId = extractApplicationIdFromLocationHeader(location);
+        assertNotBlank(createdOAuth2AppId);
 
-        // Perform an eq with filter.
+        // Perform the eq operation with name filter.
         Map<String, Object> params = new HashMap<>();
-        params.put("filter", "name eq SAMPLE");
+        params.put("filter", "name eq OAuth Application With ClientId");
         getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH, params)
                 .then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .body("totalResults", equalTo(1));
+
+        // Perform the eq operation with clientId filter.
+        params.put("filter", "clientId eq my_custom_client_id");
+        getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH, params)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("totalResults", equalTo(1));
+
+        // Perform the eq operation with clientId or name filter.
+        params.put("filter", "name eq app or clientId eq my_custom_client_id");
+        getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH, params)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("totalResults", equalTo(1));
+
+        // Perform the eq operation with clientId and name filter.
+        params.put("filter", "name eq app and clientId eq my_custom_client_id");
+        getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH, params)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("totalResults", equalTo(0));
+
+        params.put("filter", "name eq OAuth Application With ClientId and clientId eq my_custom_client_id");
+        getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH, params)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("totalResults", equalTo(1));
+
+        // Delete the OAuth2 application to release the clientId for other testcases.
+        getResponseOfDelete(APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdOAuth2AppId)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
+    }
+
+    @Test(dependsOnMethods = {"createApplication"})
+    public void testGetBasicSAMLApplicationDetailsWithFilter() throws Exception {
+
+        // Create application with predefined SAML issuer.
+        String body = readResource("create-saml-app-with-manual-config.json");
+        Response responseOfPost = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, body);
+        responseOfPost.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .header(HttpHeaders.LOCATION, notNullValue());
+
+        String location = responseOfPost.getHeader(HttpHeaders.LOCATION);
+        String createdSAMLAppId = extractApplicationIdFromLocationHeader(location);
+        assertNotBlank(createdSAMLAppId);
+
+        // Perform the eq operation with name filter.
+        Map<String, Object> params = new HashMap<>();
+        params.put("filter", "name eq My SAML App");
+        getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH, params)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("totalResults", equalTo(1));
+
+        // Perform the eq operation with issuer filter.
+        params.put("filter", "issuer eq https://sp.wso2.com");
+        getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH, params)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("totalResults", equalTo(1));
+
+        // Perform the eq operation with issuer or name filter.
+        params.put("filter", "name eq app or issuer eq https://sp.wso2.com");
+        getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH, params)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("totalResults", equalTo(1));
+
+        // Perform the eq operation with issuer and name filter.
+        params.put("filter", "name eq app and issuer eq https://sp.wso2.com");
+        getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH, params)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("totalResults", equalTo(0));
+
+        params.put("filter", "name eq My SAML App and issuer eq https://sp.wso2.com");
+        getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH, params)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("totalResults", equalTo(1));
+
+        // Delete the SAML application to release the issuer for other testcases.
+        getResponseOfDelete(APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdSAMLAppId)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
     }
 
     @Test(dependsOnMethods = {"testGetApplicationById"})

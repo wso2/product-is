@@ -7,7 +7,13 @@ SCIM2_REPO_CLONE_LINK=https://github.com/wso2-extensions/identity-inbound-provis
 echo ""
 echo "=========================================================="
 PR_LINK=${PR_LINK%/}
+JDK_VERSION=${JDK_VERSION%/}
+JAVA_8_HOME=${JAVA_8_HOME%/}
+JAVA_11_HOME=${JAVA_11_HOME%/}
 echo "    PR_LINK: $PR_LINK"
+echo "    JAVA 8 Home: $JAVA_8_HOME"
+echo "    JAVA 11 Home: $JAVA_11_HOME"
+echo "    User Input: $JDK_VERSION"
 echo "::warning::Build ran for PR $PR_LINK"
 
 USER=$(echo $PR_LINK | awk -F'/' '{print $4}')
@@ -21,6 +27,7 @@ echo "::set-output name=REPO_NAME::$REPO"
 echo "=========================================================="
 echo "Cloning product-is"
 echo "=========================================================="
+
 git clone https://github.com/wso2/product-is
 
 if [ "$REPO" = "product-is" ]; then
@@ -51,6 +58,7 @@ if [ "$REPO" = "product-is" ]; then
   echo "$COMMIT3"
 
   cat pom.xml
+  export JAVA_HOME=$JAVA_11_HOME
   mvn clean install --batch-mode | tee mvn-build.log
 
   PR_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
@@ -68,7 +76,8 @@ if [ "$REPO" = "product-is" ]; then
   PR_BUILD_RESULT_LOG=$(echo $PR_BUILD_RESULT_LOG_TEMP)
   echo "::warning::$PR_BUILD_RESULT_LOG"
 
-  if [ "$PR_BUILD_STATUS" != "SUCCESS" ]; then
+  PR_BUILD_SUCCESS_COUNT=$(grep -o -i "\[INFO\] BUILD SUCCESS" mvn-build.log | wc -l)
+  if [ "$PR_BUILD_SUCCESS_COUNT" != "1" ]; then
     echo "PR BUILD not successfull. Aborting."
     echo "::error::PR BUILD not successfull. Check artifacts for logs."
     exit 1
@@ -135,11 +144,18 @@ else
   echo ""
   echo "Building dependency repo $REPO..."
   echo "=========================================================="
+
+  if [ "$JDK_VERSION" = "11" ]; then
+    export JAVA_HOME=$JAVA_11_HOME
+  else
+    export JAVA_HOME=$JAVA_8_HOME
+  fi
+
   if [ "$REPO" = "carbon-kernel" ]; then
     mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
-  else 
+  else
     mvn clean install --batch-mode | tee mvn-build.log
-  fi 
+  fi
 
   echo ""
   echo "Dependency repo $REPO build complete."
@@ -208,6 +224,9 @@ else
     echo ""
     echo "Building repo $MULTITENANCY_REPO..."
     echo "=========================================================="
+
+
+    export JAVA_HOME=$JAVA_11_HOME
     mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
 
     echo "Repo $MULTITENANCY_REPO build complete."
@@ -260,6 +279,8 @@ else
     echo ""
     echo "Building $SCIM2_REPO repo..."
     echo "=========================================================="
+
+    export JAVA_HOME=$JAVA_8_HOME
     mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
 
     echo "Repo $SCIM2_REPO build complete."
@@ -304,6 +325,7 @@ else
     fi
   fi
 
+  export JAVA_HOME=$JAVA_11_HOME
   cat pom.xml
   mvn clean install --batch-mode | tee mvn-build.log
 
@@ -322,7 +344,8 @@ else
   PR_BUILD_RESULT_LOG=$(echo $PR_BUILD_RESULT_LOG_TEMP)
   echo "::warning::$PR_BUILD_RESULT_LOG"
 
-  if [ "$PR_BUILD_STATUS" != "SUCCESS" ]; then
+  PR_BUILD_SUCCESS_COUNT=$(grep -o -i "\[INFO\] BUILD SUCCESS" mvn-build.log | wc -l)
+  if [ "$PR_BUILD_SUCCESS_COUNT" != "1" ]; then
     echo "PR BUILD not successfull. Aborting."
     echo "::error::PR BUILD not successfull. Check artifacts for logs."
     exit 1

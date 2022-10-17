@@ -176,6 +176,10 @@ public class UserSessionTest extends RESTAPIUserTestBase {
         client = HttpClientBuilder.create().build();
         loginUserToApplication(client, ISSUER_TRAVELOCITY_COM, session_test_user1, TEST_USER_PASSWORD);
         client.close();
+
+        client = HttpClientBuilder.create().build();
+        loginUserToApplication(client, ISSUER_AVIS_COM, session_test_user2, TEST_USER_PASSWORD);
+        client.close();
     }
 
     private void loginUserToApplication(CloseableHttpClient client, String application, String username,

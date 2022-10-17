@@ -95,7 +95,7 @@ public class OAuth2TokenRevocationWithRevokedAccessToken extends OAuth2ServiceAb
         appDTO.setGrantTypes("authorization_code implicit password client_credentials refresh_token "
                 + "urn:ietf:params:oauth:grant-type:saml2-bearer iwa:ntlm");
 
-        OAuthConsumerAppDTO oAuthConsumerAppDTO = createApplication(appDTO);
+        OAuthConsumerAppDTO oAuthConsumerAppDTO = createApplication(appDTO, SERVICE_PROVIDER_NAME);
 
         consumerKey = new ClientID(oAuthConsumerAppDTO.getOauthConsumerKey());
         consumerSecret = new Secret(oAuthConsumerAppDTO.getOauthConsumerSecret());
@@ -201,7 +201,9 @@ public class OAuth2TokenRevocationWithRevokedAccessToken extends OAuth2ServiceAb
     private HTTPResponse revokeAccessToken(AccessToken accessToken) throws Exception {
 
         ClientAuthentication clientAuth = new ClientSecretBasic(consumerKey, consumerSecret);
-        URI tokenRevokeEndpoint = new URI(OAuth2Constant.TOKEN_REVOKE_ENDPOINT);
+        String tokenRevokeUrl = activeTenant.equalsIgnoreCase("carbon.super") ?
+                OAuth2Constant.TOKEN_REVOKE_ENDPOINT : OAuth2Constant.TENANT_TOKEN_REVOKE_ENDPOINT;
+        URI tokenRevokeEndpoint = new URI(tokenRevokeUrl);
 
         TokenRevocationRequest revocationRequest =
                 new TokenRevocationRequest(tokenRevokeEndpoint, clientAuth, accessToken);

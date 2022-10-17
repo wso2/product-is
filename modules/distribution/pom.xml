@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>6.0.0-m5-SNAPSHOT</version>
+        <version>6.1.0-m1-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -34,14 +34,6 @@
         <dependency>
             <groupId>org.wso2.orbit.com.h2database</groupId>
             <artifactId>h2-engine</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.privacy</groupId>
-            <artifactId>org.wso2.carbon.privacy.forgetme.conf</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.privacy</groupId>
-            <artifactId>org.wso2.carbon.privacy.forgetme.tool</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.rampart</groupId>
@@ -121,34 +113,6 @@
                                     <overWrite>true</overWrite>
                                     <outputDirectory>target</outputDirectory>
                                 </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.wso2.carbon.privacy</groupId>
-                                    <artifactId>org.wso2.carbon.privacy.forgetme.tool</artifactId>
-                                    <version>${forgetme.tool.version}</version>
-                                    <type>zip</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>target/forget-me</outputDirectory>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>copy-forgetme-war</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.wso2.carbon.privacy</groupId>
-                                    <artifactId>org.wso2.carbon.privacy.forgetme.rest</artifactId>
-                                    <version>${forgetme.tool.version}</version>
-                                    <type>war</type>
-                                    <overWrite>true</overWrite>
-                                    <destFileName>forgetme#v1.0.war</destFileName>
-                                    <outputDirectory>target/forget-me-webapp</outputDirectory>
-                                </artifactItem>
                             </artifactItems>
                         </configuration>
                     </execution>
@@ -181,7 +145,6 @@
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.scim.common.feature.default.json</param>
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.consent.mgt.server.feature.default.json</param>
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.humantask.server.feature.default.json</param>
-                                        <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.ldap.server.server.feature.default.json</param>
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.tenant.common.server.default.json</param>
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.extension.identity.x509Certificate.validation.server.feature.default.json</param>
                                     </include>
@@ -263,7 +226,7 @@
                                 <property name="identity-db" value="${4-space-tab}&lt;datasource&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}&lt;name&gt;WSO2_IDENTITY_DB&lt;/name&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}&lt;description&gt;The datasource used for identity data&lt;/description&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}&lt;jndiConfig&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;name&gt;jdbc/WSO2IdentityDB&lt;/name&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}&lt;/jndiConfig&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}&lt;definition type=&quot;RDBMS&quot;&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;configuration&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;url&gt;jdbc:h2:./repository/database/WSO2IDENTITY_DB;DB_CLOSE_ON_EXIT=FALSE&lt;/url&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;username&gt;wso2carbon&lt;/username&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;password&gt;wso2carbon&lt;/password&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;driverClassName&gt;org.h2.Driver&lt;/driverClassName&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;maxActive&gt;50&lt;/maxActive&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;maxWait&gt;60000&lt;/maxWait&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;testOnBorrow&gt;true&lt;/testOnBorrow&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;validationQuery&gt;SELECT 1&lt;/validationQuery&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;validationInterval&gt;30000&lt;/validationInterval&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;defaultAutoCommit&gt;true&lt;/defaultAutoCommit&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;/configuration&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}&lt;/definition&gt;${line.separator}${4-space-tab}${4-space-tab}&lt;/datasource&gt;${line.separator}${4-space-tab}&lt;/datasources&gt;" />
                                 <property name="identity-db-template" value="${4-space-tab}&lt;datasource&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}&lt;name&gt;WSO2_IDENTITY_DB&lt;/name&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}&lt;description&gt;Shared database for identity data&lt;/description&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}&lt;jndiConfig&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;name&gt;jdbc/WSO2IdentityDB&lt;/name&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}&lt;/jndiConfig&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}&lt;definition type=&quot;RDBMS&quot;&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;configuration&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;url&gt;{{database.identity_db.url}}&lt;/url&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;username&gt;{{database.identity_db.username}}&lt;/username&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;password&gt;{{database.identity_db.password}}&lt;/password&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;driverClassName&gt;{{database.identity_db.driver}}&lt;/driverClassName&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}{% for property_name,property_value in database.identity_db.pool_options.items() %}${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;{{property_name}}&gt;{{property_value}}&lt;/{{property_name}}&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}{% endfor %}${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}${4-space-tab}&lt;/configuration&gt;${line.separator}${4-space-tab}${4-space-tab}${4-space-tab}&lt;/definition&gt;${line.separator}${4-space-tab}${4-space-tab}&lt;/datasource&gt;${line.separator}${4-space-tab}&lt;/datasources&gt;" />
 
-                                <property name="captcha-filter-is-token" value="{% if recaptcha.enabled is sameas true %}${line.separator}&lt;filter&gt;${line.separator} &lt;filter-name&gt;CaptchaFilter&lt;/filter-name&gt;${line.separator} &lt;filter-class&gt;org.wso2.carbon.identity.captcha.filter.CaptchaFilter&lt;/filter-class&gt;${line.separator} &lt;/filter&gt;${line.separator}${line.separator} &lt;filter-mapping&gt;${line.separator} &lt;filter-name&gt;CaptchaFilter&lt;/filter-name&gt;${line.separator} &lt;url-pattern&gt;/samlsso&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/oauth2&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/commonauth&lt;/url-pattern&gt;${line.separator}&lt;url-pattern&gt;/identity/recovery/v0.9/recover-password&lt;/url-pattern&gt;${line.separator} &lt;dispatcher&gt;FORWARD&lt;/dispatcher&gt;${line.separator} &lt;dispatcher&gt;REQUEST&lt;/dispatcher&gt;${line.separator} &lt;/filter-mapping&gt;${line.separator}${line.separator}{% endif %}${line.separator}&lt;/web-app&gt;" />
+                                <property name="captcha-filter-is-token" value="{% if recaptcha.enabled is sameas true %}${line.separator}&lt;filter&gt;${line.separator} &lt;filter-name&gt;CaptchaFilter&lt;/filter-name&gt;${line.separator} &lt;filter-class&gt;org.wso2.carbon.identity.captcha.filter.CaptchaFilter&lt;/filter-class&gt;${line.separator} &lt;/filter&gt;${line.separator}${line.separator} &lt;filter-mapping&gt;${line.separator} &lt;filter-name&gt;CaptchaFilter&lt;/filter-name&gt;${line.separator} &lt;url-pattern&gt;/samlsso&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/oauth2&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/commonauth&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/identity/recovery/v0.9/recover-password&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/identity/recovery/v0.9/recover-username/&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/identity/recovery/v0.9/security-question&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/identity/recovery/v0.9/validate-answer&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/identity/user/v1.0/me&lt;/url-pattern&gt;${line.separator} &lt;url-pattern&gt;/identity/user/v1.0/resend-code&lt;/url-pattern&gt;${line.separator} &lt;dispatcher&gt;FORWARD&lt;/dispatcher&gt;${line.separator} &lt;dispatcher&gt;REQUEST&lt;/dispatcher&gt;${line.separator} &lt;/filter-mapping&gt;${line.separator}${line.separator}{% endif %}${line.separator}&lt;/web-app&gt;" />
 
                                 <mkdir dir="${tempdir}" />
                                 <unzip dest="${tempdir}">
@@ -297,6 +260,15 @@
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;!--MgtHostName&gt;mgt.wso2.org&lt;/MgtHostName--&gt;" value="&lt;MgtHostName&gt;localhost&lt;/MgtHostName&gt;" />
 
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;!--HostName&gt;www.wso2.org&lt;/HostName--&gt;" value="&lt;HostName&gt;localhost&lt;/HostName&gt;" />
+
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;EmbeddedLDAP&gt;" value="&lt;!--EmbeddedLDAP--&gt;" />
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;LDAPServerPort&gt;10389&lt;/LDAPServerPort&gt;" value="&lt;!--LDAPServerPort&gt;10389&lt;/LDAPServerPort--&gt;" />
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;KDCServerPort&gt;8000&lt;/KDCServerPort&gt;" value="&lt;!--KDCServerPort&gt;8000&lt;/KDCServerPort--&gt;" />
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;/EmbeddedLDAP&gt;" value="&lt;!--/EmbeddedLDAP--&gt;" />
+                                <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/carbon.xml.j2" token="&lt;EmbeddedLDAP&gt;" value="&lt;!--EmbeddedLDAP--&gt;" />
+                                <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/carbon.xml.j2" token="&lt;LDAPServerPort&gt;10389&lt;/LDAPServerPort&gt;" value="&lt;!--LDAPServerPort&gt;10389&lt;/LDAPServerPort--&gt;" />
+                                <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/carbon.xml.j2" token="&lt;KDCServerPort&gt;8000&lt;/KDCServerPort&gt;" value="&lt;!--KDCServerPort&gt;8000&lt;/KDCServerPort--&gt;" />
+                                <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/carbon.xml.j2" token="&lt;/EmbeddedLDAP&gt;" value="&lt;!--/EmbeddedLDAP--&gt;" />
 
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/carbon.xml" token="&lt;!--LdapServer&gt;" value="&lt;LdapServer&gt;" />
                                 <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/carbon.xml.j2" token="&lt;!--LdapServer&gt;" value="&lt;LdapServer&gt;" />
@@ -379,13 +351,15 @@
 
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/repository/conf/user-mgt.xml" token="&lt;Property name=&quot;isCascadeDeleteEnabled&quot;&gt;true&lt;/Property&gt;" value="&lt;Property name=&quot;isCascadeDeleteEnabled&quot;&gt;true&lt;/Property&gt;${line.separator} &lt;Property name=&quot;initializeNewClaimManager&quot;&gt;true&lt;/Property&gt;" />
 
-                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.sh" token="if [ $java_version_formatted -ge 1100 ]; then" value="NASHRON_ARGS=&quot;&quot; ${line.separator} ${line.separator}if [ $java_version_formatted -ge 1100 ]; then${line.separator} NASHRON_ARGS=&quot;--no-deprecation-warning&quot;" />
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.bat" token="set CARBON_CLASSPATH=.\lib\*;%CARBON_CLASSPATH%" value="set CARBON_CLASSPATH=.\lib\*;%CARBON_CLASSPATH%" />
 
-                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.bat" token="set CARBON_CLASSPATH=.\lib\*;%CARBON_CLASSPATH%" value="set CARBON_CLASSPATH=.\lib\*;%CARBON_CLASSPATH% ${line.separator}if %JAVA_VERSION% GEQ 110 set NASHRON_ARGS=--no-deprecation-warning" />
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.sh" token="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot; \" value="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot; \${line.separator} -Dorg.apache.xml.security.ignoreLineBreaks=false \" />
 
-                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.sh" token="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot; \" value="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot; \${line.separator} -Dorg.apache.xml.security.ignoreLineBreaks=false \${line.separator} -Dnashorn.args=&quot;$NASHRON_ARGS&quot; \" />
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.sh" token="--add-opens=java.xml/com.sun.org.apache.xerces.internal.dom=ALL-UNNAMED" value="--add-opens=java.xml/com.sun.org.apache.xerces.internal.dom=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED" />
 
-                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.bat" token="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot;" value="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot; -Dnashorn.args=&quot;%NASHRON_ARGS%&quot;" />
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.bat" token="--add-opens=java.xml/com.sun.org.apache.xerces.internal.dom=ALL-UNNAMED" value="--add-opens=java.xml/com.sun.org.apache.xerces.internal.dom=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED" />
+
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.bat" token="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot;" value="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot;" />
 
                                 <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/authenticators.xml" token="&lt;!--Authenticator name=&quot;MutualSSLAuthenticator&quot; disabled=&quot;false&quot;&gt;" value="&lt;Authenticator name=&quot;MutualSSLAuthenticator&quot;&gt;" />
 
@@ -577,14 +551,6 @@
                                     </fileset>
                                 </unzip>
                                 <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/console.war" />
-
-                                <!-- Explode the smsotpauthenticationendpoint.war -->
-                                <unzip dest="../connectors/target/authenticatorCopied/war/smsotpauthenticationendpoint">
-                                    <fileset dir="../connectors/target/authenticatorCopied/war">
-                                        <include name="smsotpauthenticationendpoint.war" />
-                                    </fileset>
-                                </unzip>
-                                <delete file="../connectors/target/authenticatorCopied/war/smsotpauthenticationendpoint.war" />
 
                                 <!-- Explode the x509certificateauthenticationendpoint.war -->
                                 <unzip dest="../connectors/target/authenticatorCopied/war/x509certificateauthenticationendpoint">

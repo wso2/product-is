@@ -24,9 +24,9 @@
     <oauthConsumerKey>FBgI0MCiuvGsmMfe73wIgHE3PZga</oauthConsumerKey>
     <oauthConsumerSecret>mY0wbhxZS2rijm0bQfiSHps4xnoa</oauthConsumerSecret>
     <applicationName>9.1.10.3-app-selfcontainedtoken-implicit-grant</applicationName>
-    <callbackUrl>https://app-selfcontainedtoken-implicit-grant.com/callback</callbackUrl>
+    <callbackUrl>http://localhost</callbackUrl>
     <oauthVersion>OAuth-2.0</oauthVersion>
-    <grantTypes>implicit </grantTypes>
+    <grantTypes>client_credentials implicit</grantTypes>
     <scopeValidators/>
     <pkceSupportPlain>false</pkceSupportPlain>
     <pkceMandatory>false</pkceMandatory>
@@ -70,7 +70,20 @@
     <RoleClaimURI/>
     <LocalClaimDialect>true</LocalClaimDialect>
     <IdpClaim/>
-    <ClaimMappings/>
+    <ClaimMappings>
+      <ClaimMapping>
+        <LocalClaim>
+          <ClaimUri>http://wso2.org/claims/username</ClaimUri>
+          <claimId>0</claimId>
+        </LocalClaim>
+        <RemoteClaim>
+          <ClaimUri>http://wso2.org/claims/username</ClaimUri>
+          <claimId>0</claimId>
+        </RemoteClaim>
+        <RequestClaim>true</RequestClaim>
+        <MandatoryClaim>true</MandatoryClaim>
+      </ClaimMapping>
+    </ClaimMappings>
     <AlwaysSendMappedLocalSubjectId>false</AlwaysSendMappedLocalSubjectId>
     <SPClaimDialects/>
   </ClaimConfig>

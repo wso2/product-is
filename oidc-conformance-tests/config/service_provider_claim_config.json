@@ -40,7 +40,7 @@
                 },
                 {
                     "claim": {
-                        "uri": "http://wso2.org/claims/fullname"
+                        "uri": "http://wso2.org/claims/middleName"
                     },
                     "mandatory": true
                 },

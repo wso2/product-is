@@ -138,7 +138,7 @@ public class NotificationSenderFailureTest extends NotificationSenderTestBase {
                 NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + EMAIL_SENDERS_PATH + PATH_SEPARATOR +
                         "randomName");
         if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "CONFIGM_00017");
+            validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "NSM-60006");
         } else {
             response.then()
                     .log().ifValidationFails()
@@ -154,7 +154,7 @@ public class NotificationSenderFailureTest extends NotificationSenderTestBase {
                 NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + EMAIL_SENDERS_PATH + PATH_SEPARATOR +
                         "randomName");
         if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "CONFIGM_00017");
+            validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "NSM-60006");
         } else {
             response.then()
                     .log().ifValidationFails()
@@ -228,7 +228,7 @@ public class NotificationSenderFailureTest extends NotificationSenderTestBase {
                 NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + SMS_SENDERS_PATH + PATH_SEPARATOR +
                         "randomName");
         if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "CONFIGM_00017");
+            validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "NSM-60006");
         } else {
             response.then()
                     .log().ifValidationFails()
@@ -244,7 +244,7 @@ public class NotificationSenderFailureTest extends NotificationSenderTestBase {
                 NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + SMS_SENDERS_PATH + PATH_SEPARATOR +
                         "randomName");
         if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "CONFIGM_00017");
+            validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "NSM-60006");
         } else {
             response.then()
                     .log().ifValidationFails()

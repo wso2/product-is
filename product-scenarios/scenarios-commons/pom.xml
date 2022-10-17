@@ -35,7 +35,7 @@
                 <version>2.12.4</version>
                 <configuration>
 
-                    <argLine>-Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m -Dorg.apache.jasper.compiler.disablejsr199=true</argLine>
+                    <argLine>-Xmx1024m -Dorg.apache.jasper.compiler.disablejsr199=true</argLine>
                     <systemProperties>
                         <property>
                             <name>maven.test.haltafterfailure</name>
@@ -72,10 +72,6 @@
             <artifactId>httpclient</artifactId>
         </dependency>
         <dependency>
-            <groupId>commons-httpclient</groupId>
-            <artifactId>commons-httpclient</artifactId>
-        </dependency>
-        <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
         </dependency>
@@ -94,6 +90,12 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.utils</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.wso2.orbit.commons-httpclient</groupId>
+                    <artifactId>commons-httpclient</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.framework</groupId>
@@ -122,6 +124,12 @@
         <dependency>
             <groupId>org.apache.axis2.wso2</groupId>
             <artifactId>axis2-client</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.wso2.orbit.commons-httpclient</groupId>
+                    <artifactId>commons-httpclient</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.rampart.wso2</groupId>
@@ -146,6 +154,18 @@
         <dependency>
             <groupId>org.opensaml</groupId>
             <artifactId>opensaml</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-httpclient</groupId>
+                    <artifactId>commons-httpclient</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>commons-io.wso2</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.7.0.wso2v1</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>
