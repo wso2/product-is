@@ -1368,6 +1368,11 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
     public void deleteWorkflowsForListing() throws RemoteException, WorkflowAdminServiceWorkflowException {
 
         WorkflowWizard[] workflows = client.listWorkflows();
+        try {
+            Thread.sleep(20000);
+        } catch (InterruptedException e) {
+            Assert.fail("Error while deleting the workflows created for listing.", e);
+        }
         for (index = 0; index < ITERATIONS; index++) {
             String workflowName = WORKFLOW_NAME + index;
             String workflowDescription = WORKFLOW_DESCRIPTION + index;
