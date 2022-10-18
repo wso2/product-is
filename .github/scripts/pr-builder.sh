@@ -1,6 +1,4 @@
 #!/bin/bash +x
-MULTITENANCY_REPO=carbon-multitenancy
-MULTITENANCY_REPO_CLONE_LINK=https://github.com/wso2/carbon-multitenancy.git
 OUTBOUND_AUTH_OIDC_REPO=identity-outbound-auth-oidc
 OUTBOUND_AUTH_OIDC_REPO_CLONE_LINK=https://github.com/wso2-extensions/identity-outbound-auth-oidc.git
 SCIM2_REPO=identity-inbound-provisioning-scim2
@@ -192,62 +190,9 @@ else
   fi
   cd ..
 
-  MULTITENANCY_VERSION_PROPERTY_KEY=""
-  MULTITENANCY_DEPENDENCY_VERSION=""
   OUTBOUND_AUTH_OIDC_VERSION_PROPERTY_KEY=""
   OUTBOUND_AUTH_OIDC_DEPENDENCY_VERSION=""
   if [ "$REPO" = "carbon-kernel" ]; then
-    echo ""
-    echo "Building Multitenancy repo..."
-    echo "=========================================================="
-    git clone $MULTITENANCY_REPO_CLONE_LINK
-    MULTITENANCY_VERSION_PROPERTY=$(python version_property_finder.py $MULTITENANCY_REPO product-is 2>&1)
-    if [ "$MULTITENANCY_VERSION_PROPERTY" != "invalid" ]; then
-      echo "Version property key for the $MULTITENANCY_REPO is $MULTITENANCY_VERSION_PROPERTY"
-      MULTITENANCY_VERSION_PROPERTY_KEY=$MULTITENANCY_VERSION_PROPERTY
-    else
-      echo ""
-      echo "=========================================================="
-      echo "Unable to find the version property for $MULTITENANCY_REPO..."
-      echo "=========================================================="
-      echo ""
-      echo "::error::Unable to find the version property for $MULTITENANCY_REPO..."
-      exit 1
-    fi
-    cd $MULTITENANCY_REPO
-    MULTITENANCY_DEPENDENCY_VERSION=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
-    echo "Multitenancy Dependency Version: $MULTITENANCY_DEPENDENCY_VERSION"
-    echo ""
-
-    KERNEL_VERSION_PROPERTY_KEY=carbon.kernel.version
-    echo "Updating carbon-kernel dependency version in carbon-multitenancy repo..."
-    echo "=========================================================="
-    echo ""
-    sed -i "s/<$KERNEL_VERSION_PROPERTY_KEY>.*<\/$KERNEL_VERSION_PROPERTY_KEY>/<$KERNEL_VERSION_PROPERTY_KEY>$DEPENDENCY_VERSION<\/$KERNEL_VERSION_PROPERTY_KEY>/" pom.xml
-
-    echo ""
-    echo "Building repo $MULTITENANCY_REPO..."
-    echo "=========================================================="
-
-
-    export JAVA_HOME=$JAVA_11_HOME
-    mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
-
-    echo "Repo $MULTITENANCY_REPO build complete."
-    SUB_REPO_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
-
-    if [ "$SUB_REPO_BUILD_STATUS" != "SUCCESS" ]; then
-      echo "$MULTITENANCY_REPO repo build not successfull. Aborting."
-      echo "::error::$MULTITENANCY_REPO repo build not successfull. Aborting."
-      exit 1
-    fi
-
-    echo ""
-    echo "Built version: $MULTITENANCY_DEPENDENCY_VERSION"
-    echo "=========================================================="
-    echo ""
-    cd ..
-
     echo ""
     echo "Building Outbound Auth OIDC repo..."
     echo "=========================================================="
@@ -367,16 +312,10 @@ else
   else
     sed -i "s/<$VERSION_PROPERTY_KEY>.*<\/$VERSION_PROPERTY_KEY>/<$VERSION_PROPERTY_KEY>$DEPENDENCY_VERSION<\/$VERSION_PROPERTY_KEY>/" pom.xml
     if [ "$REPO" = "carbon-kernel" ]; then
-      echo "Updating Multitenancy version in product-is..."
-      echo "=========================================================="
-      echo ""
-      sed -i "s/<$MULTITENANCY_VERSION_PROPERTY_KEY>.*<\/$MULTITENANCY_VERSION_PROPERTY_KEY>/<$MULTITENANCY_VERSION_PROPERTY_KEY>$MULTITENANCY_DEPENDENCY_VERSION<\/$MULTITENANCY_VERSION_PROPERTY_KEY>/" pom.xml
-
       echo "Updating Outbound Auth OIDC version in product-is..."
       echo "=========================================================="
       echo ""
       sed -i "s/<$OUTBOUND_AUTH_OIDC_VERSION_PROPERTY_KEY>.*<\/$OUTBOUND_AUTH_OIDC_VERSION_PROPERTY_KEY>/<$OUTBOUND_AUTH_OIDC_VERSION_PROPERTY_KEY>$OUTBOUND_AUTH_OIDC_DEPENDENCY_VERSION<\/$OUTBOUND_AUTH_OIDC_VERSION_PROPERTY_KEY>/" pom.xml
-
       echo "Updating caron-kernel version in carbon.product..."
       echo "=========================================================="
       echo ""
