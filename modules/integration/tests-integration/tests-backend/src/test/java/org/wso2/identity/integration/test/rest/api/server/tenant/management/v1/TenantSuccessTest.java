@@ -95,6 +95,19 @@ public class TenantSuccessTest extends TenantManagementBaseTest {
     }
 
     @Test(dependsOnMethods = {"testAddTenant"})
+    public void testGetTenantByDomainName() {
+
+        Response response =
+                getResponseOfGet(TENANT_API_BASE_PATH + TENANT_DOMAIN_BASE_PATH + PATH_SEPARATOR + TENANT_DOMAIN_NAME);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("id", equalTo(tenantId))
+                .body("domain", equalTo(TENANT_DOMAIN_NAME));
+    }
+
+    @Test(dependsOnMethods = {"testGetTenantByDomainName"})
     public void testGetTenant() throws IOException {
 
         Response response = getResponseOfGet(TENANT_API_BASE_PATH + PATH_SEPARATOR + tenantId);

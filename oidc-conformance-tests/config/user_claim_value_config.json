@@ -76,6 +76,14 @@
                 "op": "replace",
                 "value": {
                     "name": {
+                        "middleName": "michael"
+                    }
+                }
+            },
+            {
+                "op": "replace",
+                "value": {
+                    "name": {
                         "familyName": "Administrator"
                     }
                 }

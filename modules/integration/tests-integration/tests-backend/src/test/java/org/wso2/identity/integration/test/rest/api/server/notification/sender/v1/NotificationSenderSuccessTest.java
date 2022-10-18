@@ -250,6 +250,7 @@ public class NotificationSenderSuccessTest extends NotificationSenderTestBase {
                     .body("key", equalTo("1234"))
                     .body("secret", equalTo("12345"))
                     .body("sender", equalTo("073923902"))
+                    .body("contentType", equalTo("JSON"))
                     .body("properties", notNullValue());
         } else {
             response.then()
@@ -278,6 +279,7 @@ public class NotificationSenderSuccessTest extends NotificationSenderTestBase {
                     .body(baseIdentifier + "key", equalTo("1234"))
                     .body(baseIdentifier + "secret", equalTo("12345"))
                     .body(baseIdentifier + "sender", equalTo("073923902"))
+                    .body(baseIdentifier + "contentType", equalTo("JSON"))
                     .body(baseIdentifier + "properties", notNullValue());
         } else {
             response.then()
@@ -304,6 +306,7 @@ public class NotificationSenderSuccessTest extends NotificationSenderTestBase {
                     .body("key", equalTo("123"))
                     .body("secret", equalTo("123456"))
                     .body("sender", equalTo("0773923902"))
+                    .body("contentType", equalTo("JSON"))
                     .body("properties", notNullValue());
         } else {
             response.then()

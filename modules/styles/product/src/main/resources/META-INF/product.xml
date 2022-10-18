@@ -18,7 +18,7 @@
 <product xmlns="http://products.wso2.org/carbon">
     <properties>
        <property name="userforum">http://stackoverflow.com/questions/tagged/wso2is/</property>
-       <property name="userguide">https://is.docs.wso2.com/en/5.11.0</property>
+       <property name="userguide">https://is.docs.wso2.com/en/6.0.0</property>
        <property name="mailinglist">http://wso2.org/mail</property>
        <property name="issuetracker">https://github.com/wso2/product-is/issues</property>
     </properties>

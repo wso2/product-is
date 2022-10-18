@@ -310,6 +310,6 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
                              "urn:ietf:params:oauth:grant-type:saml2-bearer iwa:ntlm " +
                              "urn:ietf:params:oauth:grant-type:device_code");
         appDTO.setBypassClientCredentials(true);
-        return createApplication(appDTO);
+        return createApplication(appDTO, SERVICE_PROVIDER_NAME);
     }
 }

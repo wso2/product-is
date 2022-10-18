@@ -38,6 +38,7 @@ import static org.wso2.identity.scenarios.commons.util.IdentityScenarioUtil.getJ
 
 public class ProvisionUserWithAllAttributesTestCase extends ScenarioTestBase {
 
+    private static final String USER_NAME_FOR_TEST = "scim2CreateUserWithAllAttributes";
     private CloseableHttpClient client;
     private String userNameResponse;
     private String userId;
@@ -47,9 +48,7 @@ public class ProvisionUserWithAllAttributesTestCase extends ScenarioTestBase {
     private String SEPERATOR = "/";
     private String WORKEMAIL = "test@work.com";
 
-
     HttpResponse response;
-
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -68,7 +67,7 @@ public class ProvisionUserWithAllAttributesTestCase extends ScenarioTestBase {
         names.put(SCIMConstants.FAMILY_NAME_ATTRIBUTE, SCIMConstants.FAMILY_NAME_CLAIM_VALUE);
         names.put(SCIMConstants.GIVEN_NAME_ATTRIBUTE, SCIMConstants.GIVEN_NAME_CLAIM_VALUE);
         rootObject.put(SCIMConstants.NAME_ATTRIBUTE, names);
-        rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, SCIMConstants.USERNAME);
+        rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, USER_NAME_FOR_TEST);
         rootObject.put(SCIMConstants.PASSWORD_ATTRIBUTE, SCIMConstants.PASSWORD);
 
         JSONObject emailWork = new JSONObject();
@@ -87,9 +86,10 @@ public class ProvisionUserWithAllAttributesTestCase extends ScenarioTestBase {
 
         response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, rootObject, Constants.SCIMEndpoints.SCIM2_ENDPOINT,
                 Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
+        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED, "User has not been created successfully");
 
         userNameResponse = rootObject.get(SCIMConstants.USER_NAME_ATTRIBUTE).toString();
-        assertEquals(userNameResponse, SCIMConstants.USERNAME, "username not found");
+        assertEquals(userNameResponse, USER_NAME_FOR_TEST, "username not found");
    }
 
     @AfterClass(alwaysRun = true)

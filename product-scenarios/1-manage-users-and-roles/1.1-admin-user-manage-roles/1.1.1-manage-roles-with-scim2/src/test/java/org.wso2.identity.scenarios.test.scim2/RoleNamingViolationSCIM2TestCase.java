@@ -75,7 +75,7 @@ public class RoleNamingViolationSCIM2TestCase extends ScenarioTestBase {
 
         JSONObject groupJSON = scim2Client.getRoleJSON("scim2GroupWithLessThanMinCharacters.json");
         HttpResponse response = scim2Client.provisionGroup(client, groupJSON, username, password);
-        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_INTERNAL_SERVER_ERROR,
+        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_BAD_REQUEST,
                 "Group has been created with less than minimum characters");
         EntityUtils.consume(response.getEntity());
     }
@@ -85,7 +85,7 @@ public class RoleNamingViolationSCIM2TestCase extends ScenarioTestBase {
 
         JSONObject groupJSON = scim2Client.getRoleJSON("scim2GroupWithSpecialCharacters.json");
         HttpResponse response = scim2Client.provisionGroup(client, groupJSON, username, password);
-        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_INTERNAL_SERVER_ERROR,
+        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_BAD_REQUEST,
                 "Group has been created with special characters by violating the schema");
         EntityUtils.consume(response.getEntity());
     }

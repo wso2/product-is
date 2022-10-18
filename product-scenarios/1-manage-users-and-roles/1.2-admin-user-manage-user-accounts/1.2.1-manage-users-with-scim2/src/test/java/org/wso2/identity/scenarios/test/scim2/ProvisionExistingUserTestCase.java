@@ -41,12 +41,11 @@ public class ProvisionExistingUserTestCase extends ScenarioTestBase {
 
     private String userId;
     private CloseableHttpClient client;
-    private String USERNAME = "scim2user";
+    private String USERNAME = "scim2userProvisionExistingUserTestCase";
     private String PASSWORD = "scim2pwd";
     private String userNameResponse;
     HttpResponse response, errorResponse;
     JSONObject rootObject;
-
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -64,14 +63,14 @@ public class ProvisionExistingUserTestCase extends ScenarioTestBase {
         JSONObject names = new JSONObject();
         names.put(SCIMConstants.GIVEN_NAME_ATTRIBUTE, SCIMConstants.GIVEN_NAME_CLAIM_VALUE);
         rootObject.put(SCIMConstants.NAME_ATTRIBUTE, names);
-        rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, SCIMConstants.USERNAME);
+        rootObject.put(SCIMConstants.USER_NAME_ATTRIBUTE, USERNAME);
         rootObject.put(SCIMConstants.PASSWORD_ATTRIBUTE, SCIMConstants.PASSWORD);
 
         response = SCIMProvisioningUtil.provisionUserSCIM(backendURL, rootObject, Constants.SCIMEndpoints.SCIM2_ENDPOINT, Constants.SCIMEndpoints.SCIM_ENDPOINT_USER, ADMIN_USERNAME, ADMIN_PASSWORD);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED, "User has not been created successfully");
 
         userNameResponse = rootObject.get(SCIMConstants.USER_NAME_ATTRIBUTE).toString();
-        assertEquals(userNameResponse, SCIMConstants.USERNAME, "username not found");
+        assertEquals(userNameResponse, USERNAME, "username not found");
     }
 
     @Test(description = "1.1.2.1.2.4")

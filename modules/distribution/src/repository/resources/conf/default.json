@@ -3,7 +3,8 @@
     "isCascadeDeleteEnabled": true,
     "initializeNewClaimManager": true
   },
-  "user_store.type": "read_write_ldap",
+  "user_store.type": "database_unique_id",
+
   "keystore.primary.type" : "JKS",
   "keystore.userstore_password_encryption": "",
   "truststore.type" : "JKS",
@@ -20,6 +21,9 @@
     "metrics_menu",
     "shutdown_restart_menu"
   ],
+  "http_access_log.directory": "${carbon.home}/repository/logs",
+  "http_access_log.prefix": "http_access_",
+  "http_access_log.suffix": ".log",
   "http_access_log.pattern": "%h %l %u %t %r %s %b &quot;%{Referer}i&quot; &quot;%{User-Agent}i&quot; %T",
 
   "log_correlation.header_config": "{'activityid':'Correlation-ID'}",
@@ -29,6 +33,11 @@
 
   "transport.http.enabled" : true,
   "transport.https.enabled" : true,
+
+  "axis2_transport.receiver.http.enabled": true,
+  "axis2_transport.receiver.https.enabled": true,
+  "axis2_transport.sender.http.enabled": true,
+  "axis2_transport.sender.https.enabled": true,
 
   "system.parameter.\u0027org.wso2.CipherTransformation\u0027": "AES/GCM/NoPadding",
   "system.parameter.\u0027org.apache.xml.security.ignoreLineBreaks\u0027": "true",

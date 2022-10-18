@@ -27,7 +27,7 @@
       },
       {
         "name": "urn:ietf:params:oauth:grant-type:device_code",
-        "displayName": "urn:ietf:params:oauth:grant-type:device_code"
+        "displayName": "Device Code"
       },
       {
         "name": "authorization_code",

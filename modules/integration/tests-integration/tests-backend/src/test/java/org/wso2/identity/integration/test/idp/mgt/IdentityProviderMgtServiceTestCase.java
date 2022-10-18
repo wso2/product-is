@@ -613,6 +613,7 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
         Assert.assertEquals(provisioningCons.containsKey("googleapps"), true, "Default provisioning connector googleapps not found");
         Assert.assertEquals(provisioningCons.containsKey("salesforce"), true, "Default provisioning connector salesforce not found");
         Assert.assertEquals(provisioningCons.containsKey("scim"), true, "Default provisioning connector scim not found");
+        Assert.assertEquals(provisioningCons.containsKey("SCIM2"), true, "Default provisioning connector scim2 not found");
     }
 
 
@@ -630,8 +631,6 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
                             "Default federated authenticator OpenIDConnectAuthenticator not found");
         Assert.assertEquals(allFedAuthenticators.containsKey("MicrosoftWindowsLiveAuthenticator"), true,
                             "Default federated authenticator MicrosoftWindowsLiveAuthenticator not found");
-        Assert.assertEquals(allFedAuthenticators.containsKey("YahooOAuth2Authenticator"), true,
-                            "Default federated authenticator YahooOAuth2Authenticator not found");
         Assert.assertEquals(allFedAuthenticators.containsKey("SAMLSSOAuthenticator"), true,
                             "Default federated authenticator SAMLSSOAuthenticator not found");
         Assert.assertEquals(allFedAuthenticators.containsKey("GoogleOIDCAuthenticator"), true,
