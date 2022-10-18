@@ -199,6 +199,7 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.secret.management.v1.SecretManagementFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.branding.preference.management.v1.BrandingPreferenceManagementSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.branding.preference.management.v1.BrandingPreferenceManagementFailureTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.user.selfRegister.SelfRegisterTestCase"/>
         </classes>
     </test>
 
@@ -334,6 +335,7 @@
             <class name="org.wso2.identity.integration.test.identity.mgt.AccountLockWhileCaseInsensitiveUserFalseTestCase"/>
             <class name="org.wso2.identity.integration.test.EmailOTPTestCase"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.liteUserRegister.LiteUserRegisterTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenScopeValidatorTestCase" />
         </classes>
     </test>
 

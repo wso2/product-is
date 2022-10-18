@@ -123,6 +123,17 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
     }
 
     @Test(dependsOnMethods = {"createApplication"})
+    public void testGetConfiguredAuthenticatorsOfApplication() throws Exception {
+
+        getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId + "/" + "authenticators")
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("size()", is(1));
+    }
+
+    @Test(dependsOnMethods = {"createApplication"})
     public void testGetBasicOAuth2ApplicationDetailsWithFilter() throws Exception {
 
         // Create application with predefined clientId.
@@ -260,7 +271,7 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
                 .statusCode(HttpStatus.SC_NO_CONTENT);
     }
 
-    @Test(dependsOnMethods = {"testGetApplicationById"})
+    @Test(dependsOnMethods = {"testGetApplicationById", "testGetConfiguredAuthenticatorsOfApplication"})
     public void testDeleteApplicationById() throws Exception {
 
         getResponseOfDelete(APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId)
