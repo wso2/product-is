@@ -20,6 +20,7 @@ package org.wso2.identity.integration.test.workflow.mgt;
 
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
+import org.apache.commons.lang.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterGroups;
@@ -1348,7 +1349,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
     @BeforeGroups("ListWorkflowsTests")
     public void createWorkflowsForListing() throws RemoteException, WorkflowAdminServiceWorkflowException {
 
-        if (workflowId != null && isWorkflowPresent(workflowId)) {
+        if (StringUtils.isNotEmpty(workflowId) && isWorkflowPresent(workflowId)) {
             client.deleteWorkflow(workflowId);
         }
 
@@ -1581,7 +1582,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
     @BeforeGroups("ListAssociationsTests")
     public void createAssociationsForListing() throws RemoteException, WorkflowAdminServiceWorkflowException {
 
-        if (associationId != null) {
+        if (StringUtils.isNotEmpty(associationId)) {
             client.deleteAssociation(associationId);
         }
 
@@ -1629,7 +1630,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
             }
         }
 
-        if (testWorkflowId != null) {
+        if (StringUtils.isNotEmpty(testWorkflowId)) {
             client.deleteWorkflow(testWorkflowId);
         }
 

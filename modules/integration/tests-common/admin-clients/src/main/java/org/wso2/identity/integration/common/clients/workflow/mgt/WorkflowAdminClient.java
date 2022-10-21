@@ -187,7 +187,7 @@ public class WorkflowAdminClient {
     }
 
     /**
-     * List paginated Workflows with a filter
+     * List paginated Workflows with a filter.
      *
      * @param limit  Limit
      * @param offset Offset
@@ -223,7 +223,7 @@ public class WorkflowAdminClient {
     }
 
     /**
-     * Get count of Workflows
+     * Get count of Workflows.
      *
      * @param filter filter
      * @return Return count of workflows
@@ -240,7 +240,7 @@ public class WorkflowAdminClient {
     }
 
     /**
-     * List paginated associations for a tenant with a filter
+     * List paginated associations for a tenant with a filter.
      *
      * @param limit  Limit
      * @param offset Offset
@@ -260,7 +260,7 @@ public class WorkflowAdminClient {
     }
 
     /**
-     * List associations of a specific workflow
+     * List associations of a specific workflow.
      *
      * @param workflowId Workflow ID
      * @return Association[]
@@ -278,7 +278,7 @@ public class WorkflowAdminClient {
     }
 
     /**
-     * List all associations
+     * List all associations.
      *
      * @return Association[]
      * @throws RemoteException
@@ -294,7 +294,7 @@ public class WorkflowAdminClient {
     }
 
     /**
-     * Get count of associations
+     * Get count of associations.
      *
      * @param filter filter
      * @return Return count of associations
