@@ -58,6 +58,12 @@ jobs:
             ~/.m2
             !~/.m2/repository/org/wso2/is/wso2is
           key: ${{ runner.os }}-pr-builder-${{ env.CURRENT_MONTH }}
+      - name: Setup pnpm
+        id: setup-pnpm
+        uses: pnpm/action-setup@v2.1.0
+        with:
+          version: latest
+          run_install: false
       - name: Run PR builder
         id: builder_step
         env:

@@ -2275,7 +2275,7 @@
         <identity.metadata.saml.version>1.7.1</identity.metadata.saml.version>
 
         <!-- Connector Versions -->
-        <authenticator.totp.version>3.2.0</authenticator.totp.version>
+        <authenticator.totp.version>3.2.2</authenticator.totp.version>
         <authenticator.backupcode.version>0.0.11</authenticator.backupcode.version>
         <authenticator.office365.version>2.1.1</authenticator.office365.version>
         <authenticator.smsotp.version>3.3.4</authenticator.smsotp.version>
@@ -2285,8 +2285,8 @@
         <authenticator.x509.version>3.1.8</authenticator.x509.version>
         <identity.extension.utils>1.0.8</identity.extension.utils>
 
-        <identity.org.mgt.version>1.3.12</identity.org.mgt.version>
-        <identity.org.mgt.core.version>1.0.23</identity.org.mgt.core.version>
+        <identity.org.mgt.version>1.3.14</identity.org.mgt.version>
+        <identity.org.mgt.core.version>1.0.24</identity.org.mgt.core.version>
 
         <!-- Hash Provider Versions-->
         <hashprovider.pbkdf2.version>0.1.4</hashprovider.pbkdf2.version>
@@ -2316,7 +2316,7 @@
         <carbon.kernel.version>4.9.0-m2</carbon.kernel.version>
 
         <!-- Carbon Repo Versions -->
-        <carbon.deployment.version>4.12.15</carbon.deployment.version>
+        <carbon.deployment.version>4.12.16</carbon.deployment.version>
         <carbon.commons.version>4.10.0</carbon.commons.version>
         <carbon.registry.version>4.8.10</carbon.registry.version>
         <carbon.multitenancy.version>4.11.0</carbon.multitenancy.version>
