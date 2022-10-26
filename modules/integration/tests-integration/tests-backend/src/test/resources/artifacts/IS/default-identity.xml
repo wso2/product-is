@@ -890,8 +890,6 @@
             <Permissions>/permission/admin/manage/identity/applicationmgt</Permissions>
         </Resource>
 
-        <Resource context="(.*)/api/identity/oauth2/uma/resourceregistration/v1.0/(.*)" secured="true" http-method="all"/>
-        <Resource context="(.*)/api/identity/oauth2/uma/permission/v1.0/(.*)" secured="true" http-method="all"/>
         <Resource context="(.*)/api/identity/auth/(.*)" secured="true" http-method="all"/>
     </ResourceAccessControl>
 

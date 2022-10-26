@@ -1865,11 +1865,6 @@
                 <version>${carbon.registry.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.identity.oauth.uma</groupId>
-                <artifactId>org.wso2.carbon.identity.oauth.uma.server.feature</artifactId>
-                <version>${carbon.identity.oauth.uma.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.wso2.carbon.extension.identity.x509certificate</groupId>
                 <artifactId>org.wso2.carbon.extension.identity.x509Certificate.validation.server.feature</artifactId>
                 <version>${org.wso2.carbon.extension.identity.x509certificate.version}</version>
@@ -2187,7 +2182,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.25.18</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.25.19</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2310,7 +2305,6 @@
         <identity.oauth.addons.version>2.4.9</identity.oauth.addons.version>
         <org.wso2.carbon.extension.identity.x509certificate.version>1.1.0</org.wso2.carbon.extension.identity.x509certificate.version>
         <conditional.authentication.functions.version>1.2.13</conditional.authentication.functions.version>
-        <carbon.identity.oauth.uma.version>1.3.9</carbon.identity.oauth.uma.version>
 
         <!-- Identity Portal Versions -->
         <identity.apps.version>1.6.38</identity.apps.version>

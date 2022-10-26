@@ -56,8 +56,6 @@
 
     <!-- Legacy identity APIs   -->
     <import resource="classpath:META-INF/cxf/config-mgt-server-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/uma-permission-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/uma-resource-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-recovery-v0-9-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-governance-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-fido2-v2-cxf.xml"/>
@@ -200,22 +198,6 @@
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider"/>
             <bean class="org.wso2.carbon.identity.entitlement.endpoint.filter.EntitlementExceptionMapper"/>
-        </jaxrs:providers>
-    </jaxrs:server>
-    <jaxrs:server id="umaPermission" address="/identity/oauth2/uma/permission/v1.0">
-        <jaxrs:serviceBeans>
-            <bean class="org.wso2.carbon.identity.oauth.uma.permission.endpoint.PermissionApi"/>
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
-        </jaxrs:providers>
-    </jaxrs:server>
-    <jaxrs:server id="umaResource" address="/identity/oauth2/uma/resourceregistration/v1.0">
-        <jaxrs:serviceBeans>
-            <bean class="org.wso2.carbon.identity.oauth.uma.resource.endpoint.ResourceRegistrationApi"/>
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
         </jaxrs:providers>
     </jaxrs:server>
     <jaxrs:server id="recovery" address="/identity/recovery/v0.9">

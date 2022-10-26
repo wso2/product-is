@@ -34,10 +34,6 @@
         "displayName": "Code"
       },
       {
-        "name": "urn:ietf:params:oauth:grant-type:uma-ticket",
-        "displayName": "urn:ietf:params:oauth:grant-type:uma-ticket"
-      },
-      {
         "name": "account_switch",
         "displayName": "account_switch"
       },
