@@ -125,6 +125,7 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.governance:org.wso2.carbon.identity.tenant.resource.manager.feature:${identity.governance.version}
                                 </featureArtifactDef>
+                                <!-- input validation related features -->
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.input.validation.mgt.server.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
@@ -792,6 +793,10 @@
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.identity.input.validation.mgt.server.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
                                     <id>
                                         org.wso2.identity.apps.feature.group
                                     </id>
@@ -895,10 +900,6 @@
                                 <feature>
                                     <id>org.wso2.carbon.user.mgt.workflow.feature.group</id>
                                     <version>${identity.user.workflow.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.input.validation.mgt.server.feature.group</id>
-                                    <version>${carbon.identity.framework.version}</version>
                                 </feature>
 
                                 <!--BPEL and HumanTask features -->
@@ -1346,6 +1347,10 @@
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.identity.input.validation.mgt.server.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.identity.apps.common.server.feature.group</id>
                                     <version>${identity.apps.version}</version>
                                 </feature>
@@ -1544,10 +1549,6 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.authenticator.emailotp.feature.group</id>
                                     <version>${authenticator.emailotp.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.input.validation.mgt.server.feature.group</id>
-                                    <version>${carbon.identity.framework.version}</version>
                                 </feature>
                             </features>
                         </configuration>
@@ -1806,6 +1807,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.central.log.mgt.server.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.input.validation.mgt.server.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
