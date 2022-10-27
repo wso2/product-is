@@ -1398,6 +1398,11 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.framework</groupId>
+                <artifactId>org.wso2.carbon.identity.input.validation.mgt</artifactId>
+                <version>${carbon.identity.framework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.framework</groupId>
                 <artifactId>org.wso2.carbon.identity.functions.library.mgt</artifactId>
                 <version>${carbon.identity.framework.version}</version>
             </dependency>
@@ -1907,6 +1912,11 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity.framework</groupId>
                 <artifactId>org.wso2.carbon.identity.userstore.configuration.server.feature</artifactId>
+                <version>${carbon.identity.framework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.framework</groupId>
+                <artifactId>org.wso2.carbon.identity.input.validation.mgt.server.feature</artifactId>
                 <version>${carbon.identity.framework.version}</version>
             </dependency>
             <dependency>
