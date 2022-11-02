@@ -25,10 +25,11 @@
       "user_store.properties.UsernameJavaRegEx": "[a-zA-Z0-9._\\-|//]{3,50}$"
     }
   },
-  "authenticationendpoint.enable_shortened_urls": {
-    "false": {
-      "authentication.endpoint.redirect_params.filter_policy": "exclude",
-      "authentication.endpoint.redirect_params.parameters": ["loggedInUser"]
+  "authenticationendpoint.enable_url_parameter_filtering": {
+    "true" : {
+      "authentication.endpoint.redirect_params.filter_policy": "include",
+      "authentication.endpoint.redirect_params.parameters": ["sessionDataKey", "sessionDataKeyConsent", "errorKey",
+        "tenantDomain", "t"]
     }
   }
 }
