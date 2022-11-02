@@ -47,8 +47,6 @@ public class UserProfileAdminTestCase extends ISIntegrationTest {
     private String userId1 = "UserProfileAdminTestUser1";
     private ServerConfigurationManager serverConfigurationManager;
     private IdentityProviderMgtServiceClient idpMgtClient;
-
-    //Claim Uris
     private static final String lastNameClaimURI = "http://wso2.org/claims/lastname";
     
     @BeforeClass(alwaysRun = true)
@@ -70,13 +68,11 @@ public class UserProfileAdminTestCase extends ISIntegrationTest {
         userProfileMgtClient = new UserProfileMgtServiceClient(backendURL, sessionCookie);
         userMgtClient = new UserManagementClient(backendURL, sessionCookie);
 
-        ClaimValue[] claimValues = new ClaimValue[1];
         ClaimValue lastName = new ClaimValue();
         lastName.setClaimURI(lastNameClaimURI);
         lastName.setValue(userId1);
-        claimValues[0] = lastName;
 
-        userMgtClient.addUser(userId1, "passWord1@", new String[]{"admin"}, "default", claimValues);
+        userMgtClient.addUser(userId1, "passWord1@", new String[]{"admin"}, "default", new ClaimValue[]{lastName});
     }
     
     @AfterClass(alwaysRun = true)

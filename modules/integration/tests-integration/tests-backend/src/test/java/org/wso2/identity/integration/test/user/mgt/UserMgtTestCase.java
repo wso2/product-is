@@ -41,8 +41,6 @@ public class UserMgtTestCase extends ISIntegrationTest {
 
 	private UserManagementClient userMgtClient;
 	private AuthenticatorClient logManger;
-
-	//Claim Uris
 	private static final String lastNameClaimURI = "http://wso2.org/claims/lastname";
 
 	@BeforeClass(alwaysRun = true)
@@ -58,15 +56,13 @@ public class UserMgtTestCase extends ISIntegrationTest {
 			                      "default");
 		}
 
-		ClaimValue[] claims = new ClaimValue[1];
-		ClaimValue claimValue = new ClaimValue();
-		claimValue.setClaimURI(lastNameClaimURI);
-		claimValue.setValue("user3");
-		claims[0] = claimValue;
+		ClaimValue lastName = new ClaimValue();
+		lastName.setClaimURI(lastNameClaimURI);
+		lastName.setValue("user3");
 
 		userMgtClient.addUser("user1", "passWord1@", null, "default");
 		userMgtClient.addUser("user2", "passWord1@", null, "default");
-		userMgtClient.addUser("user3", "passWord1@", new String[] { "admin" }, "default", claims);
+		userMgtClient.addUser("user3", "passWord1@", new String[] { "admin" }, "default", new ClaimValue[]{lastName});
 
 		userMgtClient.addRole("umRole1", null, new String[] { "login" }, false);
 		userMgtClient.addRole("umRole2", new String[] { "user1" }, new String[] { "login" }, false);
