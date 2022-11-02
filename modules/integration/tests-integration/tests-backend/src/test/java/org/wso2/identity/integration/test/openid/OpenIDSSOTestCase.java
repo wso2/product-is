@@ -111,27 +111,22 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
 
         log.info("Creating User " + user.getUsername());
 
-        ClaimValue[] claimValues = new ClaimValue[3];
-
         ClaimValue firstName = new ClaimValue();
         firstName.setClaimURI(firstNameClaimURI);
         firstName.setValue(user.getUsername());
-        claimValues[1] = firstName;
 
         ClaimValue lastName = new ClaimValue();
         lastName.setClaimURI(lastNameClaimURI);
         lastName.setValue(user.getUsername());
-        claimValues[2] = lastName;
 
         ClaimValue email = new ClaimValue();
         email.setClaimURI(emailClaimURI);
         email.setValue(user.getEmail());
-        claimValues[0] = email;
 
         try {
             // creating the user
             remoteUSMServiceClient.addUser(user.getUsername(), user.getPassword(),
-                    new String[]{user.getRole()}, claimValues,
+                    new String[]{user.getRole()}, new ClaimValue[]{email, firstName, lastName},
                     profileName, true);
         } catch (Exception e) {
             Assert.fail("Error while creating the user", e);

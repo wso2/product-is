@@ -466,13 +466,11 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
         } else {
             String[] roles = {usrRole};
 
-            ClaimValue[] claimValues = new ClaimValue[1];
             ClaimValue lastName = new ClaimValue();
             lastName.setClaimURI(lastNameClaimURI);
             lastName.setValue(usrName);
-            claimValues[0] = lastName;
 
-            usrMgtClient.addUser(usrName, usrPwd, roles, null, claimValues);
+            usrMgtClient.addUser(usrName, usrPwd, roles, null, new ClaimValue[]{lastName});
             if (usrMgtClient.userNameExists(usrRole, usrName)) {
                 return true;
             } else {
