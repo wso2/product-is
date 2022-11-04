@@ -172,6 +172,7 @@ public class AbstractAdaptiveAuthenticationTestCase extends OAuth2ServiceAbstrac
 
         ServiceProvider serviceProvider = new ServiceProvider();
         serviceProvider.setApplicationName(appName);
+        serviceProvider.setManagementApp(true);
         serviceProvider.setDescription("This is a test Service Provider for conditional authentication flow test.");
         applicationManagementServiceClient.createApplication(serviceProvider);
         serviceProvider = applicationManagementServiceClient.getApplication(appName);

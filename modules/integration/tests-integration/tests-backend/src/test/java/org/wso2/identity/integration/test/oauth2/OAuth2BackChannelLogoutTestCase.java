@@ -295,6 +295,7 @@ public class OAuth2BackChannelLogoutTestCase extends OAuth2ServiceAbstractIntegr
 
         ServiceProvider serviceProvider = new ServiceProvider();
         serviceProvider.setApplicationName(OIDC_APP_NAME);
+        serviceProvider.setManagementApp(true);
         applicationManagementServiceClient.createApplication(serviceProvider);
         serviceProvider = applicationManagementServiceClient.getApplication(OIDC_APP_NAME);
 
