@@ -429,6 +429,7 @@ public class CrossProtocolLogoutTestCase extends ISIntegrationTest {
         applicationManagementServiceClient.createApplication(serviceProvider);
         serviceProvider = applicationManagementServiceClient.getApplication(OIDC_APP_NAME);
         serviceProvider.getApplicationID();
+
         InboundAuthenticationRequestConfig requestConfig = new InboundAuthenticationRequestConfig();
         requestConfig.setInboundAuthKey(oidcAppClientId);
         requestConfig.setInboundAuthType("oauth2");
