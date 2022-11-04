@@ -438,6 +438,7 @@ public class OIDCFederatedIdpInitLogoutTest extends AbstractIdentityFederationTe
         super.addServiceProvider(PORT_OFFSET_1, FEDERATED_IS_SP_NAME);
 
         ServiceProvider serviceProvider = getServiceProvider(PORT_OFFSET_1, FEDERATED_IS_SP_NAME);
+        serviceProvider.setManagementApp(true);
         Assert.assertNotNull(serviceProvider, "Failed to create service provider 'travelocity' in primary IS");
 
         updateServiceProviderWithSAMLConfigs(PORT_OFFSET_1, FEDERATED_IS_SAML_ISSUER_NAME, FEDERATED_IS_SAML_ACS_URL,
