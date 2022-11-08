@@ -73,19 +73,25 @@ public class SelfRegisterTestCase extends SelfRegisterTestBase {
         Assert.assertEquals(responseOfPost.statusCode(), HttpStatus.SC_BAD_REQUEST, "Self register user not enabled");
     }
 
-    @Test(
-            alwaysRun = true,
-            groups = "wso2.is",
-            description = "Create self registered user with new and existing usernames"
-    )
+    @Test(alwaysRun = true, groups = "wso2.is", description = "Create self registered user")
     public void testSelfRegister() throws Exception {
 
         updateResidentIDPProperty(ENABLE_SELF_SIGN_UP, "true", true);
         Response responseOfPost = getResponseOfPost(SELF_REGISTRATION_ENDPOINT, selfRegisterUserInfo);
         Assert.assertEquals(responseOfPost.statusCode(), HttpStatus.SC_CREATED, "Self register user successful");
+    }
 
-        Response responseOfPostConflict = getResponseOfPost(SELF_REGISTRATION_ENDPOINT, selfRegisterUserInfo);
-        Assert.assertEquals(responseOfPostConflict.statusCode(), HttpStatus.SC_CONFLICT, "Username already exist");
+    @Test(
+            alwaysRun = true,
+            groups = "wso2.is",
+            dependsOnMethods = {"testSelfRegister"},
+            description = "Create self registered user with existing username"
+    )
+    public void testSelfRegisterWithExistingUsername() throws Exception {
+
+        updateResidentIDPProperty(ENABLE_SELF_SIGN_UP, "true", true);
+        Response responseOfPost = getResponseOfPost(SELF_REGISTRATION_ENDPOINT, selfRegisterUserInfo);
+        Assert.assertEquals(responseOfPost.statusCode(), HttpStatus.SC_CONFLICT, "Self register user already exists");
     }
 
     @Test(alwaysRun = true, groups = "wso2.is", description = "Create self registered user with invalid username")
