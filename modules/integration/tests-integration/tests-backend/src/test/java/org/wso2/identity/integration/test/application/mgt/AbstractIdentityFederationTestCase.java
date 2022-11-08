@@ -137,6 +137,7 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
 
         ServiceProvider serviceProvider = new ServiceProvider();
         serviceProvider.setApplicationName(applicationName);
+        serviceProvider.setManagementApp(true);
         serviceProvider.setDescription("This is a test Service Provider");
         applicationManagementServiceClients.get(portOffset).createApplication(serviceProvider);
     }

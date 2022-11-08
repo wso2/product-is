@@ -325,7 +325,6 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
         super.addServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SP_NAME);
 
         ServiceProvider serviceProvider = getServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SP_NAME);
-        serviceProvider.setManagementApp(true);
         Assert.assertNotNull(serviceProvider, "Failed to create service provider 'secondarySP' in secondary IS");
 
         updateServiceProviderWithOIDCConfigs(PORT_OFFSET_1, SECONDARY_IS_SP_NAME, PRIMARY_IS_IDP_CALLBACK_URL,
