@@ -334,7 +334,6 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
         super.updateServiceProvider(PORT_OFFSET_1, serviceProvider);
 
         serviceProvider = getServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SP_NAME);
-
         InboundAuthenticationRequestConfig[] configs = serviceProvider.getInboundAuthenticationConfig().
                 getInboundAuthenticationRequestConfigs();
         boolean success = false;
