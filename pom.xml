@@ -2251,7 +2251,7 @@
 
         <!-- Social Authenticator Versions -->
         <social.authenticator.facebook.version>5.2.0</social.authenticator.facebook.version>
-        <social.authenticator.google.version>5.2.3</social.authenticator.google.version>
+        <social.authenticator.google.version>5.2.4</social.authenticator.google.version>
         <social.authenticator.windowslive.version>5.2.0</social.authenticator.windowslive.version>
 
         <!-- Provisioning connector Versions -->
