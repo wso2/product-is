@@ -2206,7 +2206,7 @@
         <identity.inbound.auth.saml.version>5.11.2</identity.inbound.auth.saml.version>
         <identity.inbound.auth.oauth.version>6.10.13</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.9.0</identity.inbound.auth.openid.version>
-        <identity.inbound.auth.sts.version>5.10.0</identity.inbound.auth.sts.version>
+        <identity.inbound.auth.sts.version>5.10.1</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.0</identity.inbound.provisioning.scim.version>
         <identity.inbound.provisioning.scim2.version>3.4.1</identity.inbound.provisioning.scim2.version>
 
@@ -2266,7 +2266,7 @@
         <identity.local.auth.iwa.version>5.4.0</identity.local.auth.iwa.version>
 
         <!-- Local Authentication API Connector Version -->
-        <identity.local.auth.api.version>2.5.5</identity.local.auth.api.version>
+        <identity.local.auth.api.version>2.5.6</identity.local.auth.api.version>
 
         <!-- OAuth2 Grant Type extensions -->
         <identity.oauth2.jwt.bearer.grant.version>2.2.0</identity.oauth2.jwt.bearer.grant.version>
@@ -2286,7 +2286,7 @@
         <identity.extension.utils>1.0.8</identity.extension.utils>
 
         <identity.org.mgt.version>1.3.18</identity.org.mgt.version>
-        <identity.org.mgt.core.version>1.0.30</identity.org.mgt.core.version>
+        <identity.org.mgt.core.version>1.0.31</identity.org.mgt.core.version>
 
         <!-- Hash Provider Versions-->
         <hashprovider.pbkdf2.version>0.1.4</hashprovider.pbkdf2.version>
@@ -2307,7 +2307,7 @@
         <conditional.authentication.functions.version>1.2.13</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.6.106</identity.apps.version>
+        <identity.apps.version>1.6.107</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
