@@ -81,7 +81,12 @@ public class SelfRegisterTestCase extends SelfRegisterTestBase {
         Assert.assertEquals(responseOfPost.statusCode(), HttpStatus.SC_CREATED, "Self register user successful");
     }
 
-    @Test(alwaysRun = true, groups = "wso2.is", description = "Create self registered user with existing username")
+    @Test(
+            alwaysRun = true,
+            groups = "wso2.is",
+            dependsOnMethods = {"testSelfRegister"},
+            description = "Create self registered user with existing username"
+    )
     public void testSelfRegisterWithExistingUsername() throws Exception {
 
         updateResidentIDPProperty(ENABLE_SELF_SIGN_UP, "true", true);
