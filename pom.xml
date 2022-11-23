@@ -2234,7 +2234,7 @@
         <identity.userstore.remote.version>5.2.5</identity.userstore.remote.version>
 
         <!-- Identity Data Publisher Versions -->
-        <identity.data.publisher.authentication.version>5.6.0</identity.data.publisher.authentication.version>
+        <identity.data.publisher.authentication.version>5.6.1</identity.data.publisher.authentication.version>
         <identity.data.publisher.oauth.version>1.6.0</identity.data.publisher.oauth.version>
         <identity.data.publisher.audit.version>1.4.1</identity.data.publisher.audit.version>
 
