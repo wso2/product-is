@@ -2192,7 +2192,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.25.51</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.25.52</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2314,7 +2314,7 @@
         <identity.app.authz.xacml.version>2.3.1</identity.app.authz.xacml.version>
         <identity.oauth.addons.version>2.4.9</identity.oauth.addons.version>
         <org.wso2.carbon.extension.identity.x509certificate.version>1.1.0</org.wso2.carbon.extension.identity.x509certificate.version>
-        <conditional.authentication.functions.version>1.2.14</conditional.authentication.functions.version>
+        <conditional.authentication.functions.version>1.2.16</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
         <identity.apps.version>1.6.134</identity.apps.version>
