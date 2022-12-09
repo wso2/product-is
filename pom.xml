@@ -2214,7 +2214,7 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.11.2</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.10.23</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.11.1</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.9.0</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.10.2</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.1</identity.inbound.provisioning.scim.version>
@@ -2240,7 +2240,7 @@
 
         <!-- Identity Event Handler Versions -->
         <identity.event.handler.account.lock.version>1.8.5</identity.event.handler.account.lock.version>
-        <identity.event.handler.notification.version>1.7.6</identity.event.handler.notification.version>
+        <identity.event.handler.notification.version>1.7.7</identity.event.handler.notification.version>
 
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
@@ -2285,12 +2285,12 @@
         <identity.metadata.saml.version>1.7.1</identity.metadata.saml.version>
 
         <!-- Connector Versions -->
-        <authenticator.totp.version>3.2.2</authenticator.totp.version>
+        <authenticator.totp.version>3.2.3</authenticator.totp.version>
         <authenticator.backupcode.version>0.0.12</authenticator.backupcode.version>
         <authenticator.office365.version>2.1.1</authenticator.office365.version>
-        <authenticator.smsotp.version>3.3.5</authenticator.smsotp.version>
+        <authenticator.smsotp.version>3.3.6</authenticator.smsotp.version>
         <authenticator.magiclink.version>1.1.5</authenticator.magiclink.version>
-        <authenticator.emailotp.version>4.1.3</authenticator.emailotp.version>
+        <authenticator.emailotp.version>4.1.4</authenticator.emailotp.version>
         <authenticator.twitter.version>1.1.0</authenticator.twitter.version>
         <authenticator.x509.version>3.1.8</authenticator.x509.version>
         <identity.extension.utils>1.0.8</identity.extension.utils>
