@@ -2214,7 +2214,7 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.11.2</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.11.3</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.11.4</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.9.0</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.10.2</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.1</identity.inbound.provisioning.scim.version>
@@ -2234,7 +2234,7 @@
         <identity.userstore.remote.version>5.2.5</identity.userstore.remote.version>
 
         <!-- Identity Data Publisher Versions -->
-        <identity.data.publisher.authentication.version>5.6.1</identity.data.publisher.authentication.version>
+        <identity.data.publisher.authentication.version>5.6.2</identity.data.publisher.authentication.version>
         <identity.data.publisher.oauth.version>1.6.0</identity.data.publisher.oauth.version>
         <identity.data.publisher.audit.version>1.4.1</identity.data.publisher.audit.version>
 
@@ -2317,7 +2317,7 @@
         <conditional.authentication.functions.version>1.2.17</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.6.140</identity.apps.version>
+        <identity.apps.version>1.6.143</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
@@ -2384,7 +2384,7 @@
         <opensaml3.version>3.3.1</opensaml3.version>
         <shibboleth.version>7.3.0</shibboleth.version>
         <joda.wso2.version>2.9.4.wso2v1</joda.wso2.version>
-        <wss4j.wso2.version>1.6.0-wso2v4</wss4j.wso2.version>
+        <wss4j.wso2.version>1.6.0-wso2v5</wss4j.wso2.version>
         <openws.version>1.5.4</openws.version>
         <xalan.version>2.7.2</xalan.version>
         <xalan.wso2.version>2.7.0.wso2v1</xalan.wso2.version>
