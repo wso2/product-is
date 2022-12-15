@@ -51,6 +51,8 @@ import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.net.URI;
 
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_SCOPE_OPENID;
+
 /**
  * Tests for OAuth2 client credentials grant type.
  */
@@ -132,7 +134,7 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
         ClientID clientID = new ClientID(consumerKey);
         Secret clientSecret = new Secret(consumerSecret);
         ClientAuthentication clientAuth = new ClientSecretBasic(clientID, clientSecret);
-        Scope scope = new Scope(OAuth2Constant.OAUTH2_SCOPE_OPENID, "xyz");
+        Scope scope = new Scope(OAUTH2_SCOPE_OPENID, "xyz");
 
         URI tokenEndpoint = new URI(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
         TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, clientCredentialsGrant, scope);
@@ -155,7 +157,7 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
         // This ensures that openid scopes are not issued for client credential grant type.
         Assert.assertFalse(accessTokenResponse instanceof OIDCTokenResponse, "Client credential grant type cannot " +
                 "get a OIDC Token Response.");
-        Assert.assertFalse(scopesInResponse.contains("openid"), "Client credentials cannot get openid scope.");
+        Assert.assertFalse(scopesInResponse.contains(OAUTH2_SCOPE_OPENID), "Client credentials cannot get openid scope.");
     }
 
     @Test(groups = "wso2.is", description = "Validate access token",
