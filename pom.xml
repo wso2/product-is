@@ -2285,7 +2285,7 @@
         <identity.metadata.saml.version>1.7.1</identity.metadata.saml.version>
 
         <!-- Connector Versions -->
-        <authenticator.totp.version>3.2.3</authenticator.totp.version>
+        <authenticator.totp.version>3.3.0</authenticator.totp.version>
         <authenticator.backupcode.version>0.0.12</authenticator.backupcode.version>
         <authenticator.office365.version>2.1.1</authenticator.office365.version>
         <authenticator.smsotp.version>3.3.6</authenticator.smsotp.version>
@@ -2296,7 +2296,7 @@
         <identity.extension.utils>1.0.8</identity.extension.utils>
 
         <identity.org.mgt.version>1.3.21</identity.org.mgt.version>
-        <identity.org.mgt.core.version>1.0.33</identity.org.mgt.core.version>
+        <identity.org.mgt.core.version>1.0.34</identity.org.mgt.core.version>
 
         <!-- Hash Provider Versions-->
         <hashprovider.pbkdf2.version>0.1.4</hashprovider.pbkdf2.version>
@@ -2317,7 +2317,7 @@
         <conditional.authentication.functions.version>1.2.17</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.6.146</identity.apps.version>
+        <identity.apps.version>1.6.148</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
@@ -2384,7 +2384,7 @@
         <opensaml3.version>3.3.1</opensaml3.version>
         <shibboleth.version>7.3.0</shibboleth.version>
         <joda.wso2.version>2.9.4.wso2v1</joda.wso2.version>
-        <wss4j.wso2.version>1.6.0-wso2v5</wss4j.wso2.version>
+        <wss4j.wso2.version>1.6.0-wso2v6</wss4j.wso2.version>
         <openws.version>1.5.4</openws.version>
         <xalan.version>2.7.2</xalan.version>
         <xalan.wso2.version>2.7.0.wso2v1</xalan.wso2.version>
