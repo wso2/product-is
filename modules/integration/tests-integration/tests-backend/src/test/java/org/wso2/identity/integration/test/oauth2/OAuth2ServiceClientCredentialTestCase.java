@@ -124,7 +124,6 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
 
         consumerSecret = appDto.getOauthConsumerSecret();
         Assert.assertNotNull(consumerSecret, "Application creation failed.");
-
     }
 
     @Test(groups = "wso2.is", description = "Send client credentials token request.", dependsOnMethods = "testRegisterApplication")
