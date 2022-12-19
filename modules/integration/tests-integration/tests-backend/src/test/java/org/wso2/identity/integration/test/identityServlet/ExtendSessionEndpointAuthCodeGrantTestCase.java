@@ -68,7 +68,10 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
 
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN_ENDPOINT;
@@ -265,9 +268,27 @@ public class ExtendSessionEndpointAuthCodeGrantTestCase extends OAuth2ServiceAbs
                 "Session has not been extended.");
     }
 
+    @Test(groups = "wso2.is", description = "Checks whether an access token can be obtained with internal scopes " +
+            " via refresh token grant type", dependsOnMethods = "testSessionExtensionWithValidParameters")
+    public void testRefreshTokenGrantWithInternalScopes() throws Exception {
+
+        Set<String> expectedScopes = new HashSet<>();
+        Collections.addAll(expectedScopes, OAUTH2_SCOPE_OPENID_WITH_INTERNAL_LOGIN.split(" "));
+
+        RefreshTokenGrant refreshGrant = new RefreshTokenGrant(refreshToken);
+        OIDCTokens oidcTokens = makeTokenRequest(refreshGrant, ACCESS_TOKEN_ENDPOINT,
+                OAUTH2_SCOPE_OPENID_WITH_INTERNAL_LOGIN);
+        refreshToken = oidcTokens.getRefreshToken();
+
+        List<String> actualScopes = oidcTokens.getAccessToken().getScope().toStringList();
+        actualScopes.forEach(scope -> Assert.assertTrue(expectedScopes.contains(scope), "Requested scopes does not " +
+                "match the actual scopes"));
+
+    }
+
     @Test(groups = "wso2.is", description = "Checks whether the IDP session key is available as a claim in the" +
             " ID token obtained from a Refresh Grant",
-            dependsOnMethods = "testSessionExtensionWithValidParameters")
+            dependsOnMethods = "testRefreshTokenGrantWithInternalScopes")
     public void testRefreshGrantIdTokenClaimAvailability() throws Exception {
 
         RefreshTokenGrant refreshGrant = new RefreshTokenGrant(refreshToken);
