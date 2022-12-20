@@ -18,6 +18,8 @@
 
 package org.wso2.identity.integration.test.oauth2;
 
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.oauth2.sdk.AccessTokenResponse;
 import com.nimbusds.oauth2.sdk.AuthorizationCode;
 import com.nimbusds.oauth2.sdk.AuthorizationCodeGrant;
@@ -58,16 +60,18 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.identity.application.common.model.xsd.Claim;
+import org.wso2.carbon.identity.application.common.model.xsd.ClaimConfig;
+import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.claim.metadata.mgt.stub.dto.ExternalClaimDTO;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.identity.integration.common.clients.claim.metadata.mgt.ClaimMetadataManagementServiceClient;
+import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
-import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -99,6 +103,7 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
     private CloseableHttpClient client;
     private String sessionDataKey;
     private String sessionDataKeyConsent;
+    private final List<NameValuePair> claimsToConsent = new ArrayList<>();
     private AuthorizationCode authorizationCode;
     private final TestUserMode adminUserMode;
     private final TestUserMode loginUserMode;
@@ -157,7 +162,7 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
 
         deleteApplication();
         removeOAuthApplicationData();
-        // Revert user attribute update
+        // Revert user attribute update.
         remoteUSMServiceClient.setUserClaimValue(loginUsername, CUSTOM_LOCAL_CLAIM_URI, "", "default");
         client.close();
     }
@@ -179,9 +184,23 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
         Assert.assertNotNull(serviceProvider, "OAuth App creation failed.");
         Assert.assertNotNull(consumerKey, "Consumer Key is null.");
         Assert.assertNotNull(consumerSecret, "Consumer Secret is null.");
+
+        // Update claim config.
+        ClaimConfig claimConfig = new ClaimConfig();
+        claimConfig.setClaimMappings(new ClaimMapping[]{getCustomLocalClaimMapping()});
+        serviceProvider.setClaimConfig(claimConfig);
+        appMgtclient.updateApplicationData(serviceProvider);
+
+        ServiceProvider updatedApp = appMgtclient.getApplication(serviceProvider.getApplicationName());
+        Assert.assertNotNull(updatedApp.getClaimConfig());
+
+        ClaimMapping[] claimMappings = updatedApp.getClaimConfig().getClaimMappings();
+        Assert.assertNotNull(claimMappings);
+        Assert.assertEquals(claimMappings.length, 1);
+        Assert.assertEquals(claimMappings[0].getLocalClaim().getClaimUri(), CUSTOM_LOCAL_CLAIM_URI);
     }
 
-    @Test(groups = "wso2.is", description = "Check custom OIDC claim creation.",
+    @Test(groups = "wso2.is", description = "Test custom OIDC claim creation.",
             dependsOnMethods = "testRegisterApplication")
     public void testCreateCustomOIDCClaim() throws Exception {
 
@@ -198,8 +217,8 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
                 .anyMatch(x -> CUSTOM_OIDC_CLAIM_NAME.equals(x.getExternalClaimURI())));
     }
 
-    // Create a new OIDC scope and new OIDC claim to it
-    @Test(groups = "wso2.is", description = "Create a new OIDC scope.", dependsOnMethods = "testCreateCustomOIDCClaim")
+    @Test(groups = "wso2.is", description = "Test custom OIDC scope creation.",
+            dependsOnMethods = "testCreateCustomOIDCClaim")
     public void testCreateCustomOIDCScope() throws Exception {
         // Get a token with required scopes.
         String accessToken = getAccessTokenToCallAPI("internal_application_mgt_create", "internal_application_mgt_view");
@@ -207,7 +226,7 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
         String authorizationHeader = "Bearer " + accessToken;
 
         JSONObject scopeCreateRequest = buildCreateScopeRequestBody(customScopeName, tenantDomain);
-        // Create OIDC scope.
+        // Create custom OIDC scope.
         HttpPost httpPost = new HttpPost(getOIDCSCopeEndpoint(tenantDomain));
         httpPost.setHeader("Authorization", authorizationHeader);
         httpPost.setHeader("Content-Type", "application/json");
@@ -262,7 +281,7 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
             dependsOnMethods = "testAuthCodeGrantSendLoginPost")
     public void testAuthCodeGrantSendApprovalPost() throws Exception {
 
-        HttpResponse response = sendApprovalPost(client, sessionDataKeyConsent);
+        HttpResponse response = sendApprovalPostWithConsent(client, sessionDataKeyConsent, claimsToConsent);
         Assert.assertNotNull(response, "Approval request failed. response is invalid.");
 
         Header locationHeader = response.getFirstHeader(HTTP_RESPONSE_HEADER_LOCATION);
@@ -301,8 +320,9 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
         OIDCTokens oidcTokens = oidcTokenResponse.getOIDCTokens();
         Assert.assertNotNull(oidcTokens, "OIDC Tokens object is null.");
 
-        String idToken = oidcTokens.getIDTokenString();
-        Assert.assertNotNull(idToken, "ID token is null");
+        JWTClaimsSet jwtClaimsSet = oidcTokens.getIDToken().getJWTClaimsSet();
+        // Assert custom OIDC claim is received.
+        Assert.assertEquals(jwtClaimsSet.getClaim(CUSTOM_OIDC_CLAIM_NAME), CUSTOM_CLAIM_VALUE);
 
         // Validate whether requested scopes are present.
         Scope scope = oidcTokenResponse.getOIDCTokens().getAccessToken().getScope();
@@ -316,6 +336,7 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
         // Remove previous data from variables.
         sessionDataKey = null;
         sessionDataKeyConsent = null;
+        claimsToConsent.clear();
 
         // Reset client.
         client = HttpClientBuilder.create().disableRedirectHandling().build();
@@ -352,7 +373,7 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
             dependsOnMethods = "testImplicitGrantSendLoginPost")
     public void testImplicitGrantSendApprovalPost() throws Exception {
 
-        HttpResponse response = sendApprovalPost(client, sessionDataKeyConsent);
+        HttpResponse response = sendApprovalPostWithConsent(client, sessionDataKeyConsent, claimsToConsent);
         Assert.assertNotNull(response, "Approval request failed. response is invalid.");
 
         Header locationHeader = response.getFirstHeader(HTTP_RESPONSE_HEADER_LOCATION);
@@ -361,6 +382,11 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
         // Extract authorization code from the location value.
         String idToken = DataExtractUtil.extractParamFromURIFragment(locationHeader.getValue(), ID_TOKEN);
         Assert.assertNotNull(idToken, "ID token is null.");
+
+        JWTClaimsSet jwtClaimsSet = SignedJWT.parse(idToken).getJWTClaimsSet();
+        // Assert custom OIDC claim is received.
+        Assert.assertEquals(jwtClaimsSet.getClaim(CUSTOM_OIDC_CLAIM_NAME), CUSTOM_CLAIM_VALUE);
+
         String accessToken = DataExtractUtil.extractParamFromURIFragment(locationHeader.getValue(), ACCESS_TOKEN);
         Assert.assertNotNull(idToken, "Access token is null.");
 
@@ -375,12 +401,6 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
                 "Access token does not contain all requested scopes.");
 
         EntityUtils.consume(response.getEntity());
-    }
-
-    private String getIntrospectionUrl(String tenantDomain) {
-
-        return "carbon.super".equalsIgnoreCase(tenantDomain) ?
-                OAuth2Constant.INTRO_SPEC_ENDPOINT : OAuth2Constant.TENANT_INTRO_SPEC_ENDPOINT;
     }
 
     @Test(groups = "wso2.is", description = "Send authorize user request for resource owner grant type.",
@@ -414,20 +434,21 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
         OIDCTokens oidcTokens = oidcTokenResponse.getOIDCTokens();
         Assert.assertNotNull(oidcTokens, "OIDC Tokens object is null.");
 
-        String idToken = oidcTokens.getIDTokenString();
-        Assert.assertNotNull(idToken, "ID token is null");
+        JWTClaimsSet jwtClaimsSet = oidcTokens.getIDToken().getJWTClaimsSet();
+        // Assert custom OIDC claim is received.
+        Assert.assertEquals(jwtClaimsSet.getClaim(CUSTOM_OIDC_CLAIM_NAME), CUSTOM_CLAIM_VALUE);
 
         // Validate whether requested scopes are present.
         Scope scope = oidcTokenResponse.getOIDCTokens().getAccessToken().getScope();
         Assert.assertTrue(containAllRequestedOIDCScopes(scope), "Access token does not contain all requested scopes.");
     }
 
-    /**
-     * Extract the location header value from a HttpResponse.
-     *
-     * @param response HttpResponse object that needs the header extracted.
-     * @return String value of the location header.
-     */
+    private String getIntrospectionUrl(String tenantDomain) {
+
+        return "carbon.super".equalsIgnoreCase(tenantDomain) ?
+                OAuth2Constant.INTRO_SPEC_ENDPOINT : OAuth2Constant.TENANT_INTRO_SPEC_ENDPOINT;
+    }
+
     private String getLocationHeaderValue(HttpResponse response) {
 
         Header location = response.getFirstHeader(HTTP_RESPONSE_HEADER_LOCATION);
@@ -441,11 +462,9 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
      * @param client         CloseableHttpClient object to send the login post.
      * @param sessionDataKey String sessionDataKey obtained.
      * @return Extracted sessionDataKeyConsent.
-     * @throws IOException
-     * @throws URISyntaxException
      */
     private String completeLogin(CloseableHttpClient client, String sessionDataKey,
-                                 String username, String password) throws IOException, URISyntaxException {
+                                 String username, String password) throws Exception {
 
         HttpResponse response = sendLoginPostForCustomUsers(client, sessionDataKey, username, password);
         Assert.assertNotNull(response, "Login request failed. response is null.");
@@ -456,9 +475,11 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
 
         // Request will return with a 302 to the authorize end point. Doing a GET will give the sessionDataKeyConsent
         response = sendGetRequest(client, locationHeader.getValue());
+        claimsToConsent.addAll(Utils.getConsentRequiredClaimsFromResponse(response));
 
         String locationValue = getLocationHeaderValue(response);
-        Assert.assertTrue(locationValue.contains(SESSION_DATA_KEY_CONSENT), "sessionDataKeyConsent not found in response.");
+        Assert.assertTrue(locationValue.contains(SESSION_DATA_KEY_CONSENT),
+                "sessionDataKeyConsent not found in response.");
 
         EntityUtils.consume(response.getEntity());
 
@@ -469,7 +490,8 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
     private boolean containAllRequestedOIDCScopes(Scope returnedScopes) {
 
         Set<String> requestedScopes = Arrays.stream(this.requestedScopes.split(" ")).collect(Collectors.toSet());
-        return returnedScopes.stream().map(Identifier::getValue).collect(Collectors.toSet()).containsAll(requestedScopes);
+        return returnedScopes.stream().map(Identifier::getValue)
+                .collect(Collectors.toSet()).containsAll(requestedScopes);
     }
 
     private String getOIDCSCopeEndpoint(String tenantDomain) {
@@ -507,10 +529,21 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
         JSONObject scopeCreateRequest = new JSONObject();
         scopeCreateRequest.put("name", customScopeName);
         scopeCreateRequest.put("displayName", "Custom Scope " + tenantDomain);
-        // Add claims bound to the custom OIDC scope
+        // Add claims bound to the custom OIDC scope.
         JSONArray claims = new JSONArray();
         claims.put(CUSTOM_OIDC_CLAIM_NAME);
         scopeCreateRequest.put("claims", claims);
         return scopeCreateRequest;
+    }
+
+    private ClaimMapping getCustomLocalClaimMapping() {
+
+        Claim claim = new Claim();
+        claim.setClaimUri(OIDCCustomScopesLoginTest.CUSTOM_LOCAL_CLAIM_URI);
+        ClaimMapping claimMapping = new ClaimMapping();
+        claimMapping.setRequested(true);
+        claimMapping.setLocalClaim(claim);
+        claimMapping.setRemoteClaim(claim);
+        return claimMapping;
     }
 }
