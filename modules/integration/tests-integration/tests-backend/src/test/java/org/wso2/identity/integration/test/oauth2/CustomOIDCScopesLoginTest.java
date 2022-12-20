@@ -90,7 +90,7 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.SESSION_DA
 /**
  * Tests related to retrieving user attributes with custom OIDC scopes.
  */
-public class OAuth2CustomOIDCScopesTest extends OAuth2ServiceAbstractIntegrationTest {
+public class CustomOIDCScopesLoginTest extends OAuth2ServiceAbstractIntegrationTest {
 
     private static final String CALLBACK_URL = "https://localhost/callback";
     private CloseableHttpClient client;
@@ -115,7 +115,7 @@ public class OAuth2CustomOIDCScopesTest extends OAuth2ServiceAbstractIntegration
     }
 
     @Factory(dataProvider = "configProvider")
-    public OAuth2CustomOIDCScopeTest(TestUserMode adminUserMode, TestUserMode loggedInUserMode) {
+    public CustomOIDCScopesLoginTest(TestUserMode adminUserMode, TestUserMode loggedInUserMode) {
 
         this.adminUserMode = adminUserMode;
         this.loginUserMode = loggedInUserMode;
