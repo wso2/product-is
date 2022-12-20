@@ -47,6 +47,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.testng.Assert;
@@ -58,7 +59,9 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
+import org.wso2.carbon.identity.claim.metadata.mgt.stub.dto.ExternalClaimDTO;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
+import org.wso2.identity.integration.common.clients.claim.metadata.mgt.ClaimMetadataManagementServiceClient;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
@@ -88,9 +91,9 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.SESSION_DA
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.SESSION_DATA_KEY_CONSENT;
 
 /**
- * Tests related to retrieving user attributes with custom OIDC scopes.
+ * Tests related to OIDC login with a custom scope.
  */
-public class CustomOIDCScopesLoginTest extends OAuth2ServiceAbstractIntegrationTest {
+public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationTest {
 
     private static final String CALLBACK_URL = "https://localhost/callback";
     private CloseableHttpClient client;
@@ -105,17 +108,24 @@ public class CustomOIDCScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
     private String loginUsername;
     private String loginPassword;
     private String requestedScopes;
-    private static final String REQUESTED_OIDC_SCOPE_STRING = "openid email profile phone address internal_login";
     private String customScopeName;
+    private ClaimMetadataManagementServiceClient claimMgClient;
+    private static final String REQUESTED_OIDC_SCOPE_STRING = "openid email profile phone address internal_login";
+    private static final String CUSTOM_LOCAL_CLAIM_URI = "http://wso2.org/claims/challengeQuestion1";
+    private static final String CUSTOM_CLAIM_VALUE = "ohDearMe";
+    private static final String CUSTOM_OIDC_CLAIM_NAME = "custom_oidc_claim";
 
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
 
-        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN, TestUserMode.SUPER_TENANT_USER}, {TestUserMode.TENANT_ADMIN, TestUserMode.TENANT_USER}};
+        return new Object[][]{
+                {TestUserMode.SUPER_TENANT_ADMIN, TestUserMode.SUPER_TENANT_USER},
+                {TestUserMode.TENANT_ADMIN, TestUserMode.TENANT_USER}
+        };
     }
 
     @Factory(dataProvider = "configProvider")
-    public CustomOIDCScopesLoginTest(TestUserMode adminUserMode, TestUserMode loggedInUserMode) {
+    public OIDCCustomScopesLoginTest(TestUserMode adminUserMode, TestUserMode loggedInUserMode) {
 
         this.adminUserMode = adminUserMode;
         this.loginUserMode = loggedInUserMode;
@@ -132,12 +142,13 @@ public class CustomOIDCScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
         adminPassword = userInfo.getPassword();
 
         AutomationContext context = new AutomationContext("IDENTITY", loginUserMode);
-        loginUsername = context.getContextTenant().getContextUser().getUserName();
+        loginUsername = context.getContextTenant().getContextUser().getUserNameWithoutDomain();
         loginPassword = context.getContextTenant().getContextUser().getPassword();
-
+        // Create oidc claims with different name for each tenant.
         customScopeName = "custom_" + tenantDomain;
         requestedScopes = REQUESTED_OIDC_SCOPE_STRING + " " + customScopeName;
 
+        claimMgClient = new ClaimMetadataManagementServiceClient(backendURL, sessionCookie);
         client = HttpClientBuilder.create().disableRedirectHandling().build();
     }
 
@@ -146,10 +157,21 @@ public class CustomOIDCScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
 
         deleteApplication();
         removeOAuthApplicationData();
+        // Revert user attribute update
+        remoteUSMServiceClient.setUserClaimValue(loginUsername, CUSTOM_LOCAL_CLAIM_URI, "", "default");
         client.close();
     }
 
-    @Test(groups = "wso2.is", description = "Check Oauth2 application registration.")
+    @Test(groups = "wso2.is", description = "Update user attribute")
+    public void testUpdateUserAttribute() throws Exception {
+
+        remoteUSMServiceClient.setUserClaimValue(loginUsername, CUSTOM_LOCAL_CLAIM_URI, CUSTOM_CLAIM_VALUE, "default");
+        String claimValue = remoteUSMServiceClient.getUserClaimValue(loginUsername, CUSTOM_LOCAL_CLAIM_URI, "default");
+        Assert.assertEquals(claimValue, CUSTOM_CLAIM_VALUE);
+    }
+
+    @Test(groups = "wso2.is", description = "Check Oauth2 application registration.",
+            dependsOnMethods = "testUpdateUserAttribute")
     public void testRegisterApplication() throws Exception {
 
         OAuthConsumerAppDTO oAuthConsumerAppDTO = getBasicOAuthApp(CALLBACK_URL);
@@ -159,21 +181,34 @@ public class CustomOIDCScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
         Assert.assertNotNull(consumerSecret, "Consumer Secret is null.");
     }
 
-    // Create a new OIDC claim
+    @Test(groups = "wso2.is", description = "Check custom OIDC claim creation.",
+            dependsOnMethods = "testRegisterApplication")
+    public void testCreateCustomOIDCClaim() throws Exception {
+
+        final String OIDC_CLAIM_DIALECT = "http://wso2.org/oidc/claim";
+
+        ExternalClaimDTO externalClaimDTO = new ExternalClaimDTO();
+        externalClaimDTO.setExternalClaimDialectURI(OIDC_CLAIM_DIALECT);
+        externalClaimDTO.setMappedLocalClaimURI(CUSTOM_LOCAL_CLAIM_URI);
+        externalClaimDTO.setExternalClaimURI(CUSTOM_OIDC_CLAIM_NAME);
+
+        claimMgClient.addExternalClaim(externalClaimDTO);
+        // Assert whether registered custom OIDC claim is present.
+        Assert.assertTrue(Arrays.stream(claimMgClient.getExternalClaims(OIDC_CLAIM_DIALECT))
+                .anyMatch(x -> CUSTOM_OIDC_CLAIM_NAME.equals(x.getExternalClaimURI())));
+    }
+
     // Create a new OIDC scope and new OIDC claim to it
-    @Test(groups = "wso2.is", description = "Create a new OIDC scope.", dependsOnMethods = "testRegisterApplication")
+    @Test(groups = "wso2.is", description = "Create a new OIDC scope.", dependsOnMethods = "testCreateCustomOIDCClaim")
     public void testCreateCustomOIDCScope() throws Exception {
-        // Get a token with required scopes
+        // Get a token with required scopes.
         String accessToken = getAccessTokenToCallAPI("internal_application_mgt_create", "internal_application_mgt_view");
         Assert.assertNotNull(accessToken, "Could not get an access token.");
-
-        JSONObject scopeCreateRequest = new JSONObject();
-        scopeCreateRequest.put("name", customScopeName);
-        scopeCreateRequest.put("displayName", "Custom Scope " + tenantDomain);
-        scopeCreateRequest.put("claims", new JSONArray());
-
-        HttpPost httpPost = new HttpPost(getOIDCSCopeEndpoint(tenantDomain));
         String authorizationHeader = "Bearer " + accessToken;
+
+        JSONObject scopeCreateRequest = buildCreateScopeRequestBody(customScopeName, tenantDomain);
+        // Create OIDC scope.
+        HttpPost httpPost = new HttpPost(getOIDCSCopeEndpoint(tenantDomain));
         httpPost.setHeader("Authorization", authorizationHeader);
         httpPost.setHeader("Content-Type", "application/json");
         httpPost.setEntity(new StringEntity(scopeCreateRequest.toString()));
@@ -181,6 +216,7 @@ public class CustomOIDCScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
         int statusCode = response.getStatusLine().getStatusCode();
         Assert.assertEquals(statusCode, 201);
 
+        // Get and assert the scope was created as expected.
         HttpGet httpGet = new HttpGet(getOIDCSCopeEndpoint(tenantDomain) + "/" + customScopeName);
         httpGet.setHeader("Authorization", authorizationHeader);
         response = client.execute(httpGet);
@@ -192,40 +228,9 @@ public class CustomOIDCScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
         Assert.assertEquals(json.get("name"), customScopeName);
     }
 
-    private String getOIDCSCopeEndpoint(String tenantDomain) {
-
-        return "carbon.super".equalsIgnoreCase(tenantDomain) ? OAuth2Constant.SCOPE_ENDPOINT : OAuth2Constant.TENANT_SCOPE_ENDPOINT;
-    }
-
-    private String getAccessTokenToCallAPI(String... scopes) throws Exception {
-
-        Secret adminSecret = new Secret(this.adminPassword);
-        AuthorizationGrant passwordGrant = new ResourceOwnerPasswordCredentialsGrant(adminUsername, adminSecret);
-
-        ClientID clientID = new ClientID(consumerKey);
-        Secret clientSecret = new Secret(consumerSecret);
-        ClientAuthentication clientAuth = new ClientSecretBasic(clientID, clientSecret);
-
-        Scope requestedScope = Scope.parse(Arrays.asList(scopes));
-        URI tokenEndpoint = new URI(ACCESS_TOKEN_ENDPOINT);
-        TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, passwordGrant, requestedScope);
-
-        HTTPResponse tokenHTTPResp = request.toHTTPRequest().send();
-        if (tokenHTTPResp != null) {
-            TokenResponse tokenResponse = TokenResponse.parse(tokenHTTPResp);
-            if (tokenResponse.indicatesSuccess()) {
-                AccessTokenResponse successResponse = tokenResponse.toSuccessResponse();
-                return successResponse.getTokens().getBearerAccessToken().getValue();
-            }
-        }
-        return null;
-    }
-
-    // Create a user having values for
-
-    @Test(groups = "wso2.is", description = "Send authorize user request for authorization code grant type.", dependsOnMethods = "testCreateCustomOIDCScope")
-    public void testAuthCodeGrantSendAuthRequestPost() throws Exception {
-
+    @Test(groups = "wso2.is", description = "Send authorize user request for authorization code grant type.",
+            dependsOnMethods = "testCreateCustomOIDCScope")
+    public void testAuthCodeGrantSendAuthorizeRequestPost() throws Exception {
         // Send a direct auth code request to IS instance.
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(OAUTH2_RESPONSE_TYPE, OAUTH2_GRANT_TYPE_CODE));
@@ -245,14 +250,16 @@ public class CustomOIDCScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
         EntityUtils.consume(response.getEntity());
     }
 
-    @Test(groups = "wso2.is", description = "Send login post request.", dependsOnMethods = "testAuthCodeGrantSendAuthRequestPost")
+    @Test(groups = "wso2.is", description = "Send login post request.",
+            dependsOnMethods = "testAuthCodeGrantSendAuthorizeRequestPost")
     public void testAuthCodeGrantSendLoginPost() throws Exception {
 
         sessionDataKeyConsent = completeLogin(client, sessionDataKey, loginUsername, loginPassword);
         Assert.assertNotNull(sessionDataKeyConsent, "Invalid session key consent.");
     }
 
-    @Test(groups = "wso2.is", description = "Send approval post request.", dependsOnMethods = "testAuthCodeGrantSendLoginPost")
+    @Test(groups = "wso2.is", description = "Send approval post request.",
+            dependsOnMethods = "testAuthCodeGrantSendLoginPost")
     public void testAuthCodeGrantSendApprovalPost() throws Exception {
 
         HttpResponse response = sendApprovalPost(client, sessionDataKeyConsent);
@@ -270,7 +277,8 @@ public class CustomOIDCScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
         EntityUtils.consume(response.getEntity());
     }
 
-    @Test(groups = "wso2.is", description = "Send get access token request.", dependsOnMethods = "testAuthCodeGrantSendApprovalPost")
+    @Test(groups = "wso2.is", description = "Send get access token request.",
+            dependsOnMethods = "testAuthCodeGrantSendApprovalPost")
     public void testAuthCodeGrantSendGetTokensPost() throws Exception {
 
         ClientID clientID = new ClientID(consumerKey);
@@ -301,7 +309,8 @@ public class CustomOIDCScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
         Assert.assertTrue(containAllRequestedOIDCScopes(scope), "Access token does not contain all requested scopes.");
     }
 
-    @Test(groups = "wso2.is", description = "Send authorize user request for implicit grant type.", dependsOnMethods = "testAuthCodeGrantSendGetTokensPost")
+    @Test(groups = "wso2.is", description = "Send authorize user request for implicit grant type.",
+            dependsOnMethods = "testAuthCodeGrantSendGetTokensPost")
     public void testImplicitGrantSendAuthRequestPost() throws Exception {
 
         // Remove previous data from variables.
@@ -331,14 +340,16 @@ public class CustomOIDCScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
         EntityUtils.consume(response.getEntity());
     }
 
-    @Test(groups = "wso2.is", description = "Send login post request.", dependsOnMethods = "testImplicitGrantSendAuthRequestPost")
+    @Test(groups = "wso2.is", description = "Send login post request.",
+            dependsOnMethods = "testImplicitGrantSendAuthRequestPost")
     public void testImplicitGrantSendLoginPost() throws Exception {
 
         sessionDataKeyConsent = completeLogin(client, sessionDataKey, loginUsername, loginPassword);
         Assert.assertNotNull(sessionDataKeyConsent, "Invalid session key consent.");
     }
 
-    @Test(groups = "wso2.is", description = "Send approval post request.", dependsOnMethods = "testImplicitGrantSendLoginPost")
+    @Test(groups = "wso2.is", description = "Send approval post request.",
+            dependsOnMethods = "testImplicitGrantSendLoginPost")
     public void testImplicitGrantSendApprovalPost() throws Exception {
 
         HttpResponse response = sendApprovalPost(client, sessionDataKeyConsent);
@@ -355,21 +366,25 @@ public class CustomOIDCScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
 
         // Test whether all requested scopes were returned.
         String introspectionUrl = getIntrospectionUrl(tenantDomain);
-        org.json.simple.JSONObject introspectionResponse = introspectTokenWithTenant(client, accessToken, introspectionUrl, adminUsername, adminPassword);
+        org.json.simple.JSONObject introspectionResponse =
+                introspectTokenWithTenant(client, accessToken, introspectionUrl, adminUsername, adminPassword);
         Assert.assertTrue(introspectionResponse.containsKey("scope"));
         String scope = introspectionResponse.get("scope").toString();
         Scope returnedScope = Scope.parse(scope);
-        Assert.assertTrue(containAllRequestedOIDCScopes(returnedScope), "Access token does not contain all requested scopes.");
+        Assert.assertTrue(containAllRequestedOIDCScopes(returnedScope),
+                "Access token does not contain all requested scopes.");
 
         EntityUtils.consume(response.getEntity());
     }
 
     private String getIntrospectionUrl(String tenantDomain) {
 
-        return "carbon.super".equalsIgnoreCase(tenantDomain) ? OAuth2Constant.INTRO_SPEC_ENDPOINT : OAuth2Constant.TENANT_INTRO_SPEC_ENDPOINT;
+        return "carbon.super".equalsIgnoreCase(tenantDomain) ?
+                OAuth2Constant.INTRO_SPEC_ENDPOINT : OAuth2Constant.TENANT_INTRO_SPEC_ENDPOINT;
     }
 
-    @Test(groups = "wso2.is", description = "Send authorize user request for resource owner grant type.", dependsOnMethods = "testImplicitGrantSendApprovalPost")
+    @Test(groups = "wso2.is", description = "Send authorize user request for resource owner grant type.",
+            dependsOnMethods = "testImplicitGrantSendApprovalPost")
     public void testResourceOwnerGrantSendAuthRequestPost() throws Exception {
 
         // Reset client.
@@ -429,7 +444,8 @@ public class CustomOIDCScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
      * @throws IOException
      * @throws URISyntaxException
      */
-    private String completeLogin(CloseableHttpClient client, String sessionDataKey, String username, String password) throws IOException, URISyntaxException {
+    private String completeLogin(CloseableHttpClient client, String sessionDataKey,
+                                 String username, String password) throws IOException, URISyntaxException {
 
         HttpResponse response = sendLoginPostForCustomUsers(client, sessionDataKey, username, password);
         Assert.assertNotNull(response, "Login request failed. response is null.");
@@ -454,5 +470,47 @@ public class CustomOIDCScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
 
         Set<String> requestedScopes = Arrays.stream(this.requestedScopes.split(" ")).collect(Collectors.toSet());
         return returnedScopes.stream().map(Identifier::getValue).collect(Collectors.toSet()).containsAll(requestedScopes);
+    }
+
+    private String getOIDCSCopeEndpoint(String tenantDomain) {
+
+        return "carbon.super".equalsIgnoreCase(tenantDomain) ?
+                OAuth2Constant.SCOPE_ENDPOINT : OAuth2Constant.TENANT_SCOPE_ENDPOINT;
+    }
+
+    private String getAccessTokenToCallAPI(String... scopes) throws Exception {
+
+        Secret adminSecret = new Secret(this.adminPassword);
+        AuthorizationGrant passwordGrant = new ResourceOwnerPasswordCredentialsGrant(adminUsername, adminSecret);
+
+        ClientID clientID = new ClientID(consumerKey);
+        Secret clientSecret = new Secret(consumerSecret);
+        ClientAuthentication clientAuth = new ClientSecretBasic(clientID, clientSecret);
+
+        Scope requestedScope = Scope.parse(Arrays.asList(scopes));
+        URI tokenEndpoint = new URI(ACCESS_TOKEN_ENDPOINT);
+        TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, passwordGrant, requestedScope);
+
+        HTTPResponse tokenHTTPResp = request.toHTTPRequest().send();
+        if (tokenHTTPResp != null) {
+            TokenResponse tokenResponse = TokenResponse.parse(tokenHTTPResp);
+            if (tokenResponse.indicatesSuccess()) {
+                AccessTokenResponse successResponse = tokenResponse.toSuccessResponse();
+                return successResponse.getTokens().getBearerAccessToken().getValue();
+            }
+        }
+        return null;
+    }
+
+    private JSONObject buildCreateScopeRequestBody(String customScopeName, String tenantDomain) throws JSONException {
+
+        JSONObject scopeCreateRequest = new JSONObject();
+        scopeCreateRequest.put("name", customScopeName);
+        scopeCreateRequest.put("displayName", "Custom Scope " + tenantDomain);
+        // Add claims bound to the custom OIDC scope
+        JSONArray claims = new JSONArray();
+        claims.put(CUSTOM_OIDC_CLAIM_NAME);
+        scopeCreateRequest.put("claims", claims);
+        return scopeCreateRequest;
     }
 }
