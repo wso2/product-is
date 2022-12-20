@@ -314,22 +314,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         } catch (Exception e) {
             log.error("Error occurred when adding test user, therefore ignoring testAssociation.", e);
         }
-        try {
 
-            usmClient.addUser(userName6, "test12345", new String[]{"wfRole1"}, new ClaimValue[0], null,
-                    false);
-            Assert.fail("Since user with same name already in a workflow, operation should have failed.");
-        } catch (Exception e) {
-            //test passed
-        }
-        try {
-
-            usmClient.addUser(userName6, "test12345", new String[]{}, new ClaimValue[0], null,
-                    false);
-            Assert.fail("Since user with same name already in a workflow, operation should have failed.");
-        } catch (Exception e) {
-            //test passed
-        }
         try {
             client.addAssociation(workflowId, "TestDeleteRoleAssociation", WorkflowConstants.DELETE_ROLE_EVENT,
                     "boolean(1)");
@@ -343,13 +328,6 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
                     "workflow has not approved yet.");
         } catch (Exception e) {
             Assert.fail("Failed at triggering delete role workflow.");
-        }
-        try {
-            usmClient.addUser(userName7, "test12345", new String[]{roleName1}, new ClaimValue[0], null,
-                    false);
-            Assert.fail("Since role is in a delete workflow, operation should have failed.");
-        } catch (Exception e) {
-            // test passed
         }
         try {
             Association[] associations = client.listAssociations(workflowId);
@@ -407,12 +385,6 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         } catch (Exception e) {
             log.error("Error occurred when deleting test user, therefore ignoring testAssociation.", e);
         }
-        try {
-            usmClient.deleteUser(userName1);
-            Assert.fail("Should throw an exception since there is already a pending workflow for deleting this user.");
-        } catch (Exception e) {
-            //test pass
-        }
 
         try {
             client.addAssociation(workflowId, "TestAddRoleAssociation", WorkflowConstants.ADD_ROLE_EVENT,
@@ -424,12 +396,6 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
             usmClient.addRole(roleName1, new String[]{userName2}, new PermissionDTO[]{});
         } catch (Exception e) {
             Assert.fail("Failed to add role with user.");
-        }
-        try {
-            usmClient.deleteUser(userName2);
-            Assert.fail("Should throw an exception since there is a pending addRole workflow with this user.");
-        } catch (Exception e) {
-            //test pass
         }
         try {
             Association[] associations = client.listAssociations(workflowId);
@@ -461,13 +427,6 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         } catch (Exception e) {
             Assert.fail("Failed to update user list of role.");
         }
-        try {
-            usmClient.deleteUser(userName3);
-            Assert.fail("Should throw an exception since there is a pending updateUserListOfRole workflow with this " +
-                    "user.");
-        } catch (Exception e) {
-            //test pass
-        }
 
         try {
             Association[] associations = client.listAssociations(workflowId);
@@ -493,13 +452,6 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         } catch (Exception e) {
             Assert.fail("Failed to update user list of role.");
         }
-        try {
-            usmClient.deleteUser(userName4);
-            Assert.fail("Should throw an exception since there is a pending updateRoleListOfUser workflow with this " +
-                    "user.");
-        } catch (Exception e) {
-            //test pass
-        }
 
         try {
             Association[] associations = client.listAssociations(workflowId);
@@ -524,13 +476,6 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
             usmClient.deleteUserClaimValue(userName5, "wso2.org/testClaim", null);
         } catch (Exception e) {
             Assert.fail("Failed to delete claim of user.");
-        }
-        try {
-            usmClient.deleteUser(userName5);
-            Assert.fail("Should throw an exception since there is a pending deleteClaimOfUser workflow with this user" +
-                    ".");
-        } catch (Exception e) {
-            //test pass
         }
 
         try {
@@ -585,12 +530,6 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         } catch (Exception e) {
             log.error("Error occurred while deleting test user, therefore ignoring testAssociation.", e);
         }
-        try {
-            usmClient.addRole(roleName1, new String[]{}, new PermissionDTO[]{});
-            Assert.fail("Should throw an exception since there is already a pending workflow for adding this role.");
-        } catch (Exception e) {
-            //test pass
-        }
 
         try {
             client.addAssociation(workflowId, "TestUpdateRoleNameAssociation", WorkflowConstants.UPDATE_ROLE_NAME_EVENT,
@@ -602,12 +541,6 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
             usmClient.updateRoleName(roleName2, roleName3);
         } catch (Exception e) {
             log.error("Error occurred while renaming the role.", e);
-        }
-        try {
-            usmClient.addRole(roleName3, new String[]{}, new PermissionDTO[]{});
-            Assert.fail("Should throw an exception since there is already a pending workflow for adding this role.");
-        } catch (Exception e) {
-            //test pass
         }
         try {
             Association[] associations = client.listAssociations(workflowId);
@@ -632,12 +565,6 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
             usmClient.deleteUser(userName1);
         } catch (Exception e) {
 
-        }
-        try {
-            usmClient.addRole(roleName4, new String[]{userName1}, new PermissionDTO[]{});
-            Assert.fail("Should throw an exception since the user is in a deleted workflow.");
-        } catch (Exception e) {
-            //test pass
         }
         try {
             Association[] associations = client.listAssociations(workflowId);
@@ -695,19 +622,6 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         } catch (Exception e) {
             Assert.fail("Failed to add deleteRole workflow.");
         }
-        try {
-            usmClient.deleteRole(roleName1);
-            Assert.assertTrue(usmClient.isExistingRole(roleName1), "Role exist in user store since " +
-                    "workflow has not approved yet.");
-        } catch (Exception e) {
-            log.error("Error occurred when deleting test user, therefore ignoring testAssociation.", e);
-        }
-        try {
-            usmClient.deleteRole(roleName1);
-            Assert.fail("Should throw an exception since there is already a pending workflow for deleting this role.");
-        } catch (Exception e) {
-            //test pass
-        }
 
         try {
             client.addAssociation(workflowId, "TestUpdateUserListOfRoleAssociation", WorkflowConstants
@@ -718,12 +632,6 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         }
         try {
             usmClient.updateUserListOfRole(roleName2, new String[]{userName1}, new String[]{});
-        } catch (Exception e) {
-            //test pass
-        }
-        try {
-            usmClient.deleteRole(roleName2);
-            Assert.fail("Should throw an exception since there is a pending workflow for updateUserListOfRole.");
         } catch (Exception e) {
             //test pass
         }
@@ -752,12 +660,6 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
             //test pass
         }
         try {
-            usmClient.deleteRole(roleName3);
-            Assert.fail("Should throw an exception since there is a pending workflow for updateUserListOfRole.");
-        } catch (Exception e) {
-            //test pass
-        }
-        try {
             Association[] associations = client.listAssociations(workflowId);
             for (Association association : associations) {
                 if ("TestUpdateRoleListOfUserAssociation".equals(association.getAssociationName())) {
@@ -778,12 +680,6 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         }
         try {
             usmClient.updateRoleName(roleName4, roleName5);
-        } catch (Exception e) {
-            //test pass
-        }
-        try {
-            usmClient.deleteRole(roleName4);
-            Assert.fail("Should throw an exception since there is a pending workflow for updateRoleName.");
         } catch (Exception e) {
             //test pass
         }
@@ -853,12 +749,6 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
             Assert.fail("Failed to add deleteUser workflow.");
         }
         try {
-            usmClient.updateUserListOfRole(roleName1, new String[]{}, new String[]{userName1});
-            Assert.fail("Should throw an exception since there is a pending workflow for deleting username1.");
-        } catch (Exception e) {
-            //test pass
-        }
-        try {
             Association[] associations = client.listAssociations(workflowId);
             for (Association association : associations) {
                 if ("TestDeleteUserAssociation".equals(association.getAssociationName())) {
@@ -879,12 +769,6 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
             Assert.fail("Failed to add deleteRole workflow.");
         }
         try {
-            usmClient.updateUserListOfRole(roleName1, new String[]{}, new String[]{userName2});
-            Assert.fail("Should throw an exception since there is a pending workflow for deleting username1.");
-        } catch (Exception e) {
-            //test pass
-        }
-        try {
             Association[] associations = client.listAssociations(workflowId);
             for (Association association : associations) {
                 if ("TestDeleteRoleAssociation".equals(association.getAssociationName())) {
@@ -903,12 +787,6 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
             usmClient.updateRoleName(roleName2, roleName3);
         } catch (Exception e) {
             Assert.fail("Failed to add renameRole workflow.");
-        }
-        try {
-            usmClient.updateUserListOfRole(roleName2, new String[]{}, new String[]{userName2});
-            Assert.fail("Should throw an exception since there is a pending workflow for deleting username1.");
-        } catch (Exception e) {
-            //test pass
         }
         try {
             Association[] associations = client.listAssociations(workflowId);
@@ -972,12 +850,6 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
             Assert.fail("Failed to add deleteUser workflow.");
         }
         try {
-            usmClient.updateUserListOfRole(userName1, new String[]{roleName1}, new String[]{});
-            Assert.fail("Should throw an exception since there is a pending workflow for deleting username1.");
-        } catch (Exception e) {
-            //test pass
-        }
-        try {
             Association[] associations = client.listAssociations(workflowId);
             for (Association association : associations) {
                 if ("TestDeleteUserAssociation".equals(association.getAssociationName())) {
@@ -998,12 +870,6 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
             Assert.fail("Failed to add deleteUser workflow.");
         }
         try {
-            usmClient.updateRoleListOfUser(userName2, new String[0], new String[]{roleName1});
-            Assert.fail("Should throw an exception since there is a pending workflow for deleting username1.");
-        } catch (Exception e) {
-            //test pass
-        }
-        try {
             Association[] associations = client.listAssociations(workflowId);
             for (Association association : associations) {
                 if ("TestDeleteRoleAssociation".equals(association.getAssociationName())) {
@@ -1022,12 +888,6 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
             usmClient.updateRoleName(roleName2, roleName3);
         } catch (Exception e) {
             Assert.fail("Failed to add renameRole workflow.");
-        }
-        try {
-            usmClient.updateRoleListOfUser(userName2, new String[]{}, new String[]{roleName2});
-            Assert.fail("Should throw an exception since there is a pending workflow for deleting username1.");
-        } catch (Exception e) {
-            //test pass
         }
         try {
             Association[] associations = client.listAssociations(workflowId);
@@ -1091,12 +951,6 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         } catch (Exception e) {
             Assert.fail("Failed to add updateRoleName workflow.");
         }
-        try {
-            usmClient.updateRoleName(roleName1, roleName2);
-            Assert.fail("Should throw an exception since there is a pending workflow for adding a user with rolename1");
-        } catch (Exception e) {
-            //test pass
-        }
 
         try {
             Association[] associations = client.listAssociations(workflowId);
@@ -1117,12 +971,6 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
             usmClient.deleteRole(roleName3);
         } catch (Exception e) {
             Assert.fail("Failed to add updateRoleName workflow.");
-        }
-        try {
-            usmClient.updateRoleName(roleName3, roleName2);
-            Assert.fail("Should throw an exception since there is a pending workflow for adding a user with rolename1");
-        } catch (Exception e) {
-            //test pass
         }
 
         try {
@@ -1145,12 +993,6 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         } catch (Exception e) {
             Assert.fail("Failed to add updateRoleName workflow.");
         }
-        try {
-            usmClient.updateRoleName(roleName4, roleName2);
-            Assert.fail("Should throw an exception since there is a pending workflow for adding a user with rolename1.");
-        } catch (Exception e) {
-            //test pass
-        }
 
         try {
             Association[] associations = client.listAssociations(workflowId);
@@ -1172,12 +1014,6 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         } catch (Exception e) {
             Assert.fail("Failed to add updateRoleName workflow.");
         }
-        try {
-            usmClient.updateRoleName(roleName5, roleName2);
-            Assert.fail("Should throw an exception since there is a pending workflow for adding a user with rolename1.");
-        } catch (Exception e) {
-            //test pass
-        }
 
         try {
             Association[] associations = client.listAssociations(workflowId);
@@ -1196,12 +1032,6 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
             usmClient.updateRoleName(roleName6, roleName2);
         } catch (Exception e) {
             Assert.fail("Failed to add updateRoleName workflow.");
-        }
-        try {
-            usmClient.updateRoleName(roleName6, roleName7);
-            Assert.fail("Should throw an exception since there is a pending workflow for adding a user with rolename1.");
-        } catch (Exception e) {
-            //test pass
         }
 
         try {
@@ -1243,12 +1073,6 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
             usmClient.deleteUser(userName1);
         } catch (Exception e) {
             Assert.fail("Failed to add updateRoleName workflow.");
-        }
-        try {
-            usmClient.deleteUserClaimValue(userName1, "wso2.org/testClaim", null);
-            Assert.fail("Should throw an exception since there is a pending workflow for deleting user.");
-        } catch (Exception e) {
-            //test pass
         }
 
         try {
