@@ -65,7 +65,6 @@
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceRefreshTokenGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2RoleClaimTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ScopesTestCase"/>
-            <class name="org.wso2.identity.integration.test.oauth2.CustomOIDCScopesLoginTest"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2XACMLScopeValidatorTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.PermissionBasedScopeValidatorTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCAuthzCodeIdTokenValidationTestCase"/>
@@ -104,6 +103,7 @@
             <class name="org.wso2.identity.integration.test.oidc.OIDCSubAttributeTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCSSOConsentTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCAuthCodeGrantSSODifferentSubjectIDTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.OIDCCustomScopesLoginTest"/>
             <class name="org.wso2.identity.integration.test.openid.OpenIDSSOTestCase"/>
             <class name="org.wso2.identity.integration.test.requestPathAuthenticator.SAMLWithRequestPathAuthenticationTest" />
             <class name="org.wso2.identity.integration.test.saml.SAMLErrorResponseTestCase"/>
