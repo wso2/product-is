@@ -155,8 +155,12 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
+
         deleteApplication();
         removeOAuthApplicationData();
+        // Delete the added OIDC claims.
+        claimMetadataManagementServiceClient.removeExternalClaim(OIDC_CLAIM_DIALECT, externalClaimURI1);
+        claimMetadataManagementServiceClient.removeExternalClaim(OIDC_CLAIM_DIALECT, externalClaimURI2);
 
         logManger = null;
         consumerKey = null;

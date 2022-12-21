@@ -41,6 +41,7 @@ import com.nimbusds.openid.connect.sdk.token.OIDCTokens;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -119,6 +120,8 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
     private static final String CUSTOM_LOCAL_CLAIM_URI = "http://wso2.org/claims/challengeQuestion1";
     private static final String CUSTOM_CLAIM_VALUE = "ohDearMe";
     private static final String CUSTOM_OIDC_CLAIM_NAME = "custom_oidc_claim";
+    private static final String OIDC_CLAIM_DIALECT = "http://wso2.org/oidc/claim";
+
 
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
@@ -160,10 +163,14 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
+        deleteCustomOIDCScope();
         deleteApplication();
         removeOAuthApplicationData();
         // Revert user attribute update.
         remoteUSMServiceClient.setUserClaimValue(loginUsername, CUSTOM_LOCAL_CLAIM_URI, "", "default");
+        // Remove OIDC scope
+        claimMgClient.removeExternalClaim(OIDC_CLAIM_DIALECT, CUSTOM_OIDC_CLAIM_NAME);
+        // Delete the custom OIDC scope.
         client.close();
     }
 
@@ -203,8 +210,6 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
     @Test(groups = "wso2.is", description = "Test custom OIDC claim creation.",
             dependsOnMethods = "testRegisterApplication")
     public void testCreateCustomOIDCClaim() throws Exception {
-
-        final String OIDC_CLAIM_DIALECT = "http://wso2.org/oidc/claim";
 
         ExternalClaimDTO externalClaimDTO = new ExternalClaimDTO();
         externalClaimDTO.setExternalClaimDialectURI(OIDC_CLAIM_DIALECT);
@@ -545,5 +550,21 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
         claimMapping.setLocalClaim(claim);
         claimMapping.setRemoteClaim(claim);
         return claimMapping;
+    }
+
+    private void deleteCustomOIDCScope() throws Exception {
+
+        // Get a token with required scopes.
+        String accessToken = getAccessTokenToCallAPI("internal_application_mgt_delete");
+        Assert.assertNotNull(accessToken, "Could not get an access token to delete OIDC scope.");
+        String authorizationHeader = "Bearer " + accessToken;
+        // Delete custom OIDC scope.
+        HttpDelete httpDelete = new HttpDelete(getOIDCSCopeEndpoint(tenantDomain) + "/" + customScopeName);
+        httpDelete.setHeader("Authorization", authorizationHeader);
+
+        HttpResponse response = client.execute(httpDelete);
+        int statusCode = response.getStatusLine().getStatusCode();
+        Assert.assertEquals(statusCode, 204);
+
     }
 }
