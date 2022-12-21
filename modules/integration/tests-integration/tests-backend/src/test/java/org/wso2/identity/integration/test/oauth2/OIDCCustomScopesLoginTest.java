@@ -168,9 +168,8 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
         removeOAuthApplicationData();
         // Revert user attribute update.
         remoteUSMServiceClient.setUserClaimValue(loginUsername, CUSTOM_LOCAL_CLAIM_URI, "", "default");
-        // Remove OIDC scope
+        // Remove OIDC custom claim.
         claimMgClient.removeExternalClaim(OIDC_CLAIM_DIALECT, CUSTOM_OIDC_CLAIM_NAME);
-        // Delete the custom OIDC scope.
         client.close();
     }
 
