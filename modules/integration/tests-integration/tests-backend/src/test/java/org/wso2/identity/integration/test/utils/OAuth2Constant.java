@@ -105,6 +105,9 @@ public final class OAuth2Constant {
     public static final String TENANT_USER_INFO_ENDPOINT = "https://localhost:9853/t/wso2.com/oauth2/userinfo?schema=openid";
     public final static String TENANT_TOKEN_REVOKE_ENDPOINT = "https://localhost:9853/t/wso2.com/oauth2/revoke";
 
+    public static final String SCOPE_ENDPOINT = "https://localhost:9853/api/server/v1/oidc/scopes";
+    public static final String TENANT_SCOPE_ENDPOINT = "https://localhost:9853/t/wso2.com/api/server/v1/oidc/scopes";
+
     public static final class PlaygroundAppPaths {
 
         public static final String callBackPath = "/oauth2client";
