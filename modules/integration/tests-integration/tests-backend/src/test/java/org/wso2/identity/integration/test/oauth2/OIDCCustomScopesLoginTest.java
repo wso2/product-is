@@ -61,6 +61,7 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.identity.application.common.model.xsd.Claim;
 import org.wso2.carbon.identity.application.common.model.xsd.ClaimConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
@@ -121,7 +122,6 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
     private static final String CUSTOM_CLAIM_VALUE = "ohDearMe";
     private static final String CUSTOM_OIDC_CLAIM_NAME = "custom_oidc_claim";
     private static final String OIDC_CLAIM_DIALECT = "http://wso2.org/oidc/claim";
-
 
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
@@ -224,6 +224,7 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
     @Test(groups = "wso2.is", description = "Test custom OIDC scope creation.",
             dependsOnMethods = "testCreateCustomOIDCClaim")
     public void testCreateCustomOIDCScope() throws Exception {
+
         // Get a token with required scopes.
         String accessToken = getAccessTokenToCallAPI("internal_application_mgt_create", "internal_application_mgt_view");
         Assert.assertNotNull(accessToken, "Could not get an access token.");
@@ -254,6 +255,7 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
     @Test(groups = "wso2.is", description = "Send authorize user request for authorization code grant type.",
             dependsOnMethods = "testCreateCustomOIDCScope")
     public void testAuthCodeGrantSendAuthorizeRequestPost() throws Exception {
+
         // Send a direct auth code request to IS instance.
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(OAUTH2_RESPONSE_TYPE, OAUTH2_GRANT_TYPE_CODE));
@@ -477,7 +479,7 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
         Assert.assertNotNull(locationHeader, "Login response header is null");
         EntityUtils.consume(response.getEntity());
 
-        // Request will return with a 302 to the authorize end point. Doing a GET will give the sessionDataKeyConsent
+        // Request will return with a 302 to the authorize end point. Doing a GET will give the sessionDataKeyConsent.
         response = sendGetRequest(client, locationHeader.getValue());
         claimsToConsent.addAll(Utils.getConsentRequiredClaimsFromResponse(response));
 
@@ -500,7 +502,7 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
 
     private String getOIDCSCopeEndpoint(String tenantDomain) {
 
-        return "carbon.super".equalsIgnoreCase(tenantDomain) ?
+        return MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equalsIgnoreCase(tenantDomain) ?
                 OAuth2Constant.SCOPE_ENDPOINT : OAuth2Constant.TENANT_SCOPE_ENDPOINT;
     }
 
