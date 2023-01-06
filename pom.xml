@@ -2222,7 +2222,7 @@
 
         <!-- Identity workflow Versions -->
         <identity.user.workflow.version>5.6.0</identity.user.workflow.version>
-        <identity.workflow.impl.bps.version>5.5.3</identity.workflow.impl.bps.version>
+        <identity.workflow.impl.bps.version>5.5.4</identity.workflow.impl.bps.version>
         <identity.workflow.template.multisteps.version>5.5.0</identity.workflow.template.multisteps.version>
 
 
