@@ -21,6 +21,7 @@ package org.wso2.identity.integration.test.auth;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.UserStoreDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
@@ -92,16 +93,18 @@ public class SecondaryStoreUserLoginTestCase extends ISIntegrationTest {
         }
     }
 
-    @Test(groups = "wso2.is", description = "Check the secondary user store user login flow")
-    public void testPrimaryStoreUserLogin() throws Exception {
-        Boolean primLoginSuccess = isAuthSuccessful(primUsername, primPassword);
-        Assert.assertTrue(primLoginSuccess);
+    @Test(groups = "wso2.is", description = "Check the secondary user store user login flow", dataProvider = "userCredentialProvider")
+    public void testUserLogin(String username, String password) throws Exception {
+        Boolean loginSuccess = isAuthSuccessful(username, password);
+        Assert.assertTrue(loginSuccess);
     }
 
-    @Test(groups = "wso2.is", description = "Check the secondary user store user login flow")
-    public void testSecondaryStoreUserLogin() throws Exception {
-        Boolean secLoginSuccess = isAuthSuccessful(secUsername, secPassword);
-        Assert.assertTrue(secLoginSuccess);
+    @DataProvider(name = "userCredentialProvider")
+    public static Object[][] restAPIUserConfigProvider() {
+        return new Object[][]{
+                {primUsername, primPassword},
+                {secUsername, secPassword}
+        };
     }
 
     @AfterClass(alwaysRun = true)
