@@ -18,114 +18,244 @@
 
 package org.wso2.identity.integration.test.auth;
 
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.startup.Tomcat;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.http.Header;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.CookieStore;
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.UserStoreDTO;
-import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.identity.integration.common.clients.UserManagementClient;
-import org.wso2.carbon.um.ws.api.stub.ClaimValue;
 import org.wso2.identity.integration.common.clients.user.store.config.UserStoreConfigAdminServiceClient;
-import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
-import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.common.utils.UserStoreConfigUtils;
+import org.wso2.identity.integration.test.base.TomcatInitializerTestCase;
+import org.wso2.identity.integration.test.oidc.OIDCAbstractIntegrationTest;
+import org.wso2.identity.integration.test.oidc.OIDCUtilTest;
+import org.wso2.identity.integration.test.oidc.bean.OIDCApplication;
+import org.wso2.identity.integration.test.util.Utils;
+import org.wso2.identity.integration.test.utils.DataExtractUtil;
+import org.wso2.identity.integration.test.utils.OAuth2Constant;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.*;
 
 /**
  * This class contains test case for authentication of users in both primary and secondary user stores.
  */
 
-public class SecondaryStoreUserLoginTestCase extends ISIntegrationTest {
+public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest {
 
-//    protected String adminUsername;
-//    protected String adminPassword;
-
-    protected static String primUsername = "primUsername";
-    protected static String primPassword = "primPassword";
-
-    protected static String secUsername = "secUsername";
-    protected static String secPassword = "secPassword";
-    private AuthenticatorClient logManager;
-    private UserManagementClient userMgtClient;
-    private RemoteUserStoreManagerServiceClient usmClient;
+    private OIDCApplication playgroundApp;
+    protected HttpClient client;
+    protected List<NameValuePair> consentParameters = new ArrayList<>();
+    protected String sessionDataKeyConsent;
+    protected String sessionDataKey;
+    protected static String primUsername = "primaryUsername";
+    protected static String primPassword = "primaryPassword";
+    protected static String secUsername = "secondaryUsername";
+    protected static String secPassword = "secondaryPassword";
+    private static final String primaryUserRole = "jdbcUserStoreRole";
+    private static final String secondaryUserRole = "WSO2TEST.COM/jdbcUserStoreRole";
     private UserStoreConfigAdminServiceClient userStoreConfigAdminServiceClient;
-    private UserStoreConfigUtils userStoreConfigUtils = new UserStoreConfigUtils();
+    private static final UserStoreConfigUtils userStoreConfigUtils = new UserStoreConfigUtils();
+    private UserManagementClient userMgtClient;
+    private static final String PERMISSION_LOGIN = "/permission/admin/login";
     private static final String JDBC_CLASS = "org.wso2.carbon.user.core.jdbc.UniqueIDJDBCUserStoreManager";
-    private static final String DOMAIN_ID = "SECONDARY_USERSTORE";
+    private static final String DOMAIN_ID = "WSO2TEST.COM";
     private static final String USER_STORE_DB_NAME = "SECONDARY_USER_STORE_DB";
+    private Tomcat tomcat;
+    public static final int TOMCAT_PORT = 8490;
+    public static final String playgroundAppName = "playground.app";
+    public static final String playgroundAppContext = "/playground.app";
+    public static final String playgroundAppCallBackUri = "http://localhost:" + TOMCAT_PORT + "/playground" + "" +
+            ".app/oauth2client";
+    public static final String targetApplicationUrl = "http://localhost:" + TOMCAT_PORT + "%s";
+    public static final String appUserAuthorizePath = "/playground2/oauth2-authorize-user.jsp";
+    private static final Log log = LogFactory.getLog(OIDCAbstractIntegrationTest.class);
+    private static final Log LOG = LogFactory.getLog(TomcatInitializerTestCase.class);
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
         super.init();
+        CookieStore cookieStore = new BasicCookieStore();
 
-        usmClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
-        userStoreConfigAdminServiceClient = new UserStoreConfigAdminServiceClient(backendURL, sessionCookie);
+//      Register a secondary user store
+        userStoreConfigAdminServiceClient =
+                new UserStoreConfigAdminServiceClient(backendURL, sessionCookie);
+        userMgtClient = new UserManagementClient(backendURL, getSessionCookie());
+        try {
+            UserStoreDTO userStoreDTO = userStoreConfigAdminServiceClient.createUserStoreDTO(JDBC_CLASS, DOMAIN_ID,
+                    userStoreConfigUtils.getJDBCUserStoreProperties(USER_STORE_DB_NAME));
+            userStoreConfigAdminServiceClient.addUserStore(userStoreDTO);
+            Thread.sleep(5000);
+        } catch (Exception e) {
+            log.error(e);
+        }
+        boolean isSecondaryUserStoreDeployed = userStoreConfigUtils.waitForUserStoreDeployment(
+                userStoreConfigAdminServiceClient, DOMAIN_ID);
 
-//        TODO: Register a secondary user store
-        UserStoreDTO userStoreDTO = userStoreConfigAdminServiceClient.createUserStoreDTO(JDBC_CLASS, DOMAIN_ID,
-                userStoreConfigUtils.getJDBCUserStoreProperties(USER_STORE_DB_NAME));
-        userStoreConfigAdminServiceClient.addUserStore(userStoreDTO);
-        Thread.sleep(5000);
-        Boolean isUserStoreDeployed = userStoreConfigUtils.waitForUserStoreDeployment(userStoreConfigAdminServiceClient, DOMAIN_ID);
+        if (isSecondaryUserStoreDeployed) {
 
-        if (isUserStoreDeployed) {
-            logManager = new AuthenticatorClient(backendURL);
-//            userMgtClient = new UserManagementClient(backendURL, getSessionCookie());
+//          Creating users in the primary and secondary user stores
+            try{
+                addUserIntoJDBCUserStore(primUsername, primPassword);
+                addUserIntoJDBCUserStore(secUsername, secPassword);
+            } catch (Exception e) {
+                log.error(e);
+            }
 
-            //        Login to the management console
-//            adminUsername = userInfo.getUserName();
-//            adminPassword = userInfo.getPassword();
-            logManager.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
-                    isServer.getSuperTenant().getTenantAdmin().getPassword(),
-                    isServer.getInstance().getHosts().get("default"));
+//          Creating and starting application on tomcat
+            initAndCreatePlaygroundApplication();
+            startTomcat();
+            client = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
 
-            //        Make a user (from primary user store)
-            usmClient.addUser(primUsername, primPassword, new String[]{"admin"}, new ClaimValue[0], null, false);
-
-            //        TODO: Make a user (from secondary user store)
-            usmClient.addUser(secUsername, secPassword, new String[]{"admin"}, new ClaimValue[0], null, false);
-            logManager.logOut();
+//          To generate sessionDataKey
+            try {
+                testSendAuthenticationRequest(playgroundApp, client);
+            } catch (Exception e) {
+                log.error(e);
+            }
         }
         else {
             log.error("Secondary user store is not deployed");
         }
     }
-
-    @Test(groups = "wso2.is", description = "Check the secondary user store user login flow", dataProvider = "userCredentialProvider")
-    public void testUserLogin(String username, String password) throws Exception {
-        Boolean loginSuccess = isAuthSuccessful(username, password);
-        Assert.assertTrue(loginSuccess);
-    }
-
     @DataProvider(name = "userCredentialProvider")
-    public static Object[][] restAPIUserConfigProvider() {
+    public static Object[][] userCredentialProvider() {
+
         return new Object[][]{
                 {primUsername, primPassword},
-                {secUsername, secPassword}
+                {secUsername, secPassword},
         };
     }
+    @Test(groups = "wso2.is", description = "Check the secondary user store user login flow",
+            dataProvider = "userCredentialProvider")
+    public void testUserLogin(String username, String password){
 
+        try {
+            testAuthentication(playgroundApp, username, password);
+        } catch (Exception e) {
+            log.error("Error: " + e);
+        }
+    }
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
-        usmClient.deleteUser(primUsername);
-        usmClient.deleteUser(secUsername);
-        userStoreConfigAdminServiceClient.deleteUserStore(DOMAIN_ID);
-    }
 
-    private Boolean isAuthSuccessful(String username, String password) {
-        Boolean authenticationSuccess = false;
-        try {
-            authenticationSuccess = usmClient.authenticate(username, password);
-        } catch (Exception e) {
-            log.error("Error occurred when authenticating the user.", e);
+        stopTomcat();
+        userStoreConfigAdminServiceClient.deleteUserStore(DOMAIN_ID);
+        userMgtClient.deleteRole(primaryUserRole);
+        userMgtClient.deleteUser(primUsername);
+        deleteApplication(playgroundApp);
+        clear();
+    }
+    private void testAuthentication (OIDCApplication application, String username, String password)
+            throws IOException {
+
+        HttpResponse response = sendLoginPostForCustomUsers(client, sessionDataKey, username, password);
+        Assert.assertNotNull(response, "Login request failed for " + application.getApplicationName()
+                + ". response " + "is null.");
+        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        Assert.assertNotNull(locationHeader, "Login response header is null for "
+                + application.getApplicationName());
+    }
+    public void testSendAuthenticationRequest(OIDCApplication application, HttpClient client)
+            throws Exception {
+
+        List<NameValuePair> urlParameters = OIDCUtilTest.getNameValuePairs(application);
+        application.setApplicationContext("");
+
+        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, String.format
+                (targetApplicationUrl, application.getApplicationContext() + appUserAuthorizePath));
+        Assert.assertNotNull(response, "Authorization request failed for "
+                + application.getApplicationName() + ". " + "Authorized response is null");
+
+        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        Assert.assertNotNull(locationHeader, "Authorization request failed for "
+                + application.getApplicationName() + ". Authorized response header is null");
+
+        EntityUtils.consume(response.getEntity());
+
+        response = sendGetRequest(client, locationHeader.getValue());
+        Assert.assertNotNull(response, "Authorization request failed for "
+                + application.getApplicationName() + ". " + "Authorized user response is null.");
+
+        Map<String, Integer> keyPositionMap = new HashMap<>(1);
+        keyPositionMap.put("name=\"sessionDataKey\"", 1);
+        List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil.extractDataFromResponse(response,
+                keyPositionMap);
+        Assert.assertNotNull(keyValues, "sessionDataKey key value is null for "
+                + application.getApplicationName());
+
+        sessionDataKey = keyValues.get(0).getValue();
+        Assert.assertNotNull(sessionDataKey, "Invalid sessionDataKey for "
+                + application.getApplicationName());
+
+        EntityUtils.consume(response.getEntity());
+    }
+    protected void initAndCreatePlaygroundApplication() throws Exception {
+
+        playgroundApp = new OIDCApplication(playgroundAppName,
+                playgroundAppContext,
+                playgroundAppCallBackUri);
+        playgroundApp.addRequiredClaim(OIDCUtilTest.emailClaimUri);
+        playgroundApp.addRequiredClaim(OIDCUtilTest.firstNameClaimUri);
+        playgroundApp.addRequiredClaim(OIDCUtilTest.lastNameClaimUri);
+        ServiceProvider serviceProvider = new ServiceProvider();
+        createApplication(serviceProvider, playgroundApp);
+    }
+    public void addUserIntoJDBCUserStore(String username, String password) throws Exception {
+
+        if (Objects.equals(username, secUsername)) {
+            userMgtClient.addRole(secondaryUserRole, null, new String[]{PERMISSION_LOGIN});
+            Assert.assertTrue(userMgtClient.roleNameExists(secondaryUserRole),
+                    "Role name doesn't exist");
+
+            userMgtClient.addUser(DOMAIN_ID + "/" + username, password, new String[]{secondaryUserRole}, null);
+            Assert.assertTrue(userMgtClient.userNameExists(secondaryUserRole, DOMAIN_ID + "/" + username),
+                    "User name doesn't exist");
+        } else {
+            userMgtClient.addRole(primaryUserRole, null, new String[]{PERMISSION_LOGIN});
+            Assert.assertTrue(userMgtClient.roleNameExists(primaryUserRole),
+                    "Role name doesn't exist");
+
+            userMgtClient.addUser(username, password, new String[]{primaryUserRole}, null);
+            Assert.assertTrue(userMgtClient.userNameExists(primaryUserRole, username),
+                    "User name doesn't exist");
         }
-        return authenticationSuccess;
+    }
+    private void startTomcat() throws LifecycleException, NullPointerException {
+
+        tomcat = Utils.getTomcat(getClass());
+        URL resourceUrl = getClass().getResource("/samples/" + "playground2" + ".war");
+        Assert.assertNotNull(resourceUrl, "resourceUrl is null");
+        tomcat.addWebapp(tomcat.getHost(), "/" + "playground2", resourceUrl.getPath());
+        LOG.info("Deployed tomcat application " + "playground2");
+        try {
+            tomcat.start();
+        } catch (LifecycleException e) {
+            LOG.error("Error while starting tomcat server ", e);
+            throw e;
+        }
+        LOG.info("Tomcat server started.");
+    }
+    private void stopTomcat() throws LifecycleException {
+
+        tomcat.stop();
+        tomcat.destroy();
+        LOG.info("Tomcat server stopped.");
     }
 }
-
-//  Doubtful classes I used
-    //  RemoteUserStoreManagerServiceClient ==> for adding users && checking authentication  ==> from AccountLockEnabledTestCase && RemoteUserStoreManagerServiceTestCase
-    //  UserStoreConfigAdminServiceClient   ==> for adding user stores                       ==> from ClaimMappingsOnSecondaryUserStoreTestCase
-    //  AuthenticatorClient                 ==> for logging in and out of management console ==> from ConditionalAuthenticationTestCase

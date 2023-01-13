@@ -223,6 +223,7 @@
         <classes>
             <class name="org.wso2.identity.integration.test.auth.AdaptiveScriptInitializerTestCase"/>
             <class name="org.wso2.identity.integration.test.auth.AdaptiveScriptTemporaryClaimPersistenceTestCase"/>
+            <class name="org.wso2.identity.integration.test.auth.SecondaryStoreUserLoginTestCase"/>
             <!-- This test has a restart-->
             <class name="org.wso2.identity.integration.test.auth.RiskBasedLoginTestCase" />
         </classes>
