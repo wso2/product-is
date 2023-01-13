@@ -110,7 +110,8 @@
             <class name="org.wso2.identity.integration.test.saml.SAMLFederationDynamicQueryParametersTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.SAMLInvalidIssuerTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.SAMLSSOTestCase"/>
-            <class name="org.wso2.identity.integration.test.sts.TestPassiveSTS"/>
+            <!--Disabling since passiveSTS removed from product-->
+            <!--<class name="org.wso2.identity.integration.test.sts.TestPassiveSTS"/>-->
             <class name="org.wso2.identity.integration.test.saml.SAMLIdPInitiatedSLOTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.SAMLIdPInitiatedSSOTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.SAMLSSOConsentTestCase"/>
@@ -138,7 +139,8 @@
             <class name="org.wso2.identity.integration.test.rest.api.user.challenge.v1.UserMeNegativeTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.association.v1.UserMeSuccessTestBase"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.association.v1.UserMeNegativeTestBase"/>
-            <class name="org.wso2.identity.integration.test.rest.api.user.approval.v1.UserMeApprovalTest"/>
+            <!--Disabling since passiveSTS removed from product-->
+            <!--<class name="org.wso2.identity.integration.test.rest.api.user.approval.v1.UserMeApprovalTest"/>-->
             <class name="org.wso2.identity.integration.test.rest.api.user.authorized.apps.v1.MeAuthorizedAppsNegativeTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.authorized.apps.v1.MeAuthorizedAppsSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.authorized.apps.v2.MeAuthorizedAppsSuccessTest"/>
@@ -259,7 +261,8 @@
     <test name="is-tests-federation" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
             <class name="org.wso2.identity.integration.test.base.SecondaryCarbonServerInitializerTestCase"/>
-            <class name="org.wso2.identity.integration.test.sts.TestPassiveSTSFederation"/>
+            <!--Disabling since passiveSTS removed from product-->
+            <!--<class name="org.wso2.identity.integration.test.sts.TestPassiveSTSFederation"/>-->
             <!--TODO: Temporary disabled ConditionalAuthenticationTestCase. Enable after fixing the issues. -->
             <!--<class name="org.wso2.identity.integration.test.auth.ConditionalAuthenticationTestCase" />-->
             <class name="org.wso2.identity.integration.test.provisioning.ProvisioningTestCase"/>
