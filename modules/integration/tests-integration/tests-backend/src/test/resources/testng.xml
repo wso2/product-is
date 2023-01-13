@@ -139,8 +139,7 @@
             <class name="org.wso2.identity.integration.test.rest.api.user.challenge.v1.UserMeNegativeTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.association.v1.UserMeSuccessTestBase"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.association.v1.UserMeNegativeTestBase"/>
-            <!--Disabling since passiveSTS removed from product-->
-            <!--<class name="org.wso2.identity.integration.test.rest.api.user.approval.v1.UserMeApprovalTest"/>-->
+            <class name="org.wso2.identity.integration.test.rest.api.user.approval.v1.UserMeApprovalTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.authorized.apps.v1.MeAuthorizedAppsNegativeTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.authorized.apps.v1.MeAuthorizedAppsSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.authorized.apps.v2.MeAuthorizedAppsSuccessTest"/>
