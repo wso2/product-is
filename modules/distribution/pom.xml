@@ -144,7 +144,6 @@
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.scim2.common.feature.default.json</param>
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.scim.common.feature.default.json</param>
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.consent.mgt.server.feature.default.json</param>
-                                        <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.humantask.server.feature.default.json</param>
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.tenant.common.server.default.json</param>
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.extension.identity.x509Certificate.validation.server.feature.default.json</param>
                                     </include>
