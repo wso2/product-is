@@ -50,7 +50,10 @@ import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class contains test case for authentication of users in both primary and secondary user stores.
@@ -63,10 +66,10 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
     protected List<NameValuePair> consentParameters = new ArrayList<>();
     protected String sessionDataKeyConsent;
     protected String sessionDataKey;
-    protected static String primUsername = "primaryUsername";
-    protected static String primPassword = "primaryPassword";
-    protected static String secUsername = "secondaryUsername";
-    protected static String secPassword = "secondaryPassword";
+    protected static final String primUsername = "primaryUsername";
+    protected static final String primPassword = "primaryPassword";
+    protected static final String secUsername = "secondaryUsername";
+    protected static final String secPassword = "secondaryPassword";
     private static final String primaryUserRole = "jdbcUserStoreRole";
     private static final String secondaryUserRole = "WSO2TEST.COM/jdbcUserStoreRole";
     private UserStoreConfigAdminServiceClient userStoreConfigAdminServiceClient;
@@ -111,9 +114,9 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
         if (isSecondaryUserStoreDeployed) {
 
 //          Creating users in the primary and secondary user stores
-            try{
-                addUserIntoJDBCUserStore(primUsername, primPassword);
-                addUserIntoJDBCUserStore(secUsername, secPassword);
+            try {
+                addUserIntoJDBCUserStore(primUsername, primPassword, false);
+                addUserIntoJDBCUserStore(secUsername, secPassword, true);
             } catch (Exception e) {
                 log.error(e);
             }
@@ -129,11 +132,11 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
             } catch (Exception e) {
                 log.error(e);
             }
-        }
-        else {
+        } else {
             log.error("Secondary user store is not deployed");
         }
     }
+
     @DataProvider(name = "userCredentialProvider")
     public static Object[][] userCredentialProvider() {
 
@@ -142,9 +145,10 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
                 {secUsername, secPassword},
         };
     }
+
     @Test(groups = "wso2.is", description = "Check the secondary user store user login flow",
             dataProvider = "userCredentialProvider")
-    public void testUserLogin(String username, String password){
+    public void testUserLogin(String username, String password) {
 
         try {
             testAuthentication(playgroundApp, username, password);
@@ -152,6 +156,7 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
             log.error("Error: " + e);
         }
     }
+
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
@@ -162,8 +167,8 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
         deleteApplication(playgroundApp);
         clear();
     }
-    private void testAuthentication (OIDCApplication application, String username, String password)
-            throws IOException {
+
+    private void testAuthentication(OIDCApplication application, String username, String password) throws IOException {
 
         HttpResponse response = sendLoginPostForCustomUsers(client, sessionDataKey, username, password);
         Assert.assertNotNull(response, "Login request failed for " + application.getApplicationName()
@@ -172,16 +177,16 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
         Assert.assertNotNull(locationHeader, "Login response header is null for "
                 + application.getApplicationName());
     }
-    public void testSendAuthenticationRequest(OIDCApplication application, HttpClient client)
-            throws Exception {
+
+    public void testSendAuthenticationRequest(OIDCApplication application, HttpClient client) throws Exception {
 
         List<NameValuePair> urlParameters = OIDCUtilTest.getNameValuePairs(application);
         application.setApplicationContext("");
 
-        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, String.format
-                (targetApplicationUrl, application.getApplicationContext() + appUserAuthorizePath));
-        Assert.assertNotNull(response, "Authorization request failed for "
-                + application.getApplicationName() + ". " + "Authorized response is null");
+        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, String.format(targetApplicationUrl,
+                application.getApplicationContext() + appUserAuthorizePath));
+        Assert.assertNotNull(response, "Authorization request failed for " + application.getApplicationName()
+                + ". " + "Authorized response is null");
 
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         Assert.assertNotNull(locationHeader, "Authorization request failed for "
@@ -190,22 +195,21 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
         EntityUtils.consume(response.getEntity());
 
         response = sendGetRequest(client, locationHeader.getValue());
-        Assert.assertNotNull(response, "Authorization request failed for "
-                + application.getApplicationName() + ". " + "Authorized user response is null.");
+        Assert.assertNotNull(response, "Authorization request failed for " + application.getApplicationName()
+                + ". " + "Authorized user response is null.");
 
         Map<String, Integer> keyPositionMap = new HashMap<>(1);
         keyPositionMap.put("name=\"sessionDataKey\"", 1);
-        List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil.extractDataFromResponse(response,
-                keyPositionMap);
+        List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil.extractDataFromResponse(response, keyPositionMap);
         Assert.assertNotNull(keyValues, "sessionDataKey key value is null for "
                 + application.getApplicationName());
 
         sessionDataKey = keyValues.get(0).getValue();
-        Assert.assertNotNull(sessionDataKey, "Invalid sessionDataKey for "
-                + application.getApplicationName());
+        Assert.assertNotNull(sessionDataKey, "Invalid sessionDataKey for " + application.getApplicationName());
 
         EntityUtils.consume(response.getEntity());
     }
+
     protected void initAndCreatePlaygroundApplication() throws Exception {
 
         playgroundApp = new OIDCApplication(playgroundAppName,
@@ -217,9 +221,10 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
         ServiceProvider serviceProvider = new ServiceProvider();
         createApplication(serviceProvider, playgroundApp);
     }
-    public void addUserIntoJDBCUserStore(String username, String password) throws Exception {
 
-        if (Objects.equals(username, secUsername)) {
+    public void addUserIntoJDBCUserStore(String username, String password, boolean isSecondaryStoreUser) throws Exception {
+
+        if (isSecondaryStoreUser == true) {
             userMgtClient.addRole(secondaryUserRole, null, new String[]{PERMISSION_LOGIN});
             Assert.assertTrue(userMgtClient.roleNameExists(secondaryUserRole),
                     "Role name doesn't exist");
@@ -237,6 +242,7 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
                     "User name doesn't exist");
         }
     }
+
     private void startTomcat() throws LifecycleException, NullPointerException {
 
         tomcat = Utils.getTomcat(getClass());
@@ -252,6 +258,7 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
         }
         LOG.info("Tomcat server started.");
     }
+
     private void stopTomcat() throws LifecycleException {
 
         tomcat.stop();
