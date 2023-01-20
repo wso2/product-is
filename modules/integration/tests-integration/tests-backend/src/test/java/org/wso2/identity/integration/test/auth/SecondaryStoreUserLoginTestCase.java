@@ -20,6 +20,7 @@ package org.wso2.identity.integration.test.auth;
 
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.startup.Tomcat;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
@@ -178,10 +179,10 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
                 + application.getApplicationName());
     }
 
-    public void testSendAuthenticationRequest(OIDCApplication application, HttpClient client) throws Exception {
+    private void testSendAuthenticationRequest(OIDCApplication application, HttpClient client) throws Exception {
 
         List<NameValuePair> urlParameters = OIDCUtilTest.getNameValuePairs(application);
-        application.setApplicationContext("");
+        application.setApplicationContext(StringUtils.EMPTY);
 
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters, String.format(targetApplicationUrl,
                 application.getApplicationContext() + appUserAuthorizePath));
@@ -210,7 +211,7 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
         EntityUtils.consume(response.getEntity());
     }
 
-    protected void initAndCreatePlaygroundApplication() throws Exception {
+    private void initAndCreatePlaygroundApplication() throws Exception {
 
         playgroundApp = new OIDCApplication(playgroundAppName,
                 playgroundAppContext,
@@ -222,9 +223,9 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
         createApplication(serviceProvider, playgroundApp);
     }
 
-    public void addUserIntoJDBCUserStore(String username, String password, boolean isSecondaryStoreUser) throws Exception {
+    private void addUserIntoJDBCUserStore(String username, String password, boolean isSecondaryStoreUser) throws Exception {
 
-        if (isSecondaryStoreUser == true) {
+        if (isSecondaryStoreUser) {
             userMgtClient.addRole(secondaryUserRole, null, new String[]{PERMISSION_LOGIN});
             Assert.assertTrue(userMgtClient.roleNameExists(secondaryUserRole),
                     "Role name doesn't exist");
