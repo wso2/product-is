@@ -92,7 +92,7 @@
                 {% endif %}
                 <Valve className="org.wso2.carbon.tomcat.ext.valves.RequestCorrelationIdValve"
                        headerToCorrelationIdMapping="{{log_correlation.header_config}}"
-                       queryToCorrelationIdMapping="{'RelayState':'Correlation-ID'}"
+                       queryToCorrelationIdMapping="{{log_correlation.query_config}}"
                        {% if correlation.response.header is defined %}
                             responseCorrelationIdHeader= "{{correlation.response.header}}"
                        {% endif %}
