@@ -467,6 +467,14 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.fetch.remote:org.wso2.carbon.identity.remotefetch.core.feature:${org.wso2.carbon.identity.remotefetch.version}
                                 </featureArtifactDef>
+                                <!-- Login Resolver feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.login.resolver.mgt.server.feature:${carbon.identity.framework.version}
+                                </featureArtifactDef>
+                                <!-- Login Resolver (OSGi service impl) feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.governance:org.wso2.carbon.identity.login.resolver.service.server.feature:${identity.governance.version}
+                                </featureArtifactDef>
                                 <!-- Unique Claim Management feature -->
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.unique.claim.mgt.server.feature:${carbon.identity.framework.version}
@@ -771,6 +779,14 @@
                                         org.wso2.carbon.identity.cors.mgt.server.feature.group
                                     </id>
                                     <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.login.resolver.mgt.server.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.login.resolver.service.server.feature.group</id>
+                                    <version>${identity.governance.version}</version>
                                 </feature>
                                 <feature>
                                     <id>
@@ -1327,6 +1343,14 @@
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.identity.login.resolver.mgt.server.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.login.resolver.service.server.feature.group</id>
+                                    <version>${identity.governance.version}</version>
+                                </feature>
+                                <feature>
                                     <id>
                                         org.wso2.carbon.identity.unique.claim.mgt.server.feature.group
                                     </id>
@@ -1784,6 +1808,14 @@
                                         org.wso2.carbon.identity.cors.mgt.server.feature.group
                                     </id>
                                     <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.login.resolver.mgt.server.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.login.resolver.service.server.feature.group</id>
+                                    <version>${identity.governance.version}</version>
                                 </feature>
                                 <feature>
                                     <id>
