@@ -66,8 +66,7 @@
   },
   "scopeValidators": {
     "options": [
-      "Role based scope validator",
-      "XACML Scope Validator"
+      "Role based scope validator"
     ]
   },
   "accessTokenType": {
