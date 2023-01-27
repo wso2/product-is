@@ -782,13 +782,6 @@
         </file>
         <file>
             <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/identity/pages/sts_response.html
-            </source>
-            <outputDirectory>wso2is-${pom.version}/repository/resources/identity/pages</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/bin/ciphertool.bat
             </source>
             <outputDirectory>wso2is-${pom.version}/bin</outputDirectory>

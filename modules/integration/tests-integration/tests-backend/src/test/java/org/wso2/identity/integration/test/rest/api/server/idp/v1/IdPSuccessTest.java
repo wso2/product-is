@@ -128,12 +128,6 @@ public class IdPSuccessTest extends IdPTestBase {
                         ("/t/" + context.getContextTenant().getDomain() +
                                 "/api/server/v1/identity-providers/meta/federated-authenticators" +
                                 "/TWljcm9zb2Z0V2luZG93c0xpdmVBdXRoZW50aWNhdG9y"))
-                .body("find{ it.authenticatorId == 'UGFzc2l2ZVNUU0F1dGhlbnRpY2F0b3I' }.name", equalTo
-                        ("PassiveSTSAuthenticator"))
-                .body("find{ it.authenticatorId == 'UGFzc2l2ZVNUU0F1dGhlbnRpY2F0b3I' }.self", equalTo("/t/" +
-                        context.getContextTenant().getDomain() +
-                        "/api/server/v1/identity-providers/meta/federated-authenticators" +
-                        "/UGFzc2l2ZVNUU0F1dGhlbnRpY2F0b3I"))
                 .body("find{ it.authenticatorId == 'SVdBS2VyYmVyb3NBdXRoZW50aWNhdG9y' }.name", equalTo
                         ("IWAKerberosAuthenticator"))
                 .body("find{ it.authenticatorId == 'SVdBS2VyYmVyb3NBdXRoZW50aWNhdG9y' }.self", equalTo("/t/" +

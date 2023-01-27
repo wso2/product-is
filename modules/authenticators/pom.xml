@@ -31,30 +31,6 @@
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
-                    <!-- Download PassiveSTS jar from nexus and copy to the  authenticatoroutbound/jar folder-->
-                    <execution>
-                        <id>download_passivests_jar</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.wso2.carbon.identity.outbound.auth.sts.passive</groupId>
-                                    <artifactId>
-                                        org.wso2.carbon.identity.application.authenticator.passive.sts
-                                    </artifactId>
-                                    <version>${identity.outbound.auth.passive.sts.version}</version>
-                                    <type>jar</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${basedir}/target/authenticatoroutboundCopied/jar
-                                    </outputDirectory>
-                                    <includes>**/*.jar</includes>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
                     <!-- Download SAML Federated Authenticator jar from nexus and copy to the  authenticatoroutbound/jar folder-->
                     <execution>
                         <id>download_samlauthenticator_jar</id>
