@@ -386,12 +386,6 @@
             </includes>
         </fileSet>
 
-        <fileSet>
-            <directory>conf/policies</directory>
-            <outputDirectory>wso2is-${pom.version}/repository/resources/identity/policies/xacml/default
-            </outputDirectory>
-        </fileSet>
-
         <!-- copying runtimes -->
         <fileSet>
             <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/lib/runtimes</directory>
