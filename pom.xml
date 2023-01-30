@@ -2213,7 +2213,7 @@
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.saml.version>5.11.5</identity.inbound.auth.saml.version>
+        <identity.inbound.auth.saml.version>5.11.6</identity.inbound.auth.saml.version>
         <identity.inbound.auth.oauth.version>6.11.22</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.9.0</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.10.4</identity.inbound.auth.sts.version>
@@ -2235,7 +2235,7 @@
 
         <!-- Identity Data Publisher Versions -->
         <identity.data.publisher.authentication.version>5.6.2</identity.data.publisher.authentication.version>
-        <identity.data.publisher.oauth.version>1.6.2</identity.data.publisher.oauth.version>
+        <identity.data.publisher.oauth.version>1.6.3</identity.data.publisher.oauth.version>
         <identity.data.publisher.audit.version>1.4.1</identity.data.publisher.audit.version>
 
         <!-- Identity Event Handler Versions -->
@@ -2290,7 +2290,7 @@
         <authenticator.office365.version>2.1.1</authenticator.office365.version>
         <authenticator.smsotp.version>3.3.7</authenticator.smsotp.version>
         <authenticator.magiclink.version>1.1.5</authenticator.magiclink.version>
-        <authenticator.emailotp.version>4.1.4</authenticator.emailotp.version>
+        <authenticator.emailotp.version>4.1.5</authenticator.emailotp.version>
         <authenticator.twitter.version>1.1.0</authenticator.twitter.version>
         <authenticator.x509.version>3.1.8</authenticator.x509.version>
         <identity.extension.utils>1.0.8</identity.extension.utils>
@@ -2317,7 +2317,7 @@
         <conditional.authentication.functions.version>1.2.19</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.6.195</identity.apps.version>
+        <identity.apps.version>1.6.197</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
