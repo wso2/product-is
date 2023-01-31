@@ -17,6 +17,17 @@
  */
 package org.wso2.identity.integration.test.oauth2;
 
+import com.nimbusds.oauth2.sdk.AccessTokenResponse;
+import com.nimbusds.oauth2.sdk.AuthorizationGrant;
+import com.nimbusds.oauth2.sdk.ResourceOwnerPasswordCredentialsGrant;
+import com.nimbusds.oauth2.sdk.Scope;
+import com.nimbusds.oauth2.sdk.TokenRequest;
+import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
+import com.nimbusds.oauth2.sdk.auth.ClientSecretBasic;
+import com.nimbusds.oauth2.sdk.auth.Secret;
+import com.nimbusds.oauth2.sdk.http.HTTPResponse;
+import com.nimbusds.oauth2.sdk.id.ClientID;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -38,6 +49,7 @@ import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -148,12 +160,8 @@ public class SystemScopePermissionValidationTestCase extends OAuth2ServiceAbstra
     @Test(groups = "wso2.is", description = "Test introspection endpoint", dependsOnMethods = "testGetAccessToken")
     public void testIntrospectionEndpoint() throws Exception {
 
-        String introspectionUrl = getIntrospectionUrl(activeTenant);
-        org.json.simple.JSONObject introspectionResponse =
-                introspectTokenWithTenant(client, accessToken, introspectionUrl, username, userPassword);
-        Assert.assertTrue(introspectionResponse.containsKey("scope"));
-        String scope = introspectionResponse.get("scope").toString();
 
+        String scope = getScopesFromIntrospectionResponse();
         if (activeTenant.equals("carbon.super")) {
             Assert.assertTrue(scope.contains("internal_server_admin"), "Scope should contain " +
                     "`internal_server_admin` scope");
@@ -167,9 +175,50 @@ public class SystemScopePermissionValidationTestCase extends OAuth2ServiceAbstra
         }
     }
 
-    private String getIntrospectionUrl(String tenantDomain) {
+    @Test(groups = "wso2.is", description = "Test introspection endpoint", dependsOnMethods = "testIntrospectionEndpoint")
+    public void getTokenAndValidate() throws Exception {
 
-        return "carbon.super".equalsIgnoreCase(tenantDomain) ?
+        client = HttpClientBuilder.create().disableRedirectHandling().build();
+
+        try {
+            Secret password = new Secret(userPassword);
+            AuthorizationGrant passwordGrant = new ResourceOwnerPasswordCredentialsGrant(username, password);
+            ClientID clientID = new ClientID(consumerKey);
+            Secret clientSecret = new Secret(consumerSecret);
+            ClientAuthentication clientAuth = new ClientSecretBasic(clientID, clientSecret);
+            URI tokenEndpoint = new URI(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
+            Scope systemScope = new Scope(SYSTEM_SCOPE);
+            TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, passwordGrant, systemScope);
+
+            HTTPResponse tokenHTTPResp = request.toHTTPRequest().send();
+            Assert.assertNotNull(tokenHTTPResp, "Access token http response is null.");
+            AccessTokenResponse tokenResponse = AccessTokenResponse.parse(tokenHTTPResp);
+            Assert.assertNotNull(tokenResponse, "Access token response is null.");
+            accessToken = tokenResponse.getTokens().getAccessToken().getValue();
+            String scope = getScopesFromIntrospectionResponse();
+            if (activeTenant.equals("carbon.super")) {
+                Assert.assertTrue(scope.contains("internal_server_admin"), "Scope should contain " +
+                        "`internal_server_admin` scope");
+                Assert.assertTrue(scope.contains("internal_modify_tenants"), "Scope should contain " +
+                        "`internal_modify_tenants` scope");
+            } else {
+                Assert.assertFalse(scope.contains("internal_server_admin"), "Scope should not contain " +
+                        "`internal_server_admin` scope");
+                Assert.assertFalse(scope.contains("internal_modify_tenants"), "Scope should not contain " +
+                        "`internal_modify_tenants` scope");
+            }
+        } finally {
+            client.close();
+        }
+    }
+
+    private String getScopesFromIntrospectionResponse() throws Exception {
+
+        String introspectionUrl = "carbon.super".equalsIgnoreCase(activeTenant) ?
                 OAuth2Constant.INTRO_SPEC_ENDPOINT : OAuth2Constant.TENANT_INTRO_SPEC_ENDPOINT;
+        org.json.simple.JSONObject introspectionResponse =
+                introspectTokenWithTenant(client, accessToken, introspectionUrl, username, userPassword);
+        Assert.assertTrue(introspectionResponse.containsKey("scope"));
+        return introspectionResponse.get("scope").toString();
     }
 }
