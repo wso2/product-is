@@ -60,7 +60,7 @@ public class Oauth2PersistenceProcessorInsertTokenTestCase extends OAuth2Service
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
-        super.init(TestUserMode.SUPER_TENANT_USER);
+        super.init(TestUserMode.SUPER_TENANT_ADMIN);
         String carbonHome = Utils.getResidentCarbonHome();
         //apply encryption enabled identity xml
         File defaultTomlFile = getDeploymentTomlFile(carbonHome);
@@ -69,7 +69,7 @@ public class Oauth2PersistenceProcessorInsertTokenTestCase extends OAuth2Service
         serverConfigurationManager = new ServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartForcefully();
-        super.init(TestUserMode.SUPER_TENANT_USER);
+        super.init(TestUserMode.SUPER_TENANT_ADMIN);
         logManger = new AuthenticatorClient(backendURL);
         logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
                 isServer.getSuperTenant().getTenantAdmin().getPassword(),
@@ -94,9 +94,9 @@ public class Oauth2PersistenceProcessorInsertTokenTestCase extends OAuth2Service
     }
 
     @Test(groups = "wso2.is", description = "Send authorize user request")
-    public void testSendAuthorozedPost() throws Exception {
+    public void testSendAuthorizedPost() throws Exception {
 
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("grantType", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
         urlParameters.add(new BasicNameValuePair("consumerKey", consumerKey));
         urlParameters.add(new BasicNameValuePair("callbackurl", OAuth2Constant.CALLBACK_URL));
@@ -128,7 +128,7 @@ public class Oauth2PersistenceProcessorInsertTokenTestCase extends OAuth2Service
         EntityUtils.consume(response.getEntity());
     }
 
-    @Test(groups = "wso2.is", description = "Send login post request", dependsOnMethods = "testSendAuthorozedPost")
+    @Test(groups = "wso2.is", description = "Send login post request", dependsOnMethods = "testSendAuthorizedPost")
     public void testSendLoginPost() throws Exception {
 
         HttpResponse response = sendLoginPost(client, sessionDataKey);
@@ -174,7 +174,7 @@ public class Oauth2PersistenceProcessorInsertTokenTestCase extends OAuth2Service
         response = sendPostRequest(client, locationHeader.getValue());
         Assert.assertNotNull(response, "Get Activation response is invalid.");
 
-        Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
+        Map<String, Integer> keyPositionMap = new HashMap<>(1);
         keyPositionMap.put("Authorization Code", 1);
         List<DataExtractUtil.KeyValue> keyValues =
                 DataExtractUtil.extractTableRowDataFromResponse(response,
@@ -194,7 +194,7 @@ public class Oauth2PersistenceProcessorInsertTokenTestCase extends OAuth2Service
         EntityUtils.consume(response.getEntity());
 
         response = sendPostRequest(client, OAuth2Constant.AUTHORIZED_URL);
-        Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
+        Map<String, Integer> keyPositionMap = new HashMap<>(1);
         keyPositionMap.put("name=\"accessToken\"", 1);
         List<DataExtractUtil.KeyValue> keyValues =
                 DataExtractUtil.extractInputValueFromResponse(response,
