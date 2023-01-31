@@ -30,6 +30,7 @@ import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -49,12 +50,13 @@ import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTH_CODE_BODY_ELEMENT;
 
 /**
  * This class contains test case for authentication of users in both primary and secondary user stores.
@@ -67,12 +69,12 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
     protected List<NameValuePair> consentParameters = new ArrayList<>();
     protected String sessionDataKeyConsent;
     protected String sessionDataKey;
-    protected static final String primUsername = "primaryUsername";
-    protected static final String primPassword = "primaryPassword";
-    protected static final String secUsername = "secondaryUsername";
-    protected static final String secPassword = "secondaryPassword";
-    private static final String primaryUserRole = "jdbcUserStoreRole";
-    private static final String secondaryUserRole = "WSO2TEST.COM/jdbcUserStoreRole";
+    protected static final String PRIMARY_USERNAME = "primaryUsername";
+    protected static final String PRIMARY_PASSWORD = "primaryPassword";
+    protected static final String SECONDARY_USERNAME = "secondaryUsername";
+    protected static final String SECONDARY_PASSWORD = "secondaryPassword";
+    private static final String PRIMARY_USER_ROLE = "jdbcUserStoreRole";
+    private static final String SECONDARY_USER_ROLE = "WSO2TEST.COM/jdbcUserStoreRole";
     private UserStoreConfigAdminServiceClient userStoreConfigAdminServiceClient;
     private static final UserStoreConfigUtils userStoreConfigUtils = new UserStoreConfigUtils();
     private UserManagementClient userMgtClient;
@@ -81,80 +83,76 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
     private static final String DOMAIN_ID = "WSO2TEST.COM";
     private static final String USER_STORE_DB_NAME = "SECONDARY_USER_STORE_DB";
     private Tomcat tomcat;
+    private String clientID;
     public static final int TOMCAT_PORT = 8490;
-    public static final String playgroundAppName = "playground.app";
-    public static final String playgroundAppContext = "/playground.app";
-    public static final String playgroundAppCallBackUri = "http://localhost:" + TOMCAT_PORT + "/playground" + "" +
-            ".app/oauth2client";
-    public static final String targetApplicationUrl = "http://localhost:" + TOMCAT_PORT + "%s";
-    public static final String appUserAuthorizePath = "/playground2/oauth2-authorize-user.jsp";
-    private static final Log log = LogFactory.getLog(OIDCAbstractIntegrationTest.class);
-    private static final Log LOG = LogFactory.getLog(TomcatInitializerTestCase.class);
+    public static final String PLAYGROUND_APP_NAME = "playground.app";
+    public static final String PLAYGROUND_APP_CONTEXT = "/playground.app";
+    public static final String PLAYGROUND_APP_CALLBACK_URI = "http://localhost:" + TOMCAT_PORT +
+            "/playground.app/oauth2client";
+    private static final Log log = LogFactory.getLog(TomcatInitializerTestCase.class);
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
         super.init();
-        CookieStore cookieStore = new BasicCookieStore();
 
-//      Register a secondary user store
-        userStoreConfigAdminServiceClient =
-                new UserStoreConfigAdminServiceClient(backendURL, sessionCookie);
+        // Register a secondary user store
+        userStoreConfigAdminServiceClient = new UserStoreConfigAdminServiceClient(backendURL, sessionCookie);
         userMgtClient = new UserManagementClient(backendURL, getSessionCookie());
-        try {
-            UserStoreDTO userStoreDTO = userStoreConfigAdminServiceClient.createUserStoreDTO(JDBC_CLASS, DOMAIN_ID,
-                    userStoreConfigUtils.getJDBCUserStoreProperties(USER_STORE_DB_NAME));
-            userStoreConfigAdminServiceClient.addUserStore(userStoreDTO);
-            Thread.sleep(5000);
-        } catch (Exception e) {
-            log.error(e);
-        }
+        UserStoreDTO userStoreDTO = userStoreConfigAdminServiceClient.createUserStoreDTO(JDBC_CLASS, DOMAIN_ID,
+                userStoreConfigUtils.getJDBCUserStoreProperties(USER_STORE_DB_NAME));
+        userStoreConfigAdminServiceClient.addUserStore(userStoreDTO);
+        Thread.sleep(5000);
         boolean isSecondaryUserStoreDeployed = userStoreConfigUtils.waitForUserStoreDeployment(
                 userStoreConfigAdminServiceClient, DOMAIN_ID);
-
-        if (isSecondaryUserStoreDeployed) {
-
-//          Creating users in the primary and secondary user stores
-            try {
-                addUserIntoJDBCUserStore(primUsername, primPassword, false);
-                addUserIntoJDBCUserStore(secUsername, secPassword, true);
-            } catch (Exception e) {
-                log.error(e);
-            }
-
-//          Creating and starting application on tomcat
-            initAndCreatePlaygroundApplication();
-            startTomcat();
-            client = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
-
-//          To generate sessionDataKey
-            try {
-                testSendAuthenticationRequest(playgroundApp, client);
-            } catch (Exception e) {
-                log.error(e);
-            }
-        } else {
-            log.error("Secondary user store is not deployed");
-        }
+        Assert.assertTrue(isSecondaryUserStoreDeployed);
+        // Creating users in the primary and secondary user stores
+        addUserIntoJDBCUserStore(PRIMARY_USERNAME, PRIMARY_PASSWORD, false);
+        addUserIntoJDBCUserStore(SECONDARY_USERNAME, SECONDARY_PASSWORD, true);
+        // Creating, registering and starting application on tomcat
+        createAndRegisterPlaygroundApplication();
+        startTomcat();
     }
 
     @DataProvider(name = "userCredentialProvider")
     public static Object[][] userCredentialProvider() {
 
         return new Object[][]{
-                {primUsername, primPassword},
-                {secUsername, secPassword},
+                {PRIMARY_USERNAME, PRIMARY_PASSWORD},
+                {SECONDARY_USERNAME, SECONDARY_PASSWORD}
         };
     }
 
     @Test(groups = "wso2.is", description = "Check the secondary user store user login flow",
             dataProvider = "userCredentialProvider")
-    public void testUserLogin(String username, String password) {
+    public void testUserLogin(String username, String password) throws Exception {
 
-        try {
-            testAuthentication(playgroundApp, username, password);
-        } catch (Exception e) {
-            log.error("Error: " + e);
+        CookieStore cookieStore = new BasicCookieStore();
+        client = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
+        // Sending authorization request to IS
+        sendAuthorizedPost();
+        // User (resource owner) authentication
+        HttpResponse response = sendLoginPostForCustomUsers(client, sessionDataKey, username, password);
+        Assert.assertNotNull(response, "Login request failed. Login response is null.");
+        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        Assert.assertNotNull(locationHeader, "Login response header is null");
+        EntityUtils.consume(response.getEntity());
+        response = sendGetRequest(client, locationHeader.getValue());
+        Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(2);
+        keyPositionMap.put("name=\"" + OAuth2Constant.SESSION_DATA_KEY_CONSENT + "\"", 1);
+        keyPositionMap.put(AUTH_CODE_BODY_ELEMENT, 2);
+        List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil.extractSessionConsentDataFromResponse(response,
+                keyPositionMap);
+        Assert.assertNotNull(keyValues, "SessionDataKeyConsent key value is null");
+        if (!AUTH_CODE_BODY_ELEMENT.equals(keyValues.get(0).getKey())) {
+            sessionDataKeyConsent = keyValues.get(0).getValue();
+            EntityUtils.consume(response.getEntity());
+            // Authorization
+            testSendApprovalPost();
+        } else {
+            String authorizationCode = keyValues.get(0).getValue();
+            Assert.assertNotNull(authorizationCode, "Authorization code is null.");
+            EntityUtils.consume(response.getEntity());
         }
     }
 
@@ -163,107 +161,99 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
 
         stopTomcat();
         userStoreConfigAdminServiceClient.deleteUserStore(DOMAIN_ID);
-        userMgtClient.deleteRole(primaryUserRole);
-        userMgtClient.deleteUser(primUsername);
+        userMgtClient.deleteRole(PRIMARY_USER_ROLE);
+        userMgtClient.deleteUser(PRIMARY_USERNAME);
         deleteApplication(playgroundApp);
         clear();
     }
 
-    private void testAuthentication(OIDCApplication application, String username, String password) throws IOException {
+    private void sendAuthorizedPost() throws Exception {
 
-        HttpResponse response = sendLoginPostForCustomUsers(client, sessionDataKey, username, password);
-        Assert.assertNotNull(response, "Login request failed for " + application.getApplicationName()
-                + ". response " + "is null.");
+        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        urlParameters.add(new BasicNameValuePair("grantType", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
+        urlParameters.add(new BasicNameValuePair("consumerKey", clientID));
+        urlParameters.add(new BasicNameValuePair("callbackurl", PLAYGROUND_APP_CALLBACK_URI));
+        urlParameters.add(new BasicNameValuePair("authorizeEndpoint", OAuth2Constant.APPROVAL_URL));
+        urlParameters.add(new BasicNameValuePair("authorize", OAuth2Constant.AUTHORIZE_PARAM));
+        urlParameters.add(new BasicNameValuePair("scope", ""));
+        HttpResponse response = sendPostRequestWithParameters(client, urlParameters,
+                OAuth2Constant.AUTHORIZED_USER_URL);
+        Assert.assertNotNull(response, "Authorized response is null");
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
-        Assert.assertNotNull(locationHeader, "Login response header is null for "
-                + application.getApplicationName());
-    }
-
-    private void testSendAuthenticationRequest(OIDCApplication application, HttpClient client) throws Exception {
-
-        List<NameValuePair> urlParameters = OIDCUtilTest.getNameValuePairs(application);
-        application.setApplicationContext(StringUtils.EMPTY);
-
-        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, String.format(targetApplicationUrl,
-                application.getApplicationContext() + appUserAuthorizePath));
-        Assert.assertNotNull(response, "Authorization request failed for " + application.getApplicationName()
-                + ". " + "Authorized response is null");
-
-        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
-        Assert.assertNotNull(locationHeader, "Authorization request failed for "
-                + application.getApplicationName() + ". Authorized response header is null");
-
+        Assert.assertNotNull(locationHeader, "Authorized response header is null");
         EntityUtils.consume(response.getEntity());
-
         response = sendGetRequest(client, locationHeader.getValue());
-        Assert.assertNotNull(response, "Authorization request failed for " + application.getApplicationName()
-                + ". " + "Authorized user response is null.");
-
-        Map<String, Integer> keyPositionMap = new HashMap<>(1);
+        Assert.assertNotNull(response, "Authorized user response is null.");
+        Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
         keyPositionMap.put("name=\"sessionDataKey\"", 1);
         List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil.extractDataFromResponse(response, keyPositionMap);
-        Assert.assertNotNull(keyValues, "sessionDataKey key value is null for "
-                + application.getApplicationName());
-
+        Assert.assertNotNull(keyValues, "sessionDataKey key value is null");
         sessionDataKey = keyValues.get(0).getValue();
-        Assert.assertNotNull(sessionDataKey, "Invalid sessionDataKey for " + application.getApplicationName());
-
+        Assert.assertNotNull(sessionDataKey, "Session data key is null.");
         EntityUtils.consume(response.getEntity());
     }
 
-    private void initAndCreatePlaygroundApplication() throws Exception {
+    private void testSendApprovalPost() throws Exception {
 
-        playgroundApp = new OIDCApplication(playgroundAppName,
-                playgroundAppContext,
-                playgroundAppCallBackUri);
+        HttpResponse response = sendApprovalPost(client, sessionDataKeyConsent);
+        Assert.assertNotNull(response, "Approval response is invalid.");
+        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        String locationHeaderValue = locationHeader.getValue();
+        Assert.assertNotNull(locationHeader, "Approval Location header is null.");
+        String authorizationCodeString = StringUtils.substringAfterLast(locationHeaderValue, "?code=");
+        // Assuring that the authorization code is received, which confirms that the login is successful
+        Assert.assertNotNull(authorizationCodeString, "Authorization code not present, hence login unsuccessful.");
+        EntityUtils.consume(response.getEntity());
+    }
+
+    private void createAndRegisterPlaygroundApplication() throws Exception {
+
+        playgroundApp = new OIDCApplication(PLAYGROUND_APP_NAME, PLAYGROUND_APP_CONTEXT, PLAYGROUND_APP_CALLBACK_URI);
         playgroundApp.addRequiredClaim(OIDCUtilTest.emailClaimUri);
         playgroundApp.addRequiredClaim(OIDCUtilTest.firstNameClaimUri);
         playgroundApp.addRequiredClaim(OIDCUtilTest.lastNameClaimUri);
         ServiceProvider serviceProvider = new ServiceProvider();
         createApplication(serviceProvider, playgroundApp);
+        clientID = playgroundApp.getClientId();
     }
 
-    private void addUserIntoJDBCUserStore(String username, String password, boolean isSecondaryStoreUser) throws Exception {
+    private void addUserIntoJDBCUserStore(String username, String password, boolean isSecondaryStoreUser)
+            throws Exception {
 
         if (isSecondaryStoreUser) {
-            userMgtClient.addRole(secondaryUserRole, null, new String[]{PERMISSION_LOGIN});
-            Assert.assertTrue(userMgtClient.roleNameExists(secondaryUserRole),
-                    "Role name doesn't exist");
-
-            userMgtClient.addUser(DOMAIN_ID + "/" + username, password, new String[]{secondaryUserRole}, null);
-            Assert.assertTrue(userMgtClient.userNameExists(secondaryUserRole, DOMAIN_ID + "/" + username),
-                    "User name doesn't exist");
+            userMgtClient.addRole(SECONDARY_USER_ROLE, null, new String[]{PERMISSION_LOGIN});
+            Assert.assertTrue(userMgtClient.roleNameExists(SECONDARY_USER_ROLE), "Role name doesn't exist");
+            userMgtClient.addUser(DOMAIN_ID + "/" + username, password, new String[]{SECONDARY_USER_ROLE}, null);
+            Assert.assertTrue(userMgtClient.userNameExists(SECONDARY_USER_ROLE, DOMAIN_ID + "/" + username),
+                    "User is not created.");
         } else {
-            userMgtClient.addRole(primaryUserRole, null, new String[]{PERMISSION_LOGIN});
-            Assert.assertTrue(userMgtClient.roleNameExists(primaryUserRole),
-                    "Role name doesn't exist");
-
-            userMgtClient.addUser(username, password, new String[]{primaryUserRole}, null);
-            Assert.assertTrue(userMgtClient.userNameExists(primaryUserRole, username),
-                    "User name doesn't exist");
+            userMgtClient.addRole(PRIMARY_USER_ROLE, null, new String[]{PERMISSION_LOGIN});
+            Assert.assertTrue(userMgtClient.roleNameExists(PRIMARY_USER_ROLE), "Role name doesn't exist");
+            userMgtClient.addUser(username, password, new String[]{PRIMARY_USER_ROLE}, null);
+            Assert.assertTrue(userMgtClient.userNameExists(PRIMARY_USER_ROLE, username), "User name doesn't exist");
         }
     }
 
     private void startTomcat() throws LifecycleException, NullPointerException {
 
         tomcat = Utils.getTomcat(getClass());
-        URL resourceUrl = getClass().getResource("/samples/" + "playground2" + ".war");
+        URL resourceUrl = getClass().getResource("/samples/playground2.war");
         Assert.assertNotNull(resourceUrl, "resourceUrl is null");
         tomcat.addWebapp(tomcat.getHost(), "/" + "playground2", resourceUrl.getPath());
-        LOG.info("Deployed tomcat application " + "playground2");
+        log.info("Deployed tomcat application " + "playground2");
         try {
             tomcat.start();
         } catch (LifecycleException e) {
-            LOG.error("Error while starting tomcat server ", e);
+            log.error("Error while starting tomcat server ", e);
             throw e;
         }
-        LOG.info("Tomcat server started.");
+        log.info("Tomcat server started.");
     }
 
     private void stopTomcat() throws LifecycleException {
 
         tomcat.stop();
         tomcat.destroy();
-        LOG.info("Tomcat server stopped.");
+        log.info("Tomcat server stopped.");
     }
 }
