@@ -64,32 +64,37 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTH_CODE_
 
 public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest {
 
-    private OIDCApplication playgroundApp;
-    protected HttpClient client;
-    protected List<NameValuePair> consentParameters = new ArrayList<>();
-    protected String sessionDataKeyConsent;
-    protected String sessionDataKey;
-    protected static final String PRIMARY_USERNAME = "primaryUsername";
-    protected static final String PRIMARY_PASSWORD = "primaryPassword";
-    protected static final String SECONDARY_USERNAME = "secondaryUsername";
-    protected static final String SECONDARY_PASSWORD = "secondaryPassword";
-    private static final String PRIMARY_USER_ROLE = "jdbcUserStoreRole";
-    private static final String SECONDARY_USER_ROLE = "WSO2TEST.COM/jdbcUserStoreRole";
-    private UserStoreConfigAdminServiceClient userStoreConfigAdminServiceClient;
-    private static final UserStoreConfigUtils userStoreConfigUtils = new UserStoreConfigUtils();
-    private UserManagementClient userMgtClient;
-    private static final String PERMISSION_LOGIN = "/permission/admin/login";
-    private static final String JDBC_CLASS = "org.wso2.carbon.user.core.jdbc.UniqueIDJDBCUserStoreManager";
-    private static final String DOMAIN_ID = "WSO2TEST.COM";
-    private static final String USER_STORE_DB_NAME = "SECONDARY_USER_STORE_DB";
-    private Tomcat tomcat;
-    private String clientID;
     public static final int TOMCAT_PORT = 8490;
     public static final String PLAYGROUND_APP_NAME = "playground.app";
     public static final String PLAYGROUND_APP_CONTEXT = "/playground.app";
     public static final String PLAYGROUND_APP_CALLBACK_URI = "http://localhost:" + TOMCAT_PORT +
             "/playground.app/oauth2client";
+    private static final String PRIMARY_USERNAME = "primaryUsername";
+    private static final String PRIMARY_PASSWORD = "primaryPassword";
+    private static final String SECONDARY_USERNAME = "secondaryUsername";
+    private static final String SECONDARY_PASSWORD = "secondaryPassword";
+    private static final UserStoreConfigUtils userStoreConfigUtils = new UserStoreConfigUtils();
+    private static final String PERMISSION_LOGIN = "/permission/admin/login";
+    private static final String JDBC_CLASS = "org.wso2.carbon.user.core.jdbc.UniqueIDJDBCUserStoreManager";
+    private static final String DOMAIN_ID = "WSO2TEST.COM";
+    private static final String PRIMARY_USER_ROLE = "jdbcUserStoreRole";
+    private static final String SECONDARY_USER_ROLE = DOMAIN_ID + "/" + "jdbcUserStoreRole";
+    private static final String USER_STORE_DB_NAME = "SECONDARY_USER_STORE_DB";
     private static final Log log = LogFactory.getLog(TomcatInitializerTestCase.class);
+    private OIDCApplication playgroundApp;
+    private HttpClient client;
+    private String sessionDataKeyConsent;
+    private String sessionDataKey;
+    private UserStoreConfigAdminServiceClient userStoreConfigAdminServiceClient;
+    private UserManagementClient userMgtClient;
+    private Tomcat tomcat;
+    private String clientID;
+
+    @DataProvider(name = "userCredentialProvider")
+    public static Object[][] userCredentialProvider() {
+
+        return new Object[][]{{PRIMARY_USERNAME, PRIMARY_PASSWORD}, {SECONDARY_USERNAME, SECONDARY_PASSWORD}};
+    }
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -112,15 +117,6 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
         // Creating, registering and starting application on tomcat
         createAndRegisterPlaygroundApplication();
         startTomcat();
-    }
-
-    @DataProvider(name = "userCredentialProvider")
-    public static Object[][] userCredentialProvider() {
-
-        return new Object[][]{
-                {PRIMARY_USERNAME, PRIMARY_PASSWORD},
-                {SECONDARY_USERNAME, SECONDARY_PASSWORD}
-        };
     }
 
     @Test(groups = "wso2.is", description = "Check the secondary user store user login flow",
@@ -161,8 +157,8 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
 
         stopTomcat();
         userStoreConfigAdminServiceClient.deleteUserStore(DOMAIN_ID);
-        userMgtClient.deleteRole(PRIMARY_USER_ROLE);
         userMgtClient.deleteUser(PRIMARY_USERNAME);
+        userMgtClient.deleteUser(DOMAIN_ID + "/" + SECONDARY_USERNAME);
         deleteApplication(playgroundApp);
         clear();
     }
@@ -230,7 +226,7 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
             userMgtClient.addRole(PRIMARY_USER_ROLE, null, new String[]{PERMISSION_LOGIN});
             Assert.assertTrue(userMgtClient.roleNameExists(PRIMARY_USER_ROLE), "Role name doesn't exist");
             userMgtClient.addUser(username, password, new String[]{PRIMARY_USER_ROLE}, null);
-            Assert.assertTrue(userMgtClient.userNameExists(PRIMARY_USER_ROLE, username), "User name doesn't exist");
+            Assert.assertTrue(userMgtClient.userNameExists(PRIMARY_USER_ROLE, username), "User is not created.");
         }
     }
 
