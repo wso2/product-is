@@ -73,17 +73,16 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
     private static final String PRIMARY_PASSWORD = "primaryPassword";
     private static final String SECONDARY_USERNAME = "secondaryUsername";
     private static final String SECONDARY_PASSWORD = "secondaryPassword";
-    private static final UserStoreConfigUtils userStoreConfigUtils = new UserStoreConfigUtils();
+    private static final UserStoreConfigUtils USER_STORE_CONFIG_UTILS = new UserStoreConfigUtils();
     private static final String PERMISSION_LOGIN = "/permission/admin/login";
     private static final String JDBC_CLASS = "org.wso2.carbon.user.core.jdbc.UniqueIDJDBCUserStoreManager";
     private static final String DOMAIN_ID = "WSO2TEST.COM";
     private static final String PRIMARY_USER_ROLE = "jdbcUserStoreRole";
     private static final String SECONDARY_USER_ROLE = DOMAIN_ID + "/" + "jdbcUserStoreRole";
     private static final String USER_STORE_DB_NAME = "SECONDARY_USER_STORE_DB";
-    private static final Log log = LogFactory.getLog(TomcatInitializerTestCase.class);
+    private static final Log LOG = LogFactory.getLog(TomcatInitializerTestCase.class);
     private OIDCApplication playgroundApp;
     private HttpClient client;
-    private String sessionDataKeyConsent;
     private String sessionDataKey;
     private UserStoreConfigAdminServiceClient userStoreConfigAdminServiceClient;
     private UserManagementClient userMgtClient;
@@ -105,10 +104,10 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
         userStoreConfigAdminServiceClient = new UserStoreConfigAdminServiceClient(backendURL, sessionCookie);
         userMgtClient = new UserManagementClient(backendURL, getSessionCookie());
         UserStoreDTO userStoreDTO = userStoreConfigAdminServiceClient.createUserStoreDTO(JDBC_CLASS, DOMAIN_ID,
-                userStoreConfigUtils.getJDBCUserStoreProperties(USER_STORE_DB_NAME));
+                USER_STORE_CONFIG_UTILS.getJDBCUserStoreProperties(USER_STORE_DB_NAME));
         userStoreConfigAdminServiceClient.addUserStore(userStoreDTO);
         Thread.sleep(5000);
-        boolean isSecondaryUserStoreDeployed = userStoreConfigUtils.waitForUserStoreDeployment(
+        boolean isSecondaryUserStoreDeployed = USER_STORE_CONFIG_UTILS.waitForUserStoreDeployment(
                 userStoreConfigAdminServiceClient, DOMAIN_ID);
         Assert.assertTrue(isSecondaryUserStoreDeployed);
         // Creating users in the primary and secondary user stores
@@ -140,16 +139,10 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
         List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil.extractSessionConsentDataFromResponse(response,
                 keyPositionMap);
         Assert.assertNotNull(keyValues, "SessionDataKeyConsent key value is null");
-        if (!AUTH_CODE_BODY_ELEMENT.equals(keyValues.get(0).getKey())) {
-            sessionDataKeyConsent = keyValues.get(0).getValue();
-            EntityUtils.consume(response.getEntity());
-            // Authorization
-            testSendApprovalPost();
-        } else {
-            String authorizationCode = keyValues.get(0).getValue();
-            Assert.assertNotNull(authorizationCode, "Authorization code is null.");
-            EntityUtils.consume(response.getEntity());
-        }
+        String sessionDataKeyConsent = keyValues.get(0).getValue();
+        EntityUtils.consume(response.getEntity());
+        // Authorization
+        checkAuthorizationCode(sessionDataKeyConsent);
     }
 
     @AfterClass(alwaysRun = true)
@@ -189,7 +182,7 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
         EntityUtils.consume(response.getEntity());
     }
 
-    private void testSendApprovalPost() throws Exception {
+    private void checkAuthorizationCode(String sessionDataKeyConsent) throws Exception {
 
         HttpResponse response = sendApprovalPost(client, sessionDataKeyConsent);
         Assert.assertNotNull(response, "Approval response is invalid.");
@@ -236,20 +229,20 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
         URL resourceUrl = getClass().getResource("/samples/playground2.war");
         Assert.assertNotNull(resourceUrl, "resourceUrl is null");
         tomcat.addWebapp(tomcat.getHost(), "/" + "playground2", resourceUrl.getPath());
-        log.info("Deployed tomcat application " + "playground2");
+        LOG.info("Deployed tomcat application " + "playground2");
         try {
             tomcat.start();
         } catch (LifecycleException e) {
-            log.error("Error while starting tomcat server ", e);
+            LOG.error("Error while starting tomcat server ", e);
             throw e;
         }
-        log.info("Tomcat server started.");
+        LOG.info("Tomcat server started.");
     }
 
     private void stopTomcat() throws LifecycleException {
 
         tomcat.stop();
         tomcat.destroy();
-        log.info("Tomcat server stopped.");
+        LOG.info("Tomcat server stopped.");
     }
 }
