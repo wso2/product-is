@@ -369,23 +369,6 @@
             </includes>
         </fileSet>
 
-        <fileSet>
-            <directory>../styles/service/src/main/resources/web/styles/css</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/resources/allthemes/Default/admin</outputDirectory>
-            <includes>
-                <include>**/**.css</include>
-            </includes>
-        </fileSet>
-
-        <fileSet>
-            <directory>../styles/service/src/main/resources/web/styles/images</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/resources/allthemes/Default/images</outputDirectory>
-            <includes>
-                <include>**/**.gif</include>
-                <include>**/**.png</include>
-            </includes>
-        </fileSet>
-
         <!-- copying runtimes -->
         <fileSet>
             <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/lib/runtimes</directory>

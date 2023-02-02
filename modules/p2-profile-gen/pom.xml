@@ -251,9 +251,6 @@
                                 </featureArtifactDef>
 
                                 <featureArtifactDef>
-                                    org.wso2.is:org.wso2.identity.styles.feature:${project.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
                                     org.wso2.is:org.wso2.identity.utils.feature:${project.version}
                                 </featureArtifactDef>
 
@@ -625,10 +622,6 @@
                                 <feature>
                                     <id>org.wso2.carbon.directory.service.mgr.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.identity.styles.feature.group</id>
-                                    <version>${project.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.identity.utils.feature.group</id>
