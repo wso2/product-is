@@ -170,9 +170,8 @@ public class SystemScopePermissionValidationTestCase extends OAuth2ServiceAbstra
     @Test(groups = "wso2.is", description = "Test introspection endpoint", dependsOnMethods = "testIntrospectionEndpoint")
     public void getTokenAndValidate() throws Exception {
 
-        client = HttpClientBuilder.create().disableRedirectHandling().build();
-
         try {
+            client = HttpClientBuilder.create().disableRedirectHandling().build();
             Secret password = new Secret(userPassword);
             AuthorizationGrant passwordGrant = new ResourceOwnerPasswordCredentialsGrant(username, password);
             ClientID clientID = new ClientID(consumerKey);
