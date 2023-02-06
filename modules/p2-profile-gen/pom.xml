@@ -335,10 +335,6 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.association.account:org.wso2.carbon.identity.user.account.association.feature:${identity.user.account.association.version}
                                 </featureArtifactDef>
-                                <!-- Cipher tool feature -->
-                                <featureArtifactDef>
-                                    org.wso2.ciphertool:org.wso2.ciphertool.feature:${cipher-tool.version}
-                                </featureArtifactDef>
 
                                 <featureArtifactDef>
                                     org.wso2.carbon.analytics-common:org.wso2.carbon.event.output.adapter.server.feature:${carbon.analytics-common.version}
@@ -1317,10 +1313,6 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.user.account.association.feature.group</id>
                                     <version>${identity.user.account.association.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.ciphertool.feature.group</id>
-                                    <version>${cipher-tool.version}</version>
                                 </feature>
 
                                 <!-- Auth/Authz for Rest API  -->
