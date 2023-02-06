@@ -209,7 +209,6 @@
                         <configuration>
                             <tasks>
                                 <property name="tempdir" value="target/docs-temp" />
-                                <property name="registryPolicyHandler" value="&lt;handler class=&quot;org.wso2.carbon.identity.entitlement.policy.finder.registry.RegistryPolicyHandler&quot;&gt;${line.separator} &lt;filter class=&quot;org.wso2.carbon.identity.entitlement.policy.finder.registry.RegistryPolicyMediaTypeMatcher&quot;&gt;${line.separator} &lt;property name=&quot;mediaType&quot;&gt;application/xacml-policy+xml&lt;/property&gt;${line.separator} &lt;/filter&gt;${line.separator} &lt;/handler&gt;${line.separator}${line.separator} &lt;!--&lt;handler class=&quot;org.wso2.carbon.registry.extensions.handlers.SynapseRepositoryHandler&quot;&gt;" />
 
                                 <property name="xss-kernel-token" value="&lt;XSSPreventionConfig&gt;${line.separator} &lt;Enabled&gt;true&lt;/Enabled&gt;${line.separator} &lt;Rule&gt;allow&lt;/Rule&gt;${line.separator} &lt;Patterns&gt;${line.separator} &lt;!--Pattern&gt;&lt;/Pattern--&gt;${line.separator} &lt;/Patterns&gt;${line.separator} &lt;/XSSPreventionConfig&gt;" />
 
@@ -392,10 +391,6 @@
 
                                 <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/tomcat/carbon/WEB-INF/web.xml.j2" />
                                 <delete dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/tomcat/carbon/WEB-INF/" />
-
-                                <!-- Add org.wso2.carbon.identity.entitlement.policy.finder.registry.RegistryPolicyHandler to IS -->
-
-                                <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/registry.xml" token="&lt;!--&lt;handler class=&quot;org.wso2.carbon.registry.extensions.handlers.SynapseRepositoryHandler&quot;&gt;" value="${registryPolicyHandler}" />
 
                                 <!-- Enable KDC for IS -->
 
