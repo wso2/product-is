@@ -125,7 +125,10 @@
 
                                 <!-- registry related features -->
                                 <featureArtifactDef>
-                                    org.wso2.carbon.registry:org.wso2.carbon.registry.core.feature:${carbon.registry.version}
+                                    org.wso2.carbon.registry:org.wso2.carbon.registry.core.common.feature:${carbon.registry.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.registry:org.wso2.carbon.registry.core.server.feature:${carbon.registry.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.registry:org.wso2.carbon.registry.resource.properties.server.feature:${carbon.registry.version}
@@ -519,7 +522,11 @@
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.registry.core.feature.group</id>
+                                    <id>org.wso2.carbon.registry.core.server.feature.group</id>
+                                    <version>${carbon.registry.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.registry.core.common.feature.group</id>
                                     <version>${carbon.registry.version}</version>
                                 </feature>
                                 <feature>
