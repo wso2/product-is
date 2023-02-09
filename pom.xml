@@ -1846,7 +1846,7 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.consent.mgt</groupId>
-                <artifactId>org.wso2.carbon.consent.mgt.server.feature</artifactId>
+                <artifactId>org.wso2.carbon.consent.mgt.feature</artifactId>
                 <version>${carbon.consent.mgt.version}</version>
             </dependency>
             <dependency>
@@ -2200,7 +2200,7 @@
         <saml.common.util.version.range>[1.0.0,2.0.0)</saml.common.util.version.range>
 
         <!--Carbon Consent Version-->
-        <carbon.consent.mgt.version>2.5.1</carbon.consent.mgt.version>
+        <carbon.consent.mgt.version>2.5.2</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
         <identity.governance.version>1.8.19</identity.governance.version>
