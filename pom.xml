@@ -2209,7 +2209,7 @@
         <identity.carbon.auth.saml2.version>5.8.3</identity.carbon.auth.saml2.version>
         <identity.carbon.auth.mutual.ssl.version>5.5.0</identity.carbon.auth.mutual.ssl.version>
         <identity.carbon.auth.iwa.version>5.5.0</identity.carbon.auth.iwa.version>
-        <identity.carbon.auth.rest.version>1.8.11</identity.carbon.auth.rest.version>
+        <identity.carbon.auth.rest.version>1.8.12</identity.carbon.auth.rest.version>
 
 
         <!-- Identity Inbound Versions   -->
@@ -2288,7 +2288,7 @@
         <authenticator.totp.version>3.3.6</authenticator.totp.version>
         <authenticator.backupcode.version>0.0.12</authenticator.backupcode.version>
         <authenticator.office365.version>2.1.1</authenticator.office365.version>
-        <authenticator.smsotp.version>3.3.7</authenticator.smsotp.version>
+        <authenticator.smsotp.version>3.3.8</authenticator.smsotp.version>
         <authenticator.magiclink.version>1.1.5</authenticator.magiclink.version>
         <authenticator.emailotp.version>4.1.5</authenticator.emailotp.version>
         <authenticator.twitter.version>1.1.0</authenticator.twitter.version>
@@ -2317,7 +2317,7 @@
         <conditional.authentication.functions.version>1.2.19</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.6.207</identity.apps.version>
+        <identity.apps.version>1.6.211</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
