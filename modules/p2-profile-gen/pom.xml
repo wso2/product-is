@@ -364,7 +364,7 @@
                                 </featureArtifactDef>
 
                                 <featureArtifactDef>
-                                    org.wso2.carbon.consent.mgt:org.wso2.carbon.consent.mgt.feature:${carbon.consent.mgt.version}
+                                    org.wso2.carbon.consent.mgt:org.wso2.carbon.consent.mgt.server.feature:${carbon.consent.mgt.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.consent.mgt.server.feature:${carbon.identity.framework.version}
@@ -841,7 +841,7 @@
                                     <version>${identity.carbon.auth.rest.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.consent.mgt.feature.group</id>
+                                    <id>org.wso2.carbon.consent.mgt.server.feature.group</id>
                                     <version>${carbon.consent.mgt.version}</version>
                                 </feature>
                                 <feature>

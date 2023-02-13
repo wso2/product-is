@@ -1851,7 +1851,7 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.consent.mgt</groupId>
-                <artifactId>org.wso2.carbon.consent.mgt.feature</artifactId>
+                <artifactId>org.wso2.carbon.consent.mgt.server.feature</artifactId>
                 <version>${carbon.consent.mgt.version}</version>
             </dependency>
             <dependency>
