@@ -1333,7 +1333,7 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.fetch.remote</groupId>
-                <artifactId>org.wso2.carbon.identity.remotefetch.feature</artifactId>
+                <artifactId>org.wso2.carbon.identity.remotefetch.server.feature</artifactId>
                 <version>${org.wso2.carbon.identity.remotefetch.version}</version>
             </dependency>
             <dependency>
