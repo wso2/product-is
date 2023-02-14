@@ -1666,7 +1666,7 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.extension.identity.authenticator.outbound.office365</groupId>
-                <artifactId>org.wso2.carbon.extension.identity.authenticator.office365.connector</artifactId>
+                <artifactId>org.wso2.carbon.extension.identity.authenticator.office3620connector</artifactId>
                 <version>${authenticator.office365.version}</version>
             </dependency>
             <dependency>
@@ -2192,7 +2192,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.25.107</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.25.109</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
