@@ -465,7 +465,7 @@
                                 </featureArtifactDef>
                                 <!--  RemoteFetch feature -->
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity.fetch.remote:org.wso2.carbon.identity.remotefetch.core.feature:${org.wso2.carbon.identity.remotefetch.version}
+                                    org.wso2.carbon.identity.fetch.remote:org.wso2.carbon.identity.remotefetch.feature:${org.wso2.carbon.identity.remotefetch.version}
                                 </featureArtifactDef>
                                 <!-- Unique Claim Management feature -->
                                 <featureArtifactDef>
@@ -986,7 +986,7 @@
                                     <version>${carbon.commons.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.identity.remotefetch.core.feature.group</id>
+                                    <id>org.wso2.carbon.identity.remotefetch.feature.group</id>
                                     <version>${org.wso2.carbon.identity.remotefetch.version}</version>
                                 </feature>
                                 <feature>
@@ -1521,7 +1521,7 @@
                                     <version>${carbon.commons.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.identity.remotefetch.core.feature.group</id>
+                                    <id>org.wso2.carbon.identity.remotefetch.feature.group</id>
                                     <version>${org.wso2.carbon.identity.remotefetch.version}</version>
                                 </feature>
                                 <feature>
@@ -1958,7 +1958,7 @@
                                     <version>${carbon.commons.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.identity.remotefetch.core.feature.group</id>
+                                    <id>org.wso2.carbon.identity.remotefetch.feature.group</id>
                                     <version>${org.wso2.carbon.identity.remotefetch.version}</version>
                                 </feature>
                                 <feature>
@@ -2208,7 +2208,7 @@
                                     <version>${carbon.commons.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.identity.remotefetch.core.feature.group</id>
+                                    <id>org.wso2.carbon.identity.remotefetch.feature.group</id>
                                     <version>${org.wso2.carbon.identity.remotefetch.version}</version>
                                 </feature>
                             </features>
