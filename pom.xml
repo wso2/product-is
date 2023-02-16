@@ -2260,9 +2260,9 @@
         <identity.outbound.auth.requestpath.oauth.version>5.5.3</identity.outbound.auth.requestpath.oauth.version>
 
         <!-- Social Authenticator Versions -->
-        <social.authenticator.facebook.version>5.2.0</social.authenticator.facebook.version>
-        <social.authenticator.google.version>5.2.6</social.authenticator.google.version>
-        <social.authenticator.windowslive.version>5.2.0</social.authenticator.windowslive.version>
+        <social.authenticator.facebook.version>5.2.1</social.authenticator.facebook.version>
+        <social.authenticator.google.version>5.2.7</social.authenticator.google.version>
+        <social.authenticator.windowslive.version>5.2.1</social.authenticator.windowslive.version>
 
         <!-- Provisioning connector Versions -->
         <provisioning.connector.google.version>5.2.2</provisioning.connector.google.version>
@@ -2273,7 +2273,7 @@
         <!-- Local Authenticator Versions -->
         <identity.local.auth.basicauth.version>6.7.9</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.3.30</identity.local.auth.fido.version>
-        <identity.local.auth.iwa.version>5.4.0</identity.local.auth.iwa.version>
+        <identity.local.auth.iwa.version>5.4.1</identity.local.auth.iwa.version>
 
         <!-- Local Authentication API Connector Version -->
         <identity.local.auth.api.version>2.5.6</identity.local.auth.api.version>
