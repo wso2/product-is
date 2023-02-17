@@ -2240,7 +2240,7 @@
 
         <!-- Identity Event Handler Versions -->
         <identity.event.handler.account.lock.version>1.8.7</identity.event.handler.account.lock.version>
-        <identity.event.handler.notification.version>1.7.7</identity.event.handler.notification.version>
+        <identity.event.handler.notification.version>1.7.8</identity.event.handler.notification.version>
 
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
@@ -2271,7 +2271,7 @@
         <provisioning.connector.scim2.version>2.0.1</provisioning.connector.scim2.version>
 
         <!-- Local Authenticator Versions -->
-        <identity.local.auth.basicauth.version>6.7.9</identity.local.auth.basicauth.version>
+        <identity.local.auth.basicauth.version>6.7.10</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.3.30</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.4.1</identity.local.auth.iwa.version>
 
@@ -2317,7 +2317,7 @@
         <conditional.authentication.functions.version>1.2.20</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.6.222</identity.apps.version>
+        <identity.apps.version>1.6.224</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
