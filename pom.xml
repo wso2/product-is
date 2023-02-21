@@ -1528,6 +1528,11 @@
                 <artifactId>org.wso2.carbon.identity.application.authenticator.live</artifactId>
                 <version>${social.authenticator.windowslive.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.outbound.auth.apple</groupId>
+                <artifactId>org.wso2.carbon.identity.application.authenticator.apple</artifactId>
+                <version>${social.authenticator.apple.version}</version>
+            </dependency>
 
             <!-- Provisioning Connectors -->
             <dependency>
@@ -2192,7 +2197,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.25.112</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.25.114</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2263,6 +2268,7 @@
         <social.authenticator.facebook.version>5.2.1</social.authenticator.facebook.version>
         <social.authenticator.google.version>5.2.7</social.authenticator.google.version>
         <social.authenticator.windowslive.version>5.2.1</social.authenticator.windowslive.version>
+        <social.authenticator.apple.version>1.0.0</social.authenticator.apple.version>
 
         <!-- Provisioning connector Versions -->
         <provisioning.connector.google.version>5.2.2</provisioning.connector.google.version>
