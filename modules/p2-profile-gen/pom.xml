@@ -160,8 +160,32 @@
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.template.mgt.server.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity.governance:org.wso2.carbon.identity.governance.feature:${identity.governance.version}
+                                    org.wso2.carbon.identity.governance:org.wso2.carbon.identity.governance.server.feature:${identity.governance.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.governance:org.wso2.carbon.identity.recovery.server.feature:${identity.governance.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.governance:org.wso2.carbon.identity.user.server.feature:${identity.governance.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.governance:org.wso2.carbon.identity.captcha.server.feature:${identity.governance.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.governance:org.wso2.carbon.identity.password.history.server.feature:${identity.governance.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.governance:org.wso2.carbon.identity.password.policy.server.feature:${identity.governance.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.governance:org.wso2.carbon.identity.account.suspension.notification.task.server.feature:${identity.governance.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.governance:org.wso2.carbon.identity.piicontroller.server.feature:${identity.governance.version}
+                                </featureArtifactDef>
+                                <includedFeatureDef>
+                                    org.wso2.carbon.identity.governance:org.wso2.carbon.identity.auth.attribute.handler.server.feature:${identity.governance.version}
+                                </includedFeatureDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.event.handler.accountlock:org.wso2.carbon.identity.handler.event.account.lock.feature:${identity.event.handler.account.lock.version}
                                 </featureArtifactDef>
@@ -553,7 +577,39 @@
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.identity.governance.feature.group</id>
+                                    <id>org.wso2.carbon.identity.governance.server.feature.group</id>
+                                    <version>${identity.governance.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.recovery.server.feature.group</id>
+                                    <version>${identity.governance.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.user.server.feature.group</id>
+                                    <version>${identity.governance.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.captcha.server.feature.group</id>
+                                    <version>${identity.governance.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.password.history.server.feature.group</id>
+                                    <version>${identity.governance.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.password.policy.server.feature.group</id>
+                                    <version>${identity.governance.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.account.suspension.notification.task.server.feature.group</id>
+                                    <version>${identity.governance.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.piicontroller.server.feature.group</id>
+                                    <version>${identity.governance.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.auth.attribute.handler.server.feature.group</id>
                                     <version>${identity.governance.version}</version>
                                 </feature>
                                 <feature>
