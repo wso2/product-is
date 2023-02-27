@@ -17,6 +17,7 @@ ________________________________________________________________________________
 org.wso2.carbon.identity.provisioning.connector.scim-5.3.0.jar                                      bundle         apache2
 org.wso2.carbon.identity.local.auth.api.core-2.5.6.jar                                              bundle         apache2
 org.wso2.carbon.identity.application.authenticator.facebook-5.2.0.jar                               bundle         apache2
+org.wso2.carbon.identity.application.authenticator.apple-1.0.0.jar                                  bundle         apache2
 org.wso2.carbon.extension.identity.authenticator.smsotp.connector-3.3.7.jar                         bundle         apache2
 org.wso2.carbon.extension.identity.authenticator.x509Certificate.connector-3.1.8.jar                bundle         apache2
 org.wso2.carbon.identity.oauth2.token.handler.clientauth.mutualtls-2.4.11.jar                       bundle         apache2
