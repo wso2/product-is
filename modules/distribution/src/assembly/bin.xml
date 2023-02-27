@@ -1037,6 +1037,18 @@
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
+        <file>
+            <source>src/bin/fips.sh</source>
+            <outputDirectory>wso2is-${pom.version}/bin/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>src/bin/fips.bat</source>
+            <outputDirectory>wso2is-${pom.version}/bin/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
 
         <!-- add carbon.properties with symmetric key cipher -->
         <file>
