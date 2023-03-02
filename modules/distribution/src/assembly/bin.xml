@@ -59,6 +59,20 @@
                 <exclude>**/log4j2.properties</exclude>
                 <exclude>**/catalina.properties</exclude>
                 <exclude>**/carbon.properties</exclude>
+
+                <!-- Remove carbon.ui feature -->
+                <exclude>**/repository/components/features/org.wso2.carbon.core.ui_**</exclude>
+                <exclude>**/repository/components/features/org.wso2.carbon.core_**</exclude>
+                <exclude>**/repository/components/plugins/org.wso2.carbon.ui_**.jar</exclude>
+                <exclude>**/repository/components/plugins/org.wso2.carbon.ui.menu.general_**.jar</exclude>
+                <exclude>**/repository/components/plugins/org.wso2.carbon.roles.mgt.ui_**.jar</exclude>
+                <exclude>**/repository/components/plugins/org.wso2.carbon.roles.mgt.stub_**.jar</exclude>
+                <exclude>**/repository/components/plugins/org.wso2.carbon.server.admin.ui_**.jar</exclude>
+                <exclude>**/repository/components/plugins/org.wso2.carbon.server.admin.stub_**.jar</exclude>
+                <exclude>**/repository/components/plugins/org.wso2.carbon.i18n_**.jar</exclude>
+                <exclude>**/repository/components/plugins/org.wso2.carbon.feature.mgt.stub_**.jar</exclude>
+                <exclude>**/repository/components/plugins/org.wso2.carbon.core.commons.stub_**.jar</exclude>
+                <exclude>**/repository/components/plugins/org.eclipse.equinox.jsp.jasper_**.jar</exclude>
             </excludes>
         </fileSet>
 
@@ -366,23 +380,6 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
             <includes>
                 <include>**/tenant-mgt.xml</include>
-            </includes>
-        </fileSet>
-
-        <fileSet>
-            <directory>../styles/service/src/main/resources/web/styles/css</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/resources/allthemes/Default/admin</outputDirectory>
-            <includes>
-                <include>**/**.css</include>
-            </includes>
-        </fileSet>
-
-        <fileSet>
-            <directory>../styles/service/src/main/resources/web/styles/images</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/resources/allthemes/Default/images</outputDirectory>
-            <includes>
-                <include>**/**.gif</include>
-                <include>**/**.png</include>
             </includes>
         </fileSet>
 
