@@ -18,6 +18,7 @@
 package org.wso2.identity.integration.test.oauth2;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -50,11 +51,15 @@ import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import sun.security.provider.X509Factory;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH_APPLICATION_NAME;
 
@@ -293,9 +298,53 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		consentRequiredClaimsFromResponse.addAll(Utils.getConsentRequiredClaimsFromResponse(response));
 		Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
 		HttpResponse httpResponse = sendGetRequest(httpClientWithoutAutoRedirections, locationHeader.getValue());
+
+		// This fetches the consent required claims when redirect params are filtered from consent page url.
+		if (consentRequiredClaimsFromResponse.isEmpty()) {
+			consentRequiredClaimsFromResponse.addAll(getConsentRequiredClaimsFromConsentPage(
+					httpClientWithoutAutoRedirections,locationHeader.getValue()));
+		}
+
 		client.setCookieStore(cookieStore);
 		EntityUtils.consume(response.getEntity());
 		return httpResponse;
+	}
+
+	/** This method is used to get the consent required claims from the consent page.
+	 *
+	 * @param client - Http Client
+	 * @param redirectUrl - Consent page url
+	 * @return - List of consent required claims
+	 * @throws Exception
+	 */
+	public List<NameValuePair> getConsentRequiredClaimsFromConsentPage(HttpClient client, String redirectUrl)
+			throws Exception {
+
+		List<NameValuePair> consentRequiredClaims = new ArrayList<>();
+		HttpResponse consentPageResponse = sendGetRequest(client, redirectUrl);
+		List<String> fetchedClaims = extractClaims(consentPageResponse);
+		for (String claimConsent: fetchedClaims) {
+			consentRequiredClaims.add(new BasicNameValuePair(claimConsent, "on"));
+		}
+		return consentRequiredClaims;
+	}
+
+	/**
+	 * Extract claims from consent page
+	 *
+	 * @param response Response from consent page
+	 * @return List of attributes to be consented
+	 * @throws IOException
+	 */
+	private static List<String> extractClaims(HttpResponse response) throws IOException {
+
+		BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+		String resultPage = rd.lines().collect(Collectors.joining());
+		String claimString = resultPage.substring(resultPage.lastIndexOf("<div class=\"claim-list\">"));
+		String[] dataArray = StringUtils.substringsBetween(claimString, "<label for=\"", "\"");
+		List<String> attributeList = new ArrayList<>();
+		Collections.addAll(attributeList, dataArray);
+		return attributeList;
 	}
 
 	/**
