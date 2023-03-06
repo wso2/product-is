@@ -257,9 +257,11 @@ public class OAuth2ServiceAuthCodeGrantJWTAccessTokenWithConsentedTokenColumnTes
         getRequest.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
         HttpResponse response = httpClientWithoutAutoRedirections.execute(getRequest);
 
-        consentRequiredClaimsFromResponse.addAll(Utils.getConsentRequiredClaimsFromResponse(response));
+        consentRequiredClaimsFromResponse.addAll(Utils.getConsentRequiredClaimsFromResponse(response,
+                httpClientWithoutAutoRedirections));
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         HttpResponse httpResponse = sendGetRequest(httpClientWithoutAutoRedirections, locationHeader.getValue());
+
         EntityUtils.consume(response.getEntity());
         return httpResponse;
     }

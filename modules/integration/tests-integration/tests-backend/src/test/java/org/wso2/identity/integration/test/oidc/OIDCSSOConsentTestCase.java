@@ -164,7 +164,8 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
         response = httpClientWithoutAutoRedirections.execute(getRequest);
 
         claimsToGetConsent = claimsToGetConsent(response);
-        consentParameters.addAll(Utils.getConsentRequiredClaimsFromResponse(response));
+        consentParameters.addAll(Utils.getConsentRequiredClaimsFromResponse(response,
+                httpClientWithoutAutoRedirections));
         locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         EntityUtils.consume(response.getEntity());
         response = sendGetRequest(httpClientWithoutAutoRedirections, locationHeader.getValue());

@@ -46,6 +46,7 @@ import org.wso2.identity.integration.test.provisioning.JustInTimeProvisioningTes
 import org.wso2.identity.integration.test.utils.BasicAuthHandler;
 import org.wso2.identity.integration.test.utils.BasicAuthInfo;
 import org.wso2.identity.integration.test.utils.CommonConstants;
+import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -347,13 +348,15 @@ public class Utils {
         return httpClient.execute(post);
     }
 
-    private static List<String> extractClaims(HttpResponse response) throws IOException {
+    public static List<String> extractClaims(HttpResponse response) throws IOException {
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         String resultPage = rd.lines().collect(Collectors.joining());
-        String claimString = resultPage.substring(resultPage.lastIndexOf("<div class=\"claim-list\">"));
-        String[] dataArray = StringUtils.substringsBetween(claimString, "<label for=\"", "\"");
         List<String> attributeList = new ArrayList<>();
-        Collections.addAll(attributeList, dataArray);
+        if (resultPage.contains("<div class=\"claim-list\">")) {
+            String claimString = resultPage.substring(resultPage.lastIndexOf("<div class=\"claim-list\">"));
+            String[] dataArray = StringUtils.substringsBetween(claimString, "<label for=\"", "\"");
+            Collections.addAll(attributeList, dataArray);
+        }
         return attributeList;
     }
 
@@ -478,7 +481,8 @@ public class Utils {
         return value;
     }
 
-    public static List<NameValuePair> getConsentRequiredClaimsFromResponse(HttpResponse response) throws Exception {
+    public static List<NameValuePair> getConsentRequiredClaimsFromResponse(HttpResponse response, HttpClient client)
+            throws Exception {
 
         String redirectUrl = Utils.getRedirectUrl(response);
         Map<String, String> queryParams = Utils.getQueryParams(redirectUrl);
@@ -514,7 +518,25 @@ public class Utils {
                 }
             }
         }
+
+        if(urlParameters.isEmpty()) {
+            urlParameters.addAll(getConsentRequiredClaimsFromConsentPage(
+                        client,redirectUrl));
+        }
+
         return urlParameters;
+    }
+
+    public static List<NameValuePair> getConsentRequiredClaimsFromConsentPage(HttpClient client, String redirectUrl)
+            throws Exception {
+
+        List<NameValuePair> consentRequiredClaims = new ArrayList<>();
+        HttpResponse consentPageResponse = sendGetRequest(redirectUrl, OAuth2Constant.USER_AGENT, client);
+        List<String> fetchedClaims = extractClaims(consentPageResponse);
+        for (String claimConsent: fetchedClaims) {
+            consentRequiredClaims.add(new BasicNameValuePair(claimConsent, "on"));
+        }
+        return consentRequiredClaims;
     }
 
     /**
