@@ -35,7 +35,9 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONObject;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.automation.engine.context.beans.User;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.user.core.UserCoreConstants;
@@ -43,10 +45,7 @@ import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.provisioning.JustInTimeProvisioningTestCase;
-import org.wso2.identity.integration.test.utils.BasicAuthHandler;
-import org.wso2.identity.integration.test.utils.BasicAuthInfo;
-import org.wso2.identity.integration.test.utils.CommonConstants;
-import org.wso2.identity.integration.test.utils.OAuth2Constant;
+import org.wso2.identity.integration.test.utils.*;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -489,8 +488,35 @@ public class Utils {
         List<NameValuePair> urlParameters = new ArrayList<>();
         String requestedClaims = queryParams.get("requestedClaims");
         String mandatoryClaims = queryParams.get("mandatoryClaims");
+        urlParameters = extractConsentRequiredClaims(requestedClaims, mandatoryClaims);
 
+        return urlParameters;
+    }
+
+    public static List<NameValuePair> getConsentRequiredClaimsFromDataAPI(HttpClient client,
+                                                                          String sessionDataKeyConsent, User userInfo,
+                                                                          Tenant tenantInfo) throws Exception {
+
+        HttpResponse response = sendDataAPIMessage(client, sessionDataKeyConsent, userInfo, tenantInfo);
+
+        JSONObject jsonObject = new JSONObject(DataExtractUtil.getContentData(response));
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        String mandatoryClaims = "";
+        String requestedClaims = "";
+        if (jsonObject.has("mandatoryClaims")) {
+            mandatoryClaims = jsonObject.getString("mandatoryClaims");
+        }
+
+        if (jsonObject.has("requestedClaims")) {
+            requestedClaims = jsonObject.getString("requestedClaims");
+        }
+        urlParameters = extractConsentRequiredClaims(mandatoryClaims, requestedClaims);
+        return urlParameters;
+    }
+
+    public static List<NameValuePair> extractConsentRequiredClaims(String mandatoryClaims, String requestedClaims) {
         String consentRequiredClaims;
+        List<NameValuePair> urlParameters = new ArrayList<>();
 
         if (isNotBlank(mandatoryClaims) && isNotBlank(requestedClaims)) {
             StringJoiner joiner = new StringJoiner(",");
@@ -519,24 +545,22 @@ public class Utils {
             }
         }
 
-        if(urlParameters.isEmpty()) {
-            urlParameters.addAll(getConsentRequiredClaimsFromConsentPage(
-                        client,redirectUrl));
-        }
-
         return urlParameters;
     }
 
-    public static List<NameValuePair> getConsentRequiredClaimsFromConsentPage(HttpClient client, String redirectUrl)
-            throws Exception {
+    public static HttpResponse sendDataAPIMessage(HttpClient client, String sessionDataKeyConsent, User userInfo,
+                                                  Tenant tenantInfo) throws IOException {
 
-        List<NameValuePair> consentRequiredClaims = new ArrayList<>();
-        HttpResponse consentPageResponse = sendGetRequest(redirectUrl, OAuth2Constant.USER_AGENT, client);
-        List<String> fetchedClaims = extractClaims(consentPageResponse);
-        for (String claimConsent: fetchedClaims) {
-            consentRequiredClaims.add(new BasicNameValuePair(claimConsent, "on"));
-        }
-        return consentRequiredClaims;
+        String dataApiUrl = tenantInfo.getDomain().equalsIgnoreCase("carbon.super") ?
+                OAuth2Constant.DATA_API_ENDPOINT + sessionDataKeyConsent :
+                OAuth2Constant.TENANT_DATA_API_ENDPOINT + sessionDataKeyConsent;
+        String authzHeader = getBasicAuthHeader(userInfo);
+        HttpGet request = new HttpGet(dataApiUrl);
+
+        request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
+        request.setHeader("Authorization", authzHeader);
+
+        return client.execute(request);
     }
 
     /**

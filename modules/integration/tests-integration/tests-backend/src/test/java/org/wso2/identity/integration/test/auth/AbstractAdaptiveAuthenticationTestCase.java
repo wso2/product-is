@@ -282,6 +282,13 @@ public class AbstractAdaptiveAuthenticationTestCase extends OAuth2ServiceAbstrac
         consentRequiredClaimsFromResponse.addAll(Utils.getConsentRequiredClaimsFromResponse(response,
                 httpClientWithoutAutoRedirections));
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+
+        if (consentRequiredClaimsFromResponse.isEmpty()){
+            String key = DataExtractUtil.extractParamFromURIFragment(locationHeader.getValue(),
+                    OAuth2Constant.SESSION_DATA_KEY_CONSENT);
+            consentRequiredClaimsFromResponse.addAll(Utils.getConsentRequiredClaimsFromDataAPI(
+                    httpClientWithoutAutoRedirections, key, userInfo, tenantInfo));
+        }
         HttpResponse httpResponse = sendGetRequest(httpClientWithoutAutoRedirections, locationHeader.getValue());
         EntityUtils.consume(response.getEntity());
         return httpResponse;

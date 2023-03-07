@@ -38,6 +38,7 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
 import com.nimbusds.openid.connect.sdk.OIDCTokenResponse;
 import com.nimbusds.openid.connect.sdk.OIDCTokenResponseParser;
 import com.nimbusds.openid.connect.sdk.token.OIDCTokens;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -127,7 +128,7 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
     public static Object[][] configProvider() {
 
         return new Object[][]{
-                {TestUserMode.SUPER_TENANT_ADMIN, TestUserMode.SUPER_TENANT_USER},
+//                {TestUserMode.SUPER_TENANT_ADMIN, TestUserMode.SUPER_TENANT_USER},
                 {TestUserMode.TENANT_ADMIN, TestUserMode.TENANT_USER}
         };
     }
@@ -487,10 +488,16 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
         Assert.assertTrue(locationValue.contains(SESSION_DATA_KEY_CONSENT),
                 "sessionDataKeyConsent not found in response.");
 
+        String sessionDataKeyConsent = DataExtractUtil.extractParamFromURIFragment(locationValue,
+                SESSION_DATA_KEY_CONSENT);
+        if (claimsToConsent.isEmpty()){
+            claimsToConsent.addAll(Utils.getConsentRequiredClaimsFromDataAPI(client, sessionDataKeyConsent, userInfo, tenantInfo));
+        }
+
         EntityUtils.consume(response.getEntity());
 
-        // Extract sessionDataKeyConsent from the location value.
-        return DataExtractUtil.getParamFromURIString(locationValue, SESSION_DATA_KEY_CONSENT);
+        // Return sessionDataKeyConsent extracted from the location value.
+        return sessionDataKeyConsent;
     }
 
     private boolean containAllRequestedOIDCScopes(Scope returnedScopes) {

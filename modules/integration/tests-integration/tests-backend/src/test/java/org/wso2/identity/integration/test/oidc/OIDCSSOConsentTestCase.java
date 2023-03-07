@@ -25,11 +25,14 @@ import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
 import org.json.simple.JSONValue;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.context.beans.Tenant;
+import org.wso2.carbon.automation.engine.context.beans.User;
 import org.wso2.carbon.identity.application.common.model.xsd.Claim;
 import org.wso2.carbon.identity.application.common.model.xsd.ClaimConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
@@ -163,10 +166,17 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
         getRequest.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
         response = httpClientWithoutAutoRedirections.execute(getRequest);
 
-        claimsToGetConsent = claimsToGetConsent(response);
+        claimsToGetConsent = claimsToGetConsent(response, httpClientWithoutAutoRedirections, userInfo, tenantInfo);
         consentParameters.addAll(Utils.getConsentRequiredClaimsFromResponse(response,
                 httpClientWithoutAutoRedirections));
         locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+
+        if (consentParameters.isEmpty()){
+            String key = DataExtractUtil.extractParamFromURIFragment(locationHeader.getValue(),
+                    OAuth2Constant.SESSION_DATA_KEY_CONSENT);
+            consentParameters.addAll(Utils.getConsentRequiredClaimsFromDataAPI(client, key, userInfo, tenantInfo));
+        }
+
         EntityUtils.consume(response.getEntity());
         response = sendGetRequest(httpClientWithoutAutoRedirections, locationHeader.getValue());
         HttpClientBuilder.create().setDefaultCookieStore(cookieStore);
@@ -315,18 +325,38 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
         }
     }
 
-    public static String claimsToGetConsent(HttpResponse response) throws Exception {
+    public static String claimsToGetConsent(HttpResponse response, HttpClient client, User userInfo, Tenant tenantInfo)
+            throws Exception {
 
         String redirectUrl = Utils.getRedirectUrl(response);
         Map<String, String> queryParams = Utils.getQueryParams(redirectUrl);
-        String requestedClaims = queryParams.get("requestedClaims");
-        String mandatoryClaims = queryParams.get("mandatoryClaims");
+        String mandatoryClaims = "";
+        String requestedClaims = "";
+        requestedClaims = queryParams.get("requestedClaims");
+        mandatoryClaims = queryParams.get("mandatoryClaims");
+
+        //Get the claims from the data api if the claims are not in the redirect url.
+        if (StringUtils.isEmpty(requestedClaims) && StringUtils.isEmpty(mandatoryClaims)) {
+            String sessionDataKeyConsent = queryParams.get("sessionDataKeyConsent");
+            HttpResponse dataAPIResponse = Utils.sendDataAPIMessage(client, sessionDataKeyConsent, userInfo, tenantInfo);
+            JSONObject jsonObject = new JSONObject(DataExtractUtil.getContentData(dataAPIResponse));
+
+            if (jsonObject.has("mandatoryClaims")) {
+                mandatoryClaims = jsonObject.getString("mandatoryClaims");
+            }
+
+            if (jsonObject.has("requestedClaims")) {
+                requestedClaims = jsonObject.getString("requestedClaims");
+            }
+
+        }
         if (StringUtils.isNotEmpty(requestedClaims)) {
             return requestedClaims;
         }
         if (StringUtils.isNotEmpty(mandatoryClaims)) {
             return mandatoryClaims;
         }
+
         return StringUtils.EMPTY;
     }
 }

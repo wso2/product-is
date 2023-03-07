@@ -48,6 +48,7 @@ import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
+import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import sun.security.provider.X509Factory;
 
@@ -299,11 +300,12 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
 		HttpResponse httpResponse = sendGetRequest(httpClientWithoutAutoRedirections, locationHeader.getValue());
 
-		// This fetches the consent required claims when redirect params are filtered from consent page url.
-//		if (consentRequiredClaimsFromResponse.isEmpty()) {
-//			consentRequiredClaimsFromResponse.addAll(getConsentRequiredClaimsFromConsentPage(
-//					httpClientWithoutAutoRedirections,locationHeader.getValue()));
-//		}
+		if (consentRequiredClaimsFromResponse.isEmpty()){
+			String key = DataExtractUtil.extractParamFromURIFragment(locationHeader.getValue(),
+					OAuth2Constant.SESSION_DATA_KEY_CONSENT);
+			consentRequiredClaimsFromResponse.addAll(Utils.getConsentRequiredClaimsFromDataAPI(
+					httpClientWithoutAutoRedirections, key, userInfo, tenantInfo));
+		}
 
 		client.setCookieStore(cookieStore);
 		EntityUtils.consume(response.getEntity());
