@@ -21,6 +21,7 @@ package org.wso2.identity.integration.test.rest.api.server.application.managemen
 import io.restassured.response.Response;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Factory;
@@ -33,6 +34,8 @@ import static org.wso2.identity.integration.test.rest.api.server.application.man
 import static org.wso2.identity.integration.test.rest.api.server.application.management.v1.Utils.extractApplicationIdFromLocationHeader;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Test class for Application Management User Registrant Success Test.
@@ -77,24 +80,9 @@ public class ApplicationManagementUserRegistrantSuccessTest extends ApplicationM
     }
 
     @Test
-    public void testCreateAppWithNoAuthenticationOptions() throws Exception {
+    public void testRetrieveUserRegistrantsDefault() throws IOException {
 
-        String body = readResource("create-app-with-no-authenticators.json");
-
-        Response response = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, body);
-        response.then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_CREATED)
-                .header(HttpHeaders.LOCATION, notNullValue());
-
-        String location = response.getHeader(HttpHeaders.LOCATION);
-        createdAppId = extractApplicationIdFromLocationHeader(location);
-        assertNotBlank(createdAppId);
-    }
-
-    @Test(dependsOnMethods = "testCreateAppWithNoAuthenticationOptions")
-    public void testRetrieveUserRegistrantsDefault() {
+        createInitialApp();
 
         Response response = getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + createdAppId +
                 APPLICATION_USER_REGISTRANT_CONTEXT);
@@ -161,6 +149,37 @@ public class ApplicationManagementUserRegistrantSuccessTest extends ApplicationM
                 .body(magicLinkBaseIdentifier + "authAttributes.size()", equalTo(2))
                 .body(magicLinkBaseIdentifier + "authAttributes[0].attribute", equalTo("username"))
                 .body(magicLinkBaseIdentifier + "authAttributes[1].attribute", equalTo("http://wso2.org/claims/emailaddress"));
+    }
+
+    @Test (dependsOnMethods = "testRetrieveTwoConfiguredUserRegistrants")
+    public void testClearAppData() {
+
+        String path = APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId;
+
+        Response responseOfDelete = getResponseOfDelete(path);
+        responseOfDelete.then()
+                .log()
+                .ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
+
+        // Make sure we don't have deleted application details.
+        getResponseOfGet(path).then().assertThat().statusCode(HttpStatus.SC_NOT_FOUND);
+    }
+
+    private void createInitialApp() throws IOException {
+
+        String body = readResource("create-app-with-no-authenticators.json");
+
+        Response response = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .header(HttpHeaders.LOCATION, notNullValue());
+
+        String location = response.getHeader(HttpHeaders.LOCATION);
+        createdAppId = extractApplicationIdFromLocationHeader(location);
     }
 
     private void doPutAuthenticatorsAndVerify(String authenticatorsPutPayload) {
