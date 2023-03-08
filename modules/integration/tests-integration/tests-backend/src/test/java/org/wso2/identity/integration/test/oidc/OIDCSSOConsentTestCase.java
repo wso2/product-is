@@ -43,6 +43,8 @@ import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
+import static org.apache.commons.lang.StringUtils.isBlank;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -164,15 +166,9 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
         response = httpClientWithoutAutoRedirections.execute(getRequest);
 
         claimsToGetConsent = claimsToGetConsent(response, httpClientWithoutAutoRedirections, userInfo, tenantInfo);
-        consentParameters.addAll(Utils.getConsentRequiredClaimsFromResponse(response));
+        consentParameters.addAll(Utils.getConsentRequiredClaimsFromResponse(response,
+                httpClientWithoutAutoRedirections));
         locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
-
-        if (consentParameters.isEmpty()){
-            String key = DataExtractUtil.extractParamFromURIFragment(locationHeader.getValue(),
-                    OAuth2Constant.SESSION_DATA_KEY_CONSENT);
-            consentParameters.addAll(Utils.getConsentRequiredClaimsFromDataAPI(client, key, userInfo, tenantInfo));
-        }
-
         EntityUtils.consume(response.getEntity());
         response = sendGetRequest(httpClientWithoutAutoRedirections, locationHeader.getValue());
         HttpClientBuilder.create().setDefaultCookieStore(cookieStore);
@@ -326,13 +322,11 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
 
         String redirectUrl = Utils.getRedirectUrl(response);
         Map<String, String> queryParams = Utils.getQueryParams(redirectUrl);
-        String mandatoryClaims = "";
-        String requestedClaims = "";
-        requestedClaims = queryParams.get("requestedClaims");
-        mandatoryClaims = queryParams.get("mandatoryClaims");
+        String mandatoryClaims = queryParams.get("requestedClaims");;
+        String requestedClaims = queryParams.get("mandatoryClaims");
 
         //Get the claims from the data api if the claims are not in the redirect url.
-        if (StringUtils.isEmpty(requestedClaims) && StringUtils.isEmpty(mandatoryClaims)) {
+        if (isBlank(requestedClaims) && isBlank(mandatoryClaims)) {
             String sessionDataKeyConsent = queryParams.get("sessionDataKeyConsent");
             HttpResponse dataAPIResponse = Utils.sendDataAPIGetRequest(client, sessionDataKeyConsent, userInfo,
                     tenantInfo);

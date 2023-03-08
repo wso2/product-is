@@ -354,10 +354,12 @@ public class Utils {
     private static List<String> extractClaims(HttpResponse response) throws IOException {
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         String resultPage = rd.lines().collect(Collectors.joining());
-        String claimString = resultPage.substring(resultPage.lastIndexOf("<div class=\"claim-list\">"));
-        String[] dataArray = StringUtils.substringsBetween(claimString, "<label for=\"", "\"");
         List<String> attributeList = new ArrayList<>();
-        Collections.addAll(attributeList, dataArray);
+        if (resultPage.contains("<div class=\"claim-list\">")) {
+            String claimString = resultPage.substring(resultPage.lastIndexOf("<div class=\"claim-list\">"));
+            String[] dataArray = StringUtils.substringsBetween(claimString, "<label for=\"", "\"");
+            Collections.addAll(attributeList, dataArray);
+        }
         return attributeList;
     }
 
@@ -482,42 +484,16 @@ public class Utils {
         return value;
     }
 
-    public static List<NameValuePair> getConsentRequiredClaimsFromResponse(HttpResponse response) throws Exception {
+    public static List<NameValuePair> getConsentRequiredClaimsFromResponse(HttpResponse response, HttpClient client)
+            throws Exception {
 
         String redirectUrl = Utils.getRedirectUrl(response);
         Map<String, String> queryParams = Utils.getQueryParams(redirectUrl);
         List<NameValuePair> urlParameters = new ArrayList<>();
         String requestedClaims = queryParams.get("requestedClaims");
         String mandatoryClaims = queryParams.get("mandatoryClaims");
-        urlParameters = extractConsentRequiredClaims(requestedClaims, mandatoryClaims);
 
-        return urlParameters;
-    }
-
-    public static List<NameValuePair> getConsentRequiredClaimsFromDataAPI(HttpClient client,
-                                                                          String sessionDataKeyConsent, User userInfo,
-                                                                          Tenant tenantInfo) throws Exception {
-
-        HttpResponse response = sendDataAPIGetRequest(client, sessionDataKeyConsent, userInfo, tenantInfo);
-
-        JSONObject jsonObject = new JSONObject(DataExtractUtil.getContentData(response));
-        List<NameValuePair> urlParameters = new ArrayList<>();
-        String mandatoryClaims = "";
-        String requestedClaims = "";
-        if (jsonObject.has("mandatoryClaims")) {
-            mandatoryClaims = jsonObject.getString("mandatoryClaims");
-        }
-
-        if (jsonObject.has("requestedClaims")) {
-            requestedClaims = jsonObject.getString("requestedClaims");
-        }
-        urlParameters = extractConsentRequiredClaims(mandatoryClaims, requestedClaims);
-        return urlParameters;
-    }
-
-    public static List<NameValuePair> extractConsentRequiredClaims(String mandatoryClaims, String requestedClaims) {
         String consentRequiredClaims;
-        List<NameValuePair> urlParameters = new ArrayList<>();
 
         if (isNotBlank(mandatoryClaims) && isNotBlank(requestedClaims)) {
             StringJoiner joiner = new StringJoiner(",");
@@ -526,8 +502,10 @@ public class Utils {
             consentRequiredClaims = joiner.toString();
         } else if (isNotBlank(mandatoryClaims)) {
             consentRequiredClaims = mandatoryClaims;
-        } else {
+        } else if (isNotBlank(requestedClaims)) {
             consentRequiredClaims = requestedClaims;
+        } else {
+             return extractConsentRequiredClaimsFromConsentPage(redirectUrl, client);
         }
 
         String[] claims;
@@ -545,8 +523,25 @@ public class Utils {
                 }
             }
         }
-
         return urlParameters;
+    }
+
+    public static List<NameValuePair> extractConsentRequiredClaimsFromConsentPage(String redirectUrl,
+                                                                                  HttpClient client) throws Exception {
+
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        List<String> fetchedClaims = fetchClaimsfromConsentPage(redirectUrl, client);
+        for (String claimConsent: fetchedClaims) {
+            urlParameters.add(new BasicNameValuePair(claimConsent, "on"));
+        }
+        return urlParameters;
+    }
+
+    public static List<String> fetchClaimsfromConsentPage(String redirectUrl, HttpClient client) throws Exception {
+
+        HttpResponse consentPageResponse = sendGetRequest(redirectUrl, OAuth2Constant.USER_AGENT, client);
+        List<String> fetchedClaims = extractClaims(consentPageResponse);
+        return fetchedClaims;
     }
 
     /**
@@ -560,7 +555,7 @@ public class Utils {
      * @throws IOException IOException
      */
     public static HttpResponse sendDataAPIGetRequest(HttpClient client, String sessionDataKeyConsent, User userInfo,
-                                                  Tenant tenantInfo) throws IOException {
+                                                     Tenant tenantInfo) throws IOException {
 
         String dataApiUrl = tenantInfo.getDomain().equalsIgnoreCase("carbon.super") ?
                 OAuth2Constant.DATA_API_ENDPOINT + sessionDataKeyConsent :
@@ -573,6 +568,7 @@ public class Utils {
 
         return client.execute(request);
     }
+
 
     /**
      * Read audit log lines with a given content.

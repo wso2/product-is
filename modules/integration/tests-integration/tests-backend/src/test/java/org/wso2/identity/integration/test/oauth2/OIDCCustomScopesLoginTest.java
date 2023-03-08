@@ -482,22 +482,15 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
 
         // Request will return with a 302 to the authorize end point. Doing a GET will give the sessionDataKeyConsent.
         response = sendGetRequest(client, locationHeader.getValue());
-        claimsToConsent.addAll(Utils.getConsentRequiredClaimsFromResponse(response));
+        claimsToConsent.addAll(Utils.getConsentRequiredClaimsFromResponse(response, client));
 
         String locationValue = getLocationHeaderValue(response);
         Assert.assertTrue(locationValue.contains(SESSION_DATA_KEY_CONSENT),
                 "sessionDataKeyConsent not found in response.");
-
-        String sessionDataKeyConsent = DataExtractUtil.extractParamFromURIFragment(locationValue,
-                SESSION_DATA_KEY_CONSENT);
-        if (claimsToConsent.isEmpty()){
-            claimsToConsent.addAll(Utils.getConsentRequiredClaimsFromDataAPI(client, sessionDataKeyConsent, userInfo, tenantInfo));
-        }
-
         EntityUtils.consume(response.getEntity());
 
-        // Return sessionDataKeyConsent extracted from the location value.
-        return sessionDataKeyConsent;
+        // Extract sessionDataKeyConsent from the location value.
+        return DataExtractUtil.getParamFromURIString(locationValue, SESSION_DATA_KEY_CONSENT);
     }
 
     private boolean containAllRequestedOIDCScopes(Scope returnedScopes) {

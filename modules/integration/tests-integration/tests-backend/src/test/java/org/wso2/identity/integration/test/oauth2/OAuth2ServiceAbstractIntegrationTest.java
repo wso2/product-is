@@ -291,17 +291,10 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		getRequest.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
 		HttpResponse response = httpClientWithoutAutoRedirections.execute(getRequest);
 
-		consentRequiredClaimsFromResponse.addAll(Utils.getConsentRequiredClaimsFromResponse(response));
+		consentRequiredClaimsFromResponse.addAll(Utils.getConsentRequiredClaimsFromResponse(response,
+				httpClientWithoutAutoRedirections));
 		Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
 		HttpResponse httpResponse = sendGetRequest(httpClientWithoutAutoRedirections, locationHeader.getValue());
-
-		if (consentRequiredClaimsFromResponse.isEmpty()){
-			String key = DataExtractUtil.extractParamFromURIFragment(locationHeader.getValue(),
-					OAuth2Constant.SESSION_DATA_KEY_CONSENT);
-			consentRequiredClaimsFromResponse.addAll(Utils.getConsentRequiredClaimsFromDataAPI(
-					httpClientWithoutAutoRedirections, key, userInfo, tenantInfo));
-		}
-
 		client.setCookieStore(cookieStore);
 		EntityUtils.consume(response.getEntity());
 		return httpResponse;
