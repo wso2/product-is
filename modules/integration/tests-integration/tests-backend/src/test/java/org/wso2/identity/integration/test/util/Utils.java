@@ -347,15 +347,13 @@ public class Utils {
         return httpClient.execute(post);
     }
 
-    public static List<String> extractClaims(HttpResponse response) throws IOException {
+    private static List<String> extractClaims(HttpResponse response) throws IOException {
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         String resultPage = rd.lines().collect(Collectors.joining());
         List<String> attributeList = new ArrayList<>();
-        if (resultPage.contains("<div class=\"claim-list\">")) {
-            String claimString = resultPage.substring(resultPage.lastIndexOf("<div class=\"claim-list\">"));
-            String[] dataArray = StringUtils.substringsBetween(claimString, "<label for=\"", "\"");
-            Collections.addAll(attributeList, dataArray);
-        }
+        String claimString = resultPage.substring(resultPage.lastIndexOf("<div class=\"claim-list\">"));
+        String[] dataArray = StringUtils.substringsBetween(claimString, "<label for=\"", "\"");
+        Collections.addAll(attributeList, dataArray);
         return attributeList;
     }
 
@@ -480,8 +478,7 @@ public class Utils {
         return value;
     }
 
-    public static List<NameValuePair> getConsentRequiredClaimsFromResponse(HttpResponse response)
-            throws Exception {
+    public static List<NameValuePair> getConsentRequiredClaimsFromResponse(HttpResponse response) throws Exception {
 
         String redirectUrl = Utils.getRedirectUrl(response);
         Map<String, String> queryParams = Utils.getQueryParams(redirectUrl);
@@ -497,7 +494,7 @@ public class Utils {
                                                                           String sessionDataKeyConsent, User userInfo,
                                                                           Tenant tenantInfo) throws Exception {
 
-        HttpResponse response = sendDataAPIMessage(client, sessionDataKeyConsent, userInfo, tenantInfo);
+        HttpResponse response = sendDataAPIGetRequest(client, sessionDataKeyConsent, userInfo, tenantInfo);
 
         JSONObject jsonObject = new JSONObject(DataExtractUtil.getContentData(response));
         List<NameValuePair> urlParameters = new ArrayList<>();
@@ -548,7 +545,7 @@ public class Utils {
         return urlParameters;
     }
 
-    public static HttpResponse sendDataAPIMessage(HttpClient client, String sessionDataKeyConsent, User userInfo,
+    public static HttpResponse sendDataAPIGetRequest(HttpClient client, String sessionDataKeyConsent, User userInfo,
                                                   Tenant tenantInfo) throws IOException {
 
         String dataApiUrl = tenantInfo.getDomain().equalsIgnoreCase("carbon.super") ?

@@ -128,7 +128,7 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
     public static Object[][] configProvider() {
 
         return new Object[][]{
-//                {TestUserMode.SUPER_TENANT_ADMIN, TestUserMode.SUPER_TENANT_USER},
+                {TestUserMode.SUPER_TENANT_ADMIN, TestUserMode.SUPER_TENANT_USER},
                 {TestUserMode.TENANT_ADMIN, TestUserMode.TENANT_USER}
         };
     }

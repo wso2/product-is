@@ -26,7 +26,6 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
-import org.json.simple.JSONValue;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -44,9 +43,7 @@ import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -337,7 +334,8 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
         //Get the claims from the data api if the claims are not in the redirect url.
         if (StringUtils.isEmpty(requestedClaims) && StringUtils.isEmpty(mandatoryClaims)) {
             String sessionDataKeyConsent = queryParams.get("sessionDataKeyConsent");
-            HttpResponse dataAPIResponse = Utils.sendDataAPIMessage(client, sessionDataKeyConsent, userInfo, tenantInfo);
+            HttpResponse dataAPIResponse = Utils.sendDataAPIGetRequest(client, sessionDataKeyConsent, userInfo,
+                    tenantInfo);
             JSONObject jsonObject = new JSONObject(DataExtractUtil.getContentData(dataAPIResponse));
 
             if (jsonObject.has("mandatoryClaims")) {
@@ -355,7 +353,6 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
         if (StringUtils.isNotEmpty(mandatoryClaims)) {
             return mandatoryClaims;
         }
-
         return StringUtils.EMPTY;
     }
 }

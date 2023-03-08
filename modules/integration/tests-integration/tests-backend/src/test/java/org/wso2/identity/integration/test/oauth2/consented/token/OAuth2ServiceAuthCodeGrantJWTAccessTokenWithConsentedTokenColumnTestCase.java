@@ -268,7 +268,6 @@ public class OAuth2ServiceAuthCodeGrantJWTAccessTokenWithConsentedTokenColumnTes
         }
 
         HttpResponse httpResponse = sendGetRequest(httpClientWithoutAutoRedirections, locationHeader.getValue());
-
         EntityUtils.consume(response.getEntity());
         return httpResponse;
     }
