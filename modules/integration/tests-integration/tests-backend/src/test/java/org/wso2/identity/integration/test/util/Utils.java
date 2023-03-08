@@ -501,10 +501,8 @@ public class Utils {
             consentRequiredClaims = joiner.toString();
         } else if (isNotBlank(mandatoryClaims)) {
             consentRequiredClaims = mandatoryClaims;
-        } else if (isNotBlank(requestedClaims)) {
-            consentRequiredClaims = requestedClaims;
         } else {
-             return extractConsentRequiredClaimsFromConsentPage(redirectUrl);
+            consentRequiredClaims = requestedClaims;
         }
 
         String[] claims;
@@ -521,6 +519,10 @@ public class Utils {
                     urlParameters.add(new BasicNameValuePair("consent_" + claimMeta[0], "on"));
                 }
             }
+        }
+
+        if (urlParameters.isEmpty()) {
+            urlParameters = extractConsentRequiredClaimsFromConsentPage(redirectUrl);
         }
         return urlParameters;
     }
