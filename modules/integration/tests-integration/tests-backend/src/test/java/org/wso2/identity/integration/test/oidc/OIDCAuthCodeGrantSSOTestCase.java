@@ -220,7 +220,7 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
                 Assert.assertNotNull(oauthConsentLocationHeader, "OAuth consent url is null for " +
                         oauthConsentLocationHeader.getValue());
 
-                consentParameters.addAll(Utils.getConsentRequiredClaimsFromResponse(response, client));
+                consentParameters.addAll(Utils.getConsentRequiredClaimsFromResponse(response));
                 response = sendGetRequest(client, oauthConsentLocationHeader.getValue());
 
                 keyPositionMap.put("name=\"sessionDataKeyConsent\"", 1);

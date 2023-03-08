@@ -165,9 +165,8 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
         getRequest.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
         response = httpClientWithoutAutoRedirections.execute(getRequest);
 
-        claimsToGetConsent = claimsToGetConsent(response, httpClientWithoutAutoRedirections, userInfo, tenantInfo);
-        consentParameters.addAll(Utils.getConsentRequiredClaimsFromResponse(response,
-                httpClientWithoutAutoRedirections));
+        claimsToGetConsent = claimsToGetConsent(response, userInfo, tenantInfo);
+        consentParameters.addAll(Utils.getConsentRequiredClaimsFromResponse(response));
         locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         EntityUtils.consume(response.getEntity());
         response = sendGetRequest(httpClientWithoutAutoRedirections, locationHeader.getValue());
@@ -317,7 +316,7 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
         }
     }
 
-    public static String claimsToGetConsent(HttpResponse response, HttpClient client, User userInfo, Tenant tenantInfo)
+    public static String claimsToGetConsent(HttpResponse response, User userInfo, Tenant tenantInfo)
             throws Exception {
 
         String redirectUrl = Utils.getRedirectUrl(response);
@@ -328,7 +327,7 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
         //Get the claims from the data api if the claims are not in the redirect url.
         if (isBlank(requestedClaims) && isBlank(mandatoryClaims)) {
             String sessionDataKeyConsent = queryParams.get("sessionDataKeyConsent");
-            HttpResponse dataAPIResponse = Utils.sendDataAPIGetRequest(client, sessionDataKeyConsent, userInfo,
+            HttpResponse dataAPIResponse = Utils.sendDataAPIGetRequest(sessionDataKeyConsent, userInfo,
                     tenantInfo);
             JSONObject jsonObject = new JSONObject(DataExtractUtil.getContentData(dataAPIResponse));
 

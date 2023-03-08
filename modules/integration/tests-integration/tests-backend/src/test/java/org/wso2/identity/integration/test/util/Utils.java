@@ -34,6 +34,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
@@ -482,7 +483,7 @@ public class Utils {
         return value;
     }
 
-    public static List<NameValuePair> getConsentRequiredClaimsFromResponse(HttpResponse response, HttpClient client)
+    public static List<NameValuePair> getConsentRequiredClaimsFromResponse(HttpResponse response)
             throws Exception {
 
         String redirectUrl = Utils.getRedirectUrl(response);
@@ -503,7 +504,7 @@ public class Utils {
         } else if (isNotBlank(requestedClaims)) {
             consentRequiredClaims = requestedClaims;
         } else {
-             return extractConsentRequiredClaimsFromConsentPage(redirectUrl, client);
+             return extractConsentRequiredClaimsFromConsentPage(redirectUrl);
         }
 
         String[] claims;
@@ -524,19 +525,21 @@ public class Utils {
         return urlParameters;
     }
 
-    public static List<NameValuePair> extractConsentRequiredClaimsFromConsentPage(String redirectUrl,
-                                                                                  HttpClient client) throws Exception {
+    public static List<NameValuePair> extractConsentRequiredClaimsFromConsentPage(String redirectUrl) throws Exception {
 
         List<NameValuePair> urlParameters = new ArrayList<>();
-        List<String> fetchedClaims = fetchClaimsfromConsentPage(redirectUrl, client);
+        List<String> fetchedClaims = fetchClaimsfromConsentPage(redirectUrl);
         for (String claimConsent: fetchedClaims) {
             urlParameters.add(new BasicNameValuePair(claimConsent, "on"));
         }
         return urlParameters;
     }
 
-    public static List<String> fetchClaimsfromConsentPage(String redirectUrl, HttpClient client) throws Exception {
+    public static List<String> fetchClaimsfromConsentPage(String redirectUrl) throws Exception {
 
+        HttpClient client = HttpClientBuilder.create().build();
+        HttpGet get = new HttpGet(redirectUrl);
+        get.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
         HttpResponse consentPageResponse = sendGetRequest(redirectUrl, OAuth2Constant.USER_AGENT, client);
         List<String> fetchedClaims = extractClaims(consentPageResponse);
         return fetchedClaims;
@@ -545,19 +548,19 @@ public class Utils {
     /**
      * Send a GET request to the data API.
      *
-     * @param client HttpClient
      * @param sessionDataKeyConsent Session data key consent
      * @param userInfo User info
      * @param tenantInfo Tenant info
      * @return HttpResponse
      * @throws IOException IOException
      */
-    public static HttpResponse sendDataAPIGetRequest(HttpClient client, String sessionDataKeyConsent, User userInfo,
+    public static HttpResponse sendDataAPIGetRequest(String sessionDataKeyConsent, User userInfo,
                                                      Tenant tenantInfo) throws IOException {
 
         String dataApiUrl = tenantInfo.getDomain().equalsIgnoreCase("carbon.super") ?
                 OAuth2Constant.DATA_API_ENDPOINT + sessionDataKeyConsent :
                 OAuth2Constant.TENANT_DATA_API_ENDPOINT + sessionDataKeyConsent;
+        HttpClient client = HttpClientBuilder.create().build();
         String authzHeader = getBasicAuthHeader(userInfo);
         HttpGet request = new HttpGet(dataApiUrl);
 

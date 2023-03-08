@@ -338,8 +338,7 @@ public class AdaptiveScriptTemporaryClaimPersistenceTestCase extends AbstractAda
 
         HttpClient httpClientWithoutAutoRedirections = HttpClientBuilder.create().disableRedirectHandling()
                 .setDefaultCookieStore(cookieStore).build();
-        consentRequiredClaimsFromResponse.addAll(Utils.getConsentRequiredClaimsFromResponse(response,
-                httpClientWithoutAutoRedirections));
+        consentRequiredClaimsFromResponse.addAll(Utils.getConsentRequiredClaimsFromResponse(response));
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         HttpResponse httpResponse = sendGetRequest(httpClientWithoutAutoRedirections, locationHeader.getValue());
         EntityUtils.consume(response.getEntity());

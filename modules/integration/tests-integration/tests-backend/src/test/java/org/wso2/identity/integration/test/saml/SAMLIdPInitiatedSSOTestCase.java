@@ -124,8 +124,7 @@ public class SAMLIdPInitiatedSSOTestCase extends AbstractSAMLSSOTestCase {
                         .getArtifact(), samlConfig.getUser().getUsername(), samlConfig.getUser().getPassword(),
                 httpClient);
 
-        List<NameValuePair> consentRequiredClaims = Utils.getConsentRequiredClaimsFromResponse(samlssoResponse,
-                httpClient);
+        List<NameValuePair> consentRequiredClaims = Utils.getConsentRequiredClaimsFromResponse(samlssoResponse);
         HttpResponse commonAuthResponse = setConsentForSP(sessionDataKey, consentRequiredClaims);
 
         String samlRedirectUrl = Utils.getRedirectUrl(commonAuthResponse);

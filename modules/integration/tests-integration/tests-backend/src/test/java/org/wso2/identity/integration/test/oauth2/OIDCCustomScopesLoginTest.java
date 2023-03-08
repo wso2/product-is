@@ -481,7 +481,7 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
 
         // Request will return with a 302 to the authorize end point. Doing a GET will give the sessionDataKeyConsent.
         response = sendGetRequest(client, locationHeader.getValue());
-        claimsToConsent.addAll(Utils.getConsentRequiredClaimsFromResponse(response, client));
+        claimsToConsent.addAll(Utils.getConsentRequiredClaimsFromResponse(response));
 
         String locationValue = getLocationHeaderValue(response);
         Assert.assertTrue(locationValue.contains(SESSION_DATA_KEY_CONSENT),
