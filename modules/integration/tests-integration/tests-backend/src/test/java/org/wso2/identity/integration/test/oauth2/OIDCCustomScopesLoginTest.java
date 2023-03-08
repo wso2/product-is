@@ -38,7 +38,6 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
 import com.nimbusds.openid.connect.sdk.OIDCTokenResponse;
 import com.nimbusds.openid.connect.sdk.OIDCTokenResponseParser;
 import com.nimbusds.openid.connect.sdk.token.OIDCTokens;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -487,6 +486,7 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
         String locationValue = getLocationHeaderValue(response);
         Assert.assertTrue(locationValue.contains(SESSION_DATA_KEY_CONSENT),
                 "sessionDataKeyConsent not found in response.");
+
         EntityUtils.consume(response.getEntity());
 
         // Extract sessionDataKeyConsent from the location value.

@@ -222,6 +222,7 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
 
                 consentParameters.addAll(Utils.getConsentRequiredClaimsFromResponse(response, client));
                 response = sendGetRequest(client, oauthConsentLocationHeader.getValue());
+
                 keyPositionMap.put("name=\"sessionDataKeyConsent\"", 1);
                 List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil.extractSessionConsentDataFromResponse
                         (response, keyPositionMap);
