@@ -480,7 +480,7 @@ public class Utils {
         return value;
     }
 
-    public static List<NameValuePair> getConsentRequiredClaimsFromResponse(HttpResponse response, HttpClient client)
+    public static List<NameValuePair> getConsentRequiredClaimsFromResponse(HttpResponse response)
             throws Exception {
 
         String redirectUrl = Utils.getRedirectUrl(response);

@@ -296,7 +296,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		getRequest.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
 		HttpResponse response = httpClientWithoutAutoRedirections.execute(getRequest);
 
-		consentRequiredClaimsFromResponse.addAll(Utils.getConsentRequiredClaimsFromResponse(response, httpClientWithoutAutoRedirections));
+		consentRequiredClaimsFromResponse.addAll(Utils.getConsentRequiredClaimsFromResponse(response));
 		Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
 		HttpResponse httpResponse = sendGetRequest(httpClientWithoutAutoRedirections, locationHeader.getValue());
 
@@ -311,43 +311,6 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		EntityUtils.consume(response.getEntity());
 		return httpResponse;
 	}
-
-	/** This method is used to get the consent required claims from the consent page.
-	 *
-	 * @param client - Http Client
-	 * @param redirectUrl - Consent page url
-	 * @return - List of consent required claims
-	 * @throws Exception
-	 */
-//	public List<NameValuePair> getConsentRequiredClaimsFromConsentPage(HttpClient client, String redirectUrl)
-//			throws Exception {
-//
-//		List<NameValuePair> consentRequiredClaims = new ArrayList<>();
-//		HttpResponse consentPageResponse = sendGetRequest(client, redirectUrl);
-//		List<String> fetchedClaims = extractClaims(consentPageResponse);
-//		for (String claimConsent: fetchedClaims) {
-//			consentRequiredClaims.add(new BasicNameValuePair(claimConsent, "on"));
-//		}
-//		return consentRequiredClaims;
-//	}
-
-//	/**
-//	 * Extract claims from consent page
-//	 *
-//	 * @param response Response from consent page
-//	 * @return List of attributes to be consented
-//	 * @throws IOException
-//	 */
-//	private static List<String> extractClaims(HttpResponse response) throws IOException {
-//
-//		BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-//		String resultPage = rd.lines().collect(Collectors.joining());
-//		String claimString = resultPage.substring(resultPage.lastIndexOf("<div class=\"claim-list\">"));
-//		String[] dataArray = StringUtils.substringsBetween(claimString, "<label for=\"", "\"");
-//		List<String> attributeList = new ArrayList<>();
-//		Collections.addAll(attributeList, dataArray);
-//		return attributeList;
-//	}
 
 	/**
 	 * Send Post request
