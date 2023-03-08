@@ -45,7 +45,11 @@ import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.provisioning.JustInTimeProvisioningTestCase;
-import org.wso2.identity.integration.test.utils.*;
+import org.wso2.identity.integration.test.utils.BasicAuthHandler;
+import org.wso2.identity.integration.test.utils.BasicAuthInfo;
+import org.wso2.identity.integration.test.utils.CommonConstants;
+import org.wso2.identity.integration.test.utils.DataExtractUtil;
+import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -350,9 +354,9 @@ public class Utils {
     private static List<String> extractClaims(HttpResponse response) throws IOException {
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         String resultPage = rd.lines().collect(Collectors.joining());
-        List<String> attributeList = new ArrayList<>();
         String claimString = resultPage.substring(resultPage.lastIndexOf("<div class=\"claim-list\">"));
         String[] dataArray = StringUtils.substringsBetween(claimString, "<label for=\"", "\"");
+        List<String> attributeList = new ArrayList<>();
         Collections.addAll(attributeList, dataArray);
         return attributeList;
     }
@@ -545,6 +549,16 @@ public class Utils {
         return urlParameters;
     }
 
+    /**
+     * Send a GET request to the data API.
+     *
+     * @param client HttpClient
+     * @param sessionDataKeyConsent Session data key consent
+     * @param userInfo User info
+     * @param tenantInfo Tenant info
+     * @return HttpResponse
+     * @throws IOException IOException
+     */
     public static HttpResponse sendDataAPIGetRequest(HttpClient client, String sessionDataKeyConsent, User userInfo,
                                                   Tenant tenantInfo) throws IOException {
 
