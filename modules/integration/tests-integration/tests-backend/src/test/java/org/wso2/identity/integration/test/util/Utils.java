@@ -488,7 +488,7 @@ public class Utils {
 
         String redirectUrl = Utils.getRedirectUrl(response);
         Map<String, String> queryParams = Utils.getQueryParams(redirectUrl);
-        List<NameValuePair> urlParameters = new ArrayList<>();
+        List<NameValuePair> consentRequiredClaimsList = new ArrayList<>();
         String requestedClaims = queryParams.get("requestedClaims");
         String mandatoryClaims = queryParams.get("mandatoryClaims");
 
@@ -516,15 +516,16 @@ public class Utils {
             if (isNotBlank(claim)) {
                 String[] claimMeta = claim.split("_", 2);
                 if (claimMeta.length == 2) {
-                    urlParameters.add(new BasicNameValuePair("consent_" + claimMeta[0], "on"));
+                    consentRequiredClaimsList.add(new BasicNameValuePair("consent_" + claimMeta[0], "on"));
                 }
             }
         }
 
-        if (urlParameters.isEmpty()) {
-            urlParameters = extractConsentRequiredClaimsFromConsentPage(redirectUrl);
+        // If no claims are found in the url, then extract the claims from the consent page.
+        if (consentRequiredClaimsList.isEmpty()) {
+            consentRequiredClaimsList = extractConsentRequiredClaimsFromConsentPage(redirectUrl);
         }
-        return urlParameters;
+        return consentRequiredClaimsList;
     }
 
     public static List<NameValuePair> extractConsentRequiredClaimsFromConsentPage(String redirectUrl) throws Exception {
