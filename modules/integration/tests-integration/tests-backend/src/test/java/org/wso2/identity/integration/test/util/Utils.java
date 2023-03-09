@@ -34,8 +34,10 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.automation.engine.context.beans.User;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.user.core.UserCoreConstants;
@@ -46,6 +48,7 @@ import org.wso2.identity.integration.test.provisioning.JustInTimeProvisioningTes
 import org.wso2.identity.integration.test.utils.BasicAuthHandler;
 import org.wso2.identity.integration.test.utils.BasicAuthInfo;
 import org.wso2.identity.integration.test.utils.CommonConstants;
+import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -350,10 +353,12 @@ public class Utils {
     private static List<String> extractClaims(HttpResponse response) throws IOException {
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         String resultPage = rd.lines().collect(Collectors.joining());
-        String claimString = resultPage.substring(resultPage.lastIndexOf("<div class=\"claim-list\">"));
-        String[] dataArray = StringUtils.substringsBetween(claimString, "<label for=\"", "\"");
         List<String> attributeList = new ArrayList<>();
-        Collections.addAll(attributeList, dataArray);
+        if (resultPage.contains("<div class=\"claim-list\">")) {
+            String claimString = resultPage.substring(resultPage.lastIndexOf("<div class=\"claim-list\">"));
+            String[] dataArray = StringUtils.substringsBetween(claimString, "<label for=\"", "\"");
+            Collections.addAll(attributeList, dataArray);
+        }
         return attributeList;
     }
 
@@ -478,11 +483,12 @@ public class Utils {
         return value;
     }
 
-    public static List<NameValuePair> getConsentRequiredClaimsFromResponse(HttpResponse response) throws Exception {
+    public static List<NameValuePair> getConsentRequiredClaimsFromResponse(HttpResponse response)
+            throws Exception {
 
         String redirectUrl = Utils.getRedirectUrl(response);
         Map<String, String> queryParams = Utils.getQueryParams(redirectUrl);
-        List<NameValuePair> urlParameters = new ArrayList<>();
+        List<NameValuePair> consentRequiredClaimsList = new ArrayList<>();
         String requestedClaims = queryParams.get("requestedClaims");
         String mandatoryClaims = queryParams.get("mandatoryClaims");
 
@@ -510,12 +516,63 @@ public class Utils {
             if (isNotBlank(claim)) {
                 String[] claimMeta = claim.split("_", 2);
                 if (claimMeta.length == 2) {
-                    urlParameters.add(new BasicNameValuePair("consent_" + claimMeta[0], "on"));
+                    consentRequiredClaimsList.add(new BasicNameValuePair("consent_" + claimMeta[0], "on"));
                 }
             }
         }
+
+        // If no claims are found in the url, then extract the claims from the consent page.
+        if (consentRequiredClaimsList.isEmpty()) {
+            consentRequiredClaimsList = extractConsentRequiredClaimsFromConsentPage(redirectUrl);
+        }
+        return consentRequiredClaimsList;
+    }
+
+    public static List<NameValuePair> extractConsentRequiredClaimsFromConsentPage(String redirectUrl) throws Exception {
+
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        List<String> fetchedClaims = fetchClaimsfromConsentPage(redirectUrl);
+        for (String claimConsent: fetchedClaims) {
+            urlParameters.add(new BasicNameValuePair(claimConsent, "on"));
+        }
         return urlParameters;
     }
+
+    public static List<String> fetchClaimsfromConsentPage(String redirectUrl) throws Exception {
+
+        HttpClient client = HttpClientBuilder.create().build();
+        HttpGet get = new HttpGet(redirectUrl);
+        get.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
+        HttpResponse consentPageResponse = sendGetRequest(redirectUrl, OAuth2Constant.USER_AGENT, client);
+        List<String> fetchedClaims = extractClaims(consentPageResponse);
+        return fetchedClaims;
+    }
+
+    /**
+     * Send a GET request to the data API.
+     *
+     * @param sessionDataKeyConsent Session data key consent
+     * @param userInfo User info
+     * @param tenantInfo Tenant info
+     * @return HttpResponse
+     * @throws IOException IOException
+     */
+    public static HttpResponse sendDataAPIGetRequest(String sessionDataKeyConsent, User userInfo,
+                                                     Tenant tenantInfo) throws IOException {
+
+        String dataApiUrl = tenantInfo.getDomain().equalsIgnoreCase("carbon.super") ?
+                OAuth2Constant.DATA_API_ENDPOINT + sessionDataKeyConsent :
+                OAuth2Constant.TENANT_DATA_API_ENDPOINT + sessionDataKeyConsent;
+        HttpClient client = HttpClientBuilder.create().build();
+        String authzHeader = getBasicAuthHeader(userInfo);
+        HttpGet request = new HttpGet(dataApiUrl);
+
+        request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
+        request.setHeader("Authorization", authzHeader);
+
+        return client.execute(request);
+    }
+
 
     /**
      * Read audit log lines with a given content.
