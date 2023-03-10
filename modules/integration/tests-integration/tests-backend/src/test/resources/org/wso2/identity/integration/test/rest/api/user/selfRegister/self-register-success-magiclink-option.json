@@ -1,0 +1,26 @@
+{
+  "user": {
+    "username": "magiclinkuser",
+    "realm": "PRIMARY",
+    "claims": [
+      {
+        "uri": "http://wso2.org/claims/givenname",
+        "value": "kim"
+      },
+      {
+        "uri": "http://wso2.org/claims/emailaddress",
+        "value": "kim.anderson@gmail.com"
+      }
+    ]
+  },
+  "properties": [
+    {
+      "key": "callback",
+      "value": "https://localhost:9443/myaccount/login"
+    },
+    {
+      "key" : "registrationOption",
+      "value": "MagicLinkAuthAttributeHandler"
+    }
+  ]
+}
