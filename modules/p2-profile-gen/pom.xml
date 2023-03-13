@@ -252,13 +252,7 @@
                                 </featureArtifactDef>
 
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity.carbon.auth.saml2:org.wso2.carbon.identity.authenticator.saml2.sso.server.feature:${identity.carbon.auth.saml2.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.thrift.authentication.feature:${carbon.identity.framework.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon.identity.carbon.auth.mutualssl:org.wso2.carbon.identity.authenticator.mutualssl.feature:${identity.carbon.auth.mutual.ssl.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.extension.identity.authenticator.utils:org.wso2.carbon.extension.identity.utils.helper.feature:${identity.extension.utils}
@@ -675,14 +669,6 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.user.store.configuration.server.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.authenticator.saml2.sso.server.feature.group</id>
-                                    <version>${identity.carbon.auth.saml2.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.authenticator.mutualssl.feature.group</id>
-                                    <version>${identity.carbon.auth.mutual.ssl.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.um.ws.service.feature.group</id>
