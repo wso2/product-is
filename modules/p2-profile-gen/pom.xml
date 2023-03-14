@@ -479,6 +479,10 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.governance:org.wso2.carbon.identity.multi.attribute.login.service.server.feature:${identity.governance.version}
                                 </featureArtifactDef>
+                                <!-- Admin session advisory banner feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.governance:org.wso2.carbon.identity.admin.session.advisory.banner.control.server.feature:${identity.governance.version}
+                                </featureArtifactDef>
                                 <!-- PBKDF2 feature -->
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.hash.provider.pbkdf2:org.wso2.carbon.identity.hash.provider.pbkdf2.server.feature:${hashprovider.pbkdf2.version}
@@ -531,6 +535,10 @@
                             </destination>
                             <deleteOldProfileFiles>true</deleteOldProfileFiles>
                             <features>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.admin.session.advisory.banner.control.server.feature.group</id>
+                                    <version>${identity.governance.version}</version>
+                                </feature>
                                 <feature>
                                     <id>org.wso2.carbon.as.runtimes.cxf3.feature.group</id>
                                     <version>${carbon.deployment.version}</version>
@@ -788,6 +796,11 @@
                                     <id>org.wso2.carbon.identity.multi.attribute.login.service.server.feature.group</id>
                                     <version>${identity.governance.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.admin.session.advisory.banner.control.server.feature.group</id>
+                                    <version>${identity.governance.version}</version>
+                                </feature>
+
                                 <feature>
                                     <id>org.wso2.carbon.identity.central.log.mgt.server.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
@@ -1343,6 +1356,10 @@
                                     <version>${identity.governance.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.identity.admin.session.advisory.banner.control.server.feature.group</id>
+                                    <version>${identity.governance.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.identity.central.log.mgt.server.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
@@ -1799,6 +1816,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.multi.attribute.login.service.server.feature.group</id>
+                                    <version>${identity.governance.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.admin.session.advisory.banner.control.server.feature.group</id>
                                     <version>${identity.governance.version}</version>
                                 </feature>
                                 <feature>
