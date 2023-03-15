@@ -45,6 +45,7 @@ public final class OAuth2Constant {
     public final static String OAUTH2_DEFAULT_ERROR_URL = "https://localhost:9853/authenticationendpoint/" +
             "oauth2_error.do";
     public final static String USER_INFO_ENDPOINT = "https://localhost:9853/oauth2/userinfo?schema=openid";
+    public final static String DATA_API_ENDPOINT = "https://localhost:9853/api/identity/auth/v1.1/data/OauthConsentKey/";
     public final static String AUTHTOKEN_VALIDATE_SERVICE = CommonConstants.DEFAULT_SERVICE_URL + "OAuth2TokenValidationService";
     public final static String COMMON_AUTH_URL = "https://localhost:9853/commonauth";
     public final static String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.6)";
@@ -103,6 +104,7 @@ public final class OAuth2Constant {
     public static final String INTRO_SPEC_ENDPOINT = "https://localhost:9853/oauth2/introspect";
     public static final String TENANT_INTRO_SPEC_ENDPOINT = "https://localhost:9853/t/wso2.com/oauth2/introspect";
     public static final String TENANT_USER_INFO_ENDPOINT = "https://localhost:9853/t/wso2.com/oauth2/userinfo?schema=openid";
+    public final static String TENANT_DATA_API_ENDPOINT = "https://localhost:9853/t/wso2.com/api/identity/auth/v1.1/data/OauthConsentKey/";
     public final static String TENANT_TOKEN_REVOKE_ENDPOINT = "https://localhost:9853/t/wso2.com/oauth2/revoke";
 
     public static final String SCOPE_ENDPOINT = "https://localhost:9853/api/server/v1/oidc/scopes";
