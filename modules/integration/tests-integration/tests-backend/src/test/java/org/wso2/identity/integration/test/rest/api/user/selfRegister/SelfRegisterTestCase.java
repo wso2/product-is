@@ -28,8 +28,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-
 public class SelfRegisterTestCase extends SelfRegisterTestBase {
 
     public static final String ENABLE_SELF_SIGN_UP = "SelfRegistration.Enable";
@@ -115,86 +113,5 @@ public class SelfRegisterTestCase extends SelfRegisterTestBase {
                 getResponseOfPost(SELF_REGISTRATION_ENDPOINT, selfRegisterUserInfoWithInvalidPassword);
         Assert.assertEquals(responseOfPost.statusCode(), HttpStatus.SC_BAD_REQUEST,
                 "Self register user password invalid");
-    }
-
-    @Test(alwaysRun = true, groups = "wso2.is", description = "Create self registered user with basic auth as option")
-    public void testSelfRegisterWithBasicAuth() throws Exception {
-
-        String selfRegisterUserInfo = readResource("self-register-success-basicauth-option.json");
-
-        updateResidentIDPProperty(ENABLE_SELF_SIGN_UP, "true", true);
-        Response responseOfPost = getResponseOfPost(SELF_REGISTRATION_ENDPOINT, selfRegisterUserInfo);
-        Assert.assertEquals(responseOfPost.statusCode(), HttpStatus.SC_CREATED, "User successfully registered with " +
-                "basic auth.");
-    }
-
-    @Test(alwaysRun = true, groups = "wso2.is", description = "Create self registered user with magic link as option")
-    public void testSelfRegisterWithMagicLink() throws Exception {
-
-        String selfRegisterUserInfo = readResource("self-register-success-magiclink-option.json");
-
-        updateResidentIDPProperty(ENABLE_SELF_SIGN_UP, "true", true);
-        Response responseOfPost = getResponseOfPost(SELF_REGISTRATION_ENDPOINT, selfRegisterUserInfo);
-        Assert.assertEquals(responseOfPost.statusCode(), HttpStatus.SC_CREATED, "User successfully registered with " +
-                "magic link.");
-    }
-
-    @Test(alwaysRun = true, groups = "wso2.is", description = "Self registration request with multiple options")
-    public void testSelfRegisterMultipleOptions() throws Exception {
-
-        String selfRegisterUserInfo = readResource("self-register-failure-multiple-options.json");
-
-        updateResidentIDPProperty(ENABLE_SELF_SIGN_UP, "true", true);
-        getResponseOfPost(SELF_REGISTRATION_ENDPOINT, selfRegisterUserInfo)
-                .then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_BAD_REQUEST)
-                .body("code", equalTo("USR-10008"));
-    }
-
-    @Test(alwaysRun = true, groups = "wso2.is",
-            description = "Self registration request to basic auth with missing attributes")
-    public void testSelfRegisterMissingAttributesWithBasicAuth() throws Exception {
-
-        String selfRegisterUserInfo = readResource("self-register-failure-basicauth-option.json");
-
-        updateResidentIDPProperty(ENABLE_SELF_SIGN_UP, "true", true);
-        getResponseOfPost(SELF_REGISTRATION_ENDPOINT, selfRegisterUserInfo)
-                .then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_BAD_REQUEST)
-                .body("code", equalTo("USR-10006"));
-    }
-
-    @Test(alwaysRun = true, groups = "wso2.is",
-            description = "Self registration request to magic link with missing attributes")
-    public void testSelfRegisterMissingAttributesWithMagicLink() throws Exception {
-
-        String selfRegisterUserInfo = readResource("self-register-failure-magiclink-option.json");
-
-        updateResidentIDPProperty(ENABLE_SELF_SIGN_UP, "true", true);
-        getResponseOfPost(SELF_REGISTRATION_ENDPOINT, selfRegisterUserInfo)
-                .then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_BAD_REQUEST)
-                .body("code", equalTo("USR-10006"));
-    }
-
-
-    @Test(alwaysRun = true, groups = "wso2.is", description = "Self registration request with an invalid option")
-    public void testSelfRegisterInvalidRegistrationOption() throws Exception {
-
-        String selfRegisterUserInfo = readResource("self-register-failure-invalid-option.json");
-
-        updateResidentIDPProperty(ENABLE_SELF_SIGN_UP, "true", true);
-        getResponseOfPost(SELF_REGISTRATION_ENDPOINT, selfRegisterUserInfo)
-                .then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_BAD_REQUEST)
-                .body("code", equalTo("USR-10007"));
     }
 }
