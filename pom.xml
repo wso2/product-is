@@ -2219,7 +2219,7 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.11.7</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.11.37</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.11.39</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.9.0</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.10.5</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.2</identity.inbound.provisioning.scim.version>
