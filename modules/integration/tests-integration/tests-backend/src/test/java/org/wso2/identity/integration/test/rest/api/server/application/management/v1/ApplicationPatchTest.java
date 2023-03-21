@@ -132,6 +132,7 @@ public class ApplicationPatchTest extends ApplicationManagementBaseTest {
                 .body("advancedConfigurations.find{ it.key == 'saas' }.value", equalTo(true))
                 .body("advancedConfigurations.find{ it.key == 'discoverableByEndUsers' }.value", equalTo(true))
                 .body("advancedConfigurations.find{ it.key == 'skipLoginConsent' }.value", equalTo(true))
+                .body("advancedConfigurations.find{ it.key == 'skipLogoutConsent' }.value", equalTo(true))
                 .body("advancedConfigurations.externalConsentManagement.find{ it.key == 'enabled' }.value", equalTo(true))
                 .body("advancedConfigurations.externalConsentManagement.find{ it.key == 'consentUrl' }.value", equalTo("https://example.com/consent"))
                 .body("advancedConfigurations.find{ it.key == 'returnAuthenticatedIdpList' }.value", equalTo(true))
