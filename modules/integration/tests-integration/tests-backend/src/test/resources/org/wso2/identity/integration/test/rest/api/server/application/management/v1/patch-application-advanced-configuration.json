@@ -4,6 +4,10 @@
     "discoverableByEndUsers": true,
     "skipLoginConsent": true,
     "skipLogoutConsent": true,
+    "externalConsentManagement" : {
+      "enabled" : true,
+      "consentUrl" : "https://example.com/consent"
+    },
     "returnAuthenticatedIdpList": true,
     "enableAuthorization": true
   }

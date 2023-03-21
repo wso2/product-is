@@ -30,6 +30,7 @@ public class AdvancedApplicationConfiguration  {
     private Boolean skipLogoutConsent;
     private Boolean returnAuthenticatedIdpList;
     private Boolean enableAuthorization;
+    private ExternalConsentManagementConfiguration externalConsentManagement;
 
     /**
     * Decide whether this application is allowed to be accessed across tenants.
@@ -103,6 +104,25 @@ public class AdvancedApplicationConfiguration  {
     }
 
     /**
+     **/
+    public AdvancedApplicationConfiguration externalConsentManagement(ExternalConsentManagementConfiguration
+                                                                              externalConsentManagement) {
+
+        this.externalConsentManagement = externalConsentManagement;
+        return this;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("externalConsentManagement")
+    @Valid
+    public ExternalConsentManagementConfiguration getExternalConsentManagement() {
+        return externalConsentManagement;
+    }
+    public void setExternalConsentManagement(ExternalConsentManagementConfiguration externalConsentManagement) {
+        this.externalConsentManagement = externalConsentManagement;
+    }
+
+    /**
     * Decide whether authenticated identity provider list needs to returned in the authentication response.
     **/
     public AdvancedApplicationConfiguration returnAuthenticatedIdpList(Boolean returnAuthenticatedIdpList) {
@@ -155,13 +175,14 @@ public class AdvancedApplicationConfiguration  {
             Objects.equals(this.certificate, advancedApplicationConfiguration.certificate) &&
                 Objects.equals(this.skipLoginConsent, advancedApplicationConfiguration.skipLoginConsent) &&
                 Objects.equals(this.skipLogoutConsent, advancedApplicationConfiguration.skipLogoutConsent) &&
+                Objects.equals(this.externalConsentManagement, advancedApplicationConfiguration.externalConsentManagement) &&
                 Objects.equals(this.returnAuthenticatedIdpList, advancedApplicationConfiguration.returnAuthenticatedIdpList) &&
             Objects.equals(this.enableAuthorization, advancedApplicationConfiguration.enableAuthorization);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(saas, certificate, skipLoginConsent, skipLogoutConsent, returnAuthenticatedIdpList, enableAuthorization);
+        return Objects.hash(saas, certificate, skipLoginConsent, skipLogoutConsent, externalConsentManagement, returnAuthenticatedIdpList, enableAuthorization);
     }
 
     @Override
@@ -174,6 +195,7 @@ public class AdvancedApplicationConfiguration  {
         sb.append("    certificate: ").append(toIndentedString(certificate)).append("\n");
         sb.append("    skipLoginConsent: ").append(toIndentedString(skipLoginConsent)).append("\n");
         sb.append("    skipLogoutConsent: ").append(toIndentedString(skipLogoutConsent)).append("\n");
+        sb.append("    externalConsentManagement: ").append(toIndentedString(externalConsentManagement)).append("\n");
         sb.append("    returnAuthenticatedIdpList: ").append(toIndentedString(returnAuthenticatedIdpList)).append("\n");
         sb.append("    enableAuthorization: ").append(toIndentedString(enableAuthorization)).append("\n");
         sb.append("}");
