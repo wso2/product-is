@@ -536,10 +536,6 @@
                             <deleteOldProfileFiles>true</deleteOldProfileFiles>
                             <features>
                                 <feature>
-                                    <id>org.wso2.carbon.identity.admin.session.advisory.banner.control.server.feature.group</id>
-                                    <version>${identity.governance.version}</version>
-                                </feature>
-                                <feature>
                                     <id>org.wso2.carbon.as.runtimes.cxf3.feature.group</id>
                                     <version>${carbon.deployment.version}</version>
                                 </feature>
