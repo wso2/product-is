@@ -254,6 +254,7 @@
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
+            <bean class="org.wso2.carbon.identity.oauth2.dcr.endpoint.exmapper.JsonProcessingExceptionMapper"/>
             <bean class="com.fasterxml.jackson.jaxrs.base.JsonMappingExceptionMapper"/>
             <bean class="com.fasterxml.jackson.jaxrs.base.JsonParseExceptionMapper"/>
         </jaxrs:providers>
