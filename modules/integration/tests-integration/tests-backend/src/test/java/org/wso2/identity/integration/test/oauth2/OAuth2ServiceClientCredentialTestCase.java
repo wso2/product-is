@@ -158,16 +158,14 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
 
         // This ensures that openid scopes are not issued for client credential grant type.
         Assert.assertFalse(accessTokenResponse instanceof OIDCTokenResponse,
-                "Client credential grant type cannot " +
-                        "get a OIDC Token Response.");
+                "Client credential grant type cannot get a OIDC Token Response.");
         Assert.assertFalse(scopesInResponse.contains(OAUTH2_SCOPE_OPENID),
                 "Client credentials cannot get openid scope.");
 
         Assert.assertFalse(scopesInResponse.contains(OAuth2Constant.OAUTH2_SCOPE_EMAIL),
-                "Client credentials cannot get " +
-                        "email scope.");
+                "Client credentials cannot get email scope.");
         Assert.assertFalse(scopesInResponse.contains(OAuth2Constant.OAUTH2_SCOPE_PROFILE),
-                "Client credentials cannot get " + "profile scope.");
+                "Client credentials cannot get profile scope.");
     }
 
     @Test(groups = "wso2.is", description = "Validate access token",
