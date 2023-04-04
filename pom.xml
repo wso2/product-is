@@ -2323,7 +2323,7 @@
         <conditional.authentication.functions.version>1.2.23</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.6.283</identity.apps.version>
+        <identity.apps.version>1.6.285</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
