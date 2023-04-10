@@ -2214,12 +2214,12 @@
         <identity.carbon.auth.saml2.version>5.8.4</identity.carbon.auth.saml2.version>
         <identity.carbon.auth.mutual.ssl.version>5.5.0</identity.carbon.auth.mutual.ssl.version>
         <identity.carbon.auth.iwa.version>5.5.0</identity.carbon.auth.iwa.version>
-        <identity.carbon.auth.rest.version>1.8.15</identity.carbon.auth.rest.version>
+        <identity.carbon.auth.rest.version>1.8.16</identity.carbon.auth.rest.version>
 
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.11.8</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.11.47</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.11.48</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.9.0</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.10.9</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.3</identity.inbound.provisioning.scim.version>
@@ -2323,7 +2323,7 @@
         <conditional.authentication.functions.version>1.2.23</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.6.292</identity.apps.version>
+        <identity.apps.version>1.6.295</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
