@@ -16,6 +16,7 @@ env:
   BUILD_NUMBER: ${{github.run_id}}
   DEPENDENCY_UPGRADE_BRANCH_NAME: IS_dependency_updater_github_action/$BUILD_NUMBER
   PR: "https://github.com/wso2/product-is/pulls"
+  TARGET_BRANCH_NAME: 7.x.x
 
 jobs:
   build:
@@ -68,9 +69,9 @@ jobs:
           echo "=========================================================="
           git fetch ${{ env.REMOTE_PRODUCT_REPOSITORY_PUBLIC }}
           echo ""
-          echo 'Checking out:' ${{ env.REMOTE_PRODUCT_REPOSITORY_PUBLIC }} 'master branch'
+          echo 'Checking out:' ${{ env.REMOTE_PRODUCT_REPOSITORY_PUBLIC }} ${{ env.TARGET_BRANCH_NAME }} 'branch'
           echo "=========================================================="
-          git checkout -b ${{ env.DEPENDENCY_UPGRADE_BRANCH_NAME }} ${{ env.REMOTE_PRODUCT_REPOSITORY_PUBLIC }}'/master'
+          git checkout -b ${{ env.DEPENDENCY_UPGRADE_BRANCH_NAME }} ${{ env.REMOTE_PRODUCT_REPOSITORY_PUBLIC }}'/'${{ env.TARGET_BRANCH_NAME }}
 
           echo ""
           echo 'Updating dependencies'
@@ -129,7 +130,7 @@ jobs:
             POST https://api.github.com/repos/${{ env.PRODUCT_REPOSITORY_PUBLIC }}/pulls \
             -H "Authorization: Bearer "${{ secrets.PAT }}"" \
             -H "Content-Type: application/json" \
-            -d '{ "title": "'"${TITLE}"'","body": "Bumps dependencies for product-is. Link : https://github.com/wso2/product-is/actions/runs/${{github.run_id}}","head": "'"${{ env.GIT_USERNAME }}:${{ env.DEPENDENCY_UPGRADE_BRANCH_NAME }}"'","base":"master"}')
+            -d '{ "title": "'"${TITLE}"'","body": "Bumps dependencies for product-is. Link : https://github.com/wso2/product-is/actions/runs/${{github.run_id}}","head": "'"${{ env.GIT_USERNAME }}:${{ env.DEPENDENCY_UPGRADE_BRANCH_NAME }}"'","base":"'"${{ env.TARGET_BRANCH_NAME }}"'"}')
             RESPONSE_BODY=${RESPONSE::-3}
             STATUS=$(printf "%s" "$RESPONSE" | tail -c 3)
             if [[ $STATUS == "201" ]]; then
