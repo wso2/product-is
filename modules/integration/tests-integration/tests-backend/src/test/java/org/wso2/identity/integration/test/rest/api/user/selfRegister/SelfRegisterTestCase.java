@@ -25,33 +25,29 @@ import org.apache.http.HttpStatus;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.context.TestUserMode;
 
 public class SelfRegisterTestCase extends SelfRegisterTestBase {
 
-    public static final String ENABLE_SELF_SIGN_UP = "SelfRegistration.Enable";
-    public static final String SELF_REGISTRATION_ENDPOINT = "/me";
-    protected static final String API_SELF_REGISTER_BASE_PATH = "/api/identity/user/%s";
-    protected static final String API_SELF_REGISTER_BASE_PATH_IN_SWAGGER =
-            "/t/\\{tenant-domain\\}" + API_SELF_REGISTER_BASE_PATH;
-    protected static final String API_SELF_REGISTER_BASE_PATH_WITH_TENANT_CONTEXT =
-            TENANT_CONTEXT_IN_URL + API_SELF_REGISTER_BASE_PATH;
-    protected static final String API_VERSION_SELF_REGISTER = "v1.0";
     private String selfRegisterUserInfo;
 
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
 
+        super.init(TestUserMode.SUPER_TENANT_ADMIN);
+
+        // Initialise required properties to update IDP properties.
+        initUpdateIDPProperty();
+
+        this.context = isServer;
+        this.authenticatingUserName = context.getContextTenant().getTenantAdmin().getUserName();
+        this.authenticatingCredential = context.getContextTenant().getTenantAdmin().getPassword();
+        this.tenant = context.getContextTenant().getDomain();
+
         super.testInit(API_VERSION_SELF_REGISTER, swaggerDefinitionSelfRegister, tenant,
                 API_SELF_REGISTER_BASE_PATH_IN_SWAGGER, API_SELF_REGISTER_BASE_PATH_WITH_TENANT_CONTEXT);
         selfRegisterUserInfo = readResource("self-register-request-body.json");
-    }
-
-    @BeforeMethod(alwaysRun = true)
-    public void testInit() throws Exception {
-
-        RestAssured.basePath = basePath;
     }
 
     @AfterMethod(alwaysRun = true)

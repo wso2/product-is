@@ -18,9 +18,9 @@
 
 package org.wso2.identity.integration.test.rest.api.user.selfRegister;
 
+import io.restassured.RestAssured;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.testng.annotations.BeforeMethod;
 import org.wso2.identity.integration.test.rest.api.user.common.RESTAPIUserTestBase;
 
 import java.io.IOException;
@@ -30,27 +30,27 @@ public class SelfRegisterTestBase extends RESTAPIUserTestBase {
     protected static final String API_DEFINITION_NAME_SELF_REGISTER = "api.identity.user.yaml";
     protected static String swaggerDefinitionSelfRegister;
     protected static String API_PACKAGE_NAME_SELF_REGISTER = "org.wso2.carbon.identity.api.user.governance";
+    public static final String ENABLE_SELF_SIGN_UP = "SelfRegistration.Enable";
+    public static final String SELF_REGISTRATION_ENDPOINT = "/me";
+    protected static final String API_SELF_REGISTER_BASE_PATH = "/api/identity/user/%s";
+    protected static final String API_SELF_REGISTER_BASE_PATH_IN_SWAGGER =
+            "/t/\\{tenant-domain\\}" + API_SELF_REGISTER_BASE_PATH;
+    protected static final String API_SELF_REGISTER_BASE_PATH_WITH_TENANT_CONTEXT =
+            TENANT_CONTEXT_IN_URL + API_SELF_REGISTER_BASE_PATH;
+    protected static final String API_VERSION_SELF_REGISTER = "v1.0";
 
     static {
         try {
             swaggerDefinitionSelfRegister =
                     getAPISwaggerDefinition(API_PACKAGE_NAME_SELF_REGISTER, API_DEFINITION_NAME_SELF_REGISTER);
         } catch (IOException e) {
-            Assert.fail(String.format("Unable to read the swagger definition"), e);
+            Assert.fail("Unable to read the swagger definition", e);
         }
     }
 
-    @BeforeClass(alwaysRun = true)
-    protected void initiateSelfRegistration() throws Exception {
+    @BeforeMethod(alwaysRun = true)
+    public void testInit() throws Exception {
 
-        super.init(TestUserMode.SUPER_TENANT_ADMIN);
-
-        // Initialise required properties to update IDP properties.
-        initUpdateIDPProperty();
-
-        this.context = isServer;
-        this.authenticatingUserName = context.getContextTenant().getTenantAdmin().getUserName();
-        this.authenticatingCredential = context.getContextTenant().getTenantAdmin().getPassword();
-        this.tenant = context.getContextTenant().getDomain();
+        RestAssured.basePath = basePath;
     }
 }
