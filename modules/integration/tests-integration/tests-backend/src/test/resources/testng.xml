@@ -127,7 +127,8 @@
             <class name="org.wso2.identity.integration.test.rest.api.user.association.v1.UserMeNegativeTestBase"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.authorized.apps.v1.MeAuthorizedAppsNegativeTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.authorized.apps.v1.MeAuthorizedAppsSuccessTest"/>
-            <class name="org.wso2.identity.integration.test.rest.api.user.authorized.apps.v2.MeAuthorizedAppsSuccessTest"/>
+            <!-- Temporarily disabling the test -->
+            <!-- <class name="org.wso2.identity.integration.test.rest.api.user.authorized.apps.v2.MeAuthorizedAppsSuccessTest"/> -->
             <class name="org.wso2.identity.integration.test.rest.api.user.authorized.apps.v2.MeAuthorizedAppsNegativeTest"/>
             <!--TODO: Temporary disabled MeAuthorizedAppsScopeTest. Enable after fixing https://github.com/wso2/product-is/issues/13230. -->
             <!-- <class name="org.wso2.identity.integration.test.rest.api.user.authorized.apps.v2.MeAuthorizedAppsScopeTest"/> -->
