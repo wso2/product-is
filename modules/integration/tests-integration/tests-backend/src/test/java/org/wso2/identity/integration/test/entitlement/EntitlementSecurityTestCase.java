@@ -75,7 +75,7 @@ public class EntitlementSecurityTestCase extends ISIntegrationTest {
 
             rd.close();
 
-            if(!success) {
+            if(success) {
                 Assert.fail("Content is not encoded");
             }
         }
