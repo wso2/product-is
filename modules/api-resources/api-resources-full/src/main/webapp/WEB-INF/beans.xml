@@ -48,6 +48,7 @@
     <import resource="classpath:META-INF/cxf/input-validation-server-v1-cxf.xml"/>
 
     <import resource="classpath:META-INF/cxf/identity-governance-server-v1-cxf.xml"/>
+    <import resource="classpath:META-INF/cxf/admin-advisory-management-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-store-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/tenant-management-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/cors-server-v1-cxf.xml"/>
@@ -80,6 +81,7 @@
             <bean class="org.wso2.carbon.identity.rest.api.server.claim.management.v1.ClaimManagementApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.server.email.template.v1.EmailApi"/>
             <bean class="org.wso2.carbon.identity.api.server.identity.governance.v1.IdentityGovernanceApi"/>
+            <bean class="org.wso2.carbon.identity.api.server.admin.advisory.management.v1.AdminAdvisoryManagementApi"/>
             <bean class="org.wso2.carbon.identity.api.server.application.management.v1.ApplicationsApi"/>
             <bean class="org.wso2.carbon.identity.api.server.userstore.v1.UserstoresApi"/>
             <bean class="org.wso2.carbon.identity.api.server.permission.management.v1.PermissionManagementApi"/>
