@@ -2257,7 +2257,7 @@
         <authenticator.office365.version>2.1.2</authenticator.office365.version>
         <authenticator.smsotp.version>3.3.9</authenticator.smsotp.version>
         <authenticator.magiclink.version>1.1.8</authenticator.magiclink.version>
-        <authenticator.emailotp.version>4.1.7</authenticator.emailotp.version>
+        <authenticator.emailotp.version>4.1.9</authenticator.emailotp.version>
         <authenticator.twitter.version>1.1.1</authenticator.twitter.version>
         <authenticator.x509.version>3.1.8</authenticator.x509.version>
         <identity.extension.utils>1.0.13</identity.extension.utils>
