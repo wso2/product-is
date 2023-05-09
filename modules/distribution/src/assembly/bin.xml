@@ -70,6 +70,9 @@
                 <exclude>**/repository/components/plugins/org.wso2.carbon.roles.mgt.stub_**.jar</exclude>
                 <exclude>**/repository/components/plugins/org.wso2.carbon.server.admin.ui_**.jar</exclude>
                 <exclude>**/repository/components/plugins/org.wso2.carbon.server.admin.stub_**.jar</exclude>
+                <exclude>**/repository/components/plugins/org.wso2.carbon.admin.advisory.mgt.ui_**.jar</exclude>
+                <exclude>**/repository/components/plugins/org.wso2.carbon.admin.advisory.mgt.stub_**.jar</exclude>
+                <exclude>**/repository/components/plugins/org.wso2.carbon.admin.advisory.mgt_**.jar</exclude>
                 <exclude>**/repository/components/plugins/org.wso2.carbon.i18n_**.jar</exclude>
                 <exclude>**/repository/components/plugins/org.wso2.carbon.feature.mgt.stub_**.jar</exclude>
                 <exclude>**/repository/components/plugins/org.wso2.carbon.core.commons.stub_**.jar</exclude>
