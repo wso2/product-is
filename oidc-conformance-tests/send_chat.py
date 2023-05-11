@@ -65,15 +65,15 @@ message = {
                     "widgets": [
                         {
                             "textParagraph": {
-                                "text": "<b>Identity Server " + str(wso2_is_version) + "</b>"
+                                "text": f"<b>Identity Server {wso2_is_version} </b>"
                             }
                         },
                         {
                             "textParagraph": {
-                                "text": "Status: <b><font color=" + font_color + ">" + workflow_status +
-                                        "</font></b></br>\nTotal test cases: " + str(total_tests_count) +
-                                        "\nFailed test cases: " + str(failed_count) +
-                                        "\nTest cases with warnings: " + str(warnings_count)
+                                "text": f"Status: <b><font color= {font_color}> {workflow_status}"
+                                        f"</font></b></br>\nTotal test cases: {str(total_tests_count)}" 
+                                        f"\nFailed test cases: {str(failed_count)}" 
+                                        f"\nTest cases with warnings: {str(warnings_count)}"
                             }
                         },
                         {
@@ -87,8 +87,8 @@ message = {
                                         "text": "VIEW",
                                         "onClick": {
                                             "openLink": {
-                                                "url": "https://github.com/" + github_repository_name + "/actions/runs/"
-                                                       + github_run_id
+                                                "url": f"https://github.com/{github_repository_name}/actions/runs/"
+                                                       f"{github_run_id}"
                                             }
                                         }
                                     }
