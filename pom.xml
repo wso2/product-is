@@ -44,7 +44,6 @@
         <module>modules/local-authenticators</module>
         <module>modules/oauth2-grant-types</module>
         <module>modules/distribution</module>
-        <module>modules/styles</module>
         <module>modules/tests-utils</module>
         <module>modules/integration</module>
     </modules>
@@ -553,11 +552,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.ui</artifactId>
-                <version>${carbon.kernel.version}</version>
-            </dependency>
             <dependency>
                 <groupId>org.eclipse.equinox</groupId>
                 <artifactId>org.eclipse.equinox.http.servlet</artifactId>
