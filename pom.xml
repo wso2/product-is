@@ -2177,7 +2177,7 @@
         <carbon.consent.mgt.version>2.5.2</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>2.0.7</identity.governance.version>
+        <identity.governance.version>2.0.9</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.iwa.version>5.5.0</identity.carbon.auth.iwa.version>
@@ -2227,7 +2227,7 @@
 
         <!-- Social Authenticator Versions -->
         <social.authenticator.facebook.version>5.2.2</social.authenticator.facebook.version>
-        <social.authenticator.google.version>5.2.8</social.authenticator.google.version>
+        <social.authenticator.google.version>5.2.9</social.authenticator.google.version>
         <social.authenticator.windowslive.version>5.2.2</social.authenticator.windowslive.version>
         <social.authenticator.apple.version>1.0.2</social.authenticator.apple.version>
 
