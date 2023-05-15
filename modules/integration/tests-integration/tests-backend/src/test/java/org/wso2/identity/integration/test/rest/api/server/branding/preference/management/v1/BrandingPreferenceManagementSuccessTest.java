@@ -23,6 +23,7 @@ import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.testng.Assert;
@@ -36,11 +37,15 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.testng.Assert.assertNotNull;
-import static org.wso2.identity.integration.test.entitlement.EntitlementJSONSupportMultiDecisionProfileTestCase.areJSONObjectsEqual;
 
 /**
  * Test class for Branding Preference Management REST APIs success paths.
@@ -317,5 +322,35 @@ public class BrandingPreferenceManagementSuccessTest extends BrandingPreferenceM
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
+    }
+
+    public static boolean areJSONObjectsEqual(Object ob1, Object ob2) throws JSONException {
+
+        Object obj1Converted = convertJsonElement(ob1);
+        Object obj2Converted = convertJsonElement(ob2);
+        return obj1Converted.equals(obj2Converted);
+    }
+
+    private static Object convertJsonElement(Object elem) throws JSONException {
+
+        if (elem instanceof JSONObject) {
+            JSONObject obj = (JSONObject) elem;
+            Iterator<String> keys = obj.keys();
+            Map<String, Object> jsonMap = new HashMap<>();
+            while (keys.hasNext()) {
+                String key = keys.next();
+                jsonMap.put(key, convertJsonElement(obj.get(key)));
+            }
+            return jsonMap;
+        } else if (elem instanceof JSONArray) {
+            JSONArray arr = (JSONArray) elem;
+            Set<Object> jsonSet = new HashSet<>();
+            for (int i = 0; i < arr.length(); i++) {
+                jsonSet.add(convertJsonElement(arr.get(i)));
+            }
+            return jsonSet;
+        } else {
+            return elem;
+        }
     }
 }
