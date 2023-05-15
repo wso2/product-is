@@ -1101,11 +1101,6 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.framework</groupId>
-                <artifactId>org.wso2.carbon.identity.template.mgt.ui</artifactId>
-                <version>${carbon.identity.framework.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.identity.framework</groupId>
                 <artifactId>org.wso2.carbon.identity.template.mgt.endpoint</artifactId>
                 <version>${carbon.identity.framework.version}</version>
             </dependency>
@@ -2140,7 +2135,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>6.0.36</carbon.identity.framework.version>
+        <carbon.identity.framework.version>6.0.39</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[6.0.0, 7.0.0)</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
