@@ -164,7 +164,7 @@ public class SystemScopePermissionValidationTestCase extends OAuth2ServiceAbstra
     public void testIntrospectionEndpoint() throws Exception {
 
         String scope = getScopesFromIntrospectionResponse();
-        doTheScopeValidationBasedOnTheTestUserMode(scope);
+        doTheScopeValidationBasedOnTheTestUserMode(scope, true);
     }
 
     @Test(groups = "wso2.is", description = "Test introspection endpoint", dependsOnMethods = "testIntrospectionEndpoint")
@@ -187,7 +187,7 @@ public class SystemScopePermissionValidationTestCase extends OAuth2ServiceAbstra
             Assert.assertNotNull(tokenResponse, "Access token response is null.");
             accessToken = tokenResponse.getTokens().getAccessToken().getValue();
             String scope = getScopesFromIntrospectionResponse();
-            doTheScopeValidationBasedOnTheTestUserMode(scope);
+            doTheScopeValidationBasedOnTheTestUserMode(scope, false);
         } finally {
             client.close();
         }
@@ -203,7 +203,7 @@ public class SystemScopePermissionValidationTestCase extends OAuth2ServiceAbstra
         return introspectionResponse.get("scope").toString();
     }
 
-    private void doTheScopeValidationBasedOnTheTestUserMode(String scope) {
+    private void doTheScopeValidationBasedOnTheTestUserMode(String scope, boolean isClientCredentialsGrant) {
 
         if (testUserMode == TestUserMode.SUPER_TENANT_ADMIN) {
             Assert.assertTrue(scope.contains("internal_server_admin"), "Scope should contain " +
@@ -217,7 +217,13 @@ public class SystemScopePermissionValidationTestCase extends OAuth2ServiceAbstra
                     "`internal_modify_tenants` scope");
         } else {
             // Normal user.
-            Assert.assertTrue(scope.contains("internal_login"), "Scope should contain `internal_login` scope");
+            if (isClientCredentialsGrant) {
+                Assert.assertFalse(scope.contains("internal_login"), "Scope should not contain " +
+                        "`internal_login` scope");
+            } else {
+                Assert.assertTrue(scope.contains("internal_login"), "Scope should contain " +
+                        "`internal_login` scope");
+            }
             Assert.assertFalse(scope.contains("internal_server_admin"), "Scope should not contain " +
                     "`internal_server_admin` scope");
             Assert.assertFalse(scope.contains("internal_modify_tenants"), "Scope should not contain " +
