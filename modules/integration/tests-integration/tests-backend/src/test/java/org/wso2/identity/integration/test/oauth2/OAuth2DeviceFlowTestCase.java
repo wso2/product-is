@@ -38,6 +38,9 @@ import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
@@ -46,10 +49,7 @@ import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.COMMON_AUTH_URL;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.SCOPE_PLAYGROUND_NAME;
@@ -64,10 +64,12 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
     private String sessionDataKey;
     private String consumerKey;
     private String consumerSecret;
+    private String appId;
     private String userCode;
     private String deviceCode;
 
     private DefaultHttpClient client;
+
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -85,20 +87,22 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
-        deleteApplication();
-        removeOAuthApplicationData();
+//        deleteApplication();
+//        removeOAuthApplicationData();
+        deleteApp(appId);
     }
 
     @Test(groups = "wso2.is", description = "Check Oauth2 application registration")
     public void testRegisterApplication() throws Exception {
 
-        OAuthConsumerAppDTO appDto = createApp();
+        ApplicationModel appDto = createApp();
         Assert.assertNotNull(appDto, "Application creation failed.");
 
-        consumerKey = appDto.getOauthConsumerKey();
+        consumerKey = appDto.getInboundProtocolConfiguration().getOidc().getClientId();
         Assert.assertNotNull(consumerKey, "Application creation failed.");
 
-        consumerSecret = appDto.getOauthConsumerSecret();
+        consumerSecret = appDto.getInboundProtocolConfiguration().getOidc().getClientSecret();
+        appId = appDto.getId();
     }
 
     @Test(groups = "wso2.is", description = "Send authorize user request without redirect_uri param", dependsOnMethods
@@ -300,16 +304,37 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
      * @return OAuthConsumerAppDTO
      * @throws Exception
      */
-    private OAuthConsumerAppDTO createApp() throws Exception {
+    private ApplicationModel createApp() throws Exception {
 
-        OAuthConsumerAppDTO appDTO = new OAuthConsumerAppDTO();
-        appDTO.setApplicationName(OAuth2Constant.OAUTH_APPLICATION_NAME);
-        appDTO.setCallbackUrl(OAuth2Constant.CALLBACK_URL);
-        appDTO.setOAuthVersion(OAuth2Constant.OAUTH_VERSION_2);
-        appDTO.setGrantTypes("authorization_code implicit password client_credentials refresh_token " +
-                             "urn:ietf:params:oauth:grant-type:saml2-bearer iwa:ntlm " +
-                             "urn:ietf:params:oauth:grant-type:device_code");
-        appDTO.setBypassClientCredentials(true);
-        return createApplication(appDTO, SERVICE_PROVIDER_NAME);
+        ApplicationModel application = new ApplicationModel();
+
+        List<String> grantTypes = new ArrayList<>();
+        Collections.addAll(grantTypes, "authorization_code", "implicit", "password", "client_credentials", "refresh_token", "urn:ietf:params:oauth:grant-type:saml2-bearer", "iwa:ntlm", "urn:ietf:params:oauth:grant-type:device_code");
+
+        List<String> callBackUrls = new ArrayList<>();
+        Collections.addAll(callBackUrls, OAuth2Constant.CALLBACK_URL);
+
+        OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
+        oidcConfig.setGrantTypes(grantTypes);
+        oidcConfig.setCallbackURLs(callBackUrls);
+        oidcConfig.setPublicClient(true);
+
+        InboundProtocols inboundProtocolsConfig = new InboundProtocols();
+        inboundProtocolsConfig.setOidc(oidcConfig);
+
+        application.setInboundProtocolConfiguration(inboundProtocolsConfig);
+        application.setName(OAuth2Constant.OAUTH_APPLICATION_NAME);
+
+        return addApplication(application);
+
+//        OAuthConsumerAppDTO appDTO = new OAuthConsumerAppDTO();
+//        appDTO.setApplicationName(OAuth2Constant.OAUTH_APPLICATION_NAME);
+//        appDTO.setCallbackUrl(OAuth2Constant.CALLBACK_URL);
+//        appDTO.setOAuthVersion(OAuth2Constant.OAUTH_VERSION_2);
+//        appDTO.setGrantTypes("authorization_code implicit password client_credentials refresh_token " +
+//                             "urn:ietf:params:oauth:grant-type:saml2-bearer iwa:ntlm " +
+//                             "urn:ietf:params:oauth:grant-type:device_code");
+//        appDTO.setBypassClientCredentials(true);
+//        return createApplication(appDTO, SERVICE_PROVIDER_NAME);
     }
 }
