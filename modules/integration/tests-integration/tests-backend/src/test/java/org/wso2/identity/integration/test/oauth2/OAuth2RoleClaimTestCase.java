@@ -23,12 +23,12 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
-import org.json.simple.JSONArray;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -43,12 +43,13 @@ import org.wso2.carbon.identity.application.common.model.xsd.Property;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.UserCreationModel;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTest {
@@ -65,47 +66,62 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
 
     private String consumerKey;
     private String consumerSecret;
+    private String applicationId;
+    private String roleId;
+    private String userId;
 
-    private DefaultHttpClient client;
+    private CloseableHttpClient client;
+    private SCIM2RestClient scim2RestClient;
 
     private static final String FIRST_NAME_CLAIM_URI = "http://wso2.org/claims/givenname";
     private static final String LAST_NAME_CLAIM_URI = "http://wso2.org/claims/lastname";
 
-    private static final String USERNAME = "oauthuser";
-    private static final String PASSWORD = "oauthuser";
+    private String USERNAME;
+    private String PASSWORD;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
         super.init(TestUserMode.TENANT_USER);
 
+        this.USERNAME = tenantInfo.getContextUser().getUserName();
+        this.PASSWORD = tenantInfo.getContextUser().getPassword();
         setSystemproperties();
-        client = new DefaultHttpClient();
+        client = HttpClients.createDefault();
+        scim2RestClient = new SCIM2RestClient(backendURL.replace("services/", ""), tenantInfo);
 
-        remoteUSMServiceClient.addRole(OAUTH_ROLE, null, null);
-        remoteUSMServiceClient.addUser(USERNAME, PASSWORD, null, getUserClaims(), "default",
-                false);
+//        remoteUSMServiceClient.addRole(OAUTH_ROLE, null, null);
+//        remoteUSMServiceClient.addUser(USERNAME, PASSWORD, null, getUserClaims(), "default", false);
+
+        roleId = scim2RestClient.addRole("oauthRole");
+        userId = scim2RestClient.createUser(getUserCreationInfo());
     }
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
-        deleteApplication();
-        remoteUSMServiceClient.deleteRole(OAUTH_ROLE);
-        remoteUSMServiceClient.deleteUser(USERNAME);
+//        deleteApplication();
+//        remoteUSMServiceClient.deleteRole(OAUTH_ROLE);
+//        remoteUSMServiceClient.deleteUser(USERNAME);
+//        consumerKey = null;
+
+        deleteApp(applicationId);
+        scim2RestClient.deleteRole(roleId);
+        scim2RestClient.deleteUser(userId);
         consumerKey = null;
     }
 
     @Test(groups = "wso2.is", description = "Check Oauth2 application registration")
     public void testRegisterApplication() throws Exception {
 
-        OAuthConsumerAppDTO appDto = createApplication();
-        Assert.assertNotNull(appDto, "Application creation failed.");
+        ApplicationModel app = addApplication();
+        Assert.assertNotNull(app, "Application creation failed.");
 
-        consumerKey = appDto.getOauthConsumerKey();
+        consumerKey = app.getInboundProtocolConfiguration().getOidc().getClientId();
         Assert.assertNotNull(consumerKey, "Application creation failed.");
 
-        consumerSecret = appDto.getOauthConsumerSecret();
+        consumerSecret = app.getInboundProtocolConfiguration().getOidc().getClientSecret();
+        applicationId = app.getId();
     }
 
     @Test(groups = "wso2.is", description = "Check id_token before updating roles.", dependsOnMethods =
@@ -116,7 +132,7 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("grant_type",
                 OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER));
-        urlParameters.add(new BasicNameValuePair("username", USERNAME + "@" + isServer.getContextTenant().getDomain()));
+        urlParameters.add(new BasicNameValuePair("username", USERNAME ));
         urlParameters.add(new BasicNameValuePair("password", PASSWORD));
         urlParameters.add(new BasicNameValuePair("scope", "openid"));
 
@@ -143,13 +159,13 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
             "testSendAuthorizedPost")
     public void testSendAuthorizedPostAfterRoleUpdate() throws Exception {
 
-        remoteUSMServiceClient.updateRoleListOfUser(USERNAME, null, new String[]{OAUTH_ROLE});
-
+        //remoteUSMServiceClient.updateRoleListOfUser(USERNAME, null, new String[]{OAUTH_ROLE});
+        scim2RestClient.updateUserRole(roleId, userId);
         HttpPost request = new HttpPost(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("grant_type",
                 OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER));
-        urlParameters.add(new BasicNameValuePair("username", USERNAME + "@" + isServer.getContextTenant().getDomain()));
+        urlParameters.add(new BasicNameValuePair("username", USERNAME));
         urlParameters.add(new BasicNameValuePair("password", PASSWORD));
         urlParameters.add(new BasicNameValuePair("scope", "openid"));
 
@@ -170,6 +186,20 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
         Object idToken = JSONValue.parse(new String(Base64.decodeBase64(encodedIdToken)));
         Assert.assertNull(((JSONObject) idToken).get(OIDC_ROLES_CLAIM_URI), 
                 "Id token must not contain role claim which is not configured for the requested scope.");
+    }
+
+    private UserCreationModel getUserCreationInfo() {
+
+        UserCreationModel userInfo = new UserCreationModel();
+
+        userInfo.setUserName("testAshan");
+        userInfo.setGivenName("Ashan");
+        userInfo.setFamilyName("Palihakkara");
+        userInfo.setPassword("ashan@123");
+        userInfo.setHomeEmail("ashanthamara98@gmail.com");
+        userInfo.setWorkEmail("ashant@wso2.com");
+
+        return userInfo;
     }
 
     private ClaimValue[] getUserClaims() {

@@ -17,6 +17,7 @@
 */
 package org.wso2.identity.integration.test.oauth2;
 
+import edu.emory.mathcs.backport.java.util.Arrays;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -46,6 +47,7 @@ import org.wso2.identity.integration.common.clients.application.mgt.ApplicationM
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.*;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import sun.security.provider.X509Factory;
@@ -54,6 +56,7 @@ import java.io.IOException;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH_APPLICATION_NAME;
@@ -79,6 +82,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	protected ApplicationManagementServiceClient appMgtclient;
 	protected OauthAdminClient adminClient;
 	protected RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
+	protected OAuth2RestClient restClient;
 
 
 	/**
@@ -93,6 +97,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		appMgtclient = new ApplicationManagementServiceClient(sessionCookie, backendURL, null);
 		adminClient = new OauthAdminClient(backendURL, sessionCookie);
 		remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
+		restClient = new OAuth2RestClient(backendURL.replace("services/", ""), tenantInfo);
 	}
 
 	/**
@@ -109,6 +114,29 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		appDTO.setGrantTypes("authorization_code implicit password client_credentials refresh_token "
 				+ "urn:ietf:params:oauth:grant-type:saml2-bearer iwa:ntlm");
 		return createApplication(appDTO, SERVICE_PROVIDER_NAME);
+	}
+
+	public ApplicationModel addApplication() throws Exception {
+		ApplicationModel application = new ApplicationModel();
+
+//		String[] grantTypes = new String[]{"authorization_code", "implicit", "password", "client_credentials", "refresh_token", "urn:ietf:params:oauth:grant-type:saml2-bearer", "iwa:ntlm"};
+		List<String> grantTypes = new ArrayList<>();
+		Collections.addAll(grantTypes, "authorization_code", "implicit", "password", "client_credentials", "refresh_token", "urn:ietf:params:oauth:grant-type:saml2-bearer", "iwa:ntlm");
+
+		List<String> callBackUrls = new ArrayList<>();
+		Collections.addAll(callBackUrls, OAuth2Constant.CALLBACK_URL);
+
+		OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
+		oidcConfig.setGrantTypes(grantTypes);
+		oidcConfig.setCallbackURLs(callBackUrls);
+
+		InboundProtocols inboundProtocolsConfig = new InboundProtocols();
+		inboundProtocolsConfig.setOidc(oidcConfig);
+
+		application.setInboundProtocolConfiguration(inboundProtocolsConfig);
+		application.setName(OAuth2Constant.OAUTH_APPLICATION_NAME);
+
+		return addApplication(application);
 	}
 
     /**
@@ -148,8 +176,17 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	 * @return OAuthConsumerAppDTO
 	 * @throws Exception
 	 */
-	public OAuthConsumerAppDTO createApplication(OAuthConsumerAppDTO appDTO, String serviceProviderName)
+	public ApplicationModel addApplication(ApplicationModel application)
 			throws Exception {
+		ApplicationModel resultApp;
+
+		String appId = restClient.createApplication(application);
+		resultApp = restClient.getOAuthInboundDetailsOfApp(appId);
+
+		return resultApp;
+	}
+
+	public OAuthConsumerAppDTO createApplication(OAuthConsumerAppDTO appDTO, String serviceProviderName) throws Exception {
 		OAuthConsumerAppDTO appDtoResult = null;
 
 		adminClient.registerOAuthApplicationData(appDTO);
@@ -210,6 +247,8 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		appMgtclient.updateApplicationData(serviceProvider);
 		return appDtoResult;
 	}
+
+
 
 	public void UpdateApplicationClaimConfig() throws Exception {
 		ServiceProvider serviceProvider = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
@@ -480,6 +519,10 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	 */
 	public void deleteApplication() throws Exception {
 		appMgtclient.deleteApplication(SERVICE_PROVIDER_NAME);
+	}
+
+	public void deleteApp(String appId) throws Exception {
+		restClient.deleteApplication(appId);
 	}
 
 	/**
