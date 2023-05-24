@@ -17,7 +17,6 @@
 */
 package org.wso2.identity.integration.test.oauth2;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -36,12 +35,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.application.common.model.xsd.Claim;
-import org.wso2.carbon.identity.application.common.model.xsd.ClaimConfig;
-import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
-import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
-import org.wso2.carbon.identity.application.common.model.xsd.OutboundProvisioningConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.Property;
-import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
+import org.wso2.carbon.identity.application.common.model.xsd.*;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
@@ -116,10 +111,10 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		return createApplication(appDTO, SERVICE_PROVIDER_NAME);
 	}
 
-	public ApplicationModel addApplication() throws Exception {
+	public ApplicationResponseModel addApplication() throws Exception {
+
 		ApplicationModel application = new ApplicationModel();
 
-//		String[] grantTypes = new String[]{"authorization_code", "implicit", "password", "client_credentials", "refresh_token", "urn:ietf:params:oauth:grant-type:saml2-bearer", "iwa:ntlm"};
 		List<String> grantTypes = new ArrayList<>();
 		Collections.addAll(grantTypes, "authorization_code", "implicit", "password", "client_credentials", "refresh_token", "urn:ietf:params:oauth:grant-type:saml2-bearer", "iwa:ntlm");
 
@@ -136,7 +131,9 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		application.setInboundProtocolConfiguration(inboundProtocolsConfig);
 		application.setName(OAuth2Constant.OAUTH_APPLICATION_NAME);
 
-		return addApplication(application);
+		String appId = addApplication(application);
+
+		return getApplication(appId);
 	}
 
     /**
@@ -171,20 +168,55 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
     }
 
 	/**
-	 * Create Application with a given appDTO
+	 * Create Application with a given ApplicationModel
 	 *
-	 * @return OAuthConsumerAppDTO
+	 * @return application id
 	 * @throws Exception
 	 */
-	public ApplicationModel addApplication(ApplicationModel application)
-			throws Exception {
-		ApplicationModel resultApp;
+	public String addApplication(ApplicationModel application) throws Exception {
 
-		String appId = restClient.createApplication(application);
-		resultApp = restClient.getOAuthInboundDetailsOfApp(appId);
-
-		return resultApp;
+		return restClient.createApplication(application);
 	}
+
+	/**
+	 * Get Application details with a given id
+	 *
+	 * @return ApplicationResponseModel
+	 * @throws Exception
+	 */
+	public ApplicationResponseModel getApplication(String appId) throws Exception {
+
+		return restClient.getApplication(appId);
+	}
+
+	/**
+	 * Get Application details with a given id
+	 *
+	 * @return ApplicationResponseModel
+	 * @throws Exception
+	 */
+	public void updateApplication(String appId, ApplicationPatchModel application) throws Exception {
+
+		restClient.updateApplication(appId, application);
+	}
+
+	/**
+	 * Get Application details with a given id
+	 *
+	 * @return ApplicationResponseModel
+	 * @throws Exception
+	 */
+	public OpenIDConnectConfiguration getOIDCInboundDetailsOfApplication(String appId) throws Exception {
+
+		return restClient.getOIDCInboundDetails(appId);
+	}
+
+	public void updateApplicationOidcInboundConfig(String appId, OpenIDConnectConfiguration oidcInboundConfig) throws IOException {
+
+		restClient.updateOIDCInboundDetailsOfApplication(appId, oidcInboundConfig);
+	}
+
+
 
 	public OAuthConsumerAppDTO createApplication(OAuthConsumerAppDTO appDTO, String serviceProviderName) throws Exception {
 		OAuthConsumerAppDTO appDtoResult = null;
@@ -391,7 +423,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	 * @param password       Password.
 	 * @return Http response.
 	 * @throws ClientProtocolException
-	 * @throws IOException
+	 * @throws  IOException
 	 */
 	public HttpResponse sendLoginPostForCustomUsers(HttpClient client, String sessionDataKey, String username,
 													String password)
@@ -581,6 +613,20 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
         return new String(Base64.encodeBase64((consumerKey + ":" + consumerSecret).getBytes()));
     }
 
+	public void updateApplicationCertificate(String appId, X509Certificate sp1X509PublicCert) throws Exception {
+
+		Certificate certificate = new Certificate();
+		certificate.setType(Certificate.TypeEnum.PEM);
+		certificate.setValue(convertToPem(sp1X509PublicCert));
+
+		ApplicationPatchModel applicationPatch = new ApplicationPatchModel();
+		applicationPatch = applicationPatch.advancedConfigurations(new AdvancedApplicationConfiguration());
+		applicationPatch.getAdvancedConfigurations().setCertificate(certificate);
+
+		updateApplication(appId, applicationPatch);
+	}
+
+
 	/**
 	 * Convert a x509 certificate to pem format.
 	 *
@@ -699,10 +745,10 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	/**
 	 * Build post request and return json response object.
 	 *
-	 * @param endpoint       Endpoint.
-	 * @param postParameters postParameters.
-	 * @param key            Basic authentication key.
-	 * @param secret         Basic authentication secret.
+	 * @param endpoint      		Endpoint.
+	 * @param postParameters 		postParameters.
+	 * @param client            	httpclient.
+	 * @param authorizationHeader  	Authentication header.
 	 * @return JSON object of the response.
 	 * @throws Exception
 	 */
