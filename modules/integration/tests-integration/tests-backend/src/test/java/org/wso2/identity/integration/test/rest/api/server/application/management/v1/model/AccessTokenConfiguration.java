@@ -27,6 +27,8 @@ public class AccessTokenConfiguration  {
     private String type;
     private Long userAccessTokenExpiryInSeconds;
     private Long applicationAccessTokenExpiryInSeconds;
+    private Boolean revokeTokensWhenIDPSessionTerminated;
+    private Boolean validateTokenBinding;
 
     /**
     **/
@@ -82,7 +84,41 @@ public class AccessTokenConfiguration  {
         this.applicationAccessTokenExpiryInSeconds = applicationAccessTokenExpiryInSeconds;
     }
 
+    /**
+     **/
+    public AccessTokenConfiguration validateTokenBinding(Boolean validateTokenBinding) {
 
+        this.validateTokenBinding = validateTokenBinding;
+        return this;
+    }
+
+    @ApiModelProperty(example = "false", value = "")
+    @JsonProperty("validateTokenBinding")
+    @Valid
+    public boolean getValidateTokenBinding() {
+        return validateTokenBinding;
+    }
+    public void setValidateTokenBinding(Boolean validateTokenBinding) {
+        this.validateTokenBinding = validateTokenBinding;
+    }
+
+    /**
+     **/
+    public AccessTokenConfiguration revokeTokensWhenIDPSessionTerminated(Boolean revokeTokensWhenIDPSessionTerminated) {
+
+        this.revokeTokensWhenIDPSessionTerminated = revokeTokensWhenIDPSessionTerminated;
+        return this;
+    }
+
+    @ApiModelProperty(example = "false", value = "")
+    @JsonProperty("revokeTokensWhenIDPSessionTerminated")
+    @Valid
+    public boolean getRevokeTokensWhenIDPSessionTerminated() {
+        return revokeTokensWhenIDPSessionTerminated;
+    }
+    public void setRevokeTokensWhenIDPSessionTerminated(Boolean revokeTokensWhenIDPSessionTerminated) {
+        this.revokeTokensWhenIDPSessionTerminated = revokeTokensWhenIDPSessionTerminated;
+    }
 
     @Override
     public boolean equals(Object o) {
