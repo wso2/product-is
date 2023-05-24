@@ -18,58 +18,63 @@ package org.wso2.identity.integration.test.oauth2;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
-import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class OAuth2ServiceErrorResponseTest extends OAuth2ServiceAbstractIntegrationTest {
 
-    private AuthenticatorClient logManger;
-    private DefaultHttpClient client;
+    private String applicationId;
+    private CloseableHttpClient client;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
         super.init(TestUserMode.SUPER_TENANT_USER);
-        logManger = new AuthenticatorClient(backendURL);
-        logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
-                                              isServer.getSuperTenant().getTenantAdmin().getPassword(),
-                                              isServer.getInstance().getHosts().get("default"));
 
         setSystemproperties();
-        client = new DefaultHttpClient();
+        client = HttpClients.createDefault();
     }
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
-        removeOAuthApplicationData();
-        logManger = null;
+        deleteApp(applicationId);
         consumerKey = null;
+        applicationId = null;
+        client.close();
     }
 
     @Test(groups = "wso2.is", description = "Check Oauth2 application registration")
     public void testRegisterApplication() throws Exception {
-        OAuthConsumerAppDTO appDto = createApplication();
-        Assert.assertNotNull(appDto, "Application creation failed.");
 
-        consumerKey = appDto.getOauthConsumerKey();
+        ApplicationResponseModel application = addApplication();
+        Assert.assertNotNull(application, "Application creation failed.");
+
+        OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(application.getId());
+        consumerKey = oidcConfig.getClientId();
         Assert.assertNotNull(consumerKey, "Application creation failed.");
-        consumerSecret = appDto.getOauthConsumerSecret();
+        consumerSecret = oidcConfig.getClientSecret();
+
+        applicationId = application.getId();
     }
 
     @Test(groups = "wso2.is", description = "Test unsupported grant type error response", dependsOnMethods =
             "testRegisterApplication")
     public void testUnsupportedGrantTypeErrorResponse() throws Exception {
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("response_type",
                                                  OAuth2Constant.OAUTH2_GRANT_TYPE_IMPLICIT));
         urlParameters.add(new BasicNameValuePair("client_id", consumerKey));
@@ -89,26 +94,28 @@ public class OAuth2ServiceErrorResponseTest extends OAuth2ServiceAbstractIntegra
         Assert.assertTrue(locationURI.contains("not.authorized.to.use.requested.grant.type"));
     }
 
-    public OAuthConsumerAppDTO createApplication() throws Exception {
+    public ApplicationResponseModel addApplication() throws Exception {
 
-        OAuthConsumerAppDTO appDtoResult = null;
+        ApplicationModel application = new ApplicationModel();
 
-        OAuthConsumerAppDTO appDTO = new OAuthConsumerAppDTO();
-        appDTO.setApplicationName(OAuth2Constant.OAUTH_APPLICATION_NAME);
-        appDTO.setCallbackUrl(OAuth2Constant.CALLBACK_URL);
-        appDTO.setOAuthVersion(OAuth2Constant.OAUTH_VERSION_2);
-        appDTO.setGrantTypes("");
+        List<String> grantTypes = new ArrayList<>();
+        Collections.addAll(grantTypes, "");
 
-        adminClient.registerOAuthApplicationData(appDTO);
-        OAuthConsumerAppDTO[] appDtos = adminClient.getAllOAuthApplicationData();
+        List<String> callBackUrls = new ArrayList<>();
+        Collections.addAll(callBackUrls, OAuth2Constant.CALLBACK_URL);
 
-        for (OAuthConsumerAppDTO appDto : appDtos) {
-            if (appDto.getApplicationName().equals(OAuth2Constant.OAUTH_APPLICATION_NAME)) {
-                appDtoResult = appDto;
-                consumerKey = appDto.getOauthConsumerKey();
-                consumerSecret = appDto.getOauthConsumerSecret();
-            }
-        }
-        return appDtoResult;
+        OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
+        oidcConfig.setGrantTypes(grantTypes);
+        oidcConfig.setCallbackURLs(callBackUrls);
+
+        InboundProtocols inboundProtocolsConfig = new InboundProtocols();
+        inboundProtocolsConfig.setOidc(oidcConfig);
+
+        application.setInboundProtocolConfiguration(inboundProtocolsConfig);
+        application.setName(OAuth2Constant.OAUTH_APPLICATION_NAME);
+
+        String appId = addApplication(application);
+
+        return getApplication(appId);
     }
 }
