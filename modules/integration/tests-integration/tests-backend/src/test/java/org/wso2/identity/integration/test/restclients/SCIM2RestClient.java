@@ -1,4 +1,4 @@
-package org.wso2.identity.integration.test.oauth2;
+package org.wso2.identity.integration.test.restclients;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
