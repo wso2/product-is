@@ -29,7 +29,7 @@ public class RoleConfig  {
     private List<RoleMapping> mappings = null;
 
     private Boolean includeUserDomain;
-    private String claimId;
+    private Claim claim;
 
     /**
     **/
@@ -38,7 +38,7 @@ public class RoleConfig  {
         this.mappings = mappings;
         return this;
     }
-    
+
     @ApiModelProperty(value = "")
     @JsonProperty("mappings")
     @Valid
@@ -77,20 +77,20 @@ public class RoleConfig  {
 
     /**
     **/
-    public RoleConfig claimId(String claimId) {
+    public RoleConfig claim(Claim claim) {
 
-        this.claimId = claimId;
+        this.claim = claim;
         return this;
     }
     
     @ApiModelProperty(example = "http://wso2.org/claims/groups", value = "")
-    @JsonProperty("claimId")
+    @JsonProperty("claim")
     @Valid
-    public String getClaimId() {
-        return claimId;
+    public Claim getClaim() {
+        return claim;
     }
-    public void setClaimId(String claimId) {
-        this.claimId = claimId;
+    public void setClaim(Claim claim) {
+        this.claim = claim;
     }
 
 
@@ -107,12 +107,12 @@ public class RoleConfig  {
         RoleConfig roleConfig = (RoleConfig) o;
         return Objects.equals(this.mappings, roleConfig.mappings) &&
             Objects.equals(this.includeUserDomain, roleConfig.includeUserDomain) &&
-            Objects.equals(this.claimId, roleConfig.claimId);
+            Objects.equals(this.claim, roleConfig.claim);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(mappings, includeUserDomain, claimId);
+        return Objects.hash(mappings, includeUserDomain, claim);
     }
 
     @Override
@@ -123,7 +123,7 @@ public class RoleConfig  {
 
         sb.append("    mappings: ").append(toIndentedString(mappings)).append("\n");
         sb.append("    includeUserDomain: ").append(toIndentedString(includeUserDomain)).append("\n");
-        sb.append("    claimId: ").append(toIndentedString(claimId)).append("\n");
+        sb.append("    claim: ").append(toIndentedString(claim)).append("\n");
         sb.append("}");
         return sb.toString();
     }
