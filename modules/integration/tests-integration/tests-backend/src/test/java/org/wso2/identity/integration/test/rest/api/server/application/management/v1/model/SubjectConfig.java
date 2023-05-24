@@ -24,27 +24,27 @@ import javax.validation.Valid;
 
 public class SubjectConfig  {
   
-    private String claimId;
+    private Claim claim;
     private Boolean includeUserDomain;
     private Boolean includeTenantDomain;
     private Boolean useMappedLocalSubject;
 
     /**
     **/
-    public SubjectConfig claimId(String claimId) {
+    public SubjectConfig claim(Claim claim) {
 
-        this.claimId = claimId;
+        this.claim = claim;
         return this;
     }
     
     @ApiModelProperty(example = "http://wso2.org/claims/emailaddress", value = "")
-    @JsonProperty("claimId")
+    @JsonProperty("claim")
     @Valid
-    public String getClaimId() {
-        return claimId;
+    public Claim getClaim() {
+        return claim;
     }
-    public void setClaimId(String claimId) {
-        this.claimId = claimId;
+    public void setClaim(Claim claim) {
+        this.claim = claim;
     }
 
     /**
@@ -113,7 +113,7 @@ public class SubjectConfig  {
             return false;
         }
         SubjectConfig subjectConfig = (SubjectConfig) o;
-        return Objects.equals(this.claimId, subjectConfig.claimId) &&
+        return Objects.equals(this.claim, subjectConfig.claim) &&
             Objects.equals(this.includeUserDomain, subjectConfig.includeUserDomain) &&
             Objects.equals(this.includeTenantDomain, subjectConfig.includeTenantDomain) &&
             Objects.equals(this.useMappedLocalSubject, subjectConfig.useMappedLocalSubject);
@@ -121,7 +121,7 @@ public class SubjectConfig  {
 
     @Override
     public int hashCode() {
-        return Objects.hash(claimId, includeUserDomain, includeTenantDomain, useMappedLocalSubject);
+        return Objects.hash(claim, includeUserDomain, includeTenantDomain, useMappedLocalSubject);
     }
 
     @Override
@@ -130,7 +130,7 @@ public class SubjectConfig  {
         StringBuilder sb = new StringBuilder();
         sb.append("class SubjectConfig {\n");
 
-        sb.append("    claimId: ").append(toIndentedString(claimId)).append("\n");
+        sb.append("    claimId: ").append(toIndentedString(claim)).append("\n");
         sb.append("    includeUserDomain: ").append(toIndentedString(includeUserDomain)).append("\n");
         sb.append("    includeTenantDomain: ").append(toIndentedString(includeTenantDomain)).append("\n");
         sb.append("    useMappedLocalSubject: ").append(toIndentedString(useMappedLocalSubject)).append("\n");
