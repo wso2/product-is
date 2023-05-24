@@ -129,6 +129,23 @@ public class OAuth2TokenScopeValidatorTestCase extends OAuth2ServiceAbstractInte
     @Test(
             alwaysRun = true,
             groups = "wso2.is",
+            description = "Generate access token and check if the self service requested scope is returned in " +
+                    "introspect response when single internal scope is added"
+    )
+    public void testScopeNotReturnedInternalLogin() throws Exception {
+
+        String scope = "internal_login";
+        AccessToken accessToken = requestAccessToken(scope);
+
+        TokenIntrospectionResponse activeTokenIntrospectionResponse =
+                introspectAccessToken(accessToken, privilegedAccessToken);
+        Assert.assertNotEquals(String.valueOf(activeTokenIntrospectionResponse.toSuccessResponse().getScope()), scope,
+                "Scope shouldn't contain internal login scope");
+    }
+
+    @Test(
+            alwaysRun = true,
+            groups = "wso2.is",
             description = "Generate access token and check if the added scope is returned in introspect response " +
                     "when single random internal scope is added"
     )

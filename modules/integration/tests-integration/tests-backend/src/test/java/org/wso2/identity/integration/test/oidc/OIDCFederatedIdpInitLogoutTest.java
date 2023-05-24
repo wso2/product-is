@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2021, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -260,8 +260,7 @@ public class OIDCFederatedIdpInitLogoutTest extends AbstractIdentityFederationTe
                 Utils.sendGetRequest(String.format(SAML_SSO_LOGIN_URL, FEDERATED_IS_SP_NAME, "HTTP-POST"), USER_AGENT,
                         client);
         String samlRequest = Utils.extractDataFromResponse(response, CommonConstants.SAML_REQUEST_PARAM, 5);
-        response =
-                sendSAMLMessage(SECONDARY_IS_SAML_SSO_URL, CommonConstants.SAML_REQUEST_PARAM, samlRequest);
+        response = sendSAMLMessage(SECONDARY_IS_SAML_SSO_URL, CommonConstants.SAML_REQUEST_PARAM, samlRequest);
         EntityUtils.consume(response.getEntity());
 
         response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, FEDERATED_IS_SP_NAME,

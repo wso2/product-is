@@ -1,10 +1,10 @@
-# This workflow will update dependencies for product-is.
-name: Dependency Updater
+# This workflow will update dependencies for product-is 7.x.x.
+name: Dependency Updater 7.x.x
 on:
   workflow_dispatch:
   schedule:
-    # Everyday at 15:00 UTC (8.30 PM SL time)
-    - cron:  '0 15 * * *'
+    # Everyday at 15:30 UTC (9.00 PM SL time)
+    - cron:  '30 15 * * *'
 
 env:
   MAVEN_OPTS: -Xmx4g -Xms1g
@@ -14,8 +14,9 @@ env:
   REMOTE_PRODUCT_REPOSITORY_PUBLIC: wso2/$REPOSITORY
   PRODUCT_REPOSITORY_PUBLIC: wso2/$REPOSITORY
   BUILD_NUMBER: ${{github.run_id}}
-  DEPENDENCY_UPGRADE_BRANCH_NAME: IS_dependency_updater_github_action/$BUILD_NUMBER
+  DEPENDENCY_UPGRADE_BRANCH_NAME: IS_dependency_updater_7.x.x_github_action/$BUILD_NUMBER
   PR: "https://github.com/wso2/product-is/pulls"
+  TARGET_BRANCH_NAME: 7.x.x
 
 jobs:
   build:
@@ -68,9 +69,9 @@ jobs:
           echo "=========================================================="
           git fetch ${{ env.REMOTE_PRODUCT_REPOSITORY_PUBLIC }}
           echo ""
-          echo 'Checking out:' ${{ env.REMOTE_PRODUCT_REPOSITORY_PUBLIC }} 'master branch'
+          echo 'Checking out:' ${{ env.REMOTE_PRODUCT_REPOSITORY_PUBLIC }} ${{ env.TARGET_BRANCH_NAME }} 'branch'
           echo "=========================================================="
-          git checkout -b ${{ env.DEPENDENCY_UPGRADE_BRANCH_NAME }} ${{ env.REMOTE_PRODUCT_REPOSITORY_PUBLIC }}'/master'
+          git checkout -b ${{ env.DEPENDENCY_UPGRADE_BRANCH_NAME }} ${{ env.REMOTE_PRODUCT_REPOSITORY_PUBLIC }}'/'${{ env.TARGET_BRANCH_NAME }}
 
           echo ""
           echo 'Updating dependencies'
@@ -124,12 +125,12 @@ jobs:
             echo 'Send Pull Request'
             echo "=========================================================="
 
-            TITLE="Bump Dependencies #"${{ env.BUILD_NUMBER }}
+            TITLE="[7.x.x] Bump Dependencies #"${{ env.BUILD_NUMBER }}
             RESPONSE=$(curl -s -w "%{http_code}" -k -X \
             POST https://api.github.com/repos/${{ env.PRODUCT_REPOSITORY_PUBLIC }}/pulls \
             -H "Authorization: Bearer "${{ secrets.PAT }}"" \
             -H "Content-Type: application/json" \
-            -d '{ "title": "'"${TITLE}"'","body": "Bumps dependencies for product-is. Link : https://github.com/wso2/product-is/actions/runs/${{github.run_id}}","head": "'"${{ env.GIT_USERNAME }}:${{ env.DEPENDENCY_UPGRADE_BRANCH_NAME }}"'","base":"master"}')
+            -d '{ "title": "'"${TITLE}"'","body": "Bumps dependencies for product-is. Link : https://github.com/wso2/product-is/actions/runs/${{github.run_id}}","head": "'"${{ env.GIT_USERNAME }}:${{ env.DEPENDENCY_UPGRADE_BRANCH_NAME }}"'","base":"'"${{ env.TARGET_BRANCH_NAME }}"'"}')
             RESPONSE_BODY=${RESPONSE::-3}
             STATUS=$(printf "%s" "$RESPONSE" | tail -c 3)
             if [[ $STATUS == "201" ]]; then
@@ -156,69 +157,3 @@ jobs:
           path: |
             ${{steps.builder_step.outputs.REPO_NAME}}/mvn-build.log
           if-no-files-found: warn
-      - name: Google Chat Notification
-        run: |
-          STATUS_COLOR=$(if [[ ${{ job.status }} == "success" ]];then echo "#009944";
-          elif [[ ${{ job.status }} = "failure" ]];then echo "#ff0000";
-          elif [[ ${{ job.status }} = "cancelled" ]];then echo "#ffc300"; fi)
-
-          curl --location --request POST '${{ secrets.GOOGLE_CHAT_WEBHOOK }}&threadKey=dep_updater' \
-          --header 'Content-Type: application/json' \
-          --data-raw '{
-              "cards": [
-                  {
-                      "header": {
-                          "title": "Dependency Updater",
-                          "subtitle": "GitHub Action #${{ env.BUILD_NUMBER }}"
-                      },
-                      "sections": [
-                          {
-                              "widgets": [
-                                  {
-                                      "textParagraph": {
-                                          "text": "Status: <br><b><font color='"${STATUS_COLOR}"'>${{ job.status }}</font></b></br>"
-                                      }
-                                  },
-                                  {
-                                      "keyValue": {
-                                          "topLabel": "Build Job:",
-                                          "content": "GitHub Action",
-                                          "contentMultiline": "false",
-                                          "bottomLabel": "",
-                                          "button": {
-                                              "textButton": {
-                                                  "text": "VIEW",
-                                                  "onClick": {
-                                                      "openLink": {
-                                                          "url": "https://github.com/wso2/product-is/actions/runs/${{github.run_id}}"
-                                                      }
-                                                  }
-                                              }
-                                          }
-                                      }
-                                  },
-                                  {
-                                      "keyValue": {
-                                          "topLabel": "Pull Request:",
-                                          "content": "Check Pull Request",
-                                          "contentMultiline": "false",
-                                          "bottomLabel": "",
-                                          "button": {
-                                              "textButton": {
-                                                  "text": "VIEW",
-                                                  "onClick": {
-                                                      "openLink": {
-                                                          "url": "'${{ env.PR }}'"
-                                                      }
-                                                  }
-                                              }
-                                          }
-                                      }
-                                  }
-                              ]
-                          }
-                      ]
-                  }
-              ]
-          }'
-        if: always()
