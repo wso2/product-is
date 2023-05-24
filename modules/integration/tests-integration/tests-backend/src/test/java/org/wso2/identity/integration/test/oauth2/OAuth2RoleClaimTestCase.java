@@ -34,17 +34,9 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.identity.application.common.model.xsd.Claim;
-import org.wso2.carbon.identity.application.common.model.xsd.ClaimConfig;
-import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
-import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
-import org.wso2.carbon.identity.application.common.model.xsd.OutboundProvisioningConfig;
-import org.wso2.carbon.identity.application.common.model.xsd.Property;
-import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
-import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
-import org.wso2.carbon.um.ws.api.stub.ClaimValue;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.UserCreationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
+import org.wso2.identity.integration.test.rest.api.user.common.model.*;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.BufferedReader;
@@ -54,15 +46,20 @@ import java.util.List;
 
 public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
-    private static final String OAUTH_ROLE = "Internal/oauthRole";
-    private static final String ROLES_CLAIM_URI = "http://wso2.org/claims/roles";
+    private static final String OAUTH_ROLE = "oauthRole";
+    private static final String USERS_PATH = "users";
     private static final String OIDC_ROLES_CLAIM_URI = "roles";
-    private static final String FIRST_NAME_VALUE = "FirstName";
-    private static final String LAST_NAME_VALUE = "LastName";
-    private static final String EMAIL_VALUE = "email@wso2.com";
-    private static final String OPENID_SCOPE_PROPERTY = "openid";
-    private static final String OPENID_SCOPE_RESOURCE = "/_system/config/oidc";
-    private static final String MULTI_ATTRIBUTE_SEPARATOR = ",";
+    private static final String GIVEN_NAME = "testUser";
+    private static final String FAMILY_NAME = "test";
+    private static final String HOME_ATTRIBUTE = "home";
+    private static final String HOME_EMAIL = "testuser11@gmail.com";
+    private static final String WORK_ATTRIBUTE = "work";
+    private static final String WORK_EMAIL = "testuser99@wso2.com";
+    private static final String USER_USERNAME = "testuser99";
+    private static final String USER_PASSWORD = "testuser@123";
+    private static final String EMPLOYEE_NUMBER = "Abc123";
+    private static final String MANAGER_NAME = "wso2TestManage";
+
 
     private String consumerKey;
     private String consumerSecret;
@@ -72,9 +69,6 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
 
     private CloseableHttpClient client;
     private SCIM2RestClient scim2RestClient;
-
-    private static final String FIRST_NAME_CLAIM_URI = "http://wso2.org/claims/givenname";
-    private static final String LAST_NAME_CLAIM_URI = "http://wso2.org/claims/lastname";
 
     private String USERNAME;
     private String PASSWORD;
@@ -90,38 +84,38 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
         client = HttpClients.createDefault();
         scim2RestClient = new SCIM2RestClient(backendURL.replace("services/", ""), tenantInfo);
 
-//        remoteUSMServiceClient.addRole(OAUTH_ROLE, null, null);
-//        remoteUSMServiceClient.addUser(USERNAME, PASSWORD, null, getUserClaims(), "default", false);
-
-        roleId = scim2RestClient.addRole("oauthRole");
+        roleId = scim2RestClient.addRole(getRoleCreationInfo());
         userId = scim2RestClient.createUser(getUserCreationInfo());
     }
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
-//        deleteApplication();
-//        remoteUSMServiceClient.deleteRole(OAUTH_ROLE);
-//        remoteUSMServiceClient.deleteUser(USERNAME);
-//        consumerKey = null;
-
         deleteApp(applicationId);
         scim2RestClient.deleteRole(roleId);
         scim2RestClient.deleteUser(userId);
         consumerKey = null;
+        consumerSecret = null;
+        applicationId = null;
+        roleId = null;
+        userId = null;
     }
 
     @Test(groups = "wso2.is", description = "Check Oauth2 application registration")
     public void testRegisterApplication() throws Exception {
 
-        ApplicationModel app = addApplication();
-        Assert.assertNotNull(app, "Application creation failed.");
+        ApplicationResponseModel application = addApplication();
+        Assert.assertNotNull(application, "OAuth App creation failed.");
 
-        consumerKey = app.getInboundProtocolConfiguration().getOidc().getClientId();
+        OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(application.getId());
+
+        consumerKey = oidcConfig.getClientId();
         Assert.assertNotNull(consumerKey, "Application creation failed.");
 
-        consumerSecret = app.getInboundProtocolConfiguration().getOidc().getClientSecret();
-        applicationId = app.getId();
+        consumerSecret = oidcConfig.getClientSecret();
+        Assert.assertNotNull(consumerSecret, "Application creation failed.");
+
+        applicationId = application.getId();
     }
 
     @Test(groups = "wso2.is", description = "Check id_token before updating roles.", dependsOnMethods =
@@ -159,8 +153,8 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
             "testSendAuthorizedPost")
     public void testSendAuthorizedPostAfterRoleUpdate() throws Exception {
 
-        //remoteUSMServiceClient.updateRoleListOfUser(USERNAME, null, new String[]{OAUTH_ROLE});
-        scim2RestClient.updateUserRole(roleId, userId);
+        scim2RestClient.updateUserRole(getAddUserPatchRole(userId), roleId);
+
         HttpPost request = new HttpPost(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("grant_type",
@@ -188,126 +182,54 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
                 "Id token must not contain role claim which is not configured for the requested scope.");
     }
 
-    private UserCreationModel getUserCreationInfo() {
+    private UserObject getUserCreationInfo() {
 
-        UserCreationModel userInfo = new UserCreationModel();
+        UserObject userInfo = new UserObject();
 
-        userInfo.setUserName("testAshan");
-        userInfo.setGivenName("Ashan");
-        userInfo.setFamilyName("Palihakkara");
-        userInfo.setPassword("ashan@123");
-        userInfo.setHomeEmail("ashanthamara98@gmail.com");
-        userInfo.setWorkEmail("ashant@wso2.com");
+        userInfo.setUserName(USER_USERNAME);
+        userInfo.setPassword(USER_PASSWORD);
+
+        Name name = new Name();
+        name.setGivenName(GIVEN_NAME);
+        name.setFamilyName(FAMILY_NAME);
+        userInfo.setName(name);
+
+        Email homeEmail = new Email();
+        homeEmail.setPrimary(true);
+        homeEmail.setType(HOME_ATTRIBUTE);
+        homeEmail.setValue(HOME_EMAIL);
+
+        Email workEmail = new Email();
+        workEmail.setType(WORK_ATTRIBUTE);
+        workEmail.setValue(WORK_EMAIL);
+
+        userInfo.addEmail(homeEmail);
+        userInfo.addEmail(workEmail);
+
+        ScimSchemaExtensionEnterprise scimSchema = new ScimSchemaExtensionEnterprise();
+        scimSchema.setEmployeeNumber(EMPLOYEE_NUMBER);
+        scimSchema.setManager(new Manager().value(MANAGER_NAME));
+
+        userInfo.setScimSchemaExtensionEnterprise(scimSchema);
 
         return userInfo;
     }
 
-    private ClaimValue[] getUserClaims() {
+    private RoleRequestObject getRoleCreationInfo() {
 
-        ClaimValue[] claimValues = new ClaimValue[3];
+        RoleRequestObject roleInfo = new RoleRequestObject();
+        roleInfo.setDisplayName(OAUTH_ROLE);
 
-        ClaimValue firstName = new ClaimValue();
-        firstName.setClaimURI(FIRST_NAME_CLAIM_URI);
-        firstName.setValue(FIRST_NAME_VALUE);
-        claimValues[0] = firstName;
-
-        ClaimValue lastName = new ClaimValue();
-        lastName.setClaimURI(LAST_NAME_CLAIM_URI);
-        lastName.setValue(LAST_NAME_VALUE);
-        claimValues[1] = lastName;
-
-        ClaimValue email = new ClaimValue();
-        email.setClaimURI(EMAIL_CLAIM_URI);
-        email.setValue(EMAIL_VALUE);
-        claimValues[2] = email;
-
-        return claimValues;
+        return roleInfo;
     }
 
-    public OAuthConsumerAppDTO createApplication(OAuthConsumerAppDTO appDTO) throws Exception {
+    private PatchRoleOperationRequestObject getAddUserPatchRole(String userId) {
 
-        OAuthConsumerAppDTO appDtoResult = null;
+        RoleItemAddGroupobj patchRoleItem = new RoleItemAddGroupobj();
+        patchRoleItem.setOp(RoleItemAddGroupobj.OpEnum.ADD);
+        patchRoleItem.setPath(USERS_PATH);
+        patchRoleItem.addValue(new ListObject().value(userId));
 
-        adminClient.registerOAuthApplicationData(appDTO);
-        OAuthConsumerAppDTO[] appDtos = adminClient.getAllOAuthApplicationData();
-
-        for (OAuthConsumerAppDTO appDto : appDtos) {
-            if (appDto.getApplicationName().equals(OAuth2Constant.OAUTH_APPLICATION_NAME)) {
-                appDtoResult = appDto;
-                consumerKey = appDto.getOauthConsumerKey();
-                consumerSecret = appDto.getOauthConsumerSecret();
-            }
-        }
-        ServiceProvider serviceProvider = new ServiceProvider();
-        serviceProvider.setApplicationName(SERVICE_PROVIDER_NAME);
-        serviceProvider.setDescription(SERVICE_PROVIDER_DESC);
-        appMgtclient.createApplication(serviceProvider);
-
-        serviceProvider = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
-
-        ClaimConfig claimConfig = new ClaimConfig();
-
-        Claim emailClaim = new Claim();
-        emailClaim.setClaimUri(EMAIL_CLAIM_URI);
-        ClaimMapping emailClaimMapping = new ClaimMapping();
-        emailClaimMapping.setRequested(true);
-        emailClaimMapping.setLocalClaim(emailClaim);
-        emailClaimMapping.setRemoteClaim(emailClaim);
-
-        Claim roleClaim = new Claim();
-        roleClaim.setClaimUri(ROLES_CLAIM_URI);
-        ClaimMapping roleClaimMapping = new ClaimMapping();
-        roleClaimMapping.setRequested(true);
-        roleClaimMapping.setLocalClaim(roleClaim);
-        roleClaimMapping.setRemoteClaim(roleClaim);
-
-        claimConfig.setClaimMappings(new org.wso2.carbon.identity.application.common.model.xsd
-                .ClaimMapping[]{emailClaimMapping, roleClaimMapping});
-
-        serviceProvider.setClaimConfig(claimConfig);
-        serviceProvider.setOutboundProvisioningConfig(new OutboundProvisioningConfig());
-        List<InboundAuthenticationRequestConfig> authRequestList =
-                new ArrayList<InboundAuthenticationRequestConfig>();
-
-        if (consumerKey != null) {
-            InboundAuthenticationRequestConfig opicAuthenticationRequest =
-                    new InboundAuthenticationRequestConfig();
-            opicAuthenticationRequest.setInboundAuthKey(consumerKey);
-            opicAuthenticationRequest.setInboundAuthType("oauth2");
-            if (consumerSecret != null && !consumerSecret.isEmpty()) {
-                Property property = new Property();
-                property.setName("oauthConsumerSecret");
-                property.setValue(consumerSecret);
-                Property[] properties = {property};
-                opicAuthenticationRequest.setProperties(properties);
-            }
-            authRequestList.add(opicAuthenticationRequest);
-        }
-
-        String passiveSTSRealm = SERVICE_PROVIDER_NAME;
-        if (passiveSTSRealm != null) {
-            InboundAuthenticationRequestConfig opicAuthenticationRequest =
-                    new InboundAuthenticationRequestConfig();
-            opicAuthenticationRequest.setInboundAuthKey(passiveSTSRealm);
-            opicAuthenticationRequest.setInboundAuthType("passivests");
-            authRequestList.add(opicAuthenticationRequest);
-        }
-
-        String openidRealm = SERVICE_PROVIDER_NAME;
-        if (openidRealm != null) {
-            InboundAuthenticationRequestConfig opicAuthenticationRequest =
-                    new InboundAuthenticationRequestConfig();
-            opicAuthenticationRequest.setInboundAuthKey(openidRealm);
-            opicAuthenticationRequest.setInboundAuthType("openid");
-            authRequestList.add(opicAuthenticationRequest);
-        }
-
-        if (authRequestList.size() > 0) {
-            serviceProvider.getInboundAuthenticationConfig()
-                    .setInboundAuthenticationRequestConfigs(authRequestList.toArray(new
-                            InboundAuthenticationRequestConfig[authRequestList.size()]));
-        }
-        appMgtclient.updateApplicationData(serviceProvider);
-        return appDtoResult;
+        return new PatchRoleOperationRequestObject().addOperations(patchRoleItem);
     }
 }
