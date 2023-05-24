@@ -660,6 +660,37 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	}
 
 	/**
+	 * Create and return a basic consumer application with all OAuth2 grant types.
+	 *
+	 * @param callBackURL String callback URL.
+	 * @return ApplicationResponseModel object.
+	 */
+	public ApplicationResponseModel getBasicOAuthApplication(String callBackURL) throws Exception {
+
+		ApplicationModel application = new ApplicationModel();
+
+		List<String> grantTypes = new ArrayList<>();
+		Collections.addAll(grantTypes, "authorization_code", "implicit", "password", "client_credentials", "refresh_token");
+
+		List<String> callBackUrls = new ArrayList<>();
+		Collections.addAll(callBackUrls, callBackURL);
+
+		OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
+		oidcConfig.setGrantTypes(grantTypes);
+		oidcConfig.setCallbackURLs(callBackUrls);
+
+		InboundProtocols inboundProtocolsConfig = new InboundProtocols();
+		inboundProtocolsConfig.setOidc(oidcConfig);
+
+		application.setInboundProtocolConfiguration(inboundProtocolsConfig);
+		application.setName(OAuth2Constant.OAUTH_APPLICATION_NAME);
+
+		String appId = addApplication(application);
+
+		return getApplication(appId);
+	}
+
+	/**
 	 * Register a service provider and setup consumer key and secret when a OAuthConsumerAppDTO is given.
 	 *
 	 * @param appDTO OAuthConsumerAppDTO of the service provider.

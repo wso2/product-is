@@ -90,7 +90,7 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
             dependsOnMethods = "testGenerateServiceProviderKeys")
     public void testRegisterApplication() throws Exception {
 
-        application = addBasicAuthApp();
+        application = getBasicOAuthApplication(CALLBACK_URL);
         Assert.assertNotNull(application, "OAuth App creation failed.");
 
         oidcInboundConfig = getOIDCInboundDetailsOfApplication(application.getId());
@@ -117,7 +117,7 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
     public void sentAuthorizationGrantRequest() throws Exception {
 
         HttpClient client = getRedirectDisabledClient();
-        HttpResponse response = sendGetRequest(client, getAuthzRequestUrl(consumerKey, CALLBACK_URL));
+        HttpResponse response = sendGetRequest(client, getAuthzRequestUrl(consumerKey));
         // If the request is valid it will return a 302 to redirect to the login page.
         assertForLoginPage(response);
         EntityUtils.consume(response.getEntity());
@@ -129,7 +129,7 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
 
         HttpClient client = getRedirectDisabledClient();
         String unsignedRequestObject = buildPlainJWT(consumerKey);
-        HttpResponse response = sendGetRequest(client, getAuthzRequestUrl(consumerKey, CALLBACK_URL, unsignedRequestObject));
+        HttpResponse response = sendGetRequest(client, getAuthzRequestUrl(consumerKey, unsignedRequestObject));
         assertForLoginPage(response);
         EntityUtils.consume(response.getEntity());
     }
@@ -151,7 +151,7 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
 
         HttpClient client = getRedirectDisabledClient();
         String unsignedRequestObject = buildPlainJWT(consumerKey);
-        HttpResponse response = sendGetRequest(client, getAuthzRequestUrl(consumerKey, CALLBACK_URL, unsignedRequestObject));
+        HttpResponse response = sendGetRequest(client, getAuthzRequestUrl(consumerKey, unsignedRequestObject));
         // Since we have enforced request object validation we should be redirected to the error page.
         assertForErrorPage(response);
         EntityUtils.consume(response.getEntity());
@@ -163,7 +163,7 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
 
         HttpClient client = getRedirectDisabledClient();
         String signedRequestObject = buildSignedJWT(consumerKey, sp1PrivateKey);
-        HttpResponse response = sendGetRequest(client, getAuthzRequestUrl(consumerKey, CALLBACK_URL, signedRequestObject));
+        HttpResponse response = sendGetRequest(client, getAuthzRequestUrl(consumerKey, signedRequestObject));
         assertForLoginPage(response);
         EntityUtils.consume(response.getEntity());
     }
@@ -175,7 +175,7 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
 
         HttpClient client = getRedirectDisabledClient();
         String signedRequestObject = buildSignedJWT(consumerKey, sp2PrivateKey);
-        HttpResponse response = sendGetRequest(client, getAuthzRequestUrl(consumerKey, CALLBACK_URL, signedRequestObject));
+        HttpResponse response = sendGetRequest(client, getAuthzRequestUrl(consumerKey, signedRequestObject));
         assertForErrorPage(response);
         EntityUtils.consume(response.getEntity());
     }
@@ -207,14 +207,14 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
         return HttpClients.custom().setDefaultRequestConfig(config).build();
     }
 
-    private String getAuthzRequestUrl(String clientId, String callbackUrl, String requestObject) {
+    private String getAuthzRequestUrl(String clientId, String requestObject) {
 
-        return getAuthzRequestUrl(clientId, callbackUrl) + "&request=" + requestObject;
+        return getAuthzRequestUrl(clientId) + "&request=" + requestObject;
     }
 
-    private String getAuthzRequestUrl(String clientId, String callbackUrl) {
+    private String getAuthzRequestUrl(String clientId) {
 
-        return OAuth2Constant.AUTHORIZE_ENDPOINT_URL + "?" + "client_id=" + clientId + "&redirect_uri=" + callbackUrl +
+        return OAuth2Constant.AUTHORIZE_ENDPOINT_URL + "?" + "client_id=" + clientId + "&redirect_uri=" + CALLBACK_URL +
                 "&response_type=code&scope=openid%20internal_login";
     }
 
@@ -276,30 +276,5 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
         pkEntry = (KeyStore.PrivateKeyEntry) keyStore.getEntry(alias,
                 new KeyStore.PasswordProtection(jksPassword.toCharArray()));
         sp2PrivateKey = (RSAPrivateKey) pkEntry.getPrivateKey();
-    }
-
-    private ApplicationResponseModel addBasicAuthApp() throws Exception {
-
-        ApplicationModel application = new ApplicationModel();
-
-        List<String> grantTypes = new ArrayList<>();
-        Collections.addAll(grantTypes, "authorization_code", "implicit", "password", "client_credentials", "refresh_token");
-
-        List<String> callBackUrls = new ArrayList<>();
-        Collections.addAll(callBackUrls, CALLBACK_URL);
-
-        OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
-        oidcConfig.setGrantTypes(grantTypes);
-        oidcConfig.setCallbackURLs(callBackUrls);
-
-        InboundProtocols inboundProtocolsConfig = new InboundProtocols();
-        inboundProtocolsConfig.setOidc(oidcConfig);
-
-        application.setInboundProtocolConfiguration(inboundProtocolsConfig);
-        application.setName(OAuth2Constant.OAUTH_APPLICATION_NAME);
-
-        String appId = addApplication(application);
-
-        return getApplication(appId);
     }
 }
