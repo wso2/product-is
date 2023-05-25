@@ -55,7 +55,7 @@ import java.util.List;
 
 public abstract class AbstractAnalyticsLoginTestCase extends ISIntegrationTest {
 
-    private static final Log log = LogFactory.getLog(AnalyticsLoginTestCase.class);
+    private static final Log log = LogFactory.getLog(AbstractAnalyticsLoginTestCase.class);
 
     // SAML Application attributes
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
