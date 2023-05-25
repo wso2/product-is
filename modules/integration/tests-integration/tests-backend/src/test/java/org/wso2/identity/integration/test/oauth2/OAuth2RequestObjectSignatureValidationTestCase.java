@@ -44,7 +44,9 @@ import java.security.KeyStore;
 import java.security.cert.X509Certificate;
 import java.security.cert.Certificate;
 import java.security.interfaces.RSAPrivateKey;
-import java.util.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.UUID;
 
 /*
     Integration tests for Signed Request Object validation.
@@ -109,7 +111,8 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
         updateApplicationCertificate(application.getId(), sp1X509PublicCert);
 
         ApplicationResponseModel updatedApplication = getApplication(application.getId());
-        Assert.assertNotNull(updatedApplication.getAdvancedConfigurations().getCertificate(), "Application Certificate update failed");
+        Assert.assertNotNull(updatedApplication.getAdvancedConfigurations().getCertificate(),
+                "Application Certificate update failed");
     }
 
     @Test(groups = "wso2.is", description = "Check Initial OAuth2 Authorize Request",
@@ -142,7 +145,8 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
         updateApplicationOidcInboundConfig(application.getId(), oidcInboundConfig);
 
         OpenIDConnectConfiguration updatedOidcInboundConfig = getOIDCInboundDetailsOfApplication(application.getId());
-        Assert.assertTrue(updatedOidcInboundConfig.getValidateRequestObjectSignature(), "ValidateRequestObjectSignature enable failed");
+        Assert.assertTrue(updatedOidcInboundConfig.getValidateRequestObjectSignature(),
+                "ValidateRequestObjectSignature enable failed");
     }
 
     @Test(groups = "wso2.is", description = "Check request object signature validation was enforced by sending" +

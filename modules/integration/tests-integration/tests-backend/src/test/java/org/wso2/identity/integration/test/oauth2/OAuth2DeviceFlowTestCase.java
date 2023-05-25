@@ -47,7 +47,11 @@ import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.COMMON_AUTH_URL;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.SCOPE_PLAYGROUND_NAME;
@@ -110,7 +114,8 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(CLIENT_ID_PARAM, consumerKey));
         urlParameters.add(new BasicNameValuePair(SCOPE_PLAYGROUND_NAME, "device"));
-        AutomationContext automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
+        AutomationContext automationContext = new AutomationContext("IDENTITY",
+                TestUserMode.SUPER_TENANT_ADMIN);
         String deviceAuthEndpoint = automationContext.getContextUrls().getBackEndUrl()
                 .replace("services/", "oauth2/device_authorize");
         JSONObject responseObject = responseObjectNew(urlParameters, deviceAuthEndpoint);
@@ -133,7 +138,8 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(USER_CODE, userCode));
-        AutomationContext automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
+        AutomationContext automationContext = new AutomationContext("IDENTITY",
+                TestUserMode.SUPER_TENANT_ADMIN);
         String authenticationEndpoint = automationContext.getContextUrls().getBackEndUrl()
                 .replace("services/", "authenticationendpoint/device.do");
         String response = responsePost(urlParameters,authenticationEndpoint);
@@ -145,7 +151,8 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(USER_CODE, userCode));
-        AutomationContext automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
+        AutomationContext automationContext = new AutomationContext("IDENTITY",
+                TestUserMode.SUPER_TENANT_ADMIN);
         String deviceEndpoint = automationContext.getContextUrls().getBackEndUrl()
                 .replace("services/", "oauth2/device");
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters, deviceEndpoint);
@@ -230,7 +237,8 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
         Assert.assertNotNull(accessToken, "Assess token is null");
     }
 
-    @Test(groups = "wso2.is", description = "Send token post request with used code", dependsOnMethods = "testTokenRequest")
+    @Test(groups = "wso2.is", description = "Send token post request with used code",
+            dependsOnMethods = "testTokenRequest")
     public void testExpiredDeviceTokenRequest() throws Exception {
 
         // Wait 5 seconds because of the token polling interval.
@@ -307,7 +315,9 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
         ApplicationModel application = new ApplicationModel();
 
         List<String> grantTypes = new ArrayList<>();
-        Collections.addAll(grantTypes, "authorization_code", "implicit", "password", "client_credentials", "refresh_token", "urn:ietf:params:oauth:grant-type:saml2-bearer", "iwa:ntlm", "urn:ietf:params:oauth:grant-type:device_code");
+        Collections.addAll(grantTypes, "authorization_code", "implicit", "password", "client_credentials",
+                "refresh_token", "urn:ietf:params:oauth:grant-type:saml2-bearer", "iwa:ntlm",
+                "urn:ietf:params:oauth:grant-type:device_code");
 
         List<String> callBackUrls = new ArrayList<>();
         Collections.addAll(callBackUrls, OAuth2Constant.CALLBACK_URL);

@@ -148,7 +148,8 @@ public class OAuth2IDTokenEncryptionTestCase extends OAuth2ServiceAbstractIntegr
 
         ApplicationResponseModel updatedApplication = getApplication(application.getId());
         Assert.assertNotNull(updatedApplication, "Application: " + application.getName() + " retrieval failed.");
-        Assert.assertNotNull(updatedApplication.getAdvancedConfigurations().getCertificate(), "Application Certificate update failed");
+        Assert.assertNotNull(updatedApplication.getAdvancedConfigurations().getCertificate(),
+                "Application Certificate update failed");
     }
 
     @Test(groups = "wso2.is", description = "Setup encryption algorithm and encryption method.",

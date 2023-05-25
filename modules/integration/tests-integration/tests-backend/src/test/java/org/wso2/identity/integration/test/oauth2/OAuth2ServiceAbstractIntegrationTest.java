@@ -112,12 +112,13 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		return createApplication(appDTO, SERVICE_PROVIDER_NAME);
 	}
 
-	public ApplicationResponseModel addApplication() throws Exception {
+    public ApplicationResponseModel addApplication() throws Exception {
 
 		ApplicationModel application = new ApplicationModel();
 
 		List<String> grantTypes = new ArrayList<>();
-		Collections.addAll(grantTypes, "authorization_code", "implicit", "password", "client_credentials", "refresh_token", "urn:ietf:params:oauth:grant-type:saml2-bearer", "iwa:ntlm");
+		Collections.addAll(grantTypes, "authorization_code", "implicit", "password", "client_credentials",
+				"refresh_token", "urn:ietf:params:oauth:grant-type:saml2-bearer", "iwa:ntlm");
 
 		List<String> callBackUrls = new ArrayList<>();
 		Collections.addAll(callBackUrls, OAuth2Constant.CALLBACK_URL);
@@ -212,14 +213,16 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		return restClient.getOIDCInboundDetails(appId);
 	}
 
-	public void updateApplicationOidcInboundConfig(String appId, OpenIDConnectConfiguration oidcInboundConfig) throws IOException {
+	public void updateApplicationOidcInboundConfig(String appId, OpenIDConnectConfiguration oidcInboundConfig)
+			throws IOException {
 
 		restClient.updateOIDCInboundDetailsOfApplication(appId, oidcInboundConfig);
 	}
 
 
 
-	public OAuthConsumerAppDTO createApplication(OAuthConsumerAppDTO appDTO, String serviceProviderName) throws Exception {
+	public OAuthConsumerAppDTO createApplication(OAuthConsumerAppDTO appDTO, String serviceProviderName)
+			throws Exception {
 		OAuthConsumerAppDTO appDtoResult = null;
 
 		adminClient.registerOAuthApplicationData(appDTO);
@@ -424,7 +427,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	 * @param password       Password.
 	 * @return Http response.
 	 * @throws ClientProtocolException
-	 * @throws  IOException
+	 * @throws IOException
 	 */
 	public HttpResponse sendLoginPostForCustomUsers(HttpClient client, String sessionDataKey, String username,
 													String password)
@@ -670,7 +673,8 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		ApplicationModel application = new ApplicationModel();
 
 		List<String> grantTypes = new ArrayList<>();
-		Collections.addAll(grantTypes, "authorization_code", "implicit", "password", "client_credentials", "refresh_token");
+		Collections.addAll(grantTypes, "authorization_code", "implicit", "password", "client_credentials",
+				"refresh_token");
 
 		List<String> callBackUrls = new ArrayList<>();
 		Collections.addAll(callBackUrls, callBackURL);
