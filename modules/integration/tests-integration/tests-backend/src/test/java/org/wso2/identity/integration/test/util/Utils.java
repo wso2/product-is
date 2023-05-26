@@ -271,6 +271,7 @@ public class Utils {
     }
 
     private static List<String> extractSecurityQuestions(HttpResponse response) throws IOException {
+
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         String resultPage = rd.lines().collect(Collectors.joining());
         String questionString = resultPage.substring(resultPage.lastIndexOf("<h3>"));
@@ -278,7 +279,7 @@ public class Utils {
         List<String> questionList = new ArrayList<>();
         for (String dataString : dataArray) {
             String[] splitString = dataString.split("\\s{2,}");
-            String qString = splitString[0].substring(0,splitString[0].length()-1) + "| |" + splitString[2];
+            String qString = splitString[0].substring(0, splitString[0].length() - 1) + "| |" + splitString[2];
             questionList.add(qString);
         }
         return questionList;
@@ -351,6 +352,7 @@ public class Utils {
     }
 
     private static List<String> extractClaims(HttpResponse response) throws IOException {
+
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         String resultPage = rd.lines().collect(Collectors.joining());
         List<String> attributeList = new ArrayList<>();
