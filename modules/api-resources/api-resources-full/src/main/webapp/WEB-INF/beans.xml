@@ -101,6 +101,7 @@
             <bean class="org.wso2.carbon.identity.api.server.secret.management.v1.SecretTypeApi"/>
             <bean class="org.wso2.carbon.identity.api.server.branding.preference.management.v1.BrandingPreferenceApi"/>
             <bean class="org.wso2.carbon.identity.api.server.input.validation.v1.ValidationRulesApi"/>
+            <bean class="org.wso2.carbon.identity.api.server.idv.provider.v1.IdvProvidersApi"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">
@@ -141,6 +142,8 @@
             <bean class="org.wso2.carbon.identity.rest.api.user.session.v1.SessionsApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.session.v1.UserIdApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.totp.v1.MeApi"/>
+            <bean class="org.wso2.carbon.identity.rest.api.user.idv.v1.MeApi"/>
+            <bean class="org.wso2.carbon.identity.rest.api.user.idv.v1.DefaultApi"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">
