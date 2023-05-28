@@ -494,6 +494,13 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.branding.preference.management:org.wso2.carbon.identity.branding.preference.management.core.server.feature:${identity.branding.preference.management.version}
                                 </featureArtifactDef>
+                                <!-- Identity Verification Features -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.extension.identity.verification:org.wso2.carbon.extension.identity.verification.mgt.feature:${identity.verification.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.extension.identity.verification:org.wso2.carbon.extension.identity.verification.provider.feature:${identity.verification.version}
+                                </featureArtifactDef>
                                 <!-- input validation related features -->
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.input.validation.mgt.server.feature:${carbon.identity.framework.version}
@@ -1056,6 +1063,14 @@
                                     <id>org.wso2.carbon.identity.provisioning.connector.scim2.server.feature.group</id>
                                     <version>${provisioning.connector.scim2.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.extension.identity.verification.provider.feature.group</id>
+                                    <version>${identity.verification.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.extension.identity.verification.mgt.feature.group</id>
+                                    <version>${identity.verification.version}</version>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>
@@ -1563,6 +1578,14 @@
                                     <id>org.wso2.carbon.identity.authenticator.emailotp.feature.group</id>
                                     <version>${authenticator.emailotp.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.extension.identity.verification.provider.feature.group</id>
+                                    <version>${identity.verification.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.extension.identity.verification.mgt.feature.group</id>
+                                    <version>${identity.verification.version}</version>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>
@@ -2003,6 +2026,14 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.authenticator.emailotp.feature.group</id>
                                     <version>${authenticator.emailotp.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.extension.identity.verification.provider.feature.group</id>
+                                    <version>${identity.verification.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.extension.identity.verification.mgt.feature.group</id>
+                                    <version>${identity.verification.version}</version>
                                 </feature>
                             </features>
                         </configuration>

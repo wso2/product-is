@@ -159,6 +159,14 @@
             <artifactId>org.wso2.carbon.identity.api.server.admin.advisory.management.common</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.wso2.carbon.identity.server.api</groupId>
+            <artifactId>org.wso2.carbon.identity.api.server.idv.provider.v1</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.server.api</groupId>
+            <artifactId>org.wso2.carbon.identity.api.server.idv.provider.common</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.carbon.identity.user.api</groupId>
             <artifactId>org.wso2.carbon.identity.rest.api.user.totp.v1</artifactId>
         </dependency>
@@ -205,6 +213,14 @@
         <dependency>
             <groupId>org.wso2.carbon.identity.user.api</groupId>
             <artifactId>org.wso2.carbon.identity.api.user.functionality.common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.user.api</groupId>
+            <artifactId>org.wso2.carbon.identity.api.user.idv.v1</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.user.api</groupId>
+            <artifactId>org.wso2.carbon.identity.api.user.idv.common</artifactId>
         </dependency>
 
         <!-- Server REST API Dependencies. -->
