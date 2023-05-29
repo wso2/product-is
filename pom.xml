@@ -2135,7 +2135,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>6.0.49</carbon.identity.framework.version>
+        <carbon.identity.framework.version>6.0.51</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[6.0.0, 7.0.0)</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2221,7 +2221,7 @@
         <identity.metadata.saml.version>1.7.4</identity.metadata.saml.version>
 
         <!-- Connector Versions -->
-        <authenticator.totp.version>3.3.8</authenticator.totp.version>
+        <authenticator.totp.version>3.3.9</authenticator.totp.version>
         <authenticator.backupcode.version>0.0.13</authenticator.backupcode.version>
         <authenticator.office365.version>2.1.2</authenticator.office365.version>
         <authenticator.smsotp.version>3.3.9</authenticator.smsotp.version>
