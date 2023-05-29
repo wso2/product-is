@@ -1555,6 +1555,16 @@
                 <artifactId>org.wso2.carbon.identity.provisioning.connector.scim2</artifactId>
                 <version>${provisioning.connector.scim2.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.extension.identity.verification</groupId>
+                <artifactId>org.wso2.carbon.extension.identity.verification.mgt.feature</artifactId>
+                <version>${identity.verification.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.extension.identity.verification</groupId>
+                <artifactId>org.wso2.carbon.extension.identity.verification.provider.feature</artifactId>
+                <version>${identity.verification.version}</version>
+            </dependency>
 
             <!-- Local Authenticators -->
             <dependency>
@@ -1965,6 +1975,16 @@
                 <version>${provisioning.connector.scim2.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.extension.identity.verification</groupId>
+                <artifactId>org.wso2.carbon.extension.identity.verification.mgt</artifactId>
+                <version>${identity.verification.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.extension.identity.verification</groupId>
+                <artifactId>org.wso2.carbon.extension.identity.verification.provider</artifactId>
+                <version>${identity.verification.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.msf4j</groupId>
                 <artifactId>msf4j-core</artifactId>
                 <version>${msf4j.version}</version>
@@ -2207,7 +2227,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.25.203</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.25.205</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2340,6 +2360,9 @@
 
         <!-- Carbon Kernel -->
         <carbon.kernel.version>4.9.4</carbon.kernel.version>
+
+        <!-- Identity Verification -->
+        <identity.verification.version>1.0.2</identity.verification.version>
 
         <!-- Carbon Repo Versions -->
         <carbon.deployment.version>4.12.20</carbon.deployment.version>
