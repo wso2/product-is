@@ -16,7 +16,7 @@ import org.wso2.identity.integration.test.rest.api.common.RESTTestBase;
 
 import java.io.IOException;
 
-public class ResourceAdminServiceRestClient extends RESTTestBase {
+public class EmailTemplatesRestClient {
 
     protected static final String TENANT_PATH = "t/%s";
     protected static final String API_SERVER_BASE_PATH = "/api/server/v1";
@@ -33,7 +33,7 @@ public class ResourceAdminServiceRestClient extends RESTTestBase {
     private final String PASSWORD;
 
 
-    public ResourceAdminServiceRestClient(String backendURL, Tenant tenantInfo) {
+    public EmailTemplatesRestClient(String backendURL, Tenant tenantInfo) {
         client = HttpClients.createDefault();
 
         this.USERNAME = tenantInfo.getContextUser().getUserName();

@@ -34,11 +34,10 @@ import org.wso2.carbon.identity.core.util.IdentityUtil;
 import org.wso2.carbon.identity.governance.stub.bean.Property;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
-import org.wso2.identity.integration.common.clients.ResourceAdminServiceClient;
 import org.wso2.identity.integration.common.clients.mgt.IdentityGovernanceServiceClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
-import org.wso2.identity.integration.test.restclients.ResourceAdminServiceRestClient;
+import org.wso2.identity.integration.test.restclients.EmailTemplatesRestClient;
 
 public class AccountLockEnabledTestCase extends ISIntegrationTest {
 
@@ -65,7 +64,7 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
     private AuthenticatorClient authenticatorClient;
     private RemoteUserStoreManagerServiceClient usmClient;
     private IdentityGovernanceServiceClient identityGovernanceServiceClient;
-    private ResourceAdminServiceRestClient resourceAdminServiceRestClient;
+    private EmailTemplatesRestClient emailTemplatesRestClient;
 
     private static final String ENABLE_ACCOUNT_LOCK = "account.lock.handler.lock.on.max.failed.attempts.enable";
     private static final String TRUE_STRING = "true";
@@ -79,7 +78,7 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
         authenticatorClient = new AuthenticatorClient(backendURL);
         enableAccountLocking(ENABLE_ACCOUNT_LOCK);
         usmClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
-        resourceAdminServiceRestClient = new ResourceAdminServiceRestClient(backendURL.replace("services/",
+        emailTemplatesRestClient = new EmailTemplatesRestClient(backendURL.replace("services/",
                 ""), tenantInfo);
     }
 
@@ -129,13 +128,13 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
         usmClient.addUser(testLockUser2, testLockUser2Password, new String[] { "admin" }, claimvalues, null, false);
 
         JSONObject emailTemplateResourceContent =
-                resourceAdminServiceRestClient.getEmailTemplate(accountLockTemplateWhenUserExceedsFailedAttempts,
+                emailTemplatesRestClient.getEmailTemplate(accountLockTemplateWhenUserExceedsFailedAttempts,
                         USER_LOCALE);
         Assert.assertTrue("Test Failure : Email Content applicable for account lock is not available.",
                 StringUtils.isNotEmpty((String) emailTemplateResourceContent.get("body")));
 
         JSONObject emailTemplateResourceContentAdminTriggered =
-                resourceAdminServiceRestClient.getEmailTemplate(accountLockTemplateWhenAdminTriggered, USER_LOCALE);
+                emailTemplatesRestClient.getEmailTemplate(accountLockTemplateWhenAdminTriggered, USER_LOCALE);
         Assert.assertTrue("Test Failure : Email Content applicable for account lock is not available.",
                 StringUtils.isNotEmpty((String) emailTemplateResourceContentAdminTriggered.get("body")));
     }
@@ -153,12 +152,12 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
             usmClient.addUser(testLockUser3, testLockUser3Password, new String[] { "admin" }, claimvalues, null, false);
 
             JSONObject emailTemplateResourceContent =
-                    resourceAdminServiceRestClient.getEmailTemplate(accountUnlockTemplateTimeBased, USER_LOCALE);
+                    emailTemplatesRestClient.getEmailTemplate(accountUnlockTemplateTimeBased, USER_LOCALE);
             Assert.assertTrue("Test Failure : Email Content applicable for account unlock is not available.",
                     StringUtils.isNotEmpty((String) emailTemplateResourceContent.get("body")));
 
             JSONObject emailTemplateResourceContentAdminTriggered =
-                    resourceAdminServiceRestClient.getEmailTemplate(accountUnlockTemplateAdminTriggered, USER_LOCALE);
+                    emailTemplatesRestClient.getEmailTemplate(accountUnlockTemplateAdminTriggered, USER_LOCALE);
             Assert.assertTrue("Test Failure : Email Content applicable for account unlock is not available.",
                     StringUtils.isNotEmpty((String) emailTemplateResourceContentAdminTriggered.get("body")));
     }
