@@ -23,6 +23,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.simple.JSONObject;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -37,6 +38,7 @@ import org.wso2.identity.integration.common.clients.ResourceAdminServiceClient;
 import org.wso2.identity.integration.common.clients.mgt.IdentityGovernanceServiceClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.restclients.ResourceAdminServiceRestClient;
 
 public class AccountLockEnabledTestCase extends ISIntegrationTest {
 
@@ -61,13 +63,14 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
     private String accountUnlockTemplateTimeBased = "accountunlocktimebased";
 
     private AuthenticatorClient authenticatorClient;
-    private ResourceAdminServiceClient resourceAdminServiceClient;
     private RemoteUserStoreManagerServiceClient usmClient;
     private IdentityGovernanceServiceClient identityGovernanceServiceClient;
+    private ResourceAdminServiceRestClient resourceAdminServiceRestClient;
 
     private static final String ENABLE_ACCOUNT_LOCK = "account.lock.handler.lock.on.max.failed.attempts.enable";
     private static final String TRUE_STRING = "true";
     private static final String DEFAULT = "default";
+    private static final String USER_LOCALE = "en_US";
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     @BeforeClass(alwaysRun = true)
@@ -76,7 +79,8 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
         authenticatorClient = new AuthenticatorClient(backendURL);
         enableAccountLocking(ENABLE_ACCOUNT_LOCK);
         usmClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
-        resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, sessionCookie);
+        resourceAdminServiceRestClient = new ResourceAdminServiceRestClient(backendURL.replace("services/",
+                ""), tenantInfo);
     }
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
@@ -124,20 +128,16 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
         ClaimValue[] claimvalues = { claimValue };
         usmClient.addUser(testLockUser2, testLockUser2Password, new String[] { "admin" }, claimvalues, null, false);
 
-        String userLocale = usmClient.
-                getUserClaimValue(testLockUser2, defaultLocalityClaimUri, "default");
-
-        String emailTemplateResourceName = accountLockTemplateWhenUserExceedsFailedAttempts + "/" + userLocale;
-        String emailTemplateResourceContent = resourceAdminServiceClient.
-                getTextContent(registryResourcePath + emailTemplateResourceName);
+        JSONObject emailTemplateResourceContent =
+                resourceAdminServiceRestClient.getEmailTemplate(accountLockTemplateWhenUserExceedsFailedAttempts,
+                        USER_LOCALE);
         Assert.assertTrue("Test Failure : Email Content applicable for account lock is not available.",
-                StringUtils.isNotEmpty(emailTemplateResourceContent));
+                StringUtils.isNotEmpty((String) emailTemplateResourceContent.get("body")));
 
-        String emailTemplateResourceNameAdminTriggered = accountLockTemplateWhenAdminTriggered + "/" + userLocale;
-        String emailTemplateResourceContentAdminTriggered = resourceAdminServiceClient.
-                getTextContent(registryResourcePath + emailTemplateResourceNameAdminTriggered);
+        JSONObject emailTemplateResourceContentAdminTriggered =
+                resourceAdminServiceRestClient.getEmailTemplate(accountLockTemplateWhenAdminTriggered, USER_LOCALE);
         Assert.assertTrue("Test Failure : Email Content applicable for account lock is not available.",
-                StringUtils.isNotEmpty(emailTemplateResourceContentAdminTriggered));
+                StringUtils.isNotEmpty((String) emailTemplateResourceContentAdminTriggered.get("body")));
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
@@ -152,20 +152,15 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
             ClaimValue[] claimvalues = { claimValue };
             usmClient.addUser(testLockUser3, testLockUser3Password, new String[] { "admin" }, claimvalues, null, false);
 
-            String userLocale = usmClient.
-                    getUserClaimValue(testLockUser2, defaultLocalityClaimUri, "default");
-
-            String emailTemplateResourceName = accountUnlockTemplateTimeBased + "/" + userLocale;
-            String emailTemplateResourceContent = resourceAdminServiceClient.
-                    getTextContent(registryResourcePath + emailTemplateResourceName);
+            JSONObject emailTemplateResourceContent =
+                    resourceAdminServiceRestClient.getEmailTemplate(accountUnlockTemplateTimeBased, USER_LOCALE);
             Assert.assertTrue("Test Failure : Email Content applicable for account unlock is not available.",
-                    StringUtils.isNotEmpty(emailTemplateResourceContent));
+                    StringUtils.isNotEmpty((String) emailTemplateResourceContent.get("body")));
 
-            String emailTemplateResourceNameAdminTriggered = accountUnlockTemplateAdminTriggered + "/" + userLocale;
-            String emailTemplateResourceContentAdminTriggered = resourceAdminServiceClient.
-                    getTextContent(registryResourcePath + emailTemplateResourceNameAdminTriggered);
+            JSONObject emailTemplateResourceContentAdminTriggered =
+                    resourceAdminServiceRestClient.getEmailTemplate(accountUnlockTemplateAdminTriggered, USER_LOCALE);
             Assert.assertTrue("Test Failure : Email Content applicable for account unlock is not available.",
-                    StringUtils.isNotEmpty(emailTemplateResourceContentAdminTriggered));
+                    StringUtils.isNotEmpty((String) emailTemplateResourceContentAdminTriggered.get("body")));
     }
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
