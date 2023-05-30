@@ -21,11 +21,10 @@ rem Adaptive Authentication Script for the WSO2 Carbon Server
 rem
 rem Environment Variable Prequisites
 rem
-rem    CARBON_HOME   	Home of WSO2 Carbon installation. If not set I will  try
-rem                    	to figure it out.
-rem    NASHORN_VERSION   	OpenJDK Nashorn Version
-rem
-rem    ASM_VERSION   	ASM Util, Commons Version.
+rem    CARBON_HOME   	   Home of WSO2 Carbon installation. If not set I will  try
+rem                    	 to figure it out.
+rem    NASHORN_VERSION   OpenJDK Nashorn Version        	
+rem    ASM_VERSION   	   ASM Util, Commons Version.
 rem
 rem -----------------------------------------------------------------------------
 
