@@ -68,49 +68,53 @@ goto abortDisableAdaptiveAuth
 :proceedDisableAdaptiveAuth
 set LOCAL_NASHORN_VERSION=""
 set LOCAL_ASM_VERSION=""
-if exist "%CARBON_HOME%\repository\components\lib\nashorn-core-*.jar" (
-  set SERVER_RESTART_REQUIRED="true"
-  for /f "delims=" %%i in ('dir /s /b %CARBON_HOME%\repository\components\lib\nashorn-core-*.jar') do set "location=%%i"
-  for %%j in (!location!!) do set "full_artifact_name=%%~nxj"
-  for /f "tokens=3 delims=-" %%k in ("!full_artifact_name!") do set "artifact_name=%%k"
-  for /f "tokens=1,2 delims=." %%l in ("!artifact_name!") do set "LOCAL_NASHORN_VERSION=%%l.%%m"
-  echo Remove existing Nashorn library from lib folder: !full_artifact_name!
-  del !location!
-  echo Nashorn library Removed from components\lib.
-)
-if exist "%CARBON_HOME%\repository\components\dropins\nashorn_core_*.jar" (
-  set SERVER_RESTART_REQUIRED="true"
-  for /f "delims=" %%i in ('dir /s /b %CARBON_HOME%\repository\components\dropins\nashorn_core_!LOCAL_NASHORN_VERSION!*.jar') do set "location=%%i"
-  for %%j in (!location!!) do set "full_artifact_name=%%~nxj"
-  echo Remove existing Nashorn library from dropins: !full_artifact_name!
-  del !location!
-  echo Nashorn library Removed from components\dropins.
-)
-if exist "%CARBON_HOME%\repository\components\lib\asm-util-*.jar" (
-  set SERVER_RESTART_REQUIRED="true"
-  for /f "delims=" %%i in ('dir /s /b %CARBON_HOME%\repository\components\lib\asm-util-*.jar') do set "location=%%i"
-  for %%j in (!location!!) do set "full_artifact_name=%%~nxj"
-  for /f "tokens=3 delims=-" %%k in ("!full_artifact_name!") do set "artifact_name=%%k"
-  for /f "tokens=1,2 delims=." %%l in ("!artifact_name!") do set "LOCAL_ASM_VERSION=%%l.%%m"
-  echo Remove existing ASM Util library from lib folder: !full_artifact_name!
-  del !location!
-  echo ASM Util library Removed from components\lib.
-)
-if exist "%CARBON_HOME%\repository\components\dropins\asm_util_*.jar" (
-  set SERVER_RESTART_REQUIRED="true"
-  for /f "delims=" %%i in ('dir /s /b %CARBON_HOME%\repository\components\dropins\asm_util_!LOCAL_ASM_VERSION!*.jar') do set "location=%%i"
-  for %%j in (!location!!) do set "full_artifact_name=%%~nxj"
-  echo Remove existing ASM Util library from dropins: !full_artifact_name!
-  del !location!
-  echo ASM Util library Removed from components\dropins.
-)
+
+call :removeLibrary "Nashorn", "lib", "%CARBON_HOME%\repository\components\lib\nashorn-core-*.jar"
+call :removeLibrary "Nashorn", "dropins", "%CARBON_HOME%\repository\components\dropins\nashorn_core_!LOCAL_NASHORN_VERSION!*.jar"
+call :removeLibrary "ASM Util", "lib", "%CARBON_HOME%\repository\components\lib\asm-util-*.jar"
+call :removeLibrary "ASM Util", "dropins", "%CARBON_HOME%\repository\components\dropins\asm_util_!LOCAL_ASM_VERSION!*.jar"
+
 echo Adaptive authentication successfully disabled.
 goto printRestartMsg
+
+rem function to remove a jar matching a given file path pattern.
+:removeLibrary
+rem should be one of 'Nashorn' or 'ASM-Util'.
+set jar_name=%~1
+rem should be one of 'lib' or 'dropins'.
+set folder=%~2
+rem file path pattern to be matched.
+set file_pattern=%~3
+
+if exist "%file_pattern%" (  
+  set SERVER_RESTART_REQUIRED="true"
+  rem assign the file path matching the file_pattern to the variable location
+  for /f "delims=" %%i in ('dir /s /b "%file_pattern%"') do set "location=%%i"
+  rem assign the name of the file (without the path) to the variable full_artifact_name
+  for %%j in (!location!!) do set "full_artifact_name=%%~nxj" 
+
+  rem if we are deleting from lib, we need to find the local versions and set those (To use when deleting from dropins).    
+  if "%folder%"=="lib" (  
+    rem extracts the a.b.jar and sets to the variable artifact_name
+    for /f "tokens=3 delims=-" %%k in ("!full_artifact_name!") do set "artifact_name=%%k"  
+    if "%jar_name%"=="Nashorn" (
+      rem extracts the a.b (i.e version) and sets it as local version
+      for /f "tokens=1,2 delims=." %%l in ("!artifact_name!") do set "LOCAL_NASHORN_VERSION=%%l.%%m"
+    ) else if "%jar_name%"=="ASM Util" (
+      rem extracts the a.b (i.e version) and sets it as local version
+      for /f "tokens=1,2 delims=." %%l in ("!artifact_name!") do set "LOCAL_ASM_VERSION=%%l.%%m"
+    )
+  )
+
+  echo Remove existing %jar_name% library from %folder%: !full_artifact_name!
+  del !location!
+  echo %jar_name% library Removed from components\%folder%.
+)
+exit /B 0
 
 :abortDisableAdaptiveAuth
 echo Disabling Adaptive authentication is terminated.
 goto printRestartMsg
-
 
 :enableAdaptiveAuth
 if exist "%CARBON_HOME%\repository\components\lib\nashorn-core-*.jar" (
@@ -125,13 +129,7 @@ if exist "%CARBON_HOME%\repository\components\lib\nashorn-core-*.jar" (
     set SERVER_RESTART_REQUIRED="true"
     echo Required Nashorn library not found. Remove existing library : !full_artifact_name!
     del !location!
-    if exist "%CARBON_HOME%\repository\components\dropins\nashorn_core_*.jar" (
-       for /f "delims=" %%i in ('dir /s /b %CARBON_HOME%\repository\components\dropins\nashorn_core_!LOCAL_NASHORN_VERSION!*.jar') do set "location=%%i"
-       for %%j in (!location!!) do set "full_artifact_name=%%~nxj"
-       echo Remove existing Nashorn library from dropins: !full_artifact_name!
-       del !location!
-       echo Nashorn library Removed from components\dropins.
-    )
+    call :removeLibrary "Nashorn", "dropins", "%CARBON_HOME%\repository\components\dropins\nashorn_core_!LOCAL_NASHORN_VERSION!*.jar" 
     echo Downloading required Nashorn library : nashorn-core-%NASHORN_VERSION%
 	  curl https://repo1.maven.org/maven2/org/openjdk/nashorn/nashorn-core/%NASHORN_VERSION%/nashorn-core-%NASHORN_VERSION%.jar -o %CARBON_HOME%/repository/components/lib/nashorn-core-%NASHORN_VERSION%.jar
     echo Nashorn library updated.
@@ -155,13 +153,7 @@ if exist "%CARBON_HOME%\repository\components\lib\asm-util-*.jar" (
     set SERVER_RESTART_REQUIRED="true"
     echo Required ASM-Util library not found. Remove existing library : !full_artifact_name!
     del !location!
-    if exist "%CARBON_HOME%\repository\components\dropins\asm_util_*.jar" (
-       for /f "delims=" %%i in ('dir /s /b %CARBON_HOME%\repository\components\dropins\asm_util_!LOCAL_ASM_VERSION!*.jar') do set "location=%%i"
-       for %%j in (!location!!) do set "full_artifact_name=%%~nxj"
-       echo Remove existing ASM Util library from dropins: !full_artifact_name!
-       del !location!
-       echo ASM Util library Removed from components\dropins.
-    )
+    call :removeLibrary "ASM Util", "dropins", "%CARBON_HOME%\repository\components\dropins\asm_util_!LOCAL_ASM_VERSION!*.jar" 
     echo Downloading required ASM-Util library : asm-util-%ASM_VERSION%
 	  curl https://repo1.maven.org/maven2/org/ow2/asm/asm-util/%ASM_VERSION%/asm-util-%ASM_VERSION%.jar -o %CARBON_HOME%/repository/components/lib/asm-util-%ASM_VERSION%.jar
     echo ASM-Util library updated.
