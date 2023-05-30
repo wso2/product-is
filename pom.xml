@@ -2222,7 +2222,7 @@
 
         <!-- Connector Versions -->
         <authenticator.totp.version>3.3.9</authenticator.totp.version>
-        <authenticator.backupcode.version>0.0.13</authenticator.backupcode.version>
+        <authenticator.backupcode.version>0.0.14</authenticator.backupcode.version>
         <authenticator.office365.version>2.1.2</authenticator.office365.version>
         <authenticator.smsotp.version>3.3.9</authenticator.smsotp.version>
         <authenticator.magiclink.version>1.1.8</authenticator.magiclink.version>
