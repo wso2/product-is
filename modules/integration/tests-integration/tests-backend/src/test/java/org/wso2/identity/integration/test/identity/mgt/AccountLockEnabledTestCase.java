@@ -168,6 +168,7 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
         usmClient.deleteUser(testLockUser1);
         usmClient.deleteUser(testLockUser2);
         disableAccountLocking(ENABLE_ACCOUNT_LOCK);
+        emailTemplatesRestClient.closeHttpClient();
     }
 
     protected String getISResourceLocation() {
