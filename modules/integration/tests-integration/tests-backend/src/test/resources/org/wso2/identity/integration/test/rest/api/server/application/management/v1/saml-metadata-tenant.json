@@ -20,7 +20,7 @@
       "http://www.w3.org/2001/04/xmldsig-more#rsa-sha384",
       "http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"
     ],
-    "defaultValue": "http://www.w3.org/2000/09/xmldsig#rsa-sha1"
+    "defaultValue": "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"
   },
   "responseDigestAlgorithm": {
     "options": [
@@ -31,7 +31,7 @@
       "http://www.w3.org/2001/04/xmldsig-more#sha384",
       "http://www.w3.org/2001/04/xmlenc#sha512"
     ],
-    "defaultValue": "http://www.w3.org/2000/09/xmldsig#sha1"
+    "defaultValue": "http://www.w3.org/2001/04/xmlenc#sha256"
   },
   "assertionEncryptionAlgorithm": {
     "options": [
