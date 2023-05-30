@@ -428,7 +428,8 @@ public class OIDCSubAttributeTestCase extends OAuth2ServiceAbstractIntegrationTe
 
         // Extract authorization code from the location value.
         idToken = DataExtractUtil.extractParamFromURIFragment(locationHeader.getValue(), OAuth2Constant.ID_TOKEN);
-        accessToken = DataExtractUtil.extractParamFromURIFragment(locationHeader.getValue(), "token");
+        accessToken = DataExtractUtil.extractParamFromURIFragment(locationHeader.getValue(),
+                OAuth2Constant.ACCESS_TOKEN);
         Assert.assertNotNull(idToken, "ID token is null");
         Assert.assertNotNull(accessToken, "access token is null");
     }
