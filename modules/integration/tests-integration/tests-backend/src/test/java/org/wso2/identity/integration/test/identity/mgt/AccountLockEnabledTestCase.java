@@ -31,13 +31,15 @@ import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.automation.test.utils.common.TestConfigurationProvider;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
-import org.wso2.carbon.identity.governance.stub.bean.Property;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.um.ws.api.stub.ClaimValue;
-import org.wso2.identity.integration.common.clients.mgt.IdentityGovernanceServiceClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.ConnectorsPatchReq;
+import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.ConnectorsPatchReq.OperationEnum;
+import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.PropertyReq;
 import org.wso2.identity.integration.test.restclients.EmailTemplatesRestClient;
+import org.wso2.identity.integration.test.restclients.IdentityGovernanceRestClient;
 
 public class AccountLockEnabledTestCase extends ISIntegrationTest {
 
@@ -63,10 +65,14 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
 
     private AuthenticatorClient authenticatorClient;
     private RemoteUserStoreManagerServiceClient usmClient;
-    private IdentityGovernanceServiceClient identityGovernanceServiceClient;
     private EmailTemplatesRestClient emailTemplatesRestClient;
+    private IdentityGovernanceRestClient identityGovernanceRestClient;
+    private ConnectorsPatchReq connectorPatchRequest;
 
     private static final String ENABLE_ACCOUNT_LOCK = "account.lock.handler.lock.on.max.failed.attempts.enable";
+    private static final String CATEGORY_LOGIN_ATTEMPTS_SECURITY = "TG9naW4gQXR0ZW1wdHMgU2VjdXJpdHk";
+    private static final String CONNECTOR_ACCOUNT_LOCK_HANDLER = "YWNjb3VudC5sb2NrLmhhbmRsZXI";
+
     private static final String TRUE_STRING = "true";
     private static final String DEFAULT = "default";
     private static final String USER_LOCALE = "en_US";
@@ -169,6 +175,7 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
         usmClient.deleteUser(testLockUser2);
         disableAccountLocking(ENABLE_ACCOUNT_LOCK);
         emailTemplatesRestClient.closeHttpClient();
+        identityGovernanceRestClient.closeHttpClient();
     }
 
     protected String getISResourceLocation() {
@@ -176,29 +183,30 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
     }
 
     protected void enableAccountLocking(String option) throws Exception {
-        identityGovernanceServiceClient = new IdentityGovernanceServiceClient(sessionCookie, backendURL);
+        identityGovernanceRestClient = new IdentityGovernanceRestClient(backendURL.replace("services/",
+                ""), tenantInfo);
 
         Thread.sleep(5000);
         authenticatorClient.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
                 isServer.getSuperTenant().getTenantAdmin().getPassword(),
                 isServer.getInstance().getHosts().get(DEFAULT));
 
-        Property[] newProperties = new Property[1];
-        Property prop = new Property();
-        prop.setName(option);
-        prop.setValue(TRUE_STRING);
-        newProperties[0] = prop;
-        identityGovernanceServiceClient.updateConfigurations(newProperties);
+        PropertyReq property = new PropertyReq();
+        property.setName(option);
+        property.setValue("true");
+
+        connectorPatchRequest = new ConnectorsPatchReq();
+        connectorPatchRequest.setOperation(OperationEnum.UPDATE);
+        connectorPatchRequest.addProperties(property);
+
+        identityGovernanceRestClient.updateConnectors(CATEGORY_LOGIN_ATTEMPTS_SECURITY , CONNECTOR_ACCOUNT_LOCK_HANDLER,
+                connectorPatchRequest);
     }
 
     protected void disableAccountLocking(String option) throws Exception {
-
-        Property[] newProperties = new Property[1];
-        Property prop = new Property();
-        prop.setName(option);
-        prop.setValue("false");
-        newProperties[0] = prop;
-        identityGovernanceServiceClient.updateConfigurations(newProperties);
+        connectorPatchRequest.getProperties().get(0).setValue("false");
+        identityGovernanceRestClient.updateConnectors(CATEGORY_LOGIN_ATTEMPTS_SECURITY , CONNECTOR_ACCOUNT_LOCK_HANDLER,
+                connectorPatchRequest);
     }
 
 }
