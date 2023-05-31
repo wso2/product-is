@@ -194,7 +194,6 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	/**
 	 * Get Application details with a given id
 	 *
-	 * @return ApplicationResponseModel
 	 * @throws Exception
 	 */
 	public void updateApplication(String appId, ApplicationPatchModel application) throws Exception {

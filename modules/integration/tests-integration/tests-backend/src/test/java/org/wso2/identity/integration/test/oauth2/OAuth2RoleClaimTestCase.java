@@ -1,17 +1,17 @@
 /*
- * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2017, WSO2 LLC. (https://www.wso2.com).
  *
- * WSO2 Inc. licenses this file to you under the Apache License,
+ * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -91,7 +91,6 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
-
         deleteApp(applicationId);
         scim2RestClient.deleteRole(roleId);
         scim2RestClient.deleteUser(userId);
@@ -100,7 +99,10 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
         applicationId = null;
         roleId = null;
         userId = null;
+
         client.close();
+        restClient.closeHttpClient();
+        scim2RestClient.closeHttpClient();
     }
 
     @Test(groups = "wso2.is", description = "Check Oauth2 application registration")
@@ -185,7 +187,6 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
     }
 
     private UserObject getUserCreationInfo() {
-
         UserObject userInfo = new UserObject();
 
         userInfo.setUserName(USER_USERNAME);
@@ -218,7 +219,6 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
     }
 
     private RoleRequestObject getRoleCreationInfo() {
-
         RoleRequestObject roleInfo = new RoleRequestObject();
         roleInfo.setDisplayName(OAUTH_ROLE);
 
@@ -226,7 +226,6 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
     }
 
     private PatchRoleOperationRequestObject getAddUserPatchRole(String userId) {
-
         RoleItemAddGroupobj patchRoleItem = new RoleItemAddGroupobj();
         patchRoleItem.setOp(RoleItemAddGroupobj.OpEnum.ADD);
         patchRoleItem.setPath(USERS_PATH);
