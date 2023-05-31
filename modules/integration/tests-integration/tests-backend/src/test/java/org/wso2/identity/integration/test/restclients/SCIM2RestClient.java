@@ -1,21 +1,28 @@
+/*
+ * Copyright (c) 2023, WSO2 LLC. (https://www.wso2.com).
+ *
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.wso2.identity.integration.test.restclients;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpPatch;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONException;
 import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
@@ -25,134 +32,87 @@ import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
-public class SCIM2RestClient {
+public class SCIM2RestClient extends RestBaseClient {
 
-    public static final String SCIM2_USERS_ENDPOINT = "/scim2/Users";
-    public static final String SCIM2_ROLES_ENDPOINT = "/scim2/Roles";
-    public static final String BASIC_AUTHORIZATION_ATTRIBUTE = "Basic ";
-    public static final String CONTENT_TYPE_ATTRIBUTE = "Content-Type";
-    public static final String AUTHORIZATION_ATTRIBUTE = "Authorization";
-    private static final String USER_AGENT_ATTRIBUTE = "User-Agent";
+    private static final String SCIM2_USERS_ENDPOINT = "/scim2/Users";
+    private static final String SCIM2_ROLES_ENDPOINT = "/scim2/Roles";
     private static final String SCIM_JSON_CONTENT_TYPE = "application/scim+json";
-    private final String SERVER_URL;
-    private final CloseableHttpClient client;
+    private final String serverUrl;
     private final String tenantDomain;
-    private final String USERNAME;
-    private final String PASSWORD;
+    private final String username;
+    private final String password;
 
 
-    public SCIM2RestClient(String serverURL, Tenant tenantInfo){
-        client = HttpClients.createDefault();
-        this.SERVER_URL = serverURL;
+    public SCIM2RestClient(String serverUrl, Tenant tenantInfo){
+        this.serverUrl = serverUrl;
         this.tenantDomain = tenantInfo.getContextUser().getUserDomain();
-        this.USERNAME = tenantInfo.getContextUser().getUserName();
-        this.PASSWORD = tenantInfo.getContextUser().getPassword();
+        this.username = tenantInfo.getContextUser().getUserName();
+        this.password = tenantInfo.getContextUser().getPassword();
     }
 
-    public String createUser(UserObject userInfo) throws IOException, JSONException {
-
+    public String createUser(UserObject userInfo) throws Exception {
         String jsonRequest = toJSONString(userInfo);
         if (userInfo.getScimSchemaExtensionEnterprise() != null) {
             jsonRequest = jsonRequest.replace("scimSchemaExtensionEnterprise",
                     "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User");
         }
 
-        HttpResponse response = getResponseOfHttpPost(getUsersPath(), jsonRequest);
+        CloseableHttpResponse response = getResponseOfHttpPost(getUsersPath(), jsonRequest, getHeaders());
         Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_CREATED,
                 "User creation failed");
+        JSONObject jsonResponse = getJSONObject(EntityUtils.toString(response.getEntity()));
+        response.close();
 
-        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-
-        Object obj = JSONValue.parse(rd);
-        EntityUtils.consume(response.getEntity());
-
-        return ((JSONObject) obj).get("id").toString();
+        return jsonResponse.get("id").toString();
     }
 
     public void deleteUser(String userId) throws IOException {
-
-        HttpResponse response = getResponseOfHttpDelete(getUsersPath() + "/" + userId);
+        String endPointUrl = getUsersPath() + PATH_SEPARATOR + userId;
+        CloseableHttpResponse response = getResponseOfHttpDelete(endPointUrl, getHeaders());
         Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
                 "User deletion failed");
-        EntityUtils.consume(response.getEntity());
+        response.close();
     }
 
-    public String addRole(RoleRequestObject roleInfo) throws IOException, JSONException {
-
+    public String addRole(RoleRequestObject roleInfo) throws Exception {
         String jsonRequest = toJSONString(roleInfo);
 
-        HttpResponse response = getResponseOfHttpPost(getRolesPath(), jsonRequest);
+        CloseableHttpResponse response = getResponseOfHttpPost(getRolesPath(), jsonRequest, getHeaders());
         Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_CREATED,
                 "Role creation failed");
+        JSONObject jsonResponse = getJSONObject(EntityUtils.toString(response.getEntity()));
+        response.close();
 
-
-        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-        Object obj = JSONValue.parse(rd);
-        EntityUtils.consume(response.getEntity());
-
-        return ((JSONObject) obj).get("id").toString();
+        return jsonResponse.get("id").toString();
     }
 
     public void updateUserRole(PatchRoleOperationRequestObject patchRoleInfo, String roleId) throws IOException {
-
         String jsonRequest = toJSONString(patchRoleInfo);
+        String endPointUrl = getRolesPath() + PATH_SEPARATOR + roleId;
 
-        HttpResponse response = getResponseOfHttpPatch(getRolesPath() + "/" + roleId, jsonRequest);
+        CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeaders());
         Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
                 "Role update failed");
-        EntityUtils.consume(response.getEntity());
+        response.close();
     }
 
     public void deleteRole(String roleId) throws IOException {
+        String endPointUrl = getRolesPath() + PATH_SEPARATOR + roleId;
 
-        HttpResponse response = getResponseOfHttpDelete(getRolesPath() + "/" + roleId);
+        CloseableHttpResponse response = getResponseOfHttpDelete(endPointUrl, getHeaders());
         Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
                 "Role deletion failed");
-        EntityUtils.consume(response.getEntity());
+        response.close();
     }
 
-    public String toJSONString(java.lang.Object object) {
-
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        return gson.toJson(object);
-    }
-
-    public HttpResponse getResponseOfHttpPost(String endPointUrl, String jsonRequest) throws IOException {
-
-        HttpPost request = new HttpPost(endPointUrl);
-        request.setHeaders(getHeaders());
-        request.setEntity(new StringEntity(jsonRequest));
-
-        return client.execute(request);
-    }
-
-    public HttpResponse getResponseOfHttpPatch(String endPointUrl, String jsonRequest) throws IOException {
-
-        HttpPatch request = new HttpPatch(endPointUrl);
-        request.setHeaders(getHeaders());
-        request.setEntity(new StringEntity(jsonRequest));
-
-        return client.execute(request);
-    }
-
-    public HttpResponse getResponseOfHttpDelete(String endPointUrl) throws IOException {
-
-        HttpDelete request = new HttpDelete(endPointUrl);
-        request.setHeaders(getHeaders());
-
-        return client.execute(request);
-    }
-
-    public Header[] getHeaders() {
+    private Header[] getHeaders() {
 
         Header[] headerList = new Header[3];
         headerList[0] = new BasicHeader(USER_AGENT_ATTRIBUTE, OAuth2Constant.USER_AGENT);
         headerList[1] = new BasicHeader(AUTHORIZATION_ATTRIBUTE, BASIC_AUTHORIZATION_ATTRIBUTE +
-                Base64.encodeBase64String((USERNAME + ":" + PASSWORD).getBytes()).trim());
+                Base64.encodeBase64String((username + ":" + password).getBytes()).trim());
         headerList[2] = new BasicHeader(CONTENT_TYPE_ATTRIBUTE, SCIM_JSON_CONTENT_TYPE);
 
         return headerList;
@@ -160,17 +120,21 @@ public class SCIM2RestClient {
 
     private String getUsersPath() {
         if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
-            return SERVER_URL + SCIM2_USERS_ENDPOINT;
+            return serverUrl + SCIM2_USERS_ENDPOINT;
         } else {
-            return SERVER_URL + "t/" + tenantDomain + SCIM2_USERS_ENDPOINT;
+            return serverUrl + TENANT_PATH + tenantDomain + SCIM2_USERS_ENDPOINT;
         }
     }
 
     private String getRolesPath() {
         if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
-            return SERVER_URL + SCIM2_ROLES_ENDPOINT;
+            return serverUrl + SCIM2_ROLES_ENDPOINT;
         } else {
-            return SERVER_URL + "t/" + tenantDomain + SCIM2_ROLES_ENDPOINT;
+            return serverUrl + TENANT_PATH + tenantDomain + SCIM2_ROLES_ENDPOINT;
         }
+    }
+
+    public void closeHttpClient() throws IOException {
+        client.close();
     }
 }
