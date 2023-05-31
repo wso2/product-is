@@ -29,7 +29,7 @@ echo "Cloning product-is"
 echo "=========================================================="
 
 git clone https://github.com/wso2/product-is
-git checkout -b 7.x.x
+git checkout 7.x.x
 
 if [ "$REPO" = "product-is" ]; then
 
