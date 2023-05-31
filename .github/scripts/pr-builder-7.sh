@@ -29,7 +29,6 @@ echo "Cloning product-is"
 echo "=========================================================="
 
 git clone https://github.com/wso2/product-is
-git checkout 7.x.x
 
 if [ "$REPO" = "product-is" ]; then
 
@@ -37,6 +36,7 @@ if [ "$REPO" = "product-is" ]; then
   echo "PR is for the product-is itself. Start building with test..."
   echo "=========================================================="
   cd product-is
+  git checkout 7.x.x
 
   echo ""
   echo "Applying PR $PULL_NUMBER as a diff..."
@@ -301,6 +301,7 @@ else
   fi
 
   cd product-is
+  git checkout 7.x.x
 
   echo "Updating dependency version in product-is..."
   echo "=========================================================="
