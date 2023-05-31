@@ -188,6 +188,7 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.branding.preference.management.v1.BrandingPreferenceManagementSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.branding.preference.management.v1.BrandingPreferenceManagementFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.selfRegister.SelfRegisterTestCase"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementUserRegistrantSuccessTest"/>
         </classes>
     </test>
 
