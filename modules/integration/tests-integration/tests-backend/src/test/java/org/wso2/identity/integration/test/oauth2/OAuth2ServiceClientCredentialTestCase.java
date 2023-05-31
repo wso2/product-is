@@ -1,17 +1,17 @@
 /*
- * Copyright (c) 2022, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2022, WSO2 LLC. (https://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -41,12 +41,9 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
-import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
-import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
-import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
-import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
-import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
-import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
+import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.net.URI;
@@ -58,7 +55,6 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_SCO
  */
 public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
-    private AuthenticatorClient logManger;
     private String accessToken;
     private String consumerKey;
     private String consumerSecret;
@@ -66,6 +62,7 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
     private final String userPassword;
     private final AutomationContext context;
     private Tenant tenantInfo;
+    private String applicationId;
 
     private CloseableHttpClient client;
 
@@ -77,7 +74,6 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
 
     @Factory(dataProvider = "configProvider")
     public OAuth2ServiceClientCredentialTestCase(TestUserMode userMode) throws Exception {
-
         context = new AutomationContext("IDENTITY", userMode);
         this.username = context.getContextTenant().getTenantAdmin().getUserName();
         this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
@@ -85,18 +81,10 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
-
         String backendURL = context.getContextUrls().getBackEndUrl();
-        loginLogoutClient = new LoginLogoutClient(context);
-        logManger = new AuthenticatorClient(backendURL);
-        identityContextUrls = context.getContextUrls();
         tenantInfo = context.getContextTenant();
         userInfo = tenantInfo.getContextUser();
-
-        String sessionCookie = logManger.login(username, userPassword, context.getInstance().getHosts().get("default"));
-        appMgtclient = new ApplicationManagementServiceClient(sessionCookie, backendURL, null);
-        adminClient = new OauthAdminClient(backendURL, sessionCookie);
-        remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
+        restClient = new OAuth2RestClient(backendURL.replace("services/", ""), tenantInfo);
 
         setSystemproperties();
         client = HttpClientBuilder.create().build();
@@ -104,26 +92,30 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
-
-        appMgtclient.deleteApplication(SERVICE_PROVIDER_NAME);
-        adminClient.removeOAuthApplicationData(consumerKey);
+        deleteApp(applicationId);
         client.close();
-        logManger = null;
+        restClient.closeHttpClient();
+
         consumerKey = null;
         accessToken = null;
+        applicationId = null;
     }
 
     @Test(groups = "wso2.is", description = "Check Oauth2 application registration")
     public void testRegisterApplication() throws Exception {
 
-        OAuthConsumerAppDTO appDto = createApplication();
-        Assert.assertNotNull(appDto, "Application creation failed.");
+        ApplicationResponseModel application = addApplication();
+        Assert.assertNotNull(application, "OAuth App creation failed.");
 
-        consumerKey = appDto.getOauthConsumerKey();
+        OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(application.getId());
+
+        consumerKey = oidcConfig.getClientId();
         Assert.assertNotNull(consumerKey, "Application creation failed.");
 
-        consumerSecret = appDto.getOauthConsumerSecret();
+        consumerSecret = oidcConfig.getClientSecret();
         Assert.assertNotNull(consumerSecret, "Application creation failed.");
+
+        applicationId = application.getId();
     }
 
     @Test(groups = "wso2.is", description = "Send client credentials token request.", dependsOnMethods = "testRegisterApplication")
