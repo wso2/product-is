@@ -15,6 +15,7 @@ public class UserObject {
     private String userName;
     private String password;
     private List<Email> emails = null;
+    private String locale;
     private ScimSchemaExtensionEnterprise scimSchemaExtensionEnterprise;
 
     /**
@@ -128,6 +129,26 @@ public class UserObject {
     /**
      *
      **/
+    public UserObject locale(String locale) {
+
+        this.locale = locale;
+        return this;
+    }
+
+    @ApiModelProperty(example = "en_US")
+    @JsonProperty("locale")
+    @Valid
+    public String getLocale() {
+        return locale;
+    }
+
+    public void setLocale(String locale) {
+        this.locale = locale;
+    }
+
+    /**
+     *
+     **/
     public UserObject scimSchemaExtensionEnterprise(ScimSchemaExtensionEnterprise scimSchemaExtensionEnterprise) {
 
         this.scimSchemaExtensionEnterprise = scimSchemaExtensionEnterprise;
@@ -161,13 +182,14 @@ public class UserObject {
                 Objects.equals(this.userName, user.userName) &&
                 Objects.equals(this.password, user.password) &&
                 Objects.equals(this.emails, user.emails) &&
+                Objects.equals(this.locale, user.locale) &&
                 Objects.equals(this.scimSchemaExtensionEnterprise, user.scimSchemaExtensionEnterprise);
 
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(schemas, name, userName, password, emails, scimSchemaExtensionEnterprise);
+        return Objects.hash(schemas, name, userName, password, emails, locale, scimSchemaExtensionEnterprise);
     }
 
     @Override
@@ -179,6 +201,7 @@ public class UserObject {
                 "    userName: " + toIndentedString(userName) + "\n" +
                 "    password: " + toIndentedString(password) + "\n" +
                 "    emails: " + toIndentedString(emails) + "\n" +
+                "    locale: " + toIndentedString(locale) + "\n" +
                 "    urn:ietf:params:scim:schemas:extension:enterprise:2.0:User: " + toIndentedString(scimSchemaExtensionEnterprise) + "\n" +
                 "}";
     }
