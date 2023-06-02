@@ -17,28 +17,40 @@
  */
 package org.wso2.identity.integration.test.restclients;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
 import org.wso2.identity.integration.test.rest.api.user.common.model.PatchRoleOperationRequestObject;
 import org.wso2.identity.integration.test.rest.api.user.common.model.RoleRequestObject;
+import org.wso2.identity.integration.test.rest.api.user.common.model.RoleSearchRequestObject;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 public class SCIM2RestClient extends RestBaseClient {
 
-    private static final String SCIM2_USERS_ENDPOINT = "/scim2/Users";
-    private static final String SCIM2_ROLES_ENDPOINT = "/scim2/Roles";
+    private static final String SCIM2_USERS_ENDPOINT = "scim2/Users";
+    private static final String SCIM2_ROLES_ENDPOINT = "scim2/Roles";
+    private static final String SCIM2_ROLE_SEARCH_PATH = "/.search";
     private static final String SCIM_JSON_CONTENT_TYPE = "application/scim+json";
+    private static final String ROLE_SEARCH_SCHEMA = "urn:ietf:params:scim:api:messages:2.0:SearchRequest";
+    private static final String DISPLAY_NAME_ATTRIBUTE = "displayName";
+    private static final String SPACE = " ";
+    private static final String EQ_OP = "eq";
     private final String serverUrl;
     private final String tenantDomain;
     private final String username;
@@ -66,6 +78,16 @@ public class SCIM2RestClient extends RestBaseClient {
         response.close();
 
         return jsonResponse.get("id").toString();
+    }
+
+    public JSONObject getUser(String userId) throws Exception {
+        String endPointUrl = getUsersPath() + PATH_SEPARATOR + userId;
+        CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders());
+
+        JSONObject jsonResponse = getJSONObject(EntityUtils.toString(response.getEntity()));
+        response.close();
+
+        return jsonResponse;
     }
 
     public void deleteUser(String userId) throws IOException {
@@ -98,6 +120,28 @@ public class SCIM2RestClient extends RestBaseClient {
         response.close();
     }
 
+    public String getRoleIdByName(String roleName) throws Exception {
+
+        RoleSearchRequestObject roleSearchObj = new RoleSearchRequestObject();
+        roleSearchObj.addSchemas(ROLE_SEARCH_SCHEMA);
+
+        String filterString =  DISPLAY_NAME_ATTRIBUTE + SPACE + EQ_OP + SPACE + roleName;
+        roleSearchObj.setFilter(filterString);
+
+        String jsonRequest = toJSONString(roleSearchObj);
+
+        CloseableHttpResponse response = getResponseOfHttpPost(getRolesPath() + SCIM2_ROLE_SEARCH_PATH,
+                jsonRequest, getHeaders());
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                "Role search failed");
+        JSONObject jsonResponse = getJSONObject(EntityUtils.toString(response.getEntity()));
+        response.close();
+
+        JSONObject searchResult = (JSONObject) ((JSONArray) jsonResponse.get("Resources")).get(0);
+
+        return searchResult.get("id").toString();
+    }
+
     public void deleteRole(String roleId) throws IOException {
         String endPointUrl = getRolesPath() + PATH_SEPARATOR + roleId;
 
@@ -122,7 +166,7 @@ public class SCIM2RestClient extends RestBaseClient {
         if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
             return serverUrl + SCIM2_USERS_ENDPOINT;
         } else {
-            return serverUrl + TENANT_PATH + tenantDomain + SCIM2_USERS_ENDPOINT;
+            return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + SCIM2_USERS_ENDPOINT;
         }
     }
 
@@ -130,7 +174,7 @@ public class SCIM2RestClient extends RestBaseClient {
         if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
             return serverUrl + SCIM2_ROLES_ENDPOINT;
         } else {
-            return serverUrl + TENANT_PATH + tenantDomain + SCIM2_ROLES_ENDPOINT;
+            return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + SCIM2_ROLES_ENDPOINT;
         }
     }
 
