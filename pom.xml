@@ -2332,7 +2332,7 @@
         <identity.extension.utils>1.0.14</identity.extension.utils>
 
         <identity.org.mgt.version>1.3.41</identity.org.mgt.version>
-        <identity.org.mgt.core.version>1.0.48</identity.org.mgt.core.version>
+        <identity.org.mgt.core.version>1.0.49</identity.org.mgt.core.version>
 
         <!-- Hash Provider Versions-->
         <hashprovider.pbkdf2.version>0.1.4</hashprovider.pbkdf2.version>
@@ -2353,7 +2353,7 @@
         <conditional.authentication.functions.version>1.2.26</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.6.328</identity.apps.version>
+        <identity.apps.version>1.6.329</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
