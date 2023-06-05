@@ -176,6 +176,7 @@
             <outputDirectory>wso2is-${pom.version}/repository/resources/identity/extensions</outputDirectory>
             <includes>
                 <include>**/*.json</include>
+                <include>**/</include>
             </includes>
         </fileSet>
         <fileSet>
