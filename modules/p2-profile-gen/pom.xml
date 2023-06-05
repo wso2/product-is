@@ -308,6 +308,9 @@
                                     org.wso2.carbon.commons:org.wso2.carbon.tenant.mgt.common.feature:${carbon.commons.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
+                                    org.wso2.carbon.commons:org.wso2.carbon.logging.remote.config.mgt.feature:${carbon.commons.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon.multitenancy:org.wso2.carbon.tenant.common.feature:${carbon.multitenancy.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -551,6 +554,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.webapp.mgt.server.feature.group</id>
                                     <version>${carbon.deployment.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.logging.remote.config.mgt.feature.group</id>
+                                    <version>${carbon.commons.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.logging.updater.feature.group</id>
@@ -1134,6 +1141,10 @@
                                     <version>${carbon.deployment.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.logging.remote.config.mgt.feature.group</id>
+                                    <version>${carbon.commons.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.logging.updater.feature.group</id>
                                     <version>${carbon.commons.version}</version>
                                 </feature>
@@ -1631,6 +1642,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.webapp.mgt.server.feature.group</id>
                                     <version>${carbon.deployment.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.logging.remote.config.mgt.feature.group</id>
+                                    <version>${carbon.commons.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.logging.updater.feature.group</id>
@@ -2145,6 +2160,10 @@
 
                                 <feature>
                                     <id>org.wso2.carbon.tenant.mgt.common.feature.group</id>
+                                    <version>${carbon.commons.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.logging.remote.config.mgt.feature.group</id>
                                     <version>${carbon.commons.version}</version>
                                 </feature>
                                 <feature>
