@@ -127,6 +127,16 @@ else
       echo "Checking out for 5.2.x branch in carbon-analytics-common..."
       echo "=========================================================="
       git checkout 5.2.x
+  elif [ "$REPO" = "carbon-identity-framework" ]; then
+      echo ""
+      echo "Checking out for 6.0.x branch in carbon-identity-framework..."
+      echo "=========================================================="
+      git checkout 6.0.x
+  elif [ "$REPO" = "identity-governance" ]; then
+      echo ""
+      echo "Checking out for 2.0.x branch in identity-governance..."
+      echo "=========================================================="
+      git checkout 2.0.x
   fi
   DEPENDENCY_VERSION=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
   echo "Dependency Version: $DEPENDENCY_VERSION"
