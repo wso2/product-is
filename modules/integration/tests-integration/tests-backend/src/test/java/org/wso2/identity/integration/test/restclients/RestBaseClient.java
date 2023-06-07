@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2023, WSO2 LLC. (https://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
@@ -43,6 +43,8 @@ public class RestBaseClient {
     public static final String USER_AGENT_ATTRIBUTE = "User-Agent";
     public static final String TENANT_PATH = "t/";
     public static final String PATH_SEPARATOR = "/";
+    public static final String OIDC = "oidc";
+    public static final String SAML = "saml";
     public final CloseableHttpClient client;
 
     public RestBaseClient() {

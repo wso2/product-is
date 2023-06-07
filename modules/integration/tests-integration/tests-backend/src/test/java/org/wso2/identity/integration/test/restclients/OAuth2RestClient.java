@@ -34,6 +34,7 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAML2ServiceProvider;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import javax.servlet.http.HttpServletResponse;
@@ -41,9 +42,9 @@ import java.io.IOException;
 
 public class OAuth2RestClient extends RestBaseClient {
 
-    private static final String API_SERVER_BASE_PATH = "/api/server/v1";
+    private static final String API_SERVER_BASE_PATH = "api/server/v1";
     private static final String APPLICATION_MANAGEMENT_PATH = "/applications";
-    private static final String INBOUND_PROTOCOLS_OIDC_CONTEXT_PATH = "/inbound-protocols/oidc";
+    private static final String INBOUND_PROTOCOLS_BASE_PATH = "/inbound-protocols";
     private final String applicationManagementApiBasePath;
     private final String username;
     private final String password;
@@ -109,29 +110,39 @@ public class OAuth2RestClient extends RestBaseClient {
                 "Application deletion failed");
         response.close();
     }
-
-    public OpenIDConnectConfiguration getOIDCInboundDetails(String appId) throws Exception {
-        String endPointUrl = applicationManagementApiBasePath + PATH_SEPARATOR + appId +
-                INBOUND_PROTOCOLS_OIDC_CONTEXT_PATH;
+    public String getConfig(String appId, String inboundType) throws Exception {
+        String endPointUrl = applicationManagementApiBasePath + PATH_SEPARATOR + appId + INBOUND_PROTOCOLS_BASE_PATH +
+                PATH_SEPARATOR + inboundType;
         CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders());
 
         String responseBody = EntityUtils.toString(response.getEntity());
         response.close();
 
-        ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+        return responseBody;
+    }
 
+    public OpenIDConnectConfiguration getOIDCInboundDetails(String appId) throws Exception {
+        String responseBody = getConfig(appId, OIDC);
+        ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
         return jsonWriter.readValue(responseBody, OpenIDConnectConfiguration.class);
     }
 
-    public void updateOIDCInboundDetailsOfApplication(String appId, OpenIDConnectConfiguration oidcInboundConfig)
+    public SAML2ServiceProvider getSAMLInboundDetails(String appId) throws Exception {
+        String responseBody = getConfig(appId, SAML);
+        ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+
+        return jsonWriter.readValue(responseBody, SAML2ServiceProvider.class);
+    }
+
+    public void updateInboundDetailsOfApplication(String appId, Object inboundConfig, String inboundType)
             throws IOException {
-        String jsonRequest = toJSONString(oidcInboundConfig);
-        String endPointUrl = applicationManagementApiBasePath + PATH_SEPARATOR + appId +
-                INBOUND_PROTOCOLS_OIDC_CONTEXT_PATH;
+        String jsonRequest = toJSONString(inboundConfig);
+        String endPointUrl = applicationManagementApiBasePath + PATH_SEPARATOR + appId + INBOUND_PROTOCOLS_BASE_PATH +
+                PATH_SEPARATOR + inboundType;
         CloseableHttpResponse response = getResponseOfHttpPut(endPointUrl, jsonRequest, getHeaders());
 
         Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
-                "Application oidc inbound config update failed");
+                String.format("Application %s inbound config update failed", inboundType));
         response.close();
     }
 
@@ -139,7 +150,7 @@ public class OAuth2RestClient extends RestBaseClient {
         if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
             return serverUrl + API_SERVER_BASE_PATH + APPLICATION_MANAGEMENT_PATH;
         } else {
-            return serverUrl + TENANT_PATH + tenantDomain + API_SERVER_BASE_PATH + APPLICATION_MANAGEMENT_PATH;
+            return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + API_SERVER_BASE_PATH + APPLICATION_MANAGEMENT_PATH;
         }
     }
 
