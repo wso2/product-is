@@ -145,7 +145,7 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
     public void testEnforceRequestObjectSignatureValidation() throws Exception {
 
         oidcInboundConfig.setValidateRequestObjectSignature(true);
-        updateApplicationOidcInboundConfig(application.getId(), oidcInboundConfig);
+        updateApplicationInboundConfig(application.getId(), oidcInboundConfig, OIDC);
 
         OpenIDConnectConfiguration updatedOidcInboundConfig = getOIDCInboundDetailsOfApplication(application.getId());
         Assert.assertTrue(updatedOidcInboundConfig.getValidateRequestObjectSignature(),

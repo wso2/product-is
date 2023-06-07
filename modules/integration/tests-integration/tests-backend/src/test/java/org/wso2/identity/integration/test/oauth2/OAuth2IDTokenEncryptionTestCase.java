@@ -159,7 +159,7 @@ public class OAuth2IDTokenEncryptionTestCase extends OAuth2ServiceAbstractIntegr
         oidcInboundConfig.getIdToken().getEncryption().setEnabled(true);
         oidcInboundConfig.getIdToken().getEncryption().setAlgorithm(ENCRYPTION_ALGORITHM);
         oidcInboundConfig.getIdToken().getEncryption().setMethod(ENCRYPTION_METHOD);
-        updateApplicationOidcInboundConfig(application.getId(), oidcInboundConfig);
+        updateApplicationInboundConfig(application.getId(), oidcInboundConfig, OIDC);
 
         OpenIDConnectConfiguration updatedOidcInboundConfig = getOIDCInboundDetailsOfApplication(application.getId());
         Assert.assertTrue(updatedOidcInboundConfig.getIdToken().getEncryption().getEnabled(),
