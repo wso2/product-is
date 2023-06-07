@@ -73,6 +73,8 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	private static final String customClaimURI2 = "http://wso2.org/claims/challengeQuestion2";
 	private static final String GRANT_TYPE_PASSWORD = "password";
 	private static final String SCOPE_PRODUCTION = "PRODUCTION";
+	public static final String OIDC = "oidc";
+	public static final String SAML = "saml";
 	private final static int TOMCAT_PORT = 8490;
 
 	protected ApplicationManagementServiceClient appMgtclient;
@@ -172,53 +174,69 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	/**
 	 * Create Application with a given ApplicationModel
 	 *
+	 * @param application application creation object
 	 * @return application id
-	 * @throws Exception
+	 * @throws Exception Exception
 	 */
 	public String addApplication(ApplicationModel application) throws Exception {
-
 		return restClient.createApplication(application);
 	}
 
 	/**
 	 * Get Application details with a given id
 	 *
+	 * @param appId application Id
 	 * @return ApplicationResponseModel
-	 * @throws Exception
+	 * @throws Exception Exception
 	 */
 	public ApplicationResponseModel getApplication(String appId) throws Exception {
-
 		return restClient.getApplication(appId);
 	}
 
 	/**
 	 * Get Application details with a given id
 	 *
-	 * @throws Exception
+	 * @param appId application Id
+	 * @param application application update patch object
+	 * @throws Exception Exception
 	 */
 	public void updateApplication(String appId, ApplicationPatchModel application) throws Exception {
-
 		restClient.updateApplication(appId, application);
 	}
 
 	/**
-	 * Get Application details with a given id
+	 * Get Application oidc inbound configuration details with a given id
 	 *
-	 * @return ApplicationResponseModel
-	 * @throws Exception
+	 * @param appId application Id
+	 * @return OpenIDConnectConfiguration
+	 * @throws Exception Exception
 	 */
 	public OpenIDConnectConfiguration getOIDCInboundDetailsOfApplication(String appId) throws Exception {
-
 		return restClient.getOIDCInboundDetails(appId);
 	}
 
-	public void updateApplicationOidcInboundConfig(String appId, OpenIDConnectConfiguration oidcInboundConfig)
-			throws IOException {
-
-		restClient.updateOIDCInboundDetailsOfApplication(appId, oidcInboundConfig);
+	/**
+	 * Get Application saml inbound configuration details with a given id
+	 *
+	 * @param appId application Id
+	 * @return SAML2ServiceProvider
+	 * @throws Exception Exception
+	 */
+	public SAML2ServiceProvider getSAMLInboundDetailsOfApplication(String appId) throws Exception {
+		return restClient.getSAMLInboundDetails(appId);
 	}
 
-
+	/**
+	 * Update Application inbound configuration details with a given id and the inbound Type
+	 *
+	 * @param appId application Id
+	 * @param InboundConfig InboundConfig object
+	 * @param inboundType inbound configuration type
+	 */
+	public void updateApplicationInboundConfig(String appId, Object InboundConfig, String inboundType)
+			throws IOException {
+		restClient.updateInboundDetailsOfApplication(appId, InboundConfig, inboundType);
+	}
 
 	public OAuthConsumerAppDTO createApplication(OAuthConsumerAppDTO appDTO, String serviceProviderName)
 			throws Exception {
