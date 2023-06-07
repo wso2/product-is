@@ -144,7 +144,7 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
 
             saml2AppConfig.getSingleSignOnProfile().getAssertion().setAudiences(new ArrayList<>());
             updateApplicationInboundConfig(samlAppId, new SAML2Configuration().manualConfiguration(saml2AppConfig),
-                    "saml");
+                    SAML);
 
             // Get a SAML response.
             String samlResponse = getSAMLResponse();
