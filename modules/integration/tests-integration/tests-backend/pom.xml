@@ -879,10 +879,6 @@
             <artifactId>org.wso2.carbon.identity.claim.metadata.mgt.stub</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.identity.inbound.auth.openid</groupId>
-            <artifactId>org.wso2.carbon.identity.provider.openid.stub</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.wso2.carbon.identity.inbound.provisioning.scim</groupId>
             <artifactId>org.wso2.carbon.identity.scim.common.stub</artifactId>
         </dependency>
