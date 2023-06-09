@@ -27,6 +27,7 @@ import java.util.Objects;
 public class ScimSchemaExtensionEnterprise {
     private Manager manager;
     private String employeeNumber;
+    private Boolean accountLocked;
 
     /**
      *
@@ -68,6 +69,25 @@ public class ScimSchemaExtensionEnterprise {
         this.employeeNumber = employeeNumber;
     }
 
+    /**
+     *
+     **/
+    public ScimSchemaExtensionEnterprise accountLocked(Boolean accountLocked) {
+
+        this.accountLocked = accountLocked;
+        return this;
+    }
+
+    @ApiModelProperty(example = "false")
+    @JsonProperty("accountLocked")
+    @Valid
+    public Boolean accountLocked() {
+        return accountLocked;
+    }
+
+    public void setAccountLocked(Boolean accountLocked) {
+        this.accountLocked = accountLocked;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -80,12 +100,13 @@ public class ScimSchemaExtensionEnterprise {
         }
         ScimSchemaExtensionEnterprise scimSchemaExtensionEnterprise = (ScimSchemaExtensionEnterprise) o;
         return Objects.equals(this.manager, scimSchemaExtensionEnterprise.manager) &&
-                Objects.equals(this.employeeNumber, scimSchemaExtensionEnterprise.employeeNumber);
+                Objects.equals(this.employeeNumber, scimSchemaExtensionEnterprise.employeeNumber) &&
+                Objects.equals(this.accountLocked, scimSchemaExtensionEnterprise.accountLocked);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(manager, employeeNumber);
+        return Objects.hash(manager, employeeNumber, accountLocked);
     }
 
     @Override
@@ -94,6 +115,7 @@ public class ScimSchemaExtensionEnterprise {
         return "class ScimSchemaExtensionEnterprise {\n" +
                 "    manager: " + toIndentedString(manager) + "\n" +
                 "    employeeNumber: " + toIndentedString(employeeNumber) + "\n" +
+                "    accountLocked: " + toIndentedString(accountLocked) + "\n" +
                 "}";
     }
 
