@@ -1,5 +1,5 @@
 
-This product is licensed by WSO2 LCC. under Apache License 2.0. The license
+This product is licensed by WSO2 LLC. under Apache License 2.0. The license
 can be downloaded from the following locations:
 	http://www.apache.org/licenses/LICENSE-2.0.html
 	http://www.apache.org/licenses/LICENSE-2.0.txt
