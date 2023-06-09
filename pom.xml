@@ -2146,7 +2146,7 @@
         <carbon.consent.mgt.version>2.5.2</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>2.0.13</identity.governance.version>
+        <identity.governance.version>2.0.14</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.iwa.version>5.5.0</identity.carbon.auth.iwa.version>
