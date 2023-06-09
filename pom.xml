@@ -2221,7 +2221,7 @@
         <identity.metadata.saml.version>1.7.4</identity.metadata.saml.version>
 
         <!-- Connector Versions -->
-        <authenticator.totp.version>3.3.9</authenticator.totp.version>
+        <authenticator.totp.version>3.3.11</authenticator.totp.version>
         <authenticator.backupcode.version>0.0.14</authenticator.backupcode.version>
         <authenticator.office365.version>2.1.2</authenticator.office365.version>
         <authenticator.smsotp.version>3.3.9</authenticator.smsotp.version>
