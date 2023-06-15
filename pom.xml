@@ -1129,12 +1129,6 @@
                 <scope>compile</scope>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.identity.inbound.auth.openid</groupId>
-                <artifactId>org.wso2.carbon.identity.provider.openid.stub</artifactId>
-                <version>${identity.inbound.auth.openid.version}</version>
-                <scope>compile</scope>
-            </dependency>
-            <dependency>
                 <groupId>org.wso2.carbon.identity.association.account</groupId>
                 <artifactId>org.wso2.carbon.identity.user.account.association.stub</artifactId>
                 <version>${identity.user.account.association.version}</version>
@@ -2156,7 +2150,6 @@
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.11.14</identity.inbound.auth.saml.version>
         <identity.inbound.auth.oauth.version>6.11.80</identity.inbound.auth.oauth.version>
-        <identity.inbound.auth.openid.version>5.9.1</identity.inbound.auth.openid.version>
         <identity.inbound.provisioning.scim.version>5.7.3</identity.inbound.provisioning.scim.version>
         <identity.inbound.provisioning.scim2.version>3.4.19</identity.inbound.provisioning.scim2.version>
 
