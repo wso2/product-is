@@ -12,8 +12,7 @@ on:
     inputs:
       tag:
         description: 'product-is tag name'
-        required: true
-        default: 'v5.12.0-alpha9'
+        required: false
       download-url:
         description: 'URL to download product-is'
         required: false
@@ -50,10 +49,14 @@ jobs:
     - name: Download IS zip
       run: |
         INPUT_URL=${{github.event.inputs.download-url}}
+        INPUT_TAG=${{github.event.inputs.tag}}
+        if [[ -z "${INPUT_URL}" ]] && [[ -z "${INPUT_TAG}" ]]; then
+          echo "Either 'tag' or 'download-url' must be provided."
+          exit 1
+        fi
         if [[ -z "${INPUT_URL}" ]]; then
           owner="wso2"
           repo="product-is"
-          INPUT_TAG=${{github.event.inputs.tag}}
           if [[ -z "${INPUT_TAG}" ]]; then
             tag=${GITHUB_REF:10}
             tag_trimmed=${tag// }
@@ -61,7 +64,7 @@ jobs:
             tag=${{github.event.inputs.tag}}
             tag_trimmed=${tag// }
           fi
-        
+
           artifact="wso2is-${tag_trimmed:1}.zip"
           echo "Tag=$tag"
           echo "Artifact=$artifact"
