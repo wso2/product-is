@@ -2167,7 +2167,7 @@
         <identity.data.publisher.audit.version>1.4.3</identity.data.publisher.audit.version>
 
         <!-- Identity Event Handler Versions -->
-        <identity.event.handler.account.lock.version>1.8.10</identity.event.handler.account.lock.version>
+        <identity.event.handler.account.lock.version>1.8.11</identity.event.handler.account.lock.version>
         <identity.event.handler.notification.version>1.7.15</identity.event.handler.notification.version>
 
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
