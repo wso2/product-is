@@ -14,6 +14,9 @@ on:
         description: 'product-is tag name'
         required: true
         default: 'v5.12.0-alpha9'
+      download-url:
+        description: 'URL to download product-is'
+        required: false
       send-email:
         description: 'Send test results to email'
         required: true
@@ -46,24 +49,30 @@ jobs:
         
     - name: Download IS zip
       run: |
-        owner="wso2"
-        repo="product-is"
-        INPUT_TAG=${{github.event.inputs.tag}}
-        if [[ -z "${INPUT_TAG}" ]]; then
-          tag=${GITHUB_REF:10}
-          tag_trimmed=${tag// }
+        INPUT_URL=${{github.event.inputs.download-url}}
+        if [[ -z "${INPUT_URL}" ]]; then
+          owner="wso2"
+          repo="product-is"
+          INPUT_TAG=${{github.event.inputs.tag}}
+          if [[ -z "${INPUT_TAG}" ]]; then
+            tag=${GITHUB_REF:10}
+            tag_trimmed=${tag// }
+          else
+            tag=${{github.event.inputs.tag}}
+            tag_trimmed=${tag// }
+          fi
+        
+          artifact="wso2is-${tag_trimmed:1}.zip"
+          echo "Tag=$tag"
+          echo "Artifact=$artifact"
+          list_asset_url="https://api.github.com/repos/${owner}/${repo}/releases/tags/${tag_trimmed}"
+          asset_url=$(curl "${list_asset_url}" | jq ".assets[] | select(.name==\"${artifact}\") | .url" | sed 's/\"//g')
+          curl -vLJO -H 'Accept: application/octet-stream' \
+           "${asset_url}"
         else
-          tag=${{github.event.inputs.tag}}
-          tag_trimmed=${tag// }
+          curl -vLJO -H 'Accept: application/octet-stream' \
+           "${INPUT_URL}"
         fi
-      
-        artifact="wso2is-${tag_trimmed:1}.zip"
-        echo "Tag=$tag"
-        echo "Artifact=$artifact"
-        list_asset_url="https://api.github.com/repos/${owner}/${repo}/releases/tags/${tag_trimmed}"
-        asset_url=$(curl "${list_asset_url}" | jq ".assets[] | select(.name==\"${artifact}\") | .url" | sed 's/\"//g')
-        curl -vLJO -H 'Accept: application/octet-stream' \
-         "${asset_url}"
       
     - name: Clone conformance suite
       run: |
