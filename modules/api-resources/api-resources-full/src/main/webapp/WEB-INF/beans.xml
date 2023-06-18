@@ -63,6 +63,7 @@
     <import resource="classpath:META-INF/cxf/oauth2-scope-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/consent-mgt-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/auth-v1-1-cfx.xml"/>
+    <import resource="classpath:META-INF/cxf/extension-mgt-server-v1-cxf.xml"/>
 
     <context:property-placeholder/>
     <context:annotation-config/>
@@ -99,6 +100,7 @@
             <bean class="org.wso2.carbon.identity.api.server.secret.management.v1.SecretTypeApi"/>
             <bean class="org.wso2.carbon.identity.api.server.branding.preference.management.v1.BrandingPreferenceApi"/>
             <bean class="org.wso2.carbon.identity.api.server.input.validation.v1.ValidationRulesApi"/>
+            <bean class="org.wso2.carbon.identity.api.server.extension.management.v1.ExtensionsApi"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">
