@@ -12,8 +12,10 @@ on:
     inputs:
       tag:
         description: 'product-is tag name'
-        required: true
-        default: 'v5.12.0-alpha9'
+        required: false
+      download-url:
+        description: 'URL to download product-is'
+        required: false
       send-email:
         description: 'Send test results to email'
         required: true
@@ -46,24 +48,34 @@ jobs:
         
     - name: Download IS zip
       run: |
-        owner="wso2"
-        repo="product-is"
+        INPUT_URL=${{github.event.inputs.download-url}}
         INPUT_TAG=${{github.event.inputs.tag}}
-        if [[ -z "${INPUT_TAG}" ]]; then
-          tag=${GITHUB_REF:10}
-          tag_trimmed=${tag// }
-        else
-          tag=${{github.event.inputs.tag}}
-          tag_trimmed=${tag// }
+        if [[ -z "${INPUT_URL}" ]] && [[ -z "${INPUT_TAG}" ]]; then
+          echo "Either 'tag' or 'download-url' must be provided."
+          exit 1
         fi
-      
-        artifact="wso2is-${tag_trimmed:1}.zip"
-        echo "Tag=$tag"
-        echo "Artifact=$artifact"
-        list_asset_url="https://api.github.com/repos/${owner}/${repo}/releases/tags/${tag_trimmed}"
-        asset_url=$(curl "${list_asset_url}" | jq ".assets[] | select(.name==\"${artifact}\") | .url" | sed 's/\"//g')
-        curl -vLJO -H 'Accept: application/octet-stream' \
-         "${asset_url}"
+        if [[ -z "${INPUT_URL}" ]]; then
+          owner="wso2"
+          repo="product-is"
+          if [[ -z "${INPUT_TAG}" ]]; then
+            tag=${GITHUB_REF:10}
+            tag_trimmed=${tag// }
+          else
+            tag=${{github.event.inputs.tag}}
+            tag_trimmed=${tag// }
+          fi
+
+          artifact="wso2is-${tag_trimmed:1}.zip"
+          echo "Tag=$tag"
+          echo "Artifact=$artifact"
+          list_asset_url="https://api.github.com/repos/${owner}/${repo}/releases/tags/${tag_trimmed}"
+          asset_url=$(curl "${list_asset_url}" | jq ".assets[] | select(.name==\"${artifact}\") | .url" | sed 's/\"//g')
+          curl -vLJO -H 'Accept: application/octet-stream' \
+           "${asset_url}"
+        else
+          curl -vLJO -H 'Accept: application/octet-stream' \
+           "${INPUT_URL}"
+        fi
       
     - name: Clone conformance suite
       run: |
@@ -140,7 +152,11 @@ jobs:
           echo "Sending Email"
           echo "============="
           CONFORMANCE_SUITE_URL=https://localhost:8443
-          python3 ./product-is/oidc-conformance-tests/send_email.py $CONFORMANCE_SUITE_URL $GITHUB_RUN_NUMBER ${{job.status}} ${{github.repository}} ${{github.run_id}} ${{secrets.SENDER_EMAIL}} ${{secrets.PASSWORD}} ${{secrets.RECEIVER_LIST}} ${{github.event.inputs.tag}}
+          RESOURCE=${{github.event.inputs.download-url}}
+          if [[ -z "${RESOURCE}" ]]; then
+            RESOURCE=${{github.event.inputs.tag}}
+          fi
+          python3 ./product-is/oidc-conformance-tests/send_email.py $CONFORMANCE_SUITE_URL $GITHUB_RUN_NUMBER ${{job.status}} ${{github.repository}} ${{github.run_id}} ${{secrets.SENDER_EMAIL}} ${{secrets.PASSWORD}} ${{secrets.RECEIVER_LIST}} $RESOURCE
         elif [ $SEND_EMAIL == "NO" ]; then
           echo "========================================"
           echo "Skipped Sending Email"
@@ -155,12 +171,12 @@ jobs:
       if: always()
       run: |
         INPUT=${{github.event.inputs.send-chat}}
-        TAG=${{github.event.inputs.tag}}
+        RESOURCE=${{github.event.inputs.download-url}}
+        if [[ -z "${RESOURCE}" ]]; then
+          RESOURCE=${{github.event.inputs.tag}}
+        fi
         if [[ -z "${INPUT}" ]]; then
           INPUT="yes"
-        fi
-        if [[ -z "${TAG}" ]]; then
-          TAG=${GITHUB_REF:10}
         fi
         SEND_CHAT=${INPUT^^}
         if [ $SEND_CHAT == "YES" ]; then
@@ -168,7 +184,7 @@ jobs:
           echo "Sending Google Chat Message"
           echo "==========================="
           CONFORMANCE_SUITE_URL=https://localhost:8443
-          python3 ./product-is/oidc-conformance-tests/send_chat.py "$CONFORMANCE_SUITE_URL" "$GITHUB_RUN_NUMBER" "${{job.status}}" "${{github.repository}}" "${{github.run_id}}" "${{secrets.GOOGLE_CHAT_WEBHOOK_OIDC_TEST}}" "$TAG"
+          python3 ./product-is/oidc-conformance-tests/send_chat.py "$CONFORMANCE_SUITE_URL" "$GITHUB_RUN_NUMBER" "${{job.status}}" "${{github.repository}}" "${{github.run_id}}" "${{secrets.GOOGLE_CHAT_WEBHOOK_OIDC_TEST}}" "$RESOURCE"
         elif [ $SEND_CHAT == "NO" ]; then
           echo "========================================"
           echo "Skipped Sending Google Chat Message"
