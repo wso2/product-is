@@ -345,7 +345,7 @@ public class UserMeApprovalTest extends UserApprovalTestBase {
                     .path("findAll{ it.presentationName == '"
                             + TEST_WORKFLOW_ADD_USER_FOR_REST_TASK + "' }.size()");
             if (numOfTasks == taskCount) {
-                log.info("Tasks creation verified successfully in " + i + "attempt(s). Number of tasks created : "
+                log.info("Tasks creation verified successfully in " + i + " attempt(s). Number of tasks created : "
                         + numOfTasks + " of " + userToAdd.length);
                 break;
             } else {

@@ -211,19 +211,19 @@ public class UserApprovalTestBase extends RESTAPIUserTestBase {
             if (!isBpelDeployed) {
                 log.info("Verifying BPEL deployment.");
                 url = identityContextUrls.getSecureServiceUrl() + "/" + addUserWorkflowName + "Service?wsdl";
-                if (isWorkflowDeployed(url)) {
+                if (isServiceDeployed(url)) {
                     isBpelDeployed = true;
-                    log.info("BPEL Workflow deployed successfully in " + count + " attempt(s).");
+                    log.info("Verified BPEL Workflow deployment successfully in " + count + " attempt(s).");
                 }
             }
 
-            if(isBpelDeployed) {
+            if (isBpelDeployed) {
                 log.info("Verifying Human Task deployment.");
                 url = identityContextUrls.getSecureServiceUrl() + "/" + addUserWorkflowName + "TaskService?wsdl";
-                if (isWorkflowDeployed(url)) {
+                if (isServiceDeployed(url)) {
                     isHumanTaskDeployed = true;
-                    log.info("Human Task Workflow deployed successfully in " + count + " attempt(s).");
-                    log.info("Workflow is deployed successfully.");
+                    log.info("Verified Human Task Workflow deployment successfully in " + count + " attempt(s).");
+                    log.info("Workflow deployment successfully Verified.");
                     break;
                 }
             }
@@ -233,23 +233,25 @@ public class UserApprovalTestBase extends RESTAPIUserTestBase {
 
         // Give up after 100 seconds.
         if (!isBpelDeployed || !isHumanTaskDeployed) {
-            log.info("No luck. Going to give up. Test will most probably fail.");
+            log.warn("No luck. Going to give up. Test will most probably fail.");
         }
-        log.info("Waiting for 5 seconds before proceeding.");
-        Thread.sleep(5000);
     }
 
-    private boolean isWorkflowDeployed(String url) throws IOException {
+    private boolean isServiceDeployed(String url) throws IOException {
 
         // We have to check whether the service is up and running by calling the generated endpoint.
         HttpClient client = new HttpClientFactory().getHttpClient();
         HttpGet request = new HttpGet(url);
         HttpResponse httpResponse = client.execute(request);
 
+        log.info("Response code: " + httpResponse.getStatusLine().getStatusCode());
+        if (httpResponse.getStatusLine().getStatusCode() == 200) {
+            return true;
+        }
+
         // If the server response is 500, or it contains "service not available" text or "Operation not found" text,
         // then we have to assume that the service is still not available.
         // Log response to get more context.
-        log.info("Response code: " + httpResponse.getStatusLine().getStatusCode());
         BufferedReader bufferedReader =
                 new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
         String line;
@@ -260,8 +262,7 @@ public class UserApprovalTestBase extends RESTAPIUserTestBase {
                 break;
             }
         }
-
-        return (httpResponse.getStatusLine().getStatusCode() == 200);
+        return false;
     }
 
     protected void setUpWorkFlowAssociation() throws Exception {
