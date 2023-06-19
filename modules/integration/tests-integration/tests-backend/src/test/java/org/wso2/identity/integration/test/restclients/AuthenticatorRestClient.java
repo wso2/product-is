@@ -46,11 +46,9 @@ public class AuthenticatorRestClient extends RestBaseClient {
         String jsonRequest = toJSONString(loginRequest);
         String endPointUrl =  serverUrl + AUTHENTICATION_BASE_PATH;
 
-        CloseableHttpResponse response = getResponseOfHttpPost(endPointUrl, jsonRequest, getHeaders());
-        JSONObject jsonResponse = getJSONObject(EntityUtils.toString(response.getEntity()));
-        response.close();
-
-        return jsonResponse;
+        try (CloseableHttpResponse response = getResponseOfHttpPost(endPointUrl, jsonRequest, getHeaders())) {
+            return getJSONObject(EntityUtils.toString(response.getEntity()));
+        }
     }
 
     private Header[] getHeaders() {

@@ -140,9 +140,8 @@ public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2Se
         createServiceProviderApplication(SERVICE_PROVIDER_1_NAME);
         createServiceProviderApplication(SERVICE_PROVIDER_2_NAME);
 
-        scim2RestClient = new SCIM2RestClient(backendURL.replace("services/", ""), tenantInfo);
-        identityGovernanceRestClient = new IdentityGovernanceRestClient(backendURL.replace("services/",
-                ""), tenantInfo);
+        scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
+        identityGovernanceRestClient = new IdentityGovernanceRestClient(serverURL, tenantInfo);
 
         userId = addNewTestUser();
         client = HttpClientBuilder.create().disableRedirectHandling().build();
@@ -155,6 +154,8 @@ public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2Se
         deleteApp(applications.get(SERVICE_PROVIDER_1_NAME));
         deleteApp(applications.get(SERVICE_PROVIDER_2_NAME));
         disableUserAccountDisablingFeature();
+        scim2RestClient.closeHttpClient();
+        identityGovernanceRestClient.closeHttpClient();
     }
 
     @Test(description = "Create access tokens")

@@ -95,7 +95,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		appMgtclient = new ApplicationManagementServiceClient(sessionCookie, backendURL, null);
 		adminClient = new OauthAdminClient(backendURL, sessionCookie);
 		remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
-		restClient = new OAuth2RestClient(backendURL.replace("services/", ""), tenantInfo);
+		restClient = new OAuth2RestClient(serverURL, tenantInfo);
 	}
 
 	/**

@@ -99,7 +99,7 @@ public class OAuth2BackChannelLogoutTestCase extends OAuth2ServiceAbstractIntegr
     public void testInit() throws Exception {
 
         client = HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build();
-        scim2RestClient =  new SCIM2RestClient(backendURL.replace("services/", ""), tenantInfo);
+        scim2RestClient =  new SCIM2RestClient(serverURL, tenantInfo);
 
         createOIDCApplication();
         addAdminUser();

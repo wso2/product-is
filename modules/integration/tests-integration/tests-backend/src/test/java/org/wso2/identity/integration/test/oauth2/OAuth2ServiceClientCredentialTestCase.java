@@ -81,10 +81,9 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
-        String backendURL = context.getContextUrls().getBackEndUrl();
         tenantInfo = context.getContextTenant();
         userInfo = tenantInfo.getContextUser();
-        restClient = new OAuth2RestClient(backendURL.replace("services/", ""), tenantInfo);
+        restClient = new OAuth2RestClient(serverURL, tenantInfo);
 
         setSystemproperties();
         client = HttpClientBuilder.create().build();

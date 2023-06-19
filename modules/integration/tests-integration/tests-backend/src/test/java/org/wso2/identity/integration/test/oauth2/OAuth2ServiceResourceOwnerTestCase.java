@@ -94,11 +94,10 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 	@BeforeClass(alwaysRun = true)
 	public void testInit() throws Exception {
 
-		String backendURL = context.getContextUrls().getBackEndUrl();
 		tenantInfo = context.getContextTenant();
 
-		restClient = new OAuth2RestClient(backendURL.replace("services/", ""), tenantInfo);
-		scim2RestClient = new SCIM2RestClient(backendURL.replace("services/", ""), tenantInfo);
+		restClient = new OAuth2RestClient(serverURL, tenantInfo);
+		scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
 
 		setSystemproperties();
 		client = HttpClientBuilder.create().build();

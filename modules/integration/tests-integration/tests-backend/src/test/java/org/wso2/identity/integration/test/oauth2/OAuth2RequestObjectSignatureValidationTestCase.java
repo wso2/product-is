@@ -28,6 +28,8 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.params.HttpClientParams;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
@@ -208,10 +210,10 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
         return location.getValue();
     }
 
-    public static HttpClient getRedirectDisabledClient() {
-        RequestConfig config = RequestConfig.custom().setRedirectsEnabled(false).build();
-
-        return HttpClients.custom().setDefaultRequestConfig(config).build();
+    private HttpClient getRedirectDisabledClient() {
+        HttpClient client = new DefaultHttpClient();
+        HttpClientParams.setRedirecting(client.getParams(), false);
+        return client;
     }
 
     private String getAuthzRequestUrl(String clientId, String requestObject) {

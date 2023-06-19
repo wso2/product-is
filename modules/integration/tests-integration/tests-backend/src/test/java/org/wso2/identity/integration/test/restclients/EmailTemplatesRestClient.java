@@ -63,12 +63,10 @@ public class EmailTemplatesRestClient {
         String endPointUrl = emailTemplateApiBasePath + PATH_SEPARATOR +
                 getEncodedEmailTemplateTypeId(templateTypeId) + EMAIL_TEMPLATES_PATH + PATH_SEPARATOR + templateId;
 
-        CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl);
-
-        String responseBody = EntityUtils.toString(response.getEntity());
-        response.close();
-
-        return getJSONObject(responseBody);
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl)) {
+            String responseBody = EntityUtils.toString(response.getEntity());
+            return getJSONObject(responseBody);
+        }
     }
 
     private CloseableHttpResponse getResponseOfHttpGet(String endPointUrl) throws IOException {

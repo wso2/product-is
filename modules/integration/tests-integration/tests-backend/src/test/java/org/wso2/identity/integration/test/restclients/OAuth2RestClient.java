@@ -60,65 +60,58 @@ public class OAuth2RestClient extends RestBaseClient {
     public String createApplication(ApplicationModel application) throws IOException, JSONException {
         String jsonRequest = toJSONString(application);
 
-        CloseableHttpResponse response = getResponseOfHttpPost(applicationManagementApiBasePath, jsonRequest,
-                getHeaders());
-        response.close();
-
-        String[] self = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
-
-        return self[self.length-1];
+        try (CloseableHttpResponse response = getResponseOfHttpPost(applicationManagementApiBasePath, jsonRequest,
+                getHeaders())) {
+            String[] self = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
+            return self[self.length - 1];
+        }
     }
 
     public ApplicationResponseModel getApplication(String appId) throws IOException {
         String endPointUrl = applicationManagementApiBasePath + PATH_SEPARATOR + appId;
-        CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders());
 
-        String responseBody = EntityUtils.toString(response.getEntity());
-        response.close();
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
+            String responseBody = EntityUtils.toString(response.getEntity());
 
-        ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
-
-        return jsonWriter.readValue(responseBody, ApplicationResponseModel.class);
+            ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+            return jsonWriter.readValue(responseBody, ApplicationResponseModel.class);
+        }
     }
 
     public void updateApplication(String appId, ApplicationPatchModel application) throws IOException {
         String jsonRequest = toJSONString(application);
         String endPointUrl = applicationManagementApiBasePath + PATH_SEPARATOR + appId;
-        CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeaders());
 
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
-                "Application update failed");
-        response.close();
+        try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                    "Application update failed");
+        }
     }
 
     public ApplicationListResponse getAllApplications() throws IOException {
-        CloseableHttpResponse response = getResponseOfHttpGet(applicationManagementApiBasePath, getHeaders());
+        try (CloseableHttpResponse response = getResponseOfHttpGet(applicationManagementApiBasePath, getHeaders())) {
+            String responseBody = EntityUtils.toString(response.getEntity());
 
-        String responseBody = EntityUtils.toString(response.getEntity());
-        response.close();
-
-        ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
-
-        return jsonWriter.readValue(responseBody, ApplicationListResponse.class);
+            ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+            return jsonWriter.readValue(responseBody, ApplicationListResponse.class);
+        }
     }
 
     public void deleteApplication(String appId) throws IOException {
         String endpointUrl = applicationManagementApiBasePath + PATH_SEPARATOR + appId;
-        CloseableHttpResponse response = getResponseOfHttpDelete(endpointUrl, getHeaders());
 
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
-                "Application deletion failed");
-        response.close();
+        try (CloseableHttpResponse response = getResponseOfHttpDelete(endpointUrl, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
+                    "Application deletion failed");
+        }
     }
     public String getConfig(String appId, String inboundType) throws Exception {
         String endPointUrl = applicationManagementApiBasePath + PATH_SEPARATOR + appId + INBOUND_PROTOCOLS_BASE_PATH +
                 PATH_SEPARATOR + inboundType;
-        CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders());
 
-        String responseBody = EntityUtils.toString(response.getEntity());
-        response.close();
-
-        return responseBody;
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
+            return EntityUtils.toString(response.getEntity());
+        }
     }
 
     public OpenIDConnectConfiguration getOIDCInboundDetails(String appId) throws Exception {
@@ -139,11 +132,11 @@ public class OAuth2RestClient extends RestBaseClient {
         String jsonRequest = toJSONString(inboundConfig);
         String endPointUrl = applicationManagementApiBasePath + PATH_SEPARATOR + appId + INBOUND_PROTOCOLS_BASE_PATH +
                 PATH_SEPARATOR + inboundType;
-        CloseableHttpResponse response = getResponseOfHttpPut(endPointUrl, jsonRequest, getHeaders());
 
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
-                String.format("Application %s inbound config update failed", inboundType));
-        response.close();
+        try (CloseableHttpResponse response = getResponseOfHttpPut(endPointUrl, jsonRequest, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                    String.format("Application %s inbound config update failed", inboundType));
+        }
     }
 
     private String getApplicationsPath(String serverUrl, String tenantDomain) {

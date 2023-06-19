@@ -68,11 +68,10 @@ public class IdentityGovernanceRestClient {
         String endPointUrl = identityGovernanceApiBasePath + PATH_SEPARATOR + categoryId +
                 CONNECTORS_BASE_PATH + PATH_SEPARATOR + connectorId;
 
-        CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest);
-
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
-                "Connector update failed");
-        response.close();
+        try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest)) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                    "Connector update failed");
+        }
     }
 
     private String toJSONString(java.lang.Object object) {

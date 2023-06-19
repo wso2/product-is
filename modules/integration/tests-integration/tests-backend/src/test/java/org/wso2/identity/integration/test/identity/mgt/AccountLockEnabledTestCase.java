@@ -45,19 +45,19 @@ import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 public class AccountLockEnabledTestCase extends ISIntegrationTest {
 
     private static final Log log = LogFactory.getLog(AccountLockEnabledTestCase.class.getName());
-    private static final String defaultLocalityClaimValue = "en_US";
-    private static final String testLockUser1 = "TestLockUser1";
-    private static final String testLockUser1Password = "TestLockUser1Password";
-    private static final String testLockUser1WrongPassword = "TestLockUser1WrongPassword";
-    private static final String testLockUser2 = "TestLockUser2";
-    private static final String testLockUser2Password = "TestLockUser2Password";
-    private static final String testLockUser3 = "TestLockUser3";
-    private static final String testLockUser3Password = "TestLockUser3Password";
+    private static final String DEFAULT_LOCALITY_CLAIM_VALUE = "en_US";
+    private static final String TEST_LOCK_USER_1 = "TestLockUser1";
+    private static final String TEST_LOCK_USER_1_PASSWORD = "TestLockUser1Password";
+    private static final String TEST_LOCK_USER_1_WRONG_PASSWORD = "TestLockUser1WrongPassword";
+    private static final String TEST_LOCK_USER_2 = "TestLockUser2";
+    private static final String TEST_LOCK_USER_2_PASSWORD = "TestLockUser2Password";
+    private static final String TEST_LOCK_USER_3 = "TestLockUser3";
+    private static final String TEST_LOCK_USER_3_PASSWORD = "TestLockUser3Password";
 
-    private static final String accountLockTemplateWhenUserExceedsFailedAttempts = "accountlockfailedattempt";
-    private static final String accountLockTemplateWhenAdminTriggered = "accountlockadmin";
-    private static final String accountUnlockTemplateAdminTriggered = "accountunlockadmin";
-    private static final String accountUnlockTemplateTimeBased = "accountunlocktimebased";
+    private static final String ACCOUNT_LOCK_TEMPLATE_WHEN_USER_EXCEEDS_FAILED_ATTEMPTS = "accountlockfailedattempt";
+    private static final String ACCOUNT_LOCK_TEMPLATE_WHEN_ADMIN_TRIGGERED = "accountlockadmin";
+    private static final String ACCOUNT_UNLOCK_TEMPLATE_ADMIN_TRIGGERED = "accountunlockadmin";
+    private static final String ACCOUNT_UNLOCK_TEMPLATE_TIME_BASED = "accountunlocktimebased";
     private static final String ACCOUNT_LOCK_ATTRIBUTE = "accountLocked";
     private static final String ENABLE_ACCOUNT_LOCK = "account.lock.handler.lock.on.max.failed.attempts.enable";
     private static final String CATEGORY_LOGIN_ATTEMPTS_SECURITY = "TG9naW4gQXR0ZW1wdHMgU2VjdXJpdHk";
@@ -82,25 +82,24 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
         super.init();
-        authenticatorRestClient = new AuthenticatorRestClient(backendURL.replace("services/", ""));
+        authenticatorRestClient = new AuthenticatorRestClient(serverURL);
         enableAccountLocking();
-        scim2RestClient = new SCIM2RestClient(backendURL.replace("services/", ""), tenantInfo);
-        emailTemplatesRestClient = new EmailTemplatesRestClient(backendURL.replace("services/",
-                ""), tenantInfo);
+        scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
+        emailTemplatesRestClient = new EmailTemplatesRestClient(serverURL, tenantInfo);
     }
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     @Test(groups = "wso2.is", description = "Check whether the user account lock successfully")
     public void testSuccessfulLockedInitially() {
         try {
-            testLockUserId = addAdminUser(testLockUser1,testLockUser1Password, null);
+            testLockUserId = addAdminUser(TEST_LOCK_USER_1, TEST_LOCK_USER_1_PASSWORD, null);
 
             int maximumAllowedFailedLogins = 5;
             for (int i = 0; i < maximumAllowedFailedLogins; i++) {
-                JSONObject response = authenticatorRestClient.login(testLockUser1,testLockUser1WrongPassword);
+                JSONObject response = authenticatorRestClient.login(TEST_LOCK_USER_1, TEST_LOCK_USER_1_WRONG_PASSWORD);
 
                 if (!response.containsKey("token")) {
-                    log.error("Login attempt: " + i + " for user: " + testLockUser1 + " failed");
+                    log.error("Login attempt: " + i + " for user: " + TEST_LOCK_USER_1 + " failed");
                 }
             }
 
@@ -120,16 +119,16 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
           dependsOnMethods = "testSuccessfulLockedInitially")
     public void testSuccessfulEmailTemplateRetrieval() throws Exception {
 
-        testLockUser2Id = addAdminUser(testLockUser2, testLockUser2Password, defaultLocalityClaimValue);
+        testLockUser2Id = addAdminUser(TEST_LOCK_USER_2, TEST_LOCK_USER_2_PASSWORD, DEFAULT_LOCALITY_CLAIM_VALUE);
         String locale = scim2RestClient.getUser(testLockUser2Id).get(LOCALE_ATTRIBUTE).toString();
 
         JSONObject emailTemplateResourceContent =
-                emailTemplatesRestClient.getEmailTemplate(accountLockTemplateWhenUserExceedsFailedAttempts, locale);
+                emailTemplatesRestClient.getEmailTemplate(ACCOUNT_LOCK_TEMPLATE_WHEN_USER_EXCEEDS_FAILED_ATTEMPTS, locale);
         Assert.assertTrue(StringUtils.isNotEmpty((String) emailTemplateResourceContent.get("body")),
                 "Test Failure : Email Content applicable for account lock is not available.");
 
         JSONObject emailTemplateResourceContentAdminTriggered =
-                emailTemplatesRestClient.getEmailTemplate(accountLockTemplateWhenAdminTriggered, locale);
+                emailTemplatesRestClient.getEmailTemplate(ACCOUNT_LOCK_TEMPLATE_WHEN_ADMIN_TRIGGERED, locale);
         Assert.assertTrue(StringUtils.isNotEmpty((String) emailTemplateResourceContentAdminTriggered.get("body")),
                 "Test Failure : Email Content applicable for account lock is not available.");
     }
@@ -140,16 +139,16 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
                   + "template successfully retrieved when admin triggered account lock.")
     public void testSuccessfulEmailTemplateRetrievalAccountUnLock() throws Exception {
 
-        testLockUser3Id = addAdminUser(testLockUser3, testLockUser3Password, defaultLocalityClaimValue);
+        testLockUser3Id = addAdminUser(TEST_LOCK_USER_3, TEST_LOCK_USER_3_PASSWORD, DEFAULT_LOCALITY_CLAIM_VALUE);
         String locale = scim2RestClient.getUser(testLockUser3Id).get(LOCALE_ATTRIBUTE).toString();
 
         JSONObject emailTemplateResourceContent =
-                emailTemplatesRestClient.getEmailTemplate(accountUnlockTemplateTimeBased, locale);
+                emailTemplatesRestClient.getEmailTemplate(ACCOUNT_UNLOCK_TEMPLATE_TIME_BASED, locale);
         Assert.assertTrue(StringUtils.isNotEmpty((String) emailTemplateResourceContent.get("body")),
                 "Test Failure : Email Content applicable for account unlock is not available.");
 
         JSONObject emailTemplateResourceContentAdminTriggered =
-                emailTemplatesRestClient.getEmailTemplate(accountUnlockTemplateAdminTriggered, locale);
+                emailTemplatesRestClient.getEmailTemplate(ACCOUNT_UNLOCK_TEMPLATE_ADMIN_TRIGGERED, locale);
         Assert.assertTrue(StringUtils.isNotEmpty((String) emailTemplateResourceContentAdminTriggered.get("body")),
                     "Test Failure : Email Content applicable for account unlock is not available.");
     }

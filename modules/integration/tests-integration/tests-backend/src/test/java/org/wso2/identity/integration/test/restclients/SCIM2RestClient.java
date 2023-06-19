@@ -44,13 +44,11 @@ public class SCIM2RestClient extends RestBaseClient {
     private static final String SCIM_JSON_CONTENT_TYPE = "application/scim+json";
     private static final String ROLE_SEARCH_SCHEMA = "urn:ietf:params:scim:api:messages:2.0:SearchRequest";
     private static final String DISPLAY_NAME_ATTRIBUTE = "displayName";
-    private static final String SPACE = " ";
     private static final String EQ_OP = "eq";
     private final String serverUrl;
     private final String tenantDomain;
     private final String username;
     private final String password;
-
 
     public SCIM2RestClient(String serverUrl, Tenant tenantInfo){
         this.serverUrl = serverUrl;
@@ -66,63 +64,60 @@ public class SCIM2RestClient extends RestBaseClient {
                     "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User");
         }
 
-        CloseableHttpResponse response = getResponseOfHttpPost(getUsersPath(), jsonRequest, getHeaders());
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_CREATED,
-                "User creation failed");
-        JSONObject jsonResponse = getJSONObject(EntityUtils.toString(response.getEntity()));
-        response.close();
-
-        return jsonResponse.get("id").toString();
+        try (CloseableHttpResponse response = getResponseOfHttpPost(getUsersPath(), jsonRequest, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_CREATED,
+                    "User creation failed");
+            JSONObject jsonResponse = getJSONObject(EntityUtils.toString(response.getEntity()));
+            return jsonResponse.get("id").toString();
+        }
     }
 
     public JSONObject getUser(String userId) throws Exception {
         String endPointUrl = getUsersPath() + PATH_SEPARATOR + userId;
-        CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders());
 
-        JSONObject jsonResponse = getJSONObject(EntityUtils.toString(response.getEntity()));
-        response.close();
-
-        return jsonResponse;
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
+            return getJSONObject(EntityUtils.toString(response.getEntity()));
+        }
     }
 
     public void updateUser(PatchOperationRequestObject patchUserInfo, String userId) throws IOException {
         String jsonRequest = toJSONString(patchUserInfo);
         String endPointUrl = getUsersPath() + PATH_SEPARATOR + userId;
 
-        CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeaders());
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
-                "Role update failed");
-        response.close();
+        try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                    "Role update failed");
+        }
     }
 
     public void deleteUser(String userId) throws IOException {
         String endPointUrl = getUsersPath() + PATH_SEPARATOR + userId;
-        CloseableHttpResponse response = getResponseOfHttpDelete(endPointUrl, getHeaders());
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
-                "User deletion failed");
-        response.close();
+
+        try (CloseableHttpResponse response = getResponseOfHttpDelete(endPointUrl, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
+                    "User deletion failed");
+        }
     }
 
     public String addRole(RoleRequestObject roleInfo) throws Exception {
         String jsonRequest = toJSONString(roleInfo);
 
-        CloseableHttpResponse response = getResponseOfHttpPost(getRolesPath(), jsonRequest, getHeaders());
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_CREATED,
-                "Role creation failed");
-        JSONObject jsonResponse = getJSONObject(EntityUtils.toString(response.getEntity()));
-        response.close();
-
-        return jsonResponse.get("id").toString();
+        try (CloseableHttpResponse response = getResponseOfHttpPost(getRolesPath(), jsonRequest, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_CREATED,
+                    "Role creation failed");
+            JSONObject jsonResponse = getJSONObject(EntityUtils.toString(response.getEntity()));
+            return jsonResponse.get("id").toString();
+        }
     }
 
     public void updateUserRole(PatchOperationRequestObject patchRoleInfo, String roleId) throws IOException {
         String jsonRequest = toJSONString(patchRoleInfo);
         String endPointUrl = getRolesPath() + PATH_SEPARATOR + roleId;
 
-        CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeaders());
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
-                "Role update failed");
-        response.close();
+        try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                    "Role update failed");
+        }
     }
 
     public String getRoleIdByName(String roleName) throws Exception {
@@ -130,30 +125,29 @@ public class SCIM2RestClient extends RestBaseClient {
         RoleSearchRequestObject roleSearchObj = new RoleSearchRequestObject();
         roleSearchObj.addSchemas(ROLE_SEARCH_SCHEMA);
 
-        String filterString =  DISPLAY_NAME_ATTRIBUTE + SPACE + EQ_OP + SPACE + roleName;
+        String filterString =  DISPLAY_NAME_ATTRIBUTE + " " + EQ_OP + " " + roleName;
         roleSearchObj.setFilter(filterString);
 
         String jsonRequest = toJSONString(roleSearchObj);
 
-        CloseableHttpResponse response = getResponseOfHttpPost(getRolesPath() + SCIM2_ROLE_SEARCH_PATH,
-                jsonRequest, getHeaders());
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
-                "Role search failed");
-        JSONObject jsonResponse = getJSONObject(EntityUtils.toString(response.getEntity()));
-        response.close();
+        try (CloseableHttpResponse response = getResponseOfHttpPost(getRolesPath() + SCIM2_ROLE_SEARCH_PATH,
+                jsonRequest, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                    "Role search failed");
+            JSONObject jsonResponse = getJSONObject(EntityUtils.toString(response.getEntity()));
+            JSONObject searchResult = (JSONObject) ((JSONArray) jsonResponse.get("Resources")).get(0);
 
-        JSONObject searchResult = (JSONObject) ((JSONArray) jsonResponse.get("Resources")).get(0);
-
-        return searchResult.get("id").toString();
+            return searchResult.get("id").toString();
+        }
     }
 
     public void deleteRole(String roleId) throws IOException {
         String endPointUrl = getRolesPath() + PATH_SEPARATOR + roleId;
 
-        CloseableHttpResponse response = getResponseOfHttpDelete(endPointUrl, getHeaders());
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
-                "Role deletion failed");
-        response.close();
+        try (CloseableHttpResponse response = getResponseOfHttpDelete(endPointUrl, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
+                    "Role deletion failed");
+        }
     }
 
     private Header[] getHeaders() {

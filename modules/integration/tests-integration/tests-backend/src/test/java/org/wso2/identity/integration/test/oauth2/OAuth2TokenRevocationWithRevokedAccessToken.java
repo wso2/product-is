@@ -274,5 +274,6 @@ public class OAuth2TokenRevocationWithRevokedAccessToken extends OAuth2ServiceAb
     public void atEnd() throws Exception {
 
         deleteApp(applicationId);
+        restClient.closeHttpClient();
     }
 }

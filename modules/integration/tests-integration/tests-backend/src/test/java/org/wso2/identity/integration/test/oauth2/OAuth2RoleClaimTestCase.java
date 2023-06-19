@@ -83,7 +83,7 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
         this.PASSWORD = tenantInfo.getContextUser().getPassword();
         setSystemproperties();
         client = HttpClients.createDefault();
-        scim2RestClient = new SCIM2RestClient(backendURL.replace("services/", ""), tenantInfo);
+        scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
 
         roleId = scim2RestClient.addRole(getRoleCreationInfo());
         userId = scim2RestClient.createUser(getUserCreationInfo());
