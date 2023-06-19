@@ -34,7 +34,7 @@ import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1
 import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.ConnectorsPatchReq.OperationEnum;
 import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.PropertyReq;
 import org.wso2.identity.integration.test.rest.api.user.common.model.ListObject;
-import org.wso2.identity.integration.test.rest.api.user.common.model.PatchRoleOperationRequestObject;
+import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperationRequestObject;
 import org.wso2.identity.integration.test.rest.api.user.common.model.RoleItemAddGroupobj;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 import org.wso2.identity.integration.test.restclients.AuthenticatorRestClient;
@@ -207,7 +207,7 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
         patchRoleItem.setPath(USERS_PATH);
         patchRoleItem.addValue(new ListObject().value(userId));
 
-        scim2RestClient.updateUserRole(new PatchRoleOperationRequestObject().addOperations(patchRoleItem), roleId);
+        scim2RestClient.updateUserRole(new PatchOperationRequestObject().addOperations(patchRoleItem), roleId);
         return userId;
     }
 }

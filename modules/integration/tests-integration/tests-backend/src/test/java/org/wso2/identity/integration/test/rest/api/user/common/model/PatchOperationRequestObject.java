@@ -26,15 +26,15 @@ import javax.validation.Valid;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
-public class PatchRoleOperationRequestObject {
+public class PatchOperationRequestObject {
 
     private List<String> schemas = null;
-    private List<RoleItemAddGroupobj> Operations = null;
+    private List<Object> Operations = null;
 
     /**
      *
      **/
-    public PatchRoleOperationRequestObject schemas(List<String> schemas) {
+    public PatchOperationRequestObject schemas(List<String> schemas) {
 
         this.schemas = schemas;
         return this;
@@ -54,7 +54,7 @@ public class PatchRoleOperationRequestObject {
     /**
      *
      **/
-    public PatchRoleOperationRequestObject Operations(List<RoleItemAddGroupobj> Operations) {
+    public PatchOperationRequestObject Operations(List<Object> Operations) {
 
         this.Operations = Operations;
         return this;
@@ -63,15 +63,15 @@ public class PatchRoleOperationRequestObject {
     @ApiModelProperty()
     @JsonProperty("Operations")
     @Valid
-    public List<RoleItemAddGroupobj> getOperations() {
+    public List<Object> getOperations() {
         return Operations;
     }
 
-    public void setOperations(List<RoleItemAddGroupobj> Operations) {
+    public void setOperations(List<Object> Operations) {
         this.Operations = Operations;
     }
 
-    public PatchRoleOperationRequestObject addOperations(RoleItemAddGroupobj Operation) {
+    public PatchOperationRequestObject addOperations(Object Operation) {
         if (this.Operations == null) {
             this.Operations = new ArrayList<>();
         }
@@ -88,7 +88,7 @@ public class PatchRoleOperationRequestObject {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        PatchRoleOperationRequestObject user = (PatchRoleOperationRequestObject) o;
+        PatchOperationRequestObject user = (PatchOperationRequestObject) o;
         return Objects.equals(this.schemas, user.schemas) &&
                 Objects.equals(this.Operations, user.Operations);
 

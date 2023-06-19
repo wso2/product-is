@@ -43,7 +43,7 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
 import org.wso2.identity.integration.test.rest.api.user.common.model.ListObject;
-import org.wso2.identity.integration.test.rest.api.user.common.model.PatchRoleOperationRequestObject;
+import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperationRequestObject;
 import org.wso2.identity.integration.test.rest.api.user.common.model.RoleItemAddGroupobj;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
@@ -303,6 +303,6 @@ public class OAuth2BackChannelLogoutTestCase extends OAuth2ServiceAbstractIntegr
         patchRoleItem.setPath(USERS_PATH);
         patchRoleItem.addValue(new ListObject().value(userId));
 
-        scim2RestClient.updateUserRole(new PatchRoleOperationRequestObject().addOperations(patchRoleItem), roleId);
+        scim2RestClient.updateUserRole(new PatchOperationRequestObject().addOperations(patchRoleItem), roleId);
     }
 }

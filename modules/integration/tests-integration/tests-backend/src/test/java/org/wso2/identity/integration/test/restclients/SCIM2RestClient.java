@@ -17,8 +17,6 @@
  */
 package org.wso2.identity.integration.test.restclients;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -29,8 +27,7 @@ import org.json.simple.JSONObject;
 import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
-import org.wso2.identity.integration.test.rest.api.user.common.model.PatchRoleOperationRequestObject;
+import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperationRequestObject;
 import org.wso2.identity.integration.test.rest.api.user.common.model.RoleRequestObject;
 import org.wso2.identity.integration.test.rest.api.user.common.model.RoleSearchRequestObject;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
@@ -38,8 +35,6 @@ import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
 public class SCIM2RestClient extends RestBaseClient {
 
@@ -90,6 +85,16 @@ public class SCIM2RestClient extends RestBaseClient {
         return jsonResponse;
     }
 
+    public void updateUser(PatchOperationRequestObject patchUserInfo, String userId) throws IOException {
+        String jsonRequest = toJSONString(patchUserInfo);
+        String endPointUrl = getUsersPath() + PATH_SEPARATOR + userId;
+
+        CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeaders());
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                "Role update failed");
+        response.close();
+    }
+
     public void deleteUser(String userId) throws IOException {
         String endPointUrl = getUsersPath() + PATH_SEPARATOR + userId;
         CloseableHttpResponse response = getResponseOfHttpDelete(endPointUrl, getHeaders());
@@ -110,7 +115,7 @@ public class SCIM2RestClient extends RestBaseClient {
         return jsonResponse.get("id").toString();
     }
 
-    public void updateUserRole(PatchRoleOperationRequestObject patchRoleInfo, String roleId) throws IOException {
+    public void updateUserRole(PatchOperationRequestObject patchRoleInfo, String roleId) throws IOException {
         String jsonRequest = toJSONString(patchRoleInfo);
         String endPointUrl = getRolesPath() + PATH_SEPARATOR + roleId;
 

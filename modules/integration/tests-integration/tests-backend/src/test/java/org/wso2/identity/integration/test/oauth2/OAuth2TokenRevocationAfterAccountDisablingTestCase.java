@@ -35,17 +35,14 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.token.AccessToken;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
-import java.rmi.RemoteException;
-import java.util.Arrays;
-import org.apache.axis2.context.ConfigurationContext;
-import org.apache.axis2.context.ConfigurationContextFactory;
-import org.apache.commons.lang.ArrayUtils;
+
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.simple.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -54,23 +51,19 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.identity.application.common.model.idp.xsd.FederatedAuthenticatorConfig;
-import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
-import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProviderProperty;
-import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
-import org.wso2.carbon.identity.user.profile.stub.UserProfileMgtServiceUserProfileExceptionException;
-import org.wso2.carbon.identity.user.profile.stub.types.UserFieldDTO;
-import org.wso2.carbon.identity.user.profile.stub.types.UserProfileDTO;
-import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
-import org.wso2.carbon.um.ws.api.stub.ClaimValue;
-import org.wso2.carbon.um.ws.api.stub.RemoteUserStoreManagerServiceUserStoreExceptionException;
-import org.wso2.carbon.user.api.UserStoreException;
-import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
-import org.wso2.identity.integration.common.clients.UserManagementClient;
-import org.wso2.identity.integration.common.clients.UserProfileMgtServiceClient;
-import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
-import org.wso2.identity.integration.common.clients.mgt.UserIdentityManagementAdminServiceClient;
-import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AccessTokenConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.ConnectorsPatchReq;
+import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.ConnectorsPatchReq.OperationEnum;
+import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.PropertyReq;
+import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperationRequestObject;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserItemAddGroupobj;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserItemAddGroupobj.OpEnum;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
+import org.wso2.identity.integration.test.restclients.IdentityGovernanceRestClient;
+import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
@@ -78,6 +71,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -89,42 +83,35 @@ import java.util.Set;
  */
 public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
-    private UserManagementClient userMgtClient;
-    private IdentityProviderMgtServiceClient idPMgtClient;
-    private IdentityProvider residentIDP;
-    private IdentityProviderMgtServiceClient tenantIDPMgtClient;
-    private UserProfileMgtServiceClient userProfileMgtClient;
-    private UserIdentityManagementAdminServiceClient userIdentityManagementAdminServiceClient;
-    private ApplicationManagementServiceClient applicationManagementServiceClient;
-    private RemoteUserStoreManagerServiceClient usmClient;
-
     private final String tokenType;
     private final String adminUsername;
     private final String adminPassword;
     private final String activeTenant;
 
     private static final String TENANT_DOMAIN = "wso2.com";
-    private static final String DEFAULT_STRING = "default";
     private static final String TEST_USER_USERNAME = "testUser";
     private static final String TEST_USER_PASSWORD = "Ab@123";
-    private static final String ADMIN = "admin";
-
-    private static final String ACCOUNT_DISABLED_CLAIM_URI = "http://wso2.org/claims/identity/accountDisabled";
     private static final String ENABLE_ACCOUNT_DISABLING_PROPERTY = "account.disable.handler.enable";
+    private static final String CONNECTOR_ACCOUNT_DISABLE_HANDLER = "YWNjb3VudC5kaXNhYmxlLmhhbmRsZXI";
+    private static final String CATEGORY_ACCOUNT_MANAGEMENT = "QWNjb3VudCBNYW5hZ2VtZW50";
 
-    private static final String OAUTH_APPLICATION_NAME_1 = "oauthTestApplication1";
-    private static final String OAUTH_APPLICATION_NAME_2 = "oauthTestApplication2";
+    private static final String USER_SCHEMA_ATTRIBUTE ="urn:ietf:params:scim:schemas:extension:enterprise:2.0:User";
+    private static final String ACCOUNT_DISABLED_ATTRIBUTE ="accountDisabled";
     private static final String APP_CALLBACK_URL = "http://localhost:8490/playground2/oauth2client";
 
     private static final String SERVICE_PROVIDER_1_NAME = "PlaygroundServiceProvider1";
     private static final String SERVICE_PROVIDER_2_NAME = "PlaygroundServiceProvider2";
     private static final String TEST_NONCE = "test_nonce";
 
-    private Map<String, OAuthConsumerAppDTO> applications = new HashMap<>();
-    private Map<String, AccessToken> accessTokens = new HashMap<>();
-    private Map<String, AccessToken> privilegedAccessTokens = new HashMap<>();
+    private final Map<String, String> applications = new HashMap<>();
+    private final Map<String, AccessToken> accessTokens = new HashMap<>();
+    private final Map<String, AccessToken> privilegedAccessTokens = new HashMap<>();
 
     private HttpClient client;
+    private SCIM2RestClient scim2RestClient;
+    private String userId;
+    private IdentityGovernanceRestClient identityGovernanceRestClient;
+    private ConnectorsPatchReq connectorPatchRequest;
 
     @DataProvider
     public static Object[][] oAuthConsumerApplicationProvider() {
@@ -150,49 +137,37 @@ public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2Se
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
-        createServiceProviderApplication(OAUTH_APPLICATION_NAME_1, SERVICE_PROVIDER_1_NAME);
-        createServiceProviderApplication(OAUTH_APPLICATION_NAME_2, SERVICE_PROVIDER_2_NAME);
-        addNewTestUser();
-        ConfigurationContext configContext = ConfigurationContextFactory
-                .createConfigurationContextFromFileSystem(null, null);
-        applicationManagementServiceClient =
-                new ApplicationManagementServiceClient(sessionCookie, backendURL, configContext);
+        createServiceProviderApplication(SERVICE_PROVIDER_1_NAME);
+        createServiceProviderApplication(SERVICE_PROVIDER_2_NAME);
+
+        scim2RestClient = new SCIM2RestClient(backendURL.replace("services/", ""), tenantInfo);
+        identityGovernanceRestClient = new IdentityGovernanceRestClient(backendURL.replace("services/",
+                ""), tenantInfo);
+
+        userId = addNewTestUser();
         client = HttpClientBuilder.create().disableRedirectHandling().build();
-        idPMgtClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
-        residentIDP = idPMgtClient.getResidentIdP();
-        usmClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
-        userIdentityManagementAdminServiceClient = new UserIdentityManagementAdminServiceClient(backendURL,
-                sessionCookie);
-        AuthenticatorClient logManager = new AuthenticatorClient(backendURL);
-        String secondaryTenantDomain = isServer.getTenantList().get(1);
-        String tenantCookie = logManager.login(ADMIN + "@" + secondaryTenantDomain,
-                ADMIN, isServer.getInstance().getHosts().get(DEFAULT_STRING));
-        tenantIDPMgtClient = new IdentityProviderMgtServiceClient(tenantCookie, backendURL);
     }
 
     @AfterClass(alwaysRun = true)
     public void testClear() throws Exception {
 
         deleteUser();
-        deleteSpApplication(SERVICE_PROVIDER_1_NAME);
-        deleteSpApplication(SERVICE_PROVIDER_2_NAME);
-        IdentityProviderProperty[] idpProperties = residentIDP.getIdpProperties();
-        for (IdentityProviderProperty providerProperty : idpProperties) {
-            if (ENABLE_ACCOUNT_DISABLING_PROPERTY.equalsIgnoreCase(providerProperty.getName())) {
-                providerProperty.setValue("false");
-            }
-        }
-        updateResidentIDP(residentIDP, true);
+        deleteApp(applications.get(SERVICE_PROVIDER_1_NAME));
+        deleteApp(applications.get(SERVICE_PROVIDER_2_NAME));
+        disableUserAccountDisablingFeature();
     }
 
     @Test(description = "Create access tokens")
-    public void testCreateAccessTokens() throws URISyntaxException, IOException, ParseException {
+    public void testCreateAccessTokens() throws Exception {
 
         Set<String> appKeys = applications.keySet();
         for (String appName : appKeys) {
-            OAuthConsumerAppDTO appDTO = applications.get(appName);
-            ClientID consumerKey = new ClientID(appDTO.getOauthConsumerKey());
-            Secret consumerSecret = new Secret(appDTO.getOauthConsumerSecret());
+            String appId = applications.get(appName);
+
+            OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(appId);
+            ClientID consumerKey = new ClientID(oidcConfig.getClientId());
+            Secret consumerSecret = new Secret(oidcConfig.getClientSecret());
+
             AccessToken accessToken = requestAccessToken(consumerKey, consumerSecret);
             accessTokens.put(appName, accessToken);
             AccessToken privilegedAccessToken = requestPrivilegedAccessToken(consumerKey, consumerSecret);
@@ -214,28 +189,29 @@ public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2Se
     )
     private void enableUserAccountDisablingFeature() throws Exception {
 
-        IdentityProviderProperty[] idpProperties = residentIDP.getIdpProperties();
-        for (IdentityProviderProperty providerProperty : idpProperties) {
-            if (ENABLE_ACCOUNT_DISABLING_PROPERTY.equalsIgnoreCase(providerProperty.getName())) {
-                providerProperty.setValue("true");
-            }
-        }
-        updateResidentIDP(residentIDP, true);
+        PropertyReq property = new PropertyReq();
+        property.setName(ENABLE_ACCOUNT_DISABLING_PROPERTY);
+        property.setValue("true");
+
+        connectorPatchRequest = new ConnectorsPatchReq();
+        connectorPatchRequest.setOperation(OperationEnum.UPDATE);
+        connectorPatchRequest.addProperties(property);
+
+        identityGovernanceRestClient.updateConnectors(CATEGORY_ACCOUNT_MANAGEMENT , CONNECTOR_ACCOUNT_DISABLE_HANDLER,
+                connectorPatchRequest);
     }
 
     @Test(description = "Disabling the test user account", dependsOnMethods = "enableUserAccountDisablingFeature")
-    private void testDisableUserAccount()
-            throws RemoteException, RemoteUserStoreManagerServiceUserStoreExceptionException,
-            UserProfileMgtServiceUserProfileExceptionException {
+    private void testDisableUserAccount() throws Exception {
 
-        setUserClaim(ACCOUNT_DISABLED_CLAIM_URI, "true");
-        ClaimValue[] claimValues = usmClient.getUserClaimValuesForClaims(TEST_USER_USERNAME, new String[]
-                {ACCOUNT_DISABLED_CLAIM_URI}, "default");
-        String accountDisabledClaimValue = null;
-        if (ArrayUtils.isNotEmpty(claimValues)) {
-            accountDisabledClaimValue = claimValues[0].getValue();
-        }
-        Assert.assertTrue(Boolean.parseBoolean(accountDisabledClaimValue), "User account didn't disabled");
+        UserItemAddGroupobj disableUserPatchOp = new UserItemAddGroupobj().op(OpEnum.REPLACE);
+        disableUserPatchOp.setPath(USER_SCHEMA_ATTRIBUTE + ":" + ACCOUNT_DISABLED_ATTRIBUTE);
+        disableUserPatchOp.setValue(true);
+        scim2RestClient.updateUser(new PatchOperationRequestObject().addOperations(disableUserPatchOp), userId);
+
+        Boolean accountActiveValue = (Boolean) ((JSONObject) scim2RestClient.getUser(userId).get(USER_SCHEMA_ATTRIBUTE))
+                .get(ACCOUNT_DISABLED_ATTRIBUTE);
+        Assert.assertTrue(accountActiveValue, "User account didn't disabled");
     }
 
     @Test(
@@ -255,54 +231,42 @@ public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2Se
         }
     }
 
-    private void createServiceProviderApplication(String oAuthAppName, String serviceProviderName) throws Exception {
+    private void createServiceProviderApplication(String serviceProviderName) throws Exception {
 
-        OAuthConsumerAppDTO appDTO = new OAuthConsumerAppDTO();
-        appDTO.setApplicationName(oAuthAppName);
-        appDTO.setCallbackUrl(OAuth2Constant.CALLBACK_URL);
-        appDTO.setOAuthVersion(OAuth2Constant.OAUTH_VERSION_2);
-        appDTO.setTokenType(tokenType);
-        appDTO.setGrantTypes("authorization_code password");
-        OAuthConsumerAppDTO oAuthConsumerAppDTO = createApplication(appDTO, serviceProviderName);
-        applications.put(serviceProviderName, oAuthConsumerAppDTO);
+        ApplicationModel application = new ApplicationModel();
+
+        List<String> grantTypes = new ArrayList<>();
+        Collections.addAll(grantTypes, "authorization_code", "password");
+
+        List<String> callBackUrls = new ArrayList<>();
+        Collections.addAll(callBackUrls, OAuth2Constant.CALLBACK_URL);
+
+        AccessTokenConfiguration accessTokenConfig = new AccessTokenConfiguration().type(tokenType);
+        accessTokenConfig.setUserAccessTokenExpiryInSeconds(3600L);
+        accessTokenConfig.setApplicationAccessTokenExpiryInSeconds(3600L);
+
+        OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
+        oidcConfig.setGrantTypes(grantTypes);
+        oidcConfig.setCallbackURLs(callBackUrls);
+        oidcConfig.setAccessToken(accessTokenConfig);
+
+        InboundProtocols inboundProtocolsConfig = new InboundProtocols();
+        inboundProtocolsConfig.setOidc(oidcConfig);
+
+        application.setInboundProtocolConfiguration(inboundProtocolsConfig);
+        application.setName(serviceProviderName);
+
+        String applicationId = addApplication(application);
+        applications.put(serviceProviderName, applicationId);
     }
 
-    private void addNewTestUser()
-            throws UserStoreException, RemoteException, RemoteUserStoreManagerServiceUserStoreExceptionException {
+    private String addNewTestUser() throws Exception {
 
-        remoteUSMServiceClient.addUser(TEST_USER_USERNAME, TEST_USER_PASSWORD, null, null,
-                DEFAULT_STRING, false);
-    }
+        UserObject userInfo = new UserObject();
+        userInfo.setUserName(TEST_USER_USERNAME);
+        userInfo.setPassword(TEST_USER_PASSWORD);
 
-    private void setUserClaim(String claimURI, String claimValue)
-            throws RemoteException, UserProfileMgtServiceUserProfileExceptionException {
-
-        userProfileMgtClient = new UserProfileMgtServiceClient(backendURL, sessionCookie);
-        UserProfileDTO profile = new UserProfileDTO();
-        profile.setProfileName(DEFAULT_STRING);
-        UserFieldDTO disableAccountClaim = new UserFieldDTO();
-        disableAccountClaim.setClaimUri(claimURI);
-        disableAccountClaim.setFieldValue(claimValue);
-        UserFieldDTO[] fields = new UserFieldDTO[1];
-        fields[0] = disableAccountClaim;
-        profile.setFieldValues(fields);
-        userProfileMgtClient.setUserProfile(TEST_USER_USERNAME, profile);
-    }
-
-    private void updateResidentIDP(IdentityProvider residentIdentityProvider, boolean isSuperTenant) throws Exception {
-
-        FederatedAuthenticatorConfig[] federatedAuthenticatorConfigs =
-                residentIdentityProvider.getFederatedAuthenticatorConfigs();
-        federatedAuthenticatorConfigs = Arrays.stream(federatedAuthenticatorConfigs).filter(
-                config -> config.getName().equalsIgnoreCase("samlsso")
-        ).toArray(FederatedAuthenticatorConfig[]::new);
-
-        residentIdentityProvider.setFederatedAuthenticatorConfigs(federatedAuthenticatorConfigs);
-        if (isSuperTenant) {
-            idPMgtClient.updateResidentIdP(residentIdentityProvider);
-        } else {
-            tenantIDPMgtClient.updateResidentIdP(residentIdentityProvider);
-        }
+        return scim2RestClient.createUser(userInfo);
     }
 
     private AccessToken requestAccessToken(ClientID key, Secret secret)
@@ -319,7 +283,7 @@ public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2Se
 
     private AuthorizationGrant getAuthorizationCode(ClientID key) throws IOException, URISyntaxException {
 
-        String sessionDataKey = "";
+        String sessionDataKey;
         String sessionDataKeyConsent = "";
         String sessionDataKeyResponse = getSessionDataKeyRequest(key.getValue());
 
@@ -345,8 +309,7 @@ public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2Se
                 OAuth2Constant.AUTHORIZATION_CODE_NAME));
         Assert.assertNotNull(authorizationCode, "Authorization code is null.");
         URI callbackURI = new URI(APP_CALLBACK_URL);
-        AuthorizationGrant grant = new AuthorizationCodeGrant(authorizationCode, callbackURI);
-        return grant;
+        return new AuthorizationCodeGrant(authorizationCode, callbackURI);
     }
 
     private String getSessionDataKeyRequest(String consumerKey) throws IOException {
@@ -426,15 +389,17 @@ public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2Se
         return TokenIntrospectionResponse.parse(introspectionHTTPResp);
     }
 
-    private void deleteSpApplication(String applicationName) throws Exception {
+    private void disableUserAccountDisablingFeature() throws Exception {
 
-        applicationManagementServiceClient.deleteApplication(applicationName);
+        connectorPatchRequest.getProperties().get(0).setValue("false");
+        identityGovernanceRestClient.updateConnectors(CATEGORY_ACCOUNT_MANAGEMENT , CONNECTOR_ACCOUNT_DISABLE_HANDLER,
+                connectorPatchRequest);
     }
 
     private void deleteUser() {
 
         try {
-            remoteUSMServiceClient.deleteUser(TEST_USER_USERNAME);
+            scim2RestClient.deleteUser(userId);
         } catch (Exception e) {
             Assert.fail("Error while deleting the user", e);
         }

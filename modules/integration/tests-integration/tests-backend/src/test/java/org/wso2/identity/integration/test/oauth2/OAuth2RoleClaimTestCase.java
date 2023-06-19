@@ -225,12 +225,12 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
         return roleInfo;
     }
 
-    private PatchRoleOperationRequestObject getAddUserPatchRole(String userId) {
+    private PatchOperationRequestObject getAddUserPatchRole(String userId) {
         RoleItemAddGroupobj patchRoleItem = new RoleItemAddGroupobj();
         patchRoleItem.setOp(RoleItemAddGroupobj.OpEnum.ADD);
         patchRoleItem.setPath(USERS_PATH);
         patchRoleItem.addValue(new ListObject().value(userId));
 
-        return new PatchRoleOperationRequestObject().addOperations(patchRoleItem);
+        return new PatchOperationRequestObject().addOperations(patchRoleItem);
     }
 }
