@@ -245,24 +245,7 @@ public class UserApprovalTestBase extends RESTAPIUserTestBase {
         HttpResponse httpResponse = client.execute(request);
 
         log.info("Response code: " + httpResponse.getStatusLine().getStatusCode());
-        if (httpResponse.getStatusLine().getStatusCode() == 200) {
-            return true;
-        }
-
-        // If the server response is 500, or it contains "service not available" text or "Operation not found" text,
-        // then we have to assume that the service is still not available.
-        // Log response to get more context.
-        BufferedReader bufferedReader =
-                new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
-        String line;
-        while ((line = bufferedReader.readLine()) != null) {
-            log.info("Response content: " + line);
-            if (line.contains("The service cannot be found for the endpoint reference") ||
-                    line.contains("The endpoint reference (EPR) for the Operation not found")) {
-                break;
-            }
-        }
-        return false;
+        return (httpResponse.getStatusLine().getStatusCode() == 200);
     }
 
     protected void setUpWorkFlowAssociation() throws Exception {
