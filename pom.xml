@@ -2353,13 +2353,13 @@
         <conditional.authentication.functions.version>1.2.26</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.6.342</identity.apps.version>
+        <identity.apps.version>1.6.347</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
 
         <!-- Carbon Kernel -->
-        <carbon.kernel.version>4.9.5</carbon.kernel.version>
+        <carbon.kernel.version>4.9.6</carbon.kernel.version>
 
         <!-- Identity Verification -->
         <identity.verification.version>1.0.2</identity.verification.version>
