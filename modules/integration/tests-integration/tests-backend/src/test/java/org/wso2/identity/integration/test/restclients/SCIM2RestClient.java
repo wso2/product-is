@@ -57,6 +57,12 @@ public class SCIM2RestClient extends RestBaseClient {
         this.password = tenantInfo.getContextUser().getPassword();
     }
 
+    /**
+     * Create a user
+     *
+     * @param userInfo object with user creation details.
+     * @return Id of the created user.
+     */
     public String createUser(UserObject userInfo) throws Exception {
         String jsonRequest = toJSONString(userInfo);
         if (userInfo.getScimSchemaExtensionEnterprise() != null) {
@@ -72,6 +78,12 @@ public class SCIM2RestClient extends RestBaseClient {
         }
     }
 
+    /**
+     * Get the details of a user
+     *
+     * @param userId id of the user.
+     * @return JSONObject of the HTTP response.
+     */
     public JSONObject getUser(String userId) throws Exception {
         String endPointUrl = getUsersPath() + PATH_SEPARATOR + userId;
 
@@ -80,6 +92,12 @@ public class SCIM2RestClient extends RestBaseClient {
         }
     }
 
+    /**
+     * Update the details of an existing user
+     *
+     * @param patchUserInfo user patch request object.
+     * @param userId id of the user.
+     */
     public void updateUser(PatchOperationRequestObject patchUserInfo, String userId) throws IOException {
         String jsonRequest = toJSONString(patchUserInfo);
         String endPointUrl = getUsersPath() + PATH_SEPARATOR + userId;
@@ -90,6 +108,11 @@ public class SCIM2RestClient extends RestBaseClient {
         }
     }
 
+    /**
+     * Delete an existing user
+     *
+     * @param userId id of the user.
+     */
     public void deleteUser(String userId) throws IOException {
         String endPointUrl = getUsersPath() + PATH_SEPARATOR + userId;
 
@@ -99,6 +122,12 @@ public class SCIM2RestClient extends RestBaseClient {
         }
     }
 
+    /**
+     * Add a new role
+     *
+     * @param roleInfo Role request object.
+     * @return Role id.
+     */
     public String addRole(RoleRequestObject roleInfo) throws Exception {
         String jsonRequest = toJSONString(roleInfo);
 
@@ -110,6 +139,12 @@ public class SCIM2RestClient extends RestBaseClient {
         }
     }
 
+    /**
+     * Update an existing role
+     *
+     * @param patchRoleInfo Role patch request object.
+     * @param roleId Role id.
+     */
     public void updateUserRole(PatchOperationRequestObject patchRoleInfo, String roleId) throws IOException {
         String jsonRequest = toJSONString(patchRoleInfo);
         String endPointUrl = getRolesPath() + PATH_SEPARATOR + roleId;
@@ -120,6 +155,12 @@ public class SCIM2RestClient extends RestBaseClient {
         }
     }
 
+    /**
+     * Search and get the id of a role by the name
+     *
+     * @param roleName Role name.
+     * @return Role id.
+     */
     public String getRoleIdByName(String roleName) throws Exception {
 
         RoleSearchRequestObject roleSearchObj = new RoleSearchRequestObject();
@@ -141,6 +182,11 @@ public class SCIM2RestClient extends RestBaseClient {
         }
     }
 
+    /**
+     * Delete an existing role
+     *
+     * @param roleId Role id.
+     */
     public void deleteRole(String roleId) throws IOException {
         String endPointUrl = getRolesPath() + PATH_SEPARATOR + roleId;
 
@@ -177,6 +223,10 @@ public class SCIM2RestClient extends RestBaseClient {
         }
     }
 
+    /**
+     * Close the HTTP client.
+     *
+     */
     public void closeHttpClient() throws IOException {
         client.close();
     }

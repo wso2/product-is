@@ -34,9 +34,17 @@ public class AuthenticatorRestClient extends RestBaseClient {
     private final String AUTHENTICATION_BASE_PATH = "api/identity/auth/v1.1/authenticate";
 
     public AuthenticatorRestClient(String serverUrl) {
+
         this.serverUrl = serverUrl;
     }
 
+    /**
+     * Login operation
+     *
+     * @param username username.
+     * @param password password.
+     * @return JSONObject with login details.
+     */
     public JSONObject login(String username, String password) throws Exception {
 
         AuthenticationRequest loginRequest = new AuthenticationRequest();
@@ -55,6 +63,10 @@ public class AuthenticatorRestClient extends RestBaseClient {
         return new Header[]{new BasicHeader(CONTENT_TYPE_ATTRIBUTE, String.valueOf(ContentType.JSON))};
     }
 
+    /**
+     * Close the HTTP client.
+     *
+     */
     public void closeHttpClient() throws IOException {
         client.close();
     }

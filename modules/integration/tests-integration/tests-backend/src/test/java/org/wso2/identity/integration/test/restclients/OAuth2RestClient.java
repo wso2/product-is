@@ -57,16 +57,28 @@ public class OAuth2RestClient extends RestBaseClient {
         applicationManagementApiBasePath = getApplicationsPath(backendUrl, tenantDomain);
     }
 
+    /**
+     * Create an Application
+     *
+     * @param application Application Model with application creation details.
+     * @return Id of the created application.
+     */
     public String createApplication(ApplicationModel application) throws IOException, JSONException {
         String jsonRequest = toJSONString(application);
 
         try (CloseableHttpResponse response = getResponseOfHttpPost(applicationManagementApiBasePath, jsonRequest,
                 getHeaders())) {
-            String[] self = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
-            return self[self.length - 1];
+            String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
+            return locationElements[locationElements.length - 1];
         }
     }
 
+    /**
+     * Get Application details
+     *
+     * @param appId Application id.
+     * @return ApplicationResponseModel object.
+     */
     public ApplicationResponseModel getApplication(String appId) throws IOException {
         String endPointUrl = applicationManagementApiBasePath + PATH_SEPARATOR + appId;
 
@@ -78,6 +90,12 @@ public class OAuth2RestClient extends RestBaseClient {
         }
     }
 
+    /**
+     * Update an existing application
+     *
+     * @param appId Application id.
+     * @param application Updated application patch object.
+     */
     public void updateApplication(String appId, ApplicationPatchModel application) throws IOException {
         String jsonRequest = toJSONString(application);
         String endPointUrl = applicationManagementApiBasePath + PATH_SEPARATOR + appId;
@@ -88,6 +106,11 @@ public class OAuth2RestClient extends RestBaseClient {
         }
     }
 
+    /**
+     * Get all applications
+     *
+     * @return ApplicationListResponse object.
+     */
     public ApplicationListResponse getAllApplications() throws IOException {
         try (CloseableHttpResponse response = getResponseOfHttpGet(applicationManagementApiBasePath, getHeaders())) {
             String responseBody = EntityUtils.toString(response.getEntity());
@@ -97,6 +120,11 @@ public class OAuth2RestClient extends RestBaseClient {
         }
     }
 
+    /**
+     * Delete an application
+     *
+     * @param appId Application id.
+     */
     public void deleteApplication(String appId) throws IOException {
         String endpointUrl = applicationManagementApiBasePath + PATH_SEPARATOR + appId;
 
@@ -105,7 +133,33 @@ public class OAuth2RestClient extends RestBaseClient {
                     "Application deletion failed");
         }
     }
-    public String getConfig(String appId, String inboundType) throws Exception {
+
+    /**
+     * Get OIDC inbound configuration details of an application
+     *
+     * @param appId Application id.
+     * @return OpenIDConnectConfiguration object with oidc configuration details.
+     */
+    public OpenIDConnectConfiguration getOIDCInboundDetails(String appId) throws Exception {
+        String responseBody = getConfig(appId, OIDC);
+        ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+        return jsonWriter.readValue(responseBody, OpenIDConnectConfiguration.class);
+    }
+
+    /**
+     * Get SAML inbound configuration details of an application
+     *
+     * @param appId Application id.
+     * @return SAML2ServiceProvider object with saml configuration details.
+     */
+    public SAML2ServiceProvider getSAMLInboundDetails(String appId) throws Exception {
+        String responseBody = getConfig(appId, SAML);
+        ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+
+        return jsonWriter.readValue(responseBody, SAML2ServiceProvider.class);
+    }
+
+    private String getConfig(String appId, String inboundType) throws Exception {
         String endPointUrl = applicationManagementApiBasePath + PATH_SEPARATOR + appId + INBOUND_PROTOCOLS_BASE_PATH +
                 PATH_SEPARATOR + inboundType;
 
@@ -114,19 +168,13 @@ public class OAuth2RestClient extends RestBaseClient {
         }
     }
 
-    public OpenIDConnectConfiguration getOIDCInboundDetails(String appId) throws Exception {
-        String responseBody = getConfig(appId, OIDC);
-        ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
-        return jsonWriter.readValue(responseBody, OpenIDConnectConfiguration.class);
-    }
-
-    public SAML2ServiceProvider getSAMLInboundDetails(String appId) throws Exception {
-        String responseBody = getConfig(appId, SAML);
-        ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
-
-        return jsonWriter.readValue(responseBody, SAML2ServiceProvider.class);
-    }
-
+    /**
+     * Update inbound configuration details of an application
+     *
+     * @param appId Application id.
+     * @param inboundConfig inbound configuration object to be updated.
+     * @param inboundType Type of the inbound configuration.
+     */
     public void updateInboundDetailsOfApplication(String appId, Object inboundConfig, String inboundType)
             throws IOException {
         String jsonRequest = toJSONString(inboundConfig);
@@ -157,6 +205,10 @@ public class OAuth2RestClient extends RestBaseClient {
         return headerList;
     }
 
+    /**
+     * Close the HTTP client
+     *
+     */
     public void closeHttpClient() throws IOException {
         client.close();
     }

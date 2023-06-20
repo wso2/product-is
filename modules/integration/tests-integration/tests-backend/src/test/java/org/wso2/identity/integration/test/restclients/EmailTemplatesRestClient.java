@@ -31,17 +31,13 @@ import org.json.simple.parser.JSONParser;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import java.io.IOException;
 
-public class EmailTemplatesRestClient {
+public class EmailTemplatesRestClient extends RestBaseClient {
 
     private static final String TENANT_PATH = "t/%s";
     private static final String API_SERVER_BASE_PATH = "/api/server/v1";
     private static final String EMAIL_TEMPLATES_EMAIL_BASE_PATH = "/email";
     private static final String EMAIL_TEMPLATE_TYPES_PATH = "/template-types";
     private static final String EMAIL_TEMPLATES_PATH = "/templates";
-    private static final String PATH_SEPARATOR = "/";
-    public static final String BASIC_AUTHORIZATION_ATTRIBUTE = "Basic ";
-    public static final String CONTENT_TYPE_ATTRIBUTE = "Content-Type";
-    public static final String AUTHORIZATION_ATTRIBUTE = "Authorization";
     private final String emailTemplateApiBasePath;
     private final CloseableHttpClient client;
     private final String username;
@@ -59,21 +55,21 @@ public class EmailTemplatesRestClient {
                 EMAIL_TEMPLATES_EMAIL_BASE_PATH + EMAIL_TEMPLATE_TYPES_PATH;
     }
 
+    /**
+     * Get Email template
+     *
+     * @param templateTypeId Template type id.
+     * @param templateId Template id.
+     * @return JSONObject with email template details.
+     */
     public JSONObject getEmailTemplate(String templateTypeId, String templateId) throws Exception {
         String endPointUrl = emailTemplateApiBasePath + PATH_SEPARATOR +
                 getEncodedEmailTemplateTypeId(templateTypeId) + EMAIL_TEMPLATES_PATH + PATH_SEPARATOR + templateId;
 
-        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl)) {
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
             String responseBody = EntityUtils.toString(response.getEntity());
             return getJSONObject(responseBody);
         }
-    }
-
-    private CloseableHttpResponse getResponseOfHttpGet(String endPointUrl) throws IOException {
-        HttpGet request = new HttpGet(endPointUrl);
-        request.setHeaders(getHeaders());
-
-        return client.execute(request);
     }
 
     private Header[] getHeaders() {
@@ -89,17 +85,10 @@ public class EmailTemplatesRestClient {
         return Base64.encodeBase64String(emailTemplateTypeId.getBytes());
     }
 
-    private JSONObject getJSONObject(String responseString) throws Exception {
-        JSONParser parser = new JSONParser();
-        JSONObject json = (JSONObject) parser.parse(responseString);
-        if (json == null) {
-            throw new Exception(
-                    "Error occurred while getting the response");
-        }
-
-        return json;
-    }
-
+    /**
+     * Close the HTTP client.
+     *
+     */
     public void closeHttpClient() throws IOException {
         client.close();
     }
