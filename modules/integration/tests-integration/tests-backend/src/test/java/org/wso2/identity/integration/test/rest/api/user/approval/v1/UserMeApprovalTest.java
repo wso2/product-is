@@ -29,9 +29,11 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.um.ws.api.stub.ClaimValue;
 import org.wso2.identity.integration.test.rest.api.user.approval.common.UserApprovalTestBase;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
@@ -51,7 +53,7 @@ public class UserMeApprovalTest extends UserApprovalTestBase {
     private static final String TEST_WORKFLOW_ADD_USER_FOR_REST_TASK = addUserWorkflowName + "Task";
     private static final String JSON_PATH_MATCHING_REST_API_TEST_APPROVAL_TASK = "findAll{ it.presentationName == '"
             + TEST_WORKFLOW_ADD_USER_FOR_REST_TASK + "' }";
-    private static final int MAX_WAIT_ITERATIONS_TILL_WORKFLOW_DEPLOYMENT = 18;
+    private static final int MAX_WAIT_ITERATIONS_TILL_TASK_CREATION = 10;
 
     private static String swaggerDefinition;
     private String taskIdToApprove;
@@ -117,20 +119,11 @@ public class UserMeApprovalTest extends UserApprovalTestBase {
     @Test(dependsOnMethods = {"testListTasksWhenEmpty"})
     public void testListTasksWhenAvailable() throws Exception {
 
-        addAssociationForMatch();
-        for (int i = 1; i <= MAX_WAIT_ITERATIONS_TILL_WORKFLOW_DEPLOYMENT; i++) {
-            int numOfTasks = getResponseOfGet(ME_APPROVAL_TASKS_ENDPOINT_URI)
-                    .then()
-                    .extract()
-                    .path("findAll{ it.presentationName == '"
-                            + TEST_WORKFLOW_ADD_USER_FOR_REST_TASK + "' }.size()");
-            if (numOfTasks == 3) {
-                break;
-            }
-
-            // Wait till workflow is applied.
-            log.info("Waiting 5 seconds till the workflow is applied for association, iteration " + i + " of 3");
-            Thread.sleep(5000);
+        log.info("Adding users matching the workflow engagement " + addUserWorkflowName + " to tenant " + tenant);
+        for (int taskCount = 1; taskCount <= userToAdd.length; taskCount++) {
+            usmClient.addUser(userToAdd[taskCount-1], "test12345", Arrays.copyOfRange(rolesToAdd,0, taskCount),
+                    new ClaimValue[0],null, false);
+            verifyTaskCreation(taskCount);
         }
 
         getResponseOfGet(ME_APPROVAL_TASKS_ENDPOINT_URI)
@@ -139,7 +132,7 @@ public class UserMeApprovalTest extends UserApprovalTestBase {
                 .statusCode(HttpStatus.SC_OK)
                 .log().ifValidationFails()
                 .body("findAll{ it.presentationName == " +
-                        "'" + TEST_WORKFLOW_ADD_USER_FOR_REST_TASK + "' }.size()", is(3))
+                        "'" + TEST_WORKFLOW_ADD_USER_FOR_REST_TASK + "' }.size()", is(userToAdd.length))
                 .body("findAll{ it.presentationName == " +
                         "'" + TEST_WORKFLOW_ADD_USER_FOR_REST_TASK + "' }[0].name", containsString(addUserWorkflowName))
                 .body("findAll{ it.presentationName == '" + TEST_WORKFLOW_ADD_USER_FOR_REST_TASK +
@@ -337,6 +330,30 @@ public class UserMeApprovalTest extends UserApprovalTestBase {
 
     private String getPayLoadForReleaseTask() throws IOException {
         return getPayLoad(APPROVAL_ACTION.RELEASE);
+    }
+
+    private void verifyTaskCreation(int taskCount) throws InterruptedException {
+
+        // Verifying task creation in a 10 sec window.
+        for (int i = 0; i < MAX_WAIT_ITERATIONS_TILL_TASK_CREATION; i++) {
+            // Wait till workflow is applied.
+            log.info("Waiting 1 seconds before checking whether workflow is applied for association.");
+            Thread.sleep(1000);
+            int numOfTasks = getResponseOfGet(ME_APPROVAL_TASKS_ENDPOINT_URI)
+                    .then()
+                    .extract()
+                    .path("findAll{ it.presentationName == '"
+                            + TEST_WORKFLOW_ADD_USER_FOR_REST_TASK + "' }.size()");
+            if (numOfTasks == taskCount) {
+                log.info("Tasks creation verified successfully in " + i + " attempt(s). Number of tasks created : "
+                        + numOfTasks + " of " + userToAdd.length);
+                break;
+            } else {
+                log.info("Tasks " + taskCount + " creation incomplete after " + i + "of "
+                        + MAX_WAIT_ITERATIONS_TILL_TASK_CREATION + " attempt(s)");
+            }
+        }
+
     }
 
     private void validateTaskListFilterResponse(Response response, String taskId, int size, STATE state) {

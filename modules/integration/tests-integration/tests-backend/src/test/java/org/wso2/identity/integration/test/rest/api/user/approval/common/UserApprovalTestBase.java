@@ -40,12 +40,14 @@ import org.wso2.identity.integration.test.rest.api.user.common.RESTAPIUserTestBa
 import org.wso2.identity.integration.test.utils.WorkflowConstants;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.rmi.RemoteException;
 
 public class UserApprovalTestBase extends RESTAPIUserTestBase {
 
     private static final Log log = LogFactory.getLog(UserApprovalTestBase.class);
+    private static final int MAX_WAIT_ITERATIONS_TILL_WORKFLOW_DEPLOYMENT = 100;
 
     protected static String templateId = "MultiStepApprovalTemplate";
     protected static String workflowImplId = "ApprovalWorkflow";
@@ -200,50 +202,50 @@ public class UserApprovalTestBase extends RESTAPIUserTestBase {
 
     protected void waitForWorkflowToDeploy() throws Exception {
 
-        // We have to check whether the service is up and running by calling the generated endpoint.
-        String url = super.getBackendURL() + addUserWorkflowName + "Service";
-        HttpClient client = new HttpClientFactory().getHttpClient();
-        HttpGet request = new HttpGet(url);
-
-        boolean runLoop;
-        int count = 1;
-
-        do {
-            runLoop = false;
-            HttpResponse httpResponse = client.execute(request);
-
-            // If the server response is 500 or it contains "service not available" text or "Operation not found" text,
-            // then we have to assume that the service is still not available. So we have to recheck after
-            // brief time period.
-            if (httpResponse.getStatusLine().getStatusCode() == 500) {
-                runLoop = true;
-            } else {
-                BufferedReader bufferedReader =
-                        new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
-                String line;
-                while ((line = bufferedReader.readLine()) != null) {
-                    if (line.contains("The service cannot be found for the endpoint reference") ||
-                            line.contains("The endpoint reference (EPR) for the Operation not found")) {
-                        runLoop = true;
-                        break;
-                    }
+        boolean isBpelDeployed = false;
+        boolean isHumanTaskDeployed = false;
+        String url;
+        for (int count = 1; count <= MAX_WAIT_ITERATIONS_TILL_WORKFLOW_DEPLOYMENT; count++) {
+            log.info("Verifying workflow deployment on " + count + " of " +
+                    MAX_WAIT_ITERATIONS_TILL_WORKFLOW_DEPLOYMENT + " attempts.");
+            if (!isBpelDeployed) {
+                log.info("Verifying BPEL deployment.");
+                url = identityContextUrls.getSecureServiceUrl() + "/" + addUserWorkflowName + "Service?wsdl";
+                if (isServiceDeployed(url)) {
+                    isBpelDeployed = true;
+                    log.info("Verified BPEL Workflow deployment successfully in " + count + " attempt(s).");
                 }
             }
 
-            // Wait 20 times for 5 seconds intervals until the workflow is properly deployed. This is for server based
-            // test runners like Jenkins.
-            if (count < 20) {
-                log.info("Still no luck :(. So going to wait 5 seconds and try " + (20 - count) + " more time(s).");
-                Thread.sleep(5000);
+            if (isBpelDeployed) {
+                log.info("Verifying Human Task deployment.");
+                url = identityContextUrls.getSecureServiceUrl() + "/" + addUserWorkflowName + "TaskService?wsdl";
+                if (isServiceDeployed(url)) {
+                    isHumanTaskDeployed = true;
+                    log.info("Verified Human Task Workflow deployment successfully in " + count + " attempt(s).");
+                    log.info("Workflow deployment successfully Verified.");
+                    break;
+                }
             }
+            log.info("Still no luck :(. So going to wait 1 seconds and retry");
+            Thread.sleep(1000);
+        }
 
-            // Give up after 100 seconds or this will be a forever loop.
-            if (count >= 20) {
-                log.info("No luck. Going to give up. Test will most probably fail.");
-                runLoop = false;
-            }
-            count++;
-        } while (runLoop);
+        // Give up after 100 seconds.
+        if (!isBpelDeployed || !isHumanTaskDeployed) {
+            log.warn("No luck. Going to give up. Test will most probably fail.");
+        }
+    }
+
+    private boolean isServiceDeployed(String url) throws IOException {
+
+        // We have to check whether the service is up and running by calling the generated endpoint.
+        HttpClient client = new HttpClientFactory().getHttpClient();
+        HttpGet request = new HttpGet(url);
+        HttpResponse httpResponse = client.execute(request);
+
+        log.info("Response code: " + httpResponse.getStatusLine().getStatusCode());
+        return (httpResponse.getStatusLine().getStatusCode() == 200);
     }
 
     protected void setUpWorkFlowAssociation() throws Exception {
