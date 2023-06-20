@@ -74,6 +74,7 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
 
     @Factory(dataProvider = "configProvider")
     public OAuth2ServiceClientCredentialTestCase(TestUserMode userMode) throws Exception {
+        super.init(userMode);
         context = new AutomationContext("IDENTITY", userMode);
         this.username = context.getContextTenant().getTenantAdmin().getUserName();
         this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
