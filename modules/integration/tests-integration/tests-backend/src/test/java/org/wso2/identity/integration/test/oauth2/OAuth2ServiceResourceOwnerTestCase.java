@@ -85,6 +85,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 	@Factory(dataProvider = "configProvider")
 	public OAuth2ServiceResourceOwnerTestCase(TestUserMode userMode) throws Exception {
 
+		super.init(userMode);
 		context = new AutomationContext("IDENTITY", userMode);
 		this.username = context.getContextTenant().getTenantAdmin().getUserName();
 		this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
