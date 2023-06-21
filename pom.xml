@@ -2151,7 +2151,7 @@
         <identity.inbound.auth.saml.version>5.11.14</identity.inbound.auth.saml.version>
         <identity.inbound.auth.oauth.version>6.11.81</identity.inbound.auth.oauth.version>
         <identity.inbound.provisioning.scim.version>5.7.3</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>3.4.19</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim2.version>3.4.20</identity.inbound.provisioning.scim2.version>
 
 
         <!-- Identity User Versions -->
@@ -2225,7 +2225,7 @@
         <identity.extension.utils>1.0.13</identity.extension.utils>
 
         <identity.org.mgt.version>1.3.43</identity.org.mgt.version>
-        <identity.org.mgt.core.version>1.0.50</identity.org.mgt.core.version>
+        <identity.org.mgt.core.version>1.0.51</identity.org.mgt.core.version>
 
         <!-- Hash Provider Versions-->
         <hashprovider.pbkdf2.version>0.1.4</hashprovider.pbkdf2.version>
@@ -2245,7 +2245,7 @@
         <conditional.authentication.functions.version>1.2.26</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.6.342</identity.apps.version>
+        <identity.apps.version>1.6.347</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
