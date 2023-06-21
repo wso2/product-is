@@ -1,8 +1,8 @@
 /*
- * Copyright (c) 2020, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2020, WSO2 LLC. (http://www.wso2.com).
  *
- * WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -20,7 +20,8 @@ package org.wso2.identity.integration.test.oauth2;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -30,16 +31,16 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.automation.engine.context.beans.ContextUrls;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
-import org.wso2.carbon.automation.engine.context.beans.User;
-import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
-import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
-import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
-import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
-import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
-import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
+import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT;
 
@@ -48,18 +49,9 @@ public class Oauth2OPIframeTestCase extends OAuth2ServiceAbstractIntegrationTest
     public static final String CALL_BACK_URL =
             "https://localhost:9853/oidc/checksession?client_id=%s&redirect_uri=http" +
                     "://localhost:8888/playground2/oauth2client";
-    private AuthenticatorClient logManger;
-    private DefaultHttpClient client;
-    private final String username;
-    private final String userPassword;
+    private CloseableHttpClient client;
     private final AutomationContext context;
-    private String backendURL;
-    private String sessionCookie;
-    private Tenant tenantInfo;
-    private User userInfo;
-    private LoginLogoutClient loginLogoutClient;
-    private ContextUrls identityContextUrls;
-    private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
+    private String applicationId;
 
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
@@ -69,56 +61,56 @@ public class Oauth2OPIframeTestCase extends OAuth2ServiceAbstractIntegrationTest
     @Factory(dataProvider = "configProvider")
     public Oauth2OPIframeTestCase(TestUserMode userMode) throws Exception {
 
+        super.init(userMode);
         context = new AutomationContext("IDENTITY", userMode);
-        this.username = context.getContextTenant().getTenantAdmin().getUserName();
-        this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
     }
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
-        backendURL = context.getContextUrls().getBackEndUrl();
-        loginLogoutClient = new LoginLogoutClient(context);
-        logManger = new AuthenticatorClient(backendURL);
-        sessionCookie = logManger.login(username, userPassword, context.getInstance().getHosts().get("default"));
-        identityContextUrls = context.getContextUrls();
-        tenantInfo = context.getContextTenant();
-        userInfo = tenantInfo.getContextUser();
-        appMgtclient = new ApplicationManagementServiceClient(sessionCookie, backendURL, null);
-        adminClient = new OauthAdminClient(backendURL, sessionCookie);
-        remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
-
+        Tenant tenantInfo = context.getContextTenant();
+        restClient = new OAuth2RestClient(serverURL, tenantInfo);
         setSystemproperties();
-        client = new DefaultHttpClient();
+        client = HttpClients.createDefault();
     }
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
-        appMgtclient.deleteApplication(SERVICE_PROVIDER_NAME);
-        adminClient.removeOAuthApplicationData(consumerKey);
-
-        logManger = null;
+        deleteApp(applicationId);
+        restClient.closeHttpClient();
         consumerKey = null;
     }
 
     @Test(groups = "wso2.is", description = "Check Oauth2 application registration")
     public void testOPIFrameRegex() throws Exception {
 
-        OAuthConsumerAppDTO appConfigData = new OAuthConsumerAppDTO();
-        appConfigData
-                .setApplicationName(org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH_APPLICATION_NAME);
-        appConfigData.setCallbackUrl(OAuth2Constant.CALLBACK_URL_REGEXP);
-        appConfigData.setOAuthVersion(OAuth2Constant.OAUTH_VERSION_2);
-        appConfigData.setGrantTypes("authorization_code implicit password client_credentials refresh_token "
-                + "urn:ietf:params:oauth:grant-type:saml2-bearer iwa:ntlm");
+        ApplicationModel application = new ApplicationModel();
 
-        OAuthConsumerAppDTO appDto = createApplication(appConfigData, SERVICE_PROVIDER_NAME);
-        Assert.assertNotNull(appDto, "Application creation failed.");
+        List<String> grantTypes = new ArrayList<>();
+        Collections.addAll(grantTypes, "authorization_code", "implicit", "password", "client_credentials",
+                "refresh_token", "urn:ietf:params:oauth:grant-type:saml2-bearer", "iwa:ntlm");
 
-        consumerKey = appDto.getOauthConsumerKey();
+        List<String> callBackUrls = new ArrayList<>();
+        Collections.addAll(callBackUrls, OAuth2Constant.CALLBACK_URL_REGEXP);
+
+        OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
+        oidcConfig.setGrantTypes(grantTypes);
+        oidcConfig.setCallbackURLs(callBackUrls);
+
+        InboundProtocols inboundProtocolsConfig = new InboundProtocols();
+        inboundProtocolsConfig.setOidc(oidcConfig);
+
+        application.setInboundProtocolConfiguration(inboundProtocolsConfig);
+        application.setName(SERVICE_PROVIDER_NAME);
+
+        applicationId = addApplication(application);
+        Assert.assertNotNull(applicationId, "Application creation failed.");
+
+        oidcConfig = getOIDCInboundDetailsOfApplication(applicationId);
+        consumerKey = oidcConfig.getClientId();
         Assert.assertNotNull(consumerKey, "Application creation failed.");
-        consumerSecret = appDto.getOauthConsumerSecret();
+        consumerSecret = oidcConfig.getClientSecret();
 
         HttpResponse response;
 

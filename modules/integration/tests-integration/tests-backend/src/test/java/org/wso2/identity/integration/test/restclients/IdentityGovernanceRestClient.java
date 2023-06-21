@@ -35,16 +35,12 @@ import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class IdentityGovernanceRestClient {
+public class IdentityGovernanceRestClient extends RestBaseClient {
 
     private static final String TENANT_PATH = "t/%s";
     private static final String API_SERVER_BASE_PATH = "/api/server/v1";
     private static final String IDENTITY_GOVERNANCE_BASE_PATH = "/identity-governance";
     private static final String CONNECTORS_BASE_PATH = "/connectors";
-    private static final String PATH_SEPARATOR = "/";
-    private static final String BASIC_AUTHORIZATION_ATTRIBUTE = "Basic ";
-    private static final String CONTENT_TYPE_ATTRIBUTE = "Content-Type";
-    private static final String AUTHORIZATION_ATTRIBUTE = "Authorization";
     private final String identityGovernanceApiBasePath;
     private final CloseableHttpClient client;
     private final String username;
@@ -62,32 +58,23 @@ public class IdentityGovernanceRestClient {
                 IDENTITY_GOVERNANCE_BASE_PATH;
     }
 
+    /**
+     * Update connector properties
+     *
+     * @param categoryId Connector category id.
+     * @param connectorId Connector id.
+     * @param connectorPatch Connector patch request object.
+     */
     public void updateConnectors(String categoryId, String connectorId, ConnectorsPatchReq connectorPatch)
             throws IOException {
         String jsonRequest = toJSONString(connectorPatch);
         String endPointUrl = identityGovernanceApiBasePath + PATH_SEPARATOR + categoryId +
                 CONNECTORS_BASE_PATH + PATH_SEPARATOR + connectorId;
 
-        CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest);
-
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
-                "Connector update failed");
-        response.close();
-    }
-
-    private String toJSONString(java.lang.Object object) {
-
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        return gson.toJson(object);
-    }
-
-    private CloseableHttpResponse getResponseOfHttpPatch(String endPointUrl, String jsonRequest) throws IOException {
-
-        HttpPatch request = new HttpPatch(endPointUrl);
-        request.setHeaders(getHeaders());
-        request.setEntity(new StringEntity(jsonRequest));
-
-        return client.execute(request);
+        try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                    "Connector update failed");
+        }
     }
 
     private Header[] getHeaders() {
@@ -100,6 +87,10 @@ public class IdentityGovernanceRestClient {
         return headerList;
     }
 
+    /**
+     * Close the HTTP client.
+     *
+     */
     public void closeHttpClient() throws IOException {
         client.close();
     }
