@@ -1,10 +1,10 @@
-name: 🐧🍎🪟 Migration Tester
+name: Migration Tester
 
 on:
   workflow_dispatch:
     inputs:
       currentVersion:
-        description: "🖥️ Specify the version of WSO2 IS that is presently installed in your environment."
+        description: "Specify the version of WSO2 IS that is presently installed in your environment."
         default: "5.11.0"
         type: choice
         options:
@@ -15,7 +15,7 @@ on:
           - "6.1.0"
           - "6.2.0"
       migratingVersion:
-        description: "💻 Specify the version of WSO2 IS that you want to migrate."
+        description: "Specify the version of WSO2 IS that you want to migrate."
         default: "6.0.0"
         type: choice
         options:
@@ -25,7 +25,7 @@ on:
           - "6.1.0"
           - "6.2.0"
       database:
-        description: "🐘 Select the database."
+        description: "Select the database."
         default: "mysql"
         type: choice
         options:
@@ -33,7 +33,7 @@ on:
           - "mssql"
           - "postgres"
       os:
-        description: "🐧 Select the OS."
+        description: "Select the OS."
         default: "ubuntu-latest"
         type: choice
         options:
@@ -41,78 +41,25 @@ on:
           - "macos-latest"
           - "windows-latest"
       urlOld:
-        description: "🔗 Provide the URL to download the old version of WSO2 IS."
+        description: "Provide the URL to download the old version of WSO2 IS."
         default: https://github.com/wso2/product-is/releases/download/v5.11.0/wso2is-5.11.0.zip
         required: true
       urlNew:
-        description: "🔗🆕 Provide the URL to download the version you want to upgrade WSO2 IS."
+        description: "Provide the URL to download the version you want to upgrade WSO2 IS."
         default: https://github.com/wso2/product-is/releases/download/v6.0.0-rc2/wso2is-6.0.0-rc2.zip
         required: true
 jobs:
-  setup-migration-client:
-    runs-on: ${{ github.event.inputs.os }}
-    steps:
-      - name: 💾 Checkout code
-        uses: actions/checkout@v2
-      - name: 🤖 Download Migration Client
-        run: |
-          readonly github_repo_owner="wso2-extensions"
-          readonly github_repo_name="identity-migration-resources"
-          readonly tag="1.0.225"
-          readonly asset_file_name_with_ext="wso2is-migration-$tag.zip"
-          github_tag_url=$(curl --silent --show-error \
-                --header "Authorization: token ${{ secrets.MIGRATION_PAT }}" \
-                --header "Accept: application/json, application/vnd.github.v3+json" \
-                --request GET "https://api.github.com/repos/$github_repo_owner/$github_repo_name/releases?per_page=100&draft=false" |
-                jq -r '.url') &&
-              readonly github_tag_url &&
-              echo "Discovered the github_tag_url: ${github_tag_url}" &&
-          github_tag_id=$(curl --silent --show-error \
-                --header "Authorization: token ${{ secrets.MIGRATION_PAT }}" \
-                --header "Accept: application/json, application/vnd.github.v3+json" \
-                --request GET "${github_tag_url}" | 
-              jq --raw-output "first(.[] | select(.tag_name==\"v$tag\")).id") &&
-              readonly github_tag_id &&
-              echo "Discovered the tag_id: ${github_tag_id}" &&
-              echo "Creating the download link..." &&
-              # Get the download URL of our desired asset
-              download_url=$(curl --silent --show-error \
-                --header "Authorization: token ${{ secrets.MIGRATION_PAT }}" \
-                --header "Accept: application/json, application/vnd.github.v3+json" \
-                --location --request "GET" \
-                "https://api.github.com/repos/$github_repo_owner/$github_repo_name/releases/$github_tag_id" |
-                jq --raw-output ".assets[] | select(.name==\"${asset_file_name_with_ext}\").url") &&
-              readonly download_url &&
-              echo "Found resource download url: $download_url" &&
-              echo "Discovering the S3 bucket url for resource..." &&
-              
-              redirect_url=$(curl --silent --show-error \
-                --header "Accept: application/octet-stream" \
-                --header "Authorization: token ${{ secrets.MIGRATION_PAT }}" \
-                --request GET --write-out "%{redirect_url}" \
-                "$download_url") &&
-              readonly redirect_url &&
-              echo "Download is starting now..." &&
-            # Finally download the actual binary.
-            curl -LJO --show-error \
-              --output "./utils/migration-client" \
-              --request GET \
-              "$redirect_url" &&
-            echo "Binary $asset_file_name_with_ext download is completed."
-            pwd
-            ls -a
     
   ubuntu-postgres-migration:
-    needs: setup-migration-client 
     if: ${{ github.event.inputs.database == 'postgres' && github.event.inputs.os == 'ubuntu-latest' }}
     runs-on: ${{ github.event.inputs.os }}
     steps:
-      - name: 💾 Checkout code
+      - name: Checkout code
         uses: actions/checkout@v2
-      - name: 🐳 Setup Docker environment
+      - name: Setup Docker environment
         run: |
           # Get the ID of the workflow from the GitHub API using curl and jq
-          WORKFLOW_ID=$(curl -s -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/JayanaGunaweera01/Automate-Product-Migration-Testing/actions/workflows | jq -r '.workflows[] | select(.name == "Main Migration Workflow 🐧🍎🪟") | .id')
+          WORKFLOW_ID=$(curl -s -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/wso2/product-is/actions/workflows | jq -r '.workflows[] | select(.name == "Migration Tester") | .id')
           echo "Workflow ID: $WORKFLOW_ID"
           # Update and upgrade packages, and install necessary dependencies
           sudo apt-get update
@@ -124,7 +71,7 @@ jobs:
           # Update the packages again and install Docker CE
           sudo apt-get update
           sudo apt-get install -y docker-ce
-      - name: 🐋 Run Docker command
+      - name: Run Docker command
         run: |
           # Create the PostgreSQL container if it doesn't already exist
           if ! docker ps -a | grep postgres; then
@@ -149,9 +96,9 @@ jobs:
           # Change the password for role postgres
           docker exec -i postgres psql -U postgres -c "ALTER USER postgres WITH PASSWORD 'postgres';"
           echo "Password for role 'postgres' changed successfully!"
-      - name: 🚚 Copy SQL file to PostgreSQL container
+      - name: Copy SQL file to PostgreSQL container
         run: |
-          docker cp /home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/db-scripts/IS-5.11/postgresone.sql postgres:/
+          docker cp /home/runner/work/product-is/product-is/migration-tester/utils/db-scripts/IS-5.11/postgresone.sql postgres:/
           docker exec -i postgres sh -c 'exec psql -U postgres -d testdb < /postgresone.sql'
           echo "Postgre database created successfully!"
           docker cp /home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/db-scripts/IS-5.11/identity/postgrestwo.sql postgres:/
@@ -166,19 +113,19 @@ jobs:
           docker cp /home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/db-scripts/IS-5.11/metrics/postgresfive.sql postgres:/
           docker exec -i postgres sh -c 'exec psql -U postgres -d testdb < /postgresfive.sql'
           echo "All postgre scripts executed successfully!"
-      - name: 🚀 Execute Migration Automation Script 🐧 Ubuntu
+      - name: Execute Migration Automation Script Ubuntu
         run: |
               chmod +x migration-automation/ubuntu-os/migration-script-ubuntu.sh 
               sh migration-automation/ubuntu-os/migration-script-ubuntu.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "migration-automation/logs.txt"
         continue-on-error: true
       
-      - name: 📋 Persist Logs
+      - name: Persist Logs
         run: |
           mkdir -p migration-automation/artifacts
           cp migration-automation/logs.txt migration-automation/artifacts/
         if: ${{ always() }}
 
-      - name: 📦 Upload Artifacts
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         if: always()
         with:
@@ -187,26 +134,25 @@ jobs:
 
 
   ubuntu-mysql-migration:
-    needs: setup-migration-client 
     if: ${{ github.event.inputs.database == 'mysql' && github.event.inputs.os == 'ubuntu-latest' }}
     runs-on: ${{ github.event.inputs.os }}
     steps:
-      - name: 💾 Checkout code
+      - name: Checkout code
         uses: actions/checkout@v2
         
-      - name: 🚀 Execute Migration Automation Script 🐧 Ubuntu
+      - name: Execute Migration Automation Script Ubuntu
         run: |
             chmod +x migration-automation/ubuntu-os/migration-script-ubuntu.sh 
             sh migration-automation/ubuntu-os/migration-script-ubuntu.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "migration-automation/logs.txt"
         continue-on-error: true
 
-      - name: 📋 Persist Logs
+      - name: Persist Logs
         run: |
           mkdir -p migration-automation/artifacts
           cp migration-automation/logs.txt migration-automation/artifacts/
         if: ${{ always() }}
 
-      - name: 📦 Upload Artifacts
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         if: always()
         with:
@@ -214,7 +160,6 @@ jobs:
           path: migration-automation/artifacts
 
   ubuntu-mssql-migration:
-    needs: setup-migration-client 
     if: ${{ github.event.inputs.database == 'mssql' && github.event.inputs.os == 'ubuntu-latest' }}
     runs-on: ${{ github.event.inputs.os }}
     services:
@@ -229,14 +174,14 @@ jobs:
         options: --name=sqlserver-test --health-cmd="/opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'YourStrongPassw0rd' -Q 'SELECT 1'" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
-      - name: 💾 Checkout code
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: 🏗️ Create MS SQL Database
+      - name: Create MS SQL Database
         run: |
           sudo apt-get update && sudo apt-get install -y mssql-tools
           /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'YourStrongPassw0rd' -Q 'CREATE DATABASE testdb'
-      - name: 🚚 Copy SQL files to MSSQL container
+      - name: Copy SQL files to MSSQL container
         run: |
           docker cp ./utils/db-scripts/IS-5.11/mssql.sql sqlserver-test:/mssql.sql
           docker exec sqlserver-test /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'YourStrongPassw0rd' -d testdb -i /mssql.sql
@@ -249,19 +194,19 @@ jobs:
           docker cp ./utils/db-scripts/IS-5.11/metrics/mssql.sql sqlserver-test:/metrics-mssql.sql
           docker exec sqlserver-test /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'YourStrongPassw0rd' -d testdb -i /metrics-mssql.sql
           echo "Copied mssql scripts to docker container"
-      - name: 🚀 Execute Migration Automation Script 🐧 Ubuntu
+      - name: Execute Migration Automation Script Ubuntu
         run: |
           chmod +x migration-automation/ubuntu-os/migration-script-ubuntu.sh 
           sh migration-automation/ubuntu-os/migration-script-ubuntu.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "migration-automation/logs.txt"
         continue-on-error: true
 
-      - name: 📋 Persist Logs
+      - name: Persist Logs
         run: |
           mkdir -p migration-automation/artifacts
           cp migration-automation/logs.txt migration-automation/artifacts/
         if: ${{ always() }}
 
-      - name: 📦 Upload Artifacts
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         if: always()
         with:
@@ -269,25 +214,24 @@ jobs:
           path: migration-automation/artifacts
 
   macos-mysql-migration:
-    needs: setup-migration-client 
     if: ${{ github.event.inputs.database == 'mysql' && github.event.inputs.os == 'macos-latest' }}
     runs-on: ${{ github.event.inputs.os }}
     steps:
-      - name: 💾 Checkout code
+      - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: 🚀 Execute Migration Automation Script 🍎 Mac
+      - name: Execute Migration Automation Script Mac
         run: |
           chmod +x migration-automation/mac-os/migration-script-mac.sh 
           sh migration-automation/mac-os/migration-script-mac.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "migration-automation/logs.txt"
         continue-on-error: true
-      - name: 📋 Persist Logs
+      - name: Persist Logs
         run: |
           mkdir -p migration-automation/artifacts
           cp migration-automation/logs.txt migration-automation/artifacts/
         if: ${{ always() }}
 
-      - name: 📦 Upload Artifacts
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         if: always()
         with:
@@ -295,13 +239,12 @@ jobs:
           path: migration-automation/artifacts
 
   macos-postgres-migration:
-    needs: setup-migration-client 
     runs-on: ${{ github.event.inputs.os }}
     if: ${{ github.event.inputs.database == 'postgres' && github.event.inputs.os == 'macos-latest' }}
     steps:
-      - name: 💾 Checkout code
+      - name: Checkout code
         uses: actions/checkout@v2
-      - name: 🐘 Set up PostgreSQL
+      - name: Set up PostgreSQL
         env:
            PGDATA: /usr/local/var/postgres
            PGDATABASE: testdb
@@ -313,29 +256,29 @@ jobs:
             createuser -s postgres
             createdb $PGDATABASE
             psql -c "GRANT ALL PRIVILEGES ON DATABASE $PGDATABASE TO postgres;"
-      - name: 🐘 Execute Postgres SQL scripts
+      - name: Execute Postgres SQL scripts
         run: |
           psql -d testdb -f "/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/db-scripts/IS-5.11/postgresone.sql"
           psql -d testdb -f "/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/db-scripts/IS-5.11/consent/postgresfour.sql"
           psql -d testdb -f "/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/db-scripts/IS-5.11/identity/postgrestwo.sql"
           psql -d testdb -f "/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/db-scripts/IS-5.11/identity/uma/postgresthree.sql"
           psql -d testdb -f "/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/db-scripts/IS-5.11/metrics/postgresfive.sql"
-      - name: ✅ Verify script execution
+      - name: Verify script execution
         run: psql -d testdb -c 'SHOW server_version'
         shell: bash
 
-      - name: 🚀 Execute Migration Automation Script 🍎 Mac
+      - name: Execute Migration Automation Script Mac
         run: |
           chmod +x migration-automation/mac-os/migration-script-mac.sh 
           sh migration-automation/mac-os/migration-script-mac.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "migration-automation/logs.txt"
         continue-on-error: true
-      - name: 📋 Persist Logs
+      - name: Persist Logs
         run: |
           mkdir -p migration-automation/artifacts
           cp migration-automation/logs.txt migration-automation/artifacts/
         if: ${{ always() }}
 
-      - name: 📦 Upload Artifacts
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         if: always()
         with:
@@ -343,11 +286,10 @@ jobs:
           path: migration-automation/artifacts
 
   macos-mssql-migration:
-    needs: setup-migration-client 
     if: ${{ github.event.inputs.database == 'mssql' && github.event.inputs.os == 'macos-latest' }}
     runs-on: ${{ github.event.inputs.os }}
     steps:
-      - name: 💾 Checkout code
+      - name: Checkout code
         uses: actions/checkout@v2
 
       - uses: potatoqualitee/mssqlsuite@v1.7
@@ -356,12 +298,12 @@ jobs:
           version: 2019
           SA-password: YourStrongPassw0rd
 
-      - name: 🏗️ Create MS SQL Database
+      - name: Create MS SQL Database
         run: sqlcmd -U SA -P 'YourStrongPassw0rd' -Q 'CREATE DATABASE testdb'
       - name: Run query
         run: sqlcmd -U SA -P 'YourStrongPassw0rd' -d testdb -Q 'SELECT @@VERSION'
 
-      - name: 🌐 Execute MSSQL Scripts 🍎 Mac
+      - name: Execute MSSQL Scripts Mac
         run: |
           sqlcmd -U SA -P 'YourStrongPassw0rd' -Q 'CREATE DATABASE testdb'
           sqlcmd -U SA -P 'YourStrongPassw0rd' -d testdb -Q 'SELECT @@VERSION'
@@ -370,21 +312,21 @@ jobs:
           sqlcmd -U SA -P 'YourStrongPassw0rd' -d testdb -i /Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/db-scripts/IS-5.11/identity/uma/mssql.sql
           sqlcmd -U SA -P 'YourStrongPassw0rd' -d testdb -i /Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/db-scripts/IS-5.11/consent/mssql.sql
           sqlcmd -U SA -P 'YourStrongPassw0rd' -d testdb -i /Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/db-scripts/IS-5.11/metrics/mssql.sql
-      - name: ✅ Verify script execution
+      - name: Verify script execution
         run: sqlcmd -U SA -P 'YourStrongPassw0rd' -d testdb -Q 'SELECT @@VERSION'
 
-      - name: 🚀 Execute Migration Automation Script 🍎 Mac
+      - name: Execute Migration Automation Script Mac
         run: |
           chmod +x migration-automation/mac-os/migration-script-mac.sh 
           sh migration-automation/mac-os/migration-script-mac.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "migration-automation/logs.txt"
         continue-on-error: true
-      - name: 📋 Persist Logs
+      - name: Persist Logs
         run: |
           mkdir -p migration-automation/artifacts
           cp migration-automation/logs.txt migration-automation/artifacts/
         if: ${{ always() }}
 
-      - name: 📦 Upload Artifacts
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         if: always()
         with:
@@ -404,16 +346,16 @@ jobs:
     if: always()
     runs-on: ${{ github.event.inputs.os }}
     steps:
-      - name: 💾 Checkout code
+      - name: Checkout code
         uses: actions/checkout@v2
-      - name: 📦 Download Artifacts
+      - name: Download Artifacts
         uses: actions/download-artifact@v2
         if: always()
         with:
           name: "logs-${{ github.event.inputs.currentVersion }}-${{ github.event.inputs.migratingVersion }}-${{ github.event.inputs.database }}-${{ github.event.inputs.os }}"
           path: migration-automation/artifacts
           retention-days: 7
-      - name: 💥 Post Migration Testing
+      - name: Post Migration Testing
         run: |
           # Access logs from the downloaded artifacts folder
           while IFS= read -r line; do
