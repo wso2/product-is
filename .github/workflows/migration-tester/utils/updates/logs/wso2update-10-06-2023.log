@@ -1,0 +1,3 @@
+[10-06-2023 06:00:36] DEBUG - Updates config file does not exist. Creating config.json
+[10-06-2023 06:00:36] DEBUG - Updates Home Directory: /home/wso2/.wso2-updates
+[10-06-2023 06:00:36] ERROR - Error while initializing updates config file: Error while initializing product config: Unable to identify the product in /home/wso2/Music/Automating-Product-Migration-Testing/utils/updates/product.txt

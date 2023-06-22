@@ -1,0 +1,75 @@
+[server]
+hostname = "localhost"
+node_ip = "127.0.0.1"
+base_path = "https://$ref{server.hostname}:${carbon.management.port}"
+
+[super_admin]
+username = "admin"
+password = "admin"
+create_admin_account = true
+
+[user_store]
+#type = "database"
+type = "database_unique_id"
+read_groups = true
+
+[user_store.properties]
+SCIMEnabled= true
+
+[database.user]
+url = "jdbc:mysql://localhost:3306/testdb?useSSL=false&amp;allowPublicKeyRetrieval=true"
+username = "root"
+password = "root"
+driver = "com.mysql.jdbc.Driver"
+
+[realm_manager]
+data_source = "WSO2USER_DB"
+
+[keystore.primary]
+file_name = "wso2carbon.jks"
+password = "wso2carbon"
+
+[truststore]
+file_name="client-truststore.jks"
+password="wso2carbon"
+type="JKS"
+
+[admin_service.wsdl]
+enable = true
+
+
+[account_recovery.endpoint.auth]
+hash= "66cd9688a2ae068244ea01e70f0e230f5623b7fa4cdecb65070a09ec06452262"
+
+[identity.auth_framework.endpoint]
+app_password= "dashboard"
+
+[database.identity_db]
+type = "mysql"
+url = "jdbc:mysql://localhost:3306/testdb?useSSL=false&amp;allowPublicKeyRetrieval=true"
+username = "root"
+password = "root"
+driver = "com.mysql.jdbc.Driver"
+[database.identity_db.pool_options]
+maxActive = "80"
+minIdle ="5"
+testOnBorrow = true
+validationQuery="SELECT 1"
+validationInterval="30000"
+defaultAutoCommit=false
+
+[database.shared_db]
+type = "mysql"
+url = "jdbc:mysql://localhost:3306/testdb?useSSL=false&amp;allowPublicKeyRetrieval=true"
+username = "root"
+password = "root"
+driver = "com.mysql.jdbc.Driver"
+[database.shared_db.pool_options]
+maxActive = "80"
+minIdle ="5"
+testOnBorrow = true
+validationQuery="SELECT 1"
+validationInterval="30000"
+defaultAutoCommit=false
+
+
