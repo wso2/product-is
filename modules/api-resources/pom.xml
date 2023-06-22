@@ -291,6 +291,22 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.server.api</groupId>
+                <artifactId>org.wso2.carbon.identity.api.server.extension.management.v1</artifactId>
+                <version>${identity.server.api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.server.api</groupId>
+                <artifactId>org.wso2.carbon.identity.api.server.extension.management.common</artifactId>
+                <version>${identity.server.api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.framework</groupId>
+                <artifactId>org.wso2.carbon.identity.extension.mgt</artifactId>
+                <version>${carbon.identity.framework.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.server.api</groupId>
                 <artifactId>org.wso2.carbon.identity.api.server.tenant.management.common</artifactId>
                 <version>${identity.server.api.version}</version>
             </dependency>

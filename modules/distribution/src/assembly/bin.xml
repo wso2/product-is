@@ -188,6 +188,15 @@
             </includes>
         </fileSet>
         <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/identity/extensions
+            </directory>
+            <outputDirectory>wso2is-${pom.version}/repository/resources/identity/extensions</outputDirectory>
+            <includes>
+                <include>**/*.json</include>
+            </includes>
+        </fileSet>
+        <fileSet>
             <directory>src/repository/resources/conf/templates</directory>
             <outputDirectory>wso2is-${pom.version}/repository/resources/conf/templates</outputDirectory>
             <includes>

@@ -1,20 +1,20 @@
 /*
-* Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-* WSO2 Inc. licenses this file to you under the Apache License,
-* Version 2.0 (the "License"); you may not use this file except
-* in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing,
-* software distributed under the License is distributed on an
-* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-* KIND, either express or implied. See the License for the
-* specific language governing permissions and limitations
-* under the License.
-*/
+ * Copyright (c) 2015, WSO2 LLC. (https://www.wso2.com).
+ *
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 
 package org.wso2.identity.integration.test.oauth2;
 
@@ -37,18 +37,13 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.automation.engine.context.beans.ContextUrls;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
-import org.wso2.carbon.automation.engine.context.beans.User;
-import org.wso2.carbon.identity.governance.stub.bean.Property;
-import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
-import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
-import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
-import org.wso2.carbon.um.ws.api.stub.ClaimValue;
-import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
-import org.wso2.identity.integration.common.clients.mgt.IdentityGovernanceServiceClient;
-import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
-import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
+import org.wso2.identity.integration.test.rest.api.user.common.model.ScimSchemaExtensionEnterprise;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
+import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
+import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
@@ -63,31 +58,24 @@ import static org.wso2.identity.integration.test.utils.CommonConstants.USER_IS_L
 import static org.wso2.identity.integration.test.utils.DataExtractUtil.KeyValue;
 
 public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractIntegrationTest {
-	private AuthenticatorClient logManger;
-	private String adminUsername;
-	private String adminPassword;
+
 	private String accessToken;
 	private String consumerKey;
 	private String consumerSecret;
 
 	private CloseableHttpClient client;
 	private final AutomationContext context;
-	private String backendURL;
-	private String sessionCookie;
 	private Tenant tenantInfo;
-	private User userInfo;
-	private LoginLogoutClient loginLogoutClient;
-	private ContextUrls identityContextUrls;
-	private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
+	private SCIM2RestClient scim2RestClient;
 
 	private static final String lockedUser = "test_locked_user";
 	private static final String lockedUserPassword = "test_locked_user_pass";
-	private static final String ACCOUNT_LOCK_CLAIM_URI = "http://wso2.org/claims/identity/accountLocked";
-	protected IdentityGovernanceServiceClient identityGovernanceServiceClient;
 	private final String username;
 	private final String userPassword;
 	private final String activeTenant;
 	private static final String TENANT_DOMAIN = "wso2.com";
+	private String applicationId;
+	private String userId;
 
 	@DataProvider(name = "configProvider")
 	public static Object[][] configProvider() {
@@ -97,6 +85,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 	@Factory(dataProvider = "configProvider")
 	public OAuth2ServiceResourceOwnerTestCase(TestUserMode userMode) throws Exception {
 
+		super.init(userMode);
 		context = new AutomationContext("IDENTITY", userMode);
 		this.username = context.getContextTenant().getTenantAdmin().getUserName();
 		this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
@@ -106,51 +95,48 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 	@BeforeClass(alwaysRun = true)
 	public void testInit() throws Exception {
 
-		backendURL = context.getContextUrls().getBackEndUrl();
-		loginLogoutClient = new LoginLogoutClient(context);
-		logManger = new AuthenticatorClient(backendURL);
-		sessionCookie = logManger.login(username, userPassword, context.getInstance().getHosts().get("default"));
-		identityContextUrls = context.getContextUrls();
 		tenantInfo = context.getContextTenant();
-		userInfo = tenantInfo.getContextUser();
-		appMgtclient = new ApplicationManagementServiceClient(sessionCookie, backendURL, null);
-		adminClient = new OauthAdminClient(backendURL, sessionCookie);
-		remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
+
+		restClient = new OAuth2RestClient(serverURL, tenantInfo);
+		scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
 
 		setSystemproperties();
 		client = HttpClientBuilder.create().build();
 
-        identityGovernanceServiceClient = new IdentityGovernanceServiceClient(sessionCookie, backendURL);
-        createLockedUser(lockedUser, lockedUserPassword);
+        createLockedUser();
 	}
 
 	@AfterClass(alwaysRun = true)
 	public void atEnd() throws Exception {
 
-		deleteUser(lockedUser);
+		scim2RestClient.deleteUser(userId);
+		restClient.deleteApplication(applicationId);
 
-		appMgtclient.deleteApplication(SERVICE_PROVIDER_NAME);
-		adminClient.removeOAuthApplicationData(consumerKey);
 		client.close();
-		logManger = null;
+		restClient.closeHttpClient();
+		scim2RestClient.closeHttpClient();
 		consumerKey = null;
 		accessToken = null;
 	}
 
 	@Test(groups = "wso2.is", description = "Check Oauth2 application registration")
 	public void testRegisterApplication() throws Exception {
-		OAuthConsumerAppDTO appDto = createApplication();
-		Assert.assertNotNull(appDto, "Application creation failed.");
+		ApplicationResponseModel application = addApplication();
+		Assert.assertNotNull(application, "OAuth App creation failed.");
+		applicationId = application.getId();
 
-		consumerKey = appDto.getOauthConsumerKey();
+		OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(applicationId);
+
+		consumerKey = oidcConfig.getClientId();
 		Assert.assertNotNull(consumerKey, "Application creation failed.");
 
-		consumerSecret = appDto.getOauthConsumerSecret();
+		consumerSecret = oidcConfig.getClientSecret();
+		Assert.assertNotNull(consumerSecret, "Application creation failed.");
 	}
 
 	@Test(groups = "wso2.is", description = "Send authorize user request", dependsOnMethods = "testRegisterApplication")
 	public void testSendAuthorozedPost() throws Exception {
-		List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+		List<NameValuePair> urlParameters = new ArrayList<>();
 		urlParameters.add(new BasicNameValuePair("grantType",
 		                                         OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER));
 		urlParameters.add(new BasicNameValuePair("consumerKey", consumerKey));
@@ -169,7 +155,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 
 		response = sendPostRequest(client, OAuth2Constant.AUTHORIZED_URL);
 
-		Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
+		Map<String, Integer> keyPositionMap = new HashMap<>(1);
 		keyPositionMap.put("name=\"accessToken\"", 1);
 
 		List<KeyValue> keyValues =
@@ -366,30 +352,16 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 		}
 	}
 
-	private void createLockedUser(String username, String password) {
-
-		log.info("Creating User " + username);
-
-		ClaimValue[] claimValues = new ClaimValue[1];
-		// Need to add this claim and have the value true in order to test the fix
-		ClaimValue accountLockClaim = new ClaimValue();
-		accountLockClaim.setClaimURI(ACCOUNT_LOCK_CLAIM_URI);
-		accountLockClaim.setValue(Boolean.TRUE.toString());
-		claimValues[0] = accountLockClaim;
+	private void createLockedUser() {
 
 		try {
-			remoteUSMServiceClient.addUser(username, password, null, claimValues, null, false);
+			UserObject userInfo = new UserObject();
+			userInfo.setUserName(lockedUser);
+			userInfo.setPassword(lockedUserPassword);
+			userInfo.setScimSchemaExtensionEnterprise(new ScimSchemaExtensionEnterprise().accountLocked(true));
+			userId = scim2RestClient.createUser(userInfo);
 		} catch (Exception e) {
 			Assert.fail("Error while creating the user", e);
-		}
-	}
-
-	private void deleteUser(String username) {
-		log.info("Deleting User " + username);
-		try {
-			remoteUSMServiceClient.deleteUser(username);
-		} catch (Exception e) {
-			Assert.fail("Error while deleting the user", e);
 		}
 	}
 }

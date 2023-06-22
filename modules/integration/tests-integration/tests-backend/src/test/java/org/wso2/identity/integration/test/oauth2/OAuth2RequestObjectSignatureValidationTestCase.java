@@ -1,17 +1,19 @@
 /*
- * Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2018, WSO2 LLC. (https://www.wso2.com).
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.wso2.identity.integration.test.oauth2;
 
@@ -25,8 +27,10 @@ import com.nimbusds.jwt.SignedJWT;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -34,32 +38,31 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.test.utils.common.TestConfigurationProvider;
-import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
-import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.*;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.File;
-import java.io.FileInputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.KeyStore;
-import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
+import java.security.cert.Certificate;
 import java.security.interfaces.RSAPrivateKey;
 import java.util.Collections;
 import java.util.Date;
 import java.util.UUID;
 
-/*
+/**
     Integration tests for Signed Request Object validation.
  */
 public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
     private RSAPrivateKey sp1PrivateKey;
-
     private X509Certificate sp1X509PublicCert;
-
     private RSAPrivateKey sp2PrivateKey;
-
     private static final String CALLBACK_URL = "https://localhost/callback";
+    private ApplicationResponseModel application;
+    private OpenIDConnectConfiguration oidcInboundConfig;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -69,14 +72,16 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
-        deleteApplication();
-        removeOAuthApplicationData();
+        deleteApp(application.getId());
 
         consumerKey = null;
         consumerSecret = null;
         sp1PrivateKey = null;
         sp2PrivateKey = null;
         sp1X509PublicCert = null;
+        application = null;
+        oidcInboundConfig = null;
+        restClient.closeHttpClient();
     }
 
     @Test(groups = "wso2.is", description = "Check Service Provider key generation")
@@ -92,26 +97,27 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
             dependsOnMethods = "testGenerateServiceProviderKeys")
     public void testRegisterApplication() throws Exception {
 
-        OAuthConsumerAppDTO oAuthConsumerAppDTO = getBasicOAuthApp(CALLBACK_URL);
-        ServiceProvider serviceProvider = registerServiceProviderWithOAuthInboundConfigs(oAuthConsumerAppDTO);
-        Assert.assertNotNull(serviceProvider, "OAuth App creation failed");
-        Assert.assertNotNull(consumerKey);
-        Assert.assertNotNull(consumerSecret);
+        application = getBasicOAuthApplication(CALLBACK_URL);
+        Assert.assertNotNull(application, "OAuth App creation failed.");
+
+        oidcInboundConfig = getOIDCInboundDetailsOfApplication(application.getId());
+
+        consumerKey = oidcInboundConfig.getClientId();
+        Assert.assertNotNull(consumerKey, "Application creation failed.");
+
+        consumerSecret = oidcInboundConfig.getClientSecret();
+        Assert.assertNotNull(consumerSecret, "Application creation failed.");
     }
 
     @Test(groups = "wso2.is", description = "Check Updating public cert of Service Provider",
             dependsOnMethods = "testRegisterApplication")
     public void updateServiceProviderCert() throws Exception {
 
-        ServiceProvider application = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
-        Assert.assertNotNull(application);
+        updateApplicationCertificate(application.getId(), sp1X509PublicCert);
 
-        application.setCertificateContent(convertToPem(sp1X509PublicCert));
-        appMgtclient.updateApplicationData(application);
-
-        ServiceProvider updatedApp = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
-        Assert.assertNotNull(updatedApp);
-        Assert.assertNotNull(updatedApp.getCertificateContent());
+        ApplicationResponseModel updatedApplication = getApplication(application.getId());
+        Assert.assertNotNull(updatedApplication.getAdvancedConfigurations().getCertificate(),
+                "Application Certificate update failed");
     }
 
     @Test(groups = "wso2.is", description = "Check Initial OAuth2 Authorize Request",
@@ -119,7 +125,7 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
     public void sentAuthorizationGrantRequest() throws Exception {
 
         HttpClient client = getRedirectDisabledClient();
-        HttpResponse response = sendGetRequest(client, getAuthzRequestUrl(consumerKey, CALLBACK_URL));
+        HttpResponse response = sendGetRequest(client, getAuthzRequestUrl(consumerKey));
         // If the request is valid it will return a 302 to redirect to the login page.
         assertForLoginPage(response);
         EntityUtils.consume(response.getEntity());
@@ -131,7 +137,7 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
 
         HttpClient client = getRedirectDisabledClient();
         String unsignedRequestObject = buildPlainJWT(consumerKey);
-        HttpResponse response = sendGetRequest(client, getAuthzRequestUrl(consumerKey, CALLBACK_URL, unsignedRequestObject));
+        HttpResponse response = sendGetRequest(client, getAuthzRequestUrl(consumerKey, unsignedRequestObject));
         assertForLoginPage(response);
         EntityUtils.consume(response.getEntity());
     }
@@ -140,11 +146,12 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
             dependsOnMethods = "sendAuthorizationGrantRequestWithPlainJWTRequestObject")
     public void testEnforceRequestObjectSignatureValidation() throws Exception {
 
-        OAuthConsumerAppDTO consumerAppDTO = adminClient.getOAuthAppByConsumerKey(consumerKey);
-        consumerAppDTO.setRequestObjectSignatureValidationEnabled(true);
-        adminClient.updateConsumerApp(consumerAppDTO);
-        OAuthConsumerAppDTO updateApp = adminClient.getOAuthAppByConsumerKey(consumerKey);
-        Assert.assertTrue(updateApp.getRequestObjectSignatureValidationEnabled());
+        oidcInboundConfig.setValidateRequestObjectSignature(true);
+        updateApplicationInboundConfig(application.getId(), oidcInboundConfig, OIDC);
+
+        OpenIDConnectConfiguration updatedOidcInboundConfig = getOIDCInboundDetailsOfApplication(application.getId());
+        Assert.assertTrue(updatedOidcInboundConfig.getValidateRequestObjectSignature(),
+                "ValidateRequestObjectSignature enable failed");
     }
 
     @Test(groups = "wso2.is", description = "Check request object signature validation was enforced by sending" +
@@ -153,7 +160,7 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
 
         HttpClient client = getRedirectDisabledClient();
         String unsignedRequestObject = buildPlainJWT(consumerKey);
-        HttpResponse response = sendGetRequest(client, getAuthzRequestUrl(consumerKey, CALLBACK_URL, unsignedRequestObject));
+        HttpResponse response = sendGetRequest(client, getAuthzRequestUrl(consumerKey, unsignedRequestObject));
         // Since we have enforced request object validation we should be redirected to the error page.
         assertForErrorPage(response);
         EntityUtils.consume(response.getEntity());
@@ -165,7 +172,7 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
 
         HttpClient client = getRedirectDisabledClient();
         String signedRequestObject = buildSignedJWT(consumerKey, sp1PrivateKey);
-        HttpResponse response = sendGetRequest(client, getAuthzRequestUrl(consumerKey, CALLBACK_URL, signedRequestObject));
+        HttpResponse response = sendGetRequest(client, getAuthzRequestUrl(consumerKey, signedRequestObject));
         assertForLoginPage(response);
         EntityUtils.consume(response.getEntity());
     }
@@ -177,7 +184,7 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
 
         HttpClient client = getRedirectDisabledClient();
         String signedRequestObject = buildSignedJWT(consumerKey, sp2PrivateKey);
-        HttpResponse response = sendGetRequest(client, getAuthzRequestUrl(consumerKey, CALLBACK_URL, signedRequestObject));
+        HttpResponse response = sendGetRequest(client, getAuthzRequestUrl(consumerKey, signedRequestObject));
         assertForErrorPage(response);
         EntityUtils.consume(response.getEntity());
     }
@@ -204,20 +211,19 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
     }
 
     private HttpClient getRedirectDisabledClient() {
-
         HttpClient client = new DefaultHttpClient();
         HttpClientParams.setRedirecting(client.getParams(), false);
         return client;
     }
 
-    private String getAuthzRequestUrl(String clientId, String callbackUrl, String requestObject) {
+    private String getAuthzRequestUrl(String clientId, String requestObject) {
 
-        return getAuthzRequestUrl(clientId, callbackUrl) + "&request=" + requestObject;
+        return getAuthzRequestUrl(clientId) + "&request=" + requestObject;
     }
 
-    private String getAuthzRequestUrl(String clientId, String callbackUrl) {
+    private String getAuthzRequestUrl(String clientId) {
 
-        return OAuth2Constant.AUTHORIZE_ENDPOINT_URL + "?" + "client_id=" + clientId + "&redirect_uri=" + callbackUrl +
+        return OAuth2Constant.AUTHORIZE_ENDPOINT_URL + "?" + "client_id=" + clientId + "&redirect_uri=" + CALLBACK_URL +
                 "&response_type=code&scope=openid%20internal_login";
     }
 
@@ -258,7 +264,7 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
                 File.separator + "keystores" + File.separator + "sp1KeyStore.jks";
         String jksPassword = "wso2carbon";
 
-        keyStore.load(new FileInputStream(jksPath), jksPassword.toCharArray());
+        keyStore.load(Files.newInputStream(Paths.get(jksPath)), jksPassword.toCharArray());
 
         String alias = "wso2carbon";
 
@@ -274,7 +280,7 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
         jksPath = TestConfigurationProvider.getResourceLocation("IS") + File.separator + "sp" +
                 File.separator + "keystores" + File.separator + "sp2KeyStore.jks";
 
-        keyStore.load(new FileInputStream(jksPath), jksPassword.toCharArray());
+        keyStore.load(Files.newInputStream(Paths.get(jksPath)), jksPassword.toCharArray());
 
         pkEntry = (KeyStore.PrivateKeyEntry) keyStore.getEntry(alias,
                 new KeyStore.PasswordProtection(jksPassword.toCharArray()));
