@@ -49,7 +49,7 @@ on:
         default: https://github.com/wso2/product-is/releases/download/v6.0.0-rc2/wso2is-6.0.0-rc2.zip
         required: true
 jobs:
-
+    
   ubuntu-postgres-migration:
     if: ${{ github.event.inputs.database == 'postgres' && github.event.inputs.os == 'ubuntu-latest' }}
     runs-on: ${{ github.event.inputs.os }}
@@ -98,31 +98,31 @@ jobs:
           echo "Password for role 'postgres' changed successfully!"
       - name: Copy SQL file to PostgreSQL container
         run: |
-          docker cp /home/runner/work/product-is/product-is/migration-tester/utils/db-scripts/IS-5.11/postgresone.sql postgres:/
+          docker cp ./.github/migration-tester/utils/db-scripts/IS-5.11/postgresone.sql postgres:/
           docker exec -i postgres sh -c 'exec psql -U postgres -d testdb < /postgresone.sql'
           echo "Postgre database created successfully!"
-          docker cp /home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/db-scripts/IS-5.11/identity/postgrestwo.sql postgres:/
+          docker cp ./.github/migration-tester/utils/db-scripts/IS-5.11/identity/postgrestwo.sql postgres:/
           docker exec -i postgres sh -c 'exec psql -U postgres -d testdb < /postgrestwo.sql '
           echo "Script1 executed successfully!"
-          docker cp /home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/db-scripts/IS-5.11/identity/uma/postgresthree.sql postgres:/
+          docker cp ./.github/migration-tester/utils/db-scripts/IS-5.11/identity/uma/postgresthree.sql postgres:/
           docker exec -i postgres sh -c 'exec psql -U postgres -d testdb < /postgresthree.sql'
           echo "Script2 executed successfully!"
-          docker cp /home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/db-scripts/IS-5.11/consent/postgresfour.sql postgres:/
+          docker cp ./.github/migration-tester/utils/db-scripts/IS-5.11/consent/postgresfour.sql postgres:/
           docker exec -i postgres sh -c 'exec psql -U postgres -d testdb < /postgresfour.sql'
           echo "Script3 executed successfully!"
-          docker cp /home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/db-scripts/IS-5.11/metrics/postgresfive.sql postgres:/
+          docker cp ./.github/migration-tester/utils/db-scripts/IS-5.11/metrics/postgresfive.sql postgres:/
           docker exec -i postgres sh -c 'exec psql -U postgres -d testdb < /postgresfive.sql'
           echo "All postgre scripts executed successfully!"
       - name: Execute Migration Automation Script Ubuntu
         run: |
-              chmod +x migration-automation/ubuntu-os/migration-script-ubuntu.sh 
-              sh migration-automation/ubuntu-os/migration-script-ubuntu.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "migration-automation/logs.txt"
+              chmod +x ./.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh 
+              sh ./.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "migration-automation/logs.txt"
         continue-on-error: true
-
+      
       - name: Persist Logs
         run: |
-          mkdir -p migration-automation/artifacts
-          cp migration-automation/logs.txt migration-automation/artifacts/
+          mkdir -p ./.github/migration-tester/migration-automation/artifacts
+          cp ./.github/migration-tester/migration-automation/logs.txt migration-automation/artifacts/
         if: ${{ always() }}
 
       - name: Upload Artifacts
@@ -130,7 +130,7 @@ jobs:
         if: always()
         with:
           name: "logs-${{ github.event.inputs.currentVersion }}-${{ github.event.inputs.migratingVersion }}-${{ github.event.inputs.database }}-${{ github.event.inputs.os }}"
-          path: migration-automation/artifacts
+          path: ./.github/migration-tester/migration-automation/artifacts
 
 
   ubuntu-mysql-migration:
@@ -139,17 +139,17 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
+        
       - name: Execute Migration Automation Script Ubuntu
         run: |
-            chmod +x migration-automation/ubuntu-os/migration-script-ubuntu.sh 
-            sh migration-automation/ubuntu-os/migration-script-ubuntu.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "migration-automation/logs.txt"
+            chmod +x ./.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh 
+            sh ./.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "migration-automation/logs.txt"
         continue-on-error: true
 
       - name: Persist Logs
         run: |
-          mkdir -p migration-automation/artifacts
-          cp migration-automation/logs.txt migration-automation/artifacts/
+          mkdir -p ./.github/migration-tester/migration-automation/artifacts
+          cp ./.github/migration-tester/migration-automation/logs.txt migration-automation/artifacts/
         if: ${{ always() }}
 
       - name: Upload Artifacts
@@ -157,7 +157,7 @@ jobs:
         if: always()
         with:
           name: "logs-${{ github.event.inputs.currentVersion }}-${{ github.event.inputs.migratingVersion }}-${{ github.event.inputs.database }}-${{ github.event.inputs.os }}"
-          path: migration-automation/artifacts
+          path: ./.github/migration-tester/migration-automation/artifacts
 
   ubuntu-mssql-migration:
     if: ${{ github.event.inputs.database == 'mssql' && github.event.inputs.os == 'ubuntu-latest' }}
@@ -183,27 +183,27 @@ jobs:
           /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'YourStrongPassw0rd' -Q 'CREATE DATABASE testdb'
       - name: Copy SQL files to MSSQL container
         run: |
-          docker cp ./utils/db-scripts/IS-5.11/mssql.sql sqlserver-test:/mssql.sql
+          docker cp ./.github/migration-tester/utils/db-scripts/IS-5.11/mssql.sql sqlserver-test:/mssql.sql
           docker exec sqlserver-test /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'YourStrongPassw0rd' -d testdb -i /mssql.sql
-          docker cp ./utils/db-scripts/IS-5.11/identity/mssql.sql sqlserver-test:/identity-mssql.sql
+          docker cp ./.github/migration-tester/utils/db-scripts/IS-5.11/identity/mssql.sql sqlserver-test:/identity-mssql.sql
           docker exec sqlserver-test /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'YourStrongPassw0rd' -d testdb -i /identity-mssql.sql
-          docker cp ./utils/db-scripts/IS-5.11/identity/uma/mssql.sql sqlserver-test:/identity-uma-mssql.sql
+          docker cp ./.github/migration-tester/utils/db-scripts/IS-5.11/identity/uma/mssql.sql sqlserver-test:/identity-uma-mssql.sql
           docker exec sqlserver-test /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'YourStrongPassw0rd' -d testdb -i /identity-uma-mssql.sql
-          docker cp ./utils/db-scripts/IS-5.11/consent/mssql.sql sqlserver-test:/consent-mssql.sql
+          docker cp ./.github/migration-tester/utils/db-scripts/IS-5.11/consent/mssql.sql sqlserver-test:/consent-mssql.sql
           docker exec sqlserver-test /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'YourStrongPassw0rd' -d testdb -i /consent-mssql.sql
-          docker cp ./utils/db-scripts/IS-5.11/metrics/mssql.sql sqlserver-test:/metrics-mssql.sql
+          docker cp ./.github/migration-tester/utils/db-scripts/IS-5.11/metrics/mssql.sql sqlserver-test:/metrics-mssql.sql
           docker exec sqlserver-test /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P 'YourStrongPassw0rd' -d testdb -i /metrics-mssql.sql
           echo "Copied mssql scripts to docker container"
       - name: Execute Migration Automation Script Ubuntu
         run: |
-          chmod +x migration-automation/ubuntu-os/migration-script-ubuntu.sh 
-          sh migration-automation/ubuntu-os/migration-script-ubuntu.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "migration-automation/logs.txt"
+          chmod +x ./.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh 
+          sh ./.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "migration-automation/logs.txt"
         continue-on-error: true
 
       - name: Persist Logs
         run: |
-          mkdir -p migration-automation/artifacts
-          cp migration-automation/logs.txt migration-automation/artifacts/
+          mkdir -p ./.github/migration-tester/migration-automation/artifacts
+          cp ./.github/migration-tester/migration-automation/logs.txt migration-automation/artifacts/
         if: ${{ always() }}
 
       - name: Upload Artifacts
@@ -211,7 +211,7 @@ jobs:
         if: always()
         with:
           name: "logs-${{ github.event.inputs.currentVersion }}-${{ github.event.inputs.migratingVersion }}-${{ github.event.inputs.database }}-${{ github.event.inputs.os }}"
-          path: migration-automation/artifacts
+          path: ./.github/migration-tester/migration-automation/artifacts
 
   macos-mysql-migration:
     if: ${{ github.event.inputs.database == 'mysql' && github.event.inputs.os == 'macos-latest' }}
@@ -222,13 +222,13 @@ jobs:
 
       - name: Execute Migration Automation Script Mac
         run: |
-          chmod +x migration-automation/mac-os/migration-script-mac.sh 
-          sh migration-automation/mac-os/migration-script-mac.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "migration-automation/logs.txt"
+          chmod +x ./.github/migration-tester/migration-automation/mac-os/migration-script-mac.sh 
+          sh ./.github/migration-tester/migration-automation/mac-os/migration-script-mac.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "migration-automation/logs.txt"
         continue-on-error: true
       - name: Persist Logs
         run: |
-          mkdir -p migration-automation/artifacts
-          cp migration-automation/logs.txt migration-automation/artifacts/
+          mkdir -p ./.github/migration-tester/migration-automation/artifacts
+          cp ./.github/migration-tester/migration-automation/logs.txt migration-automation/artifacts/
         if: ${{ always() }}
 
       - name: Upload Artifacts
@@ -236,7 +236,7 @@ jobs:
         if: always()
         with:
           name: "logs-${{ github.event.inputs.currentVersion }}-${{ github.event.inputs.migratingVersion }}-${{ github.event.inputs.database }}-${{ github.event.inputs.os }}"
-          path: migration-automation/artifacts
+          path: ./.github/migration-tester/migration-automation/artifacts
 
   macos-postgres-migration:
     runs-on: ${{ github.event.inputs.os }}
@@ -258,24 +258,24 @@ jobs:
             psql -c "GRANT ALL PRIVILEGES ON DATABASE $PGDATABASE TO postgres;"
       - name: Execute Postgres SQL scripts
         run: |
-          psql -d testdb -f "/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/db-scripts/IS-5.11/postgresone.sql"
-          psql -d testdb -f "/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/db-scripts/IS-5.11/consent/postgresfour.sql"
-          psql -d testdb -f "/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/db-scripts/IS-5.11/identity/postgrestwo.sql"
-          psql -d testdb -f "/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/db-scripts/IS-5.11/identity/uma/postgresthree.sql"
-          psql -d testdb -f "/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/db-scripts/IS-5.11/metrics/postgresfive.sql"
+          psql -d testdb -f "./.github/migration-tester/utils/db-scripts/IS-5.11/postgresone.sql"
+          psql -d testdb -f "./.github/migration-tester/utils/db-scripts/IS-5.11/consent/postgresfour.sql"
+          psql -d testdb -f "./.github/migration-tester/utils/db-scripts/IS-5.11/identity/postgrestwo.sql"
+          psql -d testdb -f "./.github/migration-tester/utils/db-scripts/IS-5.11/identity/uma/postgresthree.sql"
+          psql -d testdb -f "./.github/migration-tester/utils/db-scripts/IS-5.11/metrics/postgresfive.sql"
       - name: Verify script execution
         run: psql -d testdb -c 'SHOW server_version'
         shell: bash
 
       - name: Execute Migration Automation Script Mac
         run: |
-          chmod +x migration-automation/mac-os/migration-script-mac.sh 
-          sh migration-automation/mac-os/migration-script-mac.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "migration-automation/logs.txt"
+          chmod +x ./.github/migration-tester/migration-automation/mac-os/migration-script-mac.sh 
+          sh ./.github/migration-tester/migration-automation/mac-os/migration-script-mac.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "migration-automation/logs.txt"
         continue-on-error: true
       - name: Persist Logs
         run: |
-          mkdir -p migration-automation/artifacts
-          cp migration-automation/logs.txt migration-automation/artifacts/
+          mkdir -p ./.github/migration-tester/migration-automation/artifacts
+          cp ./.github/migration-tester/migration-automation/logs.txt migration-automation/artifacts/
         if: ${{ always() }}
 
       - name: Upload Artifacts
@@ -283,7 +283,7 @@ jobs:
         if: always()
         with:
           name: "logs-${{ github.event.inputs.currentVersion }}-${{ github.event.inputs.migratingVersion }}-${{ github.event.inputs.database }}-${{ github.event.inputs.os }}"
-          path: migration-automation/artifacts
+          path: ./.github/migration-tester/migration-automation/artifacts
 
   macos-mssql-migration:
     if: ${{ github.event.inputs.database == 'mssql' && github.event.inputs.os == 'macos-latest' }}
@@ -307,23 +307,23 @@ jobs:
         run: |
           sqlcmd -U SA -P 'YourStrongPassw0rd' -Q 'CREATE DATABASE testdb'
           sqlcmd -U SA -P 'YourStrongPassw0rd' -d testdb -Q 'SELECT @@VERSION'
-          sqlcmd -U SA -P 'YourStrongPassw0rd' -d testdb -i /Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/db-scripts/IS-5.11/mssql.sql
-          sqlcmd -U SA -P 'YourStrongPassw0rd' -d testdb -i /Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/db-scripts/IS-5.11/identity/mssql.sql
-          sqlcmd -U SA -P 'YourStrongPassw0rd' -d testdb -i /Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/db-scripts/IS-5.11/identity/uma/mssql.sql
-          sqlcmd -U SA -P 'YourStrongPassw0rd' -d testdb -i /Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/db-scripts/IS-5.11/consent/mssql.sql
-          sqlcmd -U SA -P 'YourStrongPassw0rd' -d testdb -i /Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/db-scripts/IS-5.11/metrics/mssql.sql
+          sqlcmd -U SA -P 'YourStrongPassw0rd' -d testdb -i ./.github/migration-tester/utils/db-scripts/IS-5.11/mssql.sql
+          sqlcmd -U SA -P 'YourStrongPassw0rd' -d testdb -i ./.github/migration-tester/utils/db-scripts/IS-5.11/identity/mssql.sql
+          sqlcmd -U SA -P 'YourStrongPassw0rd' -d testdb -i ./.github/migration-tester/utils/db-scripts/IS-5.11/identity/uma/mssql.sql
+          sqlcmd -U SA -P 'YourStrongPassw0rd' -d testdb -i ./.github/migration-tester/utils/db-scripts/IS-5.11/consent/mssql.sql
+          sqlcmd -U SA -P 'YourStrongPassw0rd' -d testdb -i ./.github/migration-tester/utils/db-scripts/IS-5.11/metrics/mssql.sql
       - name: Verify script execution
         run: sqlcmd -U SA -P 'YourStrongPassw0rd' -d testdb -Q 'SELECT @@VERSION'
 
       - name: Execute Migration Automation Script Mac
         run: |
-          chmod +x migration-automation/mac-os/migration-script-mac.sh 
-          sh migration-automation/mac-os/migration-script-mac.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "migration-automation/logs.txt"
+          chmod +x ./.github/migration-tester/migration-automation/mac-os/migration-script-mac.sh 
+          sh ./.github/migration-tester/migration-automation/mac-os/migration-script-mac.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "migration-automation/logs.txt"
         continue-on-error: true
       - name: Persist Logs
         run: |
-          mkdir -p migration-automation/artifacts
-          cp migration-automation/logs.txt migration-automation/artifacts/
+          mkdir -p ./.github/migration-tester/migration-automation/artifacts
+          cp ./.github/migration-tester/migration-automation/logs.txt migration-automation/artifacts/
         if: ${{ always() }}
 
       - name: Upload Artifacts
@@ -331,11 +331,11 @@ jobs:
         if: always()
         with:
           name: "logs-${{ github.event.inputs.currentVersion }}-${{ github.event.inputs.migratingVersion }}-${{ github.event.inputs.database }}-${{ github.event.inputs.os }}"
-          path: migration-automation/artifacts
+          path: ./.github/migration-tester/migration-automation/artifacts
 
   validate-migration:
     needs:
-      [
+     [
         ubuntu-postgres-migration,
         ubuntu-mssql-migration,
         macos-mssql-migration,
@@ -353,7 +353,7 @@ jobs:
         if: always()
         with:
           name: "logs-${{ github.event.inputs.currentVersion }}-${{ github.event.inputs.migratingVersion }}-${{ github.event.inputs.database }}-${{ github.event.inputs.os }}"
-          path: migration-automation/artifacts
+          path: ./.github/migration-tester/migration-automation/artifacts
           retention-days: 7
       - name: Post Migration Testing
         run: |
@@ -364,4 +364,4 @@ jobs:
             else
               echo "$line"
             fi
-          done < migration-automation/artifacts/logs.txt
+          done < ./.github/migration-tester/migration-automation/artifacts/logs.txt
