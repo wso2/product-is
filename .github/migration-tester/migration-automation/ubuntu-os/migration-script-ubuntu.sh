@@ -15,7 +15,7 @@ RESET='\033[0m'            # reset color
 sudo apt-get -qq update
 
 cd "$AUTOMATION_HOME"
-cd ./migration-tester/migration-automation
+cd ./.github/migration-tester/migration-automation
 
 # Get the value of the inputs from workflow dispatch
 
