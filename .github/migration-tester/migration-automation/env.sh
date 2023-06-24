@@ -16,79 +16,79 @@ export DATA_POPULATION="/home/runner/work/Automating-Product-Migration-Testing/A
 export SERVICE_PROVIDER_PATH="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/data-population-and-validation/4-service-provider-creation"
 
 # Absolute path to home folder
-export AUTOMATION_HOME="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation"
+export AUTOMATION_HOME="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation"
 
 # Absolute path to ubuntu folder
-export UBUNTU_PATH="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/ubuntu-os"
+export UBUNTU_PATH="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/ubuntu-os"
 
 # Absolute path to the deployment file to replace
-export DEPLOYMENT="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_OLD/CurrentVersion/repository/conf/deployment.toml"
+export DEPLOYMENT="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_OLD/CurrentVersion/repository/conf/deployment.toml"
 
 # Absolute path to the oldIS deployment file
-export DEPLOYMENT_PATH="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_OLD/CurrentVersion/repository/conf"
+export DEPLOYMENT_PATH="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_OLD/CurrentVersion/repository/conf"
 
 # Absolute path to the newIS deployment file
-export DEPLOYMENT_PATH_NEW="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion/repository/conf"
+export DEPLOYMENT_PATH_NEW="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion/repository/conf"
 
 # Absolute path to the mysql deployment files in migration-tester/migration-automation folder
-export DEPLOYMENT_AUTOMATION_MYSQL_UBUNTU_IS_5_9_MIGRATION="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.9/deployment-mysql-migration.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_UBUNTU_IS_5_10_MIGRATION="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.10/deployment-mysql-migration.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_UBUNTU_IS_5_11_MIGRATION="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.11/deployment-mysql-migration.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_UBUNTU_IS_6_0_MIGRATION="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.0/deployment-mysql-migration.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_UBUNTU_IS_6_1_MIGRATION="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.1/deployment-mysql-migration.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_UBUNTU_IS_6_2_MIGRATION="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.2/deployment-mysql-migration.toml"
+export DEPLOYMENT_AUTOMATION_MYSQL_UBUNTU_IS_5_9_MIGRATION="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.9/deployment-mysql-migration.toml"
+export DEPLOYMENT_AUTOMATION_MYSQL_UBUNTU_IS_5_10_MIGRATION="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.10/deployment-mysql-migration.toml"
+export DEPLOYMENT_AUTOMATION_MYSQL_UBUNTU_IS_5_11_MIGRATION="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.11/deployment-mysql-migration.toml"
+export DEPLOYMENT_AUTOMATION_MYSQL_UBUNTU_IS_6_0_MIGRATION="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.0/deployment-mysql-migration.toml"
+export DEPLOYMENT_AUTOMATION_MYSQL_UBUNTU_IS_6_1_MIGRATION="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.1/deployment-mysql-migration.toml"
+export DEPLOYMENT_AUTOMATION_MYSQL_UBUNTU_IS_6_2_MIGRATION="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.2/deployment-mysql-migration.toml"
 
 # Absolute path to the postgre deployment files in migration-tester/migration-automation folder
-export DEPLOYMENT_AUTOMATION_POSTGRE_UBUNTU_IS_5_9_MIGRATION="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.9/deployment-postgre-migration.toml"
-export DEPLOYMENT_AUTOMATION_POSTGRE_UBUNTU_IS_5_10_MIGRATION="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.10/deployment-postgre-migration.toml"
-export DEPLOYMENT_AUTOMATION_POSTGRE_UBUNTU_IS_5_11_MIGRATION="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.11/deployment-postgre-migration.toml"
-export DEPLOYMENT_AUTOMATION_POSTGRE_UBUNTU_IS_6_0_MIGRATION="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.0/deployment-postgre-migration.toml"
-export DEPLOYMENT_AUTOMATION_POSTGRE_UBUNTU_IS_6_1_MIGRATION="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.1/deployment-postgre-migration.toml"
-export DEPLOYMENT_AUTOMATION_POSTGRE_UBUNTU_IS_6_2_MIGRATION="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.2/deployment-postgre-migration.toml"
+export DEPLOYMENT_AUTOMATION_POSTGRE_UBUNTU_IS_5_9_MIGRATION="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.9/deployment-postgre-migration.toml"
+export DEPLOYMENT_AUTOMATION_POSTGRE_UBUNTU_IS_5_10_MIGRATION="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.10/deployment-postgre-migration.toml"
+export DEPLOYMENT_AUTOMATION_POSTGRE_UBUNTU_IS_5_11_MIGRATION="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.11/deployment-postgre-migration.toml"
+export DEPLOYMENT_AUTOMATION_POSTGRE_UBUNTU_IS_6_0_MIGRATION="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.0/deployment-postgre-migration.toml"
+export DEPLOYMENT_AUTOMATION_POSTGRE_UBUNTU_IS_6_1_MIGRATION="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.1/deployment-postgre-migration.toml"
+export DEPLOYMENT_AUTOMATION_POSTGRE_UBUNTU_IS_6_2_MIGRATION="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.2/deployment-postgre-migration.toml"
 
 # Absolute path to the mssql deployment files in migration-tester/migration-automation folder
-export DEPLOYMENT_AUTOMATION_MSSQL_UBUNTU_IS_5_9_MIGRATION="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.9/deployment-mssql-migration.toml"
-export DEPLOYMENT_AUTOMATION_MSSQL_UBUNTU_IS_5_10_MIGRATION="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.10/deployment-mssql-migration.toml"
-export DEPLOYMENT_AUTOMATION_MSSQL_UBUNTU_IS_5_11_MIGRATION="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.11/deployment-mssql-migration.toml"
-export DEPLOYMENT_AUTOMATION_MSSQL_UBUNTU_IS_6_0_MIGRATION="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.0/deployment-mssql-migration.toml"
-export DEPLOYMENT_AUTOMATION_MSSQL_UBUNTU_IS_6_1_MIGRATION="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.1/deployment-mssql-migration.toml"
-export DEPLOYMENT_AUTOMATION_MSSQL_UBUNTU_IS_6_2_MIGRATION="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.2/deployment-mssql-migration.toml"
+export DEPLOYMENT_AUTOMATION_MSSQL_UBUNTU_IS_5_9_MIGRATION="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.9/deployment-mssql-migration.toml"
+export DEPLOYMENT_AUTOMATION_MSSQL_UBUNTU_IS_5_10_MIGRATION="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.10/deployment-mssql-migration.toml"
+export DEPLOYMENT_AUTOMATION_MSSQL_UBUNTU_IS_5_11_MIGRATION="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.11/deployment-mssql-migration.toml"
+export DEPLOYMENT_AUTOMATION_MSSQL_UBUNTU_IS_6_0_MIGRATION="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.0/deployment-mssql-migration.toml"
+export DEPLOYMENT_AUTOMATION_MSSQL_UBUNTU_IS_6_1_MIGRATION="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.1/deployment-mssql-migration.toml"
+export DEPLOYMENT_AUTOMATION_MSSQL_UBUNTU_IS_6_2_MIGRATION="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.2/deployment-mssql-migration.toml"
 
 # Absolute path to the mysql deployment files in migration-tester/migration-automation folder
-export DEPLOYMENT_AUTOMATION_MYSQL_UBUNTU_IS_5_9="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.9/deployment-mysql.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_UBUNTU_IS_5_10="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.10/deployment-mysql.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_UBUNTU_IS_5_11="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.11/deployment-mysql.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_UBUNTU_IS_6_0="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.0/deployment-mysql.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_UBUNTU_IS_6_1="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.1/deployment-mysql.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_UBUNTU_IS_6_2="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.2/deployment-mysql.toml"
+export DEPLOYMENT_AUTOMATION_MYSQL_UBUNTU_IS_5_9="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.9/deployment-mysql.toml"
+export DEPLOYMENT_AUTOMATION_MYSQL_UBUNTU_IS_5_10="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.10/deployment-mysql.toml"
+export DEPLOYMENT_AUTOMATION_MYSQL_UBUNTU_IS_5_11="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.11/deployment-mysql.toml"
+export DEPLOYMENT_AUTOMATION_MYSQL_UBUNTU_IS_6_0="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.0/deployment-mysql.toml"
+export DEPLOYMENT_AUTOMATION_MYSQL_UBUNTU_IS_6_1="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.1/deployment-mysql.toml"
+export DEPLOYMENT_AUTOMATION_MYSQL_UBUNTU_IS_6_2="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.2/deployment-mysql.toml"
 
 # Absolute path to the postgre deployment files in migration-tester/migration-automation folder
-export DEPLOYMENT_AUTOMATION_POSTGRE_UBUNTU_IS_5_9="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.9/deployment-postgre.toml"
-export DEPLOYMENT_AUTOMATION_POSTGRE_UBUNTU_IS_5_10="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.10/deployment-postgre.toml"
-export DEPLOYMENT_AUTOMATION_POSTGRE_UBUNTU_IS_5_11="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.11/deployment-postgre.toml"
-export DEPLOYMENT_AUTOMATION_POSTGRE_UBUNTU_IS_6_0="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.0/deployment-postgre.toml"
-export DEPLOYMENT_AUTOMATION_POSTGRE_UBUNTU_IS_6_1="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.1/deployment-postgre.toml"
-export DEPLOYMENT_AUTOMATION_POSTGRE_UBUNTU_IS_6_2="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.2/deployment-postgre.toml"
+export DEPLOYMENT_AUTOMATION_POSTGRE_UBUNTU_IS_5_9="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.9/deployment-postgre.toml"
+export DEPLOYMENT_AUTOMATION_POSTGRE_UBUNTU_IS_5_10="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.10/deployment-postgre.toml"
+export DEPLOYMENT_AUTOMATION_POSTGRE_UBUNTU_IS_5_11="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.11/deployment-postgre.toml"
+export DEPLOYMENT_AUTOMATION_POSTGRE_UBUNTU_IS_6_0="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.0/deployment-postgre.toml"
+export DEPLOYMENT_AUTOMATION_POSTGRE_UBUNTU_IS_6_1="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.1/deployment-postgre.toml"
+export DEPLOYMENT_AUTOMATION_POSTGRE_UBUNTU_IS_6_2="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.2/deployment-postgre.toml"
 
 # Absolute path to the mssql deployment files in migration-tester/migration-automation folder
-export DEPLOYMENT_AUTOMATION_MSSQL_UBUNTU_IS_5_9="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.9/deployment-mssql.toml"
-export DEPLOYMENT_AUTOMATION_MSSQL_UBUNTU_IS_5_10="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.10/deployment-mssql.toml"
-export DEPLOYMENT_AUTOMATION_MSSQL_UBUNTU_IS_5_11="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.11/deployment-mssql.toml"
-export DEPLOYMENT_AUTOMATION_MSSQL_UBUNTU_IS_6_0="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.0/deployment-mssql.toml"
-export DEPLOYMENT_AUTOMATION_MSSQL_UBUNTU_IS_6_1="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.1/deployment-mssql.toml"
-export DEPLOYMENT_AUTOMATION_MSSQL_UBUNTU_IS_6_2="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.2/deployment-mssql.toml"
+export DEPLOYMENT_AUTOMATION_MSSQL_UBUNTU_IS_5_9="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.9/deployment-mssql.toml"
+export DEPLOYMENT_AUTOMATION_MSSQL_UBUNTU_IS_5_10="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.10/deployment-mssql.toml"
+export DEPLOYMENT_AUTOMATION_MSSQL_UBUNTU_IS_5_11="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.11/deployment-mssql.toml"
+export DEPLOYMENT_AUTOMATION_MSSQL_UBUNTU_IS_6_0="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.0/deployment-mssql.toml"
+export DEPLOYMENT_AUTOMATION_MSSQL_UBUNTU_IS_6_1="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.1/deployment-mssql.toml"
+export DEPLOYMENT_AUTOMATION_MSSQL_UBUNTU_IS_6_2="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.2/deployment-mssql.toml"
 
 # Absolute path to IS old deployment.toml
-export PATH_IS_OLD="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_OLD/CurrentVersion/repository/conf/deployment.toml"
+export PATH_IS_OLD="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_OLD/CurrentVersion/repository/conf/deployment.toml"
 
 # Absolute path to IS old bin folder
-export BIN_ISOLD="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_OLD/CurrentVersion/bin"
+export BIN_ISOLD="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_OLD/CurrentVersion/bin"
 
 # Absolute path to IS New bin folder
-export BIN_ISNEW="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion/bin"
+export BIN_ISNEW="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion/bin"
 
 # Absolute path to IS Home New folder
-export IS_HOME_NEW="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_NEW"
+export IS_HOME_NEW="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_NEW"
 
 # Absolute path for the relevant JDBC driver for the version you are using
 export JDBC="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/migration-client"
@@ -111,13 +111,13 @@ export DB_SCRIPT_CONSENT_5_9="/home/runner/work/Automating-Product-Migration-Tes
 export DB_SCRIPT_METRICS_5_9="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/db-scripts/IS-5.9/metrics/mysql.sql"
 
 # Absolute path for the <IS_HOME_OLD>/repository/components/lib folder
-export LIB="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_OLD/CurrentVersion/repository/components/lib"
+export LIB="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_OLD/CurrentVersion/repository/components/lib"
 
 # Absolute path for the <IS_HOME_NEW>/repository/components/lib folder
-export LIB_NEW="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion/repository/components/"
+export LIB_NEW="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion/repository/components/"
 
 # Absolute path for the <IS_HOME_OLD>/repository/components/bin folder
-export IS_OLD_BIN="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_OLD/CurrentVersion/bin"
+export IS_OLD_BIN="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_OLD/CurrentVersion/bin"
 
 # Absolute path for the mysql jar connector
 export JAR_MYSQL="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/jars/mysql/mysql-connector-java-8.0.29.jar"
@@ -129,22 +129,22 @@ export JAR_MSSQL="/home/runner/work/Automating-Product-Migration-Testing/Automat
 export JAR_POSTGRE="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/jars/postgresql/postgresql-42.5.3.jar"
 
 # Absolute path for the <IS_HOME_OLD>/Tenants folder
-export TENANT_OLD_PATH="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_OLD/CurrentVersion/repository"
+export TENANT_OLD_PATH="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_OLD/CurrentVersion/repository"
 
 # Absolute path for the <IS_HOME_NEW>/Tenants folder
-export TENANT_NEW_PATH="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion/repository/components/"
+export TENANT_NEW_PATH="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion/repository/components/"
 
 # Absolute path for the <IS_HOME_OLD>/Resources folder
-export RESOURCES_OLD_PATH="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_OLD/CurrentVersion/repository/resources"
+export RESOURCES_OLD_PATH="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_OLD/CurrentVersion/repository/resources"
 
 # Absolute path for the <IS_HOME_NEW>/Resources folder
-export RESOURCES_NEW_PATH="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion/repository/resources"
+export RESOURCES_NEW_PATH="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion/repository/resources"
 
 # Absolute path for the <IS_HOME_OLD>/Userstores folder
-export USERSTORE_OLD_PATH="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_OLD/CurrentVersion/repository/deployment/server/userstores"
+export USERSTORE_OLD_PATH="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_OLD/CurrentVersion/repository/deployment/server/userstores"
 
 # Absolute path for the <IS_HOME_NEW>/Userstores folder
-export USERSTORE_NEW_PATH="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion/repository/deployment/server/"
+export USERSTORE_NEW_PATH="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion/repository/deployment/server/"
 
 # Link to download migration client
 export LINK_TO_MIGRATION_CLIENT="https://github.com/wso2-enterprise/identity-migration-resources/releases/download/v1.0.231/wso2is-migration-1.0.225.zip"
@@ -159,25 +159,25 @@ export UTILS="/home/runner/work/Automating-Product-Migration-Testing/Automating-
 export DROPINS_PATH="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/migration-client/wso2is-migration-1.0.225/dropins"
 
 # Absolute path to IS_HOME_NEW/repository/components
-export COMPONENTS_PATH="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion/repository/components"
+export COMPONENTS_PATH="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion/repository/components"
 
 # Absolute path to migration resources folder
 export MIGRATION_RESOURCES="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/migration-client/wso2is-migration-1.0.225/migration-resources"
 
 # Absolute path to latest wso2IS root folder
-export IS_NEW_ROOT="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion"
+export IS_NEW_ROOT="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion"
 
 # Absolute path to migration resources folder in latest IS
-export MIGRATION_RESOURCES_NEW_IS_UBUNTU="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion/migration-resources"
+export MIGRATION_RESOURCES_NEW_IS_UBUNTU="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion/migration-resources"
 
 # Absolute path to migration config.yaml file in new IS
-export MIGRATION_CONFIG_YAML_UBUNTU="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion/migration-resources/migration-config.yaml"
+export MIGRATION_CONFIG_YAML_UBUNTU="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion/migration-resources/migration-config.yaml"
 
 # Absolute path to change migration config yaml file
-export MIGRATION_YAML_UBUNTU="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/ubuntu-os/change-migration-config-yaml-ubuntu.sh"
+export MIGRATION_YAML_UBUNTU="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/ubuntu-os/change-migration-config-yaml-ubuntu.sh"
 
 # Absolute path to ubuntu folder
-export UBUNTU_HOME="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/ubuntu-os"
+export UBUNTU_HOME="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/ubuntu-os"
 
 # Absolute path to ubuntu update tool
 export UPDATE_TOOL_UBUNTU="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/update-tools/wso2update_linux "
@@ -194,7 +194,7 @@ export UPDATE_TOOL_UBUNTU="/home/runner/work/Automating-Product-Migration-Testin
 export DIRECTORY_HOME_MAC="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing"
 
 #Absolute path to IS_HOME_OLD
-export IS_HOME_OLD_MAC="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_OLD"
+export IS_HOME_OLD_MAC="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_OLD"
 
 # Absolute path to data population script
 export DATA_POPULATION_MAC="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/data-population-and-validation"
@@ -203,79 +203,79 @@ export DATA_POPULATION_MAC="/Users/runner/work/Automating-Product-Migration-Test
 export SERVICE_PROVIDER_PATH_MAC="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/data-population-and-validation/4-service-provider-creation"
 
 # Absolute path to home folder
-export AUTOMATION_HOME_MAC="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation"
+export AUTOMATION_HOME_MAC="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation"
 
 # Absolute path to mac folder
-export MAC_PATH="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/mac-os"
+export MAC_PATH="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/mac-os"
 
 # Absolute path to the deployment file to replace
-export DEPLOYMENT_MAC="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_OLD/CurrentVersion/repository/conf/deployment.toml"
+export DEPLOYMENT_MAC="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_OLD/CurrentVersion/repository/conf/deployment.toml"
 
 # Absolute path to the oldIS conf folder
-export DEPLOYMENT_PATH_MAC="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_OLD/CurrentVersion/repository/conf"
+export DEPLOYMENT_PATH_MAC="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_OLD/CurrentVersion/repository/conf"
 
 # Absolute path to the newIS conf folder
-export DEPLOYMENT_PATH_NEW_MAC="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion/repository/conf"
+export DEPLOYMENT_PATH_NEW_MAC="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion/repository/conf"
 
 # Absolute paths to the mysql deployment files in migration-tester/migration-automation folder
-export DEPLOYMENT_AUTOMATION_MYSQL_MAC_IS_5_9_MIGRATION="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.9/deployment-mysql-migration.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_MAC_IS_5_10_MIGRATION="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.10/deployment-mysql-migration.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_MAC_IS_5_11_MIGRATION="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.11/deployment-mysql-migration.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_MAC_IS_6_0_MIGRATION="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.0/deployment-mysql-migration.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_MAC_IS_6_1_MIGRATION="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.1/deployment-mysql-migration.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_MAC_IS_6_2_MIGRATION="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.2/deployment-mysql-migration.toml"
+export DEPLOYMENT_AUTOMATION_MYSQL_MAC_IS_5_9_MIGRATION="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.9/deployment-mysql-migration.toml"
+export DEPLOYMENT_AUTOMATION_MYSQL_MAC_IS_5_10_MIGRATION="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.10/deployment-mysql-migration.toml"
+export DEPLOYMENT_AUTOMATION_MYSQL_MAC_IS_5_11_MIGRATION="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.11/deployment-mysql-migration.toml"
+export DEPLOYMENT_AUTOMATION_MYSQL_MAC_IS_6_0_MIGRATION="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.0/deployment-mysql-migration.toml"
+export DEPLOYMENT_AUTOMATION_MYSQL_MAC_IS_6_1_MIGRATION="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.1/deployment-mysql-migration.toml"
+export DEPLOYMENT_AUTOMATION_MYSQL_MAC_IS_6_2_MIGRATION="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.2/deployment-mysql-migration.toml"
 
 # Absolute paths to the postgre deployment files in migration-tester/migration-automation folder
-export DEPLOYMENT_AUTOMATION_POSTGRE_MAC_IS_5_9_MIGRATION="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.9/deployment-postgre-migration.toml"
-export DEPLOYMENT_AUTOMATION_POSTGRE_MAC_IS_5_10_MIGRATION="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.10/deployment-postgre-migration.toml"
-export DEPLOYMENT_AUTOMATION_POSTGRE_MAC_IS_5_11_MIGRATION="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.11/deployment-postgre-migration.toml"
-export DEPLOYMENT_AUTOMATION_POSTGRE_MAC_IS_6_0_MIGRATION="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.0/deployment-postgre-migration.toml"
-export DEPLOYMENT_AUTOMATION_POSTGRE_MAC_IS_6_1_MIGRATION="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.1/deployment-postgre-migration.toml"
-export DEPLOYMENT_AUTOMATION_POSTGRE_MAC_IS_6_2_MIGRATION="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.2/deployment-postgre-migration.toml"
+export DEPLOYMENT_AUTOMATION_POSTGRE_MAC_IS_5_9_MIGRATION="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.9/deployment-postgre-migration.toml"
+export DEPLOYMENT_AUTOMATION_POSTGRE_MAC_IS_5_10_MIGRATION="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.10/deployment-postgre-migration.toml"
+export DEPLOYMENT_AUTOMATION_POSTGRE_MAC_IS_5_11_MIGRATION="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.11/deployment-postgre-migration.toml"
+export DEPLOYMENT_AUTOMATION_POSTGRE_MAC_IS_6_0_MIGRATION="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.0/deployment-postgre-migration.toml"
+export DEPLOYMENT_AUTOMATION_POSTGRE_MAC_IS_6_1_MIGRATION="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.1/deployment-postgre-migration.toml"
+export DEPLOYMENT_AUTOMATION_POSTGRE_MAC_IS_6_2_MIGRATION="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.2/deployment-postgre-migration.toml"
 
 # Absolute paths to the mssql deployment files in migration-tester/migration-automation folder
-export DEPLOYMENT_AUTOMATION_MSSQL_MAC_IS_5_9_MIGRATION="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.9/deployment-mssql-migration.toml"
-export DEPLOYMENT_AUTOMATION_MSSQL_MAC_IS_5_10_MIGRATION="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.10/deployment-mssql-migration.toml"
-export DEPLOYMENT_AUTOMATION_MSSQL_MAC_IS_5_11_MIGRATION="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.11/deployment-mssql-migration.toml"
-export DEPLOYMENT_AUTOMATION_MSSQL_MAC_IS_6_0_MIGRATION="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.0/deployment-mssql-migration.toml"
-export DEPLOYMENT_AUTOMATION_MSSQL_MAC_IS_6_1_MIGRATION="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.1/deployment-mssql-migration.toml"
-export DEPLOYMENT_AUTOMATION_MSSQL_MAC_IS_6_2_MIGRATION="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.2/deployment-mssql-migration.toml"
+export DEPLOYMENT_AUTOMATION_MSSQL_MAC_IS_5_9_MIGRATION="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.9/deployment-mssql-migration.toml"
+export DEPLOYMENT_AUTOMATION_MSSQL_MAC_IS_5_10_MIGRATION="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.10/deployment-mssql-migration.toml"
+export DEPLOYMENT_AUTOMATION_MSSQL_MAC_IS_5_11_MIGRATION="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.11/deployment-mssql-migration.toml"
+export DEPLOYMENT_AUTOMATION_MSSQL_MAC_IS_6_0_MIGRATION="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.0/deployment-mssql-migration.toml"
+export DEPLOYMENT_AUTOMATION_MSSQL_MAC_IS_6_1_MIGRATION="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.1/deployment-mssql-migration.toml"
+export DEPLOYMENT_AUTOMATION_MSSQL_MAC_IS_6_2_MIGRATION="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.2/deployment-mssql-migration.toml"
 
 # Absolute paths to the mysql deployment files in migration-tester/migration-automation folder
-export DEPLOYMENT_AUTOMATION_MYSQL_MAC_IS_5_9="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.9/deployment-mysql.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_MAC_IS_5_10="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.10/deployment-mysql.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_MAC_IS_5_11="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.11/deployment-mysql.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_MAC_IS_6_0="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.0/deployment-mysql.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_MAC_IS_6_1="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.1/deployment-mysql.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_MAC_IS_6_2="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.2/deployment-mysql.toml"
+export DEPLOYMENT_AUTOMATION_MYSQL_MAC_IS_5_9="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.9/deployment-mysql.toml"
+export DEPLOYMENT_AUTOMATION_MYSQL_MAC_IS_5_10="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.10/deployment-mysql.toml"
+export DEPLOYMENT_AUTOMATION_MYSQL_MAC_IS_5_11="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.11/deployment-mysql.toml"
+export DEPLOYMENT_AUTOMATION_MYSQL_MAC_IS_6_0="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.0/deployment-mysql.toml"
+export DEPLOYMENT_AUTOMATION_MYSQL_MAC_IS_6_1="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.1/deployment-mysql.toml"
+export DEPLOYMENT_AUTOMATION_MYSQL_MAC_IS_6_2="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.2/deployment-mysql.toml"
 
 # Absolute paths to the postgre deployment files in migration-tester/migration-automation folder
-export DEPLOYMENT_AUTOMATION_POSTGRE_MAC_IS_5_9="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.9/deployment-postgre.toml"
-export DEPLOYMENT_AUTOMATION_POSTGRE_MAC_IS_5_10="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.10/deployment-postgre.toml"
-export DEPLOYMENT_AUTOMATION_POSTGRE_MAC_IS_5_11="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.11/deployment-postgre.toml"
-export DEPLOYMENT_AUTOMATION_POSTGRE_MAC_IS_6_0="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.0/deployment-postgre.toml"
-export DEPLOYMENT_AUTOMATION_POSTGRE_MAC_IS_6_1="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.1/deployment-postgre.toml"
-export DEPLOYMENT_AUTOMATION_POSTGRE_MAC_IS_6_2="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.2/deployment-postgre.toml"
+export DEPLOYMENT_AUTOMATION_POSTGRE_MAC_IS_5_9="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.9/deployment-postgre.toml"
+export DEPLOYMENT_AUTOMATION_POSTGRE_MAC_IS_5_10="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.10/deployment-postgre.toml"
+export DEPLOYMENT_AUTOMATION_POSTGRE_MAC_IS_5_11="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.11/deployment-postgre.toml"
+export DEPLOYMENT_AUTOMATION_POSTGRE_MAC_IS_6_0="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.0/deployment-postgre.toml"
+export DEPLOYMENT_AUTOMATION_POSTGRE_MAC_IS_6_1="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.1/deployment-postgre.toml"
+export DEPLOYMENT_AUTOMATION_POSTGRE_MAC_IS_6_2="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.2/deployment-postgre.toml"
 
 # Absolute paths to the mssql deployment files in migration-tester/migration-automation folder
-export DEPLOYMENT_AUTOMATION_MSSQL_MAC_IS_5_9="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.9/deployment-mssql.toml"
-export DEPLOYMENT_AUTOMATION_MSSQL_MAC_IS_5_10="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.10/deployment-mssql.toml"
-export DEPLOYMENT_AUTOMATION_MSSQL_MAC_IS_5_11="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.11/deployment-mssql.toml"
-export DEPLOYMENT_AUTOMATION_MSSQL_MAC_IS_6_0="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.0/deployment-mssql.toml"
-export DEPLOYMENT_AUTOMATION_MSSQL_MAC_IS_6_1="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.1/deployment-mssql.toml"
-export DEPLOYMENT_AUTOMATION_MSSQL_MAC_IS_6_2="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.2/deployment-mssql.toml"
+export DEPLOYMENT_AUTOMATION_MSSQL_MAC_IS_5_9="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.9/deployment-mssql.toml"
+export DEPLOYMENT_AUTOMATION_MSSQL_MAC_IS_5_10="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.10/deployment-mssql.toml"
+export DEPLOYMENT_AUTOMATION_MSSQL_MAC_IS_5_11="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.11/deployment-mssql.toml"
+export DEPLOYMENT_AUTOMATION_MSSQL_MAC_IS_6_0="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.0/deployment-mssql.toml"
+export DEPLOYMENT_AUTOMATION_MSSQL_MAC_IS_6_1="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.1/deployment-mssql.toml"
+export DEPLOYMENT_AUTOMATION_MSSQL_MAC_IS_6_2="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.2/deployment-mssql.toml"
 
 # Absolute path to IS old deployment.toml
-export PATH_IS_OLD_MAC="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_OLD/CurrentVersion/repository/conf/deployment.toml"
+export PATH_IS_OLD_MAC="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_OLD/CurrentVersion/repository/conf/deployment.toml"
 
 # Absolute path to IS old bin folder
-export BIN_ISOLD_MAC="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_OLD/CurrentVersion/bin"
+export BIN_ISOLD_MAC="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_OLD/CurrentVersion/bin"
 
 # Absolute path to IS New bin folder
-export BIN_ISNEW_MAC="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion/bin"
+export BIN_ISNEW_MAC="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion/bin"
 
 # Absolute path to IS Home New folder
-export IS_HOME_NEW_MAC="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_NEW"
+export IS_HOME_NEW_MAC="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_NEW"
 
 # Link to download wso2IS Old
 export LINK_TO_IS_OLD_MAC="https://github.com/wso2/product-is/releases/download/v5.11.0/wso2is-5.11.0.zip"
@@ -301,13 +301,13 @@ export DB_SCRIPT_CONSENT_5_9_MAC="/home/runner/work/Automating-Product-Migration
 export DB_SCRIPT_METRICS_5_9_MAC="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/db-scripts/IS-5.9/metrics/mysql.sql"
 
 # Absolute path for the <IS_HOME_OLD>/repository/components/lib folder
-export LIB_MAC="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_OLD/CurrentVersion/repository/components/lib"
+export LIB_MAC="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_OLD/CurrentVersion/repository/components/lib"
 
 # Absolute path for the <IS_HOME_OLD>/repository/components/bin folder
-export IS_OLD_BIN_MAC="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_OLD/CurrentVersion/bin"
+export IS_OLD_BIN_MAC="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_OLD/CurrentVersion/bin"
 
 # Absolute path for the <IS_HOME_NEW>/repository/components/lib folder
-export LIB_NEW_MAC="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion/repository/components/"
+export LIB_NEW_MAC="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion/repository/components/"
 
 # Absolute path for the mysql jar connector
 export JAR_MYSQL_MAC="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/jars/mysql/mysql-connector-java-8.0.29.jar"
@@ -319,22 +319,22 @@ export JAR_MSSQL_MAC="/Users/runner/work/Automating-Product-Migration-Testing/Au
 export JAR_POSTGRE_MAC="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/jars/postgresql/postgresql-42.5.3.jar"
 
 # Absolute path for the <IS_HOME_OLD>/Tenants folder
-export TENANT_OLD_PATH_MAC="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_OLD/CurrentVersion/repository"
+export TENANT_OLD_PATH_MAC="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_OLD/CurrentVersion/repository"
 
 # Absolute path for the <IS_HOME_NEW>/Tenants folder
-export TENANT_NEW_PATH_MAC="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion/repository/components/"
+export TENANT_NEW_PATH_MAC="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion/repository/components/"
 
 # Absolute path for the <IS_HOME_OLD>/Resources folder
-export RESOURCES_OLD_PATH_MAC="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_OLD/CurrentVersion/repository/resources"
+export RESOURCES_OLD_PATH_MAC="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_OLD/CurrentVersion/repository/resources"
 
 # Absolute path for the <IS_HOME_NEW>/Resources folder
-export RESOURCES_NEW_PATH_MAC="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion/repository/resources"
+export RESOURCES_NEW_PATH_MAC="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion/repository/resources"
 
 # Absolute path for the <IS_HOME_OLD>/Userstores folder
-export USERSTORE_OLD_PATH_MAC="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_OLD/CurrentVersion/repository/deployment/server/userstores"
+export USERSTORE_OLD_PATH_MAC="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_OLD/CurrentVersion/repository/deployment/server/userstores"
 
 #Absolute path for the <IS_HOME_NEW>/Userstores folder
-export USERSTORE_NEW_PATH_MAC="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion/repository/deployment/server/"
+export USERSTORE_NEW_PATH_MAC="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion/repository/deployment/server/"
 
 # Link to download wso2IS New
 export LINK_TO_IS_NEW_MAC="https://github.com/wso2/product-is/releases/download/v6.0.0-rc2/wso2is-6.0.0-rc2.zip"
@@ -355,25 +355,25 @@ export UTILS_MAC_PATH="/Users/runner/work/Automating-Product-Migration-Testing/A
 export DROPINS_PATH_MAC="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/migration-client/wso2is-migration-1.0.225/dropins"
 
 # Absolute path to IS_HOME_NEW/repository/components
-export COMPONENTS_PATH_MAC="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion/repository/components"
+export COMPONENTS_PATH_MAC="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion/repository/components"
 
 # Absolute path to migration resources folder
 export MIGRATION_RESOURCES_MAC="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/migration-client/wso2is-migration-1.0.225/migration-resources"
 
 # Absolute path to latest wso2IS root folder
-export IS_NEW_ROOT_MAC="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion"
+export IS_NEW_ROOT_MAC="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion"
 
 # Absolute path to migration resources folder in latest IS
-export MIGRATION_RESOURCES_NEW_IS_MAC="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion/migration-resources"
+export MIGRATION_RESOURCES_NEW_IS_MAC="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion/migration-resources"
 
 # Absolute path to migration config.yaml file in new IS
-export MIGRATION_CONFIG_YAML_MAC="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion/migration-resources/migration-config.yaml"
+export MIGRATION_CONFIG_YAML_MAC="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_NEW/MigratingVersion/migration-resources/migration-config.yaml"
 
 # Absolute path to migration config yaml file
-export MIGRATION_YAML_MAC="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/mac-os/change-migration-config-yaml-mac.sh"
+export MIGRATION_YAML_MAC="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/mac-os/change-migration-config-yaml-mac.sh"
 
 # Absolute path to macos folder
-export MAC_HOME="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/mac-os"
+export MAC_HOME="/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/mac-os"
 
 # Absolute path to macos update tool
 export UPDATE_TOOL_MACOS="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/update-tools/wso2update_darwin"
@@ -532,7 +532,7 @@ export REDIRECTURI=https://localhost:8080/callback
 #                             ENV CONFIGS RELATED TO DATABASE BACKUP - COMMON TO LINUX & MACOS                                #
 ###############################################################################################################################
 
-export BACKUP_PATH=/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/backup_db.sql
+export BACKUP_PATH=/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/backup_db.sql
 
 ###############################################################################################################################
 #                             DOCKER MYSQL CONFIGS - COMMON TO LINUX & MACOS                                                  #
@@ -554,25 +554,25 @@ export DATABASE_NAME=testdb
 ###############################################################################################################################
 
 # Absolute path to the mysql deployment files in migration-tester/migration-automation folder
-export DEPLOYMENT_AUTOMATION_MYSQL_WINDOWS_IS_5_9="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.9/deployment-mysql.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_WINDOWS_IS_5_10="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.10/deployment-mysql.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_WINDOWS_IS_5_11="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.11/deployment-mysql.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_WINDOWS_IS_6_0="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.0/deployment-mysql.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_WINDOWS_IS_6_1="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.1/deployment-mysql.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_WINDOWS_IS_6_2="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.2/deployment-mysql.toml"
+export DEPLOYMENT_AUTOMATION_MYSQL_WINDOWS_IS_5_9="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.9/deployment-mysql.toml"
+export DEPLOYMENT_AUTOMATION_MYSQL_WINDOWS_IS_5_10="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.10/deployment-mysql.toml"
+export DEPLOYMENT_AUTOMATION_MYSQL_WINDOWS_IS_5_11="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.11/deployment-mysql.toml"
+export DEPLOYMENT_AUTOMATION_MYSQL_WINDOWS_IS_6_0="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.0/deployment-mysql.toml"
+export DEPLOYMENT_AUTOMATION_MYSQL_WINDOWS_IS_6_1="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.1/deployment-mysql.toml"
+export DEPLOYMENT_AUTOMATION_MYSQL_WINDOWS_IS_6_2="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.2/deployment-mysql.toml"
 
 # Absolute path to the postgre deployment files in migration-tester/migration-automation folder
-export DEPLOYMENT_AUTOMATION_POSTGRE_WINDOWS_IS_5_9="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.9/deployment-postgre.toml"
-export DEPLOYMENT_AUTOMATION_POSTGRE_WINDOWS_IS_5_10="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.10/deployment-postgre.toml"
-export DEPLOYMENT_AUTOMATION_POSTGRE_WINDOWS_IS_5_11="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.11/deployment-postgre.toml"
-export DEPLOYMENT_AUTOMATION_POSTGRE_WINDOWS_IS_6_0="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.0/deployment-postgre.toml"
-export DEPLOYMENT_AUTOMATION_POSTGRE_WINDOWS_IS_6_1="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.1/deployment-postgre.toml"
-export DEPLOYMENT_AUTOMATION_POSTGRE_WINDOWS_IS_6_2="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.2/deployment-postgre.toml"
+export DEPLOYMENT_AUTOMATION_POSTGRE_WINDOWS_IS_5_9="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.9/deployment-postgre.toml"
+export DEPLOYMENT_AUTOMATION_POSTGRE_WINDOWS_IS_5_10="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.10/deployment-postgre.toml"
+export DEPLOYMENT_AUTOMATION_POSTGRE_WINDOWS_IS_5_11="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.11/deployment-postgre.toml"
+export DEPLOYMENT_AUTOMATION_POSTGRE_WINDOWS_IS_6_0="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.0/deployment-postgre.toml"
+export DEPLOYMENT_AUTOMATION_POSTGRE_WINDOWS_IS_6_1="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.1/deployment-postgre.toml"
+export DEPLOYMENT_AUTOMATION_POSTGRE_WINDOWS_IS_6_2="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.2/deployment-postgre.toml"
 
 # Absolute path to the mssql deployment files in migration-tester/migration-automation folder
-export DEPLOYMENT_AUTOMATION_MYSQL_WINDOWS_IS_5_9="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.9/deployment-mssql.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_WINDOWS_IS_5_10="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.10/deployment-mssql.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_WINDOWS_IS_5_11="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-5.11/deployment-mssql.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_WINDOWS_IS_6_0="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.0/deployment-mssql.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_WINDOWS_IS_6_1="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.1/deployment-mssql.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_WINDOWS_IS_6_2="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment-tomls/IS-6.2/deployment-mssql.toml"
+export DEPLOYMENT_AUTOMATION_MYSQL_WINDOWS_IS_5_9="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.9/deployment-mssql.toml"
+export DEPLOYMENT_AUTOMATION_MYSQL_WINDOWS_IS_5_10="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.10/deployment-mssql.toml"
+export DEPLOYMENT_AUTOMATION_MYSQL_WINDOWS_IS_5_11="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.11/deployment-mssql.toml"
+export DEPLOYMENT_AUTOMATION_MYSQL_WINDOWS_IS_6_0="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.0/deployment-mssql.toml"
+export DEPLOYMENT_AUTOMATION_MYSQL_WINDOWS_IS_6_1="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.1/deployment-mssql.toml"
+export DEPLOYMENT_AUTOMATION_MYSQL_WINDOWS_IS_6_2="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.2/deployment-mssql.toml"

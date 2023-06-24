@@ -235,7 +235,7 @@ WaitUntilServerIsUp
 #cd "$BIN_ISOLD"
 #bash server-start.sh&
  
-#cd /home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/IS_HOME_OLD/wso2is-5.11.0/bin
+#cd /home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/IS_HOME_OLD/wso2is-5.11.0/bin
 Write-Host "Diverted to bin"
 
 #Set-Location -Path "D:\a\Automating-Product-Migration-Testing\Automating-Product-Migration-Testing\02-POC\macos\data-population-and-validation"
@@ -767,7 +767,7 @@ cd "D:\a\Automating-Product-Migration-Testing\Automating-Product-Migration-Testi
 
 #bash download-migration-client.sh
 # Wait for the Migration client to be copied 
-#while [ ! -f "/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/wso2is-migration-1.0.225" ]
+#while [ ! -f "/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/wso2is-migration-1.0.225" ]
 #do
   #echo "\033[0;32m\033[1mMigration client not found in  folder, waiting...\033[0;m"
   #sleep 5

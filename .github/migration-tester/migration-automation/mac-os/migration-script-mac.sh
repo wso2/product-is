@@ -38,8 +38,8 @@ currentVersion=$(echo $currentVersion | xargs)
 combinedCurrentVersion="wso2is-${currentVersion}"
 
 # Replace all instances of "CurrentVersion" with the combined version value
-sed "s/CurrentVersion/${combinedCurrentVersion}/g" "/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/env.sh" >temp_env.sh
-mv temp_env.sh "/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/env.sh"
+sed "s/CurrentVersion/${combinedCurrentVersion}/g" "/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/env.sh" >temp_env.sh
+mv temp_env.sh "/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/env.sh"
 
 # Remove spaces from the beginning and end of the migratingVersion variable
 migratingVersion=$(echo $migratingVersion | xargs)
@@ -48,8 +48,8 @@ migratingVersion=$(echo $migratingVersion | xargs)
 combinedMigratingVersion="wso2is-${migratingVersion}"
 
 # Replace all instances of "MigratingVersion" with the value of the "migratingVersion" input, without spaces
-sed "s/MigratingVersion/${combinedMigratingVersion}/g" "/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/env.sh" >temp_env.sh
-mv temp_env.sh "/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/env.sh"
+sed "s/MigratingVersion/${combinedMigratingVersion}/g" "/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/env.sh" >temp_env.sh
+mv temp_env.sh "/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/env.sh"
 
 # Define the message in a variable for easier modification
 echo
@@ -65,7 +65,7 @@ echo
 echo "${ORANGE}"PROCESS STARTED!"${RESET}"
 
 # Source env file
-cd "/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation"
+cd "/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation"
 chmod +x env.sh
 source ./env.sh
 echo "${GREEN}==> Env file sourced successfully!${RESET}"
@@ -316,7 +316,7 @@ echo "${GREEN}==> Unzipped migration client successfully${RESET}"
 cd "$AUTOMATION_HOME_MAC"
 
 # Copy migration client from home to migration client folder
-cp -r "/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/wso2is-migration-1.0.225" "/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/migration-client/" &
+cp -r "/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/wso2is-migration-1.0.225" "/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/migration-client/" &
 cp_pid=$!
 
 wait $cp_pid

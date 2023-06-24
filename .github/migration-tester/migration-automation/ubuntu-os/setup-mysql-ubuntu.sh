@@ -8,7 +8,7 @@ RESET='\033[0m'           # reset color
 currentVersion=$1
 
 # Source env file
-cd /home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation
+cd /home/runner/work/product-is/product-is/.github/migration-tester/migration-automation
 chmod +x env.sh
 . ./env.sh
 

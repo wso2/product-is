@@ -8,7 +8,7 @@ RESET='\033[0m'           # reset color
 database=$5
 
 # Source env file
-cd /Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation
+cd /Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation
 chmod +x env.sh
 source ./env.sh
 

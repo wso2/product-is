@@ -16,14 +16,14 @@ if [ "$os" = "ubuntu-latest" ]; then
     if [ "$startServer" = "current" ]; then
         deployment_file="$DEPLOYMENT_PATH/deployment.toml"
         deployment_path="$DEPLOYMENT_PATH"
-        cd "/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation"
+        cd "/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation"
         chmod +x env.sh
         . ./env.sh
         echo "${GREEN}==> Env file for Ubuntu sourced successfully${RESET}"
     elif [ "$startServer" = "migrated" ]; then
         deployment_file="$DEPLOYMENT_PATH_NEW/deployment.toml"
         deployment_path="$DEPLOYMENT_PATH_NEW"
-        cd "/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation"
+        cd "/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation"
         chmod +x env.sh
         . ./env.sh
         echo "${GREEN}==> Env file for Migrating Identity server in Ubuntu os sourced successfully${RESET}"
@@ -32,14 +32,14 @@ elif [ "$os" = "macos-latest" ]; then
     if [ "$startServer" = "current" ]; then
         deployment_file="$DEPLOYMENT_PATH_MAC/deployment.toml"
         deployment_path="$DEPLOYMENT_PATH_MAC"
-        cd "/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation"
+        cd "/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation"
         chmod +x env.sh
         source ./env.sh
         echo "${GREEN}==> Env file for Mac sourced successfully${RESET}"
     elif [ "$startServer" = "migrated" ]; then
         deployment_file="$DEPLOYMENT_PATH_NEW_MAC/deployment.toml"
         deployment_path="$DEPLOYMENT_PATH_NEW_MAC"
-        cd "/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation"
+        cd "/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation"
         chmod +x env.sh
         source ./env.sh
         echo "${GREEN}==> Env file for migrating Identity server in Macos sourced successfully${RESET}"
