@@ -142,14 +142,14 @@ jobs:
         
       - name: Execute Migration Automation Script Ubuntu
         run: |
-            chmod +x ${{ github.workspace }}/product-is/.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh 
-            sh ${{ github.workspace }}/product-is/.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "./.github/migration-tester/migration-automation/logs.txt"
+            chmod +x ${{ github.workspace }}/.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh 
+            sh ${{ github.workspace }}/.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "./.github/migration-tester/migration-automation/logs.txt"
         continue-on-error: true
 
       - name: Persist Logs
         run: |
-          mkdir -p ${{ github.workspace }}/product-is/.github/migration-tester/migration-automation/artifacts
-          cp ${{ github.workspace }}/product-is/.github/migration-tester/migration-automation/logs.txt migration-automation/artifacts/
+          mkdir -p ${{ github.workspace }}/.github/migration-tester/migration-automation/artifacts
+          cp ${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt migration-automation/artifacts/
         if: ${{ always() }}
 
       - name: Upload Artifacts
@@ -157,7 +157,7 @@ jobs:
         if: always()
         with:
           name: "logs-${{ github.event.inputs.currentVersion }}-${{ github.event.inputs.migratingVersion }}-${{ github.event.inputs.database }}-${{ github.event.inputs.os }}"
-          path: ${{ github.workspace }}/product-is/.github/migration-tester/migration-automation/artifacts
+          path: ${{ github.workspace }}/.github/migration-tester/migration-automation/artifacts
 
   ubuntu-mssql-migration:
     if: ${{ github.event.inputs.database == 'mssql' && github.event.inputs.os == 'ubuntu-latest' }}
