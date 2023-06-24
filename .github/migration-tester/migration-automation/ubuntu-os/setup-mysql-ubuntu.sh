@@ -73,7 +73,7 @@ docker exec -i "$CONTAINER_NAME" sh -c 'exec mysql -uroot -p'$ROOT_PASSWORD'' <"
 echo "${GREEN}==> Database created successfully!${RESET}"
 
 # Execute SQL scripts
-chmod +x ~/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/db-scripts/database-create-scripts/mysql.sql
+chmod +x /home/runner/work/product-is/product-is/.github/migration-tester/utils/db-scripts/database-create-scripts/mysql.sql
 
 if [ "$currentVersion" = "5.9.0" ]; then
 docker exec -i "$CONTAINER_NAME" sh -c 'exec mysql -uroot -p'$ROOT_PASSWORD' -D '$DATABASE_NAME'' <"$DB_SCRIPT_MYSQL_5_9"
