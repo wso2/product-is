@@ -395,4 +395,4 @@ chmod +x stop-server.sh
 sh stop-server.sh "$os" "migrated"
 echo
 
-echo "${CYAN}END OF AUTOMATING PRODUCT MIGRATION TESTING${CYAN}"
+echo "${CYAN}-END OF AUTOMATING PRODUCT MIGRATION TESTING-${CYAN}"
