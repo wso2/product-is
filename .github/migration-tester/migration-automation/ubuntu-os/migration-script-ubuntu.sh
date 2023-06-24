@@ -36,7 +36,7 @@ currentVersion=$(echo $currentVersion | xargs)
 combinedCurrentVersion="wso2is-${currentVersion}"
 
 # Replace all instances of "CurrentVersion" with the combined version value
-sed -i "s/CurrentVersion/${combinedCurrentVersion}/g" /home/runner/work/product-is/migration-tester/migration-automation/env.s
+sed -i "s/CurrentVersion/${combinedCurrentVersion}/g" /home/runner/work/product-is/product-is/migration-tester/migration-automation/env.s
 
 # Remove spaces from the beginning and end of the migratingVersion variable
 migratingVersion=$(echo $migratingVersion | xargs)
