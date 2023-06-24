@@ -100,7 +100,7 @@ wait
 echo "${GREEN}==> Unzipped downloaded Identity Server zip${RESET}"
 
 # Copy update tool from utils to bin folder
-cd "/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/update-tools"
+cd "/Users/runner/work/product-is/product-is/.github/migration-tester/utils/update-tools"
 
 cp -r $UPDATE_TOOL_MACOS $BIN_ISOLD_MAC
 copy_exit_code=$?
@@ -248,7 +248,7 @@ echo "${GREEN}==> Unzipped "$migratingVersion" zip${RESET}"
 
 
 # Copy update tool from utils to bin folder
-cd "/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/update-tools"
+cd "/Users/runner/work/product-is/product-is/.github/migration-tester/utils/update-tools"
 
 cp -r $UPDATE_TOOL_MACOS $BIN_ISNEW_MAC
 copy_exit_code=$?
@@ -316,7 +316,7 @@ echo "${GREEN}==> Unzipped migration client successfully${RESET}"
 cd "$AUTOMATION_HOME_MAC"
 
 # Copy migration client from home to migration client folder
-cp -r "/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/wso2is-migration-1.0.225" "/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/migration-client/" &
+cp -r "/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/wso2is-migration-1.0.225" "/Users/runner/work/product-is/product-is/.github/migration-tester/utils/migration-client/" &
 cp_pid=$!
 
 wait $cp_pid
@@ -376,7 +376,7 @@ echo "${BLUE}==> Copied deployment toml of "$currentVersion" to "$migratingVersi
 
 # Execute consent management db scripts for IS 5.11.0 - MySQL
 if [ "$migratingVersion" = "5.11.0" ] && [ "$database" = "mysql" ]; then
-    docker exec -i amazing_feynman sh -c 'exec mysql -uroot -proot -D testdb' </Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/other-db-scripts/config-management-is-5-11.sql
+    docker exec -i amazing_feynman sh -c 'exec mysql -uroot -proot -D testdb' </Users/runner/work/product-is/product-is/.github/migration-tester/utils/other-db-scripts/config-management-is-5-11.sql
     echo "${GREEN}==> Executing consent management db scripts for IS 5.11.0 - MySQL${RESET}"
 else
     echo "${GREEN}==> Skipping executing consent management db scripts since the migrating version is not IS 5.11.0"$database" ${RESET}"

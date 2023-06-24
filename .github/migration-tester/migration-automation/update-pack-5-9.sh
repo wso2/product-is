@@ -4,7 +4,7 @@ email=$1
 password=$2
 
 # Copy update tool from utils to bin folder
-cd "/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/update-tools"
+cd "/home/runner/work/product-is/product-is/.github/migration-tester/utils/update-tools"
 
 cp -r $UPDATE_TOOL_UBUNTU $BIN_ISOLD
 copy_exit_code=$?

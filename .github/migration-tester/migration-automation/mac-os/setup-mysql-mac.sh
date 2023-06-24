@@ -63,16 +63,16 @@ mysql -u root -proot -e "CREATE DATABASE testdb CHARACTER SET latin1;"
 cd $UTILS_MAC
 
 # specify the path to the MySQL script
-script_path1="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/db-scripts/IS-5.11/mysql.sql"
-script_path2="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/db-scripts/IS-5.11/identity/mysql.sql"
-script_path3="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/db-scripts/IS-5.11/identity/uma/mysql.sql"
-script_path4="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/db-scripts/IS-5.11/consent/mysql.sql"
-script_path5="/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/db-scripts/IS-5.11/metrics/mysql.sql"
+script_path1="/Users/runner/work/product-is/product-is/.github/migration-tester/utils/db-scripts/IS-5.11/mysql.sql"
+script_path2="/Users/runner/work/product-is/product-is/.github/migration-tester/utils/db-scripts/IS-5.11/identity/mysql.sql"
+script_path3="/Users/runner/work/product-is/product-is/.github/migration-tester/utils/db-scripts/IS-5.11/identity/uma/mysql.sql"
+script_path4="/Users/runner/work/product-is/product-is/.github/migration-tester/utils/db-scripts/IS-5.11/consent/mysql.sql"
+script_path5="/Users/runner/work/product-is/product-is/.github/migration-tester/utils/db-scripts/IS-5.11/metrics/mysql.sql"
 
 # specify the database name
 database="testdb"
 
-cd "/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/db-scripts/IS-5.11"
+cd "/Users/runner/work/product-is/product-is/.github/migration-tester/utils/db-scripts/IS-5.11"
 # execute the script against the specified database
 mysql -u root -proot -D testdb <$script_path1
 mysql -u root -proot -D testdb <$script_path2

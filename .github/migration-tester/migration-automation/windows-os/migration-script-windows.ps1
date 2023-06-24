@@ -134,8 +134,8 @@ cd D:\a\Automating-Product-Migration-Testing\Automating-Product-Migration-Testin
 #fi
 
 # Create database
-#chmod +x /home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/mysql.sql
-#docker exec -i amazing_feynman sh -c 'exec mysql -uroot -proot' < /home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/mysql.sql
+#chmod +x /home/runner/work/product-is/product-is/.github/migration-tester/utils/mysql.sql
+#docker exec -i amazing_feynman sh -c 'exec mysql -uroot -proot' < /home/runner/work/product-is/product-is/.github/migration-tester/utils/mysql.sql
 #echo "\033[0;32m\033[1mDatabase created successfully!\033[0;m"
 
 #chmod +x ~/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/db-scripts/IS-5.11/mysql.sql
@@ -774,7 +774,7 @@ cd "D:\a\Automating-Product-Migration-Testing\Automating-Product-Migration-Testi
 #done
 #echo "\033[0;32m\033[1mMigration client found in folder, continuing...\033[0;m"
 
-#cd /home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils
+#cd /home/runner/work/product-is/product-is/.github/migration-tester/utils
 cd "D:\a\Automating-Product-Migration-Testing\Automating-Product-Migration-Testing\utils"
 
 # Unzip migration client archive
@@ -784,7 +784,7 @@ Write-Host "`e[0;32m`e[1mUnzipped migration client archive`e[0m"
 
 # Navigate to dropins folder 
 #cd "$DROPINS_PATH_HOME"
-#cd /home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/wso2is-migration-1.0.225
+#cd /home/runner/work/product-is/product-is/.github/migration-tester/utils/wso2is-migration-1.0.225
 cd "D:\a\Automating-Product-Migration-Testing\Automating-Product-Migration-Testing\utils\wso2is-migration-1.0.225"
 
 
@@ -793,7 +793,7 @@ cd "D:\a\Automating-Product-Migration-Testing\Automating-Product-Migration-Testi
 #sleep 10
 #echo "\033[0;32m\033[1mJar files from migration client have been copied to IS_HOME_NEW/repository/components/dropins folder successfully!\033[0;m"
                                              
-#cp -r /home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/wso2is-migration-1.0.225 "$COMPONENTS_PATH" &
+#cp -r /home/runner/work/product-is/product-is/.github/migration-tester/utils/wso2is-migration-1.0.225 "$COMPONENTS_PATH" &
 #sleep 10
 #echo "\033[0;32m\033[1mJar files from migration client have been copied to IS_HOME_NEW/repository/components/dropins folder successfully!\033[0;m"
 

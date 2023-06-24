@@ -219,7 +219,7 @@ ls -a
 echo "${GREEN}==> Unzipped migration client successfully${RESET}"
 
 # Copy migration client from home to migration client folder
-cp -r "/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/wso2is-migration-1.0.225" "/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/migration-client/" &
+cp -r "/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/wso2is-migration-1.0.225" "/home/runner/work/product-is/product-is/.github/migration-tester/utils/migration-client/" &
 cp_pid=$!
 
 wait $cp_pid
@@ -283,7 +283,7 @@ wait $!
 
 # Execute consent management db scripts for IS 5.11.0 - MySQL
 if [ "$migratingVersion" = "5.11.0" && "$database" = "mysql" ]; then
-    docker exec -i amazing_feynman sh -c 'exec mysql -uroot -proot -D testdb' </home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/other-db-scripts/config-management-is-5-11.sql
+    docker exec -i amazing_feynman sh -c 'exec mysql -uroot -proot -D testdb' </home/runner/work/product-is/product-is/.github/migration-tester/utils/other-db-scripts/config-management-is-5-11.sql
     echo "${GREEN}==> Executing consent management db scripts for IS 5.11.0 - MySQL${RESET}"
 else
     echo "${GREEN}==> Skipping executing consent management db scripts since the migrating version is not IS 5.11.0"$database" ${RESET}"
