@@ -36,7 +36,7 @@ currentVersion=$(echo $currentVersion | xargs)
 combinedCurrentVersion="wso2is-${currentVersion}"
 
 # Replace all instances of "CurrentVersion" with the combined version value
-sed -i "s/CurrentVersion/${combinedCurrentVersion}/g" ${{ github.workspace }}/product-is/.github/migration-tester/migration-automation/env.sh
+sed -i "s/CurrentVersion/${combinedCurrentVersion}/g" /home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/env.sh
 pwd
 echo "Paths updated.."
 
