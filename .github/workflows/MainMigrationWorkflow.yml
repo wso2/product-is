@@ -353,7 +353,7 @@ jobs:
         if: always()
         with:
           name: "logs-${{ github.event.inputs.currentVersion }}-${{ github.event.inputs.migratingVersion }}-${{ github.event.inputs.database }}-${{ github.event.inputs.os }}"
-          path: ./.github/migration-tester/migration-automation/artifacts
+          path: ${{ github.workspace }}/.github/migration-tester/migration-automation/artifacts
           retention-days: 7
       - name: Post Migration Testing
         run: |
@@ -364,4 +364,4 @@ jobs:
             else
               echo "$line"
             fi
-          done < ./.github/migration-tester/migration-automation/artifacts/logs.txt
+          done < ${{ github.workspace }}/.github/migration-tester/migration-automation/artifacts/logs.txt
