@@ -38,7 +38,7 @@ combinedCurrentVersion="wso2is-${currentVersion}"
 # Replace all instances of "CurrentVersion" with the combined version value
 sed -i "s/CurrentVersion/${combinedCurrentVersion}/g" /home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/env.sh
 pwd
-echo "Paths updated.."
+echo "Paths updated...."
 
 # Remove spaces from the beginning and end of the migratingVersion variable
 migratingVersion=$(echo $migratingVersion | xargs)
