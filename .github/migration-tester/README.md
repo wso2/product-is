@@ -301,7 +301,7 @@ Feel free to explore the repository and leverage these technologies and tools fo
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the wso2 License.
 
 
 
