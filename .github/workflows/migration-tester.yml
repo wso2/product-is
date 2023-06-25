@@ -115,14 +115,14 @@ jobs:
           echo "All postgre scripts executed successfully!"
       - name: Execute Migration Automation Script Ubuntu
         run: |
-              chmod +x ./.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh 
-              sh ./.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "migration-automation/logs.txt"
+              chmod +x  ${{ github.workspace }}/.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh 
+              sh ${{ github.workspace }}/.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt"
         continue-on-error: true
       
       - name: Persist Logs
         run: |
-          mkdir -p ./.github/migration-tester/migration-automation/artifacts
-          cp ./.github/migration-tester/migration-automation/logs.txt migration-automation/artifacts/
+          mkdir -p ${{ github.workspace }}/.github/migration-tester/migration-automation/artifacts
+          cp ${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt  ${{ github.workspace }}/.github/migration-tester/migration-automation/artifacts/
         if: ${{ always() }}
 
       - name: Upload Artifacts
@@ -130,7 +130,7 @@ jobs:
         if: always()
         with:
           name: "logs-${{ github.event.inputs.currentVersion }}-${{ github.event.inputs.migratingVersion }}-${{ github.event.inputs.database }}-${{ github.event.inputs.os }}"
-          path: ./.github/migration-tester/migration-automation/artifacts
+          path: ${{ github.workspace }}/.github/migration-tester/migration-automation/artifacts
 
 
   ubuntu-mysql-migration:
@@ -142,14 +142,14 @@ jobs:
         
       - name: Execute Migration Automation Script Ubuntu
         run: |
-            chmod +x ./.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh 
-            sh ./.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "migration-automation/logs.txt"
+            chmod +x ${{ github.workspace }}/.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh 
+            sh ${{ github.workspace }}/.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "./.github/migration-tester/migration-automation/logs.txt"
         continue-on-error: true
 
       - name: Persist Logs
         run: |
-          mkdir -p ./.github/migration-tester/migration-automation/artifacts
-          cp ./.github/migration-tester/migration-automation/logs.txt migration-automation/artifacts/
+          mkdir -p ${{ github.workspace }}/.github/migration-tester/migration-automation/artifacts
+          cp ${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt ${{ github.workspace }}/.github/migration-tester/migration-automation/artifacts/logs.txt
         if: ${{ always() }}
 
       - name: Upload Artifacts
@@ -157,7 +157,7 @@ jobs:
         if: always()
         with:
           name: "logs-${{ github.event.inputs.currentVersion }}-${{ github.event.inputs.migratingVersion }}-${{ github.event.inputs.database }}-${{ github.event.inputs.os }}"
-          path: ./.github/migration-tester/migration-automation/artifacts
+          path: ${{ github.workspace }}/.github/migration-tester/migration-automation/artifacts
 
   ubuntu-mssql-migration:
     if: ${{ github.event.inputs.database == 'mssql' && github.event.inputs.os == 'ubuntu-latest' }}
@@ -196,14 +196,14 @@ jobs:
           echo "Copied mssql scripts to docker container"
       - name: Execute Migration Automation Script Ubuntu
         run: |
-          chmod +x ./.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh 
-          sh ./.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "migration-automation/logs.txt"
+          chmod +x ${{ github.workspace }}/.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh 
+          sh ${{ github.workspace }}/.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee ${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt
         continue-on-error: true
 
       - name: Persist Logs
         run: |
-          mkdir -p ./.github/migration-tester/migration-automation/artifacts
-          cp ./.github/migration-tester/migration-automation/logs.txt migration-automation/artifacts/
+          mkdir -p ${{ github.workspace }}/.github/migration-tester/migration-automation/artifacts
+          cp ${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt ${{ github.workspace }}/.github/migration-tester/migration-automation/artifacts/
         if: ${{ always() }}
 
       - name: Upload Artifacts
@@ -211,7 +211,7 @@ jobs:
         if: always()
         with:
           name: "logs-${{ github.event.inputs.currentVersion }}-${{ github.event.inputs.migratingVersion }}-${{ github.event.inputs.database }}-${{ github.event.inputs.os }}"
-          path: ./.github/migration-tester/migration-automation/artifacts
+          path: ${{ github.workspace }}/.github/migration-tester/migration-automation/artifacts
 
   macos-mysql-migration:
     if: ${{ github.event.inputs.database == 'mysql' && github.event.inputs.os == 'macos-latest' }}
@@ -222,13 +222,13 @@ jobs:
 
       - name: Execute Migration Automation Script Mac
         run: |
-          chmod +x ./.github/migration-tester/migration-automation/mac-os/migration-script-mac.sh 
-          sh ./.github/migration-tester/migration-automation/mac-os/migration-script-mac.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "migration-automation/logs.txt"
+          chmod +x ${{ github.workspace }}/.github/migration-tester/migration-automation/mac-os/migration-script-mac.sh 
+          sh ${{ github.workspace }}/.github/migration-tester/migration-automation/mac-os/migration-script-mac.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt"
         continue-on-error: true
       - name: Persist Logs
         run: |
-          mkdir -p ./.github/migration-tester/migration-automation/artifacts
-          cp ./.github/migration-tester/migration-automation/logs.txt migration-automation/artifacts/
+          mkdir -p ${{ github.workspace }}/.github/migration-tester/migration-automation/artifacts
+          cp ${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt ${{ github.workspace }}/migration-automation/artifacts/
         if: ${{ always() }}
 
       - name: Upload Artifacts
@@ -236,7 +236,7 @@ jobs:
         if: always()
         with:
           name: "logs-${{ github.event.inputs.currentVersion }}-${{ github.event.inputs.migratingVersion }}-${{ github.event.inputs.database }}-${{ github.event.inputs.os }}"
-          path: ./.github/migration-tester/migration-automation/artifacts
+          path: ${{ github.workspace }}/.github/migration-tester/migration-automation/artifacts
 
   macos-postgres-migration:
     runs-on: ${{ github.event.inputs.os }}
@@ -269,13 +269,13 @@ jobs:
 
       - name: Execute Migration Automation Script Mac
         run: |
-          chmod +x ./.github/migration-tester/migration-automation/mac-os/migration-script-mac.sh 
-          sh ./.github/migration-tester/migration-automation/mac-os/migration-script-mac.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "migration-automation/logs.txt"
+          chmod +x ${{ github.workspace }}/.github/migration-tester/migration-automation/mac-os/migration-script-mac.sh 
+          sh ${{ github.workspace }}/.github/migration-tester/migration-automation/mac-os/migration-script-mac.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt"
         continue-on-error: true
       - name: Persist Logs
         run: |
-          mkdir -p ./.github/migration-tester/migration-automation/artifacts
-          cp ./.github/migration-tester/migration-automation/logs.txt migration-automation/artifacts/
+          mkdir -p ${{ github.workspace }}/.github/migration-tester/migration-automation/artifacts
+          cp ${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt ${{ github.workspace }}/.github/migration-tester/migration-automation/artifacts/
         if: ${{ always() }}
 
       - name: Upload Artifacts
@@ -283,7 +283,7 @@ jobs:
         if: always()
         with:
           name: "logs-${{ github.event.inputs.currentVersion }}-${{ github.event.inputs.migratingVersion }}-${{ github.event.inputs.database }}-${{ github.event.inputs.os }}"
-          path: ./.github/migration-tester/migration-automation/artifacts
+          path: ${{ github.workspace }}/.github/migration-tester/migration-automation/artifacts
 
   macos-mssql-migration:
     if: ${{ github.event.inputs.database == 'mssql' && github.event.inputs.os == 'macos-latest' }}
@@ -317,13 +317,13 @@ jobs:
 
       - name: Execute Migration Automation Script Mac
         run: |
-          chmod +x ./.github/migration-tester/migration-automation/mac-os/migration-script-mac.sh 
-          sh ./.github/migration-tester/migration-automation/mac-os/migration-script-mac.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "migration-automation/logs.txt"
+          chmod +x ${{ github.workspace }}/.github/migration-tester/migration-automation/mac-os/migration-script-mac.sh 
+          sh ${{ github.workspace }}/.github/migration-tester/migration-automation/mac-os/migration-script-mac.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt"
         continue-on-error: true
       - name: Persist Logs
         run: |
-          mkdir -p ./.github/migration-tester/migration-automation/artifacts
-          cp ./.github/migration-tester/migration-automation/logs.txt migration-automation/artifacts/
+          mkdir -p ${{ github.workspace }}/.github/migration-tester/migration-automation/artifacts
+          cp ${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt ${{ github.workspace }}/.github/migration-tester/migration-automation/artifacts/
         if: ${{ always() }}
 
       - name: Upload Artifacts
@@ -331,7 +331,7 @@ jobs:
         if: always()
         with:
           name: "logs-${{ github.event.inputs.currentVersion }}-${{ github.event.inputs.migratingVersion }}-${{ github.event.inputs.database }}-${{ github.event.inputs.os }}"
-          path: ./.github/migration-tester/migration-automation/artifacts
+          path:  ${{ github.workspace }}/.github/migration-tester/migration-automation/artifacts
 
   validate-migration:
     needs:
@@ -353,7 +353,7 @@ jobs:
         if: always()
         with:
           name: "logs-${{ github.event.inputs.currentVersion }}-${{ github.event.inputs.migratingVersion }}-${{ github.event.inputs.database }}-${{ github.event.inputs.os }}"
-          path: ./.github/migration-tester/migration-automation/artifacts
+          path: ${{ github.workspace }}/.github/migration-tester/migration-automation/artifacts
           retention-days: 7
       - name: Post Migration Testing
         run: |
@@ -364,4 +364,4 @@ jobs:
             else
               echo "$line"
             fi
-          done < ./.github/migration-tester/migration-automation/artifacts/logs.txt
+          done < ${{ github.workspace }}/.github/migration-tester/migration-automation/artifacts/logs.txt
