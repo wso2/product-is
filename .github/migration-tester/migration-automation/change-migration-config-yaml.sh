@@ -11,7 +11,7 @@ os="$3"
 
 # Setup file and path based on OS
 if [ "$os" = "ubuntu-latest" ]; then
-  cd "/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation"
+  cd "/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation"
   chmod +x env.sh
   . ./env.sh
   echo "${GREEN}==> Env file for Ubuntu sourced successfully${RESET}"
@@ -95,7 +95,7 @@ if [ "$os" = "ubuntu-latest" ]; then
 fi
 
 if [ "$os" = "macos-latest" ]; then
-  cd "/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation"
+  cd "/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation"
   chmod +x env.sh
   source ./env.sh
   echo "${GREEN}==> Env file for Mac sourced successfully${RESET}"

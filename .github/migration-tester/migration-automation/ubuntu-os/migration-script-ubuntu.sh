@@ -37,7 +37,6 @@ combinedCurrentVersion="wso2is-${currentVersion}"
 
 # Replace all instances of "CurrentVersion" with the combined version value
 sed -i "s/CurrentVersion/${combinedCurrentVersion}/g" /home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/env.sh
-pwd
 
 # Remove spaces from the beginning and end of the migratingVersion variable
 migratingVersion=$(echo $migratingVersion | xargs)
@@ -46,7 +45,7 @@ migratingVersion=$(echo $migratingVersion | xargs)
 combinedMigratingVersion="wso2is-${migratingVersion}"
 
 # Replace all instances of "MigratingVersion" with the value of the "migratingVersion" input, without spaces
-sed -i "s/MigratingVersion/${combinedMigratingVersion}/g" /home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/env.sh
+sed -i "s/MigratingVersion/${combinedMigratingVersion}/g" /home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/env.sh
 
 # Define the message in a variable for easier modification
 echo
@@ -62,7 +61,7 @@ echo
 echo "${ORANGE}"PROCESS STARTED!"${RESET}"
 
 # Source env file
-cd "/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation"
+cd "/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation"
 chmod +x env.sh
 . ./env.sh
 echo "${GREEN}==> Env file sourced successfully${RESET}"
@@ -218,7 +217,7 @@ ls -a
 echo "${GREEN}==> Unzipped migration client successfully${RESET}"
 
 # Copy migration client from home to migration client folder
-cp -r "/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/wso2is-migration-1.0.225" "/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/migration-client/" &
+cp -r "/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/wso2is-migration-1.0.225" "/home/runner/work/product-is/product-is/.github/migration-tester/utils/migration-client/" &
 cp_pid=$!
 
 wait $cp_pid
@@ -282,7 +281,7 @@ wait $!
 
 # Execute consent management db scripts for IS 5.11.0 - MySQL
 if [ "$migratingVersion" = "5.11.0" && "$database" = "mysql" ]; then
-    docker exec -i amazing_feynman sh -c 'exec mysql -uroot -proot -D testdb' </home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/other-db-scripts/config-management-is-5-11.sql
+    docker exec -i amazing_feynman sh -c 'exec mysql -uroot -proot -D testdb' </home/runner/work/product-is/product-is/.github/migration-tester/utils/other-db-scripts/config-management-is-5-11.sql
     echo "${GREEN}==> Executing consent management db scripts for IS 5.11.0 - MySQL${RESET}"
 else
     echo "${GREEN}==> Skipping executing consent management db scripts since the migrating version is not IS 5.11.0"$database" ${RESET}"
@@ -396,4 +395,4 @@ chmod +x stop-server.sh
 sh stop-server.sh "$os" "migrated"
 echo
 
-echo "${CYAN}END OF AUTOMATING PRODUCT MIGRATION TESTING${CYAN}"
+echo "${CYAN}-END OF AUTOMATING PRODUCT MIGRATION TESTING-${CYAN}"

@@ -12,13 +12,13 @@ os=$1
 # Set deployment file and path based on OS
 if [ "$os" = "ubuntu-latest" ]; then
     chmod +x env.sh
-    . "/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/env.sh"
+    . "/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/env.sh"
     echo "${GREEN}==> Env file for Ubuntu sourced successfully"
 fi
 
 if [ "$os" = "macos-latest" ]; then
     chmod +x env.sh
-    source "/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/env.sh"
+    source "/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/env.sh"
     echo "${GREEN}==> Env file for Mac sourced successfully${RESET}"
 fi
 

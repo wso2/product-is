@@ -14,19 +14,19 @@ os=$1
 if [ "$os" = "ubuntu-latest" ]; then
 
   chmod +x env.sh
-  . "/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/env.sh"
+  . "/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/env.sh"
   echo "${GREEN}==> Env file for Ubuntu sourced successfully"
 fi
 if [ "$os" = "macos-latest" ]; then
 
   chmod +x env.sh
-  source "/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/env.sh"
+  source "/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/env.sh"
   echo "${GREEN}==> Env file for Mac sourced successfully${RESET}"
 
 fi
 
 # Get the directory of the script
-script_dir="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/data-population-and-validation/4-service-provider-creation"
+script_dir="/home/runner/work/product-is/product-is/.github/migration-tester/data-population-and-validation/4-service-provider-creation"
 
 # Load client_id and client_secret from file
 if [ -f "$script_dir/client_credentials" ]; then

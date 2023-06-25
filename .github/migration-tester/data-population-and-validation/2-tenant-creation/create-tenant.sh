@@ -12,12 +12,12 @@ os=$1
 # Set deployment file and path based on OS
 if [ "$os" = "ubuntu-latest" ]; then
   chmod +x env.sh
-  . "/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/env.sh"
+  . "/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/env.sh"
   echo "${GREEN}==> Env file for Ubuntu sourced successfully${NC}"
 fi
 if [ "$os" = "macos-latest" ]; then
   chmod +x env.sh
-  source "/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/env.sh"
+  source "/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/env.sh"
   echo "${GREEN}==> Env file for Mac sourced successfully${RESET}"
 fi
 
@@ -26,7 +26,7 @@ response=$(curl -k --location --request POST 'https://localhost:9443/api/server/
   --header 'accept: */*' \
   --header 'Content-Type: application/json' \
   --header 'Authorization: Basic YWRtaW46YWRtaW4=' \
-  --data-raw '{"domain":"iit.com","owners":[{"username":"admin","password":"admin","email":"jayana@iit.com","firstname":"Jayana","lastname":"Gunaweera","provisioningMethod":"inline-password","additionalClaims":[{"claim":"http://wso2.org/claims/telephone","value":"+94 562 8723"}]}]}')
+  --data-raw '{"domain":"iit.com","owners":[{"username":"admin","password":"admin","email":"jayana@iit.com","firstname":"Jayana","lastname":"Gunaweera","provisioningMethod":"inline-password"}]}')
 
 # Check if the response contains any error message
 if echo "$response" | grep -q '"error":'; then
@@ -145,7 +145,7 @@ client_id=$(echo "$response" | jq -r '.client_id')
 client_secret=$(echo "$response" | jq -r '.client_secret')
 
 # Store client_id and client_secret in a file
-client_credentials_file="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/data-population-and-validation/2-tenant-creation/client_credentials"
+client_credentials_file="/home/runner/work/product-is/product-is/.github/migration-tester/data-population-and-validation/2-tenant-creation/client_credentials"
 
 if [ -f "$client_credentials_file" ]; then
   echo "client_id=$client_id" >>"$client_credentials_file"

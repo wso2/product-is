@@ -14,13 +14,13 @@ os=$1
 if [ "$os" = "ubuntu-latest" ]; then
 
   chmod +x env.sh
-  . "/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/env.sh"
+  . "/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/env.sh"
   echo "${GREEN}==> Env file for Ubuntu sourced successfully"
 fi
 if [ "$os" = "macos-latest" ]; then
 
   chmod +x env.sh
-  source "/Users/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/env.sh"
+  source "/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation/env.sh"
   echo "${GREEN}==> Env file for Mac sourced successfully${RESET}"
 
 fi
@@ -54,7 +54,7 @@ client_id=$(echo "$response" | jq -r '.client_id')
 client_secret=$(echo "$response" | jq -r '.client_secret')
 
 # Store client_id and client_secret in a file
-client_credentials_file="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/data-population-and-validation/4-service-provider-creation/client_credentials"
+client_credentials_file="/home/runner/work/product-is/product-is/.github/migration-tester/data-population-and-validation/4-service-provider-creation/client_credentials"
 
 if [ -f "$client_credentials_file" ]; then
   echo "client_id=$client_id" >>"$client_credentials_file"

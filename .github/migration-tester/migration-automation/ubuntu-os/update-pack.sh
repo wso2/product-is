@@ -13,11 +13,11 @@ startServer=$3
 
 
 # Source env file
-. "/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/migration-tester/migration-automation/env.sh"
+. "/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/env.sh"
 echo -e "${GREEN}==> Env file for Ubuntu sourced successfully${NC}"
 
 # Copy update tool from utils to bin folder
-cd "/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/utils/update-tools"
+cd "/home/runner/work/product-is/product-is/.github/migration-tester/utils/update-tools"
 
 
 if [ "$startServer" = "currentVersion" ]; then
