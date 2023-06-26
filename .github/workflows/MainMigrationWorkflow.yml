@@ -122,7 +122,7 @@ jobs:
       - name: Persist Logs
         run: |
           mkdir -p ${{ github.workspace }}/.github/migration-tester/migration-automation/artifacts
-          cp ${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt  ${{ github.workspace }}/.github/migration-tester/migration-automation/artifacts/
+          cp ${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt ${{ github.workspace }}/.github/migration-tester/migration-automation/artifacts/
         if: ${{ always() }}
 
       - name: Upload Artifacts
@@ -228,7 +228,7 @@ jobs:
       - name: Persist Logs
         run: |
           mkdir -p ${{ github.workspace }}/.github/migration-tester/migration-automation/artifacts
-          cp ${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt ${{ github.workspace }}/migration-automation/artifacts/
+          cp ${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt ${{ github.workspace }}/.github/migration-tester/migration-automation/artifacts/
         if: ${{ always() }}
 
       - name: Upload Artifacts
