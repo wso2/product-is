@@ -10,7 +10,7 @@ PURPLE='\033[1;35m'
 BOLD='\033[1m'
 NC='\033[0m' # No Color
 
-data_population_dir="/home/runner/work/product-is/product-is/.github/migration-tester/data-population-and-validation"
+data_population_dir="/home/runner/work/Automating-Product-Migration-Testing/Automating-Product-Migration-Testing/data-population-and-validation"
 
 echo -e "${GREEN}==> Running data population scripts${NC}"
 if [ -d "$data_population_dir" ]; then
@@ -68,4 +68,5 @@ for dir in */; do
     cd ..
   fi
 done
+
 
