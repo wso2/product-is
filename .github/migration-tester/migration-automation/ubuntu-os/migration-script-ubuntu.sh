@@ -168,15 +168,19 @@ echo "${GREEN}==> Entered to Management console home page successfully${RESET}"
 cd "$DATA_POPULATION"
 echo "${GREEN}==> Entered the data population directory successfully.${RESET}"
 
-# Run data-population-script.sh which is capable of populating data to create users,tenants,userstores,generate tokens etc.
+# Run data-population-script.sh which is capable of populating data to create users, tenants, userstores, generate tokens, etc.
 if [ "$currentVersion" = "5.9" ]; then
- chmod +x automated-data-population-and-validation-script-ubuntu-5-9.sh
- sh automated-data-population-and-validation-script-ubuntu-5-9.sh
- wait $!
+  script_name="automated-data-population-and-validation-script-ubuntu-5-9.sh"
 else
- chmod +x automated-data-population-and-validation-script-ubuntu.sh
- sh automated-data-population-and-validation-script-ubuntu.sh
- wait $!
+  script_name="automated-data-population-and-validation-script-ubuntu.sh"
+fi
+
+if [ -x "$script_name" ]; then
+  chmod +x "$script_name"
+  sh "$script_name"
+  wait $!
+else
+  echo "Script '$script_name' is not executable or does not exist."
 fi
 echo "${GREEN}==> Created users, user stores, service providers, tenants, generated oAuth tokens and executed the script successfully${RESET}"
 
