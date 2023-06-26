@@ -170,7 +170,7 @@ echo "${GREEN}==> Entered the data population directory successfully.${RESET}"
 
 # Run data-population-script.sh which is capable of populating data to create users,tenants,userstores,generate tokens etc.
 chmod +x automated-data-population-and-validation-script-ubuntu.sh
-sh automated-data-population-and-validation-script-ubuntu.sh "$os"
+sh automated-data-population-and-validation-script-ubuntu.sh "$currentVersion"
 wait $!
 echo "${GREEN}==> Created users, user stores, service providers, tenants, generated oAuth tokens and executed the script successfully${RESET}"
 
