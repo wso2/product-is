@@ -84,7 +84,7 @@ fi
 # execute scripts in any other subdirectories
 for dir in */; do
   # check if directory is not one of the specified ones and exists
-  if [ "$dir" != "1-user-creation/" ] && [ "$dir" != "2-tenant-creation/" ] && [ "$dir" != "3-userstore-creation/" ] && [ "$dir" != "4-service-provider-creation/" ] && [ "$dir" != "5-group-creation/" ] && [ "$dir" != "windows-os/" ] &&  [ -d "$dir" ]; then
+  if [ "$dir" != "1-user-creation/" ] && [ "$dir" != "2-tenant-creation/" ] && [ "$dir" != "3-userstore-creation/" ] && [ "$dir" != "4-service-provider-creation/" ] && [ "$dir" != "5-group-creation/" ] && [ "$dir" != "windows-os/" ] && [ -d "$dir" ]; then
     # execute scripts in subdirectory
     cd "$dir" || exit
     for script in *.sh; do
@@ -99,3 +99,4 @@ for dir in */; do
     cd ..
   fi
 done
+
