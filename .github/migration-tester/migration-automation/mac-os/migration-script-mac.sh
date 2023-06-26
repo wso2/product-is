@@ -18,7 +18,7 @@ brew update
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 cd "$AUTOMATION_HOME_MAC"
-cd migration-tester/migration-automation
+cd ./.github/migration-tester/migration-automation
 
 # Get the value of the inputs from workflow dispatch
 urlOld=$1
