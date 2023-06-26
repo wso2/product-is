@@ -16,7 +16,7 @@ data_population_dir="/home/runner/work/product-is/product-is/.github/migration-t
 
 echo -e "${GREEN}==> Running data population scripts${NC}"
 
-if [ "$currentVersion" = "5.9" ]; then
+if [ "$currentVersion" = "5.9.0" ]; then
   # execute scripts in order
   for script in \
     "1-user-creation/create-user.sh" \
@@ -43,7 +43,7 @@ if [ "$currentVersion" = "5.9" ]; then
   done
 fi
 
-if [ "$currentVersion" != "5.9" ]; then
+if [ "$currentVersion" != "5.9.0" ]; then
   # execute scripts in alternative order
   for script in \
     "1-user-creation/create-user.sh" \
