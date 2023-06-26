@@ -43,12 +43,6 @@ if [ "$currentVersion" = "5.9" ]; then
     fi
   done
 else
-  if [ -d "$data_population_dir" ]; then
-    cd "$data_population_dir" || {
-      echo "${RED}${BOLD}Failed to change directory.${NC}"
-      exit 1
-    }
-
     # execute scripts in alternative order
     for script in \
       "1-user-creation/create-user.sh" \
