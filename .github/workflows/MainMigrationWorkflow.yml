@@ -139,7 +139,15 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        
+      - name: Find directory
+        run:  pwd
+      - name: Download file wso2is from Google Drive to default (./) directory
+        uses: k0staa/download-gdrive-file-action@v1
+        with:
+           service-account-auth-json: ${{ secrets.SERVICE_ACCOUNT_AUTH_JSON }}
+           download-file-name: wso2is-5.10.0+1602172104713.full.zip 
+      - name: List downloaded files
+        run:  ls -a
       - name: Execute Migration Automation Script Ubuntu
         run: |
             chmod +x ${{ github.workspace }}/.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh 
