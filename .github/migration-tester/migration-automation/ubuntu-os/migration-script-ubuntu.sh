@@ -192,13 +192,39 @@ echo "${GREEN}==> Created a directory for placing latest wso2IS${RESET}"
 cd "$IS_HOME_NEW"
 
 # Download needed (latest) wso2IS zip
-wget -qq --waitretry=5 --retry-connrefused "$urlNew"
-wait $!
+#wget -qq --waitretry=5 --retry-connrefused "$urlNew"
+#wait $!
+
+
 #curl -L -o wso2is.zip "https://drive.google.com/uc?export=download&id=1ik0CJM5V9CXzBwl7DQpeBDBTT4t_cWlL"
 #response=$(curl -k -L -o wso2is.zip "https://drive.google.com/uc?export=download&id=1ik0CJM5V9CXzBwl7DQpeBDBTT4t_cWlL")
 #echo "$response"
 #curl -k -L -o wso2is.zip "https://drive.google.com/u/0/uc?id=1ik0CJM5V9CXzBwl7DQpeBDBTT4t_cWlL&export=download"
-ls -a
+
+# Download needed wso2IS zip
+if [ "$currentVersion" = "5.9.0" ]; then
+
+    response=$(curl -k -L -o wso2is.zip "https://drive.google.com/u/0/uc?id=1GU32FtPGvvB2WsmQoPnHr5yn1M6ddL-h&amp;amp;export=download&amp;amp;confirm=t&amp;amp;uuid=712b27d8-ea10-4e0b-bbbd-3cde24b1d92e&amp;amp;at=AKKF8vzpFDL5XdIrNRv6KFY0ZvPr:1687251333945&amp;confirm=t&amp;uuid=efe88210-d059-4968-84c6-7a1236bb6ef9&amp;at=AKKF8vxFWIDReSULenUtKrASKULT:1687251490306&confirm=t&uuid=7017f976-902b-4050-a3a6-22b26bb46d88&at=AKKF8vyia4DpEk742C_FTMCmJDE9:1687251582718")
+    wait $!
+    echo "$response"
+else
+    
+    # Specify the Google Drive file URL
+    file_url="$urlOld"
+    
+    # Specify your Google Drive API key
+    api_key="$migrationApiKey"
+    
+    # Extract the file ID from the URL
+    file_id=$(echo "$file_url" | awk -F'/' '{print $NF}' | awk -F'=' '{print $2}')
+    
+    # Generate the download link with the API key
+    download_link="https://www.googleapis.com/drive/v3/files/$file_id?alt=media&key=$api_key"
+    
+    # Download the ZIP file using curl
+    curl -L -o wso2is.zip "$download_link"
+    wait $!
+fi
 echo "${GREEN}==> Downloaded "$migratingVersion" zip${RESET}"
 
 # Unzip IS archive
