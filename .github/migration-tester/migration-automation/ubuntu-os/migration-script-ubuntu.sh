@@ -98,10 +98,19 @@ api_key="$migrationApiKey"
 
 echo "Downloading using API key.."
 
+# Download the file and save it with a temporary name
 curl -H "Authorization: Bearer $migrationApiKey" \
   "https://www.googleapis.com/drive/v3/files/$file_id?alt=media" \
-  -o wso2is.zip
-wait $!
+  -o wso2is_temp.zip
+
+# Check if the download was successful
+if [ $? -eq 0 ]; then
+  # Rename the temporary file to wso2is.zip
+  mv wso2is_temp.zip wso2is.zip
+  echo "Download completed successfully."
+else
+  echo "Error occurred while downloading the file."
+fi
 
 unzip -qq *.zip &
 wait $!
