@@ -100,6 +100,7 @@ echo "Downloading using API key.."
 
 # Download the file and save it with a temporary name
 curl -H "Authorization: Bearer $migrationApiKey" \
+  -C -R \
   "https://www.googleapis.com/drive/v3/files/$file_id?alt=media" \
   -o wso2is_temp.zip
 
