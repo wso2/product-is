@@ -119,6 +119,13 @@ wait $!
 ls -a
 echo "${GREEN}==> Unzipped downloaded Identity Server zip${RESET}"
 
+curl -k -H "Authorization: Bearer $api_key" \
+  https://www.googleapis.com/drive/v3/files/$file_id?alt=media \
+  -o wso2is.zip/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation
+echo "Downloading using API key.."
+pwd
+ls -a
+
 cd "$AUTOMATION_HOME"
 
 # Update IS packs
