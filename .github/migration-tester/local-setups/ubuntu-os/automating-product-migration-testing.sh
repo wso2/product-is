@@ -1,8 +1,8 @@
 #!/bin/bash
 
-chmod +x /home/wso2/Downloads/Automating-Product-Migration-Testing/local-setups/migration-tester/migration-automation-script-linux.sh
-chmod +x /home/wso2/Downloads/Automating-Product-Migration-Testing/local-setups/migration-tester/migration-automation-script-macos.sh
-chmod +x /home/wso2/Downloads/Automating-Product-Migration-Testing/local-setups/migration-tester/migration-automation-script-windows.ps1
+chmod +x $Home/Downloads/Automating-Product-Migration-Testing/local-setups/migration-automation-script-linux.sh
+chmod +x $Home/Downloads/Automating-Product-Migration-Testing/local-setups/migration-automation-script-macos.sh
+chmod +x $Home/Downloads/Automating-Product-Migration-Testing/local-setups/migration-automation-script-windows.ps1
 
 # Colors
 RED='\033[0;31m'
@@ -58,14 +58,14 @@ while true; do
 done
 
 if [ "$db" = "mysql" ] && [ "$os" = "ubuntu" ]; then
-    echo -e "${BOLD}${GREEN}Executing migration-tester/migration-automation-script-linux.sh for MySQL on Ubuntu${NC}"
-    sh /home/wso2/Downloads/Automating-Product-Migration-Testing/local-setups/migration-tester/migration-automation-script-linux.sh
+    echo -e "${BOLD}${GREEN}Executing migration-automation-script-linux.sh for MySQL on Ubuntu${NC}"
+    sh $Home/Downloads/Automating-Product-Migration-Testing/local-setups/migration-automation-script-linux.sh
 elif [ "$db" = "mssql" ] && [ "$os" = "macos" ]; then
-    echo -e "${BOLD}${GREEN}Executing migration-tester/migration-automation-script-macos.sh for MSSQL on macOS${NC}"
-    sh /home/wso2/Downloads/Automating-Product-Migration-Testing/local-setups/migration-tester/migration-automation-script-macos.sh
+    echo -e "${BOLD}${GREEN}Executing migration-automation-script-macos.sh for MSSQL on macOS${NC}"
+    sh $Home/Downloads/Automating-Product-Migration-Testing/local-setups/migration-automation-script-macos.sh
 elif [ "$db" = "postgresql" ] && [ "$os" = "windows" ]; then
     echo -e "${BOLD}${GREEN}Executing migration-tester/migration-automation-script-windows.ps1 for PostgreSQL on Windows${NC}"
-    sh /home/wso2/Downloads/Automating-Product-Migration-Testing/local-setups/migration-tester/migration-automation-script-windows.ps1
+    sh $Home/Downloads/Automating-Product-Migration-Testing/local-setups/migration-automation-script-windows.ps1
 else
     echo -e "${BOLD}${RED}Invalid database or operating system type. Please try again.${NC}"
 fi
