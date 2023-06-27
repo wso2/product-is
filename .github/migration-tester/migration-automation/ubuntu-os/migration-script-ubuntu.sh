@@ -109,7 +109,7 @@ else
     download_link="https://www.googleapis.com/drive/v3/files/$file_id?alt=media&key=$api_key"
 
     # Download the ZIP file using curl
-    curl -L -o wso2is.zip "$download_link"
+    curl -k -L -o wso2is.zip "$download_link"
     wait $!
 fi
 
@@ -118,6 +118,15 @@ unzip -qq *.zip &
 wait $!
 ls -a
 echo "${GREEN}==> Unzipped downloaded Identity Server zip${RESET}"
+
+# Specify the Google Drive file URL
+file_url="$urlOld"
+
+# Specify your Google Drive API key
+api_key="$migrationApiKey"
+
+# Extract the file ID from the URL
+file_id=$(echo "$file_url" | awk -F'/' '{print $NF}' | awk -F'=' '{print $2}')
 
 curl -k -H "Authorization: Bearer $api_key" \
   -C -R \
