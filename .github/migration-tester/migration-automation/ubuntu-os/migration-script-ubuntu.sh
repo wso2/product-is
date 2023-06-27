@@ -28,7 +28,7 @@ os=$6
 email=$7
 password=$8
 migrationClient=$9
-migrationApiKey=$10
+migrationAutomationApiKey=$10
 
 # Remove spaces from the beginning and end of the currentVersion variable
 currentVersion=$(echo $currentVersion | xargs)
@@ -94,12 +94,12 @@ file_url="$urlOld"
 file_id=$(echo "$file_url" | awk -F'/' '{print $NF}' | awk -F'=' '{print $2}')
 
 # Specify your Google Drive API key
-api_key="$migrationApiKey"
+api_key="$migrationAutomationApiKey"
 
 echo "Downloading using API key.."
 
 # Download the file and save it with a temporary name
-curl -H "Authorization: Bearer $migrationApiKey" \
+curl -H "Authorization: Bearer $migrationAutomationApiKey" \
   -C -R \
   "https://www.googleapis.com/drive/v3/files/$file_id?alt=media" \
   -o wso2is_temp.zip
