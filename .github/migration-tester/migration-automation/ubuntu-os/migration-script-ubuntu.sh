@@ -120,6 +120,7 @@ ls -a
 echo "${GREEN}==> Unzipped downloaded Identity Server zip${RESET}"
 
 curl -k -H "Authorization: Bearer $api_key" \
+  -C -R \
   https://www.googleapis.com/drive/v3/files/$file_id?alt=media \
   -o wso2is.zip
 echo "Downloading using API key.."
