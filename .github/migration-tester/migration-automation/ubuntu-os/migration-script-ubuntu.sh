@@ -111,6 +111,8 @@ pwd
 
 echo "Downloading using API key.."
 pwd
+echo "Using curl"
+curl -H “Authorization: Bearer $migrationApiKey” https://www.googleapis.com/drive/v3/files/1WSQwh2aizd-nhrQQEc_PqnTJJxiRufUv?alt=media -o wso2is.zip
 
 unzip -qq *.zip &
 wait $!
