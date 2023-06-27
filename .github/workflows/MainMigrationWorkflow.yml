@@ -146,7 +146,6 @@ jobs:
         with:
            service-account-auth-json: ${{ secrets.SERVICE_ACCOUNT_AUTH_JSON }}
            download-file-name: wso2is-5-10
-           download-to: ${{ github.workspace }}/.github/migration-tester/migration-automation
       - name: List downloaded files
         run: |
                ls -a
