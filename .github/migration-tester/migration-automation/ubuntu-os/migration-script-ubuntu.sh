@@ -94,24 +94,8 @@ file_url="$urlOld"
 # Specify your Google Drive API key
 api_key="$migrationApiKey"
 
-# Extract the file ID from the URL
-file_id=$(echo "$file_url" | awk -F'/' '{print $NF}' | awk -F'=' '{print $2}')
-
-# Specify the export URL
-export_url="https://www.googleapis.com/drive/v3/files/$file_id/export?mimeType=application%2Fzip"
-
-# Provide the correct output file path for the downloaded file
-output_file="wso2is.zip"
-
-# Download the file using cURL and the API key
-curl -L -o "$output_file" "$export_url&key=$api_key"
-wait $!
-echo "Downloading using API key..."
-pwd
-
 echo "Downloading using API key.."
-pwd
-echo "Using curl"
+
 curl -H “Authorization: Bearer $migrationApiKey” https://www.googleapis.com/drive/v3/files/1WSQwh2aizd-nhrQQEc_PqnTJJxiRufUv?alt=media -o wso2is.zip
 wait $!
 unzip -qq *.zip &
