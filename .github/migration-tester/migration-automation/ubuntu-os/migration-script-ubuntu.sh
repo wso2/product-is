@@ -105,7 +105,7 @@ output_file="wso2is.zip"
 
 # Download the file using cURL and the API key
 curl -L -o "$output_file" "$export_url&key=$api_key"
-
+wait $!
 echo "Downloading using API key..."
 pwd
 
