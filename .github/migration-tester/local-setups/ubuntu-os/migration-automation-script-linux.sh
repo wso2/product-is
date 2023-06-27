@@ -26,25 +26,25 @@ ${RESET}"
 
 toilet -f term -F border --gay 'TIME TO Automating PRODUCT MIGRATION TESTING!'
 sudo apt-get install jp2a
-jp2a --colors  --flipx --term-height "/home/wso2/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/humanoid.jpg" 
+jp2a --colors  --flipx --term-height "$Home/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/humanoid.jpg" 
 
 # Source env file
-. /home/wso2/Downloads/Automating-Product-Migration-Testing/local-setups/env.sh
+. $Home/Downloads/Automating-Product-Migration-Testing/local-setups/env.sh
 echo "\033[0;32m\033[1mEnv file sourced successfully\033[0;m"
 
-chmod +x /home/wso2/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/create-new-database.sh
-chmod +x /home/wso2/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/copy-jar-file.sh
-chmod +x /home/wso2/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/server-start.sh
-chmod +x /home/wso2/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/enter-login-credentials.sh
-chmod +x /home/wso2/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/copy-data-to-new-IS.sh
-chmod +x /home/wso2/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/change-migration-configyaml.sh 
-chmod +x /home/wso2/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/copy-data-to-new-IS.sh
-chmod +x /home/wso2/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/change-deployment-toml.sh
-chmod +x /home/wso2/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/backup-database.sh
-chmod +x /home/wso2/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/create-new-database.sh                                                               #executes from bash
-chmod +x /home/wso2/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/check-cpu-health.sh
-chmod +x /home/wso2/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/migration-terminal.sh 
-chmod +x /home/wso2/Downloads/Automating-Product-Migration-Testing/data-population-and-validation/data-population-script.sh
+chmod +x $Home/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/create-new-database.sh
+chmod +x $Home/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/copy-jar-file.sh
+chmod +x $Home/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/server-start.sh
+chmod +x $Home/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/enter-login-credentials.sh
+chmod +x $Home/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/copy-data-to-new-IS.sh
+chmod +x $Home/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/change-migration-configyaml.sh 
+chmod +x $Home/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/copy-data-to-new-IS.sh
+chmod +x $Home/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/change-deployment-toml.sh
+chmod +x $Home/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/backup-database.sh
+chmod +x $Home/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/create-new-database.sh                                                               #executes from bash
+chmod +x $Home/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/check-cpu-health.sh
+chmod +x $Home/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/migration-terminal.sh 
+chmod +x $Home/Downloads/Automating-Product-Migration-Testing/data-population-and-validation/data-population-script.sh
 
 # Process start
 toilet -f term -F border --gay 'PROCESS STARTED!'
@@ -139,8 +139,8 @@ echo "\033[0;32m\033[1mCreated a directory for placing latest wso2IS\033[0;m"
 cd IS_HOME_NEW
 
 # Download needed (latest) wso2IS zip                                                            
-#wget -qq "$LINK_TO_IS_NEW" 
-#sleep 30
+wget -qq "$LINK_TO_IS_NEW" 
+sleep 30
 echo "\033[0;32m\033[1mDownloaded latest wso2IS zip\033[0;m"
 
 # Unzip IS archive
@@ -148,12 +148,12 @@ unzip -qq wso2is-6.0.0-rc2.zip
 sleep 30
 echo "\033[0;32m\033[1mUnzipped latest wso2IS zip\033[0;m"
 
-# Download migration client                                                                      use a bot here
+# Download migration client                                                                      
 #wget -qq "$LINK_TO_MIGRATION_CLIENT" &
 #sleep 30
 #echo "\033[0;32m\033[1mDownloaded migration client successfully!\033[0;m"
 
-# Commented above path because migration client is not available in above repo
+# Download and place migration client
 cd "$utils_PATH"
 
 # Unzip migration client archive
@@ -194,22 +194,17 @@ echo "\033[0;32m\033[1mData backedup successfully\033[0;m"
 
 cd "$AUTOMATION_HOME_01_Migration_Automation"
 
-for file in $(find /home/wso2/Downloads/Automating-Product-Migration-Testing/local-setups/IS_HOME_NEW/wso2is-6.0.0/repository/conf -type f -name 'deployment.toml');
+for file in $(find $Home/Downloads/Automating-Product-Migration-Testing/local-setups/IS_HOME_NEW/wso2is-6.0.0/repository/conf -type f -name 'deployment.toml');
 do
-cat /home/wso2/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment.toml > $file;
+cat $Home/Downloads/Automating-Product-Migration-Testing/migration-automation/deployment.toml > $file;
 sleep 10
 done
 
 cd "$AUTOMATION_HOME"
 
-# Remove unused tokens before migration                                                                    Check here
-# sh remove-unused-tokens.sh
-
 # Divert to bin folder
 cd "$BIN_ISNEW"
 echo "\033[0;32m\033[1mDiverted to bin folder successfully\033[0;m"
-
-#changes in wso2server.sh file                                                                            Check here
 
 cd "$AUTOMATION_HOME"
 
@@ -219,11 +214,8 @@ sh migration-terminal.sh
 sleep 100
 toilet -f term -F border --gay 'Yay!Migration executed successfully.'
 
-# Verify migration - Check CPU health
-#sh check-cpu-health.sh
-
 # Stop wso2IS migration server
-cd "$BIN_ISNEW"                                                                             Check here
+cd "$BIN_ISNEW"                                                                         
 ./wso2server.sh stop
 ps -ef | grep migration-terminal.sh| grep -v grep | awk '{print $2}' | xargs #kill	
 sleep 60
@@ -246,7 +238,6 @@ echo "\033[0;32m\033[1mEntered to Management console home page successfully\033[
  
 cd "$GENERATE_TOKEN" 
 echo "\033[0;32m\033[1mEntered to data population directory\033[0;m"
-
 
 # Run register-a-service-provider-get-access-token.sh to validate database.
 sh generate-oauth-token.sh
