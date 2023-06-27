@@ -87,6 +87,7 @@ cd IS_HOME_OLD
 echo "${GREEN}==> Navigated to home folder successfully${RESET}"
 
 # Download needed wso2IS zip
+
 # Specify the Google Drive file URL
 file_url="$urlOld"
 
@@ -96,12 +97,17 @@ api_key="$migrationApiKey"
 # Extract the file ID from the URL
 file_id=$(echo "$file_url" | awk -F'/' '{print $NF}' | awk -F'=' '{print $2}')
 
+# Specify the export URL
+export_url="https://www.googleapis.com/drive/v3/files/$file_id/export?mimeType=application%2Fzip"
+
 # Provide the correct output file path for the downloaded file
 output_file="wso2is.zip"
 
-curl -k -H "Authorization: Bearer $api_key" \
-  "https://www.googleapis.com/drive/v3/files/$file_id?alt=media" \
-  -o "$output_file"
+# Download the file using cURL and the API key
+curl -L -o "$output_file" "$export_url&key=$api_key"
+
+echo "Downloading using API key..."
+pwd
 
 echo "Downloading using API key.."
 pwd
