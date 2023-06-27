@@ -125,6 +125,10 @@ curl -k -H "Authorization: Bearer $api_key" \
 echo "Downloading using API key.."
 pwd
 ls -a
+unzip -qq *.zip &
+wait $!
+ls -a
+echo "${GREEN}==> Unzipped downloaded Identity Server zip${RESET}"
 
 cd "$AUTOMATION_HOME"
 
