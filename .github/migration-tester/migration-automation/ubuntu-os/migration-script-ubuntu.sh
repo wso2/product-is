@@ -129,7 +129,6 @@ api_key="$migrationApiKey"
 file_id=$(echo "$file_url" | awk -F'/' '{print $NF}' | awk -F'=' '{print $2}')
 
 curl -k -H "Authorization: Bearer $api_key" \
-  -C -R \
   https://www.googleapis.com/drive/v3/files/$file_id?alt=media \
   -o wso2is.zip
 echo "Downloading using API key.."
