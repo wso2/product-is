@@ -78,16 +78,16 @@ export LINK_TO_MIGRATION_CLIENT=https://github.com/wso2-extensions/identity-migr
 export utils_PATH=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/utils
 
 # Absolute path to IS_MIGRATION_TOOL_HOME/dropins home folder
-export DROPINS_PATH_HOME=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/utils/wso2is-migration-1.0.225
+export DROPINS_PATH_HOME=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/utils/migration-client/wso2is-migration-1.0.225
 
 # Absolute path to IS_MIGRATION_TOOL_HOME/dropins folder
-export DROPINS_PATH=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/utils/wso2is-migration-1.0.225/dropins
+export DROPINS_PATH=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/utils/migration-client/wso2is-migration-1.0.225/dropins
 
 # Absolute path to IS_HOME_NEW/repository/components
 export COMPONENTS_PATH=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/IS_HOME_NEW/wso2is-6.0.0/repository/components
 
 # Absolute path to migration resources folder
-export MIGRATION_RESOURCES=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/utils/wso2is-migration-1.0.225/migration-resources
+export MIGRATION_RESOURCES=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/utils/migration-client/wso2is-migration-1.0.225/migration-resources
 
 # Absolute path to latest wso2IS root folder
 export IS_NEW_ROOT=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/IS_HOME_NEW/wso2is-6.0.0
