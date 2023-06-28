@@ -102,10 +102,12 @@ response=$(curl --location --request POST 'https://oauth2.googleapis.com/token' 
 access_token=$(echo "$response" | jq -r '.access_token')
 
 # Download the file using the access token from the "access_token" file
+
 response=$(curl "https://www.googleapis.com/drive/v3/files/1pePZJM0gIFlPft8qSsu4613kiVzuLQHs?alt=media" \
   --header "Authorization: Bearer $access_token" \
   --header "Accept: application/json" \
   --compressed -O wso2is.zip)
+wait $!
 
 # Check if the response contains any error message
 if echo "$response" | grep -q '"error":'; then
