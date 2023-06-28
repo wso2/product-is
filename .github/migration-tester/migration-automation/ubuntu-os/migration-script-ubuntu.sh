@@ -28,7 +28,9 @@ os=$6
 email=$7
 password=$8
 migrationClient=$9
-migrationAutomationApiKey=$10
+gcpClientId=$10
+gcpClientSecret=$11
+gcpRefreshToken=$12
 
 # Remove spaces from the beginning and end of the currentVersion variable
 currentVersion=$(echo $currentVersion | xargs)
@@ -87,31 +89,44 @@ cd IS_HOME_OLD
 echo "${GREEN}==> Navigated to home folder successfully${RESET}"
 
 # Download needed wso2IS zip
+# Generate access token
+access_token=$(curl -d "client_id=$gcpClientId&client_secret=$gcpClientSecret&refresh_token=$gcpRefreshToken&grant_type=refresh_token" \
+                    -H "Content-Type: application/x-www-form-urlencoded" \
+                    https://oauth2.googleapis.com/token | jq -r '.access_token')
+
+# Check if the response contains any error message
+if echo "$access_token" | grep -q '"error":'; then
+  # If there is an error, print the failure message with the error description
+  error_description=$(echo "$access_token" | jq -r '.error_description')
+  echo -e "${RED}${BOLD}Failure in generating an access token $error_description${NC}"
+
+else
+  # If there is no error, print the success message
+  echo -e "${PURPLE}${BOLD}Success: An access token generated successfully .${NC}"
+fi
+
 # Specify the Google Drive file URL
 file_url="$urlOld"
 
 # Extract the file ID from the URL
 file_id=$(echo "$file_url" | awk -F'/' '{print $NF}' | awk -F'=' '{print $2}')
 
-# Specify your Google Drive API key
-api_key="$migrationAutomationApiKey"
+# Download the file using the access token
+response=$(curl "https://www.googleapis.com/drive/v3/files/$file_id?alt=media" \
+  --header "Authorization: Bearer $access_token" \
+  --header "Accept: application/json" \
+  --compressed -O "wso2is.zip")
+wait $!
 
-echo "Downloading using API key.."
-
-# Download the file and save it with a temporary name
-curl -H "Authorization: Bearer $migrationAutomationApiKey" \
-  "https://www.googleapis.com/drive/v3/files/$file_id?alt=media" \
-  -o wso2is_temp.zip
-
-# Check if the download was successful
+# Check if the file was downloaded successfully
 if [ $? -eq 0 ]; then
-  # Rename the temporary file to wso2is.zip
-  mv wso2is_temp.zip wso2is.zip
-  echo "Download completed successfully."
+  echo "File downloaded successfully."
 else
-  echo "Error occurred while downloading the file."
+  echo "File download failed."
 fi
+ls -a
 
+# Unzip the downloaded zip 
 unzip -qq *.zip &
 wait $!
 ls -a
