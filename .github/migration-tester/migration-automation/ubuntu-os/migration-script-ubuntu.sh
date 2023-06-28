@@ -89,9 +89,6 @@ echo "${GREEN}==> Created a directory to place wso2IS${RESET}"
 cd IS_HOME_OLD
 echo "${GREEN}==> Navigated to home folder successfully${RESET}"
 
-echo "dummy client id: $gcpClientIddummy"
-echo "Currentversiontest: $currentVersion"
-
 # Download needed wso2IS zip
 # Generate access token
 access_token=$(curl --location --request POST 'https://oauth2.googleapis.com/token' \
@@ -101,19 +98,11 @@ access_token=$(curl --location --request POST 'https://oauth2.googleapis.com/tok
 --data-urlencode 'refresh_token='$gcpRefreshToken'' \
 --data-urlencode 'grant_type=refresh_token' | jq -r '.access_token')
 
-# Specify the Google Drive file URL
-file_url="$urlOld"
-
-# Extract the file ID from the URL
-file_id=$(echo "$file_url" | awk -F'/' '{print $NF}' | awk -F'=' '{print $2}')
-
 # Download the file using the access token from the "access_token" file
-access_token=$(cat access_token)
 response=$(curl "https://www.googleapis.com/drive/v3/files/1WSQwh2aizd-nhrQQEc_PqnTJJxiRufUv?alt=media" \
   --header "Authorization: Bearer $access_token" \
   --header "Accept: application/json" \
   --compressed -O wso2is.zip)
-wait $!
 
 # Check if the response contains any error message
 if echo "$response" | grep -q '"error":'; then
