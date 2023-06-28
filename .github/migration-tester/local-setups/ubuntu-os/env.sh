@@ -45,7 +45,7 @@ export JDBC=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/ut
 export LIB=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/IS_HOME_OLD/wso2is-5.11.0/repository/components/lib
 
 # Absolute path for the mysql Jar file in utils folder
-export MYSQL_JAR=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/utils/mysql-connector-java-8.0.29.jar
+export MYSQL_JAR=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/utils/jars/mysql/mysql-connector-java-8.0.29.jar
 
 # Absolute path for the <IS_HOME_NEW>/repository/components/lib folder
 export LIB_NEW=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/IS_HOME_NEW/wso2is-6.0.0/repository/components/
