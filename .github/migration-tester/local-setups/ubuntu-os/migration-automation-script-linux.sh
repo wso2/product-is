@@ -113,10 +113,10 @@ cd "$DATA_POPULATION"
 echo "\033[0;32m\033[1mEntered to data population directory\033[0;m"
 echo
 
-chmod +x data-population-script.sh
+chmod +x automated-data-population-and-validation-script-ubuntu-local-setup.sh
 
 # Run data-population-script.sh which is capable of populating data to create users,tenants,userstores,generate tokens etc.
-sh data-population-script.sh 
+sh automated-data-population-and-validation-script-ubuntu-local-setup.sh
 sleep 10
 echo "\033[0;32m\033[1mCreated users, user stores, service providers, tenants,generated oAuth tokens and executed the script successfully\033[0;m"
 
@@ -239,8 +239,8 @@ echo "\033[0;32m\033[1mEntered to Management console home page successfully\033[
 cd "$GENERATE_TOKEN" 
 echo "\033[0;32m\033[1mEntered to data population directory\033[0;m"
 
-# Run register-a-service-provider-get-access-token.sh to validate database.
-sh generate-oauth-token.sh
+# Validate database.
+sh validate-database-ubuntu-local-setup.sh
 
 toilet -f term -F border --gay 'Migration executed and database validated successfully!'
 
