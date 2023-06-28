@@ -26,24 +26,24 @@ ${RESET}"
 
 toilet -f term -F border --gay 'TIME TO Automating PRODUCT MIGRATION TESTING!'
 sudo apt-get install jp2a
-jp2a --colors  --flipx --term-height "$Home/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/humanoid.jpg" 
+jp2a --colors  --flipx --term-height "$Home/Downloads/Automating-Product-Migration-Testing/local-setups/humanoid.jpg" 
 
 # Source env file
 . $Home/Downloads/Automating-Product-Migration-Testing/local-setups/env.sh
 echo "\033[0;32m\033[1mEnv file sourced successfully\033[0;m"
 
-chmod +x $Home/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/create-new-database.sh
-chmod +x $Home/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/copy-jar-file.sh
-chmod +x $Home/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/server-start.sh
-chmod +x $Home/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/enter-login-credentials.sh
-chmod +x $Home/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/copy-data-to-new-IS.sh
-chmod +x $Home/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/change-migration-configyaml.sh 
-chmod +x $Home/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/copy-data-to-new-IS.sh
-chmod +x $Home/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/change-deployment-toml.sh
-chmod +x $Home/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/backup-database.sh
-chmod +x $Home/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/create-new-database.sh                      
-chmod +x $Home/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/migration-terminal.sh 
-chmod +x $Home/Downloads/Automating-Product-Migration-Testing/data-population-and-validation/data-population-script.sh
+chmod +x $Home/Downloads/Automating-Product-Migration-Testing/local-setups/create-new-database.sh
+chmod +x $Home/Downloads/Automating-Product-Migration-Testing/local-setups/copy-jar-file.sh
+chmod +x $Home/Downloads/Automating-Product-Migration-Testing/local-setups/server-start.sh
+chmod +x $Home/Downloads/Automating-Product-Migration-Testing/local-setups/enter-login-credentials.sh
+chmod +x $Home/Downloads/Automating-Product-Migration-Testing/local-setups/copy-data-to-new-IS.sh
+chmod +x $Home/Downloads/Automating-Product-Migration-Testing/local-setups/change-migration-configyaml.sh 
+chmod +x $Home/Downloads/Automating-Product-Migration-Testing/local-setups/copy-data-to-new-IS.sh
+chmod +x $Home/Downloads/Automating-Product-Migration-Testing/local-setups/change-deployment-toml.sh
+chmod +x $Home/Downloads/Automating-Product-Migration-Testing/local-setups/backup-database.sh
+chmod +x $Home/Downloads/Automating-Product-Migration-Testing/local-setups/create-new-database.sh                      
+chmod +x $Home/Downloads/Automating-Product-Migration-Testing/local-setups/migration-terminal.sh 
+chmod +x $Home/Downloads/Automating-Product-Migration-Testing/local-setups/automated-data-population-and-validation-script-ubuntu-local-setup.sh
 
 # Process start
 toilet -f term -F border --gay 'PROCESS STARTED!'
@@ -194,7 +194,7 @@ cd "$AUTOMATION_HOME"
 
 for file in $(find $Home/Downloads/Automating-Product-Migration-Testing/local-setups/IS_HOME_NEW/wso2is-6.0.0/repository/conf -type f -name 'deployment.toml');
 do
-cat $Home/Downloads/Automating-Product-Migration-Testing/deployment.toml > $file;
+cat $Home/Downloads/Automating-Product-Migration-Testing/local-setups/deployment.toml > $file;
 sleep 10
 done
 
