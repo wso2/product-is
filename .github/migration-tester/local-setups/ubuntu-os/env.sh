@@ -22,10 +22,10 @@ export DEPLOYMENT_PATH=$Home/Downloads/Automating-Product-Migration-Testing/loca
 export DEPLOYMENT_PATH_NEW=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/IS_HOME_NEW/wso2is-6.0.0/repository/conf
 
 # Absolute path to the deployment file in migration-tester/migration-automation folder
-exportDEPLOYMENT_AUTOMATION_MYSQL=$Home/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/deployment.toml
+export DEPLOYMENT_AUTOMATION_MYSQL=$Home/Downloads/Automating-Product-Migration-Testing/deployment.toml
 
 # Absolute path to the deployment file in mysql usage
-exportDEPLOYMENT_AUTOMATION_MYSQL_MYSQL=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/deployment-toml-mysql.toml
+export DEPLOYMENT_AUTOMATION_MYSQL_MYSQL=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/deployment-toml-mysql.toml
 
 # Absolute path to IS old deployment.toml
 export PATH_IS_OLD=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/IS_HOME_OLD/wso2is-5.11.0/repository/conf/deployment.toml
