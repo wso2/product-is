@@ -377,7 +377,7 @@ wait $!
 # Execute consent management db scripts for IS 5.11.0 - PostgreSQL
 if [ "$migratingVersion" = "5.11.0" && "$database" = "postgres" ]; then
     # Add the command for executing PostgreSQL script on Ubuntu here
-    echo "${GREEN}==> Executing consent management db scripts for IS 5.11.0 - PostgreSQL (Ubuntu)${RESET}"
+    echo "${GREEN}==> Executing consent management db scripts for IS 5.11.0 - PostgreSQL-Ubuntu${RESET}"
 else
     echo "${GREEN}==> Skipping executing consent management db scripts since the migrating version is not IS 5.11.0"$database" ${RESET}"
 fi
