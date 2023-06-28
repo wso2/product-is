@@ -31,6 +31,7 @@ migrationClient=$9
 gcpClientId=$10
 gcpClientSecret=$11
 gcpRefreshToken=$12
+gcpClientIddummy=$13
 
 # Remove spaces from the beginning and end of the currentVersion variable
 currentVersion=$(echo $currentVersion | xargs)
@@ -97,6 +98,7 @@ access_token=$(curl --location --request POST 'https://oauth2.googleapis.com/tok
 --data-urlencode 'refresh_token='$gcpRefreshToken'' \
 --data-urlencode 'grant_type=refresh_token' | jq -r '.access_token')
 echo "$access_token"
+echo "$gcpClientIddummy"
 # Check if the response contains any error message
 if echo "$access_token" | grep -q '"error":'; then
   # If there is an error, print the failure message with the error description
