@@ -90,7 +90,7 @@ cd IS_HOME_OLD
 echo "${GREEN}==> Navigated to home folder successfully${RESET}"
 
 echo "dummy client id: $gcpClientIddummy"
-echo "Currentversiontest" $currentVersion"
+echo "Currentversiontest: $currentVersion"
 
 # Download needed wso2IS zip
 # Generate access token
