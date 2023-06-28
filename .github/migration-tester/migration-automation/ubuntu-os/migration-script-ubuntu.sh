@@ -125,16 +125,11 @@ case $currentVersion in
     ;;
 esac
 
-# Use the file_id variable in further operations
+# Use the file_id variable in downloading the IS zip
 echo "file_id: $file_id"
 
 # Specify the Google Drive file URL
 file_url="https://www.googleapis.com/drive/v3/files/"$file_id"?alt=media"
-# https://drive.google.com/file/d/1WSQwh2aizd-nhrQQEc_PqnTJJxiRufUv/view?usp=sharing  - is 5.10.0
-# https://drive.google.com/file/d/1tn6GYCzJtMBdwleQ2fVy1icUlItdm4w5/view?usp=sharing   - is 5.11.0
-# https://drive.google.com/file/d/1eAcSLBD-UoYI84SefGQKokOhpmU9bO_a/view?usp=sharing -is 6.0
-# https://drive.google.com/file/d/1pePZJM0gIFlPft8qSsu4613kiVzuLQHs/view?usp=sharing  -is 5.9
-# https://drive.google.com/file/d/1WQkO5xvN8RGNNSgF2Q-x9_dAnKs2MGN6/view?usp=sharing - is 6.1
 
 # Download the file using the access token
 response=$(curl "$file_url" \
@@ -150,39 +145,22 @@ if echo "$response" | grep -q '"error":'; then
   echo -e "${RED}${BOLD}Failure in downloading Identity Server $error_description${NC}"
 else
   # If there is no error, print the success message
-  echo -e "${PURPLE}${BOLD}Success: IS downloaded successfully.${NC}"
-fi
-
-# Check if the file was downloaded successfully
-if [ $? -eq 0 ]; then
-  echo "File downloaded successfully."
-else
-  echo "File download failed."
+  echo -e "${PURPLE}${BOLD}Success: IS Pack downloaded successfully.${NC}"
 fi
 
 # Unzip IS archive
 unzip -qq *.zip &
 wait $!
-echo "${GREEN}==> Unzipped "$migratingVersion" zip${RESET}"
+echo "${GREEN}==> Unzipped "$currentVersion" zip${RESET}"
 
 ls -a
 
 cd "$AUTOMATION_HOME"
 
 # Update IS packs
-if [ "$currentVersion" = "5.9.0" ]; then
-    echo "The current version is 5.9.0."
-    # Update IS packs
-    chmod +x update-pack.sh 
-    sh update-pack.sh "$email" "$password" "current"
-    wait $!
-else
-    # Update IS packs
-    chmod +x update-pack-5-9.sh 
-    sh update-pack.sh "$email" "$password" "current"
-    wait $! 
-       
-fi
+chmod +x update-pack.sh 
+sh update-pack.sh "$email" "$password" "current"
+wait $!
 
 cd "$AUTOMATION_HOME"
 
@@ -257,39 +235,65 @@ echo "${GREEN}==> Created a directory for placing latest wso2IS${RESET}"
 cd "$IS_HOME_NEW"
 
 # Download needed (latest) wso2IS zip
-#wget -qq --waitretry=5 --retry-connrefused "$urlNew"
-#wait $!
+# Generate access token
+response=$(curl --location --request POST 'https://oauth2.googleapis.com/token' \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--data-urlencode "client_id=$gcpClientId" \
+--data-urlencode "client_secret=$gcpClientSecret" \
+--data-urlencode "refresh_token=$gcpRefreshToken" \
+--data-urlencode 'grant_type=refresh_token')
 
+# Extract the access token from the response using jq
+access_token=$(echo "$response" | jq -r '.access_token')
 
-#curl -L -o wso2is.zip "https://drive.google.com/uc?export=download&id=1ik0CJM5V9CXzBwl7DQpeBDBTT4t_cWlL"
-#response=$(curl -k -L -o wso2is.zip "https://drive.google.com/uc?export=download&id=1ik0CJM5V9CXzBwl7DQpeBDBTT4t_cWlL")
-#echo "$response"
-#curl -k -L -o wso2is.zip "https://drive.google.com/u/0/uc?id=1ik0CJM5V9CXzBwl7DQpeBDBTT4t_cWlL&export=download"
+# Initialize file_id variable
+file_id=""
 
-# Download needed wso2IS zip
-if [ "$currentVersion" = "5.9.0" ]; then
+# Check the value of currentVersion and assign the corresponding environment variable to file_id
+case $migratingVersion in
+  5.9.0)
+    file_id="$FILE_ID_5_9"
+    ;;
+  5.10.0)
+    file_id="$FILE_ID_5_10"
+    ;;
+  5.11.0)
+    file_id="$FILE_ID_5_11"
+    ;;
+  6.0.0)
+    file_id="$FILE_ID_6_0"
+    ;;
+  6.1.0)
+    file_id="$FILE_ID_6_1"
+    ;;
+  *)
+    echo "No action taken.Please assign a value in env.sh if you haven't assigned a value for file ID."
+    ;;
+esac
 
-    response=$(curl -k -L -o wso2is.zip "https://drive.google.com/u/0/uc?id=1GU32FtPGvvB2WsmQoPnHr5yn1M6ddL-h&amp;amp;export=download&amp;amp;confirm=t&amp;amp;uuid=712b27d8-ea10-4e0b-bbbd-3cde24b1d92e&amp;amp;at=AKKF8vzpFDL5XdIrNRv6KFY0ZvPr:1687251333945&amp;confirm=t&amp;uuid=efe88210-d059-4968-84c6-7a1236bb6ef9&amp;at=AKKF8vxFWIDReSULenUtKrASKULT:1687251490306&confirm=t&uuid=7017f976-902b-4050-a3a6-22b26bb46d88&at=AKKF8vyia4DpEk742C_FTMCmJDE9:1687251582718")
-    wait $!
-    echo "$response"
+# Use the file_id variable in downloading the IS zip
+echo "file_id: $file_id"
+
+# Specify the Google Drive file URL
+file_url="https://www.googleapis.com/drive/v3/files/"$file_id"?alt=media"
+
+# Download the file using the access token
+response=$(curl "$file_url" \
+  --header "Authorization: Bearer $access_token" \
+  --header "Accept: application/json" \
+  --compressed -o wso2is.zip)
+wait $!
+
+# Check if the response contains any error message
+if echo "$response" | grep -q '"error":'; then
+  # If there is an error, print the failure message with the error description
+  error_description=$(echo "$response" | jq -r '.error_description')
+  echo -e "${RED}${BOLD}Failure in downloading Identity Server $error_description${NC}"
 else
-    
-    # Specify the Google Drive file URL
-    file_url="$urlOld"
-    
-    # Specify your Google Drive API key
-    api_key="$migrationApiKey"
-    
-    # Extract the file ID from the URL
-    file_id=$(echo "$file_url" | awk -F'/' '{print $NF}' | awk -F'=' '{print $2}')
-    
-    # Generate the download link with the API key
-    download_link="https://www.googleapis.com/drive/v3/files/$file_id?alt=media&key=$api_key"
-    
-    # Download the ZIP file using curl
-    curl -L -o wso2is.zip "$download_link"
-    wait $!
+  # If there is no error, print the success message
+  echo -e "${PURPLE}${BOLD}Success: IS Pack downloaded successfully.${NC}"
 fi
+
 echo "${GREEN}==> Downloaded "$migratingVersion" zip${RESET}"
 
 # Unzip IS archive
