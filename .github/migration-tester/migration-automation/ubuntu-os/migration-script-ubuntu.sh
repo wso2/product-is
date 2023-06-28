@@ -89,7 +89,7 @@ echo "${GREEN}==> Created a directory to place wso2IS${RESET}"
 cd IS_HOME_OLD
 echo "${GREEN}==> Navigated to home folder successfully${RESET}"
 
-echo "$gcpClientIddummy"
+echo "dummy client id: $gcpClientIddummy"
 echo "Currentversiontest" $currentVersion"
 
 # Download needed wso2IS zip
