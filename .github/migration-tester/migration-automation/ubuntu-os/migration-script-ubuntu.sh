@@ -96,7 +96,7 @@ access_token=$(curl --location --request POST 'https://oauth2.googleapis.com/tok
 --data-urlencode 'client_secret=$gcpClientSecret' \
 --data-urlencode 'refresh_token=$gcpRefreshToken' \
 --data-urlencode 'grant_type=refresh_token' | jq -r '.access_token')
-
+echo "$access_token"
 # Check if the response contains any error message
 if echo "$access_token" | grep -q '"error":'; then
   # If there is an error, print the failure message with the error description
@@ -117,7 +117,7 @@ file_id=$(echo "$file_url" | awk -F'/' '{print $NF}' | awk -F'=' '{print $2}')
 
 # Download the file using the access token from the "access_token" file
 access_token=$(cat access_token)
-response=$(curl "https://www.googleapis.com/drive/v3/files/$file_id?alt=media" \
+response=$(curl "https://www.googleapis.com/drive/v3/files/1pePZJM0gIFlPft8qSsu4613kiVzuLQHs?alt=media" \
   --header "Authorization: Bearer $access_token" \
   --header "Accept: application/json" \
   --compressed -O wso2is.zip)
