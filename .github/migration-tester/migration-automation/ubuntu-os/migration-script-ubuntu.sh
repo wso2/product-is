@@ -116,10 +116,9 @@ if echo "$response" | grep -q '"error":'; then
   # If there is an error, print the failure message with the error description
   error_description=$(echo "$response" | jq -r '.error_description')
   echo -e "${RED}${BOLD}Failure in downloading Identity Server $error_description${NC}"
-
 else
   # If there is no error, print the success message
-  echo -e "${PURPLE}${BOLD}Success: IS downloaded successfully .${NC}"
+  echo -e "${PURPLE}${BOLD}Success: IS downloaded successfully.${NC}"
 fi
 
 # Check if the file was downloaded successfully
@@ -128,11 +127,27 @@ if [ $? -eq 0 ]; then
 else
   echo "File download failed."
 fi
-ls -a
 
-# Unzip the downloaded zip 
-unzip -qq *.zip &
+# Unzip the downloaded zip
+unzip -qq wso2is.zip -d wso2is_tmp
 wait $!
+
+# Get the current version of the extracted folder
+current_version=$(find wso2is_tmp -maxdepth 1 -type d -name "wso2is-*" -exec basename {} \;)
+
+# Rename the extracted folder
+if [ -n "$current_version" ]; then
+  mv "wso2is_tmp/$current_version" "wso2is-$current_version"
+  echo "Renamed the extracted folder to wso2is-$current_version"
+else
+  echo "Error: Failed to find the extracted folder with the version."
+fi
+
+# Clean up the downloaded zip and temporary folder
+rm wso2is.zip
+rm -r wso2is_tmp
+
+# Print the current directory listing
 ls -a
 echo "${GREEN}==> Unzipped downloaded Identity Server zip${RESET}"
 
