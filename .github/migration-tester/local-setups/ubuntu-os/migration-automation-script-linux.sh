@@ -41,8 +41,7 @@ chmod +x $Home/Downloads/Automating-Product-Migration-Testing/migration-tester/m
 chmod +x $Home/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/copy-data-to-new-IS.sh
 chmod +x $Home/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/change-deployment-toml.sh
 chmod +x $Home/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/backup-database.sh
-chmod +x $Home/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/create-new-database.sh                                                               #executes from bash
-chmod +x $Home/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/check-cpu-health.sh
+chmod +x $Home/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/create-new-database.sh                      
 chmod +x $Home/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/migration-terminal.sh 
 chmod +x $Home/Downloads/Automating-Product-Migration-Testing/data-population-and-validation/data-population-script.sh
 
