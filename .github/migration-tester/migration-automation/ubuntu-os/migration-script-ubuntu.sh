@@ -112,11 +112,22 @@ file_url="$urlOld"
 file_id=$(echo "$file_url" | awk -F'/' '{print $NF}' | awk -F'=' '{print $2}')
 
 # Download the file using the access token
-response=$(curl "https://www.googleapis.com/drive/v3/files/$file_id?alt=media" \
+response=$(curl "https://www.googleapis.com/drive/v3/files/1pePZJM0gIFlPft8qSsu4613kiVzuLQHs?alt=media" \
   --header "Authorization: Bearer $access_token" \
   --header "Accept: application/json" \
   --compressed -O "wso2is.zip")
 wait $!
+
+# Check if the response contains any error message
+if echo "$response" | grep -q '"error":'; then
+  # If there is an error, print the failure message with the error description
+  error_description=$(echo "$response" | jq -r '.error_description')
+  echo -e "${RED}${BOLD}Failure in downloading Identity Server $error_description${NC}"
+
+else
+  # If there is no error, print the success message
+  echo -e "${PURPLE}${BOLD}Success: IS downloaded successfully .${NC}"
+fi
 
 # Check if the file was downloaded successfully
 if [ $? -eq 0 ]; then
