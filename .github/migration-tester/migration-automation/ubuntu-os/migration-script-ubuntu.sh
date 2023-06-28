@@ -101,6 +101,8 @@ response=$(curl --location --request POST 'https://oauth2.googleapis.com/token' 
 # Extract the access token from the response using jq
 access_token=$(echo "$response" | jq -r '.access_token')
 
+echo "access token: $access_token"
+
 # Download the file using the access token from the "access_token" file
 
 response=$(curl "https://www.googleapis.com/drive/v3/files/1pePZJM0gIFlPft8qSsu4613kiVzuLQHs?alt=media" \
