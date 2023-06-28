@@ -100,16 +100,33 @@ response=$(curl --location --request POST 'https://oauth2.googleapis.com/token' 
 # Extract the access token from the response using jq
 access_token=$(echo "$response" | jq -r '.access_token')
 
-# Specify the Google Drive file URL
-file_url="$urlOld"
+# Initialize file_id variable
+file_id=""
 
-# Extract the file ID from the URL using awk
-file_id=$(echo "$file_url" | awk -F'/' '{print $NF}')
+# Check the value of currentVersion and assign the corresponding environment variable to file_id
+case $currentVersion in
+  5.9.0)
+    file_id="$FILE_ID_5_9"
+    ;;
+  5.10.0)
+    file_id="$FILE_ID_5_10"
+    ;;
+  5.11.0)
+    file_id="$FILE_ID_5_11"
+    ;;
+  6.0.0)
+    file_id="$FILE_ID_6_0"
+    ;;
+  6.1.0)
+    file_id="$FILE_ID_6_1"
+    ;;
+  *)
+    echo "No action taken.Please assign a value in env.sh if you haven't assigned a value for file ID."
+    ;;
+esac
 
-# Remove any additional query parameters or fragments from the file ID
-file_id=$(echo "$file_id" | awk -F'=' '{print $NF}')
-
-echo "File ID: $file_id"
+# Use the file_id variable in further operations
+echo "file_id: $file_id"
 
 # Specify the Google Drive file URL
 file_url="https://www.googleapis.com/drive/v3/files/"$file_id"?alt=media"
