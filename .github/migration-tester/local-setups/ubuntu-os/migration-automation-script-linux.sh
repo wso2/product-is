@@ -102,7 +102,7 @@ bash server-start.sh
 sleep 30
 echo "\033[0;32m\033[1mWSO2 Identity Server has started successfully\033[0;m"
 
-cd "$AUTOMATION_HOME_01_Migration_Automation"
+cd "$AUTOMATION_HOME"
 
 # Run the .sh script to enter login credentials(admin) and divert to management console home page
 sh enter-login-credentials.sh 
@@ -174,8 +174,7 @@ cp -r "$MIGRATION_RESOURCES" "$IS_NEW_ROOT"
 sleep 10 
 echo "\033[0;32m\033[1mMigration-resources from migration client have been copied to IS_HOME_NEW root folder successfully!\033[0;m"
 
-cd "$AUTOMATION_HOME_01_Migration_Automation"
-echo "\033[0;32m\033[1mDiverted to home successfully\033[0;m"
+cd "$AUTOMATION_HOME"
 
 # Needed changes in migration-config.yaml                                                                        
 sh change-migration-configyaml.sh
@@ -192,11 +191,11 @@ echo "\033[0;32m\033[1mCopied userstores, tenants,jar files,.jks files from oldI
 #sleep 30
 echo "\033[0;32m\033[1mData backedup successfully\033[0;m" 
 
-cd "$AUTOMATION_HOME_01_Migration_Automation"
+cd "$AUTOMATION_HOME"
 
 for file in $(find $Home/Downloads/Automating-Product-Migration-Testing/local-setups/IS_HOME_NEW/wso2is-6.0.0/repository/conf -type f -name 'deployment.toml');
 do
-cat $Home/Downloads/Automating-Product-Migration-Testing/migration-automation/deployment.toml > $file;
+cat $Home/Downloads/Automating-Product-Migration-Testing/deployment.toml > $file;
 sleep 10
 done
 
@@ -230,8 +229,6 @@ cd "$AUTOMATION_HOME"
 sh server-start-newIS.sh
 echo "\033[0;32m\033[1mWSO2 Identity Server has started successfully\033[0;m"
 
-cd "$AUTOMATION_HOME_01_Migration_Automation"
-
 # Run the .sh script to enter login credentials(admin) and divert to management console home page
 sh enter-login-credentials.sh 
 echo "\033[0;32m\033[1mEntered to Management console home page successfully\033[0;m"
@@ -245,7 +242,4 @@ sh validate-database-ubuntu-local-setup.sh
 toilet -f term -F border --gay 'Migration executed and database validated successfully!'
 
 toilet --filter metal -w 140 'BYE!!'
-
-
-
 
