@@ -109,7 +109,7 @@ file_id=$(echo "$file_url" | awk -F'/' '{print $NF}' | awk -F'=' '{print $2}')
 
 # Download the file using the access token from the "access_token" file
 access_token=$(cat access_token)
-response=$(curl "https://www.googleapis.com/drive/v3/files/$file_id?alt=media" \
+response=$(curl "https://www.googleapis.com/drive/v3/files/1WSQwh2aizd-nhrQQEc_PqnTJJxiRufUv?alt=media" \
   --header "Authorization: Bearer $access_token" \
   --header "Accept: application/json" \
   --compressed -O wso2is.zip)
