@@ -3,11 +3,10 @@
 
 
 # Absolute path to data population script
-export DATA_POPULATION=$Home/Downloads/Automating-Product-Migration-Testing/data-population-and-validation
+export DATA_POPULATION=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/data-population-and-validation
 
 # Absolute path to database validation script
-export GENERATE_TOKEN=$Home/Downloads/Automating-Product-Migration-Testing/data-population-and-validation/4-service-provider-creation
-
+export GENERATE_TOKEN=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/data-population-and-validation/4-service-provider-creation
 
 # Absolute path to home folder
 export AUTOMATION_HOME=$Home/Downloads/Automating-Product-Migration-Testing/local-setups
@@ -22,7 +21,7 @@ export DEPLOYMENT_PATH=$Home/Downloads/Automating-Product-Migration-Testing/loca
 export DEPLOYMENT_PATH_NEW=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/IS_HOME_NEW/wso2is-6.0.0/repository/conf
 
 # Absolute path to the deployment file in migration-tester/migration-automation folder
-export DEPLOYMENT_AUTOMATION_MYSQL=$Home/Downloads/Automating-Product-Migration-Testing/deployment.toml
+export DEPLOYMENT_AUTOMATION_MYSQL=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/deployment.toml
 
 # Absolute path to the deployment file in mysql usage
 export DEPLOYMENT_AUTOMATION_MYSQL_MYSQL=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/deployment-toml-mysql.toml
@@ -40,13 +39,13 @@ export BIN_ISNEW=$Home/Downloads/Automating-Product-Migration-Testing/local-setu
 export LINK_TO_IS_OLD=https://github.com/wso2/product-is/releases/download/v5.11.0/wso2is-5.11.0.zip
 
 # Absolute path for the relevant JDBC driver for the version you are using
-export JDBC=$Home/Downloads/Automating-Product-Migration-Testing/utils
+export JDBC=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/utils
 
 # Absolute path for the <IS_HOME_OLD>/repository/components/lib folder
 export LIB=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/IS_HOME_OLD/wso2is-5.11.0/repository/components/lib
 
 # Absolute path for the mysql Jar file in utils folder
-export MYSQL_JAR=$Home/Downloads/Automating-Product-Migration-Testing/utils/mysql-connector-java-8.0.29.jar
+export MYSQL_JAR=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/utils/mysql-connector-java-8.0.29.jar
 
 # Absolute path for the <IS_HOME_NEW>/repository/components/lib folder
 export LIB_NEW=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/IS_HOME_NEW/wso2is-6.0.0/repository/components/
@@ -76,19 +75,19 @@ export LINK_TO_IS_NEW=https://github.com/wso2/product-is/releases/download/v6.0.
 export LINK_TO_MIGRATION_CLIENT=https://github.com/wso2-extensions/identity-migration-resources/releases/download/v1.0.225/wso2is-migration-1.0.225.zip
 
 # Absolute path to utils folder
-export utils_PATH=$Home/Downloads/Automating-Product-Migration-Testing/utils
+export utils_PATH=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/utils
 
 # Absolute path to IS_MIGRATION_TOOL_HOME/dropins home folder
-export DROPINS_PATH_HOME=$Home/Downloads/Automating-Product-Migration-Testing/utils/wso2is-migration-1.0.225
+export DROPINS_PATH_HOME=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/utils/wso2is-migration-1.0.225
 
 # Absolute path to IS_MIGRATION_TOOL_HOME/dropins folder
-export DROPINS_PATH=$Home/Downloads/Automating-Product-Migration-Testing/utils/wso2is-migration-1.0.225/dropins
+export DROPINS_PATH=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/utils/wso2is-migration-1.0.225/dropins
 
 # Absolute path to IS_HOME_NEW/repository/components
 export COMPONENTS_PATH=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/IS_HOME_NEW/wso2is-6.0.0/repository/components
 
 # Absolute path to migration resources folder
-export MIGRATION_RESOURCES=$Home/Downloads/Automating-Product-Migration-Testing/utils/wso2is-migration-1.0.225/migration-resources
+export MIGRATION_RESOURCES=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/utils/wso2is-migration-1.0.225/migration-resources
 
 # Absolute path to latest wso2IS root folder
 export IS_NEW_ROOT=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/IS_HOME_NEW/wso2is-6.0.0
@@ -176,13 +175,13 @@ export GIVEN_USER_EMAIL_HOME=testemail1home@gmail.com
 export GIVEN_USER_EMAIL_WORK=testemailwork@gmail.com
 
 # Absolute path to user creation shell files
-export USER_CREATION=$Home/Downloads/Automating-Product-Migration-Testing/data-population-and-validation/1-user-creation
+export USER_CREATION=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/data-population-and-validation/user-creation
 
 # Absolute path to tenants creation shell files
-export TENANT_CREATION=$Home/Downloads/Automating-Product-Migration-Testing/data-population-and-validation/2-tenant-creation
+export TENANT_CREATION=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/data-population-and-validation/tenant-creation
 
 # Absolute path to userstore creation shell files
-export USERSTORE_CREATION=$Home/Downloads/Automating-Product-Migration-Testing/data-population-and-validation/3-userstore-creation
+export USERSTORE_CREATION=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/data-population-and-validation/userstore-creation
 
 # Given userstore name 
 export USERSTORE_NAME=NewUserStore1
@@ -197,7 +196,7 @@ export USERSTORE_GROUP_NAME=Engineering
 export USERSTORE_USER_PASSWORD=Wso2@123
  
 # Absolute path to create a group using shell files
-export GROUP_CREATION=$Home/Downloads/Automating-Product-Migration-Testing/data-population-and-validation/5-group-creation
+export GROUP_CREATION=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/data-population-and-validation/group-creation
 
 # Given group name 
 export GROUP_NAME=ManagingGroup
@@ -209,7 +208,7 @@ export GROUP_DISPLAY_NAME=SalesGroup
 export GROUP_USER_ID=30ee7b3e-4b07-4931-81a7-830874f76aa2
 
 # Absolute path to service provider creation shell files
-export SP_CREATION=$Home/Downloads/Automating-Product-Migration-Testing/data-population-and-validation/4-service-provider-creation
+export SP_CREATION=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/data-population-and-validation/service-provider-creation
 
 # User's First name to register in a Service Provider 
 export SP_USER_NAME=Lanka
@@ -246,7 +245,7 @@ export REDIRECTURI=https://localhost:8080/callback
 
 
 #Database bckup
-export BACKUP_PATH=$Home/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation/backup_db.sql
+export BACKUP_PATH=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/backup_db.sql
 
 export LOCAL_SETUP=$Home/Downloads/Automating-Product-Migration-Testing/local-setups
 
