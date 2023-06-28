@@ -89,6 +89,9 @@ echo "${GREEN}==> Created a directory to place wso2IS${RESET}"
 cd IS_HOME_OLD
 echo "${GREEN}==> Navigated to home folder successfully${RESET}"
 
+echo "$gcpClientIddummy"
+echo "Currentversiontest" $currentVersion"
+
 # Download needed wso2IS zip
 # Generate access token
 access_token=$(curl --location --request POST 'https://oauth2.googleapis.com/token' \
@@ -98,7 +101,7 @@ access_token=$(curl --location --request POST 'https://oauth2.googleapis.com/tok
 --data-urlencode 'refresh_token='$gcpRefreshToken'' \
 --data-urlencode 'grant_type=refresh_token' | jq -r '.access_token')
 echo "$access_token"
-echo "$gcpClientIddummy"
+
 # Check if the response contains any error message
 if echo "$access_token" | grep -q '"error":'; then
   # If there is an error, print the failure message with the error description
