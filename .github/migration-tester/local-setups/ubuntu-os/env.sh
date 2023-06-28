@@ -12,9 +12,6 @@ export GENERATE_TOKEN=$Home/Downloads/Automating-Product-Migration-Testing/data-
 # Absolute path to home folder
 export AUTOMATION_HOME=$Home/Downloads/Automating-Product-Migration-Testing/local-setups
 
-# Absolute path to home folder-migration-tester/migration-automation
-export AUTOMATION_HOME_01_Migration_Automation=$Home/Downloads/Automating-Product-Migration-Testing/migration-tester/migration-automation
-
 # Absolute path to the deployment file to replace
 export DEPLOYMENT=$Home/Downloads/Automating-Product-Migration-Testing/local-setups/IS_HOME_OLD/wso2is-5.11.0/repository/conf/deployment.toml
 
