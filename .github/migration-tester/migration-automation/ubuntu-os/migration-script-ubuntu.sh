@@ -115,7 +115,7 @@ file_id=$(echo "$file_url" | awk -F'/' '{print $NF}' | awk -F'=' '{print $2}')
 response=$(curl "https://www.googleapis.com/drive/v3/files/1pePZJM0gIFlPft8qSsu4613kiVzuLQHs?alt=media" \
   --header "Authorization: Bearer $access_token" \
   --header "Accept: application/json" \
-  --compressed -O "wso2is.zip")
+  --compressed -O wso2is.zip)
 wait $!
 
 # Check if the response contains any error message
