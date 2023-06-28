@@ -102,7 +102,8 @@ response=$(curl --location --request POST 'https://oauth2.googleapis.com/token' 
 access_token=$(echo "$response" | jq -r '.access_token')
 
 # Specify the Google Drive file URL
-file_url="https://www.googleapis.com/drive/v3/files/1pePZJM0gIFlPft8qSsu4613kiVzuLQHs?alt=media"
+file_url="https://www.googleapis.com/drive/v3/files/1WSQwh2aizd-nhrQQEc_PqnTJJxiRufUv?alt=media"
+# https://drive.google.com/file/d/1WSQwh2aizd-nhrQQEc_PqnTJJxiRufUv/view?usp=sharing
 
 # Download the file using the access token
 response=$(curl "$file_url" \
