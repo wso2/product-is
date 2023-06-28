@@ -92,9 +92,9 @@ echo "${GREEN}==> Navigated to home folder successfully${RESET}"
 # Generate access token
 access_token=$(curl --location --request POST 'https://oauth2.googleapis.com/token' \
 --header 'Content-Type: application/x-www-form-urlencoded' \
---data-urlencode 'client_id=$gcpClientId' \
---data-urlencode 'client_secret=$gcpClientSecret' \
---data-urlencode 'refresh_token=$gcpRefreshToken' \
+--data-urlencode 'client_id='$gcpClientId'' \
+--data-urlencode 'client_secret='$gcpClientSecret'' \
+--data-urlencode 'refresh_token='$gcpRefreshToken'' \
 --data-urlencode 'grant_type=refresh_token' | jq -r '.access_token')
 echo "$access_token"
 # Check if the response contains any error message
