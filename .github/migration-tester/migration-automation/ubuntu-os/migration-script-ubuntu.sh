@@ -91,15 +91,18 @@ echo "${GREEN}==> Navigated to home folder successfully${RESET}"
 
 # Download needed wso2IS zip
 # Generate access token
-access_token=$(curl --location --request POST 'https://oauth2.googleapis.com/token' \
+response=$(curl --location --request POST 'https://oauth2.googleapis.com/token' \
 --header 'Content-Type: application/x-www-form-urlencoded' \
---data-urlencode 'client_id='$gcpClientId'' \
---data-urlencode 'client_secret='$gcpClientSecret'' \
---data-urlencode 'refresh_token='$gcpRefreshToken'' \
---data-urlencode 'grant_type=refresh_token' | jq -r '.access_token')
+--data-urlencode "client_id=$gcpClientId" \
+--data-urlencode "client_secret=$gcpClientSecret" \
+--data-urlencode "refresh_token=$gcpRefreshToken" \
+--data-urlencode 'grant_type=refresh_token')
+
+# Extract the access token from the response using jq
+access_token=$(echo "$response" | jq -r '.access_token')
 
 # Download the file using the access token from the "access_token" file
-response=$(curl "https://www.googleapis.com/drive/v3/files/1WSQwh2aizd-nhrQQEc_PqnTJJxiRufUv?alt=media" \
+response=$(curl "https://www.googleapis.com/drive/v3/files/1pePZJM0gIFlPft8qSsu4613kiVzuLQHs?alt=media" \
   --header "Authorization: Bearer $access_token" \
   --header "Accept: application/json" \
   --compressed -O wso2is.zip)
