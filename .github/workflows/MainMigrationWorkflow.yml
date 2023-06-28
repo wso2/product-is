@@ -142,7 +142,7 @@ jobs:
       - name: Execute Migration Automation Script Ubuntu
         run: |
             chmod +x ${{ github.workspace }}/.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh 
-            sh ${{ github.workspace }}/.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" "${{ secrets.GCP_CLIENT_ID }}" "${{ secrets.GCP_CLIENT_SECRET }}" "${{ secrets.GCP_REFRESH_TOKEN }}" "${{ secrets.GCP_CLIENT_DUMMY }}" | tee "${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt"
+            sh ${{ github.workspace }}/.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" "${{ secrets.GCP_CLIENT_ID }}" "${{ secrets.GCP_CLIENT_SECRET }}" "${{ secrets.GCP_REFRESH_TOKEN }}" | tee "${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt"
         continue-on-error: true
         
       - name: Persist Logs
