@@ -133,11 +133,11 @@ unzip -qq wso2is.zip -d wso2is_tmp
 wait $!
 
 # Get the current version of the extracted folder
-current_version=$(find wso2is_tmp -maxdepth 1 -type d -name "wso2is-*" -exec basename {} \;)
+current_version=$(find wso2is_tmp -maxdepth 1 -type d -name "wso2is-*" -exec basename {} \; | cut -d'-' -f3-)
 
 # Rename the extracted folder
 if [ -n "$current_version" ]; then
-  mv "wso2is_tmp/$current_version" "wso2is-$current_version"
+  mv "wso2is_tmp/wso2is-$current_version" "wso2is-$current_version"
   echo "Renamed the extracted folder to wso2is-$current_version"
 else
   echo "Error: Failed to find the extracted folder with the version."
