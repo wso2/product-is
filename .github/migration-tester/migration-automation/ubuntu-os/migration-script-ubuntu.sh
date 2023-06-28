@@ -155,7 +155,8 @@ echo "${GREEN}==> Unzipped "$currentVersion" zip${RESET}"
 
 ls -a
 
-cd "$AUTOMATION_HOME"
+#cd "$AUTOMATION_HOME"
+cd "$UBUNTU_HOME"
 
 # Update IS packs
 chmod +x update-pack.sh 
