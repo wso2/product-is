@@ -96,7 +96,7 @@ access_token=$(curl --location --request POST 'https://oauth2.googleapis.com/tok
 --data-urlencode 'client_secret=$gcpClientSecret' \
 --data-urlencode 'refresh_token=$gcpRefreshToken' \
 --data-urlencode 'grant_type=refresh_token' | jq -r '.access_token')
-echo "$access_token"
+
 # Check if the response contains any error message
 if echo "$access_token" | grep -q '"error":'; then
   # If there is an error, print the failure message with the error description
