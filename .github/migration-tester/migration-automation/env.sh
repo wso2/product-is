@@ -535,6 +535,13 @@ export FILE_ID_5_11=1tn6GYCzJtMBdwleQ2fVy1icUlItdm4w5
 export FILE_ID_6_0=1eAcSLBD-UoYI84SefGQKokOhpmU9bO_a
 export FILE_ID_6_1=1WQkO5xvN8RGNNSgF2Q-x9_dAnKs2MGN6
 
+# Urls for GA packs stored inside google drive
+# https://drive.google.com/file/d/1pePZJM0gIFlPft8qSsu4613kiVzuLQHs/view?usp=sharing  - is 5.9.0
+# https://drive.google.com/file/d/1WSQwh2aizd-nhrQQEc_PqnTJJxiRufUv/view?usp=sharing  - is 5.10.0
+# https://drive.google.com/file/d/1tn6GYCzJtMBdwleQ2fVy1icUlItdm4w5/view?usp=sharing  - is 5.11.0
+# https://drive.google.com/file/d/1eAcSLBD-UoYI84SefGQKokOhpmU9bO_a/view?usp=sharing  - is 6.0.0
+# https://drive.google.com/file/d/1WQkO5xvN8RGNNSgF2Q-x9_dAnKs2MGN6/view?usp=sharing  - is 6.1.0
+
 ###############################################################################################################################
 #                             ENV CONFIGS RELATED TO DATABASE BACKUP - COMMON TO LINUX & MACOS                                #
 ###############################################################################################################################
