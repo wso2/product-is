@@ -528,6 +528,13 @@ export APP_NAME=Demoapp4
 # Oauth 2.0 redirect_uri used in authorization code and implicit grant types.
 export REDIRECTURI=https://localhost:8080/callback
 
+# File IDs in IAM Updates User google Drive (Where GA Packs are hosted)
+export FILE_ID_5_9=1pePZJM0gIFlPft8qSsu4613kiVzuLQHs
+export FILE_ID_5_10=1WSQwh2aizd-nhrQQEc_PqnTJJxiRufUv
+export FILE_ID_5_11=1tn6GYCzJtMBdwleQ2fVy1icUlItdm4w5
+export FILE_ID_6_0=1eAcSLBD-UoYI84SefGQKokOhpmU9bO_a
+export FILE_ID_6_1=1WQkO5xvN8RGNNSgF2Q-x9_dAnKs2MGN6
+
 ###############################################################################################################################
 #                             ENV CONFIGS RELATED TO DATABASE BACKUP - COMMON TO LINUX & MACOS                                #
 ###############################################################################################################################
@@ -548,31 +555,3 @@ export DATABASE_NAME=testdb
 ###############################################################################################################################
 #                             END OF ENV CONFIGS RELATED TO POC - LINUX & MACOS                                               #
 ###############################################################################################################################
-
-###############################################################################################################################
-#                                                    ENV CONFIGS RELATED TO WINDOWS                                           #
-###############################################################################################################################
-
-# Absolute path to the mysql deployment files in migration-tester/migration-automation folder
-export DEPLOYMENT_AUTOMATION_MYSQL_WINDOWS_IS_5_9="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.9/deployment-mysql.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_WINDOWS_IS_5_10="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.10/deployment-mysql.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_WINDOWS_IS_5_11="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.11/deployment-mysql.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_WINDOWS_IS_6_0="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.0/deployment-mysql.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_WINDOWS_IS_6_1="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.1/deployment-mysql.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_WINDOWS_IS_6_2="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.2/deployment-mysql.toml"
-
-# Absolute path to the postgre deployment files in migration-tester/migration-automation folder
-export DEPLOYMENT_AUTOMATION_POSTGRE_WINDOWS_IS_5_9="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.9/deployment-postgre.toml"
-export DEPLOYMENT_AUTOMATION_POSTGRE_WINDOWS_IS_5_10="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.10/deployment-postgre.toml"
-export DEPLOYMENT_AUTOMATION_POSTGRE_WINDOWS_IS_5_11="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.11/deployment-postgre.toml"
-export DEPLOYMENT_AUTOMATION_POSTGRE_WINDOWS_IS_6_0="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.0/deployment-postgre.toml"
-export DEPLOYMENT_AUTOMATION_POSTGRE_WINDOWS_IS_6_1="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.1/deployment-postgre.toml"
-export DEPLOYMENT_AUTOMATION_POSTGRE_WINDOWS_IS_6_2="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.2/deployment-postgre.toml"
-
-# Absolute path to the mssql deployment files in migration-tester/migration-automation folder
-export DEPLOYMENT_AUTOMATION_MYSQL_WINDOWS_IS_5_9="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.9/deployment-mssql.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_WINDOWS_IS_5_10="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.10/deployment-mssql.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_WINDOWS_IS_5_11="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-5.11/deployment-mssql.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_WINDOWS_IS_6_0="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.0/deployment-mssql.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_WINDOWS_IS_6_1="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.1/deployment-mssql.toml"
-export DEPLOYMENT_AUTOMATION_MYSQL_WINDOWS_IS_6_2="/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/deployment-tomls/IS-6.2/deployment-mssql.toml"
