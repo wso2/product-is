@@ -103,13 +103,16 @@ access_token=$(echo "$response" | jq -r '.access_token')
 # Specify the Google Drive file URL
 file_url="$urlOld"
 
-# Extract the file ID from the URL using grep
-file_id=$(echo "$file_url" | grep -o -E '[^/]+$' | grep -o -E '[^?=]+$')
+# Extract the file ID from the URL using awk
+file_id=$(echo "$file_url" | awk -F'/' '{print $NF}')
+
+# Remove any additional query parameters or fragments from the file ID
+file_id=$(echo "$file_id" | awk -F'=' '{print $NF}')
 
 echo "File ID: $file_id"
 
 # Specify the Google Drive file URL
-file_url="https://www.googleapis.com/drive/v3/files/$file_id?alt=media"
+file_url="https://www.googleapis.com/drive/v3/files/"$file_id"?alt=media"
 # https://drive.google.com/file/d/1WSQwh2aizd-nhrQQEc_PqnTJJxiRufUv/view?usp=sharing  - is 5.10.0
 # https://drive.google.com/file/d/1tn6GYCzJtMBdwleQ2fVy1icUlItdm4w5/view?usp=sharing   - is 5.11.0
 # https://drive.google.com/file/d/1eAcSLBD-UoYI84SefGQKokOhpmU9bO_a/view?usp=sharing -is 6.0
