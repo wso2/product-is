@@ -94,8 +94,7 @@ response=$(curl --location --request POST 'https://oauth2.googleapis.com/token' 
 --header 'Content-Type: application/x-www-form-urlencoded' \
 --data-urlencode "client_id=$gcpClientId" \
 --data-urlencode "client_secret=$gcpClientSecret" \
---data-urlencode "refresh_token=$gcpRefreshToken" \
---data-urlencode 'grant_type=refresh_token')
+--data-urlencode 'grant_type=client_credentials')
 
 # Extract the access token from the response using jq
 access_token=$(echo "$response" | jq -r '.access_token')
