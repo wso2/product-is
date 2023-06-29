@@ -1,20 +1,42 @@
 #!/bin/bash
 
+# Define colours
+RED='\033[0;31m'
+GREEN='\033[0;32m\033[1m'
+PURPLE='\033[1;35m'
+BOLD='\033[1m'
+NC='\033[0m' # No Color
+
 email=$1
 password=$2
+startServer=$3
+
+
+# Source env file
+. "/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/env.sh"
+echo -e "${GREEN}==> Env file for Ubuntu sourced successfully${NC}"
 
 # Copy update tool from utils to bin folder
 cd "/home/runner/work/product-is/product-is/.github/migration-tester/utils/update-tools"
 
-cp -r $UPDATE_TOOL_UBUNTU $BIN_ISOLD
+
+if [ "$startServer" = "$currentVersion" ]; then
+  cp -r $UPDATE_TOOL_UBUNTU $BIN_ISOLD
+elif [ "$startServer" = "$migratingVersion" ]; then
+  cp -r $UPDATE_TOOL_UBUNTU $BIN_ISNEW
+fi
 copy_exit_code=$?
 if [ $copy_exit_code -eq 0 ]; then
-    echo "${GREEN}==> Update tool successfully copied to $currentVersion${RESET}"
+    echo "${GREEN}==> Update tool successfully copied to "$startServer"${RESET}"
 else
     echo "${RED}==> Failed to copy the update tool.${RESET}"
 fi
 
-cd "$BIN_ISOLD"
+if [ "$startServer" = "$currentVersion" ]; then
+  cd "$BIN_ISOLD"
+elif [ "$startServer" = "$migratingVersion" ]; then
+  cd "$BIN_ISNEW"
+fi
 
 sudo apt-get install expect -y
 
