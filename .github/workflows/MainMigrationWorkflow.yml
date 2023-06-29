@@ -13,7 +13,6 @@ on:
           - "5.11.0"
           - "6.0.0"
           - "6.1.0"
-          - "6.2.0"
       migratingVersion:
         description: "Specify the version of WSO2 IS that you want to migrate."
         default: "6.0.0"
@@ -23,7 +22,6 @@ on:
           - "5.11.0"
           - "6.0.0"
           - "6.1.0"
-          - "6.2.0"
       database:
         description: "Select the database."
         default: "mysql"
@@ -39,7 +37,6 @@ on:
         options:
           - "ubuntu-latest"
           - "macos-latest"
-          - "windows-latest"
       urlOld:
         description: "Provide the URL to download the old version of WSO2 IS."
         default: https://github.com/wso2/product-is/releases/download/v5.11.0/wso2is-5.11.0.zip
