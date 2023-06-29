@@ -20,9 +20,9 @@ echo -e "${GREEN}==> Env file for Ubuntu sourced successfully${NC}"
 cd "/home/runner/work/product-is/product-is/.github/migration-tester/utils/update-tools"
 
 
-if [ "$startServer" = "$currentVersion" ]; then
+if [ "$startServer" = "current" ]; then
   cp -r $UPDATE_TOOL_UBUNTU $BIN_ISOLD
-elif [ "$startServer" = "$migratingVersion" ]; then
+elif [ "$startServer" = "migrating" ]; then
   cp -r $UPDATE_TOOL_UBUNTU $BIN_ISNEW
 fi
 copy_exit_code=$?
@@ -32,9 +32,9 @@ else
     echo "${RED}==> Failed to copy the update tool.${RESET}"
 fi
 
-if [ "$startServer" = "$currentVersion" ]; then
+if [ "$startServer" = "current" ]; then
   cd "$BIN_ISOLD"
-elif [ "$startServer" = "$migratingVersion" ]; then
+elif [ "$startServer" = "migrating" ]; then
   cd "$BIN_ISNEW"
 fi
 
