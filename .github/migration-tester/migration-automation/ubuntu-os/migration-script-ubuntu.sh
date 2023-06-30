@@ -128,7 +128,7 @@ esac
 echo "file_id: $file_id"
 
 # Specify the Google Drive file URL
-file_url="https://www.googleapis.com/drive/v3/files/"$file_id"?alt=media"
+file_url="https://www.googleapis.com/drive/v3/files/$file_id?alt=media"
 
 # Download the file using the access token
 response=$(curl "$file_url" \
