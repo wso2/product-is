@@ -94,11 +94,12 @@ response=$(curl --location --request POST 'https://oauth2.googleapis.com/token' 
 --header 'Content-Type: application/x-www-form-urlencoded' \
 --data-urlencode "client_id=$gcpClientId" \
 --data-urlencode "client_secret=$gcpClientSecret" \
---data-urlencode 'grant_type=client_credentials')
+--data-urlencode "refresh_token=$gcpRefreshToken" \
+--data-urlencode 'grant_type=refresh_token')
 
 # Extract the access token from the response using jq
 access_token=$(echo "$response" | jq -r '.access_token')
-#https://drive.google.com/file/d/1tn6GYCzJtMBdwleQ2fVy1icUlItdm4w5/view?usp=sharing
+
 # Initialize file_id variable
 file_id=""
 
@@ -154,7 +155,8 @@ echo "${GREEN}==> Unzipped "$currentVersion" zip${RESET}"
 
 ls -a
 
-cd "$AUTOMATION_HOME"
+#cd "$AUTOMATION_HOME"
+cd "$UBUNTU_HOME"
 
 # Update IS packs
 chmod +x update-pack.sh 
