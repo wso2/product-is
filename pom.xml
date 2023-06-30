@@ -2244,12 +2244,12 @@
         <identity.carbon.auth.saml2.version>5.8.4</identity.carbon.auth.saml2.version>
         <identity.carbon.auth.mutual.ssl.version>5.5.0</identity.carbon.auth.mutual.ssl.version>
         <identity.carbon.auth.iwa.version>5.5.0</identity.carbon.auth.iwa.version>
-        <identity.carbon.auth.rest.version>1.8.19</identity.carbon.auth.rest.version>
+        <identity.carbon.auth.rest.version>1.8.20</identity.carbon.auth.rest.version>
 
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.11.15</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.11.82</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.11.85</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.9.1</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.10.11</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.3</identity.inbound.provisioning.scim.version>
@@ -2262,7 +2262,7 @@
 
 
         <!-- Identity User Versions -->
-        <identity.user.account.association.version>5.5.3</identity.user.account.association.version>
+        <identity.user.account.association.version>5.5.4</identity.user.account.association.version>
         <identity.user.ws.version>5.7.3</identity.user.ws.version>
 
         <!-- Identity Userstore Versions -->
@@ -2353,7 +2353,7 @@
         <conditional.authentication.functions.version>1.2.26</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.6.354</identity.apps.version>
+        <identity.apps.version>1.6.355</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
