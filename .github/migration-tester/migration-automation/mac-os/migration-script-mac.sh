@@ -133,8 +133,7 @@ esac
 echo "file_id: $file_id"
 
 # Specify the Google Drive file URL
-#file_url="https://www.googleapis.com/drive/v3/files/"$file_id"?alt=media"
-file_url="https://www.googleapis.com/drive/v3/files/1tn6GYCzJtMBdwleQ2fVy1icUlItdm4w5?alt=media"
+file_url="https://www.googleapis.com/drive/v3/files/"$file_id"?alt=media"
 
 # Download the file using the access token
 response=$(curl "$file_url" \
@@ -295,18 +294,71 @@ echo "${GREEN}==> Created a directory for placing latest wso2IS${RESET}"
 # Navigate to folder
 cd "$IS_HOME_NEW_MAC"
 
-# Download needed (latest) wso2IS zip
-wget -qq --waitretry=5 --retry-connrefused "$urlNew" &
+# Download needed wso2IS zip
+# Generate access token
+response=$(curl --location --request POST 'https://oauth2.googleapis.com/token' \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--data-urlencode "client_id=$gcpClientId" \
+--data-urlencode "client_secret=$gcpClientSecret" \
+--data-urlencode "refresh_token=$gcpRefreshToken" \
+--data-urlencode 'grant_type=refresh_token')
+
+# Extract the access token from the response using jq
+access_token=$(echo "$response" | jq -r '.access_token')
+
+# Initialize file_id variable
+file_id=""
+
+# Check the value of currentVersion and assign the corresponding environment variable to file_id
+case $currentVersion in
+  5.9.0)
+    file_id="$FILE_ID_5_9"
+    ;;
+  5.10.0)
+    file_id="$FILE_ID_5_10"
+    ;;
+  5.11.0)
+    file_id="$FILE_ID_5_11"
+    ;;
+  6.0.0)
+    file_id="$FILE_ID_6_0"
+    ;;
+  6.1.0)
+    file_id="$FILE_ID_6_1"
+    ;;
+  *)
+    echo "No action taken.Please assign a value in env.sh if you haven't assigned a value for file ID."
+    ;;
+esac
+
+# Use the file_id variable in downloading the IS zip
+echo "file_id: $file_id"
+
+# Specify the Google Drive file URL
+file_url="https://www.googleapis.com/drive/v3/files/"$file_id"?alt=media"
+
+# Download the file using the access token
+response=$(curl "$file_url" \
+  --header "Authorization: Bearer $access_token" \
+  --header "Accept: application/json" \
+  --compressed -o wso2is.zip)
 wait $!
-ls -a
-echo "${GREEN}==> Downloaded "$migratingVersion" zip${RESET}"
+
+# Check if the response contains any error message
+if echo "$response" | grep -q '"error":'; then
+  # If there is an error, print the failure message with the error description
+  error_description=$(echo "$response" | jq -r '.error_description')
+  echo -e "${RED}${BOLD}Failure in downloading Identity Server $error_description${NC}"
+else
+  # If there is no error, print the success message
+  echo -e "${PURPLE}${BOLD}Success: IS Pack downloaded successfully.${NC}"
+fi
 
 # Unzip IS archive
 unzip -qq *.zip &
 wait $!
 ls -a
 echo "${GREEN}==> Unzipped "$migratingVersion" zip${RESET}"
-
 
 # Copy update tool from utils to bin folder
 cd "/Users/runner/work/product-is/product-is/.github/migration-tester/utils/update-tools"
