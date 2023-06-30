@@ -134,7 +134,7 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
         Secret clientSecret = new Secret(consumerSecret);
         ClientAuthentication clientAuth = new ClientSecretBasic(clientID, clientSecret);
 
-        //Add email, profile scopes to the request.
+        // Add email, profile scopes to the request.
         Scope scope = new Scope(OAuth2Constant.OAUTH2_SCOPE_OPENID, OAuth2Constant.OAUTH2_SCOPE_EMAIL,
                 OAuth2Constant.OAUTH2_SCOPE_PROFILE, "xyz");
 
