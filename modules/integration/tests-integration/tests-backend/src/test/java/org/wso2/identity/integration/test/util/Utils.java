@@ -485,6 +485,36 @@ public class Utils {
         return value;
     }
 
+    /**
+     * Extract data from response for management console requests.
+     *
+     * @param response HttpResponse
+     * @param key      key to determine the line to extract
+     * @param token    index of the value after splitting the line
+     * @return value extracted
+     * @throws IOException IOException
+     */
+    public static String extractDataFromResponseForManagementConsoleRequests(HttpResponse response, String key,
+                                                                             int token)
+            throws IOException {
+
+        BufferedReader rd = new BufferedReader(
+                new InputStreamReader(response.getEntity().getContent()));
+        String line;
+        String value = StringUtils.EMPTY;
+
+        while ((line = rd.readLine()) != null) {
+            if (line.contains(key)) {
+                String[] tokens = line.split("\"");
+                value = tokens[token];
+                value = value.trim();
+                break;
+            }
+        }
+        rd.close();
+        return value;
+    }
+
     public static List<NameValuePair> getConsentRequiredClaimsFromResponse(HttpResponse response)
             throws Exception {
 
