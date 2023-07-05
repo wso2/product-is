@@ -83,12 +83,12 @@ public class SAMLSSOForAdminLoginTestCase extends AbstractSAMLSSOTestCase {
     public void testSSOForAdminLogin() {
 
         try {
-            // Get to management console login page
+            // Get the management console login page.
             HttpResponse response = Utils.sendGetRequest(MANAGEMENT_CONSOLE_LOGIN_URL, USER_AGENT, httpClient);
             Assert.assertEquals(response.getStatusLine().getStatusCode(), 200,
                     "User may have already logged in");
 
-            // Extract saml request from the response and send the post request to samlsso endpoint
+            // Extract saml request from the response and send the post request to samlsso endpoint.
             String samlRequest = Utils.extractDataFromResponseForManagementConsoleRequests(response, "value", 1);
             response = sendSAMLMessage(SAML_SSO_URL, CommonConstants.SAML_REQUEST_PARAM, samlRequest, config);
             EntityUtils.consume(response.getEntity());
@@ -96,7 +96,7 @@ public class SAMLSSOForAdminLoginTestCase extends AbstractSAMLSSOTestCase {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), 200,
                     "SAML SSO Login failed for " + config);
 
-            // check whether the user is logged in
+            // Check whether the user is successfully logged in.
             response = Utils.sendGetRequest(MANAGEMENT_CONSOLE_HOME_URL, USER_AGENT, httpClient);
             Assert.assertEquals(response.getStatusLine().getStatusCode(), 200,
                     "SAML SSO Login failed for " + config);
@@ -128,7 +128,7 @@ public class SAMLSSOForAdminLoginTestCase extends AbstractSAMLSSOTestCase {
                 + File.separator + "saml-sso-for-admin-console.toml");
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredIdentityXML, defaultConfigFile, true);
 
-        // creating a new sp from file based configs
+        // Create a new service provider from file based configs.
         File SAMLSSOSpXml = new File(FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator + "IS"
                 + File.separator + "saml" + File.separator + "filebasedspidpconfigs" + File.separator +
                 "management-console-sso-carbonServer.xml");
@@ -140,7 +140,7 @@ public class SAMLSSOForAdminLoginTestCase extends AbstractSAMLSSOTestCase {
         FileManager.copyResourceToFileSystem(SAMLSSOSpXml.getAbsolutePath(), identityConfigPath,
                 SAMLSSOSpXml.getName());
 
-        // update sso idp configs to enable saml sso
+        // Update sso idp configs to enable saml sso.
         File ssoIdPConfigXml = new File(Utils.getResidentCarbonHome() + File.separator + "repository" + File
                 .separator + "conf" + File.separator + "identity" + File.separator + "sso-idp-config.xml");
         File ssoIdPConfigXmlToCopy = new File(FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File
@@ -148,7 +148,7 @@ public class SAMLSSOForAdminLoginTestCase extends AbstractSAMLSSOTestCase {
                 .separator + "management-console-sso-idp-config.xml");
         serverConfigurationManager.applyConfigurationWithoutRestart(ssoIdPConfigXmlToCopy, ssoIdPConfigXml, true);
 
-        // restart server to apply configs
+        // Restart server to apply configs.
         serverConfigurationManager.restartGracefully();
     }
 
@@ -157,7 +157,7 @@ public class SAMLSSOForAdminLoginTestCase extends AbstractSAMLSSOTestCase {
      */
     private void resetISConfiguration() throws IOException, AutomationUtilException {
 
-        // delete the sp created file.
+        // Delete the config file used to create the service provider.
         String identityConfigPath = Utils.getResidentCarbonHome() + File.separator + "repository" + File.separator +
                 "conf" + File.separator + "identity";
         if (StringUtils.isNotBlank("service-providers")) {
@@ -168,7 +168,7 @@ public class SAMLSSOForAdminLoginTestCase extends AbstractSAMLSSOTestCase {
             FileManager.deleteFile(file.getAbsolutePath());
         }
 
-        // restore sso idp configs to original.
+        // Restore sso idp configs to original.
         File ssoIdPConfigXml = new File(Utils.getResidentCarbonHome() + File.separator + "repository" + File
                 .separator + "conf" + File.separator + "identity" + File.separator + "sso-idp-config.xml");
         File ssoIdPConfigXmlToCopy = new File(FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File
