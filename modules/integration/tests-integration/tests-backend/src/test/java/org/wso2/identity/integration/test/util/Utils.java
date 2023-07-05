@@ -498,12 +498,11 @@ public class Utils {
                                                                              int token)
             throws IOException {
 
-        BufferedReader rd = new BufferedReader(
-                new InputStreamReader(response.getEntity().getContent()));
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         String line;
         String value = StringUtils.EMPTY;
 
-        while ((line = rd.readLine()) != null) {
+        while ((line = bufferedReader.readLine()) != null) {
             if (line.contains(key)) {
                 String[] tokens = line.split("\"");
                 value = tokens[token];
@@ -511,7 +510,7 @@ public class Utils {
                 break;
             }
         }
-        rd.close();
+        bufferedReader.close();
         return value;
     }
 
