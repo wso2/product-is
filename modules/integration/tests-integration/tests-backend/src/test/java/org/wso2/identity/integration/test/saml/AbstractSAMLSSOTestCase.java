@@ -112,8 +112,7 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
         SUPER_TENANT_USER_WITHOUT_MANDATORY_CLAIMS("samluser3", "samluser3", "carbon.super", "samluser3",
                 "providedClaimValue", "providedClaimValue", false),
         TENANT_USER_WITHOUT_MANDATORY_CLAIMS("samluser4@wso2.com", "samluser4", "wso2.com", "samluser4",
-                "providedClaimValue", "providedClaimValue", false),
-        SUPER_TENANT_ADMIN("admin", "admin", "carbon.super", "admin", "", "", true);
+                "providedClaimValue", "providedClaimValue", false);
 
         private String username;
         private String password;
@@ -177,8 +176,7 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
         TENANT_APP_WITHOUT_SIGNING("travelocity.com-saml-tenantwithoutsigning", false),
         SUPER_TENANT_APP_WITH_SAMLARTIFACT_CONFIG("travelocity.com-saml-artifactresolving", false),
         TENANT_APP_WITH_SAMLARTIFACT_CONFIG("travelocity.com-saml-tenant-artifactresolving", false),
-        ECP_APP("https://localhost/ecp-sp", false),
-        MANAGEMENT_CONSOLE_SSO_APP_WITH_SIGNING("carbonServer", true);
+        ECP_APP("https://localhost/ecp-sp", false);
 
         private String artifact;
         private boolean signingEnabled;

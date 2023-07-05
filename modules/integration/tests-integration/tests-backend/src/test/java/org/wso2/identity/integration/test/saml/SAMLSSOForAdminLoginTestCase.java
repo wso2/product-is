@@ -19,13 +19,12 @@ package org.wso2.identity.integration.test.saml;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
@@ -34,6 +33,7 @@ import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilExcepti
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
+import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.File;
 import java.io.IOException;
@@ -70,21 +70,17 @@ public class SAMLSSOForAdminLoginTestCase extends AbstractSAMLSSOTestCase {
     String ssoIdPConfigXmlOriginalConfigPath = buildPath(FrameworkPathUtil.getSystemResourceLocation(),
             "artifacts", "IS", "saml", "filebasedspidpconfigs", "original-sso-idp-config.xml");
 
-    private SAMLConfig config;
-
-    @Factory(dataProvider = "samlConfigProvider")
-    public SAMLSSOForAdminLoginTestCase(SAMLConfig config) {
+    public SAMLSSOForAdminLoginTestCase() {
 
         if (log.isDebugEnabled()) {
             log.info(String.format("SAML SSO for Admin Console Test initialized for %s", SAML_SSO_URL));
         }
-        this.config = config;
     }
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
-        super.init(config.getUserMode());
+        super.init(TestUserMode.SUPER_TENANT_ADMIN);
         super.testInit();
         changeISConfiguration();
     }
@@ -100,31 +96,54 @@ public class SAMLSSOForAdminLoginTestCase extends AbstractSAMLSSOTestCase {
     public void testSSOForAdminLogin() {
 
         try {
+            SAMLConfig samlConfig = new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, null, null,
+                    null, null);
+
             // Get the management console login page.
             HttpResponse response = Utils.sendGetRequest(MANAGEMENT_CONSOLE_LOGIN_URL, USER_AGENT, httpClient);
-            Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "User may have already logged in");
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), 200,
+                    "User may have already logged in");
 
             // Extract saml request from the response and send the post request to samlsso endpoint.
-            String samlRequest = Utils.extractDataFromResponseForManagementConsoleRequests(response, "value", 1);
-            response = sendSAMLMessage(SAML_SSO_URL, CommonConstants.SAML_REQUEST_PARAM, samlRequest, config);
+            String samlRequest = Utils.extractDataFromResponseForManagementConsoleRequests(
+                    response, "value", 1);
             EntityUtils.consume(response.getEntity());
-            response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, SAML_SSO_URL, httpClient);
-            Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "SAML SSO Login failed for " + config);
 
-            // Check whether the user is successfully logged in.
-            response = Utils.sendGetRequest(MANAGEMENT_CONSOLE_HOME_URL, USER_AGENT, httpClient);
-            Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "SAML SSO Login failed for " + config);
+            response = sendSAMLMessage(SAML_SSO_URL, CommonConstants.SAML_REQUEST_PARAM, samlRequest, samlConfig);
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), 302,
+                    "Invalid response received for SAML SSO request.");
+            Header location = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+            EntityUtils.consume(response.getEntity());
+
+            // Get SAML SSO Login page. (authentication portal login page)
+            response = Utils.sendRedirectRequest(response, USER_AGENT, MANAGEMENT_CONSOLE_LOGIN_URL, "",
+                    httpClient);
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), 200,
+                    "Error while retrieving SAML SSO login page.");
+
+            // Send the login request to the SAML SSO endpoint.
+            String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
+            EntityUtils.consume(response.getEntity());
+
+            response = Utils.sendPOSTMessage(sessionKey, SAML_SSO_URL, USER_AGENT, location.getValue(),
+                    "", "admin", "admin", httpClient);
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), 200,
+                    "SAML SSO Login failed for admin user.");
+
+            // Extract saml response from the login request.
+            String samlResponse = Utils.extractDataFromResponse(response, CommonConstants.SAML_RESPONSE_PARAM, 5);
+            EntityUtils.consume(response.getEntity());
+            response = super.sendSAMLMessage("https://localhost:9853/acs", CommonConstants.SAML_RESPONSE_PARAM,
+                    samlResponse, samlConfig);
+            location = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+            EntityUtils.consume(response.getEntity());
+
+            Assert.assertTrue(location.getValue().contains(MANAGEMENT_CONSOLE_HOME_URL),
+                    "SAML SSO Login failed for admin user.");
+
         } catch (Exception e) {
-            Assert.fail("SAML SSO Login test failed for " + config, e);
+            Assert.fail("SAML SSO Login test failed for admin user." , e);
         }
-    }
-
-    @DataProvider(name = "samlConfigProvider")
-    public static SAMLConfig[][] samlConfigProvider() {
-
-        return new SAMLConfig[][]{
-                {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_ADMIN, HttpBinding.HTTP_REDIRECT,
-                        ClaimType.LOCAL, App.MANAGEMENT_CONSOLE_SSO_APP_WITH_SIGNING)}};
     }
 
     /**
