@@ -56,7 +56,8 @@ public class SAMLSSOForAdminLoginTestCase extends AbstractSAMLSSOTestCase {
     private static final String MANAGEMENT_CONSOLE_LOGIN_URL = "https://localhost:9853/carbon/admin/login.jsp";
     private static final String MANAGEMENT_CONSOLE_LOGOUT_URL = "https://localhost:9853/carbon/admin/logout_action.jsp";
     private static final String MANAGEMENT_CONSOLE_HOME_URL = "https://localhost:9853/carbon/admin/index.jsp";
-    private static final String AUTHENTICATION_PORTAL_LOGIN_URL = "https://localhost:9853/authenticationendpoint/login.do";
+    private static final String AUTHENTICATION_PORTAL_LOGIN_URL =
+            "https://localhost:9853/authenticationendpoint/login.do";
     private static final String USERNAME = "admin";
     private static final String PASSWORD = "admin";
 
@@ -140,13 +141,14 @@ public class SAMLSSOForAdminLoginTestCase extends AbstractSAMLSSOTestCase {
                     "SAML SSO Login failed for admin user.");
 
         } catch (Exception e) {
-            Assert.fail("SAML SSO Login test failed for admin user." , e);
+            Assert.fail("SAML SSO Login test failed for admin user.", e);
         }
     }
 
     @Test(alwaysRun = true, description = "Testing SSO for admin logout", groups = "wso2.is", dependsOnMethods =
-            { "testSSOForAdminLogin" })
+            {"testSSOForAdminLogin"})
     public void testSAMLSSOLogout() {
+
         try {
             // Get logout page and extract the saml request.
             HttpResponse response = Utils.sendGetRequest(MANAGEMENT_CONSOLE_LOGOUT_URL, USER_AGENT, httpClient);
@@ -227,8 +229,8 @@ public class SAMLSSOForAdminLoginTestCase extends AbstractSAMLSSOTestCase {
         File ssoIdPConfigXml = new File(ssoIdPConfigXmlPath);
         File ssoIdPConfigXmlOriginal = new File(ssoIdPConfigXmlOriginalConfigPath);
 
-        // Not restarting since the next test will restart the server.
+        // Restarting to apply the old configs back.
         serverConfigurationManager.applyConfiguration(ssoIdPConfigXmlOriginal, ssoIdPConfigXml, false, false);
-        serverConfigurationManager.restoreToLastConfiguration(false);
+        serverConfigurationManager.restoreToLastConfiguration();
     }
 }
