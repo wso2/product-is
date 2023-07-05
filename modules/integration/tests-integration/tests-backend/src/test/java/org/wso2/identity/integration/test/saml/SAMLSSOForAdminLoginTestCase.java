@@ -47,27 +47,34 @@ public class SAMLSSOForAdminLoginTestCase extends AbstractSAMLSSOTestCase {
 
     private static final Log log = LogFactory.getLog(SAMLSSOForAdminLoginTestCase.class);
     private ServerConfigurationManager serverConfigurationManager;
+    private final SAMLConfig samlConfig = new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, null, null,
+            null, null);
 
     // Constants.
-    protected static final String SAML_SSO_URL = "https://localhost:9853/samlsso";
-    protected static final String MANAGEMENT_CONSOLE_LOGIN_URL = "https://localhost:9853/carbon/admin/login.jsp";
-    protected static final String MANAGEMENT_CONSOLE_HOME_URL = "https://localhost:9853/carbon/admin/index.jsp";
+    private static final String SAML_ACS_URL = "https://localhost:9853/acs";
+    private static final String SAML_SSO_URL = "https://localhost:9853/samlsso";
+    private static final String MANAGEMENT_CONSOLE_LOGIN_URL = "https://localhost:9853/carbon/admin/login.jsp";
+    private static final String MANAGEMENT_CONSOLE_LOGOUT_URL = "https://localhost:9853/carbon/admin/logout_action.jsp";
+    private static final String MANAGEMENT_CONSOLE_HOME_URL = "https://localhost:9853/carbon/admin/index.jsp";
+    private static final String AUTHENTICATION_PORTAL_LOGIN_URL = "https://localhost:9853/authenticationendpoint/login.do";
+    private static final String USERNAME = "admin";
+    private static final String PASSWORD = "admin";
 
     // File paths.
     private final String carbonHome = Utils.getResidentCarbonHome();
-    private final String configuredIdentityXMLPath = buildPath(getISResourceLocation(), "saml",
+    private final String serverConfigFilePath = buildPath(getISResourceLocation(), "saml",
             "saml-sso-for-admin-console.toml");
     private final String SAMLSSOSpXmlPath = buildPath(FrameworkPathUtil.getSystemResourceLocation(), "artifacts",
-            "IS", "saml", "filebasedspidpconfigs", "management-console-sso-carbonServer.xml");
+            "IS", "saml", "filebasedspidpconfigs", "self.xml");
     private final String identityConfigSAMLSSOSpXmlPath = buildPath(carbonHome, "repository", "conf",
-            "identity", "service-providers", "management-console-sso-carbonServer.xml");
+            "identity", "service-providers", "self.xml");
     private final String identityConfigPath = buildPath(carbonHome, "repository", "conf", "identity",
             "service-providers");
     private final String ssoIdPConfigXmlPath = buildPath(carbonHome, "repository", "conf", "identity",
             "sso-idp-config.xml");
     private final String ssoIdPConfigXmlToCopyPath = buildPath(FrameworkPathUtil.getSystemResourceLocation(),
             "artifacts", "IS", "saml", "filebasedspidpconfigs", "management-console-sso-idp-config.xml");
-    String ssoIdPConfigXmlOriginalConfigPath = buildPath(FrameworkPathUtil.getSystemResourceLocation(),
+    private final String ssoIdPConfigXmlOriginalConfigPath = buildPath(FrameworkPathUtil.getSystemResourceLocation(),
             "artifacts", "IS", "saml", "filebasedspidpconfigs", "original-sso-idp-config.xml");
 
     public SAMLSSOForAdminLoginTestCase() {
@@ -96,9 +103,6 @@ public class SAMLSSOForAdminLoginTestCase extends AbstractSAMLSSOTestCase {
     public void testSSOForAdminLogin() {
 
         try {
-            SAMLConfig samlConfig = new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, null, null,
-                    null, null);
-
             // Get the management console login page.
             HttpResponse response = Utils.sendGetRequest(MANAGEMENT_CONSOLE_LOGIN_URL, USER_AGENT, httpClient);
             Assert.assertEquals(response.getStatusLine().getStatusCode(), 200,
@@ -108,41 +112,62 @@ public class SAMLSSOForAdminLoginTestCase extends AbstractSAMLSSOTestCase {
             String samlRequest = Utils.extractDataFromResponseForManagementConsoleRequests(
                     response, "value", 1);
             EntityUtils.consume(response.getEntity());
-
             response = sendSAMLMessage(SAML_SSO_URL, CommonConstants.SAML_REQUEST_PARAM, samlRequest, samlConfig);
-            Assert.assertEquals(response.getStatusLine().getStatusCode(), 302,
-                    "Invalid response received for SAML SSO request.");
             Header location = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+            Assert.assertTrue(location.getValue().contains(AUTHENTICATION_PORTAL_LOGIN_URL),
+                    "Invalid response received for SAML SSO request.");
             EntityUtils.consume(response.getEntity());
 
-            // Get SAML SSO Login page. (authentication portal login page)
-            response = Utils.sendRedirectRequest(response, USER_AGENT, MANAGEMENT_CONSOLE_LOGIN_URL, "",
-                    httpClient);
-            Assert.assertEquals(response.getStatusLine().getStatusCode(), 200,
-                    "Error while retrieving SAML SSO login page.");
-
-            // Send the login request to the SAML SSO endpoint.
+            // Send the redirection request and get the sessionDataKey.
+            response = Utils.sendRedirectRequest(response, USER_AGENT, SAML_ACS_URL, "", httpClient);
             String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
             EntityUtils.consume(response.getEntity());
 
-            response = Utils.sendPOSTMessage(sessionKey, SAML_SSO_URL, USER_AGENT, location.getValue(),
-                    "", "admin", "admin", httpClient);
+            // Send the login request to the SAML SSO endpoint.
+            response = Utils.sendPOSTMessage(sessionKey, SAML_SSO_URL, USER_AGENT, AUTHENTICATION_PORTAL_LOGIN_URL,
+                    "", USERNAME, PASSWORD, httpClient);
             Assert.assertEquals(response.getStatusLine().getStatusCode(), 200,
                     "SAML SSO Login failed for admin user.");
 
-            // Extract saml response from the login request.
+            // Extract saml response from the login request send the request to ACS to get the home page.
             String samlResponse = Utils.extractDataFromResponse(response, CommonConstants.SAML_RESPONSE_PARAM, 5);
             EntityUtils.consume(response.getEntity());
-            response = super.sendSAMLMessage("https://localhost:9853/acs", CommonConstants.SAML_RESPONSE_PARAM,
-                    samlResponse, samlConfig);
+            response = super.sendSAMLMessage(SAML_ACS_URL, CommonConstants.SAML_RESPONSE_PARAM, samlResponse,
+                    samlConfig);
             location = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
             EntityUtils.consume(response.getEntity());
-
             Assert.assertTrue(location.getValue().contains(MANAGEMENT_CONSOLE_HOME_URL),
                     "SAML SSO Login failed for admin user.");
 
         } catch (Exception e) {
             Assert.fail("SAML SSO Login test failed for admin user." , e);
+        }
+    }
+
+    @Test(alwaysRun = true, description = "Testing SSO for admin logout", groups = "wso2.is", dependsOnMethods =
+            { "testSSOForAdminLogin" })
+    public void testSAMLSSOLogout() {
+        try {
+            // Get logout page and extract the saml request.
+            HttpResponse response = Utils.sendGetRequest(MANAGEMENT_CONSOLE_LOGOUT_URL, USER_AGENT, httpClient);
+            String samlRequest = Utils.extractDataFromResponseForManagementConsoleRequests(
+                    response, "value", 1);
+            EntityUtils.consume(response.getEntity());
+
+            // Send logout request to the SAML SSO endpoint.
+            response = super.sendSAMLMessage(SAML_SSO_URL, CommonConstants.SAML_REQUEST_PARAM, samlRequest, samlConfig);
+            String samlResponse = Utils.extractDataFromResponse(response, CommonConstants.SAML_RESPONSE_PARAM, 5);
+            EntityUtils.consume(response.getEntity());
+
+            // Send the logout response to the ACS endpoint and verify the logout.
+            response = super.sendSAMLMessage(SAML_ACS_URL, CommonConstants.SAML_RESPONSE_PARAM, samlResponse,
+                    samlConfig);
+            Header location = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+            EntityUtils.consume(response.getEntity());
+            Assert.assertTrue(location.getValue().contains(MANAGEMENT_CONSOLE_LOGOUT_URL),
+                    "SAML SSO Logout failed for admin user.");
+        } catch (Exception e) {
+            Assert.fail("SAML SSO Logout test failed for admin user.", e);
         }
     }
 
@@ -155,8 +180,8 @@ public class SAMLSSOForAdminLoginTestCase extends AbstractSAMLSSOTestCase {
 
         // Changing deployment.toml file configs to enable sso for admin login.
         File defaultConfigFile = getDeploymentTomlFile(carbonHome);
-        File configuredIdentityXML = new File(configuredIdentityXMLPath);
-        serverConfigurationManager.applyConfigurationWithoutRestart(configuredIdentityXML, defaultConfigFile, true);
+        File serverConfigFile = new File(serverConfigFilePath);
+        serverConfigurationManager.applyConfigurationWithoutRestart(serverConfigFile, defaultConfigFile, true);
 
         // Create a new service provider from file based configs.
         File SAMLSSOSpXml = new File(SAMLSSOSpXmlPath);
