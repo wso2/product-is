@@ -111,7 +111,6 @@
             <class name="org.wso2.identity.integration.test.saml.SAMLFederationDynamicQueryParametersTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.SAMLInvalidIssuerTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.SAMLSSOTestCase"/>
-            <class name="org.wso2.identity.integration.test.saml.SAMLSSOForAdminLoginTestCase"/>
             <class name="org.wso2.identity.integration.test.sts.TestPassiveSTS"/>
             <class name="org.wso2.identity.integration.test.saml.SAMLIdPInitiatedSLOTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.SAMLIdPInitiatedSSOTestCase"/>
@@ -342,6 +341,7 @@
             <class name="org.wso2.identity.integration.test.EmailOTPTestCase"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.liteUserRegister.LiteUserRegisterTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenScopeValidatorTestCase" />
+            <class name="org.wso2.identity.integration.test.saml.SAMLSSOForAdminLoginTestCase"/>
         </classes>
     </test>
 

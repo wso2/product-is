@@ -104,12 +104,18 @@ public class SAMLSSOForAdminLoginTestCase extends AbstractSAMLSSOTestCase {
     public void testSSOForAdminLogin() {
 
         try {
-            // Get the management console login page.
+            // Verify the server has started properly.
+            while (!isServerAvailable()) {
+                log.info("Waiting for server to start up.");
+                Thread.sleep(5000);
+            }
+
+            log.debug("Sending GET request for management console login page.");
             HttpResponse response = Utils.sendGetRequest(MANAGEMENT_CONSOLE_LOGIN_URL, USER_AGENT, httpClient);
             Assert.assertEquals(response.getStatusLine().getStatusCode(), 200,
                     "User may have already logged in");
 
-            // Extract saml request from the response and send the post request to samlsso endpoint.
+            log.debug("Extracting SAML request from the response and sending the post request to samlsso endpoint.");
             String samlRequest = Utils.extractDataFromResponseForManagementConsoleRequests(
                     response, "value", 1);
             EntityUtils.consume(response.getEntity());
@@ -119,18 +125,19 @@ public class SAMLSSOForAdminLoginTestCase extends AbstractSAMLSSOTestCase {
                     "Invalid response received for SAML SSO request.");
             EntityUtils.consume(response.getEntity());
 
-            // Send the redirection request and get the sessionDataKey.
+            log.debug("Sending redirection request to get the sessionDataKey.");
             response = Utils.sendRedirectRequest(response, USER_AGENT, SAML_ACS_URL, "", httpClient);
             String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
             EntityUtils.consume(response.getEntity());
 
-            // Send the login request to the SAML SSO endpoint.
+            log.debug("Sending login request to SAML SSO endpoint.");
             response = Utils.sendPOSTMessage(sessionKey, SAML_SSO_URL, USER_AGENT, AUTHENTICATION_PORTAL_LOGIN_URL,
                     "", USERNAME, PASSWORD, httpClient);
             Assert.assertEquals(response.getStatusLine().getStatusCode(), 200,
                     "SAML SSO Login failed for admin user.");
 
-            // Extract saml response from the login request send the request to ACS to get the home page.
+            log.debug("Extracting SAML response from the login request and sending the request to ACS to get the " +
+                    "home page.");
             String samlResponse = Utils.extractDataFromResponse(response, CommonConstants.SAML_RESPONSE_PARAM, 5);
             EntityUtils.consume(response.getEntity());
             response = super.sendSAMLMessage(SAML_ACS_URL, CommonConstants.SAML_RESPONSE_PARAM, samlResponse,
@@ -150,18 +157,18 @@ public class SAMLSSOForAdminLoginTestCase extends AbstractSAMLSSOTestCase {
     public void testSAMLSSOLogout() {
 
         try {
-            // Get logout page and extract the saml request.
+            log.debug("Sending GET request for management console logout page.");
             HttpResponse response = Utils.sendGetRequest(MANAGEMENT_CONSOLE_LOGOUT_URL, USER_AGENT, httpClient);
             String samlRequest = Utils.extractDataFromResponseForManagementConsoleRequests(
                     response, "value", 1);
             EntityUtils.consume(response.getEntity());
 
-            // Send logout request to the SAML SSO endpoint.
+            log.debug("Sending logout request to SAML SSO endpoint.");
             response = super.sendSAMLMessage(SAML_SSO_URL, CommonConstants.SAML_REQUEST_PARAM, samlRequest, samlConfig);
             String samlResponse = Utils.extractDataFromResponse(response, CommonConstants.SAML_RESPONSE_PARAM, 5);
             EntityUtils.consume(response.getEntity());
 
-            // Send the logout response to the ACS endpoint and verify the logout.
+            log.debug("Sending logout response to ACS endpoint and verify the logout.");
             response = super.sendSAMLMessage(SAML_ACS_URL, CommonConstants.SAML_RESPONSE_PARAM, samlResponse,
                     samlConfig);
             Header location = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
@@ -232,5 +239,20 @@ public class SAMLSSOForAdminLoginTestCase extends AbstractSAMLSSOTestCase {
         // Restarting to apply the old configs back.
         serverConfigurationManager.applyConfiguration(ssoIdPConfigXmlOriginal, ssoIdPConfigXml, false, false);
         serverConfigurationManager.restoreToLastConfiguration();
+    }
+
+    /**
+     * Test whether the server is available.
+     *
+     * @return true if the server is available.
+     */
+    private boolean isServerAvailable() throws Exception {
+
+        HttpResponse response = Utils.sendGetRequest(MANAGEMENT_CONSOLE_LOGIN_URL, USER_AGENT, httpClient);
+        if (response.getStatusLine().getStatusCode() == 200) {
+            EntityUtils.consume(response.getEntity());
+            return true;
+        }
+        return false;
     }
 }
