@@ -1,111 +1,112 @@
 /*
- * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 LLC. (https://www.wso2.com).
  *
- * WSO2 Inc. licenses this file to you under the Apache License,
+ * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
 package org.wso2.identity.integration.test.identity.mgt;
 
 
-import junit.framework.Assert;
-import org.apache.commons.lang.ArrayUtils;
+import org.testng.Assert;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.simple.JSONObject;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.automation.test.utils.common.TestConfigurationProvider;
-import org.wso2.carbon.identity.core.util.IdentityUtil;
-import org.wso2.carbon.identity.governance.stub.bean.Property;
-import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
-import org.wso2.carbon.um.ws.api.stub.ClaimValue;
-import org.wso2.identity.integration.common.clients.ResourceAdminServiceClient;
-import org.wso2.identity.integration.common.clients.mgt.IdentityGovernanceServiceClient;
-import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.ConnectorsPatchReq;
+import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.ConnectorsPatchReq.OperationEnum;
+import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.PropertyReq;
+import org.wso2.identity.integration.test.rest.api.user.common.model.ListObject;
+import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperationRequestObject;
+import org.wso2.identity.integration.test.rest.api.user.common.model.RoleItemAddGroupobj;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
+import org.wso2.identity.integration.test.restclients.AuthenticatorRestClient;
+import org.wso2.identity.integration.test.restclients.EmailTemplatesRestClient;
+import org.wso2.identity.integration.test.restclients.IdentityGovernanceRestClient;
+import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 
 public class AccountLockEnabledTestCase extends ISIntegrationTest {
 
     private static final Log log = LogFactory.getLog(AccountLockEnabledTestCase.class.getName());
+    private static final String DEFAULT_LOCALITY_CLAIM_VALUE = "en_US";
+    private static final String TEST_LOCK_USER_1 = "TestLockUser1";
+    private static final String TEST_LOCK_USER_1_PASSWORD = "TestLockUser1Password";
+    private static final String TEST_LOCK_USER_1_WRONG_PASSWORD = "TestLockUser1WrongPassword";
+    private static final String TEST_LOCK_USER_2 = "TestLockUser2";
+    private static final String TEST_LOCK_USER_2_PASSWORD = "TestLockUser2Password";
+    private static final String TEST_LOCK_USER_3 = "TestLockUser3";
+    private static final String TEST_LOCK_USER_3_PASSWORD = "TestLockUser3Password";
 
-    private String defaultLocalityClaimUri = IdentityUtil.getClaimUriLocale();
-    private String accountLockClaimUri = "http://wso2.org/claims/identity/accountLocked";
-    private String defaultLocalityClaimValue = "en_us";
-    private String registryResourcePath = "/_system/config/identity/email/";
-
-    private String testLockUser1 = "TestLockUser1";
-    private String testLockUser1Password = "TestLockUser1Password";
-    private String testLockUser1WrongPassword = "TestLockUser1WrongPassword";
-    private String testLockUser2 = "TestLockUser2";
-    private String testLockUser2Password = "TestLockUser2Password";
-    private String testLockUser3 = "TestLockUser3";
-    private String testLockUser3Password = "TestLockUser3Password";
-
-    private String accountLockTemplateWhenUserExceedsFailedAttempts = "accountlockfailedattempt";
-    private String accountLockTemplateWhenAdminTriggered = "accountlockadmin";
-    private String accountUnlockTemplateAdminTriggered = "accountunlockadmin";
-    private String accountUnlockTemplateTimeBased = "accountunlocktimebased";
-
-    private AuthenticatorClient authenticatorClient;
-    private ResourceAdminServiceClient resourceAdminServiceClient;
-    private RemoteUserStoreManagerServiceClient usmClient;
-    private IdentityGovernanceServiceClient identityGovernanceServiceClient;
-
+    private static final String ACCOUNT_LOCK_TEMPLATE_WHEN_USER_EXCEEDS_FAILED_ATTEMPTS = "accountlockfailedattempt";
+    private static final String ACCOUNT_LOCK_TEMPLATE_WHEN_ADMIN_TRIGGERED = "accountlockadmin";
+    private static final String ACCOUNT_UNLOCK_TEMPLATE_ADMIN_TRIGGERED = "accountunlockadmin";
+    private static final String ACCOUNT_UNLOCK_TEMPLATE_TIME_BASED = "accountunlocktimebased";
+    private static final String ACCOUNT_LOCK_ATTRIBUTE = "accountLocked";
     private static final String ENABLE_ACCOUNT_LOCK = "account.lock.handler.lock.on.max.failed.attempts.enable";
-    private static final String TRUE_STRING = "true";
-    private static final String DEFAULT = "default";
+    private static final String CATEGORY_LOGIN_ATTEMPTS_SECURITY = "TG9naW4gQXR0ZW1wdHMgU2VjdXJpdHk";
+    private static final String CONNECTOR_ACCOUNT_LOCK_HANDLER = "YWNjb3VudC5sb2NrLmhhbmRsZXI";
+    private static final String LOCALE_ATTRIBUTE = "locale";
+    private static final String USERS_PATH = "users";
+    private static final String USER_SCHEMA = "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User";
+
+
+    private SCIM2RestClient scim2RestClient;
+    private AuthenticatorRestClient authenticatorRestClient;
+    private EmailTemplatesRestClient emailTemplatesRestClient;
+    private IdentityGovernanceRestClient identityGovernanceRestClient;
+    private ConnectorsPatchReq connectorPatchRequest;
+
+
+    private String testLockUserId;
+    private String testLockUser2Id;
+    private String testLockUser3Id;
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
         super.init();
-        authenticatorClient = new AuthenticatorClient(backendURL);
-        enableAccountLocking(ENABLE_ACCOUNT_LOCK);
-        usmClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
-        resourceAdminServiceClient = new ResourceAdminServiceClient(backendURL, sessionCookie);
+        authenticatorRestClient = new AuthenticatorRestClient(serverURL);
+        enableAccountLocking();
+        scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
+        emailTemplatesRestClient = new EmailTemplatesRestClient(serverURL, tenantInfo);
     }
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     @Test(groups = "wso2.is", description = "Check whether the user account lock successfully")
     public void testSuccessfulLockedInitially() {
         try {
-            usmClient.addUser(testLockUser1, testLockUser1Password, new String[]{"admin"}, new ClaimValue[0], null, false);
+            testLockUserId = addAdminUser(TEST_LOCK_USER_1, TEST_LOCK_USER_1_PASSWORD, null);
 
             int maximumAllowedFailedLogins = 5;
             for (int i = 0; i < maximumAllowedFailedLogins; i++) {
-                try {
-                    authenticatorClient.login(testLockUser1, testLockUser1WrongPassword, "localhost");
-                } catch (Exception e) {
-                    log.error("Login attempt: " + i + " for user: " + testLockUser1 + " failed");
+                JSONObject response = authenticatorRestClient.login(TEST_LOCK_USER_1, TEST_LOCK_USER_1_WRONG_PASSWORD);
+
+                if (!response.containsKey("token")) {
+                    log.error("Login attempt: " + i + " for user: " + TEST_LOCK_USER_1 + " failed");
                 }
             }
 
-            ClaimValue[] claimValues = usmClient.getUserClaimValuesForClaims(testLockUser1, new String[]
-                    {accountLockClaimUri}, "default");
 
-            String userAccountLockClaimValue = null;
-
-            if (ArrayUtils.isNotEmpty(claimValues)) {
-                userAccountLockClaimValue = claimValues[0].getValue();
-            }
-
-            Assert.assertTrue
-                    ("Test Failure : User Account Didn't Locked Properly", Boolean.valueOf(userAccountLockClaimValue));
-
+            JSONObject userParameters = (JSONObject) scim2RestClient.getUser(testLockUserId).get(USER_SCHEMA);
+            Assert.assertTrue((Boolean) userParameters.get(ACCOUNT_LOCK_ATTRIBUTE),
+                    "Test Failure : User Account Didn't Locked Properly");
         } catch (Exception e) {
             log.error("Error occurred when locking the test user.", e);
         }
@@ -118,26 +119,18 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
           dependsOnMethods = "testSuccessfulLockedInitially")
     public void testSuccessfulEmailTemplateRetrieval() throws Exception {
 
-        ClaimValue claimValue = new ClaimValue();
-        claimValue.setClaimURI(defaultLocalityClaimUri);
-        claimValue.setValue(defaultLocalityClaimValue);
-        ClaimValue[] claimvalues = { claimValue };
-        usmClient.addUser(testLockUser2, testLockUser2Password, new String[] { "admin" }, claimvalues, null, false);
+        testLockUser2Id = addAdminUser(TEST_LOCK_USER_2, TEST_LOCK_USER_2_PASSWORD, DEFAULT_LOCALITY_CLAIM_VALUE);
+        String locale = scim2RestClient.getUser(testLockUser2Id).get(LOCALE_ATTRIBUTE).toString();
 
-        String userLocale = usmClient.
-                getUserClaimValue(testLockUser2, defaultLocalityClaimUri, "default");
+        JSONObject emailTemplateResourceContent =
+                emailTemplatesRestClient.getEmailTemplate(ACCOUNT_LOCK_TEMPLATE_WHEN_USER_EXCEEDS_FAILED_ATTEMPTS, locale);
+        Assert.assertTrue(StringUtils.isNotEmpty((String) emailTemplateResourceContent.get("body")),
+                "Test Failure : Email Content applicable for account lock is not available.");
 
-        String emailTemplateResourceName = accountLockTemplateWhenUserExceedsFailedAttempts + "/" + userLocale;
-        String emailTemplateResourceContent = resourceAdminServiceClient.
-                getTextContent(registryResourcePath + emailTemplateResourceName);
-        Assert.assertTrue("Test Failure : Email Content applicable for account lock is not available.",
-                StringUtils.isNotEmpty(emailTemplateResourceContent));
-
-        String emailTemplateResourceNameAdminTriggered = accountLockTemplateWhenAdminTriggered + "/" + userLocale;
-        String emailTemplateResourceContentAdminTriggered = resourceAdminServiceClient.
-                getTextContent(registryResourcePath + emailTemplateResourceNameAdminTriggered);
-        Assert.assertTrue("Test Failure : Email Content applicable for account lock is not available.",
-                StringUtils.isNotEmpty(emailTemplateResourceContentAdminTriggered));
+        JSONObject emailTemplateResourceContentAdminTriggered =
+                emailTemplatesRestClient.getEmailTemplate(ACCOUNT_LOCK_TEMPLATE_WHEN_ADMIN_TRIGGERED, locale);
+        Assert.assertTrue(StringUtils.isNotEmpty((String) emailTemplateResourceContentAdminTriggered.get("body")),
+                "Test Failure : Email Content applicable for account lock is not available.");
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
@@ -146,64 +139,74 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
                   + "template successfully retrieved when admin triggered account lock.")
     public void testSuccessfulEmailTemplateRetrievalAccountUnLock() throws Exception {
 
-            ClaimValue claimValue = new ClaimValue();
-            claimValue.setClaimURI(defaultLocalityClaimUri);
-            claimValue.setValue(defaultLocalityClaimValue);
-            ClaimValue[] claimvalues = { claimValue };
-            usmClient.addUser(testLockUser3, testLockUser3Password, new String[] { "admin" }, claimvalues, null, false);
+        testLockUser3Id = addAdminUser(TEST_LOCK_USER_3, TEST_LOCK_USER_3_PASSWORD, DEFAULT_LOCALITY_CLAIM_VALUE);
+        String locale = scim2RestClient.getUser(testLockUser3Id).get(LOCALE_ATTRIBUTE).toString();
 
-            String userLocale = usmClient.
-                    getUserClaimValue(testLockUser2, defaultLocalityClaimUri, "default");
+        JSONObject emailTemplateResourceContent =
+                emailTemplatesRestClient.getEmailTemplate(ACCOUNT_UNLOCK_TEMPLATE_TIME_BASED, locale);
+        Assert.assertTrue(StringUtils.isNotEmpty((String) emailTemplateResourceContent.get("body")),
+                "Test Failure : Email Content applicable for account unlock is not available.");
 
-            String emailTemplateResourceName = accountUnlockTemplateTimeBased + "/" + userLocale;
-            String emailTemplateResourceContent = resourceAdminServiceClient.
-                    getTextContent(registryResourcePath + emailTemplateResourceName);
-            Assert.assertTrue("Test Failure : Email Content applicable for account unlock is not available.",
-                    StringUtils.isNotEmpty(emailTemplateResourceContent));
-
-            String emailTemplateResourceNameAdminTriggered = accountUnlockTemplateAdminTriggered + "/" + userLocale;
-            String emailTemplateResourceContentAdminTriggered = resourceAdminServiceClient.
-                    getTextContent(registryResourcePath + emailTemplateResourceNameAdminTriggered);
-            Assert.assertTrue("Test Failure : Email Content applicable for account unlock is not available.",
-                    StringUtils.isNotEmpty(emailTemplateResourceContentAdminTriggered));
+        JSONObject emailTemplateResourceContentAdminTriggered =
+                emailTemplatesRestClient.getEmailTemplate(ACCOUNT_UNLOCK_TEMPLATE_ADMIN_TRIGGERED, locale);
+        Assert.assertTrue(StringUtils.isNotEmpty((String) emailTemplateResourceContentAdminTriggered.get("body")),
+                    "Test Failure : Email Content applicable for account unlock is not available.");
     }
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
-        usmClient.deleteUser(testLockUser1);
-        usmClient.deleteUser(testLockUser2);
-        disableAccountLocking(ENABLE_ACCOUNT_LOCK);
+        scim2RestClient.deleteUser(testLockUserId);
+        scim2RestClient.deleteUser(testLockUser2Id);
+        scim2RestClient.deleteUser(testLockUser3Id);
+        disableAccountLocking();
+        emailTemplatesRestClient.closeHttpClient();
+        identityGovernanceRestClient.closeHttpClient();
+        scim2RestClient.closeHttpClient();
+        authenticatorRestClient.closeHttpClient();
     }
 
     protected String getISResourceLocation() {
         return TestConfigurationProvider.getResourceLocation("IS");
     }
 
-    protected void enableAccountLocking(String option) throws Exception {
-        identityGovernanceServiceClient = new IdentityGovernanceServiceClient(sessionCookie, backendURL);
+    protected void enableAccountLocking() throws Exception {
+        identityGovernanceRestClient = new IdentityGovernanceRestClient(backendURL.replace("services/",
+                ""), tenantInfo);
 
-        Thread.sleep(5000);
-        authenticatorClient.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
-                isServer.getSuperTenant().getTenantAdmin().getPassword(),
-                isServer.getInstance().getHosts().get(DEFAULT));
+        PropertyReq property = new PropertyReq();
+        property.setName(ENABLE_ACCOUNT_LOCK);
+        property.setValue("true");
 
-        Property[] newProperties = new Property[1];
-        Property prop = new Property();
-        prop.setName(option);
-        prop.setValue(TRUE_STRING);
-        newProperties[0] = prop;
-        identityGovernanceServiceClient.updateConfigurations(newProperties);
+        connectorPatchRequest = new ConnectorsPatchReq();
+        connectorPatchRequest.setOperation(OperationEnum.UPDATE);
+        connectorPatchRequest.addProperties(property);
+
+        identityGovernanceRestClient.updateConnectors(CATEGORY_LOGIN_ATTEMPTS_SECURITY , CONNECTOR_ACCOUNT_LOCK_HANDLER,
+                connectorPatchRequest);
     }
 
-    protected void disableAccountLocking(String option) throws Exception {
-
-        Property[] newProperties = new Property[1];
-        Property prop = new Property();
-        prop.setName(option);
-        prop.setValue("false");
-        newProperties[0] = prop;
-        identityGovernanceServiceClient.updateConfigurations(newProperties);
+    protected void disableAccountLocking() throws Exception {
+        connectorPatchRequest.getProperties().get(0).setValue("false");
+        identityGovernanceRestClient.updateConnectors(CATEGORY_LOGIN_ATTEMPTS_SECURITY , CONNECTOR_ACCOUNT_LOCK_HANDLER,
+                connectorPatchRequest);
     }
 
+    protected String addAdminUser(String username, String password, String locale) throws Exception {
+        UserObject userInfo = new UserObject();
+        userInfo.setUserName(username);
+        userInfo.setPassword(password);
+        userInfo.setLocale(locale);
+
+        String userId = scim2RestClient.createUser(userInfo);
+        String roleId = scim2RestClient.getRoleIdByName("admin");
+
+        RoleItemAddGroupobj patchRoleItem = new RoleItemAddGroupobj();
+        patchRoleItem.setOp(RoleItemAddGroupobj.OpEnum.ADD);
+        patchRoleItem.setPath(USERS_PATH);
+        patchRoleItem.addValue(new ListObject().value(userId));
+
+        scim2RestClient.updateUserRole(new PatchOperationRequestObject().addOperations(patchRoleItem), roleId);
+        return userId;
+    }
 }

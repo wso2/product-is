@@ -1,22 +1,21 @@
 /*
- * Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2023, WSO2 LLC. (https://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
-
-package org.wso2.identity.integration.test.rest.api.server.application.management.v1.model;
+package org.wso2.identity.integration.test.rest.api.user.common.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
@@ -24,46 +23,48 @@ import io.swagger.annotations.ApiModelProperty;
 import javax.validation.Valid;
 import java.util.Objects;
 
-public class AdditionalSpProperties {
+public class Email {
 
-    private String name;
+    private String type;
     private String value;
-    private String displayName;
+    private Boolean primary;
 
     /**
      *
      **/
-    public AdditionalSpProperties name(String name) {
+    public Email type(String type) {
 
-        this.name = name;
+        this.type = type;
         return this;
     }
 
-    @ApiModelProperty(example = "isB2BSelfServiceApp")
-    @JsonProperty("name")
+    @ApiModelProperty(example = "work")
+    @JsonProperty("type")
     @Valid
-    public String getName() {
-        return name;
+    public String getType() {
+        return type;
     }
-    public void setName(String name) {
-        this.name = name;
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     /**
      *
      **/
-    public AdditionalSpProperties value(String value) {
+    public Email value(String value) {
 
         this.value = value;
         return this;
     }
 
-    @ApiModelProperty(example = "isB2BSelfServiceApp")
+    @ApiModelProperty(example = "abc@wso2.com")
     @JsonProperty("value")
     @Valid
     public String getValue() {
         return value;
     }
+
     public void setValue(String value) {
         this.value = value;
     }
@@ -71,21 +72,23 @@ public class AdditionalSpProperties {
     /**
      *
      **/
-    public AdditionalSpProperties displayName(String displayName) {
+    public Email primary(Boolean primary) {
 
-        this.displayName = displayName;
+        this.primary = primary;
         return this;
     }
 
-    @ApiModelProperty(example = "isB2BSelfServiceApp")
-    @JsonProperty("displayName")
+    @ApiModelProperty(example = "false")
+    @JsonProperty("primary")
     @Valid
-    public String getDisplayName() {
-        return displayName;
+    public Boolean getPrimary() {
+        return primary;
     }
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
+
+    public void setPrimary(Boolean primary) {
+        this.primary = primary;
     }
+
 
     @Override
     public boolean equals(Object o) {
@@ -96,24 +99,24 @@ public class AdditionalSpProperties {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        AdditionalSpProperties additionalSpProperties = (AdditionalSpProperties) o;
-        return Objects.equals(this.name, additionalSpProperties.name) &&
-                Objects.equals(this.value, additionalSpProperties.value) &&
-                Objects.equals(this.displayName, additionalSpProperties.displayName);
+        Email email = (Email) o;
+        return Objects.equals(this.type, email.type) &&
+                Objects.equals(this.value, email.value) &&
+                Objects.equals(this.primary, email.primary);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, value, displayName);
+        return Objects.hash(type, value, primary);
     }
 
     @Override
     public String toString() {
 
-        return "class InboundProtocolListItem {\n" +
-                "    name: " + toIndentedString(name) + "\n" +
+        return "class Email {\n" +
+                "    type: " + toIndentedString(type) + "\n" +
                 "    value: " + toIndentedString(value) + "\n" +
-                "    displayName: " + toIndentedString(displayName) + "\n" +
+                "    primary: " + toIndentedString(primary) + "\n" +
                 "}";
     }
 

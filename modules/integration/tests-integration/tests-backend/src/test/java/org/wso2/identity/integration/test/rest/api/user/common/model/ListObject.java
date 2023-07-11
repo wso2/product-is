@@ -15,8 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
-package org.wso2.identity.integration.test.rest.api.server.application.management.v1.model;
+package org.wso2.identity.integration.test.rest.api.user.common.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
@@ -24,46 +23,48 @@ import io.swagger.annotations.ApiModelProperty;
 import javax.validation.Valid;
 import java.util.Objects;
 
-public class AdditionalSpProperties {
+public class ListObject {
 
-    private String name;
+    private String display;
     private String value;
-    private String displayName;
+    private String $ref;
 
     /**
      *
      **/
-    public AdditionalSpProperties name(String name) {
+    public ListObject display(String display) {
 
-        this.name = name;
+        this.display = display;
         return this;
     }
 
-    @ApiModelProperty(example = "isB2BSelfServiceApp")
-    @JsonProperty("name")
+    @ApiModelProperty(example = "abc")
+    @JsonProperty("display")
     @Valid
-    public String getName() {
-        return name;
+    public String getDisplay() {
+        return display;
     }
-    public void setName(String name) {
-        this.name = name;
+
+    public void setDisplay(String display) {
+        this.display = display;
     }
 
     /**
      *
      **/
-    public AdditionalSpProperties value(String value) {
+    public ListObject value(String value) {
 
         this.value = value;
         return this;
     }
 
-    @ApiModelProperty(example = "isB2BSelfServiceApp")
+    @ApiModelProperty(example = "csdhfkjcdoqfo[adpscbdsjk]")
     @JsonProperty("value")
     @Valid
     public String getValue() {
         return value;
     }
+
     public void setValue(String value) {
         this.value = value;
     }
@@ -71,21 +72,23 @@ public class AdditionalSpProperties {
     /**
      *
      **/
-    public AdditionalSpProperties displayName(String displayName) {
+    public ListObject $ref(String $ref) {
 
-        this.displayName = displayName;
+        this.$ref = $ref;
         return this;
     }
 
-    @ApiModelProperty(example = "isB2BSelfServiceApp")
-    @JsonProperty("displayName")
+    @ApiModelProperty(example = "false")
+    @JsonProperty("$ref")
     @Valid
-    public String getDisplayName() {
-        return displayName;
+    public String getRef() {
+        return $ref;
     }
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
+
+    public void setRef(String $ref) {
+        this.$ref = $ref;
     }
+
 
     @Override
     public boolean equals(Object o) {
@@ -96,24 +99,24 @@ public class AdditionalSpProperties {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        AdditionalSpProperties additionalSpProperties = (AdditionalSpProperties) o;
-        return Objects.equals(this.name, additionalSpProperties.name) &&
-                Objects.equals(this.value, additionalSpProperties.value) &&
-                Objects.equals(this.displayName, additionalSpProperties.displayName);
+        ListObject listObj = (ListObject) o;
+        return Objects.equals(this.display, listObj.display) &&
+                Objects.equals(this.value, listObj.value) &&
+                Objects.equals(this.$ref, listObj.$ref);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, value, displayName);
+        return Objects.hash(display, value, $ref);
     }
 
     @Override
     public String toString() {
 
-        return "class InboundProtocolListItem {\n" +
-                "    name: " + toIndentedString(name) + "\n" +
+        return "class ListObject {\n" +
+                "    display: " + toIndentedString(display) + "\n" +
                 "    value: " + toIndentedString(value) + "\n" +
-                "    displayName: " + toIndentedString(displayName) + "\n" +
+                "    $ref: " + toIndentedString($ref) + "\n" +
                 "}";
     }
 

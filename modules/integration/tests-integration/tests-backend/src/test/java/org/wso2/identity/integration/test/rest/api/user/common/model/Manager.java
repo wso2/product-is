@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.identity.integration.test.rest.api.server.application.management.v1.model;
+package org.wso2.identity.integration.test.rest.api.user.common.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
@@ -24,67 +24,28 @@ import io.swagger.annotations.ApiModelProperty;
 import javax.validation.Valid;
 import java.util.Objects;
 
-public class AdditionalSpProperties {
+public class Manager {
 
-    private String name;
     private String value;
-    private String displayName;
 
     /**
      *
      **/
-    public AdditionalSpProperties name(String name) {
-
-        this.name = name;
-        return this;
-    }
-
-    @ApiModelProperty(example = "isB2BSelfServiceApp")
-    @JsonProperty("name")
-    @Valid
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     *
-     **/
-    public AdditionalSpProperties value(String value) {
+    public Manager value(String value) {
 
         this.value = value;
         return this;
     }
 
-    @ApiModelProperty(example = "isB2BSelfServiceApp")
+    @ApiModelProperty(example = "abc@wso2.com")
     @JsonProperty("value")
     @Valid
     public String getValue() {
         return value;
     }
+
     public void setValue(String value) {
         this.value = value;
-    }
-
-    /**
-     *
-     **/
-    public AdditionalSpProperties displayName(String displayName) {
-
-        this.displayName = displayName;
-        return this;
-    }
-
-    @ApiModelProperty(example = "isB2BSelfServiceApp")
-    @JsonProperty("displayName")
-    @Valid
-    public String getDisplayName() {
-        return displayName;
-    }
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
     }
 
     @Override
@@ -96,24 +57,20 @@ public class AdditionalSpProperties {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        AdditionalSpProperties additionalSpProperties = (AdditionalSpProperties) o;
-        return Objects.equals(this.name, additionalSpProperties.name) &&
-                Objects.equals(this.value, additionalSpProperties.value) &&
-                Objects.equals(this.displayName, additionalSpProperties.displayName);
+        Manager manager = (Manager) o;
+        return Objects.equals(this.value, manager.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, value, displayName);
+        return Objects.hash(value);
     }
 
     @Override
     public String toString() {
 
-        return "class InboundProtocolListItem {\n" +
-                "    name: " + toIndentedString(name) + "\n" +
+        return "class Manager {\n" +
                 "    value: " + toIndentedString(value) + "\n" +
-                "    displayName: " + toIndentedString(displayName) + "\n" +
                 "}";
     }
 

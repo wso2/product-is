@@ -1,8 +1,8 @@
 /*
- * Copyright (c) 2020, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2020, WSO2 LLC. (http://www.wso2.com).
  *
- * WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -18,7 +18,6 @@
 
 package org.wso2.identity.integration.test.oauth2;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -36,16 +35,18 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationConfig;
-import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
-import org.wso2.carbon.identity.application.common.model.xsd.Property;
-import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
-import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
-import org.wso2.carbon.um.ws.api.stub.ClaimValue;
-import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
-import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OIDCLogoutConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
+import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
+import org.wso2.identity.integration.test.rest.api.user.common.model.ListObject;
+import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperationRequestObject;
+import org.wso2.identity.integration.test.rest.api.user.common.model.RoleItemAddGroupobj;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
+import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
@@ -53,6 +54,7 @@ import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,23 +68,21 @@ public class OAuth2BackChannelLogoutTestCase extends OAuth2ServiceAbstractIntegr
 
     private HttpClient client;
     private final String OIDC_APP_NAME = "playground2";
-    private String oidcAppClientId = "";
-    private String oidcAppClientSecret = "";
-    private OauthAdminClient adminClient;
-    private ApplicationManagementServiceClient applicationManagementServiceClient;
+    private String oidcAppClientId;
     private String sessionDataKeyConsent;
     private String sessionDataKey;
-    private final String CONSENT = "consent";
-    private final String APPROVE = "approve";
-    private final String SCOPE_APPROVAL = "scope-approval";
-    private final String USER_AGENT = "User-Agent";
-    private final String username;
-    private final String userPassword;
-    private final String activeTenant;
+    private static final String CONSENT = "consent";
+    private static final String APPROVE = "approve";
+    private static final String SCOPE_APPROVAL = "scope-approval";
+    private static final String USER_AGENT = "User-Agent";
+    private static final String USERS_PATH = "users";
 
     private static final String USER_EMAIL = "abc@wso2.com";
     private static final String USERNAME = "testUser";
     private static final String PASSWORD = "pass123";
+    private String applicationId;
+    private SCIM2RestClient scim2RestClient;
+    private String userId;
 
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
@@ -93,38 +93,23 @@ public class OAuth2BackChannelLogoutTestCase extends OAuth2ServiceAbstractIntegr
     public OAuth2BackChannelLogoutTestCase(TestUserMode userMode) throws Exception {
 
         super.init(userMode);
-        AutomationContext context = new AutomationContext("IDENTITY", userMode);
-        this.username = context.getContextTenant().getTenantAdmin().getUserName();
-        this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
-        this.activeTenant = context.getContextTenant().getDomain();
     }
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
-        init();
         client = HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build();
+        scim2RestClient =  new SCIM2RestClient(serverURL, tenantInfo);
+
         createOIDCApplication();
-        createServiceProvider();
-
-        remoteUSMServiceClient.addUser(USERNAME, PASSWORD, new String[]{"admin"},
-                getUserClaims(), "default", true);
-
+        addAdminUser();
     }
 
     @AfterClass(alwaysRun = true)
     public void testCleanUp() throws Exception {
 
         removeApplications();
-
-        remoteUSMServiceClient.deleteUser(USERNAME);
-    }
-
-    protected void init() throws Exception {
-
-        super.init();
-        adminClient = new OauthAdminClient(backendURL, sessionCookie);
-        applicationManagementServiceClient = new ApplicationManagementServiceClient(sessionCookie, backendURL, null);
+        scim2RestClient.deleteUser(userId);
     }
 
     @Test(groups = "wso2.is", description = "Test back channel logout for OIDC.")
@@ -140,25 +125,38 @@ public class OAuth2BackChannelLogoutTestCase extends OAuth2ServiceAbstractIntegr
     }
 
     private void createOIDCApplication() throws Exception {
+        ApplicationModel application = new ApplicationModel();
 
-        OAuthConsumerAppDTO appDTO = new OAuthConsumerAppDTO();
-        appDTO.setApplicationName(OIDC_APP_NAME);
-        appDTO.setCallbackUrl(OAuth2Constant.CALLBACK_URL);
-        appDTO.setOAuthVersion(OAuth2Constant.OAUTH_VERSION_2);
-        appDTO.setGrantTypes(OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE);
-        appDTO.setBackChannelLogoutUrl("http://localhost:" + DEFAULT_TOMCAT_PORT + "/playground2/bclogout");
+        List<String> grantTypes = new ArrayList<>();
+        Collections.addAll(grantTypes, OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE);
 
-        adminClient.registerOAuthApplicationData(appDTO);
-        OAuthConsumerAppDTO createdApp = adminClient.getOAuthAppByName(OIDC_APP_NAME);
-        Assert.assertNotNull(createdApp, "Adding OIDC app failed.");
-        oidcAppClientId = createdApp.getOauthConsumerKey();
-        oidcAppClientSecret = createdApp.getOauthConsumerSecret();
+        List<String> callBackUrls = new ArrayList<>();
+        Collections.addAll(callBackUrls, OAuth2Constant.CALLBACK_URL);
+
+        OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
+        oidcConfig.setGrantTypes(grantTypes);
+        oidcConfig.setCallbackURLs(callBackUrls);
+        oidcConfig.setLogout(new OIDCLogoutConfiguration().backChannelLogoutUrl("http://localhost:" +
+                DEFAULT_TOMCAT_PORT + "/playground2/bclogout"));
+
+        InboundProtocols inboundProtocolsConfig = new InboundProtocols();
+        inboundProtocolsConfig.setOidc(oidcConfig);
+
+        application.setInboundProtocolConfiguration(inboundProtocolsConfig);
+        application.setName(OIDC_APP_NAME);
+
+        String appId = addApplication(application);
+        ApplicationResponseModel createdApplication = getApplication(appId);
+
+        applicationId = createdApplication.getId();
+        oidcConfig = getOIDCInboundDetailsOfApplication(applicationId);
+
+        oidcAppClientId = oidcConfig.getClientId();
     }
 
     private void removeApplications() throws Exception {
 
-        adminClient.removeOAuthApplicationData(oidcAppClientId);
-        applicationManagementServiceClient.deleteApplication(OIDC_APP_NAME);
+        deleteApp(applicationId);
     }
 
     private void initiateOIDCRequest(boolean isCheckLogoutConfirmation) throws IOException {
@@ -281,7 +279,7 @@ public class OAuth2BackChannelLogoutTestCase extends OAuth2ServiceAbstractIntegr
 
     private List<NameValuePair> getOIDCInitiationRequestParams() {
 
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("grantType", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
         urlParameters.add(new BasicNameValuePair("consumerKey", oidcAppClientId));
         urlParameters.add(new BasicNameValuePair("callbackurl", OAuth2Constant.CALLBACK_URL));
@@ -291,40 +289,20 @@ public class OAuth2BackChannelLogoutTestCase extends OAuth2ServiceAbstractIntegr
         return urlParameters;
     }
 
-    private ServiceProvider createServiceProvider() throws Exception {
+    private void addAdminUser() throws Exception {
+        UserObject userInfo = new UserObject();
+        userInfo.setUserName(USERNAME);
+        userInfo.setPassword(PASSWORD);
+        userInfo.addEmail(new Email().value(USER_EMAIL));
 
-        ServiceProvider serviceProvider = new ServiceProvider();
-        serviceProvider.setApplicationName(OIDC_APP_NAME);
-        serviceProvider.setManagementApp(true);
-        applicationManagementServiceClient.createApplication(serviceProvider);
-        serviceProvider = applicationManagementServiceClient.getApplication(OIDC_APP_NAME);
+        userId = scim2RestClient.createUser(userInfo);
+        String roleId = scim2RestClient.getRoleIdByName("admin");
 
-        InboundAuthenticationRequestConfig requestConfig = new InboundAuthenticationRequestConfig();
-        requestConfig.setInboundAuthKey(oidcAppClientId);
-        requestConfig.setInboundAuthType("oauth2");
-        if (StringUtils.isNotBlank(oidcAppClientSecret)) {
-            Property property = new Property();
-            property.setName("oauthConsumerSecret");
-            property.setValue(oidcAppClientSecret);
-            Property[] properties = {property};
-            requestConfig.setProperties(properties);
-        }
+        RoleItemAddGroupobj patchRoleItem = new RoleItemAddGroupobj();
+        patchRoleItem.setOp(RoleItemAddGroupobj.OpEnum.ADD);
+        patchRoleItem.setPath(USERS_PATH);
+        patchRoleItem.addValue(new ListObject().value(userId));
 
-        InboundAuthenticationConfig inboundAuthenticationConfig = new InboundAuthenticationConfig();
-        inboundAuthenticationConfig
-                .setInboundAuthenticationRequestConfigs(new InboundAuthenticationRequestConfig[]{requestConfig});
-        serviceProvider.setInboundAuthenticationConfig(inboundAuthenticationConfig);
-        applicationManagementServiceClient.updateApplicationData(serviceProvider);
-        return serviceProvider;
-    }
-
-    protected ClaimValue[] getUserClaims() {
-
-        ClaimValue[] claimValues = new ClaimValue[1];
-        ClaimValue email = new ClaimValue();
-        email.setClaimURI(EMAIL_CLAIM_URI);
-        email.setValue(USER_EMAIL);
-        claimValues[0] = email;
-        return claimValues;
+        scim2RestClient.updateUserRole(new PatchOperationRequestObject().addOperations(patchRoleItem), roleId);
     }
 }

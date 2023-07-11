@@ -40,6 +40,7 @@ public class ISIntegrationTest {
     protected Log log = LogFactory.getLog(getClass());
     protected AutomationContext isServer;
     protected String backendURL;
+    protected String serverURL;
     protected String sessionCookie;
     protected Tenant tenantInfo;
     protected User userInfo;
@@ -54,6 +55,7 @@ public class ISIntegrationTest {
     protected void init(TestUserMode userMode) throws Exception {
         isServer = new AutomationContext("IDENTITY", userMode);
         backendURL = isServer.getContextUrls().getBackEndUrl();
+        serverURL = backendURL.replace("services/", "");
         loginLogoutClient = new LoginLogoutClient(isServer);
         sessionCookie = loginLogoutClient.login();
         identityContextUrls = isServer.getContextUrls();
@@ -66,6 +68,7 @@ public class ISIntegrationTest {
         loginLogoutClient = new LoginLogoutClient(isServer);
         sessionCookie = loginLogoutClient.login();
         backendURL = isServer.getContextUrls().getBackEndUrl();
+        serverURL = backendURL.replace("services/", "");
     }
 
     protected String login() throws Exception{
@@ -86,6 +89,7 @@ public class ISIntegrationTest {
             throws XPathExpressionException {
         isServer = new AutomationContext(productGroupName, instanceName, userMode);
         backendURL = isServer.getContextUrls().getBackEndUrl();
+        serverURL = backendURL.replace("services/", "");
     }
 
     protected String getBackendURL() throws XPathExpressionException {

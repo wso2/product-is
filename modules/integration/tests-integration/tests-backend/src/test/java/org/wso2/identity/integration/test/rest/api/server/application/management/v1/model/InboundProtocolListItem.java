@@ -21,25 +21,42 @@ package org.wso2.identity.integration.test.rest.api.server.application.managemen
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.validation.Valid;
 import java.util.Objects;
+import javax.validation.Valid;
 
-public class AdditionalSpProperties {
-
+public class InboundProtocolListItem {
+   
+    private String type;
     private String name;
-    private String value;
-    private String displayName;
+    private String self;
 
     /**
-     *
-     **/
-    public AdditionalSpProperties name(String name) {
+    **/
+    public InboundProtocolListItem type(String type) {
+
+        this.type = type;
+        return this;
+    }
+    
+    @ApiModelProperty(example = "samlsso")
+    @JsonProperty("type")
+    @Valid
+    public String getType() {
+        return type;
+    }
+    public void setType(String type) {
+        this.type = type;
+    }   
+    
+    /**
+    **/
+    public InboundProtocolListItem name(String name) {
 
         this.name = name;
         return this;
     }
-
-    @ApiModelProperty(example = "isB2BSelfServiceApp")
+    
+    @ApiModelProperty(example = "SAML2 Inbound")
     @JsonProperty("name")
     @Valid
     public String getName() {
@@ -47,44 +64,24 @@ public class AdditionalSpProperties {
     }
     public void setName(String name) {
         this.name = name;
-    }
+    }   
 
     /**
-     *
-     **/
-    public AdditionalSpProperties value(String value) {
+    **/
+    public InboundProtocolListItem self(String self) {
 
-        this.value = value;
+        this.self = self;
         return this;
     }
-
-    @ApiModelProperty(example = "isB2BSelfServiceApp")
-    @JsonProperty("value")
+    
+    @ApiModelProperty(example = "/t/carbon.super/api/server/v1/applications/29048810-1447-4ea0-a348-30d15ab65fa3/inbound-protocols/saml")
+    @JsonProperty("self")
     @Valid
-    public String getValue() {
-        return value;
+    public String getSelf() {
+        return self;
     }
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    /**
-     *
-     **/
-    public AdditionalSpProperties displayName(String displayName) {
-
-        this.displayName = displayName;
-        return this;
-    }
-
-    @ApiModelProperty(example = "isB2BSelfServiceApp")
-    @JsonProperty("displayName")
-    @Valid
-    public String getDisplayName() {
-        return displayName;
-    }
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
+    public void setSelf(String self) {
+        this.self = self;
     }
 
     @Override
@@ -96,25 +93,25 @@ public class AdditionalSpProperties {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        AdditionalSpProperties additionalSpProperties = (AdditionalSpProperties) o;
-        return Objects.equals(this.name, additionalSpProperties.name) &&
-                Objects.equals(this.value, additionalSpProperties.value) &&
-                Objects.equals(this.displayName, additionalSpProperties.displayName);
+        InboundProtocolListItem inboundProtocolItem = (InboundProtocolListItem) o;
+        return Objects.equals(this.type, inboundProtocolItem.type) &&
+            Objects.equals(this.name, inboundProtocolItem.name) &&
+            Objects.equals(this.self, inboundProtocolItem.self);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, value, displayName);
+        return Objects.hash(type, name, self);
     }
 
     @Override
     public String toString() {
 
         return "class InboundProtocolListItem {\n" +
-                "    name: " + toIndentedString(name) + "\n" +
-                "    value: " + toIndentedString(value) + "\n" +
-                "    displayName: " + toIndentedString(displayName) + "\n" +
-                "}";
+                    "    type: " + toIndentedString(type) + "\n" +
+                    "    name: " + toIndentedString(name) + "\n" +
+                    "    self: " + toIndentedString(self) + "\n" +
+                    "}";
     }
 
     /**
