@@ -20,9 +20,15 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.CookieSpecProvider;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
@@ -64,6 +70,8 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
 
     CookieStore cookieStore = new BasicCookieStore();
 
+    protected Lookup<CookieSpecProvider> cookieSpecRegistry;
+    protected RequestConfig requestConfig;
     protected HttpClient client;
     protected List<NameValuePair> consentParameters = new ArrayList<>();
     OIDCApplication playgroundApp;
@@ -82,7 +90,17 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
 
         playgroundApp = initApplication();
         serviceProvider = createApplication(new ServiceProvider(), playgroundApp);
-        client = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
+
+        cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+                .build();
+        requestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.DEFAULT)
+                .build();
+        client = HttpClientBuilder.create().setDefaultCookieStore(cookieStore)
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .setDefaultRequestConfig(requestConfig)
+                .build();
     }
 
     @AfterClass(alwaysRun = true)
@@ -159,8 +177,12 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
                 application.getApplicationName());
         EntityUtils.consume(response.getEntity());
 
-        HttpClient httpClientWithoutAutoRedirections = HttpClientBuilder.create().disableRedirectHandling()
-                .setDefaultCookieStore(cookieStore).build();
+        HttpClient httpClientWithoutAutoRedirections = HttpClientBuilder.create()
+                .disableRedirectHandling()
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .setDefaultRequestConfig(requestConfig)
+                .setDefaultCookieStore(cookieStore)
+                .build();
         HttpGet getRequest = new HttpGet(locationHeader.getValue());
         getRequest.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
         response = httpClientWithoutAutoRedirections.execute(getRequest);

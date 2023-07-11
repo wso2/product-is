@@ -43,9 +43,15 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.CookieSpecProvider;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
@@ -84,6 +90,8 @@ public class AdaptiveScriptTemporaryClaimPersistenceTestCase extends AbstractAda
     private ApplicationManagementServiceClient applicationManagementServiceClient;
     private CookieStore cookieStore = new BasicCookieStore();
     private CloseableHttpClient client;
+    private Lookup<CookieSpecProvider> cookieSpecRegistry;
+    private RequestConfig requestConfig;
     private HttpResponse response;
     private String idToken;
     private AuthorizationCode authorizationCode;
@@ -110,7 +118,15 @@ public class AdaptiveScriptTemporaryClaimPersistenceTestCase extends AbstractAda
         applicationManagementServiceClient = new ApplicationManagementServiceClient(sessionCookie, backendURL,
                 configContext);
 
+        cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+                .build();
+        requestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.DEFAULT)
+                .build();
         client = HttpClientBuilder.create()
+                .setDefaultRequestConfig(requestConfig)
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
                 .disableRedirectHandling()
                 .setDefaultCookieStore(cookieStore)
                 .build();
@@ -336,7 +352,10 @@ public class AdaptiveScriptTemporaryClaimPersistenceTestCase extends AbstractAda
                                                  List<NameValuePair> consentRequiredClaimsFromResponse)
             throws Exception {
 
-        HttpClient httpClientWithoutAutoRedirections = HttpClientBuilder.create().disableRedirectHandling()
+        HttpClient httpClientWithoutAutoRedirections = HttpClientBuilder.create()
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .setDefaultRequestConfig(requestConfig)
+                .disableRedirectHandling()
                 .setDefaultCookieStore(cookieStore).build();
         consentRequiredClaimsFromResponse.addAll(Utils.getConsentRequiredClaimsFromResponse(response));
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);

@@ -20,8 +20,14 @@ package org.wso2.identity.integration.test.oauth2;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.CookieSpecProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
@@ -65,6 +71,8 @@ public class OAuth2ServiceImplicitGrantTestCase extends OAuth2ServiceAbstractInt
 	private String consumerKey;
 	private String consumerSecret;
 
+	private Lookup<CookieSpecProvider> cookieSpecRegistry;
+	private RequestConfig requestConfig;
 	private CloseableHttpClient client;
 	private final String username;
 	private final String userPassword;
@@ -106,7 +114,16 @@ public class OAuth2ServiceImplicitGrantTestCase extends OAuth2ServiceAbstractInt
 		remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
 
 		setSystemproperties();
-		client = HttpClientBuilder.create().build();
+		cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+				.register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+				.build();
+		requestConfig = RequestConfig.custom()
+				.setCookieSpec(CookieSpecs.DEFAULT)
+				.build();
+		client = HttpClientBuilder.create()
+				.setDefaultRequestConfig(requestConfig)
+				.setDefaultCookieSpecRegistry(cookieSpecRegistry)
+				.build();
 		scopes = "abc";
 	}
 

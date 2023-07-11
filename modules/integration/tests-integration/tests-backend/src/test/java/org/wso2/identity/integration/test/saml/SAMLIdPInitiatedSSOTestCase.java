@@ -24,10 +24,16 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.CookieSpecProvider;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicNameValuePair;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -60,6 +66,8 @@ public class SAMLIdPInitiatedSSOTestCase extends AbstractSAMLSSOTestCase {
     private static final String SP_ACS_URL = "http://localhost:8490/%s/home.jsp";
     private HttpClient httpClient;
     private CookieStore cookieStore = new BasicCookieStore();
+    private Lookup<CookieSpecProvider> cookieSpecRegistry;
+    private RequestConfig requestConfig;
     private SAMLConfig samlConfig;
 
     @Factory(dataProvider = "samlConfigProvider")
@@ -88,7 +96,16 @@ public class SAMLIdPInitiatedSSOTestCase extends AbstractSAMLSSOTestCase {
         super.init(samlConfig.getUserMode());
         super.testInit();
         super.createApplication(samlConfig, samlConfig.getApp().getArtifact());
-        httpClient = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).disableRedirectHandling().build();
+        cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+                .build();
+        requestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.DEFAULT)
+                .build();
+        httpClient = HttpClientBuilder.create()
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .setDefaultRequestConfig(requestConfig)
+                .setDefaultCookieStore(cookieStore).disableRedirectHandling().build();
         super.createUser(samlConfig);
     }
 

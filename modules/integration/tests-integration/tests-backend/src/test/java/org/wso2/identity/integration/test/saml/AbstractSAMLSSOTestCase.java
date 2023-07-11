@@ -24,11 +24,17 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.CookieSpecProvider;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicNameValuePair;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.application.common.model.xsd.Claim;
@@ -83,6 +89,9 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
     protected SAMLSSOConfigServiceClient ssoConfigServiceClient;
     private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
     protected HttpClient httpClient;
+    protected Lookup<CookieSpecProvider> cookieSpecRegistry;
+    protected RequestConfig requestConfig;
+
 
     protected enum HttpBinding {
 
@@ -261,7 +270,17 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
                 configContext);
         ssoConfigServiceClient = new SAMLSSOConfigServiceClient(backendURL, sessionCookie);
         remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
-        httpClient = HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build();
+
+        cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+                .build();
+        requestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.DEFAULT)
+                .build();
+        httpClient = HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore())
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .setDefaultRequestConfig(requestConfig)
+                .build();
     }
 
     public void testClear() throws Exception {

@@ -23,12 +23,18 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.CookieSpecProvider;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.opensaml.xml.util.Base64;
@@ -121,6 +127,8 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
     private static final int PORT_OFFSET_1 = 1;
 
     CookieStore cookieStore;
+    private Lookup<CookieSpecProvider> cookieSpecRegistry;
+    private RequestConfig requestConfig;
     private CloseableHttpClient client;
 
     @DataProvider(name = "configProvider")
@@ -162,7 +170,17 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
         createServiceProviderInPrimaryIS();
 
         cookieStore = new BasicCookieStore();
-        client = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
+        cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+                .build();
+        requestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.DEFAULT)
+                .build();
+        client = HttpClientBuilder.create()
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .setDefaultRequestConfig(requestConfig)
+                .setDefaultCookieStore(cookieStore)
+                .build();
 
         boolean userCreated = addUserToSecondaryIS();
         Assert.assertTrue(userCreated, "User creation failed in secondary IS.");
@@ -607,7 +625,10 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
 
     private String testAuthzCode(String authzResponseURL) throws Exception {
 
-        HttpClient httpClientWithoutAutoRedirections = HttpClientBuilder.create().disableRedirectHandling()
+        HttpClient httpClientWithoutAutoRedirections = HttpClientBuilder.create()
+                .disableRedirectHandling()
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .setDefaultRequestConfig(requestConfig)
                 .setDefaultCookieStore(cookieStore).build();
 
         HttpResponse response = sendGetRequest(httpClientWithoutAutoRedirections, authzResponseURL);
