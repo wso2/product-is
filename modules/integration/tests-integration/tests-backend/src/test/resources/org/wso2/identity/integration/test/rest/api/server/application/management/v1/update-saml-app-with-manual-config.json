@@ -1,0 +1,55 @@
+{
+  "manualConfiguration": {
+    "issuer": "https://sp.wso2.com",
+    "assertionConsumerUrls": [
+      "https://saml.wso2.com/acs1",
+      "https://saml.wso2.com/acs2",
+      "https://saml.wso2.com/acs3"
+    ],
+    "defaultAssertionConsumerUrl": "https://saml.wso2.com/acs3",
+    "idpEntityIdAlias": "https://localhost/myidp",
+    "singleSignOnProfile": {
+      "bindings": [
+        "HTTP_POST",
+        "HTTP_REDIRECT",
+        "ARTIFACT"
+      ],
+      "enableSignatureValidationForArtifactBinding": true,
+      "attributeConsumingServiceIndex": "480766126",
+      "enableIdpInitiatedSingleSignOn": true,
+      "assertion": {
+        "nameIdFormat": "urn/oasis/names/tc/SAML/1.1/nameid-format/unspecified",
+        "audiences": [],
+        "recipients": [],
+        "digestAlgorithm": "http://www.w3.org/2000/09/xmldsig#sha1",
+        "encryption": {
+          "enabled": false,
+          "assertionEncryptionAlgorithm": "http://www.w3.org/2001/04/xmlenc#aes256-cbc",
+          "keyEncryptionAlgorithm": "http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p"
+        }
+      }
+    },
+    "attributeProfile": {
+      "enabled": true,
+      "alwaysIncludeAttributesInResponse": true
+    },
+    "singleLogoutProfile": {
+      "enabled": true,
+      "logoutRequestUrl": "https://saml.wso2.com/slo",
+      "logoutMethod": "BACKCHANNEL",
+      "idpInitiatedSingleLogout": {
+        "enabled": false,
+        "returnToUrls": []
+      }
+    },
+    "requestValidation": {
+      "enableSignatureValidation": false,
+      "signatureValidationCertAlias": "wso2carbon"
+    },
+    "responseSigning": {
+      "enabled": false,
+      "signingAlgorithm": "http://www.w3.org/2000/09/xmldsig#rsa-sha1"
+    },
+    "enableAssertionQueryProfile": true
+  }
+}
