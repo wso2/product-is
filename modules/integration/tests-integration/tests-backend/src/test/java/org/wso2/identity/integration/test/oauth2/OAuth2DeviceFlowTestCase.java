@@ -98,7 +98,6 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
                 .setDefaultRequestConfig(requestConfig)
                 .build();
 
-
         setSystemproperties();
     }
 
