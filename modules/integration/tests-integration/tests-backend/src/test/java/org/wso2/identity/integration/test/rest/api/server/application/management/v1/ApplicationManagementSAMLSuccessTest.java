@@ -121,7 +121,7 @@ public class ApplicationManagementSAMLSuccessTest extends ApplicationManagementB
                 .body("requestValidation.enableSignatureValidation", equalTo(false));
     }
 
-    @Test(dependsOnMethods = "testUpdateSAMLInbound")
+    @Test(dependsOnMethods = "testUpdateSAMLInbound", description = "Test to verify the SAML inbound delete")
     public void testDeleteSAMLInbound() throws Exception {
 
         String path = APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId + "/inbound-protocols/saml";
