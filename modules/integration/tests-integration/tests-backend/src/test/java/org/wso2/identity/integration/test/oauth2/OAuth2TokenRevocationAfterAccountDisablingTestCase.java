@@ -44,7 +44,13 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.CookieSpecProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicNameValuePair;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -124,6 +130,8 @@ public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2Se
     private Map<String, AccessToken> accessTokens = new HashMap<>();
     private Map<String, AccessToken> privilegedAccessTokens = new HashMap<>();
 
+    private Lookup<CookieSpecProvider> cookieSpecRegistry;
+    private RequestConfig requestConfig;
     private HttpClient client;
 
     @DataProvider
@@ -157,7 +165,18 @@ public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2Se
                 .createConfigurationContextFromFileSystem(null, null);
         applicationManagementServiceClient =
                 new ApplicationManagementServiceClient(sessionCookie, backendURL, configContext);
-        client = HttpClientBuilder.create().disableRedirectHandling().build();
+
+        cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+                .build();
+        requestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.DEFAULT)
+                .build();
+        client = HttpClientBuilder.create()
+                .disableRedirectHandling()
+                .setDefaultRequestConfig(requestConfig)
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .build();
         idPMgtClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
         residentIDP = idPMgtClient.getResidentIdP();
         usmClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);

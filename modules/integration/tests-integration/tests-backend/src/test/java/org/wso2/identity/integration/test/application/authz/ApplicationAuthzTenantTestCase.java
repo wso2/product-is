@@ -24,8 +24,13 @@ import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.CookieSpecProvider;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -102,8 +107,20 @@ public class ApplicationAuthzTenantTestCase extends AbstractApplicationAuthzTest
         remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
         entitlementPolicyClient = new EntitlementPolicyServiceClient(backendURL, sessionCookie);
 
-        httpClientAzUser = HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build();
-        httpClientNonAzUser = HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build();
+        cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+                .build();
+        requestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.DEFAULT)
+                .build();
+        httpClientAzUser = HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore())
+                .setDefaultRequestConfig(requestConfig)
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .build();
+        httpClientNonAzUser = HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore())
+                .setDefaultRequestConfig(requestConfig)
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .build();
 
         createRole(AZ_TEST_TENANT_ROLE);
         createUser(AZ_TEST_TENANT_USER, AZ_TEST_TENANT_USER_PW, new String[]{AZ_TEST_TENANT_ROLE});

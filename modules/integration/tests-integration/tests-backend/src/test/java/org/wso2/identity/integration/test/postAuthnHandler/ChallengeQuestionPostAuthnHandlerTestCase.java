@@ -26,10 +26,16 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.CookieSpecProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
@@ -178,7 +184,7 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
             groups = "wso2.is",
             dependsOnMethods = {"testAddSP"})
     public void testLoginWithDefaultSetting() {
-        try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
+        try (CloseableHttpClient httpClient = getClosableHTTPClient()) {
             HttpResponse response;
             // Update resident IDP property for forcing challenge questions
             response = Utils.sendGetRequest(String.format(SAML_SSO_LOGIN_URL, config.getApp().getArtifact(), config
@@ -229,7 +235,7 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
             groups = "wso2.is",
             dependsOnMethods = {"testAddSP"})
     public void testLoginWithDisabledSetting() {
-        try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
+        try (CloseableHttpClient httpClient = getClosableHTTPClient()) {
             HttpResponse response;
             // Update resident IDP property for forcing challenge questions
             updateResidentIDPProperty(superTenantResidentIDP, FORCE_ADD_PW_RECOVERY_QUESTION, "false", true);
@@ -280,7 +286,7 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
             groups = "wso2.is",
             dependsOnMethods = {"testAddSP"})
     public void testLoginWithEnabledSetting() {
-        try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
+        try (CloseableHttpClient httpClient = getClosableHTTPClient()) {
             HttpResponse response;
             // Update resident IDP property for forcing challenge questions
             updateResidentIDPProperty(superTenantResidentIDP, FORCE_ADD_PW_RECOVERY_QUESTION, "true", true);
@@ -339,7 +345,7 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
             groups = "wso2.is",
             dependsOnMethods = {"testAddSP", "testLoginWithEnabledSetting"})
     public void testLoginWithChallengeQuestions() {
-        try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
+        try (CloseableHttpClient httpClient = getClosableHTTPClient()) {
             HttpResponse response;
             // Update resident IDP property for forcing challenge questions
             updateResidentIDPProperty(superTenantResidentIDP, FORCE_ADD_PW_RECOVERY_QUESTION, "true", true);
@@ -589,6 +595,20 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
             }
         }
         updateResidentIDP(residentIdp, isSuperTenant);
+    }
+
+    private CloseableHttpClient getClosableHTTPClient() {
+
+        Lookup<CookieSpecProvider> cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+                .build();
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.DEFAULT)
+                .build();
+        return HttpClientBuilder.create()
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .setDefaultRequestConfig(requestConfig)
+                .build();
     }
 
     private enum HttpBinding {

@@ -23,10 +23,16 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.CookieSpecProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
@@ -79,6 +85,8 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
     private static final String TENANT_DOMAIN_PARAM = "tenantDomain";
     private static final String SAML_SSO_URL = "https://localhost:9853/samlsso";
 
+    private Lookup<CookieSpecProvider> cookieSpecRegistry;
+    private RequestConfig requestConfig;
     private CloseableHttpClient client;
 
     private SAMLSSOConfigServiceClient ssoConfigServiceClient;
@@ -96,7 +104,16 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
         consumerKey = oauthApp.getOauthConsumerKey();
         consumerSecret = oauthApp.getOauthConsumerSecret();
 
-        client = HttpClientBuilder.create().build();
+        cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+                .build();
+        requestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.DEFAULT)
+                .build();
+        client = HttpClientBuilder.create()
+                .setDefaultRequestConfig(requestConfig)
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .build();
         log.info(String.format("Oauth app initialized with key: %s, secret: %s.", consumerKey, consumerSecret));
     }
 
@@ -135,7 +152,10 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
 
         try {
 
-            client = HttpClientBuilder.create().build();
+            client = HttpClientBuilder.create()
+                    .setDefaultRequestConfig(requestConfig)
+                    .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                    .build();
             // Set some invalid audience.
             ServiceProvider application = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
             SAMLSSOServiceProviderDTO[] serviceProviders =
@@ -177,7 +197,10 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
             ssoConfigServiceClient.addServiceProvider(createDefaultSSOServiceProviderDTO());
 
             // We have to initiate the http client again or other tests will fail.
-            client = HttpClientBuilder.create().build();
+            client = HttpClientBuilder.create()
+                    .setDefaultRequestConfig(requestConfig)
+                    .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                    .build();
         }
     }
 

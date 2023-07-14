@@ -23,10 +23,16 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.CookieSpecProvider;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONValue;
@@ -64,6 +70,8 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
 
     CookieStore cookieStore = new BasicCookieStore();
 
+    protected Lookup<CookieSpecProvider> cookieSpecRegistry;
+    protected RequestConfig requestConfig;
     protected HttpClient client;
     protected List<NameValuePair> consentParameters = new ArrayList<>();
 
@@ -78,7 +86,17 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
         initApplications();
         createApplications();
 
-        client = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
+        cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+                .build();
+        requestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.DEFAULT)
+                .build();
+        client = HttpClientBuilder.create()
+                .setDefaultRequestConfig(requestConfig)
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .setDefaultCookieStore(cookieStore)
+                .build();
 
     }
 
@@ -189,7 +207,10 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
         if (isFirstAuthenticationRequest) {
             response = sendGetRequest(client, locationHeader.getValue());
         } else {
-            HttpClient httpClientWithoutAutoRedirections = HttpClientBuilder.create().disableRedirectHandling()
+            HttpClient httpClientWithoutAutoRedirections = HttpClientBuilder.create()
+                    .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                    .setDefaultRequestConfig(requestConfig)
+                    .disableRedirectHandling()
                     .setDefaultCookieStore(cookieStore).build();
             response = sendGetRequest(httpClientWithoutAutoRedirections, locationHeader.getValue());
         }

@@ -53,8 +53,14 @@ import java.util.UUID;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.CookieSpecProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
@@ -80,6 +86,8 @@ public class OIDCSubAttributeTestCase extends OAuth2ServiceAbstractIntegrationTe
 
     private static final String CALLBACK_URL = "https://localhost/callback";
 
+    private Lookup<CookieSpecProvider> cookieSpecRegistry;
+    private RequestConfig requestConfig;
     private CloseableHttpClient client;
 
     private String sessionDataKey;
@@ -112,7 +120,18 @@ public class OIDCSubAttributeTestCase extends OAuth2ServiceAbstractIntegrationTe
     public void testInit() throws Exception {
 
         super.init(TestUserMode.SUPER_TENANT_USER);
-        client = HttpClientBuilder.create().disableRedirectHandling().build();
+
+        cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+                .build();
+        requestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.DEFAULT)
+                .build();
+        client = HttpClientBuilder.create()
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .setDefaultRequestConfig(requestConfig)
+                .disableRedirectHandling()
+                .build();
         tenantAwareUsername = MultitenantUtils.getTenantAwareUsername(userInfo.getUserName());
         if (legacyMode) {
             userId = tenantAwareUsername;
@@ -289,7 +308,11 @@ public class OIDCSubAttributeTestCase extends OAuth2ServiceAbstractIntegrationTe
         idToken = null;
 
         // Reset client.
-        client = HttpClientBuilder.create().disableRedirectHandling().build();
+        client = HttpClientBuilder.create()
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .setDefaultRequestConfig(requestConfig)
+                .disableRedirectHandling()
+                .build();
 
         String username = userInfo.getUserName();
         Secret password = new Secret(userInfo.getPassword());
@@ -380,7 +403,11 @@ public class OIDCSubAttributeTestCase extends OAuth2ServiceAbstractIntegrationTe
         idToken = null;
 
         // Reset client.
-        client = HttpClientBuilder.create().disableRedirectHandling().build();
+        client = HttpClientBuilder.create()
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .setDefaultRequestConfig(requestConfig)
+                .disableRedirectHandling()
+                .build();
 
         // Send a direct implicit token request to IS instance.
         List<NameValuePair> urlParameters = new ArrayList<>();
