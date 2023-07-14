@@ -1565,6 +1565,11 @@
                 <artifactId>org.wso2.carbon.extension.identity.verification.provider.feature</artifactId>
                 <version>${identity.verification.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.extension.identity.verification</groupId>
+                <artifactId>org.wso2.carbon.extension.identity.verification.ui.feature</artifactId>
+                <version>${identity.verification.version}</version>
+            </dependency>
 
             <!-- Local Authenticators -->
             <dependency>
@@ -1982,6 +1987,11 @@
             <dependency>
                 <groupId>org.wso2.carbon.extension.identity.verification</groupId>
                 <artifactId>org.wso2.carbon.extension.identity.verification.provider</artifactId>
+                <version>${identity.verification.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.extension.identity.verification</groupId>
+                <artifactId>org.wso2.carbon.extension.identity.verification.ui</artifactId>
                 <version>${identity.verification.version}</version>
             </dependency>
             <dependency>
