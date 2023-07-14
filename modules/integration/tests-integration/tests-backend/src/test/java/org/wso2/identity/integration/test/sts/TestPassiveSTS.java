@@ -75,7 +75,6 @@ public class TestPassiveSTS extends ISIntegrationTest {
         return new Object[][]{
                 {TestUserMode.TENANT_ADMIN},
                 {TestUserMode.SUPER_TENANT_ADMIN}
-
         };
     }
 
