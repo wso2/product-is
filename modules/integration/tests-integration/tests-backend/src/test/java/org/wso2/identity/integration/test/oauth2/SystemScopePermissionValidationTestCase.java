@@ -42,10 +42,8 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
-import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
-import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
-import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
@@ -59,7 +57,6 @@ import static org.wso2.identity.integration.test.utils.DataExtractUtil.KeyValue;
 
 public class SystemScopePermissionValidationTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
-    private AuthenticatorClient logManger;
     private String accessToken;
     private String consumerKey;
     private String consumerSecret;
@@ -67,10 +64,10 @@ public class SystemScopePermissionValidationTestCase extends OAuth2ServiceAbstra
     private final String username;
     private final String userPassword;
     private final String activeTenant;
-    private final AutomationContext context;
     private final TestUserMode testUserMode;
 
     private static final String SYSTEM_SCOPE = "SYSTEM";
+    private String applicationId;
 
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
@@ -82,7 +79,8 @@ public class SystemScopePermissionValidationTestCase extends OAuth2ServiceAbstra
     @Factory(dataProvider = "configProvider")
     public SystemScopePermissionValidationTestCase(TestUserMode userMode) throws Exception {
 
-        context = new AutomationContext("IDENTITY", userMode);
+        super.init(userMode);
+        AutomationContext context = new AutomationContext("IDENTITY", userMode);
         this.username = context.getContextTenant().getTenantAdmin().getUserName();
         this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
         this.activeTenant = context.getContextTenant().getDomain();
@@ -92,14 +90,6 @@ public class SystemScopePermissionValidationTestCase extends OAuth2ServiceAbstra
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
-        backendURL = context.getContextUrls().getBackEndUrl();
-        logManger = new AuthenticatorClient(backendURL);
-        sessionCookie = logManger.login(username, userPassword, context.getInstance().getHosts().get("default"));
-        tenantInfo = context.getContextTenant();
-        userInfo = tenantInfo.getContextUser();
-        appMgtclient = new ApplicationManagementServiceClient(sessionCookie, backendURL, null);
-        adminClient = new OauthAdminClient(backendURL, sessionCookie);
-
         setSystemproperties();
         client = HttpClientBuilder.create().build();
     }
@@ -107,10 +97,9 @@ public class SystemScopePermissionValidationTestCase extends OAuth2ServiceAbstra
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
-        appMgtclient.deleteApplication(SERVICE_PROVIDER_NAME);
-        adminClient.removeOAuthApplicationData(consumerKey);
+        deleteApp(applicationId);
         client.close();
-        logManger = null;
+        restClient.closeHttpClient();
         consumerKey = null;
         accessToken = null;
     }
@@ -118,13 +107,15 @@ public class SystemScopePermissionValidationTestCase extends OAuth2ServiceAbstra
     @Test(groups = "wso2.is", description = "Check Oauth2 application registration")
     public void testRegisterApplication() throws Exception {
 
-        OAuthConsumerAppDTO appDto = createApplication();
-        Assert.assertNotNull(appDto, "Application creation failed.");
+        ApplicationResponseModel application = addApplication();
+        Assert.assertNotNull(application, "OAuth App creation failed.");
+        applicationId = application.getId();
+        OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(applicationId);
 
-        consumerKey = appDto.getOauthConsumerKey();
+        consumerKey = oidcConfig.getClientId();
         Assert.assertNotNull(consumerKey, "Application creation failed.");
 
-        consumerSecret = appDto.getOauthConsumerSecret();
+        consumerSecret = oidcConfig.getClientSecret();
         Assert.assertNotNull(consumerSecret, "Application creation failed.");
     }
 
@@ -147,7 +138,7 @@ public class SystemScopePermissionValidationTestCase extends OAuth2ServiceAbstra
 
         response = sendPostRequest(client, OAuth2Constant.AUTHORIZED_URL);
 
-        Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
+        Map<String, Integer> keyPositionMap = new HashMap<>(1);
         keyPositionMap.put("name=\"accessToken\"", 1);
 
         List<KeyValue> keyValues =
