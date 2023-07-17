@@ -1,33 +1,40 @@
 /*
- * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2017, WSO2 LLC. (http://www.wso2.com).
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 package org.wso2.identity.integration.test.oauth2;
 
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Oauth2 client id & client secret persistence processor test case.
@@ -35,8 +42,6 @@ import java.io.File;
 public class Oauth2PersistenceProcessorTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
     private ServerConfigurationManager serverConfigurationManager;
-    private String consumerKey1;
-    private String consumerKey2;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -48,21 +53,24 @@ public class Oauth2PersistenceProcessorTestCase extends OAuth2ServiceAbstractInt
     public void atEnd() throws Exception {
 
         resetISConfiguration();
+        restClient.closeHttpClient();
     }
 
     @Test(groups = "wso2.is", description = "Test PlainTextPersistenceProcessor")
     public void testPlainTextPersistenceProcessor() throws Exception {
 
-        OAuthConsumerAppDTO oAuthConsumerAppDTO = createApplication("app1");
-        Assert.assertNotNull(oAuthConsumerAppDTO, "Application creation failed.");
+        ApplicationResponseModel application = createApplication("app1");
+        Assert.assertNotNull(application, "Application creation failed.");
+        String applicationId1 = application.getId();
 
-        consumerKey1 = oAuthConsumerAppDTO.getOauthConsumerKey();
+        OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(applicationId1);
+        String consumerKey1 = oidcConfig.getClientId();
         Assert.assertNotNull(consumerKey1, "Application creation failed.");
 
-        String consumerSecret1 = oAuthConsumerAppDTO.getOauthConsumerSecret();
+        String consumerSecret1  = oidcConfig.getClientSecret();
         Assert.assertNotNull(consumerSecret1, "Application creation failed.");
 
-        deleteApplication(consumerKey1);
+        deleteApp(applicationId1);
     }
 
     @Test(groups = "wso2.is", description = "Test EncryptionDecryptionPersistenceProcessor",
@@ -72,41 +80,45 @@ public class Oauth2PersistenceProcessorTestCase extends OAuth2ServiceAbstractInt
         changeISConfiguration();
         super.init(TestUserMode.SUPER_TENANT_USER);
 
-        OAuthConsumerAppDTO oAuthConsumerAppDTO = createApplication("app2");
-        Assert.assertNotNull(oAuthConsumerAppDTO, "Application creation failed.");
+        ApplicationResponseModel application = createApplication("app2");
+        Assert.assertNotNull(application, "Application creation failed.");
+        String applicationId2 = application.getId();
 
-        consumerKey2 = oAuthConsumerAppDTO.getOauthConsumerKey();
+        OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(applicationId2);
+        String consumerKey2 = oidcConfig.getClientId();
         Assert.assertNotNull(consumerKey2, "Application creation failed.");
 
-        String consumerSecret2 = oAuthConsumerAppDTO.getOauthConsumerSecret();
+        String consumerSecret2  = oidcConfig.getClientSecret();
         Assert.assertNotNull(consumerSecret2, "Application creation failed.");
 
-        deleteApplication(consumerKey2);
+        deleteApp(applicationId2);
     }
 
-    private OAuthConsumerAppDTO createApplication(String applicationName) throws Exception {
+    private ApplicationResponseModel createApplication(String applicationName) throws Exception {
 
-        OAuthConsumerAppDTO oAuthConsumerAppDTO = new OAuthConsumerAppDTO();
-        oAuthConsumerAppDTO.setApplicationName(applicationName);
-        oAuthConsumerAppDTO.setCallbackUrl(OAuth2Constant.CALLBACK_URL);
-        oAuthConsumerAppDTO.setOAuthVersion(OAuth2Constant.OAUTH_VERSION_2);
-        oAuthConsumerAppDTO.setGrantTypes("authorization_code implicit password client_credentials refresh_token "
-                + "urn:ietf:params:oauth:grant-type:saml2-bearer iwa:ntlm");
+        ApplicationModel application = new ApplicationModel();
 
-        adminClient.registerOAuthApplicationData(oAuthConsumerAppDTO);
-        OAuthConsumerAppDTO[] appDTOs = adminClient.getAllOAuthApplicationData();
+        List<String> grantTypes = new ArrayList<>();
+        Collections.addAll(grantTypes, "authorization_code", "implicit", "password", "client_credentials",
+                "refresh_token", "urn:ietf:params:oauth:grant-type:saml2-bearer", "iwa:ntlm");
 
-        for (OAuthConsumerAppDTO appDTO : appDTOs) {
-            if (appDTO.getApplicationName().equals(applicationName)) {
-                return appDTO;
-            }
-        }
-        return null;
-    }
+        List<String> callBackUrls = new ArrayList<>();
+        Collections.addAll(callBackUrls, OAuth2Constant.CALLBACK_URL);
 
-    private void deleteApplication(String consumerKey) throws Exception {
+        OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
+        oidcConfig.setGrantTypes(grantTypes);
+        oidcConfig.setCallbackURLs(callBackUrls);
 
-        adminClient.removeOAuthApplicationData(consumerKey);
+        InboundProtocols inboundProtocolsConfig = new InboundProtocols();
+        inboundProtocolsConfig.setOidc(oidcConfig);
+
+        application.setInboundProtocolConfiguration(inboundProtocolsConfig);
+        application.setName(applicationName);
+        application.setIsManagementApp(true);
+
+        String appId = addApplication(application);
+
+        return getApplication(appId);
     }
 
     private void changeISConfiguration() throws Exception {
