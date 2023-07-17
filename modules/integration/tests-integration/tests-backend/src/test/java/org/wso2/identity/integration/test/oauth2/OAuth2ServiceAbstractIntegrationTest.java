@@ -24,11 +24,18 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.CookieSpecProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
@@ -373,11 +380,20 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		return response;
 	}
 
-	public HttpResponse sendConsentGetRequest(DefaultHttpClient client, String locationURL, CookieStore cookieStore,
+	public HttpResponse sendConsentGetRequest(CloseableHttpClient client, String locationURL, CookieStore cookieStore,
 											  List<NameValuePair> consentRequiredClaimsFromResponse) throws Exception {
 
-		HttpClient httpClientWithoutAutoRedirections = HttpClientBuilder.create().disableRedirectHandling()
-																		.setDefaultCookieStore(cookieStore).build();
+		Lookup<CookieSpecProvider> cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+				.register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+				.build();
+		RequestConfig requestConfig = RequestConfig.custom()
+				.setCookieSpec(CookieSpecs.DEFAULT)
+				.build();
+		HttpClient httpClientWithoutAutoRedirections = HttpClientBuilder.create()
+				.setDefaultRequestConfig(requestConfig)
+				.setDefaultCookieSpecRegistry(cookieSpecRegistry)
+				.disableRedirectHandling()
+				.setDefaultCookieStore(cookieStore).build();
 		HttpGet getRequest = new HttpGet(locationURL);
 		getRequest.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
 		HttpResponse response = httpClientWithoutAutoRedirections.execute(getRequest);
@@ -385,7 +401,6 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		consentRequiredClaimsFromResponse.addAll(Utils.getConsentRequiredClaimsFromResponse(response));
 		Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
 		HttpResponse httpResponse = sendGetRequest(httpClientWithoutAutoRedirections, locationHeader.getValue());
-		client.setCookieStore(cookieStore);
 		EntityUtils.consume(response.getEntity());
 		return httpResponse;
 	}

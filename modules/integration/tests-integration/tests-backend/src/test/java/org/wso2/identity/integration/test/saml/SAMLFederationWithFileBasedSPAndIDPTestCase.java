@@ -22,11 +22,17 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.CookieSpecProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
@@ -156,7 +162,7 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
     @Test(groups = "wso2.is", dependsOnMethods = {"testCreateServiceProviderInSecondaryIS"}, description = "Check SAML To SAML fedaration flow")
     public void testSAMLToSAMLFederation() throws Exception {
 
-        try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
+        try (CloseableHttpClient client = getClosableHTTPClient()) {
             String sessionId = sendSAMLRequestToPrimaryIS(client);
             Assert.assertNotNull(sessionId, "Unable to acquire 'sessionDataKey' value");
 
@@ -483,6 +489,20 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
 
     protected String getSecondaryISURI() {
         return String.format("https://localhost:%s/services/", DEFAULT_PORT + PORT_OFFSET_1);
+    }
+
+    private CloseableHttpClient getClosableHTTPClient() {
+
+        Lookup<CookieSpecProvider> cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+                .build();
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.DEFAULT)
+                .build();
+        return HttpClientBuilder.create()
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .setDefaultRequestConfig(requestConfig)
+                .build();
     }
 
 }
