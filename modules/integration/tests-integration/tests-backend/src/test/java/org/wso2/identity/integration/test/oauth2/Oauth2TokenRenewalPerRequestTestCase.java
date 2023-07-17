@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019, WSO2 LLC. (http://www.wso2.com).
  *
- * WSO2 Inc. licenses this file to you under the Apache License,
+ * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
- * you may obtain a copy of the License at
+ * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -39,8 +39,8 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
@@ -61,6 +61,7 @@ public class Oauth2TokenRenewalPerRequestTestCase extends OAuth2ServiceAbstractI
     private String tempAccessToken;
 
     CookieStore cookieStore = new BasicCookieStore();
+    private String applicationId;
 
     @BeforeClass(alwaysRun = true)
     public void setup() throws Exception {
@@ -68,17 +69,20 @@ public class Oauth2TokenRenewalPerRequestTestCase extends OAuth2ServiceAbstractI
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         changeISConfiguration();
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
-        OAuthConsumerAppDTO appDto = createApplication();
-        consumerKey = appDto.getOauthConsumerKey();
-        consumerSecret = appDto.getOauthConsumerSecret();
+
+        applicationId = addApplication().getId();
+        OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(applicationId);
+        consumerKey = oidcConfig.getClientId();
+        consumerSecret = oidcConfig.getClientSecret();
+
         client = HttpClientBuilder.create().disableRedirectHandling().setDefaultCookieStore(cookieStore).build();
     }
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
-        deleteApplication();
-        removeOAuthApplicationData();
+        deleteApp(applicationId);
+        restClient.closeHttpClient();
 
         log.info("Replacing deployment.toml with default configurations.");
         serverConfigurationManager.restoreToLastConfiguration(false);
@@ -262,7 +266,7 @@ public class Oauth2TokenRenewalPerRequestTestCase extends OAuth2ServiceAbstractI
 
     private void checkOldTokenRevocation(String token) throws Exception {
 
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("token", token));
 
         JSONObject jsonResponse = responseObject(OAuth2Constant.INTRO_SPEC_ENDPOINT, urlParameters,
