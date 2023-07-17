@@ -1,18 +1,20 @@
 /*
-* Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright (c) 2019, WSO2 LLC. (http://www.wso2.com).
+ *
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 
 package org.wso2.identity.integration.test.rest.api.server.application.management.v1.model;
 
@@ -24,43 +26,43 @@ import javax.validation.Valid;
 
 public class ClaimMappings  {
   
-    private String applicationClaimUri;
-    private String localClaimUri;
+    private String applicationClaim;
+    private Claim localClaim;
 
     /**
     **/
-    public ClaimMappings applicationClaimUri(String applicationClaimUri) {
+    public ClaimMappings applicationClaim(String applicationClaim) {
 
-        this.applicationClaimUri = applicationClaimUri;
+        this.applicationClaim = applicationClaim;
         return this;
     }
     
-    @ApiModelProperty(example = "firstname", value = "")
-    @JsonProperty("applicationClaimUri")
+    @ApiModelProperty(example = "firstname")
+    @JsonProperty("applicationClaim")
     @Valid
-    public String getApplicationClaimUri() {
-        return applicationClaimUri;
+    public String getApplicationClaim() {
+        return applicationClaim;
     }
-    public void setApplicationClaimUri(String applicationClaimUri) {
-        this.applicationClaimUri = applicationClaimUri;
+    public void setApplicationClaim(String applicationClaim) {
+        this.applicationClaim = applicationClaim;
     }
 
     /**
     **/
-    public ClaimMappings localClaimUri(String localClaimUri) {
+    public ClaimMappings localClaim(Claim localClaim) {
 
-        this.localClaimUri = localClaimUri;
+        this.localClaim = localClaim;
         return this;
     }
     
-    @ApiModelProperty(example = "http://wso2.org/claims/givenname", value = "")
-    @JsonProperty("localClaimUri")
+    @ApiModelProperty(example = "http://wso2.org/claims/givenname")
+    @JsonProperty("localClaim")
     @Valid
-    public String getLocalClaimUri() {
-        return localClaimUri;
+    public Claim getLocalClaim() {
+        return localClaim;
     }
-    public void setLocalClaimUri(String localClaimUri) {
-        this.localClaimUri = localClaimUri;
+    public void setLocalClaim(Claim localClaim) {
+        this.localClaim = localClaim;
     }
 
 
@@ -75,25 +77,22 @@ public class ClaimMappings  {
             return false;
         }
         ClaimMappings claimMappings = (ClaimMappings) o;
-        return Objects.equals(this.applicationClaimUri, claimMappings.applicationClaimUri) &&
-            Objects.equals(this.localClaimUri, claimMappings.localClaimUri);
+        return Objects.equals(this.applicationClaim, claimMappings.applicationClaim) &&
+            Objects.equals(this.localClaim, claimMappings.localClaim);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(applicationClaimUri, localClaimUri);
+        return Objects.hash(applicationClaim, localClaim);
     }
 
     @Override
     public String toString() {
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("class ClaimMappings {\n");
-
-        sb.append("    applicationClaimUri: ").append(toIndentedString(applicationClaimUri)).append("\n");
-        sb.append("    localClaimUri: ").append(toIndentedString(localClaimUri)).append("\n");
-        sb.append("}");
-        return sb.toString();
+        return "class ClaimMappings {\n" +
+                "    applicationClaim: " + toIndentedString(applicationClaim) + "\n" +
+                "    localClaim: " + toIndentedString(localClaim) + "\n" +
+                "}";
     }
 
     /**
@@ -105,7 +104,7 @@ public class ClaimMappings  {
         if (o == null) {
             return "null";
         }
-        return o.toString().replace("\n", "\n");
+        return o.toString();
     }
 }
 
