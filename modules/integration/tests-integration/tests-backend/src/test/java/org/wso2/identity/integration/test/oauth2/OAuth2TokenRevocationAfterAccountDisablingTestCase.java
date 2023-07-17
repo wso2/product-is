@@ -152,11 +152,6 @@ public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2Se
         identityGovernanceRestClient = new IdentityGovernanceRestClient(serverURL, tenantInfo);
 
         userId = addNewTestUser();
-        
-        ConfigurationContext configContext = ConfigurationContextFactory
-                .createConfigurationContextFromFileSystem(null, null);
-        applicationManagementServiceClient =
-                new ApplicationManagementServiceClient(sessionCookie, backendURL, configContext);
 
         cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
                 .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
@@ -169,16 +164,6 @@ public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2Se
                 .setDefaultRequestConfig(requestConfig)
                 .setDefaultCookieSpecRegistry(cookieSpecRegistry)
                 .build();
-        idPMgtClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
-        residentIDP = idPMgtClient.getResidentIdP();
-        usmClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
-        userIdentityManagementAdminServiceClient = new UserIdentityManagementAdminServiceClient(backendURL,
-                sessionCookie);
-        AuthenticatorClient logManager = new AuthenticatorClient(backendURL);
-        String secondaryTenantDomain = isServer.getTenantList().get(1);
-        String tenantCookie = logManager.login(ADMIN + "@" + secondaryTenantDomain,
-                ADMIN, isServer.getInstance().getHosts().get(DEFAULT_STRING));
-        tenantIDPMgtClient = new IdentityProviderMgtServiceClient(tenantCookie, backendURL);
     }
 
     @AfterClass(alwaysRun = true)

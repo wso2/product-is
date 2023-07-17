@@ -29,9 +29,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.params.HttpClientParams;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.apache.http.config.Lookup;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.cookie.CookieSpecProvider;
@@ -168,23 +165,25 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
             " a unsigned request object", dependsOnMethods = "testEnforceRequestObjectSignatureValidation")
     public void sendUnsuccessfulAuthorizationGrantRequestWithPlainJWTRequestObject() throws Exception {
 
-        HttpClient client = getRedirectDisabledClient();
-        String unsignedRequestObject = buildPlainJWT(consumerKey);
-        HttpResponse response = sendGetRequest(client, getAuthzRequestUrl(consumerKey, unsignedRequestObject));
-        // Since we have enforced request object validation we should be redirected to the error page.
-        assertForErrorPage(response);
-        EntityUtils.consume(response.getEntity());
+        try (CloseableHttpClient client = getRedirectDisabledClient()) {
+            String unsignedRequestObject = buildPlainJWT(consumerKey);
+            HttpResponse response = sendGetRequest(client, getAuthzRequestUrl(consumerKey, CALLBACK_URL, unsignedRequestObject));
+            // Since we have enforced request object validation we should be redirected to the error page.
+            assertForErrorPage(response);
+            EntityUtils.consume(response.getEntity());
+        }
     }
 
     @Test(groups = "wso2.is", description = "Check request object signature validation by sending a valid signed" +
             " request object", dependsOnMethods = "sendUnsuccessfulAuthorizationGrantRequestWithPlainJWTRequestObject")
     public void sendSuccessfulAuthorizationGrantRequestWithSignedRequestObject() throws Exception {
 
-        HttpClient client = getRedirectDisabledClient();
-        String signedRequestObject = buildSignedJWT(consumerKey, sp1PrivateKey);
-        HttpResponse response = sendGetRequest(client, getAuthzRequestUrl(consumerKey, signedRequestObject));
-        assertForLoginPage(response);
-        EntityUtils.consume(response.getEntity());
+        try (CloseableHttpClient client = getRedirectDisabledClient()) {
+            String signedRequestObject = buildSignedJWT(consumerKey, sp1PrivateKey);
+            HttpResponse response = sendGetRequest(client, getAuthzRequestUrl(consumerKey, CALLBACK_URL, signedRequestObject));
+            assertForLoginPage(response);
+            EntityUtils.consume(response.getEntity());
+        }
     }
 
     @Test(groups = "wso2.is", description = "Check request object signature validation by sending an invalid signed" +
@@ -192,11 +191,12 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
     public void sendUnSuccessfulAuthorizationGrantRequestWithSignedRequestObjectWithDifferentPrivateKey() throws
             Exception {
 
-        HttpClient client = getRedirectDisabledClient();
-        String signedRequestObject = buildSignedJWT(consumerKey, sp2PrivateKey);
-        HttpResponse response = sendGetRequest(client, getAuthzRequestUrl(consumerKey, signedRequestObject));
-        assertForErrorPage(response);
-        EntityUtils.consume(response.getEntity());
+        try (CloseableHttpClient client = getRedirectDisabledClient()) {
+            String signedRequestObject = buildSignedJWT(consumerKey, sp2PrivateKey);
+            HttpResponse response = sendGetRequest(client, getAuthzRequestUrl(consumerKey, CALLBACK_URL, signedRequestObject));
+            assertForErrorPage(response);
+            EntityUtils.consume(response.getEntity());
+        }
     }
 
     private void assertForLoginPage(HttpResponse response) {
@@ -235,14 +235,14 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
                 .build();
     }
 
-    private String getAuthzRequestUrl(String clientId, String requestObject) {
+    private String getAuthzRequestUrl(String clientId, String callbackUrl, String requestObject) {
 
-        return getAuthzRequestUrl(clientId) + "&request=" + requestObject;
+        return getAuthzRequestUrl(clientId, callbackUrl) + "&request=" + requestObject;
     }
 
-    private String getAuthzRequestUrl(String clientId) {
+    private String getAuthzRequestUrl(String clientId, String callbackUrl) {
 
-        return OAuth2Constant.AUTHORIZE_ENDPOINT_URL + "?" + "client_id=" + clientId + "&redirect_uri=" + CALLBACK_URL +
+        return OAuth2Constant.AUTHORIZE_ENDPOINT_URL + "?" + "client_id=" + clientId + "&redirect_uri=" + callbackUrl +
                 "&response_type=code&scope=openid%20internal_login";
     }
 

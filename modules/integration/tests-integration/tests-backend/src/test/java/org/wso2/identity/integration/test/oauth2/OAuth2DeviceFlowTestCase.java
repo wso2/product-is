@@ -30,7 +30,6 @@ import org.apache.http.config.Lookup;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.cookie.CookieSpecProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicNameValuePair;
@@ -87,10 +86,6 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
     public void testInit() throws Exception {
 
         super.init(TestUserMode.SUPER_TENANT_USER);
-        AuthenticatorClient logManger = new AuthenticatorClient(backendURL);
-        logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
-                        isServer.getSuperTenant().getTenantAdmin().getPassword(),
-                        isServer.getInstance().getHosts().get("default"));
 
         cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
                 .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
