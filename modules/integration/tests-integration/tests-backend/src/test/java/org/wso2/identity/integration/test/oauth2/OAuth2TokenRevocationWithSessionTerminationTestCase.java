@@ -1,7 +1,7 @@
 /*
- * Copyright (c) 2021, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2021, WSO2 LLC. (http://www.wso2.com).
  *
- * WSO2 Inc. licenses this file to you under the Apache License,
+ * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
@@ -38,9 +38,15 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
-import org.wso2.carbon.um.ws.api.stub.ClaimValue;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
+import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
+import org.wso2.identity.integration.test.rest.api.user.common.model.ListObject;
+import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperationRequestObject;
+import org.wso2.identity.integration.test.rest.api.user.common.model.RoleItemAddGroupobj;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
+import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
+import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
@@ -75,32 +81,46 @@ public class OAuth2TokenRevocationWithSessionTerminationTestCase extends OAuth2S
     private static final String USER_EMAIL = "authTokenRevokeUser@wso2.com";
     private static final String USERNAME = "authTokenRevokeUser";
     private static final String PASSWORD = "AuthTokenRevokeUser@123";
-    private static final String emailClaimURI = "http://wso2.org/claims/emailaddress";
+    private static final String USERS_PATH = "users";
+    private String applicationId;
+    private String userId;
+    private SCIM2RestClient scim2RestClient;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
         super.init();
         setSystemproperties();
-        remoteUSMServiceClient.addUser(USERNAME, PASSWORD, new String[]{"admin"},
-                getUserClaims(), "default", true);
+
+        backendURL = isServer.getContextUrls().getBackEndUrl();
+        tenantInfo = isServer.getContextTenant();
+        scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
+        restClient = new OAuth2RestClient(serverURL, tenantInfo);
+
+        addAdminUser();
         client = HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build();
     }
 
     @AfterClass(alwaysRun = true)
     public void testConclude() throws Exception {
 
-        deleteApplication();
+        deleteApp(applicationId);
+        scim2RestClient.deleteUser(userId);
+        restClient.closeHttpClient();
+        scim2RestClient.closeHttpClient();
     }
 
     @Test(groups = "wso2.is", description = "Create OAuth2 application")
     public void testRegisterApplication() throws Exception {
 
-        OAuthConsumerAppDTO appDto = createApplication();
-        Assert.assertNotNull(appDto, "Application creation failed.");
-        consumerKey = appDto.getOauthConsumerKey();
-        Assert.assertNotNull(consumerKey, "OAuth clientId is invalid.");
-        consumerSecret = appDto.getOauthConsumerSecret();
+        ApplicationResponseModel application = addApplication();
+        Assert.assertNotNull(application, "OAuth App creation failed.");
+        applicationId = application.getId();
+        OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(application.getId());
+
+        consumerKey = oidcConfig.getClientId();
+        Assert.assertNotNull(consumerKey, "Application creation failed.");
+        consumerSecret = oidcConfig.getClientSecret();
     }
 
     @Test(groups = "wso2.is", dependsOnMethods = {"testRegisterApplication"}, description = "Test login using OpenId " +
@@ -170,7 +190,7 @@ public class OAuth2TokenRevocationWithSessionTerminationTestCase extends OAuth2S
     /**
      * Playground app will initiate authorization request to IS and obtain session data key.
      *
-     * @throws IOException
+     * @throws IOException IOException
      */
     private void initiateAuthorizationRequest() throws IOException {
 
@@ -191,9 +211,9 @@ public class OAuth2TokenRevocationWithSessionTerminationTestCase extends OAuth2S
     /**
      * Provide user credentials and authenticate to the system.
      *
-     * @throws IOException
+     * @throws IOException IOException
      */
-    private void authenticateUser() throws IOException {
+    private void authenticateUser() throws Exception {
 
         // Pass user credentials to commonauth endpoint and authenticate the user.
         HttpResponse response = sendLoginPostForCustomUsers(client, sessionDataKey, USERNAME, PASSWORD);
@@ -216,7 +236,7 @@ public class OAuth2TokenRevocationWithSessionTerminationTestCase extends OAuth2S
     /**
      * Approve the consent.
      *
-     * @throws IOException
+     * @throws IOException IOException
      */
     private void performConsentApproval() throws IOException {
 
@@ -240,7 +260,7 @@ public class OAuth2TokenRevocationWithSessionTerminationTestCase extends OAuth2S
     /**
      * Exchange authorization code and get accesstoken.
      *
-     * @throws Exception
+     * @throws Exception IOException
      */
     private void generateAuthzCodeAccessToken() throws Exception {
 
@@ -258,7 +278,7 @@ public class OAuth2TokenRevocationWithSessionTerminationTestCase extends OAuth2S
 
     private List<NameValuePair> getOIDCInitiationRequestParams() {
 
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("grantType", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
         urlParameters.add(new BasicNameValuePair("consumerKey", consumerKey));
         urlParameters.add(new BasicNameValuePair("callbackurl", OAuth2Constant.CALLBACK_URL));
@@ -272,7 +292,7 @@ public class OAuth2TokenRevocationWithSessionTerminationTestCase extends OAuth2S
     /**
      * Introspect the obtained accesstoken and it should be an active token.
      *
-     * @throws Exception
+     * @throws Exception Exception
      */
     private void introspectActiveAccessToken() throws Exception {
 
@@ -317,11 +337,11 @@ public class OAuth2TokenRevocationWithSessionTerminationTestCase extends OAuth2S
      * Get introspection endpoint response by callling introspection endpoint.
      *
      * @return JSONObject
-     * @throws Exception
+     * @throws Exception Exception
      */
     private JSONObject testIntrospectionEndpoint() throws Exception {
 
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("token", accessToken));
         return responseObject(OAuth2Constant.INTRO_SPEC_ENDPOINT, urlParameters, USERNAME, PASSWORD);
     }
@@ -334,7 +354,7 @@ public class OAuth2TokenRevocationWithSessionTerminationTestCase extends OAuth2S
      * @param key            Basic authentication key.
      * @param secret         Basic authentication secret.
      * @return JSON object of the response.
-     * @throws Exception
+     * @throws Exception Exception
      */
     private JSONObject responseObject(String endpoint, List<NameValuePair> postParameters, String key, String secret)
             throws Exception {
@@ -355,19 +375,23 @@ public class OAuth2TokenRevocationWithSessionTerminationTestCase extends OAuth2S
     }
 
     /**
-     * Crete claim values array.
+     * Create a user with admin role assigned.
      *
-     * @return Array of claim values.
      */
-    protected ClaimValue[] getUserClaims() {
+    private void addAdminUser() throws Exception {
+        UserObject userInfo = new UserObject();
+        userInfo.setUserName(USERNAME);
+        userInfo.setPassword(PASSWORD);
+        userInfo.addEmail(new Email().value(USER_EMAIL));
 
-        ClaimValue[] claimValues = new ClaimValue[1];
+        userId = scim2RestClient.createUser(userInfo);
+        String roleId = scim2RestClient.getRoleIdByName("admin");
 
-        ClaimValue email = new ClaimValue();
-        email.setClaimURI(emailClaimURI);
-        email.setValue(USER_EMAIL);
-        claimValues[0] = email;
+        RoleItemAddGroupobj patchRoleItem = new RoleItemAddGroupobj();
+        patchRoleItem.setOp(RoleItemAddGroupobj.OpEnum.ADD);
+        patchRoleItem.setPath(USERS_PATH);
+        patchRoleItem.addValue(new ListObject().value(userId));
 
-        return claimValues;
+        scim2RestClient.updateUserRole(new PatchOperationRequestObject().addOperations(patchRoleItem), roleId);
     }
 }
