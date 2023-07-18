@@ -31,7 +31,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONArray;
@@ -683,8 +682,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 
 		updateApplication(appId, applicationPatch);
 	}
-
-
+	
 	/**
 	 * Convert a x509 certificate to pem format.
 	 *
