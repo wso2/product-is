@@ -27,6 +27,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.config.Lookup;
@@ -38,6 +39,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
@@ -50,6 +52,7 @@ import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.*;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration.DialectEnum;
 import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
@@ -140,11 +143,35 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		inboundProtocolsConfig.setOidc(oidcConfig);
 
 		application.setInboundProtocolConfiguration(inboundProtocolsConfig);
-		application.setName(OAuth2Constant.OAUTH_APPLICATION_NAME);
+		application.setName(SERVICE_PROVIDER_NAME);
+		application.setIsManagementApp(true);
+
+		application.setClaimConfiguration(setApplicationClaimConfig()); ;
 
 		String appId = addApplication(application);
 
 		return getApplication(appId);
+	}
+
+	ClaimConfiguration setApplicationClaimConfig() {
+
+		ClaimMappings emailClaim = new ClaimMappings().applicationClaim(EMAIL_CLAIM_URI);
+		emailClaim.setLocalClaim(new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(EMAIL_CLAIM_URI));
+		ClaimMappings countryClaim = new ClaimMappings().applicationClaim(COUNTRY_CLAIM_URI);
+		countryClaim.setLocalClaim(new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(COUNTRY_CLAIM_URI));
+
+		RequestedClaimConfiguration emailRequestedClaim = new RequestedClaimConfiguration();
+		emailRequestedClaim.setClaim(new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(EMAIL_CLAIM_URI));
+		RequestedClaimConfiguration countryRequestedClaim = new RequestedClaimConfiguration();
+		countryRequestedClaim.setClaim(new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(COUNTRY_CLAIM_URI));
+
+		ClaimConfiguration claimConfiguration = new ClaimConfiguration().dialect(DialectEnum.CUSTOM);
+		claimConfiguration.addClaimMappingsItem(emailClaim);
+		claimConfiguration.addClaimMappingsItem(countryClaim);
+		claimConfiguration.addRequestedClaimsItem(emailRequestedClaim);
+		claimConfiguration.addRequestedClaimsItem(countryRequestedClaim);
+
+		return claimConfiguration;
 	}
 
     /**
@@ -308,36 +335,44 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		return appDtoResult;
 	}
 
+	public void UpdateApplicationClaimConfig(String appId) throws Exception {
 
-
-	public void UpdateApplicationClaimConfig() throws Exception {
-		ServiceProvider serviceProvider = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
-		ClaimConfig claimConfig = getClaimConfig();
-		serviceProvider.setClaimConfig(claimConfig);
-		appMgtclient.updateApplicationData(serviceProvider);
+		ApplicationPatchModel applicationPatch = new ApplicationPatchModel();
+		applicationPatch.setClaimConfiguration(getClaimConfigurations());
+		restClient.updateApplication(appId, applicationPatch);
 	}
 
-	private ClaimConfig getClaimConfig() {
-		ClaimConfig claimConfig = new ClaimConfig();
-		ClaimMapping emailClaimMapping = getClaimMapping(EMAIL_CLAIM_URI);
-		ClaimMapping givenNameClaimMapping = getClaimMapping(GIVEN_NAME_CLAIM_URI);
-		ClaimMapping countryClaimMapping = getClaimMapping(COUNTRY_CLAIM_URI);
-		ClaimMapping customClaimMapping1 = getClaimMapping(customClaimURI1);
-		ClaimMapping customClaimMapping2 = getClaimMapping(customClaimURI2);
-		claimConfig.setClaimMappings(new org.wso2.carbon.identity.application.common.model.xsd
-				.ClaimMapping[]{emailClaimMapping, givenNameClaimMapping, countryClaimMapping, customClaimMapping1,
-				customClaimMapping2});
-		return claimConfig;
+	private ClaimConfiguration getClaimConfigurations() {
+
+		ClaimConfiguration claimConfiguration = new ClaimConfiguration().dialect(DialectEnum.CUSTOM);
+		claimConfiguration.addClaimMappingsItem(getClaimMapping(EMAIL_CLAIM_URI));
+		claimConfiguration.addRequestedClaimsItem(getRequestedClaim(EMAIL_CLAIM_URI));
+
+		claimConfiguration.addClaimMappingsItem(getClaimMapping(GIVEN_NAME_CLAIM_URI));
+		claimConfiguration.addRequestedClaimsItem(getRequestedClaim(GIVEN_NAME_CLAIM_URI));
+
+		claimConfiguration.addClaimMappingsItem(getClaimMapping(COUNTRY_CLAIM_URI));
+		claimConfiguration.addRequestedClaimsItem(getRequestedClaim(COUNTRY_CLAIM_URI));
+
+		claimConfiguration.addClaimMappingsItem(getClaimMapping(customClaimURI1));
+		claimConfiguration.addRequestedClaimsItem(getRequestedClaim(customClaimURI1));
+
+		claimConfiguration.addClaimMappingsItem(getClaimMapping(customClaimURI2));
+		claimConfiguration.addRequestedClaimsItem(getRequestedClaim(customClaimURI2));
+
+		return claimConfiguration;
 	}
 
-	private ClaimMapping getClaimMapping(String claimUri) {
-		Claim claim = new Claim();
-		claim.setClaimUri(claimUri);
-		ClaimMapping claimMapping = new ClaimMapping();
-		claimMapping.setRequested(true);
-		claimMapping.setLocalClaim(claim);
-		claimMapping.setRemoteClaim(claim);
-		return claimMapping;
+	private ClaimMappings getClaimMapping(String claimUri) {
+		ClaimMappings claim = new ClaimMappings().applicationClaim(claimUri);
+		claim.setLocalClaim(new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(claimUri));
+		return claim;
+	}
+
+	private RequestedClaimConfiguration getRequestedClaim(String claimUri) {
+		RequestedClaimConfiguration requestedClaim = new RequestedClaimConfiguration();
+		requestedClaim.setClaim(new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(claimUri));
+		return requestedClaim;
 	}
 
 	/**
@@ -720,6 +755,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 
 		application.setInboundProtocolConfiguration(inboundProtocolsConfig);
 		application.setName(OAuth2Constant.OAUTH_APPLICATION_NAME);
+		application.isManagementApp(true);
 
 		String appId = addApplication(application);
 
@@ -836,5 +872,22 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 			throw new Exception("Error occurred while getting the response.");
 		}
 		return json;
+	}
+
+	/**
+	 * Get public certificate from jwks endpoint.
+	 *
+	 * @param client HttpClient.
+	 * @param endPoint jwks endpoint.
+	 * @return String object of the certificate.
+	 * @throws Exception Exception
+	 */
+	public String getPublicCertificate(CloseableHttpClient client, String endPoint) throws Exception {
+		HttpGet request = new HttpGet(endPoint);
+		CloseableHttpResponse response = client.execute(request);
+
+		JSONParser parser = new JSONParser();
+		JSONObject json = (JSONObject) parser.parse(EntityUtils.toString(response.getEntity()));
+		return ((JSONArray) ((JSONObject)((JSONArray) json.get("keys")).get(0)).get("x5c")).get(0).toString();
 	}
 }

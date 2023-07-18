@@ -64,7 +64,7 @@ public class UserItemAddGroupobj {
 
     private OpEnum op = null;
     private String path;
-    private Boolean value = null;
+    private Object value = null;
 
     /**
      **/
@@ -107,7 +107,7 @@ public class UserItemAddGroupobj {
     /**
      *
      **/
-    public UserItemAddGroupobj value(Boolean value) {
+    public UserItemAddGroupobj value(Object value) {
 
         this.value = value;
         return this;
@@ -116,11 +116,11 @@ public class UserItemAddGroupobj {
     @ApiModelProperty()
     @JsonProperty("value")
     @Valid
-    public Boolean getValue() {
+    public Object getValue() {
         return value;
     }
 
-    public void setValue(Boolean value) {
+    public void setValue(Object value) {
         this.value = value;
     }
 

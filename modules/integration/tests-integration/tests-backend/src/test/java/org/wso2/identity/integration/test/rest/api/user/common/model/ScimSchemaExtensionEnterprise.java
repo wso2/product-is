@@ -28,6 +28,7 @@ public class ScimSchemaExtensionEnterprise {
     private Manager manager;
     private String employeeNumber;
     private Boolean accountLocked;
+    private String country;
 
     /**
      *
@@ -89,6 +90,26 @@ public class ScimSchemaExtensionEnterprise {
         this.accountLocked = accountLocked;
     }
 
+    /**
+     *
+     **/
+    public ScimSchemaExtensionEnterprise country(String country) {
+
+        this.country = country;
+        return this;
+    }
+
+    @ApiModelProperty(example = "Sri Lanka")
+    @JsonProperty("country")
+    @Valid
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
     @Override
     public boolean equals(Object o) {
 
@@ -101,12 +122,13 @@ public class ScimSchemaExtensionEnterprise {
         ScimSchemaExtensionEnterprise scimSchemaExtensionEnterprise = (ScimSchemaExtensionEnterprise) o;
         return Objects.equals(this.manager, scimSchemaExtensionEnterprise.manager) &&
                 Objects.equals(this.employeeNumber, scimSchemaExtensionEnterprise.employeeNumber) &&
-                Objects.equals(this.accountLocked, scimSchemaExtensionEnterprise.accountLocked);
+                Objects.equals(this.accountLocked, scimSchemaExtensionEnterprise.accountLocked) &&
+                Objects.equals(this.country, scimSchemaExtensionEnterprise.country);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(manager, employeeNumber, accountLocked);
+        return Objects.hash(manager, employeeNumber, accountLocked, country);
     }
 
     @Override
@@ -116,6 +138,7 @@ public class ScimSchemaExtensionEnterprise {
                 "    manager: " + toIndentedString(manager) + "\n" +
                 "    employeeNumber: " + toIndentedString(employeeNumber) + "\n" +
                 "    accountLocked: " + toIndentedString(accountLocked) + "\n" +
+                "    country: " + toIndentedString(country) + "\n" +
                 "}";
     }
 
