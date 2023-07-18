@@ -1,17 +1,19 @@
 /*
- * Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2018, WSO2 LLC. (http://www.wso2.com).
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.wso2.identity.integration.test.oauth2;
 
@@ -33,9 +35,8 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
-import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
@@ -54,17 +55,16 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT
  */
 public class Oauth2PersistenceProcessorInsertTokenTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
-    private AuthenticatorClient logManger;
     private String accessToken;
     private String sessionDataKeyConsent;
     private String sessionDataKey;
-    private String authorizationCode;
     private String consumerKey;
     private String consumerSecret;
     private Lookup<CookieSpecProvider> cookieSpecRegistry;
     private RequestConfig requestConfig;
     private CloseableHttpClient client;
     private ServerConfigurationManager serverConfigurationManager;
+    private String applicationId;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -79,10 +79,6 @@ public class Oauth2PersistenceProcessorInsertTokenTestCase extends OAuth2Service
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartForcefully();
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
-        logManger = new AuthenticatorClient(backendURL);
-        logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
-                isServer.getSuperTenant().getTenantAdmin().getPassword(),
-                isServer.getInstance().getHosts().get("default"));
         cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
                 .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
                 .build();
@@ -101,10 +97,10 @@ public class Oauth2PersistenceProcessorInsertTokenTestCase extends OAuth2Service
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
-        deleteApplication();
-        removeOAuthApplicationData();
+        deleteApp(applicationId);
+        restClient.closeHttpClient();
+        client.close();
 
-        logManger = null;
         consumerKey = null;
         accessToken = null;
 
@@ -136,7 +132,7 @@ public class Oauth2PersistenceProcessorInsertTokenTestCase extends OAuth2Service
         response = sendGetRequest(client, locationHeader.getValue());
         Assert.assertNotNull(response, "Authorized user response is null.");
 
-        Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
+        Map<String, Integer> keyPositionMap = new HashMap<>(1);
         keyPositionMap.put("name=\"sessionDataKey\"", 1);
         List<DataExtractUtil.KeyValue> keyValues =
                 DataExtractUtil.extractDataFromResponse(response, keyPositionMap);
@@ -167,7 +163,7 @@ public class Oauth2PersistenceProcessorInsertTokenTestCase extends OAuth2Service
         EntityUtils.consume(response.getEntity());
 
         response = sendGetRequest(client, locationHeader.getValue());
-        Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
+        Map<String, Integer> keyPositionMap = new HashMap<>(1);
         keyPositionMap.put("name=\"" + OAuth2Constant.SESSION_DATA_KEY_CONSENT + "\"", 1);
         List<DataExtractUtil.KeyValue> keyValues =
                 DataExtractUtil.extractSessionConsentDataFromResponse(response,
@@ -199,7 +195,10 @@ public class Oauth2PersistenceProcessorInsertTokenTestCase extends OAuth2Service
                 DataExtractUtil.extractTableRowDataFromResponse(response,
                         keyPositionMap);
         Assert.assertNotNull(response, "Authorization Code key value is invalid.");
-        authorizationCode = keyValues.get(0).getValue();
+        String authorizationCode = null;
+        if (keyValues != null) {
+            authorizationCode = keyValues.get(0).getValue();
+        }
         Assert.assertNotNull(authorizationCode, "Authorization code is null.");
         EntityUtils.consume(response.getEntity());
 
@@ -232,7 +231,7 @@ public class Oauth2PersistenceProcessorInsertTokenTestCase extends OAuth2Service
         HttpResponse response = sendValidateAccessTokenPost(client, accessToken);
         Assert.assertNotNull(response, "Validate access token response is invalid.");
 
-        Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
+        Map<String, Integer> keyPositionMap = new HashMap<>(1);
         keyPositionMap.put("name=\"valid\"", 1);
 
         List<DataExtractUtil.KeyValue> keyValues =
@@ -247,9 +246,9 @@ public class Oauth2PersistenceProcessorInsertTokenTestCase extends OAuth2Service
 
     private void registerAndDeployApplication() throws Exception {
 
-        OAuthConsumerAppDTO appDto = createApplication();
-        consumerKey = appDto.getOauthConsumerKey();
-        consumerSecret = appDto.getOauthConsumerSecret();
+        applicationId = addApplication().getId();
+        OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(applicationId);
+        consumerKey = oidcConfig.getClientId();
+        consumerSecret = oidcConfig.getClientSecret();
     }
-
 }
