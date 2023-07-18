@@ -207,7 +207,6 @@ public class OAuth2RestClient extends RestBaseClient {
 
     /**
      * Close the HTTP client
-     *
      */
     public void closeHttpClient() throws IOException {
         client.close();
