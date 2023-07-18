@@ -111,7 +111,6 @@ public class IdpMgtRestClient extends RestBaseClient {
 
     /**
      * Close the HTTP client.
-     *
      */
     public void closeHttpClient() throws IOException {
         client.close();

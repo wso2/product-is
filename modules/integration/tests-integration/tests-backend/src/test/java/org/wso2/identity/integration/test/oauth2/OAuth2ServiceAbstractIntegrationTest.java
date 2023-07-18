@@ -96,9 +96,8 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	/**
 	 * Initialize
 	 *
-	 * @param userMode
-	 *            - User Id
-	 * @throws Exception
+	 * @param userMode - User Id
+	 * @throws Exception Exception
 	 */
 	protected void init(TestUserMode userMode) throws Exception {
 		super.init(userMode);
@@ -112,7 +111,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	 * Create Application with the given app configurations
 	 *
 	 * @return OAuthConsumerAppDTO
-	 * @throws Exception
+	 * @throws Exception Exception
 	 */
 	public OAuthConsumerAppDTO createApplication() throws Exception {
 		OAuthConsumerAppDTO appDTO = new OAuthConsumerAppDTO();
@@ -377,15 +376,15 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 
 	/**
 	 * Send post request with parameters
-	 * @param client
-	 * @param urlParameters
-	 * @param url
-	 * @return
-	 * @throws ClientProtocolException
-	 * @throws java.io.IOException
+	 * @param client HttpClient
+	 * @param urlParameters url parameters
+	 * @param url endpoint
+	 * @return HttpResponse
+	 * @throws ClientProtocolException ClientProtocolException
+	 * @throws java.io.IOException java.io.IOException
 	 */
-	public HttpResponse sendPostRequestWithParameters(HttpClient client, List<NameValuePair> urlParameters, String url) throws ClientProtocolException,
-	                                                         IOException {
+	public HttpResponse sendPostRequestWithParameters(HttpClient client, List<NameValuePair> urlParameters, String url)
+			throws ClientProtocolException, IOException {
 		HttpPost request = new HttpPost(url);
 		request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
 		request.setEntity(new UrlEncodedFormEntity(urlParameters));
@@ -396,23 +395,16 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	/**
 	 * Send Get request
 	 *
-	 * @param client
-	 *            - http Client
-	 * @param locationURL
-	 *            - Get url location
+	 * @param client - http Client
+	 * @param locationURL - Get url location
 	 * @return http response
-	 * @throws ClientProtocolException
-	 * @throws java.io.IOException
+	 * @throws ClientProtocolException ClientProtocolException
+	 * @throws java.io.IOException java.io.IOException
 	 */
-	public HttpResponse sendGetRequest(HttpClient client, String locationURL)
-	                                                                         throws
-	                                                                         ClientProtocolException,
-	                                                                         IOException {
+	public HttpResponse sendGetRequest(HttpClient client, String locationURL) throws ClientProtocolException, IOException {
 		HttpGet getRequest = new HttpGet(locationURL);
 		getRequest.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
-		HttpResponse response = client.execute(getRequest);
-
-		return response;
+		return client.execute(getRequest);
 	}
 
 	public HttpResponse sendConsentGetRequest(CloseableHttpClient client, String locationURL, CookieStore cookieStore,
@@ -443,46 +435,36 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	/**
 	 * Send Post request
 	 *
-	 * @param client
-	 *            - http Client
-	 * @param locationURL
-	 *            - Post url location
+	 * @param client - http Client
+	 * @param locationURL - Post url location
 	 * @return http response
-	 * @throws ClientProtocolException
-	 * @throws java.io.IOException
+	 * @throws ClientProtocolException ClientProtocolException
+	 * @throws java.io.IOException java.io.IOException
 	 */
-	public HttpResponse sendPostRequest(HttpClient client, String locationURL)
-	                                                                          throws ClientProtocolException,
-	                                                                          IOException {
+	public HttpResponse sendPostRequest(HttpClient client, String locationURL) throws ClientProtocolException,
+			IOException {
 		HttpPost postRequest = new HttpPost(locationURL);
 		postRequest.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
-		HttpResponse response = client.execute(postRequest);
-
-		return response;
+		return client.execute(postRequest);
 	}
 
 	/**
 	 * Send login post request
 	 *
-	 * @param client
-	 *            - Http client
-	 * @param sessionDataKey
-	 *            - Session data key
+	 * @param client - Http client
+	 * @param sessionDataKey - Session data key
 	 * @return http response
-	 * @throws ClientProtocolException
-	 * @throws java.io.IOException
+	 * @throws ClientProtocolException ClientProtocolException
+	 * @throws java.io.IOException java.io.IOException
 	 */
-	public HttpResponse sendLoginPost(HttpClient client, String sessionDataKey)
-	                                                                           throws ClientProtocolException,
-	                                                                           IOException {
+	public HttpResponse sendLoginPost(HttpClient client, String sessionDataKey) throws ClientProtocolException,
+			IOException {
 		List<NameValuePair> urlParameters = new ArrayList<>();
 		urlParameters.add(new BasicNameValuePair("username", userInfo.getUserName()));
 		urlParameters.add(new BasicNameValuePair("password", userInfo.getPassword()));
 		urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
 		log.info(">>> sendLoginPost:sessionDataKey: " + sessionDataKey);
-		HttpResponse response = sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.COMMON_AUTH_URL);
-
-		return response;
+		return sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.COMMON_AUTH_URL);
 	}
 
 	/**
@@ -493,44 +475,36 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	 * @param username       Username.
 	 * @param password       Password.
 	 * @return Http response.
-	 * @throws ClientProtocolException
-	 * @throws IOException
+	 * @throws ClientProtocolException 	ClientProtocolException
+	 * @throws IOException				IOException
 	 */
 	public HttpResponse sendLoginPostForCustomUsers(HttpClient client, String sessionDataKey, String username,
-													String password)
-			throws ClientProtocolException, IOException {
+													String password) throws ClientProtocolException, IOException {
 
 		List<NameValuePair> urlParameters = new ArrayList<>();
 		urlParameters.add(new BasicNameValuePair("username", username));
 		urlParameters.add(new BasicNameValuePair("password", password));
 		urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
 		log.info(">>> sendLoginPost:sessionDataKey: " + sessionDataKey);
-		HttpResponse response = sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.COMMON_AUTH_URL);
-
-		return response;
+		return sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.COMMON_AUTH_URL);
 	}
 
 	/**
 	 * Send approval post request
 	 *
-	 * @param client
-	 *            - http client
-	 * @param sessionDataKeyConsent
-	 *            - session consent data
+	 * @param client - http client
+	 * @param sessionDataKeyConsent - session consent data
 	 * @return http response
-	 * @throws ClientProtocolException
-	 * @throws java.io.IOException
+	 * @throws ClientProtocolException ClientProtocolException
+	 * @throws java.io.IOException java.io.IOException
 	 */
-	public HttpResponse sendApprovalPost(HttpClient client, String sessionDataKeyConsent)
-	                                                                                     throws ClientProtocolException,
-	                                                                                     IOException {
+	public HttpResponse sendApprovalPost(HttpClient client, String sessionDataKeyConsent) throws ClientProtocolException,
+			IOException {
 		List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
 		urlParameters.add(new BasicNameValuePair("consent", "approve"));
 		urlParameters.add(new BasicNameValuePair("sessionDataKeyConsent", sessionDataKeyConsent));
 
-		HttpResponse response = sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.APPROVAL_URL);
-
-		return response;
+		return sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.APPROVAL_URL);
 	}
 
 	/**
@@ -540,7 +514,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	 * @param sessionDataKeyConsent session consent data
 	 * @param consentClaims claims requiring user consent
 	 * @return http response
-	 * @throws java.io.IOException
+	 * @throws java.io.IOException java.io.IOException
 	 */
 	public HttpResponse sendApprovalPostWithConsent(HttpClient client, String sessionDataKeyConsent,
 													List<NameValuePair> consentClaims) throws IOException {
@@ -554,32 +528,26 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 			urlParameters.addAll(consentClaims);
 		}
 
-		HttpResponse response = sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.APPROVAL_URL);
-		return response;
+		return sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.APPROVAL_URL);
 	}
 
 	/**
 	 * Send approval post request
 	 *
-	 * @param client
-	 *            - http client
-	 * @param consumerSecret
-	 *            - consumer secret
+	 * @param client - http client
+	 * @param consumerSecret - consumer secret
 	 * @return http response
-	 * @throws ClientProtocolException
-	 * @throws java.io.IOException
+	 * @throws ClientProtocolException ClientProtocolException
+	 * @throws java.io.IOException java.io.IOException
 	 */
-	public HttpResponse sendGetAccessTokenPost(HttpClient client, String consumerSecret)
-	                                                                                    throws ClientProtocolException,
+	public HttpResponse sendGetAccessTokenPost(HttpClient client, String consumerSecret) throws ClientProtocolException,
 	                                                                                    IOException {
 		List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
 		urlParameters.add(new BasicNameValuePair("callbackurl", OAuth2Constant.CALLBACK_URL));
 		urlParameters.add(new BasicNameValuePair("accessEndpoint",
 		                                         OAuth2Constant.ACCESS_TOKEN_ENDPOINT));
 		urlParameters.add(new BasicNameValuePair("consumerSecret", consumerSecret));
-		HttpResponse response = sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.GET_ACCESS_TOKEN_URL);
-
-		return response;
+		return sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.GET_ACCESS_TOKEN_URL);
 	}
 
 	/**
@@ -587,8 +555,8 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	 * @param client - http client
 	 * @param accessToken - access token
 	 * @return http response
-	 * @throws ClientProtocolException
-	 * @throws java.io.IOException
+	 * @throws ClientProtocolException ClientProtocolException
+	 * @throws java.io.IOException java.io.IOException
 	 */
 	public HttpResponse sendValidateAccessTokenPost(HttpClient client, String accessToken)
 	                                                                                    throws ClientProtocolException,
@@ -605,7 +573,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	 * @param accessToken - access token
 	 * @param endpoint - Introspection URL of the tenant domain.
 	 * @return JSON object of the response.
-	 * @throws Exception
+	 * @throws Exception Exception
 	 */
 	public JSONObject introspectTokenWithTenant(HttpClient client, String accessToken, String endpoint, String key,
 												String secret) throws Exception {
@@ -618,7 +586,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	/**
 	 * Delete Application
 	 *
-	 * @throws Exception
+	 * @throws Exception Exception
 	 */
 	public void deleteApplication() throws Exception {
 		appMgtclient.deleteApplication(SERVICE_PROVIDER_NAME);
@@ -631,7 +599,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	/**
 	 * Remove OAuth Application
 	 *
-	 * @throws Exception
+	 * @throws Exception Exception
 	 */
 	public void removeOAuthApplicationData() throws Exception {
 		adminClient.removeOAuthApplicationData(consumerKey);
@@ -697,13 +665,12 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		updateApplication(appId, applicationPatch);
 	}
 
-
 	/**
 	 * Convert a x509 certificate to pem format.
 	 *
 	 * @param x509Certificate Certificate in x509 format.
 	 * @return Certificate in pem format.
-	 * @throws CertificateEncodingException
+	 * @throws CertificateEncodingException CertificateEncodingException
 	 */
 	public String convertToPem(X509Certificate x509Certificate) throws CertificateEncodingException {
 
@@ -767,7 +734,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	 *
 	 * @param appDTO OAuthConsumerAppDTO of the service provider.
 	 * @return Registered service provider.
-	 * @throws Exception
+	 * @throws Exception Exception
 	 */
 	public ServiceProvider registerServiceProviderWithOAuthInboundConfigs(OAuthConsumerAppDTO appDTO)
 			throws Exception {
@@ -781,7 +748,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	 *
 	 * @param appDTO OAuthConsumerAppDTO of the service provider.
 	 * @return Registered service provider with some local and outbound configs
-	 * @throws Exception
+	 * @throws Exception Exception
 	 */
 	public ServiceProvider registerServiceProviderWithLocalAndOutboundConfigs(OAuthConsumerAppDTO appDTO)
 			throws Exception {
