@@ -81,8 +81,8 @@ public class TestPassiveSTS extends ISIntegrationTest {
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
         return new Object[][]{
-                {TestUserMode.SUPER_TENANT_ADMIN},
-                {TestUserMode.TENANT_ADMIN}
+                {TestUserMode.TENANT_ADMIN},
+                {TestUserMode.SUPER_TENANT_ADMIN}
         };
     }
 
@@ -265,7 +265,6 @@ public class TestPassiveSTS extends ISIntegrationTest {
 
         HttpEntity entity = response.getEntity();
         String responseString = EntityUtils.toString(entity, "UTF-8");
-
         Assert.assertTrue(responseString.contains("urn:oasis:names:tc:SAML:2.0:assertion"),
                 "No SAML2 Assertion found for the SAML2 request for tenant domain: " + tenantDomain);
     }

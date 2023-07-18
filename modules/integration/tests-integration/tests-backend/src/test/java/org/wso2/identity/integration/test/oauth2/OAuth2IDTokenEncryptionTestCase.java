@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2018, WSO2 LLC. (https://www.wso2.com).
  *
- * WSO2 Inc. licenses this file to you under the Apache License,
+ * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -14,7 +14,6 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *
  */
 package org.wso2.identity.integration.test.oauth2;
 
@@ -59,16 +58,17 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.test.utils.common.TestConfigurationProvider;
-import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
-import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.KeyStore;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
@@ -99,6 +99,10 @@ public class OAuth2IDTokenEncryptionTestCase extends OAuth2ServiceAbstractIntegr
     private String sessionDataKeyConsent;
     private AuthorizationCode authorizationCode;
     private String idToken;
+    private String consumerKey;
+    private String consumerSecret;
+    private ApplicationResponseModel application;
+    private OpenIDConnectConfiguration oidcInboundConfig;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -119,15 +123,17 @@ public class OAuth2IDTokenEncryptionTestCase extends OAuth2ServiceAbstractIntegr
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
-        deleteApplication();
-        removeOAuthApplicationData();
+        deleteApp(application.getId());
 
         consumerKey = null;
         consumerSecret = null;
         spPrivateKey = null;
         spX509PublicCert = null;
+        application = null;
+        oidcInboundConfig = null;
 
         client.close();
+        restClient.closeHttpClient();
     }
 
     @Test(groups = "wso2.is", description = "Check Service Provider key generation.")
@@ -142,10 +148,13 @@ public class OAuth2IDTokenEncryptionTestCase extends OAuth2ServiceAbstractIntegr
             dependsOnMethods = "testGenerateServiceProviderKeys")
     public void testRegisterApplication() throws Exception {
 
-        OAuthConsumerAppDTO oAuthConsumerAppDTO = getBasicOAuthApp(CALLBACK_URL);
-        ServiceProvider serviceProvider = registerServiceProviderWithOAuthInboundConfigs(oAuthConsumerAppDTO);
-        Assert.assertNotNull(serviceProvider, "OAuth App creation failed.");
+        application = getBasicOAuthApplication(CALLBACK_URL);
+        Assert.assertNotNull(application, "OAuth App creation failed.");
+
+        oidcInboundConfig = getOIDCInboundDetailsOfApplication(application.getId());
+        consumerKey = oidcInboundConfig.getClientId();
         Assert.assertNotNull(consumerKey, "Consumer Key is null.");
+        consumerSecret = oidcInboundConfig.getClientSecret();
         Assert.assertNotNull(consumerSecret, "Consumer Secret is null.");
     }
 
@@ -153,32 +162,29 @@ public class OAuth2IDTokenEncryptionTestCase extends OAuth2ServiceAbstractIntegr
             dependsOnMethods = "testRegisterApplication")
     public void updateServiceProviderCert() throws Exception {
 
-        ServiceProvider application = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
-        Assert.assertNotNull(application, "Application: " + SERVICE_PROVIDER_NAME + " retrieval failed.");
+        updateApplicationCertificate(application.getId(), spX509PublicCert);
 
-        application.setCertificateContent(convertToPem(spX509PublicCert));
-        appMgtclient.updateApplicationData(application);
-
-        ServiceProvider updatedApp = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
-        Assert.assertNotNull(updatedApp, "Updated application: " + SERVICE_PROVIDER_NAME +
-                " retrieval failed.");
-        Assert.assertNotNull(updatedApp.getCertificateContent(), "Updating application certificate failed.");
+        ApplicationResponseModel updatedApplication = getApplication(application.getId());
+        Assert.assertNotNull(updatedApplication, "Application: " + application.getName() + " retrieval failed.");
+        Assert.assertNotNull(updatedApplication.getAdvancedConfigurations().getCertificate(),
+                "Application Certificate update failed");
     }
 
     @Test(groups = "wso2.is", description = "Setup encryption algorithm and encryption method.",
             dependsOnMethods = "updateServiceProviderCert")
     public void testConfigureIDTokenEncryptionAlgorithms() throws Exception {
 
-        OAuthConsumerAppDTO consumerAppDTO = adminClient.getOAuthAppByConsumerKey(consumerKey);
-        consumerAppDTO.setIdTokenEncryptionEnabled(true);
-        consumerAppDTO.setIdTokenEncryptionAlgorithm(ENCRYPTION_ALGORITHM);
-        consumerAppDTO.setIdTokenEncryptionMethod(ENCRYPTION_METHOD);
-        adminClient.updateConsumerApp(consumerAppDTO);
-        OAuthConsumerAppDTO updateApp = adminClient.getOAuthAppByConsumerKey(consumerKey);
-        Assert.assertTrue(updateApp.getIdTokenEncryptionEnabled(), "Enforcing ID Token encryption failed.");
-        Assert.assertEquals(updateApp.getIdTokenEncryptionAlgorithm(),
+        oidcInboundConfig.getIdToken().getEncryption().setEnabled(true);
+        oidcInboundConfig.getIdToken().getEncryption().setAlgorithm(ENCRYPTION_ALGORITHM);
+        oidcInboundConfig.getIdToken().getEncryption().setMethod(ENCRYPTION_METHOD);
+        updateApplicationInboundConfig(application.getId(), oidcInboundConfig, OIDC);
+
+        OpenIDConnectConfiguration updatedOidcInboundConfig = getOIDCInboundDetailsOfApplication(application.getId());
+        Assert.assertTrue(updatedOidcInboundConfig.getIdToken().getEncryption().getEnabled(),
+                "Enforcing ID Token encryption failed.");
+        Assert.assertEquals(updatedOidcInboundConfig.getIdToken().getEncryption().getAlgorithm(),
                 ENCRYPTION_ALGORITHM, "Configuring encryption algorithm failed.");
-        Assert.assertEquals(updateApp.getIdTokenEncryptionMethod(),
+        Assert.assertEquals(updatedOidcInboundConfig.getIdToken().getEncryption().getMethod(),
                 ENCRYPTION_METHOD, "Configuring encryption method failed.");
     }
 
@@ -431,7 +437,7 @@ public class OAuth2IDTokenEncryptionTestCase extends OAuth2ServiceAbstractIntegr
     /**
      * Initiate service provider keys required for the tests.
      *
-     * @throws Exception
+     * @throws Exception error
      */
     private void initServiceProviderKeys() throws Exception {
 
@@ -440,7 +446,7 @@ public class OAuth2IDTokenEncryptionTestCase extends OAuth2ServiceAbstractIntegr
                 File.separator + "keystores" + File.separator + "sp1KeyStore.jks";
         String jksPassword = "wso2carbon";
 
-        keyStore.load(new FileInputStream(jksPath), jksPassword.toCharArray());
+        keyStore.load(Files.newInputStream(Paths.get(jksPath)), jksPassword.toCharArray());
 
         String alias = "wso2carbon";
         KeyStore.PrivateKeyEntry pkEntry = (KeyStore.PrivateKeyEntry) keyStore.getEntry(alias,
@@ -458,8 +464,8 @@ public class OAuth2IDTokenEncryptionTestCase extends OAuth2ServiceAbstractIntegr
      * @param client         CloseableHttpClient object to send the login post.
      * @param sessionDataKey String sessionDataKey obtained.
      * @return Extracted sessionDataKeyConsent.
-     * @throws IOException
-     * @throws URISyntaxException
+     * @throws IOException Error
+     * @throws URISyntaxException Error
      */
     private String getSessionDataKeyConsent(CloseableHttpClient client, String sessionDataKey)
             throws IOException, URISyntaxException {
@@ -491,8 +497,8 @@ public class OAuth2IDTokenEncryptionTestCase extends OAuth2ServiceAbstractIntegr
      * @param idToken  Encrypted ID token to be decrypted and checked.
      * @param audience Audience value that should be appeared in the token.
      * @return Boolean True if audience matches, False otherwise.
-     * @throws ParseException
-     * @throws JOSEException
+     * @throws ParseException Error
+     * @throws JOSEException Error
      */
     private boolean decryptAndCheckIDToken(String idToken, String audience) throws ParseException, JOSEException {
 

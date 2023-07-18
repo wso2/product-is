@@ -1,17 +1,19 @@
 /*
- * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2017, WSO2 LLC. (https://www.wso2.com).
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 package org.wso2.identity.integration.test.oauth2;
@@ -20,7 +22,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
@@ -30,61 +33,63 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
-import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class OAuth2ServiceRefreshTokenGrantTestCase extends OAuth2ServiceAbstractIntegrationTest {
-    private AuthenticatorClient logManger;
     private String adminUsername;
     private String adminPassword;
     private String refreshToken;
     private String consumerKey;
     private String consumerSecret;
+    private String applicationId;
 
-    private DefaultHttpClient client;
+    private CloseableHttpClient client;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
         super.init(TestUserMode.SUPER_TENANT_USER);
-        logManger = new AuthenticatorClient(backendURL);
         adminUsername = userInfo.getUserName();
         adminPassword = userInfo.getPassword();
-        logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
-                isServer.getSuperTenant().getTenantAdmin().getPassword(),
-                isServer.getInstance().getHosts().get("default"));
 
         setSystemproperties();
-        client = new DefaultHttpClient();
+        client = HttpClients.createDefault();
     }
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
-        deleteApplication();
-        removeOAuthApplicationData();
+        deleteApp(applicationId);
 
-        logManger = null;
         consumerKey = null;
         refreshToken = null;
+        applicationId = null;
+        client.close();
+        restClient.closeHttpClient();
     }
 
     @Test(alwaysRun = true, description = "Check Oauth2 application registration")
     public void testRegisterApplication() throws Exception {
-        OAuthConsumerAppDTO appDto = createApplication();
-        Assert.assertNotNull(appDto, "Application creation failed.");
+        ApplicationResponseModel application = addApplication();
+        Assert.assertNotNull(application, "OAuth App creation failed.");
 
-        consumerKey = appDto.getOauthConsumerKey();
+        OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(application.getId());
+
+        consumerKey = oidcConfig.getClientId();
         Assert.assertNotNull(consumerKey, "Application creation failed.");
 
-        consumerSecret = appDto.getOauthConsumerSecret();
+        consumerSecret = oidcConfig.getClientSecret();
+        Assert.assertNotNull(consumerSecret, "Application creation failed.");
+
+        applicationId = application.getId();
     }
 
     @Test(groups = "wso2.is", description = "Validate refresh token", dependsOnMethods = "testRegisterApplication")
     public void testSendAuthorizedPost() throws Exception {
-        List<NameValuePair> postParameters = new ArrayList<NameValuePair>();
+        List<NameValuePair> postParameters = new ArrayList<>();
         postParameters.add(new BasicNameValuePair("username", adminUsername));
         postParameters.add(new BasicNameValuePair("password", adminPassword));
         postParameters.add(new BasicNameValuePair("grant_type", OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER));
@@ -96,7 +101,7 @@ public class OAuth2ServiceRefreshTokenGrantTestCase extends OAuth2ServiceAbstrac
 
     @Test(groups = "wso2.is", description = "Validate refresh token", dependsOnMethods = "testSendAuthorizedPost")
     public void testRefreshTokenGrant() throws Exception {
-        List<NameValuePair> postParameters = new ArrayList<NameValuePair>();
+        List<NameValuePair> postParameters = new ArrayList<>();
         postParameters.add(new BasicNameValuePair("grant_type", OAuth2Constant.OAUTH2_GRANT_TYPE_REFRESH_TOKEN));
         postParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_GRANT_TYPE_REFRESH_TOKEN, refreshToken));
         JSONObject responseObject = responseObject(postParameters);
