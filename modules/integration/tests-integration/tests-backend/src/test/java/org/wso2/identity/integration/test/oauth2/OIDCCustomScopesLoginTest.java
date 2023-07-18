@@ -62,17 +62,25 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.base.MultitenantConstants;
-import org.wso2.carbon.identity.application.common.model.xsd.Claim;
-import org.wso2.carbon.identity.application.common.model.xsd.ClaimConfig;
-import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
-import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
-import org.wso2.carbon.identity.claim.metadata.mgt.stub.dto.ExternalClaimDTO;
-import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
-import org.wso2.identity.integration.common.clients.claim.metadata.mgt.ClaimMetadataManagementServiceClient;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration.DialectEnum;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimMappings;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.RequestedClaimConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model.ExternalClaimReq;
+import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperationRequestObject;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserItemAddGroupobj;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserItemAddGroupobj.OpEnum;
+import org.wso2.identity.integration.test.restclients.ClaimManagementRestClient;
+import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -116,12 +124,18 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
     private String loginPassword;
     private String requestedScopes;
     private String customScopeName;
-    private ClaimMetadataManagementServiceClient claimMgClient;
+    private static final String ENCODED_OIDC_CLAIM_DIALECT = "aHR0cDovL3dzbzIub3JnL29pZGMvY2xhaW0";
     private static final String REQUESTED_OIDC_SCOPE_STRING = "openid email profile phone address internal_login";
-    private static final String CUSTOM_LOCAL_CLAIM_URI = "http://wso2.org/claims/challengeQuestion1";
-    private static final String CUSTOM_CLAIM_VALUE = "ohDearMe";
+    private static final String CLAIM_DIALECT = "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User";
+    private static final String CLAIM = "department";
+    private static final String CUSTOM_MAPPED_LOCAL_CLAIM_URI = "http://wso2.org/claims/department";
+    private static final String CUSTOM_CLAIM_VALUE = "finance";
     private static final String CUSTOM_OIDC_CLAIM_NAME = "custom_oidc_claim";
-    private static final String OIDC_CLAIM_DIALECT = "http://wso2.org/oidc/claim";
+    private ClaimManagementRestClient claimManagementRestClient;
+    private SCIM2RestClient scim2RestClient;
+    private String applicationId;
+    private String customClaimId;
+    private String loginUserId;
 
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
@@ -156,7 +170,8 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
         customScopeName = "custom_" + tenantDomain;
         requestedScopes = REQUESTED_OIDC_SCOPE_STRING + " " + customScopeName;
 
-        claimMgClient = new ClaimMetadataManagementServiceClient(backendURL, sessionCookie);
+        claimManagementRestClient = new ClaimManagementRestClient(serverURL, tenantInfo);
+        scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
         client = HttpClientBuilder.create().disableRedirectHandling().build();
     }
 
@@ -164,20 +179,26 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
     public void atEnd() throws Exception {
 
         deleteCustomOIDCScope();
-        deleteApplication();
-        removeOAuthApplicationData();
+        deleteApp(applicationId);
         // Revert user attribute update.
-        remoteUSMServiceClient.setUserClaimValue(loginUsername, CUSTOM_LOCAL_CLAIM_URI, "", "default");
+        updateUserAttribute(loginUserId, CLAIM_DIALECT + ":" + CLAIM, "");
         // Remove OIDC custom claim.
-        claimMgClient.removeExternalClaim(OIDC_CLAIM_DIALECT, CUSTOM_OIDC_CLAIM_NAME);
+        claimManagementRestClient.deleteExternalClaim(ENCODED_OIDC_CLAIM_DIALECT, customClaimId);
+
+        restClient.closeHttpClient();
+        scim2RestClient.closeHttpClient();
+        claimManagementRestClient.closeHttpClient();
         client.close();
     }
 
     @Test(groups = "wso2.is", description = "Update user attribute")
     public void testUpdateUserAttribute() throws Exception {
 
-        remoteUSMServiceClient.setUserClaimValue(loginUsername, CUSTOM_LOCAL_CLAIM_URI, CUSTOM_CLAIM_VALUE, "default");
-        String claimValue = remoteUSMServiceClient.getUserClaimValue(loginUsername, CUSTOM_LOCAL_CLAIM_URI, "default");
+        loginUserId = getLoginUserId();
+        updateUserAttribute(loginUserId, CLAIM_DIALECT + ":" + CLAIM, CUSTOM_CLAIM_VALUE);
+
+        org.json.simple.JSONObject userObj = scim2RestClient.getUser(loginUserId);
+        String claimValue = ((org.json.simple.JSONObject) userObj.get(CLAIM_DIALECT)).get(CLAIM).toString();
         Assert.assertEquals(claimValue, CUSTOM_CLAIM_VALUE);
     }
 
@@ -185,40 +206,40 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
             dependsOnMethods = "testUpdateUserAttribute")
     public void testRegisterApplication() throws Exception {
 
-        OAuthConsumerAppDTO oAuthConsumerAppDTO = getBasicOAuthApp(CALLBACK_URL);
-        ServiceProvider serviceProvider = registerServiceProviderWithOAuthInboundConfigs(oAuthConsumerAppDTO);
-        Assert.assertNotNull(serviceProvider, "OAuth App creation failed.");
+        ApplicationResponseModel application = getBasicOAuthApplication(CALLBACK_URL);
+        Assert.assertNotNull(application, "OAuth App creation failed.");
+        applicationId = application.getId();
+
+        OpenIDConnectConfiguration oidcInboundConfig = getOIDCInboundDetailsOfApplication(applicationId);
+        consumerKey = oidcInboundConfig.getClientId();
         Assert.assertNotNull(consumerKey, "Consumer Key is null.");
+        consumerSecret = oidcInboundConfig.getClientSecret();
         Assert.assertNotNull(consumerSecret, "Consumer Secret is null.");
 
         // Update claim config.
-        ClaimConfig claimConfig = new ClaimConfig();
-        claimConfig.setClaimMappings(new ClaimMapping[]{getCustomLocalClaimMapping()});
-        serviceProvider.setClaimConfig(claimConfig);
-        appMgtclient.updateApplicationData(serviceProvider);
+        ApplicationPatchModel applicationPatch = new ApplicationPatchModel();
+        applicationPatch.setClaimConfiguration(getCustomLocalClaimMapping());
+        updateApplication(applicationId, applicationPatch);
 
-        ServiceProvider updatedApp = appMgtclient.getApplication(serviceProvider.getApplicationName());
-        Assert.assertNotNull(updatedApp.getClaimConfig());
-
-        ClaimMapping[] claimMappings = updatedApp.getClaimConfig().getClaimMappings();
+        application = getApplication(applicationId);
+        List<ClaimMappings> claimMappings = application.getClaimConfiguration().getClaimMappings();
         Assert.assertNotNull(claimMappings);
-        Assert.assertEquals(claimMappings.length, 1);
-        Assert.assertEquals(claimMappings[0].getLocalClaim().getClaimUri(), CUSTOM_LOCAL_CLAIM_URI);
+        Assert.assertEquals(claimMappings.size(), 1);
+        Assert.assertEquals(claimMappings.get(0).getLocalClaim().getUri(), CUSTOM_MAPPED_LOCAL_CLAIM_URI);
     }
 
     @Test(groups = "wso2.is", description = "Test custom OIDC claim creation.",
             dependsOnMethods = "testRegisterApplication")
     public void testCreateCustomOIDCClaim() throws Exception {
 
-        ExternalClaimDTO externalClaimDTO = new ExternalClaimDTO();
-        externalClaimDTO.setExternalClaimDialectURI(OIDC_CLAIM_DIALECT);
-        externalClaimDTO.setMappedLocalClaimURI(CUSTOM_LOCAL_CLAIM_URI);
-        externalClaimDTO.setExternalClaimURI(CUSTOM_OIDC_CLAIM_NAME);
+        ExternalClaimReq externalClaimReq = new ExternalClaimReq();
+        externalClaimReq.setClaimURI(CUSTOM_OIDC_CLAIM_NAME);
+        externalClaimReq.setMappedLocalClaimURI(CUSTOM_MAPPED_LOCAL_CLAIM_URI);
+        customClaimId = claimManagementRestClient.addExternalClaim(ENCODED_OIDC_CLAIM_DIALECT, externalClaimReq);
 
-        claimMgClient.addExternalClaim(externalClaimDTO);
-        // Assert whether registered custom OIDC claim is present.
-        Assert.assertTrue(Arrays.stream(claimMgClient.getExternalClaims(OIDC_CLAIM_DIALECT))
-                .anyMatch(x -> CUSTOM_OIDC_CLAIM_NAME.equals(x.getExternalClaimURI())));
+        org.json.simple.JSONObject customClaim =  claimManagementRestClient.getExternalClaim(ENCODED_OIDC_CLAIM_DIALECT,
+                customClaimId);
+        Assert.assertEquals(customClaim.get("claimURI").toString(), CUSTOM_OIDC_CLAIM_NAME);
     }
 
     @Test(groups = "wso2.is", description = "Test custom OIDC scope creation.",
@@ -542,15 +563,19 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
         return scopeCreateRequest;
     }
 
-    private ClaimMapping getCustomLocalClaimMapping() {
+    private ClaimConfiguration getCustomLocalClaimMapping() {
 
-        Claim claim = new Claim();
-        claim.setClaimUri(OIDCCustomScopesLoginTest.CUSTOM_LOCAL_CLAIM_URI);
-        ClaimMapping claimMapping = new ClaimMapping();
-        claimMapping.setRequested(true);
-        claimMapping.setLocalClaim(claim);
-        claimMapping.setRemoteClaim(claim);
-        return claimMapping;
+        ClaimMappings claimMapping = new ClaimMappings().applicationClaim(CUSTOM_MAPPED_LOCAL_CLAIM_URI);
+        claimMapping.setLocalClaim(new Claim().uri(CUSTOM_MAPPED_LOCAL_CLAIM_URI));
+
+        RequestedClaimConfiguration requestedClaim = new RequestedClaimConfiguration();
+        requestedClaim.setClaim(new Claim().uri(CUSTOM_MAPPED_LOCAL_CLAIM_URI));
+
+        ClaimConfiguration claimConfiguration = new ClaimConfiguration().dialect(DialectEnum.CUSTOM);
+        claimConfiguration.addClaimMappingsItem(claimMapping);
+        claimConfiguration.addRequestedClaimsItem(requestedClaim);
+
+        return claimConfiguration;
     }
 
     private void deleteCustomOIDCScope() throws Exception {
@@ -566,6 +591,24 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
         HttpResponse response = client.execute(httpDelete);
         int statusCode = response.getStatusLine().getStatusCode();
         Assert.assertEquals(statusCode, 204);
+    }
 
+    private String getLoginUserId() throws Exception {
+        String userSearchReq = new JSONObject()
+                .put("schemas", new JSONArray().put("urn:ietf:params:scim:api:messages:2.0:SearchRequest"))
+                .put("attributes", new JSONArray().put("id"))
+                .put("filter", "userName eq " + loginUsername )
+                .toString();
+
+        org.json.simple.JSONObject userSearchResponse = scim2RestClient.searchUser(userSearchReq);
+        return ((org.json.simple.JSONObject) ((org.json.simple.JSONArray) userSearchResponse.get("Resources")).get(0))
+                .get("id").toString();
+    }
+
+    private void updateUserAttribute(String loginUserId, String attributePath, String attributeValue) throws IOException {
+        UserItemAddGroupobj updateUserPatchOp = new UserItemAddGroupobj().op(OpEnum.ADD);
+        updateUserPatchOp.setPath(attributePath);
+        updateUserPatchOp.setValue(attributeValue);
+        scim2RestClient.updateUser(new PatchOperationRequestObject().addOperations(updateUserPatchOp), loginUserId);
     }
 }
