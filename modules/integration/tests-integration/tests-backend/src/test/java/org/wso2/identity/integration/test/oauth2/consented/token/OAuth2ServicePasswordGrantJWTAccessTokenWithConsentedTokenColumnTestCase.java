@@ -39,6 +39,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -52,6 +53,7 @@ import java.net.URISyntaxException;
 public class OAuth2ServicePasswordGrantJWTAccessTokenWithConsentedTokenColumnTestCase extends
         OAuth2ServiceWithConsentedTokenColumnAbstractIntegrationTest {
 
+    private static final String COUNTRY_OIDC_CLAIM = "country";
     protected Log log = LogFactory.getLog(getClass());
 
     @BeforeClass
@@ -64,8 +66,7 @@ public class OAuth2ServicePasswordGrantJWTAccessTokenWithConsentedTokenColumnTes
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
-        deleteApplication();
-        removeOAuthApplicationData();
+        deleteApp(applicationId);
         removeUser();
         resetVariables();
     }
@@ -89,10 +90,10 @@ public class OAuth2ServicePasswordGrantJWTAccessTokenWithConsentedTokenColumnTes
         ClientAuthentication clientAuth = new ClientSecretBasic(clientID, clientSecret);
         URI tokenEndpoint = new URI(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
         // email scope is to retrieve the email address of the user.
-        // phone scope is to retrieve the phone number of the user.
+        // address scope is to retrieve the country of the user.
         TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, passwordGrant,
                 new Scope(OAuth2Constant.OAUTH2_SCOPE_OPENID, OAuth2Constant.OAUTH2_SCOPE_EMAIL,
-                        OAuth2Constant.OAUTH2_SCOPE_PHONE));
+                        OAuth2Constant.OAUTH2_SCOPE_ADDRESS));
 
         HTTPResponse tokenHTTPResp = request.toHTTPRequest().send();
         Assert.assertNotNull(tokenHTTPResp, "JWT access token http response is null.");
@@ -122,9 +123,10 @@ public class OAuth2ServicePasswordGrantJWTAccessTokenWithConsentedTokenColumnTes
 
         org.json.simple.JSONObject userInfoEndpointResponse = sendRequestToUserInfoEndpoint();
         String email = userInfoEndpointResponse.get(EMAIL_OIDC_CLAIM).toString();
-        String phoneNumber = userInfoEndpointResponse.get(TELEPHONE_OIDC_CLAIM).toString();
+        String country = ((org.json.simple.JSONObject) userInfoEndpointResponse.get(ADDRESS_OIDC_CLAIM))
+                .get(COUNTRY_OIDC_CLAIM).toString();
 
-        Assert.assertEquals(PHONE_NUMBER, phoneNumber, "Incorrect phone number name claim value");
+        Assert.assertEquals(COUNTRY, country, "Incorrect country claim value");
         Assert.assertEquals(USER_EMAIL, email, "Incorrect email claim value");
     }
 
@@ -135,19 +137,20 @@ public class OAuth2ServicePasswordGrantJWTAccessTokenWithConsentedTokenColumnTes
         refreshToken = oidcTokens.getRefreshToken().getValue(); // Get the new refresh token.
 
         // Get the user info from the JWT access token.
-        org.json.JSONObject jwtJsonObject = new org.json.JSONObject(new String(Base64.decodeBase64(accessToken.split(
+        JSONObject jwtJsonObject = new JSONObject(new String(Base64.decodeBase64(accessToken.split(
                 "\\.")[1])));
         String email = jwtJsonObject.get(EMAIL_OIDC_CLAIM).toString();
-        String phoneNumber = jwtJsonObject.get(TELEPHONE_OIDC_CLAIM).toString();
+        String country = ((JSONObject) jwtJsonObject.get(ADDRESS_OIDC_CLAIM)).get(COUNTRY_OIDC_CLAIM).toString();
 
         // Check the user info of the JWT access token.
         Assert.assertEquals(USER_EMAIL, email, "Requested user claim (email) is not present in the JWT access token.");
-        Assert.assertEquals(PHONE_NUMBER, phoneNumber, "Requested user claim (phone_number) is not present in the JWT "
+        Assert.assertEquals(COUNTRY, country, "Requested user claim (country) is not present in the JWT "
                 + "access token.");
 
         Assert.assertEquals(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(EMAIL_OIDC_CLAIM), USER_EMAIL,
                 "Requested user claims is not returned back with the ID token.");
-        Assert.assertEquals(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(TELEPHONE_OIDC_CLAIM), PHONE_NUMBER,
+        Assert.assertEquals(((net.minidev.json.JSONObject) oidcTokens.getIDToken().getJWTClaimsSet()
+                        .getClaim(ADDRESS_OIDC_CLAIM)).get(COUNTRY_OIDC_CLAIM).toString(), COUNTRY,
                 "Requested user claims is not returned back with the ID token.");
     }
 }
