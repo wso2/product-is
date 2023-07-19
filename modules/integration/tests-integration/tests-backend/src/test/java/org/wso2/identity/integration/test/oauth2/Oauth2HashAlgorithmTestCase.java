@@ -93,7 +93,7 @@ public class Oauth2HashAlgorithmTestCase extends OAuth2ServiceAbstractIntegratio
                 .build();
 
         setSystemproperties();
-        registerAndDeployApplication();
+        createApp();
     }
 
     @AfterClass(alwaysRun = true)
@@ -244,7 +244,7 @@ public class Oauth2HashAlgorithmTestCase extends OAuth2ServiceAbstractIntegratio
         EntityUtils.consume(response.getEntity());
     }
 
-    private void registerAndDeployApplication() throws Exception {
+    private void createApp() throws Exception {
 
         applicationId = addApplication().getId();
         OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(applicationId);

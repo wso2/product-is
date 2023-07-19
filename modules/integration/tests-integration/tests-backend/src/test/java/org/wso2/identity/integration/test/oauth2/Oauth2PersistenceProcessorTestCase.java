@@ -67,7 +67,7 @@ public class Oauth2PersistenceProcessorTestCase extends OAuth2ServiceAbstractInt
         String consumerKey1 = oidcConfig.getClientId();
         Assert.assertNotNull(consumerKey1, "Application creation failed.");
 
-        String consumerSecret1  = oidcConfig.getClientSecret();
+        String consumerSecret1 = oidcConfig.getClientSecret();
         Assert.assertNotNull(consumerSecret1, "Application creation failed.");
 
         deleteApp(applicationId1);
@@ -88,7 +88,7 @@ public class Oauth2PersistenceProcessorTestCase extends OAuth2ServiceAbstractInt
         String consumerKey2 = oidcConfig.getClientId();
         Assert.assertNotNull(consumerKey2, "Application creation failed.");
 
-        String consumerSecret2  = oidcConfig.getClientSecret();
+        String consumerSecret2 = oidcConfig.getClientSecret();
         Assert.assertNotNull(consumerSecret2, "Application creation failed.");
 
         deleteApp(applicationId2);
