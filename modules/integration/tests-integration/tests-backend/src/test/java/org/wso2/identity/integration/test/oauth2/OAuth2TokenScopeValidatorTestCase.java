@@ -34,14 +34,22 @@ import com.nimbusds.oauth2.sdk.token.AccessToken;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 import java.io.File;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AccessTokenConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
+import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
@@ -49,12 +57,13 @@ public class OAuth2TokenScopeValidatorTestCase extends OAuth2ServiceAbstractInte
 
     public static final String ADD_SCOPE_DEPLOYMENT_CONFIG = "add_scope_deployment.toml";
     private static final String TENANT_DOMAIN = "wso2.com";
-    private final String tokenType = "Default";
+    private static final String tokenType = "Default";
     private AccessToken privilegedAccessToken;
     private ClientID consumerKey;
     private Secret consumerSecret;
     private String activeTenant;
     private ServerConfigurationManager serverConfigurationManager;
+    private String applicationId;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -72,17 +81,7 @@ public class OAuth2TokenScopeValidatorTestCase extends OAuth2ServiceAbstractInte
         AutomationContext context = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
         this.activeTenant = context.getContextTenant().getDomain();
 
-        OAuthConsumerAppDTO appDTO = new OAuthConsumerAppDTO();
-        appDTO.setApplicationName(OAuth2Constant.OAUTH_APPLICATION_NAME);
-        appDTO.setCallbackUrl(OAuth2Constant.CALLBACK_URL);
-        appDTO.setOAuthVersion(OAuth2Constant.OAUTH_VERSION_2);
-        appDTO.setTokenType(tokenType);
-        appDTO.setGrantTypes("client_credentials");
-
-        OAuthConsumerAppDTO oAuthConsumerAppDTO = createApplication(appDTO, SERVICE_PROVIDER_NAME);
-
-        consumerKey = new ClientID(oAuthConsumerAppDTO.getOauthConsumerKey());
-        consumerSecret = new Secret(oAuthConsumerAppDTO.getOauthConsumerSecret());
+        createOAuthApplication();
 
         privilegedAccessToken = requestAccessToken("internal_application_mgt_view");
     }
@@ -90,8 +89,9 @@ public class OAuth2TokenScopeValidatorTestCase extends OAuth2ServiceAbstractInte
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
-        deleteApplication();
+        deleteApp(applicationId);
         serverConfigurationManager.restoreToLastConfiguration(false);
+        restClient.closeHttpClient();
     }
 
     @Test(
@@ -221,5 +221,39 @@ public class OAuth2TokenScopeValidatorTestCase extends OAuth2ServiceAbstractInte
         HTTPResponse introspectionHTTPResp = TokenIntroRequest.toHTTPRequest().send();
 
         return TokenIntrospectionResponse.parse(introspectionHTTPResp);
+    }
+
+    private void createOAuthApplication() throws Exception {
+        restClient = new OAuth2RestClient(serverURL, tenantInfo);
+        ApplicationModel application = new ApplicationModel();
+
+        List<String> grantTypes = new ArrayList<>();
+        Collections.addAll(grantTypes, "client_credentials");
+
+        List<String> callBackUrls = new ArrayList<>();
+        Collections.addAll(callBackUrls, OAuth2Constant.CALLBACK_URL);
+
+        AccessTokenConfiguration accessTokenConfig = new AccessTokenConfiguration().type(tokenType);
+        accessTokenConfig.setUserAccessTokenExpiryInSeconds(3600L);
+        accessTokenConfig.setApplicationAccessTokenExpiryInSeconds(3600L);
+
+        OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
+        oidcConfig.setGrantTypes(grantTypes);
+        oidcConfig.setCallbackURLs(callBackUrls);
+        oidcConfig.setAccessToken(accessTokenConfig);
+
+        InboundProtocols inboundProtocolsConfig = new InboundProtocols();
+        inboundProtocolsConfig.setOidc(oidcConfig);
+
+        application.setInboundProtocolConfiguration(inboundProtocolsConfig);
+        application.setName(SERVICE_PROVIDER_NAME);
+        application.setIsManagementApp(true);
+
+        applicationId = addApplication(application);
+
+        oidcConfig = getOIDCInboundDetailsOfApplication(applicationId);
+
+        consumerKey = new ClientID(oidcConfig.getClientId());
+        consumerSecret = new Secret(oidcConfig.getClientSecret());
     }
 }

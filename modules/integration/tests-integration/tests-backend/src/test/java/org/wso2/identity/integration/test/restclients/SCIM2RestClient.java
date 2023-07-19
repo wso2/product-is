@@ -40,7 +40,7 @@ public class SCIM2RestClient extends RestBaseClient {
 
     private static final String SCIM2_USERS_ENDPOINT = "scim2/Users";
     private static final String SCIM2_ROLES_ENDPOINT = "scim2/Roles";
-    private static final String SCIM2_ROLE_SEARCH_PATH = "/.search";
+    private static final String SCIM2_SEARCH_PATH = "/.search";
     private static final String SCIM_JSON_CONTENT_TYPE = "application/scim+json";
     private static final String ROLE_SEARCH_SCHEMA = "urn:ietf:params:scim:api:messages:2.0:SearchRequest";
     private static final String DISPLAY_NAME_ATTRIBUTE = "displayName";
@@ -104,7 +104,23 @@ public class SCIM2RestClient extends RestBaseClient {
 
         try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeaders())) {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
-                    "Role update failed");
+                    "User update failed");
+        }
+    }
+
+    /**
+     * Search a user and get requested attributes
+     *
+     * @param userSearchReq json String of user search request.
+     * @return JSONObject of the user search response.
+     */
+    public JSONObject searchUser(String userSearchReq) throws Exception {
+        String endPointUrl = getUsersPath() + SCIM2_SEARCH_PATH;
+
+        try (CloseableHttpResponse response = getResponseOfHttpPost(endPointUrl, userSearchReq, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                    "User search failed");
+            return getJSONObject(EntityUtils.toString(response.getEntity()));
         }
     }
 
@@ -171,7 +187,7 @@ public class SCIM2RestClient extends RestBaseClient {
 
         String jsonRequest = toJSONString(roleSearchObj);
 
-        try (CloseableHttpResponse response = getResponseOfHttpPost(getRolesPath() + SCIM2_ROLE_SEARCH_PATH,
+        try (CloseableHttpResponse response = getResponseOfHttpPost(getRolesPath() + SCIM2_SEARCH_PATH,
                 jsonRequest, getHeaders())) {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
                     "Role search failed");
