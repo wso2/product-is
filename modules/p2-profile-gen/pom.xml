@@ -504,6 +504,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.extension.identity.verification:org.wso2.carbon.extension.identity.verification.provider.feature:${identity.verification.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.extension.identity.verification:org.wso2.carbon.extension.identity.verification.ui.feature:${identity.verification.version}
+                                </featureArtifactDef>
                                 <!-- input validation related features -->
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.input.validation.mgt.server.feature:${carbon.identity.framework.version}
@@ -1078,6 +1081,10 @@
                                     <id>org.wso2.carbon.extension.identity.verification.mgt.feature.group</id>
                                     <version>${identity.verification.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.extension.identity.verification.ui.feature.group</id>
+                                    <version>${identity.verification.version}</version>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>
@@ -1597,6 +1604,10 @@
                                     <id>org.wso2.carbon.extension.identity.verification.mgt.feature.group</id>
                                     <version>${identity.verification.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.extension.identity.verification.ui.feature.group</id>
+                                    <version>${identity.verification.version}</version>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>
@@ -2048,6 +2059,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.extension.identity.verification.mgt.feature.group</id>
+                                    <version>${identity.verification.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.extension.identity.verification.ui.feature.group</id>
                                     <version>${identity.verification.version}</version>
                                 </feature>
                             </features>
