@@ -78,7 +78,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	protected final static String SERVICE_PROVIDER_DESC = "Playground Service Provider";
 	protected static final String EMAIL_CLAIM_URI = "http://wso2.org/claims/emailaddress";
 	private static final String GIVEN_NAME_CLAIM_URI = "http://wso2.org/claims/givenname";
-	private static final String COUNTRY_CLAIM_URI = "http://wso2.org/claims/country";
+	protected static final String COUNTRY_CLAIM_URI = "http://wso2.org/claims/country";
 	private static final String customClaimURI1 = "http://wso2.org/claims/challengeQuestion1";
 	private static final String customClaimURI2 = "http://wso2.org/claims/challengeQuestion2";
 	private static final String GRANT_TYPE_PASSWORD = "password";
@@ -152,7 +152,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		return getApplication(appId);
 	}
 
-	ClaimConfiguration setApplicationClaimConfig() {
+	protected ClaimConfiguration setApplicationClaimConfig() {
 
 		ClaimMappings emailClaim = new ClaimMappings().applicationClaim(EMAIL_CLAIM_URI);
 		emailClaim.setLocalClaim(new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(EMAIL_CLAIM_URI));
