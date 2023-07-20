@@ -21,13 +21,19 @@ package org.wso2.identity.integration.test.saml;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.CookieSpecProvider;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
@@ -158,8 +164,17 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
     @Test(groups = "wso2.is", description = "Check SAML To SAML fedaration flow")
     public void testChangeACSUrl() throws Exception {
 
-        try (CloseableHttpClient client =
-                     HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build()) {
+        Lookup<CookieSpecProvider> cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+                .build();
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.DEFAULT)
+                .build();
+        try (CloseableHttpClient client = HttpClientBuilder.create()
+                             .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                             .setDefaultRequestConfig(requestConfig)
+                             .setDefaultCookieStore(new BasicCookieStore())
+                             .build()) {
             String sessionId = sendSAMLRequestToPrimaryIS(client);
             Assert.assertNotNull(sessionId, "Unable to acquire 'sessionDataKey' value");
 

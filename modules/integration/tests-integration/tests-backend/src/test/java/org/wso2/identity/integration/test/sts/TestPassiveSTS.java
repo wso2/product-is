@@ -5,12 +5,18 @@ import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.CookieSpecProvider;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
@@ -68,6 +74,8 @@ public class TestPassiveSTS extends ISIntegrationTest {
 
     private ApplicationManagementServiceClient appMgtClient;
     private ServiceProvider serviceProvider;
+    private Lookup<CookieSpecProvider> cookieSpecRegistry;
+    private RequestConfig requestConfig;
     private CloseableHttpClient client;
 
     @DataProvider(name = "configProvider")
@@ -96,7 +104,16 @@ public class TestPassiveSTS extends ISIntegrationTest {
 
         appMgtClient = new ApplicationManagementServiceClient(sessionCookie, backendURL, null);
 
-        client = HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build();
+        cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+                .build();
+        requestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.DEFAULT)
+                .build();
+        client = HttpClientBuilder.create()
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .setDefaultRequestConfig(requestConfig)
+                .setDefaultCookieStore(new BasicCookieStore()).build();
         String isURL = backendURL.substring(0, backendURL.indexOf("services/"));
         this.passiveStsURL = isURL + "passivests";
 

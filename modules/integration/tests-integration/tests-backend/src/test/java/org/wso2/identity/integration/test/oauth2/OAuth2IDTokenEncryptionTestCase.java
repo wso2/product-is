@@ -42,8 +42,14 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.CookieSpecProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
@@ -85,6 +91,8 @@ public class OAuth2IDTokenEncryptionTestCase extends OAuth2ServiceAbstractIntegr
     private static final String ENCRYPTION_ALGORITHM = "RSA-OAEP";
     private static final String ENCRYPTION_METHOD = "A256GCM";
 
+    private Lookup<CookieSpecProvider> cookieSpecRegistry;
+    private RequestConfig requestConfig;
     private CloseableHttpClient client;
 
     private String sessionDataKey;
@@ -100,7 +108,17 @@ public class OAuth2IDTokenEncryptionTestCase extends OAuth2ServiceAbstractIntegr
     public void testInit() throws Exception {
 
         super.init(TestUserMode.SUPER_TENANT_USER);
-        client = HttpClientBuilder.create().disableRedirectHandling().build();
+        cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+                .build();
+        requestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.DEFAULT)
+                .build();
+        client = HttpClientBuilder.create()
+                .disableRedirectHandling()
+                .setDefaultRequestConfig(requestConfig)
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .build();
     }
 
     @AfterClass(alwaysRun = true)
@@ -288,8 +306,11 @@ public class OAuth2IDTokenEncryptionTestCase extends OAuth2ServiceAbstractIntegr
         idToken = null;
 
         // Reset client.
-        client = HttpClientBuilder.create().disableRedirectHandling().build();
-
+        client = HttpClientBuilder.create()
+                .disableRedirectHandling()
+                .setDefaultRequestConfig(requestConfig)
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .build();
         // Send a direct implicit token request to IS instance.
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_RESPONSE_TYPE, OAuth2Constant.ID_TOKEN));
@@ -356,8 +377,11 @@ public class OAuth2IDTokenEncryptionTestCase extends OAuth2ServiceAbstractIntegr
         idToken = null;
 
         // Reset client.
-        client = HttpClientBuilder.create().disableRedirectHandling().build();
-
+        client = HttpClientBuilder.create()
+                .disableRedirectHandling()
+                .setDefaultRequestConfig(requestConfig)
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .build();
         String username = "admin";
         Secret password = new Secret("admin");
         AuthorizationGrant passwordGrant = new ResourceOwnerPasswordCredentialsGrant(username, password);

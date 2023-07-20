@@ -40,7 +40,13 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.CookieSpecProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.simple.JSONObject;
 import org.testng.Assert;
@@ -107,6 +113,8 @@ public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2Se
     private final Map<String, AccessToken> accessTokens = new HashMap<>();
     private final Map<String, AccessToken> privilegedAccessTokens = new HashMap<>();
 
+    private Lookup<CookieSpecProvider> cookieSpecRegistry;
+    private RequestConfig requestConfig;
     private HttpClient client;
     private SCIM2RestClient scim2RestClient;
     private String userId;
@@ -144,7 +152,17 @@ public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2Se
         identityGovernanceRestClient = new IdentityGovernanceRestClient(serverURL, tenantInfo);
 
         userId = addNewTestUser();
-        client = HttpClientBuilder.create().disableRedirectHandling().build();
+        cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+                .build();
+        requestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.DEFAULT)
+                .build();
+        client = HttpClientBuilder.create()
+                .disableRedirectHandling()
+                .setDefaultRequestConfig(requestConfig)
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .build();
     }
 
     @AfterClass(alwaysRun = true)

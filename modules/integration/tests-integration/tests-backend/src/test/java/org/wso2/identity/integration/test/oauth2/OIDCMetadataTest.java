@@ -20,8 +20,14 @@ package org.wso2.identity.integration.test.oauth2;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.CookieSpecProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.testng.Assert;
@@ -74,7 +80,16 @@ public class OIDCMetadataTest extends ISIntegrationTest {
 
     private void testResponseContent(String oidcMetadataEndpoint) throws IOException, JSONException {
 
-        HttpClient client = HttpClientBuilder.create().build();
+        Lookup<CookieSpecProvider> cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+                .build();
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.DEFAULT)
+                .build();
+        HttpClient client = HttpClientBuilder.create()
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .setDefaultRequestConfig(requestConfig)
+                .build();
         HttpResponse httpResponse = sendGetRequest(client, oidcMetadataEndpoint);
         String content = DataExtractUtil.getContentData(httpResponse);
         Assert.assertNotNull(content, "Response content is not received");

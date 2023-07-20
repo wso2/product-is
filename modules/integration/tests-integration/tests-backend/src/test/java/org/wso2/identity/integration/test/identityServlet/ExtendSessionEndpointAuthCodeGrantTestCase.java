@@ -45,9 +45,15 @@ import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.CookieSpecProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -101,6 +107,8 @@ public class ExtendSessionEndpointAuthCodeGrantTestCase extends OAuth2ServiceAbs
     private static final String SESSION_EXTENDER_ENDPOINT_GET_URL = SESSION_EXTENDER_ENDPOINT_URL + "?%s=%s";
     private static final String SESSIONS_ENDPOINT_URI = "https://localhost:9853/api/users/v1/me/sessions";
 
+    private Lookup<CookieSpecProvider> cookieSpecRegistry;
+    private RequestConfig requestConfig;
     private CloseableHttpClient firstPartyClient;
     private CloseableHttpClient thirdPartyClient;
     private String sessionDataKey;
@@ -120,8 +128,23 @@ public class ExtendSessionEndpointAuthCodeGrantTestCase extends OAuth2ServiceAbs
         context = isServer;
         this.authenticatingUserName = context.getContextTenant().getContextUser().getUserName();
         this.authenticatingCredential = context.getContextTenant().getContextUser().getPassword();
-        firstPartyClient = HttpClientBuilder.create().disableRedirectHandling().build();
-        thirdPartyClient = HttpClientBuilder.create().disableRedirectHandling().build();
+
+        cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+                .build();
+        requestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.DEFAULT)
+                .build();
+        firstPartyClient = HttpClientBuilder.create()
+                .disableRedirectHandling()
+                .setDefaultRequestConfig(requestConfig)
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .build();
+        thirdPartyClient = HttpClientBuilder.create()
+                .disableRedirectHandling()
+                .setDefaultRequestConfig(requestConfig)
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .build();
     }
 
     @AfterClass(alwaysRun = true)

@@ -40,8 +40,14 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.CookieSpecProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
@@ -251,8 +257,18 @@ public class OAuth2ServiceAuthCodeGrantJWTAccessTokenWithConsentedTokenColumnTes
     private HttpResponse sendConsentGetRequest(String locationURL,
             List<NameValuePair> consentRequiredClaimsFromResponse) throws Exception {
 
-        HttpClient httpClientWithoutAutoRedirections = HttpClientBuilder.create().disableRedirectHandling()
-                .setDefaultCookieStore(cookieStore).build();
+        Lookup<CookieSpecProvider> cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+                .build();
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.DEFAULT)
+                .build();
+        HttpClient httpClientWithoutAutoRedirections = HttpClientBuilder.create()
+                .disableRedirectHandling()
+                .setDefaultCookieStore(cookieStore)
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .setDefaultRequestConfig(requestConfig)
+                .build();
         HttpGet getRequest = new HttpGet(locationURL);
         getRequest.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
         HttpResponse response = httpClientWithoutAutoRedirections.execute(getRequest);
