@@ -59,7 +59,7 @@ if [ "$REPO" = "product-is" ]; then
 
   cat pom.xml
   export JAVA_HOME=$JAVA_11_HOME
-  mvn clean install -Djdk.util.zip.disableZip64ExtraFieldValidation=true --batch-mode | tee mvn-build.log
+  mvn clean install --batch-mode | tee mvn-build.log
 
   PR_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
   PR_TEST_RESULT=$(sed -n -e '/\[INFO\] Results:/,/\[INFO\] Tests run:/ p' mvn-build.log)
@@ -152,9 +152,9 @@ else
   fi
 
   if [ "$REPO" = "carbon-kernel" ]; then
-    mvn clean install -Dmaven.test.skip=true -Djdk.util.zip.disableZip64ExtraFieldValidation=true --batch-mode | tee mvn-build.log
+    mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
   else
-    mvn clean install -Djdk.util.zip.disableZip64ExtraFieldValidation=true --batch-mode | tee mvn-build.log
+    mvn clean install --batch-mode | tee mvn-build.log
   fi
 
   echo ""
@@ -227,7 +227,7 @@ else
 
 
     export JAVA_HOME=$JAVA_11_HOME
-    mvn clean install -Dmaven.test.skip=true -Djdk.util.zip.disableZip64ExtraFieldValidation=true --batch-mode | tee mvn-build.log
+    mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
 
     echo "Repo $OUTBOUND_AUTH_OIDC_REPO build complete."
     SUB_REPO_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
@@ -327,7 +327,7 @@ else
 
   export JAVA_HOME=$JAVA_11_HOME
   cat pom.xml
-  mvn clean install -Djdk.util.zip.disableZip64ExtraFieldValidation=true --batch-mode | tee mvn-build.log
+  mvn clean install --batch-mode | tee mvn-build.log
 
   PR_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
   PR_TEST_RESULT=$(sed -n -e '/\[INFO\] Results:/,/\[INFO\] Tests run:/ p' mvn-build.log)
