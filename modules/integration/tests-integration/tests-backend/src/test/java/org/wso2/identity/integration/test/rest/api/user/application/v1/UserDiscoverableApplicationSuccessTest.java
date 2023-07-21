@@ -21,6 +21,7 @@ package org.wso2.identity.integration.test.rest.api.user.application.v1;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
@@ -40,6 +41,7 @@ import static org.hamcrest.Matchers.hasSize;
 public class UserDiscoverableApplicationSuccessTest extends UserDiscoverableApplicationServiceTestBase {
 
     private static final String PAGINATION_LINK_QUERY_PARAM_STRING = "?offset=%d&limit=%d";
+    private static final String APP_NAME_WITH_SPACES = "APP_SPACES IN NAME";
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public UserDiscoverableApplicationSuccessTest(TestUserMode userMode) throws Exception {
@@ -184,6 +186,59 @@ public class UserDiscoverableApplicationSuccessTest extends UserDiscoverableAppl
 
         // Only 0th index application matches the given filter
         assertForApplication(serviceProviders.get(0), response);
+    }
+
+    @Test(description = "Test filtering applications by name with eq operator when name contains spaces.")
+    public void testFilterApplicationsByNameWithSpacesForEQ() throws Exception {
+
+        // Create a discoverable SP with spaces in the name.
+        ServiceProvider serviceProvider = createServiceProvider(
+                APP_NAME_WITH_SPACES, "This is " + APP_NAME_WITH_SPACES);
+        Assert.assertNotNull(serviceProvider, "Failed to create service provider with spaces in name.");
+
+        Map<String, Object> params = new HashMap<String, Object>() {{
+            put("filter", "name eq " + APP_NAME_WITH_SPACES);
+        }};
+        Response response = getResponseOfGet(USER_APPLICATION_ENDPOINT_URI, params);
+        response.then().log().ifValidationFails().assertThat().body("totalResults", equalTo(1));
+        response.then().log().ifValidationFails().assertThat().body("startIndex", equalTo(1));
+        response.then().log().ifValidationFails().assertThat().body("count", equalTo(1));
+
+        assertForApplication(serviceProvider, response);
+
+        // Remove the discoverable SP with spaces in the name.
+        ServiceProvider serviceProviderCreated = appMgtclient.getApplication(APP_NAME_WITH_SPACES);
+        if (serviceProviderCreated != null) {
+            appMgtclient.deleteApplication(serviceProviderCreated.getApplicationName());
+            log.info("############## " + "Deleted app: " + serviceProviderCreated.getApplicationName());
+        }
+    }
+
+    @Test(description = "Test filtering applications by name with co operator when name contains spaces.")
+    public void testFilterApplicationsByNameWithSpacesForCO() throws Exception {
+
+        // Create a discoverable SP with spaces in the name.
+        ServiceProvider serviceProvider = createServiceProvider(
+                APP_NAME_WITH_SPACES, "This is " + APP_NAME_WITH_SPACES);
+        Assert.assertNotNull(serviceProvider, "Failed to create service provider with spaces in name.");
+
+        Map<String, Object> params = new HashMap<String, Object>() {{
+            put("filter", "name co " + APP_NAME_WITH_SPACES);
+
+        }};
+        Response response = getResponseOfGet(USER_APPLICATION_ENDPOINT_URI, params);
+        response.then().log().ifValidationFails().assertThat().body("totalResults", equalTo(1));
+        response.then().log().ifValidationFails().assertThat().body("startIndex", equalTo(1));
+        response.then().log().ifValidationFails().assertThat().body("count", equalTo(1));
+
+        assertForApplication(serviceProvider, response);
+
+        // Remove the discoverable SP with spaces in the name.
+        ServiceProvider serviceProviderCreated = appMgtclient.getApplication(APP_NAME_WITH_SPACES);
+        if (serviceProviderCreated != null) {
+            appMgtclient.deleteApplication(serviceProviderCreated.getApplicationName());
+            log.info("############## " + "Deleted app: " + serviceProviderCreated.getApplicationName());
+        }
     }
 
     @Test(description = "Test get application.")
