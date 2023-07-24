@@ -1680,6 +1680,16 @@
                 <version>${authenticator.magiclink.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.identity.local.auth.magiclink</groupId>
+                <artifactId>org.wso2.carbon.identity.local.auth.emailotp</artifactId>
+                <version>${authenticator.local.auth.emailotp.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.local.auth.magiclink</groupId>
+                <artifactId>org.wso2.carbon.identity.local.auth.emailotp.server.feature</artifactId>
+                <version>${authenticator.local.auth.emailotp.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.extension.identity.authenticator.outbound.twitter</groupId>
                 <artifactId>org.wso2.carbon.extension.identity.authenticator.twitter.connector</artifactId>
                 <version>${authenticator.twitter.version}</version>
@@ -2337,6 +2347,7 @@
         <authenticator.smsotp.version>3.3.10</authenticator.smsotp.version>
         <authenticator.magiclink.version>1.1.10</authenticator.magiclink.version>
         <authenticator.emailotp.version>4.1.13</authenticator.emailotp.version>
+        <authenticator.local.auth.emailotp.version>1.0.0</authenticator.local.auth.emailotp.version>
         <authenticator.twitter.version>1.1.1</authenticator.twitter.version>
         <authenticator.x509.version>3.1.11</authenticator.x509.version>
         <identity.extension.utils>1.0.14</identity.extension.utils>
