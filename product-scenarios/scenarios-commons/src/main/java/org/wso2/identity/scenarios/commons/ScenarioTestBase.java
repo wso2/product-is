@@ -21,9 +21,14 @@ package org.wso2.identity.scenarios.commons;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.commons.collections.MapUtils;
+import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.CookieSpecProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
@@ -125,8 +130,17 @@ public class ScenarioTestBase {
     }
 
     public CloseableHttpClient createHttpClient(int timeOutInSeconds) {
-        RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(timeOutInSeconds * 1000).build();
-        return HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
+        Lookup<CookieSpecProvider> cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+                .build();
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setConnectTimeout(timeOutInSeconds * 1000)
+                .setCookieSpec(CookieSpecs.DEFAULT)
+                .build();
+        return HttpClientBuilder.create()
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .setDefaultRequestConfig(requestConfig)
+                .build();
     }
 
     public CloseableHttpClient createHttpClient() {
