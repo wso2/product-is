@@ -529,6 +529,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.local.auth.magiclink:org.wso2.carbon.identity.local.auth.magiclink.server.feature:${authenticator.magiclink.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.local.auth.emailotp:org.wso2.carbon.identity.local.auth.emailotp.server.feature:${authenticator.local.auth.emailotp.version}
+                                </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -1068,6 +1071,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.local.auth.magiclink.server.feature.group</id>
                                     <version>${authenticator.magiclink.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.local.auth.emailotp.server.feature.group</id>
+                                    <version>${authenticator.local.auth.emailotp.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.provisioning.connector.scim2.server.feature.group</id>
