@@ -2258,7 +2258,7 @@
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.saml.version>5.11.17</identity.inbound.auth.saml.version>
+        <identity.inbound.auth.saml.version>5.11.18</identity.inbound.auth.saml.version>
         <identity.inbound.auth.oauth.version>6.11.89</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.9.1</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.10.12</identity.inbound.auth.sts.version>
