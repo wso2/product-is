@@ -2324,7 +2324,7 @@
         <provisioning.connector.google.version>5.2.3</provisioning.connector.google.version>
         <provisioning.connector.salesforce.version>5.2.3</provisioning.connector.salesforce.version>
         <provisioning.connector.scim.version>5.3.1</provisioning.connector.scim.version>
-        <provisioning.connector.scim2.version>2.0.2</provisioning.connector.scim2.version>
+        <provisioning.connector.scim2.version>2.0.3</provisioning.connector.scim2.version>
 
         <!-- Local Authenticator Versions -->
         <identity.local.auth.basicauth.version>6.7.18</identity.local.auth.basicauth.version>
