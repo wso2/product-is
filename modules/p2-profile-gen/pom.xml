@@ -532,6 +532,10 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.local.auth.emailotp:org.wso2.carbon.identity.local.auth.emailotp.server.feature:${authenticator.local.auth.emailotp.version}
                                 </featureArtifactDef>
+                                <!-- Token exchange grant feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.extension.identity.oauth2.grantType.token.exchange:org.wso2.carbon.extension.identity.oauth2.token.exchange.feature:${identity.oauth2.token.exchange.grant.version}
+                                </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -1091,6 +1095,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.extension.identity.verification.ui.feature.group</id>
                                     <version>${identity.verification.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.extension.identity.oauth2.token.exchange.feature.group</id>
+                                    <version>${identity.oauth2.token.exchange.grant.version}</version>
                                 </feature>
                             </features>
                         </configuration>
