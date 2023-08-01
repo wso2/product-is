@@ -1,17 +1,17 @@
 /*
- * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 LLC. (https://www.wso2.com).
  *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -41,7 +41,9 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.identity.integration.test.oidc.bean.OIDCApplication;
-import org.wso2.identity.integration.test.oidc.bean.OIDCUser;
+import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
+import org.wso2.identity.integration.test.rest.api.user.common.model.Name;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
@@ -60,7 +62,7 @@ import java.util.Map;
  */
 public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
 
-    protected OIDCUser user;
+    protected UserObject user;
     protected Map<String, OIDCApplication> applications = new HashMap<>(2);
 
     protected String accessToken;
@@ -74,6 +76,7 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
     protected RequestConfig requestConfig;
     protected HttpClient client;
     protected List<NameValuePair> consentParameters = new ArrayList<>();
+
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -261,7 +264,8 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
 
     private void testAuthentication(OIDCApplication application) throws Exception {
 
-        HttpResponse response = sendLoginPostForCustomUsers(client, sessionDataKey, user.getUsername(), user.getPassword());
+        HttpResponse response = sendLoginPostForCustomUsers(client, sessionDataKey, user.getUserName(),
+                user.getPassword());
         Assert.assertNotNull(response, "Login request failed for " + application.getApplicationName() + ". response "
                 + "is null.");
 
@@ -364,12 +368,11 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
 
     protected void initUser() throws Exception {
 
-        user = new OIDCUser(OIDCUtilTest.username, OIDCUtilTest.password);
-        user.setProfile(OIDCUtilTest.profile);
-        user.addUserClaim(OIDCUtilTest.emailClaimUri, OIDCUtilTest.email);
-        user.addUserClaim(OIDCUtilTest.firstNameClaimUri, OIDCUtilTest.firstName);
-        user.addUserClaim(OIDCUtilTest.lastNameClaimUri, OIDCUtilTest.lastName);
-        user.addRole(OIDCUtilTest.role);
+        user = new UserObject();
+        user.setUserName(OIDCUtilTest.username);
+        user.setPassword(OIDCUtilTest.password);
+        user.setName(new Name().givenName(OIDCUtilTest.firstName).familyName(OIDCUtilTest.lastName));
+        user.addEmail(new Email().value(OIDCUtilTest.email));
     }
 
     protected void initApplications() throws Exception {
