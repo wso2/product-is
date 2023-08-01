@@ -23,6 +23,7 @@ import java.util.List;
 
 public class OIDCApplication {
 
+    private String applicationId;
     private String applicationName;
     private String clientId;
     private String clientSecret;
@@ -39,6 +40,14 @@ public class OIDCApplication {
         this.applicationName = applicationName;
         this.applicationContext = applicationContext;
         this.callBackURL = callBackURL;
+    }
+
+    public String getApplicationId() {
+        return applicationId;
+    }
+
+    public void setApplicationId(String applicationId) {
+        this.applicationId = applicationId;
     }
 
     public String getApplicationName() {

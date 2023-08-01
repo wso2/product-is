@@ -743,21 +743,6 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		return getServiceProvider(serviceProvider);
 	}
 
-	/**
-	 * Register a SP with some local and outbound configs.
-	 *
-	 * @param appDTO OAuthConsumerAppDTO of the service provider.
-	 * @return Registered service provider with some local and outbound configs
-	 * @throws Exception Exception
-	 */
-	public ServiceProvider registerServiceProviderWithLocalAndOutboundConfigs(OAuthConsumerAppDTO appDTO)
-			throws Exception {
-
-		ServiceProvider serviceProvider = generateServiceProvider(appDTO);
-		serviceProvider.getLocalAndOutBoundAuthenticationConfig().setUseTenantDomainInLocalSubjectIdentifier(true);
-		return getServiceProvider(serviceProvider);
-	}
-
 	protected ServiceProvider generateServiceProvider(OAuthConsumerAppDTO appDTO) throws Exception {
 
 		adminClient.registerOAuthApplicationData(appDTO);
@@ -821,7 +806,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	 * @param client            	httpclient.
 	 * @param authorizationHeader  	Authentication header.
 	 * @return JSON object of the response.
-	 * @throws Exception
+	 * @throws Exception Exception
 	 */
 	private JSONObject responseObject(HttpClient client, String endpoint, List<NameValuePair> postParameters,
 									  String authorizationHeader) throws Exception {

@@ -20,7 +20,10 @@ package org.wso2.identity.integration.test.rest.api.server.idp.v1.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
+
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -66,6 +69,14 @@ public class FederatedAuthenticatorRequest {
 
     public void setAuthenticators(List<FederatedAuthenticator> authenticators) {
         this.authenticators = authenticators;
+    }
+
+    public FederatedAuthenticatorRequest addAuthenticator(FederatedAuthenticator authenticator) {
+        if (this.authenticators == null) {
+            this.authenticators = new ArrayList<>();
+        }
+        this.authenticators.add(authenticator);
+        return this;
     }
 
     @Override
@@ -213,6 +224,14 @@ public class FederatedAuthenticatorRequest {
 
         public void setProperties(List<Property> properties) {
             this.properties = properties;
+        }
+
+        public FederatedAuthenticator addProperty(Property property) {
+            if (this.properties == null) {
+                this.properties = new ArrayList<>();
+            }
+            this.properties.add(property);
+            return this;
         }
 
         @Override

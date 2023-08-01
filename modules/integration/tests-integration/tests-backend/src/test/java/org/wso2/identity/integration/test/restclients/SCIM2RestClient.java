@@ -18,6 +18,7 @@
 package org.wso2.identity.integration.test.restclients;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.message.BasicHeader;
@@ -44,6 +45,7 @@ public class SCIM2RestClient extends RestBaseClient {
     private static final String SCIM_JSON_CONTENT_TYPE = "application/scim+json";
     private static final String ROLE_SEARCH_SCHEMA = "urn:ietf:params:scim:api:messages:2.0:SearchRequest";
     private static final String DISPLAY_NAME_ATTRIBUTE = "displayName";
+    private static final String ATTRIBUTES_PART = "?attributes=";
     private static final String EQ_OP = "eq";
     private final String serverUrl;
     private final String tenantDomain;
@@ -81,11 +83,17 @@ public class SCIM2RestClient extends RestBaseClient {
     /**
      * Get the details of a user
      *
-     * @param userId id of the user.
+     * @param userId     id of the user.
+     * @param attribute  requested user attributes
      * @return JSONObject of the HTTP response.
      */
-    public JSONObject getUser(String userId) throws Exception {
-        String endPointUrl = getUsersPath() + PATH_SEPARATOR + userId;
+    public JSONObject getUser(String userId, String attribute) throws Exception {
+        String endPointUrl;
+        if (StringUtils.isEmpty(attribute)) {
+            endPointUrl = getUsersPath() + PATH_SEPARATOR + userId;
+        } else {
+            endPointUrl = getUsersPath() + PATH_SEPARATOR + userId + ATTRIBUTES_PART + attribute;
+        }
 
         try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
             return getJSONObject(EntityUtils.toString(response.getEntity()));
