@@ -104,7 +104,7 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
             }
 
 
-            JSONObject userParameters = (JSONObject) scim2RestClient.getUser(testLockUserId).get(USER_SCHEMA);
+            JSONObject userParameters = (JSONObject) scim2RestClient.getUser(testLockUserId, null).get(USER_SCHEMA);
             Assert.assertTrue((Boolean) userParameters.get(ACCOUNT_LOCK_ATTRIBUTE),
                     "Test Failure : User Account Didn't Locked Properly");
         } catch (Exception e) {
@@ -120,7 +120,7 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
     public void testSuccessfulEmailTemplateRetrieval() throws Exception {
 
         testLockUser2Id = addAdminUser(TEST_LOCK_USER_2, TEST_LOCK_USER_2_PASSWORD, DEFAULT_LOCALITY_CLAIM_VALUE);
-        String locale = scim2RestClient.getUser(testLockUser2Id).get(LOCALE_ATTRIBUTE).toString();
+        String locale = scim2RestClient.getUser(testLockUser2Id, null).get(LOCALE_ATTRIBUTE).toString();
 
         JSONObject emailTemplateResourceContent =
                 emailTemplatesRestClient.getEmailTemplate(ACCOUNT_LOCK_TEMPLATE_WHEN_USER_EXCEEDS_FAILED_ATTEMPTS, locale);
@@ -140,7 +140,7 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
     public void testSuccessfulEmailTemplateRetrievalAccountUnLock() throws Exception {
 
         testLockUser3Id = addAdminUser(TEST_LOCK_USER_3, TEST_LOCK_USER_3_PASSWORD, DEFAULT_LOCALITY_CLAIM_VALUE);
-        String locale = scim2RestClient.getUser(testLockUser3Id).get(LOCALE_ATTRIBUTE).toString();
+        String locale = scim2RestClient.getUser(testLockUser3Id, null).get(LOCALE_ATTRIBUTE).toString();
 
         JSONObject emailTemplateResourceContent =
                 emailTemplatesRestClient.getEmailTemplate(ACCOUNT_UNLOCK_TEMPLATE_TIME_BASED, locale);
@@ -171,8 +171,7 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
     }
 
     protected void enableAccountLocking() throws Exception {
-        identityGovernanceRestClient = new IdentityGovernanceRestClient(backendURL.replace("services/",
-                ""), tenantInfo);
+        identityGovernanceRestClient = new IdentityGovernanceRestClient(serverURL, tenantInfo);
 
         PropertyReq property = new PropertyReq();
         property.setName(ENABLE_ACCOUNT_LOCK);
