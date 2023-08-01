@@ -1,17 +1,19 @@
 /*
- *  Copyright (c) 2021, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2021, WSO2 LLC. (http://www.wso2.com).
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.wso2.identity.integration.test.oidc;
 
@@ -38,13 +40,16 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.automation.engine.context.beans.User;
-import org.wso2.carbon.identity.application.common.model.xsd.Claim;
-import org.wso2.carbon.identity.application.common.model.xsd.ClaimConfig;
-import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
-import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.apache.commons.lang.StringUtils;
 import org.wso2.identity.integration.test.oidc.bean.OIDCApplication;
-import org.wso2.identity.integration.test.oidc.bean.OIDCUser;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimMappings;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.RequestedClaimConfiguration;
+import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
+import org.wso2.identity.integration.test.rest.api.user.common.model.Name;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
@@ -62,7 +67,7 @@ import java.util.Map;
  */
 public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
 
-    protected OIDCUser user;
+    protected UserObject user;
     protected String accessToken;
     protected String sessionDataKeyConsent;
     protected String sessionDataKey;
@@ -75,7 +80,6 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
     protected HttpClient client;
     protected List<NameValuePair> consentParameters = new ArrayList<>();
     OIDCApplication playgroundApp;
-    ServiceProvider serviceProvider;
     private String claimsToGetConsent;
 
     @BeforeClass(alwaysRun = true)
@@ -85,11 +89,11 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
 
         initUser();
         createUser(user);
-        userInfo.setUserName(user.getUsername());
+        userInfo.setUserName(user.getUserName());
         userInfo.setPassword(user.getPassword());
 
         playgroundApp = initApplication();
-        serviceProvider = createApplication(new ServiceProvider(), playgroundApp);
+        createApplication(playgroundApp);
 
         cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
                 .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
@@ -123,7 +127,7 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
         testGetAccessToken(playgroundApp);
 
         performOIDCLogout();
-        updateApplication(playgroundApp, serviceProvider);
+        updateApplication(playgroundApp);
 
         // Login again with updated claim configurations.
         testSendAuthenticationRequest(playgroundApp, client);
@@ -269,12 +273,11 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
 
     protected void initUser() throws Exception {
 
-        user = new OIDCUser(OIDCUtilTest.username, OIDCUtilTest.password);
-        user.setProfile(OIDCUtilTest.profile);
-        user.addUserClaim(OIDCUtilTest.emailClaimUri, OIDCUtilTest.email);
-        user.addUserClaim(OIDCUtilTest.firstNameClaimUri, OIDCUtilTest.firstName);
-        user.addUserClaim(OIDCUtilTest.lastNameClaimUri, OIDCUtilTest.lastName);
-        user.addRole(OIDCUtilTest.role);
+        user = new UserObject();
+        user.setUserName(OIDCUtilTest.username);
+        user.setPassword(OIDCUtilTest.password);
+        user.setName(new Name().givenName(OIDCUtilTest.firstName).familyName(OIDCUtilTest.lastName));
+        user.addEmail(new Email().value(OIDCUtilTest.email));
     }
 
     protected OIDCApplication initApplication() {
@@ -287,19 +290,20 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
         return playgroundApp;
     }
 
-    private void updateApplication(OIDCApplication playgroundApp, ServiceProvider serviceProvider) throws Exception {
+    private void updateApplication(OIDCApplication playgroundApp) throws Exception {
 
         playgroundApp.addRequiredClaim(OIDCUtilTest.lastNameClaimUri);
-        ClaimConfig claimConfig = new ClaimConfig();
-        Claim claim = new Claim();
-        claim.setClaimUri(OIDCUtilTest.lastNameClaimUri);
-        ClaimMapping claimMapping = new ClaimMapping();
-        claimMapping.setRequested(true);
-        claimMapping.setLocalClaim(claim);
-        claimMapping.setRemoteClaim(claim);
-        claimConfig.addClaimMappings(claimMapping);
-        serviceProvider.setClaimConfig(claimConfig);
-        updateApplication(serviceProvider);
+        ClaimConfiguration claimConfig = getApplication(playgroundApp.getApplicationId()).getClaimConfiguration();
+
+        ClaimMappings claimMapping = new ClaimMappings().applicationClaim(OIDCUtilTest.lastNameClaimUri);
+        claimMapping.setLocalClaim(new Claim().uri(OIDCUtilTest.lastNameClaimUri));
+        RequestedClaimConfiguration requestedClaim = new RequestedClaimConfiguration();
+        requestedClaim.setClaim(new Claim().uri(OIDCUtilTest.lastNameClaimUri));
+
+        claimConfig.addClaimMappingsItem(claimMapping);
+        claimConfig.addRequestedClaimsItem(requestedClaim);
+
+        updateApplication(playgroundApp.getApplicationId(), new ApplicationPatchModel().claimConfiguration(claimConfig));
     }
 
     protected HttpResponse sendGetAccessTokenPost(HttpClient client, OIDCApplication application) throws IOException {
