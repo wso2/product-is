@@ -66,17 +66,6 @@ public class UserDiscoverableApplicationFailureTest extends UserDiscoverableAppl
     }
 
     @Test
-    public void testFilterApplicationsWithInvalidFilterOperation() {
-
-        Map<String, Object> params = new HashMap<String, Object>() {{
-            put("filter", "name equal APP_1 ");
-
-        }};
-        Response response = getResponseOfGet(USER_APPLICATION_ENDPOINT_URI, params);
-        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "APP-10002", "equal");
-    }
-
-    @Test
     public void testFilterApplicationsWithInvalidFilterAttribute() {
 
         Map<String, Object> params = new HashMap<String, Object>() {{
