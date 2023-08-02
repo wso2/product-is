@@ -38,6 +38,10 @@
         "displayName": "account_switch"
       },
       {
+        "name": "urn:ietf:params:oauth:grant-type:token-exchange",
+        "displayName": "Token Exchange"
+      },
+      {
         "name": "urn:ietf:params:oauth:grant-type:jwt-bearer",
         "displayName": "urn:ietf:params:oauth:grant-type:jwt-bearer"
       }

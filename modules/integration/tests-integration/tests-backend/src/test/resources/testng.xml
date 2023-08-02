@@ -271,6 +271,7 @@
             <class name="org.wso2.identity.integration.test.oidc.OIDCIdentityFederationTestCase"/>
             <class name="org.wso2.identity.integration.test.provisioning.JustInTimeProvisioningTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCFederatedIdpInitLogoutTest"/>
+            <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenExchangeGrantTypeTestCase" />
         </classes>
     </test>
 
