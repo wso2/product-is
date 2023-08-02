@@ -1,20 +1,19 @@
 /*
- * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019, WSO2 LLC. (https://www.wso2.com).
  *
- * WSO2 Inc. licenses this file to you under the Apache License,
+ * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *
  */
 
 package org.wso2.identity.integration.test.oauth2;
@@ -41,8 +40,8 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
-import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.IOException;
@@ -58,6 +57,7 @@ public class PermissionBasedScopeValidatorTestCase extends OAuth2ServiceAbstract
     private static final String SYSTEM_SCOPE = "SYSTEM";
     private static final String CALLBACK_URL = "https://localhost/callback";
     private CloseableHttpClient client;
+    private String applicationId;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -69,10 +69,11 @@ public class PermissionBasedScopeValidatorTestCase extends OAuth2ServiceAbstract
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
-        deleteApplication();
-        removeOAuthApplicationData();
+        deleteApp(applicationId);
         consumerKey = null;
         consumerSecret = null;
+        applicationId = null;
+        restClient.closeHttpClient();
     }
 
     @Test(groups = "wso2.is", description = "Testing secured API without authentication.")
@@ -154,10 +155,15 @@ public class PermissionBasedScopeValidatorTestCase extends OAuth2ServiceAbstract
 
     private void createOauthApplication() throws Exception {
 
-        OAuthConsumerAppDTO oAuthConsumerAppDTO = getBasicOAuthApp(CALLBACK_URL);
-        ServiceProvider serviceProvider = registerServiceProviderWithOAuthInboundConfigs(oAuthConsumerAppDTO);
-        Assert.assertNotNull(serviceProvider, "OAuth App creation failed.");
+        ApplicationResponseModel application = getBasicOAuthApplication(CALLBACK_URL);
+        Assert.assertNotNull(application, "OAuth App creation failed.");
+
+        OpenIDConnectConfiguration  oidcInboundConfig = getOIDCInboundDetailsOfApplication(application.getId());
+        consumerKey = oidcInboundConfig.getClientId();
         Assert.assertNotNull(consumerKey, "Consumer Key is null.");
+        consumerSecret = oidcInboundConfig.getClientSecret();
         Assert.assertNotNull(consumerSecret, "Consumer Secret is null.");
+
+        applicationId = application.getId();
     }
 }

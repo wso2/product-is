@@ -1,7 +1,7 @@
 /*
- * Copyright (c) 2021, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2021, WSO2 LLC. (http://www.wso2.com).
  *
- * WSO2 Inc. licenses this file to you under the Apache License,
+ * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
@@ -26,10 +26,16 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.CookieSpecProvider;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
@@ -39,7 +45,8 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
@@ -68,9 +75,12 @@ public class OAuth2TokenRevocationWithMultipleSessionTerminationTestCase extends
     private String consumerSecret;
     private String sessionDataKeyConsent;
     private String sessionDataKey;
+    private Lookup<CookieSpecProvider> cookieSpecRegistry;
+    private RequestConfig requestConfig;
     private  HttpClient httpClientForFirstSession;
     private  HttpClient httpClientForSecondSession;
     private static final String SESSION_API_ENDPOINT = "https://localhost:9853/t/carbon.super/api/users/v1/me/sessions";
+    private String applicationId;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -78,24 +88,43 @@ public class OAuth2TokenRevocationWithMultipleSessionTerminationTestCase extends
         super.init();
         setSystemproperties();
         super.init(TestUserMode.SUPER_TENANT_USER);
-        httpClientForFirstSession = HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build();
-        httpClientForSecondSession = HttpClientBuilder.create().setDefaultCookieStore(new BasicCookieStore()).build();
+
+        cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+                .build();
+        requestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.DEFAULT)
+                .build();
+        httpClientForFirstSession = HttpClientBuilder.create()
+                .setDefaultCookieStore(new BasicCookieStore())
+                .setDefaultRequestConfig(requestConfig)
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .build();
+        httpClientForSecondSession = HttpClientBuilder.create()
+                .setDefaultCookieStore(new BasicCookieStore())
+                .setDefaultRequestConfig(requestConfig)
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .build();
     }
 
     @AfterClass(alwaysRun = true)
     public void testConclude() throws Exception {
 
-        deleteApplication();
+        deleteApp(applicationId);
+        restClient.closeHttpClient();
     }
 
     @Test(groups = "wso2.is", description = "Create OAuth2 application")
     public void testCreateApplication() throws Exception {
 
-        OAuthConsumerAppDTO appDto = createApplication();
-        Assert.assertNotNull(appDto, "Application creation failed.");
-        consumerKey = appDto.getOauthConsumerKey();
-        Assert.assertNotNull(consumerKey, "OAuth clientId is invalid.");
-        consumerSecret = appDto.getOauthConsumerSecret();
+        ApplicationResponseModel application = addApplication();
+        Assert.assertNotNull(application, "OAuth App creation failed.");
+        applicationId = application.getId();
+        OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(application.getId());
+
+        consumerKey = oidcConfig.getClientId();
+        Assert.assertNotNull(consumerKey, "Application creation failed.");
+        consumerSecret = oidcConfig.getClientSecret();
     }
 
     @Test(groups = "wso2.is", dependsOnMethods = {"testCreateApplication"},
@@ -155,9 +184,8 @@ public class OAuth2TokenRevocationWithMultipleSessionTerminationTestCase extends
             "sessions using session management REST API")
     public void testDeleteUserSessions() {
 
-        String endpointURI = SESSION_API_ENDPOINT;
         // Delete all sessions using session management api.
-        getResponseOfDelete(endpointURI).then()
+        getResponseOfDelete(SESSION_API_ENDPOINT).then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
@@ -189,7 +217,7 @@ public class OAuth2TokenRevocationWithMultipleSessionTerminationTestCase extends
      * @param key            Basic authentication key.
      * @param secret         Basic authentication secret.
      * @return JSON object of the response.
-     * @throws Exception
+     * @throws Exception Exception
      */
     private JSONObject responseObject(HttpClient client, String endpoint, List<NameValuePair> postParameters,
                                       String key, String secret) throws Exception {
@@ -282,7 +310,7 @@ public class OAuth2TokenRevocationWithMultipleSessionTerminationTestCase extends
 
     private List<NameValuePair> getOIDCInitiationRequestParams(String scope) {
 
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("grantType", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
         urlParameters.add(new BasicNameValuePair("consumerKey", consumerKey));
         urlParameters.add(new BasicNameValuePair("callbackurl", OAuth2Constant.CALLBACK_URL));
@@ -335,11 +363,11 @@ public class OAuth2TokenRevocationWithMultipleSessionTerminationTestCase extends
      * Get introspection endpoint response by callling introspection endpoint.
      *
      * @return JSONObject
-     * @throws Exception
+     * @throws Exception Exception
      */
     private JSONObject testIntrospectionEndpoint(String accessToken, HttpClient client) throws Exception {
 
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("token", accessToken));
         return responseObject(client, OAuth2Constant.INTRO_SPEC_ENDPOINT, urlParameters, userInfo.getUserName(),
                 userInfo.getPassword());

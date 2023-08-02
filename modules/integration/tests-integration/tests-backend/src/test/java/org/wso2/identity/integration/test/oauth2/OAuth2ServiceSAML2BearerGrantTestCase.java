@@ -23,10 +23,16 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.CookieSpecProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
@@ -35,13 +41,17 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationConfig;
-import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
-import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
-import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
-import org.wso2.carbon.identity.sso.saml.stub.IdentitySAMLSSOConfigServiceIdentityException;
-import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
-import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAML2Configuration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAML2ServiceProvider;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAMLAssertionConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAMLAttributeProfile;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAMLResponseSigning;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SingleLogoutProfile;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SingleSignOnProfile;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
@@ -51,10 +61,9 @@ import org.xml.sax.SAXException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.nio.charset.Charset;
-import java.rmi.RemoteException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -78,33 +87,43 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
     private static final String ACS_URL = "http://localhost:8490/%s/home.jsp";
     private static final String TENANT_DOMAIN_PARAM = "tenantDomain";
     private static final String SAML_SSO_URL = "https://localhost:9853/samlsso";
+    private static final String ISSUER = "travelocity.com";
 
+    private Lookup<CookieSpecProvider> cookieSpecRegistry;
+    private RequestConfig requestConfig;
     private CloseableHttpClient client;
-
-    private SAMLSSOConfigServiceClient ssoConfigServiceClient;
+    private String samlAppId;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
         super.init(TestUserMode.SUPER_TENANT_USER);
 
-        ssoConfigServiceClient = new SAMLSSOConfigServiceClient(backendURL, sessionCookie);
+        ApplicationResponseModel application = createSAMLApplication();
+        samlAppId = application.getId();
+        OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(samlAppId);
+        consumerKey = oidcConfig.getClientId();
+        consumerSecret = oidcConfig.getClientSecret();
 
-        OAuthConsumerAppDTO oauthApp = createDefaultOAuthApplication();
-        createDefaultSAMLApplication();
-
-        consumerKey = oauthApp.getOauthConsumerKey();
-        consumerSecret = oauthApp.getOauthConsumerSecret();
-
-        client = HttpClientBuilder.create().build();
+        cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+                .build();
+        requestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.DEFAULT)
+                .build();
+        client = HttpClientBuilder.create()
+                .setDefaultRequestConfig(requestConfig)
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .build();
         log.info(String.format("Oauth app initialized with key: %s, secret: %s.", consumerKey, consumerSecret));
     }
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
-        deleteApplication();
-        removeOAuthApplicationData();
+        deleteApp(samlAppId);
+        client.close();
+        restClient.closeHttpClient();
     }
 
     @Test
@@ -130,29 +149,22 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
         }
     }
 
-    @Test
-    public void testSAML2BearerInvalidAudience() throws RemoteException, IdentitySAMLSSOConfigServiceIdentityException {
+    @Test(dependsOnMethods = "testSAML2BearerValidSAMLAssertion")
+    public void testSAML2BearerInvalidAudience() {
 
         try {
 
-            client = HttpClientBuilder.create().build();
+            client = HttpClientBuilder.create()
+                    .setDefaultRequestConfig(requestConfig)
+                    .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                    .build();
             // Set some invalid audience.
-            ServiceProvider application = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
-            SAMLSSOServiceProviderDTO[] serviceProviders =
-                    ssoConfigServiceClient.getServiceProviders().getServiceProviders();
-            SAMLSSOServiceProviderDTO serviceProvider = null;
-            for (SAMLSSOServiceProviderDTO serviceProviderDTO : serviceProviders) {
-                if ("travelocity.com".equals(serviceProviderDTO.getIssuer())) {
-                    serviceProvider = serviceProviderDTO;
-                    break;
-                }
-            }
+            SAML2ServiceProvider saml2AppConfig = getSAMLInboundDetailsOfApplication(samlAppId);
+            Assert.assertNotNull(saml2AppConfig, "No service provider exists for issuer" + ISSUER);
 
-            Assert.assertNotNull(serviceProvider, "No service provider exists for issuer travelocity.com");
-            serviceProvider.setRequestedAudiences(new String[]{});
-            ssoConfigServiceClient.removeServiceProvider("travelocity.com");
-            ssoConfigServiceClient.addServiceProvider(serviceProvider);
-            appMgtclient.updateApplicationData(application);
+            saml2AppConfig.getSingleSignOnProfile().getAssertion().setAudiences(new ArrayList<>());
+            updateApplicationInboundConfig(samlAppId, new SAML2Configuration().manualConfiguration(saml2AppConfig),
+                    SAML);
 
             // Get a SAML response.
             String samlResponse = getSAMLResponse();
@@ -166,104 +178,88 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
             // We should get an http 400 error code.
             Assert.assertEquals(httpResponse.getStatusLine().getStatusCode(), 400);
 
-            // We should get a non empty error message.
+            // We should get a non-empty error message.
             Assert.assertTrue(StringUtils.isNotBlank(IOUtils.toString(httpResponse.getEntity().getContent())));
         } catch (Exception e) {
             Assert.fail("SAML Bearer Grant test failed with an exception.", e);
         } finally {
-
-            // Restore the default service provider.
-            ssoConfigServiceClient.removeServiceProvider("travelocity.com");
-            ssoConfigServiceClient.addServiceProvider(createDefaultSSOServiceProviderDTO());
-
             // We have to initiate the http client again or other tests will fail.
-            client = HttpClientBuilder.create().build();
+            client = HttpClientBuilder.create()
+                    .setDefaultRequestConfig(requestConfig)
+                    .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                    .build();
         }
     }
 
     /**
-     * Create and attache the default OAUTH application to a service provider for testing.
+     * Create a SAML Application for testing.
      *
-     * @return OAuth app DTO.
-     * @throws Exception
+     * @return ApplicationResponseModel application.
+     * @throws Exception Exception
      */
-    private OAuthConsumerAppDTO createDefaultOAuthApplication() throws Exception {
+    private ApplicationResponseModel createSAMLApplication() throws Exception {
+        ApplicationModel applicationCreationModel = new ApplicationModel().name(SERVICE_PROVIDER_NAME);
+        applicationCreationModel.inboundProtocolConfiguration(new InboundProtocols().oidc(getOIDCConfigurations()));
+        applicationCreationModel.getInboundProtocolConfiguration().setSaml(getSAMLConfigurations());
 
-        OAuthConsumerAppDTO appDTO = new OAuthConsumerAppDTO();
-        appDTO.setApplicationName(OAuth2Constant.OAUTH_APPLICATION_NAME);
-        appDTO.setCallbackUrl(OAuth2Constant.AUTHORIZED_URL);
-        appDTO.setOAuthVersion(OAuth2Constant.OAUTH_VERSION_2);
-        appDTO.setGrantTypes("urn:ietf:params:oauth:grant-type:saml2-bearer");
-        return createApplication(appDTO, SERVICE_PROVIDER_NAME);
+        String appId = addApplication(applicationCreationModel);
+
+        return getApplication(appId);
     }
 
     /**
-     * Create and attach the SAML application to a service provider for testing.
+     * Create OIDC Configured ApplicationModel object.
      *
-     * @throws Exception
+     * @return ApplicationModel application.
      */
-    private void createDefaultSAMLApplication() throws Exception {
+    private OpenIDConnectConfiguration getOIDCConfigurations() {
+        List<String> grantTypes = new ArrayList<>();
+        Collections.addAll(grantTypes, "urn:ietf:params:oauth:grant-type:saml2-bearer");
 
-        ServiceProvider serviceProvider = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
+        List<String> callBackUrls = new ArrayList<>();
+        Collections.addAll(callBackUrls, OAuth2Constant.AUTHORIZED_URL);
 
-        InboundAuthenticationRequestConfig inboundAuthenticationRequestConfig =
-                new InboundAuthenticationRequestConfig();
-        inboundAuthenticationRequestConfig.setInboundAuthType("samlsso");
-        inboundAuthenticationRequestConfig.setInboundAuthKey("travelocity.com");
+        OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
+        oidcConfig.setGrantTypes(grantTypes);
+        oidcConfig.setCallbackURLs(callBackUrls);
 
-        InboundAuthenticationRequestConfig[] inboundAuthenticationRequestConfigs =
-                serviceProvider.getInboundAuthenticationConfig().getInboundAuthenticationRequestConfigs();
-        List<InboundAuthenticationRequestConfig> inboundAuthenticationRequestConfigsList =
-                new ArrayList<>(Arrays.asList(inboundAuthenticationRequestConfigs));
-        inboundAuthenticationRequestConfigsList.add(inboundAuthenticationRequestConfig);
-
-        InboundAuthenticationConfig inboundAuthenticationConfig = new InboundAuthenticationConfig();
-        inboundAuthenticationConfig.setInboundAuthenticationRequestConfigs(
-                inboundAuthenticationRequestConfigsList.toArray(new InboundAuthenticationRequestConfig[0]));
-
-        serviceProvider.setInboundAuthenticationConfig(inboundAuthenticationConfig);
-
-        SAMLSSOServiceProviderDTO samlssoServiceProviderDTO = createDefaultSSOServiceProviderDTO();
-        boolean isCreated = ssoConfigServiceClient.addServiceProvider(samlssoServiceProviderDTO);
-        if (!isCreated) {
-            throw new Exception("App creation failed.");
-        }
-
-        appMgtclient.updateApplicationData(serviceProvider);
+        return oidcConfig;
     }
 
     /**
-     * Create the SAML SSO DTO.
+     * Create SAML Configured ApplicationModel object.
      *
-     * @return SAML SSO DTO.
+     * @return ApplicationModel application.
      */
-    private SAMLSSOServiceProviderDTO createDefaultSSOServiceProviderDTO() {
+    private SAML2Configuration getSAMLConfigurations() {
+        SAML2ServiceProvider serviceProvider = new SAML2ServiceProvider();
+        serviceProvider.setIssuer(ISSUER);
+        serviceProvider.addAssertionConsumerUrl(String.format("http://localhost:8490/%s/home.jsp", ISSUER));
+        serviceProvider.setDefaultAssertionConsumerUrl(String.format("http://localhost:8490/%s/home.jsp", ISSUER));
+        serviceProvider.setAttributeProfile(new SAMLAttributeProfile().enabled(true));
+        serviceProvider.setSingleLogoutProfile(new SingleLogoutProfile().enabled(true));
+        serviceProvider.setResponseSigning(new SAMLResponseSigning().enabled(true));
 
-        SAMLSSOServiceProviderDTO samlssoServiceProviderDTO = new SAMLSSOServiceProviderDTO();
-        samlssoServiceProviderDTO.setIssuer("travelocity.com");
-        samlssoServiceProviderDTO.setAssertionConsumerUrls(
-                new String[]{String.format("http://localhost:8490/%s/home.jsp", "travelocity.com")});
-        samlssoServiceProviderDTO.setDefaultAssertionConsumerUrl(
-                String.format("http://localhost:8490/%s/home.jsp", "travelocity.com"));
-        samlssoServiceProviderDTO.setAttributeConsumingServiceIndex("1239245949");
-        samlssoServiceProviderDTO.setNameIDFormat("urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress");
-        samlssoServiceProviderDTO.setDoSignAssertions(true);
-        samlssoServiceProviderDTO.setDoSignResponse(true);
-        samlssoServiceProviderDTO.setDoSingleLogout(true);
-        samlssoServiceProviderDTO.addRequestedAudiences(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
-        samlssoServiceProviderDTO.addRequestedRecipients(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
-        samlssoServiceProviderDTO.setLoginPageURL("/carbon/admin/login.jsp");
-        samlssoServiceProviderDTO.setEnableAttributeProfile(true);
-        samlssoServiceProviderDTO.setEnableAttributesByDefault(true);
+        SAMLAssertionConfiguration assertion = new SAMLAssertionConfiguration();
+        assertion.addAudiencesItem(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
+        assertion.addRecipientsItem(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
 
-        return samlssoServiceProviderDTO;
+        SingleSignOnProfile ssoProfile = new SingleSignOnProfile().attributeConsumingServiceIndex("1239245949");
+        ssoProfile.setAssertion(assertion);
+
+        serviceProvider.setSingleSignOnProfile(ssoProfile);
+
+        SAML2Configuration saml2Configuration = new SAML2Configuration();
+        saml2Configuration.setManualConfiguration(serviceProvider);
+
+        return saml2Configuration;
     }
 
     /**
      * Get the SAML response by calling the default SAML endpoint.
      *
      * @return SAML response.
-     * @throws Exception
+     * @throws Exception Exception
      */
     private String getSAMLResponse() throws Exception {
 
@@ -275,7 +271,7 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
                 "initiation request");
         String samlRequest = Utils.extractDataFromResponse(response, CommonConstants.SAML_REQUEST_PARAM, 5);
         Assert.assertTrue(StringUtils.isNotBlank(samlRequest), "SAML request in response body is empty");
-        response = sendSAMLRequest(SAML_SSO_URL, CommonConstants.SAML_REQUEST_PARAM, samlRequest);
+        response = sendSAMLRequest(samlRequest);
         EntityUtils.consume(response.getEntity());
 
         // Added temporarily to debug intermittent failure.
@@ -323,9 +319,9 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
      *
      * @param samlResponse SAML response.
      * @return Extracted SAML assertion.
-     * @throws ParserConfigurationException
-     * @throws IOException
-     * @throws SAXException
+     * @throws ParserConfigurationException Exception
+     * @throws IOException Exception
+     * @throws SAXException Exception
      */
     private String getSAMLAssersion(String samlResponse) throws ParserConfigurationException, IOException,
             SAXException {
@@ -345,26 +341,24 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
             Assert.fail("Error while parsing the SAML response.");
         }
 
-        return Base64.encodeBase64String(sw.toString().getBytes(Charset.forName("UTF-8")));
+        return Base64.encodeBase64String(sw.toString().getBytes(StandardCharsets.UTF_8));
     }
 
     /**
      * Send SAML request to the SAML endpoint.
      *
-     * @param url          URL of the endpoint.
-     * @param samlMsgKey   Message key.
      * @param samlMsgValue Message value.
      * @return HTTP Response object that we get from calling the SAML endpoint.
-     * @throws IOException
+     * @throws IOException Exception
      */
-    private HttpResponse sendSAMLRequest(String url, String samlMsgKey, String samlMsgValue) throws IOException {
+    private HttpResponse sendSAMLRequest(String samlMsgValue) throws IOException {
 
         List<NameValuePair> urlParameters = new ArrayList<>();
 
-        HttpPost post = new HttpPost(url);
+        HttpPost post = new HttpPost(SAML_SSO_URL);
         post.setHeader("User-Agent", USER_AGENT);
 
-        urlParameters.add(new BasicNameValuePair(samlMsgKey, samlMsgValue));
+        urlParameters.add(new BasicNameValuePair(CommonConstants.SAML_REQUEST_PARAM, samlMsgValue));
         urlParameters.add(new BasicNameValuePair(TENANT_DOMAIN_PARAM, "carbon.super"));
 
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
@@ -377,7 +371,7 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
      *
      * @param samlAssertion SAML assertion.
      * @return HTTP Response object that we get from calling the token endpoint.
-     * @throws IOException
+     * @throws IOException Exception
      */
     private HttpResponse sendSAMLAssertion(String samlAssertion) throws IOException {
 

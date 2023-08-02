@@ -24,28 +24,36 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.CookieSpecProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.application.common.model.xsd.Claim;
-import org.wso2.carbon.identity.application.common.model.xsd.ClaimConfig;
-import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
-import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
-import org.wso2.carbon.identity.application.common.model.xsd.OutboundProvisioningConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.Property;
-import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
+import org.wso2.carbon.identity.application.common.model.xsd.*;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.*;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration.DialectEnum;
+import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import sun.security.provider.X509Factory;
@@ -54,6 +62,7 @@ import java.io.IOException;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH_APPLICATION_NAME;
@@ -74,32 +83,35 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	private static final String customClaimURI2 = "http://wso2.org/claims/challengeQuestion2";
 	private static final String GRANT_TYPE_PASSWORD = "password";
 	private static final String SCOPE_PRODUCTION = "PRODUCTION";
+	public static final String OIDC = "oidc";
+	public static final String SAML = "saml";
 	private final static int TOMCAT_PORT = 8490;
 
 	protected ApplicationManagementServiceClient appMgtclient;
 	protected OauthAdminClient adminClient;
 	protected RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
+	protected OAuth2RestClient restClient;
 
 
 	/**
 	 * Initialize
 	 *
-	 * @param userMode
-	 *            - User Id
-	 * @throws Exception
+	 * @param userMode - User Id
+	 * @throws Exception Exception
 	 */
 	protected void init(TestUserMode userMode) throws Exception {
 		super.init(userMode);
 		appMgtclient = new ApplicationManagementServiceClient(sessionCookie, backendURL, null);
 		adminClient = new OauthAdminClient(backendURL, sessionCookie);
 		remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
+		restClient = new OAuth2RestClient(serverURL, tenantInfo);
 	}
 
 	/**
 	 * Create Application with the given app configurations
 	 *
 	 * @return OAuthConsumerAppDTO
-	 * @throws Exception
+	 * @throws Exception Exception
 	 */
 	public OAuthConsumerAppDTO createApplication() throws Exception {
 		OAuthConsumerAppDTO appDTO = new OAuthConsumerAppDTO();
@@ -109,6 +121,56 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		appDTO.setGrantTypes("authorization_code implicit password client_credentials refresh_token "
 				+ "urn:ietf:params:oauth:grant-type:saml2-bearer iwa:ntlm");
 		return createApplication(appDTO, SERVICE_PROVIDER_NAME);
+	}
+
+    public ApplicationResponseModel addApplication() throws Exception {
+
+		ApplicationModel application = new ApplicationModel();
+
+		List<String> grantTypes = new ArrayList<>();
+		Collections.addAll(grantTypes, "authorization_code", "implicit", "password", "client_credentials",
+				"refresh_token", "urn:ietf:params:oauth:grant-type:saml2-bearer", "iwa:ntlm");
+
+		List<String> callBackUrls = new ArrayList<>();
+		Collections.addAll(callBackUrls, OAuth2Constant.CALLBACK_URL);
+
+		OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
+		oidcConfig.setGrantTypes(grantTypes);
+		oidcConfig.setCallbackURLs(callBackUrls);
+
+		InboundProtocols inboundProtocolsConfig = new InboundProtocols();
+		inboundProtocolsConfig.setOidc(oidcConfig);
+
+		application.setInboundProtocolConfiguration(inboundProtocolsConfig);
+		application.setName(SERVICE_PROVIDER_NAME);
+		application.setIsManagementApp(true);
+
+		application.setClaimConfiguration(setApplicationClaimConfig()); ;
+
+		String appId = addApplication(application);
+
+		return getApplication(appId);
+	}
+
+	ClaimConfiguration setApplicationClaimConfig() {
+
+		ClaimMappings emailClaim = new ClaimMappings().applicationClaim(EMAIL_CLAIM_URI);
+		emailClaim.setLocalClaim(new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(EMAIL_CLAIM_URI));
+		ClaimMappings countryClaim = new ClaimMappings().applicationClaim(COUNTRY_CLAIM_URI);
+		countryClaim.setLocalClaim(new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(COUNTRY_CLAIM_URI));
+
+		RequestedClaimConfiguration emailRequestedClaim = new RequestedClaimConfiguration();
+		emailRequestedClaim.setClaim(new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(EMAIL_CLAIM_URI));
+		RequestedClaimConfiguration countryRequestedClaim = new RequestedClaimConfiguration();
+		countryRequestedClaim.setClaim(new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(COUNTRY_CLAIM_URI));
+
+		ClaimConfiguration claimConfiguration = new ClaimConfiguration().dialect(DialectEnum.CUSTOM);
+		claimConfiguration.addClaimMappingsItem(emailClaim);
+		claimConfiguration.addClaimMappingsItem(countryClaim);
+		claimConfiguration.addRequestedClaimsItem(emailRequestedClaim);
+		claimConfiguration.addRequestedClaimsItem(countryRequestedClaim);
+
+		return claimConfiguration;
 	}
 
     /**
@@ -143,11 +205,72 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
     }
 
 	/**
-	 * Create Application with a given appDTO
+	 * Create Application with a given ApplicationModel
 	 *
-	 * @return OAuthConsumerAppDTO
-	 * @throws Exception
+	 * @param application application creation object
+	 * @return application id
+	 * @throws Exception Exception
 	 */
+	public String addApplication(ApplicationModel application) throws Exception {
+		return restClient.createApplication(application);
+	}
+
+	/**
+	 * Get Application details with a given id
+	 *
+	 * @param appId application Id
+	 * @return ApplicationResponseModel
+	 * @throws Exception Exception
+	 */
+	public ApplicationResponseModel getApplication(String appId) throws Exception {
+		return restClient.getApplication(appId);
+	}
+
+	/**
+	 * Get Application details with a given id
+	 *
+	 * @param appId application Id
+	 * @param application application update patch object
+	 * @throws Exception Exception
+	 */
+	public void updateApplication(String appId, ApplicationPatchModel application) throws Exception {
+		restClient.updateApplication(appId, application);
+	}
+
+	/**
+	 * Get Application oidc inbound configuration details with a given id
+	 *
+	 * @param appId application Id
+	 * @return OpenIDConnectConfiguration
+	 * @throws Exception Exception
+	 */
+	public OpenIDConnectConfiguration getOIDCInboundDetailsOfApplication(String appId) throws Exception {
+		return restClient.getOIDCInboundDetails(appId);
+	}
+
+	/**
+	 * Get Application saml inbound configuration details with a given id
+	 *
+	 * @param appId application Id
+	 * @return SAML2ServiceProvider
+	 * @throws Exception Exception
+	 */
+	public SAML2ServiceProvider getSAMLInboundDetailsOfApplication(String appId) throws Exception {
+		return restClient.getSAMLInboundDetails(appId);
+	}
+
+	/**
+	 * Update Application inbound configuration details with a given id and the inbound Type
+	 *
+	 * @param appId application Id
+	 * @param InboundConfig InboundConfig object
+	 * @param inboundType inbound configuration type
+	 */
+	public void updateApplicationInboundConfig(String appId, Object InboundConfig, String inboundType)
+			throws IOException {
+		restClient.updateInboundDetailsOfApplication(appId, InboundConfig, inboundType);
+	}
+
 	public OAuthConsumerAppDTO createApplication(OAuthConsumerAppDTO appDTO, String serviceProviderName)
 			throws Exception {
 		OAuthConsumerAppDTO appDtoResult = null;
@@ -211,47 +334,57 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		return appDtoResult;
 	}
 
-	public void UpdateApplicationClaimConfig() throws Exception {
-		ServiceProvider serviceProvider = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
-		ClaimConfig claimConfig = getClaimConfig();
-		serviceProvider.setClaimConfig(claimConfig);
-		appMgtclient.updateApplicationData(serviceProvider);
+	public void UpdateApplicationClaimConfig(String appId) throws Exception {
+
+		ApplicationPatchModel applicationPatch = new ApplicationPatchModel();
+		applicationPatch.setClaimConfiguration(getClaimConfigurations());
+		restClient.updateApplication(appId, applicationPatch);
 	}
 
-	private ClaimConfig getClaimConfig() {
-		ClaimConfig claimConfig = new ClaimConfig();
-		ClaimMapping emailClaimMapping = getClaimMapping(EMAIL_CLAIM_URI);
-		ClaimMapping givenNameClaimMapping = getClaimMapping(GIVEN_NAME_CLAIM_URI);
-		ClaimMapping countryClaimMapping = getClaimMapping(COUNTRY_CLAIM_URI);
-		ClaimMapping customClaimMapping1 = getClaimMapping(customClaimURI1);
-		ClaimMapping customClaimMapping2 = getClaimMapping(customClaimURI2);
-		claimConfig.setClaimMappings(new org.wso2.carbon.identity.application.common.model.xsd
-				.ClaimMapping[]{emailClaimMapping, givenNameClaimMapping, countryClaimMapping, customClaimMapping1,
-				customClaimMapping2});
-		return claimConfig;
+	private ClaimConfiguration getClaimConfigurations() {
+
+		ClaimConfiguration claimConfiguration = new ClaimConfiguration().dialect(DialectEnum.CUSTOM);
+		claimConfiguration.addClaimMappingsItem(getClaimMapping(EMAIL_CLAIM_URI));
+		claimConfiguration.addRequestedClaimsItem(getRequestedClaim(EMAIL_CLAIM_URI));
+
+		claimConfiguration.addClaimMappingsItem(getClaimMapping(GIVEN_NAME_CLAIM_URI));
+		claimConfiguration.addRequestedClaimsItem(getRequestedClaim(GIVEN_NAME_CLAIM_URI));
+
+		claimConfiguration.addClaimMappingsItem(getClaimMapping(COUNTRY_CLAIM_URI));
+		claimConfiguration.addRequestedClaimsItem(getRequestedClaim(COUNTRY_CLAIM_URI));
+
+		claimConfiguration.addClaimMappingsItem(getClaimMapping(customClaimURI1));
+		claimConfiguration.addRequestedClaimsItem(getRequestedClaim(customClaimURI1));
+
+		claimConfiguration.addClaimMappingsItem(getClaimMapping(customClaimURI2));
+		claimConfiguration.addRequestedClaimsItem(getRequestedClaim(customClaimURI2));
+
+		return claimConfiguration;
 	}
 
-	private ClaimMapping getClaimMapping(String claimUri) {
-		Claim claim = new Claim();
-		claim.setClaimUri(claimUri);
-		ClaimMapping claimMapping = new ClaimMapping();
-		claimMapping.setRequested(true);
-		claimMapping.setLocalClaim(claim);
-		claimMapping.setRemoteClaim(claim);
-		return claimMapping;
+	private ClaimMappings getClaimMapping(String claimUri) {
+		ClaimMappings claim = new ClaimMappings().applicationClaim(claimUri);
+		claim.setLocalClaim(new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(claimUri));
+		return claim;
+	}
+
+	private RequestedClaimConfiguration getRequestedClaim(String claimUri) {
+		RequestedClaimConfiguration requestedClaim = new RequestedClaimConfiguration();
+		requestedClaim.setClaim(new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(claimUri));
+		return requestedClaim;
 	}
 
 	/**
 	 * Send post request with parameters
-	 * @param client
-	 * @param urlParameters
-	 * @param url
-	 * @return
-	 * @throws ClientProtocolException
-	 * @throws java.io.IOException
+	 * @param client HttpClient
+	 * @param urlParameters url parameters
+	 * @param url endpoint
+	 * @return HttpResponse
+	 * @throws ClientProtocolException ClientProtocolException
+	 * @throws java.io.IOException java.io.IOException
 	 */
-	public HttpResponse sendPostRequestWithParameters(HttpClient client, List<NameValuePair> urlParameters, String url) throws ClientProtocolException,
-	                                                         IOException {
+	public HttpResponse sendPostRequestWithParameters(HttpClient client, List<NameValuePair> urlParameters, String url)
+			throws ClientProtocolException, IOException {
 		HttpPost request = new HttpPost(url);
 		request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
 		request.setEntity(new UrlEncodedFormEntity(urlParameters));
@@ -262,30 +395,32 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	/**
 	 * Send Get request
 	 *
-	 * @param client
-	 *            - http Client
-	 * @param locationURL
-	 *            - Get url location
+	 * @param client - http Client
+	 * @param locationURL - Get url location
 	 * @return http response
-	 * @throws ClientProtocolException
-	 * @throws java.io.IOException
+	 * @throws ClientProtocolException ClientProtocolException
+	 * @throws java.io.IOException java.io.IOException
 	 */
-	public HttpResponse sendGetRequest(HttpClient client, String locationURL)
-	                                                                         throws
-	                                                                         ClientProtocolException,
-	                                                                         IOException {
+	public HttpResponse sendGetRequest(HttpClient client, String locationURL) throws ClientProtocolException, IOException {
 		HttpGet getRequest = new HttpGet(locationURL);
 		getRequest.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
-		HttpResponse response = client.execute(getRequest);
-
-		return response;
+		return client.execute(getRequest);
 	}
 
-	public HttpResponse sendConsentGetRequest(DefaultHttpClient client, String locationURL, CookieStore cookieStore,
+	public HttpResponse sendConsentGetRequest(CloseableHttpClient client, String locationURL, CookieStore cookieStore,
 											  List<NameValuePair> consentRequiredClaimsFromResponse) throws Exception {
 
-		HttpClient httpClientWithoutAutoRedirections = HttpClientBuilder.create().disableRedirectHandling()
-																		.setDefaultCookieStore(cookieStore).build();
+		Lookup<CookieSpecProvider> cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+				.register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+				.build();
+		RequestConfig requestConfig = RequestConfig.custom()
+				.setCookieSpec(CookieSpecs.DEFAULT)
+				.build();
+		HttpClient httpClientWithoutAutoRedirections = HttpClientBuilder.create()
+				.setDefaultRequestConfig(requestConfig)
+				.setDefaultCookieSpecRegistry(cookieSpecRegistry)
+				.disableRedirectHandling()
+				.setDefaultCookieStore(cookieStore).build();
 		HttpGet getRequest = new HttpGet(locationURL);
 		getRequest.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
 		HttpResponse response = httpClientWithoutAutoRedirections.execute(getRequest);
@@ -293,7 +428,6 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		consentRequiredClaimsFromResponse.addAll(Utils.getConsentRequiredClaimsFromResponse(response));
 		Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
 		HttpResponse httpResponse = sendGetRequest(httpClientWithoutAutoRedirections, locationHeader.getValue());
-		client.setCookieStore(cookieStore);
 		EntityUtils.consume(response.getEntity());
 		return httpResponse;
 	}
@@ -301,46 +435,36 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	/**
 	 * Send Post request
 	 *
-	 * @param client
-	 *            - http Client
-	 * @param locationURL
-	 *            - Post url location
+	 * @param client - http Client
+	 * @param locationURL - Post url location
 	 * @return http response
-	 * @throws ClientProtocolException
-	 * @throws java.io.IOException
+	 * @throws ClientProtocolException ClientProtocolException
+	 * @throws java.io.IOException java.io.IOException
 	 */
-	public HttpResponse sendPostRequest(HttpClient client, String locationURL)
-	                                                                          throws ClientProtocolException,
-	                                                                          IOException {
+	public HttpResponse sendPostRequest(HttpClient client, String locationURL) throws ClientProtocolException,
+			IOException {
 		HttpPost postRequest = new HttpPost(locationURL);
 		postRequest.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
-		HttpResponse response = client.execute(postRequest);
-
-		return response;
+		return client.execute(postRequest);
 	}
 
 	/**
 	 * Send login post request
 	 *
-	 * @param client
-	 *            - Http client
-	 * @param sessionDataKey
-	 *            - Session data key
+	 * @param client - Http client
+	 * @param sessionDataKey - Session data key
 	 * @return http response
-	 * @throws ClientProtocolException
-	 * @throws java.io.IOException
+	 * @throws ClientProtocolException ClientProtocolException
+	 * @throws java.io.IOException java.io.IOException
 	 */
-	public HttpResponse sendLoginPost(HttpClient client, String sessionDataKey)
-	                                                                           throws ClientProtocolException,
-	                                                                           IOException {
+	public HttpResponse sendLoginPost(HttpClient client, String sessionDataKey) throws ClientProtocolException,
+			IOException {
 		List<NameValuePair> urlParameters = new ArrayList<>();
 		urlParameters.add(new BasicNameValuePair("username", userInfo.getUserName()));
 		urlParameters.add(new BasicNameValuePair("password", userInfo.getPassword()));
 		urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
 		log.info(">>> sendLoginPost:sessionDataKey: " + sessionDataKey);
-		HttpResponse response = sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.COMMON_AUTH_URL);
-
-		return response;
+		return sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.COMMON_AUTH_URL);
 	}
 
 	/**
@@ -351,44 +475,36 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	 * @param username       Username.
 	 * @param password       Password.
 	 * @return Http response.
-	 * @throws ClientProtocolException
-	 * @throws IOException
+	 * @throws ClientProtocolException 	ClientProtocolException
+	 * @throws IOException				IOException
 	 */
 	public HttpResponse sendLoginPostForCustomUsers(HttpClient client, String sessionDataKey, String username,
-													String password)
-			throws ClientProtocolException, IOException {
+													String password) throws ClientProtocolException, IOException {
 
 		List<NameValuePair> urlParameters = new ArrayList<>();
 		urlParameters.add(new BasicNameValuePair("username", username));
 		urlParameters.add(new BasicNameValuePair("password", password));
 		urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
 		log.info(">>> sendLoginPost:sessionDataKey: " + sessionDataKey);
-		HttpResponse response = sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.COMMON_AUTH_URL);
-
-		return response;
+		return sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.COMMON_AUTH_URL);
 	}
 
 	/**
 	 * Send approval post request
 	 *
-	 * @param client
-	 *            - http client
-	 * @param sessionDataKeyConsent
-	 *            - session consent data
+	 * @param client - http client
+	 * @param sessionDataKeyConsent - session consent data
 	 * @return http response
-	 * @throws ClientProtocolException
-	 * @throws java.io.IOException
+	 * @throws ClientProtocolException ClientProtocolException
+	 * @throws java.io.IOException java.io.IOException
 	 */
-	public HttpResponse sendApprovalPost(HttpClient client, String sessionDataKeyConsent)
-	                                                                                     throws ClientProtocolException,
-	                                                                                     IOException {
+	public HttpResponse sendApprovalPost(HttpClient client, String sessionDataKeyConsent) throws ClientProtocolException,
+			IOException {
 		List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
 		urlParameters.add(new BasicNameValuePair("consent", "approve"));
 		urlParameters.add(new BasicNameValuePair("sessionDataKeyConsent", sessionDataKeyConsent));
 
-		HttpResponse response = sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.APPROVAL_URL);
-
-		return response;
+		return sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.APPROVAL_URL);
 	}
 
 	/**
@@ -398,7 +514,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	 * @param sessionDataKeyConsent session consent data
 	 * @param consentClaims claims requiring user consent
 	 * @return http response
-	 * @throws java.io.IOException
+	 * @throws java.io.IOException java.io.IOException
 	 */
 	public HttpResponse sendApprovalPostWithConsent(HttpClient client, String sessionDataKeyConsent,
 													List<NameValuePair> consentClaims) throws IOException {
@@ -412,32 +528,26 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 			urlParameters.addAll(consentClaims);
 		}
 
-		HttpResponse response = sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.APPROVAL_URL);
-		return response;
+		return sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.APPROVAL_URL);
 	}
 
 	/**
 	 * Send approval post request
 	 *
-	 * @param client
-	 *            - http client
-	 * @param consumerSecret
-	 *            - consumer secret
+	 * @param client - http client
+	 * @param consumerSecret - consumer secret
 	 * @return http response
-	 * @throws ClientProtocolException
-	 * @throws java.io.IOException
+	 * @throws ClientProtocolException ClientProtocolException
+	 * @throws java.io.IOException java.io.IOException
 	 */
-	public HttpResponse sendGetAccessTokenPost(HttpClient client, String consumerSecret)
-	                                                                                    throws ClientProtocolException,
+	public HttpResponse sendGetAccessTokenPost(HttpClient client, String consumerSecret) throws ClientProtocolException,
 	                                                                                    IOException {
 		List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
 		urlParameters.add(new BasicNameValuePair("callbackurl", OAuth2Constant.CALLBACK_URL));
 		urlParameters.add(new BasicNameValuePair("accessEndpoint",
 		                                         OAuth2Constant.ACCESS_TOKEN_ENDPOINT));
 		urlParameters.add(new BasicNameValuePair("consumerSecret", consumerSecret));
-		HttpResponse response = sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.GET_ACCESS_TOKEN_URL);
-
-		return response;
+		return sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.GET_ACCESS_TOKEN_URL);
 	}
 
 	/**
@@ -445,8 +555,8 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	 * @param client - http client
 	 * @param accessToken - access token
 	 * @return http response
-	 * @throws ClientProtocolException
-	 * @throws java.io.IOException
+	 * @throws ClientProtocolException ClientProtocolException
+	 * @throws java.io.IOException java.io.IOException
 	 */
 	public HttpResponse sendValidateAccessTokenPost(HttpClient client, String accessToken)
 	                                                                                    throws ClientProtocolException,
@@ -463,7 +573,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	 * @param accessToken - access token
 	 * @param endpoint - Introspection URL of the tenant domain.
 	 * @return JSON object of the response.
-	 * @throws Exception
+	 * @throws Exception Exception
 	 */
 	public JSONObject introspectTokenWithTenant(HttpClient client, String accessToken, String endpoint, String key,
 												String secret) throws Exception {
@@ -476,16 +586,20 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	/**
 	 * Delete Application
 	 *
-	 * @throws Exception
+	 * @throws Exception Exception
 	 */
 	public void deleteApplication() throws Exception {
 		appMgtclient.deleteApplication(SERVICE_PROVIDER_NAME);
 	}
 
+	public void deleteApp(String appId) throws Exception {
+		restClient.deleteApplication(appId);
+	}
+
 	/**
 	 * Remove OAuth Application
 	 *
-	 * @throws Exception
+	 * @throws Exception Exception
 	 */
 	public void removeOAuthApplicationData() throws Exception {
 		adminClient.removeOAuthApplicationData(consumerKey);
@@ -538,12 +652,25 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
         return new String(Base64.encodeBase64((consumerKey + ":" + consumerSecret).getBytes()));
     }
 
+	public void updateApplicationCertificate(String appId, X509Certificate sp1X509PublicCert) throws Exception {
+
+		Certificate certificate = new Certificate();
+		certificate.setType(Certificate.TypeEnum.PEM);
+		certificate.setValue(convertToPem(sp1X509PublicCert));
+
+		ApplicationPatchModel applicationPatch = new ApplicationPatchModel();
+		applicationPatch = applicationPatch.advancedConfigurations(new AdvancedApplicationConfiguration());
+		applicationPatch.getAdvancedConfigurations().setCertificate(certificate);
+
+		updateApplication(appId, applicationPatch);
+	}
+
 	/**
 	 * Convert a x509 certificate to pem format.
 	 *
 	 * @param x509Certificate Certificate in x509 format.
 	 * @return Certificate in pem format.
-	 * @throws CertificateEncodingException
+	 * @throws CertificateEncodingException CertificateEncodingException
 	 */
 	public String convertToPem(X509Certificate x509Certificate) throws CertificateEncodingException {
 
@@ -570,11 +697,44 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	}
 
 	/**
+	 * Create and return a basic consumer application with all OAuth2 grant types.
+	 *
+	 * @param callBackURL String callback URL.
+	 * @return ApplicationResponseModel object.
+	 */
+	public ApplicationResponseModel getBasicOAuthApplication(String callBackURL) throws Exception {
+
+		ApplicationModel application = new ApplicationModel();
+
+		List<String> grantTypes = new ArrayList<>();
+		Collections.addAll(grantTypes, "authorization_code", "implicit", "password", "client_credentials",
+				"refresh_token");
+
+		List<String> callBackUrls = new ArrayList<>();
+		Collections.addAll(callBackUrls, callBackURL);
+
+		OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
+		oidcConfig.setGrantTypes(grantTypes);
+		oidcConfig.setCallbackURLs(callBackUrls);
+
+		InboundProtocols inboundProtocolsConfig = new InboundProtocols();
+		inboundProtocolsConfig.setOidc(oidcConfig);
+
+		application.setInboundProtocolConfiguration(inboundProtocolsConfig);
+		application.setName(OAuth2Constant.OAUTH_APPLICATION_NAME);
+		application.isManagementApp(true);
+
+		String appId = addApplication(application);
+
+		return getApplication(appId);
+	}
+
+	/**
 	 * Register a service provider and setup consumer key and secret when a OAuthConsumerAppDTO is given.
 	 *
 	 * @param appDTO OAuthConsumerAppDTO of the service provider.
 	 * @return Registered service provider.
-	 * @throws Exception
+	 * @throws Exception Exception
 	 */
 	public ServiceProvider registerServiceProviderWithOAuthInboundConfigs(OAuthConsumerAppDTO appDTO)
 			throws Exception {
@@ -588,7 +748,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	 *
 	 * @param appDTO OAuthConsumerAppDTO of the service provider.
 	 * @return Registered service provider with some local and outbound configs
-	 * @throws Exception
+	 * @throws Exception Exception
 	 */
 	public ServiceProvider registerServiceProviderWithLocalAndOutboundConfigs(OAuthConsumerAppDTO appDTO)
 			throws Exception {
@@ -656,10 +816,10 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	/**
 	 * Build post request and return json response object.
 	 *
-	 * @param endpoint       Endpoint.
-	 * @param postParameters postParameters.
-	 * @param key            Basic authentication key.
-	 * @param secret         Basic authentication secret.
+	 * @param endpoint      		Endpoint.
+	 * @param postParameters 		postParameters.
+	 * @param client            	httpclient.
+	 * @param authorizationHeader  	Authentication header.
 	 * @return JSON object of the response.
 	 * @throws Exception
 	 */
@@ -679,5 +839,22 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 			throw new Exception("Error occurred while getting the response.");
 		}
 		return json;
+	}
+
+	/**
+	 * Get public certificate from jwks endpoint.
+	 *
+	 * @param client HttpClient.
+	 * @param endPoint jwks endpoint.
+	 * @return String object of the certificate.
+	 * @throws Exception Exception
+	 */
+	public String getPublicCertificate(CloseableHttpClient client, String endPoint) throws Exception {
+		HttpGet request = new HttpGet(endPoint);
+		CloseableHttpResponse response = client.execute(request);
+
+		JSONParser parser = new JSONParser();
+		JSONObject json = (JSONObject) parser.parse(EntityUtils.toString(response.getEntity()));
+		return ((JSONArray) ((JSONObject)((JSONArray) json.get("keys")).get(0)).get("x5c")).get(0).toString();
 	}
 }

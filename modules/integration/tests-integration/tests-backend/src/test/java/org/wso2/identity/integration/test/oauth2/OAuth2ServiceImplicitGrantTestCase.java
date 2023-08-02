@@ -1,27 +1,34 @@
 /*
-* Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-* WSO2 Inc. licenses this file to you under the Apache License,
-* Version 2.0 (the "License"); you may not use this file except
-* in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing,
-* software distributed under the License is distributed on an
-* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-* KIND, either express or implied. See the License for the
-* specific language governing permissions and limitations
-* under the License.
-*/
+ * Copyright (c) 2015, WSO2 LLC. (https://www.wso2.com).
+ *
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 package org.wso2.identity.integration.test.oauth2;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.CookieSpecProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
@@ -32,15 +39,9 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.automation.engine.context.beans.ContextUrls;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
-import org.wso2.carbon.automation.engine.context.beans.User;
-import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
-import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
-import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
-import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
-import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
-import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.DataExtractUtil.KeyValue;
@@ -56,7 +57,6 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT
 
 public class OAuth2ServiceImplicitGrantTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
-	private AuthenticatorClient logManger;
 	private String accessToken;
 	private String scopes;
 	private String sessionDataKeyConsent;
@@ -65,17 +65,14 @@ public class OAuth2ServiceImplicitGrantTestCase extends OAuth2ServiceAbstractInt
 	private String consumerKey;
 	private String consumerSecret;
 
+	private Lookup<CookieSpecProvider> cookieSpecRegistry;
+	private RequestConfig requestConfig;
 	private CloseableHttpClient client;
 	private final String username;
 	private final String userPassword;
 	private final AutomationContext context;
-	private String backendURL;
-	private String sessionCookie;
 	private Tenant tenantInfo;
-	private User userInfo;
-	private LoginLogoutClient loginLogoutClient;
-	private ContextUrls identityContextUrls;
-	private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
+	private String applicationId;
 
 	@DataProvider(name = "configProvider")
 	public static Object[][] configProvider() {
@@ -94,46 +91,52 @@ public class OAuth2ServiceImplicitGrantTestCase extends OAuth2ServiceAbstractInt
 	@BeforeClass(alwaysRun = true)
 	public void testInit() throws Exception {
 
-		backendURL = context.getContextUrls().getBackEndUrl();
-		loginLogoutClient = new LoginLogoutClient(context);
-		logManger = new AuthenticatorClient(backendURL);
-		sessionCookie = logManger.login(username, userPassword, context.getInstance().getHosts().get("default"));
-		identityContextUrls = context.getContextUrls();
 		tenantInfo = context.getContextTenant();
-		userInfo = tenantInfo.getContextUser();
-		appMgtclient = new ApplicationManagementServiceClient(sessionCookie, backendURL, null);
-		adminClient = new OauthAdminClient(backendURL, sessionCookie);
-		remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
 
 		setSystemproperties();
-		client = HttpClientBuilder.create().build();
+		cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+				.register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+				.build();
+		requestConfig = RequestConfig.custom()
+				.setCookieSpec(CookieSpecs.DEFAULT)
+				.build();
+		client = HttpClientBuilder.create()
+				.setDefaultRequestConfig(requestConfig)
+				.setDefaultCookieSpecRegistry(cookieSpecRegistry)
+				.build();
 		scopes = "abc";
 	}
 
 	@AfterClass(alwaysRun = true)
 	public void atEnd() throws Exception {
 
-		appMgtclient.deleteApplication(SERVICE_PROVIDER_NAME);
-		adminClient.removeOAuthApplicationData(consumerKey);
+		deleteApp(applicationId);
 		client.close();
-		logManger = null;
+		restClient.closeHttpClient();
 		consumerKey = null;
 		accessToken = null;
+		applicationId = null;
 	}
 
 	@Test(groups = "wso2.is", description = "Check Oauth2 application registration")
 	public void testRegisterApplication() throws Exception {
-		OAuthConsumerAppDTO appDto = createApplication();
-		Assert.assertNotNull(appDto, "Application creation failed.");
+		ApplicationResponseModel application = addApplication();
+		Assert.assertNotNull(application, "OAuth App creation failed.");
 
-		consumerKey = appDto.getOauthConsumerKey();
+		OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(application.getId());
+
+		consumerKey = oidcConfig.getClientId();
 		Assert.assertNotNull(consumerKey, "Application creation failed.");
-		consumerSecret = appDto.getOauthConsumerSecret();
+
+		consumerSecret = oidcConfig.getClientSecret();
+		Assert.assertNotNull(consumerSecret, "Application creation failed.");
+
+		applicationId = application.getId();
 	}
 
 	@Test(groups = "wso2.is", description = "Send authorize user request", dependsOnMethods = "testRegisterApplication")
 	public void testSendAuthorozedPost() throws Exception {
-		List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+		List<NameValuePair> urlParameters = new ArrayList<>();
 		urlParameters.add(new BasicNameValuePair("grantType",
 		                                         OAuth2Constant.OAUTH2_GRANT_TYPE_IMPLICIT));
 		urlParameters.add(new BasicNameValuePair("consumerKey", consumerKey));
@@ -156,7 +159,7 @@ public class OAuth2ServiceImplicitGrantTestCase extends OAuth2ServiceAbstractInt
 		response = sendGetRequest(client, locationHeader.getValue());
 		Assert.assertNotNull(response, "Authorized user response is null.");
 
-		Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
+		Map<String, Integer> keyPositionMap = new HashMap<>(1);
 		keyPositionMap.put("name=\"sessionDataKey\"", 1);
 		List<KeyValue> keyValues =
 		                           DataExtractUtil.extractDataFromResponse(response, keyPositionMap);
@@ -187,7 +190,7 @@ public class OAuth2ServiceImplicitGrantTestCase extends OAuth2ServiceAbstractInt
 		EntityUtils.consume(response.getEntity());
 
 		response = sendGetRequest(client, locationHeader.getValue());
-		Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
+		Map<String, Integer> keyPositionMap = new HashMap<>(1);
 		keyPositionMap.put("name=\"sessionDataKeyConsent\"", 1);
 		List<KeyValue> keyValues =
 		                           DataExtractUtil.extractSessionConsentDataFromResponse(response,
@@ -202,7 +205,7 @@ public class OAuth2ServiceImplicitGrantTestCase extends OAuth2ServiceAbstractInt
 	@Test(groups = "wso2.is", description = "Send approval post request", dependsOnMethods = "testSendLoginPost")
 	public void testSendApprovalPost() throws Exception {
 
-		List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+		List<NameValuePair> urlParameters = new ArrayList<>();
 		urlParameters.add(new BasicNameValuePair("consent", "approve"));
 		urlParameters.add(new BasicNameValuePair("sessionDataKeyConsent", sessionDataKeyConsent));
 

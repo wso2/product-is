@@ -1,0 +1,36 @@
+<SSOIdentityProviderConfig>
+    <ServiceProviders>
+        <ServiceProvider>
+            <Issuer>carbonServer</Issuer>
+            <AssertionConsumerServiceURLs>
+                <AssertionConsumerServiceURL>${carbon.protocol}://${carbon.host}:${carbon.management.port}/acs</AssertionConsumerServiceURL>
+            </AssertionConsumerServiceURLs>
+            <DefaultAssertionConsumerServiceURL>${carbon.protocol}://${carbon.host}:${carbon.management.port}/acs</DefaultAssertionConsumerServiceURL>
+            <EnableSingleLogout>true</EnableSingleLogout>
+            <SLOResponseURL></SLOResponseURL>
+            <SLORequestURL></SLORequestURL>
+            <SAMLDefaultSigningAlgorithmURI>http://www.w3.org/2001/04/xmldsig-more#rsa-sha256</SAMLDefaultSigningAlgorithmURI>
+            <SAMLDefaultDigestAlgorithmURI>http://www.w3.org/2001/04/xmlenc#sha256</SAMLDefaultDigestAlgorithmURI>
+            <SignResponse>true</SignResponse>
+            <ValidateSignatures>true</ValidateSignatures>
+            <EncryptAssertion>false</EncryptAssertion>
+            <CertAlias>wso2carbon</CertAlias>
+            <EnableAttributeProfile>false</EnableAttributeProfile>
+            <IncludeAttributeByDefault>false</IncludeAttributeByDefault>
+            <ConsumingServiceIndex>2104589</ConsumingServiceIndex>
+            <EnableAudienceRestriction>false</EnableAudienceRestriction>
+            <AudiencesList>
+                <Audience></Audience>
+            </AudiencesList>
+            <EnableRecipients>false</EnableRecipients>
+            <RecipientList>
+                <Recipient></Recipient>
+            </RecipientList>
+            <EnableIdPInitiatedSSO>false</EnableIdPInitiatedSSO>
+            <EnableIdPInitSLO>false</EnableIdPInitSLO>
+            <ReturnToURLList>
+                <ReturnToURL></ReturnToURL>
+            </ReturnToURLList>
+        </ServiceProvider>
+    </ServiceProviders>
+</SSOIdentityProviderConfig>

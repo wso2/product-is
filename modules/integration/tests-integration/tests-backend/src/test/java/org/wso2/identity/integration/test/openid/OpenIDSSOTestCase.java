@@ -24,11 +24,17 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.CookieSpecProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
@@ -71,7 +77,9 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
 
     private OpenIDUtils.OpenIDConfig config;
     private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
-    private HttpClient client;
+    private Lookup<CookieSpecProvider> cookieSpecRegistry;
+    private RequestConfig requestConfig;
+    private CloseableHttpClient client;
     private File identityXML;
     private ServerConfigurationManager serverConfigurationManager;
 
@@ -103,6 +111,7 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
         }
 
         remoteUSMServiceClient = null;
+        client.close();
     }
 
     @BeforeMethod
@@ -153,7 +162,16 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
         HttpResponse response;
         String results;
 
-        client = new DefaultHttpClient();
+        cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+                .build();
+        requestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.DEFAULT)
+                .build();
+        client = HttpClientBuilder.create()
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .setDefaultRequestConfig(requestConfig)
+                .build();
 
         response = executePhaseBeforeApproval();
 
@@ -171,7 +189,10 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
         }
 
         if (config.getUserConsent() == OpenIDUtils.UserConsent.APPROVE_ALWAYS){
-            client = new DefaultHttpClient();
+            client = HttpClientBuilder.create()
+                    .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                    .setDefaultRequestConfig(requestConfig)
+                    .build();
 
             response = executePhaseBeforeApproval();
             results = extractDataFromResponse(response);

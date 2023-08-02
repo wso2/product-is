@@ -1,18 +1,20 @@
 /*
-* Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-* Licensed under the Apache License, Version 2.0 (the "License");
-* you may not use this file except in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing, software
-* distributed under the License is distributed on an "AS IS" BASIS,
-* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the License for the specific language governing permissions and
-* limitations under the License.
-*/
+ * Copyright (c) 2019, WSO2 LLC. (http://www.wso2.com).
+ *
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 
 package org.wso2.identity.integration.test.rest.api.server.application.management.v1.model;
 
@@ -31,6 +33,7 @@ public class ApplicationModel  {
     private String description;
     private String imageUrl;
     private String loginUrl;
+    private Boolean isManagementApp;
     private ClaimConfiguration claimConfiguration;
     private InboundProtocols inboundProtocolConfiguration;
     private AuthenticationSequence authenticationSequence;
@@ -127,6 +130,24 @@ public class ApplicationModel  {
     }
     public void setLoginUrl(String loginUrl) {
         this.loginUrl = loginUrl;
+    }
+
+    /**
+     **/
+    public ApplicationModel isManagementApp(Boolean isManagementApp) {
+
+        this.isManagementApp = isManagementApp;
+        return this;
+    }
+
+    @ApiModelProperty(example = "false")
+    @JsonProperty("isManagementApp")
+    @Valid
+    public Boolean getIsManagementApp() {
+        return isManagementApp;
+    }
+    public void setIsManagementApp(Boolean isManagementApp) {
+        this.isManagementApp = isManagementApp;
     }
 
     /**
@@ -236,6 +257,7 @@ public class ApplicationModel  {
             Objects.equals(this.description, applicationModel.description) &&
             Objects.equals(this.imageUrl, applicationModel.imageUrl) &&
             Objects.equals(this.loginUrl, applicationModel.loginUrl) &&
+            Objects.equals(this.isManagementApp, applicationModel.isManagementApp) &&
             Objects.equals(this.claimConfiguration, applicationModel.claimConfiguration) &&
             Objects.equals(this.inboundProtocolConfiguration, applicationModel.inboundProtocolConfiguration) &&
             Objects.equals(this.authenticationSequence, applicationModel.authenticationSequence) &&
@@ -245,7 +267,8 @@ public class ApplicationModel  {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, imageUrl, loginUrl, claimConfiguration, inboundProtocolConfiguration, authenticationSequence, advancedConfigurations, provisioningConfigurations);
+        return Objects.hash(id, name, description, imageUrl, loginUrl, isManagementApp, claimConfiguration,
+                inboundProtocolConfiguration, authenticationSequence, advancedConfigurations, provisioningConfigurations);
     }
 
     @Override
@@ -259,6 +282,7 @@ public class ApplicationModel  {
         sb.append("    description: ").append(toIndentedString(description)).append("\n");
         sb.append("    imageUrl: ").append(toIndentedString(imageUrl)).append("\n");
         sb.append("    loginUrl: ").append(toIndentedString(loginUrl)).append("\n");
+        sb.append("    isManagementApp: ").append(toIndentedString(isManagementApp)).append("\n");
         sb.append("    claimConfiguration: ").append(toIndentedString(claimConfiguration)).append("\n");
         sb.append("    inboundProtocolConfiguration: ").append(toIndentedString(inboundProtocolConfiguration)).append("\n");
         sb.append("    authenticationSequence: ").append(toIndentedString(authenticationSequence)).append("\n");

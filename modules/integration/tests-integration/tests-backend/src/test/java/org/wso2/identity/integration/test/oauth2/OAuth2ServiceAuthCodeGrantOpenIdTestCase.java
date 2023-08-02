@@ -1,33 +1,41 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2015, WSO2 LLC. (http://www.wso2.com).
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 package org.wso2.identity.integration.test.oauth2;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.CookieSpecProvider;
 import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONObject;
+import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -37,20 +45,14 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.automation.engine.context.beans.ContextUrls;
-import org.wso2.carbon.automation.engine.context.beans.Tenant;
-import org.wso2.carbon.automation.engine.context.beans.User;
-import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
-import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationRequestDTO;
-import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationRequestDTO_OAuth2AccessToken;
-import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationResponseDTO;
-import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
-import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
-import org.wso2.carbon.um.ws.api.stub.ClaimValue;
-import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
-import org.wso2.identity.integration.common.clients.oauth.Oauth2TokenValidationClient;
-import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
-import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
+import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
+import org.wso2.identity.integration.test.rest.api.user.common.model.ListObject;
+import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperationRequestObject;
+import org.wso2.identity.integration.test.rest.api.user.common.model.RoleItemAddGroupobj;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
+import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
@@ -58,7 +60,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,8 +69,6 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.COMMON_AUT
 
 public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
-    private Oauth2TokenValidationClient oAuth2TokenValidationClient;
-    private AuthenticatorClient logManger;
     private String accessToken;
     private String sessionDataKeyConsent;
     private String sessionDataKey;
@@ -79,18 +78,22 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
     private String consumerKey;
     private String consumerSecret;
 
-    private DefaultHttpClient client;
+    private Lookup<CookieSpecProvider> cookieSpecRegistry;
+    private RequestConfig requestConfig;
+    private CloseableHttpClient client;
 
-    private static final String emailClaimURI = "http://wso2.org/claims/emailaddress";
-
+    private static final String USERS_PATH = "users";
     private static final String USER_EMAIL = "abc@wso2.com";
     private static final String USERNAME = "authcodegrantuser";
     private static final String PASSWORD = "pass123";
 
-    private List<NameValuePair> consentParameters = new ArrayList<>();
-    private CookieStore cookieStore = new BasicCookieStore();
+    private final List<NameValuePair> consentParameters = new ArrayList<>();
+    private final CookieStore cookieStore = new BasicCookieStore();
     private final String username;
     private final String userPassword;
+    private String applicationId;
+    private String userId;
+    private SCIM2RestClient scim2RestClient;
 
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
@@ -100,6 +103,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
     @Factory(dataProvider = "configProvider")
     public OAuth2ServiceAuthCodeGrantOpenIdTestCase(TestUserMode userMode) throws Exception {
 
+        super.init(userMode);
         context = new AutomationContext("IDENTITY", userMode);
         this.username = context.getContextTenant().getTenantAdmin().getUserName();
         this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
@@ -108,47 +112,51 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
-        backendURL = context.getContextUrls().getBackEndUrl();
-        loginLogoutClient = new LoginLogoutClient(context);
-        logManger = new AuthenticatorClient(backendURL);
-        sessionCookie = logManger.login(username, userPassword, context.getInstance().getHosts().get("default"));
-        identityContextUrls = context.getContextUrls();
         tenantInfo = context.getContextTenant();
-        userInfo = tenantInfo.getContextUser();
-        appMgtclient = new ApplicationManagementServiceClient(sessionCookie, backendURL, null);
-        adminClient = new OauthAdminClient(backendURL, sessionCookie);
-        remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
-        oAuth2TokenValidationClient = new Oauth2TokenValidationClient(backendURL, sessionCookie);
-        client = new DefaultHttpClient();
-        client.setCookieStore(cookieStore);
+        scim2RestClient =  new SCIM2RestClient(serverURL, tenantInfo);
+        
+        cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+                .build();
+        requestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.DEFAULT)
+                .build();
+        client = HttpClientBuilder.create()
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .setDefaultRequestConfig(requestConfig)
+                .setDefaultCookieStore(cookieStore).build();
         setSystemproperties();
-        remoteUSMServiceClient.addUser(USERNAME, PASSWORD, new String[]{"admin"},
-                getUserClaims(), "default", true);
+        addAdminUser();
     }
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
-        deleteApplication();
-        removeOAuthApplicationData();
+        deleteApp(applicationId);
+        scim2RestClient.deleteUser(userId);
 
-        logManger = null;
+        restClient.closeHttpClient();
+        scim2RestClient.closeHttpClient();
+        client.close();
+
         consumerKey = null;
         accessToken = null;
     }
 
     @Test(groups = "wso2.is", description = "Check Oauth2 application registration")
     public void testRegisterApplication() throws Exception {
-        OAuthConsumerAppDTO appDto = createApplication();
-        Assert.assertNotNull(appDto, "Application creation failed.");
+        ApplicationResponseModel application = addApplication();
+        Assert.assertNotNull(application, "OAuth App creation failed.");
+        applicationId = application.getId();
+        OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(applicationId);
 
-        consumerKey = appDto.getOauthConsumerKey();
+        consumerKey = oidcConfig.getClientId();
         Assert.assertNotNull(consumerKey, "Application creation failed.");
-        consumerSecret = appDto.getOauthConsumerSecret();
+        consumerSecret = oidcConfig.getClientSecret();
     }
 
     @Test(groups = "wso2.is", description = "Send authorize user request", dependsOnMethods = "testRegisterApplication")
-    public void testSendAuthorozedPost() throws Exception {
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+    public void testSendAuthorizedPost() throws Exception {
+        List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("grantType", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
         urlParameters.add(new BasicNameValuePair("consumerKey", consumerKey));
         urlParameters.add(new BasicNameValuePair("callbackurl", OAuth2Constant.CALLBACK_URL));
@@ -172,7 +180,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
         Assert.assertNotNull(response,
                 "Authorization request failed. Authorized user response is null.");
 
-        Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
+        Map<String, Integer> keyPositionMap = new HashMap<>(1);
         keyPositionMap.put("name=\"sessionDataKey\"", 1);
         List<KeyValue> keyValues =
                 DataExtractUtil.extractDataFromResponse(response, keyPositionMap);
@@ -183,7 +191,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
         EntityUtils.consume(response.getEntity());
     }
 
-    @Test(groups = "wso2.is", description = "Send login post request", dependsOnMethods = "testSendAuthorozedPost")
+    @Test(groups = "wso2.is", description = "Send login post request", dependsOnMethods = "testSendAuthorizedPost")
     public void testSendLoginPost() throws Exception {
         HttpResponse response = sendLoginPost(client, sessionDataKey);
         Assert.assertNotNull(response, "Login request failed. response is null.");
@@ -193,7 +201,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         Assert.assertNotNull(locationHeader, "Login response header is null");
         response = sendConsentGetRequest(client, locationHeader.getValue(), cookieStore, consentParameters);
-        Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
+        Map<String, Integer> keyPositionMap = new HashMap<>(1);
         keyPositionMap.put("name=\"sessionDataKeyConsent\"", 1);
         List<KeyValue> keyValues =
                 DataExtractUtil.extractSessionConsentDataFromResponse(response,
@@ -219,14 +227,16 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
         response = sendPostRequest(client, locationHeader.getValue());
         Assert.assertNotNull(response, "Get Activation response is invalid.");
 
-        Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
+        Map<String, Integer> keyPositionMap = new HashMap<>(1);
         keyPositionMap.put("Authorization Code", 1);
         List<KeyValue> keyValues =
                 DataExtractUtil.extractTableRowDataFromResponse(response,
                         keyPositionMap);
         Assert.assertNotNull(response, "Authorization Code key value is invalid.");
 
-        authorizationCode = keyValues.get(0).getValue();
+        if (keyValues != null) {
+            authorizationCode = keyValues.get(0).getValue();
+        }
         Assert.assertNotNull(authorizationCode, "Authorization code is null.");
         EntityUtils.consume(response.getEntity());
     }
@@ -239,7 +249,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
 
         response = sendPostRequest(client, OAuth2Constant.AUTHORIZED_URL);
 
-        Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
+        Map<String, Integer> keyPositionMap = new HashMap<>(1);
         keyPositionMap.put("name=\"accessToken\"", 1);
         List<KeyValue> keyValues =
                 DataExtractUtil.extractInputValueFromResponse(response,
@@ -252,7 +262,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
 
         response = sendPostRequest(client, OAuth2Constant.AUTHORIZED_URL);
 
-        keyPositionMap = new HashMap<String, Integer>(1);
+        keyPositionMap = new HashMap<>(1);
         keyPositionMap.put("id=\"loggedUser\"", 1);
         keyValues = DataExtractUtil.extractLabelValueFromResponse(response, keyPositionMap);
         Assert.assertNotNull(keyValues, "Access token Key value is null.");
@@ -267,10 +277,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
     @Test(groups = "wso2.is", description = "Validate access token", dependsOnMethods = "testGetAccessToken")
     public void testValidateAccessToken() throws Exception {
 
-        String introspectionUrl = tenantInfo.getDomain().equalsIgnoreCase("carbon.super") ?
-                OAuth2Constant.INTRO_SPEC_ENDPOINT : OAuth2Constant.TENANT_INTRO_SPEC_ENDPOINT;
-        org.json.simple.JSONObject responseObj = introspectTokenWithTenant(client, accessToken, introspectionUrl,
-                username, userPassword);
+        JSONObject responseObj = introspectToken();
         Assert.assertNotNull(responseObj, "Validate access token failed. response is invalid.");
         Assert.assertEquals(responseObj.get("active"), true, "Token Validation failed");
     }
@@ -299,59 +306,25 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
     @Test(groups = "wso2.is", description = "Validate Token Expiration Time",
             dependsOnMethods = "testValidateAccessToken")
     public void testValidateTokenExpirationTime() throws Exception {
-        OAuth2TokenValidationRequestDTO requestDTO = new OAuth2TokenValidationRequestDTO();
-        OAuth2TokenValidationRequestDTO_OAuth2AccessToken accessTokenDTO = new
-                OAuth2TokenValidationRequestDTO_OAuth2AccessToken();
-        accessTokenDTO.setIdentifier(accessToken);
-        accessTokenDTO.setTokenType("bearer");
-        requestDTO.setAccessToken(accessTokenDTO);
+        JSONObject tokenResponse = introspectToken();
 
-        OAuth2TokenValidationResponseDTO responseDTO = oAuth2TokenValidationClient.validateToken(requestDTO);
-        Assert.assertNotNull(responseDTO != null && responseDTO.getAuthorizationContextToken() != null,
-                "received authorization context token is null");
-
-        if (responseDTO != null && responseDTO.getAuthorizationContextToken() != null) {
-            String tokenString = responseDTO.getAuthorizationContextToken().getTokenString();
-            Assert.assertNotNull(tokenString, "received token string is null");
-
-            String[] tokenElements = tokenString.split("\\.");
-            Assert.assertTrue(tokenElements.length > 1, "Invalid JWT token received");
-
-            JSONObject jwtJsonObject = new JSONObject(new String(Base64.decodeBase64(tokenElements[1])));
-            Assert.assertNotNull(jwtJsonObject.get("exp"), "'exp' value is not included");
-
-            long expValue = Long.valueOf(jwtJsonObject.get("exp").toString());
-            // ratio between these vales is normally 999, used 975 just to be in the safe side
-            Assert.assertTrue(System.currentTimeMillis() / expValue > 975, "'exp time is not in milliseconds'");
-        }
+        Assert.assertNotNull(tokenResponse.get("exp"), "'exp' value is not included");
+        long expValue = Long.parseLong(tokenResponse.get("exp").toString());
+        // ratio between these vales is normally 999, used 975 just to be in the safe side
+        Assert.assertTrue(System.currentTimeMillis() / expValue > 975, "'exp time is not in milliseconds'");
     }
 
     @Test(groups = "wso2.is", description = "Validate Authorization Context of jwt Token", dependsOnMethods =
-            "testGetAccessToken")
-    public void testAuthorizationContextValidateJwtToken() throws Exception {
-        String claimURI[] = {OAuth2Constant.WSO2_CLAIM_DIALECT_ROLE};
-        OAuth2TokenValidationRequestDTO requestDTO = new OAuth2TokenValidationRequestDTO();
-        OAuth2TokenValidationRequestDTO_OAuth2AccessToken accessTokenDTO = new
-                OAuth2TokenValidationRequestDTO_OAuth2AccessToken();
-        accessTokenDTO.setIdentifier(accessToken);
-        accessTokenDTO.setTokenType("bearer");
-        requestDTO.setAccessToken(accessTokenDTO);
-        requestDTO.setRequiredClaimURIs(claimURI);
+            "testValidateAccessToken")
+    public void testValidateTokenScope() throws Exception {
+        JSONObject tokenResponse = introspectToken();
 
-        OAuth2TokenValidationResponseDTO responseDTO = oAuth2TokenValidationClient.validateToken(requestDTO);
-        if (responseDTO != null && responseDTO.getAuthorizationContextToken() != null) {
-            String tokenString = responseDTO.getAuthorizationContextToken().getTokenString();
+        Assert.assertTrue(tokenResponse.size() > 1, "Invalid JWT token received");
+        Assert.assertNotNull(tokenResponse.get("scope"), "'scope' is not included");
 
-            String[] tokenElements = tokenString.split("\\.");
-            JSONObject jwtJsonObject = new JSONObject(new String(Base64.decodeBase64(tokenElements[1])));
-            String jwtClaimMappingRoleValues = jwtJsonObject.get(OAuth2Constant.WSO2_CLAIM_DIALECT_ROLE).toString();
-            Assert.assertTrue(jwtClaimMappingRoleValues.contains(","), "Broken JWT Token from Authorization context");
-
-            String[] jwtClaimMappingRoleElements = jwtClaimMappingRoleValues.replaceAll("[\\[\\]\"]", "").split(",");
-            List<String> jwtClaimMappingRoleElementsList = Arrays.asList(jwtClaimMappingRoleElements);
-            Assert.assertTrue(jwtClaimMappingRoleElementsList.contains("Internal/everyone"), "Invalid JWT Token Role " +
-                    "Values");
-        }
+        String scopes = tokenResponse.get("scope").toString();
+        Assert.assertTrue(scopes.contains("email"), "Invalid JWT Token scope Value");
+        Assert.assertTrue(scopes.contains("openid"), "Invalid JWT Token scope Value");
     }
 
     public HttpResponse sendLoginPost(HttpClient client, String sessionDataKey) throws IOException {
@@ -360,19 +333,29 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
         urlParameters.add(new BasicNameValuePair("password", PASSWORD));
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
 
-        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, COMMON_AUTH_URL);
-
-        return response;
+        return sendPostRequestWithParameters(client, urlParameters, COMMON_AUTH_URL);
     }
 
-    protected ClaimValue[] getUserClaims() {
-        ClaimValue[] claimValues = new ClaimValue[1];
+    private JSONObject introspectToken() throws Exception {
+        String introspectionUrl = tenantInfo.getDomain().equalsIgnoreCase("carbon.super") ?
+                OAuth2Constant.INTRO_SPEC_ENDPOINT : OAuth2Constant.TENANT_INTRO_SPEC_ENDPOINT;
+        return introspectTokenWithTenant(client, accessToken, introspectionUrl, username, userPassword);
+    }
 
-        ClaimValue email = new ClaimValue();
-        email.setClaimURI(emailClaimURI);
-        email.setValue(USER_EMAIL);
-        claimValues[0] = email;
+    private void addAdminUser() throws Exception {
+        UserObject userInfo = new UserObject();
+        userInfo.setUserName(USERNAME);
+        userInfo.setPassword(PASSWORD);
+        userInfo.addEmail(new Email().value(USER_EMAIL));
 
-        return claimValues;
+        userId = scim2RestClient.createUser(userInfo);
+        String roleId = scim2RestClient.getRoleIdByName("admin");
+
+        RoleItemAddGroupobj patchRoleItem = new RoleItemAddGroupobj();
+        patchRoleItem.setOp(RoleItemAddGroupobj.OpEnum.ADD);
+        patchRoleItem.setPath(USERS_PATH);
+        patchRoleItem.addValue(new ListObject().value(userId));
+
+        scim2RestClient.updateUserRole(new PatchOperationRequestObject().addOperations(patchRoleItem), roleId);
     }
 }

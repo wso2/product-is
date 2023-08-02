@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019, WSO2 LLC. (http://www.wso2.com).
  *
- * WSO2 Inc. licenses this file to you under the Apache License,
+ * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
- * you may obtain a copy of the License at
+ * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -25,11 +25,17 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.CookieSpecProvider;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
@@ -39,8 +45,8 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
@@ -56,11 +62,14 @@ public class Oauth2TokenRenewalPerRequestTestCase extends OAuth2ServiceAbstractI
 
     protected Log log = LogFactory.getLog(getClass());
     private ServerConfigurationManager serverConfigurationManager;
+    private Lookup<CookieSpecProvider> cookieSpecRegistry;
+    private RequestConfig requestConfig;
     private CloseableHttpClient client;
     private static final String TEST_NONCE = "test_nonce";
     private String tempAccessToken;
 
     CookieStore cookieStore = new BasicCookieStore();
+    private String applicationId;
 
     @BeforeClass(alwaysRun = true)
     public void setup() throws Exception {
@@ -68,17 +77,32 @@ public class Oauth2TokenRenewalPerRequestTestCase extends OAuth2ServiceAbstractI
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         changeISConfiguration();
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
-        OAuthConsumerAppDTO appDto = createApplication();
-        consumerKey = appDto.getOauthConsumerKey();
-        consumerSecret = appDto.getOauthConsumerSecret();
-        client = HttpClientBuilder.create().disableRedirectHandling().setDefaultCookieStore(cookieStore).build();
+        
+        applicationId = addApplication().getId();
+        OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(applicationId);
+        consumerKey = oidcConfig.getClientId();
+        consumerSecret = oidcConfig.getClientSecret();
+
+        cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+                .build();
+        requestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.DEFAULT)
+                .build();
+
+        client = HttpClientBuilder.create()
+                .disableRedirectHandling()
+                .setDefaultCookieStore(cookieStore)
+                .setDefaultRequestConfig(requestConfig)
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .build();
     }
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
-        deleteApplication();
-        removeOAuthApplicationData();
+        deleteApp(applicationId);
+        restClient.closeHttpClient();
 
         log.info("Replacing deployment.toml with default configurations.");
         serverConfigurationManager.restoreToLastConfiguration(false);
@@ -262,7 +286,7 @@ public class Oauth2TokenRenewalPerRequestTestCase extends OAuth2ServiceAbstractI
 
     private void checkOldTokenRevocation(String token) throws Exception {
 
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("token", token));
 
         JSONObject jsonResponse = responseObject(OAuth2Constant.INTRO_SPEC_ENDPOINT, urlParameters,
@@ -316,6 +340,10 @@ public class Oauth2TokenRenewalPerRequestTestCase extends OAuth2ServiceAbstractI
     private void refreshHTTPClient() {
 
         cookieStore.clear();
-        client = HttpClientBuilder.create().disableRedirectHandling().setDefaultCookieStore(cookieStore).build();
+        client = HttpClientBuilder.create().disableRedirectHandling()
+                .setDefaultCookieStore(cookieStore)
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .setDefaultRequestConfig(requestConfig)
+                .build();
     }
 }

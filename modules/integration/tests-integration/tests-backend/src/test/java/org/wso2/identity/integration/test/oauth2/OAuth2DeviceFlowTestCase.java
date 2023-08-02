@@ -1,30 +1,37 @@
 /*
- * Copyright (c) 2020, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2020, WSO2 LLC. (https://www.wso2.com).
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.wso2.identity.integration.test.oauth2;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.CookieSpecProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
@@ -36,8 +43,10 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
-import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
@@ -47,6 +56,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,20 +74,29 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
     private String sessionDataKey;
     private String consumerKey;
     private String consumerSecret;
+    private String appId;
     private String userCode;
     private String deviceCode;
 
-    private DefaultHttpClient client;
+    private Lookup<CookieSpecProvider> cookieSpecRegistry;
+    private RequestConfig requestConfig;
+    private CloseableHttpClient client;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
         super.init(TestUserMode.SUPER_TENANT_USER);
-        AuthenticatorClient logManger = new AuthenticatorClient(backendURL);
-        logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
-                        isServer.getSuperTenant().getTenantAdmin().getPassword(),
-                        isServer.getInstance().getHosts().get("default"));
-        client = new DefaultHttpClient();
+
+        cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+                .build();
+        requestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.DEFAULT)
+                .build();
+        client = HttpClientBuilder.create()
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .setDefaultRequestConfig(requestConfig)
+                .build();
 
         setSystemproperties();
     }
@@ -85,20 +104,28 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
-        deleteApplication();
-        removeOAuthApplicationData();
+        deleteApp(appId);
+        consumerKey = null;
+        consumerSecret = null;
+        appId = null;
+        client.close();
+        restClient.closeHttpClient();
     }
 
     @Test(groups = "wso2.is", description = "Check Oauth2 application registration")
     public void testRegisterApplication() throws Exception {
 
-        OAuthConsumerAppDTO appDto = createApp();
-        Assert.assertNotNull(appDto, "Application creation failed.");
+        ApplicationResponseModel application = createApp();
+        Assert.assertNotNull(application, "OAuth App creation failed.");
 
-        consumerKey = appDto.getOauthConsumerKey();
+        OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(application.getId());
+
+        consumerKey = oidcConfig.getClientId();
         Assert.assertNotNull(consumerKey, "Application creation failed.");
 
-        consumerSecret = appDto.getOauthConsumerSecret();
+        consumerSecret = oidcConfig.getClientSecret();
+        Assert.assertNotNull(consumerSecret, "Application creation failed.");
+        appId = application.getId();
     }
 
     @Test(groups = "wso2.is", description = "Send authorize user request without redirect_uri param", dependsOnMethods
@@ -108,7 +135,8 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(CLIENT_ID_PARAM, consumerKey));
         urlParameters.add(new BasicNameValuePair(SCOPE_PLAYGROUND_NAME, "device"));
-        AutomationContext automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
+        AutomationContext automationContext = new AutomationContext("IDENTITY",
+                TestUserMode.SUPER_TENANT_ADMIN);
         String deviceAuthEndpoint = automationContext.getContextUrls().getBackEndUrl()
                 .replace("services/", "oauth2/device_authorize");
         JSONObject responseObject = responseObjectNew(urlParameters, deviceAuthEndpoint);
@@ -129,9 +157,10 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
     @Test(groups = "wso2.is", description = "Send authorize user request", dependsOnMethods = "testSendDeviceAuthorize")
     public void testSendDeviceAuthorozedPost() throws Exception {
 
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(USER_CODE, userCode));
-        AutomationContext automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
+        AutomationContext automationContext = new AutomationContext("IDENTITY",
+                TestUserMode.SUPER_TENANT_ADMIN);
         String authenticationEndpoint = automationContext.getContextUrls().getBackEndUrl()
                 .replace("services/", "authenticationendpoint/device.do");
         String response = responsePost(urlParameters,authenticationEndpoint);
@@ -143,7 +172,8 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(USER_CODE, userCode));
-        AutomationContext automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
+        AutomationContext automationContext = new AutomationContext("IDENTITY",
+                TestUserMode.SUPER_TENANT_ADMIN);
         String deviceEndpoint = automationContext.getContextUrls().getBackEndUrl()
                 .replace("services/", "oauth2/device");
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters, deviceEndpoint);
@@ -156,7 +186,7 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
         response = sendGetRequest(client, locationHeader.getValue());
         Assert.assertNotNull(response, "Authorized user response is null.");
 
-        Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
+        Map<String, Integer> keyPositionMap = new HashMap<>(1);
         keyPositionMap.put("name=\"sessionDataKey\"", 1);
         List<DataExtractUtil.KeyValue> keyValues =
                 DataExtractUtil.extractDataFromResponse(response, keyPositionMap);
@@ -189,7 +219,7 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
         EntityUtils.consume(response.getEntity());
 
         response = sendGetRequest(client, locationHeader.getValue());
-        Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
+        Map<String, Integer> keyPositionMap = new HashMap<>(1);
         keyPositionMap.put("name=\"" + OAuth2Constant.SESSION_DATA_KEY_CONSENT + "\"", 1);
         List<DataExtractUtil.KeyValue> keyValues =
                 DataExtractUtil.extractSessionConsentDataFromResponse(response,
@@ -228,7 +258,8 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
         Assert.assertNotNull(accessToken, "Assess token is null");
     }
 
-    @Test(groups = "wso2.is", description = "Send token post request with used code", dependsOnMethods = "testTokenRequest")
+    @Test(groups = "wso2.is", description = "Send token post request with used code",
+            dependsOnMethods = "testTokenRequest")
     public void testExpiredDeviceTokenRequest() throws Exception {
 
         // Wait 5 seconds because of the token polling interval.
@@ -297,19 +328,34 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
     /**
      * Create Application with the given app configurations
      *
-     * @return OAuthConsumerAppDTO
-     * @throws Exception
+     * @return ApplicationResponseModel
+     * @throws Exception exception
      */
-    private OAuthConsumerAppDTO createApp() throws Exception {
+    private ApplicationResponseModel createApp() throws Exception {
 
-        OAuthConsumerAppDTO appDTO = new OAuthConsumerAppDTO();
-        appDTO.setApplicationName(OAuth2Constant.OAUTH_APPLICATION_NAME);
-        appDTO.setCallbackUrl(OAuth2Constant.CALLBACK_URL);
-        appDTO.setOAuthVersion(OAuth2Constant.OAUTH_VERSION_2);
-        appDTO.setGrantTypes("authorization_code implicit password client_credentials refresh_token " +
-                             "urn:ietf:params:oauth:grant-type:saml2-bearer iwa:ntlm " +
-                             "urn:ietf:params:oauth:grant-type:device_code");
-        appDTO.setBypassClientCredentials(true);
-        return createApplication(appDTO, SERVICE_PROVIDER_NAME);
+        ApplicationModel application = new ApplicationModel();
+
+        List<String> grantTypes = new ArrayList<>();
+        Collections.addAll(grantTypes, "authorization_code", "implicit", "password", "client_credentials",
+                "refresh_token", "urn:ietf:params:oauth:grant-type:saml2-bearer", "iwa:ntlm",
+                "urn:ietf:params:oauth:grant-type:device_code");
+
+        List<String> callBackUrls = new ArrayList<>();
+        Collections.addAll(callBackUrls, OAuth2Constant.CALLBACK_URL);
+
+        OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
+        oidcConfig.setGrantTypes(grantTypes);
+        oidcConfig.setCallbackURLs(callBackUrls);
+        oidcConfig.setPublicClient(true);
+
+        InboundProtocols inboundProtocolsConfig = new InboundProtocols();
+        inboundProtocolsConfig.setOidc(oidcConfig);
+
+        application.setInboundProtocolConfiguration(inboundProtocolsConfig);
+        application.setName(OAuth2Constant.OAUTH_APPLICATION_NAME);
+
+        String appId = addApplication(application);
+
+        return getApplication(appId);
     }
 }

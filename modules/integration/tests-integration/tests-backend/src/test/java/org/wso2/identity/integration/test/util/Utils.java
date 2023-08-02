@@ -485,6 +485,36 @@ public class Utils {
         return value;
     }
 
+    /**
+     * Extract data from response for management console requests.
+     *
+     * @param response HttpResponse
+     * @param key      key to determine the line to extract
+     * @param token    index of the value after splitting the line
+     * @return value extracted
+     * @throws IOException IOException
+     */
+    public static String extractDataFromResponseForManagementConsoleRequests(HttpResponse response, String key,
+                                                                             int token)
+            throws IOException {
+
+        try (BufferedReader bufferedReader = new BufferedReader(
+                new InputStreamReader(response.getEntity().getContent()))) {
+            String line;
+            String value = StringUtils.EMPTY;
+
+            while ((line = bufferedReader.readLine()) != null) {
+                if (line.contains(key)) {
+                    String[] tokens = line.split("\"");
+                    value = tokens[token];
+                    value = value.trim();
+                    break;
+                }
+            }
+            return value;
+        }
+    }
+
     public static List<NameValuePair> getConsentRequiredClaimsFromResponse(HttpResponse response)
             throws Exception {
 
@@ -534,7 +564,7 @@ public class Utils {
 
         List<NameValuePair> urlParameters = new ArrayList<>();
         List<String> fetchedClaims = fetchClaimsfromConsentPage(redirectUrl);
-        for (String claimConsent: fetchedClaims) {
+        for (String claimConsent : fetchedClaims) {
             urlParameters.add(new BasicNameValuePair(claimConsent, "on"));
         }
         return urlParameters;
@@ -554,8 +584,8 @@ public class Utils {
      * Send a GET request to the data API.
      *
      * @param sessionDataKeyConsent Session data key consent
-     * @param userInfo User info
-     * @param tenantInfo Tenant info
+     * @param userInfo              User info
+     * @param tenantInfo            Tenant info
      * @return HttpResponse
      * @throws IOException IOException
      */
@@ -574,7 +604,6 @@ public class Utils {
 
         return client.execute(request);
     }
-
 
     /**
      * Read audit log lines with a given content.

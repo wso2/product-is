@@ -1,7 +1,7 @@
 /*
- * Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2015, WSO2 LLC. (http://www.wso2.com).
  *
- * WSO2 Inc. licenses this file to you under the Apache License,
+ * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
@@ -11,7 +11,7 @@
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
+ * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -21,9 +21,16 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.CookieSpecProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
@@ -34,8 +41,8 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
-import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
@@ -55,9 +62,6 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT
 
 public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
-    private AuthenticatorClient logManger;
-    private String adminUsername;
-    private String adminPassword;
     private String accessToken;
     private String sessionDataKeyConsent;
     private String sessionDataKey;
@@ -67,19 +71,26 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
 
     private static final String PLAYGROUND_RESET_PAGE = "http://localhost:" + CommonConstants.DEFAULT_TOMCAT_PORT +
             "/playground2/oauth2.jsp?reset=true";
-    private DefaultHttpClient client;
+
+    private Lookup<CookieSpecProvider> cookieSpecRegistry;
+    private RequestConfig requestConfig;
+    private CloseableHttpClient client;
+    private String applicationId;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
         super.init(TestUserMode.SUPER_TENANT_USER);
-        logManger = new AuthenticatorClient(backendURL);
-        adminUsername = userInfo.getUserName();
-        adminPassword = userInfo.getPassword();
-        logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
-                isServer.getSuperTenant().getTenantAdmin().getPassword(),
-                isServer.getInstance().getHosts().get("default"));
-        client = new DefaultHttpClient();
+        cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+                .build();
+        requestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.DEFAULT)
+                .build();
+        client = HttpClientBuilder.create()
+                .setDefaultRequestConfig(requestConfig)
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .build();
 
         setSystemproperties();
     }
@@ -87,29 +98,30 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
-        this.logManger.logOut();
-        deleteApplication();
-        removeOAuthApplicationData();
-
+        deleteApp(applicationId);
+        restClient.closeHttpClient();
+        client.close();
     }
 
     @Test(groups = "wso2.is", description = "Check Oauth2 application registration")
     public void testRegisterApplication() throws Exception {
 
-        OAuthConsumerAppDTO appDto = createApplication();
-        Assert.assertNotNull(appDto, "Application creation failed.");
+        ApplicationResponseModel application = addApplication();
+        Assert.assertNotNull(application, "OAuth App creation failed.");
+        applicationId = application.getId();
+        OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(applicationId);
 
-        consumerKey = appDto.getOauthConsumerKey();
+        consumerKey = oidcConfig.getClientId();
         Assert.assertNotNull(consumerKey, "Application creation failed.");
 
-        consumerSecret = appDto.getOauthConsumerSecret();
+        consumerSecret = oidcConfig.getClientSecret();
         Assert.assertNotNull(consumerSecret, "Application creation failed.");
     }
 
     @Test(groups = "wso2.is", description = "Send authorize user request", dependsOnMethods = "testRegisterApplication")
     public void testSendAuthorizedPost() throws Exception {
 
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("grantType", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
         urlParameters.add(new BasicNameValuePair("consumerKey", consumerKey));
         urlParameters.add(new BasicNameValuePair("callbackurl", OAuth2Constant.CALLBACK_URL));
@@ -130,7 +142,7 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
         response = sendGetRequest(client, locationHeader.getValue());
         Assert.assertNotNull(response, "Authorized user response is null.");
 
-        Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
+        Map<String, Integer> keyPositionMap = new HashMap<>(1);
         keyPositionMap.put("name=\"sessionDataKey\"", 1);
         List<KeyValue> keyValues =
                 DataExtractUtil.extractDataFromResponse(response, keyPositionMap);
@@ -164,7 +176,7 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
         response = sendGetRequest(client, locationHeader.getValue());
         // TODO: This fix is done to handle situations where consent page is skipped. Need to identify cause for this
         //  intermittent issue.
-        Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(2);
+        Map<String, Integer> keyPositionMap = new HashMap<>(2);
         keyPositionMap.put("name=\"" + OAuth2Constant.SESSION_DATA_KEY_CONSENT + "\"", 1);
         keyPositionMap.put(AUTH_CODE_BODY_ELEMENT, 2);
         List<KeyValue> keyValues =
@@ -196,7 +208,7 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
         response = sendPostRequest(client, locationHeader.getValue());
         Assert.assertNotNull(response, "Get Activation response is invalid.");
 
-        Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
+        Map<String, Integer> keyPositionMap = new HashMap<>(1);
         keyPositionMap.put(AUTH_CODE_BODY_ELEMENT, 1);
         List<KeyValue> keyValues = DataExtractUtil.extractTableRowDataFromResponse(response, keyPositionMap);
         Assert.assertNotNull(keyValues, "Authorization Code key value is invalid.");
@@ -213,7 +225,7 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
         EntityUtils.consume(response.getEntity());
 
         response = sendPostRequest(client, OAuth2Constant.AUTHORIZED_URL);
-        Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
+        Map<String, Integer> keyPositionMap = new HashMap<>(1);
         keyPositionMap.put("name=\"accessToken\"", 1);
         List<KeyValue> keyValues =
                 DataExtractUtil.extractInputValueFromResponse(response,
@@ -232,7 +244,7 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
         HttpResponse response = sendValidateAccessTokenPost(client, accessToken);
         Assert.assertNotNull(response, "Validate access token response is invalid.");
 
-        Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(1);
+        Map<String, Integer> keyPositionMap = new HashMap<>(1);
         keyPositionMap.put("name=\"valid\"", 1);
 
         List<KeyValue> keyValues =
@@ -302,7 +314,7 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
         response = sendGetRequest(client, locationHeader.getValue());
         // TODO: This fix is done to handle situations where consent page is skipped. Need to identify cause for this
         //  intermittent issue.
-        Map<String, Integer> keyPositionMap = new HashMap<String, Integer>(2);
+        Map<String, Integer> keyPositionMap = new HashMap<>(2);
         keyPositionMap.put("name=\"" + OAuth2Constant.SESSION_DATA_KEY_CONSENT + "\"", 1);
         keyPositionMap.put(AUTH_CODE_BODY_ELEMENT, 2);
         List<KeyValue> keyValues =
@@ -357,7 +369,7 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
             = "testInvalidAuthzCode")
     public void testSendAuthorozedPostForError() throws Exception {
 
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("client_id", consumerKey));
         urlParameters.add(new BasicNameValuePair("redirect_uri", OAuth2Constant.CALLBACK_URL));
         AutomationContext automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
@@ -374,7 +386,7 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
             = "testSendAuthorozedPostForError")
     public void testInvalidRedirectUri() throws Exception {
 
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("client_id", consumerKey));
         AutomationContext automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
         String authorizeEndpoint = automationContext.getContextUrls().getBackEndUrl()

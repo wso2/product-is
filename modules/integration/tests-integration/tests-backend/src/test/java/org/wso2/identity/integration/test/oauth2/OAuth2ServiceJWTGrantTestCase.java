@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2018, WSO2 LLC. (http://www.wso2.com).
  *
- * WSO2 Inc. licenses this file to you under the Apache License,
+ * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
- * you may obtain a copy of the License at
+ * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -18,6 +18,8 @@
 
 package org.wso2.identity.integration.test.oauth2;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.oauth2.sdk.AuthorizationGrant;
 import com.nimbusds.oauth2.sdk.JWTBearerGrant;
@@ -43,29 +45,37 @@ import com.nimbusds.openid.connect.sdk.token.OIDCTokens;
 import net.minidev.json.JSONObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.identity.application.common.model.idp.xsd.Claim;
-import org.wso2.carbon.identity.application.common.model.idp.xsd.ClaimConfig;
-import org.wso2.carbon.identity.application.common.model.idp.xsd.ClaimMapping;
-import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
-import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
-import org.wso2.carbon.identity.claim.metadata.mgt.stub.ClaimMetadataManagementServiceClaimMetadataException;
-import org.wso2.carbon.identity.claim.metadata.mgt.stub.dto.ExternalClaimDTO;
-import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
-import org.wso2.carbon.identity.user.profile.stub.UserProfileMgtServiceUserProfileExceptionException;
-import org.wso2.carbon.identity.user.profile.stub.types.UserFieldDTO;
-import org.wso2.carbon.identity.user.profile.stub.types.UserProfileDTO;
-import org.wso2.carbon.integration.common.admin.client.UserManagementClient;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
-import org.wso2.carbon.user.mgt.stub.UserAdminUserAdminException;
-import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
-import org.wso2.identity.integration.common.clients.UserProfileMgtServiceClient;
-import org.wso2.identity.integration.common.clients.claim.metadata.mgt.ClaimMetadataManagementServiceClient;
-import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration.DialectEnum;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model.ExternalClaimReq;
+import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Claims;
+import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.IdentityProviderPOSTRequest;
+import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.IdentityProviderPOSTRequest.Certificate;
+import org.wso2.identity.integration.test.rest.api.server.oidc.scope.management.v1.model.ScopeUpdateRequest;
+import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
+import org.wso2.identity.integration.test.rest.api.user.common.model.ListObject;
+import org.wso2.identity.integration.test.rest.api.user.common.model.Name;
+import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperationRequestObject;
+import org.wso2.identity.integration.test.rest.api.user.common.model.RoleItemAddGroupobj;
+import org.wso2.identity.integration.test.rest.api.user.common.model.ScimSchemaExtensionEnterprise;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
+import org.wso2.identity.integration.test.restclients.ClaimManagementRestClient;
+import org.wso2.identity.integration.test.restclients.IdpMgtRestClient;
+import org.wso2.identity.integration.test.restclients.OIDCScopeMgtRestClient;
+import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
@@ -73,33 +83,48 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.rmi.RemoteException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * This is a test class for self contained access tokens with JWT bearer grant type.
  */
 public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
+    private static final String USERS_PATH = "users";
+    private static final String BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----\n";
+    private static final String END_CERTIFICATE = "\n-----END CERTIFICATE-----";
+    private static final String JWKS_BASE_PATH = "t/%s/oauth2/jwks";
+    private static final String COUNTRY_CLAIM_VALUE = "USA";
+    private static final String COUNTRY_OIDC_CLAIM = "country";
+    private static final String COUNTRY_NEW_OIDC_CLAIM = "customclaim";
+    private static final String COUNTRY_LOCAL_CLAIM_URI = "http://wso2.org/claims/country";
+    private static final String EMAIL_OIDC_CLAIM = "email";
+    private static final String EMAIL_CLAIM_VALUE = "email@email.com";
+    private static final String EMAIL_LOCAL_CLAIM_URI = "http://wso2.org/claims/emailaddress";
+    private static final String ENCODED_OIDC_CLAIM_DIALECT = "aHR0cDovL3dzbzIub3JnL29pZGMvY2xhaW0";
+    private static final String COUNTRY_CLAIM_ID = "Y291bnRyeQ";
+    private static final String openIdScope = "openid";
+    private static final String JWT_USER = "jwtUser";
+
     protected Log log = LogFactory.getLog(getClass());
     private ServerConfigurationManager serverConfigurationManager;
-    private UserManagementClient userManagementClient;
-    private UserProfileMgtServiceClient userProfileMgtServiceClient;
-    private OauthAdminClient oauthAdminClient;
-    private ClaimMetadataManagementServiceClient claimMetadataManagementServiceClient;
-    private final String JWT_USER = "jwtUser";
+    private SCIM2RestClient scim2RestClient;
+    private ClaimManagementRestClient claimManagementRestClient;
+    private OIDCScopeMgtRestClient oidcScopeMgtRestClient;
+    private IdpMgtRestClient idpMgtRestClient;
+
     private String jwtAssertion;
     private String alias;
     private String issuer;
-    private IdentityProviderMgtServiceClient identityProviderMgtServiceClient;
-    private final String COUNTRY_CLAIM_VALUE = "USA";
-    private final String COUNTRY_OIDC_CLAIM = "country";
-    private final String COUNTRY_NEW_OIDC_CLAIM = "customclaim";
-    private final String COUNTRY_LOCAL_CLAIM_URI = "http://wso2.org/claims/country";
-    private final String EMAIL_OIDC_CLAIM = "email";
-    private final String EMAIL_CLAIM_VALUE = "email@email.com";
-    private final String EMAIL_LOCAL_CLAIM_URI = "http://wso2.org/claims/emailaddress";
     private String refreshToken;
-    String openIdScope = "openid";
+    private String applicationId;
+    private String userId;
+    private String idpId;
+    private String countryClaimId;
 
     @BeforeClass
     public void setup() throws Exception {
@@ -107,44 +132,41 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         changeISConfiguration("jwt_token_issuer_enabled.toml");
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
-        OAuthConsumerAppDTO appDto = createApplication(createApplicationWithJWTGrantType(), SERVICE_PROVIDER_NAME);
-        consumerKey = appDto.getOauthConsumerKey();
-        consumerSecret = appDto.getOauthConsumerSecret();
-        userManagementClient = new UserManagementClient(backendURL, sessionCookie);
-        oauthAdminClient = new OauthAdminClient(backendURL, sessionCookie);
-        userProfileMgtServiceClient = new UserProfileMgtServiceClient(backendURL, sessionCookie);
-        identityProviderMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
-        addNewUserWithClaims();
-        claimMetadataManagementServiceClient = new ClaimMetadataManagementServiceClient(backendURL, sessionCookie);
 
-        changeCountryOIDDialect();
+        ApplicationResponseModel application = createApplicationWithJWTGrantType();
+        applicationId = application.getId();
+        OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(applicationId);
+        consumerKey = oidcConfig.getClientId();
+        consumerSecret = oidcConfig.getClientSecret();
 
-        ExternalClaimDTO externalClaimDTO = new ExternalClaimDTO();
-        externalClaimDTO
-                .setExternalClaimDialectURI(OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase.OIDC_CLAIM_DIALECT);
-        externalClaimDTO.setMappedLocalClaimURI(COUNTRY_LOCAL_CLAIM_URI);
-        externalClaimDTO.setExternalClaimURI(COUNTRY_NEW_OIDC_CLAIM);
-        claimMetadataManagementServiceClient.addExternalClaim(externalClaimDTO);
-        String[] openidValue = new String[1];
-        openidValue[0] = COUNTRY_NEW_OIDC_CLAIM;
-        oauthAdminClient.updateScope(openIdScope, openidValue, null);
+        scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
+        claimManagementRestClient =  new ClaimManagementRestClient(serverURL, tenantInfo);
+        oidcScopeMgtRestClient =  new OIDCScopeMgtRestClient(serverURL, tenantInfo);
+        idpMgtRestClient = new IdpMgtRestClient(serverURL, tenantInfo);
+
+        addAdminUser();
+        changeCountryOIDCDialect();
     }
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
+        deleteApp(applicationId);
+        scim2RestClient.deleteUser(userId);
+        idpMgtRestClient.deleteIdp(idpId);
+        claimManagementRestClient.deleteExternalClaim(ENCODED_OIDC_CLAIM_DIALECT, countryClaimId);
 
-        deleteApplication();
-        removeOAuthApplicationData();
-        identityProviderMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
-        identityProviderMgtServiceClient.deleteIdP(issuer);
+        restClient.closeHttpClient();
+        scim2RestClient.closeHttpClient();
+        oidcScopeMgtRestClient.closeHttpClient();
+        idpMgtRestClient.closeHttpClient();
+
         resetISConfiguration();
     }
 
     @Test(description = "This test case tests the JWT self contained access token generation using password grant "
             + "type.")
     public void testPasswordGrantBasedSelfContainedAccessTokenGeneration()
-            throws IOException, URISyntaxException, ParseException, java.text.ParseException,
-            ClaimMetadataManagementServiceClaimMetadataException {
+            throws IOException, URISyntaxException, ParseException, java.text.ParseException {
 
         Secret password = new Secret(JWT_USER);
         AuthorizationGrant passwordGrant = new ResourceOwnerPasswordCredentialsGrant(JWT_USER, password);
@@ -226,11 +248,9 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
             dependsOnMethods = "testJWTGrantTypeWithConvertOIDCDialectWithIDPMappingWithSPMapping")
     public void testJWTGrantTypeWithConvertOIDCDialectWithIDPMappingWithoutSPMapping() throws Exception {
 
-        ServiceProvider serviceProvider = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
-        org.wso2.carbon.identity.application.common.model.xsd.ClaimConfig claimConfig = new org.wso2.carbon.identity.application.common.model.xsd.ClaimConfig();
-        claimConfig.setLocalClaimDialect(true);
-        serviceProvider.setClaimConfig(claimConfig);
-        appMgtclient.updateApplicationData(serviceProvider);
+        ApplicationPatchModel applicationPatch = new ApplicationPatchModel();
+        applicationPatch.setClaimConfiguration(new ClaimConfiguration().dialect(DialectEnum.LOCAL));
+        updateApplication(applicationId, applicationPatch);
 
         OIDCTokens oidcTokens = makeJWTBearerGrantRequest();
         Assert.assertNull(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(COUNTRY_OIDC_CLAIM),
@@ -250,11 +270,9 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
             "testJWTGrantTypeWithConvertOIDCDialectWithIDPMappingWithoutSPMapping")
     public void testJWTGrantTypeWithConvertOIDCDialectWithoutIDPMappingWithoutSPMapping() throws Exception {
 
-        IdentityProvider identityProvider = identityProviderMgtServiceClient.getIdPByName(issuer);
-        ClaimConfig claimConfig = new ClaimConfig();
-        claimConfig.setLocalClaimDialect(true);
-        identityProvider.setClaimConfig(claimConfig);
-        identityProviderMgtServiceClient.updateIdP(issuer, identityProvider);
+        Claims idpClaims = new Claims().provisioningClaims(new ArrayList<>());
+        idpClaims.setMappings(new ArrayList<>());
+        idpMgtRestClient.updateIdpClaimConfig(idpId, idpClaims);
 
         OIDCTokens oidcTokens = makeJWTBearerGrantRequest();
         Assert.assertEquals(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(EMAIL_OIDC_CLAIM), EMAIL_CLAIM_VALUE,
@@ -275,9 +293,11 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
             throws Exception {
 
         updateIdentityProviderWithClaimMappings();
-        ServiceProvider serviceProvider = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
-        serviceProvider = setServiceProviderClaimConfig(serviceProvider);
-        appMgtclient.updateApplicationData(serviceProvider);
+
+        ApplicationPatchModel applicationPatch = new ApplicationPatchModel();
+        applicationPatch.setClaimConfiguration(setApplicationClaimConfig());
+        updateApplication(applicationId, applicationPatch);
+
         resetISConfiguration();
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         changeISConfiguration("jwt_token_issuer_add_remaining_user_attribute.toml");
@@ -326,8 +346,8 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
         OIDCTokens secondTokenSet = makeJWTBearerGrantRequest();
         AccessToken secondAccessToken = secondTokenSet.getAccessToken();
 
-        Assert.assertFalse(firstAccessToken.toJSONString().equals(secondAccessToken.toJSONString()), "Same access " +
-                "token is returned even after the access token issued from JWT Bearer grant has been revoked. ");
+        Assert.assertNotEquals(secondAccessToken.toJSONString(), firstAccessToken.toJSONString(), "Same access "
+                + "token is returned even after the access token issued from JWT Bearer grant has been revoked. ");
     }
 
     @Test(description = "This test case tests refresh token revocation flow of JWTBearerGrant.", dependsOnMethods =
@@ -342,8 +362,8 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
         OIDCTokens secondTokenSet = makeJWTBearerGrantRequest();
         RefreshToken refreshToken = secondTokenSet.getRefreshToken();
 
-        Assert.assertFalse(firstRefreshToken.toJSONString().equals(refreshToken.toJSONString()), "Same refresh " +
-                "token is returned even after the refresh token issued from JWT Bearer grant has been revoked ");
+        Assert.assertNotEquals(refreshToken.toJSONString(), firstRefreshToken.toJSONString(), "Same refresh "
+                + "token is returned even after the refresh token issued from JWT Bearer grant has been revoked ");
     }
 
     @Test(description = "This test case tests the behaviour when ConvertToOIDCDialect is false in identity.xml, this "
@@ -355,8 +375,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         changeISConfiguration("jwt_token_issuer_convert_to_oidc.toml");
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
-        identityProviderMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
-        identityProviderMgtServiceClient.deleteIdP(issuer);
+        idpMgtRestClient.deleteIdp(idpId);
         addFederatedIdentityProvider();
         OIDCTokens oidcTokens = makeJWTBearerGrantRequest();
         Assert.assertNull(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(COUNTRY_OIDC_CLAIM),
@@ -445,18 +464,35 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
     /**
      * To create consumer application that supports JWT bearer grant type
      *
-     * @return OauthConsumerApp
+     * @return ApplicationResponseModel
      */
-    private OAuthConsumerAppDTO createApplicationWithJWTGrantType() {
+    private ApplicationResponseModel createApplicationWithJWTGrantType() throws Exception {
 
-        OAuthConsumerAppDTO appDTO = new OAuthConsumerAppDTO();
-        appDTO.setApplicationName(OAuth2Constant.OAUTH_APPLICATION_NAME);
-        appDTO.setCallbackUrl(OAuth2Constant.CALLBACK_URL);
-        appDTO.setOAuthVersion(OAuth2Constant.OAUTH_VERSION_2);
-        appDTO.setIdTokenExpiryTime(3600);
-        appDTO.setGrantTypes("authorization_code implicit password client_credentials refresh_token "
-                + "urn:ietf:params:oauth:grant-type:saml2-bearer iwa:ntlm urn:ietf:params:oauth:grant-type:jwt-bearer");
-        return appDTO;
+        ApplicationModel application = new ApplicationModel();
+
+        List<String> grantTypes = new ArrayList<>();
+        Collections.addAll(grantTypes, "authorization_code", "implicit", "password", "client_credentials",
+                "refresh_token", "urn:ietf:params:oauth:grant-type:saml2-bearer", "iwa:ntlm",
+                "urn:ietf:params:oauth:grant-type:jwt-bearer");
+
+        List<String> callBackUrls = new ArrayList<>();
+        Collections.addAll(callBackUrls, OAuth2Constant.CALLBACK_URL);
+
+        OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
+        oidcConfig.setGrantTypes(grantTypes);
+        oidcConfig.setCallbackURLs(callBackUrls);
+
+        InboundProtocols inboundProtocolsConfig = new InboundProtocols();
+        inboundProtocolsConfig.setOidc(oidcConfig);
+
+        application.setInboundProtocolConfiguration(inboundProtocolsConfig);
+        application.setName(SERVICE_PROVIDER_NAME);
+        application.setIsManagementApp(true);
+        application.setClaimConfiguration(setApplicationClaimConfig());
+
+        String appId = addApplication(application);
+
+        return getApplication(appId);
     }
 
     /**
@@ -466,14 +502,26 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
      */
     private void addFederatedIdentityProvider() throws Exception {
 
-        IdentityProvider residentIdP = identityProviderMgtServiceClient.getResidentIdP();
-        IdentityProvider identityProvider = new IdentityProvider();
-        identityProvider.setEnable(true);
-        identityProvider.setAlias(alias);
-        identityProvider.setDisplayName(issuer);
-        identityProvider.setCertificate(residentIdP.getCertificate());
-        identityProvider.setIdentityProviderName(issuer);
-        identityProviderMgtServiceClient.addIdP(identityProvider);
+        IdentityProviderPOSTRequest idpCreateReq = new IdentityProviderPOSTRequest();
+        idpCreateReq.setName(issuer);
+        idpCreateReq.setAlias(alias);
+        idpCreateReq.setCertificate(new Certificate().addCertificates(getEncodedCertificate()));
+        idpId = idpMgtRestClient.createIdentityProvider(idpCreateReq);
+    }
+
+    /**
+     * Get public certificate.
+     *
+     * @return Encoded certificate string
+     * @throws Exception Exception.
+     */
+    private String getEncodedCertificate() throws Exception {
+        CloseableHttpClient client = HttpClients.createDefault();
+        String jwksEndpoint = serverURL + String.format(JWKS_BASE_PATH, tenantInfo.getDomain());
+        String certificate = BEGIN_CERTIFICATE + getPublicCertificate(client, jwksEndpoint) + END_CERTIFICATE;
+
+        return new String(Base64.getEncoder().encode(certificate.getBytes(StandardCharsets.UTF_8)),
+                (StandardCharsets.UTF_8));
     }
 
     /**
@@ -483,19 +531,12 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
      */
     private void updateIdentityProviderWithClaimMappings() throws Exception {
 
-        IdentityProvider identityProvider = identityProviderMgtServiceClient.getIdPByName(issuer);
-        ClaimConfig claimConfig = new ClaimConfig();
-        Claim emailClaim = new Claim();
-        emailClaim.setClaimUri(COUNTRY_LOCAL_CLAIM_URI);
-        Claim emailRemoteClaim = new Claim();
-        emailRemoteClaim.setClaimUri(COUNTRY_NEW_OIDC_CLAIM);
-        ClaimMapping emailClaimMapping = new ClaimMapping();
-        emailClaimMapping.setLocalClaim(emailClaim);
-        emailClaimMapping.setRemoteClaim(emailRemoteClaim);
-        claimConfig.addIdpClaims(emailRemoteClaim);
-        claimConfig.setClaimMappings(new ClaimMapping[]{emailClaimMapping});
-        identityProvider.setClaimConfig(claimConfig);
-        identityProviderMgtServiceClient.updateIdP(issuer, identityProvider);
+        Claims.ClaimMapping claimMapping = new Claims.ClaimMapping().idpClaim(COUNTRY_NEW_OIDC_CLAIM);
+        Claims.Claim localClaim = new Claims.Claim().uri(COUNTRY_LOCAL_CLAIM_URI);
+        claimMapping.setLocalClaim(localClaim);
+        Claims idpClaims = new Claims().provisioningClaims(new ArrayList<>());
+        idpClaims.addMappings(claimMapping);
+        idpMgtRestClient.updateIdpClaimConfig(idpId, idpClaims);
     }
 
     /**
@@ -517,54 +558,50 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
     }
 
     /**
-     * Add a new with 3 user claims.
+     * Add a new user with admin role.
      *
-     * @throws RemoteException                                    Remote Exception.
-     * @throws UserAdminUserAdminException                        User Admin User Admin Exception.
-     * @throws UserProfileMgtServiceUserProfileExceptionException User Profile Mgt Service User Profile Exception.
+     * @throws Exception Exception.
      */
-    private void addNewUserWithClaims()
-            throws RemoteException, UserAdminUserAdminException, UserProfileMgtServiceUserProfileExceptionException {
+    private void addAdminUser() throws Exception {
 
-        String profileName = "default";
-        String adminRoleName = "admin";
-        String countryLocalClaimUri = "http://wso2.org/claims/country";
-        String givenNameLocalClaimUri = "http://wso2.org/claims/givenname";
+        UserObject userInfo = new UserObject();
+        userInfo.setUserName(JWT_USER);
+        userInfo.setPassword(JWT_USER);
+        userInfo.setName(new Name().givenName(JWT_USER));
+        userInfo.addEmail(new Email().value(EMAIL_CLAIM_VALUE));
+        userInfo.setScimSchemaExtensionEnterprise(new ScimSchemaExtensionEnterprise().country(COUNTRY_CLAIM_VALUE));
 
-        userManagementClient.addUser(JWT_USER, JWT_USER, new String[]{adminRoleName}, profileName);
-        UserProfileDTO profile = new UserProfileDTO();
-        profile.setProfileName(profileName);
-        UserFieldDTO country = new UserFieldDTO();
-        country.setClaimUri(countryLocalClaimUri);
-        country.setFieldValue(COUNTRY_CLAIM_VALUE);
-        UserFieldDTO givenname = new UserFieldDTO();
-        givenname.setClaimUri(givenNameLocalClaimUri);
-        givenname.setFieldValue(JWT_USER);
-        UserFieldDTO email = new UserFieldDTO();
-        email.setClaimUri(EMAIL_LOCAL_CLAIM_URI);
-        email.setFieldValue(EMAIL_CLAIM_VALUE);
-        UserFieldDTO[] fields = new UserFieldDTO[3];
-        fields[0] = country;
-        fields[1] = givenname;
-        fields[2] = email;
-        profile.setFieldValues(fields);
-        userProfileMgtServiceClient.setUserProfile(JWT_USER, profile);
+        userId = scim2RestClient.createUser(userInfo);
+        String roleId = scim2RestClient.getRoleIdByName("admin");
+
+        RoleItemAddGroupobj patchRoleItem = new RoleItemAddGroupobj();
+        patchRoleItem.setOp(RoleItemAddGroupobj.OpEnum.ADD);
+        patchRoleItem.setPath(USERS_PATH);
+        patchRoleItem.addValue(new ListObject().value(userId));
+
+        scim2RestClient.updateUserRole(new PatchOperationRequestObject().addOperations(patchRoleItem), roleId);
     }
 
     /**
      * Change the OIDC dialect claim for local claim country.
      *
-     * @throws RemoteException                                      Remote Exception.
-     * @throws ClaimMetadataManagementServiceClaimMetadataException Claim
-     *                                                              MetadataManagementServiceClaimMetadataException
+     * @throws Exception Exception.
      */
-    private void changeCountryOIDDialect()
-            throws RemoteException, ClaimMetadataManagementServiceClaimMetadataException {
+    private void changeCountryOIDCDialect() throws Exception {
 
-        ClaimMetadataManagementServiceClient claimMetadataManagementServiceClient = new ClaimMetadataManagementServiceClient(
-                backendURL, sessionCookie);
-        claimMetadataManagementServiceClient
-                .removeExternalClaim(OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase.OIDC_CLAIM_DIALECT,
-                        COUNTRY_OIDC_CLAIM);
+        claimManagementRestClient.deleteExternalClaim(ENCODED_OIDC_CLAIM_DIALECT, COUNTRY_CLAIM_ID);
+
+        ExternalClaimReq externalClaimReq = new ExternalClaimReq();
+        externalClaimReq.setClaimURI(COUNTRY_NEW_OIDC_CLAIM);
+        externalClaimReq.setMappedLocalClaimURI(COUNTRY_LOCAL_CLAIM_URI);
+        countryClaimId = claimManagementRestClient.addExternalClaim(ENCODED_OIDC_CLAIM_DIALECT, externalClaimReq);
+
+        org.json.simple.JSONObject scope = oidcScopeMgtRestClient.getScope(openIdScope);
+        scope.remove("name");
+        ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+        ScopeUpdateRequest scopeUpdateReq = jsonWriter.readValue(scope.toString(), ScopeUpdateRequest.class);
+        scopeUpdateReq.addClaims(COUNTRY_NEW_OIDC_CLAIM);
+
+        oidcScopeMgtRestClient.updateScope(openIdScope, scopeUpdateReq);
     }
 }

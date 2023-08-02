@@ -12,6 +12,7 @@ table#main-table td#menu-panel {
 	border-right: solid 1px #989898;
 	background-position: right top;
 	background-repeat: repeat-y;
+	min-width: 230px;
 }
 
 
