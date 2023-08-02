@@ -56,6 +56,7 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthenticationSequence;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthenticationSequence.TypeEnum;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthenticationStep;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Authenticator;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.IdpInitiatedSingleLogout;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
@@ -410,7 +411,7 @@ public class OIDCFederatedIdpInitLogoutTest extends AbstractIdentityFederationTe
                         .saml(getSAMLConfigurations(PRIMARY_IS_SAML_ISSUER_NAME, PRIMARY_IS_SAML_ACS_URL)))
                 .authenticationSequence(new AuthenticationSequence()
                         .type(TypeEnum.USER_DEFINED)
-                        .addStepsItem(new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthenticationStep()
+                        .addStepsItem(new AuthenticationStep()
                                 .id(1)
                                 .addOptionsItem(new Authenticator()
                                         .idp(PRIMARY_IS_IDP_NAME)
