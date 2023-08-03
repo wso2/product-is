@@ -69,6 +69,10 @@
     <import resource="classpath:META-INF/cxf/idv-provider-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/idv-v1-cxf.xml"/>
 
+    <import resource="classpath:META-INF/cxf/org-mgt-server-v1-cxf.xml"/>
+    <import resource="classpath:META-INF/cxf/org-role-mgt-server-v1-cxf.xml"/>
+    <import resource="classpath:META-INF/cxf/user-organization-v1-cxf.xml"/>
+
     <context:property-placeholder/>
     <context:annotation-config/>
     <bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer"/>
@@ -107,6 +111,9 @@
             <bean class="org.wso2.carbon.identity.api.server.input.validation.v1.ValidationRulesApi"/>
             <bean class="org.wso2.carbon.identity.api.server.extension.management.v1.ExtensionsApi"/>
             <bean class="org.wso2.carbon.identity.api.server.idv.provider.v1.IdvProvidersApi"/>
+
+            <bean class="org.wso2.carbon.identity.api.server.organization.management.v1.OrganizationsApi"/>
+            <bean class="org.wso2.carbon.identity.api.server.organization.role.management.v1.OrganizationsApi"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">
@@ -149,6 +156,8 @@
             <bean class="org.wso2.carbon.identity.rest.api.user.totp.v1.MeApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.idv.v1.MeApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.idv.v1.DefaultApi"/>
+
+            <bean class="org.wso2.carbon.identity.api.user.organization.v1.OrganizationsApi"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">
