@@ -127,7 +127,11 @@ else
   else
     sever_restart_required=true
     echo "Nashorn library not found. Starting to download....."
-    curl https://repo1.maven.org/maven2/org/openjdk/nashorn/nashorn-core/$NASHORN_VERSION/nashorn-core-$NASHORN_VERSION.jar -o $CARBON_HOME/repository/components/lib/nashorn-core-$NASHORN_VERSION.jar
+    res_code=$(curl https://repo1.maven.org/maven2/org/openjdk/nashorn/nashorn-core/$NASHORN_VERSION/nashorn-core-$NASHORN_VERSION.jar -o $CARBON_HOME/repository/components/lib/nashorn-core-$NASHORN_VERSION.jar)
+    if test "$exit_code" != "0"; then
+      echo "Nashorn library download failed with exit code: $exit_code"
+      exit 1
+    fi
     echo "Nashorn download completed. Downloaded version : nashorn-core-${NASHORN_VERSION}"
   fi
 
@@ -156,7 +160,11 @@ else
   else
     sever_restart_required=true
     echo "ASM-Util library not found. Starting to download....."
-    curl https://repo1.maven.org/maven2/org/ow2/asm/asm-util/$ASM_VERSION/asm-util-$ASM_VERSION.jar -o $CARBON_HOME/repository/components/lib/asm-util-$ASM_VERSION.jar
+    res_code=$(curl https://repo1.maven.org/maven2/org/ow2/asm/asm-util/$ASM_VERSION/asm-util-$ASM_VERSION.jar -o $CARBON_HOME/repository/components/lib/asm-util-$ASM_VERSION.jar)
+    if test "$exit_code" != "0"; then
+      echo "ASM-Util library download failed with exit code: $exit_code"
+      exit 1
+    fi
     echo "ASM-Util download completed. Downloaded version : asm-util-${ASM_VERSION}"
   fi
   echo "Adaptive authentication successfully enabled."
