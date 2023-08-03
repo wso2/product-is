@@ -103,7 +103,7 @@ public class RegistryMountTestCase extends ISIntegrationTest {
     private String userId;
 
     private TenantMgtRestClient tenantMgtRestClient;
-    private OAuth2RestClient applicationaMgtRestClient;
+    private OAuth2RestClient applicationMgtRestClient;
     private String appId;
 
     @BeforeClass(alwaysRun = true)
@@ -125,7 +125,7 @@ public class RegistryMountTestCase extends ISIntegrationTest {
                 .setDefaultCookieSpecRegistry(cookieSpecRegistry)
                 .build();
 
-        applicationaMgtRestClient = new OAuth2RestClient(serverURL, getRegistryMountTenantInfo());
+        applicationMgtRestClient = new OAuth2RestClient(serverURL, getRegistryMountTenantInfo());
         createApplication();
 
         userId = UserUtil.getUserId(MultitenantUtils.getTenantAwareUsername(TENANT_ADMIN_USERNAME),
@@ -137,7 +137,7 @@ public class RegistryMountTestCase extends ISIntegrationTest {
         deleteApplication();
         serverConfigurationManager.restoreToLastConfiguration(false);
         tenantMgtRestClient.closeHttpClient();
-        applicationaMgtRestClient.closeHttpClient();
+        applicationMgtRestClient.closeHttpClient();
         httpClient.close();
         httpClient = null;
     }
@@ -285,11 +285,11 @@ public class RegistryMountTestCase extends ISIntegrationTest {
                         .saml(getSAMLConfigurations()))
                 .claimConfiguration(getClaimConfiguration());
 
-        appId = applicationaMgtRestClient.createApplication(applicationCreationModel);
+        appId = applicationMgtRestClient.createApplication(applicationCreationModel);
     }
 
     private void deleteApplication() throws Exception{
-        applicationaMgtRestClient.deleteApplication(appId);
+        applicationMgtRestClient.deleteApplication(appId);
     }
 
     private SAML2Configuration getSAMLConfigurations() {
