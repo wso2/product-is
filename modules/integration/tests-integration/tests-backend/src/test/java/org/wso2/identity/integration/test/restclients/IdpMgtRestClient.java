@@ -36,6 +36,7 @@ import java.io.IOException;
 
 public class IdpMgtRestClient extends RestBaseClient {
     private static final String CLAIMS_PATH = "/claims";
+    private static final String FEDERATED_AUTHENTICATORS_PATH = "/federated-authenticators/";
     private final String serverUrl;
     private final String IDENTITY_PROVIDER_BASE_PATH = "t/%s/api/server/v1/identity-providers";
     private final String tenantDomain;
@@ -64,6 +65,23 @@ public class IdpMgtRestClient extends RestBaseClient {
                     "Idp creation failed");
             JSONObject jsonResponse = getJSONObject(EntityUtils.toString(response.getEntity()));
             return jsonResponse.get("id").toString();
+        }
+    }
+
+    /**
+     * Get an Identity Provider's federated authenticator
+     *
+     * @param idpId identity provider id.
+     * @param federatedAuthenticatorId Federated Authenticator id.
+     * @return JSONObject with Federated Authenticator details.
+     */
+    public JSONObject getIdpFederatedAuthenticator(String idpId, String federatedAuthenticatorId) throws Exception {
+        String endPointUrl = serverUrl + String.format(IDENTITY_PROVIDER_BASE_PATH, tenantDomain)+ PATH_SEPARATOR + 
+                idpId + FEDERATED_AUTHENTICATORS_PATH + federatedAuthenticatorId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
+            String responseBody = EntityUtils.toString(response.getEntity());
+            return getJSONObject(responseBody);
         }
     }
 
