@@ -28,6 +28,7 @@ import org.json.simple.JSONObject;
 import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+import org.wso2.identity.integration.test.rest.api.user.common.model.GroupRequestObject;
 import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperationRequestObject;
 import org.wso2.identity.integration.test.rest.api.user.common.model.RoleRequestObject;
 import org.wso2.identity.integration.test.rest.api.user.common.model.RoleSearchRequestObject;
@@ -41,6 +42,7 @@ public class SCIM2RestClient extends RestBaseClient {
 
     private static final String SCIM2_USERS_ENDPOINT = "scim2/Users";
     private static final String SCIM2_ROLES_ENDPOINT = "scim2/Roles";
+    private static final String SCIM2_GROUPS_ENDPOINT = "scim2/Groups";
     private static final String SCIM2_SEARCH_PATH = "/.search";
     private static final String SCIM_JSON_CONTENT_TYPE = "application/scim+json";
     private static final String ROLE_SEARCH_SCHEMA = "urn:ietf:params:scim:api:messages:2.0:SearchRequest";
@@ -157,7 +159,7 @@ public class SCIM2RestClient extends RestBaseClient {
 
         try (CloseableHttpResponse response = getResponseOfHttpPost(getRolesPath(), jsonRequest, getHeaders())) {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_CREATED,
-                    "Role creation failed");
+                    roleInfo.getDisplayName() + " Role creation failed");
             JSONObject jsonResponse = getJSONObject(EntityUtils.toString(response.getEntity()));
             return jsonResponse.get("id").toString();
         }
@@ -220,6 +222,37 @@ public class SCIM2RestClient extends RestBaseClient {
         }
     }
 
+    /**
+     * Add a new group
+     *
+     * @param groupInfo Group request object.
+     * @return Group id.
+     */
+    public String createGroup(GroupRequestObject groupInfo) throws Exception {
+        String jsonRequest = toJSONString(groupInfo);
+
+        try (CloseableHttpResponse response = getResponseOfHttpPost(getGroupsPath(), jsonRequest, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_CREATED,
+                    groupInfo.getDisplay() + " Group creation failed");
+            JSONObject jsonResponse = getJSONObject(EntityUtils.toString(response.getEntity()));
+            return jsonResponse.get("id").toString();
+        }
+    }
+
+    /**
+     * Delete an existing group
+     *
+     * @param groupId Group id.
+     */
+    public void deleteGroup(String groupId) throws IOException {
+        String endPointUrl = getGroupsPath() + PATH_SEPARATOR + groupId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpDelete(endPointUrl, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
+                    "Group deletion failed");
+        }
+    }
+
     private Header[] getHeaders() {
 
         Header[] headerList = new Header[3];
@@ -244,6 +277,14 @@ public class SCIM2RestClient extends RestBaseClient {
             return serverUrl + SCIM2_ROLES_ENDPOINT;
         } else {
             return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + SCIM2_ROLES_ENDPOINT;
+        }
+    }
+
+    private String getGroupsPath() {
+        if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+            return serverUrl + SCIM2_GROUPS_ENDPOINT;
+        } else {
+            return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + SCIM2_GROUPS_ENDPOINT;
         }
     }
 

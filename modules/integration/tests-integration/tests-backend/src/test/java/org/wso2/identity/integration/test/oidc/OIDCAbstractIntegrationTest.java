@@ -18,8 +18,6 @@
 
 package org.wso2.identity.integration.test.oidc;
 
-import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
@@ -31,19 +29,10 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.identity.application.common.model.xsd.Claim;
-import org.wso2.carbon.identity.application.common.model.xsd.ClaimConfig;
-import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
-import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
-import org.wso2.carbon.identity.application.common.model.xsd.OutboundProvisioningConfig;
-import org.wso2.carbon.identity.application.common.model.xsd.Property;
-import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
-import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
-import org.wso2.carbon.um.ws.api.stub.ClaimValue;
 import org.wso2.identity.integration.test.oauth2.OAuth2ServiceAbstractIntegrationTest;
 import org.wso2.identity.integration.test.oidc.bean.OIDCApplication;
-import org.wso2.identity.integration.test.oidc.bean.OIDCUser;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration.DialectEnum;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimMappings;
@@ -98,35 +87,8 @@ public class OIDCAbstractIntegrationTest extends OAuth2ServiceAbstractIntegratio
      * Creates a user
      *
      * @param user user instance
-     * @throws Exception
+     * @throws Exception Exception
      */
-    public void createUser(OIDCUser user) throws Exception {
-
-        log.info("Creating User " + user.getUsername());
-
-        ClaimValue[] claims = null;
-        if (MapUtils.isNotEmpty(user.getUserClaims())) {
-            claims = new ClaimValue[user.getUserClaims().size()];
-
-            int i = 0;
-            for (Map.Entry<String, String> entry : user.getUserClaims().entrySet()) {
-                ClaimValue claimValue = new ClaimValue();
-                claimValue.setClaimURI(entry.getKey());
-                claimValue.setValue(entry.getValue());
-                claims[i++] = claimValue;
-            }
-        }
-
-        String[] roles = null;
-        if (!user.getRoles().isEmpty()) {
-            roles = new String[user.getRoles().size()];
-            roles = user.getRoles().toArray(roles);
-        }
-
-        // creating the user
-        remoteUSMServiceClient.addUser(user.getUsername(), user.getPassword(), roles, claims, user.getProfile(), true);
-    }
-
     public void createUser(UserObject user) throws Exception {
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
         userId = scim2RestClient.createUser(user);
@@ -153,7 +115,7 @@ public class OIDCAbstractIntegrationTest extends OAuth2ServiceAbstractIntegratio
     }
 
     /**
-     * Register an OIDC application in OP
+     * Create an OIDC application
      *
      * @param application application instance
      * @throws Exception Exception
@@ -164,7 +126,7 @@ public class OIDCAbstractIntegrationTest extends OAuth2ServiceAbstractIntegratio
         createApplication(applicationModel, application);
     }
 
-    public void createApplication(ApplicationModel applicationModel, OIDCApplication application) throws Exception {
+    private void createApplication(ApplicationModel applicationModel, OIDCApplication application) throws Exception {
 
         log.info("Creating application " + application.getApplicationName());
 
@@ -179,10 +141,10 @@ public class OIDCAbstractIntegrationTest extends OAuth2ServiceAbstractIntegratio
         ClaimConfiguration applicationClaimConfiguration = new ClaimConfiguration().dialect(DialectEnum.CUSTOM);
         for (String claimUri : application.getRequiredClaims()) {
             ClaimMappings claimMapping = new ClaimMappings().applicationClaim(claimUri);
-            claimMapping.setLocalClaim(new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(claimUri));
+            claimMapping.setLocalClaim(new Claim().uri(claimUri));
 
             RequestedClaimConfiguration requestedClaim = new RequestedClaimConfiguration();
-            requestedClaim.setClaim(new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(claimUri));
+            requestedClaim.setClaim(new Claim().uri(claimUri));
 
             applicationClaimConfiguration.addClaimMappingsItem(claimMapping);
             applicationClaimConfiguration.addRequestedClaimsItem(requestedClaim);
@@ -200,85 +162,11 @@ public class OIDCAbstractIntegrationTest extends OAuth2ServiceAbstractIntegratio
         application.setClientSecret(oidcConfig.getClientSecret());
     }
 
-    public ServiceProvider createApplication(ServiceProvider serviceProvider, OIDCApplication application)
-            throws Exception {
-
-        log.info("Creating application " + application.getApplicationName());
-
-        OAuthConsumerAppDTO appDTO = new OAuthConsumerAppDTO();
-        appDTO.setApplicationName(application.getApplicationName());
-        appDTO.setCallbackUrl(application.getCallBackURL());
-        appDTO.setOAuthVersion(OAuth2Constant.OAUTH_VERSION_2);
-        appDTO.setGrantTypes("authorization_code implicit password client_credentials refresh_token " +
-                "urn:ietf:params:oauth:grant-type:saml2-bearer iwa:ntlm");
-
-        adminClient.registerOAuthApplicationData(appDTO);
-        OAuthConsumerAppDTO[] appDtos = adminClient.getAllOAuthApplicationData();
-
-        for (OAuthConsumerAppDTO appDto : appDtos) {
-            if (appDto.getApplicationName().equals(application.getApplicationName())) {
-                application.setClientId(appDto.getOauthConsumerKey());
-                application.setClientSecret(appDto.getOauthConsumerSecret());
-            }
-        }
-
-        serviceProvider.setApplicationName(application.getApplicationName());
-        serviceProvider.setDescription(application.getApplicationName());
-        appMgtclient.createApplication(serviceProvider);
-
-        serviceProvider = appMgtclient.getApplication(application.getApplicationName());
-
-        ClaimConfig claimConfig = null;
-        if (!application.getRequiredClaims().isEmpty()) {
-            claimConfig = new ClaimConfig();
-            for (String claimUri : application.getRequiredClaims()) {
-                Claim claim = new Claim();
-                claim.setClaimUri(claimUri);
-                ClaimMapping claimMapping = new ClaimMapping();
-                claimMapping.setRequested(true);
-                claimMapping.setLocalClaim(claim);
-                claimMapping.setRemoteClaim(claim);
-                claimConfig.addClaimMappings(claimMapping);
-            }
-        }
-
-        serviceProvider.setClaimConfig(claimConfig);
-        serviceProvider.setOutboundProvisioningConfig(new OutboundProvisioningConfig());
-        List<InboundAuthenticationRequestConfig> authRequestList = new ArrayList<>();
-
-        if (application.getClientId() != null) {
-            InboundAuthenticationRequestConfig inboundAuthenticationRequestConfig = new InboundAuthenticationRequestConfig();
-            inboundAuthenticationRequestConfig.setInboundAuthKey(application.getClientId());
-            inboundAuthenticationRequestConfig.setInboundAuthType(OAuth2Constant.OAUTH_2);
-            if (StringUtils.isNotBlank(application.getClientSecret())) {
-                Property property = new Property();
-                property.setName(OAuth2Constant.OAUTH_CONSUMER_SECRET);
-                property.setValue(application.getClientSecret());
-                Property[] properties = {property};
-                inboundAuthenticationRequestConfig.setProperties(properties);
-            }
-            authRequestList.add(inboundAuthenticationRequestConfig);
-        }
-
-        if (authRequestList.size() > 0) {
-            serviceProvider.getInboundAuthenticationConfig().setInboundAuthenticationRequestConfigs(authRequestList
-                    .toArray(new InboundAuthenticationRequestConfig[authRequestList.size()]));
-        }
-
-        updateApplication(serviceProvider);
-        return serviceProvider;
-    }
-
-    public void updateApplication(ServiceProvider serviceProvider) throws Exception {
-
-        appMgtclient.updateApplicationData(serviceProvider);
-    }
-
     /**
      * Deletes the registered OIDC application in OP
      *
      * @param application application instance
-     * @throws Exception
+     * @throws Exception Exception
      */
     public void deleteApplication(OIDCApplication application) throws Exception {
 
