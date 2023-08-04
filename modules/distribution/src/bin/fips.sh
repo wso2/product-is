@@ -192,11 +192,11 @@ while getopts "f:m:" opt; do
 
 	if grep -q "bcprov-jdk15on" "$bundles_info"; then
 		sever_restart_required=true
-		sed -i '/bcprov-jdk15on/d' $bundles_info
+		perl -i -ne 'print unless /bcprov-jdk15on/' $bundles_info
 	fi
 	if grep -q "bcpkix-jdk15on" "$bundles_info"; then
 		sever_restart_required=true
-		sed -i '/bcpkix-jdk15on/d' $bundles_info
+		perl -i -ne 'print unless /bcpkix-jdk15on/' $bundles_info
 	fi
 
 	if [ -e $CARBON_HOME/repository/components/lib/bc-fips*.jar ]; then
@@ -227,7 +227,6 @@ while getopts "f:m:" opt; do
   		        echo "Checksum verification failed: The downloaded bc-fips-$BC_FIPS_VERSION.jar may be corrupted."
 	   	    fi
 	   	elif [ ! -z "$arg1" ] && [ -z "$arg2" ]; then
-	        echo "2 empty"
 	    	if [ ! -e $arg1/bcpkix-fips-$BCPKIX_FIPS_VERSION.jar ]; then
 	    	    echo "Can not be found required bc-fips-$BC_FIPS_VERSION.jar in given file path : $arg1."
 	    	else
