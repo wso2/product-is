@@ -2263,7 +2263,7 @@
         <carbon.consent.mgt.version>2.5.2</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.8.51</identity.governance.version>
+        <identity.governance.version>1.8.52</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.8.5</identity.carbon.auth.saml2.version>
@@ -2274,11 +2274,11 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.11.19</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.11.96</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.11.97</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.9.3</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.10.12</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.3</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>3.4.22</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim2.version>3.4.23</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity workflow Versions -->
         <identity.user.workflow.version>5.6.0</identity.user.workflow.version>
@@ -2358,8 +2358,8 @@
         <authenticator.x509.version>3.1.11</authenticator.x509.version>
         <identity.extension.utils>1.0.14</identity.extension.utils>
 
-        <identity.org.mgt.version>1.3.51</identity.org.mgt.version>
-        <identity.org.mgt.core.version>1.0.57</identity.org.mgt.core.version>
+        <identity.org.mgt.version>1.3.52</identity.org.mgt.version>
+        <identity.org.mgt.core.version>1.0.58</identity.org.mgt.core.version>
 
         <!-- Hash Provider Versions-->
         <hashprovider.pbkdf2.version>0.1.4</hashprovider.pbkdf2.version>
