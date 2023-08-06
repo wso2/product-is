@@ -1,5 +1,5 @@
 
-# 🪄 Automating-Product-Migration-Testing
+#  Automating-Product-Migration-Testing
 
 Welcome to Automating-Product-Migration-Testing! This project aims to automate the testing process of the migration client for WSO2 Identity Server when migrating between different product versions. By automating the migration client test execution, we can significantly reduce the overhead and effort involved in manual testing.
 
@@ -17,40 +17,65 @@ This repository contains automation scripts and tools for automating product mig
 
 ```
 .
-├── Automating-Product-Migration-Testing
+├── product-is
 │   ├── .github
 │   │   └── workflows
-│   │       └── MainMigrationWorkflow.yml
+│   │       └── migration-automation.yml
 │   ├── data-population-and-validation
 │   │   ├── 1-user-creation
+│   │   │   │   ├── create-bulk-users.sh
+│   │   │   │   ├── create-user.sh
 │   │   ├── 2-tenant-creation
+│   │   │   │   ├── create-tenant-soapAPI.sh
+│   │   │   │   ├── create-tenant.sh
 │   │   ├── 3-userstore-creation
+│   │   │   │   ├── create-user-in-userstore.sh
+│   │   │   │   ├── create-userstore-soapAPI.sh
+│   │   │   │   └── create-userstore.sh
 │   │   ├── 4-service-provider-creation
+│   │   │   │   ├── create-user-in-a-service-provider.sh
+│   │   │   │   ├── register-a-service-provider-get-access-token-mac.sh
+│   │   │   │   └── register-a-service-provider-get-access-token-ubuntu.sh
+│   │   │   │   ├── register-a-service-provider.sh
+│   │   │   │   ├── validate-database-mac.sh
+│   │   │   │   └── validate-database-ubuntu.sh
 │   │   ├── 5-group-creation
+│   │   │   │   ├── create-group.sh
+│   │   │   │   ├── create-groups-with-users.sh
 │   │   └── automated-data-poputation-and-validation-script-mac.sh
 │   │   └── automated-data-poputation-and-validation-script-ubuntu.sh
-│   │   └── windows-os
-│   │       ├── 1-user-creation
-│   │       ├── 2-tenant-creation
-│   │       ├── 3-userstore-creation
-│   │       ├── 4-service-provider-creation
-│   │       ├── 5-group-creation
-│   │       └── automated-data-poputation-and-validation-script.ps1
 │   ├── documents
 │   │   └── Automating Product Migration Testing.word
 │   ├── local-setups
 │   │   ├── mac-os
-│   │   │   ├── migration-script-mac.sh
-│   │   │   └── setup-mysql-mac.sh
+│   │   │   ├── migration-automation-script-macos.sh
 │   │   ├── ubuntu-os
-│   │   │   ├── migration-script-ubuntu.sh
-│   │   │   └── setup-mysql-ubuntu.sh
-│   │   └── windows-os
-│   │       ├── change-deployment-toml-windows.ps1
-│   │       ├── change-migration-config-yaml-windows.ps1
-│   │       ├── migration-script-windows.ps1
-│   ├── migration-tester/migration-automation
+│   │   │   │   ├──automated-data-population-and-validation-script-ubuntu-local-setup.sh
+│   │   │   │   ├──automating-product-migration-testing.sh
+│   │   │   │   └── backup_db.sql
+│   │   │   │   ├──change-deployment-toml.sh
+│   │   │   │   ├── change-migration-configyaml.sh
+│   │   │   │   └── copy-jar-file-mysql.sh
+│   │   │   │   ├──create-new-database.sh
+│   │   │   │   ├── deployment.toml
+│   │   │   │   └── enter-login-credentials.sh
+│   │   │   │   ├── env.sh
+│   │   │   │   ├── humanoid.jpg
+│   │   │   │   └── migration-automation-script-linux.sh
+│   │   │   │   ├── migration-terminal.sh
+│   │   │   │   ├── migration.log
+│   │   │   │   └── server-start-newIS.sh
+│   │   │   │   ├── server-start.sh
+│   │   │   │   ├── validate-database-ubuntu-local-setup.sh
+│   ├── migration-automation
 │   │   ├── deployment-tomls
+│   │   │   ├── IS-5.9
+│   │   │   │   ├── deployment-mssql.toml
+│   │   │   │   ├── deployment-mysql.toml
+│   │   │   │   └── deployment-postgre.toml
+│   │   │   │   ├── deployment-mssql-migration.toml
+│   │   │   │   ├── deployment-mysql-migration.toml
+│   │   │   │   └── deployment-postgre-migration.toml
 │   │   │   ├── IS-5.10
 │   │   │   │   ├── deployment-mssql.toml
 │   │   │   │   ├── deployment-mysql.toml
@@ -59,13 +84,6 @@ This repository contains automation scripts and tools for automating product mig
 │   │   │   │   ├── deployment-mysql-migration.toml
 │   │   │   │   └── deployment-postgre-migration.toml
 │   │   │   ├── IS-5.11
-│   │   │   │   ├── deployment-mssql.toml
-│   │   │   │   ├── deployment-mysql.toml
-│   │   │   │   └── deployment-postgre.toml
-│   │   │   │   ├── deployment-mssql-migration.toml
-│   │   │   │   ├── deployment-mysql-migration.toml
-│   │   │   │   └── deployment-postgre-migration.toml
-│   │   │   ├── IS-5.9
 │   │   │   │   ├── deployment-mssql.toml
 │   │   │   │   ├── deployment-mysql.toml
 │   │   │   │   └── deployment-postgre.toml
@@ -93,16 +111,25 @@ This repository contains automation scripts and tools for automating product mig
 │   │   │       ├── deployment-mssql-migration.toml
 │   │   │       ├── deployment-mysql-migration.toml
 │   │   │       └── deployment-postgre-migration.toml
+│   │   ├── mac-os
+│   │   │   ├── migration-script-mac.sh
+│   │   │   └── setup-mysql-mac.sh
+│   │   ├── ubuntu-os
+│   │   │   ├── migration-script-ubuntu.sh
+│   │   │   └── setup-mysql-ubuntu.sh
 │   │   ├── enter-login-credentials.sh
 │   │   ├── env.sh
 │   │   ├── logs.txt
 │   │   ├── change-deployment-toml.sh
 │   │   └── change-migration-config-yaml.sh
+│   │   └──download-migration-client.sh
+│   │   └──update-pack.sh
 │   │   ├── copy-jar-file.sh
 │   │   └── start-server.sh
 │   │   └── stop-server.sh
-│   ├── db-scripts
-│   │   ├── IS-5.11
+│   ├── utils
+│   |   ├── db-scripts
+│   │   |    ├── IS-5.11
 │   │   │    ├── Bps
 │   │   │    ├── consent
 │   │   │    │   ├── mysql.sql
@@ -123,7 +150,7 @@ This repository contains automation scripts and tools for automating product mig
 │   │   │    ├── mssql.sql
 │   │   │    ├── mysql.sql
 │   │   │    ├── postgresone.sql
-│   │   ├── IS-5.9
+│   │   |    ├── IS-5.9
 │   │   │    ├── Bps
 │   │   │    ├── consent
 │   │   │    │   ├── mysql.sql
@@ -148,20 +175,23 @@ This repository contains automation scripts and tools for automating product mig
 │   │   │   ├── mysql.sql
 │   │   │   ├── mssql.sql
 │   │   │   ├── postgressql.sql
-│   ├── jars
-│   │   ├── mssql
-│   │   │   ├── mssql-jdbc-12.2.0.jre11.jar
-│   │   │   ├── mssql-jdbc-12.2.0.jre8.jar
-│   │   │   └── mssql-jdbc-9.2.0.jre8.jar
-│   │   ├── mysql
-│   │   │   └── mysql-connector-java-8.0.29.jar
-│   │   └── postgresql
-│   │       └── postgresql-42.5.3.jar
-│   └── migration-client
-│       └── wso2is-migration-1.0.225.zip
+│   |   ├── jars
+│   │   |   ├── mssql
+│   │   │   |   ├── mssql-jdbc-12.2.0.jre11.jar
+│   │   │   |   ├── mssql-jdbc-12.2.0.jre8.jar
+│   │   │   |   └── mssql-jdbc-9.2.0.jre8.jar
+│   │   |   ├── mysql
+│   │   │   |   └── mysql-connector-java-8.0.29.jar
+│   │   |   └── postgresql
+│   │   |       └── postgresql-42.5.3.jar
+│   |   ├── update-tools
+│   │   |   ├── wso2update_darwin
+│   │   |   ├── wso2update_linux
+│   │   |   ├── wso2update_windows.exe
+│   |   ├── migration-client
+│   |   
 │   └── other-db-scripts
 │       └── config-management-is-5-11.sql
-├── LICENSE
 └── README.md
 
 ```
@@ -181,7 +211,7 @@ This repository contains automation scripts and tools for automating product mig
   - Contains subdirectories for different operating systems: `mac-os`, `ubuntu-os`, and `windows-os`.
   - Each OS directory includes setup scripts specific to that operating system, such as changing deployment toml files, migration configuration YAML files, copying jar files, migration scripts, and MySQL setup scripts.
 
-- `migration-tester/migration-automation`:
+- `migration-automation`:
   - Contains subdirectories for different operating systems: `mac-os`, `ubuntu-os`, and `windows-os`.
   - Each OS directory includes scripts specific to that operating system for migration automation, such as changing deployment toml files, changing migration configuration YAML files, copying jar files, migration scripts, and MySQL setup scripts.
   - The `deployment-tomls` directory includes subdirectories for different versions of the migration target (e.g., IS-5.10, IS-5.11) and respective deployment toml files for MSSQL, MySQL, and Postgre databases.
@@ -254,7 +284,9 @@ This project utilizes the following technologies and tools:
 
 - **wso2 REST APIs**
 
-- **wso2 SOAP APIs**
+- **wso2 SOAP APIs** 
+
+- **Google Drive APIs** - API V3
 
 - **Bash Scripting**
 
@@ -299,9 +331,13 @@ This project utilizes the following technologies and tools:
 Feel free to explore the repository and leverage these technologies and tools for the project.
 
 
-## License
 
-This project is licensed under the wso2 License.
+
+
+
+
+
+
 
 
 
