@@ -527,6 +527,12 @@
                                     org.wso2.carbon.identity.organization.management.core:org.wso2.carbon.identity.organization.management.core.server.feature:${identity.org.mgt.core.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
+                                    org.wso2.carbon.identity.auth.organization.login:org.wso2.carbon.identity.auth.organization.login.server.feature:${identity.organization.login.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.extension.identity.oauth2.grantType.organizationswitch:org.wso2.carbon.identity.oauth2.grant.organizationswitch.server.feature:${identity.oauth2.grant.organizationswitch.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon.identity.local.auth.magiclink:org.wso2.carbon.identity.local.auth.magiclink.server.feature:${authenticator.magiclink.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -1071,6 +1077,14 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.organization.management.core.server.feature.group</id>
                                     <version>${identity.org.mgt.core.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.auth.organization.login.server.feature.group</id>
+                                    <version>${identity.organization.login.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.oauth2.grant.organizationswitch.server.feature.group</id>
+                                    <version>${identity.oauth2.grant.organizationswitch.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.local.auth.magiclink.server.feature.group</id>
