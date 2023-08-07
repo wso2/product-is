@@ -81,8 +81,8 @@ public class TestPassiveSTS extends ISIntegrationTest {
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
         return new Object[][]{
-                {TestUserMode.TENANT_ADMIN},
-                {TestUserMode.SUPER_TENANT_ADMIN}
+                {TestUserMode.SUPER_TENANT_ADMIN},
+                {TestUserMode.TENANT_ADMIN}
         };
     }
 
