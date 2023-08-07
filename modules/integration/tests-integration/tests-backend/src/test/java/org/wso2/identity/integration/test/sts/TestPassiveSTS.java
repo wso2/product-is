@@ -227,6 +227,8 @@ public class TestPassiveSTS extends ISIntegrationTest {
                 "for tenant domain: " + tenantDomain);
 
         locationHeader = response.getFirstHeader(HTTP_RESPONSE_HEADER_LOCATION);
+        log.info("\nLocation header for tenant (230) : " + tenantDomain + "\n");
+        log.info(locationHeader);
         Assert.assertNotNull(locationHeader, "Login response header is null for tenant domain: " + tenantDomain);
         if (requestMissingClaims(response)) {
             String pastrCookie = Utils.getPastreCookie(response);
@@ -236,6 +238,8 @@ public class TestPassiveSTS extends ISIntegrationTest {
             response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT, locationHeader.getValue()
                     , client, pastrCookie);
             locationHeader = response.getFirstHeader(HTTP_RESPONSE_HEADER_LOCATION);
+            log.info("\nLocation header inside if (241) : " + tenantDomain + "\n");
+            log.info(locationHeader);
             EntityUtils.consume(response.getEntity());
         }
 
@@ -265,6 +269,8 @@ public class TestPassiveSTS extends ISIntegrationTest {
 
         HttpEntity entity = response.getEntity();
         String responseString = EntityUtils.toString(entity, "UTF-8");
+        log.info("Line 272\n tenant domain : " + tenantDomain + "\n");
+        log.info(responseString);
         Assert.assertTrue(responseString.contains("urn:oasis:names:tc:SAML:2.0:assertion"),
                 "No SAML2 Assertion found for the SAML2 request for tenant domain: " + tenantDomain);
     }
@@ -289,7 +295,8 @@ public class TestPassiveSTS extends ISIntegrationTest {
 
         HttpEntity entity = response.getEntity();
         String responseString = EntityUtils.toString(entity, "UTF-8");
-
+        log.info("Line 298\n tenant domain : " + tenantDomain + "\n");
+        log.info(responseString);
         Assert.assertTrue(responseString.contains("urn:oasis:names:tc:SAML:2.0:assertion"),
                 "No SAML2 Assertion found for the SAML2 request without WReply in passive-sts request for " +
                         "tenant domain: " + tenantDomain);
@@ -317,7 +324,8 @@ public class TestPassiveSTS extends ISIntegrationTest {
 
         HttpEntity entity = response.getEntity();
         String responseString = EntityUtils.toString(entity, "UTF-8");
-
+        log.info("Line 327\n tenant domain : " + tenantDomain + "\n");
+        log.info(responseString);
         assertTrue(responseString.contains("soapenv:Fault"),
                 "Cannot find soap fault for invalid WReply URL for tenant domain: " + tenantDomain);
     }
@@ -341,7 +349,8 @@ public class TestPassiveSTS extends ISIntegrationTest {
         passiveParams = appendTenantDomainQueryParam(passiveParams);
         HttpGet request = new HttpGet(this.passiveStsURL + passiveParams);
         HttpResponse response = client.execute(request);
-
+        log.info("Line 352\n tenant domain : " + tenantDomain + "\n");
+        log.info(EntityUtils.toString(response.getEntity(), "UTF-8"));
         Assert.assertNotNull(response, "PassiveSTSSampleApp logout response is null for tenant domain: " +
                 tenantDomain);
         int responseCode = response.getStatusLine().getStatusCode();
