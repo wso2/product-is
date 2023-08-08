@@ -27,17 +27,16 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.identity.application.common.model.xsd.Claim;
+import org.wso2.carbon.identity.application.common.model.xsd.ClaimConfig;
+import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
+import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
+import org.wso2.carbon.identity.application.common.model.xsd.OutboundProvisioningConfig;
+import org.wso2.carbon.identity.application.common.model.xsd.Property;
+import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
+import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration.DialectEnum;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimMappings;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.PassiveStsConfiguration;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.RequestedClaimConfiguration;
-import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 
@@ -65,19 +64,19 @@ public class TestPassiveSTS extends ISIntegrationTest {
     private static final String HTTP_RESPONSE_HEADER_LOCATION = "location";
     public final static String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.6)";
 
-    private final String username;
-    private final String userPassword;
-    private final String tenantDomain;
+    private String username;
+    private String userPassword;
+    private String tenantDomain;
 
     private String sessionDataKey;
     private Header locationHeader;
     private String passiveStsURL;
 
+    private ApplicationManagementServiceClient appMgtClient;
+    private ServiceProvider serviceProvider;
     private Lookup<CookieSpecProvider> cookieSpecRegistry;
     private RequestConfig requestConfig;
     private CloseableHttpClient client;
-    private OAuth2RestClient appMgtRestClient;
-    private String appId;
 
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
@@ -100,7 +99,10 @@ public class TestPassiveSTS extends ISIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
-        appMgtRestClient = new OAuth2RestClient(serverURL, tenantInfo);
+        AuthenticatorClient logManger = new AuthenticatorClient(backendURL);
+        logManger.login(username, userPassword, isServer.getInstance().getHosts().get("default"));
+
+        appMgtClient = new ApplicationManagementServiceClient(sessionCookie, backendURL, null);
 
         cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
                 .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
@@ -120,18 +122,18 @@ public class TestPassiveSTS extends ISIntegrationTest {
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
-        appMgtRestClient.deleteApplication(appId);
+        appMgtClient.deleteApplication(SERVICE_PROVIDER_NAME);
     }
 
     @Test(alwaysRun = true, description = "Add service provider")
     public void testAddSP() throws Exception {
 
-        appId = appMgtRestClient.createApplication(new ApplicationModel()
-                .name(SERVICE_PROVIDER_NAME)
-                .description(SERVICE_PROVIDER_Desc));
-
-        ApplicationResponseModel application = appMgtRestClient.getApplication(appId);
-        Assert.assertNotNull(application, "Service provider registration failed for tenant domain: " +
+        serviceProvider = new ServiceProvider();
+        serviceProvider.setApplicationName(SERVICE_PROVIDER_NAME);
+        serviceProvider.setDescription(SERVICE_PROVIDER_Desc);
+        appMgtClient.createApplication(serviceProvider);
+        serviceProvider = appMgtClient.getApplication(SERVICE_PROVIDER_NAME);
+        Assert.assertNotNull(serviceProvider, "Service provider registration failed for tenant domain: " +
                 tenantDomain);
     }
 
@@ -139,43 +141,43 @@ public class TestPassiveSTS extends ISIntegrationTest {
             dependsOnMethods = {"testAddSP"})
     public void testUpdateSP() throws Exception {
 
-        PassiveStsConfiguration passiveSts = new PassiveStsConfiguration()
-                .realm(SERVICE_PROVIDER_NAME)
-                .replyTo(PASSIVE_STS_SAMPLE_APP_URL);
+        serviceProvider.setOutboundProvisioningConfig(new OutboundProvisioningConfig());
+        List<InboundAuthenticationRequestConfig> authRequestList = new ArrayList<InboundAuthenticationRequestConfig>();
+        InboundAuthenticationRequestConfig opicAuthenticationRequest = new InboundAuthenticationRequestConfig();
+        opicAuthenticationRequest.setInboundAuthKey(SERVICE_PROVIDER_NAME);
+        opicAuthenticationRequest.setInboundAuthType("passivests");
+        Property property = new Property();
+        property.setName("passiveSTSWReply");
+        property.setValue(PASSIVE_STS_SAMPLE_APP_URL);
+        opicAuthenticationRequest.setProperties(new Property[]{property});
+        authRequestList.add(opicAuthenticationRequest);
 
-        appMgtRestClient.updateInboundDetailsOfApplication(appId, passiveSts, "passive-sts");
-        ApplicationResponseModel application = appMgtRestClient.getApplication(appId);
-        Assert.assertEquals(application.getInboundProtocols().get(0).getType(), "passivests",
-                "Fail to update service provider with passiveSTS configs for tenant domain: " + tenantDomain);
+        if (authRequestList.size() > 0) {
+            serviceProvider.getInboundAuthenticationConfig()
+                    .setInboundAuthenticationRequestConfigs(
+                            authRequestList
+                                    .toArray(new InboundAuthenticationRequestConfig[0]));
+        }
+        appMgtClient.updateApplicationData(serviceProvider);
+        Assert.assertNotEquals(appMgtClient.getApplication(SERVICE_PROVIDER_NAME)
+                        .getInboundAuthenticationConfig()
+                        .getInboundAuthenticationRequestConfigs().length,
+                0, "Fail to update service provider with passiveSTS configs for tenant domain: " + tenantDomain);
     }
 
     @Test(alwaysRun = true, description = "Update service provider with claim configurations",
             dependsOnMethods = {"testUpdateSP"})
     public void testAddClaimConfiguration() throws Exception {
 
-        ClaimConfiguration claimConfig = new ClaimConfiguration()
-                .dialect(DialectEnum.LOCAL)
-                .addClaimMappingsItem(new ClaimMappings()
-                        .applicationClaim(GIVEN_NAME_CLAIM_URI)
-                        .localClaim(new Claim().uri(GIVEN_NAME_CLAIM_URI)))
-                .addClaimMappingsItem(new ClaimMappings()
-                        .applicationClaim(EMAIL_CLAIM_URI)
-                        .localClaim(new Claim().uri(EMAIL_CLAIM_URI)))
-                .addRequestedClaimsItem(new RequestedClaimConfiguration()
-                        .claim(new Claim().uri(GIVEN_NAME_CLAIM_URI)))
-                .addRequestedClaimsItem(new RequestedClaimConfiguration()
-                        .claim(new Claim().uri(EMAIL_CLAIM_URI)));
+        serviceProvider.getClaimConfig().setClaimMappings(getClaimMappings());
+        appMgtClient.updateApplicationData(serviceProvider);
+        ServiceProvider updatedServiceProvider = appMgtClient.getApplication(SERVICE_PROVIDER_NAME);
+        ClaimConfig updatedClaimConfig = updatedServiceProvider.getClaimConfig();
 
-        ApplicationPatchModel applicationPatch = new ApplicationPatchModel()
-                .claimConfiguration(claimConfig);
-
-        appMgtRestClient.updateApplication(appId, applicationPatch);
-        ApplicationResponseModel application = appMgtRestClient.getApplication(appId);
-
-        int arraySize = application.getClaimConfiguration().getClaimMappings().size();
+        int arraySize = updatedClaimConfig.getClaimMappings().length;
         String[] claimsUris = new String[arraySize];
         for (int index = 0; index < arraySize; index++) {
-            claimsUris[index] = application.getClaimConfiguration().getClaimMappings().get(index).getLocalClaim().getUri();
+            claimsUris[index] = updatedClaimConfig.getClaimMappings()[index].getLocalClaim().getClaimUri();
         }
 
         List<String> claimsList = Arrays.asList(claimsUris);
@@ -257,7 +259,6 @@ public class TestPassiveSTS extends ISIntegrationTest {
                 + "%3ARequestSecurityToken%3E";
 
         passiveParams = appendTenantDomainQueryParam(passiveParams);
-        log.info("Line 260\n URL : " + this.passiveStsURL + passiveParams + wreqParam + "\n");
         HttpGet request = new HttpGet(this.passiveStsURL + passiveParams + wreqParam);
         HttpResponse response = client.execute(request);
 
@@ -284,7 +285,6 @@ public class TestPassiveSTS extends ISIntegrationTest {
                 + "%3ARequestSecurityToken%3E";
 
         passiveParams = appendTenantDomainQueryParam(passiveParams);
-        log.info("Line 287\n URL : " + this.passiveStsURL + passiveParams + wreqParam + "\n");
         HttpGet request = new HttpGet(this.passiveStsURL + passiveParams + wreqParam);
         HttpResponse response = client.execute(request);
 
@@ -315,7 +315,6 @@ public class TestPassiveSTS extends ISIntegrationTest {
                 + "%3ARequestSecurityToken%3E";
 
         passiveParams = appendTenantDomainQueryParam(passiveParams);
-        log.info("Line 318\n URL : " + this.passiveStsURL + passiveParams + wreqParam + "\n");
         HttpGet request = new HttpGet(this.passiveStsURL + passiveParams + wreqParam);
         HttpResponse response = client.execute(request);
 
@@ -348,11 +347,10 @@ public class TestPassiveSTS extends ISIntegrationTest {
 
         String passiveParams = "?wa=wsignout1.0&wreply=" + PASSIVE_STS_SAMPLE_APP_URL + "&wtrealm=PassiveSTSSampleApp";
         passiveParams = appendTenantDomainQueryParam(passiveParams);
-        log.info("Line 351\n URL : " + this.passiveStsURL + passiveParams+ "\n");
         HttpGet request = new HttpGet(this.passiveStsURL + passiveParams);
-        log.info("Line 350\n testSendLogoutRequest tenant domain : " + tenantDomain + "\n");
         HttpResponse response = client.execute(request);
-        log.info("Line 352\n testSendLogoutRequest tenant domain : " + tenantDomain + "\n");
+        log.info("Line 352\n tenant domain : " + tenantDomain + "\n");
+        log.info(EntityUtils.toString(response.getEntity(), "UTF-8"));
         Assert.assertNotNull(response, "PassiveSTSSampleApp logout response is null for tenant domain: " +
                 tenantDomain);
         int responseCode = response.getStatusLine().getStatusCode();
@@ -378,6 +376,28 @@ public class TestPassiveSTS extends ISIntegrationTest {
         System.setProperty("javax.net.ssl.trustStoreType", "JKS");
     }
 
+    private ClaimMapping[] getClaimMappings() {
+        List<ClaimMapping> claimMappingList = new ArrayList<ClaimMapping>();
+
+        Claim givenNameClaim = new Claim();
+        givenNameClaim.setClaimUri(GIVEN_NAME_CLAIM_URI);
+        ClaimMapping givenNameClaimMapping = new ClaimMapping();
+        givenNameClaimMapping.setRequested(true);
+        givenNameClaimMapping.setLocalClaim(givenNameClaim);
+        givenNameClaimMapping.setRemoteClaim(givenNameClaim);
+        claimMappingList.add(givenNameClaimMapping);
+
+        Claim emailClaim = new Claim();
+        emailClaim.setClaimUri(EMAIL_CLAIM_URI);
+        ClaimMapping emailClaimMapping = new ClaimMapping();
+        emailClaimMapping.setRequested(true);
+        emailClaimMapping.setLocalClaim(emailClaim);
+        emailClaimMapping.setRemoteClaim(emailClaim);
+        claimMappingList.add(emailClaimMapping);
+
+        return claimMappingList.toArray(new ClaimMapping[0]);
+    }
+
     private boolean requestMissingClaims(HttpResponse response) {
 
         String redirectUrl = Utils.getRedirectUrl(response);
@@ -386,10 +406,9 @@ public class TestPassiveSTS extends ISIntegrationTest {
 
     private String appendTenantDomainQueryParam(String params) {
 
-//        if (!StringUtils.equals(tenantDomain, "carbon.super")) {
-//            return params + "&tenantDomain=" + tenantDomain;
-//        }
-//        return params;
-        return params + "&tenantDomain=" + tenantDomain;
+        if (!StringUtils.equals(tenantDomain, "carbon.super")) {
+            return params + "&tenantDomain=" + tenantDomain;
+        }
+        return params;
     }
 }
