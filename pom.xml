@@ -2398,7 +2398,7 @@
         <charon.version>3.4.1</charon.version>
 
         <!-- Carbon Kernel -->
-        <carbon.kernel.version>4.9.10</carbon.kernel.version>
+        <carbon.kernel.version>4.9.11</carbon.kernel.version>
 
         <!-- Identity Verification -->
         <identity.verification.version>1.0.6</identity.verification.version>
