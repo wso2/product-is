@@ -1,7 +1,7 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2015, WSO2 LLC. (http://www.wso2.com).
  *
- * WSO2 Inc. licenses this file to you under the Apache License,
+ * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
@@ -40,15 +40,25 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.identity.application.common.model.idp.xsd.FederatedAuthenticatorConfig;
-import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
-import org.wso2.carbon.identity.application.common.model.idp.xsd.Property;
-import org.wso2.carbon.identity.application.common.model.xsd.AuthenticationStep;
-import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
-import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
-import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.test.application.mgt.AbstractIdentityFederationTestCase;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthenticationSequence;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthenticationSequence.TypeEnum;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Authenticator;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.IdpInitiatedSingleLogout;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAML2Configuration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAML2ServiceProvider;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAMLAssertionConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAMLAttributeProfile;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAMLResponseSigning;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SingleLogoutProfile;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SingleSignOnProfile;
+import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.FederatedAuthenticatorRequest;
+import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.FederatedAuthenticatorRequest.FederatedAuthenticator;
+import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.IdentityProviderPOSTRequest;
+import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Property;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
 
@@ -73,11 +83,10 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
     private static final String SAML_SSO_URL = "http://localhost:8490/travelocity.com/samlsso?SAML2" +
             ".HTTPBinding=HTTP-Redirect";
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
-    private static final String AUTHENTICATION_TYPE = "federated";
-    private static final String INBOUND_AUTH_TYPE = "samlsso";
-    private static final int TOMCAT_8490 = 8490;
     private static final int PORT_OFFSET_0 = 0;
     private static final int PORT_OFFSET_1 = 1;
+    private static final String PRIMARY_IS_IDP_AUTHENTICATOR_NAME_SAML = "SAMLSSOAuthenticator";
+    private static final String ENCODED_PRIMARY_IS_IDP_AUTHENTICATOR_ID_SAML = "U0FNTFNTT0F1dGhlbnRpY2F0b3I";
     private String COMMON_AUTH_URL = "https://localhost:%s/commonauth";
     private String COMMON_AUTH_URL_CHANGED = "https://localhost:%s/commonauth1";
 
@@ -85,6 +94,9 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
     private String usrPwd = "admin";
 
     private ServerConfigurationManager serverConfigurationManager;
+    private String primaryISIdpId;
+    private String primaryISAppId;
+    private String secondaryISAppId;
 
     @BeforeClass(alwaysRun = true)
     public void initTest() throws Exception {
@@ -102,62 +114,25 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
 
         super.initTest();
 
-        super.createServiceClients(PORT_OFFSET_0, sessionCookie, new IdentityConstants
-                .ServiceClientType[]{IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT, IdentityConstants.ServiceClientType.IDENTITY_PROVIDER_MGT, IdentityConstants.ServiceClientType.SAML_SSO_CONFIG});
-        super.createServiceClients(PORT_OFFSET_1, null, new IdentityConstants.ServiceClientType[]{IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT, IdentityConstants.ServiceClientType.SAML_SSO_CONFIG});
+        createServiceClients(PORT_OFFSET_0, new IdentityConstants.ServiceClientType[]{
+                IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT,
+                IdentityConstants.ServiceClientType.IDENTITY_PROVIDER_MGT});
 
-        //create identity provider in primary IS
-        IdentityProvider identityProvider = new IdentityProvider();
-        identityProvider.setIdentityProviderName(IDENTITY_PROVIDER_NAME);
+        createServiceClients(PORT_OFFSET_1, new IdentityConstants.ServiceClientType[]{
+                IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT});
 
-        FederatedAuthenticatorConfig saml2SSOAuthnConfig = new FederatedAuthenticatorConfig();
-        saml2SSOAuthnConfig.setName("SAMLSSOAuthenticator");
-        saml2SSOAuthnConfig.setDisplayName("samlsso");
-        saml2SSOAuthnConfig.setEnabled(true);
-        saml2SSOAuthnConfig.setProperties(getSAML2SSOAuthnConfigProperties());
-        identityProvider.setDefaultAuthenticatorConfig(saml2SSOAuthnConfig);
-        identityProvider.setFederatedAuthenticatorConfigs(new FederatedAuthenticatorConfig[]{saml2SSOAuthnConfig});
-
-        super.addIdentityProvider(PORT_OFFSET_0, identityProvider);
-
-        //create service provider in primary IS
-        super.addServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SERVICE_PROVIDER_NAME);
-
-        ServiceProvider serviceProvider = getServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SERVICE_PROVIDER_NAME);
-
-        updateServiceProviderWithSAMLConfigs(PORT_OFFSET_0, PRIMARY_IS_SAML_ISSUER_NAME, PRIMARY_IS_SAML_ACS_URL, serviceProvider);
-
-        AuthenticationStep authStep = new AuthenticationStep();
-        org.wso2.carbon.identity.application.common.model.xsd.IdentityProvider idP = new org.wso2.carbon.identity.application.common.model.xsd.IdentityProvider();
-        idP.setIdentityProviderName(IDENTITY_PROVIDER_NAME);
-        org.wso2.carbon.identity.application.common.model.xsd.FederatedAuthenticatorConfig saml2SSOAuthnConfigXsd = new org.wso2.carbon.identity.application.common.model.xsd.FederatedAuthenticatorConfig();
-        saml2SSOAuthnConfigXsd.setName("SAMLSSOAuthenticator");
-        saml2SSOAuthnConfigXsd.setDisplayName("samlsso");
-        idP.setFederatedAuthenticatorConfigs(new org.wso2.carbon.identity.application.common.model.xsd.FederatedAuthenticatorConfig[]{saml2SSOAuthnConfigXsd});
-        authStep.setFederatedIdentityProviders(new org.wso2.carbon.identity.application.common.model.xsd.IdentityProvider[]{idP});
-        serviceProvider.getLocalAndOutBoundAuthenticationConfig().setAuthenticationSteps(new AuthenticationStep[]{authStep});
-        serviceProvider.getLocalAndOutBoundAuthenticationConfig().setAuthenticationType(AUTHENTICATION_TYPE);
-
-        updateServiceProvider(PORT_OFFSET_0, serviceProvider);
-
-        //create service provider in secondary IS
-        super.addServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
-
-        serviceProvider = getServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
-
-        updateServiceProviderWithSAMLConfigs(PORT_OFFSET_1, SECONDARY_IS_SAML_ISSUER_NAME, String.format
-                (COMMON_AUTH_URL_CHANGED, DEFAULT_PORT + PORT_OFFSET_0), serviceProvider);
-
-        updateServiceProvider(PORT_OFFSET_1, serviceProvider);
+        createIdpInPrimaryIS();
+        createApplicationInPrimaryIS();
+        createApplicationInSecondaryIS();
     }
 
     @AfterClass(alwaysRun = true)
     public void endTest() throws Exception {
 
-        super.deleteServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SERVICE_PROVIDER_NAME);
-        super.deleteIdentityProvider(PORT_OFFSET_0, IDENTITY_PROVIDER_NAME);
+        deleteApplication(PORT_OFFSET_0, primaryISAppId);
+        deleteIdp(PORT_OFFSET_0, primaryISIdpId);
 
-        super.deleteServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
+        deleteApplication(PORT_OFFSET_1, secondaryISAppId);
         serverConfigurationManager.restoreToLastConfiguration(false);
     }
 
@@ -195,6 +170,112 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
             Assert.assertTrue(validResponse, "Invalid SAML response received by travelocity app");
         }
 
+    }
+
+    private void createIdpInPrimaryIS() throws Exception {
+
+        FederatedAuthenticator authenticator = new FederatedAuthenticator()
+                .authenticatorId(ENCODED_PRIMARY_IS_IDP_AUTHENTICATOR_ID_SAML)
+                .name(PRIMARY_IS_IDP_AUTHENTICATOR_NAME_SAML)
+                .isEnabled(true)
+                .addProperty(new Property()
+                        .key(IdentityConstants.Authenticator.SAML2SSO.IDP_ENTITY_ID)
+                        .value("samlChangeACSIdP"))
+                .addProperty(new Property()
+                        .key(IdentityConstants.Authenticator.SAML2SSO.SP_ENTITY_ID)
+                        .value("samlChangeACSSP"))
+                .addProperty(new Property()
+                        .key(IdentityConstants.Authenticator.SAML2SSO.SSO_URL)
+                        .value("https://localhost:9854/samlsso"))
+                .addProperty(new Property()
+                        .key(IdentityConstants.Authenticator.SAML2SSO.IS_AUTHN_REQ_SIGNED)
+                        .value("false"))
+                .addProperty(new Property()
+                        .key(IdentityConstants.Authenticator.SAML2SSO.IS_LOGOUT_ENABLED)
+                        .value("true"))
+                .addProperty(new Property()
+                        .key(IdentityConstants.Authenticator.SAML2SSO.LOGOUT_REQ_URL))
+                .addProperty(new Property()
+                        .key(IdentityConstants.Authenticator.SAML2SSO.IS_LOGOUT_REQ_SIGNED)
+                        .value("false"))
+                .addProperty(new Property()
+                        .key(IdentityConstants.Authenticator.SAML2SSO.IS_AUTHN_RESP_SIGNED)
+                        .value("false"))
+                .addProperty(new Property()
+                        .key(IdentityConstants.Authenticator.SAML2SSO.IS_USER_ID_IN_CLAIMS)
+                        .value("false"))
+                .addProperty(new Property()
+                        .key(IdentityConstants.Authenticator.SAML2SSO.IS_ENABLE_ASSERTION_ENCRYPTION)
+                        .value("false"))
+                .addProperty(new Property()
+                        .key(IdentityConstants.Authenticator.SAML2SSO.IS_ENABLE_ASSERTION_SIGNING)
+                        .value("false"))
+                .addProperty(new Property()
+                        .key("commonAuthQueryParams"))
+                .addProperty(new Property()
+                        .key("AttributeConsumingServiceIndex"));
+
+        FederatedAuthenticatorRequest oidcAuthnConfig = new FederatedAuthenticatorRequest()
+                .defaultAuthenticatorId(ENCODED_PRIMARY_IS_IDP_AUTHENTICATOR_ID_SAML)
+                .addAuthenticator(authenticator);
+
+        IdentityProviderPOSTRequest idpPostRequest = new IdentityProviderPOSTRequest()
+                .name(IDENTITY_PROVIDER_NAME)
+                .federatedAuthenticators(oidcAuthnConfig);
+
+        primaryISIdpId = addIdentityProvider(PORT_OFFSET_0, idpPostRequest);
+    }
+
+    private void createApplicationInPrimaryIS() throws Exception {
+
+        ApplicationModel applicationCreationModel = new ApplicationModel()
+                .name(PRIMARY_IS_SERVICE_PROVIDER_NAME)
+                .description("This is a test Service Provider")
+                .isManagementApp(true)
+                .inboundProtocolConfiguration(new InboundProtocols()
+                        .saml(getSAMLConfigurations(PRIMARY_IS_SAML_ISSUER_NAME, PRIMARY_IS_SAML_ACS_URL)))
+                .authenticationSequence(new AuthenticationSequence()
+                        .type(TypeEnum.USER_DEFINED)
+                        .addStepsItem(new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthenticationStep()
+                                .id(1)
+                                .addOptionsItem(new Authenticator()
+                                        .idp(IDENTITY_PROVIDER_NAME)
+                                        .authenticator(PRIMARY_IS_IDP_AUTHENTICATOR_NAME_SAML))));
+
+        primaryISAppId = addApplication(PORT_OFFSET_0, applicationCreationModel);
+    }
+
+    private void createApplicationInSecondaryIS() throws Exception {
+
+        ApplicationModel applicationCreationModel = new ApplicationModel()
+                .name(SECONDARY_IS_SERVICE_PROVIDER_NAME)
+                .description("This is a test Service Provider")
+                .isManagementApp(true)
+                .inboundProtocolConfiguration(new InboundProtocols()
+                        .saml(getSAMLConfigurations(SECONDARY_IS_SAML_ISSUER_NAME,
+                                String.format(COMMON_AUTH_URL_CHANGED, DEFAULT_PORT + PORT_OFFSET_0))));
+
+        secondaryISAppId = addApplication(PORT_OFFSET_1, applicationCreationModel);
+    }
+
+    private SAML2Configuration getSAMLConfigurations(String issuerName, String acsUrl) {
+
+        SAML2ServiceProvider serviceProvider = new SAML2ServiceProvider()
+                .issuer(issuerName)
+                .addAssertionConsumerUrl(acsUrl)
+                .defaultAssertionConsumerUrl(acsUrl)
+                .attributeProfile(new SAMLAttributeProfile()
+                        .enabled(true)
+                        .alwaysIncludeAttributesInResponse(true))
+                .singleLogoutProfile(new SingleLogoutProfile()
+                        .enabled(true)
+                        .idpInitiatedSingleLogout(new IdpInitiatedSingleLogout().enabled(true)))
+                .responseSigning(new SAMLResponseSigning()
+                        .enabled(true))
+                .singleSignOnProfile(new SingleSignOnProfile()
+                        .assertion(new SAMLAssertionConfiguration().nameIdFormat(SAML_NAME_ID_FORMAT)));
+
+        return new SAML2Configuration().manualConfiguration(serviceProvider);
     }
 
     private String sendSAMLRequestToPrimaryIS(HttpClient client) throws Exception {
@@ -297,109 +378,6 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
         return validateSAMLResponse(response, usrName);
     }
 
-    private void updateServiceProviderWithSAMLConfigs(int portOffset, String issuerName,
-                                                      String acsUrl,
-                                                      ServiceProvider serviceProvider)
-            throws Exception {
-
-        String attributeConsumingServiceIndex = super.createSAML2WebSSOConfiguration(portOffset, getSAMLSSOServiceProviderDTO(issuerName, acsUrl));
-        Assert.assertNotNull(attributeConsumingServiceIndex, "Failed to create SAML2 Web SSO configuration for issuer '" + issuerName + "'");
-
-        InboundAuthenticationRequestConfig samlAuthenticationRequestConfig = new InboundAuthenticationRequestConfig();
-        samlAuthenticationRequestConfig.setInboundAuthKey(issuerName);
-        samlAuthenticationRequestConfig.setInboundAuthType(INBOUND_AUTH_TYPE);
-        org.wso2.carbon.identity.application.common.model.xsd.Property property = new org.wso2.carbon.identity.application.common.model.xsd.Property();
-        property.setName("attrConsumServiceIndex");
-        property.setValue(attributeConsumingServiceIndex);
-        samlAuthenticationRequestConfig.setProperties(new org.wso2.carbon.identity.application.common.model.xsd.Property[]{property});
-
-        serviceProvider.getInboundAuthenticationConfig().setInboundAuthenticationRequestConfigs(new InboundAuthenticationRequestConfig[]{samlAuthenticationRequestConfig});
-    }
-
-    private SAMLSSOServiceProviderDTO getSAMLSSOServiceProviderDTO(String issuerName,
-                                                                   String acsUrl) {
-
-        SAMLSSOServiceProviderDTO samlssoServiceProviderDTO = new SAMLSSOServiceProviderDTO();
-        samlssoServiceProviderDTO.setIssuer(issuerName);
-        samlssoServiceProviderDTO.setAssertionConsumerUrls(new String[]{acsUrl});
-        samlssoServiceProviderDTO.setDefaultAssertionConsumerUrl(acsUrl);
-        samlssoServiceProviderDTO.setNameIDFormat(SAML_NAME_ID_FORMAT);
-        samlssoServiceProviderDTO.setDoSignAssertions(true);
-        samlssoServiceProviderDTO.setDoSignResponse(true);
-        samlssoServiceProviderDTO.setDoSingleLogout(true);
-        samlssoServiceProviderDTO.setEnableAttributeProfile(true);
-        samlssoServiceProviderDTO.setEnableAttributesByDefault(true);
-        return samlssoServiceProviderDTO;
-    }
-
-    private Property[] getSAML2SSOAuthnConfigProperties() {
-
-        Property[] properties = new Property[13];
-        Property property = new Property();
-        property.setName(IdentityConstants.Authenticator.SAML2SSO.IDP_ENTITY_ID);
-        property.setValue("samlChangeACSIdP");
-        properties[0] = property;
-
-        property = new Property();
-        property.setName(IdentityConstants.Authenticator.SAML2SSO.SP_ENTITY_ID);
-        property.setValue("samlChangeACSSP");
-        properties[1] = property;
-
-        property = new Property();
-        property.setName(IdentityConstants.Authenticator.SAML2SSO.SSO_URL);
-        property.setValue("https://localhost:9854/samlsso");
-        properties[2] = property;
-
-        property = new Property();
-        property.setName(IdentityConstants.Authenticator.SAML2SSO.IS_AUTHN_REQ_SIGNED);
-        property.setValue("false");
-        properties[3] = property;
-
-        property = new Property();
-        property.setName(IdentityConstants.Authenticator.SAML2SSO.IS_LOGOUT_ENABLED);
-        property.setValue("true");
-        properties[4] = property;
-
-        property = new Property();
-        property.setName(IdentityConstants.Authenticator.SAML2SSO.LOGOUT_REQ_URL);
-        properties[5] = property;
-
-        property = new Property();
-        property.setName(IdentityConstants.Authenticator.SAML2SSO.IS_LOGOUT_REQ_SIGNED);
-        property.setValue("false");
-        properties[6] = property;
-
-        property = new Property();
-        property.setName(IdentityConstants.Authenticator.SAML2SSO.IS_AUTHN_RESP_SIGNED);
-        property.setValue("false");
-        properties[7] = property;
-
-        property = new Property();
-        property.setName(IdentityConstants.Authenticator.SAML2SSO.IS_USER_ID_IN_CLAIMS);
-        property.setValue("false");
-        properties[8] = property;
-
-        property = new Property();
-        property.setName(IdentityConstants.Authenticator.SAML2SSO.IS_ENABLE_ASSERTION_ENCRYPTION);
-        property.setValue("false");
-        properties[9] = property;
-
-        property = new Property();
-        property.setName(IdentityConstants.Authenticator.SAML2SSO.IS_ENABLE_ASSERTION_SIGNING);
-        property.setValue("false");
-        properties[10] = property;
-
-        property = new Property();
-        property.setName("commonAuthQueryParams");
-        properties[11] = property;
-
-        property = new Property();
-        property.setName("AttributeConsumingServiceIndex");
-        properties[12] = property;
-
-        return properties;
-    }
-
     public boolean validateSAMLResponse(HttpResponse response, String userName) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         StringBuffer buffer = new StringBuffer();
@@ -411,5 +389,4 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
 
         return buffer.toString().contains("You are logged in as ");
     }
-
 }

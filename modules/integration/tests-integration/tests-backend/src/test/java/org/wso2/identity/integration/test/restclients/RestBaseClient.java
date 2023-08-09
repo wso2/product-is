@@ -29,6 +29,7 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -76,6 +77,22 @@ public class RestBaseClient {
         }
 
         return json;
+    }
+
+    /**
+     * To convert a string from a Http response to a json array.
+     *
+     * @param responseString Respective Http response.
+     * @return Relevant JSONArray object.
+     */
+    public JSONArray getJSONArray(String responseString) throws Exception {
+        JSONParser parser = new JSONParser();
+        JSONArray jsonArray = (JSONArray) parser.parse(responseString);
+        if (jsonArray == null) {
+            throw new Exception("Error occurred while getting the response");
+        }
+
+        return jsonArray;
     }
 
     /**

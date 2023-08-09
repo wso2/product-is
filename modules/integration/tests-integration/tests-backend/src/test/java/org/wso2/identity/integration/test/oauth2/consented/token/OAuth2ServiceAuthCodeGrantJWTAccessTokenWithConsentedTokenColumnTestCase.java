@@ -1,18 +1,19 @@
 /*
- *  Copyright (c) 2022, WSO2 Inc. (http://www.wso2.com).
+ * Copyright (c) 2022, WSO2 LLC. (http://www.wso2.com).
  *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 package org.wso2.identity.integration.test.oauth2.consented.token;
@@ -89,8 +90,7 @@ public class OAuth2ServiceAuthCodeGrantJWTAccessTokenWithConsentedTokenColumnTes
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
-        deleteApplication();
-        removeOAuthApplicationData();
+        deleteApp(applicationId);
         removeUser();
         resetVariables();
     }
@@ -111,9 +111,9 @@ public class OAuth2ServiceAuthCodeGrantJWTAccessTokenWithConsentedTokenColumnTes
         urlParameters.add(new BasicNameValuePair("authorizeEndpoint", OAuth2Constant.APPROVAL_URL));
         urlParameters.add(new BasicNameValuePair("authorize", OAuth2Constant.AUTHORIZE_PARAM));
         // email scope is to retrieve the email address of the user.
-        // phone scope is to retrieve the telephone number of the user.
+        // address scope is to retrieve the country number of the user.
         urlParameters.add(new BasicNameValuePair("scope", OAuth2Constant.OAUTH2_SCOPE_OPENID + " "
-                + OAuth2Constant.OAUTH2_SCOPE_EMAIL + " " + OAuth2Constant.OAUTH2_SCOPE_PHONE));
+                + OAuth2Constant.OAUTH2_SCOPE_EMAIL + " " + OAuth2Constant.OAUTH2_SCOPE_ADDRESS));
 
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters,
                 OAuth2Constant.AUTHORIZED_USER_URL);
@@ -146,8 +146,8 @@ public class OAuth2ServiceAuthCodeGrantJWTAccessTokenWithConsentedTokenColumnTes
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         Assert.assertNotNull(locationHeader, "Login response header is null");
         response = sendConsentGetRequest(locationHeader.getValue(), consentParameters);
-        // Remove the consent from phone number claim.
-        consentParameters.remove(1);
+        // Remove the consent from country claim.
+        consentParameters.remove(0);
         Map<String, Integer> keyPositionMap = new HashMap<>(1);
         keyPositionMap.put("name=\"sessionDataKeyConsent\"", 1);
         List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil.extractSessionConsentDataFromResponse(response,
@@ -195,10 +195,10 @@ public class OAuth2ServiceAuthCodeGrantJWTAccessTokenWithConsentedTokenColumnTes
         ClientAuthentication clientAuth = new ClientSecretBasic(clientID, clientSecret);
         URI tokenEndpoint = new URI(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
         // email scope is to retrieve the email address of the user.
-        // phone scope is to retrieve the telephone number of the user.
+        // address scope is to retrieve the country of the user.
         TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, authorizationCodeGrant,
                 new Scope(OAuth2Constant.OAUTH2_SCOPE_OPENID, OAuth2Constant.OAUTH2_SCOPE_EMAIL,
-                        OAuth2Constant.OAUTH2_SCOPE_PHONE));
+                        OAuth2Constant.OAUTH2_SCOPE_ADDRESS));
 
         HTTPResponse tokenHTTPResp = request.toHTTPRequest().send();
         Assert.assertNotNull(tokenHTTPResp, "JWT access token http response is null.");
@@ -219,7 +219,7 @@ public class OAuth2ServiceAuthCodeGrantJWTAccessTokenWithConsentedTokenColumnTes
         org.json.simple.JSONObject userInfoEndpointResponse = sendRequestToUserInfoEndpoint();
         Assert.assertEquals(USER_EMAIL, userInfoEndpointResponse.get(EMAIL_OIDC_CLAIM).toString(),
                 "Incorrect email claim value");
-        Assert.assertNull(userInfoEndpointResponse.get(TELEPHONE_OIDC_CLAIM), "A value for telephone claim is "
+        Assert.assertNull(userInfoEndpointResponse.get(ADDRESS_OIDC_CLAIM), "A value for address claim is "
                 + "present in the response.");
     }
 
@@ -244,14 +244,14 @@ public class OAuth2ServiceAuthCodeGrantJWTAccessTokenWithConsentedTokenColumnTes
         String email = jwtJsonObject.getString(EMAIL_OIDC_CLAIM);
         Assert.assertEquals(USER_EMAIL, email, "Requested user claim (Email) is not present in the JWT access "
                 + "token.");
-        Assert.assertTrue(jwtJsonObject.isNull(TELEPHONE_OIDC_CLAIM), "Non-consented user claim (Phone Number) is"
+        Assert.assertTrue(jwtJsonObject.isNull(ADDRESS_OIDC_CLAIM), "Non-consented user claim (address) is"
                 + " present in the JWT access token.");
 
         // Get the user info from the ID token.
         Assert.assertEquals(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(EMAIL_OIDC_CLAIM).toString(), USER_EMAIL,
                 "Requested user claims is not returned back with the ID token.");
-        Assert.assertNull(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(TELEPHONE_OIDC_CLAIM), "Non-requested "
-                + "user claim (phone_number) is returned back with the ID Token.");
+        Assert.assertNull(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(ADDRESS_OIDC_CLAIM), "Non-requested "
+                + "user claim (address) is returned back with the ID Token.");
     }
 
     private HttpResponse sendConsentGetRequest(String locationURL,

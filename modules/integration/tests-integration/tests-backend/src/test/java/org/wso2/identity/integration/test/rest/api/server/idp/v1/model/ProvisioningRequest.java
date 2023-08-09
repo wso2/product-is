@@ -153,7 +153,7 @@ public class ProvisioningRequest {
 
         private SchemeEnum scheme = SchemeEnum.PROVISION_SILENTLY;
         private String userstore = "PRIMARY";
-        private Boolean associateLocalUser;
+        private Boolean associateLocalUser = false;
 
         /**
          *

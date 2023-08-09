@@ -289,7 +289,6 @@ public class TestPassiveSTS extends ISIntegrationTest {
 
         HttpEntity entity = response.getEntity();
         String responseString = EntityUtils.toString(entity, "UTF-8");
-
         Assert.assertTrue(responseString.contains("urn:oasis:names:tc:SAML:2.0:assertion"),
                 "No SAML2 Assertion found for the SAML2 request without WReply in passive-sts request for " +
                         "tenant domain: " + tenantDomain);
@@ -317,7 +316,6 @@ public class TestPassiveSTS extends ISIntegrationTest {
 
         HttpEntity entity = response.getEntity();
         String responseString = EntityUtils.toString(entity, "UTF-8");
-
         assertTrue(responseString.contains("soapenv:Fault"),
                 "Cannot find soap fault for invalid WReply URL for tenant domain: " + tenantDomain);
     }
@@ -341,7 +339,6 @@ public class TestPassiveSTS extends ISIntegrationTest {
         passiveParams = appendTenantDomainQueryParam(passiveParams);
         HttpGet request = new HttpGet(this.passiveStsURL + passiveParams);
         HttpResponse response = client.execute(request);
-
         Assert.assertNotNull(response, "PassiveSTSSampleApp logout response is null for tenant domain: " +
                 tenantDomain);
         int responseCode = response.getStatusLine().getStatusCode();

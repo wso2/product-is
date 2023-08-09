@@ -197,7 +197,7 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
         loginUserId = getLoginUserId();
         updateUserAttribute(loginUserId, CLAIM_DIALECT + ":" + CLAIM, CUSTOM_CLAIM_VALUE);
 
-        org.json.simple.JSONObject userObj = scim2RestClient.getUser(loginUserId);
+        org.json.simple.JSONObject userObj = scim2RestClient.getUser(loginUserId, null);
         String claimValue = ((org.json.simple.JSONObject) userObj.get(CLAIM_DIALECT)).get(CLAIM).toString();
         Assert.assertEquals(claimValue, CUSTOM_CLAIM_VALUE);
     }

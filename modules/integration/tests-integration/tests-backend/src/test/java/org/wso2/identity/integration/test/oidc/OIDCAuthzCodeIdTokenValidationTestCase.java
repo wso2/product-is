@@ -1,21 +1,21 @@
 /*
- * Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2018, WSO2 LLC. (http://www.wso2.com).
  *
- * WSO2 Inc. licenses this file to you under the Apache License,
+ * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
+ * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *
  */
+
 package org.wso2.identity.integration.test.oidc;
 
 import com.nimbusds.jwt.JWTClaimsSet;
@@ -51,10 +51,13 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.test.utils.common.TestConfigurationProvider;
-import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
-import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 import org.wso2.identity.integration.test.oauth2.OAuth2ServiceAbstractIntegrationTest;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SubjectConfig;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import org.wso2.identity.integration.test.utils.UserUtil;
@@ -80,26 +83,20 @@ public class OIDCAuthzCodeIdTokenValidationTestCase extends OAuth2ServiceAbstrac
     private RSAPrivateKey spPrivateKey;
     private X509Certificate spX509PublicCert;
     private static final String CALLBACK_URL = "https://localhost/callback";
-    private Lookup<CookieSpecProvider> cookieSpecRegistry;
-    private RequestConfig requestConfig;
     private CloseableHttpClient client;
     private String sessionDataKey;
     private String sessionDataKeyConsent;
     private AuthorizationCode authorizationCode;
-    private String idToken;
     private String userId;
+    private String applicationId;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
         super.init(TestUserMode.SUPER_TENANT_USER);
 
-        cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
-                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
-                .build();
-        requestConfig = RequestConfig.custom()
-                .setCookieSpec(CookieSpecs.DEFAULT)
-                .build();
+        Lookup<CookieSpecProvider> cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create().register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider()).build();
+        RequestConfig requestConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.DEFAULT).build();
         client = HttpClientBuilder.create()
                 .setDefaultCookieSpecRegistry(cookieSpecRegistry)
                 .setDefaultRequestConfig(requestConfig)
@@ -112,8 +109,7 @@ public class OIDCAuthzCodeIdTokenValidationTestCase extends OAuth2ServiceAbstrac
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
-        deleteApplication();
-        removeOAuthApplicationData();
+        deleteApp(applicationId);
 
         consumerKey = null;
         consumerSecret = null;
@@ -121,6 +117,7 @@ public class OIDCAuthzCodeIdTokenValidationTestCase extends OAuth2ServiceAbstrac
         spX509PublicCert = null;
 
         client.close();
+        restClient.closeHttpClient();
     }
 
     @Test(groups = "wso2.is", description = "Check Service Provider key generation.")
@@ -135,11 +132,18 @@ public class OIDCAuthzCodeIdTokenValidationTestCase extends OAuth2ServiceAbstrac
             dependsOnMethods = "testGenerateServiceProviderKeys")
     public void testRegisterApplication() throws Exception {
 
-        OAuthConsumerAppDTO oAuthConsumerAppDTO = getBasicOAuthApp(CALLBACK_URL);
-        ServiceProvider serviceProvider = registerServiceProviderWithLocalAndOutboundConfigs(oAuthConsumerAppDTO);
-        serviceProvider.getLocalAndOutBoundAuthenticationConfig().setUseTenantDomainInLocalSubjectIdentifier(true);
-        serviceProvider.getLocalAndOutBoundAuthenticationConfig().setUseUserstoreDomainInLocalSubjectIdentifier(true);
-        Assert.assertNotNull(serviceProvider, "OAuth App creation failed.");
+        ApplicationResponseModel oAuthConsumerApp = getBasicOAuthApplication(CALLBACK_URL);
+        Assert.assertNotNull(oAuthConsumerApp, "OAuth App creation failed.");
+        applicationId = oAuthConsumerApp.getId();
+
+        ClaimConfiguration claimConfig = new ClaimConfiguration().subject(new SubjectConfig());
+        claimConfig.getSubject().setIncludeTenantDomain(true);
+        claimConfig.getSubject().setIncludeUserDomain(true);
+        updateApplication(applicationId, new ApplicationPatchModel().claimConfiguration(claimConfig));
+
+        OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(applicationId);
+        consumerKey = oidcConfig.getClientId();
+        consumerSecret = oidcConfig.getClientSecret();
         Assert.assertNotNull(consumerKey, "Consumer Key is null.");
         Assert.assertNotNull(consumerSecret, "Consumer Secret is null.");
     }
@@ -230,7 +234,7 @@ public class OIDCAuthzCodeIdTokenValidationTestCase extends OAuth2ServiceAbstrac
         OIDCTokens oidcTokens = oidcTokenResponse.getOIDCTokens();
         Assert.assertNotNull(oidcTokens, "OIDC Tokens object is null.");
 
-        idToken = oidcTokens.getIDTokenString();
+        String idToken = oidcTokens.getIDTokenString();
         Assert.assertNotNull(idToken, "ID token is null");
         JWTClaimsSet jwtClaimsSet = SignedJWT.parse(idToken).getJWTClaimsSet();
         Assert.assertEquals(jwtClaimsSet.getClaim("nonce"), TEST_NONCE, "Invalid nonce received.");

@@ -31,6 +31,7 @@ import org.apache.http.cookie.CookieSpecProvider;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
+import org.json.JSONException;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.extensions.servers.carbonserver.MultipleServersManager;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
@@ -46,6 +47,13 @@ import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServic
 import org.wso2.identity.integration.common.utils.CarbonTestServerManager;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.base.TestDataHolder;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAML2ServiceProvider;
+import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.IdentityProviderPOSTRequest;
+import org.wso2.identity.integration.test.restclients.IdpMgtRestClient;
+import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
 
@@ -63,6 +71,8 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
     private Map<Integer, IdentityProviderMgtServiceClient> identityProviderMgtServiceClients;
     private Map<Integer, SAMLSSOConfigServiceClient> samlSSOConfigServiceClients;
     private Map<Integer, OauthAdminClient> oauthAdminClients;
+    private Map<Integer, OAuth2RestClient> applicationManagementRestClients;
+    private Map<Integer, IdpMgtRestClient> identityProviderMgtRestClients;
     protected Map<Integer, AutomationContext> automationContextMap;
     private MultipleServersManager manager;
     protected static final int DEFAULT_PORT = CommonConstants.IS_DEFAULT_HTTPS_PORT;
@@ -71,6 +81,8 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
 
         super.init();
         TestDataHolder testDataHolder = TestDataHolder.getInstance();
+        applicationManagementRestClients = new HashMap<>();
+        identityProviderMgtRestClients = new HashMap<>();
         applicationManagementServiceClients = new HashMap<>();
         identityProviderMgtServiceClients = new HashMap<>();
         samlSSOConfigServiceClients = new HashMap<>();
@@ -137,6 +149,26 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
         }
     }
 
+    public void createServiceClients(int portOffset, IdentityConstants.ServiceClientType[] adminClients)
+            throws Exception {
+
+        if (adminClients == null) {
+            return;
+        }
+
+        serverURL = automationContextMap.get(portOffset).getContextUrls().getSecureServiceUrl()
+                .replace("/services", "");
+        String serviceUrl = getSecureServiceUrl(portOffset, serverURL);
+
+        for (IdentityConstants.ServiceClientType clientType : adminClients) {
+            if (IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT.equals(clientType)) {
+                applicationManagementRestClients.put(portOffset, new OAuth2RestClient(serviceUrl, tenantInfo));
+            } else if (IdentityConstants.ServiceClientType.IDENTITY_PROVIDER_MGT.equals(clientType)) {
+                identityProviderMgtRestClients.put(portOffset, new IdpMgtRestClient(serviceUrl, tenantInfo));
+            }
+        }
+    }
+
     public void addServiceProvider(int portOffset, String applicationName) throws Exception {
 
         ServiceProvider serviceProvider = new ServiceProvider();
@@ -144,6 +176,31 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
         serviceProvider.setManagementApp(true);
         serviceProvider.setDescription("This is a test Service Provider");
         applicationManagementServiceClients.get(portOffset).createApplication(serviceProvider);
+    }
+
+    public String addApplication(int portOffset, ApplicationModel applicationModel) throws JSONException, IOException {
+
+        return applicationManagementRestClients.get(portOffset).createApplication(applicationModel);
+    }
+
+    public ApplicationResponseModel getApplication(int portOffset, String appId) throws Exception {
+
+        return applicationManagementRestClients.get(portOffset).getApplication(appId);
+    }
+
+    public OpenIDConnectConfiguration getOIDCInboundDetailsOfApplication(int portOffset, String appId) throws Exception {
+
+        return applicationManagementRestClients.get(portOffset).getOIDCInboundDetails(appId);
+    }
+
+    public SAML2ServiceProvider getSAMLInboundDetailsOfApplication(int portOffset, String appId) throws Exception {
+
+        return applicationManagementRestClients.get(portOffset).getSAMLInboundDetails(appId);
+    }
+
+    public void deleteApplication(int portOffset, String appId) throws Exception {
+
+        applicationManagementRestClients.get(portOffset).deleteApplication(appId);
     }
 
     public ServiceProvider getServiceProvider(int portOffset, String applicationName)
@@ -167,6 +224,16 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
             throws Exception {
 
         identityProviderMgtServiceClients.get(portOffset).addIdP(identityProvider);
+    }
+
+    public String addIdentityProvider(int portOffset, IdentityProviderPOSTRequest idp) throws Exception {
+
+        return identityProviderMgtRestClients.get(portOffset).createIdentityProvider(idp);
+    }
+
+    public void deleteIdp(int portOffset, String idpId) throws Exception {
+
+        identityProviderMgtRestClients.get(portOffset).deleteIdp(idpId);
     }
 
     public IdentityProvider getIdentityProvider(int portOffset, String idPName) throws Exception {

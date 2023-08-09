@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2017, WSO2 LLC. (http://www.wso2.com).
  *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -18,10 +18,6 @@
 
 package org.wso2.identity.integration.test.saml;
 
-import org.apache.axis2.context.ConfigurationContext;
-import org.apache.axis2.context.ConfigurationContextFactory;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -35,19 +31,22 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.opensaml.xml.util.Base64;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationConfig;
-import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
-import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
-import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
-import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
-import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAML2Configuration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAML2ServiceProvider;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAMLAssertionConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAMLAttributeProfile;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAMLResponseSigning;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SingleLogoutProfile;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SingleSignOnProfile;
+import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -56,7 +55,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,17 +65,13 @@ import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
 import static org.testng.Assert.assertTrue;
-import static org.wso2.identity.integration.test.utils.OAuth2Constant.COMMON_AUTH_URL;
 
 public class SAMLErrorResponseTestCase extends ISIntegrationTest {
-
-    private static final Log log = LogFactory.getLog(SAMLSSOTestCase.class);
 
     // SAML Application attributes
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
     private static final String APPLICATION_NAME = "SAML-SSO-TestApplication";
     private static final String ARTIFACT_ID = "travelocity.com";
-    private static final String INBOUND_AUTH_TYPE = "samlsso";
     private static final String TENANT_DOMAIN_PARAM = "tenantDomain";
 
     private static final String SAML_SSO_URL = "https://localhost:9853/samlsso";
@@ -86,7 +80,6 @@ public class SAMLErrorResponseTestCase extends ISIntegrationTest {
     private static final String SAML_SSO_LOGIN_URL = "http://localhost:8490/%s/samlsso?SAML2.HTTPBinding=%s";
 
     private static final String NAMEID_FORMAT = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
-    private static final String LOGIN_URL = "/carbon/admin/login.jsp";
     private static final String RELAY_STATE = "token";
     private static final String HTTP_POST_BINDING = "HTTP-POST";
     private static final String JAVAX_NET_SSL_TRUSTORE = "javax.net.ssl.trustStore";
@@ -96,23 +89,18 @@ public class SAMLErrorResponseTestCase extends ISIntegrationTest {
             " \'http://localhost:8490/travelocity.com/home.jsp\' in the AuthnRequest message from  the issuer" +
             " \'travelocity.com\'. Possibly an attempt for a spoofing attack</saml2p:StatusMessage>";
     protected static final String DEFAULT_CHARSET = "UTF-8";
-
-    private ApplicationManagementServiceClient applicationManagementServiceClient;
-    private SAMLSSOConfigServiceClient ssoConfigServiceClient;
     private CloseableHttpClient httpClient;
     private CookieStore cookieStore = new BasicCookieStore();
+    private OAuth2RestClient applicationMgtRestClient;
+    private String appId;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
-
-        ConfigurationContext configContext = ConfigurationContextFactory
-                .createConfigurationContextFromFileSystem(null, null);
-        applicationManagementServiceClient = new ApplicationManagementServiceClient(sessionCookie, backendURL,
-                configContext);
-        ssoConfigServiceClient = new SAMLSSOConfigServiceClient(backendURL, sessionCookie);
+        applicationMgtRestClient = new OAuth2RestClient(serverURL, tenantInfo);
         httpClient = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
+
         createApplication();
     }
 
@@ -121,8 +109,7 @@ public class SAMLErrorResponseTestCase extends ISIntegrationTest {
 
         deleteApplication();
 
-        ssoConfigServiceClient = null;
-        applicationManagementServiceClient = null;
+        applicationMgtRestClient.closeHttpClient();
         httpClient.close();
     }
 
@@ -130,16 +117,15 @@ public class SAMLErrorResponseTestCase extends ISIntegrationTest {
      * Tests whether the RelayState and ACS Url parameters are sent to the notification.do page in SAML error
      * scenarios.
      *
-     * @throws Exception
+     * @throws Exception Exception
      */
     @Test(alwaysRun = true, description = "Testing Relay state and ACS parameters in SAML error response", groups =
             "wso2.is")
     public void testRelayStateAndACSWithSAMLErrorResponse() throws Exception {
 
         // Create service provider config with mis-matching ACS to generate SAML error response
-        boolean isAddSuccess = ssoConfigServiceClient
-                .addServiceProvider(createSsoServiceProviderDTO());
-        assertTrue(isAddSuccess, "Adding a service provider has failed for " + ARTIFACT_ID);
+        SAML2ServiceProvider saml2AppConfig = applicationMgtRestClient.getSAMLInboundDetails(appId);
+        Assert.assertNotNull(saml2AppConfig, "Adding a service provider has failed for " + ARTIFACT_ID);
 
         HttpResponse response;
         response = sendGetRequest(String.format(SAML_SSO_LOGIN_URL, ARTIFACT_ID, HTTP_POST_BINDING));
@@ -179,22 +165,12 @@ public class SAMLErrorResponseTestCase extends ISIntegrationTest {
 
     private void createApplication() throws Exception {
 
-        ServiceProvider serviceProvider = new ServiceProvider();
-        serviceProvider.setApplicationName(APPLICATION_NAME);
-        serviceProvider.setDescription("This is a test Service Provider");
-        applicationManagementServiceClient.createApplication(serviceProvider);
-        serviceProvider = applicationManagementServiceClient.getApplication(APPLICATION_NAME);
+        ApplicationModel applicationCreationModel = new ApplicationModel().name(APPLICATION_NAME)
+                .description("This is a test Service Provider")
+                .inboundProtocolConfiguration(new InboundProtocols().
+                        saml(getSAMLConfigurations()));
 
-        InboundAuthenticationRequestConfig requestConfig = new InboundAuthenticationRequestConfig();
-        requestConfig.setInboundAuthType(INBOUND_AUTH_TYPE);
-        requestConfig.setInboundAuthKey(ARTIFACT_ID);
-
-        InboundAuthenticationConfig inboundAuthenticationConfig = new InboundAuthenticationConfig();
-        inboundAuthenticationConfig.setInboundAuthenticationRequestConfigs(
-                new InboundAuthenticationRequestConfig[]{requestConfig});
-
-        serviceProvider.setInboundAuthenticationConfig(inboundAuthenticationConfig);
-        applicationManagementServiceClient.updateApplicationData(serviceProvider);
+        appId = applicationMgtRestClient.createApplication(applicationCreationModel);
     }
 
     private void setSystemProperties() {
@@ -275,24 +251,27 @@ public class SAMLErrorResponseTestCase extends ISIntegrationTest {
         return httpClient.execute(post);
     }
 
-    private SAMLSSOServiceProviderDTO createSsoServiceProviderDTO() {
+    private SAML2Configuration getSAMLConfigurations() {
 
-        SAMLSSOServiceProviderDTO samlssoServiceProviderDTO = new SAMLSSOServiceProviderDTO();
-        samlssoServiceProviderDTO.setIssuer(ARTIFACT_ID);
-        samlssoServiceProviderDTO.setAssertionConsumerUrls(new String[]{String.format(INVALID_ACS_URL,
-                ARTIFACT_ID)});
-        samlssoServiceProviderDTO.setDefaultAssertionConsumerUrl(String.format(INVALID_ACS_URL, ARTIFACT_ID));
-        samlssoServiceProviderDTO.setNameIDFormat(NAMEID_FORMAT);
-        samlssoServiceProviderDTO.setDoSignAssertions(false);
-        samlssoServiceProviderDTO.setDoSignResponse(false);
-        samlssoServiceProviderDTO.setDoSingleLogout(true);
-        samlssoServiceProviderDTO.setLoginPageURL(LOGIN_URL);
-        return samlssoServiceProviderDTO;
+        SAML2ServiceProvider serviceProvider = new SAML2ServiceProvider()
+                .issuer(ARTIFACT_ID)
+                .addAssertionConsumerUrl(String.format(INVALID_ACS_URL, ARTIFACT_ID))
+                .defaultAssertionConsumerUrl(String.format(INVALID_ACS_URL, ARTIFACT_ID))
+                .attributeProfile(new SAMLAttributeProfile()
+                        .enabled(false))
+                .singleLogoutProfile(new SingleLogoutProfile()
+                        .enabled(true))
+                .responseSigning(new SAMLResponseSigning()
+                        .enabled(false))
+                .singleSignOnProfile(new SingleSignOnProfile()
+                        .assertion(new SAMLAssertionConfiguration().nameIdFormat(NAMEID_FORMAT)));
+
+        return new SAML2Configuration().manualConfiguration(serviceProvider);
     }
 
     private void deleteApplication() throws Exception {
 
-        applicationManagementServiceClient.deleteApplication(APPLICATION_NAME);
+        applicationMgtRestClient.deleteApplication(appId);
     }
 
     private static String decode(String encodedStr) {
