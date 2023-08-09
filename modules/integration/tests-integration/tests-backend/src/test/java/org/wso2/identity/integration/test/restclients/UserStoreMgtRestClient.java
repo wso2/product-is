@@ -104,7 +104,7 @@ public class UserStoreMgtRestClient extends RestBaseClient {
      */
     public boolean waitForUserStoreDeployment(String domain) throws Exception {
 
-        long waitTime = System.currentTimeMillis() + 30000; //wait for 45 seconds
+        long waitTime = System.currentTimeMillis() + 30000; //wait for 30 seconds
         while (System.currentTimeMillis() < waitTime) {
             JSONArray userStores = getUserStores();
             for (Object userStore : userStores) {
