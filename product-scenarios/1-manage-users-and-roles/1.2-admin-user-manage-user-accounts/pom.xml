@@ -33,20 +33,20 @@
     <modules>
         <module>1.2.1-manage-users-with-scim2</module>
         <module>1.2.2-manage-users-with-scim1</module>
-        <module>1.2.3-manage-users-with-soap-services</module>
-        <module>1.2.4-register-user-with-email-verification</module>
-        <module>1.2.5-ask-password</module>
-        <module>1.2.6-bulk-user-import</module>
-        <module>1.2.7-prevent-access-upon-invalid-login-attempts</module>
-        <module>1.2.8-suspend-idle-user-accounts</module>
-        <module>1.2.9-authentication-analytics</module>
-        <module>1.2.10-force-user-password-reset</module>
-        <module>1.2.11-lock-unlock-user-accounts</module>
-        <module>1.2.12-enable-disable-user-accounts</module>
-        <module>1.2.13-removing-user-account</module>
-        <module>1.2.14-manage-challenge-questions</module>
-        <module>1.2.15-user-session-management</module>
-        <module>1.2.16-claim-management</module>
+<!--        <module>1.2.3-manage-users-with-soap-services</module>-->
+<!--        <module>1.2.4-register-user-with-email-verification</module>-->
+<!--        <module>1.2.5-ask-password</module>-->
+<!--        <module>1.2.6-bulk-user-import</module>-->
+<!--        <module>1.2.7-prevent-access-upon-invalid-login-attempts</module>-->
+<!--        <module>1.2.8-suspend-idle-user-accounts</module>-->
+<!--        <module>1.2.9-authentication-analytics</module>-->
+<!--        <module>1.2.10-force-user-password-reset</module>-->
+<!--        <module>1.2.11-lock-unlock-user-accounts</module>-->
+<!--        <module>1.2.12-enable-disable-user-accounts</module>-->
+<!--        <module>1.2.13-removing-user-account</module>-->
+<!--        <module>1.2.14-manage-challenge-questions</module>-->
+<!--        <module>1.2.15-user-session-management</module>-->
+<!--        <module>1.2.16-claim-management</module>-->
     </modules>
 
 </project>

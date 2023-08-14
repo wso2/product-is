@@ -32,9 +32,9 @@
 
     <modules>
         <module>2.1-self-registration-via-end-user-portal</module>
-        <module>2.2-self-registration-via-social-ipds</module>
-        <module>2.3-self-registration-on-idp</module>
-        <module>2.4-manage-own-user-account</module>
+<!--        <module>2.2-self-registration-via-social-ipds</module>-->
+<!--        <module>2.3-self-registration-on-idp</module>-->
+<!--        <module>2.4-manage-own-user-account</module>-->
     </modules>
 
 </project>
