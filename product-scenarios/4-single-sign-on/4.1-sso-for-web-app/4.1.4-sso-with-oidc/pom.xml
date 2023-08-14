@@ -32,10 +32,10 @@
 
     <modules>
         <module>4.1.4.1-dcr</module>
-        <module>4.1.4.2-request-object-support</module>
+<!--        <module>4.1.4.2-request-object-support</module>-->
         <module>4.1.4.3-basic-profile</module>
-        <module>4.1.4.4-implicit-profile</module>
-        <module>4.1.4.5-hybrid-profile</module>
+<!--        <module>4.1.4.4-implicit-profile</module>-->
+<!--        <module>4.1.4.5-hybrid-profile</module>-->
     </modules>
 
 </project>

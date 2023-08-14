@@ -31,7 +31,7 @@
     <name>Admin user manage roles</name>
     <modules>
         <module>1.1.1-manage-roles-with-scim2</module>
-        <module>1.1.2-manage-roles-with-scim1</module>
+<!--        <module>1.1.2-manage-roles-with-scim1</module>-->
         <module>1.1.3-manage-roles-with-soap-services</module>
     </modules>
 
