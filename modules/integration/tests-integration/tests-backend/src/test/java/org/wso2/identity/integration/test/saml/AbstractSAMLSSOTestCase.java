@@ -1,17 +1,17 @@
 /*
- * Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2018, WSO2 LLC. (http://www.wso2.com).
  *
- * WSO2 Inc. licenses this file to you under the Apache License,
+ * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
+ * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -36,6 +36,7 @@ import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.application.common.model.xsd.Claim;
 import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
@@ -51,6 +52,25 @@ import org.wso2.identity.integration.common.clients.application.mgt.ApplicationM
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AdvancedApplicationConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthenticationSequence;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration.DialectEnum;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimMappings;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.RequestedClaimConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAML2Configuration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAML2ServiceProvider;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAMLAssertionConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAMLAttributeProfile;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAMLResponseSigning;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SingleLogoutProfile;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SingleSignOnProfile;
+import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
+import org.wso2.identity.integration.test.rest.api.user.common.model.Name;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
+import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
+import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -65,7 +85,7 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
     private static final String ATTRIBUTE_CS_INDEX_VALUE = "1239245949";
     private static final String ATTRIBUTE_CS_INDEX_NAME = "attrConsumServiceIndex";
     public static final String TENANT_DOMAIN_PARAM = "tenantDomain";
-
+    protected static final String SAML = "saml";
     protected static final String SAML_SSO_URL = "https://localhost:9853/samlsso";
     protected static final String SAML_IDP_SLO_URL = SAML_SSO_URL + "?slo=true";
     protected static final String SAML_SSO_LOGIN_URL = "http://localhost:8490/%s/samlsso?SAML2.HTTPBinding=%s";
@@ -87,6 +107,8 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
 
     private ApplicationManagementServiceClient applicationManagementServiceClient;
     protected SAMLSSOConfigServiceClient ssoConfigServiceClient;
+    protected SCIM2RestClient scim2RestClient;
+    protected OAuth2RestClient applicationMgtRestClient;
     private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
     protected HttpClient httpClient;
     protected Lookup<CookieSpecProvider> cookieSpecRegistry;
@@ -270,6 +292,8 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
                 configContext);
         ssoConfigServiceClient = new SAMLSSOConfigServiceClient(backendURL, sessionCookie);
         remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
+        scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
+        applicationMgtRestClient = new OAuth2RestClient(serverURL, tenantInfo);
 
         cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
                 .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
@@ -288,6 +312,8 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
         ssoConfigServiceClient = null;
         applicationManagementServiceClient = null;
         remoteUSMServiceClient = null;
+        applicationMgtRestClient = null;
+        scim2RestClient = null;
         httpClient = null;
     }
 
@@ -304,6 +330,24 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
         }
     }
 
+    public String addUser(SAMLConfig config) throws Exception {
+
+        log.info("Creating User " + config.getUser().getUsername());
+        UserObject user = new UserObject()
+                .userName(config.getUser().getTenantAwareUsername())
+                .password(config.getUser().getPassword());
+
+        if (config.getUser().getSetUserClaims()) {
+            user.setName(new Name()
+                    .givenName(config.getUser().getNickname())
+                    .familyName(config.getUser().getUsername()));
+            user.addEmail(new Email().value(config.getUser().getEmail()));
+        } else {
+            user.setName(new Name().familyName(config.getUser().getUsername()));
+        }
+        return scim2RestClient.createUser(user);
+    }
+
     /**
      * Create application for SAML artifact resolve.
      *
@@ -315,6 +359,26 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
 
         samlArtResolve = true;
         createApplication(config, appName);
+    }
+
+    public String addApplication(SAMLConfig config, String appName) throws JSONException, IOException {
+
+        ApplicationModel applicationModel = new ApplicationModel()
+                .name(appName)
+                .description("This is a test Service Provider")
+                .claimConfiguration(getClaimConfigurations());
+
+        if (config.httpBinding.equals(HttpBinding.HTTP_SOAP)) {
+            applicationModel.setAuthenticationSequence(new AuthenticationSequence()
+                    .addRequestPathAuthenticatorsItem("BasicAuthRequestPathAuthenticator"));
+        }
+
+        if (samlArtResolve) {
+            applicationModel.setAdvancedConfigurations(new AdvancedApplicationConfiguration()
+                    .skipLoginConsent(true));
+        }
+
+        return applicationMgtRestClient.createApplication(applicationModel);
     }
 
     public void createApplication(SAMLConfig config, String appName) throws Exception {
@@ -371,6 +435,11 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
         applicationManagementServiceClient.updateApplicationData(serviceProvider);
     }
 
+    public void deleteUser(String userId) throws IOException {
+
+        scim2RestClient.deleteUser(userId);
+    }
+
     public void deleteUser(SAMLConfig config) {
 
         log.info("Deleting User " + config.getUser().getUsername());
@@ -379,6 +448,11 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
         } catch (Exception e) {
             log.error("Error while deleting the user", e);
         }
+    }
+
+    public void deleteApp(String appId) throws Exception {
+
+        applicationMgtRestClient.deleteApplication(appId);
     }
 
     public void deleteApplication(String appName) throws Exception {
@@ -450,14 +524,41 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
         return claimMappingList.toArray(new ClaimMapping[claimMappingList.size()]);
     }
 
+    public ClaimConfiguration getClaimConfigurations() {
+
+        return new ClaimConfiguration()
+                .dialect(DialectEnum.LOCAL)
+                .addClaimMappingsItem(new ClaimMappings()
+                        .applicationClaim(firstNameClaimURI)
+                        .localClaim(new org.wso2.identity.integration.test.rest.api.server.application.management
+                                .v1.model.Claim().uri(firstNameClaimURI)))
+                .addClaimMappingsItem(new ClaimMappings()
+                        .applicationClaim(lastNameClaimURI)
+                        .localClaim(new org.wso2.identity.integration.test.rest.api.server.application.management
+                                .v1.model.Claim().uri(lastNameClaimURI)))
+                .addClaimMappingsItem(new ClaimMappings()
+                        .applicationClaim(emailClaimURI)
+                        .localClaim(new org.wso2.identity.integration.test.rest.api.server.application.management.
+                                v1.model.Claim().uri(emailClaimURI)))
+                .addRequestedClaimsItem(new RequestedClaimConfiguration()
+                        .claim(new org.wso2.identity.integration.test.rest.api.server.application.management
+                                .v1.model.Claim().uri(firstNameClaimURI)))
+                .addRequestedClaimsItem(new RequestedClaimConfiguration()
+                        .claim(new org.wso2.identity.integration.test.rest.api.server.application.management
+                                .v1.model.Claim().uri(lastNameClaimURI)))
+                .addRequestedClaimsItem(new RequestedClaimConfiguration()
+                        .claim(new org.wso2.identity.integration.test.rest.api.server.application.management
+                                .v1.model.Claim().uri(emailClaimURI)));
+    }
+
     /**
      * @param config contains the details of the IDP initiated SSO enabled service provider application.
      * @return the created SAMLSSOServiceProviderDTO.
      */
-    public SAMLSSOServiceProviderDTO createSsoSPDTOForIdPInit(SAMLConfig config){
-        SAMLSSOServiceProviderDTO idpInitSpDTO = createSsoSPDTO(config);
-        idpInitSpDTO.setIdPInitSSOEnabled(true);
-        return idpInitSpDTO;
+    public SAML2Configuration getSAMLConfigurationsForIdPInit(SAMLConfig config){
+        SAML2Configuration idpInitSamlConfig = getSAMLConfigurations(config);
+        idpInitSamlConfig.getManualConfiguration().getSingleSignOnProfile().setEnableIdpInitiatedSingleSignOn(true);
+        return idpInitSamlConfig;
     }
 
     /**
@@ -470,6 +571,28 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
         SAMLSSOServiceProviderDTO idpInitSpDTO = createSsoSPDTO(config);
         idpInitSpDTO.setEnableSAML2ArtifactBinding(true);
         return idpInitSpDTO;
+    }
+
+    public SAML2Configuration getSAMLConfigurations(SAMLConfig config) {
+
+        SAML2ServiceProvider serviceProvider = new SAML2ServiceProvider()
+                .issuer(config.getApp().getArtifact())
+                .addAssertionConsumerUrl(String.format(ACS_URL, config.getApp().getArtifact()))
+                .defaultAssertionConsumerUrl(String.format(ACS_URL, config.getApp().getArtifact()))
+                .singleLogoutProfile(new SingleLogoutProfile()
+                        .enabled(true))
+                .responseSigning(new SAMLResponseSigning()
+                        .enabled(config.getApp().isSigningEnabled()))
+                .singleSignOnProfile(new SingleSignOnProfile()
+                        .assertion(new SAMLAssertionConfiguration().nameIdFormat(NAMEID_FORMAT))
+                        .attributeConsumingServiceIndex(ATTRIBUTE_CS_INDEX_VALUE));
+
+        if (config.getClaimType() != AbstractSAMLSSOTestCase.ClaimType.NONE) {
+            serviceProvider.setAttributeProfile(new SAMLAttributeProfile()
+                            .enabled(true)
+                            .alwaysIncludeAttributesInResponse(true));
+        }
+        return new SAML2Configuration().manualConfiguration(serviceProvider);
     }
 
     public SAMLSSOServiceProviderDTO createSsoServiceProviderDTO(SAMLConfig config){
