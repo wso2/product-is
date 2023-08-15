@@ -28,6 +28,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
+import org.wso2.carbon.utils.StringUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationListResponse;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
@@ -184,6 +185,21 @@ public class OAuth2RestClient extends RestBaseClient {
         try (CloseableHttpResponse response = getResponseOfHttpPut(endPointUrl, jsonRequest, getHeaders())) {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
                     String.format("Application %s inbound config update failed", inboundType));
+        }
+    }
+
+    /**
+     * Delete an Inbound Configuration
+     *
+     * @param appId Application id.
+     * @param inboundType Inbound Type to be deleted.
+     */
+    public Boolean deleteInboundConfiguration(String appId, String inboundType) throws IOException {
+        String endpointUrl = applicationManagementApiBasePath + PATH_SEPARATOR + appId + INBOUND_PROTOCOLS_BASE_PATH +
+                PATH_SEPARATOR + inboundType;
+
+        try (CloseableHttpResponse response = getResponseOfHttpDelete(endpointUrl, getHeaders())) {
+            return response.getStatusLine().getStatusCode() == HttpServletResponse.SC_NO_CONTENT;
         }
     }
 
