@@ -222,6 +222,14 @@
             <groupId>org.wso2.carbon.identity.user.api</groupId>
             <artifactId>org.wso2.carbon.identity.api.user.idv.common</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.user.api</groupId>
+            <artifactId>org.wso2.carbon.identity.rest.api.user.organization.v1</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.user.api</groupId>
+            <artifactId>org.wso2.carbon.identity.api.user.organization.common</artifactId>
+        </dependency>
 
         <!-- Server REST API Dependencies. -->
         <dependency>

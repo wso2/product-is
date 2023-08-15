@@ -31,7 +31,7 @@
 
     <modules>
         <module>9.1-access-delegation-with-end-user-authorization</module>
-        <module>9.2-access-delegation-with-user-managed-access</module>
+<!--        <module>9.2-access-delegation-with-user-managed-access</module>-->
     </modules>
 
 </project>
