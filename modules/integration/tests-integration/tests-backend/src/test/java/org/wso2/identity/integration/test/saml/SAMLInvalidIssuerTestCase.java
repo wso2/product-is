@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2015, WSO2 LLC. (http://www.wso2.com).
  *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -18,8 +18,6 @@
 
 package org.wso2.identity.integration.test.saml;
 
-import org.apache.axis2.context.ConfigurationContext;
-import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
@@ -36,12 +34,9 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationConfig;
-import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
-import org.wso2.carbon.identity.application.common.model.xsd.Property;
-import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
-import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
-import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
+import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
+import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 
@@ -58,25 +53,20 @@ public class SAMLInvalidIssuerTestCase extends AbstractSAMLSSOTestCase {
 
     // SAML Application attributes
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
-    private static final String ISSUER_NAME = "dummy.com";
     private static final String APPLICATION_NAME = "SAML-SSO-TestApplication";
-    private static final String INBOUND_AUTH_TYPE = "samlsso";
-    private static final String ATTRIBUTE_CS_INDEX_VALUE = "1239245949";
-    private static final String ATTRIBUTE_CS_INDEX_NAME = "attrConsumServiceIndex";
 
     private static final String ACS_URL = "http://localhost:8490/travelocity.com/home.jsp";
-    private static final String COMMON_AUTH_URL = "https://localhost:9853/commonauth";
     private static final String SAML_SSO_LOGIN_URL =
             "http://localhost:8490/travelocity.com/samlsso?SAML2.HTTPBinding=HTTP-Redirect";
     private static final String SAML_ERROR_NOTIFICATION_PATH = "/authenticationendpoint/samlsso_notification.do";
 
-    private ApplicationManagementServiceClient applicationManagementServiceClient;
-    private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
     private DefaultHttpClient httpClient;
 
     private boolean isSAMLReturned;
 
-    private SAMLConfig config;
+    private final SAMLConfig config;
+    private String appId;
+    private String userId;
 
     @Factory(dataProvider = "samlConfigProvider")
     public SAMLInvalidIssuerTestCase(SAMLConfig config) {
@@ -92,12 +82,8 @@ public class SAMLInvalidIssuerTestCase extends AbstractSAMLSSOTestCase {
 
         super.init(config.getUserMode());
 
-        ConfigurationContext configContext = ConfigurationContextFactory
-                .createConfigurationContextFromFileSystem(null
-                        , null);
-        applicationManagementServiceClient =
-                new ApplicationManagementServiceClient(sessionCookie, backendURL, configContext);
-        remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
+        scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
+        applicationMgtRestClient = new OAuth2RestClient(serverURL, tenantInfo);
 
         isSAMLReturned = false;
 
@@ -134,18 +120,18 @@ public class SAMLInvalidIssuerTestCase extends AbstractSAMLSSOTestCase {
             }
         });
 
-        super.createUser(config);
-        createApplication(config, APPLICATION_NAME);
+        userId = super.addUser(config);
+        appId = addApplication(APPLICATION_NAME);
     }
 
     @AfterClass(alwaysRun = true)
     public void testClear() throws Exception {
 
-        super.deleteUser(config);
-        deleteApplication();
+        super.deleteUser(userId);
+        deleteApp(appId);
 
-        applicationManagementServiceClient = null;
-        remoteUSMServiceClient = null;
+        applicationMgtRestClient = null;
+        scim2RestClient = null;
         httpClient = null;
     }
 
@@ -165,8 +151,7 @@ public class SAMLInvalidIssuerTestCase extends AbstractSAMLSSOTestCase {
 
             Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, config.getApp().getArtifact(), httpClient);
 
-            Assert.assertTrue(isSAMLReturned,
-                              "Sending SAML response to the samlsso_notification page failed");
+            Assert.assertTrue(isSAMLReturned, "Sending SAML response to the samlsso_notification page failed");
 
         } catch (Exception e) {
             Assert.fail("SAML SSO Login test failed.", e);
@@ -195,36 +180,13 @@ public class SAMLInvalidIssuerTestCase extends AbstractSAMLSSOTestCase {
         };
     }
 
-    private void deleteApplication() throws Exception {
+    public String addApplication(String appName) throws Exception {
 
-        applicationManagementServiceClient.deleteApplication(APPLICATION_NAME);
-    }
+        ApplicationModel applicationModel = new ApplicationModel()
+                .name(appName)
+                .description("This is a test Service Provider")
+                .claimConfiguration(getClaimConfigurations());
 
-    public void createApplication(SAMLConfig config, String appName) throws Exception {
-
-        ServiceProvider serviceProvider = new ServiceProvider();
-        serviceProvider.setApplicationName(appName);
-        serviceProvider.setDescription("This is a test Service Provider");
-        applicationManagementServiceClient.createApplication(serviceProvider);
-
-        serviceProvider = applicationManagementServiceClient.getApplication(appName);
-
-        serviceProvider.getClaimConfig().setClaimMappings(getClaimMappings());
-
-        InboundAuthenticationRequestConfig requestConfig = new InboundAuthenticationRequestConfig();
-        requestConfig.setInboundAuthType(INBOUND_AUTH_TYPE);
-        requestConfig.setInboundAuthKey(ISSUER_NAME);
-
-        Property attributeConsumerServiceIndexProp = new Property();
-        attributeConsumerServiceIndexProp.setName(ATTRIBUTE_CS_INDEX_NAME);
-        attributeConsumerServiceIndexProp.setValue(ATTRIBUTE_CS_INDEX_VALUE);
-        requestConfig.setProperties(new Property[]{attributeConsumerServiceIndexProp});
-
-        InboundAuthenticationConfig inboundAuthenticationConfig = new InboundAuthenticationConfig();
-        inboundAuthenticationConfig.setInboundAuthenticationRequestConfigs(
-                new InboundAuthenticationRequestConfig[]{requestConfig});
-
-        serviceProvider.setInboundAuthenticationConfig(inboundAuthenticationConfig);
-        applicationManagementServiceClient.updateApplicationData(serviceProvider);
+        return applicationMgtRestClient.createApplication(applicationModel);
     }
 }
