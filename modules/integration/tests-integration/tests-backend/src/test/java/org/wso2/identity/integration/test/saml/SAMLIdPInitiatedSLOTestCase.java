@@ -137,8 +137,7 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
     @Test(description = "Add service providers", groups = "wso2.is", priority = 1)
     public void testAddSP() throws Exception {
 
-        applicationMgtRestClient.updateInboundDetailsOfApplication(appOneId, getSAMLConfigurations(samlConfigOne),
-                "saml");
+        applicationMgtRestClient.updateInboundDetailsOfApplication(appOneId, getSAMLConfigurations(samlConfigOne), SAML);
         SAML2ServiceProvider samlConfig = applicationMgtRestClient.getSAMLInboundDetails(appOneId);
         Assert.assertNotNull(samlConfig, "Adding a service provider has failed for " + samlConfigOne);
 
