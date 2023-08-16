@@ -65,16 +65,13 @@ public class KeystoreMgtRestClient extends RestBaseClient {
      * Check whether a certain certificate is already added in the tenant keystore.
      *
      * @param alias alias.
+     * @return Boolean status of the tenant keystore availability.
      */
     public Boolean checkCertInStore(String alias) throws Exception {
         String endPointUrl = serverUrl + String.format(KEYSTORE_BASE_PATH, tenantDomain) + PATH_SEPARATOR + alias;
 
         try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
-            if (response.getStatusLine().getStatusCode() == HttpServletResponse.SC_OK) {
-                return true;
-            } else {
-                return false;
-            }
+            return response.getStatusLine().getStatusCode() == HttpServletResponse.SC_OK;
         }
     }
 
