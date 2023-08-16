@@ -1685,12 +1685,12 @@
                 <version>${authenticator.magiclink.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.identity.local.auth.magiclink</groupId>
+                <groupId>org.wso2.carbon.identity.local.auth.emilotp</groupId>
                 <artifactId>org.wso2.carbon.identity.local.auth.emailotp</artifactId>
                 <version>${authenticator.local.auth.emailotp.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.identity.local.auth.magiclink</groupId>
+                <groupId>org.wso2.carbon.identity.local.auth.emilotp</groupId>
                 <artifactId>org.wso2.carbon.identity.local.auth.emailotp.server.feature</artifactId>
                 <version>${authenticator.local.auth.emailotp.version}</version>
             </dependency>
