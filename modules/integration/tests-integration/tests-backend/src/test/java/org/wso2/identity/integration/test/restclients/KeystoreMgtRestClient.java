@@ -65,7 +65,7 @@ public class KeystoreMgtRestClient extends RestBaseClient {
      * Check whether a certain certificate is already added in the tenant keystore.
      *
      * @param alias alias.
-     * @return Boolean status of the tenant keystore availability.
+     * @return Boolean status of certificate availability in tenant keystore.
      */
     public Boolean checkCertInStore(String alias) throws Exception {
         String endPointUrl = serverUrl + String.format(KEYSTORE_BASE_PATH, tenantDomain) + PATH_SEPARATOR + alias;
