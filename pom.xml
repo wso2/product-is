@@ -2330,10 +2330,10 @@
         <identity.outbound.auth.requestpath.oauth.version>5.5.4</identity.outbound.auth.requestpath.oauth.version>
 
         <!-- Social Authenticator Versions -->
-        <social.authenticator.facebook.version>5.2.2</social.authenticator.facebook.version>
-        <social.authenticator.google.version>5.2.9</social.authenticator.google.version>
+        <social.authenticator.facebook.version>5.2.3</social.authenticator.facebook.version>
+        <social.authenticator.google.version>5.2.10</social.authenticator.google.version>
         <social.authenticator.windowslive.version>5.2.2</social.authenticator.windowslive.version>
-        <social.authenticator.apple.version>1.0.2</social.authenticator.apple.version>
+        <social.authenticator.apple.version>1.0.4</social.authenticator.apple.version>
 
         <!-- Provisioning connector Versions -->
         <provisioning.connector.google.version>5.2.3</provisioning.connector.google.version>
@@ -2368,8 +2368,8 @@
         <authenticator.x509.version>3.1.11</authenticator.x509.version>
         <identity.extension.utils>1.0.14</identity.extension.utils>
 
-        <identity.org.mgt.version>1.3.53</identity.org.mgt.version>
-        <identity.org.mgt.core.version>1.0.59</identity.org.mgt.core.version>
+        <identity.org.mgt.version>1.3.54</identity.org.mgt.version>
+        <identity.org.mgt.core.version>1.0.60</identity.org.mgt.core.version>
         <identity.organization.login.version>1.1.21</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.9</identity.oauth2.grant.organizationswitch.version>
 
@@ -2392,7 +2392,7 @@
         <conditional.authentication.functions.version>1.2.31</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.6.364</identity.apps.version>
+        <identity.apps.version>1.6.365</identity.apps.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
