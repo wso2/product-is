@@ -1,17 +1,19 @@
 /*
- * Copyright (c) 2020, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2020, WSO2 LLC. (http://www.wso2.com).
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
  * You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 package org.wso2.identity.integration.test.oidc;
@@ -25,13 +27,11 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.dbutils.H2DataBaseManager;
-import org.wso2.carbon.identity.user.store.configuration.stub.dto.PropertyDTO;
-import org.wso2.carbon.identity.user.store.configuration.stub.dto.UserStoreDTO;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
-import org.wso2.identity.integration.common.clients.user.store.config.UserStoreConfigAdminServiceClient;
-import org.wso2.identity.integration.common.utils.UserStoreConfigUtils;
 import org.wso2.identity.integration.test.oidc.bean.OIDCApplication;
-import org.wso2.identity.integration.test.oidc.bean.OIDCUser;
+import org.wso2.identity.integration.test.rest.api.server.user.store.v1.model.UserStoreReq;
+import org.wso2.identity.integration.test.rest.api.server.user.store.v1.model.UserStoreReq.Property;
+import org.wso2.identity.integration.test.restclients.UserStoreMgtRestClient;
 
 import java.io.File;
 import java.util.HashMap;
@@ -49,24 +49,18 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
     private static final String USER_STORE_DB_NAME = "JDBC_USER_STORE_DB";
     private static final String DB_USER_NAME = "wso2automation";
     private static final String DB_USER_PASSWORD = "wso2automation";
-    private UserStoreConfigAdminServiceClient userStoreConfigAdminServiceClient;
-    private UserStoreConfigUtils userStoreConfigUtils = new UserStoreConfigUtils();
-
-
-    protected OIDCUser user;
+    private static final String SERVICES = "/services";
+    private UserStoreMgtRestClient userStoreMgtRestClient;
     private OIDCApplication application;
-
     protected String accessToken;
     protected String sessionDataKey;
-
-    private static final String SERVICES = "/services";
-
+    private String userStoreId;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
         super.init();
-        userStoreConfigAdminServiceClient = new UserStoreConfigAdminServiceClient(backendURL, sessionCookie);
+        userStoreMgtRestClient = new UserStoreMgtRestClient(serverURL, tenantInfo);
         addSecondaryUserStore();
         // Wait till the user-store is deployed
         Thread.sleep(5000);
@@ -75,24 +69,23 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
 
         // Create a user in secondary user-store
         OIDCUtilTest.initUser();
-        OIDCUtilTest.user.setUsername(USER_STORE_DOMAIN + "/" + OIDCUtilTest.user.getUsername());
-        user = OIDCUtilTest.user;
+        OIDCUtilTest.user.setUserName(USER_STORE_DOMAIN + "/" + OIDCUtilTest.user.getUserName());
         createUser(OIDCUtilTest.user);
 
         // Create application
         OIDCUtilTest.initApplications();
         application = OIDCUtilTest.applications.get(OIDCUtilTest.playgroundAppTwoAppName);
         createApplication(application);
-
     }
 
     @AfterClass(alwaysRun = true)
     public void testClear() throws Exception {
 
-        deleteUser(user);
+        deleteUser(OIDCUtilTest.user);
         deleteApplication(application);
         clear();
-
+        userStoreMgtRestClient.deleteUserStore(userStoreId);
+        userStoreMgtRestClient.closeHttpClient();
     }
 
     @Test(groups = "wso2.is", description = "Get access token for playground.appone")
@@ -101,8 +94,8 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
         Map<String, String> params = new HashMap<>();
         params.put("grant_type", "password");
         params.put("scope", "openid email profile");
-        params.put("username", user.getUsername());
-        params.put("password", user.getPassword());
+        params.put("username", OIDCUtilTest.user.getUserName());
+        params.put("password", OIDCUtilTest.user.getPassword());
 
         Response response = getResponseOfFormPostWithAuth(OAUTH2_TOKEN_ENDPOINT_URI, params, new HashMap<>(),
                 application.getClientId(), application.getClientSecret());
@@ -132,9 +125,9 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("email", is(user.getUserClaims().get(OIDCUtilTest.emailClaimUri)))
-                .body("given_name", is(user.getUserClaims().get(OIDCUtilTest.firstNameClaimUri)))
-                .body("last_name", is(user.getUserClaims().get(OIDCUtilTest.lastName)));
+                .body("email", is(OIDCUtilTest.email))
+                .body("given_name", is(OIDCUtilTest.firstName))
+                .body("family_name", is(OIDCUtilTest.lastName));
     }
 
     /**
@@ -155,9 +148,9 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("email", is(user.getUserClaims().get(OIDCUtilTest.emailClaimUri)))
-                .body("given_name", is(user.getUserClaims().get(OIDCUtilTest.firstNameClaimUri)))
-                .body("last_name", is(user.getUserClaims().get(OIDCUtilTest.lastName)));
+                .body("email", is(OIDCUtilTest.email))
+                .body("given_name", is(OIDCUtilTest.firstName))
+                .body("family_name", is(OIDCUtilTest.lastName));
     }
 
     @Test(groups = "wso2.is", description = "Get access token with a JSON request", dependsOnMethods =
@@ -167,8 +160,8 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
         Map<String, String> params = new HashMap<>();
         params.put("grant_type", "password");
         params.put("scope", "openid");
-        params.put("username", user.getUsername());
-        params.put("password", user.getPassword());
+        params.put("username", OIDCUtilTest.user.getUserName());
+        params.put("password", OIDCUtilTest.user.getPassword());
 
         JSONObject jsonObject = new JSONObject(params);
         String payload = jsonObject.toJSONString();
@@ -278,38 +271,27 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
 
     private void addSecondaryUserStore() throws Exception {
 
-        String jdbcClass = "org.wso2.carbon.user.core.jdbc.UniqueIDJDBCUserStoreManager";
+        String userStoreType = "VW5pcXVlSURKREJDVXNlclN0b3JlTWFuYWdlcg";
         H2DataBaseManager dataBaseManager = new H2DataBaseManager(
                 "jdbc:h2:" + ServerConfigurationManager.getCarbonHome() + "/repository/database/" + USER_STORE_DB_NAME,
                 DB_USER_NAME, DB_USER_PASSWORD);
         dataBaseManager.executeUpdate(new File(ServerConfigurationManager.getCarbonHome() + "/dbscripts/h2.sql"));
         dataBaseManager.disconnect();
 
-        PropertyDTO[] propertyDTOs = new PropertyDTO[10];
-        for (int i = 0; i < 10; i++) {
-            propertyDTOs[i] = new PropertyDTO();
-        }
+        UserStoreReq userStore = new UserStoreReq();
 
-        propertyDTOs[0].setName("driverName");
-        propertyDTOs[0].setValue("org.h2.Driver");
+        userStore.setTypeId(userStoreType);
+        userStore.setName(USER_STORE_DOMAIN);
+        userStore.addPropertiesItem(new Property().name("driverName").value("org.h2.Driver"));
+        userStore.addPropertiesItem(new Property().name("url").value("jdbc:h2:" +
+                ServerConfigurationManager.getCarbonHome() + "/repository/database/" + USER_STORE_DB_NAME));
+        userStore.addPropertiesItem(new Property().name("userName").value(DB_USER_NAME));
+        userStore.addPropertiesItem(new Property().name("password").value(DB_USER_PASSWORD));
+        userStore.addPropertiesItem(new Property().name("UserIDEnabled").value("true"));
 
-        propertyDTOs[1].setName("url");
-        propertyDTOs[1].setValue(
-                "jdbc:h2:" + ServerConfigurationManager.getCarbonHome() + "/repository/database/" + USER_STORE_DB_NAME);
+        userStoreId = userStoreMgtRestClient.addUserStore(userStore);
 
-        propertyDTOs[2].setName("userName");
-        propertyDTOs[2].setValue(DB_USER_NAME);
-
-        propertyDTOs[3].setName("password");
-        propertyDTOs[3].setValue(DB_USER_PASSWORD);
-
-        propertyDTOs[4].setName("UserIDEnabled");
-        propertyDTOs[4].setValue("true");
-
-        UserStoreDTO userStoreDTO = userStoreConfigAdminServiceClient
-                .createUserStoreDTO(jdbcClass, USER_STORE_DOMAIN, propertyDTOs);
-        userStoreConfigAdminServiceClient.addUserStore(userStoreDTO);
         Thread.sleep(5000);
-        userStoreConfigUtils.waitForUserStoreDeployment(userStoreConfigAdminServiceClient, USER_STORE_DOMAIN);
+        userStoreMgtRestClient.waitForUserStoreDeployment(USER_STORE_DOMAIN);
     }
 }

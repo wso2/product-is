@@ -21,6 +21,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      JAVA_TOOL_OPTIONS: "-Djdk.util.zip.disableZip64ExtraFieldValidation=true -Djdk.nio.zipfs.allowDotZipEntry=true"
+
     steps:
       - uses: actions/checkout@v2
       - name: Set up Adopt JDK 11

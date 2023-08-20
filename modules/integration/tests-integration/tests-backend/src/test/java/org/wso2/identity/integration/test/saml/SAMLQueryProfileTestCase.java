@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 LLC. (http://www.wso2.com).
  *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -15,6 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.wso2.identity.integration.test.saml;
 
 import org.apache.commons.lang.StringUtils;
@@ -32,15 +33,17 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
-import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
-import org.wso2.identity.integration.common.clients.KeyStoreAdminClient;
 import org.wso2.identity.integration.common.clients.sso.saml.query.ClientSignKeyDataHolder;
 import org.wso2.identity.integration.common.clients.sso.saml.query.QueryClientUtils;
 import org.wso2.identity.integration.common.clients.sso.saml.query.SAMLQueryClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAML2Configuration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAML2ServiceProvider;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAMLRequestValidation;
+import org.wso2.identity.integration.test.rest.api.server.keystore.management.v1.model.CertificateRequest;
+import org.wso2.identity.integration.test.restclients.KeystoreMgtRestClient;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
-import org.wso2.identity.integration.test.utils.UserUtil;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -71,15 +74,17 @@ public class SAMLQueryProfileTestCase extends AbstractSAMLSSOTestCase {
     private static final String COMMON_AUTH_URL = WSO2IS_URL + "/commonauth";
     private static final String ACS_URL = "http://localhost:8490/%s/home.jsp";
     private static final String SAML_SSO_LOGIN_URL = "http://localhost:8490/%s/samlsso?SAML2.HTTPBinding=%s";
+    private static final String KEYSTORE_ALIAS = "wso2carbon";
     //Claim Uris
     private static final String firstNameClaimURI = "http://wso2.org/claims/givenname";
     private static final String lastNameClaimURI = "http://wso2.org/claims/lastname";
     private static final String emailClaimURI = "http://wso2.org/claims/emailaddress";
 
-    private SAMLConfig config;
+    private final SAMLConfig config;
     private String resultPage;
     private String samlResponse;
     private String userId;
+    private String appId;
 
     @Factory(dataProvider = "samlConfigProvider")
     public SAMLQueryProfileTestCase(SAMLConfig config) {
@@ -94,11 +99,18 @@ public class SAMLQueryProfileTestCase extends AbstractSAMLSSOTestCase {
     public void initiateTenant() throws Exception {
         // Since all the requests sign with default wso2 key, upload that public key to tenants
         super.init(TestUserMode.TENANT_ADMIN);
-        KeyStoreAdminClient keyStoreAdminClient = new KeyStoreAdminClient(backendURL, sessionCookie);
-        String filePath = FrameworkPathUtil.getSystemResourceLocation() +
-                "keystores" + File.separator + "products" + File.separator + "wso2carbon.pem";
-        byte[] crt = Files.readAllBytes(Paths.get(filePath));
-        keyStoreAdminClient.importCertToStore("wso2carbon", crt, "wso2-com.jks");
+        KeystoreMgtRestClient keystoreMgtRestClient = new KeystoreMgtRestClient(serverURL, tenantInfo);
+
+        if (!keystoreMgtRestClient.checkCertInStore(KEYSTORE_ALIAS)) {
+            String filePath = FrameworkPathUtil.getSystemResourceLocation() +
+                    "keystores" + File.separator + "products" + File.separator + "wso2carbon.pem";
+            String cert = StringUtils.substringBetween(new String(Files.readAllBytes(Paths.get(filePath))),
+                    "-----BEGIN CERTIFICATE-----\n", "-----END CERTIFICATE-----\n");
+
+            keystoreMgtRestClient.importCertToStore(new CertificateRequest()
+                    .alias(KEYSTORE_ALIAS)
+                    .certificate(cert));
+        }
     }
 
     @DataProvider(name = "samlConfigProvider")
@@ -132,17 +144,15 @@ public class SAMLQueryProfileTestCase extends AbstractSAMLSSOTestCase {
         super.init(config.getUserMode());
 
         super.testInit();
-        super.createUser(config);
-        userId = UserUtil.getUserId(config.getUser().getTenantAwareUsername(), isServer.getContextTenant());
-
-        super.createApplication(config, APPLICATION_NAME);
+        userId = super.addUser(config);
+        appId = super.addApplication(config, APPLICATION_NAME);
     }
 
     @AfterClass(alwaysRun = true)
     public void testClear() throws Exception {
 
-        super.deleteUser(config);
-        super.deleteApplication(APPLICATION_NAME);
+        super.deleteUser(userId);
+        super.deleteApp(appId);
 
         super.testClear();
     }
@@ -150,12 +160,10 @@ public class SAMLQueryProfileTestCase extends AbstractSAMLSSOTestCase {
     @Test(description = "Add service provider", groups = "wso2.is", priority = 1)
     public void testAddSP() throws Exception {
 
-        Boolean isAddSuccess = ssoConfigServiceClient.addServiceProvider(createSsoServiceProviderDTO(config));
-        Assert.assertTrue(isAddSuccess, "Adding a service provider has failed for " + config);
-
-        SAMLSSOServiceProviderDTO[] samlssoServiceProviderDTOs = ssoConfigServiceClient
-                .getServiceProviders().getServiceProviders();
-        Assert.assertEquals(samlssoServiceProviderDTOs[0].getIssuer(), config.getApp().getArtifact(),
+        applicationMgtRestClient.updateInboundDetailsOfApplication(appId, getSAMLConfigurations(config), SAML);
+        SAML2ServiceProvider samlConfig = applicationMgtRestClient.getSAMLInboundDetails(appId);
+        Assert.assertNotNull(samlConfig, "Adding a service provider has failed for " + config);
+        Assert.assertEquals(samlConfig.getIssuer(), config.getApp().getArtifact(),
                 "Adding a service provider has failed for " + config);
     }
 
@@ -163,8 +171,8 @@ public class SAMLQueryProfileTestCase extends AbstractSAMLSSOTestCase {
     public void testRemoveSP()
             throws Exception {
 
-        Boolean isAddSuccess = ssoConfigServiceClient.removeServiceProvider(config.getApp().getArtifact());
-        Assert.assertTrue(isAddSuccess, "Removing a service provider has failed for " + config);
+        Boolean isDeleteSuccess = applicationMgtRestClient.deleteInboundConfiguration(appId, "saml");
+        Assert.assertTrue(isDeleteSuccess, "Removing a service provider has failed for " + config);
     }
 
     @Test(alwaysRun = true, description = "Testing SAML SSO login", groups = "wso2.is",
@@ -240,7 +248,7 @@ public class SAMLQueryProfileTestCase extends AbstractSAMLSSOTestCase {
 
     @Test(alwaysRun = true, description = "Testing Assertion ID Request", groups = "wso2.is",
             dependsOnMethods = {"testSAMLSSOLogin"})
-    public void testSAMLAssertionIDRequest() throws Exception {
+    public void testSAMLAssertionIDRequest() {
 
         try {
             log.info("RESPONSE " + this.samlResponse);
@@ -265,7 +273,7 @@ public class SAMLQueryProfileTestCase extends AbstractSAMLSSOTestCase {
 
     @Test(alwaysRun = true, description = "Testing Attribute Query Request", groups = "wso2.is",
             dependsOnMethods = {"testSAMLAssertionIDRequest"})
-    public void testSAMLAttributeQueryRequest() throws Exception {
+    public void testSAMLAttributeQueryRequest() {
 
         try {
             URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "keystores" + ISIntegrationTest.URL_SEPARATOR
@@ -275,7 +283,7 @@ public class SAMLQueryProfileTestCase extends AbstractSAMLSSOTestCase {
             String serverURL = TestUserMode.TENANT_ADMIN.equals(config.getUserMode()) ? WSO2IS_TENANT_URL : WSO2IS_URL;
             SAMLQueryClient queryClient = new SAMLQueryClient(serverURL, signKeyDataHolder);
 
-            List<String> attributes = new ArrayList<String>();
+            List<String> attributes = new ArrayList<>();
             attributes.add(firstNameClaimURI);
             attributes.add(lastNameClaimURI);
             attributes.add(emailClaimURI);
@@ -324,7 +332,7 @@ public class SAMLQueryProfileTestCase extends AbstractSAMLSSOTestCase {
     private Map<String, String> extractClaims(String claimString) {
 
         String[] dataArray = StringUtils.substringsBetween(claimString, "<td>", "</td>");
-        Map<String, String> attributeMap = new HashMap<String, String>();
+        Map<String, String> attributeMap = new HashMap<>();
         String key = null;
         String value;
         for (int i = 0; i < dataArray.length; i++) {
@@ -339,11 +347,13 @@ public class SAMLQueryProfileTestCase extends AbstractSAMLSSOTestCase {
         return attributeMap;
     }
 
-    public SAMLSSOServiceProviderDTO createSsoServiceProviderDTO(SAMLConfig config) {
+    public SAML2Configuration getSAMLConfigurations(SAMLConfig config) {
+        SAML2Configuration samlConfig = super.getSAMLConfigurations(config);
+        samlConfig.getManualConfiguration().setRequestValidation(new SAMLRequestValidation()
+                .enableSignatureValidation(false)
+                .signatureValidationCertAlias("wso2carbon"));
+        samlConfig.getManualConfiguration().setEnableAssertionQueryProfile(true);
 
-        SAMLSSOServiceProviderDTO ssoServiceProviderDTO = super.createSsoServiceProviderDTO(config);
-        ssoServiceProviderDTO.setAssertionQueryRequestProfileEnabled(true);
-        ssoServiceProviderDTO.setCertAlias("wso2carbon");
-        return ssoServiceProviderDTO;
+        return samlConfig;
     }
 }

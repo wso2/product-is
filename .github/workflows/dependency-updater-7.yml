@@ -2,9 +2,9 @@
 name: Dependency Updater 7.x.x
 on:
   workflow_dispatch:
-  schedule:
+  # schedule:
     # Everyday at 15:30 UTC (9.00 PM SL time)
-    - cron:  '30 15 * * *'
+    # - cron:  '30 15 * * *'
 
 env:
   MAVEN_OPTS: -Xmx4g -Xms1g

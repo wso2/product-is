@@ -1,18 +1,19 @@
 /*
- *  Copyright (c) 2022, WSO2 Inc. (http://www.wso2.com).
+ * Copyright (c) 2022, WSO2 LLC. (http://www.wso2.com).
  *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 package org.wso2.identity.integration.test.oauth2.consented.token;
@@ -51,13 +52,18 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.identity.application.common.model.xsd.Claim;
-import org.wso2.carbon.identity.application.common.model.xsd.ClaimConfig;
-import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
-import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
-import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
-import org.wso2.carbon.um.ws.api.stub.ClaimValue;
 import org.wso2.identity.integration.test.oauth2.OAuth2ServiceAbstractIntegrationTest;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AccessTokenConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
+import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
+import org.wso2.identity.integration.test.rest.api.user.common.model.ListObject;
+import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperationRequestObject;
+import org.wso2.identity.integration.test.rest.api.user.common.model.RoleItemAddGroupobj;
+import org.wso2.identity.integration.test.rest.api.user.common.model.ScimSchemaExtensionEnterprise;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
+import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.BufferedReader;
@@ -66,21 +72,21 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * OAuth2 test with Consented Token column integration abstraction.
  */
-public class OAuth2ServiceWithConsentedTokenColumnAbstractIntegrationTest extends
-        OAuth2ServiceAbstractIntegrationTest {
+public class OAuth2ServiceWithConsentedTokenColumnAbstractIntegrationTest extends OAuth2ServiceAbstractIntegrationTest {
 
-    protected static final String TELEPHONE_CLAIM_URI = "http://wso2.org/claims/telephone";
     protected static final String USERNAME = "TestUser_1";
     protected static final String PASSWORD = "pass123";
-    protected static final String PHONE_NUMBER = "0123456789";
+    protected static final String COUNTRY = "Sri Lanka";
     protected static final String USER_EMAIL = "abcrqo@wso2.com";
-    protected static final String TELEPHONE_OIDC_CLAIM = "phone_number";
+    protected static final String ADDRESS_OIDC_CLAIM = "address";
     protected static final String EMAIL_OIDC_CLAIM = "email";
+    private static final String USERS_PATH = "users";
 
     protected CookieStore cookieStore = new BasicCookieStore();
 
@@ -89,6 +95,9 @@ public class OAuth2ServiceWithConsentedTokenColumnAbstractIntegrationTest extend
     protected HttpClient client;
     protected String accessToken;
     protected String refreshToken;
+    protected String applicationId;
+    private SCIM2RestClient scim2RestClient;
+    private String userId;
 
     protected void initConsentedTokenTest() throws Exception {
 
@@ -103,34 +112,66 @@ public class OAuth2ServiceWithConsentedTokenColumnAbstractIntegrationTest extend
                 .setDefaultRequestConfig(requestConfig)
                 .setDefaultCookieSpecRegistry(cookieSpecRegistry)
                 .setDefaultCookieStore(cookieStore).build();
+        scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
     }
 
     protected void createUser() throws Exception {
 
-        remoteUSMServiceClient.addUser(USERNAME, PASSWORD, new String[]{"admin"}, getUserClaims(), "default", true);
+        UserObject userInfo = new UserObject();
+        userInfo.setUserName(USERNAME);
+        userInfo.setPassword(PASSWORD);
+        userInfo.addEmail(new Email().value(USER_EMAIL));
+        userInfo.setScimSchemaExtensionEnterprise(new ScimSchemaExtensionEnterprise().country(COUNTRY));
+
+        userId = scim2RestClient.createUser(userInfo);
+        String roleId = scim2RestClient.getRoleIdByName("admin");
+
+        RoleItemAddGroupobj patchRoleItem = new RoleItemAddGroupobj();
+        patchRoleItem.setOp(RoleItemAddGroupobj.OpEnum.ADD);
+        patchRoleItem.setPath(USERS_PATH);
+        patchRoleItem.addValue(new ListObject().value(userId));
+
+        scim2RestClient.updateUserRole(new PatchOperationRequestObject().addOperations(patchRoleItem), roleId);
     }
 
     protected void removeUser() throws Exception {
-
-        remoteUSMServiceClient.deleteUser(USERNAME);
+        scim2RestClient.deleteUser(userId);
     }
 
     protected void registerApplication() throws Exception {
 
-        OAuthConsumerAppDTO appDTO = new OAuthConsumerAppDTO();
-        appDTO.setApplicationName(OAuth2Constant.OAUTH_APPLICATION_NAME);
-        appDTO.setCallbackUrl(OAuth2Constant.CALLBACK_URL);
-        appDTO.setOAuthVersion(OAuth2Constant.OAUTH_VERSION_2);
-        appDTO.setGrantTypes("authorization_code implicit password client_credentials refresh_token urn:ietf"
-                + ":params:oauth:grant-type:saml2-bearer iwa:ntlm");
-        appDTO.setTokenType("JWT"); // To get access token in JWT format.
-        appDTO = createApplication(appDTO, SERVICE_PROVIDER_NAME);
-        updateApplicationClaimConfig();
-        Assert.assertNotNull(appDTO, "Application creation failed.");
+        ApplicationModel application = new ApplicationModel();
 
-        consumerKey = appDTO.getOauthConsumerKey();
+        List<String> grantTypes = new ArrayList<>();
+        Collections.addAll(grantTypes, "authorization_code", "implicit", "password", "client_credentials",
+                "refresh_token", "urn:ietf:params:oauth:grant-type:saml2-bearer", "iwa:ntlm");
+
+        List<String> callBackUrls = new ArrayList<>();
+        Collections.addAll(callBackUrls, OAuth2Constant.CALLBACK_URL);
+
+        AccessTokenConfiguration accessTokenConfig = new AccessTokenConfiguration().type("JWT");
+        accessTokenConfig.setUserAccessTokenExpiryInSeconds(3600L);
+        accessTokenConfig.setApplicationAccessTokenExpiryInSeconds(3600L);
+
+        OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
+        oidcConfig.setGrantTypes(grantTypes);
+        oidcConfig.setCallbackURLs(callBackUrls);
+        oidcConfig.setAccessToken(accessTokenConfig);
+
+        InboundProtocols inboundProtocolsConfig = new InboundProtocols();
+        inboundProtocolsConfig.setOidc(oidcConfig);
+
+        application.setInboundProtocolConfiguration(inboundProtocolsConfig);
+        application.setName(SERVICE_PROVIDER_NAME);
+        application.setClaimConfiguration(setApplicationClaimConfig());
+
+        applicationId = addApplication(application);
+        Assert.assertNotNull(applicationId, "Application creation failed.");
+
+        oidcConfig = getOIDCInboundDetailsOfApplication(applicationId);
+        consumerKey = oidcConfig.getClientId();
         Assert.assertNotNull(consumerKey, "Application creation failed.");
-        consumerSecret = appDTO.getOauthConsumerSecret();
+        consumerSecret = oidcConfig.getClientSecret();
     }
 
     protected JSONObject sendRequestToUserInfoEndpoint() throws IOException {
@@ -158,21 +199,6 @@ public class OAuth2ServiceWithConsentedTokenColumnAbstractIntegrationTest extend
         return sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.COMMON_AUTH_URL);
     }
 
-    protected ClaimValue[] getUserClaims() {
-
-        ClaimValue emailClaim = getClaimValue(EMAIL_CLAIM_URI, USER_EMAIL);
-        ClaimValue telephone = getClaimValue(TELEPHONE_CLAIM_URI, PHONE_NUMBER);
-        return new ClaimValue[] {emailClaim, telephone};
-    }
-
-    private ClaimValue getClaimValue(String claimURL, String claimVal) {
-
-        ClaimValue claim = new ClaimValue();
-        claim.setClaimURI(claimURL);
-        claim.setValue(claimVal);
-        return claim;
-    }
-
     protected OIDCTokens makeTokenRequest(AuthorizationGrant authorizationGrant) throws URISyntaxException,
             IOException, ParseException {
 
@@ -181,10 +207,10 @@ public class OAuth2ServiceWithConsentedTokenColumnAbstractIntegrationTest extend
         ClientAuthentication clientAuth = new ClientSecretBasic(clientID, clientSecret);
         URI tokenEndpoint = new URI(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
         // email scope is to retrieve the email address of the user.
-        // phone scope is to retrieve the phone number of the user.
+        // country scope is to retrieve the phone number of the user.
         TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, authorizationGrant,
                 new Scope(OAuth2Constant.OAUTH2_SCOPE_OPENID, OAuth2Constant.OAUTH2_SCOPE_EMAIL,
-                        OAuth2Constant.OAUTH2_SCOPE_PHONE));
+                        OAuth2Constant.OAUTH2_SCOPE_ADDRESS));
 
         HTTPResponse tokenHTTPResp = request.toHTTPRequest().send();
         Assert.assertNotNull(tokenHTTPResp, "JWT access token http response is null.");
@@ -200,41 +226,13 @@ public class OAuth2ServiceWithConsentedTokenColumnAbstractIntegrationTest extend
         return oidcTokens;
     }
 
-    private void setServiceProviderClaimConfig(ServiceProvider serviceProvider) {
-
-        ClaimConfig claimConfig = new ClaimConfig();
-        Claim emailClaim = new Claim();
-        emailClaim.setClaimUri(EMAIL_CLAIM_URI);
-        ClaimMapping emailClaimMapping = new ClaimMapping();
-        emailClaimMapping.setRequested(true);
-        emailClaimMapping.setLocalClaim(emailClaim);
-        emailClaimMapping.setRemoteClaim(emailClaim);
-
-        Claim phoneNumberClaim = new Claim();
-        phoneNumberClaim.setClaimUri(TELEPHONE_CLAIM_URI);
-        ClaimMapping phoneNumberClaimMapping = new ClaimMapping();
-        phoneNumberClaimMapping.setRequested(true);
-        phoneNumberClaimMapping.setLocalClaim(phoneNumberClaim);
-        phoneNumberClaimMapping.setRemoteClaim(phoneNumberClaim);
-
-        claimConfig.setClaimMappings(
-                new org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping[] { emailClaimMapping,
-                        phoneNumberClaimMapping});
-        serviceProvider.setClaimConfig(claimConfig);
-    }
-
-    protected void updateApplicationClaimConfig() throws Exception {
-
-        ServiceProvider serviceProvider = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
-        setServiceProviderClaimConfig(serviceProvider);
-        appMgtclient.updateApplicationData(serviceProvider);
-    }
-
-    protected void resetVariables() {
+    protected void resetVariables() throws IOException {
 
         accessToken = null;
         refreshToken = null;
         consumerKey = null;
         consumerSecret = null;
+        scim2RestClient.closeHttpClient();
+        restClient.closeHttpClient();
     }
 }

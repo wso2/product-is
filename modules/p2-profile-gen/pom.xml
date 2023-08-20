@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>6.2.0-alpha4-SNAPSHOT</version>
+        <version>6.2.0-alpha5-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -311,6 +311,9 @@
                                     org.wso2.carbon.commons:org.wso2.carbon.logging.remote.config.mgt.feature:${carbon.commons.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
+                                    org.wso2.carbon.commons:org.wso2.carbon.logging.appender.http.feature:${carbon.commons.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon.multitenancy:org.wso2.carbon.tenant.common.feature:${carbon.multitenancy.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -527,7 +530,20 @@
                                     org.wso2.carbon.identity.organization.management.core:org.wso2.carbon.identity.organization.management.core.server.feature:${identity.org.mgt.core.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
+                                    org.wso2.carbon.identity.auth.organization.login:org.wso2.carbon.identity.auth.organization.login.server.feature:${identity.organization.login.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.extension.identity.oauth2.grantType.organizationswitch:org.wso2.carbon.identity.oauth2.grant.organizationswitch.server.feature:${identity.oauth2.grant.organizationswitch.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon.identity.local.auth.magiclink:org.wso2.carbon.identity.local.auth.magiclink.server.feature:${authenticator.magiclink.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.local.auth.emailotp:org.wso2.carbon.identity.local.auth.emailotp.server.feature:${authenticator.local.auth.emailotp.version}
+                                </featureArtifactDef>
+                                <!-- Token exchange grant feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.extension.identity.oauth2.grantType.token.exchange:org.wso2.carbon.extension.identity.oauth2.token.exchange.feature:${identity.oauth2.token.exchange.grant.version}
                                 </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
@@ -560,6 +576,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.logging.remote.config.mgt.feature.group</id>
+                                    <version>${carbon.commons.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.logging.appender.http.feature.group</id>
                                     <version>${carbon.commons.version}</version>
                                 </feature>
                                 <feature>
@@ -1066,8 +1086,20 @@
                                     <version>${identity.org.mgt.core.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.identity.auth.organization.login.server.feature.group</id>
+                                    <version>${identity.organization.login.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.oauth2.grant.organizationswitch.server.feature.group</id>
+                                    <version>${identity.oauth2.grant.organizationswitch.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.identity.local.auth.magiclink.server.feature.group</id>
                                     <version>${authenticator.magiclink.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.local.auth.emailotp.server.feature.group</id>
+                                    <version>${authenticator.local.auth.emailotp.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.provisioning.connector.scim2.server.feature.group</id>
@@ -1084,6 +1116,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.extension.identity.verification.ui.feature.group</id>
                                     <version>${identity.verification.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.extension.identity.oauth2.token.exchange.feature.group</id>
+                                    <version>${identity.oauth2.token.exchange.grant.version}</version>
                                 </feature>
                             </features>
                         </configuration>
@@ -1149,6 +1185,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.logging.remote.config.mgt.feature.group</id>
+                                    <version>${carbon.commons.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.logging.appender.http.feature.group</id>
                                     <version>${carbon.commons.version}</version>
                                 </feature>
                                 <feature>
@@ -1656,6 +1696,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.logging.remote.config.mgt.feature.group</id>
+                                    <version>${carbon.commons.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.logging.appender.http.feature.group</id>
                                     <version>${carbon.commons.version}</version>
                                 </feature>
                                 <feature>
@@ -2179,6 +2223,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.logging.remote.config.mgt.feature.group</id>
+                                    <version>${carbon.commons.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.logging.appender.http.feature.group</id>
                                     <version>${carbon.commons.version}</version>
                                 </feature>
                                 <feature>

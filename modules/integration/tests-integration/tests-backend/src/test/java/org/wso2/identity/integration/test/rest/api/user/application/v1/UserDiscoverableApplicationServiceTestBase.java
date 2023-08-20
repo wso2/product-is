@@ -88,18 +88,8 @@ public class UserDiscoverableApplicationServiceTestBase extends RESTAPIUserTestB
     private void createServiceProviders() throws Exception {
 
         for (int i = 1; i <= TOTAL_DISCOVERABLE_APP_COUNT; i++) {
-
-            ServiceProvider serviceProvider = new ServiceProvider();
-            serviceProvider.setApplicationName(APP_NAME_PREFIX + i);
-            serviceProvider.setDescription(APP_DESC_PREFIX + i);
-            appMgtclient.createApplication(serviceProvider);
-
-            serviceProvider = appMgtclient.getApplication(APP_NAME_PREFIX + i);
+            ServiceProvider serviceProvider = createServiceProvider(APP_NAME_PREFIX + i, APP_DESC_PREFIX + i);
             if (serviceProvider != null) {
-                serviceProvider.setDiscoverable(true);
-                serviceProvider.setImageUrl(APP_IMAGE_URL);
-                serviceProvider.setAccessUrl(APP_ACCESS_URL);
-                appMgtclient.updateApplicationData(serviceProvider);
                 serviceProviders.add(serviceProvider);
             }
         }
@@ -122,4 +112,23 @@ public class UserDiscoverableApplicationServiceTestBase extends RESTAPIUserTestB
         serviceProviders.clear();
     }
 
+    protected ServiceProvider createServiceProvider(String appName, String appDescription) throws Exception {
+
+        ServiceProvider serviceProvider = new ServiceProvider();
+        serviceProvider.setApplicationName(appName);
+        serviceProvider.setDescription(appDescription);
+        appMgtclient.createApplication(serviceProvider);
+
+        serviceProvider = appMgtclient.getApplication(appName);
+        if (serviceProvider != null) {
+            serviceProvider.setDiscoverable(true);
+            serviceProvider.setImageUrl(APP_IMAGE_URL);
+            serviceProvider.setAccessUrl(APP_ACCESS_URL);
+            appMgtclient.updateApplicationData(serviceProvider);
+
+            return serviceProvider;
+        }
+
+        return null;
+    }
 }

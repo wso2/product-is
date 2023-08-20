@@ -229,7 +229,7 @@ public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2Se
         disableUserPatchOp.setValue(true);
         scim2RestClient.updateUser(new PatchOperationRequestObject().addOperations(disableUserPatchOp), userId);
 
-        Boolean accountActiveValue = (Boolean) ((JSONObject) scim2RestClient.getUser(userId).get(USER_SCHEMA_ATTRIBUTE))
+        Boolean accountActiveValue = (Boolean) ((JSONObject) scim2RestClient.getUser(userId, null).get(USER_SCHEMA_ATTRIBUTE))
                 .get(ACCOUNT_DISABLED_ATTRIBUTE);
         Assert.assertTrue(accountActiveValue, "User account didn't disabled");
     }

@@ -37,19 +37,25 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
-import org.wso2.carbon.identity.user.store.configuration.stub.dto.UserStoreDTO;
-import org.wso2.identity.integration.common.clients.UserManagementClient;
-import org.wso2.identity.integration.common.clients.user.store.config.UserStoreConfigAdminServiceClient;
-import org.wso2.identity.integration.common.utils.UserStoreConfigUtils;
+import org.wso2.carbon.automation.test.utils.dbutils.H2DataBaseManager;
+import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.test.base.TomcatInitializerTestCase;
 import org.wso2.identity.integration.test.oidc.OIDCAbstractIntegrationTest;
 import org.wso2.identity.integration.test.oidc.OIDCUtilTest;
 import org.wso2.identity.integration.test.oidc.bean.OIDCApplication;
+import org.wso2.identity.integration.test.rest.api.server.user.store.v1.model.UserStoreReq;
+import org.wso2.identity.integration.test.rest.api.server.user.store.v1.model.UserStoreReq.Property;
+import org.wso2.identity.integration.test.rest.api.user.common.model.GroupRequestObject;
+import org.wso2.identity.integration.test.rest.api.user.common.model.GroupRequestObject.MemberItem;
+import org.wso2.identity.integration.test.rest.api.user.common.model.ListObject;
+import org.wso2.identity.integration.test.rest.api.user.common.model.RoleRequestObject;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
+import org.wso2.identity.integration.test.restclients.UserStoreMgtRestClient;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -73,21 +79,30 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
     private static final String PRIMARY_PASSWORD = "primaryPassword";
     private static final String SECONDARY_USERNAME = "secondaryUsername";
     private static final String SECONDARY_PASSWORD = "secondaryPassword";
-    private static final UserStoreConfigUtils USER_STORE_CONFIG_UTILS = new UserStoreConfigUtils();
     private static final String PERMISSION_LOGIN = "/permission/admin/login";
-    private static final String JDBC_CLASS = "org.wso2.carbon.user.core.jdbc.UniqueIDJDBCUserStoreManager";
     private static final String DOMAIN_ID = "WSO2TEST.COM";
+    private static final String PRIMARY_USER_GROUP = "jdbcUserStoreGroup";
     private static final String PRIMARY_USER_ROLE = "jdbcUserStoreRole";
-    private static final String SECONDARY_USER_ROLE = DOMAIN_ID + "/" + "jdbcUserStoreRole";
+    private static final String SECONDARY_USER_GROUP = DOMAIN_ID + "/" + "jdbcSecondaryUserStoreGroup";
+    private static final String SECONDARY_USER_ROLE = "jdbcSecondaryUserStoreRole";
     private static final String USER_STORE_DB_NAME = "SECONDARY_USER_STORE_DB";
+    private static final String USER_STORE_TYPE = "VW5pcXVlSURKREJDVXNlclN0b3JlTWFuYWdlcg";
     private static final Log LOG = LogFactory.getLog(TomcatInitializerTestCase.class);
+    private static final String DB_USER_NAME = "wso2automation";
+    private static final String DB_USER_PASSWORD = "wso2automation";
     private OIDCApplication playgroundApp;
     private HttpClient client;
     private String sessionDataKey;
-    private UserStoreConfigAdminServiceClient userStoreConfigAdminServiceClient;
-    private UserManagementClient userMgtClient;
     private Tomcat tomcat;
     private String clientID;
+    private UserStoreMgtRestClient userStoreMgtRestClient;
+    private String userStoreId;
+    private String secondaryUserStoreRoleId;
+    private String secondaryUserStoreUserId;
+    private String primaryUserStoreUserId;
+    private String primaryUserStoreRoleId;
+    private String secondaryUserStoreGroupId;
+    private String primaryUserStoreGroupId;
 
     @DataProvider(name = "userCredentialProvider")
     public static Object[][] userCredentialProvider() {
@@ -99,20 +114,12 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
     public void testInit() throws Exception {
 
         super.init();
+        userStoreMgtRestClient = new UserStoreMgtRestClient(serverURL, tenantInfo);
+        addSecondaryJDBCUserStore();
 
-        // Register a secondary user store
-        userStoreConfigAdminServiceClient = new UserStoreConfigAdminServiceClient(backendURL, sessionCookie);
-        userMgtClient = new UserManagementClient(backendURL, getSessionCookie());
-        UserStoreDTO userStoreDTO = userStoreConfigAdminServiceClient.createUserStoreDTO(JDBC_CLASS, DOMAIN_ID,
-                USER_STORE_CONFIG_UTILS.getJDBCUserStoreProperties(USER_STORE_DB_NAME));
-        userStoreConfigAdminServiceClient.addUserStore(userStoreDTO);
-        Thread.sleep(5000);
-        boolean isSecondaryUserStoreDeployed = USER_STORE_CONFIG_UTILS.waitForUserStoreDeployment(
-                userStoreConfigAdminServiceClient, DOMAIN_ID);
-        Assert.assertTrue(isSecondaryUserStoreDeployed);
-        // Creating users in the primary and secondary user stores
         addUserIntoJDBCUserStore(PRIMARY_USERNAME, PRIMARY_PASSWORD, false);
         addUserIntoJDBCUserStore(SECONDARY_USERNAME, SECONDARY_PASSWORD, true);
+
         // Creating, registering and starting application on tomcat
         createAndRegisterPlaygroundApplication();
         startTomcat();
@@ -149,9 +156,13 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
     public void atEnd() throws Exception {
 
         stopTomcat();
-        userStoreConfigAdminServiceClient.deleteUserStore(DOMAIN_ID);
-        userMgtClient.deleteUser(PRIMARY_USERNAME);
-        userMgtClient.deleteUser(DOMAIN_ID + "/" + SECONDARY_USERNAME);
+        scim2RestClient.deleteUser(primaryUserStoreUserId);
+        scim2RestClient.deleteUser(secondaryUserStoreUserId);
+        scim2RestClient.deleteGroup(primaryUserStoreGroupId);
+        scim2RestClient.deleteGroup(secondaryUserStoreGroupId);
+        scim2RestClient.deleteRole(primaryUserStoreRoleId);
+        scim2RestClient.deleteRole(secondaryUserStoreRoleId);
+        userStoreMgtRestClient.deleteUserStore(userStoreId);
         deleteApplication(playgroundApp);
         clear();
     }
@@ -201,8 +212,8 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
         playgroundApp.addRequiredClaim(OIDCUtilTest.emailClaimUri);
         playgroundApp.addRequiredClaim(OIDCUtilTest.firstNameClaimUri);
         playgroundApp.addRequiredClaim(OIDCUtilTest.lastNameClaimUri);
-        ServiceProvider serviceProvider = new ServiceProvider();
-        createApplication(serviceProvider, playgroundApp);
+
+        createApplication(playgroundApp);
         clientID = playgroundApp.getClientId();
     }
 
@@ -210,16 +221,33 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
             throws Exception {
 
         if (isSecondaryStoreUser) {
-            userMgtClient.addRole(SECONDARY_USER_ROLE, null, new String[]{PERMISSION_LOGIN});
-            Assert.assertTrue(userMgtClient.roleNameExists(SECONDARY_USER_ROLE), "Role name doesn't exist");
-            userMgtClient.addUser(DOMAIN_ID + "/" + username, password, new String[]{SECONDARY_USER_ROLE}, null);
-            Assert.assertTrue(userMgtClient.userNameExists(SECONDARY_USER_ROLE, DOMAIN_ID + "/" + username),
-                    "User is not created.");
+            secondaryUserStoreUserId = scim2RestClient.createUser(new UserObject()
+                    .userName(DOMAIN_ID + "/" + username)
+                    .password(password));
+
+            secondaryUserStoreGroupId = scim2RestClient.createGroup(new GroupRequestObject()
+                    .displayName(SECONDARY_USER_GROUP)
+                    .addMember(new MemberItem().value(secondaryUserStoreUserId)));
+
+            secondaryUserStoreRoleId = scim2RestClient.addRole(new RoleRequestObject()
+                    .displayName(SECONDARY_USER_ROLE)
+                    .addPermissions(PERMISSION_LOGIN)
+                    .addUsers(new ListObject().value(secondaryUserStoreUserId))
+                    .addGroups(new ListObject().value(secondaryUserStoreGroupId)));
         } else {
-            userMgtClient.addRole(PRIMARY_USER_ROLE, null, new String[]{PERMISSION_LOGIN});
-            Assert.assertTrue(userMgtClient.roleNameExists(PRIMARY_USER_ROLE), "Role name doesn't exist");
-            userMgtClient.addUser(username, password, new String[]{PRIMARY_USER_ROLE}, null);
-            Assert.assertTrue(userMgtClient.userNameExists(PRIMARY_USER_ROLE, username), "User is not created.");
+            primaryUserStoreUserId = scim2RestClient.createUser(new UserObject()
+                    .userName(username)
+                    .password(password));
+
+            primaryUserStoreGroupId = scim2RestClient.createGroup(new GroupRequestObject()
+                    .displayName(PRIMARY_USER_GROUP)
+                    .addMember(new MemberItem().value(primaryUserStoreUserId)));
+
+            primaryUserStoreRoleId = scim2RestClient.addRole(new RoleRequestObject()
+                    .displayName(PRIMARY_USER_ROLE)
+                    .addPermissions(PERMISSION_LOGIN)
+                    .addUsers(new ListObject().value(primaryUserStoreUserId))
+                    .addGroups(new ListObject().value(primaryUserStoreGroupId)));
         }
     }
 
@@ -244,5 +272,60 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
         tomcat.stop();
         tomcat.destroy();
         LOG.info("Tomcat server stopped.");
+    }
+
+    private void addSecondaryJDBCUserStore() throws Exception {
+
+        //creating database
+        H2DataBaseManager dbmanager = new H2DataBaseManager("jdbc:h2:" + ServerConfigurationManager.getCarbonHome()
+                + "/repository/database/" + USER_STORE_DB_NAME, DB_USER_NAME, DB_USER_PASSWORD);
+        dbmanager.executeUpdate(new File(ServerConfigurationManager.getCarbonHome() + "/dbscripts/h2.sql"));
+        dbmanager.disconnect();
+
+        // Register a secondary user store
+        UserStoreReq userStore = new UserStoreReq()
+                .typeId(USER_STORE_TYPE)
+                .name(DOMAIN_ID)
+                .addPropertiesItem(new Property()
+                        .name("driverName")
+                        .value("org.h2.Driver"))
+                .addPropertiesItem(new Property()
+                        .name("url")
+                        .value("jdbc:h2:./repository/database/" + USER_STORE_DB_NAME))
+                .addPropertiesItem(new Property()
+                        .name("userName")
+                        .value(DB_USER_NAME))
+                .addPropertiesItem(new Property()
+                        .name("password")
+                        .value(DB_USER_PASSWORD))
+                .addPropertiesItem(new Property()
+                        .name("PasswordJavaRegEx")
+                        .value("^[\\S]{5,30}$"))
+                .addPropertiesItem(new Property()
+                        .name("UsernameJavaRegEx")
+                        .value("^[\\S]{5,30}$"))
+                .addPropertiesItem(new Property()
+                        .name("Disabled")
+                        .value("false"))
+                .addPropertiesItem(new Property()
+                        .name("PasswordDigest")
+                        .value("SHA-256"))
+                .addPropertiesItem(new Property()
+                        .name("StoreSaltedPassword")
+                        .value("true"))
+                .addPropertiesItem(new Property()
+                        .name("SCIMEnabled")
+                        .value("true"))
+                .addPropertiesItem(new Property()
+                        .name("CountRetrieverClass")
+                        .value("org.wso2.carbon.identity.user.store.count.jdbc.JDBCUserStoreCountRetriever"))
+                .addPropertiesItem(new Property()
+                        .name("UserIDEnabled")
+                        .value("true"));
+
+        userStoreId = userStoreMgtRestClient.addUserStore(userStore);
+        Thread.sleep(5000);
+        boolean isSecondaryUserStoreDeployed = userStoreMgtRestClient.waitForUserStoreDeployment(DOMAIN_ID);
+        Assert.assertTrue(isSecondaryUserStoreDeployed);
     }
 }

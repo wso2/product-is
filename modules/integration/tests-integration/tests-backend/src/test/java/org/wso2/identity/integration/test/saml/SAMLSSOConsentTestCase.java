@@ -1,18 +1,21 @@
 /*
- *  Copyright (c) 2021, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2021, WSO2 LLC. (http://www.wso2.com).
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
+
 package org.wso2.identity.integration.test.saml;
 
 import org.apache.commons.codec.binary.Base64;
@@ -25,20 +28,20 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.identity.application.common.model.xsd.Claim;
-import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
-import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
-import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration.DialectEnum;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimMappings;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.RequestedClaimConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAML2ServiceProvider;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
-import org.wso2.identity.integration.test.utils.UserUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -57,8 +60,8 @@ public class SAMLSSOConsentTestCase extends AbstractSAMLSSOTestCase{
 
     private SAMLConfig config;
     private String resultPage;
-    private ServiceProvider serviceProvider;
     private String userId;
+    private String appId;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -67,30 +70,26 @@ public class SAMLSSOConsentTestCase extends AbstractSAMLSSOTestCase{
                 ClaimType.LOCAL, App.SUPER_TENANT_APP_WITH_SIGNING);
         super.init(config.getUserMode());
         super.testInit();
-        super.createUser(config);
-        userId = UserUtil.getUserId(config.getUser().getTenantAwareUsername(), isServer.getContextTenant());
 
-        serviceProvider = new ServiceProvider();
-        serviceProvider = createApplication(serviceProvider, config, APPLICATION_NAME);
+        userId = super.addUser(config);
+        appId = super.addApplication(config, APPLICATION_NAME);
     }
 
     @AfterClass(alwaysRun = true)
     public void testClear() throws Exception{
 
-        super.deleteUser(config);
-        super.deleteApplication(APPLICATION_NAME);
+        super.deleteUser(userId);
+        super.deleteApp(appId);
         super.testClear();
     }
 
     @Test(description = "Add service provider", groups = "wso2.is", priority = 1)
     public void testAddSP() throws Exception {
 
-        boolean isAddSuccess = ssoConfigServiceClient.addServiceProvider(super.createSsoServiceProviderDTO(config));
-        Assert.assertTrue(isAddSuccess, "Adding a service provider has failed for " + config);
-
-        SAMLSSOServiceProviderDTO[] samlSSOServiceProviderDTOs = ssoConfigServiceClient
-                .getServiceProviders().getServiceProviders();
-        Assert.assertEquals(samlSSOServiceProviderDTOs[0].getIssuer(), config.getApp().getArtifact(),
+        applicationMgtRestClient.updateInboundDetailsOfApplication(appId, getSAMLConfigurations(config), SAML);
+        SAML2ServiceProvider samlConfig = applicationMgtRestClient.getSAMLInboundDetails(appId);
+        Assert.assertNotNull(samlConfig, "Adding a service provider has failed for " + config);
+        Assert.assertEquals(samlConfig.getIssuer(), config.getApp().getArtifact(),
                 "Adding a service provider has failed for " + config);
     }
 
@@ -196,17 +195,16 @@ public class SAMLSSOConsentTestCase extends AbstractSAMLSSOTestCase{
 
     private void updateSPClaimConfiguration() throws Exception {
 
-        List<ClaimMapping> claimMappingList = new ArrayList<>();
+        ApplicationPatchModel applicationPatch = new ApplicationPatchModel()
+                .claimConfiguration(new ClaimConfiguration()
+                        .dialect(DialectEnum.LOCAL)
+                        .addClaimMappingsItem(new ClaimMappings()
+                                .applicationClaim(emailClaimURI)
+                                .localClaim(new Claim().uri(emailClaimURI)))
+                        .addRequestedClaimsItem(new RequestedClaimConfiguration()
+                                .claim(new Claim().uri(emailClaimURI))));
 
-        Claim emailClaim = new Claim();
-        emailClaim.setClaimUri(emailClaimURI);
-        ClaimMapping emailClaimMapping = new ClaimMapping();
-        emailClaimMapping.setRequested(true);
-        emailClaimMapping.setLocalClaim(emailClaim);
-        emailClaimMapping.setRemoteClaim(emailClaim);
-        claimMappingList.add(emailClaimMapping);
-
-        updateServiceProvider(serviceProvider, claimMappingList.toArray(new ClaimMapping[0]));
+        applicationMgtRestClient.updateApplication(appId, applicationPatch);
     }
 
     private String extractDataFromResponse(HttpResponse response) throws IOException {
@@ -237,26 +235,19 @@ public class SAMLSSOConsentTestCase extends AbstractSAMLSSOTestCase{
         return attributeMap;
     }
 
-    public ClaimMapping[] getClaimMappings() {
+    public ClaimConfiguration getClaimConfigurations() {
 
-        List<ClaimMapping> claimMappingList = new ArrayList<>();
-
-        Claim firstNameClaim = new Claim();
-        firstNameClaim.setClaimUri(firstNameClaimURI);
-        ClaimMapping firstNameClaimMapping = new ClaimMapping();
-        firstNameClaimMapping.setRequested(true);
-        firstNameClaimMapping.setLocalClaim(firstNameClaim);
-        firstNameClaimMapping.setRemoteClaim(firstNameClaim);
-        claimMappingList.add(firstNameClaimMapping);
-
-        Claim lastNameClaim = new Claim();
-        lastNameClaim.setClaimUri(lastNameClaimURI);
-        ClaimMapping lastNameClaimMapping = new ClaimMapping();
-        lastNameClaimMapping.setRequested(true);
-        lastNameClaimMapping.setLocalClaim(lastNameClaim);
-        lastNameClaimMapping.setRemoteClaim(lastNameClaim);
-        claimMappingList.add(lastNameClaimMapping);
-
-        return claimMappingList.toArray(new ClaimMapping[0]);
+        return new ClaimConfiguration()
+                .dialect(DialectEnum.LOCAL)
+                .addClaimMappingsItem(new ClaimMappings()
+                        .applicationClaim(firstNameClaimURI)
+                        .localClaim(new Claim().uri(firstNameClaimURI)))
+                .addClaimMappingsItem(new ClaimMappings()
+                        .applicationClaim(lastNameClaimURI)
+                        .localClaim(new Claim().uri(lastNameClaimURI)))
+                .addRequestedClaimsItem(new RequestedClaimConfiguration()
+                        .claim(new Claim().uri(firstNameClaimURI)))
+                .addRequestedClaimsItem(new RequestedClaimConfiguration()
+                        .claim(new Claim().uri(lastNameClaimURI)));
     }
 }

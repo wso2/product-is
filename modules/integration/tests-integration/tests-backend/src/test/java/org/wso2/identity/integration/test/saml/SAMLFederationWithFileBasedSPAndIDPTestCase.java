@@ -1,20 +1,20 @@
 /*
-*  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*  WSO2 Inc. licenses this file to you under the Apache License,
-*  Version 2.0 (the "License"); you may not use this file except
-*  in compliance with the License.
-*  You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing,
-* software distributed under the License is distributed on an
-* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-* KIND, either express or implied.  See the License for the
-* specific language governing permissions and limitations
-* under the License.
-*/
+ * Copyright (c) 2017, WSO2 LLC. (http://www.wso2.com).
+ *
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 
 package org.wso2.identity.integration.test.saml;
 
@@ -39,22 +39,37 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.context.beans.Tenant;
+import org.wso2.carbon.automation.engine.context.beans.User;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
-import org.wso2.carbon.identity.application.common.model.xsd.Claim;
-import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
-import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
-import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
-import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.carbon.integration.common.utils.FileManager;
 import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
-import org.wso2.carbon.um.ws.api.stub.ClaimValue;
-import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.test.application.mgt.AbstractIdentityFederationTestCase;
 import org.wso2.identity.integration.test.base.TestDataHolder;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration.DialectEnum;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimMappings;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.RequestedClaimConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAML2Configuration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAML2ServiceProvider;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAMLAssertionConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAMLAttributeProfile;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAMLResponseSigning;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SingleLogoutProfile;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SingleSignOnProfile;
+import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
+import org.wso2.identity.integration.test.rest.api.user.common.model.Name;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
+import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
 
+import javax.xml.xpath.XPathExpressionException;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -74,7 +89,6 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
     private static final String INBOUND_AUTH_TYPE = "samlsso";
     private static final String SECONDARY_IS_SERVICE_PROVIDER_NAME = "primaryIS";
     private static final String SECONDARY_IS_SAML_ISSUER_NAME = "is-sp-saml";
-    private static final int TOMCAT_8490 = 8490;
     private static final int PORT_OFFSET_0 = 0;
     private static final int PORT_OFFSET_1 = 1;
     //Claim Uris
@@ -86,10 +100,12 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
     private static final String userName = "samlFederatedUser1";
     private static final String password = "samlFederatedUserPassword1";
     private static final String email = "samlFederatedUser1@wso2.com";
-    private static final String profileName = "default";
     private static String COMMON_AUTH_URL = "https://localhost:%s/commonauth";
     private ServerConfigurationManager serverConfigurationManager;
-    private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
+    private TestDataHolder testDataHolder;
+    private SCIM2RestClient scim2RestClient;
+    private String userId;
+    private String secondaryISAppId;
 
     @BeforeClass(alwaysRun = true)
     public void initTest() throws Exception {
@@ -99,13 +115,12 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
         serverConfigurationManager = new ServerConfigurationManager(isServer);
         applyConfigurationsForPrimaryIS();
         // Start secondary IS server
-        TestDataHolder testDataHolder = TestDataHolder.getInstance();
+        testDataHolder = TestDataHolder.getInstance();
         // Create service clients
-        super.createServiceClients(PORT_OFFSET_1, null, new IdentityConstants.ServiceClientType[]{IdentityConstants
-                .ServiceClientType.APPLICATION_MANAGEMENT, IdentityConstants.ServiceClientType.SAML_SSO_CONFIG});
-        remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(getSecondaryISURI(), testDataHolder.getAutomationContext()
-                .getContextTenant().getContextUser().getUserName(), testDataHolder.getAutomationContext().getContextTenant()
-                .getContextUser().getPassword());
+        createServiceClients(PORT_OFFSET_1, new IdentityConstants.ServiceClientType[]{
+                IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT});
+        scim2RestClient = new SCIM2RestClient(getSecondaryISURI(), getTenantInfo());
+
         // Create user in secondary IS server
         createUserInSecondaryIS();
     }
@@ -114,11 +129,10 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
     public void endTest() throws Exception {
 
         try {
-            super.deleteServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
+            deleteApplication(PORT_OFFSET_1, secondaryISAppId);
             deleteUserInSecondaryIS();
 
-            remoteUSMServiceClient = null;
-
+            scim2RestClient.closeHttpClient();
             removeConfigurationsFromPrimaryIS();
         } catch (Exception e) {
             log.error("Failure occurred due to :" + e.getMessage(), e);
@@ -129,32 +143,19 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
     @Test(groups = "wso2.is", description = "Check create service provider in secondary IS")
     public void testCreateServiceProviderInSecondaryIS() throws Exception {
 
-        super.addServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
+        ApplicationModel applicationCreationModel = new ApplicationModel()
+                .name(SECONDARY_IS_SERVICE_PROVIDER_NAME)
+                .description("This is a test Service Provider")
+                .isManagementApp(true)
+                .inboundProtocolConfiguration(new InboundProtocols().saml(getSAMLConfigsForSPInSecondaryIS()))
+                .claimConfiguration(getClaimConfigsForSPInSecondaryIS());
 
-        ServiceProvider serviceProvider = getServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
-        Assert.assertNotNull(serviceProvider, "Failed to create service provider 'secondarySP' in secondary IS");
-        // Set SAML configurations
-        updateServiceProviderWithSAMLConfigs(PORT_OFFSET_1, SECONDARY_IS_SAML_ISSUER_NAME, String.format
-                (COMMON_AUTH_URL, DEFAULT_PORT + PORT_OFFSET_0), serviceProvider);
-        // Set claim configurations
-        serviceProvider.getClaimConfig().setLocalClaimDialect(false);
-        serviceProvider.getClaimConfig().setClaimMappings(getClaimMappingsForSPInSecondaryIS());
-        updateServiceProvider(PORT_OFFSET_1, serviceProvider);
+        secondaryISAppId = addApplication(PORT_OFFSET_1, applicationCreationModel);
+        ApplicationResponseModel application = getApplication(PORT_OFFSET_1, secondaryISAppId);
+        Assert.assertNotNull(application, "Failed to create service provider 'primaryIS' in primary IS");
 
-        serviceProvider = getServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SERVICE_PROVIDER_NAME);
-
-        InboundAuthenticationRequestConfig[] configs = serviceProvider.getInboundAuthenticationConfig()
-                .getInboundAuthenticationRequestConfigs();
-        boolean success = false;
-        if (configs != null) {
-            for (InboundAuthenticationRequestConfig config : configs) {
-                if (SECONDARY_IS_SAML_ISSUER_NAME.equals(config.getInboundAuthKey()) && INBOUND_AUTH_TYPE.equals
-                        (config.getInboundAuthType())) {
-                    success = true;
-                    break;
-                }
-            }
-        }
+        boolean success = SECONDARY_IS_SAML_ISSUER_NAME.equals(application.getIssuer()) &&
+                INBOUND_AUTH_TYPE.equals(application.getInboundProtocols().get(0).getType());
 
         Assert.assertTrue(success, "Failed to update service provider with inbound SAML2 configs in secondary IS");
     }
@@ -199,7 +200,7 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
         request.addHeader("User-Agent", USER_AGENT);
         request.addHeader("Referer", PRIMARY_IS_SAML_ACS_URL);
 
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("username", userName));
         urlParameters.add(new BasicNameValuePair("password", password));
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionId));
@@ -230,7 +231,7 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
         request.addHeader("Referer", PRIMARY_IS_SAML_ACS_URL);
         HttpResponse response = client.execute(request);
 
-        Map<String, Integer> searchParams = new HashMap<String, Integer>();
+        Map<String, Integer> searchParams = new HashMap<>();
         searchParams.put("SAMLResponse", 5);
         searchParams.put("RelayState", 5);
         return extractValuesFromResponse(response, searchParams);
@@ -242,7 +243,7 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
         HttpPost request = new HttpPost(String.format(COMMON_AUTH_URL, DEFAULT_PORT + PORT_OFFSET_0));
         request.setHeader("User-Agent", USER_AGENT);
 
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("SAMLResponse", searchResults.get("SAMLResponse")));
         urlParameters.add(new BasicNameValuePair("RelayState", searchResults.get("RelayState")));
         request.setEntity(new UrlEncodedFormEntity(urlParameters));
@@ -278,7 +279,7 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
 
         HttpPost request = new HttpPost(PRIMARY_IS_SAML_ACS_URL);
         request.setHeader("User-Agent", USER_AGENT);
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("SAMLResponse", samlResponse));
         request.setEntity(new UrlEncodedFormEntity(urlParameters));
         HttpResponse response = client.execute(request);
@@ -309,46 +310,9 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
         Assert.assertEquals(attributeMap.get(emailLocalClaimURI), email, "Expected claim value for email is " + email);
     }
 
-    protected void updateServiceProviderWithSAMLConfigs(int portOffset, String issuerName, String acsUrl,
-                                                        ServiceProvider serviceProvider) throws Exception {
-
-        String attributeConsumingServiceIndex = super.createSAML2WebSSOConfiguration(portOffset,
-                getSAMLSSOServiceProviderDTO(issuerName, acsUrl));
-        Assert.assertNotNull(attributeConsumingServiceIndex, "Failed to create SAML2 Web SSO configuration for " +
-                "issuer" + " '" + issuerName + "'");
-
-        InboundAuthenticationRequestConfig samlAuthenticationRequestConfig = new InboundAuthenticationRequestConfig();
-        samlAuthenticationRequestConfig.setInboundAuthKey(issuerName);
-        samlAuthenticationRequestConfig.setInboundAuthType(INBOUND_AUTH_TYPE);
-        org.wso2.carbon.identity.application.common.model.xsd.Property property = new org.wso2.carbon.identity
-                .application.common.model.xsd.Property();
-        property.setName("attrConsumServiceIndex");
-        property.setValue(attributeConsumingServiceIndex);
-        samlAuthenticationRequestConfig.setProperties(new org.wso2.carbon.identity.application.common.model.xsd
-                .Property[]{property});
-
-        serviceProvider.getInboundAuthenticationConfig().setInboundAuthenticationRequestConfigs(new
-                InboundAuthenticationRequestConfig[]{samlAuthenticationRequestConfig});
-    }
-
-    protected SAMLSSOServiceProviderDTO getSAMLSSOServiceProviderDTO(String issuerName, String acsUrl) {
-
-        SAMLSSOServiceProviderDTO samlssoServiceProviderDTO = new SAMLSSOServiceProviderDTO();
-        samlssoServiceProviderDTO.setIssuer(issuerName);
-        samlssoServiceProviderDTO.setAssertionConsumerUrls(new String[]{acsUrl});
-        samlssoServiceProviderDTO.setDefaultAssertionConsumerUrl(acsUrl);
-        samlssoServiceProviderDTO.setNameIDFormat(SAML_NAME_ID_FORMAT);
-        samlssoServiceProviderDTO.setDoSignAssertions(true);
-        samlssoServiceProviderDTO.setDoSignResponse(true);
-        samlssoServiceProviderDTO.setDoSingleLogout(true);
-        samlssoServiceProviderDTO.setEnableAttributeProfile(true);
-        samlssoServiceProviderDTO.setEnableAttributesByDefault(true);
-        return samlssoServiceProviderDTO;
-    }
-
     private Map<String, String> extractClaims(String claimString) {
         String[] dataArray = StringUtils.substringsBetween(claimString, "<td>", "</td>");
-        Map<String, String> attributeMap = new HashMap<String, String>();
+        Map<String, String> attributeMap = new HashMap<>();
         String key = null;
         String value;
         for (int i = 0; i < dataArray.length; i++) {
@@ -408,7 +372,7 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
         FileManager.copyResourceToFileSystem(sourceFile.getAbsolutePath(), identityConfigPath, sourceFile.getName());
     }
 
-    protected void removeFromIdentity(String fileName, String targetDirectory) throws IOException {
+    protected void removeFromIdentity(String fileName, String targetDirectory) {
 
         String identityConfigPath = Utils.getResidentCarbonHome() + File.separator + "repository" + File.separator +
                 "conf" + File.separator + "identity";
@@ -425,70 +389,77 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
     protected void createUserInSecondaryIS() {
         log.info("Creating User " + userName);
         try {
-            remoteUSMServiceClient.addUser(userName, password, null, getUserClaims(), profileName, true);
+            UserObject user = new UserObject()
+                    .userName(userName)
+                    .password(password)
+                    .name(new Name().givenName(userName))
+                    .addEmail(new Email().value(email));
+
+            userId = scim2RestClient.createUser(user);
         } catch (Exception e) {
             Assert.fail("Error while creating the user", e);
         }
-
     }
 
     protected void deleteUserInSecondaryIS() {
         log.info("Deleting User " + userName);
         try {
-            remoteUSMServiceClient.deleteUser(userName);
+            scim2RestClient.deleteUser(userId);
         } catch (Exception e) {
             Assert.fail("Error while deleting the user", e);
         }
     }
 
-    protected ClaimValue[] getUserClaims() {
+    private SAML2Configuration getSAMLConfigsForSPInSecondaryIS() {
 
-        ClaimValue[] claimValues;
+        SAML2ServiceProvider serviceProvider = new SAML2ServiceProvider()
+                .issuer(SECONDARY_IS_SAML_ISSUER_NAME)
+                .addAssertionConsumerUrl(String.format(COMMON_AUTH_URL, DEFAULT_PORT + PORT_OFFSET_0))
+                .defaultAssertionConsumerUrl(String.format(COMMON_AUTH_URL, DEFAULT_PORT + PORT_OFFSET_0))
+                .attributeProfile(new SAMLAttributeProfile()
+                        .enabled(true)
+                        .alwaysIncludeAttributesInResponse(true))
+                .singleLogoutProfile(new SingleLogoutProfile()
+                        .enabled(true))
+                .responseSigning(new SAMLResponseSigning()
+                        .enabled(true))
+                .singleSignOnProfile(new SingleSignOnProfile()
+                        .assertion(new SAMLAssertionConfiguration().nameIdFormat(SAML_NAME_ID_FORMAT)));
 
-        claimValues = new ClaimValue[2];
-
-        ClaimValue firstNameClaim = new ClaimValue();
-        firstNameClaim.setClaimURI(firstNameLocalClaimURI);
-        firstNameClaim.setValue(userName);
-        claimValues[0] = firstNameClaim;
-
-        ClaimValue emailClaim = new ClaimValue();
-        emailClaim.setClaimURI(emailLocalClaimURI);
-        emailClaim.setValue(email);
-        claimValues[1] = emailClaim;
-
-        return claimValues;
+        return new SAML2Configuration().manualConfiguration(serviceProvider);
     }
 
-    protected ClaimMapping[] getClaimMappingsForSPInSecondaryIS() {
+    private ClaimConfiguration getClaimConfigsForSPInSecondaryIS() {
 
-        ClaimMapping[] claimMappingArray = new ClaimMapping[2];
-
-        Claim firstNameLocalClaim = new Claim();
-        firstNameLocalClaim.setClaimUri(firstNameLocalClaimURI);
-        Claim firstNameRemoteClaim = new Claim();
-        firstNameRemoteClaim.setClaimUri(firstNameRemoteIdPClaimURI);
-        ClaimMapping firstNameClaimMapping = new ClaimMapping();
-        firstNameClaimMapping.setRequested(true);
-        firstNameClaimMapping.setLocalClaim(firstNameLocalClaim);
-        firstNameClaimMapping.setRemoteClaim(firstNameRemoteClaim);
-        claimMappingArray[0] = firstNameClaimMapping;
-
-        Claim emailLocalClaim = new Claim();
-        emailLocalClaim.setClaimUri(emailLocalClaimURI);
-        Claim emailRemoteClaim = new Claim();
-        emailRemoteClaim.setClaimUri(emailRemoteIdPClaimURI);
-        ClaimMapping emailClaimMapping = new ClaimMapping();
-        emailClaimMapping.setRequested(true);
-        emailClaimMapping.setLocalClaim(emailLocalClaim);
-        emailClaimMapping.setRemoteClaim(emailRemoteClaim);
-        claimMappingArray[1] = emailClaimMapping;
-
-        return claimMappingArray;
+        return new ClaimConfiguration()
+                .dialect(DialectEnum.CUSTOM)
+                .addClaimMappingsItem(new ClaimMappings()
+                        .applicationClaim(firstNameRemoteIdPClaimURI)
+                        .localClaim(new Claim().uri(firstNameLocalClaimURI)))
+                .addClaimMappingsItem(new ClaimMappings()
+                        .applicationClaim(emailRemoteIdPClaimURI)
+                        .localClaim(new Claim().uri(emailLocalClaimURI)))
+                .addRequestedClaimsItem(new RequestedClaimConfiguration()
+                        .claim(new Claim().uri(firstNameRemoteIdPClaimURI)))
+                .addRequestedClaimsItem(new RequestedClaimConfiguration()
+                        .claim(new Claim().uri(emailRemoteIdPClaimURI)));
     }
 
     protected String getSecondaryISURI() {
-        return String.format("https://localhost:%s/services/", DEFAULT_PORT + PORT_OFFSET_1);
+        return String.format("https://localhost:%s/", DEFAULT_PORT + PORT_OFFSET_1);
+    }
+
+    private Tenant getTenantInfo() throws XPathExpressionException {
+
+        User registryMountTenantAdmin = new User();
+        registryMountTenantAdmin.setUserName(testDataHolder.getAutomationContext().getContextTenant().getContextUser()
+                .getUserName());
+        registryMountTenantAdmin.setPassword(testDataHolder.getAutomationContext().getContextTenant().getContextUser()
+                .getPassword());
+        Tenant registryMountTenant =  new Tenant();
+        registryMountTenant.setContextUser(registryMountTenantAdmin);
+
+        return registryMountTenant;
     }
 
     private CloseableHttpClient getClosableHTTPClient() {
@@ -504,5 +475,4 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
                 .setDefaultRequestConfig(requestConfig)
                 .build();
     }
-
 }

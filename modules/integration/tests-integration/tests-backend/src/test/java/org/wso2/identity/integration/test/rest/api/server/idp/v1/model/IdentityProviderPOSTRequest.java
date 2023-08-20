@@ -35,6 +35,7 @@ public class IdentityProviderPOSTRequest {
     private Boolean isFederationHub = false;
     private String homeRealmIdentifier;
     private Certificate certificate;
+    private String idpIssuerName;
     private String alias;
     private Claims claims;
     private Roles roles;
@@ -184,6 +185,26 @@ public class IdentityProviderPOSTRequest {
     /**
      *
      **/
+    public IdentityProviderPOSTRequest idpIssuerName(String idpIssuerName) {
+
+        this.idpIssuerName = idpIssuerName;
+        return this;
+    }
+
+    @ApiModelProperty()
+    @JsonProperty("idpIssuerName")
+    @Valid
+    public String getIdpIssuerName() {
+        return idpIssuerName;
+    }
+
+    public void setIdpIssuerName(String idpIssuerName) {
+        this.idpIssuerName = idpIssuerName;
+    }
+
+    /**
+     *
+     **/
     public IdentityProviderPOSTRequest alias(String alias) {
 
         this.alias = alias;
@@ -291,18 +312,44 @@ public class IdentityProviderPOSTRequest {
             return false;
         }
         IdentityProviderPOSTRequest identityProviderPOSTRequest = (IdentityProviderPOSTRequest) o;
-        return Objects.equals(this.name, identityProviderPOSTRequest.name) && Objects.equals(this.description, identityProviderPOSTRequest.description) && Objects.equals(this.image, identityProviderPOSTRequest.image) && Objects.equals(this.isPrimary, identityProviderPOSTRequest.isPrimary) && Objects.equals(this.isFederationHub, identityProviderPOSTRequest.isFederationHub) && Objects.equals(this.homeRealmIdentifier, identityProviderPOSTRequest.homeRealmIdentifier) && Objects.equals(this.certificate, identityProviderPOSTRequest.certificate) && Objects.equals(this.alias, identityProviderPOSTRequest.alias) && Objects.equals(this.claims, identityProviderPOSTRequest.claims) && Objects.equals(this.roles, identityProviderPOSTRequest.roles) && Objects.equals(this.federatedAuthenticators, identityProviderPOSTRequest.federatedAuthenticators) && Objects.equals(this.provisioning, identityProviderPOSTRequest.provisioning);
+        return Objects.equals(this.name, identityProviderPOSTRequest.name) &&
+                Objects.equals(this.description, identityProviderPOSTRequest.description) &&
+                Objects.equals(this.image, identityProviderPOSTRequest.image) &&
+                Objects.equals(this.isPrimary, identityProviderPOSTRequest.isPrimary) &&
+                Objects.equals(this.isFederationHub, identityProviderPOSTRequest.isFederationHub) &&
+                Objects.equals(this.homeRealmIdentifier, identityProviderPOSTRequest.homeRealmIdentifier) &&
+                Objects.equals(this.certificate, identityProviderPOSTRequest.certificate) &&
+                Objects.equals(this.idpIssuerName, identityProviderPOSTRequest.idpIssuerName) &&
+                Objects.equals(this.alias, identityProviderPOSTRequest.alias) &&
+                Objects.equals(this.claims, identityProviderPOSTRequest.claims) &&
+                Objects.equals(this.roles, identityProviderPOSTRequest.roles) &&
+                Objects.equals(this.federatedAuthenticators, identityProviderPOSTRequest.federatedAuthenticators) &&
+                Objects.equals(this.provisioning, identityProviderPOSTRequest.provisioning);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, description, image, isPrimary, isFederationHub, homeRealmIdentifier, certificate, alias, claims, roles, federatedAuthenticators, provisioning);
+        return Objects.hash(name, description, image, isPrimary, isFederationHub, homeRealmIdentifier, certificate,
+                idpIssuerName, alias, claims, roles, federatedAuthenticators, provisioning);
     }
 
     @Override
     public String toString() {
 
-        return "class IdentityProviderPOSTRequest {\n" + "    name: " + toIndentedString(name) + "\n" + "    description: " + toIndentedString(description) + "\n" + "    image: " + toIndentedString(image) + "\n" + "    isPrimary: " + toIndentedString(isPrimary) + "\n" + "    isFederationHub: " + toIndentedString(isFederationHub) + "\n" + "    homeRealmIdentifier: " + toIndentedString(homeRealmIdentifier) + "\n" + "    certificate: " + toIndentedString(certificate) + "\n" + "    alias: " + toIndentedString(alias) + "\n" + "    claims: " + toIndentedString(claims) + "\n" + "    roles: " + toIndentedString(roles) + "\n" + "    federatedAuthenticators: " + toIndentedString(federatedAuthenticators) + "\n" + "    provisioning: " + toIndentedString(provisioning) + "\n" + "}";
+        return "class IdentityProviderPOSTRequest {\n" +
+                "    name: " + toIndentedString(name) + "\n" +
+                "    description: " + toIndentedString(description) + "\n" +
+                "    image: " + toIndentedString(image) + "\n" +
+                "    isPrimary: " + toIndentedString(isPrimary) + "\n" +
+                "    isFederationHub: " + toIndentedString(isFederationHub) + "\n" +
+                "    homeRealmIdentifier: " + toIndentedString(homeRealmIdentifier) + "\n" +
+                "    certificate: " + toIndentedString(certificate) + "\n" +
+                "    idpIssuerName: " + toIndentedString(idpIssuerName) + "\n" +
+                "    alias: " + toIndentedString(alias) + "\n" +
+                "    claims: " + toIndentedString(claims) + "\n" +
+                "    roles: " + toIndentedString(roles) + "\n" +
+                "    federatedAuthenticators: " + toIndentedString(federatedAuthenticators) + "\n" +
+                "    provisioning: " + toIndentedString(provisioning) + "\n" + "}";
     }
 
     /**

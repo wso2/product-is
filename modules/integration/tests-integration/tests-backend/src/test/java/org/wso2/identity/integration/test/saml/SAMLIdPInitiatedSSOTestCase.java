@@ -1,19 +1,19 @@
 /*
- * Copyright (c) 2020, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2020, WSO2 LLC. (http://www.wso2.com).
  *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing,
- *  software distributed under the License is distributed on an
- *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- *  KIND, either express or implied.  See the License for the
- *  specific language governing permissions and limitations
- *  under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 package org.wso2.identity.integration.test.saml;
@@ -69,6 +69,8 @@ public class SAMLIdPInitiatedSSOTestCase extends AbstractSAMLSSOTestCase {
     private Lookup<CookieSpecProvider> cookieSpecRegistry;
     private RequestConfig requestConfig;
     private SAMLConfig samlConfig;
+    private String appId;
+    private String userId;
 
     @Factory(dataProvider = "samlConfigProvider")
     public SAMLIdPInitiatedSSOTestCase(SAMLConfig config) {
@@ -95,7 +97,7 @@ public class SAMLIdPInitiatedSSOTestCase extends AbstractSAMLSSOTestCase {
 
         super.init(samlConfig.getUserMode());
         super.testInit();
-        super.createApplication(samlConfig, samlConfig.getApp().getArtifact());
+        appId = super.addApplication(samlConfig, samlConfig.getApp().getArtifact());
         cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
                 .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
                 .build();
@@ -106,15 +108,14 @@ public class SAMLIdPInitiatedSSOTestCase extends AbstractSAMLSSOTestCase {
                 .setDefaultCookieSpecRegistry(cookieSpecRegistry)
                 .setDefaultRequestConfig(requestConfig)
                 .setDefaultCookieStore(cookieStore).disableRedirectHandling().build();
-        super.createUser(samlConfig);
+        userId = super.addUser(samlConfig);
     }
 
     @AfterClass(alwaysRun = true)
     public void testClear() throws Exception {
 
-        super.deleteUser(samlConfig);
-        super.ssoConfigServiceClient.removeServiceProvider(samlConfig.getApp().getArtifact());
-        super.deleteApplication(samlConfig.getApp().getArtifact());
+        super.deleteUser(userId);
+        super.deleteApp(appId);
         super.testClear();
     }
 
@@ -122,7 +123,8 @@ public class SAMLIdPInitiatedSSOTestCase extends AbstractSAMLSSOTestCase {
     public void testIdPInitiatedSSO() throws Exception {
 
         HttpResponse idpInitResponse;
-        ssoConfigServiceClient.addServiceProvider(super.createSsoSPDTOForIdPInit(samlConfig));
+        applicationMgtRestClient.updateInboundDetailsOfApplication(appId,
+                super.getSAMLConfigurationsForIdPInit(samlConfig), "saml");
         if (samlConfig.getUserMode().name().equals("TENANT_ADMIN")) {
             idpInitResponse = Utils.sendGetRequest(String.format(IDP_INIT_SSO_TENANT_URL, IS_DEFAULT_HTTPS_PORT,
                     samlConfig.getApp().getArtifact()), USER_AGENT, httpClient);

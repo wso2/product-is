@@ -23,12 +23,12 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>6.2.0-alpha4-SNAPSHOT</version>
+        <version>6.2.0-alpha5-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <artifactId>api-resources</artifactId>
-    <version>6.2.0-alpha4-SNAPSHOT</version>
+    <version>6.2.0-alpha5-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>WSO2 Identity Server - Rest API</name>
@@ -116,6 +116,16 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity.user.api</groupId>
                 <artifactId>org.wso2.carbon.identity.api.user.functionality.common</artifactId>
+                <version>${identity.user.api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.user.api</groupId>
+                <artifactId>org.wso2.carbon.identity.rest.api.user.organization.v1</artifactId>
+                <version>${identity.user.api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.user.api</groupId>
+                <artifactId>org.wso2.carbon.identity.api.user.organization.common</artifactId>
                 <version>${identity.user.api.version}</version>
             </dependency>
 
@@ -438,6 +448,26 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity.server.api</groupId>
                 <artifactId>org.wso2.carbon.identity.api.server.idv.provider.common</artifactId>
+                <version>${identity.server.api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.server.api</groupId>
+                <artifactId>org.wso2.carbon.identity.api.server.organization.management.v1</artifactId>
+                <version>${identity.server.api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.server.api</groupId>
+                <artifactId>org.wso2.carbon.identity.api.server.organization.management.common</artifactId>
+                <version>${identity.server.api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.server.api</groupId>
+                <artifactId>org.wso2.carbon.identity.api.server.organization.role.management.v1</artifactId>
+                <version>${identity.server.api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.server.api</groupId>
+                <artifactId>org.wso2.carbon.identity.api.server.organization.role.management.common</artifactId>
                 <version>${identity.server.api.version}</version>
             </dependency>
 

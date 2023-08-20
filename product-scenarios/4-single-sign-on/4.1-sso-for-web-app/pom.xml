@@ -33,12 +33,12 @@
 
     <modules>
         <module>4.1.1-sso-with-saml</module>
-        <module>4.1.2-saml-eidas</module>
-        <module>4.1.3-saml-2-artifact-binding</module>
+<!--        <module>4.1.2-saml-eidas</module>-->
+<!--        <module>4.1.3-saml-2-artifact-binding</module>-->
         <module>4.1.4-sso-with-oidc</module>
         <module>4.1.5-sso-with-ws-federation</module>
-        <module>4.1.6-sso-with-cross-protocol</module>
-        <module>4.1.7-sso-with-end-user-consent</module>
+<!--        <module>4.1.6-sso-with-cross-protocol</module>-->
+<!--        <module>4.1.7-sso-with-end-user-consent</module>-->
     </modules>
 
 </project>

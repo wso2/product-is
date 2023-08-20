@@ -1,17 +1,19 @@
 /*
- * Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2018, WSO2 LLC. (http://www.wso2.com).
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
  * You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 package org.wso2.identity.integration.test.saml;
@@ -28,18 +30,25 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.identity.application.common.model.idp.xsd.FederatedAuthenticatorConfig;
-import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
-import org.wso2.carbon.identity.application.common.model.idp.xsd.Property;
-import org.wso2.carbon.identity.application.common.model.xsd.AuthenticationStep;
-import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationConfig;
-import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
-import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
-import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
-import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
-import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
-import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
 import org.wso2.identity.integration.test.application.mgt.AbstractIdentityFederationTestCase;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthenticationSequence;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthenticationSequence.TypeEnum;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Authenticator;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAML2Configuration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAML2ServiceProvider;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAMLAssertionConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAMLResponseSigning;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SingleLogoutProfile;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SingleSignOnProfile;
+import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.FederatedAuthenticatorRequest;
+import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.FederatedAuthenticatorRequest.FederatedAuthenticator;
+import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.IdentityProviderPOSTRequest;
+import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Property;
+import org.wso2.identity.integration.test.restclients.IdpMgtRestClient;
+import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
 
@@ -55,128 +64,96 @@ public class SAMLFederationDynamicQueryParametersTestCase extends AbstractIdenti
     public static final String SERVICE_PROVIDER = "SERVICE_PROVIDER";
     public static final String INBOUND_AUTH_KEY = "travelocity.com";
     public static final String INBOUND_AUTH_TYPE = "samlsso";
-    private ApplicationManagementServiceClient appMgtclient;
-    private IdentityProviderMgtServiceClient idpMgtClient;
-    private SAMLSSOConfigServiceClient ssoConfigServiceClient;
+    private static final String IDP_AUTHENTICATOR_NAME_SAML = "SAMLSSOAuthenticator";
+    private static final String ENCODED_IDP_AUTHENTICATOR_NAME_SAML = "U0FNTFNTT0F1dGhlbnRpY2F0b3I";
+    private static final String NAME_ID_FORMAT = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
 
     private static final String INBOUND_QUERY_PARAM = "inbound_request_param_key";
     private static final String INBOUND_QUERY_PARAM_VALUE = "inbound_request_param_value";
 
     private static final String DYNAMIC_QUERY_PARAM_KEY = "dynamic_query";
     private static final String DYNAMIC_QUERY = "dynamic_query={inbound_request_param_key}";
-    private static final String FEDERATED_AUTHENTICATION_TYPE = "federated";
     private static final String TRAVELOCITY_SAMPLE_APP_URL = "http://localhost:8490/travelocity.com";
+    private IdpMgtRestClient idpMgtRestClient;
+    private OAuth2RestClient applicationMgtRestClient;
+    private String idpId;
+    private String appId;
 
     @BeforeClass(alwaysRun = true)
     public void initTest() throws Exception {
 
         super.initTest();
 
-        String userName = userInfo.getUserName();
-        String password = userInfo.getPassword();
-
-        appMgtclient = new ApplicationManagementServiceClient(sessionCookie, backendURL, null);
-        idpMgtClient = new IdentityProviderMgtServiceClient(userName, password, backendURL);
-        ssoConfigServiceClient = new SAMLSSOConfigServiceClient(backendURL, userName, password);
-
+        idpMgtRestClient = new IdpMgtRestClient(serverURL, tenantInfo);
+        applicationMgtRestClient = new OAuth2RestClient(serverURL, tenantInfo);
     }
 
     @AfterClass(alwaysRun = true)
     public void endTest() throws Exception {
 
-        appMgtclient.deleteApplication(SERVICE_PROVIDER);
-        idpMgtClient.deleteIdP(IDENTITY_PROVIDER_NAME);
+        applicationMgtRestClient.deleteApplication(appId);
+        idpMgtRestClient.deleteIdp(idpId);
 
-        appMgtclient = null;
-        idpMgtClient = null;
+        applicationMgtRestClient.closeHttpClient();
+        idpMgtRestClient.closeHttpClient();
     }
 
     @Test(groups = "wso2.is", description = "Test federated IDP creation with SAML Federated Authenticator")
     public void testIdpWithDynamicQueryParams() throws Exception {
 
-        IdentityProvider identityProvider = new IdentityProvider();
-        identityProvider.setIdentityProviderName(IDENTITY_PROVIDER_NAME);
+        FederatedAuthenticator authenticator = new FederatedAuthenticator()
+                .authenticatorId(ENCODED_IDP_AUTHENTICATOR_NAME_SAML)
+                .name(IDP_AUTHENTICATOR_NAME_SAML)
+                .isEnabled(true)
+                .addProperty(new Property()
+                        .key(IdentityConstants.Authenticator.SAML2SSO.IDP_ENTITY_ID)
+                        .value("samlFedIdP"))
+                .addProperty(new Property()
+                        .key(IdentityConstants.Authenticator.SAML2SSO.SP_ENTITY_ID)
+                        .value("samlFedSP"))
+                .addProperty(new Property()
+                        .key(IdentityConstants.Authenticator.SAML2SSO.SSO_URL)
+                        .value("https://localhost:9453/samlsso"))
+                .addProperty(new Property()
+                        .key("commonAuthQueryParams")
+                        .value(DYNAMIC_QUERY));
 
-        FederatedAuthenticatorConfig saml2SSOAuthnConfig = new FederatedAuthenticatorConfig();
-        saml2SSOAuthnConfig.setName("SAMLSSOAuthenticator");
-        saml2SSOAuthnConfig.setDisplayName("samlsso");
-        saml2SSOAuthnConfig.setEnabled(true);
-        saml2SSOAuthnConfig.setProperties(getSAML2SSOAuthnConfigProperties());
-        identityProvider.setDefaultAuthenticatorConfig(saml2SSOAuthnConfig);
-        identityProvider.setFederatedAuthenticatorConfigs(new FederatedAuthenticatorConfig[]{saml2SSOAuthnConfig});
+        FederatedAuthenticatorRequest oidcAuthnConfig = new FederatedAuthenticatorRequest()
+                .defaultAuthenticatorId(ENCODED_IDP_AUTHENTICATOR_NAME_SAML)
+                .addAuthenticator(authenticator);
 
-        idpMgtClient.addIdP(identityProvider);
+        IdentityProviderPOSTRequest idpPostRequest = new IdentityProviderPOSTRequest()
+                .name(IDENTITY_PROVIDER_NAME)
+                .federatedAuthenticators(oidcAuthnConfig);
 
-        IdentityProvider idPByName = idpMgtClient.getIdPByName(IDENTITY_PROVIDER_NAME);
-        Assert.assertNotNull(idPByName);
+        idpId = idpMgtRestClient.createIdentityProvider(idpPostRequest);
+        Assert.assertNotNull(idpId, "Failed to create Identity Provider 'testIdP'");
     }
 
     @Test(groups = "wso2.is", description = "Test Service Provider creation with SAML Federated IDP Authentication",
             dependsOnMethods = {"testIdpWithDynamicQueryParams"})
     public void testCreateServiceProviderWithSAMLConfigsAndSAMLFedIdp() throws Exception {
 
-        ServiceProvider serviceProvider = new ServiceProvider();
-        serviceProvider.setApplicationName(SERVICE_PROVIDER);
-        appMgtclient.createApplication(serviceProvider);
+        ApplicationModel applicationCreationModel = new ApplicationModel()
+                .name(SERVICE_PROVIDER)
+                .inboundProtocolConfiguration(new InboundProtocols().saml(getSAMLConfigurations()))
+                .authenticationSequence(new AuthenticationSequence()
+                        .type(TypeEnum.USER_DEFINED)
+                        .addStepsItem(new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthenticationStep()
+                                .id(1)
+                                .addOptionsItem(new Authenticator()
+                                        .idp(IDENTITY_PROVIDER_NAME)
+                                        .authenticator(IDP_AUTHENTICATOR_NAME_SAML))));
 
-        serviceProvider = appMgtclient.getApplication(SERVICE_PROVIDER);
-        Assert.assertNotNull(serviceProvider, "Service Provider creation has failed.");
+        appId = applicationMgtRestClient.createApplication(applicationCreationModel);
+        ApplicationResponseModel application = applicationMgtRestClient.getApplication(appId);
+        Assert.assertNotNull(application, "Failed to create service provider 'SERVICE_PROVIDER'");
 
-        // Set SAML Inbound for the service provider.
-        ssoConfigServiceClient.addServiceProvider(createSsoServiceProviderDTOForTravelocityApp());
-        InboundAuthenticationConfig inboundAuthenticationConfig = new InboundAuthenticationConfig();
-        InboundAuthenticationRequestConfig requestConfig = new InboundAuthenticationRequestConfig();
-        requestConfig.setInboundAuthKey(INBOUND_AUTH_KEY);
-        requestConfig.setInboundAuthType(INBOUND_AUTH_TYPE);
+        SAML2ServiceProvider saml2AppConfig = applicationMgtRestClient.getSAMLInboundDetails(appId);
+        Assert.assertNotNull(saml2AppConfig, "Failed to update service provider with SAML inbound configs.");
 
-        org.wso2.carbon.identity.application.common.model.xsd.Property attributeConsumerServiceIndexProp =
-                new org.wso2.carbon.identity.application.common.model.xsd.Property();
-        attributeConsumerServiceIndexProp.setName("attrConsumServiceIndex");
-        attributeConsumerServiceIndexProp.setValue("1239245949");
-        requestConfig.setProperties(new org.wso2.carbon.identity.application.common.model.xsd.Property[]{
-                attributeConsumerServiceIndexProp});
-        inboundAuthenticationConfig
-                .setInboundAuthenticationRequestConfigs(new InboundAuthenticationRequestConfig[]{requestConfig});
-        serviceProvider.setInboundAuthenticationConfig(inboundAuthenticationConfig);
-
-        // Add SAML IDP as authentication step.
-        AuthenticationStep authStep = new AuthenticationStep();
-        org.wso2.carbon.identity.application.common.model.xsd.IdentityProvider idP =
-                new org.wso2.carbon.identity.application.common.model.xsd.IdentityProvider();
-        idP.setIdentityProviderName(IDENTITY_PROVIDER_NAME);
-        org.wso2.carbon.identity.application.common.model.xsd.FederatedAuthenticatorConfig saml2SSOAuthnConfig = new org.wso2.carbon.identity.application.common.model.xsd.FederatedAuthenticatorConfig();
-        saml2SSOAuthnConfig.setName("SAMLSSOAuthenticator");
-        saml2SSOAuthnConfig.setDisplayName("samlsso");
-        idP.setFederatedAuthenticatorConfigs(new org.wso2.carbon.identity.application.common.model.xsd.FederatedAuthenticatorConfig[]{saml2SSOAuthnConfig});
-        authStep.setFederatedIdentityProviders(
-                new org.wso2.carbon.identity.application.common.model.xsd.IdentityProvider[]{idP});
-        serviceProvider.getLocalAndOutBoundAuthenticationConfig().setAuthenticationSteps(
-                new AuthenticationStep[]{authStep});
-        serviceProvider.getLocalAndOutBoundAuthenticationConfig().setAuthenticationType(FEDERATED_AUTHENTICATION_TYPE);
-
-        appMgtclient.updateApplicationData(serviceProvider);
-        serviceProvider = appMgtclient.getApplication(SERVICE_PROVIDER);
-
-        Assert.assertNotNull(serviceProvider);
-
-        Assert.assertNotNull(serviceProvider.getInboundAuthenticationConfig());
-        InboundAuthenticationRequestConfig[] inboundAuthenticationRequestConfigs =
-                serviceProvider.getInboundAuthenticationConfig().getInboundAuthenticationRequestConfigs();
-        Assert.assertNotNull(inboundAuthenticationRequestConfigs);
-
-        boolean inboundAuthUpdateSuccess = false;
-        for (InboundAuthenticationRequestConfig config : inboundAuthenticationRequestConfigs) {
-            if (INBOUND_AUTH_KEY.equals(config.getInboundAuthKey())
-                    && INBOUND_AUTH_TYPE.equals(config.getInboundAuthType())) {
-                inboundAuthUpdateSuccess = true;
-                break;
-            }
-        }
-        Assert.assertTrue(inboundAuthUpdateSuccess, "Failed to update service provider with SAML inbound configs.");
-
-        Assert.assertNotNull(serviceProvider.getLocalAndOutBoundAuthenticationConfig());
-        Assert.assertEquals(serviceProvider.getLocalAndOutBoundAuthenticationConfig().getAuthenticationType(),
-                FEDERATED_AUTHENTICATION_TYPE);
+        Assert.assertEquals(TypeEnum.USER_DEFINED, application.getAuthenticationSequence().getType(),
+                "Failed to update local and outbound configs");
     }
 
     @Test(alwaysRun = true, description = "Test SAML Federation Request with Dynamic Query Parameters",
@@ -184,9 +161,7 @@ public class SAMLFederationDynamicQueryParametersTestCase extends AbstractIdenti
     public void testSAMLRedirectBindingDynamicWithInboundQueryParam() throws Exception {
 
         HttpGet request = new HttpGet(TRAVELOCITY_SAMPLE_APP_URL + "/samlsso?SAML2.HTTPBinding=HTTP-Redirect");
-        CloseableHttpClient client = null;
-        try {
-            client = HttpClientBuilder.create().disableRedirectHandling().build();
+        try (CloseableHttpClient client = HttpClientBuilder.create().disableRedirectHandling().build()) {
             // Do a redirect to travelocity app.
             HttpResponse response = client.execute(request);
             EntityUtils.consume(response.getEntity());
@@ -212,10 +187,6 @@ public class SAMLFederationDynamicQueryParametersTestCase extends AbstractIdenti
                 }
             }
             Assert.assertTrue(isDynamicQueryParamReplaced);
-        } finally {
-            if (client != null) {
-                client.close();
-            }
         }
     }
 
@@ -224,9 +195,7 @@ public class SAMLFederationDynamicQueryParametersTestCase extends AbstractIdenti
     public void testSAMLRedirectBindingDynamicWithoutInboundQueryParam() throws Exception {
 
         HttpGet request = new HttpGet(TRAVELOCITY_SAMPLE_APP_URL + "/samlsso?SAML2.HTTPBinding=HTTP-Redirect");
-        CloseableHttpClient client = null;
-        try {
-            client = HttpClientBuilder.create().disableRedirectHandling().build();
+        try (CloseableHttpClient client = HttpClientBuilder.create().disableRedirectHandling().build()) {
             // Do a redirect to travelocity app.
             HttpResponse response = client.execute(request);
             EntityUtils.consume(response.getEntity());
@@ -253,10 +222,6 @@ public class SAMLFederationDynamicQueryParametersTestCase extends AbstractIdenti
             }
 
             Assert.assertTrue(isDynamicQuerySentInFedAuthRequestEmpty);
-        } finally {
-            if (client != null) {
-                client.close();
-            }
         }
     }
 
@@ -265,45 +230,20 @@ public class SAMLFederationDynamicQueryParametersTestCase extends AbstractIdenti
         return URLEncodedUtils.parse(requestToFedIdpLocationHeader, StandardCharsets.UTF_8);
     }
 
-    private Property[] getSAML2SSOAuthnConfigProperties() {
+    private SAML2Configuration getSAMLConfigurations() {
 
-        Property[] properties = new Property[4];
-        Property property = new Property();
-        property.setName(IdentityConstants.Authenticator.SAML2SSO.IDP_ENTITY_ID);
-        property.setValue("samlFedIdP");
-        properties[0] = property;
+        SAML2ServiceProvider serviceProvider = new SAML2ServiceProvider()
+                .issuer(INBOUND_AUTH_KEY)
+                .addAssertionConsumerUrl(TRAVELOCITY_SAMPLE_APP_URL + "/home.jsp")
+                .defaultAssertionConsumerUrl((TRAVELOCITY_SAMPLE_APP_URL + "/home.jsp"))
+                .singleLogoutProfile(new SingleLogoutProfile()
+                        .enabled(true))
+                .responseSigning(new SAMLResponseSigning()
+                        .enabled(true))
+                .singleSignOnProfile(new SingleSignOnProfile()
+                        .assertion(new SAMLAssertionConfiguration().nameIdFormat(NAME_ID_FORMAT))
+                        .attributeConsumingServiceIndex("1239245949"));
 
-        property = new Property();
-        property.setName(IdentityConstants.Authenticator.SAML2SSO.SP_ENTITY_ID);
-        property.setValue("samlFedSP");
-        properties[1] = property;
-
-        property = new Property();
-        property.setName(IdentityConstants.Authenticator.SAML2SSO.SSO_URL);
-        property.setValue("https://localhost:9453/samlsso");
-        properties[2] = property;
-
-        property = new Property();
-        property.setName("commonAuthQueryParams");
-        property.setValue(DYNAMIC_QUERY);
-        properties[3] = property;
-
-        return properties;
-    }
-
-    private SAMLSSOServiceProviderDTO createSsoServiceProviderDTOForTravelocityApp() {
-
-        SAMLSSOServiceProviderDTO samlssoServiceProviderDTO = new SAMLSSOServiceProviderDTO();
-        samlssoServiceProviderDTO.setIssuer(INBOUND_AUTH_KEY);
-        samlssoServiceProviderDTO.setAssertionConsumerUrls(new String[]{TRAVELOCITY_SAMPLE_APP_URL + "/home" +
-                ".jsp"});
-        samlssoServiceProviderDTO.setDefaultAssertionConsumerUrl(TRAVELOCITY_SAMPLE_APP_URL + "/home.jsp");
-        samlssoServiceProviderDTO.setAttributeConsumingServiceIndex("1239245949");
-        samlssoServiceProviderDTO.setNameIDFormat("urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress");
-        samlssoServiceProviderDTO.setDoSignAssertions(true);
-        samlssoServiceProviderDTO.setDoSignResponse(true);
-        samlssoServiceProviderDTO.setDoSingleLogout(true);
-        samlssoServiceProviderDTO.setLoginPageURL("/carbon/admin/login.jsp");
-        return samlssoServiceProviderDTO;
+        return new SAML2Configuration().manualConfiguration(serviceProvider);
     }
 }
