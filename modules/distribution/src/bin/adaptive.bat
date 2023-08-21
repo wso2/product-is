@@ -132,10 +132,9 @@ if exist "%CARBON_HOME%\repository\components\lib\nashorn-core-*.jar" (
     echo Downloading required Nashorn library : nashorn-core-%NASHORN_VERSION%
 	  curl https://repo1.maven.org/maven2/org/openjdk/nashorn/nashorn-core/%NASHORN_VERSION%/nashorn-core-%NASHORN_VERSION%.jar -o %CARBON_HOME%/repository/components/lib/nashorn-core-%NASHORN_VERSION%.jar
     rem if download failed
-    set exit_code_n=%ERRORLEVEL%
-    if %exit_code_n% neq "0" (
-      echo Nashorn library update failed with exit code: %exit_code_n%
-      exit /b %exit_code_n%
+    if !ERRORLEVEL! neq 0 (
+      echo Nashorn library update failed with exit code: !ERRORLEVEL!
+      exit /b !ERRORLEVEL!
     )
     echo Nashorn library updated.
   )
@@ -144,10 +143,9 @@ if exist "%CARBON_HOME%\repository\components\lib\nashorn-core-*.jar" (
   echo Nashorn library not found. Starting to download.....
   curl https://repo1.maven.org/maven2/org/openjdk/nashorn/nashorn-core/%NASHORN_VERSION%/nashorn-core-%NASHORN_VERSION%.jar -o %CARBON_HOME%/repository/components/lib/nashorn-core-%NASHORN_VERSION%.jar
   rem if download failed
-  set exit_code_n=%ERRORLEVEL%
-  if %exit_code_n% neq "0" (
-  	echo Nashorn library download failed with exit code: %exit_code_n%
-  	exit /b %exit_code_n%
+  if !ERRORLEVEL! neq 0 (
+  	echo Nashorn library download failed with exit code: !ERRORLEVEL!
+  	exit /b !ERRORLEVEL!
   )
   echo Nashorn download completed. Downloaded version : nashorn-core-%NASHORN_VERSION%
 )
@@ -168,10 +166,9 @@ if exist "%CARBON_HOME%\repository\components\lib\asm-util-*.jar" (
     echo Downloading required ASM-Util library : asm-util-%ASM_VERSION%
 	  curl https://repo1.maven.org/maven2/org/ow2/asm/asm-util/%ASM_VERSION%/asm-util-%ASM_VERSION%.jar -o %CARBON_HOME%/repository/components/lib/asm-util-%ASM_VERSION%.jar
 	rem if download failed
-    set exit_code_a=%ERRORLEVEL%
-    if %exit_code_a% neq "0" (
-      echo ASM-Util library update failed with exit code: %exit_code_a%
-      exit /b %exit_code_a%
+    if !ERRORLEVEL! neq 0 (
+      echo ASM-Util library update failed with exit code: !ERRORLEVEL!
+      exit /b !ERRORLEVEL!
     )
     echo ASM-Util library updated.
   )
@@ -180,10 +177,10 @@ if exist "%CARBON_HOME%\repository\components\lib\asm-util-*.jar" (
   echo ASM-Util library not found. Starting to download.....
   curl https://repo1.maven.org/maven2/org/ow2/asm/asm-util/%ASM_VERSION%/asm-util-%ASM_VERSION%.jar -o %CARBON_HOME%/repository/components/lib/asm-util-%ASM_VERSION%.jar
   rem if download failed
-  set exit_code_a=%ERRORLEVEL%
-  if %exit_code_a% neq "0" (
-    echo ASM-Util library download failed with exit code: %exit_code_a%
-    exit /b %exit_code_a%
+  set exit_code_a=!ERRORLEVEL!
+  if !ERRORLEVEL! neq 0 (
+    echo ASM-Util library download failed with exit code: !ERRORLEVEL!
+    exit /b !ERRORLEVEL!
   )
   echo ASM-Util download completed. Downloaded version : asm-util-%ASM_VERSION%%
 )
