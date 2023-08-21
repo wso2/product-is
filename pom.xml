@@ -1695,6 +1695,16 @@
                 <version>${authenticator.local.auth.emailotp.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.identity.auth.otp.commons</groupId>
+                <artifactId>org.wso2.carbon.identity.auth.otp.core</artifactId>
+                <version>${authenticator.auth.otp.commons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.auth.otp.commons</groupId>
+                <artifactId>org.wso2.carbon.identity.auth.otp.core.server.feature</artifactId>
+                <version>${authenticator.auth.otp.commons.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.extension.identity.authenticator.outbound.twitter</groupId>
                 <artifactId>org.wso2.carbon.extension.identity.authenticator.twitter.connector</artifactId>
                 <version>${authenticator.twitter.version}</version>
@@ -2367,6 +2377,7 @@
         <authenticator.twitter.version>1.1.1</authenticator.twitter.version>
         <authenticator.x509.version>3.1.11</authenticator.x509.version>
         <identity.extension.utils>1.0.14</identity.extension.utils>
+        <authenticator.auth.otp.commons.version>1.0.0</authenticator.auth.otp.commons.version>
 
         <identity.org.mgt.version>1.3.55</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.0.60</identity.org.mgt.core.version>
