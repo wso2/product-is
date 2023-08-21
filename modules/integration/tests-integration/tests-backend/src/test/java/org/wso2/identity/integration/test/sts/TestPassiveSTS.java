@@ -77,6 +77,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
     private Lookup<CookieSpecProvider> cookieSpecRegistry;
     private RequestConfig requestConfig;
     private CloseableHttpClient client;
+    private BasicCookieStore cookieStore;
 
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
@@ -103,6 +104,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
         logManger.login(username, userPassword, isServer.getInstance().getHosts().get("default"));
 
         appMgtClient = new ApplicationManagementServiceClient(sessionCookie, backendURL, null);
+        cookieStore = new BasicCookieStore();
 
         cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
                 .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
@@ -113,7 +115,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
         client = HttpClientBuilder.create()
                 .setDefaultCookieSpecRegistry(cookieSpecRegistry)
                 .setDefaultRequestConfig(requestConfig)
-                .setDefaultCookieStore(new BasicCookieStore()).build();
+                .setDefaultCookieStore(cookieStore).build();
         String isURL = backendURL.substring(0, backendURL.indexOf("services/"));
         this.passiveStsURL = isURL + "passivests";
 
@@ -191,6 +193,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
             dependsOnMethods = {"testAddClaimConfiguration"})
     public void testInvokePassiveSTSEndPoint() throws IOException {
 
+        cookieStore.clear();
         String passiveParams = "?wreply=" + PASSIVE_STS_SAMPLE_APP_URL + "&wtrealm=PassiveSTSSampleApp";
         passiveParams = appendTenantDomainQueryParam(passiveParams);
         HttpGet request = new HttpGet(this.passiveStsURL + passiveParams);
@@ -214,6 +217,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
             {"testInvokePassiveSTSEndPoint"})
     public void testSendLoginRequestPost() throws Exception {
 
+        cookieStore.clear();
         HttpPost request = new HttpPost(COMMON_AUTH_URL);
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         urlParameters.add(new BasicNameValuePair("username", username));
