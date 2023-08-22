@@ -1,0 +1,18 @@
+{
+  "operation": "UPDATE",
+  "connectors": [
+    {
+      "id": "cGFzc3dvcmRIaXN0b3J5",
+      "properties":[
+        {"name":"passwordHistory.count","value":"10"},{"name":"passwordHistory.enable","value":"true"}
+      ]
+    },
+    {
+      "id": "cGFzc3dvcmRFeHBpcnlWMg",
+      "properties":[
+        {"name":"passwordExpiry.enablePasswordExpiry","value":"true"},
+        {"name":"passwordExpiry.passwordExpiryInDays","value":"20"}
+      ]
+    }
+  ]
+}
