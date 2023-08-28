@@ -201,7 +201,7 @@ jobs:
         run: |
           chmod +x ${{ github.workspace }}/.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh 
           sh ${{ github.workspace }}/.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" creds.json | tee "${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt"
-
+        continue-on-error: true
       - name: Persist Logs
         run: |
           mkdir -p ${{ github.workspace }}/.github/migration-tester/migration-automation/artifacts
@@ -277,6 +277,7 @@ jobs:
         run: |
           chmod +x ${{ github.workspace }}/.github/migration-tester/migration-automation/mac-os/migration-script-mac.sh 
           sh ${{ github.workspace }}/.github/migration-tester/migration-automation/mac-os/migration-script-mac.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" creds.json | tee "${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt"
+        continue-on-error: true
       - name: Persist Logs
         run: |
           mkdir -p ${{ github.workspace }}/.github/migration-tester/migration-automation/artifacts
@@ -326,6 +327,9 @@ jobs:
         run: |
           chmod +x ${{ github.workspace }}/.github/migration-tester/migration-automation/mac-os/migration-script-mac.sh 
           sh ${{ github.workspace }}/.github/migration-tester/migration-automation/mac-os/migration-script-mac.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" creds.json | tee "${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt"
+        continue-on-error: true
+      - name: Persist Logs
+        run: |
           mkdir -p ${{ github.workspace }}/.github/migration-tester/migration-automation/artifacts
           cp ${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt ${{ github.workspace }}/.github/migration-tester/migration-automation/artifacts/
         if: ${{ always() }}
