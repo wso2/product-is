@@ -141,6 +141,10 @@
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
+            <bean class="org.wso2.carbon.identity.api.dispatcher.core.JsonProcessingExceptionMapper"/>
+            <bean class="org.wso2.carbon.identity.api.dispatcher.core.APIErrorExceptionMapper"/>
+            <bean class="org.wso2.carbon.identity.api.dispatcher.core.InputValidationExceptionMapper"/>
+            <bean class="org.wso2.carbon.identity.api.dispatcher.core.DefaultExceptionMapper"/>
         </jaxrs:providers>
     </jaxrs:server>
     <jaxrs:server id="users" address="/users/v1">
