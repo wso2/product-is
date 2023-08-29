@@ -102,7 +102,6 @@ token_response=$(curl -s -X POST -d "$data" "https://www.googleapis.com/oauth2/v
 
 # Extract the access token from the response
 access_token=$(echo "$token_response" | jq -r .access_token)
-echo " test: $access_token"
 
 # Use the file_id variable in downloading the IS zip
 echo "file_id: $file_id"
