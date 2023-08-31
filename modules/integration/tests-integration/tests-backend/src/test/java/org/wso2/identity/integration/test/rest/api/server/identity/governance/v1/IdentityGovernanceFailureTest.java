@@ -36,6 +36,10 @@ import java.io.IOException;
  */
 public class IdentityGovernanceFailureTest extends IdentityGovernanceTestBase {
 
+    private static final String CATEGORY_PASSWORD_POLICIES = "UGFzc3dvcmQgUG9saWNpZXM";
+    private static final String INCORRECT_CATEGORY_PASSWORD_POLICIES = "YWNjb3VudC5sb2mhhbmRsZXI";
+    private static final String CATEGORY_ACCOUNT_MANAGEMENT_PROPERTIES = "QWNjb3VudCBNYW5hZ2VtZW50";
+
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public IdentityGovernanceFailureTest(TestUserMode userMode) throws Exception {
 
@@ -109,5 +113,32 @@ public class IdentityGovernanceFailureTest extends IdentityGovernanceTestBase {
         Response response = getResponseOfPost(IDENTITY_GOVERNANCE_ENDPOINT_URI + "/preferences", body);
         validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "IDG-50012",
                 "SelfRegistration.Enble");
+    }
+
+    @Test
+    public void testUpdateGovernanceConnectorsIncorrectCategoryID() throws IOException {
+
+        String body = readResource("update-multiple-connector-properties.json");
+        Response response = getResponseOfPatch(IDENTITY_GOVERNANCE_ENDPOINT_URI +
+                "/" + INCORRECT_CATEGORY_PASSWORD_POLICIES + "/connectors/", body);
+        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "IDG-50008");
+    }
+
+    @Test
+    public void testUpdateGovernanceConnectorsIncorrectConnectorID() throws IOException {
+
+        String body = readResource("update-multiple-connector-properties-incorrect.json");
+        Response response = getResponseOfPatch(IDENTITY_GOVERNANCE_ENDPOINT_URI +
+                                "/" + CATEGORY_PASSWORD_POLICIES + "/connectors/", body);
+        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "IDG-50009");
+    }
+
+    @Test
+    public void testUpdateGovernanceConnectorsMismatch() throws IOException {
+
+        String body = readResource("update-multiple-connector-properties.json");
+        Response response = getResponseOfPatch(IDENTITY_GOVERNANCE_ENDPOINT_URI +
+                "/" + CATEGORY_ACCOUNT_MANAGEMENT_PROPERTIES + "/connectors/", body);
+        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "IDG-50009");
     }
 }
