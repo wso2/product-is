@@ -179,6 +179,38 @@ else
     echo "$REPO_TEST_RESULT_2"
   )
 
+  if [ $REPO = "identity-apps" ]; then
+      MAIN_COMPONENT_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$' | tail -1)
+      SUB_COMPONENT_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$' | head -1)
+      REPO_BUILD_STATUS="SUCCESS"
+      if [ $MAIN_COMPONENT_BUILD_STATUS != "SUCCESS" ] || [ $SUB_COMPONENT_BUILD_STATUS != "SUCCESS" ]; then
+          REPO_BUILD_STATUS="FAILED"
+      fi
+      REPO_TEST_RESULT_1=$(sed -n -e '/Results :/,/Tests run:/ p' mvn-build.log)
+      REPO_TEST_RESULT_2=$(sed -n -e '/\[INFO\] Results:/,/\[INFO\] Tests run:/ p' mvn-build.log)
+  
+      REPO_FINAL_RESULT=$(
+          echo "==========================================================="
+          if [ $REPO_BUILD_STATUS = "SUCCESS" ]; then
+              echo "BUILD $REPO_BUILD_STATUS"
+          else
+              if [ $MAIN_COMPONENT_BUILD_STATUS != "SUCCESS" ]; then
+              echo "WSO2 Identity Server Apps - Parent Build Failed."
+              fi
+              if [ $SUB_COMPONENT_BUILD_STATUS != "SUCCESS" ]; then
+              echo "WSO2 Identity Server Apps - Login Portal Layouts Build Failed."
+              fi
+          fi
+          echo "=========================================================="
+          echo ""
+          echo "Built version: $DEPENDENCY_VERSION"
+          echo ""
+          echo "$REPO_TEST_RESULT_1"
+          echo ""
+          echo "$REPO_TEST_RESULT_2"
+      )
+  fi
+
   REPO_BUILD_RESULT_LOG_TEMP=$(echo "$REPO_FINAL_RESULT" | sed 's/$/%0A/')
   REPO_BUILD_RESULT_LOG=$(echo $REPO_BUILD_RESULT_LOG_TEMP)
   echo "::warning::$REPO_BUILD_RESULT_LOG"
