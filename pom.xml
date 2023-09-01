@@ -1357,9 +1357,9 @@
                 <version>${carbon.identity.framework.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.security.mgt</groupId>
+                <groupId>org.wso2.carbon.identity.framework</groupId>
                 <artifactId>org.wso2.carbon.security.mgt.stub</artifactId>
-                <version>${carbon.security.mgt.version}</version>
+                <version>${carbon.identity.framework.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.workflow.impl.bps</groupId>
@@ -2274,10 +2274,6 @@
         <!--Carbon Identity Framework Version-->
         <carbon.identity.framework.version>5.25.300</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
-
-        <!--Carbon Security Mgt Version-->
-        <carbon.security.mgt.version>1.0.0</carbon.security.mgt.version>
-        <carbon.security.mgt.version.range>[1.0.0,2.0.0)</carbon.security.mgt.version.range>
 
         <!--SAML Common Utils Version-->
         <saml.common.util.version>1.3.0</saml.common.util.version>
