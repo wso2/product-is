@@ -5,7 +5,7 @@ RED='\033[0;31m'
 GREEN='\033[0;32m\033[1m'
 PURPLE='\033[1;35m'
 BOLD='\033[1m'
-NC='\033[0m' # No Color
+RESET='\033[0m' # No Color
 
 email=$1
 password=$2
@@ -14,7 +14,7 @@ startServer=$3
 
 # Source env file
 . "/home/runner/work/product-is/product-is/.github/migration-tester/migration-automation/env.sh"
-echo -e "${GREEN}==> Env file for Ubuntu sourced successfully${NC}"
+echo -e "${GREEN}==> Env file for Ubuntu sourced successfully${RESET}"
 
 # Copy update tool from utils to bin folder
 cd "/home/runner/work/product-is/product-is/.github/migration-tester/utils/update-tools"
