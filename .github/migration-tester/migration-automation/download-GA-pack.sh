@@ -8,6 +8,7 @@ NC='\033[0m'           # reset color
 # Get the value of the inputs
 os=$2
 downloadingISVersion=$3
+startServer=$4
 
 # Setup file and path based on OS
 if [ "$os" = "ubuntu-latest" ]; then
@@ -16,11 +17,27 @@ if [ "$os" = "ubuntu-latest" ]; then
   . ./env.sh
   echo "${GREEN}==> Env file for Ubuntu sourced successfully${NC}"
 
+  if [ "$startServer" = "current" ]; then
+    cd "$IS_HOME_OLD"
+    echo "${GREEN}==> Navigated to newly created directory to download GA pack $downloadingISVersion ${NC}"
+  elif [ "$startServer" = "migrating" ]; then
+    cd "$IS_HOME_NEW"
+    echo "${GREEN}==> Navigated to newly created directory to download GA pack $downloadingISVersion ${NC}"
+  fi
+
 elif [ "$os" = "macos-latest" ]; then
   cd "/Users/runner/work/product-is/product-is/.github/migration-tester/migration-automation"
   chmod +x env.sh
   source ./env.sh
   echo "${GREEN}==> Env file for Mac sourced successfully${NC}"
+
+  if [ "$startServer" = "current" ]; then
+    cd "$IS_HOME_OLD_MAC"
+    echo "${GREEN}==> Navigated to newly created directory to download GA pack $downloadingISVersion ${NC}"
+  elif [ "$startServer" = "migrating" ]; then
+    cd "$IS_HOME_NEW_MAC"
+    echo "${GREEN}==> Navigated to newly created directory to download GA pack $downloadingISVersion ${NC}"
+  fi
 fi
 
 # Initialize file_id variable
