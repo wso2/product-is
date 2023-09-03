@@ -92,11 +92,10 @@ cd "$AUTOMATION_HOME"
 chmod +x download-GA-pack.sh
 bash download-GA-pack.sh "$keyJsonFile" "$os" "$currentVersion"
 
-#cd "$AUTOMATION_HOME"
-cd "$UBUNTU_HOME"
+cd "$AUTOMATION_HOME"
 
-# Update IS packs
-chmod +x update-pack.sh 
+# Update downloaded GA pack
+chmod +x update-GA-pack-ubuntu.sh
 sh update-pack.sh "$email" "$password" "current"
 wait $!
 
@@ -177,6 +176,14 @@ chmod +x download-GA-pack.sh
 bash download-GA-pack.sh "$keyJsonFile" "$os" "$migratingVersion"
 
 cd "$AUTOMATION_HOME"
+
+# Update downloaded GA pack
+chmod +x update-GA-pack-ubuntu.sh
+sh update-pack.sh "$email" "$password" "migrating"
+wait $!
+
+cd "$AUTOMATION_HOME"
+
 chmod +x download-migration-client.sh
 sh download-migration-client.sh "$migrationClient" &
 wait $!
