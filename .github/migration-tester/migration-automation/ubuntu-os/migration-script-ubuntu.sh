@@ -82,15 +82,11 @@ cd "$AUTOMATION_HOME"
 mkdir IS_HOME_OLD
 echo "${GREEN}==> Created a directory to place wso2IS${RESET}"
 
-# Navigate to folder
-cd IS_HOME_OLD
-echo "${GREEN}==> Navigated to home folder successfully${RESET}"
-
 cd "$AUTOMATION_HOME"
 
 # Download needed wso2IS zip
 chmod +x download-GA-pack.sh
-bash download-GA-pack.sh "$keyJsonFile" "$os" "$currentVersion"
+bash download-GA-pack.sh "$keyJsonFile" "$os" "$currentVersion" "current"
 
 cd "$AUTOMATION_HOME"
 
@@ -168,12 +164,11 @@ echo "${GREEN}==> Directed to home successfully${RESET}"
 mkdir IS_HOME_NEW
 echo "${GREEN}==> Created a directory for placing latest wso2IS${RESET}"
 
-# Navigate to folder
-cd "$IS_HOME_NEW"
+cd "$AUTOMATION_HOME"
 
 # Download needed (latest) wso2IS zip
 chmod +x download-GA-pack.sh
-bash download-GA-pack.sh "$keyJsonFile" "$os" "$migratingVersion"
+bash download-GA-pack.sh "$keyJsonFile" "$os" "$migratingVersion" "migrating"
 
 cd "$AUTOMATION_HOME"
 
