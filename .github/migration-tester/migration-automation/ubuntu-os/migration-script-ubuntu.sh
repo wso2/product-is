@@ -92,7 +92,7 @@ cd "$AUTOMATION_HOME"
 
 # Update downloaded GA pack
 chmod +x update-GA-pack-ubuntu.sh
-sh update-pack.sh "$email" "$password" "current"
+sh update-GA-pack-ubuntu.sh "$email" "$password" "current"
 wait $!
 
 cd "$AUTOMATION_HOME"
@@ -174,7 +174,7 @@ cd "$AUTOMATION_HOME"
 
 # Update downloaded GA pack
 chmod +x update-GA-pack-ubuntu.sh
-sh update-pack.sh "$email" "$password" "migrating"
+sh update-GA-pack-ubuntu.sh "$email" "$password" "migrating"
 wait $!
 
 cd "$AUTOMATION_HOME"
