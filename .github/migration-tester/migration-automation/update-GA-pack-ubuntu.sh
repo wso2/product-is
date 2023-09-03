@@ -27,7 +27,7 @@ elif [ "$startServer" = "migrating" ]; then
 fi
 copy_exit_code=$?
 if [ $copy_exit_code -eq 0 ]; then
-    echo "${GREEN}==> Update tool successfully copied to "$startServer"${RESET}"
+    echo "${GREEN}==> Update tool successfully copied to bin folder${RESET}"
 else
     echo "${RED}==> Failed to copy the update tool.${RESET}"
 fi
