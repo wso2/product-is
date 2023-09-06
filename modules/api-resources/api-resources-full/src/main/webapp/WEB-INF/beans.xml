@@ -48,6 +48,7 @@
     <import resource="classpath:META-INF/cxf/branding-preference-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/input-validation-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/idle-account-identification-cxf.xml"/>
+    <import resource="classpath:META-INF/cxf/expired-password-identification-cxf.xml"/>
 
     <import resource="classpath:META-INF/cxf/identity-governance-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/admin-advisory-management-server-v1-cxf.xml"/>
@@ -115,6 +116,7 @@
             <bean class="org.wso2.carbon.identity.api.server.organization.management.v1.OrganizationsApi"/>
             <bean class="org.wso2.carbon.identity.api.server.organization.role.management.v1.OrganizationsApi"/>
             <bean class="org.wso2.carbon.identity.api.server.organization.user.invitation.management.v1.GuestsApi"/>
+            <bean class="org.wso2.carbon.identity.api.expired.password.identification.v1.PasswordExpiredUsersApi"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">
