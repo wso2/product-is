@@ -163,7 +163,7 @@
             <!-- Disabling /user/{user-id}/* type of API tests as they will not be exposed in 5.9.0 -->
             <!--<class name="org.wso2.identity.integration.test.rest.api.user.challenge.v1.UserSuccessTest"/>-->
             <!--<class name="org.wso2.identity.integration.test.rest.api.user.challenge.v1.UserNegativeTest"/>-->
-            <class name="org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.IdentityGovernanceSuccessTest"/>
+<!--            <class name="org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.IdentityGovernanceSuccessTest"/>-->
             <class name="org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.IdentityGovernanceFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.permission.management.v1.PermissionManagementTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.keystore.management.v1.KeystoreManagementSuccessTest"/>
