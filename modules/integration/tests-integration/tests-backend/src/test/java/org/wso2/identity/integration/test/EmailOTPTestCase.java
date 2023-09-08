@@ -340,6 +340,7 @@ public class EmailOTPTestCase extends ISIntegrationTest {
         // This will add basic authentication as the first step for authentication.
         AuthenticationStep authenticationStepOne = new AuthenticationStep();
         authenticationStepOne.setStepOrder(1);
+        authenticationStepOne.setAttributeStep(true);
         LocalAuthenticatorConfig localConfig = new LocalAuthenticatorConfig();
         localConfig.setName(CommonConstants.BASIC_AUTHENTICATOR);
         localConfig.setDisplayName("basicauth");
