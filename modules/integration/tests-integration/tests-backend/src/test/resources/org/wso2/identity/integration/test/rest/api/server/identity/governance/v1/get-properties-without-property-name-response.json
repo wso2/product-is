@@ -68,6 +68,10 @@
         "value": "true"
       },
       {
+        "name": "EmailVerification.AskPassword.AccountActivation",
+        "value": "true"
+      },
+      {
         "name": "EmailVerification.ExpiryTime",
         "value": "1440"
       },
