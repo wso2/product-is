@@ -17,6 +17,8 @@ ALIAS = "test"
 
 BASE_URL = "https://localhost:9443"
 
+IAM_BASE_URL = "https://iam:9443"
+
 DCR_ENDPOINT = BASE_URL + "/api/identity/oauth2/dcr/v1.1/register"
 
 TOKEN_ENDPOINT = BASE_URL + "/oauth2/token"

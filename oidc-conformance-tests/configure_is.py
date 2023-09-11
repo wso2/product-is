@@ -34,7 +34,18 @@ headers = {
 }
 # path to product is zip file
 path_to_is_zip = str(sys.argv[1])
+profile = str(sys.argv[2])
 
+# check whether fapi or not
+def is_fapi_profile():
+    return profile == "FAPI"
+
+if is_fapi_profile():
+    client1_jwks = str(sys.argv[3])
+    client2_jwks = str(sys.argv[4])
+    client1_mtls = str(sys.argv[5])
+    client2_mtls = str(sys.argv[6])
+    resource_url_path = str(sys.argv[7])
 
 # use dcr to register a client
 def dcr():
@@ -276,31 +287,55 @@ def unpack_and_run(zip_file_name):
 
 # creates the IS_config.json file needed to run OIDC test plans and save in the given path
 def json_config_builder(service_provider_1, service_provider_2, output_file_path, plan_name):
-    config = {
-        "alias": constants.ALIAS,
-        "server": {
-            "issuer": constants.BASE_URL + "/oauth2/token",
-            "jwks_uri": constants.BASE_URL + "/oauth2/jwks",
-            "authorization_endpoint": constants.BASE_URL + "/oauth2/authorize",
-            "token_endpoint": constants.BASE_URL + "/oauth2/token",
-            "userinfo_endpoint": constants.BASE_URL + "/oauth2/userinfo",
-            "acr_values": "acr1"
-        },
-        "client": {
-            "client_id": service_provider_1['clientId'],
-            "client_secret": service_provider_1['clientSecret']
-        },
-        "client2": {
-            "client_id": service_provider_2['clientId'],
-            "client_secret": service_provider_2['clientSecret']
-        },
-        "client_secret_post": {
-            "client_id": service_provider_1['clientId'],
-            "client_secret": service_provider_1['clientSecret']
-        },
-        "browser": browser_configuration.CONFIG[plan_name]["browser"],
-        "override": browser_configuration.CONFIG[plan_name]["override"]
-    }
+    if is_fapi_profile():
+        config = {
+            "alias": plan_name,
+            "description": "FAPI conformance suite for wso2 identity server.",
+            "server": {
+                "discoveryUrl": constants.IAM_BASE_URL + "/oauth2/token/.well-known/openid-configuration"
+                },
+            "resource": {
+                "resourceUrl": constants.IAM_BASE_URL + resource_url_path
+            },
+            "client": {
+                "client_id": service_provider_1['clientId'],
+                "scope": "openid profile abc",
+                "jwks": client1_jwks
+            },
+            "client2": {
+                "client_id": service_provider_2['clientId'],
+                "scope": "openid profile abc",
+                "jwks": client2_jwks
+            },
+            "mtls": client1_mtls,
+            "mtls2": client2_mtls
+        }
+    else:
+        config = {
+            "alias": constants.ALIAS,
+            "server": {
+                "issuer": constants.BASE_URL + "/oauth2/token",
+                "jwks_uri": constants.BASE_URL + "/oauth2/jwks",
+                "authorization_endpoint": constants.BASE_URL + "/oauth2/authorize",
+                "token_endpoint": constants.BASE_URL + "/oauth2/token",
+                "userinfo_endpoint": constants.BASE_URL + "/oauth2/userinfo",
+                "acr_values": "acr1"
+            },
+            "client": {
+                "client_id": service_provider_1['clientId'],
+                "client_secret": service_provider_1['clientSecret']
+            },
+            "client2": {
+                "client_id": service_provider_2['clientId'],
+                "client_secret": service_provider_2['clientSecret']
+            },
+            "client_secret_post": {
+                "client_id": service_provider_1['clientId'],
+                "client_secret": service_provider_1['clientSecret']
+            },
+            "browser": browser_configuration.CONFIG[plan_name]["browser"],
+            "override": browser_configuration.CONFIG[plan_name]["override"]
+        }
 
     json_config = json.dumps(config, indent=4)
     f = open(output_file_path, "w")
@@ -390,32 +425,38 @@ edit_scope("openid", {
     "displayName": "openid"
 })
 
-generate_config_for_plan("./basic/config/service_provider1_config.json",
-                         "./basic/config/service_provider2_config.json",
-                         "basic/IS_config_basic.json",
-                         "basic")
+if is_fapi_profile():
+    generate_config_for_plan("./fapi/config/service_provider1_config.json",
+                         "./fapi/config/service_provider2_config.json",
+                         "fapi/IS_config_fapi.json",
+                         "fapi")
+else:
+    generate_config_for_plan("./basic/config/service_provider1_config.json",
+                            "./basic/config/service_provider2_config.json",
+                            "basic/IS_config_basic.json",
+                            "basic")
 
-generate_config_for_plan("./implicit/config/service_provider1_config.json",
-                         "./implicit/config/service_provider2_config.json",
-                         "implicit/IS_config_implicit.json",
-                         "implicit")
+    generate_config_for_plan("./implicit/config/service_provider1_config.json",
+                            "./implicit/config/service_provider2_config.json",
+                            "implicit/IS_config_implicit.json",
+                            "implicit")
 
-generate_config_for_plan("./hybrid/config/service_provider1_config.json",
-                         "./hybrid/config/service_provider2_config.json",
-                         "hybrid/IS_config_hybrid.json",
-                         "hybrid")
+    generate_config_for_plan("./hybrid/config/service_provider1_config.json",
+                            "./hybrid/config/service_provider2_config.json",
+                            "hybrid/IS_config_hybrid.json",
+                            "hybrid")
 
-generate_config_for_plan("./formpost-basic/config/service_provider1_config.json",
-                         "./formpost-basic/config/service_provider2_config.json",
-                         "formpost-basic/IS_config_formpost_basic.json",
-                         "formpost-basic")
+    generate_config_for_plan("./formpost-basic/config/service_provider1_config.json",
+                            "./formpost-basic/config/service_provider2_config.json",
+                            "formpost-basic/IS_config_formpost_basic.json",
+                            "formpost-basic")
 
-generate_config_for_plan("./formpost-implicit/config/service_provider1_config.json",
-                         "./formpost-implicit/config/service_provider2_config.json",
-                         "formpost-implicit/IS_config_formpost_implicit.json",
-                         "formpost-implicit")
+    generate_config_for_plan("./formpost-implicit/config/service_provider1_config.json",
+                            "./formpost-implicit/config/service_provider2_config.json",
+                            "formpost-implicit/IS_config_formpost_implicit.json",
+                            "formpost-implicit")
 
-generate_config_for_plan("./formpost-hybrid/config/service_provider1_config.json",
-                         "./formpost-hybrid/config/service_provider2_config.json",
-                         "formpost-hybrid/IS_config_formpost_hybrid.json",
-                         "formpost-hybrid")
+    generate_config_for_plan("./formpost-hybrid/config/service_provider1_config.json",
+                            "./formpost-hybrid/config/service_provider2_config.json",
+                            "formpost-hybrid/IS_config_formpost_hybrid.json",
+                            "formpost-hybrid")
