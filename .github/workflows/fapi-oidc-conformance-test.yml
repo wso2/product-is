@@ -13,15 +13,23 @@ on:
       tag:
         description: 'product-is tag name'
         required: false
+        default: 'v7.0.0-m1'
       download-url:
         description: 'URL to download product-is'
         required: false
-      conformance-suite-version:
-        description: 'Conformance suite release tag in https://github.com/openid-certification/conformance-suite.git (Default: v4.1.42)'
+      jwt-authenticator-tag:
+        description: 'pvt-key-jwt-authenticator tag name'
         required: false
-        default: 'v4.1.42'
+        default: 'v2.4.25'
+      jwt-authenticator-download-url:
+        description: 'URL to download pvt-key-jwt-authenticator jar'
+        required: false
+      conformance-suite-version:
+        description: 'Conformance suite release tag in https://github.com/openid-certification/conformance-suite.git'
+        required: false
+        default: 'v5.1.1'
       resource-url:
-        description: 'Resource url path (Default: /oauth2/userinfo)'
+        description: 'Resource url path'
         default: '/oauth2/userinfo'
       send-email:
         description: 'Send test results to email'
@@ -83,7 +91,55 @@ jobs:
           curl -vLJO -H 'Accept: application/octet-stream' \
            "${INPUT_URL}"
         fi
-      
+
+    - name: Ready IS for fapi - config pvt key jwt authenticator
+      run: |
+        JWT_AUTH_INPUT_URL=${{github.event.inputs.jwt-authenticator-download-url}}
+        JWT_AUTH_INPUT_TAG=${{github.event.inputs.jwt-authenticator-tag}}
+        
+        echo "Downloading JWT Client Authenticator..."
+        
+        if [[ -z "${JWT_AUTH_INPUT_URL}" ]] && [[ -z "${JWT_AUTH_INPUT_TAG}" ]]; then
+          echo "[JWT Client Authenticator] Either 'tag' or 'download-url' must be provided."
+          exit 1
+        fi
+        if [[ -z "${JWT_AUTH_INPUT_URL}" ]]; then
+          echo "[JWT Client Authenticator] No URL provided."
+          owner="wso2-extensions"
+          repo="identity-oauth-addons"
+          
+          if [[ -z "${JWT_AUTH_INPUT_TAG}" ]]; then
+            echo "[JWT Client Authenticator] No Tag provided."
+            tag=${GITHUB_REF:10}
+            tag_trimmed=${tag// }
+          else
+            tag=${JWT_AUTH_INPUT_TAG}
+            tag_trimmed=${tag// }
+            echo "Tag = $tag_trimmed"
+          fi
+        
+          artifact="org.wso2.carbon.identity.oauth2.token.handler.clientauth.jwt-${tag_trimmed:1}.jar"
+          download_url = https://github.com/${owner}/${repo}/releases/download/${tag_trimmed}/${artifact}
+          
+          echo "[JWT Client Authenticator] Artifact = $artifact"
+          echo "[JWT Client Authenticator] Download Url = $download_url"
+  
+          curl -vLJO -H 'Accept: application/octet-stream' \
+            "${download_url}"
+            
+          if [[ -f "$artifact" ]] then
+            echo "[JWT Client Authenticator] $TARGET_FILE downloaded."
+          else
+            echo "[JWT Client Authenticator] $TARGET_FILE NOT Downloaded."
+            exit 1
+        fi
+        
+        else
+          echo "[JWT Client Authenticator] Downloading via the provided url: ${JWT_AUTH_INPUT_URL}"
+          curl -vLJO -H 'Accept: application/octet-stream' \
+            "${JWT_AUTH_INPUT_URL}"
+        fi
+
     - name: Clone conformance suite
       run: |
         CONFORMANCE_SUITE_VERSION=${{github.event.inputs.conformance-suite-version}}

@@ -296,7 +296,7 @@ def unpack_and_run(zip_file_name):
 def json_config_builder(service_provider_1, service_provider_2, output_file_path, plan_name):
     if is_fapi_profile():
         config = {
-            "alias": plan_name,
+            "alias": constants.ALIAS,
             "description": "FAPI conformance suite for wso2 identity server.",
             "server": {
                 "discoveryUrl": constants.IAM_BASE_URL + "/oauth2/token/.well-known/openid-configuration"
