@@ -119,7 +119,7 @@ jobs:
           fi
         
           artifact="org.wso2.carbon.identity.oauth2.token.handler.clientauth.jwt-${tag_trimmed:1}.jar"
-          download_url = https://github.com/${owner}/${repo}/releases/download/${tag_trimmed}/${artifact}
+          download_url = "https://github.com/${owner}/${repo}/releases/download/${tag_trimmed}/${artifact}"
           
           echo "[JWT Client Authenticator] Artifact = $artifact"
           echo "[JWT Client Authenticator] Download Url = $download_url"
