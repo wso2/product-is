@@ -89,9 +89,11 @@ jobs:
         CONFORMANCE_SUITE_VERSION=${{github.event.inputs.conformance-suite-version}}
         git clone --depth 1 --branch release-${CONFORMANCE_SUITE_VERSION} https://github.com/openid-certification/conformance-suite.git
     
-    - name: Adding extra hosts to docker-compose-dev.yml
-      run: sed -i '/^    volumes.*/i \ \ \ \ extra_hosts:\n \ \ \ \ - "localhost:\$IP\"\n \ \ \ \ - "iam:\$IP\"' ./conformance-suite/docker-compose-dev.yml
-         
+    - name: Adding extra hosts to docker-compose-dev.yml and adding iam as a localhost to /etc/hosts
+      run: |
+        sed -i '/^    volumes.*/i \ \ \ \ extra_hosts:\n \ \ \ \ - "localhost:\$IP\"\n \ \ \ \ - "iam:\$IP\"' ./conformance-suite/docker-compose-dev.yml
+        sudo -- sh -c -e "echo '127.0.1.1 iam' >> /etc/hosts"
+
     - name: Run IS
       run: |
         PRODUCT_IS_ZIP=$(find ./ -name wso2is* -type f -printf "%f\n")
