@@ -127,7 +127,7 @@ jobs:
           curl -vLJO -H 'Accept: application/octet-stream' \
             "${download_url}"
             
-          if [[ -f "$artifact" ]] then
+          if [[ -f "$artifact" ]]; then
             echo "[JWT Client Authenticator] $TARGET_FILE downloaded."
           else
             echo "[JWT Client Authenticator] $TARGET_FILE NOT Downloaded."
