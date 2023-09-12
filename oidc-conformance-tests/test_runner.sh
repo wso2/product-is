@@ -43,7 +43,7 @@ then
   echo "FAPI test plan"
   echo "-----------------------------"
   echo
-  sed -i '/^all_test_modules.*/a print("All available test modules:")\nprint("==============================================")\nprint(all_test_modules)' $CONFORMANCE_SUITE_PATH/scripts/run-test-plan.py
+  sed -i '/^.*all_test_modules\ =.*/a \ \ \ \ print("All available OIDC test modules:")\n\ \ \ \ print("==============================================")\n\ \ \ \ print(json.dumps(all_test_modules,indent=4))' run-test-plan.py
   python3 $CONFORMANCE_SUITE_PATH/scripts/run-test-plan.py X[server_metadata=static][client_registration=static_client] $PATH_TO_SCRIPTS/fapi/IS_config_fapi.json 2>&1 | tee fapi-certification-test-plan-log.txt
   echo
 else
