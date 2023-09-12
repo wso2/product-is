@@ -21,7 +21,7 @@ IS_SUCCESSFUL=false
 IS_LOCAL=false
 
 # Default the profile to "OIDC"
-local PROFILE="${1:-OIDC}";
+PROFILE="${1:-OIDC}";
 
 if $IS_LOCAL; then
   PATH_TO_SCRIPTS=.
