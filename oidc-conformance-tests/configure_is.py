@@ -25,6 +25,7 @@ import os
 import sys
 from requests.exceptions import HTTPError
 import constants
+import base64
 from config import browser_configuration
 
 headers = {
@@ -41,10 +42,16 @@ def is_fapi_profile():
     return profile == "FAPI"
 
 if is_fapi_profile():
-    client1_jwks = str(sys.argv[3])
-    client2_jwks = str(sys.argv[4])
-    client1_mtls = str(sys.argv[5])
-    client2_mtls = str(sys.argv[6])
+    client1_jwks_en = str(sys.argv[3])
+    client2_jwks_en = str(sys.argv[4])
+    client1_mtls_en = str(sys.argv[5])
+    client2_mtls_en = str(sys.argv[6])
+
+    client1_jwks = json.loads(json.dumps(base64.b64decode(client1_jwks_en+"=").decode("utf-8")))
+    client2_jwks = json.loads(json.dumps(base64.b64decode(client2_jwks_en+"=").decode("utf-8")))
+    client1_mtls = json.loads(json.dumps(base64.b64decode(client1_mtls_en+"=").decode("utf-8")))
+    client2_mtls = json.loads(json.dumps(base64.b64decode(client2_mtls_en+"=").decode("utf-8")))
+
     resource_url_path = str(sys.argv[7])
 
 # use dcr to register a client
