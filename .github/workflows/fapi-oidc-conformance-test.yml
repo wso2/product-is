@@ -124,7 +124,7 @@ jobs:
           echo "[JWT Client Authenticator] Artifact = $artifact"
           echo "[JWT Client Authenticator] Downloading via: ${download_url}"
   
-          authenticator_file="$(curl -O --remote-name -s -w "%{filename_effective}" "${download_url}")"
+          authenticator_file="$(curl -vLJO -H 'Accept: application/octet-stream' --remote-name -s -w "%{filename_effective}" "${download_url}")"
           echo "[JWT Client Authenticator] $authenticator_file downloaded"
             
           if [[ -f "$artifact" ]]; then
@@ -136,29 +136,31 @@ jobs:
         
         else
           echo "[JWT Client Authenticator] Downloading via the provided url: ${JWT_AUTH_INPUT_URL}"
-          authenticator_file="$(curl -O --remote-name -s -w "%{filename_effective}" "${JWT_AUTH_INPUT_URL}")"
+          authenticator_file="$(curl -vLJO -H 'Accept: application/octet-stream' --remote-name -s -w "%{filename_effective}" "${JWT_AUTH_INPUT_URL}")"
           echo "[JWT Client Authenticator] $authenticator_file downloaded"
         fi
         
         # Move Downloaded JWT Client Authenticator to IS
         PRODUCT_IS_ZIP=$(find ./ -name 'wso2is*' -type f -printf "%f\n")
-        echo "Unzipping Product IS: ${PRODUCT_IS_ZIP}"
+        echo "Unzipping Product IS: ${PRODUCT_IS_ZIP} ..."
         unzip -qq ${PRODUCT_IS_ZIP}
           
         PRODUCT_IS=$(find ./ -name 'wso2is*' -type d -printf "%f\n")
         echo "Directory Name: ${PRODUCT_IS}"
           
         MOVE_TO="${PRODUCT_IS}/repository/components/dropins"
-        echo "Moving $authenticator_file to ${MOVE_TO}"
-        mv $authenticator_file $MOVE_TO
+        echo "Moving $authenticator_file to ${MOVE_TO}..."
+        mv -i $authenticator_file $MOVE_TO
         
         # Add Client Authenticator configs to deployment.toml
-        echo "Adding deployment-fapi-config.toml configs to deployment.toml"
-        cat ./product-is/oidc-conformance-tests/fapi/config/deployment-fapi-config.toml >> ${PRODUCT_IS}/repository/conf/deployment.toml
+        echo "Adding deployment-fapi-config.toml configs to deployment.toml..."
+        echo "\n" >> ${PRODUCT_IS}/repository/conf/deployment.toml
+        cat deployment-fapi-config.toml >> ${PRODUCT_IS}/repository/conf/deployment.toml
         
         # zip IS back
         echo "Zipping $PRODUCT_IS to $PRODUCT_IS_ZIP"
         zip -qq -r $PRODUCT_IS_ZIP $PRODUCT_IS
+        rm -r $PRODUCT_IS
 
     - name: Clone conformance suite
       run: |
