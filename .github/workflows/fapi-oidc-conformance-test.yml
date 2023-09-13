@@ -155,7 +155,7 @@ jobs:
         # Add Client Authenticator configs to deployment.toml
         echo "Adding deployment-fapi-config.toml configs to deployment.toml..."
         echo "\n" >> ${PRODUCT_IS}/repository/conf/deployment.toml
-        cat fapi/config/deployment-fapi-config.toml >> ${PRODUCT_IS}/repository/conf/deployment.toml
+        cat ./product-is/oidc-conformance-tests/fapi/config/deployment-fapi-config.toml >> ${PRODUCT_IS}/repository/conf/deployment.toml
         
         # zip IS back
         echo "Zipping $PRODUCT_IS to $PRODUCT_IS_ZIP"
