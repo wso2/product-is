@@ -173,7 +173,7 @@ jobs:
 
     - name: Run IS
       run: |
-        PRODUCT_IS_ZIP=$(find ./ -name wso2is* -type f -printf "%f\n")
+        PRODUCT_IS_ZIP=$(find ./ -name 'wso2is*' -type f -printf "%f\n")
         cd ./product-is/oidc-conformance-tests
         python3 ./configure_is.py ../../$PRODUCT_IS_ZIP FAPI ${{secrets.FAPI_CLIENT1_JWKS}} ${{secrets.FAPI_CLIENT2_JWKS}} ${{secrets.FAPI_CLIENT1_MTLS}} ${{secrets.FAPI_CLIENT2_MTLS}} ${{github.event.inputs.resource-url}}
         
