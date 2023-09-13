@@ -1,0 +1,64 @@
+# FAPI Related Configs
+
+# enable pvt key jwt authenticator
+[[event_listener]]
+id = "private_key_jwt_authenticator"
+type = "org.wso2.carbon.identity.core.handler.AbstractIdentityHandler"
+name = "org.wso2.carbon.identity.oauth2.token.handler.clientauth.jwt.PrivateKeyJWTClientAuthenticator"
+order = "899"
+[event_listener.properties]
+PreventTokenReuse= false
+RejectBeforeInMinutes= "100"
+TokenEndpointAlias= "https://localhost:9443/oauth2/token"
+
+[[cache.manager]]
+name="PrivateKeyJWT"
+timeout="10"
+capacity="5000"
+
+# enable mtls authenticator
+[admin_console.authenticator.mutual_ssl_authenticator]
+enable = false
+
+[transport.https]
+trustManagerClassName="org.wso2.carbon.identity.core.util.ClientAuthX509TrustManager"
+clientAuth="want"
+
+[[event_listener]]
+id = "custom_event_listener"
+type = "org.wso2.carbon.identity.core.handler.AbstractIdentityMessageHandler"
+name= "org.wso2.carbon.identity.oauth2.token.handler.clientauth.mutualtls.MutualTLSClientAuthenticator"
+order = 158
+enable = true
+
+[[event_listener]]
+id = "introspection_response_interceptor"
+type = "org.wso2.carbon.identity.core.handler.AbstractIdentityHandler"
+name="org.wso2.carbon.identity.oauth2.token.handler.clientauth.mutualtls.introspection.IntrospectionResponseInterceptor"
+order=27
+enable=true
+
+[[event_listener]]
+id = "is_introspection_data_provider"
+type = "org.wso2.carbon.identity.core.handler.AbstractIdentityHandler"
+name= "org.wso2.carbon.identity.oauth2.token.handler.clientauth.mutualtls.introspection.ISIntrospectionDataProvider"
+order=28
+enable=true
+
+[oauth.grant_type.authorization_code]
+grant_handler = "org.wso2.carbon.identity.oauth2.token.handler.clientauth.mutualtls.handlers.MTLSTokenBindingAuthorizationCodeGrantHandler"
+
+[oauth.grant_type.client_credentials]
+grant_handler = "org.wso2.carbon.identity.oauth2.token.handler.clientauth.mutualtls.handlers.MTLSTokenBindingClientCredentialsGrantHandler"
+
+[oauth.grant_type.refresh_token]
+grant_handler = "org.wso2.carbon.identity.oauth2.token.handler.clientauth.mutualtls.handlers.MTLSTokenBindingRefreshGrantHandler"
+
+[oauth.grant_type.uma_ticket]
+retrieve_uma_permission_info_through_introspection = true
+
+# [oauth.mutualtls]
+# client_certificate_header = "x-wso2-mtls-cert"
+
+[oauth.mutualtls]
+client_certificate_header = "javax.servlet.request.X509Certificate"
