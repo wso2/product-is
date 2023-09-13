@@ -44,8 +44,7 @@ def is_fapi_profile():
 def decode_secret(secret):
     decoded_string=base64.b64decode(secret+"=").decode("utf-8")
     decoded_json = json.loads(decoded_string)
-    json_string = json.dumps(decoded_json)
-    return json_string
+    return decoded_json
 
 if is_fapi_profile():
     client1_jwks_en = str(sys.argv[3])
