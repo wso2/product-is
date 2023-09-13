@@ -41,16 +41,22 @@ profile = str(sys.argv[2])
 def is_fapi_profile():
     return profile == "FAPI"
 
+def decode_secret(secret):
+    decoded_string=base64.b64decode(secret+"=").decode("utf-8")
+    decoded_json = json.loads(decoded_string)
+    json_string = json.dumps(decoded_json)
+    return json_string
+
 if is_fapi_profile():
     client1_jwks_en = str(sys.argv[3])
     client2_jwks_en = str(sys.argv[4])
     client1_mtls_en = str(sys.argv[5])
     client2_mtls_en = str(sys.argv[6])
 
-    client1_jwks = json.loads(json.dumps(base64.b64decode(client1_jwks_en+"=").decode("utf-8")))
-    client2_jwks = json.loads(json.dumps(base64.b64decode(client2_jwks_en+"=").decode("utf-8")))
-    client1_mtls = json.loads(json.dumps(base64.b64decode(client1_mtls_en+"=").decode("utf-8")))
-    client2_mtls = json.loads(json.dumps(base64.b64decode(client2_mtls_en+"=").decode("utf-8")))
+    client1_jwks = decode_secret(client1_jwks_en)
+    client2_jwks = decode_secret(client2_jwks_en)
+    client1_mtls = decode_secret(client1_mtls_en)
+    client2_mtls = decode_secret(client2_mtls_en)
 
     resource_url_path = str(sys.argv[7])
 

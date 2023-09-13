@@ -128,9 +128,9 @@ jobs:
             "${download_url}"
             
           if [[ -f "$artifact" ]]; then
-            echo "[JWT Client Authenticator] $TARGET_FILE downloaded."
+            echo "[JWT Client Authenticator] $artifact downloaded."
           else
-            echo "[JWT Client Authenticator] $TARGET_FILE NOT Downloaded."
+            echo "[JWT Client Authenticator] $artifact NOT Downloaded."
             exit 1
         fi
         
