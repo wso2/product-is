@@ -20,10 +20,10 @@ on:
       jwt-authenticator-tag:
         description: 'pvt-key-jwt-authenticator tag name'
         required: false
+        default: 'v2.4.25'
       jwt-authenticator-download-url:
         description: 'URL to download pvt-key-jwt-authenticator jar'
         required: false
-        default: "https://github.com/anjuchamantha/host-files/releases/download/v1/org.wso2.carbon.identity.oauth2.token.handler.clientauth.jwt-2.4.26-SNAPSHOT.jar"
       conformance-suite-version:
         description: 'Conformance suite release tag in https://github.com/openid-certification/conformance-suite.git'
         required: false
