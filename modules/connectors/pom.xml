@@ -157,7 +157,7 @@
                                 <artifactItem>
                                     <groupId>org.wso2.identity.apps</groupId>
                                     <artifactId>x509-certificate-authentication-portal</artifactId>
-                                    <version>${identity.apps.version}</version>
+                                    <version>${identity.apps.core.version}</version>
                                     <type>war</type>
                                     <overWrite>true</overWrite>
                                     <destFileName>x509certificateauthenticationendpoint.war</destFileName>

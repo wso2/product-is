@@ -1855,18 +1855,28 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.identity.apps</groupId>
-                <artifactId>org.wso2.identity.apps.feature</artifactId>
-                <version>${identity.apps.version}</version>
+                <artifactId>org.wso2.identity.apps.common.server.feature</artifactId>
+                <version>${identity.apps.core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.identity.apps</groupId>
+                <artifactId>org.wso2.identity.apps.console.server.feature</artifactId>
+                <version>${identity.apps.console.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.identity.apps</groupId>
+                <artifactId>org.wso2.identity.apps.myaccount.server.feature</artifactId>
+                <version>${identity.apps.myaccount.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.identity.apps</groupId>
                 <artifactId>org.wso2.identity.apps.authentication.portal.server.feature</artifactId>
-                <version>${identity.apps.version}</version>
+                <version>${identity.apps.core.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.identity.apps</groupId>
                 <artifactId>org.wso2.identity.apps.recovery.portal.server.feature</artifactId>
-                <version>${identity.apps.version}</version>
+                <version>${identity.apps.core.version}</version>
             </dependency>
 
             <dependency>
@@ -2089,7 +2099,7 @@
             <dependency>
                 <groupId>org.wso2.identity.apps</groupId>
                 <artifactId>identity-apps-cypress-tests</artifactId>
-                <version>${identity.apps.version}</version>
+                <version>${identity.apps.tests.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.codehaus.jackson</groupId>
@@ -2272,7 +2282,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.25.314</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.25.318</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2403,7 +2413,10 @@
         <conditional.authentication.functions.version>1.2.34</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.version>1.6.373</identity.apps.version>
+        <identity.apps.console.version>2.0.2</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.0.2</identity.apps.myaccount.version>
+        <identity.apps.core.version>2.0.2</identity.apps.core.version>
+        <identity.apps.tests.version>1.6.372</identity.apps.tests.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
