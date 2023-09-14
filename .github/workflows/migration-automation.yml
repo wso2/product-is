@@ -54,8 +54,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Save service account JSON credentials to a file
-        run: echo '${{ secrets.MIGRATION_JSON }}' > ${{ github.workspace }}/.github/migration-tester/migration-automation/creds.json
+      - name: Set JSON credentials as an environment variable
+        run: echo "MIGRATION_JSON_ENCODED=$(echo '${{ secrets.MIGRATION_JSON }}' | base64 -w0)" >> $GITHUB_ENV
       - name: Setup Docker environment
         run: |
           # Get the ID of the workflow from the GitHub API using curl and jq
@@ -116,7 +116,7 @@ jobs:
       - name: Execute Migration Automation Script Ubuntu
         run: |
               chmod +x  ${{ github.workspace }}/.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh 
-              sh ${{ github.workspace }}/.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" creds.json | tee "${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt" 
+              sh ${{ github.workspace }}/.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt" 
         continue-on-error: true
       - name: Remove creds.json file
         run: rm -f ${{ github.workspace }}/.github/migration-tester/migration-automation/creds.json
@@ -142,12 +142,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Save service account JSON credentials to a file
-        run: echo '${{ secrets.MIGRATION_JSON }}' > ${{ github.workspace }}/.github/migration-tester/migration-automation/creds.json
+      - name: Set JSON credentials as an environment variable
+        run: echo "MIGRATION_JSON_ENCODED=$(echo '${{ secrets.MIGRATION_JSON }}' | base64 -w0)" >> $GITHUB_ENV
       - name: Execute Migration Automation Script Ubuntu
         run: |
             chmod +x ${{ github.workspace }}/.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh 
-            sh ${{ github.workspace }}/.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" creds.json | tee "${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt"
+            sh ${{ github.workspace }}/.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt"
         continue-on-error: true
       - name: Remove creds.json file
         run: rm -f ${{ github.workspace }}/.github/migration-tester/migration-automation/creds.json
@@ -183,8 +183,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Save service account JSON credentials to a file
-        run: echo '${{ secrets.JSON }}' > ${{ github.workspace }}/.github/migration-tester/migration-automation/creds.json
+      - name: Set JSON credentials as an environment variable
+        run: echo "MIGRATION_JSON_ENCODED=$(echo '${{ secrets.MIGRATION_JSON }}' | base64 -w0)" >> $GITHUB_ENV
 
       - name: Create MS SQL Database
         run: |
@@ -206,7 +206,7 @@ jobs:
       - name: Execute Migration Automation Script Ubuntu
         run: |
           chmod +x ${{ github.workspace }}/.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh 
-          sh ${{ github.workspace }}/.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" creds.json | tee "${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt"
+          sh ${{ github.workspace }}/.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt"
         continue-on-error: true
       - name: Remove creds.json file
         run: rm -f ${{ github.workspace }}/.github/migration-tester/migration-automation/creds.json
@@ -230,13 +230,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Save service account JSON credentials to a file
-        run: echo '${{ secrets.MIGRATION_JSON }}' > ${{ github.workspace }}/.github/migration-tester/migration-automation/creds.json
+      - name: Set JSON credentials as an environment variable
+        run: echo "MIGRATION_JSON_ENCODED=$(echo '${{ secrets.MIGRATION_JSON }}' | base64 -w0)" >> $GITHUB_ENV
 
       - name: Execute Migration Automation Script Mac
         run: |
           chmod +x ${{ github.workspace }}/.github/migration-tester/migration-automation/mac-os/migration-script-mac.sh 
-          sh ${{ github.workspace }}/.github/migration-tester/migration-automation/mac-os/migration-script-mac.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" creds.json | tee "${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt"
+          sh ${{ github.workspace }}/.github/migration-tester/migration-automation/mac-os/migration-script-mac.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt"
         continue-on-error: true
       - name: Remove creds.json file
         run: rm -f ${{ github.workspace }}/.github/migration-tester/migration-automation/creds.json
@@ -260,8 +260,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Save service account JSON credentials to a file
-        run: echo '${{ secrets.MIGRATION_JSON }}' > ${{ github.workspace }}/.github/migration-tester/migration-automation/creds.json
+      - name: Set JSON credentials as an environment variable
+        run: echo "MIGRATION_JSON_ENCODED=$(echo '${{ secrets.MIGRATION_JSON }}' | base64 -w0)" >> $GITHUB_ENV
       - name: Set up PostgreSQL
         env:
            PGDATA: /usr/local/var/postgres
@@ -288,7 +288,7 @@ jobs:
       - name: Execute Migration Automation Script Mac
         run: |
           chmod +x ${{ github.workspace }}/.github/migration-tester/migration-automation/mac-os/migration-script-mac.sh 
-          sh ${{ github.workspace }}/.github/migration-tester/migration-automation/mac-os/migration-script-mac.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" creds.json | tee "${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt"
+          sh ${{ github.workspace }}/.github/migration-tester/migration-automation/mac-os/migration-script-mac.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt"
         continue-on-error: true
       - name: Remove creds.json file
         run: rm -f ${{ github.workspace }}/.github/migration-tester/migration-automation/creds.json
@@ -312,8 +312,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Save service account JSON credentials to a file
-        run: echo '${{ secrets.MIGRATION_JSON }}' > ${{ github.workspace }}/.github/migration-tester/migration-automation/creds.json
+      - name: Set JSON credentials as an environment variable
+        run: echo "MIGRATION_JSON_ENCODED=$(echo '${{ secrets.MIGRATION_JSON }}' | base64 -w0)" >> $GITHUB_ENV
 
       - uses: potatoqualitee/mssqlsuite@v1.7
         with:
@@ -341,7 +341,7 @@ jobs:
       - name: Execute Migration Automation Script Mac
         run: |
           chmod +x ${{ github.workspace }}/.github/migration-tester/migration-automation/mac-os/migration-script-mac.sh 
-          sh ${{ github.workspace }}/.github/migration-tester/migration-automation/mac-os/migration-script-mac.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" creds.json | tee "${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt"
+          sh ${{ github.workspace }}/.github/migration-tester/migration-automation/mac-os/migration-script-mac.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt"
         continue-on-error: true
       - name: Remove creds.json file
         run: rm -f ${{ github.workspace }}/.github/migration-tester/migration-automation/creds.json
