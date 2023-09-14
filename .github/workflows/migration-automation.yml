@@ -118,10 +118,7 @@ jobs:
               chmod +x  ${{ github.workspace }}/.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh 
               sh ${{ github.workspace }}/.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt" 
         continue-on-error: true
-      - name: Remove creds.json file
-        run: rm -f ${{ github.workspace }}/.github/migration-tester/migration-automation/creds.json
-
-      
+   
       - name: Persist Logs
         run: |
           mkdir -p ${{ github.workspace }}/.github/migration-tester/migration-automation/artifacts
@@ -149,10 +146,7 @@ jobs:
             chmod +x ${{ github.workspace }}/.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh 
             sh ${{ github.workspace }}/.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt"
         continue-on-error: true
-      - name: Remove creds.json file
-        run: rm -f ${{ github.workspace }}/.github/migration-tester/migration-automation/creds.json
-
-        
+      
       - name: Persist Logs
         run: |
           mkdir -p ${{ github.workspace }}/.github/migration-tester/migration-automation/artifacts
@@ -208,8 +202,6 @@ jobs:
           chmod +x ${{ github.workspace }}/.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh 
           sh ${{ github.workspace }}/.github/migration-tester/migration-automation/ubuntu-os/migration-script-ubuntu.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt"
         continue-on-error: true
-      - name: Remove creds.json file
-        run: rm -f ${{ github.workspace }}/.github/migration-tester/migration-automation/creds.json
 
       - name: Persist Logs
         run: |
@@ -238,8 +230,6 @@ jobs:
           chmod +x ${{ github.workspace }}/.github/migration-tester/migration-automation/mac-os/migration-script-mac.sh 
           sh ${{ github.workspace }}/.github/migration-tester/migration-automation/mac-os/migration-script-mac.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt"
         continue-on-error: true
-      - name: Remove creds.json file
-        run: rm -f ${{ github.workspace }}/.github/migration-tester/migration-automation/creds.json
 
       - name: Persist Logs
         run: |
@@ -290,8 +280,6 @@ jobs:
           chmod +x ${{ github.workspace }}/.github/migration-tester/migration-automation/mac-os/migration-script-mac.sh 
           sh ${{ github.workspace }}/.github/migration-tester/migration-automation/mac-os/migration-script-mac.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt"
         continue-on-error: true
-      - name: Remove creds.json file
-        run: rm -f ${{ github.workspace }}/.github/migration-tester/migration-automation/creds.json
 
       - name: Persist Logs
         run: |
@@ -343,8 +331,6 @@ jobs:
           chmod +x ${{ github.workspace }}/.github/migration-tester/migration-automation/mac-os/migration-script-mac.sh 
           sh ${{ github.workspace }}/.github/migration-tester/migration-automation/mac-os/migration-script-mac.sh "${{ github.event.inputs.urlOld }}" "${{ github.event.inputs.urlNew }}" "${{ github.event.inputs.currentVersion }}" "${{ github.event.inputs.migratingVersion }}" "${{ github.event.inputs.database }}" "${{ github.event.inputs.os }}" "${{ secrets.MIGRATION_EMAIL }}" "${{ secrets.MIGRATION_PASSWORD }}" "${{ secrets.MIGRATION_PAT }}" | tee "${{ github.workspace }}/.github/migration-tester/migration-automation/logs.txt"
         continue-on-error: true
-      - name: Remove creds.json file
-        run: rm -f ${{ github.workspace }}/.github/migration-tester/migration-automation/creds.json
 
       - name: Persist Logs
         run: |
