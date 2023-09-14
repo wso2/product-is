@@ -79,7 +79,7 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
     private static final String FINANCIAL = "Financial";
     private static final String ERROR_MESSAGE_SELF_REGISTRATION_DISABLED = "Self registration is disabled for tenant" +
             " - %s";
-    private static final String ERROR_MESSAGE_INVALID_TENANT = "%s is an invalid tenant domain";
+    private static final String ERROR_MESSAGE_INVALID_TENANT = "Invalid tenant domain :%s";
     private static final String ERROR_MESSAGE_USERNAME_TAKEN = "Username &#39;%s&#39; is already taken. Please pick a " +
             "different username";
 
@@ -194,8 +194,8 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
         updateResidentIDPProperty(superTenantResidentIDP, ENABLE_SELF_REGISTRATION_PROP_KEY, "true", true);
 
         String content = doCallSignUpDo("smith");
-        Assert.assertTrue(content.contains("Password"));
-        Assert.assertTrue(content.contains("Confirm password"));
+        Assert.assertTrue(!content.contains("Password"));
+        Assert.assertTrue(!content.contains("Confirm password"));
 
     }
 
@@ -206,8 +206,8 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
         updateResidentIDPProperty(tenantResidentIDP, ENABLE_SELF_REGISTRATION_PROP_KEY, "true", false);
 
         String content = doCallSignUpDo("smith@" + secondaryTenantDomain);
-        Assert.assertTrue(content.contains("Password"));
-        Assert.assertTrue(content.contains("Confirm password"));
+        Assert.assertTrue(!content.contains("Password"));
+        Assert.assertTrue(!content.contains("Confirm password"));
         Assert.assertTrue(!content.contains(FINANCIAL_PURPOSE_NAME));
     }
 
@@ -221,8 +221,8 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
         addFinancialPurpose();
         addFinancialPurposeCategory();
         String content = doCallSignUpDo("smith@" + secondaryTenantDomain);
-        Assert.assertTrue(content.contains("Password"));
-        Assert.assertTrue(content.contains("Confirm password"));
+        Assert.assertTrue(!content.contains("Password"));
+        Assert.assertTrue(!content.contains("Confirm password"));
         Assert.assertTrue(content.contains(FINANCIAL_PURPOSE_NAME));
     }
 
