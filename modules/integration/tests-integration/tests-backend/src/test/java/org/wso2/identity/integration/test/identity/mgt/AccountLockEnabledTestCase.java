@@ -29,10 +29,13 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.automation.test.utils.common.TestConfigurationProvider;
+import org.wso2.carbon.automation.test.utils.dbutils.H2DataBaseManager;
+import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.ConnectorsPatchReq;
 import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.ConnectorsPatchReq.OperationEnum;
 import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.PropertyReq;
+import org.wso2.identity.integration.test.rest.api.server.user.store.v1.model.UserStoreReq;
 import org.wso2.identity.integration.test.rest.api.user.common.model.ListObject;
 import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperationRequestObject;
 import org.wso2.identity.integration.test.rest.api.user.common.model.RoleItemAddGroupobj;
@@ -41,6 +44,9 @@ import org.wso2.identity.integration.test.restclients.AuthenticatorRestClient;
 import org.wso2.identity.integration.test.restclients.EmailTemplatesRestClient;
 import org.wso2.identity.integration.test.restclients.IdentityGovernanceRestClient;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
+import org.wso2.identity.integration.test.restclients.UserStoreMgtRestClient;
+
+import java.io.File;
 
 public class AccountLockEnabledTestCase extends ISIntegrationTest {
 
@@ -53,6 +59,14 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
     private static final String TEST_LOCK_USER_2_PASSWORD = "TestLockUser2Password";
     private static final String TEST_LOCK_USER_3 = "TestLockUser3";
     private static final String TEST_LOCK_USER_3_PASSWORD = "TestLockUser3Password";
+    private static final String USER_STORE_DB_NAME = "SECONDARY_USER_STORE_DB";
+    private static final String USER_STORE_TYPE = "VW5pcXVlSURKREJDVXNlclN0b3JlTWFuYWdlcg";
+    private static final String DB_USER_NAME = "wso2automation";
+    private static final String DB_USER_PASSWORD = "wso2automation";
+    private static final String DOMAIN_ID = "WSO2TEST.COM";
+    private static final String TEST_LOCK_USER_4 = "TestLockUser4";
+    private static final String TEST_LOCK_USER_4_PASSWORD = "TestLockUser4Password";
+    private static final String TEST_LOCK_USER_4_WRONG_PASSWORD = "TestLockUser4WrongPassword";
 
     private static final String ACCOUNT_LOCK_TEMPLATE_WHEN_USER_EXCEEDS_FAILED_ATTEMPTS = "accountlockfailedattempt";
     private static final String ACCOUNT_LOCK_TEMPLATE_WHEN_ADMIN_TRIGGERED = "accountlockadmin";
@@ -72,16 +86,21 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
     private EmailTemplatesRestClient emailTemplatesRestClient;
     private IdentityGovernanceRestClient identityGovernanceRestClient;
     private ConnectorsPatchReq connectorPatchRequest;
+    private UserStoreMgtRestClient userStoreMgtRestClient;
 
 
     private String testLockUserId;
     private String testLockUser2Id;
     private String testLockUser3Id;
+    private String testLockUser4Id;
+    private String userStoreId;
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
         super.init();
+        userStoreMgtRestClient = new UserStoreMgtRestClient(serverURL, tenantInfo);
+        addSecondaryJDBCUserStore();
         authenticatorRestClient = new AuthenticatorRestClient(serverURL);
         enableAccountLocking();
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
@@ -91,24 +110,35 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     @Test(groups = "wso2.is", description = "Check whether the user account lock successfully")
     public void testSuccessfulLockedInitially() {
+
         try {
             testLockUserId = addAdminUser(TEST_LOCK_USER_1, TEST_LOCK_USER_1_PASSWORD, null);
 
             int maximumAllowedFailedLogins = 5;
-            for (int i = 0; i < maximumAllowedFailedLogins; i++) {
+            for (int i = 0; i < maximumAllowedFailedLogins - 1; i++) {
                 JSONObject response = authenticatorRestClient.login(TEST_LOCK_USER_1, TEST_LOCK_USER_1_WRONG_PASSWORD);
 
                 if (!response.containsKey("token")) {
-                    log.error("Login attempt: " + i + " for user: " + TEST_LOCK_USER_1 + " failed");
+                    log.error("Login attempt: " + (i + 1) + " for user: " + TEST_LOCK_USER_1 + " failed");
                 }
             }
-
-
+            // Check whether the user is locked before the maximum allowed failed login attempts.
             JSONObject userParameters = (JSONObject) scim2RestClient.getUser(testLockUserId, null).get(USER_SCHEMA);
-            Assert.assertTrue((Boolean) userParameters.get(ACCOUNT_LOCK_ATTRIBUTE),
+            Assert.assertFalse(Boolean.parseBoolean(String.valueOf(userParameters.get(ACCOUNT_LOCK_ATTRIBUTE))),
+                    "Test Failure : User is Locked before the maximum allowed failed login attempts");
+
+            // Check whether the user is locked after the maximum allowed failed login attempts.
+            JSONObject response = authenticatorRestClient.login(TEST_LOCK_USER_1, TEST_LOCK_USER_1_WRONG_PASSWORD);
+            if (!response.containsKey("token")) {
+                log.error(
+                        "Login attempt: " + maximumAllowedFailedLogins + " for user: " + TEST_LOCK_USER_1 + " failed");
+            }
+            userParameters = (JSONObject) scim2RestClient.getUser(testLockUserId, null).get(USER_SCHEMA);
+            Assert.assertTrue(Boolean.parseBoolean(String.valueOf(userParameters.get(ACCOUNT_LOCK_ATTRIBUTE))),
                     "Test Failure : User Account Didn't Locked Properly");
         } catch (Exception e) {
             log.error("Error occurred when locking the test user.", e);
+            Assert.fail("Error occurred when locking the test user.");
         }
     }
 
@@ -154,16 +184,52 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
     }
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
+    @Test(groups = "wso2.is", description = "Check whether the secondary user-store user account lock successfully")
+    public void testSuccessfulLockedSecondaryUserStoreUser() {
+        try {
+            testLockUser4Id = addSecondaryUserStoreUser(TEST_LOCK_USER_4, TEST_LOCK_USER_4_PASSWORD);
+
+            int maximumAllowedFailedLogins = 5;
+            for (int i = 0; i < maximumAllowedFailedLogins - 1; i++) {
+                JSONObject response = authenticatorRestClient.login(TEST_LOCK_USER_4, TEST_LOCK_USER_4_WRONG_PASSWORD);
+
+                if (!response.containsKey("token")) {
+                    log.error("Login attempt: " + (i + 1) + " for user: " + TEST_LOCK_USER_4 + " failed");
+                }
+            }
+            // Check whether the user is locked before the maximum allowed failed login attempts.
+            JSONObject userParameters = (JSONObject) scim2RestClient.getUser(testLockUser4Id, null).get(USER_SCHEMA);
+            Assert.assertFalse(Boolean.parseBoolean(String.valueOf(userParameters.get(ACCOUNT_LOCK_ATTRIBUTE))),
+                    "Test Failure : User is Locked before the maximum allowed failed login attempts");
+
+            // Check whether the user is locked after the maximum allowed failed login attempts.
+            JSONObject response = authenticatorRestClient.login(TEST_LOCK_USER_4, TEST_LOCK_USER_4_WRONG_PASSWORD);
+            if (!response.containsKey("token")) {
+                log.error(
+                        "Login attempt: " + maximumAllowedFailedLogins + " for user: " + TEST_LOCK_USER_4 + " failed");
+            }
+            userParameters = (JSONObject) scim2RestClient.getUser(testLockUser4Id, null).get(USER_SCHEMA);
+            Assert.assertTrue(Boolean.parseBoolean(String.valueOf(userParameters.get(ACCOUNT_LOCK_ATTRIBUTE))),
+                    "Test Failure : User Account Didn't Locked Properly");
+        } catch (Exception e) {
+            log.error("Error occurred when locking the test user.", e);
+            Assert.fail("Error occurred when locking the test user.");
+        }
+    }
+
+    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
         scim2RestClient.deleteUser(testLockUserId);
         scim2RestClient.deleteUser(testLockUser2Id);
         scim2RestClient.deleteUser(testLockUser3Id);
+        scim2RestClient.deleteUser(testLockUser4Id);
         disableAccountLocking();
         emailTemplatesRestClient.closeHttpClient();
         identityGovernanceRestClient.closeHttpClient();
         scim2RestClient.closeHttpClient();
         authenticatorRestClient.closeHttpClient();
+        userStoreMgtRestClient.deleteUserStore(userStoreId);
     }
 
     protected String getISResourceLocation() {
@@ -207,5 +273,76 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
 
         scim2RestClient.updateUserRole(new PatchOperationRequestObject().addOperations(patchRoleItem), roleId);
         return userId;
+    }
+
+    private String addSecondaryUserStoreUser(String username, String password) throws Exception {
+
+        String userId = scim2RestClient.createUser(new UserObject()
+                .userName(DOMAIN_ID + "/" + username)
+                .password(password));
+        String roleId = scim2RestClient.getRoleIdByName("admin");
+
+        RoleItemAddGroupobj patchRoleItem = new RoleItemAddGroupobj();
+        patchRoleItem.setOp(RoleItemAddGroupobj.OpEnum.ADD);
+        patchRoleItem.setPath(USERS_PATH);
+        patchRoleItem.addValue(new ListObject().value(userId));
+
+        scim2RestClient.updateUserRole(new PatchOperationRequestObject().addOperations(patchRoleItem), roleId);
+        return userId;
+    }
+
+    private void addSecondaryJDBCUserStore() throws Exception {
+
+        // Creating database.
+        H2DataBaseManager dbmanager = new H2DataBaseManager("jdbc:h2:" + ServerConfigurationManager.getCarbonHome()
+                + "/repository/database/" + USER_STORE_DB_NAME, DB_USER_NAME, DB_USER_PASSWORD);
+        dbmanager.executeUpdate(new File(ServerConfigurationManager.getCarbonHome() + "/dbscripts/h2.sql"));
+        dbmanager.disconnect();
+
+        // Register a secondary user store.
+        UserStoreReq userStore = new UserStoreReq()
+                .typeId(USER_STORE_TYPE)
+                .name(DOMAIN_ID)
+                .addPropertiesItem(new UserStoreReq.Property()
+                        .name("driverName")
+                        .value("org.h2.Driver"))
+                .addPropertiesItem(new UserStoreReq.Property()
+                        .name("url")
+                        .value("jdbc:h2:./repository/database/" + USER_STORE_DB_NAME))
+                .addPropertiesItem(new UserStoreReq.Property()
+                        .name("userName")
+                        .value(DB_USER_NAME))
+                .addPropertiesItem(new UserStoreReq.Property()
+                        .name("password")
+                        .value(DB_USER_PASSWORD))
+                .addPropertiesItem(new UserStoreReq.Property()
+                        .name("PasswordJavaRegEx")
+                        .value("^[\\S]{5,30}$"))
+                .addPropertiesItem(new UserStoreReq.Property()
+                        .name("UsernameJavaRegEx")
+                        .value("^[\\S]{5,30}$"))
+                .addPropertiesItem(new UserStoreReq.Property()
+                        .name("Disabled")
+                        .value("false"))
+                .addPropertiesItem(new UserStoreReq.Property()
+                        .name("PasswordDigest")
+                        .value("SHA-256"))
+                .addPropertiesItem(new UserStoreReq.Property()
+                        .name("StoreSaltedPassword")
+                        .value("true"))
+                .addPropertiesItem(new UserStoreReq.Property()
+                        .name("SCIMEnabled")
+                        .value("true"))
+                .addPropertiesItem(new UserStoreReq.Property()
+                        .name("CountRetrieverClass")
+                        .value("org.wso2.carbon.identity.user.store.count.jdbc.JDBCUserStoreCountRetriever"))
+                .addPropertiesItem(new UserStoreReq.Property()
+                        .name("UserIDEnabled")
+                        .value("true"));
+
+        userStoreId = userStoreMgtRestClient.addUserStore(userStore);
+        Thread.sleep(5000);
+        boolean isSecondaryUserStoreDeployed = userStoreMgtRestClient.waitForUserStoreDeployment(DOMAIN_ID);
+        Assert.assertTrue(isSecondaryUserStoreDeployed);
     }
 }
