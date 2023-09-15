@@ -40,6 +40,7 @@ import org.wso2.identity.integration.test.rest.api.server.user.store.v1.model.Us
 import org.wso2.identity.integration.test.rest.api.user.common.model.ListObject;
 import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperationRequestObject;
 import org.wso2.identity.integration.test.rest.api.user.common.model.RoleItemAddGroupobj;
+import org.wso2.identity.integration.test.rest.api.user.common.model.RoleRequestObject;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 import org.wso2.identity.integration.test.restclients.AuthenticatorRestClient;
 import org.wso2.identity.integration.test.restclients.EmailTemplatesRestClient;
@@ -66,10 +67,12 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
     private static final String DB_USER_NAME = "wso2automation";
     private static final String DB_USER_PASSWORD = "wso2automation";
     private static final String DOMAIN_ID = "WSO2TEST.COM";
-    private static final String TEST_LOCK_USER_4 = "TestLockUser4";
-    private static final String TEST_LOCK_USER_4_PASSWORD = "TestLockUser4Password";
-    private static final String TEST_LOCK_USER_4_WRONG_PASSWORD = "TestLockUser4WrongPassword";
-
+    private static final String TEST_LOCK_USER_SECONDARY = "TestLockUserSecondary";
+    private static final String TEST_LOCK_USER_SECONDARY_PASSWORD = "TestLockUserSecondaryPassword";
+    private static final String TEST_LOCK_USER_SECONDARY_WRONG_PASSWORD = "TestLockUserSecondaryWrongPassword";
+    private static final String PRIMARY_USER_ROLE = "PRIMARY_USER_ROLE";
+    private static final String SECONDARY_USER_ROLE = "SECONDARY_USER_ROLE";
+    private static final String PERMISSION_LOGIN = "/permission/admin/login";
     private static final String ACCOUNT_LOCK_TEMPLATE_WHEN_USER_EXCEEDS_FAILED_ATTEMPTS = "accountlockfailedattempt";
     private static final String ACCOUNT_LOCK_TEMPLATE_WHEN_ADMIN_TRIGGERED = "accountlockadmin";
     private static final String ACCOUNT_UNLOCK_TEMPLATE_ADMIN_TRIGGERED = "accountunlockadmin";
@@ -90,15 +93,17 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
     private ConnectorsPatchReq connectorPatchRequest;
     private UserStoreMgtRestClient userStoreMgtRestClient;
 
+    private String testLockUserId;
     private String testLockUser2Id;
     private String testLockUser3Id;
+    private String testLockRoleId;
     private String userStoreId;
 
     @DataProvider(name = "userDetailsProvider")
     public Object[][] getUserDetails() {
         return new Object[][]{
                 {TEST_LOCK_USER_1, TEST_LOCK_USER_1_PASSWORD, TEST_LOCK_USER_1_WRONG_PASSWORD, false},
-                {TEST_LOCK_USER_4, TEST_LOCK_USER_4_PASSWORD, TEST_LOCK_USER_4_WRONG_PASSWORD, true}
+                {TEST_LOCK_USER_SECONDARY, TEST_LOCK_USER_SECONDARY_PASSWORD, TEST_LOCK_USER_SECONDARY_WRONG_PASSWORD, true}
         };
     }
 
@@ -119,9 +124,8 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
     public void testSuccessfulLockedInitially(String username, String password, String wrongPassword,
                                               boolean isSecondaryUserStore) throws IOException {
 
-        String testLockUserId = StringUtils.EMPTY;
         try {
-            testLockUserId = addAdminUser(username, password, null, isSecondaryUserStore);
+            addUserIntoJDBCUserStore(username, password, isSecondaryUserStore);
 
             int maximumAllowedFailedLogins = 5;
             for (int i = 0; i < maximumAllowedFailedLogins - 1; i++) {
@@ -150,6 +154,7 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
             Assert.fail("Error occurred when locking the test user.");
         } finally {
             scim2RestClient.deleteUser(testLockUserId);
+            scim2RestClient.deleteGroup(testLockRoleId);
         }
     }
 
@@ -160,7 +165,7 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
           dependsOnMethods = "testSuccessfulLockedInitially")
     public void testSuccessfulEmailTemplateRetrieval() throws Exception {
 
-        testLockUser2Id = addAdminUser(TEST_LOCK_USER_2, TEST_LOCK_USER_2_PASSWORD, DEFAULT_LOCALITY_CLAIM_VALUE, false);
+        testLockUser2Id = addAdminUser(TEST_LOCK_USER_2, TEST_LOCK_USER_2_PASSWORD, DEFAULT_LOCALITY_CLAIM_VALUE);
         String locale = scim2RestClient.getUser(testLockUser2Id, null).get(LOCALE_ATTRIBUTE).toString();
 
         JSONObject emailTemplateResourceContent =
@@ -180,7 +185,7 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
                   + "template successfully retrieved when admin triggered account lock.")
     public void testSuccessfulEmailTemplateRetrievalAccountUnLock() throws Exception {
 
-        testLockUser3Id = addAdminUser(TEST_LOCK_USER_3, TEST_LOCK_USER_3_PASSWORD, DEFAULT_LOCALITY_CLAIM_VALUE, false);
+        testLockUser3Id = addAdminUser(TEST_LOCK_USER_3, TEST_LOCK_USER_3_PASSWORD, DEFAULT_LOCALITY_CLAIM_VALUE);
         String locale = scim2RestClient.getUser(testLockUser3Id, null).get(LOCALE_ATTRIBUTE).toString();
 
         JSONObject emailTemplateResourceContent =
@@ -232,15 +237,32 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
                 connectorPatchRequest);
     }
 
-    protected String addAdminUser(String username, String password, String locale, boolean isSecondaryUserStore)
+    private void addUserIntoJDBCUserStore(String username, String password, boolean isSecondaryStoreUser)
             throws Exception {
 
-        UserObject userInfo = new UserObject();
-        if (isSecondaryUserStore) {
-            userInfo.setUserName(DOMAIN_ID + "/" + username);
+        if (isSecondaryStoreUser) {
+            testLockUserId = scim2RestClient.createUser(new UserObject()
+                    .userName(DOMAIN_ID + "/" + username)
+                    .password(password));
+            testLockRoleId = scim2RestClient.addRole(new RoleRequestObject()
+                    .displayName(SECONDARY_USER_ROLE)
+                    .addPermissions(PERMISSION_LOGIN)
+                    .addUsers(new ListObject().value(testLockUserId)));
         } else {
-            userInfo.setUserName(username);
+            testLockUserId = scim2RestClient.createUser(new UserObject()
+                    .userName(username)
+                    .password(password));
+            testLockRoleId = scim2RestClient.addRole(new RoleRequestObject()
+                    .displayName(PRIMARY_USER_ROLE)
+                    .addPermissions(PERMISSION_LOGIN)
+                    .addUsers(new ListObject().value(testLockUserId)));
         }
+    }
+
+    protected String addAdminUser(String username, String password, String locale) throws Exception {
+
+        UserObject userInfo = new UserObject();
+        userInfo.setUserName(username);
         userInfo.setPassword(password);
         userInfo.setLocale(locale);
 
