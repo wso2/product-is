@@ -154,7 +154,7 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
             Assert.fail("Error occurred when locking the test user.");
         } finally {
             scim2RestClient.deleteUser(testLockUserId);
-            scim2RestClient.deleteGroup(testLockRoleId);
+            scim2RestClient.deleteRole(testLockRoleId);
         }
     }
 
