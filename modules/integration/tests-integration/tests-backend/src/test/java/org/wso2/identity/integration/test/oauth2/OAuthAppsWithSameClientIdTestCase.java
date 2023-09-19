@@ -49,6 +49,7 @@ import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.automation.engine.context.beans.User;
 import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.identity.integration.test.EmailOTPTestCase;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationListItem;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationListResponse;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
@@ -68,12 +69,15 @@ import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.xml.xpath.XPathExpressionException;
 
 /**
  * This class contains tests for OAuth apps with same client id in multiple tenants.
@@ -118,9 +122,7 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
 
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(isServer);
-
-        // TODO: See whether tenant qualified urls and tenanted sessions can be enabled with below method.
-        //  serverConfigurationManager.applyConfiguration();
+        changeISConfigurations();
 
         tenantMgtRestClient = new TenantMgtRestClient(serverURL, tenantInfo);
 
@@ -156,7 +158,7 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
     @AfterClass(alwaysRun = true)
     public void testClear() throws IOException, AutomationUtilException {
 
-        serverConfigurationManager.restoreToLastConfiguration(false);
+        serverConfigurationManager.restoreToLastConfiguration(true);
         tenantMgtRestClient.closeHttpClient();
         oAuth2RestClientTenant1.closeHttpClient();
         oAuth2RestClientTenant2.closeHttpClient();
@@ -372,6 +374,16 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
         initiateAuthorizationRequest();
         authenticateUser(TENANT_2_USER_USERNAME + "@" + TENANT_2_DOMAIN, TENANT_2_USER_PASSWORD, TENANT_1_DOMAIN);
         Assert.fail("Expected exception not received.");
+    }
+
+    private void changeISConfigurations() throws AutomationUtilException, IOException {
+
+        String carbonHome = Utils.getResidentCarbonHome();
+        File defaultTomlFile = getDeploymentTomlFile(carbonHome);
+        File modifiedConfigFile = new File(getISResourceLocation()
+                + File.separator + "tenant.qualified" + File.separator
+                + "tenant_qualified_url_tenanted_sessions_enabled.toml");
+        serverConfigurationManager.applyConfiguration(modifiedConfigFile, defaultTomlFile, true, true);
     }
 
     private void addTenant(String tenantDomain, String adminUsername, String adminPassword,
