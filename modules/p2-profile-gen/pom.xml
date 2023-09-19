@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>7.0.0-m2-SNAPSHOT</version>
+        <version>7.0.0-alpha-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -448,19 +448,26 @@
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.cors.mgt.server.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
 
-                                <!-- User portal feature -->
                                 <featureArtifactDef>
-                                    org.wso2.identity.apps:org.wso2.identity.apps.feature:${identity.apps.version}
+                                    org.wso2.identity.apps:org.wso2.identity.apps.common.server.feature:${identity.apps.core.version}
+                                </featureArtifactDef>
+
+                                <featureArtifactDef>
+                                    org.wso2.identity.apps:org.wso2.identity.apps.console.server.feature:${identity.apps.console.version}
+                                </featureArtifactDef>
+
+                                <featureArtifactDef>
+                                    org.wso2.identity.apps:org.wso2.identity.apps.myaccount.server.feature:${identity.apps.myaccount.version}
                                 </featureArtifactDef>
 
                                 <!-- Authentication portal feature -->
                                 <featureArtifactDef>
-                                    org.wso2.identity.apps:org.wso2.identity.apps.authentication.portal.server.feature:${identity.apps.version}
+                                    org.wso2.identity.apps:org.wso2.identity.apps.authentication.portal.server.feature:${identity.apps.core.version}
                                 </featureArtifactDef>
 
                                 <!-- Recovery portal feature -->
                                 <featureArtifactDef>
-                                    org.wso2.identity.apps:org.wso2.identity.apps.recovery.portal.server.feature:${identity.apps.version}
+                                    org.wso2.identity.apps:org.wso2.identity.apps.recovery.portal.server.feature:${identity.apps.core.version}
                                 </featureArtifactDef>
 
                                 <!-- FIDO2/WebAuthn feature -->
@@ -838,25 +845,40 @@
                                     <id>org.wso2.carbon.identity.central.log.mgt.server.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
+
                                 <feature>
                                     <id>
-                                        org.wso2.identity.apps.feature.group
+                                        org.wso2.identity.apps.common.server.feature.group
                                     </id>
-                                    <version>${identity.apps.version}</version>
+                                    <version>${identity.apps.core.version}</version>
+                                </feature>
+
+                                <feature>
+                                    <id>
+                                        org.wso2.identity.apps.console.server.feature.group
+                                    </id>
+                                    <version>${identity.apps.console.version}</version>
+                                </feature>
+
+                                <feature>
+                                    <id>
+                                        org.wso2.identity.apps.myaccount.server.feature.group
+                                    </id>
+                                    <version>${identity.apps.myaccount.version}</version>
                                 </feature>
 
                                 <feature>
                                     <id>
                                         org.wso2.identity.apps.authentication.portal.server.feature.group
                                     </id>
-                                    <version>${identity.apps.version}</version>
+                                    <version>${identity.apps.core.version}</version>
                                 </feature>
 
                                 <feature>
                                     <id>
                                         org.wso2.identity.apps.recovery.portal.server.feature.group
                                     </id>
-                                    <version>${identity.apps.version}</version>
+                                    <version>${identity.apps.core.version}</version>
                                 </feature>
 
                                 <feature>
@@ -1441,32 +1463,27 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.identity.apps.common.server.feature.group</id>
-                                    <version>${identity.apps.version}</version>
-                                </feature>
-
-                                <feature>
-                                    <id>org.wso2.identity.apps.myaccount.server.feature.group</id>
-                                    <version>${identity.apps.version}</version>
+                                    <version>${identity.apps.core.version}</version>
                                 </feature>
 
                                 <feature>
                                     <id>org.wso2.identity.apps.console.server.feature.group</id>
-                                    <version>${identity.apps.version}</version>
+                                    <version>${identity.apps.console.version}</version>
                                 </feature>
 
                                 <feature>
-                                    <id>org.wso2.identity.apps.feature.group</id>
-                                    <version>${identity.apps.version}</version>
+                                    <id>org.wso2.identity.apps.myaccount.server.feature.group</id>
+                                    <version>${identity.apps.myaccount.version}</version>
                                 </feature>
 
                                 <feature>
                                     <id>org.wso2.identity.apps.authentication.portal.server.feature.group</id>
-                                    <version>${identity.apps.version}</version>
+                                    <version>${identity.apps.core.version}</version>
                                 </feature>
 
                                 <feature>
                                     <id>org.wso2.identity.apps.recovery.portal.server.feature.group</id>
-                                    <version>${identity.apps.version}</version>
+                                    <version>${identity.apps.core.version}</version>
                                 </feature>
 
                                 <feature>
@@ -1922,12 +1939,22 @@
                                     <id>org.wso2.carbon.identity.central.log.mgt.server.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
+
                                 <feature>
-                                    <id>
-                                        org.wso2.identity.apps.feature.group
-                                    </id>
-                                    <version>${identity.apps.version}</version>
+                                    <id>org.wso2.identity.apps.common.server.feature.group</id>
+                                    <version>${identity.apps.core.version}</version>
                                 </feature>
+
+                                <feature>
+                                    <id>org.wso2.identity.apps.console.server.feature.group</id>
+                                    <version>${identity.apps.console.version}</version>
+                                </feature>
+
+                                <feature>
+                                    <id>org.wso2.identity.apps.myaccount.server.feature.group</id>
+                                    <version>${identity.apps.myaccount.version}</version>
+                                </feature>
+                                
 
                                 <feature>
                                     <id>

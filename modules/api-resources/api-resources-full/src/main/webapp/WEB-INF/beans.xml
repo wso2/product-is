@@ -192,6 +192,7 @@
     <jaxrs:server id="orgUser" address="/users/v1/me/organizations">
         <jaxrs:serviceBeans>
             <bean class="org.wso2.carbon.identity.rest.api.user.organization.v1.RootApi"/>
+            <bean class="org.wso2.carbon.identity.rest.api.user.organization.v1.MeApi"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">
