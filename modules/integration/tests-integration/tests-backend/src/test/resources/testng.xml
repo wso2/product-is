@@ -68,6 +68,7 @@
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ScopesTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2XACMLScopeValidatorTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.PermissionBasedScopeValidatorTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.OAuthAppsWithSameClientIdTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCAuthzCodeIdTokenValidationTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCSPWiseSkipLoginConsentTestCase"/>
 
