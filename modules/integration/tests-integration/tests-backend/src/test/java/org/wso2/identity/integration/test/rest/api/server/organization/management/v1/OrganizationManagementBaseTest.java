@@ -33,7 +33,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.common.B2BRESTAPIServerTestBase;
-import org.wso2.identity.integration.test.rest.api.server.organization.management.v1.model.OrganizationType;
+import org.wso2.identity.integration.test.rest.api.server.organization.management.v1.model.OrganizationLevel;
 
 import java.io.IOException;
 import java.util.Set;
@@ -49,7 +49,7 @@ public class OrganizationManagementBaseTest extends B2BRESTAPIServerTestBase {
 
     private static final String API_DEFINITION_NAME = "org.wso2.carbon.identity.organization.management.yaml";
     static final String API_VERSION = "v1";
-    public final OrganizationType organizationType;
+    public final OrganizationLevel organizationLevel;
     static final String SUPER_ORGANIZATION_NAME = "Super";
     static final String ORGANIZATION_NAME = "name";
     static final String ORGANIZATION_PARENT_ID = "parentId";
@@ -68,9 +68,9 @@ public class OrganizationManagementBaseTest extends B2BRESTAPIServerTestBase {
         }
     }
 
-    public OrganizationManagementBaseTest(TestUserMode userMode, OrganizationType organizationType) throws Exception {
+    public OrganizationManagementBaseTest(TestUserMode userMode, OrganizationLevel organizationLevel) throws Exception {
 
-        this.organizationType = organizationType;
+        this.organizationLevel = organizationLevel;
         super.init(userMode);
         this.context = isServer;
         this.authenticatingUserName = context.getContextTenant().getTenantAdmin().getUserName();
@@ -86,7 +86,7 @@ public class OrganizationManagementBaseTest extends B2BRESTAPIServerTestBase {
             orgId = SUPER_ORGANIZATION_ID;
         }
         this.subOrganizationId = orgId;
-        if (OrganizationType.SUPER_ORGANIZATION.equals(this.organizationType)) {
+        if (OrganizationLevel.SUPER_ORGANIZATION.equals(this.organizationLevel)) {
             super.testInitWithoutTenantQualifiedPath(API_VERSION, swaggerDefinition);
         } else {
             this.tenant = subOrganizationId;
@@ -124,8 +124,8 @@ public class OrganizationManagementBaseTest extends B2BRESTAPIServerTestBase {
     public static Object[][] restAPIUserConfigProvider() {
 
         return new Object[][]{
-                {TestUserMode.SUPER_TENANT_ADMIN, OrganizationType.SUPER_ORGANIZATION},
-                {TestUserMode.SUPER_TENANT_ADMIN, OrganizationType.SUB_ORGANIZATION}
+                {TestUserMode.SUPER_TENANT_ADMIN, OrganizationLevel.SUPER_ORGANIZATION},
+                {TestUserMode.SUPER_TENANT_ADMIN, OrganizationLevel.SUB_ORGANIZATION}
         };
     }
 
@@ -133,7 +133,7 @@ public class OrganizationManagementBaseTest extends B2BRESTAPIServerTestBase {
     public static Object[][] initRESTAPIUserConfigProvider() {
 
         return new Object[][]{
-                {TestUserMode.SUPER_TENANT_ADMIN, OrganizationType.SUPER_ORGANIZATION},
+                {TestUserMode.SUPER_TENANT_ADMIN, OrganizationLevel.SUPER_ORGANIZATION},
         };
     }
 

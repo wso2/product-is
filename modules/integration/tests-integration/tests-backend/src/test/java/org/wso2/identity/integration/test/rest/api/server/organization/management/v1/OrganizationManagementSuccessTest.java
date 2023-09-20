@@ -27,7 +27,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.identity.integration.test.rest.api.server.organization.management.v1.model.OrganizationType;
+import org.wso2.identity.integration.test.rest.api.server.organization.management.v1.model.OrganizationLevel;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -49,10 +49,10 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     private String createdOrganizationName;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
-    public OrganizationManagementSuccessTest(TestUserMode userMode, OrganizationType organizationType)
+    public OrganizationManagementSuccessTest(TestUserMode userMode, OrganizationLevel organizationLevel)
             throws Exception {
 
-        super(userMode, organizationType);
+        super(userMode, organizationLevel);
     }
 
     @AfterClass(alwaysRun = true)
@@ -70,7 +70,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         String org;
         String parentId;
 
-        if (OrganizationType.SUPER_ORGANIZATION.equals(this.organizationType)) {
+        if (OrganizationLevel.SUPER_ORGANIZATION.equals(this.organizationLevel)) {
             org = "Level1Org";
             parentId = SUPER_ORGANIZATION_NAME;
         } else {
@@ -95,7 +95,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         createdOrganizationName = org;
 
         assertNotBlank(createdOrgId);
-        if (organizationType == OrganizationType.SUB_ORGANIZATION) {
+        if (organizationLevel == OrganizationLevel.SUB_ORGANIZATION) {
             // Check whether password recovery is enabled in the created sub-organization.
             String governanceURL = "/o/" + createdOrganizationId +
                     "/api/server/v1/identity-governance/QWNjb3VudCBNYW5hZ2VtZW50/connectors/YWNjb3VudC1yZWNvdmVyeQ";

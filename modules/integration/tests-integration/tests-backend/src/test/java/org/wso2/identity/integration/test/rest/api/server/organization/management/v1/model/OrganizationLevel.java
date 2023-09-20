@@ -18,7 +18,7 @@
 
 package org.wso2.identity.integration.test.rest.api.server.organization.management.v1.model;
 
-public enum OrganizationType {
+public enum OrganizationLevel {
     SUPER_ORGANIZATION,
     SUB_ORGANIZATION
 }

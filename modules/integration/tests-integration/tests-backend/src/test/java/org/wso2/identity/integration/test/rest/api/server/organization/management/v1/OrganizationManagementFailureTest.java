@@ -26,7 +26,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.identity.integration.test.rest.api.server.organization.management.v1.model.OrganizationType;
+import org.wso2.identity.integration.test.rest.api.server.organization.management.v1.model.OrganizationLevel;
 
 /**
  * Tests for negative paths of the Organization Management REST API.
@@ -34,10 +34,10 @@ import org.wso2.identity.integration.test.rest.api.server.organization.managemen
 public class OrganizationManagementFailureTest extends OrganizationManagementBaseTest {
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
-    public OrganizationManagementFailureTest(TestUserMode userMode, OrganizationType organizationType)
+    public OrganizationManagementFailureTest(TestUserMode userMode, OrganizationLevel organizationLevel)
             throws Exception {
 
-        super(userMode, organizationType);
+        super(userMode, organizationLevel);
     }
 
     @AfterMethod(alwaysRun = true)
@@ -53,7 +53,7 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
         JSONObject organizationObject = new JSONObject();
         String parentId;
 
-        if (OrganizationType.SUPER_ORGANIZATION.equals(this.organizationType)) {
+        if (OrganizationLevel.SUPER_ORGANIZATION.equals(this.organizationLevel)) {
             parentId = SUPER_ORGANIZATION_NAME;
         } else {
             parentId = subOrganizationId;
@@ -71,7 +71,7 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
         JSONObject organizationObject = new JSONObject();
         String parentId;
 
-        if (OrganizationType.SUPER_ORGANIZATION.equals(this.organizationType)) {
+        if (OrganizationLevel.SUPER_ORGANIZATION.equals(this.organizationLevel)) {
             parentId = SUPER_ORGANIZATION_NAME;
         } else {
             parentId = subOrganizationId;
