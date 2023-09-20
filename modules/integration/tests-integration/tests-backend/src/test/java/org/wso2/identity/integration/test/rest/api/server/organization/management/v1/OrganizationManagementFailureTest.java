@@ -19,6 +19,7 @@
 package org.wso2.identity.integration.test.rest.api.server.organization.management.v1;
 
 import io.restassured.response.Response;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 import org.testng.annotations.AfterMethod;
@@ -52,7 +53,7 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
         JSONObject organizationObject = new JSONObject();
         String parentId;
 
-        if (organizationType.name().equals("SUPER_ORGANIZATION")) {
+        if (OrganizationType.SUPER_ORGANIZATION.equals(this.organizationType)) {
             parentId = SUPER_ORGANIZATION_NAME;
         } else {
             parentId = subOrganizationId;
@@ -70,12 +71,12 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
         JSONObject organizationObject = new JSONObject();
         String parentId;
 
-        if (organizationType.name().equals("SUPER_ORGANIZATION")) {
+        if (OrganizationType.SUPER_ORGANIZATION.equals(this.organizationType)) {
             parentId = SUPER_ORGANIZATION_NAME;
         } else {
             parentId = subOrganizationId;
         }
-        organizationObject.put(ORGANIZATION_NAME, "");
+        organizationObject.put(ORGANIZATION_NAME, StringUtils.EMPTY);
         organizationObject.put(ORGANIZATION_PARENT_ID, parentId);
         String payload = organizationObject.toString();
 

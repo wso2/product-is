@@ -86,7 +86,7 @@ public class OrganizationManagementBaseTest extends B2BRESTAPIServerTestBase {
             orgId = SUPER_ORGANIZATION_ID;
         }
         this.subOrganizationId = orgId;
-        if (this.organizationType.name().equals("SUPER_ORGANIZATION")) {
+        if (OrganizationType.SUPER_ORGANIZATION.equals(this.organizationType)) {
             super.testInitWithoutTenantQualifiedPath(API_VERSION, swaggerDefinition);
         } else {
             this.tenant = subOrganizationId;

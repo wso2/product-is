@@ -70,7 +70,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         String org;
         String parentId;
 
-        if (organizationType.name().equals("SUPER_ORGANIZATION")) {
+        if (OrganizationType.SUPER_ORGANIZATION.equals(this.organizationType)) {
             org = "Level1Org";
             parentId = SUPER_ORGANIZATION_NAME;
         } else {

@@ -92,6 +92,7 @@ public class B2BRESTTestBase extends RESTTestBase {
      * @return Response of post request.
      */
     protected Response getResponseOfPost(String endpointUri, String body) {
+
         return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
                 .contentType(ContentType.JSON)
                 .header(HttpHeaders.ACCEPT, ContentType.JSON)
@@ -140,7 +141,7 @@ public class B2BRESTTestBase extends RESTTestBase {
     }
 
     /**
-     * Validate http status code of the response
+     * Validate http status code of the response.
      *
      * @param response       Response.
      * @param httpStatusCode Expected status code.
@@ -155,7 +156,7 @@ public class B2BRESTTestBase extends RESTTestBase {
     }
 
     /**
-     * Validate error description of the response, if an entry is available in RESTAPIErrors.properties
+     * Validate error description of the response, if an entry is available in RESTAPIErrors.properties.
      *
      * @param response     Response.
      * @param errorCode    Error code.
@@ -179,7 +180,7 @@ public class B2BRESTTestBase extends RESTTestBase {
     }
 
     /**
-     * Validate elements in error response against entries in RESTAPIErrors.properties
+     * Validate elements in error response against entries in RESTAPIErrors.properties.
      *
      * @param response          Response.
      * @param errorCode         API error code.
