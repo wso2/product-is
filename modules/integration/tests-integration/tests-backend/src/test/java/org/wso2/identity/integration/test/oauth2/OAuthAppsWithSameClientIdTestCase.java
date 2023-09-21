@@ -49,7 +49,6 @@ import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.automation.engine.context.beans.User;
 import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
-import org.wso2.identity.integration.test.EmailOTPTestCase;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationListItem;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationListResponse;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
@@ -71,13 +70,12 @@ import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.xml.xpath.XPathExpressionException;
 
 /**
  * This class contains tests for OAuth apps with same client id in multiple tenants.
@@ -110,6 +108,7 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
     private SCIM2RestClient scim2RestClientTenant2;
     private HttpClient client;
 
+    private boolean configurationsRestored = false;
     private String tenant1UserId = null;
     private String tenant2UserId = null;
     private String sessionDataKey;
@@ -122,6 +121,8 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
 
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(isServer);
+
+        // Enable tenant qualified urls/ tenanted sessions and restart the server.
         changeISConfigurations();
 
         tenantMgtRestClient = new TenantMgtRestClient(serverURL, tenantInfo);
@@ -158,7 +159,9 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
     @AfterClass(alwaysRun = true)
     public void testClear() throws IOException, AutomationUtilException {
 
-        serverConfigurationManager.restoreToLastConfiguration(true);
+        if (!configurationsRestored) {
+            serverConfigurationManager.restoreToLastConfiguration(true);
+        }
         tenantMgtRestClient.closeHttpClient();
         oAuth2RestClientTenant1.closeHttpClient();
         oAuth2RestClientTenant2.closeHttpClient();
@@ -178,9 +181,14 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
             getSCIMRestClient(TENANT_2_DOMAIN).deleteUser(tenant2UserId);
             tenant2UserId = null;
         }
+
+        sessionDataKey = null;
+        sessionDataKeyConsent = null;
+        authorizationCode = null;
+        accessToken = null;
     }
 
-    @Test(description = "Create two OAuth apps in the same tenant with same client id.")
+    @Test(description = "Create two OAuth apps in the same tenant with same client id.", priority = 0)
     public void testCreateAppsWithSameClientIdInSameTenant() throws Exception {
 
         // Create first app.
@@ -192,7 +200,7 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
         Assert.assertEquals(statusLine.getStatusCode(), HttpStatus.SC_CONFLICT, "Expected status code not received.");
     }
 
-    @Test(description = "Create two OAuth apps in two tenants with the same client id.")
+    @Test(description = "Create two OAuth apps in two tenants with the same client id.", priority = 1)
     public void testCreateAppsWithSameClientIdInMultipleTenants() throws Exception {
 
         // Create oauth apps in both tenants.
@@ -214,7 +222,7 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
     }
 
     @Test(description = "Create two OAuth apps in two tenants with the same client id and retrieve " +
-            "tenant app by client id.")
+            "tenant app by client id.", priority = 2)
     public void testRetrieveTenantAppByClientId() throws JSONException, IOException {
 
         // Create oauth apps in both tenants.
@@ -233,7 +241,7 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
     }
 
     @Test(description = "Create two OAuth apps in two tenants with the same client id and update " +
-            "inbound configurations of one app.")
+            "inbound configurations of one app.", priority = 3)
     public void testCreateAppsAndUpdateInboundConfigurationsOfOne() throws Exception {
 
         // Create oauth apps in both tenants.
@@ -284,7 +292,7 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
     }
 
     @Test(description = "Create two OAuth apps in two tenants with the same client id and delete an app " +
-            "in one tenant.")
+            "in one tenant.", priority = 4)
     public void testCreateAppsAndDeleteOne() throws Exception {
 
         // Create oauth apps in both tenants.
@@ -304,7 +312,7 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
     }
 
     @Test(description = "Create two OAuth apps in two tenants with the same client id and delete " +
-            "inbound configurations of one app.")
+            "inbound configurations of one app.", priority = 5)
     public void testCreateAppsAndDeleteInboundConfigurationsOfOne() throws Exception {
 
         // Create oauth apps in both tenants.
@@ -335,7 +343,7 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
     }
 
     @Test(description = "Create two OAuth apps in two tenants with the same client id and try to login " +
-            "with the user for the tenant.")
+            "with the user for the tenant.", priority = 6)
     public void testOAuthApplicationLoginSuccess() throws Exception {
 
         // Create oauth apps in both tenants.
@@ -349,15 +357,15 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
         tenant2UserId = createUser(TENANT_2_DOMAIN);
 
         // Authenticate.
-        initiateAuthorizationRequest();
-        authenticateUser(TENANT_1_USER_USERNAME + "@" + TENANT_1_DOMAIN, TENANT_1_USER_PASSWORD, TENANT_1_DOMAIN);
-        performConsentApproval(TENANT_1_DOMAIN);
-        generateAuthzCodeAccessToken(TENANT_1_DOMAIN);
+        initiateAuthorizationRequest(true);
+        authenticateUser(true, TENANT_1_USER_USERNAME, TENANT_1_USER_PASSWORD, TENANT_1_DOMAIN);
+        performConsentApproval(true, TENANT_1_DOMAIN);
+        generateAuthzCodeAccessToken(true, TENANT_1_DOMAIN);
         introspectActiveAccessToken(TENANT_1_DOMAIN, TENANT_1_ADMIN_USERNAME, TENANT_1_ADMIN_PASSWORD);
     }
 
     @Test(description = "Create two OAuth apps in two tenants with the same client id and try to login " +
-            "with the user from the other tenant.", expectedExceptions = AssertionError.class)
+            "with the user from the other tenant.", priority = 7, expectedExceptions = AssertionError.class)
     public void testOAuthApplicationLoginIncorrectTenant() throws Exception {
 
         // Create oauth apps in both tenants.
@@ -371,9 +379,31 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
         tenant2UserId = createUser(TENANT_2_DOMAIN);
 
         // Authenticate.
-        initiateAuthorizationRequest();
-        authenticateUser(TENANT_2_USER_USERNAME + "@" + TENANT_2_DOMAIN, TENANT_2_USER_PASSWORD, TENANT_1_DOMAIN);
+        initiateAuthorizationRequest(true);
+        authenticateUser(true, TENANT_2_USER_USERNAME, TENANT_2_USER_PASSWORD, TENANT_1_DOMAIN);
         Assert.fail("Expected exception not received.");
+    }
+
+    @Test(description = "Create an OAuth app in tenant 1 and try to login when tenant qualified urls are disabled.",
+            priority = 8)
+    public void testOAuthApplicationLoginWhenTenantQualifiedUrlsDisabled() throws Exception {
+
+        // Restore the server back to the initial state (tenant qualified urls disabled).
+        serverConfigurationManager.restoreToLastConfiguration(true);
+        configurationsRestored = true;
+
+        // Create oauth app and add user.
+        ApplicationResponseModel tenant1App = createApplication(TENANT_1_DOMAIN);
+        Assert.assertNotNull(tenant1App, "OAuth app creation failed for tenant 1.");
+        tenant1UserId = createUser(TENANT_1_DOMAIN);
+
+        // Authenticate.
+        initiateAuthorizationRequest(false);
+        authenticateUser(false, TENANT_1_USER_USERNAME + "@" + TENANT_1_DOMAIN, TENANT_1_USER_PASSWORD,
+                TENANT_1_DOMAIN);
+        performConsentApproval(false, TENANT_1_DOMAIN);
+        generateAuthzCodeAccessToken(false, TENANT_1_DOMAIN);
+        introspectActiveAccessToken(TENANT_1_DOMAIN, TENANT_1_ADMIN_USERNAME, TENANT_1_ADMIN_PASSWORD);
     }
 
     private void changeISConfigurations() throws AutomationUtilException, IOException {
@@ -516,11 +546,12 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
     /**
      * Playground app will initiate authorization request to IS and obtain session data key.
      *
-     * @throws IOException IOException
+     * @param tenantQualified Whether tenant qualified urls are enabled.
+     * @throws IOException IOException.
      */
-    private void initiateAuthorizationRequest() throws IOException {
+    private void initiateAuthorizationRequest(boolean tenantQualified) throws IOException {
 
-        List<NameValuePair> urlParameters = getOIDCInitiationRequestParams();
+        List<NameValuePair> urlParameters = getOIDCInitiationRequestParams(tenantQualified);
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters,
                 OAuth2Constant.AUTHORIZED_USER_URL);
         Assert.assertNotNull(response, "Authorization response is null");
@@ -534,31 +565,43 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
         EntityUtils.consume(response.getEntity());
     }
 
-    private List<NameValuePair> getOIDCInitiationRequestParams() {
+    private List<NameValuePair> getOIDCInitiationRequestParams(boolean tenantQualified) {
 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("grantType", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
         urlParameters.add(new BasicNameValuePair("consumerKey", DUMMY_CLIENT_ID));
         urlParameters.add(new BasicNameValuePair("callbackurl", OAuth2Constant.CALLBACK_URL));
-        urlParameters.add(new BasicNameValuePair("authorizeEndpoint", TENANT_1_AUTHORIZE_URL));
+        if (tenantQualified) {
+            urlParameters.add(new BasicNameValuePair("authorizeEndpoint", TENANT_1_AUTHORIZE_URL));
+        } else {
+            urlParameters.add(new BasicNameValuePair("authorizeEndpoint", OAuth2Constant.AUTHORIZE_ENDPOINT_URL));
+        }
         urlParameters.add(new BasicNameValuePair("authorize", OAuth2Constant.AUTHORIZE_PARAM));
         urlParameters.add(new BasicNameValuePair("scope", OAuth2Constant.OAUTH2_SCOPE_OPENID + " " +
                 OAuth2Constant.OAUTH2_SCOPE_EMAIL));
+
         return urlParameters;
     }
 
     /**
      * Provide user credentials and authenticate to the system.
      *
-     * @param username      Username of the user.
-     * @param password      Password of the user.
-     * @param tenantDomain  Tenant domain.
+     * @param tenantQualified   Whether tenant qualified urls are enabled.
+     * @param username          Username of the user.
+     * @param password          Password of the user.
+     * @param tenantDomain      Tenant domain.
      * @throws IOException IOException.
      */
-    private void authenticateUser(String username, String password, String tenantDomain) throws Exception {
+    private void authenticateUser(boolean tenantQualified, String username, String password, String tenantDomain)
+            throws Exception {
 
         // Pass user credentials to commonauth endpoint and authenticate the user.
-        HttpResponse response = sendLoginPostForCustomUsers(client, sessionDataKey, username, password, tenantDomain);
+        HttpResponse response;
+        if (tenantQualified) {
+            response = sendLoginPostForCustomUsers(client, sessionDataKey, username, password, tenantDomain);
+        } else {
+            response = sendLoginPostForCustomUsers(client, sessionDataKey, username, password);
+        }
         Assert.assertNotNull(response, "OIDC login request response is null.");
 
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
@@ -580,36 +623,42 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
     /**
      * Approve the consent.
      *
-     * @param tenantDomain Tenant domain.
+     * @param tenantQualified   Whether tenant qualified urls are enabled.
+     * @param tenantDomain      Tenant domain.
      * @throws IOException IOException.
      */
-    private void performConsentApproval(String tenantDomain) throws IOException {
+    private void performConsentApproval(boolean tenantQualified, String tenantDomain) throws IOException {
 
-        HttpResponse response = sendApprovalPostWithConsent(client, sessionDataKeyConsent, null, tenantDomain);
+        HttpResponse response;
+        if (tenantQualified) {
+            response = sendApprovalPostWithConsent(client, sessionDataKeyConsent, null, tenantDomain);
+        } else {
+            response = sendApprovalPostWithConsent(client, sessionDataKeyConsent, null);
+        }
         Assert.assertNotNull(response, "OIDC consent approval request response is null.");
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         Assert.assertNotNull(locationHeader, "OIDC consent approval request location header is null.");
         EntityUtils.consume(response.getEntity());
 
         // Get authorization code flow.
-        response = sendPostRequest(client, locationHeader.getValue());
-        Map<String, Integer> keyPositionMap = new HashMap<>(1);
-        keyPositionMap.put("Authorization Code", 1);
-        List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil
-                .extractTableRowDataFromResponse(response, keyPositionMap);
-        Assert.assertNotNull(keyValues, "Authorization code not received.");
-        authorizationCode = keyValues.get(0).getValue();
+        String[] queryParams = new URL(locationHeader.getValue()).getQuery().split("&");
+        Assert.assertNotEquals(queryParams.length, 0, "Authorization code not received.");
+        for (String param : queryParams) {
+            if (param.contains(OAuth2Constant.OAUTH2_GRANT_TYPE_CODE)) {
+                authorizationCode = param.split("=")[1];
+            }
+        }
         Assert.assertNotNull(authorizationCode, "Authorization code not received.");
-        EntityUtils.consume(response.getEntity());
     }
 
     /**
      * Exchange authorization code and get access token.
      *
-     * @param tenantDomain Tenant domain.
+     * @param tenantQualified   Whether tenant qualified urls are enabled.
+     * @param tenantDomain      Tenant domain.
      * @throws Exception IOException.
      */
-    private void generateAuthzCodeAccessToken(String tenantDomain) throws Exception {
+    private void generateAuthzCodeAccessToken(boolean tenantQualified, String tenantDomain) throws Exception {
 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.GRANT_TYPE_NAME,
@@ -617,7 +666,12 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_REDIRECT_URI, OAuth2Constant.CALLBACK_URL));
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.AUTHORIZATION_CODE_NAME, authorizationCode));
 
-        String url = OAuth2Constant.TENANT_TOKEN_ENDPOINT.replace(OAuth2Constant.TENANT_PLACEHOLDER, tenantDomain);
+        String url;
+        if (tenantQualified) {
+            url = OAuth2Constant.TENANT_TOKEN_ENDPOINT.replace(OAuth2Constant.TENANT_PLACEHOLDER, tenantDomain);
+        } else {
+            url = OAuth2Constant.ACCESS_TOKEN_ENDPOINT;
+        }
         JSONObject jsonResponse = responseObject(url, urlParameters, DUMMY_CLIENT_ID, DUMMY_CLIENT_SECRET);
         Assert.assertNotNull(jsonResponse.get(OAuth2Constant.ACCESS_TOKEN), "Access token is null.");
         Assert.assertNotNull(jsonResponse.get(OAuth2Constant.REFRESH_TOKEN), "Refresh token is null.");
