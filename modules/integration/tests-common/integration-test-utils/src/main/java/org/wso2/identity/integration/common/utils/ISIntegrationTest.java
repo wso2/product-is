@@ -159,9 +159,12 @@ public class ISIntegrationTest {
     public String getTenantQualifiedURL(String endpointURL, String tenantDomain) {
 
         try {
-            if(!tenantDomain.equalsIgnoreCase(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+            if(!tenantDomain.isBlank() && !tenantDomain.equalsIgnoreCase(
+                    MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+
                 String baseURL = getBaseURL();
-                endpointURL = endpointURL.replace(baseURL, baseURL + TENANTED_URL_PATH_SPECIFIER + tenantDomain);
+                endpointURL = endpointURL.replace(baseURL,
+                        baseURL + TENANTED_URL_PATH_SPECIFIER + tenantDomain);
             }
             return endpointURL;
         } catch (XPathExpressionException e) {
@@ -178,7 +181,7 @@ public class ISIntegrationTest {
      */
     public String getTenantQualifiedURLWithoutHostName(String endpointURLWithHostname, String tenantDomain) {
 
-        if(!tenantDomain.equalsIgnoreCase(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+        if(!tenantDomain.isBlank() && !tenantDomain.equalsIgnoreCase(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
             endpointURLWithHostname = TENANTED_URL_PATH_SPECIFIER + tenantDomain + endpointURLWithHostname;
         }
         return endpointURLWithHostname;
@@ -191,17 +194,14 @@ public class ISIntegrationTest {
      */
     private String getBaseURL() throws XPathExpressionException {
 
-        String baseURL;
         Instance instance = isServer.getInstance();
         String httpsPort = isServer.getInstance().getPorts().get(PRODUCT_GROUP_PORT_HTTPS);
         String hostName = UrlGenerationUtil.getWorkerHost(instance);
 
         if(httpsPort != null) {
-            baseURL = PRODUCT_GROUP_PORT_HTTPS + "://" + hostName + ":" + httpsPort;
-        } else {
-            baseURL = PRODUCT_GROUP_PORT_HTTPS + "://" + hostName;
+            return PRODUCT_GROUP_PORT_HTTPS + "://" + hostName + ":" + httpsPort;
         }
-        return baseURL;
+        return PRODUCT_GROUP_PORT_HTTPS + "://" + hostName;
     }
 
 //    protected void addJDBCUserStore(String dbURI, String driverName, String userName, String password,
