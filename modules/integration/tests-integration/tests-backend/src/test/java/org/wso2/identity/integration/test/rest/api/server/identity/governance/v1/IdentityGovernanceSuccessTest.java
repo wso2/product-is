@@ -142,8 +142,8 @@ public class IdentityGovernanceSuccessTest extends IdentityGovernanceTestBase {
                     equalTo(category.getValue().getName()));
 
             validatableResponse.body("find{ it.id == '" + category.getKey() + "' }.self",
-                    equalTo("/t/" + tenant + "/api/server/v1" + IDENTITY_GOVERNANCE_ENDPOINT_URI + "/" +
-                            category.getValue().getId()));
+                    equalTo(getTenantQualifiedURLWithoutHostName("/api/server/v1" +
+                            IDENTITY_GOVERNANCE_ENDPOINT_URI + "/" + category.getValue().getId(), tenant)));
         }
     }
 

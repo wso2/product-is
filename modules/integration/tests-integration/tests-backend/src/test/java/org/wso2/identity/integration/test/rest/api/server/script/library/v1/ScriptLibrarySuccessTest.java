@@ -113,8 +113,10 @@ public class ScriptLibrarySuccessTest extends ScriptLibraryTestBase {
     @Test(dependsOnMethods = {"testAddScriptLibrary"})
     public void testGetScriptLibrary() throws XPathExpressionException {
 
-        SCRIPT_LIBRARY_CONTENT_REF = "/t/" + context.getContextTenant()
-                .getDomain() + "/api/server/v1/script-libraries/" + SCRIPT_LIBRARY_NAME + SCRIPT_LIBRARY_CONTENT_PATH;
+        SCRIPT_LIBRARY_CONTENT_REF = getTenantQualifiedURLWithoutHostName(
+                "/api/server/v1/script-libraries/" + SCRIPT_LIBRARY_NAME + SCRIPT_LIBRARY_CONTENT_PATH,
+                context.getContextTenant().getDomain());
+
         Response response = getResponseOfGet(SCRIPT_LIBRARY_API_BASE_PATH + PATH_SEPARATOR + SCRIPT_LIBRARY_NAME);
         response.then()
                 .log().ifValidationFails()
@@ -138,8 +140,9 @@ public class ScriptLibrarySuccessTest extends ScriptLibraryTestBase {
     @Test(dependsOnMethods = {"testGetScriptLibrary"})
     public void testUpdateScriptLibrary() throws IOException, XPathExpressionException {
 
-        SCRIPT_LIBRARY_CONTENT_REF = "/t/" + context.getContextTenant()
-                .getDomain() + "/api/server/v1/script-libraries/" + SCRIPT_LIBRARY_NAME + SCRIPT_LIBRARY_CONTENT_PATH;
+        SCRIPT_LIBRARY_CONTENT_REF = getTenantQualifiedURLWithoutHostName(
+                "/api/server/v1/script-libraries/" + SCRIPT_LIBRARY_NAME + SCRIPT_LIBRARY_CONTENT_PATH,
+                context.getContextTenant().getDomain());
         String content = readResource("sample-script-library-updated.js");
         String endpoint = SCRIPT_LIBRARY_API_BASE_PATH + PATH_SEPARATOR + SCRIPT_LIBRARY_NAME;
         Response response = getResponseOfMultipartPut(endpoint, content, SCRIPT_LIBRARY_UPDATED_DESCRIPTION);
