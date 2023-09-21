@@ -31,6 +31,7 @@
         <classes>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2DeviceFlowTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2PushedAuthRequestTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.OAuth2ResponseModeTestCase"/>
             <class name="org.wso2.identity.integration.test.consent.ConsentMgtTestCase"/>
             <class name="org.wso2.identity.integration.test.user.export.UserInfoExportTestCase" />
             <class name="org.wso2.identity.integration.test.consent.SelfSignUpConsentTest"/>
@@ -356,6 +357,12 @@
     <test name="is-tests-default-encryption" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
             <class name="org.wso2.identity.integration.test.encryption.EventPublisherPasswordEncryptionTestCase"/>
+        </classes>
+    </test>
+    <test name="org-mgt-test-rest-api" preserve-order="true" parallel="false" group-by-instances="true">
+        <classes>
+            <class name="org.wso2.identity.integration.test.rest.api.server.organization.management.v1.OrganizationManagementSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.organization.management.v1.OrganizationManagementFailureTest"/>
         </classes>
     </test>
 </suite>
