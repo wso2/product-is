@@ -50,7 +50,10 @@ import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
 public class OAuth2ResponseModeTestCase extends OAuth2ServiceAbstractIntegrationTest{
 
@@ -183,11 +186,11 @@ public class OAuth2ResponseModeTestCase extends OAuth2ServiceAbstractIntegration
      */
     private AuthorizationCode getAuthorizationCode(String url, String responseMode)
             throws URISyntaxException {
+
         String code;
         if (responseMode.contains("jwt")) {
             String responseJWT;
-            Assert.assertTrue(url.contains("response"),
-                    "Response JWT not found in the response.");
+            Assert.assertTrue(url.contains("response"), "Response JWT not found in the response.");
             if (responseMode.contains("fragment")) {
                 responseJWT =  DataExtractUtil.extractParamFromURIFragment(url, "response");
                 Assert.assertNotNull(responseJWT, "Response JWT not found as a fragment parameter.");
