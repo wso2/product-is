@@ -936,6 +936,7 @@
                                     <id>org.wso2.carbon.identity.provisioning.server.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
+                              
                                 <feature>
                                     <id>org.wso2.carbon.identity.tools.saml.validator.feature.group</id>
                                     <version>${identity.tool.samlsso.validator.version}</version>
