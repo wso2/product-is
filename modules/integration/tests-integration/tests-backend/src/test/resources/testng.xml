@@ -31,6 +31,7 @@
         <classes>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2DeviceFlowTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2PushedAuthRequestTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.OAuth2ResponseModeTestCase"/>
             <class name="org.wso2.identity.integration.test.consent.ConsentMgtTestCase"/>
             <class name="org.wso2.identity.integration.test.user.export.UserInfoExportTestCase" />
             <class name="org.wso2.identity.integration.test.consent.SelfSignUpConsentTest"/>
