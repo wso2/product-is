@@ -259,6 +259,11 @@ public class OIDCRPInitiatedLogoutTestCase extends OIDCAbstractIntegrationTest {
             EntityUtils.consume(response.getEntity());
 
             String redirectUrl = locationHeader.getValue();
+            /*
+            since client_id and id_token_hint are optional parameters, logout will be successful even if they are not
+            present in the request. However, if either of these and the correct post_logout_redirect_uri is sent in the
+            request, OP should validate the client based on these values and redirect to the given redirect url.
+            */
             Assert.assertTrue(redirectUrl.contains(playgroundApp.getCallBackURL()), "Not redirected to the" +
                     "post logout redirect url");
             response = sendGetRequest(client, redirectUrl);
