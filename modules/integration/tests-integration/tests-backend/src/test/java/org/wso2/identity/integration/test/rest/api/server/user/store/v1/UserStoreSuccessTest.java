@@ -149,7 +149,7 @@ public class UserStoreSuccessTest extends UserStoreTestBase {
             validatableResponse.body("find{ it.typeId == '" + resEntry.getKey() + "' }.className",
                     equalTo(resEntry.getValue().getClassName()));
             validatableResponse.body("find{ it.typeId == '" + resEntry.getKey() + "' }.self",
-                    equalTo(getTenantQualifiedURLWithoutHostName("/api/server/v1" + USER_STORE_PATH_COMPONENT +
+                    equalTo(getTenantedRelativePath("/api/server/v1" + USER_STORE_PATH_COMPONENT +
                             PATH_SEPARATOR + "meta/types/" + resEntry.getValue().getTypeId(), tenant)));
         }
     }
@@ -193,7 +193,7 @@ public class UserStoreSuccessTest extends UserStoreTestBase {
             validatableResponse.body("find{ it.id == '" + resEntry.getKey() + "' }.description",
                     equalTo(resEntry.getValue().getDescription()));
             validatableResponse.body("find{ it.id == '" + resEntry.getKey() + "' }.self",
-                    equalTo(getTenantQualifiedURLWithoutHostName("/api/server/v1" +
+                    equalTo(getTenantedRelativePath("/api/server/v1" +
                             USER_STORE_PATH_COMPONENT + PATH_SEPARATOR + resEntry.getValue().getId(), tenant)));
         }
     }

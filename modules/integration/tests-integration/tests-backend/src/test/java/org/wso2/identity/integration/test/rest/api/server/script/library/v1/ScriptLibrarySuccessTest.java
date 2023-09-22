@@ -113,7 +113,7 @@ public class ScriptLibrarySuccessTest extends ScriptLibraryTestBase {
     @Test(dependsOnMethods = {"testAddScriptLibrary"})
     public void testGetScriptLibrary() throws XPathExpressionException {
 
-        SCRIPT_LIBRARY_CONTENT_REF = getTenantQualifiedURLWithoutHostName(
+        SCRIPT_LIBRARY_CONTENT_REF = getTenantedRelativePath(
                 "/api/server/v1/script-libraries/" + SCRIPT_LIBRARY_NAME + SCRIPT_LIBRARY_CONTENT_PATH,
                 context.getContextTenant().getDomain());
 
@@ -140,7 +140,7 @@ public class ScriptLibrarySuccessTest extends ScriptLibraryTestBase {
     @Test(dependsOnMethods = {"testGetScriptLibrary"})
     public void testUpdateScriptLibrary() throws IOException, XPathExpressionException {
 
-        SCRIPT_LIBRARY_CONTENT_REF = getTenantQualifiedURLWithoutHostName(
+        SCRIPT_LIBRARY_CONTENT_REF = getTenantedRelativePath(
                 "/api/server/v1/script-libraries/" + SCRIPT_LIBRARY_NAME + SCRIPT_LIBRARY_CONTENT_PATH,
                 context.getContextTenant().getDomain());
         String content = readResource("sample-script-library-updated.js");

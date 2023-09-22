@@ -101,62 +101,62 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body("find{ it.authenticatorId == 'T2ZmaWNlMzY1QXV0aGVudGljYXRvcg' }.name", equalTo
                         ("Office365Authenticator"))
                 .body("find{ it.authenticatorId == 'T2ZmaWNlMzY1QXV0aGVudGljYXRvcg' }.self", equalTo(
-                        getTenantQualifiedURLWithoutHostName("/api/server/v1/identity-providers/meta/federated-authenticators" +
+                        getTenantedRelativePath("/api/server/v1/identity-providers/meta/federated-authenticators" +
                                 "/T2ZmaWNlMzY1QXV0aGVudGljYXRvcg", context.getContextTenant().getDomain())))
                 .body("find{ it.authenticatorId == 'VHdpdHRlckF1dGhlbnRpY2F0b3I' }.name", equalTo
                         ("TwitterAuthenticator"))
                 .body("find{ it.authenticatorId == 'VHdpdHRlckF1dGhlbnRpY2F0b3I' }.self", equalTo(
-                        getTenantQualifiedURLWithoutHostName(
+                        getTenantedRelativePath(
                                 "/api/server/v1/identity-providers/meta/federated-authenticators" +
                                 "/VHdpdHRlckF1dGhlbnRpY2F0b3I", context.getContextTenant().getDomain())))
                 .body("find{ it.authenticatorId == 'RmFjZWJvb2tBdXRoZW50aWNhdG9y' }.name", equalTo
                         ("FacebookAuthenticator"))
                 .body("find{ it.authenticatorId == 'RmFjZWJvb2tBdXRoZW50aWNhdG9y' }.self", equalTo(
-                        getTenantQualifiedURLWithoutHostName("/api/server/v1/identity-providers/meta/federated-authenticators"
+                        getTenantedRelativePath("/api/server/v1/identity-providers/meta/federated-authenticators"
                                 + "/RmFjZWJvb2tBdXRoZW50aWNhdG9y", context.getContextTenant().getDomain())))
                 .body("find{ it.authenticatorId == 'R29vZ2xlT0lEQ0F1dGhlbnRpY2F0b3I' }.name", equalTo
                         ("GoogleOIDCAuthenticator"))
                 .body("find{ it.authenticatorId == 'R29vZ2xlT0lEQ0F1dGhlbnRpY2F0b3I' }.self", equalTo(
-                        getTenantQualifiedURLWithoutHostName("/api/server/v1/identity-providers/meta/federated-authenticators" +
+                        getTenantedRelativePath("/api/server/v1/identity-providers/meta/federated-authenticators" +
                                 "/R29vZ2xlT0lEQ0F1dGhlbnRpY2F0b3I", context.getContextTenant().getDomain())))
                 .body("find{ it.authenticatorId == 'TWljcm9zb2Z0V2luZG93c0xpdmVBdXRoZW50aWNhdG9y' }.name", equalTo
                         ("MicrosoftWindowsLiveAuthenticator"))
                 .body("find{ it.authenticatorId == 'TWljcm9zb2Z0V2luZG93c0xpdmVBdXRoZW50aWNhdG9y' }.self", equalTo
-                        (getTenantQualifiedURLWithoutHostName(
+                        (getTenantedRelativePath(
                                 "/api/server/v1/identity-providers/meta/federated-authenticators" +
                                 "/TWljcm9zb2Z0V2luZG93c0xpdmVBdXRoZW50aWNhdG9y", context.getContextTenant().getDomain())))
                 .body("find{ it.authenticatorId == 'UGFzc2l2ZVNUU0F1dGhlbnRpY2F0b3I' }.name", equalTo
                         ("PassiveSTSAuthenticator"))
                 .body("find{ it.authenticatorId == 'UGFzc2l2ZVNUU0F1dGhlbnRpY2F0b3I' }.self", equalTo(
-                        getTenantQualifiedURLWithoutHostName(
+                        getTenantedRelativePath(
                                 "/api/server/v1/identity-providers/meta/federated-authenticators" +
                                 "/UGFzc2l2ZVNUU0F1dGhlbnRpY2F0b3I", context.getContextTenant().getDomain())))
                 .body("find{ it.authenticatorId == 'SVdBS2VyYmVyb3NBdXRoZW50aWNhdG9y' }.name", equalTo
                         ("IWAKerberosAuthenticator"))
                 .body("find{ it.authenticatorId == 'SVdBS2VyYmVyb3NBdXRoZW50aWNhdG9y' }.self", equalTo(
-                        getTenantQualifiedURLWithoutHostName(
+                        getTenantedRelativePath(
                                 "/api/server/v1/identity-providers/meta/federated-authenticators" +
                                 "/SVdBS2VyYmVyb3NBdXRoZW50aWNhdG9y", context.getContextTenant().getDomain())))
                 .body("find{ it.authenticatorId == 'U0FNTFNTT0F1dGhlbnRpY2F0b3I' }.name", equalTo
                         ("SAMLSSOAuthenticator"))
                 .body("find{ it.authenticatorId == 'U0FNTFNTT0F1dGhlbnRpY2F0b3I' }.self", equalTo(
-                        getTenantQualifiedURLWithoutHostName(
+                        getTenantedRelativePath(
                                 "/api/server/v1/identity-providers/meta/federated-authenticators/U0FNTFNTT0F1dGhlbnRpY2F0b3I",
                                 context.getContextTenant().getDomain())))
                 .body("find{ it.authenticatorId == 'T3BlbklEQ29ubmVjdEF1dGhlbnRpY2F0b3I' }.name", equalTo
                         ("OpenIDConnectAuthenticator"))
                 .body("find{ it.authenticatorId == 'T3BlbklEQ29ubmVjdEF1dGhlbnRpY2F0b3I' }.self", equalTo(
-                        getTenantQualifiedURLWithoutHostName(
+                        getTenantedRelativePath(
                                 "/api/server/v1/identity-providers/meta/federated-authenticators" +
                                 "/T3BlbklEQ29ubmVjdEF1dGhlbnRpY2F0b3I", context.getContextTenant().getDomain())))
                 .body("find{ it.authenticatorId == 'RW1haWxPVFA' }.name", equalTo("EmailOTP"))
                 .body("find{ it.authenticatorId == 'RW1haWxPVFA' }.self", equalTo(
-                        getTenantQualifiedURLWithoutHostName(
+                        getTenantedRelativePath(
                                 "/api/server/v1/identity-providers/meta/federated-authenticators/RW1haWxPVFA",
                                 context.getContextTenant().getDomain())))
                 .body("find{ it.authenticatorId == 'U01TT1RQ' }.name", equalTo("SMSOTP"))
                 .body("find{ it.authenticatorId == 'U01TT1RQ' }.self", equalTo(
-                        getTenantQualifiedURLWithoutHostName(
+                        getTenantedRelativePath(
                                 "/api/server/v1/identity-providers/meta/federated-authenticators/U01TT1RQ",
                                 context.getContextTenant().getDomain())));
     }
@@ -226,16 +226,16 @@ public class IdPSuccessTest extends IdPTestBase {
                 .statusCode(HttpStatus.SC_OK)
                 .body("find{ it.connectorId == 'Z29vZ2xlYXBwcw' }.name", equalTo("googleapps"))
                 .body("find{ it.connectorId == 'Z29vZ2xlYXBwcw' }.self", equalTo(
-                        getTenantQualifiedURLWithoutHostName(
+                        getTenantedRelativePath(
                             "/api/server/v1/identity-providers/meta/outbound-provisioning-connectors" +
                             "/Z29vZ2xlYXBwcw", context.getContextTenant().getDomain())))
                 .body("find{ it.connectorId == 'c2FsZXNmb3JjZQ' }.name", equalTo("salesforce"))
                 .body("find{ it.connectorId == 'c2FsZXNmb3JjZQ' }.self", equalTo(
-                        getTenantQualifiedURLWithoutHostName(
+                        getTenantedRelativePath(
                             "/api/server/v1/identity-providers/meta/outbound-provisioning-connectors" +
                             "/c2FsZXNmb3JjZQ", context.getContextTenant().getDomain())))
                 .body("find{ it.connectorId == 'c2NpbQ' }.name", equalTo("scim"))
-                .body("find{ it.connectorId == 'c2NpbQ' }.self", equalTo(getTenantQualifiedURLWithoutHostName(
+                .body("find{ it.connectorId == 'c2NpbQ' }.self", equalTo(getTenantedRelativePath(
                             "/api/server/v1/identity-providers/meta/outbound-provisioning-connectors" +
                             "/c2NpbQ", context.getContextTenant().getDomain())));
     }
@@ -305,7 +305,7 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body(baseIdentifier + "description", equalTo("IDP for Google Federation"))
                 .body(baseIdentifier + "isEnabled", equalTo(true))
                 .body(baseIdentifier + "image", equalTo("google-logo-url"))
-                .body(baseIdentifier + "self", equalTo(getTenantQualifiedURLWithoutHostName(
+                .body(baseIdentifier + "self", equalTo(getTenantedRelativePath(
                         "/api/server/v1/identity-providers/" + idPId,
                         context.getContextTenant().getDomain())));
     }
@@ -326,7 +326,7 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body(baseIdentifier + "description", equalTo("IDP for Google Federation"))
                 .body(baseIdentifier + "isEnabled", equalTo(true))
                 .body(baseIdentifier + "image", equalTo("google-logo-url"))
-                .body(baseIdentifier + "self", equalTo(getTenantQualifiedURLWithoutHostName(
+                .body(baseIdentifier + "self", equalTo(getTenantedRelativePath(
                         "/api/server/v1/identity-providers/" + idPId,
                         context.getContextTenant().getDomain())))
                 .body(baseIdentifier + "homeRealmIdentifier", equalTo("localhost"));
@@ -345,7 +345,7 @@ public class IdPSuccessTest extends IdPTestBase {
                 .statusCode(HttpStatus.SC_OK)
                 .body(baseIdentifier + "name", equalTo("GoogleOIDCAuthenticator"))
                 .body(baseIdentifier + "isEnabled", equalTo(true))
-                .body(baseIdentifier + "self", equalTo(getTenantQualifiedURLWithoutHostName(
+                .body(baseIdentifier + "self", equalTo(getTenantedRelativePath(
                         "/api/server/v1/identity-providers/" + idPId + "/federated-authenticators/" +
                         SAMPLE_FEDERATED_AUTHENTICATOR_ID, context.getContextTenant().getDomain())));
     }
@@ -398,7 +398,7 @@ public class IdPSuccessTest extends IdPTestBase {
                 .statusCode(HttpStatus.SC_OK)
                 .body(baseIdentifier + "name", equalTo("scim"))
                 .body(baseIdentifier + "isEnabled", equalTo(true))
-                .body(baseIdentifier + "self", equalTo(getTenantQualifiedURLWithoutHostName(
+                .body(baseIdentifier + "self", equalTo(getTenantedRelativePath(
                         "/api/server/v1/identity-providers/" + idPId + "/provisioning/outbound-connectors/" +
                         SAMPLE_OUTBOUND_CONNECTOR_ID, context.getContextTenant().getDomain())));
     }
@@ -636,7 +636,7 @@ public class IdPSuccessTest extends IdPTestBase {
                 .statusCode(HttpStatus.SC_OK)
                 .body(baseIdentifier + "name", equalTo("Facebook"))
                 .body(baseIdentifier + "category", equalTo("DEFAULT"))
-                .body(baseIdentifier + "self", equalTo(getTenantQualifiedURLWithoutHostName(
+                .body(baseIdentifier + "self", equalTo(getTenantedRelativePath(
                         "/api/server/v1/identity-providers/templates/"
                                 + fileBasedIdpTemplateId, context.getContextTenant().getDomain())))
                 .body("templates.size()", notNullValue());
@@ -691,7 +691,7 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body(baseIdentifier + "category", equalTo("DEFAULT"))
                 .body(baseIdentifier + "image", equalTo("google-logo-url"))
                 .body(baseIdentifier + "displayOrder", equalTo(10))
-                .body(baseIdentifier + "self", equalTo(getTenantQualifiedURLWithoutHostName(
+                .body(baseIdentifier + "self", equalTo(getTenantedRelativePath(
                         "/api/server/v1/identity-providers/templates/"
                                 + idPTemplateId, context.getContextTenant().getDomain())))
                 .body("templates.size()", notNullValue());
@@ -711,7 +711,7 @@ public class IdPSuccessTest extends IdPTestBase {
                 .statusCode(HttpStatus.SC_OK)
                 .body(baseIdentifier + "name", equalTo("Google"))
                 .body(baseIdentifier + "category", equalTo("DEFAULT"))
-                .body(baseIdentifier + "self", equalTo(getTenantQualifiedURLWithoutHostName(
+                .body(baseIdentifier + "self", equalTo(getTenantedRelativePath(
                         "/api/server/v1/identity-providers/templates/"
                                 + idPTemplateId, context.getContextTenant().getDomain())));
     }

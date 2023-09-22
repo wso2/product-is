@@ -135,7 +135,7 @@ public class EmailTemplatesPositiveTest extends EmailTemplatesTestBase {
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .body(baseIdentifier + "displayName", equalTo("AccountConfirmation"))
-                .body(baseIdentifier + "self", equalTo(getTenantQualifiedURLWithoutHostName(
+                .body(baseIdentifier + "self", equalTo(getTenantedRelativePath(
                         "/api/server/v1/email/template-types/QWNjb3VudENvbmZpcm1hdGlvbg",
                         context.getContextTenant().getDomain())));
     }

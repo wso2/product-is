@@ -308,7 +308,7 @@ public class UserDiscoverableApplicationSuccessTest extends UserDiscoverableAppl
                     .body("applications.find{ it.id == '" + serviceProvider.getApplicationResourceId() + "'}.image",
                             equalTo(serviceProvider.getImageUrl()))
                     .body("applications.find{ it.id == '" + serviceProvider.getApplicationResourceId() + "'}" +
-                                    ".accessUrl", equalTo(serviceProvider.getAccessUrl()))
+                            ".accessUrl", equalTo(serviceProvider.getAccessUrl()))
                     .body("applications.find{ it.id == '" + serviceProvider.getApplicationResourceId() + "'}" +
                                     ".description",
                             equalTo(serviceProvider.getDescription()));
@@ -321,7 +321,7 @@ public class UserDiscoverableApplicationSuccessTest extends UserDiscoverableAppl
 
             response.then().log().ifValidationFails().body("links.rel", hasItem("next"));
             response.then().log().ifValidationFails().body("links.find { it.rel == 'next'}.href", equalTo
-                    (String.format(getTenantQualifiedURLWithoutHostName(RestAssured.basePath +
+                    (String.format(getTenantedRelativePath("/api/users/v1" +
                             USER_APPLICATION_ENDPOINT_URI, context.getContextTenant().getDomain()) +
                             PAGINATION_LINK_QUERY_PARAM_STRING, (offset + limit), limit)));
         } else {
@@ -344,7 +344,7 @@ public class UserDiscoverableApplicationSuccessTest extends UserDiscoverableAppl
             }
 
             response.then().log().ifValidationFails().body("links.find { it.rel == 'previous'}.href", equalTo
-                    (String.format(getTenantQualifiedURLWithoutHostName(RestAssured.basePath +
+                    (String.format(getTenantedRelativePath("/api/users/v1" +
                             USER_APPLICATION_ENDPOINT_URI, context.getContextTenant().getDomain()) +
                             PAGINATION_LINK_QUERY_PARAM_STRING, expectedOffsetQueryParam, expectedLimitQueryParam)));
 
