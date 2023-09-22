@@ -58,6 +58,7 @@
     <import resource="classpath:META-INF/cxf/user-functionality-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/rfc-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/organization-user-invitation-mgt-v1-cxf.xml"/>
+    <import resource="classpath:META-INF/cxf/organization-configs-server-v1-cxf.xml"/>
 
     <!-- Legacy identity APIs   -->
     <import resource="classpath:META-INF/cxf/config-mgt-server-v1-cxf.xml"/>
@@ -117,6 +118,7 @@
             <bean class="org.wso2.carbon.identity.api.server.organization.management.v1.OrganizationsApi"/>
             <bean class="org.wso2.carbon.identity.api.server.organization.role.management.v1.OrganizationsApi"/>
             <bean class="org.wso2.carbon.identity.api.server.organization.user.invitation.management.v1.GuestsApi"/>
+            <bean class="org.wso2.carbon.identity.api.server.organization.configs.v1.OrganizationConfigsApi"/>
             <bean class="org.wso2.carbon.identity.api.expired.password.identification.v1.PasswordExpiredUsersApi"/>
             <bean class="org.wso2.carbon.identity.api.server.api.resource.v1.ApiResourcesApi"/>
             <bean class="org.wso2.carbon.identity.api.server.api.resource.v1.ScopesApi"/>
