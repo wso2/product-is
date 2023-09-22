@@ -111,7 +111,8 @@ public class OIDCRPInitiatedLogoutTestCase extends OIDCAbstractIntegrationTest {
         testOIDCLogout(new BasicNameValuePair("client_id", playgroundApp.getClientId()));
     }
 
-    @Test(groups = "wso2.is", description = "Test RP-initiated logout with id_token_hint parameter")
+    @Test(groups = "wso2.is", description = "Test RP-initiated logout with id_token_hint parameter",
+            dependsOnMethods = { "testOIDCLogoutWithClientId" })
     public void testOIDCLogoutWithIdTokenHint() throws Exception {
 
         testInitiateOIDCRequest(playgroundApp, client);
@@ -246,21 +247,24 @@ public class OIDCRPInitiatedLogoutTestCase extends OIDCAbstractIntegrationTest {
     private void testOIDCLogout(BasicNameValuePair parameter) {
 
         try {
-            String oidcLogoutUrl = identityContextUrls.getWebAppURLHttps() + "/oidc/logout";
+            String oidcLogoutUrl = identityContextUrls.getWebAppURLHttps() + "/oidc/logout?" + parameter.getName() +
+                    "=" + parameter.getValue() + "&post_logout_redirect_uri=" + playgroundApp.getCallBackURL();
             HttpResponse response = sendGetRequest(client, oidcLogoutUrl);
             EntityUtils.consume(response.getEntity());
 
             List<NameValuePair> urlParameters = new ArrayList<>();
             urlParameters.add(new BasicNameValuePair("consent", "approve"));
-            urlParameters.add(parameter);
             response = sendPostRequestWithParameters(client, urlParameters, oidcLogoutUrl);
             Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
             EntityUtils.consume(response.getEntity());
 
-            response = sendGetRequest(client, locationHeader.getValue());
+            String redirectUrl = locationHeader.getValue();
+            Assert.assertTrue(redirectUrl.contains(playgroundApp.getCallBackURL()), "Not redirected to the" +
+                    "post logout redirect url");
+            response = sendGetRequest(client, redirectUrl);
             Assert.assertNotNull(response, "OIDC Logout failed.");
             String result = DataExtractUtil.getContentData(response);
-            Assert.assertTrue(result.contains("You have successfully logged out"), "OIDC logout failed.");
+            Assert.assertTrue(result.contains("WSO2 OAuth2 Playground"), "OIDC logout failed.");
             EntityUtils.consume(response.getEntity());
         } catch (Exception e) {
             Assert.fail("OIDC Logout failed.", e);
