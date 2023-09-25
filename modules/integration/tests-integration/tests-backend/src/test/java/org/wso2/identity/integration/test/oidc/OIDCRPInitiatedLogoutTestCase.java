@@ -60,7 +60,8 @@ public class OIDCRPInitiatedLogoutTestCase extends OIDCAbstractIntegrationTest {
     protected RequestConfig requestConfig;
     protected HttpClient client;
     protected List<NameValuePair> consentParameters = new ArrayList<>();
-    OIDCApplication playgroundApp;
+    OIDCApplication playgroundAppOne;
+    OIDCApplication playgroundAppTwo;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -72,8 +73,10 @@ public class OIDCRPInitiatedLogoutTestCase extends OIDCAbstractIntegrationTest {
         userInfo.setUserName(user.getUserName());
         userInfo.setPassword(user.getPassword());
 
-        playgroundApp = initApplication();
-        createApplication(playgroundApp);
+        playgroundAppOne = initApplicationOne();
+        playgroundAppTwo = initApplicationTwo();
+        createApplication(playgroundAppOne);
+        createApplication(playgroundAppTwo);
 
         cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
                 .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
@@ -91,7 +94,8 @@ public class OIDCRPInitiatedLogoutTestCase extends OIDCAbstractIntegrationTest {
     public void testClear() throws Exception {
 
         deleteUser(user);
-        deleteApplication(playgroundApp);
+        deleteApplication(playgroundAppOne);
+        deleteApplication(playgroundAppTwo);
         clear();
     }
 
@@ -100,25 +104,43 @@ public class OIDCRPInitiatedLogoutTestCase extends OIDCAbstractIntegrationTest {
 
         sessionDataKey = null;
         sessionDataKeyConsent = null;
+        idToken = null;
     }
 
     @Test(groups = "wso2.is", description = "Test RP-initiated logout with client_id parameter")
     public void testOIDCLogoutWithClientId() throws Exception {
 
-        testInitiateOIDCRequest(playgroundApp, client);
-        testOIDCLogin(playgroundApp, true);
-        testOIDCConsentApproval(playgroundApp);
-        testOIDCLogout(new BasicNameValuePair("client_id", playgroundApp.getClientId()));
+        testInitiateOIDCRequest(playgroundAppOne, client);
+        testOIDCLogin(playgroundAppOne, true);
+        testOIDCConsentApproval(playgroundAppOne);
+        testOIDCLogout(true, playgroundAppOne,
+                new BasicNameValuePair("client_id", playgroundAppOne.getClientId()));
     }
 
     @Test(groups = "wso2.is", description = "Test RP-initiated logout with id_token_hint parameter",
             dependsOnMethods = { "testOIDCLogoutWithClientId" })
     public void testOIDCLogoutWithIdTokenHint() throws Exception {
 
-        testInitiateOIDCRequest(playgroundApp, client);
-        testOIDCLogin(playgroundApp, false);
-        testGetIdToken();
-        testOIDCLogout(new BasicNameValuePair("id_token_hint", idToken));
+        testInitiateOIDCRequest(playgroundAppOne, client);
+        testOIDCLogin(playgroundAppOne, false);
+        testGetIdToken(playgroundAppOne);
+        testOIDCLogout(true, playgroundAppOne, new BasicNameValuePair("id_token_hint", idToken));
+    }
+
+    @Test(groups = "wso2.is", description = "Test RP-initiated logout with both client_id and id_token_hint",
+            dependsOnMethods = { "testOIDCLogoutWithClientId" })
+    public void testOIDCLogoutPrecedence() throws Exception {
+
+        /* the purpose of this test is to verify client_id takes precedence when both parameters are sent.
+        Here, both client_id and id_token are valid but the post_logout_redirect uri matches with the id_token only.
+        So the request should fail.
+         */
+        testInitiateOIDCRequest(playgroundAppTwo, client);
+        testOIDCLogin(playgroundAppTwo, false);
+        testGetIdToken(playgroundAppTwo);
+        testOIDCLogout(false, playgroundAppTwo,
+                new BasicNameValuePair("client_id", playgroundAppOne.getClientId()),
+                new BasicNameValuePair("id_token_hint", idToken));
     }
 
     private void testInitiateOIDCRequest(OIDCApplication application, HttpClient client) throws Exception {
@@ -215,13 +237,13 @@ public class OIDCRPInitiatedLogoutTestCase extends OIDCAbstractIntegrationTest {
         EntityUtils.consume(response.getEntity());
     }
 
-    private void testGetIdToken() throws Exception {
+    private void testGetIdToken(OIDCApplication application) throws Exception {
 
-        ClientID clientID = new ClientID(playgroundApp.getClientId());
-        Secret clientSecret = new Secret(playgroundApp.getClientSecret());
+        ClientID clientID = new ClientID(application.getClientId());
+        Secret clientSecret = new Secret(application.getClientSecret());
         ClientSecretBasic clientSecretBasic = new ClientSecretBasic(clientID, clientSecret);
 
-        URI callbackURI = new URI(playgroundApp.getCallBackURL());
+        URI callbackURI = new URI(application.getCallBackURL());
         AuthorizationCodeGrant authorizationCodeGrant = new AuthorizationCodeGrant(authorizationCode, callbackURI);
 
         TokenRequest tokenReq = new TokenRequest(new URI(OAuth2Constant.ACCESS_TOKEN_ENDPOINT), clientSecretBasic,
@@ -244,33 +266,43 @@ public class OIDCRPInitiatedLogoutTestCase extends OIDCAbstractIntegrationTest {
         Assert.assertNotNull(idToken, "ID token is null");
     }
 
-    private void testOIDCLogout(BasicNameValuePair parameter) {
+    private void testOIDCLogout(boolean checkSuccess, OIDCApplication application, BasicNameValuePair... parameters) {
 
         try {
-            String oidcLogoutUrl = identityContextUrls.getWebAppURLHttps() + "/oidc/logout?" + parameter.getName() +
-                    "=" + parameter.getValue() + "&post_logout_redirect_uri=" + playgroundApp.getCallBackURL();
-            HttpResponse response = sendGetRequest(client, oidcLogoutUrl);
+            StringBuilder oidcLogoutUrl =
+                    new StringBuilder(identityContextUrls.getWebAppURLHttps() + "/oidc/logout?post_logout_redirect_uri="
+                            + application.getCallBackURL());
+
+            for (BasicNameValuePair parameter: parameters) {
+                oidcLogoutUrl.append("&").append(parameter.getName()).append("=").append(parameter.getValue());
+            }
+            HttpResponse response = sendGetRequest(client, oidcLogoutUrl.toString());
             EntityUtils.consume(response.getEntity());
 
             List<NameValuePair> urlParameters = new ArrayList<>();
             urlParameters.add(new BasicNameValuePair("consent", "approve"));
-            response = sendPostRequestWithParameters(client, urlParameters, oidcLogoutUrl);
+            response = sendPostRequestWithParameters(client, urlParameters, oidcLogoutUrl.toString());
             Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
             EntityUtils.consume(response.getEntity());
 
             String redirectUrl = locationHeader.getValue();
-            /*
-            since client_id and id_token_hint are optional parameters, logout will be successful even if they are not
-            present in the request. However, if either of these and the correct post_logout_redirect_uri is sent in the
-            request, OP should validate the client based on these values and redirect to the given redirect url.
-            */
-            Assert.assertTrue(redirectUrl.contains(playgroundApp.getCallBackURL()), "Not redirected to the" +
-                    "post logout redirect url");
-            response = sendGetRequest(client, redirectUrl);
-            Assert.assertNotNull(response, "OIDC Logout failed.");
-            String result = DataExtractUtil.getContentData(response);
-            Assert.assertTrue(result.contains("WSO2 OAuth2 Playground"), "OIDC logout failed.");
-            EntityUtils.consume(response.getEntity());
+            if (checkSuccess) {
+                /*
+                since client_id and id_token_hint are optional parameters, logout will be successful even if they are
+                not present in the request. However, if either of these and the correct post_logout_redirect_uri is
+                sent in the request, OP should validate the client based on these values and redirect to the given
+                redirect url.
+                */
+                Assert.assertTrue(redirectUrl.contains(application.getCallBackURL()), "Not redirected to the"
+                        + "post logout redirect url");
+                response = sendGetRequest(client, redirectUrl);
+                Assert.assertNotNull(response, "OIDC Logout failed.");
+                String result = DataExtractUtil.getContentData(response);
+                Assert.assertTrue(result.contains("WSO2 OAuth2 Playground"), "OIDC logout failed.");
+                EntityUtils.consume(response.getEntity());
+            } else {
+                Assert.assertTrue(redirectUrl.contains("oauth2_error.do"));
+            }
         } catch (Exception e) {
             Assert.fail("OIDC Logout failed.", e);
         }
@@ -285,13 +317,23 @@ public class OIDCRPInitiatedLogoutTestCase extends OIDCAbstractIntegrationTest {
         user.addEmail(new Email().value(OIDCUtilTest.email));
     }
 
-    protected OIDCApplication initApplication() {
+    protected OIDCApplication initApplicationOne() {
 
-        playgroundApp = new OIDCApplication(OIDCUtilTest.playgroundAppOneAppName,
+        playgroundAppOne = new OIDCApplication(OIDCUtilTest.playgroundAppOneAppName,
                 OIDCUtilTest.playgroundAppOneAppContext,
                 OIDCUtilTest.playgroundAppOneAppCallBackUri);
-        playgroundApp.addRequiredClaim(OIDCUtilTest.emailClaimUri);
-        playgroundApp.addRequiredClaim(OIDCUtilTest.firstNameClaimUri);
-        return playgroundApp;
+        playgroundAppOne.addRequiredClaim(OIDCUtilTest.emailClaimUri);
+        playgroundAppOne.addRequiredClaim(OIDCUtilTest.firstNameClaimUri);
+        return playgroundAppOne;
+    }
+
+    protected OIDCApplication initApplicationTwo() {
+
+        playgroundAppTwo = new OIDCApplication(OIDCUtilTest.playgroundAppTwoAppName,
+                OIDCUtilTest.playgroundAppTwoAppContext,
+                OIDCUtilTest.playgroundAppTwoAppCallBackUri);
+        playgroundAppOne.addRequiredClaim(OIDCUtilTest.emailClaimUri);
+        playgroundAppOne.addRequiredClaim(OIDCUtilTest.firstNameClaimUri);
+        return playgroundAppTwo;
     }
 }
