@@ -452,16 +452,13 @@ public class Utils {
         return response;
     }
 
-    public static HttpResponse sendSAMLMessage(String url, Map<String, String> parameters, String userAgent, TestUserMode userMode, String tenantDomainParam, String tenantDomain, HttpClient httpClient) throws IOException {
+    public static HttpResponse sendSAMLMessage(String url, Map<String, String> parameters, String userAgent, HttpClient httpClient) throws IOException {
 
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         HttpPost post = new HttpPost(url);
         post.setHeader("User-Agent", userAgent);
         for (Map.Entry<String, String> entry : parameters.entrySet()) {
             urlParameters.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
-        }
-        if (userMode == TestUserMode.TENANT_ADMIN || userMode == TestUserMode.TENANT_USER) {
-            urlParameters.add(new BasicNameValuePair(tenantDomainParam, tenantDomain));
         }
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
         return httpClient.execute(post);
