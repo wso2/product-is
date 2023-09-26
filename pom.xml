@@ -2050,6 +2050,12 @@
                 <version>${identity.verification.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.extension.identity.oauth.addons</groupId>
+                <artifactId>org.wso2.carbon.identity.oauth2.token.handler.clientauth.jwt</artifactId>
+                <version>${identity.oauth.addons.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.wso2.msf4j</groupId>
                 <artifactId>msf4j-core</artifactId>
                 <version>${msf4j.version}</version>
@@ -2292,7 +2298,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.25.361</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.25.364</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
