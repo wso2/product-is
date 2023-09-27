@@ -69,7 +69,6 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
     private static final String COUNTRY_WSO2_CLAIM = "http://wso2.org/claims/country";
     private static final String CALLBACK_QUERY_PARAM = "callback";
     private static final String USERNAME_QUERY_PARAM = "username";
-    private static final String TENANT_DOMAIN_QUERY_PARAM = "tenantDomain";
     private static final String ADMIN = "admin";
     private static final String EBONY = "ebony";
     private static final String PASSWORD = "UsEr@123";
@@ -296,8 +295,7 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
             username = MultitenantUtils.getTenantAwareUsername(username);
         }
         String selfRegisterEndpoint =
-                signupDoEndpoint + "?" + USERNAME_QUERY_PARAM + "=" + username + "&" + TENANT_DOMAIN_QUERY_PARAM + "="
-                        + tenantDomain;
+                signupDoEndpoint + "?" + USERNAME_QUERY_PARAM + "=" + username;
         HttpResponse httpResponse = sendGetRequest(client, selfRegisterEndpoint);
         return DataExtractUtil.getContentData(httpResponse);
     }
