@@ -140,6 +140,10 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.user.api</groupId>
+            <artifactId>org.wso2.carbon.identity.rest.api.user.recovery.v2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.user.api</groupId>
             <artifactId>org.wso2.carbon.identity.api.user.recovery.commons</artifactId>
         </dependency>
         <dependency>

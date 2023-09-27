@@ -40,6 +40,7 @@
     <import resource="classpath:META-INF/cxf/idp-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/oidc-scope-management-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-recovery-v1-cxf.xml"/>
+    <import resource="classpath:META-INF/cxf/user-recovery-v2-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/script-libraries-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/configs-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/notification-sender-server-v1-cxf.xml"/>
@@ -221,6 +222,7 @@
             <bean class="org.wso2.carbon.identity.rest.api.user.authorized.apps.v2.MeApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.authorized.apps.v2.UserIdApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.authorized.apps.v2.AuthorizedAppsApi"/>
+            <bean class="org.wso2.carbon.identity.rest.api.user.recovery.v2.RecoveryApi"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">
