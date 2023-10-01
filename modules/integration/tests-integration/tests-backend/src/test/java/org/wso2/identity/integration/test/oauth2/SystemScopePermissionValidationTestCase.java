@@ -62,6 +62,7 @@ public class SystemScopePermissionValidationTestCase extends OAuth2ServiceAbstra
     private String consumerSecret;
     private CloseableHttpClient client;
     private final String username;
+    private final String usernameWithoutTenantDomain;
     private final String userPassword;
     private final String activeTenant;
     private final TestUserMode testUserMode;
@@ -82,6 +83,7 @@ public class SystemScopePermissionValidationTestCase extends OAuth2ServiceAbstra
         super.init(userMode);
         AutomationContext context = new AutomationContext("IDENTITY", userMode);
         this.username = context.getContextTenant().getTenantAdmin().getUserName();
+        this.usernameWithoutTenantDomain = context.getContextTenant().getTenantAdmin().getUserNameWithoutDomain();
         this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
         this.activeTenant = context.getContextTenant().getDomain();
         this.testUserMode = userMode;
@@ -127,7 +129,7 @@ public class SystemScopePermissionValidationTestCase extends OAuth2ServiceAbstra
         urlParameters.add(new BasicNameValuePair("consumerKey", consumerKey));
         urlParameters.add(new BasicNameValuePair("consumerSecret", consumerSecret));
         urlParameters.add(new BasicNameValuePair("accessEndpoint",
-                OAuth2Constant.ACCESS_TOKEN_ENDPOINT));
+                getTenantQualifiedURL(OAuth2Constant.ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain())));
         urlParameters.add(new BasicNameValuePair("authorize", OAuth2Constant.AUTHORIZE_PARAM));
         urlParameters.add(new BasicNameValuePair("scope", SYSTEM_SCOPE));
         HttpResponse response =
@@ -164,11 +166,12 @@ public class SystemScopePermissionValidationTestCase extends OAuth2ServiceAbstra
         try {
             client = HttpClientBuilder.create().disableRedirectHandling().build();
             Secret password = new Secret(userPassword);
-            AuthorizationGrant passwordGrant = new ResourceOwnerPasswordCredentialsGrant(username, password);
+            AuthorizationGrant passwordGrant = new ResourceOwnerPasswordCredentialsGrant(
+                    usernameWithoutTenantDomain, password);
             ClientID clientID = new ClientID(consumerKey);
             Secret clientSecret = new Secret(consumerSecret);
             ClientAuthentication clientAuth = new ClientSecretBasic(clientID, clientSecret);
-            URI tokenEndpoint = new URI(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
+            URI tokenEndpoint = new URI(getTenantQualifiedURL(OAuth2Constant.ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()));
             Scope systemScope = new Scope(SYSTEM_SCOPE);
             TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, passwordGrant, systemScope);
 

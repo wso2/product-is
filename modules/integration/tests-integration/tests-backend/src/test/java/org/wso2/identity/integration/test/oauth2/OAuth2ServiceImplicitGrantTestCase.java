@@ -142,7 +142,8 @@ public class OAuth2ServiceImplicitGrantTestCase extends OAuth2ServiceAbstractInt
 		urlParameters.add(new BasicNameValuePair("consumerKey", consumerKey));
 		urlParameters.add(new BasicNameValuePair("scope", scopes));
 		urlParameters.add(new BasicNameValuePair("callbackurl", OAuth2Constant.CALLBACK_URL));
-		urlParameters.add(new BasicNameValuePair("authorizeEndpoint", OAuth2Constant.APPROVAL_URL));
+		urlParameters.add(new BasicNameValuePair("authorizeEndpoint",
+                getTenantQualifiedURL(OAuth2Constant.APPROVAL_URL, tenantInfo.getDomain())));
 		urlParameters.add(new BasicNameValuePair("authorize", OAuth2Constant.AUTHORIZE_PARAM));
 		urlParameters.add(new BasicNameValuePair("consumerSecret", consumerSecret));
 
