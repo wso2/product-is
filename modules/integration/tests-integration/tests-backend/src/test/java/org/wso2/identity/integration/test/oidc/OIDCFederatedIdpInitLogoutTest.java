@@ -147,8 +147,6 @@ public class OIDCFederatedIdpInitLogoutTest extends AbstractIdentityFederationTe
     private static final String HTTPS_LOCALHOST_SERVICES = "https://localhost:%s/";
     private static final String SAML_IDP_SLO_URL = SECONDARY_IS_SAML_SSO_URL + "?slo=true";
 
-    private static final String TENANT_DOMAIN_PARAM = "tenantDomain";
-
     private SCIM2RestClient scim2RestClient;
     private String secondaryISClientID;
     private String secondaryISClientSecret;
@@ -349,10 +347,9 @@ public class OIDCFederatedIdpInitLogoutTest extends AbstractIdentityFederationTe
             throws IOException {
 
         List<NameValuePair> urlParameters = new ArrayList<>();
-        HttpPost post = new HttpPost(url);
+        HttpPost post = new HttpPost(getTenantQualifiedURL(url, tenantInfo.getDomain()));
         post.setHeader("User-Agent", USER_AGENT);
         urlParameters.add(new BasicNameValuePair(samlMsgKey, samlMsgValue));
-        urlParameters.add(new BasicNameValuePair(TENANT_DOMAIN_PARAM, "carbon.super"));
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
 
         return client.execute(post);
