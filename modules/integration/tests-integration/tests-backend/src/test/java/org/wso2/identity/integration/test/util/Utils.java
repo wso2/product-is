@@ -136,13 +136,20 @@ public class Utils {
     public static HttpResponse sendPOSTMessage(String sessionKey, String url, String userAgent, String
             acsUrl, String artifact, String userName, String password, HttpClient httpClient) throws Exception {
 
+        return sendPOSTMessage(sessionKey, url, userAgent, acsUrl, artifact, userName, password, httpClient,
+                SAML_SSO_URL);
+    }
+
+    public static HttpResponse sendPOSTMessage(String sessionKey, String url, String userAgent, String
+            acsUrl, String artifact, String userName, String password, HttpClient httpClient, String samlSSOUrl) throws Exception {
+
         HttpPost post = new HttpPost(url);
         post.setHeader("User-Agent", userAgent);
         post.addHeader("Referer", String.format(acsUrl, artifact));
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         urlParameters.add(new BasicNameValuePair("username", userName));
         urlParameters.add(new BasicNameValuePair("password", password));
-        if (StringUtils.equals(url, SAML_SSO_URL)) {
+        if (StringUtils.equals(url, samlSSOUrl)) {
             urlParameters.add(new BasicNameValuePair("tocommonauth", "true"));
         }
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionKey));

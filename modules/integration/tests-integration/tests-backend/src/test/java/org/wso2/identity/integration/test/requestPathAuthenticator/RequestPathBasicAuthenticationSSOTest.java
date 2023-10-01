@@ -79,9 +79,9 @@ public class RequestPathBasicAuthenticationSSOTest extends ISIntegrationTest {
         super.init();
 
         logManger = new AuthenticatorClient(backendURL);
-        adminUsername = userInfo.getUserName();
+        adminUsername = userInfo.getUserNameWithoutDomain();
         adminPassword = userInfo.getPassword();
-        logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserName(),
+        logManger.login(isServer.getSuperTenant().getTenantAdmin().getUserNameWithoutDomain(),
                 isServer.getSuperTenant().getTenantAdmin().getPassword(),
                 isServer.getInstance().getHosts().get("default"));
 
@@ -178,7 +178,7 @@ public class RequestPathBasicAuthenticationSSOTest extends ISIntegrationTest {
             }
         }
         EntityUtils.consume(response.getEntity());
-        request = new HttpPost(isURL + "samlsso");
+        request = new HttpPost(addTenantToURL(isURL + "samlsso", tenantInfo.getDomain()));
         urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("sectoken", secToken));
         urlParameters.add(new BasicNameValuePair("SAMLRequest", samlRequest));
@@ -229,7 +229,7 @@ public class RequestPathBasicAuthenticationSSOTest extends ISIntegrationTest {
             }
         }
         EntityUtils.consume(response.getEntity());
-        request = new HttpPost(isURL + "samlsso");
+        request = new HttpPost(getTenantQualifiedURL(isURL + "samlsso", tenantInfo.getDomain()));
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("SAMLRequest", samlRequest));
         request.setEntity(new UrlEncodedFormEntity(urlParameters));
@@ -240,8 +240,8 @@ public class RequestPathBasicAuthenticationSSOTest extends ISIntegrationTest {
             Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
             EntityUtils.consume(response.getEntity());
 
-            response = Utils.sendPOSTConsentMessage(response, isURL + "commonauth", USER_AGENT, String.format(ACS_URL
-                    , ISSUER_AVIS_COM), client, pastrCookie);
+            response = Utils.sendPOSTConsentMessage(response, getTenantQualifiedURL(isURL + "commonauth",
+                    tenantInfo.getDomain()), USER_AGENT, String.format(ACS_URL, ISSUER_AVIS_COM), client, pastrCookie);
             EntityUtils.consume(response.getEntity());
         }
 

@@ -56,6 +56,8 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
     private static final String firstNameClaimURI = "http://wso2.org/claims/givenname";
     private static final String lastNameClaimURI = "http://wso2.org/claims/lastname";
     private static final String emailClaimURI = "http://wso2.org/claims/emailaddress";
+    private String tenantedSamlSSOUrl;
+    private String tenantedCommonAuthUrl;
 
     private SAMLConfig config;
     private String userId;
@@ -76,6 +78,10 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
 
         super.testInit();
         super.createUser(config);
+
+        tenantedSamlSSOUrl = getTenantQualifiedURL(SAML_SSO_URL, tenantInfo.getDomain());
+        tenantedCommonAuthUrl = getTenantQualifiedURL(COMMON_AUTH_URL, tenantInfo.getDomain());
+
         userId = UserUtil.getUserId(config.getUser().getTenantAwareUsername(), isServer.getContextTenant());
 
         super.createApplication(config, APPLICATION_NAME);
@@ -135,7 +141,8 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
 
             if (config.getHttpBinding() == HttpBinding.HTTP_POST){
                 String samlRequest = Utils.extractDataFromResponse(response, CommonConstants.SAML_REQUEST_PARAM, 5);
-                response = super.sendSAMLMessage(SAML_SSO_URL, CommonConstants.SAML_REQUEST_PARAM, samlRequest, config);
+                response = super.sendSAMLMessage(tenantedSamlSSOUrl, CommonConstants.SAML_REQUEST_PARAM,
+                        samlRequest, config);
                 EntityUtils.consume(response.getEntity());
 
                 response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, config.getApp().getArtifact(),
@@ -143,8 +150,9 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
             }
 
             String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
-            response = Utils.sendPOSTMessage(sessionKey, SAML_SSO_URL, USER_AGENT, ACS_URL, config.getApp()
-                    .getArtifact(), config.getUser().getUsername(), config.getUser().getPassword(), httpClient);
+            response = Utils.sendPOSTMessage(sessionKey, tenantedSamlSSOUrl, USER_AGENT, ACS_URL, config.getApp()
+                    .getArtifact(), config.getUser().getUsername(), config.getUser().getPassword(), httpClient,
+                    tenantedSamlSSOUrl);
 
 
             if (requestMissingClaims(response)) {
@@ -152,8 +160,8 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
                 Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
                 EntityUtils.consume(response.getEntity());
 
-                response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT, String.format(ACS_URL, config.getApp()
-                        .getArtifact()), httpClient, pastrCookie);
+                response = Utils.sendPOSTConsentMessage(response, tenantedCommonAuthUrl, USER_AGENT,
+                        String.format(ACS_URL, config.getApp().getArtifact()), httpClient, pastrCookie);
                 EntityUtils.consume(response.getEntity());
             }
 
@@ -202,7 +210,8 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
 
             if (config.getHttpBinding() == HttpBinding.HTTP_POST){
                 String samlRequest = Utils.extractDataFromResponse(response, CommonConstants.SAML_REQUEST_PARAM, 5);
-                response = super.sendSAMLMessage(SAML_SSO_URL, CommonConstants.SAML_REQUEST_PARAM, samlRequest, config);
+                response = super.sendSAMLMessage(tenantedSamlSSOUrl, CommonConstants.SAML_REQUEST_PARAM,
+                        samlRequest, config);
             }
 
             String samlResponse = Utils.extractDataFromResponse(response, CommonConstants.SAML_RESPONSE_PARAM, 5);
@@ -236,15 +245,15 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
                 Map<String, String> paramters = new HashMap<String, String>();
                 paramters.put(CommonConstants.SAML_REQUEST_PARAM, samlRequest);
                 paramters.put("RelayState", relayState);
-                response = Utils.sendSAMLMessage(getTenantQualifiedURL(SAML_SSO_URL,
-                        config.getUser().getTenantDomain()), paramters, USER_AGENT, httpClient);
+                response = Utils.sendSAMLMessage(tenantedSamlSSOUrl, paramters, USER_AGENT, httpClient);
                 EntityUtils.consume(response.getEntity());
                 response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, config.getApp().getArtifact(),
                         httpClient);
 
                 String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
-                response = Utils.sendPOSTMessage(sessionKey, COMMON_AUTH_URL, USER_AGENT, ACS_URL, config.getApp()
-                        .getArtifact(), config.getUser().getUsername(), config.getUser().getPassword(), httpClient);
+                response = Utils.sendPOSTMessage(sessionKey, tenantedCommonAuthUrl, USER_AGENT, ACS_URL, config.getApp()
+                        .getArtifact(), config.getUser().getTenantAwareUsername(), config.getUser().getPassword(),
+                        httpClient);
                 EntityUtils.consume(response.getEntity());
 
                 response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, config.getApp().getArtifact(),
@@ -269,7 +278,8 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
 
         try {
             if (config.getHttpBinding() == HttpBinding.HTTP_POST) {
-                HttpResponse response = Utils.sendGetRequest(SAML_IDP_SLO_URL, USER_AGENT, httpClient);
+                HttpResponse response = Utils.sendGetRequest(getTenantQualifiedURL(SAML_IDP_SLO_URL,
+                        tenantInfo.getDomain()), USER_AGENT, httpClient);
                 String resultPage = extractDataFromResponse(response);
 
                 Assert.assertTrue(resultPage.contains("You have successfully logged out") &&

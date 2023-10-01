@@ -173,6 +173,28 @@ public class ISIntegrationTest {
     }
 
     /**
+     * Get the qualified endpoint URL with the hostname for the given tenant.
+     *
+     * @param endpointURL   The endpoint URL with the hostname.
+     * @param tenantDomain  Tenanted domain.
+     * @return Tenant qualified URL.
+     */
+    public String addTenantToURL(String endpointURL, String tenantDomain) {
+
+        if(tenantDomain.isBlank()) {
+            throw new RuntimeException("Tenant domain is blank.");
+        }
+
+        try {
+            String baseURL = getBaseURL();
+            endpointURL = endpointURL.replace(baseURL, baseURL + TENANTED_URL_PATH_SPECIFIER + tenantDomain);
+            return endpointURL;
+        } catch (XPathExpressionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
      * Get the qualified endpoint URL without the hostname for the given tenant.
      *
      * @param endpointURLWithHostname   The endpoint URL without the hostname.

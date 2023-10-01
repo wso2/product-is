@@ -53,32 +53,34 @@ public class OIDCMetadataTest extends ISIntegrationTest {
             "https://localhost:9853/t/carbon.super/oauth2/oidcdiscovery/.well-known/openid-configuration";
     private static final String INTROSPECTION_ENDPOINT_SUPER_TENANT = "https://localhost:9853/oauth2/introspect";
     private static final String INTROSPECTION_ENDPOINT_TENANT = "https://localhost:9853/t/wso2.com/oauth2/introspect";
-    private static final String CHECK_SESSION_IFRAME = "https://localhost:9853/oidc/checksession";
-    private static final String ISSUER = "https://localhost:9853/oauth2/token";
-    private static final String AUTHORIZATION_ENDPOINT = "https://localhost:9853/oauth2/authorize";
-    private static final String TOKEN_ENDPOINT = "https://localhost:9853/oauth2/token";
-    private static final String END_SESSION_ENDPOINT = "https://localhost:9853/oidc/logout";
-    private static final String REVOCATION_ENDPOINT = "https://localhost:9853/oauth2/revoke";
-    private static final String USERINFO_ENDPOINT =	"https://localhost:9853/oauth2/userinfo";
+    private static final String CHECK_SESSION_IFRAME = "/oidc/checksession";
+    private static final String ISSUER = "/oauth2/token";
+    private static final String AUTHORIZATION_ENDPOINT = "/oauth2/authorize";
+    private static final String TOKEN_ENDPOINT = "/oauth2/token";
+    private static final String END_SESSION_ENDPOINT = "/oidc/logout";
+    private static final String REVOCATION_ENDPOINT = "/oauth2/revoke";
+    private static final String USERINFO_ENDPOINT =	"/oauth2/userinfo";
     private static final String JKWS_URI_SUPER_TENANT =	"https://localhost:9853/oauth2/jwks";
     private static final String JKWS_URI_TENANT = "https://localhost:9853/t/wso2.com/oauth2/jwks";
     private static final String REGISTRATION_ENDPOINT_SUPER_TENANT =
             "https://localhost:9853/api/identity/oauth2/dcr/v1.1/register";
     private static final String REGISTRATION_ENDPOINT_TENANT =
             "https://localhost:9853/t/wso2.com/api/identity/oauth2/dcr/v1.1/register";
+    private static final String BASE_IS_URL = "https://localhost:9853";
+    private static final String TENANTED_BASE_IS_URL = "https://localhost:9853/t/wso2.com";
 
     @Test(groups = "wso2.is", description = "This test method will test OIDC Metadata endpoints.")
     public void getOIDCMetadata() throws Exception {
 
-        testResponseContent(TOKEN_ENDPOINT_SUPER_TENANT);
-        testResponseContent(TOKEN_ENDPOINT_TENANT);
-        testResponseContent(TOKEN_ENDPOINT_WITH_SUPER_TENANT_AS_PATH_PARAM);
-        testResponseContent(OIDCDISCOVERY_ENDPOINT_SUPER_TENANT);
-        testResponseContent(OIDCDISCOVERY_ENDPOINT_TENANT);
-        testResponseContent(OIDCDISCOVERY_ENDPOINT_WITH_SUPER_TENANT_AS_PATH_PARAM);
+        testResponseContent(TOKEN_ENDPOINT_SUPER_TENANT, BASE_IS_URL);
+        testResponseContent(TOKEN_ENDPOINT_TENANT, TENANTED_BASE_IS_URL);
+        testResponseContent(TOKEN_ENDPOINT_WITH_SUPER_TENANT_AS_PATH_PARAM, BASE_IS_URL);
+        testResponseContent(OIDCDISCOVERY_ENDPOINT_SUPER_TENANT, BASE_IS_URL);
+        testResponseContent(OIDCDISCOVERY_ENDPOINT_TENANT, TENANTED_BASE_IS_URL);
+        testResponseContent(OIDCDISCOVERY_ENDPOINT_WITH_SUPER_TENANT_AS_PATH_PARAM, BASE_IS_URL);
     }
 
-    private void testResponseContent(String oidcMetadataEndpoint) throws IOException, JSONException {
+    private void testResponseContent(String oidcMetadataEndpoint, String baseUrl) throws IOException, JSONException {
 
         Lookup<CookieSpecProvider> cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
                 .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
@@ -96,19 +98,19 @@ public class OIDCMetadataTest extends ISIntegrationTest {
 
         JSONObject oidcMetadataEndpoints = new JSONObject(content);
         Assert.assertEquals(oidcMetadataEndpoints.getString("check_session_iframe"),
-                CHECK_SESSION_IFRAME, "Incorrect session iframe");
+                baseUrl + CHECK_SESSION_IFRAME, "Incorrect session iframe");
         Assert.assertEquals(oidcMetadataEndpoints.getString("issuer"),
-                ISSUER, "Incorrect issuer");
+                baseUrl + ISSUER, "Incorrect issuer");
         Assert.assertEquals(oidcMetadataEndpoints.getString("authorization_endpoint"),
-                AUTHORIZATION_ENDPOINT, "Incorrect authorization endpoint");
+                baseUrl + AUTHORIZATION_ENDPOINT, "Incorrect authorization endpoint");
         Assert.assertEquals(oidcMetadataEndpoints.getString("token_endpoint"),
-                TOKEN_ENDPOINT, "Incorrect token_endpoint");
+                baseUrl + TOKEN_ENDPOINT, "Incorrect token_endpoint");
         Assert.assertEquals(oidcMetadataEndpoints.getString("end_session_endpoint"),
-                END_SESSION_ENDPOINT, "Incorrect end session endpoint");
+                baseUrl + END_SESSION_ENDPOINT, "Incorrect end session endpoint");
         Assert.assertEquals(oidcMetadataEndpoints.getString("revocation_endpoint"),
-                REVOCATION_ENDPOINT, "Incorrect revocation endpoint");
+                baseUrl + REVOCATION_ENDPOINT, "Incorrect revocation endpoint");
         Assert.assertEquals(oidcMetadataEndpoints.getString("userinfo_endpoint"),
-                USERINFO_ENDPOINT, "Incorrect userinfo endpoint");
+                baseUrl + USERINFO_ENDPOINT, "Incorrect userinfo endpoint");
 
         if (oidcMetadataEndpoint.equals(TOKEN_ENDPOINT_SUPER_TENANT) ||
                 oidcMetadataEndpoint.equals(OIDCDISCOVERY_ENDPOINT_SUPER_TENANT) ||

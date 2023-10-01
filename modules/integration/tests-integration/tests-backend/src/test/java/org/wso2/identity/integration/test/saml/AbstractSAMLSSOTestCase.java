@@ -318,7 +318,7 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
 
     public void createUser(SAMLConfig config) {
 
-        log.info("Creating User " + config.getUser().getUsername());
+        log.info("Creating User " + config.getUser().getTenantAwareUsername());
         try {
             // creating the user
             remoteUSMServiceClient.addUser(config.getUser().getTenantAwareUsername(), config.getUser().getPassword(),
@@ -643,7 +643,7 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
             throws IOException {
 
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-        HttpPost post = new HttpPost(getTenantQualifiedURL(url, tenantInfo.getDomain()));
+        HttpPost post = new HttpPost(url);
         post.setHeader("User-Agent", USER_AGENT);
         urlParameters.add(new BasicNameValuePair(samlMsgKey, samlMsgValue));
         post.setEntity(new UrlEncodedFormEntity(urlParameters));

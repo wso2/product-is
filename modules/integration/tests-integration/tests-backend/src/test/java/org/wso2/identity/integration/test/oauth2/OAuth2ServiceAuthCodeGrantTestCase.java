@@ -125,7 +125,8 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
         urlParameters.add(new BasicNameValuePair("grantType", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
         urlParameters.add(new BasicNameValuePair("consumerKey", consumerKey));
         urlParameters.add(new BasicNameValuePair("callbackurl", OAuth2Constant.CALLBACK_URL));
-        urlParameters.add(new BasicNameValuePair("authorizeEndpoint", OAuth2Constant.APPROVAL_URL));
+        urlParameters.add(new BasicNameValuePair("authorizeEndpoint",
+                addTenantToURL(OAuth2Constant.APPROVAL_URL, tenantInfo.getDomain())));
         urlParameters.add(new BasicNameValuePair("authorize", OAuth2Constant.AUTHORIZE_PARAM));
         urlParameters.add(new BasicNameValuePair("scope", ""));
 
@@ -298,8 +299,8 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.CONSUMER_KEY_PLAYGROUND_NAME, consumerKey));
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.CALLBACKURL_PLAYGROUND_NAME, OAuth2Constant
                 .CALLBACK_URL));
-        urlParameters.add(new BasicNameValuePair(OAuth2Constant.AUTHORIZE_ENDPOINT_PLAYGROUND_NAME, OAuth2Constant
-                .APPROVAL_URL));
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.AUTHORIZE_ENDPOINT_PLAYGROUND_NAME,
+                addTenantToURL(OAuth2Constant.APPROVAL_URL, tenantInfo.getDomain())));
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.AUTHORIZE_PLAYGROUND_NAME, OAuth2Constant
                 .AUTHORIZE_PARAM));
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.SCOPE_PLAYGROUND_NAME, ""));
@@ -373,8 +374,8 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
         urlParameters.add(new BasicNameValuePair("client_id", consumerKey));
         urlParameters.add(new BasicNameValuePair("redirect_uri", OAuth2Constant.CALLBACK_URL));
         AutomationContext automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
-        String authorizeEndpoint = automationContext.getContextUrls().getBackEndUrl()
-                .replace("services/", "oauth2/authorize");
+        String authorizeEndpoint = addTenantToURL(automationContext.getContextUrls().getBackEndUrl()
+                .replace("services/", "oauth2/authorize"), tenantInfo.getDomain());
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters, authorizeEndpoint);
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         Assert.assertTrue(locationHeader.getValue().startsWith(OAuth2Constant.CALLBACK_URL),
@@ -389,8 +390,8 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("client_id", consumerKey));
         AutomationContext automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
-        String authorizeEndpoint = automationContext.getContextUrls().getBackEndUrl()
-                .replace("services/", "oauth2/authorize");
+        String authorizeEndpoint = addTenantToURL(automationContext.getContextUrls().getBackEndUrl()
+                .replace("services/", "oauth2/authorize"), tenantInfo.getDomain());
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters, authorizeEndpoint);
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         Assert.assertTrue(locationHeader.getValue().startsWith(OAuth2Constant.OAUTH2_DEFAULT_ERROR_URL),

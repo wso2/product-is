@@ -103,7 +103,7 @@ public class ExtendSessionEndpointAuthCodeGrantTestCase extends OAuth2ServiceAbs
 
     private static final String CALLBACK_URL = "https://localhost/callback";
     private static final String IDP_SESSION_KEY_CLAIM_NAME = "isk";
-    private static final String SESSION_EXTENDER_ENDPOINT_URL = "https://localhost:9853/identity/extend-session";
+    private static final String SESSION_EXTENDER_ENDPOINT_URL = "https://localhost:9853/t/carbon.super/identity/extend-session";
     private static final String SESSION_EXTENDER_ENDPOINT_GET_URL = SESSION_EXTENDER_ENDPOINT_URL + "?%s=%s";
     private static final String SESSIONS_ENDPOINT_URI = "https://localhost:9853/api/users/v1/me/sessions";
 
@@ -126,7 +126,7 @@ public class ExtendSessionEndpointAuthCodeGrantTestCase extends OAuth2ServiceAbs
 
         super.init(TestUserMode.SUPER_TENANT_USER);
         context = isServer;
-        this.authenticatingUserName = context.getContextTenant().getContextUser().getUserName();
+        this.authenticatingUserName = context.getContextTenant().getContextUser().getUserNameWithoutDomain();
         this.authenticatingCredential = context.getContextTenant().getContextUser().getPassword();
 
         cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
@@ -180,7 +180,8 @@ public class ExtendSessionEndpointAuthCodeGrantTestCase extends OAuth2ServiceAbs
         urlParameters.add(new BasicNameValuePair(OAUTH2_REDIRECT_URI, CALLBACK_URL));
         urlParameters.add(new BasicNameValuePair(OAUTH2_SCOPE, OAUTH2_SCOPE_OPENID_WITH_INTERNAL_LOGIN));
 
-        HttpResponse response = sendPostRequestWithParameters(firstPartyClient, urlParameters, AUTHORIZE_ENDPOINT_URL);
+        HttpResponse response = sendPostRequestWithParameters(firstPartyClient, urlParameters,
+                getTenantQualifiedURL(AUTHORIZE_ENDPOINT_URL, tenantInfo.getDomain()));
         Assert.assertNotNull(response, "Authorization request failed. Authorized response is null");
 
         String locationValue = getLocationHeaderValue(response);
@@ -247,7 +248,8 @@ public class ExtendSessionEndpointAuthCodeGrantTestCase extends OAuth2ServiceAbs
 
         // A valid commonAuthIdCookie is already available in the HttpClient, which had been obtained during the
         // authorization code grant.
-        HttpResponse response = sendGetRequest(firstPartyClient, SESSION_EXTENDER_ENDPOINT_URL);
+        HttpResponse response = sendGetRequest(firstPartyClient,
+                SESSION_EXTENDER_ENDPOINT_URL);
         Assert.assertNotNull(response, "Session extension request failed. Response is invalid.");
 
         int statusCode = response.getStatusLine().getStatusCode();

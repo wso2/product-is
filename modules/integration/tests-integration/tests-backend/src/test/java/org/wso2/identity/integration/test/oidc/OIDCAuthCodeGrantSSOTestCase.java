@@ -350,7 +350,7 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
 
     private void testUserClaims() throws Exception {
 
-        HttpGet request = new HttpGet(OAuth2Constant.USER_INFO_ENDPOINT);
+        HttpGet request = new HttpGet(getTenantQualifiedURL(OAuth2Constant.USER_INFO_ENDPOINT, tenantInfo.getDomain()));
 
         request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
         request.setHeader("Authorization", "Bearer " + accessToken);
@@ -360,6 +360,7 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
         Object obj = JSONValue.parse(rd);
+        // email claim is not coming here.
         String email = ((org.json.simple.JSONObject) obj).get("email").toString();
 
         EntityUtils.consume(response.getEntity());
@@ -411,7 +412,8 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("callbackurl", application.getCallBackURL()));
-        urlParameters.add(new BasicNameValuePair("accessEndpoint", OAuth2Constant.ACCESS_TOKEN_ENDPOINT));
+        urlParameters.add(new BasicNameValuePair("accessEndpoint",
+                getTenantQualifiedURL(OAuth2Constant.ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain())));
         urlParameters.add(new BasicNameValuePair("consumerSecret", application.getClientSecret()));
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters, String.format
                 (OIDCUtilTest.targetApplicationUrl, application.getApplicationContext() + OAuth2Constant.PlaygroundAppPaths

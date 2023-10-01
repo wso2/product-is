@@ -528,7 +528,8 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 			urlParameters.addAll(consentClaims);
 		}
 
-		return sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.APPROVAL_URL);
+		return sendPostRequestWithParameters(client, urlParameters, getTenantQualifiedURL(OAuth2Constant.APPROVAL_URL,
+                tenantInfo.getDomain()));
 	}
 
 	/**

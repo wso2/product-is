@@ -68,7 +68,8 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
     private static final String OPEN_ID_PROFILE_URL = "https://localhost:9853/authenticationendpoint/openid_profile.do";
     private static final String APPROVAL_URL = "https://localhost:9853/openidserver";
     private static final String OPEN_ID_URL = "http://localhost:8490/%s/openid?OpenId" +
-                                              ".ClaimedId=https://localhost:9853/openid/";
+                                              ".ClaimedId=";
+    private static final String OPENID_URL = "https://localhost:9853/openid/";
     //Claim Uris
     private static final String firstNameClaimURI = "http://axschema.org/namePerson/first";
     private static final String emailClaimURI = "http://axschema.org/contact/email";
@@ -118,7 +119,7 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
     public void createUser(){
         OpenIDUtils.User user = config.getUser();
 
-        log.info("Creating User " + user.getUsername());
+        log.info("Creating User gggggggggg" + user.getUsername());
 
         ClaimValue firstName = new ClaimValue();
         firstName.setClaimURI(firstNameClaimURI);
@@ -310,14 +311,15 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
     }
 
     private HttpResponse sendOpenIdGet() throws IOException {
-        HttpGet request = new HttpGet(String.format(OPEN_ID_URL, config.getAppType().getArtifact()));
+        HttpGet request = new HttpGet(String.format(OPEN_ID_URL + getTenantQualifiedURL(OPENID_URL,
+                tenantInfo.getDomain()), config.getAppType().getArtifact()));
         request.addHeader("User-Agent", USER_AGENT);
 
         return client.execute(request);
     }
 
     private HttpResponse sendLoginPost(String sessionKey) throws IOException {
-        HttpPost request = new HttpPost(COMMON_AUTH_URL);
+        HttpPost request = new HttpPost(getTenantQualifiedURL(COMMON_AUTH_URL, tenantInfo.getDomain()));
         request.setHeader("User-Agent", USER_AGENT);
 
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
@@ -346,7 +348,7 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
     }
 
     private HttpResponse sendOpenIdProfilePost(List<KeyValue> keyValues) throws IOException {
-        HttpPost request = new HttpPost(OPEN_ID_PROFILE_URL);
+        HttpPost request = new HttpPost(getTenantQualifiedURL(OPEN_ID_PROFILE_URL, tenantInfo.getDomain()));
         request.setHeader("User-Agent", USER_AGENT);
 
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
@@ -361,7 +363,7 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
     }
 
     private HttpResponse sendApprovalPost() throws IOException {
-        HttpPost request = new HttpPost(APPROVAL_URL);
+        HttpPost request = new HttpPost(getTenantQualifiedURL(APPROVAL_URL, tenantInfo.getDomain()));
         request.setHeader("User-Agent", USER_AGENT);
 
         boolean approvedAlways = (config.getUserConsent() == OpenIDUtils.UserConsent.APPROVE_ALWAYS);

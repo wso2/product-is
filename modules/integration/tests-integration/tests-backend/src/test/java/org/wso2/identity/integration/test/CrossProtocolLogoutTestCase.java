@@ -86,7 +86,8 @@ public class CrossProtocolLogoutTestCase extends ISIntegrationTest {
             "http://localhost:" + DEFAULT_TOMCAT_PORT + "/travelocity.com/samlsso?SAML2.HTTPBinding=HTTP-POST";
     private final String ACS_URL = "http://localhost:" + DEFAULT_TOMCAT_PORT + "/travelocity.com/home.jsp";
     private final String ACS_URL_PARAMETERIZED = "http://localhost:" + DEFAULT_TOMCAT_PORT + "/%s/home.jsp";
-    private String SAML_SSO_URL;
+    private String samlSSOUrl;
+    private String samlSSOUrlWithTenantDomainInUrl;
     private SAMLSSOConfigServiceClient ssoConfigServiceClient;
     private final String CONSENT = "consent";
     private final String APPROVE = "approve";
@@ -111,7 +112,9 @@ public class CrossProtocolLogoutTestCase extends ISIntegrationTest {
                 .setDefaultRequestConfig(requestConfig)
                 .setDefaultCookieSpecRegistry(cookieSpecRegistry)
                 .build();
-        SAML_SSO_URL = identityContextUrls.getWebAppURLHttps() + "/samlsso";
+        String baseSamlSSOUrl = identityContextUrls.getWebAppURLHttps() + "/samlsso";
+        samlSSOUrlWithTenantDomainInUrl = addTenantToURL(baseSamlSSOUrl, tenantInfo.getDomain());
+        samlSSOUrl = getTenantQualifiedURL(baseSamlSSOUrl, tenantInfo.getDomain());
     }
 
     @AfterClass(alwaysRun = true)
@@ -308,7 +311,7 @@ public class CrossProtocolLogoutTestCase extends ISIntegrationTest {
             String samlRequest = Utils.extractDataFromResponse(response, CommonConstants.SAML_REQUEST_PARAM, 5);
             EntityUtils.consume(response.getEntity());
 
-            response = sendSAMLMessage(SAML_SSO_URL, CommonConstants.SAML_REQUEST_PARAM, samlRequest);
+            response = sendSAMLMessage(samlSSOUrlWithTenantDomainInUrl, CommonConstants.SAML_REQUEST_PARAM, samlRequest);
             if (Utils.requestMissingClaims(response)) {
                 EntityUtils.consume(response.getEntity());
                 String pastrCookie = Utils.getPastreCookie(response);
@@ -343,7 +346,7 @@ public class CrossProtocolLogoutTestCase extends ISIntegrationTest {
             String samlRequest = Utils.extractDataFromResponse(response, CommonConstants.SAML_REQUEST_PARAM, 5);
             EntityUtils.consume(response.getEntity());
 
-            response = sendSAMLMessage(SAML_SSO_URL, CommonConstants.SAML_REQUEST_PARAM, samlRequest);
+            response = sendSAMLMessage(samlSSOUrlWithTenantDomainInUrl, CommonConstants.SAML_REQUEST_PARAM, samlRequest);
             String samlResponse = Utils.extractDataFromResponse(response, CommonConstants.SAML_RESPONSE_PARAM, 5);
             EntityUtils.consume(response.getEntity());
 
@@ -362,7 +365,7 @@ public class CrossProtocolLogoutTestCase extends ISIntegrationTest {
         try {
             HttpResponse response = sendGetRequest(SAML_SSO_LOGIN_URL);
             String samlRequest = Utils.extractDataFromResponse(response, CommonConstants.SAML_REQUEST_PARAM, 5);
-            response = sendSAMLMessage(SAML_SSO_URL, CommonConstants.SAML_REQUEST_PARAM, samlRequest);
+            response = sendSAMLMessage(samlSSOUrl, CommonConstants.SAML_REQUEST_PARAM, samlRequest);
             EntityUtils.consume(response.getEntity());
 
             response = Utils.sendRedirectRequest(response, OAuth2Constant.USER_AGENT, ACS_URL_PARAMETERIZED,
@@ -394,7 +397,8 @@ public class CrossProtocolLogoutTestCase extends ISIntegrationTest {
         urlParameters.add(new BasicNameValuePair(CONSENT, APPROVE));
         urlParameters.add(new BasicNameValuePair(SCOPE_APPROVAL, APPROVE));
         urlParameters.add(new BasicNameValuePair("sessionDataKeyConsent", sessionDataKeyConsent));
-        return sendPostRequestWithParameters(urlParameters, OAuth2Constant.APPROVAL_URL);
+        return sendPostRequestWithParameters(urlParameters,
+                addTenantToURL(OAuth2Constant.APPROVAL_URL, tenantInfo.getDomain()));
     }
 
     public HttpResponse sendLoginPost(String sessionDataKey) throws IOException {
@@ -431,7 +435,8 @@ public class CrossProtocolLogoutTestCase extends ISIntegrationTest {
         urlParameters.add(new BasicNameValuePair("grantType", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
         urlParameters.add(new BasicNameValuePair("consumerKey", oidcAppClientId));
         urlParameters.add(new BasicNameValuePair("callbackurl", OAuth2Constant.CALLBACK_URL));
-        urlParameters.add(new BasicNameValuePair("authorizeEndpoint", OAuth2Constant.APPROVAL_URL));
+        urlParameters.add(new BasicNameValuePair("authorizeEndpoint",
+                addTenantToURL(OAuth2Constant.APPROVAL_URL, tenantInfo.getDomain())));
         urlParameters.add(new BasicNameValuePair("authorize", OAuth2Constant.AUTHORIZE_PARAM));
         urlParameters.add(new BasicNameValuePair("scope", OAuth2Constant.OAUTH2_SCOPE_OPENID_WITH_INTERNAL_LOGIN));
         return urlParameters;

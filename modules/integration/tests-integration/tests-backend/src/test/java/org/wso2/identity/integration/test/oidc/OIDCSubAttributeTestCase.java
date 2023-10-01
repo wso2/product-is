@@ -314,7 +314,7 @@ public class OIDCSubAttributeTestCase extends OAuth2ServiceAbstractIntegrationTe
                 .disableRedirectHandling()
                 .build();
 
-        String username = userInfo.getUserName();
+        String username = userInfo.getUserNameWithoutDomain();
         Secret password = new Secret(userInfo.getPassword());
         AuthorizationGrant passwordGrant = new ResourceOwnerPasswordCredentialsGrant(username, password);
 
@@ -324,7 +324,8 @@ public class OIDCSubAttributeTestCase extends OAuth2ServiceAbstractIntegrationTe
 
         Scope scope = new Scope(OAuth2Constant.OAUTH2_SCOPE_OPENID);
 
-        URI tokenEndpoint = new URI(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
+        URI tokenEndpoint = new URI(getTenantQualifiedURL(
+                OAuth2Constant.ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()));
 
         TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, passwordGrant, scope);
 
