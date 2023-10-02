@@ -111,6 +111,14 @@ public final class OAuth2Constant {
 
     public static final String SCOPE_ENDPOINT = "https://localhost:9853/api/server/v1/oidc/scopes";
     public static final String TENANT_SCOPE_ENDPOINT = "https://localhost:9853/t/wso2.com/api/server/v1/oidc/scopes";
+    public static final String OAUTH2_RESPONSE_MODE = "response_mode";
+    public static final String RESPONSE_MODE_QUERY = "query";
+    public static final String RESPONSE_MODE_FRAGMENT = "fragment";
+    public static final String RESPONSE_MODE_JWT = "jwt";
+    public static final String RESPONSE_MODE_QUERY_JWT = "query.jwt";
+    public static final String RESPONSE_MODE_FRAGMENT_JWT = "fragment.jwt";
+
+    public static final String RESPONSE_TYPE_CODE_ID_TOKEN = "code id_token";
 
     // Tenanted urls.
     public final static String TENANT_PLACEHOLDER = "<TENANT_PLACEHOLDER>";

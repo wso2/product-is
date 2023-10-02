@@ -40,6 +40,7 @@
     <import resource="classpath:META-INF/cxf/idp-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/oidc-scope-management-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-recovery-v1-cxf.xml"/>
+    <import resource="classpath:META-INF/cxf/user-recovery-v2-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/script-libraries-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/configs-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/notification-sender-server-v1-cxf.xml"/>
@@ -58,6 +59,7 @@
     <import resource="classpath:META-INF/cxf/user-functionality-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/rfc-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/organization-user-invitation-mgt-v1-cxf.xml"/>
+    <import resource="classpath:META-INF/cxf/organization-configs-server-v1-cxf.xml"/>
 
     <!-- Legacy identity APIs   -->
     <import resource="classpath:META-INF/cxf/config-mgt-server-v1-cxf.xml"/>
@@ -74,6 +76,7 @@
     <import resource="classpath:META-INF/cxf/org-mgt-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/org-role-mgt-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-organization-v1-cxf.xml"/>
+    <import resource="classpath:META-INF/cxf/api-resource-server-v1-cxf.xml"/>
 
     <context:property-placeholder/>
     <context:annotation-config/>
@@ -116,7 +119,10 @@
             <bean class="org.wso2.carbon.identity.api.server.organization.management.v1.OrganizationsApi"/>
             <bean class="org.wso2.carbon.identity.api.server.organization.role.management.v1.OrganizationsApi"/>
             <bean class="org.wso2.carbon.identity.api.server.organization.user.invitation.management.v1.GuestsApi"/>
+            <bean class="org.wso2.carbon.identity.api.server.organization.configs.v1.OrganizationConfigsApi"/>
             <bean class="org.wso2.carbon.identity.api.expired.password.identification.v1.PasswordExpiredUsersApi"/>
+            <bean class="org.wso2.carbon.identity.api.server.api.resource.v1.ApiResourcesApi"/>
+            <bean class="org.wso2.carbon.identity.api.server.api.resource.v1.ScopesApi"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">
@@ -216,6 +222,7 @@
             <bean class="org.wso2.carbon.identity.rest.api.user.authorized.apps.v2.MeApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.authorized.apps.v2.UserIdApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.authorized.apps.v2.AuthorizedAppsApi"/>
+            <bean class="org.wso2.carbon.identity.rest.api.user.recovery.v2.RecoveryApi"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">
