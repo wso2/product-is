@@ -159,9 +159,7 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
     @AfterClass(alwaysRun = true)
     public void testClear() throws IOException, AutomationUtilException {
 
-        if (!configurationsRestored) {
-            serverConfigurationManager.restoreToLastConfiguration(true);
-        }
+        restoreISConfigurations();
         tenantMgtRestClient.closeHttpClient();
         oAuth2RestClientTenant1.closeHttpClient();
         oAuth2RestClientTenant2.closeHttpClient();
@@ -188,7 +186,7 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
         accessToken = null;
     }
 
-    @Test(description = "Create two OAuth apps in the same tenant with same client id.", priority = 0)
+    @Test(description = "Create two OAuth apps in the same tenant with same client id.")
     public void testCreateAppsWithSameClientIdInSameTenant() throws Exception {
 
         // Create first app.
@@ -200,7 +198,8 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
         Assert.assertEquals(statusLine.getStatusCode(), HttpStatus.SC_CONFLICT, "Expected status code not received.");
     }
 
-    @Test(description = "Create two OAuth apps in two tenants with the same client id.", priority = 1)
+    @Test(description = "Create two OAuth apps in two tenants with the same client id.",
+            dependsOnMethods = "testCreateAppsWithSameClientIdInSameTenant")
     public void testCreateAppsWithSameClientIdInMultipleTenants() throws Exception {
 
         // Create oauth apps in both tenants.
@@ -222,7 +221,7 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
     }
 
     @Test(description = "Create two OAuth apps in two tenants with the same client id and retrieve " +
-            "tenant app by client id.", priority = 2)
+            "tenant app by client id.", dependsOnMethods = "testCreateAppsWithSameClientIdInMultipleTenants")
     public void testRetrieveTenantAppByClientId() throws JSONException, IOException {
 
         // Create oauth apps in both tenants.
@@ -241,7 +240,7 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
     }
 
     @Test(description = "Create two OAuth apps in two tenants with the same client id and update " +
-            "inbound configurations of one app.", priority = 3)
+            "inbound configurations of one app.", dependsOnMethods = "testRetrieveTenantAppByClientId")
     public void testCreateAppsAndUpdateInboundConfigurationsOfOne() throws Exception {
 
         // Create oauth apps in both tenants.
@@ -292,7 +291,7 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
     }
 
     @Test(description = "Create two OAuth apps in two tenants with the same client id and delete an app " +
-            "in one tenant.", priority = 4)
+            "in one tenant.", dependsOnMethods = "testCreateAppsAndUpdateInboundConfigurationsOfOne")
     public void testCreateAppsAndDeleteOne() throws Exception {
 
         // Create oauth apps in both tenants.
@@ -312,7 +311,7 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
     }
 
     @Test(description = "Create two OAuth apps in two tenants with the same client id and delete " +
-            "inbound configurations of one app.", priority = 5)
+            "inbound configurations of one app.", dependsOnMethods = "testCreateAppsAndDeleteOne")
     public void testCreateAppsAndDeleteInboundConfigurationsOfOne() throws Exception {
 
         // Create oauth apps in both tenants.
@@ -343,7 +342,7 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
     }
 
     @Test(description = "Create two OAuth apps in two tenants with the same client id and try to login " +
-            "with the user for the tenant.", priority = 6)
+            "with the user for the tenant.", dependsOnMethods = "testCreateAppsAndDeleteInboundConfigurationsOfOne")
     public void testOAuthApplicationLoginSuccess() throws Exception {
 
         // Create oauth apps in both tenants.
@@ -365,7 +364,8 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
     }
 
     @Test(description = "Create two OAuth apps in two tenants with the same client id and try to login " +
-            "with the user from the other tenant.", priority = 7, expectedExceptions = AssertionError.class)
+            "with the user from the other tenant.", dependsOnMethods = "testOAuthApplicationLoginSuccess",
+            expectedExceptions = AssertionError.class)
     public void testOAuthApplicationLoginIncorrectTenant() throws Exception {
 
         // Create oauth apps in both tenants.
@@ -385,12 +385,11 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
     }
 
     @Test(description = "Create an OAuth app in tenant 1 and try to login when tenant qualified urls are disabled.",
-            priority = 8)
+            dependsOnMethods = "testOAuthApplicationLoginIncorrectTenant")
     public void testOAuthApplicationLoginWhenTenantQualifiedUrlsDisabled() throws Exception {
 
         // Restore the server back to the initial state (tenant qualified urls disabled).
-        serverConfigurationManager.restoreToLastConfiguration(true);
-        configurationsRestored = true;
+        restoreISConfigurations();
 
         // Create oauth app and add user.
         ApplicationResponseModel tenant1App = createApplication(TENANT_1_DOMAIN);
@@ -414,6 +413,20 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
                 + File.separator + "tenant.qualified" + File.separator
                 + "tenant_qualified_url_tenanted_sessions_enabled.toml");
         serverConfigurationManager.applyConfiguration(modifiedConfigFile, defaultTomlFile, true, true);
+    }
+
+    private void restoreISConfigurations() throws AutomationUtilException, IOException {
+
+        if (configurationsRestored) {
+            return;
+        }
+        String carbonHome = Utils.getResidentCarbonHome();
+        File defaultTomlFile = getDeploymentTomlFile(carbonHome);
+        File modifiedConfigFile = new File(getISResourceLocation()
+                + File.separator + "tenant.qualified" + File.separator
+                + "tenant_qualified_url_tenanted_sessions_default.toml");
+        serverConfigurationManager.applyConfiguration(modifiedConfigFile, defaultTomlFile, true, true);
+        configurationsRestored = true;
     }
 
     private void addTenant(String tenantDomain, String adminUsername, String adminPassword,
