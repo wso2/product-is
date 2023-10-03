@@ -30,6 +30,7 @@ public class ApplicationListItem  {
     private String description;
     private String image;
     private String accessUrl;
+    private String clientId;
 
     @XmlType(name="AccessEnum")
     @XmlEnum(String.class)
@@ -192,7 +193,24 @@ public class ApplicationListItem  {
         this.self = self;
     }
 
+    public ApplicationListItem clientId(String clientId) {
 
+        this.clientId = clientId;
+        return this;
+    }
+
+    @ApiModelProperty(example = "clientId", value = "")
+    @JsonProperty("clientId")
+    @Valid
+    public String getClientId() {
+
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+
+        this.clientId = clientId;
+    }
 
     @Override
     public boolean equals(java.lang.Object o) {

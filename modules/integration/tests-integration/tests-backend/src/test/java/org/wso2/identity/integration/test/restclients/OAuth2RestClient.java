@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.http.ContentType;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
+import org.apache.http.StatusLine;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
@@ -30,6 +31,7 @@ import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.utils.StringUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationListItem;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationListResponse;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
@@ -40,6 +42,7 @@ import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 public class OAuth2RestClient extends RestBaseClient {
 
@@ -75,6 +78,21 @@ public class OAuth2RestClient extends RestBaseClient {
     }
 
     /**
+     * Create an Application.
+     *
+     * @param application Application Model with application creation details.
+     * @return Application creation response.
+     */
+    public StatusLine createApplicationWithResponse(ApplicationModel application) throws IOException, JSONException {
+
+        String jsonRequest = toJSONString(application);
+        try (CloseableHttpResponse response = getResponseOfHttpPost(applicationManagementApiBasePath, jsonRequest,
+                getHeaders())) {
+            return response.getStatusLine();
+        }
+    }
+
+    /**
      * Get Application details
      *
      * @param appId Application id.
@@ -88,6 +106,27 @@ public class OAuth2RestClient extends RestBaseClient {
 
             ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
             return jsonWriter.readValue(responseBody, ApplicationResponseModel.class);
+        }
+    }
+
+    /**
+     * Get Application details by client id.
+     *
+     * @param clientId Client id of the application.
+     * @return Application list.
+     * @throws IOException Error when getting the response.
+     */
+    public List<ApplicationListItem> getApplicationsByClientId(String clientId) throws IOException {
+
+        String endPointUrl = applicationManagementApiBasePath + "?filter=clientId eq " + clientId;
+        endPointUrl = endPointUrl.replace(" ", "%20");
+
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
+            String responseBody = EntityUtils.toString(response.getEntity());
+
+            ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+            ApplicationListResponse applications = jsonWriter.readValue(responseBody, ApplicationListResponse.class);
+            return applications.getApplications();
         }
     }
 

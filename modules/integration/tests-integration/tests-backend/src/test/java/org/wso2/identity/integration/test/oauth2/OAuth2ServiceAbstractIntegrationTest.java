@@ -490,6 +490,31 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	}
 
 	/**
+	 * Send login post request for a tenant with given username and password credentials.
+	 *
+	 * @param client         Http client.
+	 * @param sessionDataKey Session data key.
+	 * @param username       Username.
+	 * @param password       Password.
+	 * @param tenantDomain	 Tenant domain.
+	 * @return Http response.
+	 * @throws ClientProtocolException 	ClientProtocolException
+	 * @throws IOException				IOException
+	 */
+	public HttpResponse sendLoginPostForCustomUsers(HttpClient client, String sessionDataKey, String username,
+													String password, String tenantDomain)
+			throws ClientProtocolException, IOException {
+
+		List<NameValuePair> urlParameters = new ArrayList<>();
+		urlParameters.add(new BasicNameValuePair("username", username));
+		urlParameters.add(new BasicNameValuePair("password", password));
+		urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
+		log.info(">>> sendLoginPost:sessionDataKey: " + sessionDataKey);
+		String url = OAuth2Constant.TENANT_COMMON_AUTH_URL.replace(OAuth2Constant.TENANT_PLACEHOLDER, tenantDomain);
+		return sendPostRequestWithParameters(client, urlParameters, url);
+	}
+
+	/**
 	 * Send approval post request
 	 *
 	 * @param client - http client
@@ -529,6 +554,33 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		}
 
 		return sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.APPROVAL_URL);
+	}
+
+	/**
+	 * Send approval post request for tenant with consent.
+	 *
+	 * @param client 				http client.
+	 * @param sessionDataKeyConsent session consent data.
+	 * @param consentClaims 		claims requiring user consent.
+	 * @param tenantDomain 			tenant domain.
+	 * @return http response.
+	 * @throws java.io.IOException IOException.
+	 */
+	public HttpResponse sendApprovalPostWithConsent(HttpClient client, String sessionDataKeyConsent,
+													List<NameValuePair> consentClaims, String tenantDomain)
+			throws IOException {
+
+		List<NameValuePair> urlParameters = new ArrayList<>();
+		urlParameters.add(new BasicNameValuePair("consent", "approve"));
+		urlParameters.add(new BasicNameValuePair("scope-approval", "approve"));
+		urlParameters.add(new BasicNameValuePair("sessionDataKeyConsent", sessionDataKeyConsent));
+
+		if (consentClaims != null) {
+			urlParameters.addAll(consentClaims);
+		}
+		String url = OAuth2Constant.TENANT_APPROVAL_URL.replace(OAuth2Constant.TENANT_PLACEHOLDER, tenantDomain);
+
+		return sendPostRequestWithParameters(client, urlParameters, url);
 	}
 
 	/**
