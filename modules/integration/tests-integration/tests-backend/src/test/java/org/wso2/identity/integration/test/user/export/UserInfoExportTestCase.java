@@ -55,7 +55,6 @@ public class UserInfoExportTestCase extends ISIntegrationTest {
     private HttpClient client;
 
     private String username;
-    private String tenantAwareUsername;
     private String password;
     private String tenant;
 
@@ -64,7 +63,6 @@ public class UserInfoExportTestCase extends ISIntegrationTest {
 
         AutomationContext context = new AutomationContext("IDENTITY", userMode);
         this.username = context.getContextTenant().getTenantAdmin().getUserName();
-        this.tenantAwareUsername = context.getContextTenant().getTenantAdmin().getUserNameWithoutDomain();
         this.password = context.getContextTenant().getTenantAdmin().getPassword();
         this.tenant = context.getContextTenant().getDomain();
     }
