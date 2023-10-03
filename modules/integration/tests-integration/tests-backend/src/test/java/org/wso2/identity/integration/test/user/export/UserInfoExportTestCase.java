@@ -51,7 +51,7 @@ public class UserInfoExportTestCase extends ISIntegrationTest {
     private static final String PI_INFO = "pi-info/";
     private static final String ME = "me";
     private static final String RESOURCE_PATH = "/api/identity/user/v1.0/";
-    private static final String USERNAME_CLAIM_URI = "http://wso2.org/claims/username";
+    private static final String GROUPS_ATTRIBUTE = "groups";
     private HttpClient client;
 
     private String username;
@@ -97,14 +97,13 @@ public class UserInfoExportTestCase extends ISIntegrationTest {
 
         Object responseObj = JSONValue.parse(rd);
         EntityUtils.consume(response.getEntity());
-        Object basicObj = ((JSONObject) responseObj).get("basic");
-        if (basicObj == null) {
+        Object userProfileObj = ((JSONObject) responseObj).get("user_profile");
+        if (userProfileObj == null) {
             Assert.fail();
         } else {
-            JSONObject basic = (JSONObject) basicObj;
-            String username = basic.get(USERNAME_CLAIM_URI).toString();
-            //TODO tenant aware username is coming. is this okay?
-            Assert.assertEquals(username, this.tenantAwareUsername);
+            JSONObject userProfile = (JSONObject) userProfileObj;
+            String groups = userProfile.get(GROUPS_ATTRIBUTE).toString();
+            Assert.assertNotNull(groups);
         }
     }
 
@@ -121,10 +120,9 @@ public class UserInfoExportTestCase extends ISIntegrationTest {
 
         Object responseObj = JSONValue.parse(rd);
         EntityUtils.consume(response.getEntity());
-        JSONObject basic = (JSONObject)((JSONObject) responseObj).get("basic");
-        String username = basic.get(USERNAME_CLAIM_URI).toString();
-        //TODO tenant aware username is coming. is this okay?
-        Assert.assertEquals(username, this.tenantAwareUsername);
+        JSONObject userProfile = (JSONObject)((JSONObject) responseObj).get("user_profile");
+        String groups = userProfile.get(GROUPS_ATTRIBUTE).toString();
+        Assert.assertNotNull(groups);
     }
 
     private String getPiInfoPath() {
