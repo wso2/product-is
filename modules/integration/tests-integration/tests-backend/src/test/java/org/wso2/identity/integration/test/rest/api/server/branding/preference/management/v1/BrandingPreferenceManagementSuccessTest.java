@@ -318,4 +318,126 @@ public class BrandingPreferenceManagementSuccessTest extends BrandingPreferenceM
                 .assertThat()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
     }
+
+    @Test
+    public void testAddCustomTextPreference() throws IOException, JSONException {
+
+        String body = readResource("add-custom-text.json");
+        Response response = getResponseOfPost(CUSTOM_TEXT_API_BASE_PATH, body);
+
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .header(HttpHeaders.LOCATION, notNullValue());
+        String location = response.getHeader(HttpHeaders.LOCATION);
+        assertNotNull(location);
+
+        JSONObject expectedPreference = new JSONObject(new JSONObject(readResource("add-custom-text.json")).
+                get("preference").toString());
+        JSONObject receivedPreference = new JSONObject(new JSONObject(response.asString()).
+                get("preference").toString());
+        Assert.assertTrue(areJSONObjectsEqual(expectedPreference, receivedPreference),
+                "The custom text preference schema of the Response is incorrect");
+    }
+
+    @Test(dependsOnMethods = {"testAddCustomTextPreference"})
+    public void testGetCustomTextPreference() throws IOException, JSONException {
+
+        Response response = getResponseOfGet(CUSTOM_TEXT_API_BASE_PATH + QUERY_PARAM_SEPARATOR +
+                String.format(SCREEN_QUERY_PARAM, LOGIN_SCREEN));
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("type", equalTo(ORGANIZATION_TYPE))
+                .body("name", equalTo(tenant))
+                .body("screen", equalTo(LOGIN_SCREEN))
+                .body("locale", equalTo(DEFAULT_LOCALE));
+
+        JSONObject expectedPreference = new JSONObject(new JSONObject(readResource("add-custom-text.json")).
+                get("preference").toString());
+        JSONObject receivedPreference = new JSONObject(new JSONObject(response.asString()).
+                get("preference").toString());
+        Assert.assertTrue(areJSONObjectsEqual(expectedPreference, receivedPreference),
+                "The custom text preference schema of the Response is incorrect");
+    }
+
+    @Test(dependsOnMethods = {"testGetCustomTextPreference"})
+    public void testGetCustomTextPreferenceByQueryParams() throws IOException, JSONException {
+
+        Response response = getResponseOfGet(CUSTOM_TEXT_API_BASE_PATH + String.format
+                (CUSTOM_TEXT_COMPONENT_WITH_QUERY_PARAM, ORGANIZATION_TYPE, tenant, LOGIN_SCREEN, DEFAULT_LOCALE));
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("type", equalTo(ORGANIZATION_TYPE))
+                .body("name", equalTo(tenant))
+                .body("screen", equalTo(LOGIN_SCREEN))
+                .body("locale", equalTo(DEFAULT_LOCALE));
+
+        JSONObject expectedPreference = new JSONObject(new JSONObject(readResource("add-custom-text.json")).
+                get("preference").toString());
+        JSONObject receivedPreference = new JSONObject(new JSONObject(response.asString()).
+                get("preference").toString());
+        Assert.assertTrue(areJSONObjectsEqual(expectedPreference, receivedPreference),
+                "The custom text preference schema of the Response is incorrect");
+    }
+
+    @Test(dependsOnMethods = {"testGetCustomTextPreferenceByQueryParams"})
+    public void testUpdateCustomTextPreference() throws IOException, JSONException {
+
+        String body = readResource("update-custom-text.json");
+        Response response = getResponseOfPut(CUSTOM_TEXT_API_BASE_PATH, body);
+
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("type", equalTo(ORGANIZATION_TYPE))
+                .body("name", equalTo(tenant))
+                .body("screen", equalTo(LOGIN_SCREEN))
+                .body("locale", equalTo(DEFAULT_LOCALE));
+
+        JSONObject expectedPreference = new JSONObject(new JSONObject(readResource("update-custom-text.json")).
+                get("preference").toString());
+        JSONObject receivedPreference = new JSONObject(new JSONObject(response.asString()).
+                get("preference").toString());
+        Assert.assertTrue(areJSONObjectsEqual(expectedPreference, receivedPreference),
+                "The custom text preference schema of the Response is incorrect");
+    }
+
+    @Test(dependsOnMethods = {"testUpdateCustomTextPreference"})
+    public void testGetCustomTextPreferenceAfterUpdate() throws IOException, JSONException {
+
+        Response response = getResponseOfGet(CUSTOM_TEXT_API_BASE_PATH + QUERY_PARAM_SEPARATOR +
+                String.format(SCREEN_QUERY_PARAM, LOGIN_SCREEN));
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("type", equalTo(ORGANIZATION_TYPE))
+                .body("name", equalTo(tenant))
+                .body("screen", equalTo(LOGIN_SCREEN))
+                .body("locale", equalTo(DEFAULT_LOCALE));
+
+        JSONObject expectedPreference = new JSONObject(new JSONObject(readResource("update-custom-text.json")).
+                get("preference").toString());
+        JSONObject receivedPreference = new JSONObject(new JSONObject(response.asString()).
+                get("preference").toString());
+        Assert.assertTrue(areJSONObjectsEqual(expectedPreference, receivedPreference),
+                "The custom text preference schema of the Response is incorrect");
+    }
+
+    @Test(dependsOnMethods = {"testGetCustomTextPreferenceAfterUpdate"})
+    public void testDeleteCustomTextPreference() {
+
+        Response response = getResponseOfDelete(CUSTOM_TEXT_API_BASE_PATH + QUERY_PARAM_SEPARATOR +
+                String.format(SCREEN_QUERY_PARAM, LOGIN_SCREEN));
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
+    }
 }
