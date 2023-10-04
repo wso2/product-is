@@ -263,6 +263,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.extension.identity.authenticator.outbound.emailotp:org.wso2.carbon.identity.authenticator.emailotp.feature:${authenticator.emailotp.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.extension.identity.oauth.addons:org.wso2.carbon.identity.oauth2.token.handler.clientauth.jwt.feature:${identity.oauth.addons.version}
+                                </featureArtifactDef>
 
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.user.ws:org.wso2.carbon.um.ws.service.feature:${identity.user.ws.version}
@@ -1102,6 +1105,10 @@
                                     <id>org.wso2.carbon.identity.authenticator.emailotp.feature.group</id>
                                     <version>${authenticator.emailotp.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.oauth2.token.handler.clientauth.jwt.feature.group</id>
+                                    <version>${identity.oauth.addons.version}</version>
+                                </feature>
 
                                 <feature>
                                     <id>org.wso2.carbon.identity.application.authenticator.oidc.server.feature.group</id>
@@ -1674,6 +1681,10 @@
                                     <version>${authenticator.emailotp.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.identity.oauth2.token.handler.clientauth.jwt.feature.group</id>
+                                    <version>${identity.oauth.addons.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.extension.identity.verification.provider.feature.group</id>
                                     <version>${identity.verification.version}</version>
                                 </feature>
@@ -2147,6 +2158,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.authenticator.emailotp.feature.group</id>
                                     <version>${authenticator.emailotp.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.oauth2.token.handler.clientauth.jwt.feature.group</id>
+                                    <version>${identity.oauth.addons.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.extension.identity.verification.provider.feature.group</id>
