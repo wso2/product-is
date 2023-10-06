@@ -229,7 +229,7 @@ public class RequestPathBasicAuthenticationSSOTest extends ISIntegrationTest {
             }
         }
         EntityUtils.consume(response.getEntity());
-        request = new HttpPost(getTenantQualifiedURL(isURL + "samlsso", tenantInfo.getDomain()));
+        request = new HttpPost(addTenantToURL(isURL + "samlsso", tenantInfo.getDomain()));
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("SAMLRequest", samlRequest));
         request.setEntity(new UrlEncodedFormEntity(urlParameters));
