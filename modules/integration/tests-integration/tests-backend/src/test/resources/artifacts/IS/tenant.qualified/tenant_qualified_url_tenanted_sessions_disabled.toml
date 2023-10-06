@@ -37,3 +37,7 @@ hash = "66cd9688a2ae068244ea01e70f0e230f5623b7fa4cdecb65070a09ec06452262"
 
 [identity.auth_framework.endpoint]
 app_password = "dashboard"
+
+[tenant_context]
+enable_tenant_qualified_urls = false
+enable_tenanted_sessions = false
