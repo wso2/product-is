@@ -333,12 +333,11 @@ public class BrandingPreferenceManagementSuccessTest extends BrandingPreferenceM
         String location = response.getHeader(HttpHeaders.LOCATION);
         assertNotNull(location);
 
-        JSONObject expectedPreference = new JSONObject(new JSONObject(readResource("add-custom-text.json")).
-                get("preference").toString());
+        JSONObject expectedPreference = new JSONObject(new JSONObject(body).get("preference").toString());
         JSONObject receivedPreference = new JSONObject(new JSONObject(response.asString()).
                 get("preference").toString());
         Assert.assertTrue(areJSONObjectsEqual(expectedPreference, receivedPreference),
-                "The custom text preference schema of the Response is incorrect");
+                "The custom text preference schema of the Response is incorrect.");
     }
 
     @Test(dependsOnMethods = {"testAddCustomTextPreference"})
@@ -360,7 +359,7 @@ public class BrandingPreferenceManagementSuccessTest extends BrandingPreferenceM
         JSONObject receivedPreference = new JSONObject(new JSONObject(response.asString()).
                 get("preference").toString());
         Assert.assertTrue(areJSONObjectsEqual(expectedPreference, receivedPreference),
-                "The custom text preference schema of the Response is incorrect");
+                "The custom text preference schema of the Response is incorrect.");
     }
 
     @Test(dependsOnMethods = {"testGetCustomTextPreference"})
@@ -400,8 +399,7 @@ public class BrandingPreferenceManagementSuccessTest extends BrandingPreferenceM
                 .body("screen", equalTo(LOGIN_SCREEN))
                 .body("locale", equalTo(DEFAULT_LOCALE));
 
-        JSONObject expectedPreference = new JSONObject(new JSONObject(readResource("update-custom-text.json")).
-                get("preference").toString());
+        JSONObject expectedPreference = new JSONObject(new JSONObject(body).get("preference").toString());
         JSONObject receivedPreference = new JSONObject(new JSONObject(response.asString()).
                 get("preference").toString());
         Assert.assertTrue(areJSONObjectsEqual(expectedPreference, receivedPreference),

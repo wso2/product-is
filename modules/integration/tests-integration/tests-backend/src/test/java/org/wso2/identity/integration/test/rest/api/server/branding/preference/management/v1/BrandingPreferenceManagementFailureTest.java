@@ -252,6 +252,9 @@ public class BrandingPreferenceManagementFailureTest extends BrandingPreferenceM
 
         Response response = getResponseOfDelete(CUSTOM_TEXT_API_BASE_PATH + QUERY_PARAM_SEPARATOR +
                 String.format(SCREEN_QUERY_PARAM, LOGIN_SCREEN));
-        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "BPM-60006");
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
     }
 }
