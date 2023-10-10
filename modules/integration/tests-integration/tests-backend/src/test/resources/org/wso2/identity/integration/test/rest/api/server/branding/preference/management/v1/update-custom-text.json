@@ -1,0 +1,22 @@
+{
+  "type": "ORG",
+  "name": "WSO2",
+  "locale": "en-US",
+  "screen": "login",
+  "preference": {
+    "login": "Sign In",
+    "welcome": "Welcome",
+    "account.linking": "Account Linking",
+    "username": "Username",
+    "email.username": "Email address",
+    "back.to.sign.in": "Back to Sign In",
+    "or": "Or",
+    "dont.have.an.account": "Don't have an account?",
+    "password": "Password",
+    "confirm.password": "Confirm Password",
+    "email": "Email",
+    "enter.your.email": "Enter your email",
+    "enter.your.username": "Enter your username",
+    "enter.your.password": "Enter your password"
+  }
+}

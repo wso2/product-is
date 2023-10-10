@@ -1,0 +1,7 @@
+{
+  "type": "ORG",
+  "name": "organization-name",
+  "locale": "en-US",
+  "screen": "login",
+  "preference": {  }
+}
