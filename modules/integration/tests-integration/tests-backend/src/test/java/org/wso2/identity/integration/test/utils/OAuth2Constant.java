@@ -120,6 +120,14 @@ public final class OAuth2Constant {
 
     public static final String RESPONSE_TYPE_CODE_ID_TOKEN = "code id_token";
 
+    // Tenanted urls.
+    public final static String TENANT_PLACEHOLDER = "<TENANT_PLACEHOLDER>";
+    public final static String TENANT_COMMON_AUTH_URL = "https://localhost:9853/t/<TENANT_PLACEHOLDER>/commonauth";
+    public final static String TENANT_APPROVAL_URL = "https://localhost:9853/t/<TENANT_PLACEHOLDER>/oauth2/authorize";
+    public final static String TENANT_TOKEN_ENDPOINT = "https://localhost:9853/t/<TENANT_PLACEHOLDER>/oauth2/token";
+    public static final String TENANT_INTROSPECT_ENDPOINT =
+            "https://localhost:9853/t/<TENANT_PLACEHOLDER>/oauth2/introspect";
+
     public static final class PlaygroundAppPaths {
 
         public static final String callBackPath = "/oauth2client";
