@@ -20,6 +20,7 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpStatus;
+import org.junit.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
@@ -28,9 +29,13 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import java.io.IOException;
+import java.util.Arrays;
+
+import javax.xml.xpath.XPathExpressionException;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -258,5 +263,86 @@ public class ConfigSuccessTest extends ConfigTestBase {
                 .body("exposedHeaders", hasItem("X-Custom-1"))
                 .body("supportsCredentials", equalTo(false))
                 .body("maxAge", equalTo(3600));
+    }
+
+    @Test
+    public void testGetSAMLInboundAuthConfigs() throws XPathExpressionException {
+
+        Response response = getResponseOfGet(SAML_INBOUND_AUTH_CONFIG_API_PATH);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("destinationURLs", notNullValue())
+                .body("metadataValidityPeriod", equalTo(60))
+                .body("enableMetadataSigning", equalTo(false))
+                .body("metadataEndpoint",
+                        MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(context.getContextTenant().getDomain())
+                                ? equalTo(SAML_METADATA_ENDPOINT_SUPER_TENANT)
+                                : equalTo(SAML_METADATA_ENDPOINT_TENANT));
+
+        String[] destinationUrls = response.jsonPath().getString("destinationURLs")
+                .replace("[", "").replace("]", "").split(",");
+        if (MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(context.getContextTenant().getDomain())) {
+            Assert.assertArrayEquals(new String[]{SAML_SSO_URL_SUPER_TENANT}, destinationUrls);
+        } else {
+            Assert.assertArrayEquals(new String[]{SAML_SSO_URL_TENANT}, destinationUrls);
+        }
+    }
+
+    @Test(dependsOnMethods = {"testGetSAMLInboundAuthConfigs"})
+    public void testUpdateSAMLInboundAuthConfigs() throws IOException {
+
+        String body = readResource("update-saml-inbound-auth-configs.json");
+        Response response = getResponseOfPatch(SAML_INBOUND_AUTH_CONFIG_API_PATH, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK);
+
+        response = getResponseOfGet(SAML_INBOUND_AUTH_CONFIG_API_PATH);
+
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("destinationURLs", notNullValue())
+                .body("metadataValidityPeriod", equalTo(120))
+                .body("enableMetadataSigning", equalTo(true));
+
+        String[] destinationUrls = response.jsonPath().getString("destinationURLs")
+                .replace("[", "").replace("]", "").replace(" ", "").split(",");
+        Assert.assertEquals(2, destinationUrls.length);
+        Assert.assertTrue(Arrays.asList(destinationUrls).contains("https://localhost:9853/test/updated"));
+    }
+
+    @Test
+    public void testGetPassiveSTSInboundAuthConfigs() throws XPathExpressionException {
+
+        Response response = getResponseOfGet(PASSIVE_STS_INBOUND_AUTH_CONFIG_API_PATH);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("enableRequestSigning", equalTo(false))
+                .body("passiveSTSUrl", equalTo(PASSIVE_STS_URL));
+    }
+
+    @Test(dependsOnMethods = {"testGetPassiveSTSInboundAuthConfigs"})
+    public void testUpdatePassiveSTSInboundAuthConfigs() throws IOException {
+
+        String body = readResource("update-passive-sts-inbound-auth-configs.json");
+        Response response = getResponseOfPatch(PASSIVE_STS_INBOUND_AUTH_CONFIG_API_PATH, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK);
+
+        response = getResponseOfGet(PASSIVE_STS_INBOUND_AUTH_CONFIG_API_PATH);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("enableRequestSigning", equalTo(true));
     }
 }
