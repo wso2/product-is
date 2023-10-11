@@ -314,7 +314,7 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
         return "Basic " + Base64.encodeBase64String((username + ":" + password).getBytes()).trim();
     }
 
-    @Test(alwaysRun = true, groups = "wso2.is", priority = 1, description = "Create a service provider with " +
+    @Test(alwaysRun = true, groups = "wso2.is", priority = 9, description = "Create a service provider with " +
             "additional OIDC properties")
     public void testCreateServiceProviderRequestWithAdditionalParameters() throws IOException {
 
@@ -363,7 +363,7 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
         client_id = ((JSONObject) responseObj).get("client_id").toString();
 
         assertNotNull(client_id, "client_id cannot be null");
-
+        testDeleteServiceProvider();
     }
 
 }
