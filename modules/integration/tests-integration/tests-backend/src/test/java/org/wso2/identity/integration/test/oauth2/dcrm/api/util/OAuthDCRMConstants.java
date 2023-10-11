@@ -46,6 +46,23 @@ public class OAuthDCRMConstants {
     public static final String GRANT_TYPE_AUTHORIZATION_CODE = "authorization_code";
     public static final String GRANT_TYPE_PASSWORD = "password";
 
+    public static final String TOKEN_AUTH_METHOD =  "token_endpoint_auth_method";
+    public static final String TOKEN_AUTH_SIGNATURE_ALGORITHM = "token_endpoint_auth_signing_alg";
+    public static final String SECTOR_IDENTIFIER_URI = "sector_identifier_uri";
+    public static final String ID_TOKEN_SIGNATURE_ALGORITHM = "id_token_signed_response_alg";
+    public static final String ID_TOKEN_ENCRYPTION_ALGORITHM = "id_token_encrypted_response_alg";
+    public static final String ID_TOKEN_ENCRYPTION_METHOD = "id_token_encrypted_response_enc";
+    public static final String AUTH_RESPONSE_SIGNATURE_ALGORITHM = "authorization_signed_response_alg";
+    public static final String REQUEST_OBJECT_SIGNATURE_ALGORITHM = "request_object_signing_alg";
+    public static final String TLS_SUBJECT_DN = "tls_client_auth_subject_dn";
+    public static final String IS_PUSH_AUTH = "require_pushed_authorization_requests";
+    public static final String IS_SIGNED_REQUEST_OBJECT = "require_signed_request_object";
+    public static final String IS_CERTIFICATE_BOUND_ACCESS_TOKEN = "tls_client_certificate_bound_access_tokens";
+    public static final String SUBJECT_TYPE = "subject_type";
+    public static final String REQUEST_OBJECT_ENCRYPTION_ALGORITHM = "request_object_encryption_alg";
+    public static final String REQUEST_OBJECT_ENCRYPTION_METHOD = "request_object_encryption_enc";
+
+
 
 
 }

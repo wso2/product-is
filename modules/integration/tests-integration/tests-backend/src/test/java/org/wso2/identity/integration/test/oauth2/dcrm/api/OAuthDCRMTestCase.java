@@ -314,4 +314,56 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
         return "Basic " + Base64.encodeBase64String((username + ":" + password).getBytes()).trim();
     }
 
+    @Test(alwaysRun = true, groups = "wso2.is", priority = 1, description = "Create a service provider with " +
+            "additional OIDC properties")
+    public void testCreateServiceProviderRequestWithAdditionalParameters() throws IOException {
+
+        HttpPost request = new HttpPost(getPath());
+        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+        request.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
+
+        JSONArray grantTypes = new JSONArray();
+        grantTypes.add(OAuthDCRMConstants.GRANT_TYPE_AUTHORIZATION_CODE);
+        grantTypes.add(OAuthDCRMConstants.GRANT_TYPE_IMPLICIT);
+
+        JSONArray redirectURI = new JSONArray();
+        redirectURI.add(OAuthDCRMConstants.REDIRECT_URI);
+
+        JSONObject obj = new JSONObject();
+        obj.put(OAuthDCRMConstants.CLIENT_NAME, OAuthDCRMConstants.APPLICATION_NAME);
+        obj.put(OAuthDCRMConstants.GRANT_TYPES, grantTypes);
+        obj.put(OAuthDCRMConstants.REDIRECT_URIS, redirectURI);
+        obj.put(OAuthDCRMConstants.TOKEN_AUTH_METHOD, "private_key_jwt");
+        obj.put(OAuthDCRMConstants.TOKEN_AUTH_SIGNATURE_ALGORITHM, "PS256");
+        obj.put(OAuthDCRMConstants.SECTOR_IDENTIFIER_URI, "https://mocki.io/v1/04b49547-0ae2-4049-8d1c-42648e633001");
+        obj.put(OAuthDCRMConstants.ID_TOKEN_SIGNATURE_ALGORITHM, "PS256");
+        obj.put(OAuthDCRMConstants.ID_TOKEN_ENCRYPTION_ALGORITHM, "RSA-OAEP");
+        obj.put(OAuthDCRMConstants.ID_TOKEN_ENCRYPTION_METHOD, "A128GCM");
+        obj.put(OAuthDCRMConstants.AUTH_RESPONSE_SIGNATURE_ALGORITHM, "PS256");
+        obj.put(OAuthDCRMConstants.REQUEST_OBJECT_SIGNATURE_ALGORITHM, "PS256");
+        obj.put(OAuthDCRMConstants.REQUEST_OBJECT_ENCRYPTION_ALGORITHM, "RSA-OAEP");
+        obj.put(OAuthDCRMConstants.REQUEST_OBJECT_ENCRYPTION_METHOD, "A128GCM");
+        obj.put(OAuthDCRMConstants.TLS_SUBJECT_DN, "dfrrfc");
+        obj.put(OAuthDCRMConstants.IS_SIGNED_REQUEST_OBJECT, true);
+        obj.put(OAuthDCRMConstants.IS_PUSH_AUTH, true);
+        obj.put(OAuthDCRMConstants.IS_CERTIFICATE_BOUND_ACCESS_TOKEN, true);
+        obj.put(OAuthDCRMConstants.SUBJECT_TYPE, "pairwise");
+
+        StringEntity entity = new StringEntity(obj.toJSONString());
+        request.setEntity(entity);
+
+        HttpResponse response = client.execute(request);
+        assertEquals(response.getStatusLine().getStatusCode(), 201, "Service Provider " +
+                "has not been created successfully");
+
+        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+
+        Object responseObj = JSONValue.parse(rd);
+        EntityUtils.consume(response.getEntity());
+        client_id = ((JSONObject) responseObj).get("client_id").toString();
+
+        assertNotNull(client_id, "client_id cannot be null");
+
+    }
+
 }
