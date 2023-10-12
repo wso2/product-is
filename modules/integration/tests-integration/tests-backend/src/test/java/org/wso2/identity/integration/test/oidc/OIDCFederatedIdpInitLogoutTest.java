@@ -179,7 +179,7 @@ public class OIDCFederatedIdpInitLogoutTest extends AbstractIdentityFederationTe
     public OIDCFederatedIdpInitLogoutTest(TestUserMode userMode) throws Exception {
 
         context = new AutomationContext("IDENTITY", userMode);
-        this.username = context.getContextTenant().getTenantAdmin().getUserName();
+        this.username = context.getContextTenant().getTenantAdmin().getUserNameWithoutDomain();
         this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
     }
 

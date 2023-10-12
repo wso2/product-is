@@ -116,7 +116,7 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
     private static final String SECONDARY_IS_IDP_CALLBACK_URL = "https://localhost:9854/commonauth";
     private static final String SECONDARY_IS_TOKEN_ENDPOINT = "https://localhost:9854/oauth2/token";
     private static final String SECONDARY_IS_LOGOUT_ENDPOINT = "https://localhost:9854/oidc/logout";
-    private static final String SECONDARY_IS_AUTHORIZE_ENDPOINT = "https://localhost:9854/oauth2/authorize";
+    private String SECONDARY_IS_AUTHORIZE_ENDPOINT;
     private static final String HTTPS_LOCALHOST_SERVICES = "https://localhost:%s/";
     private String secondaryISClientID;
     private String secondaryISClientSecret;
@@ -146,7 +146,7 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
     public OIDCIdentityFederationTestCase(TestUserMode userMode) throws Exception {
 
         context = new AutomationContext("IDENTITY", userMode);
-        this.username = context.getContextTenant().getTenantAdmin().getUserName();
+        this.username = context.getContextTenant().getTenantAdmin().getUserNameWithoutDomain();
         this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
     }
 
@@ -154,6 +154,7 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
     public void initTest() throws Exception {
 
         super.initTest();
+        SECONDARY_IS_AUTHORIZE_ENDPOINT = addTenantToURL( "https://localhost:9854/oauth2/authorize", tenantInfo.getDomain());
 
         createServiceClients(PORT_OFFSET_0, new IdentityConstants.ServiceClientType[]{
                 IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT,
@@ -643,6 +644,7 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("consent", "deny"));
+        //
 
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters, SECONDARY_IS_LOGOUT_ENDPOINT);
         return response;

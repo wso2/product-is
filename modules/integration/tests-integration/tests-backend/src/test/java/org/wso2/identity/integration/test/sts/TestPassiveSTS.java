@@ -59,12 +59,13 @@ public class TestPassiveSTS extends ISIntegrationTest {
     private static final String EMAIL_CLAIM_URI = "http://wso2.org/claims/emailaddress";
     private static final String GIVEN_NAME_CLAIM_URI = "http://wso2.org/claims/givenname";
     private static final String PASSIVE_STS_SAMPLE_APP_URL = "http://localhost:8490/PassiveSTSSampleApp";
-    private static final String COMMON_AUTH_URL =
-            "https://localhost:9853/commonauth";
+    private static String COMMON_AUTH_URL;
+
     private static final String HTTP_RESPONSE_HEADER_LOCATION = "location";
     public final static String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.6)";
 
     private String username;
+    private String usernameWithoutTenantDomain;
     private String userPassword;
     private String tenantDomain;
 
@@ -93,8 +94,10 @@ public class TestPassiveSTS extends ISIntegrationTest {
         super.init(userMode);
         AutomationContext context = new AutomationContext("IDENTITY", userMode);
         this.username = context.getContextTenant().getTenantAdmin().getUserName();
+        this.usernameWithoutTenantDomain = context.getContextTenant().getTenantAdmin().getUserNameWithoutDomain();
         this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
         this.tenantDomain = context.getContextTenant().getDomain();
+        COMMON_AUTH_URL = getTenantQualifiedURL("https://localhost:9853/commonauth", tenantDomain);
     }
 
     @BeforeClass(alwaysRun = true)
@@ -219,6 +222,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
         cookieStore.clear();
         HttpPost request = new HttpPost(COMMON_AUTH_URL);
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        // changed to username
         urlParameters.add(new BasicNameValuePair("username", username));
         urlParameters.add(new BasicNameValuePair("password", userPassword));
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));

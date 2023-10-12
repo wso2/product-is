@@ -44,13 +44,13 @@ public class OIDCMetadataTest extends ISIntegrationTest {
     private static final String TOKEN_ENDPOINT_TENANT =
             "https://localhost:9853/t/wso2.com/oauth2/token/.well-known/openid-configuration";
     private static final String TOKEN_ENDPOINT_WITH_SUPER_TENANT_AS_PATH_PARAM =
-            "https://localhost:9853/t/carbon.super/oauth2/token/.well-known/openid-configuration";
+            "https://localhost:9853/oauth2/token/.well-known/openid-configuration";
     private static final String OIDCDISCOVERY_ENDPOINT_SUPER_TENANT =
             "https://localhost:9853/oauth2/oidcdiscovery/.well-known/openid-configuration";
     private static final String OIDCDISCOVERY_ENDPOINT_TENANT =
             "https://localhost:9853/t/wso2.com/oauth2/oidcdiscovery/.well-known/openid-configuration";
     private static final String OIDCDISCOVERY_ENDPOINT_WITH_SUPER_TENANT_AS_PATH_PARAM =
-            "https://localhost:9853/t/carbon.super/oauth2/oidcdiscovery/.well-known/openid-configuration";
+            "https://localhost:9853/oauth2/oidcdiscovery/.well-known/openid-configuration";
     private static final String INTROSPECTION_ENDPOINT_SUPER_TENANT = "https://localhost:9853/oauth2/introspect";
     private static final String INTROSPECTION_ENDPOINT_TENANT = "https://localhost:9853/t/wso2.com/oauth2/introspect";
     private static final String CHECK_SESSION_IFRAME = "/oidc/checksession";

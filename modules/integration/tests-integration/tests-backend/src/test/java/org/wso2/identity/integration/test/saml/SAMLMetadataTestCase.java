@@ -40,7 +40,7 @@ public class SAMLMetadataTestCase extends ISIntegrationTest {
     private static final String SAML_METADATA_ENDPOINT_TENANT =
             "https://localhost:9853/t/wso2.com/identity/metadata/saml2";
     private static final String SAML_METADATA_ENDPOINT_WITH_SUPER_TENANT_AS_PATH_PARAM =
-            "https://localhost:9853/t/carbon.super/identity/metadata/saml2";
+            "https://localhost:9853/identity/metadata/saml2";
     private static final String SAML_SSO_ENDPOINT_TENANT = "https://localhost:9853/t/wso2.com/samlsso";
     private static final String SAML_SSO_ENDPOINT_SUPER_TENANT = "https://localhost:9853/samlsso";
     private static final String SAMLARTRESOLVE_ENDPOINT = "https://localhost:9853/samlartresolve";

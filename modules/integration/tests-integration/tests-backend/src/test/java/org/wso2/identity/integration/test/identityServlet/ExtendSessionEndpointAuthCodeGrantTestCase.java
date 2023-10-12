@@ -103,7 +103,7 @@ public class ExtendSessionEndpointAuthCodeGrantTestCase extends OAuth2ServiceAbs
 
     private static final String CALLBACK_URL = "https://localhost/callback";
     private static final String IDP_SESSION_KEY_CLAIM_NAME = "isk";
-    private static final String SESSION_EXTENDER_ENDPOINT_URL = "https://localhost:9853/t/carbon.super/identity/extend-session";
+    private static final String SESSION_EXTENDER_ENDPOINT_URL = "https://localhost:9853/identity/extend-session";
     private static final String SESSION_EXTENDER_ENDPOINT_GET_URL = SESSION_EXTENDER_ENDPOINT_URL + "?%s=%s";
     private static final String SESSIONS_ENDPOINT_URI = "https://localhost:9853/api/users/v1/me/sessions";
 

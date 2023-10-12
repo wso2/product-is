@@ -105,7 +105,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
 
         super.init(userMode);
         context = new AutomationContext("IDENTITY", userMode);
-        this.username = context.getContextTenant().getTenantAdmin().getUserName();
+        this.username = context.getContextTenant().getTenantAdmin().getUserNameWithoutDomain();
         this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
     }
 
@@ -160,7 +160,8 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
         urlParameters.add(new BasicNameValuePair("grantType", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
         urlParameters.add(new BasicNameValuePair("consumerKey", consumerKey));
         urlParameters.add(new BasicNameValuePair("callbackurl", OAuth2Constant.CALLBACK_URL));
-        urlParameters.add(new BasicNameValuePair("authorizeEndpoint", OAuth2Constant.APPROVAL_URL));
+        urlParameters.add(new BasicNameValuePair("authorizeEndpoint",
+                addTenantToURL( OAuth2Constant.APPROVAL_URL, tenantInfo.getDomain())));
         urlParameters.add(new BasicNameValuePair("authorize", OAuth2Constant.AUTHORIZE_PARAM));
         urlParameters.add(new BasicNameValuePair("scope", OAuth2Constant.OAUTH2_SCOPE_OPENID + " "
                 + OAuth2Constant.OAUTH2_SCOPE_EMAIL));

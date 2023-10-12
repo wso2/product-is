@@ -97,7 +97,7 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
         super.init(samlConfigOne.getUserMode());
         super.testInit();
 
-        tenantedSamlSSOUrl = addTenantToURL(SAML_SSO_URL, tenantInfo.getDomain());
+        tenantedSamlSSOUrl = addTenantToURL( SAML_SSO_URL, tenantInfo.getDomain());
         tenantedCommonAuthUrl = getTenantQualifiedURL(COMMON_AUTH_URL, tenantInfo.getDomain());
         userId = super.addUser(samlConfigOne);
 
@@ -171,7 +171,7 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
             String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
             response = Utils.sendPOSTMessage(sessionKey, tenantedSamlSSOUrl, USER_AGENT, ACS_URL, samlConfigOne.getApp().
                     getArtifact(), samlConfigOne.getUser().getUsername(), samlConfigOne.getUser().getPassword()
-                    , httpClient, tenantedCommonAuthUrl);
+                    , httpClient, tenantedSamlSSOUrl);
 
             if (Utils.requestMissingClaims(response)) {
                 String pastrCookie = Utils.getPastreCookie(response);

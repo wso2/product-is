@@ -117,7 +117,7 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
 
         //When accessing the below endpoint from with invalid session it should provide a message with login_required
         OIDCApplication application = applications.get(OIDCUtilTest.playgroundAppOneAppName);
-        URI uri = new URIBuilder(OAuth2Constant.APPROVAL_URL)
+        URI uri = new URIBuilder(addTenantToURL( OAuth2Constant.APPROVAL_URL, tenantInfo.getDomain()))
                 .addParameter("client_id", application.getClientId())
                 .addParameter("scope", "openid")
                 .addParameter("response_type", "code")
@@ -194,7 +194,8 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
                                               HttpClient client, CookieStore cookieStore)
             throws Exception {
 
-        List<NameValuePair> urlParameters = OIDCUtilTest.getNameValuePairs(application);
+        List<NameValuePair> urlParameters = OIDCUtilTest.getNameValuePairs(application, addTenantToURL( 
+                OAuth2Constant.APPROVAL_URL, tenantInfo.getDomain()));
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters, String.format
                 (OIDCUtilTest.targetApplicationUrl, application.getApplicationContext() + OAuth2Constant.PlaygroundAppPaths
                         .appUserAuthorizePath));
