@@ -223,7 +223,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
         HttpPost request = new HttpPost(COMMON_AUTH_URL);
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         // changed to username
-        urlParameters.add(new BasicNameValuePair("username", username));
+        urlParameters.add(new BasicNameValuePair("username", usernameWithoutTenantDomain + "@" + tenantDomain));
         urlParameters.add(new BasicNameValuePair("password", userPassword));
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
         request.setEntity(new UrlEncodedFormEntity(urlParameters));

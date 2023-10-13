@@ -334,13 +334,14 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
         urlParameters.add(new BasicNameValuePair("password", PASSWORD));
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
 
-        return sendPostRequestWithParameters(client, urlParameters, COMMON_AUTH_URL);
+        return sendPostRequestWithParameters(client, urlParameters, getTenantQualifiedURL(COMMON_AUTH_URL, tenantInfo.getDomain()));
     }
 
     private JSONObject introspectToken() throws Exception {
         String introspectionUrl = tenantInfo.getDomain().equalsIgnoreCase("carbon.super") ?
                 OAuth2Constant.INTRO_SPEC_ENDPOINT : OAuth2Constant.TENANT_INTRO_SPEC_ENDPOINT;
-        return introspectTokenWithTenant(client, accessToken, introspectionUrl, username, userPassword);
+        return introspectTokenWithTenant(client, accessToken, introspectionUrl,
+                username + "@" + tenantInfo.getDomain(), userPassword);
     }
 
     private void addAdminUser() throws Exception {
