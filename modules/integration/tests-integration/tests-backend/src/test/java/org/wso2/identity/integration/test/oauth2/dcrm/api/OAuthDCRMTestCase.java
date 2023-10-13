@@ -330,7 +330,7 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
         redirectURI.add(OAuthDCRMConstants.REDIRECT_URI);
 
         JSONObject obj = new JSONObject();
-        obj.put(OAuthDCRMConstants.CLIENT_NAME, OAuthDCRMConstants.APPLICATION_NAME);
+        obj.put(OAuthDCRMConstants.CLIENT_NAME, "DCR_1");
         obj.put(OAuthDCRMConstants.GRANT_TYPES, grantTypes);
         obj.put(OAuthDCRMConstants.REDIRECT_URIS, redirectURI);
         obj.put(OAuthDCRMConstants.TOKEN_AUTH_METHOD, "private_key_jwt");
