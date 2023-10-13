@@ -398,7 +398,7 @@ public class CrossProtocolLogoutTestCase extends ISIntegrationTest {
         urlParameters.add(new BasicNameValuePair(SCOPE_APPROVAL, APPROVE));
         urlParameters.add(new BasicNameValuePair("sessionDataKeyConsent", sessionDataKeyConsent));
         return sendPostRequestWithParameters(urlParameters,
-                addTenantToURL( OAuth2Constant.APPROVAL_URL, tenantInfo.getDomain()));
+                getTenantQualifiedURL( OAuth2Constant.APPROVAL_URL, tenantInfo.getDomain()));
     }
 
     public HttpResponse sendLoginPost(String sessionDataKey) throws IOException {
@@ -436,7 +436,7 @@ public class CrossProtocolLogoutTestCase extends ISIntegrationTest {
         urlParameters.add(new BasicNameValuePair("consumerKey", oidcAppClientId));
         urlParameters.add(new BasicNameValuePair("callbackurl", OAuth2Constant.CALLBACK_URL));
         urlParameters.add(new BasicNameValuePair("authorizeEndpoint",
-                addTenantToURL( OAuth2Constant.APPROVAL_URL, tenantInfo.getDomain())));
+                getTenantQualifiedURL( OAuth2Constant.APPROVAL_URL, tenantInfo.getDomain())));
         urlParameters.add(new BasicNameValuePair("authorize", OAuth2Constant.AUTHORIZE_PARAM));
         urlParameters.add(new BasicNameValuePair("scope", OAuth2Constant.OAUTH2_SCOPE_OPENID_WITH_INTERNAL_LOGIN));
         return urlParameters;

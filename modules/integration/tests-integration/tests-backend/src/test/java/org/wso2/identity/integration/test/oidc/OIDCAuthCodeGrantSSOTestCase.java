@@ -117,7 +117,7 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
 
         //When accessing the below endpoint from with invalid session it should provide a message with login_required
         OIDCApplication application = applications.get(OIDCUtilTest.playgroundAppOneAppName);
-        URI uri = new URIBuilder(addTenantToURL( OAuth2Constant.APPROVAL_URL, tenantInfo.getDomain()))
+        URI uri = new URIBuilder(getTenantQualifiedURL( OAuth2Constant.APPROVAL_URL, tenantInfo.getDomain()))
                 .addParameter("client_id", application.getClientId())
                 .addParameter("scope", "openid")
                 .addParameter("response_type", "code")

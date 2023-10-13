@@ -143,7 +143,7 @@ public class OAuth2ServiceImplicitGrantTestCase extends OAuth2ServiceAbstractInt
 		urlParameters.add(new BasicNameValuePair("scope", scopes));
 		urlParameters.add(new BasicNameValuePair("callbackurl", OAuth2Constant.CALLBACK_URL));
 		urlParameters.add(new BasicNameValuePair("authorizeEndpoint",
-                addTenantToURL( OAuth2Constant.APPROVAL_URL, tenantInfo.getDomain())));
+                getTenantQualifiedURL( OAuth2Constant.APPROVAL_URL, tenantInfo.getDomain())));
 		urlParameters.add(new BasicNameValuePair("authorize", OAuth2Constant.AUTHORIZE_PARAM));
 		urlParameters.add(new BasicNameValuePair("consumerSecret", consumerSecret));
 
@@ -211,7 +211,7 @@ public class OAuth2ServiceImplicitGrantTestCase extends OAuth2ServiceAbstractInt
 		urlParameters.add(new BasicNameValuePair("sessionDataKeyConsent", sessionDataKeyConsent));
 
 		HttpResponse response = sendPostRequestWithParameters(client, urlParameters,
-		                              addTenantToURL( OAuth2Constant.APPROVAL_URL, tenantInfo.getDomain()));
+                getTenantQualifiedURL( OAuth2Constant.APPROVAL_URL, tenantInfo.getDomain()));
 		Assert.assertNotNull(response, "Approval response is invalid.");
 
 		Header locationHeader =
