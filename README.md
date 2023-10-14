@@ -20,10 +20,10 @@ Welcome to WSO2 Identity Server
 [![Twitter](https://img.shields.io/twitter/follow/wso2.svg?style=social&label=Follow)](https://twitter.com/intent/follow?screen_name=wso2)
 ---
 
-WSO2 Identity Server is an open source Identity and Access Management solution federating and managing identities across 
+WSO2 Identity Server is an open-source Identity and Access Management solution federating and managing identities across 
 both enterprise and cloud service environments. It supports a wide array of authentication 
 protocols such as SAML 2.0 Web SSO, OpenID, OAuth 2.0, OpenID Connect and WS-Federation Passive. 
-It supports role based authorization and fined grained authorization with XACML 2.0/3.0 while inbound/outbound provisioning is 
+It supports role-based authorization and fine-grained authorization with XACML 2.0/3.0 while inbound/outbound provisioning is 
 supported through SCIM.
 
 This is based on the revolutionary WSO2 Carbon framework. All the major features have been developed as pluggable Carbon components.
