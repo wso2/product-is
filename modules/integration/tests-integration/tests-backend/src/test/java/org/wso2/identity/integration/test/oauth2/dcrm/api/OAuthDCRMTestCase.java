@@ -17,6 +17,7 @@
  */
 package org.wso2.identity.integration.test.oauth2.dcrm.api;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
@@ -314,6 +315,14 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
         return "Basic " + Base64.encodeBase64String((username + ":" + password).getBytes()).trim();
     }
 
+    private JSONObject getPayload(HttpResponse response) throws IOException {
+
+        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+        Object responseObj = JSONValue.parse(rd);
+        EntityUtils.consume(response.getEntity());
+        return (JSONObject) responseObj;
+    }
+
     @Test(alwaysRun = true, groups = "wso2.is", priority = 9, description = "Create a service provider with " +
             "additional OIDC properties")
     public void testCreateServiceProviderRequestWithAdditionalParameters() throws IOException {
@@ -339,7 +348,6 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
         obj.put(OAuthDCRMConstants.ID_TOKEN_SIGNATURE_ALGORITHM, "PS256");
         obj.put(OAuthDCRMConstants.ID_TOKEN_ENCRYPTION_ALGORITHM, "RSA-OAEP");
         obj.put(OAuthDCRMConstants.ID_TOKEN_ENCRYPTION_METHOD, "A128GCM");
-        obj.put(OAuthDCRMConstants.AUTH_RESPONSE_SIGNATURE_ALGORITHM, "PS256");
         obj.put(OAuthDCRMConstants.REQUEST_OBJECT_SIGNATURE_ALGORITHM, "PS256");
         obj.put(OAuthDCRMConstants.REQUEST_OBJECT_ENCRYPTION_ALGORITHM, "RSA-OAEP");
         obj.put(OAuthDCRMConstants.REQUEST_OBJECT_ENCRYPTION_METHOD, "A128GCM");
@@ -348,6 +356,7 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
         obj.put(OAuthDCRMConstants.IS_PUSH_AUTH, true);
         obj.put(OAuthDCRMConstants.IS_CERTIFICATE_BOUND_ACCESS_TOKEN, true);
         obj.put(OAuthDCRMConstants.SUBJECT_TYPE, "pairwise");
+        obj.put(OAuthDCRMConstants.JWKS_URI, "https://localhost:9443/oauth2/jwks");
 
         StringEntity entity = new StringEntity(obj.toJSONString());
         request.setEntity(entity);
@@ -356,13 +365,25 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
         assertEquals(response.getStatusLine().getStatusCode(), 201, "Service Provider " +
                 "has not been created successfully");
 
-        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-
-        Object responseObj = JSONValue.parse(rd);
-        EntityUtils.consume(response.getEntity());
-        client_id = ((JSONObject) responseObj).get("client_id").toString();
-
+        JSONObject createResponsePayload  = getPayload(response);
+        client_id = ((JSONObject) createResponsePayload).get("client_id").toString();
         assertNotNull(client_id, "client_id cannot be null");
+
+        HttpGet getRequest = new HttpGet(getPath() + client_id);
+        getRequest.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+        getRequest.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
+
+        HttpResponse getResponse = client.execute(getRequest);
+        assertEquals(getResponse.getStatusLine().getStatusCode(), 200, "Service provider request " +
+                "has not returned with successful response");
+
+        JSONObject getResponsePayload = getPayload(getResponse);
+        getResponsePayload.remove("client_id");
+        getResponsePayload.remove("client_secret");
+        getResponsePayload.remove("client_secret_expires_at");
+        ObjectMapper mapper = new ObjectMapper();
+        assertEquals(mapper.readTree(getResponsePayload.toJSONString()), mapper.readTree(obj.toJSONString()),
+                "Response payload should be equal.");
         testDeleteServiceProvider();
     }
 
