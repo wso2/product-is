@@ -25,6 +25,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
@@ -360,14 +361,20 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
 
         StringEntity entity = new StringEntity(obj.toJSONString());
         request.setEntity(entity);
+        ObjectMapper mapper = new ObjectMapper();
 
         HttpResponse response = client.execute(request);
         assertEquals(response.getStatusLine().getStatusCode(), 201, "Service Provider " +
                 "has not been created successfully");
-
         JSONObject createResponsePayload  = getPayload(response);
         client_id = ((JSONObject) createResponsePayload).get("client_id").toString();
         assertNotNull(client_id, "client_id cannot be null");
+
+        createResponsePayload.remove("client_id");
+        createResponsePayload.remove("client_secret");
+        createResponsePayload.remove("client_secret_expires_at");
+        assertEquals(mapper.readTree(createResponsePayload.toJSONString()), mapper.readTree(obj.toJSONString()),
+                "Response payload should be equal.");
 
         HttpGet getRequest = new HttpGet(getPath() + client_id);
         getRequest.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
@@ -381,10 +388,63 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
         getResponsePayload.remove("client_id");
         getResponsePayload.remove("client_secret");
         getResponsePayload.remove("client_secret_expires_at");
-        ObjectMapper mapper = new ObjectMapper();
+
         assertEquals(mapper.readTree(getResponsePayload.toJSONString()), mapper.readTree(obj.toJSONString()),
                 "Response payload should be equal.");
-        testDeleteServiceProvider();
     }
 
+
+    @Test(alwaysRun = true, groups = "wso2.is", priority = 10, description = "Create a service provider with " +
+            "additional OIDC properties")
+    public void testUpdateServiceProviderRequestWithAdditionalParameters() throws IOException {
+
+        HttpPut request = new HttpPut(getPath() + client_id);
+        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+        request.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
+
+        JSONArray grantTypes = new JSONArray();
+        grantTypes.add(OAuthDCRMConstants.GRANT_TYPE_AUTHORIZATION_CODE);
+        grantTypes.add(OAuthDCRMConstants.GRANT_TYPE_IMPLICIT);
+
+        JSONArray redirectURI = new JSONArray();
+        redirectURI.add(OAuthDCRMConstants.REDIRECT_URI);
+
+        JSONObject obj = new JSONObject();
+        obj.put(OAuthDCRMConstants.CLIENT_NAME, "DCR_1");
+        obj.put(OAuthDCRMConstants.GRANT_TYPES, grantTypes);
+        obj.put(OAuthDCRMConstants.REDIRECT_URIS, redirectURI);
+        obj.put(OAuthDCRMConstants.TOKEN_AUTH_METHOD, "tls_client_auth");
+        obj.put(OAuthDCRMConstants.TOKEN_AUTH_SIGNATURE_ALGORITHM, "ES256");
+        obj.put(OAuthDCRMConstants.SECTOR_IDENTIFIER_URI, "https://mocki.io/v1/04b49547-0ae2-4049-8d1c-42648e633001");
+        obj.put(OAuthDCRMConstants.ID_TOKEN_SIGNATURE_ALGORITHM, "PS256");
+        obj.put(OAuthDCRMConstants.ID_TOKEN_ENCRYPTION_ALGORITHM, "RSA-OAEP");
+        obj.put(OAuthDCRMConstants.ID_TOKEN_ENCRYPTION_METHOD, "A128GCM");
+        obj.put(OAuthDCRMConstants.REQUEST_OBJECT_SIGNATURE_ALGORITHM, "PS256");
+        obj.put(OAuthDCRMConstants.REQUEST_OBJECT_ENCRYPTION_ALGORITHM, "RSA-OAEP");
+        obj.put(OAuthDCRMConstants.REQUEST_OBJECT_ENCRYPTION_METHOD, "A128GCM");
+        obj.put(OAuthDCRMConstants.TLS_SUBJECT_DN, "dfrrfc");
+        obj.put(OAuthDCRMConstants.IS_SIGNED_REQUEST_OBJECT, true);
+        obj.put(OAuthDCRMConstants.IS_PUSH_AUTH, true);
+        obj.put(OAuthDCRMConstants.IS_CERTIFICATE_BOUND_ACCESS_TOKEN, true);
+        obj.put(OAuthDCRMConstants.SUBJECT_TYPE, "pairwise");
+        obj.put(OAuthDCRMConstants.JWKS_URI, "https://localhost:9443/oauth2/jwks");
+
+        StringEntity entity = new StringEntity(obj.toJSONString());
+        request.setEntity(entity);
+        ObjectMapper mapper = new ObjectMapper();
+
+        HttpResponse response = client.execute(request);
+        assertEquals(response.getStatusLine().getStatusCode(), 200, "Service Provider " +
+                "has not been created successfully");
+        JSONObject updateResponsePayload  = getPayload(response);
+        client_id = ((JSONObject) updateResponsePayload).get("client_id").toString();
+        assertNotNull(client_id, "client_id cannot be null");
+        updateResponsePayload.remove("client_id");
+        updateResponsePayload.remove("client_secret");
+        updateResponsePayload.remove("client_secret_expires_at");
+        assertEquals(mapper.readTree(updateResponsePayload.toJSONString()), mapper.readTree(obj.toJSONString()),
+                "Response payload should be equal.");
+
+        testDeleteServiceProvider();
+    }
 }
