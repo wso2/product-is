@@ -84,7 +84,7 @@ public class OAuth2ServiceErrorResponseTest extends OAuth2ServiceAbstractIntegra
         urlParameters.add(new BasicNameValuePair("redirect_uri", OAuth2Constant.CALLBACK_URL));
 
         HttpResponse response =
-                sendPostRequestWithParameters(client, urlParameters, addTenantToURL( 
+                sendPostRequestWithParameters(client, urlParameters, getTenantQualifiedURL(
                                               OAuth2Constant.APPROVAL_URL, tenantInfo.getDomain()));
         Assert.assertNotNull(response, "Authorization request failed. Authorized response is null");
 

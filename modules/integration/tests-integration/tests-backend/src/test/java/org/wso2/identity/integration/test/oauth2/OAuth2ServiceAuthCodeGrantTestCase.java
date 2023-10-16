@@ -126,7 +126,7 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
         urlParameters.add(new BasicNameValuePair("consumerKey", consumerKey));
         urlParameters.add(new BasicNameValuePair("callbackurl", OAuth2Constant.CALLBACK_URL));
         urlParameters.add(new BasicNameValuePair("authorizeEndpoint",
-                addTenantToURL( OAuth2Constant.APPROVAL_URL, tenantInfo.getDomain())));
+                getTenantQualifiedURL( OAuth2Constant.APPROVAL_URL, tenantInfo.getDomain())));
         urlParameters.add(new BasicNameValuePair("authorize", OAuth2Constant.AUTHORIZE_PARAM));
         urlParameters.add(new BasicNameValuePair("scope", ""));
 
@@ -374,7 +374,7 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
         urlParameters.add(new BasicNameValuePair("client_id", consumerKey));
         urlParameters.add(new BasicNameValuePair("redirect_uri", OAuth2Constant.CALLBACK_URL));
         AutomationContext automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
-        String authorizeEndpoint = addTenantToURL( automationContext.getContextUrls().getBackEndUrl()
+        String authorizeEndpoint = getTenantQualifiedURL( automationContext.getContextUrls().getBackEndUrl()
                 .replace("services/", "oauth2/authorize"), tenantInfo.getDomain());
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters, authorizeEndpoint);
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
@@ -390,7 +390,7 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("client_id", consumerKey));
         AutomationContext automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
-        String authorizeEndpoint = addTenantToURL( automationContext.getContextUrls().getBackEndUrl()
+        String authorizeEndpoint = getTenantQualifiedURL( automationContext.getContextUrls().getBackEndUrl()
                 .replace("services/", "oauth2/authorize"), tenantInfo.getDomain());
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters, authorizeEndpoint);
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
