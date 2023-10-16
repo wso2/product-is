@@ -179,7 +179,7 @@ public class ISIntegrationTest {
      * @param tenantDomain              Tenanted domain.
      * @return Tenant qualified URL without hostname.
      */
-    public String getTenantQualifiedURLWithoutHostName(String endpointURLWithHostname, String tenantDomain) {
+    public String getTenantedRelativePath(String endpointURLWithHostname, String tenantDomain) {
 
         if(!tenantDomain.isBlank() && !tenantDomain.equalsIgnoreCase(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
             endpointURLWithHostname = TENANTED_URL_PATH_SPECIFIER + tenantDomain + endpointURLWithHostname;
