@@ -86,7 +86,7 @@ public class ApplicationAuthorizedAppsSuccessTest extends UserAuthorizedAppsBase
 
         super.init(userMode);
         this.context = isServer;
-        this.authenticatingUserName = context.getContextTenant().getTenantAdmin().getUserName();
+        this.authenticatingUserName = context.getContextTenant().getTenantAdmin().getUserNameWithoutDomain();
         this.authenticatingCredential = context.getContextTenant().getTenantAdmin().getPassword();
         this.tenant = context.getContextTenant().getDomain();
 
