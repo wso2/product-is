@@ -52,7 +52,6 @@ public class OAuthDCRMConstants {
     public static final String ID_TOKEN_SIGNATURE_ALGORITHM = "id_token_signed_response_alg";
     public static final String ID_TOKEN_ENCRYPTION_ALGORITHM = "id_token_encrypted_response_alg";
     public static final String ID_TOKEN_ENCRYPTION_METHOD = "id_token_encrypted_response_enc";
-    public static final String AUTH_RESPONSE_SIGNATURE_ALGORITHM = "authorization_signed_response_alg";
     public static final String REQUEST_OBJECT_SIGNATURE_ALGORITHM = "request_object_signing_alg";
     public static final String TLS_SUBJECT_DN = "tls_client_auth_subject_dn";
     public static final String IS_PUSH_AUTH = "require_pushed_authorization_requests";
@@ -61,6 +60,7 @@ public class OAuthDCRMConstants {
     public static final String SUBJECT_TYPE = "subject_type";
     public static final String REQUEST_OBJECT_ENCRYPTION_ALGORITHM = "request_object_encryption_alg";
     public static final String REQUEST_OBJECT_ENCRYPTION_METHOD = "request_object_encryption_enc";
+    public static final String JWKS_URI = "jwks_uri";
 
 
 
