@@ -70,7 +70,7 @@ public class SAMLQueryProfileTestCase extends AbstractSAMLSSOTestCase {
     private static final String APPLICATION_NAME = "SAML-SSO-Query-TestApplication";
     private static final String WSO2IS_URL = "https://localhost:9853/";
     private static final String WSO2IS_TENANT_URL = WSO2IS_URL + "t/wso2.com";
-    private static final String SAML_SSO_URL = WSO2IS_URL + "samlsso";
+    private String tenantedSamlSSOUrl;
     private static final String COMMON_AUTH_URL = WSO2IS_URL + "/commonauth";
     private static final String ACS_URL = "http://localhost:8490/%s/home.jsp";
     private static final String SAML_SSO_LOGIN_URL = "http://localhost:8490/%s/samlsso?SAML2.HTTPBinding=%s";
@@ -99,6 +99,7 @@ public class SAMLQueryProfileTestCase extends AbstractSAMLSSOTestCase {
     public void initiateTenant() throws Exception {
         // Since all the requests sign with default wso2 key, upload that public key to tenants
         super.init(TestUserMode.TENANT_ADMIN);
+        tenantedSamlSSOUrl = getTenantQualifiedURL(WSO2IS_URL + "samlsso", config.getUser().getTenantDomain());
         KeystoreMgtRestClient keystoreMgtRestClient = new KeystoreMgtRestClient(serverURL, tenantInfo);
 
         if (!keystoreMgtRestClient.checkCertInStore(KEYSTORE_ALIAS)) {
@@ -187,7 +188,7 @@ public class SAMLQueryProfileTestCase extends AbstractSAMLSSOTestCase {
 
             if (config.getHttpBinding() == AbstractSAMLSSOTestCase.HttpBinding.HTTP_POST){
                 String samlRequest = Utils.extractDataFromResponse(response, CommonConstants.SAML_REQUEST_PARAM, 5);
-                response = super.sendSAMLMessage(SAML_SSO_URL, CommonConstants.SAML_REQUEST_PARAM, samlRequest, config);
+                response = super.sendSAMLMessage(tenantedSamlSSOUrl, CommonConstants.SAML_REQUEST_PARAM, samlRequest, config);
                 EntityUtils.consume(response.getEntity());
 
                 response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, config.getApp().getArtifact(),
@@ -195,8 +196,9 @@ public class SAMLQueryProfileTestCase extends AbstractSAMLSSOTestCase {
             }
 
             String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
-            response = Utils.sendPOSTMessage(sessionKey, SAML_SSO_URL, USER_AGENT, ACS_URL, config.getApp()
-                    .getArtifact(), config.getUser().getUsername(), config.getUser().getPassword(), httpClient);
+            response = Utils.sendPOSTMessage(sessionKey, tenantedSamlSSOUrl, USER_AGENT, ACS_URL, config.getApp()
+                            .getArtifact(), config.getUser().getUsername(), config.getUser().getPassword(), httpClient,
+                    tenantedSamlSSOUrl);
 
 
             if (requestMissingClaims(response)) {
