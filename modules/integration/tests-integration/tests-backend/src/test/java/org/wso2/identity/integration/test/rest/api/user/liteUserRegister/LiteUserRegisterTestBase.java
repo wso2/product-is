@@ -38,7 +38,7 @@ import org.wso2.identity.integration.test.util.Utils;
 public class LiteUserRegisterTestBase extends RESTAPIUserTestBase {
 
     protected static final String API_USERNAME_CLAIM_PATH =
-            "/t/carbon.super/api/server/v1/claim-dialects/local/claims/aHR0cDovL3dzbzIub3JnL2NsYWltcy91c2VybmFtZQ";
+            "/api/server/v1/claim-dialects/local/claims/aHR0cDovL3dzbzIub3JnL2NsYWltcy91c2VybmFtZQ";
     protected static final String API_DEFINITION_NAME_LITE_USER_REGISTER = "api.identity.user.yaml";
     protected static final String ENABLE_EMAIL_USERNAME_DEPLOYMENT_CONFIG = "enable_email_username_deployment.toml";
     protected static final String LITE_USER_REGISTER_CLAIM_EMAIL_AS_USERNAME_JSON =

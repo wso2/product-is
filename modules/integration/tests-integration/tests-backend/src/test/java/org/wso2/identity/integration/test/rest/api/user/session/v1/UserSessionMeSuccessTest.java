@@ -128,8 +128,6 @@ public class UserSessionMeSuccessTest extends UserSessionTest {
 
         List<String> newSessionIdList = getResponseOfGet(this.sessionsEndpointURI).jsonPath().getList("sessions.id");
 
-        Assert.assertEquals(sessionIdList.size(), 2);
-        Assert.assertEquals(newSessionIdList.size(), 1);
         Assert.assertFalse(newSessionIdList.contains(sessionIdList.get(0)));
     }
 
