@@ -210,9 +210,8 @@ public class OAuth2ServiceImplicitGrantTestCase extends OAuth2ServiceAbstractInt
 		urlParameters.add(new BasicNameValuePair("consent", "approve"));
 		urlParameters.add(new BasicNameValuePair("sessionDataKeyConsent", sessionDataKeyConsent));
 
-		HttpResponse response =
-		                        sendPostRequestWithParameters(client, urlParameters,
-		                                                      OAuth2Constant.APPROVAL_URL);
+		HttpResponse response = sendPostRequestWithParameters(client, urlParameters,
+                getTenantQualifiedURL(OAuth2Constant.APPROVAL_URL, tenantInfo.getDomain()));
 		Assert.assertNotNull(response, "Approval response is invalid.");
 
 		Header locationHeader =
