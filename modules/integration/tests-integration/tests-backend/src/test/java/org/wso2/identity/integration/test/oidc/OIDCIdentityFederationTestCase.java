@@ -154,7 +154,7 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
     public void initTest() throws Exception {
 
         super.initTest();
-        SECONDARY_IS_AUTHORIZE_ENDPOINT = addTenantToURL( "https://localhost:9854/oauth2/authorize", tenantInfo.getDomain());
+        SECONDARY_IS_AUTHORIZE_ENDPOINT = getTenantQualifiedURL( "https://localhost:9854/oauth2/authorize", tenantInfo.getDomain());
 
         createServiceClients(PORT_OFFSET_0, new IdentityConstants.ServiceClientType[]{
                 IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT,
@@ -448,7 +448,7 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
     private HttpResponse sendLoginPost(HttpClient client, String sessionDataKey) throws IOException {
 
         List<NameValuePair> urlParameters = new ArrayList<>();
-        urlParameters.add(new BasicNameValuePair("username", SECONDARY_IS_TEST_USERNAME));
+        urlParameters.add(new BasicNameValuePair("username", SECONDARY_IS_TEST_USERNAME + "@carbon.super"));
         urlParameters.add(new BasicNameValuePair("password", SECONDARY_IS_TEST_PASSWORD));
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
 

@@ -87,7 +87,7 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
                 {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_POST,
                         ClaimType.LOCAL, App.SUPER_TENANT_APP_WITH_SIGNING),
                         new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_POST,
-                                ClaimType.LOCAL, App.TENANT_APP_WITHOUT_SIGNING)},
+                                ClaimType.LOCAL, App.SUPER_TENANT_APP_WITH_SAMLARTIFACT_CONFIG)},
         };
     }
 
@@ -97,7 +97,7 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
         super.init(samlConfigOne.getUserMode());
         super.testInit();
 
-        tenantedSamlSSOUrl = addTenantToURL( SAML_SSO_URL, tenantInfo.getDomain());
+        tenantedSamlSSOUrl = getTenantQualifiedURL( SAML_SSO_URL, tenantInfo.getDomain());
         tenantedCommonAuthUrl = getTenantQualifiedURL(COMMON_AUTH_URL, tenantInfo.getDomain());
         userId = super.addUser(samlConfigOne);
 
@@ -170,7 +170,7 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
 
             String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
             response = Utils.sendPOSTMessage(sessionKey, tenantedSamlSSOUrl, USER_AGENT, ACS_URL, samlConfigOne.getApp().
-                    getArtifact(), samlConfigOne.getUser().getUsername(), samlConfigOne.getUser().getPassword()
+                    getArtifact(), samlConfigOne.getUser().getTenantAwareUsername(), samlConfigOne.getUser().getPassword()
                     , httpClient, tenantedSamlSSOUrl);
 
             if (Utils.requestMissingClaims(response)) {

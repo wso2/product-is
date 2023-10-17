@@ -113,7 +113,7 @@ public class CrossProtocolLogoutTestCase extends ISIntegrationTest {
                 .setDefaultCookieSpecRegistry(cookieSpecRegistry)
                 .build();
         String baseSamlSSOUrl = identityContextUrls.getWebAppURLHttps() + "/samlsso";
-        samlSSOUrlWithTenantDomainInUrl = addTenantToURL( baseSamlSSOUrl, tenantInfo.getDomain());
+        samlSSOUrlWithTenantDomainInUrl = getTenantQualifiedURL( baseSamlSSOUrl, tenantInfo.getDomain());
         samlSSOUrl = getTenantQualifiedURL(baseSamlSSOUrl, tenantInfo.getDomain());
     }
 

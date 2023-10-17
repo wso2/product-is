@@ -194,7 +194,7 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
                                               HttpClient client, CookieStore cookieStore)
             throws Exception {
 
-        List<NameValuePair> urlParameters = OIDCUtilTest.getNameValuePairs(application, addTenantToURL( 
+        List<NameValuePair> urlParameters = OIDCUtilTest.getNameValuePairs(application, getTenantQualifiedURL(
                 OAuth2Constant.APPROVAL_URL, tenantInfo.getDomain()));
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters, String.format
                 (OIDCUtilTest.targetApplicationUrl, application.getApplicationContext() + OAuth2Constant.PlaygroundAppPaths

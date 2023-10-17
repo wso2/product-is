@@ -300,7 +300,7 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.CALLBACKURL_PLAYGROUND_NAME, OAuth2Constant
                 .CALLBACK_URL));
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.AUTHORIZE_ENDPOINT_PLAYGROUND_NAME,
-                addTenantToURL( OAuth2Constant.APPROVAL_URL, tenantInfo.getDomain())));
+                getTenantQualifiedURL( OAuth2Constant.APPROVAL_URL, tenantInfo.getDomain())));
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.AUTHORIZE_PLAYGROUND_NAME, OAuth2Constant
                 .AUTHORIZE_PARAM));
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.SCOPE_PLAYGROUND_NAME, ""));

@@ -264,7 +264,7 @@ public class AdaptiveScriptTemporaryClaimPersistenceTestCase extends AbstractAda
         }
 
         response = sendPostRequestWithParameters(client, urlParameters,
-                addTenantToURL( OAuth2Constant.APPROVAL_URL, tenantInfo.getDomain()));
+                getTenantQualifiedURL( OAuth2Constant.APPROVAL_URL, tenantInfo.getDomain()));
         Assert.assertNotNull(response, "Authorization request failed. Authorized response is null.");
         EntityUtils.consume(response.getEntity());
 
