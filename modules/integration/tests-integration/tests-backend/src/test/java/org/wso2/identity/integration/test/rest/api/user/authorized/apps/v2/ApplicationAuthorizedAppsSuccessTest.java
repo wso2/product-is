@@ -57,7 +57,11 @@ public class ApplicationAuthorizedAppsSuccessTest extends UserAuthorizedAppsBase
         super.testInit(API_VERSION, swaggerDefinition, tenant);
         initUrls("me");
         registerApplication(appName1, clientIdApp1, CLIENT_SECRET);
+
+        this.authenticatingUserName = context.getContextTenant().getTenantAdmin().getUserNameWithoutDomain();
         getTokenFromPasswordGrant(clientIdApp1, CLIENT_SECRET);
+
+        this.authenticatingUserName = context.getContextTenant().getTenantAdmin().getUserName();
     }
 
     @BeforeMethod(alwaysRun = true)
@@ -86,7 +90,7 @@ public class ApplicationAuthorizedAppsSuccessTest extends UserAuthorizedAppsBase
 
         super.init(userMode);
         this.context = isServer;
-        this.authenticatingUserName = context.getContextTenant().getTenantAdmin().getUserNameWithoutDomain();
+        this.authenticatingUserName = context.getContextTenant().getTenantAdmin().getUserName();
         this.authenticatingCredential = context.getContextTenant().getTenantAdmin().getPassword();
         this.tenant = context.getContextTenant().getDomain();
 
