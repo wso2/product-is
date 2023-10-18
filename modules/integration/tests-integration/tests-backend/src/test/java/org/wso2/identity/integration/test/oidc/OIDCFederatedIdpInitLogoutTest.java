@@ -102,7 +102,7 @@ public class OIDCFederatedIdpInitLogoutTest extends AbstractIdentityFederationTe
 
     private static final String SAML_SSO_LOGIN_URL = "http://localhost:8490/%s/samlsso?SAML2.HTTPBinding=%s";
     private static final String FEDERATED_SAML_SSO_URL =
-            "http://localhost:8490/travelocity.com-saml-tenantwithoutsigning/samlsso?SAML2.HTTPBinding=HTTP-Redirect";
+            "http://localhost:8490/travelocity.com-saml-supertenantwithoutsigning/samlsso?SAML2.HTTPBinding=HTTP-Redirect";
     private static final String PRIMARY_SAML_SSO_URL =
             "http://localhost:8490/travelocity.com/samlsso?SAML2.HTTPBinding=HTTP-Redirect";
 
@@ -117,10 +117,10 @@ public class OIDCFederatedIdpInitLogoutTest extends AbstractIdentityFederationTe
     private static final String PRIMARY_IS_SAML_NAME_ID_FORMAT =
             "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
 
-    private static final String FEDERATED_IS_SP_NAME = "travelocity.com-saml-tenantwithoutsigning";
-    private static final String FEDERATED_IS_SAML_ISSUER_NAME = "travelocity.com-saml-tenantwithoutsigning";
+    private static final String FEDERATED_IS_SP_NAME = "travelocity.com-saml-supertenantwithoutsigning";
+    private static final String FEDERATED_IS_SAML_ISSUER_NAME = "travelocity.com-saml-supertenantwithoutsigning";
     private static final String FEDERATED_IS_SAML_ACS_URL =
-            "http://localhost:8490/travelocity.com-saml-tenantwithoutsigning/home.jsp";
+            "http://localhost:8490/travelocity.com-saml-supertenantwithoutsigning/home.jsp";
 
     private static final String PRIMARY_IS_IDP_NAME = "trustedIdP";
     private static final String PRIMARY_IS_IDP_AUTHENTICATOR_NAME_OIDC = "OpenIDConnectAuthenticator";
