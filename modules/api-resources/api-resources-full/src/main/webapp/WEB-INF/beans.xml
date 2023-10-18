@@ -60,6 +60,7 @@
     <import resource="classpath:META-INF/cxf/rfc-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/organization-user-invitation-mgt-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/organization-configs-server-v1-cxf.xml"/>
+    <import resource="classpath:META-INF/cxf/self-service-mgt-v1-cxf.xml"/>
 
     <!-- Legacy identity APIs   -->
     <import resource="classpath:META-INF/cxf/config-mgt-server-v1-cxf.xml"/>
@@ -123,6 +124,7 @@
             <bean class="org.wso2.carbon.identity.api.expired.password.identification.v1.PasswordExpiredUsersApi"/>
             <bean class="org.wso2.carbon.identity.api.server.api.resource.v1.ApiResourcesApi"/>
             <bean class="org.wso2.carbon.identity.api.server.api.resource.v1.ScopesApi"/>
+            <bean class="org.wso2.carbon.identity.api.server.organization.selfservice.v1.SelfServiceApi"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">
