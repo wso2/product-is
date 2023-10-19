@@ -2414,7 +2414,7 @@
         <hashprovider.pbkdf2.version>0.1.4</hashprovider.pbkdf2.version>
 
         <!-- Identity Branding Preference Management Versions -->
-        <identity.branding.preference.management.version>1.0.9</identity.branding.preference.management.version>
+        <identity.branding.preference.management.version>1.0.10</identity.branding.preference.management.version>
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.13</identity.api.dispatcher.version>
