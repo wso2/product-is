@@ -32,19 +32,19 @@ import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Factory;
-import org.testng.annotations.Test;
+import org.json.simple.parser.JSONParser;
+import org.testng.annotations.*;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.oauth2.dcrm.api.util.OAuthDCRMConstants;
+import org.wso2.identity.integration.test.util.Utils;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -61,6 +61,9 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
     private String username;
     private String password;
     private String tenant;
+    private static JSONParser parser = new JSONParser();
+    private static final String REGISTER_REQUESTS_LOCATION = "registration.requests.location";
+    private ServerConfigurationManager serverConfigurationManager;
 
     @Factory(dataProvider = "dcrmConfigProvider")
     public OAuthDCRMTestCase(TestUserMode userMode) throws Exception {
@@ -77,11 +80,96 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
         return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}};
     }
 
+    @DataProvider(name = "dcrConfigProvider")
+    private static Object[][] dcrConfigProvider() throws Exception {
+
+        String INVALID_CLIENT_METADATA = "invalid_client_metadata";
+        String INVALID_SOFTWARE_STATEMENT = "invalid_software_statement";
+        return new Object[][]{
+                {
+                        getRegisterRequestJSON("request1.json"), INVALID_CLIENT_METADATA,
+                        "Invalid token endpoint authentication method requested."
+                },
+                {
+                        getRegisterRequestJSON("request2.json"), INVALID_CLIENT_METADATA,
+                        "Invalid signature algorithm requested"
+                },
+                {
+                        getRegisterRequestJSON("request3.json"), INVALID_CLIENT_METADATA,
+                        "Invalid encryption algorithm requested"
+                },
+                {
+                        getRegisterRequestJSON("request4.json"), INVALID_CLIENT_METADATA,
+                        "Sector identifier URI is needed for PPID calculation"
+                },
+                {
+                        getRegisterRequestJSON("request5.json"), INVALID_CLIENT_METADATA,
+                        "Redirect URI missing in sector identifier URI set"
+                }
+               /*{
+                        getRegisterRequestJSON("request3.json"), INVALID_SOFTWARE_STATEMENT,
+                        "Signature validation failed for the software statement"
+                }*/
+        };
+    }
+
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
         super.init();
         client = HttpClients.createDefault();
+        changeISConfiguration();
+    }
 
+    @AfterClass(alwaysRun = true)
+    public void restoreConfiguration() throws Exception {
+        resetISConfiguration();
+    }
+
+    private void changeISConfiguration() throws Exception {
+
+        log.info("Adding entity id of SSOService to deployment.toml file");
+        String carbonHome = Utils.getResidentCarbonHome();
+        File defaultConfigFile = getDeploymentTomlFile(carbonHome);
+        File configuredIdentityXML = new File(getISResourceLocation() + File.separator + "oauth"
+                + File.separator + "dcr-fapi-validation-enabled.toml");
+        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager.applyConfigurationWithoutRestart(configuredIdentityXML, defaultConfigFile, true);
+        serverConfigurationManager.restartGracefully();
+    }
+
+    private void resetISConfiguration() throws Exception {
+
+        log.info("Replacing identity.xml with default configurations");
+        serverConfigurationManager.restoreToLastConfiguration(false);
+    }
+
+    /**
+     * Get register request JSON object.
+     *
+     * @param fileName File name.
+     * @return Register request JSON object.
+     * @throws Exception Exception.
+     */
+    private static JSONObject getRegisterRequestJSON(String fileName) throws Exception {
+
+        return (JSONObject) parser.parse(new FileReader(getFilePath(REGISTER_REQUESTS_LOCATION, fileName)));
+    }
+
+    /**
+     * Get file path.
+     *
+     * @param folderPath Folder path.
+     * @param fileName   File name.
+     * @return File path.
+     * @throws Exception Exception.
+     */
+    private static String getFilePath(String folderPath, String fileName) throws Exception {
+
+        Path path = Paths.get(System.getProperty(folderPath) + fileName);
+        if (!Files.exists(path)) {
+            throw new FileNotFoundException("Failed to find file: " + path.toString());
+        }
+        return path.toString();
     }
 
     @Test(alwaysRun = true, groups = "wso2.is", priority = 1, description = "Create a service provider successfully")
@@ -324,42 +412,16 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
         return (JSONObject) responseObj;
     }
 
-    @Test(alwaysRun = true, groups = "wso2.is", priority = 9, description = "Create a service provider with " +
+   @Test(alwaysRun = true, groups = "wso2.is", priority = 9, description = "Create a service provider with " +
             "additional OIDC properties")
-    public void testCreateServiceProviderRequestWithAdditionalParameters() throws IOException {
+    public void testCreateServiceProviderRequestWithAdditionalParameters() throws Exception {
 
         HttpPost request = new HttpPost(getPath());
+        JSONObject registerRequestJSON = getRegisterRequestJSON("request6.json");
+
         request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
         request.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
-
-        JSONArray grantTypes = new JSONArray();
-        grantTypes.add(OAuthDCRMConstants.GRANT_TYPE_AUTHORIZATION_CODE);
-        grantTypes.add(OAuthDCRMConstants.GRANT_TYPE_IMPLICIT);
-
-        JSONArray redirectURI = new JSONArray();
-        redirectURI.add(OAuthDCRMConstants.REDIRECT_URI);
-
-        JSONObject obj = new JSONObject();
-        obj.put(OAuthDCRMConstants.CLIENT_NAME, "DCR_1");
-        obj.put(OAuthDCRMConstants.GRANT_TYPES, grantTypes);
-        obj.put(OAuthDCRMConstants.REDIRECT_URIS, redirectURI);
-        obj.put(OAuthDCRMConstants.TOKEN_AUTH_METHOD, "private_key_jwt");
-        obj.put(OAuthDCRMConstants.TOKEN_AUTH_SIGNATURE_ALGORITHM, "PS256");
-        obj.put(OAuthDCRMConstants.SECTOR_IDENTIFIER_URI, "https://mocki.io/v1/04b49547-0ae2-4049-8d1c-42648e633001");
-        obj.put(OAuthDCRMConstants.ID_TOKEN_SIGNATURE_ALGORITHM, "PS256");
-        obj.put(OAuthDCRMConstants.ID_TOKEN_ENCRYPTION_ALGORITHM, "RSA-OAEP");
-        obj.put(OAuthDCRMConstants.ID_TOKEN_ENCRYPTION_METHOD, "A128GCM");
-        obj.put(OAuthDCRMConstants.REQUEST_OBJECT_SIGNATURE_ALGORITHM, "PS256");
-        obj.put(OAuthDCRMConstants.REQUEST_OBJECT_ENCRYPTION_ALGORITHM, "RSA-OAEP");
-        obj.put(OAuthDCRMConstants.REQUEST_OBJECT_ENCRYPTION_METHOD, "A128GCM");
-        obj.put(OAuthDCRMConstants.TLS_SUBJECT_DN, "dfrrfc");
-        obj.put(OAuthDCRMConstants.IS_SIGNED_REQUEST_OBJECT, true);
-        obj.put(OAuthDCRMConstants.IS_PUSH_AUTH, true);
-        obj.put(OAuthDCRMConstants.IS_CERTIFICATE_BOUND_ACCESS_TOKEN, true);
-        obj.put(OAuthDCRMConstants.SUBJECT_TYPE, "pairwise");
-        obj.put(OAuthDCRMConstants.JWKS_URI, "https://localhost:9443/oauth2/jwks");
-
-        StringEntity entity = new StringEntity(obj.toJSONString());
+        StringEntity entity = new StringEntity(registerRequestJSON.toJSONString());
         request.setEntity(entity);
         ObjectMapper mapper = new ObjectMapper();
 
@@ -373,8 +435,8 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
         createResponsePayload.remove("client_id");
         createResponsePayload.remove("client_secret");
         createResponsePayload.remove("client_secret_expires_at");
-        assertEquals(mapper.readTree(createResponsePayload.toJSONString()), mapper.readTree(obj.toJSONString()),
-                "Response payload should be equal.");
+        assertEquals(mapper.readTree(createResponsePayload.toJSONString()), mapper.readTree(
+                registerRequestJSON.toJSONString()), "Response payload should be equal.");
 
         HttpGet getRequest = new HttpGet(getPath() + client_id);
         getRequest.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
@@ -389,47 +451,22 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
         getResponsePayload.remove("client_secret");
         getResponsePayload.remove("client_secret_expires_at");
 
-        assertEquals(mapper.readTree(getResponsePayload.toJSONString()), mapper.readTree(obj.toJSONString()),
-                "Response payload should be equal.");
+        registerRequestJSON.remove("software_statement");
+        getResponsePayload.remove("software_statement");
+        assertEquals(mapper.readTree(getResponsePayload.toJSONString()), mapper.readTree(
+                registerRequestJSON.toJSONString()), "Response payload should be equal.");
     }
-
 
     @Test(alwaysRun = true, groups = "wso2.is", priority = 10, description = "Create a service provider with " +
             "additional OIDC properties")
-    public void testUpdateServiceProviderRequestWithAdditionalParameters() throws IOException {
+    public void testUpdateServiceProviderRequestWithAdditionalParameters() throws Exception {
 
         HttpPut request = new HttpPut(getPath() + client_id);
         request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
         request.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
+        JSONObject updateRequestPayload =  getRegisterRequestJSON("request7.json");
 
-        JSONArray grantTypes = new JSONArray();
-        grantTypes.add(OAuthDCRMConstants.GRANT_TYPE_AUTHORIZATION_CODE);
-        grantTypes.add(OAuthDCRMConstants.GRANT_TYPE_IMPLICIT);
-
-        JSONArray redirectURI = new JSONArray();
-        redirectURI.add(OAuthDCRMConstants.REDIRECT_URI);
-
-        JSONObject obj = new JSONObject();
-        obj.put(OAuthDCRMConstants.CLIENT_NAME, "DCR_1");
-        obj.put(OAuthDCRMConstants.GRANT_TYPES, grantTypes);
-        obj.put(OAuthDCRMConstants.REDIRECT_URIS, redirectURI);
-        obj.put(OAuthDCRMConstants.TOKEN_AUTH_METHOD, "tls_client_auth");
-        obj.put(OAuthDCRMConstants.TOKEN_AUTH_SIGNATURE_ALGORITHM, "ES256");
-        obj.put(OAuthDCRMConstants.SECTOR_IDENTIFIER_URI, "https://mocki.io/v1/04b49547-0ae2-4049-8d1c-42648e633001");
-        obj.put(OAuthDCRMConstants.ID_TOKEN_SIGNATURE_ALGORITHM, "PS256");
-        obj.put(OAuthDCRMConstants.ID_TOKEN_ENCRYPTION_ALGORITHM, "RSA-OAEP");
-        obj.put(OAuthDCRMConstants.ID_TOKEN_ENCRYPTION_METHOD, "A128GCM");
-        obj.put(OAuthDCRMConstants.REQUEST_OBJECT_SIGNATURE_ALGORITHM, "PS256");
-        obj.put(OAuthDCRMConstants.REQUEST_OBJECT_ENCRYPTION_ALGORITHM, "RSA-OAEP");
-        obj.put(OAuthDCRMConstants.REQUEST_OBJECT_ENCRYPTION_METHOD, "A128GCM");
-        obj.put(OAuthDCRMConstants.TLS_SUBJECT_DN, "dfrrfc");
-        obj.put(OAuthDCRMConstants.IS_SIGNED_REQUEST_OBJECT, true);
-        obj.put(OAuthDCRMConstants.IS_PUSH_AUTH, true);
-        obj.put(OAuthDCRMConstants.IS_CERTIFICATE_BOUND_ACCESS_TOKEN, true);
-        obj.put(OAuthDCRMConstants.SUBJECT_TYPE, "pairwise");
-        obj.put(OAuthDCRMConstants.JWKS_URI, "https://localhost:9443/oauth2/jwks");
-
-        StringEntity entity = new StringEntity(obj.toJSONString());
+        StringEntity entity = new StringEntity(updateRequestPayload.toJSONString());
         request.setEntity(entity);
         ObjectMapper mapper = new ObjectMapper();
 
@@ -442,9 +479,28 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
         updateResponsePayload.remove("client_id");
         updateResponsePayload.remove("client_secret");
         updateResponsePayload.remove("client_secret_expires_at");
-        assertEquals(mapper.readTree(updateResponsePayload.toJSONString()), mapper.readTree(obj.toJSONString()),
+        assertEquals(mapper.readTree(updateResponsePayload.toJSONString()),
+                mapper.readTree(updateRequestPayload.toJSONString()),
                 "Response payload should be equal.");
+    }
 
-        testDeleteServiceProvider();
+    @Test(alwaysRun = true, groups = "wso2.is", priority = 11,
+            description = "Check FAPI validations, PPID and SSA during DCR", dataProvider = "dcrConfigProvider")
+    public void validateErrorScenarios(JSONObject requestJSON, String errorCode, String errorMessage) throws Exception {
+
+        HttpPost request = new HttpPost(getPath());
+        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+        request.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
+        StringEntity entity = new StringEntity(requestJSON.toJSONString());
+        request.setEntity(entity);
+        HttpResponse response = client.execute(request);
+
+        assertEquals(response.getStatusLine().getStatusCode(), 400, "Service Provider " +
+                "has not been created successfully");
+        JSONObject errorResponse = getPayload(response);
+        assertEquals(errorResponse.get("error"), errorCode);
+        assertEquals(errorResponse.get("error_description"), errorMessage);
+
+        // resetISConfiguration();
     }
 }
