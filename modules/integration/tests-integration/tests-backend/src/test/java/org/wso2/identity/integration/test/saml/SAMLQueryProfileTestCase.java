@@ -188,7 +188,7 @@ public class SAMLQueryProfileTestCase extends AbstractSAMLSSOTestCase {
 
             if (config.getHttpBinding() == AbstractSAMLSSOTestCase.HttpBinding.HTTP_POST){
                 String samlRequest = Utils.extractDataFromResponse(response, CommonConstants.SAML_REQUEST_PARAM, 5);
-                response = super.sendSAMLMessage(tenantedSamlSSOUrl, CommonConstants.SAML_REQUEST_PARAM, samlRequest, config);
+                response = super.sendSAMLMessage(SAML_SSO_URL, CommonConstants.SAML_REQUEST_PARAM, samlRequest, config);
                 EntityUtils.consume(response.getEntity());
 
                 response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, config.getApp().getArtifact(),
