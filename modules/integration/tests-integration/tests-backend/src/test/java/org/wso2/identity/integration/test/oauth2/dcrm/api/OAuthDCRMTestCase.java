@@ -480,8 +480,9 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
         updateResponsePayload.remove("client_secret");
         updateResponsePayload.remove("client_secret_expires_at");
         assertEquals(mapper.readTree(updateResponsePayload.toJSONString()),
-                mapper.readTree(updateRequestPayload.toJSONString()),
-                "Response payload should be equal.");
+                mapper.readTree(updateRequestPayload.toJSONString()), "Response payload should be equal.");
+
+        testDeleteServiceProvider();
     }
 
     @Test(alwaysRun = true, groups = "wso2.is", priority = 11,
@@ -500,7 +501,5 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
         JSONObject errorResponse = getPayload(response);
         assertEquals(errorResponse.get("error"), errorCode);
         assertEquals(errorResponse.get("error_description"), errorMessage);
-
-        // resetISConfiguration();
     }
 }
