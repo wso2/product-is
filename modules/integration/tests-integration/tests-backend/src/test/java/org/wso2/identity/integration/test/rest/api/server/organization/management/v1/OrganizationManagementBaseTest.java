@@ -156,7 +156,7 @@ public class OrganizationManagementBaseTest extends B2BRESTAPIServerTestBase {
                 "  \"name\": \"ABC Builders\",\n" +
                 "  \"description\": \"Building constructions\",\n" +
                 "  \"type\": \"TENANT\",\n" +
-                "  \"parentId\": \"Super\",\n" +
+                "  \"parentId\": \"10084a8d-113f-4211-a0d5-efe36b082211\",\n" +
                 "  \"attributes\": [\n" +
                 "    {\n" +
                 "      \"key\": \"Country\",\n" +
