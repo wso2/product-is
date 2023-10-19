@@ -73,7 +73,7 @@ public class OAuth2TokenRevocationWithRevokedAccessToken extends OAuth2ServiceAb
 
         super.init(userMode);
         AutomationContext context = new AutomationContext("IDENTITY", userMode);
-        this.username = context.getContextTenant().getTenantAdmin().getUserName();
+        this.username = context.getContextTenant().getTenantAdmin().getUserNameWithoutDomain();
         this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
         this.activeTenant = context.getContextTenant().getDomain();
         this.tokenType = tokenType;
@@ -173,7 +173,7 @@ public class OAuth2TokenRevocationWithRevokedAccessToken extends OAuth2ServiceAb
     private AccessToken requestAccessToken() throws Exception {
 
         ClientAuthentication clientAuth = new ClientSecretBasic(consumerKey, consumerSecret);
-        URI tokenEndpoint = new URI(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
+        URI tokenEndpoint = new URI(getTenantQualifiedURL(OAuth2Constant.ACCESS_TOKEN_ENDPOINT, activeTenant));
         AuthorizationGrant authorizationGrant = new ResourceOwnerPasswordCredentialsGrant(username,
                 new Secret(userPassword));
 
@@ -187,7 +187,7 @@ public class OAuth2TokenRevocationWithRevokedAccessToken extends OAuth2ServiceAb
     private AccessToken requestPrivilegedAccessToken() throws Exception {
 
         ClientAuthentication clientAuth = new ClientSecretBasic(consumerKey, consumerSecret);
-        URI tokenEndpoint = new URI(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
+        URI tokenEndpoint = new URI(getTenantQualifiedURL(OAuth2Constant.ACCESS_TOKEN_ENDPOINT, activeTenant));
         AuthorizationGrant authorizationGrant = new ResourceOwnerPasswordCredentialsGrant(username,
                 new Secret(userPassword));
 

@@ -117,7 +117,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
                 .setDefaultRequestConfig(requestConfig)
                 .setDefaultCookieStore(cookieStore).build();
         String isURL = backendURL.substring(0, backendURL.indexOf("services/"));
-        this.passiveStsURL = isURL + "passivests";
+        this.passiveStsURL = getTenantQualifiedURL(isURL + "passivests", tenantDomain);
 
         setSystemProperties();
     }
@@ -195,7 +195,6 @@ public class TestPassiveSTS extends ISIntegrationTest {
 
         cookieStore.clear();
         String passiveParams = "?wreply=" + PASSIVE_STS_SAMPLE_APP_URL + "&wtrealm=PassiveSTSSampleApp";
-        passiveParams = appendTenantDomainQueryParam(passiveParams);
         HttpGet request = new HttpGet(this.passiveStsURL + passiveParams);
         HttpResponse response = client.execute(request);
         Assert.assertNotNull(response, "PassiveSTSSampleApp invoke response is null for tenant domain: " +
@@ -258,7 +257,6 @@ public class TestPassiveSTS extends ISIntegrationTest {
                 + "%2Fwss%2Foasis-wss-saml-token-profile-1.1%23SAMLV2.0%3C%2Fwst%3ATokenType%3E%3C%2Fwst"
                 + "%3ARequestSecurityToken%3E";
 
-        passiveParams = appendTenantDomainQueryParam(passiveParams);
         HttpGet request = new HttpGet(this.passiveStsURL + passiveParams + wreqParam);
         HttpResponse response = client.execute(request);
 
@@ -282,7 +280,6 @@ public class TestPassiveSTS extends ISIntegrationTest {
                 + "%2Fwss%2Foasis-wss-saml-token-profile-1.1%23SAMLV2.0%3C%2Fwst%3ATokenType%3E%3C%2Fwst"
                 + "%3ARequestSecurityToken%3E";
 
-        passiveParams = appendTenantDomainQueryParam(passiveParams);
         HttpGet request = new HttpGet(this.passiveStsURL + passiveParams + wreqParam);
         HttpResponse response = client.execute(request);
 
@@ -310,7 +307,6 @@ public class TestPassiveSTS extends ISIntegrationTest {
                 + "%2Fwss%2Foasis-wss-saml-token-profile-1.1%23SAMLV2.0%3C%2Fwst%3ATokenType%3E%3C%2Fwst"
                 + "%3ARequestSecurityToken%3E";
 
-        passiveParams = appendTenantDomainQueryParam(passiveParams);
         HttpGet request = new HttpGet(this.passiveStsURL + passiveParams + wreqParam);
         HttpResponse response = client.execute(request);
 
@@ -340,7 +336,6 @@ public class TestPassiveSTS extends ISIntegrationTest {
     public void testSendLogoutRequest() throws Exception {
 
         String passiveParams = "?wa=wsignout1.0&wreply=" + PASSIVE_STS_SAMPLE_APP_URL + "&wtrealm=PassiveSTSSampleApp";
-        passiveParams = appendTenantDomainQueryParam(passiveParams);
         HttpGet request = new HttpGet(this.passiveStsURL + passiveParams);
         HttpResponse response = client.execute(request);
         Assert.assertNotNull(response, "PassiveSTSSampleApp logout response is null for tenant domain: " +
@@ -394,13 +389,5 @@ public class TestPassiveSTS extends ISIntegrationTest {
 
         String redirectUrl = Utils.getRedirectUrl(response);
         return redirectUrl.contains("consent.do");
-    }
-
-    private String appendTenantDomainQueryParam(String params) {
-
-        if (!StringUtils.equals(tenantDomain, "carbon.super")) {
-            return params + "&tenantDomain=" + tenantDomain;
-        }
-        return params;
     }
 }

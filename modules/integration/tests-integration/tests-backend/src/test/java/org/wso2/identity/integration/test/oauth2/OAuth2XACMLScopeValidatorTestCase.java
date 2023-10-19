@@ -189,12 +189,12 @@ public class OAuth2XACMLScopeValidatorTestCase extends OAuth2ServiceAbstractInte
 
         try {
             Secret password = new Secret(userInfo.getPassword());
-            AuthorizationGrant passwordGrant = new ResourceOwnerPasswordCredentialsGrant(userInfo.getUserName(),
-                    password);
+            AuthorizationGrant passwordGrant = new ResourceOwnerPasswordCredentialsGrant(
+                    userInfo.getUserNameWithoutDomain(), password);
             ClientID clientID = new ClientID(consumerKey);
             Secret clientSecret = new Secret(consumerSecret);
             ClientAuthentication clientAuth = new ClientSecretBasic(clientID, clientSecret);
-            URI tokenEndpoint = new URI(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
+            URI tokenEndpoint = new URI(getTenantQualifiedURL(OAuth2Constant.ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()));
             TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, passwordGrant, scope);
 
             HTTPResponse tokenHTTPResp = request.toHTTPRequest().send();
