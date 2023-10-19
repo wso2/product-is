@@ -204,7 +204,7 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
 
         SUPER_TENANT_APP_WITH_SIGNING("travelocity.com", true),
         TENANT_APP_WITHOUT_SIGNING("travelocity.com-saml-tenantwithoutsigning", false),
-        SUPER_TENANT_APP_WITHOUT_SIGNING("travelocity.com-saml-supergtenantwithoutsigning", false),
+        SUPER_TENANT_APP_WITHOUT_SIGNING("travelocity.com-saml-supertenantwithoutsigning", false),
         SUPER_TENANT_APP_WITH_SAMLARTIFACT_CONFIG("travelocity.com-saml-artifactresolving", false),
         TENANT_APP_WITH_SAMLARTIFACT_CONFIG("travelocity.com-saml-tenant-artifactresolving", false),
         ECP_APP("https://localhost/ecp-sp", false);

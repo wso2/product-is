@@ -499,7 +499,7 @@
                         <configuration>
                             <tasks>
                                 <ant antfile="src/test/resources/artifacts/IS/saml/saml-app-build.xml" target="saml-tenant-signingdisabled" />
-                                <ant antfile="src/test/resources/artifacts/IS/saml/saml-supertenant-app-build.xml" target="saml-supertenant-signingdisabled" />
+                                <ant antfile="src/test/resources/artifacts/IS/saml/supertenant-saml-app-build.xml" target="saml-supertenant-signingdisabled" />
                                 <ant antfile="src/test/resources/artifacts/IS/saml/registrymount/registry-app-build.xml" target="saml-tenant-registrymount" />
                             </tasks>
                         </configuration>
