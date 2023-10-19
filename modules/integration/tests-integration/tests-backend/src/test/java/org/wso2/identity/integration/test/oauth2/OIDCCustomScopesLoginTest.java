@@ -425,7 +425,7 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
         // Test whether all requested scopes were returned.
         String introspectionUrl = getIntrospectionUrl(tenantDomain);
         org.json.simple.JSONObject introspectionResponse =
-                introspectTokenWithTenant(client, accessToken, introspectionUrl, adminUsernameWithoutTenantDomain, adminPassword);
+                introspectTokenWithTenant(client, accessToken, introspectionUrl, adminUsername, adminPassword);
         Assert.assertTrue(introspectionResponse.containsKey("scope"));
         String scope = introspectionResponse.get("scope").toString();
         Scope returnedScope = Scope.parse(scope);
