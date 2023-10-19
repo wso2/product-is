@@ -105,11 +105,11 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
                 {
                         getRegisterRequestJSON("request5.json"), INVALID_CLIENT_METADATA,
                         "Redirect URI missing in sector identifier URI set"
-                }
-               /*{
-                        getRegisterRequestJSON("request3.json"), INVALID_SOFTWARE_STATEMENT,
+                },
+                {
+                        getRegisterRequestJSON("request8.json"), INVALID_SOFTWARE_STATEMENT,
                         "Signature validation failed for the software statement"
-                }*/
+                }
         };
     }
 
