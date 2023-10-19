@@ -62,7 +62,7 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
     private static final String TEST_LOCK_USER_2_PASSWORD = "TestLockUser2Password";
     private static final String TEST_LOCK_USER_3 = "TestLockUser3";
     private static final String TEST_LOCK_USER_3_PASSWORD = "TestLockUser3Password";
-    private static final String USER_STORE_DB_NAME = "SECONDARY_USER_STORE_DB";
+    private static final String USER_STORE_DB_NAME = "ACCOUNT_LOCK_ON_SECONDARY_USER_STORE_DB";
     private static final String USER_STORE_TYPE = "VW5pcXVlSURKREJDVXNlclN0b3JlTWFuYWdlcg";
     private static final String DB_USER_NAME = "wso2automation";
     private static final String DB_USER_PASSWORD = "wso2automation";
