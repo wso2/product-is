@@ -2298,7 +2298,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.25.402</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.25.405</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2346,7 +2346,7 @@
 
         <!-- Identity Event Handler Versions -->
         <identity.event.handler.account.lock.version>1.8.12</identity.event.handler.account.lock.version>
-        <identity.event.handler.notification.version>1.7.18</identity.event.handler.notification.version>
+        <identity.event.handler.notification.version>1.7.19</identity.event.handler.notification.version>
 
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->

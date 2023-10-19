@@ -157,7 +157,7 @@ public class EmailTemplatesPositiveTest extends EmailTemplatesTestBase {
                 .body(baseIdentifier + "displayName", equalTo("AccountConfirmation"))
                 .body(baseIdentifier + "templates", notNullValue())
                 .body(baseIdentifier + "templates.find{ it.id == 'en_US' }." + "subject",
-                        equalTo("WSO2 - Account Confirmation"));
+                        equalTo("Confirm your account"));
     }
 
     // Get the list of templates of the default AccountEnable email template type
