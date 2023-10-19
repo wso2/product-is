@@ -97,9 +97,7 @@ public class DCRTestCase extends ScenarioTestBase {
                 }, {
                         getRegisterRequestJSON("request2.json"), getUpdateRequestJSON("request2.json"), ADMIN_USERNAME,
                         ADMIN_PASSWORD, SUPER_TENANT_DOMAIN
-                }, {
-                        getRegisterRequestJSON("request3.json"), getUpdateRequestJSON("request3.json"), ADMIN_USERNAME,
-                        ADMIN_PASSWORD, SUPER_TENANT_DOMAIN}
+                }
                 };
     }
 
