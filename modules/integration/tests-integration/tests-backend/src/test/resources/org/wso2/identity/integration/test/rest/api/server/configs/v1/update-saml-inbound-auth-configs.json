@@ -1,0 +1,7 @@
+{
+  "destinationURLs": [
+    "https://localhost:9853/test/updated"
+  ],
+  "metadataValidityPeriod": 120,
+  "enableMetadataSigning": true
+}
