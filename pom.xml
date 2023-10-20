@@ -2358,7 +2358,7 @@
         <callhome.version>4.5.x_1.0.14</callhome.version>
 
         <!-- Authenticator Versions -->
-        <identity.outbound.auth.oidc.version>5.11.20</identity.outbound.auth.oidc.version>
+        <identity.outbound.auth.oidc.version>5.11.21</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.oauth2.version>1.0.11</identity.outbound.auth.oauth2.version>
         <identity.outbound.auth.passive.sts.version>5.5.0</identity.outbound.auth.passive.sts.version>
         <identity.outbound.auth.samlsso.version>5.8.6</identity.outbound.auth.samlsso.version>
@@ -2367,7 +2367,7 @@
 
         <!-- Social Authenticator Versions -->
         <social.authenticator.facebook.version>5.2.4</social.authenticator.facebook.version>
-        <social.authenticator.google.version>5.2.10</social.authenticator.google.version>
+        <social.authenticator.google.version>5.2.11</social.authenticator.google.version>
         <social.authenticator.windowslive.version>5.2.2</social.authenticator.windowslive.version>
         <social.authenticator.apple.version>1.0.4</social.authenticator.apple.version>
 
