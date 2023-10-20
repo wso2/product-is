@@ -321,7 +321,7 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
         request.setHeader("User-Agent", USER_AGENT);
 
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-        urlParameters.add(new BasicNameValuePair("username", config.getUser().getUsername()));
+        urlParameters.add(new BasicNameValuePair("username", config.getUser().getUsername() + "@" + tenantInfo.getDomain()));
         urlParameters.add(new BasicNameValuePair("password", config.getUser().getPassword()));
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionKey));
 
@@ -339,6 +339,7 @@ public class OpenIDSSOTestCase extends ISIntegrationTest {
             }
         }
 
+        url = StringUtils.replace(url, "/t/" + tenantInfo.getDomain(), "");
         HttpGet request = new HttpGet(url);
         request.addHeader("User-Agent", USER_AGENT);
 
