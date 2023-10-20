@@ -85,7 +85,7 @@ public class OAuth2TokenRevocationWithSessionTerminationTestCase extends OAuth2S
     private HttpClient client;
     private String accessToken;
     private List<String> sessionIdList;
-    private static final String SESSION_API_ENDPOINT = "https://localhost:9853/api/users/v1/me/sessions";
+    private static final String SESSION_API_ENDPOINT = "https://localhost:9853/t/carbon.super/api/users/v1/me/sessions";
     private static final String USER_EMAIL = "authTokenRevokeUser@wso2.com";
     private static final String USERNAME = "authTokenRevokeUser";
     private static final String PASSWORD = "AuthTokenRevokeUser@123";

@@ -236,8 +236,8 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
                 Map<String, String> paramters = new HashMap<String, String>();
                 paramters.put(CommonConstants.SAML_REQUEST_PARAM, samlRequest);
                 paramters.put("RelayState", relayState);
-                response = Utils.sendSAMLMessage(getTenantQualifiedURL(SAML_SSO_URL,
-                        config.getUser().getTenantDomain()), paramters, USER_AGENT, httpClient);
+                response = Utils.sendSAMLMessage(SAML_SSO_URL, paramters, USER_AGENT, config.getUserMode(),
+                        TENANT_DOMAIN_PARAM, config.getUser().getTenantDomain(), httpClient);
                 EntityUtils.consume(response.getEntity());
                 response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, config.getApp().getArtifact(),
                         httpClient);

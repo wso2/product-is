@@ -136,7 +136,7 @@ public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2Se
 
         super.init(userMode);
         AutomationContext context = new AutomationContext("IDENTITY", userMode);
-        this.adminUsername = context.getContextTenant().getTenantAdmin().getUserNameWithoutDomain();
+        this.adminUsername = context.getContextTenant().getTenantAdmin().getUserName();
         this.adminPassword = context.getContextTenant().getTenantAdmin().getPassword();
         this.activeTenant = context.getContextTenant().getDomain();
         this.tokenType = "Default";
@@ -293,8 +293,7 @@ public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2Se
             throws URISyntaxException, IOException, ParseException {
 
         ClientAuthentication clientAuth = new ClientSecretBasic(key, secret);
-        URI tokenEndpoint = new URI(getTenantQualifiedURL(
-                OAuth2Constant.ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()));
+        URI tokenEndpoint = new URI(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
         AuthorizationGrant codeGrant = getAuthorizationCode(key);
         TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, codeGrant, null);
         HTTPResponse tokenHTTPResp = request.toHTTPRequest().send();
@@ -346,7 +345,7 @@ public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2Se
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_NONCE, TEST_NONCE));
 
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters,
-                getTenantQualifiedURL(OAuth2Constant.AUTHORIZE_ENDPOINT_URL, tenantInfo.getDomain()));
+                OAuth2Constant.AUTHORIZE_ENDPOINT_URL);
         Assert.assertNotNull(response, "Authorization request failed. Authorized response is null");
         String locationValue = getLocationHeaderValue(response);
         Assert.assertTrue(locationValue.contains(OAuth2Constant.SESSION_DATA_KEY),
@@ -383,8 +382,7 @@ public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2Se
             throws IOException, ParseException, URISyntaxException {
 
         ClientAuthentication clientAuth = new ClientSecretBasic(key, secret);
-        URI tokenEndpoint = new URI(getTenantQualifiedURL(
-                OAuth2Constant.ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()));
+        URI tokenEndpoint = new URI(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
         AuthorizationGrant authorizationGrant = new ResourceOwnerPasswordCredentialsGrant(adminUsername,
                 new Secret(adminPassword));
         Scope scope = new Scope("internal_application_mgt_view");

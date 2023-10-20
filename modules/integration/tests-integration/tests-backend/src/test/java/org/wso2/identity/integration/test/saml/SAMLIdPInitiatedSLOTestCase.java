@@ -54,7 +54,7 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
     private static final String APPLICATION_ONE = "SAML-TestApplication-01";
     private static final String APPLICATION_TWO = "SAML-TestApplication-02";
     private static final String SAML_APP_ONE_ACS_URL = "http://localhost:8490/travelocity.com/home.jsp";
-    private static final String SAML_APP_TWO_ACS_URL = "http://localhost:8490/travelocity.com-saml-supertenantwithoutsigning/home.jsp";
+    private static final String SAML_APP_TWO_ACS_URL = "http://localhost:8490/travelocity.com-saml-tenantwithoutsigning/home.jsp";
 
     private final SAMLConfig samlConfigOne;
     private final SAMLConfig samlConfigTwo;
@@ -85,7 +85,7 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
                 {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_POST,
                         ClaimType.LOCAL, App.SUPER_TENANT_APP_WITH_SIGNING),
                         new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_POST,
-                                ClaimType.LOCAL, App.SUPER_TENANT_APP_WITHOUT_SIGNING)},
+                                ClaimType.LOCAL, App.TENANT_APP_WITHOUT_SIGNING)},
         };
     }
 
@@ -224,7 +224,7 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
             boolean requestTwoSentLogFound = checkForLog(logViewer,
                     "single logout request is sent to : " + SAML_APP_TWO_ACS_URL + " is returned with OK");
             Assert.assertTrue(requestTwoSentLogFound, "System Log not found. Single logout request is not " +
-                    "sent to travelocity.com-saml-supertenantwithoutsigning app.");
+                    "sent to travelocity.com-saml-tenantwithoutsigning app.");
 
             boolean responseOneReceivedLogFound = checkForLog(logViewer,
                     "Logout response received for issuer: travelocity.com for tenant domain: carbon.super");
@@ -232,10 +232,10 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
                     "received for issuer travelocity.com");
 
             boolean responseTwoReceivedLogFound = checkForLog(logViewer,
-                    "Logout response received for issuer: travelocity.com-saml-supertenantwithoutsigning for " +
+                    "Logout response received for issuer: travelocity.com-saml-tenantwithoutsigning for " +
                             "tenant domain: carbon.super");
             Assert.assertTrue(responseTwoReceivedLogFound, "System Log not found. Logout response is not " +
-                    "received for issuer travelocity.com-saml-supertenantwithoutsigning");
+                    "received for issuer travelocity.com-saml-tenantwithoutsigning");
         } catch (Exception e) {
             Assert.fail("SAML IdP initiated SLO test failed for " + samlConfigOne.getApp().getArtifact()
                     + " & " + samlConfigTwo.getApp().getArtifact(), e);

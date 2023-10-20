@@ -84,6 +84,7 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
     private static final String INBOUND_AUTH_TYPE = "samlsso";
     private static final String ATTRIBUTE_CS_INDEX_VALUE = "1239245949";
     private static final String ATTRIBUTE_CS_INDEX_NAME = "attrConsumServiceIndex";
+    public static final String TENANT_DOMAIN_PARAM = "tenantDomain";
     protected static final String SAML = "saml";
     protected static final String SAML_SSO_URL = "https://localhost:9853/samlsso";
     protected static final String SAML_IDP_SLO_URL = SAML_SSO_URL + "?slo=true";
@@ -204,7 +205,6 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
 
         SUPER_TENANT_APP_WITH_SIGNING("travelocity.com", true),
         TENANT_APP_WITHOUT_SIGNING("travelocity.com-saml-tenantwithoutsigning", false),
-        SUPER_TENANT_APP_WITHOUT_SIGNING("travelocity.com-saml-supertenantwithoutsigning", false),
         SUPER_TENANT_APP_WITH_SAMLARTIFACT_CONFIG("travelocity.com-saml-artifactresolving", false),
         TENANT_APP_WITH_SAMLARTIFACT_CONFIG("travelocity.com-saml-tenant-artifactresolving", false),
         ECP_APP("https://localhost/ecp-sp", false);
@@ -644,9 +644,12 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
             throws IOException {
 
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-        HttpPost post = new HttpPost(getTenantQualifiedURL(url, tenantInfo.getDomain()));
+        HttpPost post = new HttpPost(url);
         post.setHeader("User-Agent", USER_AGENT);
         urlParameters.add(new BasicNameValuePair(samlMsgKey, samlMsgValue));
+        if (config.getUserMode() == TestUserMode.TENANT_ADMIN || config.getUserMode() == TestUserMode.TENANT_USER) {
+            urlParameters.add(new BasicNameValuePair(TENANT_DOMAIN_PARAM, config.getUser().getTenantDomain()));
+        }
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
 
         return httpClient.execute(post);

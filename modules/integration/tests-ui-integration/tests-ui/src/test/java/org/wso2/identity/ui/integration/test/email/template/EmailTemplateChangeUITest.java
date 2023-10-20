@@ -32,7 +32,7 @@ import org.wso2.identity.integration.ui.pages.ISIntegrationUiBaseTest;
 public class EmailTemplateChangeUITest extends ISIntegrationUiBaseTest {
 
     private static final String TEST_EMAIL_TYPE_PASSWORD = "Ask Password";
-    private static final String TEST_EMAIL_BODY_ASK_PASSWORD = "Hi {first-name}\n\n\"\n\nPlease change your password for the newly created account : {user-name}. Please click the link below to create the password.\n\nhttps://localhost:8443/t/wso2.com/InfoRecoverySample/infoRecover/verify?confirmation={confirmation-code}&userstoredomain={userstore-domain}&username={url:user-name}\n\nIf clicking the link doesn't seem to work, you can copy and paste the\nlink into your browser's address window.";
+    private static final String TEST_EMAIL_BODY_ASK_PASSWORD = "Hi {first-name}\n\n\"\n\nPlease change your password for the newly created account : {user-name}. Please click the link below to create the password.\n\nhttps://localhost:8443/InfoRecoverySample/infoRecover/verify?confirmation={confirmation-code}&userstoredomain={userstore-domain}&username={url:user-name}&tenantdomain={tenant-domain}\n\nIf clicking the link doesn't seem to work, you can copy and paste the\nlink into your browser's address window.";
 
     @Test
     public void testChangeTemplateBody() throws Exception {

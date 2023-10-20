@@ -79,7 +79,7 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
 
         super.init(TestUserMode.TENANT_USER);
 
-        this.USERNAME = tenantInfo.getContextUser().getUserNameWithoutDomain();
+        this.USERNAME = tenantInfo.getContextUser().getUserName();
         this.PASSWORD = tenantInfo.getContextUser().getPassword();
         setSystemproperties();
         client = HttpClients.createDefault();
@@ -126,8 +126,7 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
             "testRegisterApplication")
     public void testSendAuthorizedPost() throws Exception {
 
-        HttpPost request = new HttpPost(getTenantQualifiedURL(
-                OAuth2Constant.ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()));
+        HttpPost request = new HttpPost(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("grant_type",
                 OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER));
@@ -160,8 +159,7 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
 
         scim2RestClient.updateUserRole(getAddUserPatchRole(userId), roleId);
 
-        HttpPost request = new HttpPost(getTenantQualifiedURL(
-                OAuth2Constant.ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()));
+        HttpPost request = new HttpPost(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("grant_type",
                 OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER));

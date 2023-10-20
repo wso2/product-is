@@ -186,8 +186,7 @@ public class OIDCAbstractIntegrationTest extends OAuth2ServiceAbstractIntegratio
                                               HttpClient client, CookieStore cookieStore)
             throws Exception {
 
-        List<NameValuePair> urlParameters = OIDCUtilTest.getNameValuePairs(application,
-                getTenantQualifiedURL(OAuth2Constant.APPROVAL_URL, tenantInfo.getDomain()));
+        List<NameValuePair> urlParameters = OIDCUtilTest.getNameValuePairs(application);
 
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters, String.format
                 (OIDCUtilTest.targetApplicationUrl, application.getApplicationContext() + OAuth2Constant.PlaygroundAppPaths

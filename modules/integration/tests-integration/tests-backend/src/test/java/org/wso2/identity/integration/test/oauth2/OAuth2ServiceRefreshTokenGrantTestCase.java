@@ -53,7 +53,7 @@ public class OAuth2ServiceRefreshTokenGrantTestCase extends OAuth2ServiceAbstrac
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
         super.init(TestUserMode.SUPER_TENANT_USER);
-        adminUsername = userInfo.getUserNameWithoutDomain();
+        adminUsername = userInfo.getUserName();
         adminPassword = userInfo.getPassword();
 
         setSystemproperties();
@@ -111,8 +111,7 @@ public class OAuth2ServiceRefreshTokenGrantTestCase extends OAuth2ServiceAbstrac
     }
 
     private JSONObject responseObject(List<NameValuePair> postParameters) throws Exception {
-        HttpPost httpPost = new HttpPost(getTenantQualifiedURL(
-                OAuth2Constant.ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()));
+        HttpPost httpPost = new HttpPost(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
         //generate post request
         httpPost.setHeader("Authorization", "Basic " + getBase64EncodedString(consumerKey, consumerSecret));
         httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");

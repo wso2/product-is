@@ -105,7 +105,7 @@ public class OAuth2ServiceIntrospectionTestCase extends OAuth2ServiceAbstractInt
         urlParameters.add(new BasicNameValuePair("consumerKey", consumerKey));
         urlParameters.add(new BasicNameValuePair("consumerSecret", consumerSecret));
         urlParameters.add(new BasicNameValuePair("accessEndpoint",
-                getTenantQualifiedURL(OAuth2Constant.ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain())));
+                OAuth2Constant.ACCESS_TOKEN_ENDPOINT));
         urlParameters.add(new BasicNameValuePair("authorize", OAuth2Constant.AUTHORIZE_PARAM));
         HttpResponse response =
                 sendPostRequestWithParameters(client, urlParameters,

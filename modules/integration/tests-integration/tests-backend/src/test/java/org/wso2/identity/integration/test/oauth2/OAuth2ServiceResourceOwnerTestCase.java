@@ -71,7 +71,6 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 	private static final String lockedUser = "test_locked_user";
 	private static final String lockedUserPassword = "test_locked_user_pass";
 	private final String username;
-	private final String tenantAwareUsername;
 	private final String userPassword;
 	private final String activeTenant;
 	private static final String TENANT_DOMAIN = "wso2.com";
@@ -88,10 +87,9 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 
 		super.init(userMode);
 		context = new AutomationContext("IDENTITY", userMode);
-		this.username = context.getContextTenant().getTenantAdmin().getUserNameWithoutDomain();
+		this.username = context.getContextTenant().getTenantAdmin().getUserName();
 		this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
 		this.activeTenant = context.getContextTenant().getDomain();
-		this.tenantAwareUsername = context.getContextTenant().getTenantAdmin().getUserName();
 	}
 
 	@BeforeClass(alwaysRun = true)
@@ -144,7 +142,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 		urlParameters.add(new BasicNameValuePair("consumerKey", consumerKey));
 		urlParameters.add(new BasicNameValuePair("consumerSecret", consumerSecret));
 		urlParameters.add(new BasicNameValuePair("accessEndpoint",
-				getTenantQualifiedURL(OAuth2Constant.ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain())));
+		                                         OAuth2Constant.ACCESS_TOKEN_ENDPOINT));
 		urlParameters.add(new BasicNameValuePair("recowner", username));
 		urlParameters.add(new BasicNameValuePair("recpassword", userPassword));
 		urlParameters.add(new BasicNameValuePair("authorize", OAuth2Constant.AUTHORIZE_PARAM));
@@ -176,7 +174,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 		String introspectionUrl = tenantInfo.getDomain().equalsIgnoreCase("carbon.super") ?
 				OAuth2Constant.INTRO_SPEC_ENDPOINT : OAuth2Constant.TENANT_INTRO_SPEC_ENDPOINT;
 		org.json.simple.JSONObject responseObj = introspectTokenWithTenant(client, accessToken, introspectionUrl,
-				tenantAwareUsername, userPassword);
+				username, userPassword);
 		Assert.assertNotNull(responseObj, "Validate access token failed. response is invalid.");
 		Assert.assertEquals(responseObj.get("active"), true, "Token Validation failed");
 	}
@@ -185,8 +183,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
             " secret values", dependsOnMethods = "testRegisterApplication")
     public void testSendInvalidAuthorizedPost() throws Exception {
 
-        HttpPost request = new HttpPost(
-                getTenantQualifiedURL(OAuth2Constant.ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()));
+        HttpPost request = new HttpPost(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("grant_type",
                 OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER));
@@ -214,8 +211,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
             "testRegisterApplication")
 	public void testSendInvalidAuthenticationPost() throws Exception {
 
-        HttpPost request = new HttpPost(
-                getTenantQualifiedURL(OAuth2Constant.ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()));
+        HttpPost request = new HttpPost(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("grant_type",
                 OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER));
@@ -244,8 +240,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
             dependsOnMethods = "testRegisterApplication")
     public void testSendInvalidConsumerSecretPost() throws Exception {
 
-        HttpPost request = new HttpPost(
-                getTenantQualifiedURL(OAuth2Constant.ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()));
+        HttpPost request = new HttpPost(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("grant_type",
                 OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER));
@@ -273,8 +268,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
             dependsOnMethods = "testRegisterApplication")
     public void testSendInvalidConsumerKeyPost() throws Exception {
 
-        HttpPost request = new HttpPost(
-                getTenantQualifiedURL(OAuth2Constant.ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()));
+        HttpPost request = new HttpPost(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("grant_type",
                 OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER));
@@ -302,8 +296,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
             dependsOnMethods = "testRegisterApplication")
     public void testSendInvalidRequestPost() throws Exception {
 
-        HttpPost request = new HttpPost(
-                getTenantQualifiedURL(OAuth2Constant.ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()));
+        HttpPost request = new HttpPost(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("grant_type",
                 OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER));
@@ -333,8 +326,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 	public void testSendLockedAuthenticationPost() throws Exception {
 
 		if (!TENANT_DOMAIN.equals(activeTenant)) {
-			HttpPost request = new HttpPost(
-                    getTenantQualifiedURL(OAuth2Constant.ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()));
+			HttpPost request = new HttpPost(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
 			List<NameValuePair> urlParameters = new ArrayList<>();
 			urlParameters.add(new BasicNameValuePair("grant_type",
 					OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER));
