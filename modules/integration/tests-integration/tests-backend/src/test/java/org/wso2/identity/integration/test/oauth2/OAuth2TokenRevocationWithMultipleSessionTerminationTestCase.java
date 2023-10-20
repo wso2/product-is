@@ -79,7 +79,7 @@ public class OAuth2TokenRevocationWithMultipleSessionTerminationTestCase extends
     private RequestConfig requestConfig;
     private  HttpClient httpClientForFirstSession;
     private  HttpClient httpClientForSecondSession;
-    private static final String SESSION_API_ENDPOINT = "https://localhost:9853/api/users/v1/me/sessions";
+    private static final String SESSION_API_ENDPOINT = "https://localhost:9853/t/carbon.super/api/users/v1/me/sessions";
     private String applicationId;
 
     @BeforeClass(alwaysRun = true)

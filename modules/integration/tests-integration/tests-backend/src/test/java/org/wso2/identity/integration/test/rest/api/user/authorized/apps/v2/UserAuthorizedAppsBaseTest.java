@@ -65,7 +65,7 @@ public class UserAuthorizedAppsBaseTest extends RESTAPIUserTestBase {
         this.userAuthorizedAppsEndpointUri = String.format(AUTHORIZED_APPS_ENDPOINT_URI, pathParam);
         this.userApplicationEndpointUri = APPLICATION_ENDPOINT_URI;
         this.dcrEndpointUri = String.format(DCR_ENDPOINT_PATH_URI, tenant);
-        this.tokenEndpointUri = getTenantedRelativePath("/oauth2/token", tenant);
+        this.tokenEndpointUri = "/oauth2/token";
     }
 
     public void registerApplication(String appName, String clientId, String clientSecret) {

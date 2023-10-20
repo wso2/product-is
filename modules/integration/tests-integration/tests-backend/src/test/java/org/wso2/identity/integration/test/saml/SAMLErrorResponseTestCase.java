@@ -72,6 +72,7 @@ public class SAMLErrorResponseTestCase extends ISIntegrationTest {
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
     private static final String APPLICATION_NAME = "SAML-SSO-TestApplication";
     private static final String ARTIFACT_ID = "travelocity.com";
+    private static final String TENANT_DOMAIN_PARAM = "tenantDomain";
 
     private static final String SAML_SSO_URL = "https://localhost:9853/samlsso";
     private static final String ACS_URL = "http://localhost:8490/%s/home.jsp";
@@ -184,11 +185,12 @@ public class SAMLErrorResponseTestCase extends ISIntegrationTest {
     private HttpResponse sendSAMLMessage(String url, Map<String, String> parameters) throws Exception {
 
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-        HttpPost post = new HttpPost(getTenantQualifiedURL(url, tenantInfo.getDomain()));
+        HttpPost post = new HttpPost(url);
         post.setHeader("User-Agent", USER_AGENT);
         for (Map.Entry<String, String> entry : parameters.entrySet()) {
             urlParameters.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
         }
+        urlParameters.add(new BasicNameValuePair(TENANT_DOMAIN_PARAM, isServer.getSuperTenant().getDomain()));
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
         return httpClient.execute(post);
     }

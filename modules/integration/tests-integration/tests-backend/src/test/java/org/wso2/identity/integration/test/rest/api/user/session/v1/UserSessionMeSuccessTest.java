@@ -52,7 +52,7 @@ public class UserSessionMeSuccessTest extends UserSessionTest {
         this.tenant = context.getContextTenant().getDomain();
         this.session_test_user1 = username1;
         this.session_test_user2 = username2;
-        this.authenticatingUserName = session_test_user1;
+        this.authenticatingUserName = session_test_user1 + "@" + tenant;
         this.authenticatingCredential = TEST_USER_PASSWORD;
     }
 
@@ -128,6 +128,8 @@ public class UserSessionMeSuccessTest extends UserSessionTest {
 
         List<String> newSessionIdList = getResponseOfGet(this.sessionsEndpointURI).jsonPath().getList("sessions.id");
 
+        Assert.assertEquals(sessionIdList.size(), 2);
+        Assert.assertEquals(newSessionIdList.size(), 1);
         Assert.assertFalse(newSessionIdList.contains(sessionIdList.get(0)));
     }
 

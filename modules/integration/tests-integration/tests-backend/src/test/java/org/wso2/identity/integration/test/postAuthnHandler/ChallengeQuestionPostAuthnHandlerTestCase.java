@@ -75,6 +75,7 @@ import java.util.List;
 
 public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest {
 
+    private static final String TENANT_DOMAIN_PARAM = "tenantDomain";
     private static final Log log = LogFactory.getLog(ChallengeQuestionPostAuthnHandlerTestCase.class);
     // SAML Application attributes
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
@@ -394,9 +395,12 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
 
     private HttpResponse sendSAMLMessage(String url, String samlMsgKey, String samlMsgValue, CloseableHttpClient httpClient) throws IOException {
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-        HttpPost post = new HttpPost(getTenantQualifiedURL(url, tenantInfo.getDomain()));
+        HttpPost post = new HttpPost(url);
         post.setHeader("User-Agent", USER_AGENT);
         urlParameters.add(new BasicNameValuePair(samlMsgKey, samlMsgValue));
+        if (config.getUserMode() == TestUserMode.TENANT_ADMIN || config.getUserMode() == TestUserMode.TENANT_USER) {
+            urlParameters.add(new BasicNameValuePair(TENANT_DOMAIN_PARAM, config.getUser().getTenantDomain()));
+        }
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
         return httpClient.execute(post);
     }

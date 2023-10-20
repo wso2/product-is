@@ -93,7 +93,7 @@ public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractInt
         superTenantResidentIDP = superTenantIDPMgtClient.getResidentIdP();
         adminClient = new OauthAdminClient(backendURL, sessionCookie);
         String isServerBackendUrl = isServer.getContextUrls().getWebAppURLHttps();
-        recoveryEndpoint = getTenantQualifiedURL(isServerBackendUrl + RECOVERY_ENDPOINT_URL, tenantInfo.getDomain());
+        recoveryEndpoint = isServerBackendUrl +"/t/" + activeTenant + RECOVERY_ENDPOINT_URL;
         createOIDCApplication();
     }
 
@@ -225,8 +225,8 @@ public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractInt
 
     private String getAuthzRequestUrl(String clientId, String callbackUrl) {
 
-        return getTenantQualifiedURL(OAuth2Constant.AUTHORIZE_ENDPOINT_URL + "?" + "client_id=" + clientId + "&redirect_uri=" + callbackUrl +
-                "&response_type=code&scope=openid", tenantInfo.getDomain());
+        return OAuth2Constant.AUTHORIZE_ENDPOINT_URL + "?" + "client_id=" + clientId + "&redirect_uri=" + callbackUrl +
+                "&response_type=code&scope=openid";
     }
 
     private String sendAuthorizeRequest() throws IOException {

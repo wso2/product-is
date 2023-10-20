@@ -118,12 +118,12 @@ public class PermissionBasedScopeValidatorTestCase extends OAuth2ServiceAbstract
 
         try {
             Secret password = new Secret(userInfo.getPassword());
-            AuthorizationGrant passwordGrant = new ResourceOwnerPasswordCredentialsGrant(
-                    userInfo.getUserNameWithoutDomain(), password);
+            AuthorizationGrant passwordGrant = new ResourceOwnerPasswordCredentialsGrant(userInfo.getUserName(),
+                    password);
             ClientID clientID = new ClientID(consumerKey);
             Secret clientSecret = new Secret(consumerSecret);
             ClientAuthentication clientAuth = new ClientSecretBasic(clientID, clientSecret);
-            URI tokenEndpoint = new URI(getTenantQualifiedURL(OAuth2Constant.ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()));
+            URI tokenEndpoint = new URI(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
             TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, passwordGrant, scope);
 
             HTTPResponse tokenHTTPResp = request.toHTTPRequest().send();

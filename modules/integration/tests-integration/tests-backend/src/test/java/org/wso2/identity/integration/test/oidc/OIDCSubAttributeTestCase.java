@@ -314,8 +314,9 @@ public class OIDCSubAttributeTestCase extends OAuth2ServiceAbstractIntegrationTe
                 .disableRedirectHandling()
                 .build();
 
+        String username = userInfo.getUserName();
         Secret password = new Secret(userInfo.getPassword());
-        AuthorizationGrant passwordGrant = new ResourceOwnerPasswordCredentialsGrant(tenantAwareUsername, password);
+        AuthorizationGrant passwordGrant = new ResourceOwnerPasswordCredentialsGrant(username, password);
 
         ClientID clientID = new ClientID(consumerKey);
         Secret clientSecret = new Secret(consumerSecret);

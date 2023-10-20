@@ -69,6 +69,7 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
     private static final String COUNTRY_WSO2_CLAIM = "http://wso2.org/claims/country";
     private static final String CALLBACK_QUERY_PARAM = "callback";
     private static final String USERNAME_QUERY_PARAM = "username";
+    private static final String TENANT_DOMAIN_QUERY_PARAM = "tenantDomain";
     private static final String ADMIN = "admin";
     private static final String EBONY = "ebony";
     private static final String PASSWORD = "UsEr@123";
@@ -78,7 +79,7 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
     private static final String FINANCIAL = "Financial";
     private static final String ERROR_MESSAGE_SELF_REGISTRATION_DISABLED = "Self registration is disabled for tenant" +
             " - %s";
-    private static final String ERROR_MESSAGE_INVALID_TENANT = "%s is an invalid tenant domain";
+    private static final String ERROR_MESSAGE_INVALID_TENANT = "Invalid tenant domain :%s";
     private static final String ERROR_MESSAGE_USERNAME_TAKEN = "Username &#39;%s&#39; is already taken. Please pick a " +
             "different username";
 
@@ -141,7 +142,6 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
 
         HttpClient client = HttpClientBuilder.create().build();
         String selfRegisterEndpoint = selfRegisterDoEndpoint + "?" + CALLBACK_QUERY_PARAM + "=" + CALLBACK_ENDPOINT;
-        selfRegisterEndpoint = getTenantQualifiedURL(selfRegisterEndpoint, secondaryTenantDomain);
         HttpResponse httpResponse = sendGetRequest(client, selfRegisterEndpoint);
         String content = DataExtractUtil.getContentData(httpResponse);
         Assert.assertNotNull(content);
@@ -296,8 +296,8 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
             username = MultitenantUtils.getTenantAwareUsername(username);
         }
         String selfRegisterEndpoint =
-                signupDoEndpoint + "?" + USERNAME_QUERY_PARAM + "=" + username;
-        selfRegisterEndpoint = getTenantQualifiedURL(selfRegisterEndpoint, tenantDomain);
+                signupDoEndpoint + "?" + USERNAME_QUERY_PARAM + "=" + username + "&" + TENANT_DOMAIN_QUERY_PARAM + "="
+                        + tenantDomain;
         HttpResponse httpResponse = sendGetRequest(client, selfRegisterEndpoint);
         return DataExtractUtil.getContentData(httpResponse);
     }
@@ -436,12 +436,12 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
 
     private String getConsentReqBody(String purposeId, int piiCategoryId, String username) {
 
-        return  "{\\\"jurisdiction\\\":\\\"someJurisdiction\\\",\\\"collectionMethod\\\":\\\"Web Form - Self " +
+       return  "{\\\"jurisdiction\\\":\\\"someJurisdiction\\\",\\\"collectionMethod\\\":\\\"Web Form - Self " +
                 "Registration\\\"," +
                 "\\\"language\\\":\\\"en\\\",\\\"piiPrincipalId\\\":\\\""+username+"\\\",\\\"services\\\":" +
                 "[{\\\"tenantDomain\\\":\\\"wso2.com\\\",\\\"serviceDisplayName\\\":\\\"Resident IDP\\\"," +
                 "\\\"serviceDescription\\\":\\\"Resident IDP\\\",\\\"purposes\\\":[{\\\"purposeId\\\":"+purposeId+"," +
-                "\\\"purposeCategoryId\\\":[1]," +
+               "\\\"purposeCategoryId\\\":[1]," +
                 "\\\"consentType\\\":\\\"EXPLICIT\\\",\\\"piiCategory\\\":[{\\\"piiCategoryId\\\":"+piiCategoryId+"," +
                 "\\\"validity\\\":\\\"DATE_UNTIL:INDEFINITE\\\"}],\\\"primaryPurpose\\\":true," +
                 "\\\"termination\\\":\\\"DATE_UNTIL:INDEFINITE\\\",\\\"thirdPartyDisclosure\\\":false}],\\\"tenantId\\\":1}]," +

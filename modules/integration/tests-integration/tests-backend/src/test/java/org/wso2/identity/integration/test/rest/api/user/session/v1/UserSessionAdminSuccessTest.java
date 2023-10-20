@@ -187,7 +187,7 @@ public class UserSessionAdminSuccessTest extends UserSessionTest {
 
     private void authenticateUser(String user) {
 
-        this.authenticatingUserName = user;
+        this.authenticatingUserName = user + "@" + tenant;
         this.authenticatingCredential = TEST_USER_PASSWORD;
     }
 

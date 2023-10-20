@@ -85,7 +85,8 @@ public class MeAuthorizedAppsScopeTest extends UserAuthorizedAppsBaseTest {
     private String accessToken;
     private List<String> accessTokes = new ArrayList<>();
 
-    private static final String AUTHORIZED_API_ENDPOINT = "https://localhost:9853/api/users/v2/me/authorized-apps";
+    private static final String AUTHORIZED_API_ENDPOINT = "https://localhost:9853/t/carbon" +
+            ".super/api/users/v2/me/authorized-apps";
     private String requestedScopes = "openid test_internal_login test_internal_user_update test_SYSTEM";
 
     @BeforeClass(alwaysRun = true)

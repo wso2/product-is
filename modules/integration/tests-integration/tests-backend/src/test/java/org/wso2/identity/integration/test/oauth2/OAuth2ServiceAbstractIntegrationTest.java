@@ -464,8 +464,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		urlParameters.add(new BasicNameValuePair("password", userInfo.getPassword()));
 		urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
 		log.info(">>> sendLoginPost:sessionDataKey: " + sessionDataKey);
-		return sendPostRequestWithParameters(client, urlParameters,
-                getTenantQualifiedURL(OAuth2Constant.COMMON_AUTH_URL, tenantInfo.getDomain()));
+		return sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.COMMON_AUTH_URL);
 	}
 
 	/**
@@ -487,8 +486,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		urlParameters.add(new BasicNameValuePair("password", password));
 		urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
 		log.info(">>> sendLoginPost:sessionDataKey: " + sessionDataKey);
-		return sendPostRequestWithParameters(client, urlParameters,
-                getTenantQualifiedURL(OAuth2Constant.COMMON_AUTH_URL, tenantInfo.getDomain()));
+		return sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.COMMON_AUTH_URL);
 	}
 
 	/**
@@ -531,8 +529,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		urlParameters.add(new BasicNameValuePair("consent", "approve"));
 		urlParameters.add(new BasicNameValuePair("sessionDataKeyConsent", sessionDataKeyConsent));
 
-		return sendPostRequestWithParameters(client, urlParameters,
-                getTenantQualifiedURL(OAuth2Constant.APPROVAL_URL, tenantInfo.getDomain()));
+		return sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.APPROVAL_URL);
 	}
 
 	/**
@@ -556,8 +553,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 			urlParameters.addAll(consentClaims);
 		}
 
-		return sendPostRequestWithParameters(client, urlParameters,
-                getTenantQualifiedURL(OAuth2Constant.APPROVAL_URL, tenantInfo.getDomain()));
+		return sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.APPROVAL_URL);
 	}
 
 	/**
@@ -601,7 +597,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
 		urlParameters.add(new BasicNameValuePair("callbackurl", OAuth2Constant.CALLBACK_URL));
 		urlParameters.add(new BasicNameValuePair("accessEndpoint",
-                getTenantQualifiedURL(OAuth2Constant.ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain())));
+		                                         OAuth2Constant.ACCESS_TOKEN_ENDPOINT));
 		urlParameters.add(new BasicNameValuePair("consumerSecret", consumerSecret));
 		return sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.GET_ACCESS_TOKEN_URL);
 	}

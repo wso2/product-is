@@ -86,7 +86,7 @@ public class OIDCDiscoveryTestCase extends ISIntegrationTest {
         Object links = ((JSONObject)obj).get("links");
         Assert.assertNotNull(links);
         String openIdProviderIssuerLocation = ((JSONObject)((JSONArray)links).get(0)).get("href").toString();
-        String urlExpected =  getTenantQualifiedURL(isServerBackendUrl + "/oauth2/token", config.getTenant());
+        String urlExpected = isServerBackendUrl + "/oauth2/token";
         Assert.assertEquals(openIdProviderIssuerLocation, urlExpected);
     }
 
