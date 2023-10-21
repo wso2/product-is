@@ -59,8 +59,12 @@ public class MeAuthorizedAppsSuccessTest extends UserAuthorizedAppsBaseTest {
         initUrls("me");
         registerApplication(appName1, clientIdApp1, CLIENT_SECRET);
         registerApplication(appName2, clientIdApp2, CLIENT_SECRET);
+
+        this.authenticatingUserName = context.getContextTenant().getTenantAdmin().getUserNameWithoutDomain();
         getTokenFromPasswordGrant(clientIdApp1, CLIENT_SECRET);
         getTokenFromPasswordGrant(clientIdApp2, CLIENT_SECRET);
+
+        this.authenticatingUserName = context.getContextTenant().getTenantAdmin().getUserName();
     }
 
     @BeforeMethod(alwaysRun = true)
