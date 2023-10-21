@@ -2,7 +2,7 @@
   "redirect_uris": [
     "https://abc/redirect1"
   ],
-  "client_name": "TestAdditionalProperties",
+  "client_name": "TestInvalidSSA",
 
   "grant_types": [
     "authorization_code",

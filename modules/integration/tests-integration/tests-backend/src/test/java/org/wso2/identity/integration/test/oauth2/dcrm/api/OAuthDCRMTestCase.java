@@ -18,7 +18,6 @@
 package org.wso2.identity.integration.test.oauth2.dcrm.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -32,23 +31,22 @@ import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
-import org.json.simple.parser.JSONParser;
-import org.testng.annotations.*;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
+import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.oauth2.dcrm.api.util.DCRUtils;
 import org.wso2.identity.integration.test.oauth2.dcrm.api.util.OAuthDCRMConstants;
-import org.wso2.identity.integration.test.util.Utils;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
 
 /**
  * OAuth2 DCRM API Create process test case
@@ -61,9 +59,6 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
     private String username;
     private String password;
     private String tenant;
-    private static JSONParser parser = new JSONParser();
-    private static final String REGISTER_REQUESTS_LOCATION = "registration.requests.location";
-    private ServerConfigurationManager serverConfigurationManager;
 
     @Factory(dataProvider = "dcrmConfigProvider")
     public OAuthDCRMTestCase(TestUserMode userMode) throws Exception {
@@ -79,103 +74,15 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
     public static Object[][] dcrmConfigProvider() {
         return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}};
     }
-
-    @DataProvider(name = "dcrConfigProvider")
-    private static Object[][] dcrConfigProvider() throws Exception {
-
-        String INVALID_CLIENT_METADATA = "invalid_client_metadata";
-        String INVALID_SOFTWARE_STATEMENT = "invalid_software_statement";
-        return new Object[][]{
-                {
-                        getRegisterRequestJSON("request1.json"), INVALID_CLIENT_METADATA,
-                        "Invalid token endpoint authentication method requested."
-                },
-                {
-                        getRegisterRequestJSON("request2.json"), INVALID_CLIENT_METADATA,
-                        "Invalid signature algorithm requested"
-                },
-                {
-                        getRegisterRequestJSON("request3.json"), INVALID_CLIENT_METADATA,
-                        "Invalid encryption algorithm requested"
-                },
-                {
-                        getRegisterRequestJSON("request4.json"), INVALID_CLIENT_METADATA,
-                        "Sector identifier URI is needed for PPID calculation"
-                },
-                {
-                        getRegisterRequestJSON("request5.json"), INVALID_CLIENT_METADATA,
-                        "Redirect URI missing in sector identifier URI set"
-                },
-                {
-                        getRegisterRequestJSON("request8.json"), INVALID_SOFTWARE_STATEMENT,
-                        "Signature validation failed for the software statement"
-                }
-        };
-    }
-
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
         super.init();
         client = HttpClients.createDefault();
-        changeISConfiguration();
     }
-
-    @AfterClass(alwaysRun = true)
-    public void restoreConfiguration() throws Exception {
-        resetISConfiguration();
-    }
-
-    private void changeISConfiguration() throws Exception {
-
-        log.info("Adding entity id of SSOService to deployment.toml file");
-        String carbonHome = Utils.getResidentCarbonHome();
-        File defaultConfigFile = getDeploymentTomlFile(carbonHome);
-        File configuredIdentityXML = new File(getISResourceLocation() + File.separator + "oauth"
-                + File.separator + "dcr-fapi-validation-enabled.toml");
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
-        serverConfigurationManager.applyConfigurationWithoutRestart(configuredIdentityXML, defaultConfigFile, true);
-        serverConfigurationManager.restartGracefully();
-    }
-
-    private void resetISConfiguration() throws Exception {
-
-        log.info("Replacing identity.xml with default configurations");
-        serverConfigurationManager.restoreToLastConfiguration(false);
-    }
-
-    /**
-     * Get register request JSON object.
-     *
-     * @param fileName File name.
-     * @return Register request JSON object.
-     * @throws Exception Exception.
-     */
-    private static JSONObject getRegisterRequestJSON(String fileName) throws Exception {
-
-        return (JSONObject) parser.parse(new FileReader(getFilePath(REGISTER_REQUESTS_LOCATION, fileName)));
-    }
-
-    /**
-     * Get file path.
-     *
-     * @param folderPath Folder path.
-     * @param fileName   File name.
-     * @return File path.
-     * @throws Exception Exception.
-     */
-    private static String getFilePath(String folderPath, String fileName) throws Exception {
-
-        Path path = Paths.get(System.getProperty(folderPath) + fileName);
-        if (!Files.exists(path)) {
-            throw new FileNotFoundException("Failed to find file: " + path.toString());
-        }
-        return path.toString();
-    }
-
     @Test(alwaysRun = true, groups = "wso2.is", priority = 1, description = "Create a service provider successfully")
     public void testCreateServiceProviderRequest() throws IOException {
-        HttpPost request = new HttpPost(getPath());
-        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+        HttpPost request = new HttpPost(DCRUtils.getPath(tenant));
+        request.addHeader(HttpHeaders.AUTHORIZATION, DCRUtils.getAuthzHeader(username, password));
         request.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
 
         JSONArray grantTypes = new JSONArray();
@@ -211,8 +118,8 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
     @Test(alwaysRun = true, groups = "wso2.is", priority = 2, description =
             "Create a service provider with already registered client name")
     public void testCreateServiceProviderRequestWithExistingClientName() throws IOException {
-        HttpPost request = new HttpPost(getPath());
-        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+        HttpPost request = new HttpPost(DCRUtils.getPath(tenant));
+        request.addHeader(HttpHeaders.AUTHORIZATION, DCRUtils.getAuthzHeader(username, password));
         request.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
 
         JSONArray grantTypes = new JSONArray();
@@ -247,8 +154,8 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
     @Test(alwaysRun = true, groups = "wso2.is", priority = 3, description = "Read service provider")
     public void testReadServiceProvider() throws IOException {
 
-        HttpGet request = new HttpGet(getPath() + client_id);
-        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+        HttpGet request = new HttpGet(DCRUtils.getPath(tenant) + client_id);
+        request.addHeader(HttpHeaders.AUTHORIZATION, DCRUtils.getAuthzHeader(username, password));
         request.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
 
         HttpResponse response = client.execute(request);
@@ -265,8 +172,8 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
 
     @Test(alwaysRun = true, groups = "wso2.is", priority = 4, description = "Read request with an invalid client ID")
     public void testReadServiceProviderWithInvalidClientID() throws IOException {
-        HttpGet request = new HttpGet(getPath() + OAuthDCRMConstants.INVALID_CLIENT_ID);
-        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+        HttpGet request = new HttpGet(DCRUtils.getPath(tenant) + OAuthDCRMConstants.INVALID_CLIENT_ID);
+        request.addHeader(HttpHeaders.AUTHORIZATION, DCRUtils.getAuthzHeader(username, password));
         request.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
 
         HttpResponse response = client.execute(request);
@@ -278,8 +185,8 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
     @Test(alwaysRun = true, groups = "wso2.is", priority = 5, description = "Delete Service Provider")
     public void testDeleteServiceProvider() throws IOException {
 
-        HttpDelete request = new HttpDelete(getPath() + client_id);
-        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+        HttpDelete request = new HttpDelete(DCRUtils.getPath(tenant) + client_id);
+        request.addHeader(HttpHeaders.AUTHORIZATION, DCRUtils.getAuthzHeader(username, password));
 
         HttpResponse response = client.execute(request);
         assertEquals(response.getStatusLine().getStatusCode(), 204, "Service provider has not " +
@@ -287,8 +194,8 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
 
         EntityUtils.consume(response.getEntity());
 
-        HttpGet getRequest = new HttpGet(getPath() + client_id);
-        getRequest.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+        HttpGet getRequest = new HttpGet(DCRUtils.getPath(tenant) + client_id);
+        getRequest.addHeader(HttpHeaders.AUTHORIZATION, DCRUtils.getAuthzHeader(username, password));
         getRequest.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
 
         response = client.execute(request);
@@ -302,8 +209,8 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
     @Test(alwaysRun = true, groups = "wso2.is", priority = 6, description = "Delete service provider request with " +
             "invalid client id")
     public void testDeleteRequestWithInvalidClientID() throws IOException {
-        HttpDelete request = new HttpDelete(getPath() + OAuthDCRMConstants.INVALID_CLIENT_ID);
-        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+        HttpDelete request = new HttpDelete(DCRUtils.getPath(tenant) + OAuthDCRMConstants.INVALID_CLIENT_ID);
+        request.addHeader(HttpHeaders.AUTHORIZATION, DCRUtils.getAuthzHeader(username, password));
 
         HttpResponse response = client.execute(request);
         assertEquals(response.getStatusLine().getStatusCode(), 401, "Service Provider delete request " +
@@ -315,8 +222,8 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
     @Test(alwaysRun = true, groups = "wso2.is", description = "Try to register an OAuth app with authorization_code " +
             "grant without any redirect uris.", priority = 7)
     public void testRegisterAppWithAuthzCodeGrantAndNoRedirectUris() throws IOException {
-        HttpPost request = new HttpPost(getPath());
-        setRequestHeaders(request);
+        HttpPost request = new HttpPost(DCRUtils.getPath(tenant));
+        DCRUtils.setRequestHeaders(request, username, password);
 
         JSONArray grantTypes = new JSONArray();
         grantTypes.add(OAuthDCRMConstants.GRANT_TYPE_AUTHORIZATION_CODE);
@@ -348,8 +255,8 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
         requestBody.put(OAuthDCRMConstants.GRANT_TYPES, grantTypes);
 
         //////////////////////// BAD REQUEST WITH EMPTY REDIRECT URI ///////////////////////////
-        HttpPost badRequestWithoutRedirectUris = new HttpPost(getPath());
-        setRequestHeaders(badRequestWithoutRedirectUris);
+        HttpPost badRequestWithoutRedirectUris = new HttpPost(DCRUtils.getPath(tenant));
+        DCRUtils.setRequestHeaders(badRequestWithoutRedirectUris, username, password);
         // We keep the redirect uris empty to make this a bad request.
         JSONObject badRequestBody = (JSONObject) requestBody.clone();
         badRequestBody.put(OAuthDCRMConstants.REDIRECT_URIS, new JSONArray());
@@ -362,8 +269,8 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
         EntityUtils.consume(failedResponse.getEntity());
 
         ///////////////// VALID REQUEST WITH THE SAME CLIENT_NAME ///////////////////////////
-        HttpPost validRequest = new HttpPost(getPath());
-        setRequestHeaders(validRequest);
+        HttpPost validRequest = new HttpPost(DCRUtils.getPath(tenant));
+        DCRUtils.setRequestHeaders(validRequest, username, password);
 
         JSONArray redirectURIs = new JSONArray();
         redirectURIs.add(OAuthDCRMConstants.REDIRECT_URI);
@@ -373,8 +280,9 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
 
         validRequest.setEntity(new StringEntity(validJSONBody.toJSONString()));
         HttpResponse successResponse = client.execute(validRequest);
-        assertEquals(successResponse.getStatusLine().getStatusCode(), 201, "Service Provider should have been created " +
-                "with the same client name: " +  DUMMY_DCR_APP + " attempted in the previous failed request.");
+        assertEquals(successResponse.getStatusLine().getStatusCode(), 201,
+                "Service Provider should have been created with the same client name: " +  DUMMY_DCR_APP +
+                        " attempted in the previous failed request.");
 
         BufferedReader rd = new BufferedReader(new InputStreamReader(successResponse.getEntity().getContent()));
         Object responseObj = JSONValue.parse(rd);
@@ -385,41 +293,14 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
         // Deleting created application.
         testDeleteServiceProvider();
     }
-
-    private void setRequestHeaders(HttpPost request) {
-        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
-        request.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
-    }
-
-    private String getPath() {
-        if (tenant.equals("carbon.super")) {
-            return OAuthDCRMConstants.DCR_ENDPOINT_HOST_PART + OAuthDCRMConstants.DCR_ENDPOINT_PATH_PART;
-        } else {
-            return OAuthDCRMConstants.DCR_ENDPOINT_HOST_PART + "/t/" + tenant + OAuthDCRMConstants
-                    .DCR_ENDPOINT_PATH_PART;
-        }
-    }
-
-    private String getAuthzHeader() {
-        return "Basic " + Base64.encodeBase64String((username + ":" + password).getBytes()).trim();
-    }
-
-    private JSONObject getPayload(HttpResponse response) throws IOException {
-
-        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-        Object responseObj = JSONValue.parse(rd);
-        EntityUtils.consume(response.getEntity());
-        return (JSONObject) responseObj;
-    }
-
-   @Test(alwaysRun = true, groups = "wso2.is", priority = 9, description = "Create a service provider with " +
+    @Test(alwaysRun = true, groups = "wso2.is", priority = 9, description = "Create a service provider with " +
             "additional OIDC properties")
     public void testCreateServiceProviderRequestWithAdditionalParameters() throws Exception {
 
-        HttpPost request = new HttpPost(getPath());
-        JSONObject registerRequestJSON = getRegisterRequestJSON("request6.json");
+        HttpPost request = new HttpPost(DCRUtils.getPath(tenant));
+        JSONObject registerRequestJSON = DCRUtils.getRegisterRequestJSON("request6.json");
 
-        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+        request.addHeader(HttpHeaders.AUTHORIZATION, DCRUtils.getAuthzHeader(username, password));
         request.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
         StringEntity entity = new StringEntity(registerRequestJSON.toJSONString());
         request.setEntity(entity);
@@ -428,31 +309,31 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
         HttpResponse response = client.execute(request);
         assertEquals(response.getStatusLine().getStatusCode(), 201, "Service Provider " +
                 "has not been created successfully");
-        JSONObject createResponsePayload  = getPayload(response);
+        JSONObject createResponsePayload  = DCRUtils.getPayload(response);
         client_id = ((JSONObject) createResponsePayload).get("client_id").toString();
         assertNotNull(client_id, "client_id cannot be null");
 
         createResponsePayload.remove("client_id");
         createResponsePayload.remove("client_secret");
         createResponsePayload.remove("client_secret_expires_at");
+        createResponsePayload.remove("software_statement");
         assertEquals(mapper.readTree(createResponsePayload.toJSONString()), mapper.readTree(
                 registerRequestJSON.toJSONString()), "Response payload should be equal.");
 
-        HttpGet getRequest = new HttpGet(getPath() + client_id);
-        getRequest.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+        HttpGet getRequest = new HttpGet(DCRUtils.getPath(tenant) + client_id);
+        getRequest.addHeader(HttpHeaders.AUTHORIZATION, DCRUtils.getAuthzHeader(username, password));
         getRequest.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
 
         HttpResponse getResponse = client.execute(getRequest);
         assertEquals(getResponse.getStatusLine().getStatusCode(), 200, "Service provider request " +
                 "has not returned with successful response");
 
-        JSONObject getResponsePayload = getPayload(getResponse);
+        JSONObject getResponsePayload = DCRUtils.getPayload(getResponse);
         getResponsePayload.remove("client_id");
         getResponsePayload.remove("client_secret");
         getResponsePayload.remove("client_secret_expires_at");
-
-        registerRequestJSON.remove("software_statement");
         getResponsePayload.remove("software_statement");
+
         assertEquals(mapper.readTree(getResponsePayload.toJSONString()), mapper.readTree(
                 registerRequestJSON.toJSONString()), "Response payload should be equal.");
     }
@@ -461,10 +342,10 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
             "additional OIDC properties")
     public void testUpdateServiceProviderRequestWithAdditionalParameters() throws Exception {
 
-        HttpPut request = new HttpPut(getPath() + client_id);
-        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+        HttpPut request = new HttpPut(DCRUtils.getPath(tenant) + client_id);
+        request.addHeader(HttpHeaders.AUTHORIZATION, DCRUtils.getAuthzHeader(username, password));
         request.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
-        JSONObject updateRequestPayload =  getRegisterRequestJSON("request7.json");
+        JSONObject updateRequestPayload =  DCRUtils.getRegisterRequestJSON("request7.json");
 
         StringEntity entity = new StringEntity(updateRequestPayload.toJSONString());
         request.setEntity(entity);
@@ -473,33 +354,16 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
         HttpResponse response = client.execute(request);
         assertEquals(response.getStatusLine().getStatusCode(), 200, "Service Provider " +
                 "has not been created successfully");
-        JSONObject updateResponsePayload  = getPayload(response);
+        JSONObject updateResponsePayload  = DCRUtils.getPayload(response);
         client_id = ((JSONObject) updateResponsePayload).get("client_id").toString();
         assertNotNull(client_id, "client_id cannot be null");
         updateResponsePayload.remove("client_id");
         updateResponsePayload.remove("client_secret");
         updateResponsePayload.remove("client_secret_expires_at");
+        updateResponsePayload.remove("software_statement");
         assertEquals(mapper.readTree(updateResponsePayload.toJSONString()),
                 mapper.readTree(updateRequestPayload.toJSONString()), "Response payload should be equal.");
 
         testDeleteServiceProvider();
-    }
-
-    @Test(alwaysRun = true, groups = "wso2.is", priority = 11,
-            description = "Check FAPI validations, PPID and SSA during DCR", dataProvider = "dcrConfigProvider")
-    public void validateErrorScenarios(JSONObject requestJSON, String errorCode, String errorMessage) throws Exception {
-
-        HttpPost request = new HttpPost(getPath());
-        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
-        request.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
-        StringEntity entity = new StringEntity(requestJSON.toJSONString());
-        request.setEntity(entity);
-        HttpResponse response = client.execute(request);
-
-        assertEquals(response.getStatusLine().getStatusCode(), 400, "Service Provider " +
-                "has not been created successfully");
-        JSONObject errorResponse = getPayload(response);
-        assertEquals(errorResponse.get("error"), errorCode);
-        assertEquals(errorResponse.get("error_description"), errorMessage);
     }
 }
