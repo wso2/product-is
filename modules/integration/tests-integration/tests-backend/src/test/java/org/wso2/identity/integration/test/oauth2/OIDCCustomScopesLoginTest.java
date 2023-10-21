@@ -119,6 +119,7 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
     private final TestUserMode loginUserMode;
     private String tenantDomain;
     private String adminUsername;
+    private String adminUsernameWithoutTenantDomain;
     private String adminPassword;
     private String loginUsername;
     private String loginPassword;
@@ -161,6 +162,7 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
         tenantDomain = tenantInfo.getDomain();
         // Setup admin credentials.
         adminUsername = userInfo.getUserName();
+        adminUsernameWithoutTenantDomain = userInfo.getUserNameWithoutDomain();
         adminPassword = userInfo.getPassword();
 
         AutomationContext context = new AutomationContext("IDENTITY", loginUserMode);
@@ -284,7 +286,8 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
         urlParameters.add(new BasicNameValuePair(OAUTH2_REDIRECT_URI, CALLBACK_URL));
         urlParameters.add(new BasicNameValuePair(OAUTH2_SCOPE, requestedScopes));
 
-        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, AUTHORIZE_ENDPOINT_URL);
+        HttpResponse response = sendPostRequestWithParameters(client, urlParameters,
+                getTenantQualifiedURL(AUTHORIZE_ENDPOINT_URL, tenantDomain));
         Assert.assertNotNull(response, "Authorization request failed. Authorized response is null");
 
         String locationValue = getLocationHeaderValue(response);
@@ -334,7 +337,8 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
         URI callbackURI = new URI(CALLBACK_URL);
         AuthorizationCodeGrant codeGrant = new AuthorizationCodeGrant(authorizationCode, callbackURI);
 
-        TokenRequest tokenReq = new TokenRequest(new URI(ACCESS_TOKEN_ENDPOINT), clientSecretBasic, codeGrant);
+        TokenRequest tokenReq = new TokenRequest(new URI(getTenantQualifiedURL(ACCESS_TOKEN_ENDPOINT, tenantDomain)),
+                clientSecretBasic, codeGrant);
         HTTPResponse tokenHTTPResp = tokenReq.toHTTPRequest().send();
         Assert.assertNotNull(tokenHTTPResp, "Access token http response is null.");
 
@@ -376,7 +380,8 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
         urlParameters.add(new BasicNameValuePair(OAUTH2_REDIRECT_URI, CALLBACK_URL));
         urlParameters.add(new BasicNameValuePair(OAUTH2_SCOPE, requestedScopes));
 
-        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, AUTHORIZE_ENDPOINT_URL);
+        HttpResponse response = sendPostRequestWithParameters(client, urlParameters,
+                getTenantQualifiedURL(AUTHORIZE_ENDPOINT_URL, tenantDomain));
         Assert.assertNotNull(response, "Authorization request failed. Authorized response is null");
 
         String locationValue = getLocationHeaderValue(response);
@@ -445,7 +450,7 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
         ClientAuthentication clientAuth = new ClientSecretBasic(clientID, clientSecret);
 
         Scope requestedScope = Scope.parse(requestedScopes);
-        URI tokenEndpoint = new URI(ACCESS_TOKEN_ENDPOINT);
+        URI tokenEndpoint = new URI(getTenantQualifiedURL(ACCESS_TOKEN_ENDPOINT, tenantDomain));
 
         TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, passwordGrant, requestedScope);
 
@@ -530,14 +535,15 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
     private String getAccessTokenToCallAPI(String... scopes) throws Exception {
 
         Secret adminSecret = new Secret(this.adminPassword);
-        AuthorizationGrant passwordGrant = new ResourceOwnerPasswordCredentialsGrant(adminUsername, adminSecret);
+        AuthorizationGrant passwordGrant = new ResourceOwnerPasswordCredentialsGrant(adminUsernameWithoutTenantDomain
+                , adminSecret);
 
         ClientID clientID = new ClientID(consumerKey);
         Secret clientSecret = new Secret(consumerSecret);
         ClientAuthentication clientAuth = new ClientSecretBasic(clientID, clientSecret);
 
         Scope requestedScope = Scope.parse(Arrays.asList(scopes));
-        URI tokenEndpoint = new URI(ACCESS_TOKEN_ENDPOINT);
+        URI tokenEndpoint = new URI(getTenantQualifiedURL(ACCESS_TOKEN_ENDPOINT, tenantDomain));
         TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, passwordGrant, requestedScope);
 
         HTTPResponse tokenHTTPResp = request.toHTTPRequest().send();

@@ -447,7 +447,7 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
     private HttpResponse sendLoginPost(HttpClient client, String sessionDataKey) throws IOException {
 
         List<NameValuePair> urlParameters = new ArrayList<>();
-        urlParameters.add(new BasicNameValuePair("username", SECONDARY_IS_TEST_USERNAME));
+        urlParameters.add(new BasicNameValuePair("username", SECONDARY_IS_TEST_USERNAME + "@" + tenantInfo.getDomain()));
         urlParameters.add(new BasicNameValuePair("password", SECONDARY_IS_TEST_PASSWORD));
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
 
