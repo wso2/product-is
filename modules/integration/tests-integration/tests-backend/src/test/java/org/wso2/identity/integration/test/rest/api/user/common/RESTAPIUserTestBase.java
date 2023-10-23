@@ -24,6 +24,7 @@ import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvide
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProviderProperty;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.common.RESTTestBase;
 
 /**
@@ -34,7 +35,6 @@ public class RESTAPIUserTestBase extends RESTTestBase {
 
     protected static final String API_USERS_BASE_PATH = "/api/users/%s";
     protected static final String API_USERS_BASE_PATH_IN_SWAGGER = "/t/\\{tenant-domain\\}" + API_USERS_BASE_PATH;
-    protected static final String API_USERS_BASE_PATH_WITH_TENANT_CONTEXT = TENANT_CONTEXT_IN_URL + API_USERS_BASE_PATH;
     private static final String ADMIN = "admin";
     private IdentityProviderMgtServiceClient superTenantIDPMgtClient;
     private IdentityProviderMgtServiceClient tenantIDPMgtClient;
@@ -45,8 +45,8 @@ public class RESTAPIUserTestBase extends RESTTestBase {
             throws XPathExpressionException, RemoteException {
 
         String basePathInSwagger = String.format(API_USERS_BASE_PATH_IN_SWAGGER, apiVersion);
-        String basePath = String.format(API_USERS_BASE_PATH_WITH_TENANT_CONTEXT,
-                tenantDomain, apiVersion);
+        String basePath = ISIntegrationTest.getTenantedRelativePath(String.format(API_USERS_BASE_PATH, apiVersion),
+                tenantDomain);
         super.init(apiDefinition, basePathInSwagger, basePath);
     }
 
@@ -64,8 +64,8 @@ public class RESTAPIUserTestBase extends RESTTestBase {
             throws XPathExpressionException, RemoteException {
 
         String basePathInSwagger = String.format(apiUserBasePathInSwagger, apiVersion);
-        String basePath = String.format(apiUserBasePathWithTenantContext,
-                tenantDomain, apiVersion);
+        String basePath = ISIntegrationTest.getTenantedRelativePath(String.format(apiUserBasePathWithTenantContext,
+                apiVersion), tenantDomain);
         super.init(apiDefinition, basePathInSwagger, basePath);
     }
 

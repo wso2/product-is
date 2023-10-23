@@ -29,11 +29,12 @@ import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+
 import java.io.IOException;
 
 public class EmailTemplatesRestClient extends RestBaseClient {
 
-    private static final String TENANT_PATH = "t/%s";
     private static final String API_SERVER_BASE_PATH = "/api/server/v1";
     private static final String EMAIL_TEMPLATES_EMAIL_BASE_PATH = "/email";
     private static final String EMAIL_TEMPLATE_TYPES_PATH = "/template-types";
@@ -51,8 +52,8 @@ public class EmailTemplatesRestClient extends RestBaseClient {
 
         String tenantDomain = tenantInfo.getContextUser().getUserDomain();
 
-        emailTemplateApiBasePath = backendURL + String.format(TENANT_PATH, tenantDomain) + API_SERVER_BASE_PATH +
-                EMAIL_TEMPLATES_EMAIL_BASE_PATH + EMAIL_TEMPLATE_TYPES_PATH;
+        emailTemplateApiBasePath = backendURL + ISIntegrationTest.getTenantedRelativePath(API_SERVER_BASE_PATH
+                + EMAIL_TEMPLATES_EMAIL_BASE_PATH + EMAIL_TEMPLATE_TYPES_PATH, tenantDomain);
     }
 
     /**

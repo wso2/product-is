@@ -39,15 +39,13 @@ public class LiteUserRegisterTestCase extends LiteUserRegisterTestBase {
     protected static final String API_LITE_USER_REGISTER_BASE_PATH = "/api/identity/user/%s";
     protected static final String API_LITE_USER_REGISTER_BASE_PATH_IN_SWAGGER =
             "/t/\\{tenant-domain\\}" + API_LITE_USER_REGISTER_BASE_PATH;
-    protected static final String API_LITE_USER_REGISTER_BASE_PATH_WITH_TENANT_CONTEXT =
-            TENANT_CONTEXT_IN_URL + API_LITE_USER_REGISTER_BASE_PATH;
     protected static final String API_VERSION_LITE_USER = "v1.0";
 
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
 
         super.testInit(API_VERSION_LITE_USER, swaggerDefinitionLiteUserRegister, tenant,
-                API_LITE_USER_REGISTER_BASE_PATH_IN_SWAGGER, API_LITE_USER_REGISTER_BASE_PATH_WITH_TENANT_CONTEXT);
+                API_LITE_USER_REGISTER_BASE_PATH_IN_SWAGGER, API_LITE_USER_REGISTER_BASE_PATH);
     }
 
     @BeforeMethod(alwaysRun = true)

@@ -58,7 +58,8 @@ public class OAuth2ScopesTestCase extends ISIntegrationTest {
     public void testInit() throws Exception {
         super.init();
         String isServerBackendUrl = isServer.getContextUrls().getWebAppURLHttps();
-        scopeEndpoint = isServerBackendUrl + "/t/" + isServer.getContextTenant().getDomain() + SCOPE_ENDPOINT_SUFFIX;
+        scopeEndpoint = isServerBackendUrl +
+                getTenantedRelativePath(SCOPE_ENDPOINT_SUFFIX, isServer.getContextTenant().getDomain());
     }
 
     @AfterClass(alwaysRun = true)

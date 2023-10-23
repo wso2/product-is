@@ -79,7 +79,6 @@ public class RESTTestBase extends ISIntegrationTest {
             + File.separator + "deployment" + File.separator + "server" + File.separator + "webapps" + File
             .separator + "api" + File.separator + "WEB-INF" + File.separator
             + "lib" + File.separator;
-    protected static final String TENANT_CONTEXT_IN_URL = "/t/%s";
     private static final String JAR_EXTENSION = ".jar";
     protected static final String SERVICES = "/services";
 

@@ -30,6 +30,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -194,7 +195,7 @@ public class SCIM2SchemasTest extends SCIM2BaseTest {
         if (CARBON_SUPER.equals(tenant)) {
             return API_SERVER_BASE_CONTEXT;
         } else {
-            return String.format(TENANT_CONTEXT_IN_URL, tenant) + API_SERVER_BASE_CONTEXT;
+            return ISIntegrationTest.getTenantedRelativePath(API_SERVER_BASE_CONTEXT, tenant);
         }
     }
 }
