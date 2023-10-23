@@ -60,6 +60,7 @@
     <import resource="classpath:META-INF/cxf/rfc-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/organization-user-invitation-mgt-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/organization-configs-server-v1-cxf.xml"/>
+    <import resource="classpath:META-INF/cxf/self-service-mgt-v1-cxf.xml"/>
 
     <!-- Legacy identity APIs   -->
     <import resource="classpath:META-INF/cxf/config-mgt-server-v1-cxf.xml"/>
@@ -123,6 +124,46 @@
             <bean class="org.wso2.carbon.identity.api.expired.password.identification.v1.PasswordExpiredUsersApi"/>
             <bean class="org.wso2.carbon.identity.api.server.api.resource.v1.ApiResourcesApi"/>
             <bean class="org.wso2.carbon.identity.api.server.api.resource.v1.ScopesApi"/>
+            <bean class="org.wso2.carbon.identity.api.server.organization.selfservice.v1.SelfServiceApi"/>
+        </jaxrs:serviceBeans>
+        <jaxrs:providers>
+            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">
+                <constructor-arg>
+                    <bean class="com.fasterxml.jackson.databind.ObjectMapper">
+                        <property name="serializationInclusion" value="NON_NULL" />
+                    </bean>
+                </constructor-arg>
+            </bean>
+            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
+            <bean class="org.wso2.carbon.identity.api.dispatcher.core.JsonProcessingExceptionMapper"/>
+            <bean class="org.wso2.carbon.identity.api.dispatcher.core.APIErrorExceptionMapper"/>
+            <bean class="org.wso2.carbon.identity.api.dispatcher.core.InputValidationExceptionMapper"/>
+            <bean class="org.wso2.carbon.identity.api.dispatcher.core.DefaultExceptionMapper"/>
+            <bean class="org.apache.cxf.jaxrs.ext.search.SearchContextProvider"/>
+        </jaxrs:providers>
+        <jaxrs:inInterceptors>
+            <ref bean="validationInInterceptor"/>
+        </jaxrs:inInterceptors>
+    </jaxrs:server>
+    <jaxrs:server id="organization" address="/o/server/v1">
+        <jaxrs:serviceBeans>
+            <bean class="org.wso2.carbon.identity.rest.api.server.claim.management.v1.ClaimManagementApi"/>
+            <bean class="org.wso2.carbon.identity.rest.api.server.email.template.v1.EmailApi"/>
+            <bean class="org.wso2.carbon.identity.api.server.identity.governance.v1.IdentityGovernanceApi"/>
+            <bean class="org.wso2.carbon.identity.api.server.application.management.v1.ApplicationsApi"/>
+            <bean class="org.wso2.carbon.identity.api.server.userstore.v1.UserstoresApi"/>
+            <bean class="org.wso2.carbon.identity.api.server.idp.v1.IdentityProvidersApi"/>
+            <bean class="org.wso2.carbon.identity.api.server.configs.v1.ConfigsApi"/>
+            <bean class="org.wso2.carbon.identity.api.server.cors.v1.CorsApi"/>
+            <bean class="org.wso2.carbon.identity.api.server.authenticators.v1.AuthenticatorsApi"/>
+            <bean class="org.wso2.carbon.identity.api.server.branding.preference.management.v1.BrandingPreferenceApi"/>
+            <bean class="org.wso2.carbon.identity.api.server.input.validation.v1.ValidationRulesApi"/>
+            <bean class="org.wso2.carbon.identity.api.server.idv.provider.v1.IdvProvidersApi"/>
+            <bean class="org.wso2.carbon.identity.api.server.organization.management.v1.OrganizationsApi"/>
+            <bean class="org.wso2.carbon.identity.api.server.organization.role.management.v1.OrganizationsApi"/>
+            <bean class="org.wso2.carbon.identity.api.server.organization.user.invitation.management.v1.GuestsApi"/>
+            <bean class="org.wso2.carbon.identity.api.server.organization.configs.v1.OrganizationConfigsApi"/>
+            <bean class="org.wso2.carbon.identity.api.server.organization.selfservice.v1.SelfServiceApi"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">

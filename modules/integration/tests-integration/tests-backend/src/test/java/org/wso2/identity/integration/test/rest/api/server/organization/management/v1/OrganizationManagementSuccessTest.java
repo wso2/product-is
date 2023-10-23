@@ -72,7 +72,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         if (OrganizationLevel.SUPER_ORGANIZATION.equals(this.organizationLevel)) {
             org = "Level1Org";
-            parentId = SUPER_ORGANIZATION_NAME;
+            parentId = SUPER_ORGANIZATION_ID;
         } else {
             org = "Level2Org";
             parentId = subOrganizationId;
