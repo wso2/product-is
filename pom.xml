@@ -2298,7 +2298,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.25.420</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.25.427</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2462,7 +2462,7 @@
         <!-- Feature dependency Versions -->
         <stratos.version.221>2.2.1</stratos.version.221>
         <ehcache.version>1.5.0.wso2v3</ehcache.version>
-        <bcel.wso2.version>5.2.0.wso2v1</bcel.wso2.version>
+        <bcel.wso2.version>6.7.0.wso2v1</bcel.wso2.version>
         <asm-all.version>5.2</asm-all.version>
         <cglib.wso2.version>2.2.wso2v1</cglib.wso2.version>
         <jibx.wso2.version>1.2.1.wso2v1</jibx.wso2.version>
