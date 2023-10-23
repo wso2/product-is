@@ -38,6 +38,7 @@ public class TomcatInitializerTestCase extends ISIntegrationTest {
 
     private static final String[] APPLICATIONS = {
             "travelocity.com",
+            "travelocity.com-saml-supertenantwithoutsigning",
             "travelocity.com-saml-tenantwithoutsigning",
             "travelocity.com-registrymount",
             "avis.com",

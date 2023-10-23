@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.IntStream;
 
+import javax.xml.xpath.XPathExpressionException;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.hasItem;
@@ -100,7 +101,7 @@ public class UserDiscoverableApplicationSuccessTest extends UserDiscoverableAppl
     }
 
     @Test(description = "Test listing applications with offset and limit.", dataProvider = "offsetLimitProvider")
-    public void testListApplicationsWithOffsetLimit(int offset, int limit) {
+    public void testListApplicationsWithOffsetLimit(int offset, int limit) throws Exception {
 
         Map<String, Object> params = new HashMap<String, Object>() {{
             put("offset", offset);
@@ -307,27 +308,28 @@ public class UserDiscoverableApplicationSuccessTest extends UserDiscoverableAppl
                     .body("applications.find{ it.id == '" + serviceProvider.getApplicationResourceId() + "'}.image",
                             equalTo(serviceProvider.getImageUrl()))
                     .body("applications.find{ it.id == '" + serviceProvider.getApplicationResourceId() + "'}" +
-                                    ".accessUrl", equalTo(serviceProvider.getAccessUrl()))
+                            ".accessUrl", equalTo(serviceProvider.getAccessUrl()))
                     .body("applications.find{ it.id == '" + serviceProvider.getApplicationResourceId() + "'}" +
                                     ".description",
                             equalTo(serviceProvider.getDescription()));
         });
     }
 
-    private void assertNextLink(int offset, int limit, Response response) {
+    private void assertNextLink(int offset, int limit, Response response) throws XPathExpressionException {
 
         if ((offset + limit) < TOTAL_DISCOVERABLE_APP_COUNT) {
 
             response.then().log().ifValidationFails().body("links.rel", hasItem("next"));
             response.then().log().ifValidationFails().body("links.find { it.rel == 'next'}.href", equalTo
-                    (String.format(RestAssured.basePath + USER_APPLICATION_ENDPOINT_URI +
+                    (String.format(getTenantedRelativePath("/api/users/v1" +
+                            USER_APPLICATION_ENDPOINT_URI, context.getContextTenant().getDomain()) +
                             PAGINATION_LINK_QUERY_PARAM_STRING, (offset + limit), limit)));
         } else {
             response.then().log().ifValidationFails().body("links", not(hasItem("next")));
         }
     }
 
-    private void assertPreviousLink(int offset, int limit, Response response) {
+    private void assertPreviousLink(int offset, int limit, Response response) throws XPathExpressionException {
 
         if (offset > 0) { // Previous link exists only if offset is greater than 0.
             int expectedOffsetQueryParam;
@@ -342,7 +344,8 @@ public class UserDiscoverableApplicationSuccessTest extends UserDiscoverableAppl
             }
 
             response.then().log().ifValidationFails().body("links.find { it.rel == 'previous'}.href", equalTo
-                    (String.format(RestAssured.basePath + USER_APPLICATION_ENDPOINT_URI +
+                    (String.format(getTenantedRelativePath("/api/users/v1" +
+                            USER_APPLICATION_ENDPOINT_URI, context.getContextTenant().getDomain()) +
                             PAGINATION_LINK_QUERY_PARAM_STRING, expectedOffsetQueryParam, expectedLimitQueryParam)));
 
         } else if (offset == 0) {
