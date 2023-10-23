@@ -325,7 +325,10 @@ public class ConfigSuccessTest extends ConfigTestBase {
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .body("enableRequestSigning", equalTo(false))
-                .body("passiveSTSUrl", equalTo(PASSIVE_STS_URL));
+                .body("passiveSTSUrl",
+                        MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(context.getContextTenant().getDomain())
+                                ? equalTo(PASSIVE_STS_URL_SUPER_TENANT)
+                                : equalTo(PASSIVE_STS_URL_TENANT));
     }
 
     @Test(dependsOnMethods = {"testGetPassiveSTSInboundAuthConfigs"})

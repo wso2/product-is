@@ -47,7 +47,8 @@ public class ConfigTestBase extends RESTAPIServerTestBase {
             "https://localhost:9853/t/wso2.com/identity/metadata/saml2";
     public static final String SAML_SSO_URL_SUPER_TENANT = "https://localhost:9853/samlsso";
     public static final String SAML_SSO_URL_TENANT = "https://localhost:9853/t/wso2.com/samlsso";
-    public static final String PASSIVE_STS_URL = "https://localhost:9853/passivests";
+    public static final String PASSIVE_STS_URL_SUPER_TENANT = "https://localhost:9853/passivests";
+    public static final String PASSIVE_STS_URL_TENANT = "https://localhost:9853/t/wso2.com/passivests";
 
     public static final String PATH_SEPARATOR = "/";
     public static final String SAMPLE_AUTHENTICATOR_ID = "QmFzaWNBdXRoZW50aWNhdG9y";
