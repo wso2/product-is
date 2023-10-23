@@ -32,3 +32,5 @@ dcr.enable_sector_identifier_validation=true
 dcr.ssa_jkws="https://localhost:9853/oauth2/jwks"
 dcr.enable_fapi_enforcement=true
 oidc.fapi.enable_validation=true
+oidc.fapi.allowed_client_authentication_methods = ["private_key_jwt", "tls_client_auth"]
+oidc.fapi.allowed_signature_algorithms = ["PS256", "ES256"]
