@@ -35,8 +35,6 @@ public class SelfRegisterTestBase extends RESTAPIUserTestBase {
     protected static final String API_SELF_REGISTER_BASE_PATH = "/api/identity/user/%s";
     protected static final String API_SELF_REGISTER_BASE_PATH_IN_SWAGGER =
             "/t/\\{tenant-domain\\}" + API_SELF_REGISTER_BASE_PATH;
-    protected static final String API_SELF_REGISTER_BASE_PATH_WITH_TENANT_CONTEXT =
-            TENANT_CONTEXT_IN_URL + API_SELF_REGISTER_BASE_PATH;
     protected static final String API_VERSION_SELF_REGISTER = "v1.0";
 
     static {
