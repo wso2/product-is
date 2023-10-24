@@ -1,0 +1,47 @@
+{
+  "name": "OAuth Application With Additional OIDC Attributes",
+  "inboundProtocolConfiguration": {
+    "oidc": {
+      "clientId": "custom_client_id",
+      "clientSecret": "custom_client_secret",
+      "grantTypes": [
+        "password",
+        "authorization_code"
+      ],
+      "callbackURLs": [
+        "https://localhost/callback"
+      ],
+      "publicClient": false,
+      "idToken": {
+        "audience": [
+          "valid_audience_value"
+        ],
+        "idTokenSignedResponseAlg": "PS256",
+        "encryption": {
+          "enabled": true,
+          "algorithm": "RSA-OAEP",
+          "method": "A128GCM"
+        },
+        "expiryInSeconds": 3600
+      },
+      "clientAuthentication": {
+        "tokenEndpointAuthMethod": "private_key_jwt",
+        "tokenEndpointAuthSigningAlg": "PS256"
+      },
+      "requestObject": {
+        "requireSignedRequestObject": true,
+        "requestObjectSigningAlg": "PS256",
+        "encryption": {
+          "algorithm": "RSA-OAEP",
+          "method": "A128CBC+HS256"
+        }
+      },
+      "pushAuthorizationRequest": {
+        "requirePushAuthorizationRequest": true
+      },
+      "subject": {
+        "subjectType": "public"
+      }
+    }
+  }
+}

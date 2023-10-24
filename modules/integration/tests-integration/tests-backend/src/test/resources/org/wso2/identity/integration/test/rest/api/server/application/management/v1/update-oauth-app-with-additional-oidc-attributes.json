@@ -1,0 +1,68 @@
+{
+  "clientId": "custom_client_id",
+  "clientSecret": "custom_client_secret",
+  "accessToken": {
+    "applicationAccessTokenExpiryInSeconds": 3600,
+    "type": "Default",
+    "userAccessTokenExpiryInSeconds": 3600,
+    "bindingType" : "cookie"
+  },
+  "allowedOrigins": [
+    "http://wso2.is"
+  ],
+  "callbackURLs": [
+    "http://localhost:8080/playground2/oauth2client"
+  ],
+  "grantTypes": [
+    "refresh_token",
+    "authorization_code",
+    "account_switch",
+    "password"
+  ],
+  "idToken": {
+    "audience": [
+      "valid_audience_value"
+    ],
+    "idTokenSignedResponseAlg": "ES256",
+    "encryption": {
+      "enabled": true,
+      "algorithm": "RSA-OAEP",
+      "method": "A128GCM"
+    },
+    "expiryInSeconds": 3600
+  },
+  "logout": {
+    "backChannelLogoutUrl": "",
+    "frontChannelLogoutUrl": ""
+  },
+  "pkce": {
+    "mandatory": true,
+    "supportPlainTransformAlgorithm": true
+  },
+  "publicClient": false,
+  "refreshToken": {
+    "expiryInSeconds": 86400,
+    "renewRefreshToken": true
+  },
+  "scopeValidators": [],
+  "validateRequestObjectSignature": false,
+  "clientAuthentication": {
+    "tokenEndpointAuthMethod": "tls_client_auth",
+    "tlsClientAuthSubjectDn": "CN=John Doe,OU=OrgUnit,O=Organization,L=Colombo,ST=Western,C=LK"
+  },
+  "requestObject": {
+    "requireSignedRequestObject": false,
+    "requestObjectSigningAlg": "ES256",
+    "encryption": {
+      "algorithm": "RSA1_5",
+      "method": "A128GCM"
+    }
+  },
+  "pushAuthorizationRequest": {
+    "requirePushAuthorizationRequest": false
+  },
+  "subject": {
+    "subjectType": "pairwise",
+    "sectorIdentifierUri": "https://app.example.com"
+  }
+}

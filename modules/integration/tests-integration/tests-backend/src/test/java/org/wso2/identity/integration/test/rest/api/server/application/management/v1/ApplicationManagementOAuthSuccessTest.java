@@ -200,4 +200,70 @@ public class ApplicationManagementOAuthSuccessTest extends ApplicationManagement
         getResponseOfGet(path).then().assertThat().statusCode(HttpStatus.SC_NOT_FOUND);
         createdAppId = null;
     }
+
+    @Test(dependsOnMethods = "testDeleteSecondApp")
+    public void testCreateOAuthAppWithAdditionalOIDCAttributes() throws Exception {
+
+        String body = readResource("create-oauth-app-with-additional-oidc-attributes.json");
+        Response responseOfPost = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, body);
+        responseOfPost.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .header(HttpHeaders.LOCATION, notNullValue());
+
+        String location = responseOfPost.getHeader(HttpHeaders.LOCATION);
+        createdAppId = extractApplicationIdFromLocationHeader(location);
+        assertNotBlank(createdAppId);
+    }
+
+    @Test(dependsOnMethods = "testCreateOAuthAppWithAdditionalOIDCAttributes")
+    public void testGetOAuthInboundDetailsWithAdditionalOIDCAttributes() throws Exception {
+
+        String path = APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId + INBOUND_PROTOCOLS_OIDC_CONTEXT_PATH;
+
+        Response responseOfGet = getResponseOfGet(path);
+        responseOfGet.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("idToken.idTokenSignedResponseAlg", equalTo("PS256"))
+                .body("clientAuthentication.tokenEndpointAuthMethod", equalTo("private_key_jwt"))
+                .body("clientAuthentication.tokenEndpointAuthSigningAlg", equalTo("PS256"))
+                .body("requestObject.requireSignedRequestObject", equalTo(true))
+                .body("requestObject.requestObjectSigningAlg", equalTo("PS256"))
+                .body("requestObject.encryption.algorithm", equalTo("RSA-OAEP"))
+                .body("requestObject.encryption.method", equalTo("A128CBC+HS256"))
+                .body("pushAuthorizationRequest.requirePushAuthorizationRequest", equalTo(true))
+                .body("subject.subjectType", equalTo("public"));
+    }
+
+    @Test(dependsOnMethods = "testGetOAuthInboundDetailsWithAdditionalOIDCAttributes")
+    public void testUpdateOAuthInboundDetailsWithAdditionalOIDCAttributes() throws Exception {
+
+        String body = readResource("update-oauth-app-with-additional-oidc-attributes.json");
+        String path = APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId + INBOUND_PROTOCOLS_OIDC_CONTEXT_PATH;
+
+        getResponseOfPut(path, body)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK);
+
+        getResponseOfGet(path).then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("idToken.idTokenSignedResponseAlg", equalTo("ES256"))
+                .body("clientAuthentication.tokenEndpointAuthMethod", equalTo("tls_client_auth"))
+                .body("clientAuthentication.tlsClientAuthSubjectDn",
+                        equalTo("CN=John Doe,OU=OrgUnit,O=Organization,L=Colombo,ST=Western,C=LK"))
+                .body("requestObject.requireSignedRequestObject", equalTo(false))
+                .body("requestObject.requestObjectSigningAlg", equalTo("ES256"))
+                .body("requestObject.encryption.algorithm", equalTo("RSA1_5"))
+                .body("requestObject.encryption.method", equalTo("A128GCM"))
+                .body("pushAuthorizationRequest.requirePushAuthorizationRequest", equalTo(false))
+                .body("subject.subjectType", equalTo("pairwise"))
+                .body("subject.sectorIdentifierUri", equalTo("https://app.example.com"));
+    }
 }

@@ -130,4 +130,44 @@ public class ApplicationManagementOAuthFailureTest extends ApplicationManagement
         Response responseOfPost = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, body);
         validateErrorResponse(responseOfPost, HttpStatus.SC_BAD_REQUEST, "OAUTH-60001");
     }
+
+    @Test (description = "Tests error scenario when an OIDC application is created with invalid signature algorithm.")
+    public void testCreateOAuthApplicationsWithInvalidIdTokenSigningAlgorithm() throws Exception {
+
+        String body = readResource("create-oauth-app-with-invalid-id-token-signing-algorithm.json");
+        Response responseOfPost = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, body);
+        validateErrorResponse(responseOfPost, HttpStatus.SC_BAD_REQUEST, "OAUTH-60001");
+    }
+
+    @Test (description = "Tests error scenario when an OIDC application is created with invalid signature algorithm")
+    public void testCreateOAuthApplicationsWithInvalidRequestObjectSigningAlgorithm() throws Exception {
+
+        String body = readResource("create-oauth-app-with-invalid-request-object-signing-algorithm.json");
+        Response responseOfPost = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, body);
+        validateErrorResponse(responseOfPost, HttpStatus.SC_BAD_REQUEST, "OAUTH-60001");
+    }
+
+    @Test (description = "Tests error scenario when an OIDC application is created with invalid client auth method")
+    public void testCreateOAuthApplicationsWithInvalidClientAuthenticationMethod() throws Exception {
+
+        String body = readResource("create-oauth-app-with-invalid-client-authentication-method.json");
+        Response responseOfPost = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, body);
+        validateErrorResponse(responseOfPost, HttpStatus.SC_BAD_REQUEST, "OAUTH-60001");
+    }
+
+    @Test (description = "Tests error scenario when an OIDC application is created with invalid encryption algorithm.")
+    public void testCreateOAuthApplicationsWithInvalidRequestObjectEncryptionAlgorithm() throws Exception {
+
+        String body = readResource("create-oauth-app-with-invalid-request-object-encryption-algorithm.json");
+        Response responseOfPost = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, body);
+        validateErrorResponse(responseOfPost, HttpStatus.SC_BAD_REQUEST, "OAUTH-60001");
+    }
+
+    @Test (description = "Tests error scenario when an OIDC application is created with invalid encryption method.")
+    public void testCreateOAuthApplicationsWithInvalidRequestObjectEncryptionMethod() throws Exception {
+
+        String body = readResource("create-oauth-app-with-invalid-request-object-encryption-method.json");
+        Response responseOfPost = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, body);
+        validateErrorResponse(responseOfPost, HttpStatus.SC_BAD_REQUEST, "OAUTH-60001");
+    }
 }
