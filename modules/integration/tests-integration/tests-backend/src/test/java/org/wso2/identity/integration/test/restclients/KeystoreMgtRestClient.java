@@ -25,6 +25,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.message.BasicHeader;
 import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.server.keystore.management.v1.model.CertificateRequest;
 
 import javax.servlet.http.HttpServletResponse;
@@ -32,7 +33,7 @@ import java.io.IOException;
 
 public class KeystoreMgtRestClient extends RestBaseClient {
 
-    private static final String KEYSTORE_BASE_PATH = "t/%s/api/server/v1/keystores/certs";
+    private static final String KEYSTORE_BASE_PATH = "/api/server/v1/keystores/certs";
     private final String serverUrl;
     private final String tenantDomain;
     private final String username;
@@ -53,7 +54,7 @@ public class KeystoreMgtRestClient extends RestBaseClient {
      */
     public void importCertToStore(CertificateRequest certificateRequest) throws Exception {
         String jsonRequest = toJSONString(certificateRequest);
-        String endPointUrl = serverUrl + String.format(KEYSTORE_BASE_PATH, tenantDomain);
+        String endPointUrl = serverUrl + ISIntegrationTest.getTenantedRelativePath(KEYSTORE_BASE_PATH, tenantDomain);
 
         try (CloseableHttpResponse response = getResponseOfHttpPost(endPointUrl, jsonRequest, getHeaders())) {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_CREATED,
@@ -68,7 +69,8 @@ public class KeystoreMgtRestClient extends RestBaseClient {
      * @return Boolean status of certificate availability in tenant keystore.
      */
     public Boolean checkCertInStore(String alias) throws Exception {
-        String endPointUrl = serverUrl + String.format(KEYSTORE_BASE_PATH, tenantDomain) + PATH_SEPARATOR + alias;
+        String endPointUrl = serverUrl + ISIntegrationTest.getTenantedRelativePath(KEYSTORE_BASE_PATH, tenantDomain)
+                + PATH_SEPARATOR + alias;
 
         try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
             return response.getStatusLine().getStatusCode() == HttpServletResponse.SC_OK;

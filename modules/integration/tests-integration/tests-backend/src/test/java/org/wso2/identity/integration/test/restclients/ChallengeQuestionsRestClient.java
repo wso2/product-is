@@ -25,6 +25,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.message.BasicHeader;
 import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.server.challenge.v1.model.UserChallengeAnswer;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
@@ -57,8 +58,8 @@ public class ChallengeQuestionsRestClient extends RestBaseClient {
                                            UserChallengeAnswer challengeAsnwerObj) throws Exception {
 
         String jsonRequest = toJSONString(challengeAsnwerObj);
-        String endPointUrl = serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR +
-                String.format(CHALLENGE_QUESTION_BASE_PATH, userId) + PATH_SEPARATOR +  questionSetId;
+        String endPointUrl = serverUrl + ISIntegrationTest.getTenantedRelativePath(String.format(
+                CHALLENGE_QUESTION_BASE_PATH, userId) + PATH_SEPARATOR +  questionSetId, tenantDomain);
 
         try (CloseableHttpResponse response = getResponseOfHttpPost(endPointUrl, jsonRequest, getHeaders())) {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_CREATED,

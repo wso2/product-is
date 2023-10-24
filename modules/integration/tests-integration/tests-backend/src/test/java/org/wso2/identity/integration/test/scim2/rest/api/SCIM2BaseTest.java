@@ -23,6 +23,7 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.common.RESTTestBase;
 
 import java.io.File;
@@ -38,7 +39,6 @@ public class SCIM2BaseTest extends RESTTestBase {
     protected static String swaggerDefinition;
     protected static final String SCIM_CONTENT_TYPE = "application/scim+json";
     protected static final String SCIM2_BASE_PATH_IN_SWAGGER = "/t/\\{tenant-domain\\}" + SCIM2_ENDPOINT;
-    protected static final String SCIM2_BASE_PATH_WITH_TENANT_CONTEXT = TENANT_CONTEXT_IN_URL + SCIM2_ENDPOINT;
     public static final String FILE_BASE_PATH = (System.getProperty("basedir", "."))
             + File.separator + "src" + File.separator + "test"
             + File.separator + "resources" + File.separator;
@@ -59,8 +59,7 @@ public class SCIM2BaseTest extends RESTTestBase {
         if ("carbon.super".equals(tenantDomain)) {
             basePath = String.format(SCIM2_ENDPOINT);
         } else {
-            basePath = String.format(SCIM2_BASE_PATH_WITH_TENANT_CONTEXT,
-                    tenantDomain);
+            basePath = ISIntegrationTest.getTenantedRelativePath(SCIM2_ENDPOINT, tenantDomain);
         }
         super.init(apiDefinition, SCIM2_BASE_PATH_IN_SWAGGER, basePath);
     }
