@@ -2429,7 +2429,7 @@
         <conditional.authentication.functions.version>1.2.36</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.1.11</identity.apps.console.version>
+        <identity.apps.console.version>2.1.13</identity.apps.console.version>
         <identity.apps.myaccount.version>2.1.6</identity.apps.myaccount.version>
         <identity.apps.core.version>2.0.22</identity.apps.core.version>
         <identity.apps.tests.version>1.6.373</identity.apps.tests.version>
