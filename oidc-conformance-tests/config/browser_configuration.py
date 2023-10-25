@@ -23,7 +23,7 @@ FORMPOST_PROMPT_LOGIN = {
         [
             "wait",
             "xpath",
-            "/html/body/main/div/div[2]/h3",
+            "/html/body/div[2]/main/div/div[2]/h3",
             10,
             "Sign In",
             "update-image-placeholder-optional"
@@ -31,7 +31,7 @@ FORMPOST_PROMPT_LOGIN = {
         [
             "text",
             "id",
-            "username",
+            "usernameUserInput",
             "admin"
         ],
         [
@@ -43,7 +43,7 @@ FORMPOST_PROMPT_LOGIN = {
         [
             "click",
             "xpath",
-            "//*[@id=\"loginForm\"]/div[9]/div[1]/button"
+            "//*[@id=\"loginForm\"]/div[8]/div[1]/button"
         ]
     ]
 }
@@ -75,7 +75,7 @@ FORMPOST_LOGIN = {
         [
             "text",
             "id",
-            "username",
+            "usernameUserInput",
             "admin"
         ],
         [
@@ -87,7 +87,26 @@ FORMPOST_LOGIN = {
         [
             "click",
             "xpath",
-            "//*[@id=\"loginForm\"]/div[9]/div[1]/button"
+            "//*[@id=\"loginForm\"]/div[8]/div[1]/button"
+        ]
+    ]
+}
+
+FORMPOST_LOGIN_WITHOUT_USERNAME = {
+    "task": "Login",
+    "match": constants.BASE_URL + "/authenticationendpoint/login*",
+    "optional": True,
+    "commands": [
+        [
+            "text",
+            "id",
+            "password",
+            "admin"
+        ],
+        [
+            "click",
+            "xpath",
+            "//*[@id=\"loginForm\"]/div[6]/div[1]/button"
         ]
     ]
 }
@@ -741,6 +760,17 @@ CONFIG = {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             FORMPOST_LOGIN,
+                            VERIFY_COMPLETE_FORMPOST
+                        ]
+                    }
+                ]
+            },
+            "oidcc-login-hint": {
+                "browser": [
+                    {
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
+                        "tasks": [
+                            FORMPOST_LOGIN_WITHOUT_USERNAME,
                             VERIFY_COMPLETE_FORMPOST
                         ]
                     }
