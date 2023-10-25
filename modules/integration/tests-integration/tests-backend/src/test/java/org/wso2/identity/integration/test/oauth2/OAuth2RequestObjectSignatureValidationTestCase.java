@@ -148,7 +148,6 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
             EntityUtils.consume(response.getEntity());
         }
     }
-
     @Test(groups = "wso2.is", description = "Check enabling option to enforce request object signature validation",
             dependsOnMethods = "sendAuthorizationGrantRequestWithPlainJWTRequestObject")
     public void testEnforceRequestObjectSignatureValidation() throws Exception {
@@ -193,6 +192,19 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
 
         try (CloseableHttpClient client = getRedirectDisabledClient()) {
             String signedRequestObject = buildSignedJWT(consumerKey, sp2PrivateKey);
+            HttpResponse response = sendGetRequest(client, getAuthzRequestUrl(consumerKey, CALLBACK_URL, signedRequestObject));
+            assertForErrorPage(response);
+            EntityUtils.consume(response.getEntity());
+        }
+    }
+    @Test(groups = "wso2.is", description = "Check whether request object is signed with registered signing algorithm")
+    public void sendInvalidSigningAlgorithmForRequestObject() throws Exception {
+
+        oidcInboundConfig.getRequestObject().setRequestObjectSigningAlg("PS256");
+        updateApplicationInboundConfig(application.getId(), oidcInboundConfig, OIDC);
+
+        try (CloseableHttpClient client = getRedirectDisabledClient()) {
+            String signedRequestObject = buildSignedJWT(consumerKey, sp1PrivateKey);
             HttpResponse response = sendGetRequest(client, getAuthzRequestUrl(consumerKey, CALLBACK_URL, signedRequestObject));
             assertForErrorPage(response);
             EntityUtils.consume(response.getEntity());
