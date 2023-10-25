@@ -284,7 +284,8 @@ def json_config_builder(service_provider_1, service_provider_2, output_file_path
             "authorization_endpoint": constants.BASE_URL + "/oauth2/authorize",
             "token_endpoint": constants.BASE_URL + "/oauth2/token",
             "userinfo_endpoint": constants.BASE_URL + "/oauth2/userinfo",
-            "acr_values": "acr1"
+            "acr_values": "acr1",
+            "login_hint": "admin"
         },
         "client": {
             "client_id": service_provider_1['clientId'],
