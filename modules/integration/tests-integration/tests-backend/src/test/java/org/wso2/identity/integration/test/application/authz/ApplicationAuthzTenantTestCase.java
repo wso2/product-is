@@ -61,7 +61,6 @@ public class ApplicationAuthzTenantTestCase extends AbstractApplicationAuthzTest
     private static final String AZ_TEST_TENANT_USER_PW = "azTest123";
     private static final String NON_AZ_TEST_TENANT_USER = "nonAzTestTenantUser";
     private static final String NON_AZ_TEST_TENANT_USER_PW = "nonAzTest123";
-    private static final String WSO2_DOMAIN = "@wso2.com";
     private static final Log log = LogFactory.getLog(ApplicationAuthzTenantTestCase.class);
     private static final String APPLICATION_NAME = "travelocity.com-saml-tenantwithoutsigning";
     private static final String POLICY_ID = "spTenantAuthPolicy";
@@ -93,11 +92,13 @@ public class ApplicationAuthzTenantTestCase extends AbstractApplicationAuthzTest
                     "</Policy>";
 
     private String userId;
+    private String tenantQualifiedCommonAuthURL;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
         super.init(TestUserMode.TENANT_ADMIN);
+        tenantQualifiedCommonAuthURL = getTenantQualifiedURL(COMMON_AUTH_URL, tenantInfo.getDomain());
         ConfigurationContext configContext = ConfigurationContextFactory
                 .createConfigurationContextFromFileSystem(null, null);
         applicationManagementServiceClient =
@@ -157,8 +158,8 @@ public class ApplicationAuthzTenantTestCase extends AbstractApplicationAuthzTest
                 Utils.sendGetRequest(String.format(SAML_SSO_LOGIN_URL, APPLICATION_NAME, HTTP_REDIRECT), USER_AGENT,
                         httpClientAzUser);
         String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
-        response = Utils.sendPOSTMessage(sessionKey, COMMON_AUTH_URL, USER_AGENT, ACS_URL, APPLICATION_NAME,
-                AZ_TEST_TENANT_USER + WSO2_DOMAIN, AZ_TEST_TENANT_USER_PW, httpClientAzUser);
+        response = Utils.sendPOSTMessage(sessionKey, tenantQualifiedCommonAuthURL, USER_AGENT, ACS_URL, APPLICATION_NAME,
+                AZ_TEST_TENANT_USER, AZ_TEST_TENANT_USER_PW, httpClientAzUser, tenantQualifiedCommonAuthURL);
 
         String locationHeader = Utils.getRedirectUrl(response);
         if (Utils.requestMissingClaims(response)) {
@@ -166,7 +167,7 @@ public class ApplicationAuthzTenantTestCase extends AbstractApplicationAuthzTest
             Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
             EntityUtils.consume(response.getEntity());
 
-            response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT, locationHeader,
+            response = Utils.sendPOSTConsentMessage(response, tenantQualifiedCommonAuthURL, USER_AGENT, locationHeader,
                     httpClientAzUser, pastrCookie);
         }
         EntityUtils.consume(response.getEntity());
@@ -176,9 +177,9 @@ public class ApplicationAuthzTenantTestCase extends AbstractApplicationAuthzTest
             Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
             EntityUtils.consume(response.getEntity());
 
-            response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT,
-                                                    String.format(ACS_URL, APPLICATION_NAME),
-                                                    httpClientAzUser, pastrCookie);
+            response = Utils.sendPOSTConsentMessage(response, tenantQualifiedCommonAuthURL, USER_AGENT,
+                    String.format(ACS_URL, APPLICATION_NAME),
+                    httpClientAzUser, pastrCookie);
             EntityUtils.consume(response.getEntity());
         }
 
@@ -198,8 +199,9 @@ public class ApplicationAuthzTenantTestCase extends AbstractApplicationAuthzTest
         HttpResponse response = Utils.sendGetRequest(String.format(SAML_SSO_LOGIN_URL, APPLICATION_NAME,
                 HTTP_REDIRECT), USER_AGENT, httpClientNonAzUser);
         String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
-        response = Utils.sendPOSTMessage(sessionKey, COMMON_AUTH_URL, USER_AGENT, ACS_URL, APPLICATION_NAME,
-                NON_AZ_TEST_TENANT_USER + WSO2_DOMAIN, NON_AZ_TEST_TENANT_USER_PW, httpClientNonAzUser);
+        response = Utils.sendPOSTMessage(sessionKey, tenantQualifiedCommonAuthURL, USER_AGENT, ACS_URL, APPLICATION_NAME,
+                NON_AZ_TEST_TENANT_USER, NON_AZ_TEST_TENANT_USER_PW, httpClientNonAzUser,
+                tenantQualifiedCommonAuthURL);
 
         String redirectUrl = Utils.getRedirectUrl(response);
         if (Utils.requestMissingClaims(response)) {
@@ -207,7 +209,7 @@ public class ApplicationAuthzTenantTestCase extends AbstractApplicationAuthzTest
             Assert.assertNotNull(pastrCookie, "pastr cookie not found in response.");
             EntityUtils.consume(response.getEntity());
 
-            response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT, redirectUrl,
+            response = Utils.sendPOSTConsentMessage(response, tenantQualifiedCommonAuthURL, USER_AGENT, redirectUrl,
                     httpClientNonAzUser, pastrCookie);
             redirectUrl = Utils.getRedirectUrl(response);
         }

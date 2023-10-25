@@ -29,6 +29,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
 import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.server.oidc.scope.management.v1.model.ScopeUpdateRequest;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
@@ -37,7 +38,7 @@ import java.io.IOException;
 
 public class OIDCScopeMgtRestClient extends RestBaseClient {
     private final String serverUrl;
-    private final String OIDC_SCOPE_MGT_BASE_PATH = "t/%s/api/server/v1/oidc/scopes";
+    private final String OIDC_SCOPE_MGT_BASE_PATH = "/api/server/v1/oidc/scopes";
     private final String tenantDomain;
     private final String username;
     private final String password;
@@ -57,8 +58,8 @@ public class OIDCScopeMgtRestClient extends RestBaseClient {
      * @return Scope object.
      */
     public JSONObject getScope(String scopeId) throws Exception {
-        String endPointUrl = serverUrl + String.format(OIDC_SCOPE_MGT_BASE_PATH, tenantDomain) +
-                PATH_SEPARATOR +  scopeId;
+        String endPointUrl = serverUrl + ISIntegrationTest.getTenantedRelativePath(OIDC_SCOPE_MGT_BASE_PATH,
+                tenantDomain) + PATH_SEPARATOR +  scopeId;
 
         try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
             return getJSONObject(EntityUtils.toString(response.getEntity()));
@@ -73,8 +74,8 @@ public class OIDCScopeMgtRestClient extends RestBaseClient {
      */
     public void updateScope(String scopeId, ScopeUpdateRequest scopeUpdateObj) throws Exception {
         String jsonRequest = toJSONString(scopeUpdateObj);
-        String endPointUrl = serverUrl + String.format(OIDC_SCOPE_MGT_BASE_PATH, tenantDomain) +
-                PATH_SEPARATOR +  scopeId;
+        String endPointUrl = serverUrl + ISIntegrationTest.getTenantedRelativePath(OIDC_SCOPE_MGT_BASE_PATH,
+                tenantDomain) + PATH_SEPARATOR +  scopeId;
 
         try (CloseableHttpResponse response = getResponseOfHttpPut(endPointUrl, jsonRequest, getHeaders())) {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,

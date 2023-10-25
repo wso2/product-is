@@ -17,6 +17,7 @@
 package org.wso2.identity.integration.test.rest.api.server.common;
 
 import org.apache.axis2.AxisFault;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.common.RESTTestBase;
 
 import java.rmi.RemoteException;
@@ -29,15 +30,13 @@ public class RESTAPIServerTestBase extends RESTTestBase {
 
     protected static final String API_SERVER_BASE_PATH = "/api/server/%s";
     protected static final String API_SERVER_BASE_PATH_IN_SWAGGER = "/t/\\{tenant-domain\\}" + API_SERVER_BASE_PATH;
-    protected static final String API_SERVER_BASE_PATH_WITH_TENANT_CONTEXT =
-            TENANT_CONTEXT_IN_URL + API_SERVER_BASE_PATH;
 
     protected void testInit(String apiVersion, String apiDefinition, String tenantDomain)
             throws RemoteException {
 
         String basePathInSwagger = String.format(API_SERVER_BASE_PATH_IN_SWAGGER, apiVersion);
-        String basePath = String.format(API_SERVER_BASE_PATH_WITH_TENANT_CONTEXT,
-                tenantDomain, apiVersion);
+        String basePath = ISIntegrationTest.getTenantedRelativePath(String.format(API_SERVER_BASE_PATH, apiVersion),
+                tenantDomain);
         super.init(apiDefinition, basePathInSwagger, basePath);
     }
 

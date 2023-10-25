@@ -30,6 +30,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
 import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.ConnectorsPatchReq;
 
 import javax.servlet.http.HttpServletResponse;
@@ -37,7 +38,6 @@ import java.io.IOException;
 
 public class IdentityGovernanceRestClient extends RestBaseClient {
 
-    private static final String TENANT_PATH = "t/%s";
     private static final String API_SERVER_BASE_PATH = "/api/server/v1";
     private static final String IDENTITY_GOVERNANCE_BASE_PATH = "/identity-governance";
     private static final String CONNECTORS_BASE_PATH = "/connectors";
@@ -54,8 +54,8 @@ public class IdentityGovernanceRestClient extends RestBaseClient {
 
         String tenantDomain = tenantInfo.getContextUser().getUserDomain();
 
-        identityGovernanceApiBasePath = backendURL + String.format(TENANT_PATH, tenantDomain) + API_SERVER_BASE_PATH +
-                IDENTITY_GOVERNANCE_BASE_PATH;
+        identityGovernanceApiBasePath = backendURL + ISIntegrationTest.getTenantedRelativePath(
+                API_SERVER_BASE_PATH + IDENTITY_GOVERNANCE_BASE_PATH, tenantDomain);
     }
 
     /**

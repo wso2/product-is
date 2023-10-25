@@ -39,8 +39,8 @@ public class ApplicationResponseModel {
     private String issuer;
     private String templateId;
     private Boolean isManagementApp;
-    private Boolean isFapiApplication;
-
+    private Boolean isB2BSelfServiceApp;
+    private AssociatedRolesConfig associatedRoles;
     private ClaimConfiguration claimConfiguration;
     private List<InboundProtocolListItem> inboundProtocols = null;
     private AuthenticationSequence authenticationSequence;
@@ -247,6 +247,27 @@ public class ApplicationResponseModel {
         this.isManagementApp = isManagementApp;
     }
 
+    /**
+     *
+     **/
+    public ApplicationResponseModel associatedRoles(AssociatedRolesConfig associatedRoles) {
+
+        this.associatedRoles = associatedRoles;
+        return this;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("associatedRoles")
+    @Valid
+    public AssociatedRolesConfig getAssociatedRoles() {
+
+        return associatedRoles;
+    }
+
+    public void setAssociatedRoles(AssociatedRolesConfig associatedRoles) {
+
+        this.associatedRoles = associatedRoles;
+    }
 
     /**
     **/
@@ -358,24 +379,6 @@ public class ApplicationResponseModel {
 
     /**
      **/
-    public ApplicationResponseModel isFapiApplication(Boolean isFapiApplication) {
-
-        this.isFapiApplication = isFapiApplication;
-        return this;
-    }
-
-    @ApiModelProperty(value = "")
-    @JsonProperty("isFapiApplication")
-    @Valid
-    public Boolean getIsFapiApplication() {
-        return isFapiApplication;
-    }
-    public void setIsFapiApplication(Boolean isFapiApplication) {
-        this.isFapiApplication = isFapiApplication;
-    }
-
-    /**
-     **/
     public ApplicationResponseModel access(ApplicationResponseModel.AccessEnum access) {
 
         this.access = access;
@@ -413,19 +416,20 @@ public class ApplicationResponseModel {
             Objects.equals(this.issuer, applicationResponseModel.issuer) &&
             Objects.equals(this.templateId, applicationResponseModel.templateId) &&
             Objects.equals(this.isManagementApp, applicationResponseModel.isManagementApp) &&
-            Objects.equals(this.isFapiApplication, applicationResponseModel.isFapiApplication) &&
             Objects.equals(this.claimConfiguration, applicationResponseModel.claimConfiguration) &&
             Objects.equals(this.inboundProtocols, applicationResponseModel.inboundProtocols) &&
             Objects.equals(this.authenticationSequence, applicationResponseModel.authenticationSequence) &&
             Objects.equals(this.appRoleConfigurations, applicationResponseModel.appRoleConfigurations) &&
             Objects.equals(this.advancedConfigurations, applicationResponseModel.advancedConfigurations) &&
-            Objects.equals(this.provisioningConfigurations, applicationResponseModel.provisioningConfigurations) &&
-            Objects.equals(this.access, applicationResponseModel.access);
+            Objects.equals(this.provisioningConfigurations, applicationResponseModel.provisioningConfigurations) && Objects.equals(this.access, applicationResponseModel.access) && Objects.equals(this.associatedRoles, applicationResponseModel.associatedRoles);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, imageUrl, accessUrl, clientId, issuer, templateId, isManagementApp, isFapiApplication, claimConfiguration, inboundProtocols, authenticationSequence, appRoleConfigurations, advancedConfigurations, provisioningConfigurations, access);
+
+        return Objects.hash(id, name, description, imageUrl, accessUrl, clientId, issuer, templateId, isManagementApp,
+                claimConfiguration, inboundProtocols, associatedRoles, authenticationSequence, appRoleConfigurations,
+                advancedConfigurations, provisioningConfigurations, access);
     }
 
     @Override
@@ -441,6 +445,7 @@ public class ApplicationResponseModel {
                 "    issuer: " + toIndentedString(issuer) + "\n" +
                 "    templateId: " + toIndentedString(templateId) + "\n" +
                 "    isManagementApp: " + toIndentedString(isManagementApp) + "\n" +
+                "    associatedRoles: " + toIndentedString(associatedRoles) + "\n" +
                 "    claimConfiguration: " + toIndentedString(claimConfiguration) + "\n" +
                 "    inboundProtocols: " + toIndentedString(inboundProtocols) + "\n" +
                 "    authenticationSequence: " + toIndentedString(authenticationSequence) + "\n" +

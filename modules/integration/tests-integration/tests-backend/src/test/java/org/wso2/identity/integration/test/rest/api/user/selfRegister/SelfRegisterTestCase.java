@@ -46,7 +46,7 @@ public class SelfRegisterTestCase extends SelfRegisterTestBase {
         this.tenant = context.getContextTenant().getDomain();
 
         super.testInit(API_VERSION_SELF_REGISTER, swaggerDefinitionSelfRegister, tenant,
-                API_SELF_REGISTER_BASE_PATH_IN_SWAGGER, API_SELF_REGISTER_BASE_PATH_WITH_TENANT_CONTEXT);
+                API_SELF_REGISTER_BASE_PATH_IN_SWAGGER, API_SELF_REGISTER_BASE_PATH);
         selfRegisterUserInfo = readResource("self-register-request-body.json");
     }
 

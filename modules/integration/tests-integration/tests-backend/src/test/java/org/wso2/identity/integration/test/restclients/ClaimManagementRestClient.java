@@ -29,6 +29,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
 import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model.ExternalClaimReq;
 
 import javax.servlet.http.HttpServletResponse;
@@ -36,7 +37,6 @@ import java.io.IOException;
 
 public class ClaimManagementRestClient extends RestBaseClient {
 
-    private static final String TENANT_PATH = "t/%s";
     private static final String API_SERVER_BASE_PATH = "/api/server/v1";
     private static final String CLAIM_DIALECTS_ENDPOINT_URI = "/claim-dialects";
 
@@ -54,7 +54,7 @@ public class ClaimManagementRestClient extends RestBaseClient {
 
         String tenantDomain = tenantInfo.getContextUser().getUserDomain();
 
-        serverBasePath = backendURL + String.format(TENANT_PATH, tenantDomain) + API_SERVER_BASE_PATH;
+        serverBasePath = backendURL + ISIntegrationTest.getTenantedRelativePath(API_SERVER_BASE_PATH, tenantDomain);
     }
 
     /**
