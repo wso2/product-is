@@ -171,7 +171,7 @@ VERIFY_ERROR = {
             "xpath",
             "//*",
             10,
-            "Need help? Contact us via.*",
+            "Need help\? Contact us via",
             "update-image-placeholder"
         ]
     ]
