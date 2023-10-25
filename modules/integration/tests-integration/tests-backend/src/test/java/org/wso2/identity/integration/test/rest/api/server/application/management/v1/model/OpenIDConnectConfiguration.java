@@ -80,7 +80,10 @@ public enum StateEnum {
     private OIDCLogoutConfiguration logout;
     private Boolean validateRequestObjectSignature = false;
     private List<String> scopeValidators = null;
-
+    private ClientAuthenticationConfiguration clientAuthentication;
+    private RequestObjectConfiguration requestObject;
+    private PushAuthorizationRequestConfiguration pushAuthorizationRequest;
+    private SubjectConfiguration subject;
 
     /**
     **/
@@ -367,8 +370,79 @@ public enum StateEnum {
         this.scopeValidators.add(scopeValidatorsItem);
         return this;
     }
+    /**
+     **/
+    public OpenIDConnectConfiguration clientAuthentication(ClientAuthenticationConfiguration clientAuthentication) {
 
-    
+        this.clientAuthentication = clientAuthentication;
+        return this;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("clientAuthentication")
+    @Valid
+    public ClientAuthenticationConfiguration getClientAuthentication() {
+        return clientAuthentication;
+    }
+    public void setClientAuthentication(ClientAuthenticationConfiguration clientAuthentication) {
+        this.clientAuthentication = clientAuthentication;
+    }
+
+    /**
+     **/
+    public OpenIDConnectConfiguration requestObject(RequestObjectConfiguration requestObject) {
+
+        this.requestObject = requestObject;
+        return this;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("requestObject")
+    @Valid
+    public RequestObjectConfiguration getRequestObject() {
+        return requestObject;
+    }
+    public void setRequestObject(RequestObjectConfiguration requestObject) {
+        this.requestObject = requestObject;
+    }
+
+    /**
+     **/
+    public OpenIDConnectConfiguration pushAuthorizationRequest(PushAuthorizationRequestConfiguration pushAuthorizationRequest) {
+
+        this.pushAuthorizationRequest = pushAuthorizationRequest;
+        return this;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("pushAuthorizationRequest")
+    @Valid
+    public PushAuthorizationRequestConfiguration getPushAuthorizationRequest() {
+        return pushAuthorizationRequest;
+    }
+    public void setPushAuthorizationRequest(PushAuthorizationRequestConfiguration pushAuthorizationRequest) {
+        this.pushAuthorizationRequest = pushAuthorizationRequest;
+    }
+
+    /**
+     **/
+    public OpenIDConnectConfiguration subject(SubjectConfiguration subject) {
+
+        this.subject = subject;
+        return this;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("subject")
+    @Valid
+    public SubjectConfiguration getSubject() {
+        return subject;
+    }
+    public void setSubject(SubjectConfiguration subject) {
+        this.subject = subject;
+    }
+
+
 
     @Override
     public boolean equals(Object o) {
@@ -381,25 +455,30 @@ public enum StateEnum {
         }
         OpenIDConnectConfiguration openIDConnectConfiguration = (OpenIDConnectConfiguration) o;
         return Objects.equals(this.clientId, openIDConnectConfiguration.clientId) &&
-            Objects.equals(this.clientSecret, openIDConnectConfiguration.clientSecret) &&
-            Objects.equals(this.state, openIDConnectConfiguration.state) &&
-            Objects.equals(this.grantTypes, openIDConnectConfiguration.grantTypes) &&
-            Objects.equals(this.callbackURLs, openIDConnectConfiguration.callbackURLs) &&
-            Objects.equals(this.allowedOrigins, openIDConnectConfiguration.allowedOrigins) &&
-            Objects.equals(this.publicClient, openIDConnectConfiguration.publicClient) &&
-            Objects.equals(this.pkce, openIDConnectConfiguration.pkce) &&
-            Objects.equals(this.accessToken, openIDConnectConfiguration.accessToken) &&
-            Objects.equals(this.refreshToken, openIDConnectConfiguration.refreshToken) &&
-            Objects.equals(this.idToken, openIDConnectConfiguration.idToken) &&
-            Objects.equals(this.logout, openIDConnectConfiguration.logout) &&
-            Objects.equals(this.validateRequestObjectSignature, openIDConnectConfiguration.validateRequestObjectSignature) &&
-            Objects.equals(this.scopeValidators, openIDConnectConfiguration.scopeValidators);
+                Objects.equals(this.clientSecret, openIDConnectConfiguration.clientSecret) &&
+                Objects.equals(this.state, openIDConnectConfiguration.state) &&
+                Objects.equals(this.grantTypes, openIDConnectConfiguration.grantTypes) &&
+                Objects.equals(this.callbackURLs, openIDConnectConfiguration.callbackURLs) &&
+                Objects.equals(this.allowedOrigins, openIDConnectConfiguration.allowedOrigins) &&
+                Objects.equals(this.publicClient, openIDConnectConfiguration.publicClient) &&
+                Objects.equals(this.pkce, openIDConnectConfiguration.pkce) &&
+                Objects.equals(this.accessToken, openIDConnectConfiguration.accessToken) &&
+                Objects.equals(this.refreshToken, openIDConnectConfiguration.refreshToken) &&
+                Objects.equals(this.idToken, openIDConnectConfiguration.idToken) &&
+                Objects.equals(this.logout, openIDConnectConfiguration.logout) &&
+                Objects.equals(this.validateRequestObjectSignature, openIDConnectConfiguration
+                        .validateRequestObjectSignature) &&
+                Objects.equals(this.scopeValidators, openIDConnectConfiguration.scopeValidators) &&
+                Objects.equals(this.scopeValidators, openIDConnectConfiguration.scopeValidators) &&
+                Objects.equals(this.clientAuthentication, openIDConnectConfiguration.clientAuthentication) &&
+                Objects.equals(this.requestObject, openIDConnectConfiguration.requestObject) &&
+                Objects.equals(this.pushAuthorizationRequest, openIDConnectConfiguration.pushAuthorizationRequest) &&
+                Objects.equals(this.subject, openIDConnectConfiguration.subject);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(clientId, clientSecret, state, grantTypes, callbackURLs, allowedOrigins, publicClient, pkce, accessToken, refreshToken, idToken, logout, validateRequestObjectSignature, scopeValidators);
-    }
+        return Objects.hash(clientId, clientSecret, state, grantTypes, callbackURLs, allowedOrigins, publicClient, pkce, accessToken, refreshToken, idToken, logout, validateRequestObjectSignature, scopeValidators, clientAuthentication, requestObject, pushAuthorizationRequest, subject);    }
 
     @Override
     public String toString() {

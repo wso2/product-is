@@ -39,6 +39,8 @@ public class ApplicationResponseModel {
     private String issuer;
     private String templateId;
     private Boolean isManagementApp;
+    private Boolean isFapiApplication;
+
     private ClaimConfiguration claimConfiguration;
     private List<InboundProtocolListItem> inboundProtocols = null;
     private AuthenticationSequence authenticationSequence;
@@ -356,6 +358,24 @@ public class ApplicationResponseModel {
 
     /**
      **/
+    public ApplicationResponseModel isFapiApplication(Boolean isFapiApplication) {
+
+        this.isFapiApplication = isFapiApplication;
+        return this;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("isFapiApplication")
+    @Valid
+    public Boolean getIsFapiApplication() {
+        return isFapiApplication;
+    }
+    public void setIsFapiApplication(Boolean isFapiApplication) {
+        this.isFapiApplication = isFapiApplication;
+    }
+
+    /**
+     **/
     public ApplicationResponseModel access(ApplicationResponseModel.AccessEnum access) {
 
         this.access = access;
@@ -393,6 +413,7 @@ public class ApplicationResponseModel {
             Objects.equals(this.issuer, applicationResponseModel.issuer) &&
             Objects.equals(this.templateId, applicationResponseModel.templateId) &&
             Objects.equals(this.isManagementApp, applicationResponseModel.isManagementApp) &&
+            Objects.equals(this.isFapiApplication, applicationResponseModel.isFapiApplication) &&
             Objects.equals(this.claimConfiguration, applicationResponseModel.claimConfiguration) &&
             Objects.equals(this.inboundProtocols, applicationResponseModel.inboundProtocols) &&
             Objects.equals(this.authenticationSequence, applicationResponseModel.authenticationSequence) &&
@@ -404,7 +425,7 @@ public class ApplicationResponseModel {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, imageUrl, accessUrl, clientId, issuer, templateId, isManagementApp, claimConfiguration, inboundProtocols, authenticationSequence, appRoleConfigurations, advancedConfigurations, provisioningConfigurations, access);
+        return Objects.hash(id, name, description, imageUrl, accessUrl, clientId, issuer, templateId, isManagementApp, isFapiApplication, claimConfiguration, inboundProtocols, authenticationSequence, appRoleConfigurations, advancedConfigurations, provisioningConfigurations, access);
     }
 
     @Override

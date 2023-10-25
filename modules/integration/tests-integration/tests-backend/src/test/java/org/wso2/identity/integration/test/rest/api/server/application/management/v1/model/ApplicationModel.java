@@ -34,6 +34,7 @@ public class ApplicationModel  {
     private String imageUrl;
     private String loginUrl;
     private Boolean isManagementApp;
+    private Boolean isFapiApplication = false;
     private ClaimConfiguration claimConfiguration;
     private InboundProtocols inboundProtocolConfiguration;
     private AuthenticationSequence authenticationSequence;
@@ -240,6 +241,24 @@ public class ApplicationModel  {
         this.provisioningConfigurations = provisioningConfigurations;
     }
 
+    /**
+     **/
+    public ApplicationModel isFapiApplication(Boolean isFapiApplication) {
+
+        this.isFapiApplication = isFapiApplication;
+        return this;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("isFapiApplication")
+    @Valid
+    public Boolean getIsFapiApplication() {
+        return isFapiApplication;
+    }
+    public void setIsFapiApplication(Boolean isFapiApplication) {
+        this.isFapiApplication = isFapiApplication;
+    }
+
 
 
     @Override
@@ -258,6 +277,7 @@ public class ApplicationModel  {
             Objects.equals(this.imageUrl, applicationModel.imageUrl) &&
             Objects.equals(this.loginUrl, applicationModel.loginUrl) &&
             Objects.equals(this.isManagementApp, applicationModel.isManagementApp) &&
+            Objects.equals(this.isFapiApplication, applicationModel.isFapiApplication) &&
             Objects.equals(this.claimConfiguration, applicationModel.claimConfiguration) &&
             Objects.equals(this.inboundProtocolConfiguration, applicationModel.inboundProtocolConfiguration) &&
             Objects.equals(this.authenticationSequence, applicationModel.authenticationSequence) &&
@@ -267,8 +287,9 @@ public class ApplicationModel  {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, imageUrl, loginUrl, isManagementApp, claimConfiguration,
-                inboundProtocolConfiguration, authenticationSequence, advancedConfigurations, provisioningConfigurations);
+        return Objects.hash(id, name, description, imageUrl, isManagementApp, isFapiApplication, claimConfiguration,
+                inboundProtocolConfiguration, authenticationSequence, advancedConfigurations,
+                provisioningConfigurations);
     }
 
     @Override
@@ -283,6 +304,7 @@ public class ApplicationModel  {
         sb.append("    imageUrl: ").append(toIndentedString(imageUrl)).append("\n");
         sb.append("    loginUrl: ").append(toIndentedString(loginUrl)).append("\n");
         sb.append("    isManagementApp: ").append(toIndentedString(isManagementApp)).append("\n");
+        sb.append("    isFapiApplication: ").append(toIndentedString(isFapiApplication)).append("\n");
         sb.append("    claimConfiguration: ").append(toIndentedString(claimConfiguration)).append("\n");
         sb.append("    inboundProtocolConfiguration: ").append(toIndentedString(inboundProtocolConfiguration)).append("\n");
         sb.append("    authenticationSequence: ").append(toIndentedString(authenticationSequence)).append("\n");

@@ -34,6 +34,8 @@ public class OIDCMetaData  {
     private MetadataProperty scopeValidators;
     private MetadataProperty accessTokenType;
     private MetadataProperty accessTokenBindingType;
+    private MetadataProperty tokenEndpointAuthMethod;
+    private MetadataProperty tokenEndpointSignatureAlgorithm;
 
     /**
      **/
@@ -215,6 +217,42 @@ public class OIDCMetaData  {
         this.accessTokenBindingType = accessTokenBindingType;
     }
 
+    /**
+     **/
+    public OIDCMetaData tokenEndpointAuthMethod(MetadataProperty tokenEndpointAuthMethod) {
+
+        this.tokenEndpointAuthMethod = tokenEndpointAuthMethod;
+        return this;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("tokenEndpointAuthMethod")
+    @Valid
+    public MetadataProperty getTokenEndpointAuthMethod() {
+        return tokenEndpointAuthMethod;
+    }
+    public void setTokenEndpointAuthMethod(MetadataProperty tokenEndpointAuthMethod) {
+        this.tokenEndpointAuthMethod = tokenEndpointAuthMethod;
+    }
+
+    /**
+     **/
+    public OIDCMetaData tokenEndpointSignatureAlgorithm(MetadataProperty tokenEndpointSignatureAlgorithm) {
+
+        this.tokenEndpointSignatureAlgorithm = tokenEndpointSignatureAlgorithm;
+        return this;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("tokenEndpointSignatureAlgorithm")
+    @Valid
+    public MetadataProperty getTokenEndpointSignatureAlgorithm() {
+        return tokenEndpointSignatureAlgorithm;
+    }
+    public void setTokenEndpointSignatureAlgorithm(MetadataProperty tokenEndpointSignatureAlgorithm) {
+        this.tokenEndpointSignatureAlgorithm = tokenEndpointSignatureAlgorithm;
+    }
+
     @Override
     public boolean equals(java.lang.Object o) {
 
@@ -234,12 +272,17 @@ public class OIDCMetaData  {
                 Objects.equals(this.idTokenEncryptionMethod, oiDCMetaData.idTokenEncryptionMethod) &&
                 Objects.equals(this.scopeValidators, oiDCMetaData.scopeValidators) &&
                 Objects.equals(this.accessTokenType, oiDCMetaData.accessTokenType) &&
-                Objects.equals(this.accessTokenBindingType, oiDCMetaData.accessTokenBindingType);
+                Objects.equals(this.accessTokenBindingType, oiDCMetaData.accessTokenBindingType) &&
+                Objects.equals(this.tokenEndpointAuthMethod, oiDCMetaData.tokenEndpointAuthMethod) &&
+                Objects.equals(this.tokenEndpointSignatureAlgorithm, oiDCMetaData.tokenEndpointSignatureAlgorithm);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(allowedGrantTypes, defaultUserAccessTokenExpiryTime, defaultApplicationAccessTokenExpiryTime, defaultRefreshTokenExpiryTime, defaultIdTokenExpiryTime, idTokenEncryptionAlgorithm, idTokenEncryptionMethod, scopeValidators, accessTokenType, accessTokenBindingType);
+        return Objects.hash(allowedGrantTypes, defaultUserAccessTokenExpiryTime,
+                defaultApplicationAccessTokenExpiryTime, defaultRefreshTokenExpiryTime, defaultIdTokenExpiryTime,
+                idTokenEncryptionAlgorithm, idTokenEncryptionMethod, scopeValidators, accessTokenType,
+                accessTokenBindingType, tokenEndpointAuthMethod, tokenEndpointSignatureAlgorithm);
     }
 
     @Override
@@ -258,6 +301,9 @@ public class OIDCMetaData  {
         sb.append("    scopeValidators: ").append(toIndentedString(scopeValidators)).append("\n");
         sb.append("    accessTokenType: ").append(toIndentedString(accessTokenType)).append("\n");
         sb.append("    accessTokenBindingType: ").append(toIndentedString(accessTokenBindingType)).append("\n");
+        sb.append("    tokenEndpointAuthMethod: ").append(toIndentedString(tokenEndpointAuthMethod)).append("\n");
+        sb.append("    tokenEndpointSignatureAlgorithm: ").append(toIndentedString(tokenEndpointSignatureAlgorithm))
+                .append("\n");
         sb.append("}");
         return sb.toString();
     }
