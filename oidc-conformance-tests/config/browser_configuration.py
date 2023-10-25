@@ -905,6 +905,17 @@ CONFIG = {
                         ]
                     }
                 ]
+            },
+            "oidcc-login-hint": {
+                "browser": [
+                    {
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
+                        "tasks": [
+                            FORMPOST_LOGIN_WITHOUT_USERNAME,
+                            VERIFY_COMPLETE_FORMPOST
+                        ]
+                    }
+                ]
             }
         }
     },
