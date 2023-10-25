@@ -39,6 +39,8 @@ public class ApplicationResponseModel {
     private String issuer;
     private String templateId;
     private Boolean isManagementApp;
+    private Boolean isB2BSelfServiceApp;
+    private AssociatedRolesConfig associatedRoles;
     private ClaimConfiguration claimConfiguration;
     private List<InboundProtocolListItem> inboundProtocols = null;
     private AuthenticationSequence authenticationSequence;
@@ -245,6 +247,27 @@ public class ApplicationResponseModel {
         this.isManagementApp = isManagementApp;
     }
 
+    /**
+     *
+     **/
+    public ApplicationResponseModel associatedRoles(AssociatedRolesConfig associatedRoles) {
+
+        this.associatedRoles = associatedRoles;
+        return this;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("associatedRoles")
+    @Valid
+    public AssociatedRolesConfig getAssociatedRoles() {
+
+        return associatedRoles;
+    }
+
+    public void setAssociatedRoles(AssociatedRolesConfig associatedRoles) {
+
+        this.associatedRoles = associatedRoles;
+    }
 
     /**
     **/
@@ -398,13 +421,15 @@ public class ApplicationResponseModel {
             Objects.equals(this.authenticationSequence, applicationResponseModel.authenticationSequence) &&
             Objects.equals(this.appRoleConfigurations, applicationResponseModel.appRoleConfigurations) &&
             Objects.equals(this.advancedConfigurations, applicationResponseModel.advancedConfigurations) &&
-            Objects.equals(this.provisioningConfigurations, applicationResponseModel.provisioningConfigurations) &&
-            Objects.equals(this.access, applicationResponseModel.access);
+            Objects.equals(this.provisioningConfigurations, applicationResponseModel.provisioningConfigurations) && Objects.equals(this.access, applicationResponseModel.access) && Objects.equals(this.associatedRoles, applicationResponseModel.associatedRoles);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, imageUrl, accessUrl, clientId, issuer, templateId, isManagementApp, claimConfiguration, inboundProtocols, authenticationSequence, appRoleConfigurations, advancedConfigurations, provisioningConfigurations, access);
+
+        return Objects.hash(id, name, description, imageUrl, accessUrl, clientId, issuer, templateId, isManagementApp,
+                claimConfiguration, inboundProtocols, associatedRoles, authenticationSequence, appRoleConfigurations,
+                advancedConfigurations, provisioningConfigurations, access);
     }
 
     @Override
@@ -420,6 +445,7 @@ public class ApplicationResponseModel {
                 "    issuer: " + toIndentedString(issuer) + "\n" +
                 "    templateId: " + toIndentedString(templateId) + "\n" +
                 "    isManagementApp: " + toIndentedString(isManagementApp) + "\n" +
+                "    associatedRoles: " + toIndentedString(associatedRoles) + "\n" +
                 "    claimConfiguration: " + toIndentedString(claimConfiguration) + "\n" +
                 "    inboundProtocols: " + toIndentedString(inboundProtocols) + "\n" +
                 "    authenticationSequence: " + toIndentedString(authenticationSequence) + "\n" +
