@@ -546,6 +546,9 @@
                                     </fileset>
                                 </unzip>
                                 <delete file="../connectors/target/authenticatorCopied/war/x509certificateauthenticationendpoint.war" />
+                                <delete>
+                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api/WEB-INF/lib/" includes="org.wso2.carbon.identity.api.resource.mgt*" />
+                                </delete>
                             </tasks>
                         </configuration>
                     </execution>
@@ -576,6 +579,7 @@
                 <artifactId>maven-site-plugin</artifactId>
                 <version>3.3</version>
                 <configuration>
+
                     <reportPlugins>
                         <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
