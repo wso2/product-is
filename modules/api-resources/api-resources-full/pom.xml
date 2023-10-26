@@ -67,6 +67,9 @@
                         WEB-INF/lib/org.wso2.carbon.api.*.jar,
                         WEB-INF/lib/org.wso2.carbon.rest.api.*.jar
                     </packagingIncludes>
+                    <packagingExcludes>
+                        WEB-INF/lib/org.wso2.carbon.identity.api.resource.mgt*.jar
+                    </packagingExcludes>
                 </configuration>
             </plugin>
             <plugin>
