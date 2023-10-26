@@ -28,7 +28,7 @@
     <artifactId>identity-server-parent</artifactId>
     <packaging>pom</packaging>
     <description>WSO2 Identity Server</description>
-    <version>7.0.0-m4-SNAPSHOT</version>
+    <version>7.0.0-alpha-SNAPSHOT</version>
     <name>WSO2 Identity Server</name>
     <url>http://wso2.org/projects/identity</url>
 
@@ -2298,7 +2298,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.25.444</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.25.446</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2324,7 +2324,7 @@
         <identity.inbound.auth.openid.version>5.9.5</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.10.17</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.4</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>3.4.34</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim2.version>3.4.36</identity.inbound.provisioning.scim2.version>
       
         <!-- Identity workflow Versions -->
         <identity.user.workflow.version>5.6.0</identity.user.workflow.version>
@@ -2346,7 +2346,7 @@
 
         <!-- Identity Event Handler Versions -->
         <identity.event.handler.account.lock.version>1.8.13</identity.event.handler.account.lock.version>
-        <identity.event.handler.notification.version>1.7.21</identity.event.handler.notification.version>
+        <identity.event.handler.notification.version>1.7.23</identity.event.handler.notification.version>
 
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
@@ -2429,7 +2429,7 @@
         <conditional.authentication.functions.version>1.2.36</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.2.3</identity.apps.console.version>
+        <identity.apps.console.version>2.3.0</identity.apps.console.version>
         <identity.apps.myaccount.version>2.1.9</identity.apps.myaccount.version>
         <identity.apps.core.version>2.0.26</identity.apps.core.version>
         <identity.apps.tests.version>1.6.373</identity.apps.tests.version>
