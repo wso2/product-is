@@ -215,22 +215,12 @@ public class NotificationSenderSuccessTest extends NotificationSenderTestBase {
         String body = readResource("add-sms-sender.json");
         Response response =
                 getResponseOfPost(NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + SMS_SENDERS_PATH, body);
-        if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            response.then()
-                    .log().ifValidationFails()
-                    .assertThat()
-                    .statusCode(HttpStatus.SC_CREATED)
-                    .header(HttpHeaders.LOCATION, notNullValue());
-            String location = response.getHeader(HttpHeaders.LOCATION);
-            assertNotNull(location);
-            smsNotificationSenderName = location.substring(location.lastIndexOf("/") + 1);
-            assertNotNull(smsNotificationSenderName);
-        } else {
-            response.then()
-                    .log().ifValidationFails()
-                    .assertThat()
-                    .statusCode(HttpStatus.SC_METHOD_NOT_ALLOWED);
-        }
+        response.then().log().ifValidationFails().assertThat().statusCode(HttpStatus.SC_CREATED)
+                .header(HttpHeaders.LOCATION, notNullValue());
+        String location = response.getHeader(HttpHeaders.LOCATION);
+        assertNotNull(location);
+        smsNotificationSenderName = location.substring(location.lastIndexOf("/") + 1);
+        assertNotNull(smsNotificationSenderName);
     }
 
     @Test(dependsOnMethods = {"testAddSmsSender"})
@@ -239,25 +229,18 @@ public class NotificationSenderSuccessTest extends NotificationSenderTestBase {
         Response response = getResponseOfGet(
                 NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + SMS_SENDERS_PATH + PATH_SEPARATOR +
                         smsNotificationSenderName);
-        if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            response.then()
-                    .log().ifValidationFails()
-                    .assertThat()
-                    .statusCode(HttpStatus.SC_OK)
-                    .body("name", equalTo("SMSPublisher"))
-                    .body("provider", equalTo("Vonage"))
-                    .body("providerURL", equalTo("https://webhook.site/9b79bebd-445a-4dec-ad5e-622b856fa184"))
-                    .body("key", equalTo("1234"))
-                    .body("secret", equalTo("12345"))
-                    .body("sender", equalTo("073923902"))
-                    .body("contentType", equalTo("JSON"))
-                    .body("properties", notNullValue());
-        } else {
-            response.then()
-                    .log().ifValidationFails()
-                    .assertThat()
-                    .statusCode(HttpStatus.SC_METHOD_NOT_ALLOWED);
-        }
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("name", equalTo("SMSPublisher"))
+                .body("provider", equalTo("Vonage"))
+                .body("providerURL", equalTo("https://webhook.site/9b79bebd-445a-4dec-ad5e-622b856fa184"))
+                .body("key", equalTo("1234"))
+                .body("secret", equalTo("12345"))
+                .body("sender", equalTo("073923902"))
+                .body("contentType", equalTo("JSON"))
+                .body("properties", notNullValue());
     }
 
     @Test(dependsOnMethods = {"testGetSMSSender"})
@@ -267,26 +250,19 @@ public class NotificationSenderSuccessTest extends NotificationSenderTestBase {
                 "find{ it.name == '" + URLDecoder.decode(smsNotificationSenderName, StandardCharsets.UTF_8.name()) +
                         "' }.";
         Response response = getResponseOfGet(NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + SMS_SENDERS_PATH);
-        if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            response.then()
-                    .log().ifValidationFails()
-                    .assertThat()
-                    .statusCode(HttpStatus.SC_OK)
-                    .body(baseIdentifier + "name", equalTo("SMSPublisher"))
-                    .body(baseIdentifier + "provider", equalTo("Vonage"))
-                    .body(baseIdentifier + "providerURL",
-                            equalTo("https://webhook.site/9b79bebd-445a-4dec-ad5e-622b856fa184"))
-                    .body(baseIdentifier + "key", equalTo("1234"))
-                    .body(baseIdentifier + "secret", equalTo("12345"))
-                    .body(baseIdentifier + "sender", equalTo("073923902"))
-                    .body(baseIdentifier + "contentType", equalTo("JSON"))
-                    .body(baseIdentifier + "properties", notNullValue());
-        } else {
-            response.then()
-                    .log().ifValidationFails()
-                    .assertThat()
-                    .statusCode(HttpStatus.SC_METHOD_NOT_ALLOWED);
-        }
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body(baseIdentifier + "name", equalTo("SMSPublisher"))
+                .body(baseIdentifier + "provider", equalTo("Vonage"))
+                .body(baseIdentifier + "providerURL",
+                        equalTo("https://webhook.site/9b79bebd-445a-4dec-ad5e-622b856fa184"))
+                .body(baseIdentifier + "key", equalTo("1234"))
+                .body(baseIdentifier + "secret", equalTo("12345"))
+                .body(baseIdentifier + "sender", equalTo("073923902"))
+                .body(baseIdentifier + "contentType", equalTo("JSON"))
+                .body(baseIdentifier + "properties", notNullValue());
     }
 
     @Test(dependsOnMethods = {"testGetSMSSenders"})
@@ -295,25 +271,18 @@ public class NotificationSenderSuccessTest extends NotificationSenderTestBase {
         String body = readResource("update-sms-sender.json");
         Response response = getResponseOfPut(NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + SMS_SENDERS_PATH +
                 PATH_SEPARATOR + smsNotificationSenderName, body);
-        if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            response.then()
-                    .log().ifValidationFails()
-                    .assertThat()
-                    .statusCode(HttpStatus.SC_OK)
-                    .body("name", equalTo("SMSPublisher"))
-                    .body("provider", equalTo("Clickatell"))
-                    .body("providerURL", equalTo("https://webhook.site/9b79bebd-445a-4dec-ad5e-622b856fa185"))
-                    .body("key", equalTo("123"))
-                    .body("secret", equalTo("123456"))
-                    .body("sender", equalTo("0773923902"))
-                    .body("contentType", equalTo("JSON"))
-                    .body("properties", notNullValue());
-        } else {
-            response.then()
-                    .log().ifValidationFails()
-                    .assertThat()
-                    .statusCode(HttpStatus.SC_METHOD_NOT_ALLOWED);
-        }
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("name", equalTo("SMSPublisher"))
+                .body("provider", equalTo("Clickatell"))
+                .body("providerURL", equalTo("https://webhook.site/9b79bebd-445a-4dec-ad5e-622b856fa185"))
+                .body("key", equalTo("123"))
+                .body("secret", equalTo("123456"))
+                .body("sender", equalTo("0773923902"))
+                .body("contentType", equalTo("JSON"))
+                .body("properties", notNullValue());
     }
 
     @Test(dependsOnMethods = {"testUpdateSMSSender"})
@@ -322,17 +291,10 @@ public class NotificationSenderSuccessTest extends NotificationSenderTestBase {
         Response response =
                 getResponseOfDelete(NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + SMS_SENDERS_PATH +
                         PATH_SEPARATOR + smsNotificationSenderName);
-        if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            response.then()
-                    .log().ifValidationFails()
-                    .assertThat()
-                    .statusCode(HttpStatus.SC_NO_CONTENT);
-        } else {
-            response.then()
-                    .log().ifValidationFails()
-                    .assertThat()
-                    .statusCode(HttpStatus.SC_METHOD_NOT_ALLOWED);
-        }
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
     }
 
 }
