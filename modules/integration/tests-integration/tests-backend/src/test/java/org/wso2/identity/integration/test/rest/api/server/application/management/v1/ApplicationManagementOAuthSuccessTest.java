@@ -230,7 +230,6 @@ public class ApplicationManagementOAuthSuccessTest extends ApplicationManagement
                 .body("idToken.idTokenSignedResponseAlg", equalTo("PS256"))
                 .body("clientAuthentication.tokenEndpointAuthMethod", equalTo("private_key_jwt"))
                 .body("clientAuthentication.tokenEndpointAuthSigningAlg", equalTo("PS256"))
-                .body("requestObject.requireSignedRequestObject", equalTo(true))
                 .body("requestObject.requestObjectSigningAlg", equalTo("PS256"))
                 .body("requestObject.encryption.algorithm", equalTo("RSA-OAEP"))
                 .body("requestObject.encryption.method", equalTo("A128CBC+HS256"))
@@ -258,7 +257,6 @@ public class ApplicationManagementOAuthSuccessTest extends ApplicationManagement
                 .body("clientAuthentication.tokenEndpointAuthMethod", equalTo("tls_client_auth"))
                 .body("clientAuthentication.tlsClientAuthSubjectDn",
                         equalTo("CN=John Doe,OU=OrgUnit,O=Organization,L=Colombo,ST=Western,C=LK"))
-                .body("requestObject.requireSignedRequestObject", equalTo(false))
                 .body("requestObject.requestObjectSigningAlg", equalTo("ES256"))
                 .body("requestObject.encryption.algorithm", equalTo("RSA1_5"))
                 .body("requestObject.encryption.method", equalTo("A128GCM"))

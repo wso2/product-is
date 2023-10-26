@@ -15,7 +15,6 @@
         "tokenEndpointAuthSigningAlg": "PS256"
       },
       "requestObject": {
-        "requireSignedRequestObject": true,
         "requestObjectSigningAlg": "PS256",
         "encryption": {
           "algorithm": "random_encryption_algorithm_not_supported_by_the_server",

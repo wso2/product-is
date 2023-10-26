@@ -29,7 +29,6 @@
         "tokenEndpointAuthSigningAlg": "PS256"
       },
       "requestObject": {
-        "requireSignedRequestObject": true,
         "requestObjectSigningAlg": "PS256",
         "encryption": {
           "algorithm": "RSA-OAEP",

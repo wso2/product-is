@@ -51,7 +51,6 @@
     "tlsClientAuthSubjectDn": "CN=John Doe,OU=OrgUnit,O=Organization,L=Colombo,ST=Western,C=LK"
   },
   "requestObject": {
-    "requireSignedRequestObject": false,
     "requestObjectSigningAlg": "ES256",
     "encryption": {
       "algorithm": "RSA1_5",
