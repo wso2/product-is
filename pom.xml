@@ -2403,7 +2403,7 @@
         <authenticator.twitter.version>1.1.1</authenticator.twitter.version>
         <authenticator.x509.version>3.1.12</authenticator.x509.version>
         <identity.extension.utils>1.0.14</identity.extension.utils>
-        <authenticator.auth.otp.commons.version>1.0.0</authenticator.auth.otp.commons.version>
+        <authenticator.auth.otp.commons.version>1.0.1</authenticator.auth.otp.commons.version>
 
         <identity.org.mgt.version>1.3.101</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.0.78</identity.org.mgt.core.version>
