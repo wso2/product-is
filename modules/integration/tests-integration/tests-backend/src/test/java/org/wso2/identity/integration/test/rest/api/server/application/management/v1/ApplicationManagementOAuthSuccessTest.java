@@ -264,4 +264,20 @@ public class ApplicationManagementOAuthSuccessTest extends ApplicationManagement
                 .body("subject.subjectType", equalTo("pairwise"))
                 .body("subject.sectorIdentifierUri", equalTo("https://app.example.com"));
     }
+
+    @Test(dependsOnMethods = "testUpdateOAuthInboundDetailsWithAdditionalOIDCAttributes")
+    public void testDeleteOAuthAppWithAdditionalOIDCAttributes() throws Exception {
+
+        String path = APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId;
+
+        Response responseOfDelete = getResponseOfDelete(path);
+        responseOfDelete.then()
+                .log()
+                .ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
+
+        getResponseOfGet(path).then().assertThat().statusCode(HttpStatus.SC_NOT_FOUND);
+        createdAppId = null;
+    }
 }
