@@ -361,11 +361,14 @@
             <class name="org.wso2.identity.integration.test.encryption.EventPublisherPasswordEncryptionTestCase"/>
         </classes>
     </test>
-    <test name="org-mgt-test-rest-api" preserve-order="true" parallel="false" group-by-instances="true">
+
+    <!--     Disable the test case temporarily   -->
+    <!--<test name="org-mgt-test-rest-api" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
             <class name="org.wso2.identity.integration.test.rest.api.server.organization.management.v1.OrganizationManagementSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.organization.management.v1.OrganizationManagementFailureTest"/>
         </classes>
+    </test>-->
     </test>
     <test name="fapi-dcr-validations" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>

@@ -421,7 +421,6 @@ public class CrossProtocolLogoutTestCase extends ISIntegrationTest {
         HttpPost post = new HttpPost(url);
         post.setHeader(USER_AGENT, OAuth2Constant.USER_AGENT);
         urlParameters.add(new BasicNameValuePair(samlMsgKey, samlMsgValue));
-        urlParameters.add(new BasicNameValuePair("tenantDomain", "carbon.super"));
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
         return client.execute(post);
     }

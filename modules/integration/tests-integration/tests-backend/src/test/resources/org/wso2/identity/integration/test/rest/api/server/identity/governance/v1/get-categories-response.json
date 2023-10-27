@@ -2,87 +2,87 @@
   {
     "id": "VXNlciBPbmJvYXJkaW5n",
     "name": "User Onboarding",
-    "self": "/t/carbon.super/api/server/v1/identity-governance/VXNlciBPbmJvYXJkaW5n",
+    "self": "/api/server/v1/identity-governance/VXNlciBPbmJvYXJkaW5n",
     "connectors": [
       {
         "id": "c2VsZi1zaWduLXVw",
-        "self": "/t/carbon.super/api/server/v1/identity-governance/VXNlciBPbmJvYXJkaW5n/connectors/c2VsZi1zaWduLXVw"
+        "self": "/api/server/v1/identity-governance/VXNlciBPbmJvYXJkaW5n/connectors/c2VsZi1zaWduLXVw"
       },
       {
         "id": "bGl0ZS11c2VyLXNpZ24tdXA",
-        "self": "/t/carbon.super/api/server/v1/identity-governance/VXNlciBPbmJvYXJkaW5n/connectors/bGl0ZS11c2VyLXNpZ24tdXA"
+        "self": "/api/server/v1/identity-governance/VXNlciBPbmJvYXJkaW5n/connectors/bGl0ZS11c2VyLXNpZ24tdXA"
       },
       {
         "id": "dXNlci1lbWFpbC12ZXJpZmljYXRpb24",
-        "self": "/t/carbon.super/api/server/v1/identity-governance/VXNlciBPbmJvYXJkaW5n/connectors/dXNlci1lbWFpbC12ZXJpZmljYXRpb24"
+        "self": "/api/server/v1/identity-governance/VXNlciBPbmJvYXJkaW5n/connectors/dXNlci1lbWFpbC12ZXJpZmljYXRpb24"
       }
     ]
   },
   {
     "id": "TG9naW4gQXR0ZW1wdHMgU2VjdXJpdHk",
     "name": "Login Attempts Security",
-    "self": "/t/carbon.super/api/server/v1/identity-governance/TG9naW4gQXR0ZW1wdHMgU2VjdXJpdHk",
+    "self": "/api/server/v1/identity-governance/TG9naW4gQXR0ZW1wdHMgU2VjdXJpdHk",
     "connectors": [
       {
         "id": "YWNjb3VudC5sb2NrLmhhbmRsZXI",
-        "self": "/t/carbon.super/api/server/v1/identity-governance/TG9naW4gQXR0ZW1wdHMgU2VjdXJpdHk/connectors/YWNjb3VudC5sb2NrLmhhbmRsZXI"
+        "self": "/api/server/v1/identity-governance/TG9naW4gQXR0ZW1wdHMgU2VjdXJpdHk/connectors/YWNjb3VudC5sb2NrLmhhbmRsZXI"
       },
       {
         "id": "c3NvLmxvZ2luLnJlY2FwdGNoYQ",
-        "self": "/t/carbon.super/api/server/v1/identity-governance/TG9naW4gQXR0ZW1wdHMgU2VjdXJpdHk/connectors/c3NvLmxvZ2luLnJlY2FwdGNoYQ"
+        "self": "/api/server/v1/identity-governance/TG9naW4gQXR0ZW1wdHMgU2VjdXJpdHk/connectors/c3NvLmxvZ2luLnJlY2FwdGNoYQ"
       }
     ]
   },
   {
     "id": "T3RoZXIgU2V0dGluZ3M",
     "name": "Other Settings",
-    "self": "/t/carbon.super/api/server/v1/identity-governance/T3RoZXIgU2V0dGluZ3M",
+    "self": "/api/server/v1/identity-governance/T3RoZXIgU2V0dGluZ3M",
     "connectors": [
       {
         "id": "cGlpLWNvbnRyb2xsZXI",
-        "self": "/t/carbon.super/api/server/v1/identity-governance/T3RoZXIgU2V0dGluZ3M/connectors/cGlpLWNvbnRyb2xsZXI"
+        "self": "/api/server/v1/identity-governance/T3RoZXIgU2V0dGluZ3M/connectors/cGlpLWNvbnRyb2xsZXI"
       },
       {
         "id": "dXNlci1jbGFpbS11cGRhdGU",
-        "self": "/t/carbon.super/api/server/v1/identity-governance/T3RoZXIgU2V0dGluZ3M/connectors/dXNlci1jbGFpbS11cGRhdGU"
+        "self": "/api/server/v1/identity-governance/T3RoZXIgU2V0dGluZ3M/connectors/dXNlci1jbGFpbS11cGRhdGU"
       }
     ]
   },
   {
     "id": "QWNjb3VudCBNYW5hZ2VtZW50",
     "name": "Account Management",
-    "self": "/t/carbon.super/api/server/v1/identity-governance/QWNjb3VudCBNYW5hZ2VtZW50",
+    "self": "/api/server/v1/identity-governance/QWNjb3VudCBNYW5hZ2VtZW50",
     "connectors": [
       {
         "id": "c3VzcGVuc2lvbi5ub3RpZmljYXRpb24",
-        "self": "/t/carbon.super/api/server/v1/identity-governance/QWNjb3VudCBNYW5hZ2VtZW50/connectors/c3VzcGVuc2lvbi5ub3RpZmljYXRpb24"
+        "self": "/api/server/v1/identity-governance/QWNjb3VudCBNYW5hZ2VtZW50/connectors/c3VzcGVuc2lvbi5ub3RpZmljYXRpb24"
       },
       {
         "id": "YWNjb3VudC5kaXNhYmxlLmhhbmRsZXI",
-        "self": "/t/carbon.super/api/server/v1/identity-governance/QWNjb3VudCBNYW5hZ2VtZW50/connectors/YWNjb3VudC5kaXNhYmxlLmhhbmRsZXI"
+        "self": "/api/server/v1/identity-governance/QWNjb3VudCBNYW5hZ2VtZW50/connectors/YWNjb3VudC5kaXNhYmxlLmhhbmRsZXI"
       },
       {
         "id": "YWNjb3VudC1yZWNvdmVyeQ",
-        "self": "/t/carbon.super/api/server/v1/identity-governance/QWNjb3VudCBNYW5hZ2VtZW50/connectors/YWNjb3VudC1yZWNvdmVyeQ"
+        "self": "/api/server/v1/identity-governance/QWNjb3VudCBNYW5hZ2VtZW50/connectors/YWNjb3VudC1yZWNvdmVyeQ"
       },
       {
         "id": "YWRtaW4tZm9yY2VkLXBhc3N3b3JkLXJlc2V0",
-        "self": "/t/carbon.super/api/server/v1/identity-governance/QWNjb3VudCBNYW5hZ2VtZW50/connectors/YWRtaW4tZm9yY2VkLXBhc3N3b3JkLXJlc2V0"
+        "self": "/api/server/v1/identity-governance/QWNjb3VudCBNYW5hZ2VtZW50/connectors/YWRtaW4tZm9yY2VkLXBhc3N3b3JkLXJlc2V0"
       }
     ]
   },
   {
     "id": "UGFzc3dvcmQgUG9saWNpZXM",
     "name": "Password Policies",
-    "self": "/t/carbon.super/api/server/v1/identity-governance/UGFzc3dvcmQgUG9saWNpZXM",
+    "self": "/api/server/v1/identity-governance/UGFzc3dvcmQgUG9saWNpZXM",
     "connectors": [
       {
         "id": "cGFzc3dvcmRIaXN0b3J5",
-        "self": "/t/carbon.super/api/server/v1/identity-governance/UGFzc3dvcmQgUG9saWNpZXM/connectors/cGFzc3dvcmRIaXN0b3J5"
+        "self": "/api/server/v1/identity-governance/UGFzc3dvcmQgUG9saWNpZXM/connectors/cGFzc3dvcmRIaXN0b3J5"
       },
       {
         "id": "cGFzc3dvcmRQb2xpY3k",
-        "self": "/t/carbon.super/api/server/v1/identity-governance/UGFzc3dvcmQgUG9saWNpZXM/connectors/cGFzc3dvcmRQb2xpY3k"
+        "self": "/api/server/v1/identity-governance/UGFzc3dvcmQgUG9saWNpZXM/connectors/cGFzc3dvcmRQb2xpY3k"
       }
     ]
   }

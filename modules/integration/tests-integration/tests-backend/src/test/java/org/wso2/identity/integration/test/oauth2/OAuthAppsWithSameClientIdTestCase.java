@@ -108,7 +108,6 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
     private SCIM2RestClient scim2RestClientTenant2;
     private HttpClient client;
 
-    private boolean configurationsRestored = false;
     private String tenant1UserId = null;
     private String tenant2UserId = null;
     private String sessionDataKey;
@@ -121,10 +120,6 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
 
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(isServer);
-
-        // Enable tenant qualified urls/ tenanted sessions and restart the server.
-        changeISConfigurations();
-
         tenantMgtRestClient = new TenantMgtRestClient(serverURL, tenantInfo);
 
         // Create the test tenants.
@@ -159,7 +154,7 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
     @AfterClass(alwaysRun = true)
     public void testClear() throws IOException, AutomationUtilException {
 
-        restoreISConfigurations();
+        serverConfigurationManager.restoreToLastConfiguration(true);
         tenantMgtRestClient.closeHttpClient();
         oAuth2RestClientTenant1.closeHttpClient();
         oAuth2RestClientTenant2.closeHttpClient();
@@ -388,8 +383,8 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
             dependsOnMethods = "testOAuthApplicationLoginIncorrectTenant")
     public void testOAuthApplicationLoginWhenTenantQualifiedUrlsDisabled() throws Exception {
 
-        // Restore the server back to the initial state (tenant qualified urls disabled).
-        restoreISConfigurations();
+        // Disable tenant qualified urls/ tenanted sessions and restart the server.
+        changeISConfigurations();
 
         // Create oauth app and add user.
         ApplicationResponseModel tenant1App = createApplication(TENANT_1_DOMAIN);
@@ -411,22 +406,8 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
         File defaultTomlFile = getDeploymentTomlFile(carbonHome);
         File modifiedConfigFile = new File(getISResourceLocation()
                 + File.separator + "tenant.qualified" + File.separator
-                + "tenant_qualified_url_tenanted_sessions_enabled.toml");
+                + "tenant_qualified_url_tenanted_sessions_disabled.toml");
         serverConfigurationManager.applyConfiguration(modifiedConfigFile, defaultTomlFile, true, true);
-    }
-
-    private void restoreISConfigurations() throws AutomationUtilException, IOException {
-
-        if (configurationsRestored) {
-            return;
-        }
-        String carbonHome = Utils.getResidentCarbonHome();
-        File defaultTomlFile = getDeploymentTomlFile(carbonHome);
-        File modifiedConfigFile = new File(getISResourceLocation()
-                + File.separator + "tenant.qualified" + File.separator
-                + "tenant_qualified_url_tenanted_sessions_default.toml");
-        serverConfigurationManager.applyConfiguration(modifiedConfigFile, defaultTomlFile, true, true);
-        configurationsRestored = true;
     }
 
     private void addTenant(String tenantDomain, String adminUsername, String adminPassword,

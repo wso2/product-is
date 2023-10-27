@@ -109,11 +109,16 @@ public class OIDCUtilTest {
      */
     public static List<NameValuePair> getNameValuePairs(OIDCApplication application) {
 
+        return getNameValuePairs(application, OAuth2Constant.APPROVAL_URL);
+    }
+
+    public static List<NameValuePair> getNameValuePairs(OIDCApplication application, String approvalUrl) {
+
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("grantType", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
         urlParameters.add(new BasicNameValuePair("consumerKey", application.getClientId()));
         urlParameters.add(new BasicNameValuePair("callbackurl", application.getCallBackURL()));
-        urlParameters.add(new BasicNameValuePair("authorizeEndpoint", OAuth2Constant.APPROVAL_URL));
+        urlParameters.add(new BasicNameValuePair("authorizeEndpoint", approvalUrl));
         urlParameters.add(new BasicNameValuePair("authorize", OAuth2Constant.AUTHORIZE_PARAM));
         urlParameters.add(new BasicNameValuePair("scope", OAuth2Constant.OAUTH2_SCOPE_OPENID + " " +
                 OAuth2Constant.OAUTH2_SCOPE_EMAIL + " " + OAuth2Constant.OAUTH2_SCOPE_PROFILE));

@@ -32,13 +32,13 @@ import org.json.simple.JSONObject;
 import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.UserStoreDTO;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.server.user.store.v1.model.UserStoreReq;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class UserStoreMgtRestClient extends RestBaseClient {
-    private static final String TENANT_PATH = "t/%s";
     private static final String API_SERVER_BASE_PATH = "/api/server/v1";
     public static final String USER_STORES_ENDPOINT_URI = "/userstores";
     private final CloseableHttpClient client;
@@ -53,8 +53,8 @@ public class UserStoreMgtRestClient extends RestBaseClient {
         this.password = tenantInfo.getContextUser().getPassword();
         String tenantDomain = tenantInfo.getContextUser().getUserDomain();
 
-        userStoreBasePath = backendURL + String.format(TENANT_PATH, tenantDomain) + API_SERVER_BASE_PATH +
-                USER_STORES_ENDPOINT_URI;
+        userStoreBasePath = backendURL + ISIntegrationTest.getTenantedRelativePath(API_SERVER_BASE_PATH
+                + USER_STORES_ENDPOINT_URI, tenantDomain);
     }
 
     /**

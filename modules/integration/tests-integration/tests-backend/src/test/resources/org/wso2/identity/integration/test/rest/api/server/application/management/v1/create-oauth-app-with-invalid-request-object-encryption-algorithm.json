@@ -1,0 +1,32 @@
+{
+  "name": "OAuth Application",
+  "inboundProtocolConfiguration": {
+    "oidc": {
+      "grantTypes": [
+        "password",
+        "authorization_code"
+      ],
+      "callbackURLs": [
+        "https://localhost/callback"
+      ],
+      "publicClient": false,
+      "clientAuthentication": {
+        "tokenEndpointAuthMethod": "private_key_jwt",
+        "tokenEndpointAuthSigningAlg": "PS256"
+      },
+      "requestObject": {
+        "requestObjectSigningAlg": "PS256",
+        "encryption": {
+          "algorithm": "random_encryption_algorithm_not_supported_by_the_server",
+          "method": "A128CBC+HS256"
+        }
+      },
+      "pushAuthorizationRequest": {
+        "requirePushAuthorizationRequest": true
+      },
+      "subject": {
+        "subjectType": "public"
+      }
+    }
+  }
+}

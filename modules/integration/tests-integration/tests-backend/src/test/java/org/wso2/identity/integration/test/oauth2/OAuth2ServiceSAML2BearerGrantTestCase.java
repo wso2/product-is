@@ -85,7 +85,6 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
     private static final String COMMON_AUTH_URL = "https://localhost:9853/commonauth";
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
     private static final String ACS_URL = "http://localhost:8490/%s/home.jsp";
-    private static final String TENANT_DOMAIN_PARAM = "tenantDomain";
     private static final String SAML_SSO_URL = "https://localhost:9853/samlsso";
     private static final String ISSUER = "travelocity.com";
 
@@ -359,7 +358,6 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
         post.setHeader("User-Agent", USER_AGENT);
 
         urlParameters.add(new BasicNameValuePair(CommonConstants.SAML_REQUEST_PARAM, samlMsgValue));
-        urlParameters.add(new BasicNameValuePair(TENANT_DOMAIN_PARAM, "carbon.super"));
 
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
 

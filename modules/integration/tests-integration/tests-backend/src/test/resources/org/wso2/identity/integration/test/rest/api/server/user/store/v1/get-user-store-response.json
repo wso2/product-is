@@ -3,6 +3,6 @@
     "id": "SkRCQy0z",
     "name": "JDBC-3",
     "description": "Sample JDBC user store to add.",
-    "self": "/t/carbon.super/api/server/v1/userstores/SkRCQy0z"
+    "self": "/api/server/v1/userstores/SkRCQy0z"
   }
 ]
