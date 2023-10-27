@@ -23,7 +23,7 @@ FORMPOST_PROMPT_LOGIN = {
         [
             "wait",
             "xpath",
-            "/html/body/main/div/div[2]/h3",
+            "/html/body/div[2]/main/div/div[2]/h3",
             10,
             "Sign In",
             "update-image-placeholder-optional"
@@ -31,7 +31,7 @@ FORMPOST_PROMPT_LOGIN = {
         [
             "text",
             "id",
-            "username",
+            "usernameUserInput",
             "admin"
         ],
         [
@@ -43,7 +43,7 @@ FORMPOST_PROMPT_LOGIN = {
         [
             "click",
             "xpath",
-            "//*[@id=\"loginForm\"]/div[9]/div[1]/button"
+            "//*[@id=\"loginForm\"]/div[8]/div[1]/button"
         ]
     ]
 }
@@ -75,7 +75,7 @@ FORMPOST_LOGIN = {
         [
             "text",
             "id",
-            "username",
+            "usernameUserInput",
             "admin"
         ],
         [
@@ -87,7 +87,26 @@ FORMPOST_LOGIN = {
         [
             "click",
             "xpath",
-            "//*[@id=\"loginForm\"]/div[9]/div[1]/button"
+            "//*[@id=\"loginForm\"]/div[8]/div[1]/button"
+        ]
+    ]
+}
+
+FORMPOST_LOGIN_WITHOUT_USERNAME = {
+    "task": "Login",
+    "match": constants.BASE_URL + "/authenticationendpoint/login*",
+    "optional": True,
+    "commands": [
+        [
+            "text",
+            "id",
+            "password",
+            "admin"
+        ],
+        [
+            "click",
+            "xpath",
+            "//*[@id=\"loginForm\"]/div[6]/div[1]/button"
         ]
     ]
 }
@@ -131,7 +150,7 @@ PROMPT_LOGIN = {
         [
             "wait",
             "xpath",
-            "/html/body/main/div/div[2]/h3",
+            "/html/body/div[2]/main/div/div[2]/h3",
             10,
             "Sign In",
             "update-image-placeholder-optional"
@@ -139,7 +158,7 @@ PROMPT_LOGIN = {
         [
             "text",
             "id",
-            "username",
+            "usernameUserInput",
             "admin"
         ],
         [
@@ -151,7 +170,7 @@ PROMPT_LOGIN = {
         [
             "click",
             "xpath",
-            "//*[@id=\"loginForm\"]/div[9]/div[1]/button"
+            "//*[@id=\"loginForm\"]/div[8]/div[1]/button"
         ],
         [
             "wait",
@@ -171,7 +190,7 @@ VERIFY_ERROR = {
             "xpath",
             "//*",
             10,
-            "Identity Server",
+            "Need help\? Contact us via",
             "update-image-placeholder"
         ]
     ]
@@ -205,7 +224,7 @@ LOGIN_REFRESH_TOKEN = {
         [
             "text",
             "id",
-            "username",
+            "usernameUserInput",
             "admin"
         ],
         [
@@ -217,7 +236,7 @@ LOGIN_REFRESH_TOKEN = {
         [
             "click",
             "xpath",
-            "//*[@id=\"loginForm\"]/div[9]/div[1]/button"
+            "//*[@id=\"loginForm\"]/div[8]/div[1]/button"
         ],
         [
             "wait",
@@ -261,7 +280,7 @@ LOGIN_BASIC = {
         [
             "text",
             "id",
-            "username",
+            "usernameUserInput",
             "admin"
         ],
         [
@@ -273,7 +292,32 @@ LOGIN_BASIC = {
         [
             "click",
             "xpath",
-            "//*[@id=\"loginForm\"]/div[9]/div[1]/button"
+            "//*[@id=\"loginForm\"]/div[8]/div[1]/button"
+        ],
+        [
+            "wait",
+            "contains",
+            "test/callback",
+            10
+        ]
+    ]
+}
+
+LOGIN_BASIC_WITHOUT_USERNAME = {
+    "task": "Login",
+    "match": constants.BASE_URL + "/authenticationendpoint/login*",
+    "optional": True,
+    "commands": [
+        [
+            "text",
+            "id",
+            "password",
+            "admin"
+        ],
+        [
+            "click",
+            "xpath",
+            "//*[@id=\"loginForm\"]/div[6]/div[1]/button"
         ],
         [
             "wait",
@@ -404,6 +448,18 @@ CONFIG = {
                         ]
                     }
                 ]
+            },
+            "oidcc-login-hint": {
+                "browser": [
+                    {
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
+                        "tasks": [
+                            LOGIN_BASIC_WITHOUT_USERNAME,
+                            VERIFY_COMPLETE
+
+                        ]
+                    }
+                ]
             }
         }
     },
@@ -488,6 +544,18 @@ CONFIG = {
                         ]
                     }
                 ]
+            },
+            "oidcc-login-hint": {
+                "browser": [
+                    {
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
+                        "tasks": [
+                            LOGIN_BASIC_WITHOUT_USERNAME,
+                            VERIFY_COMPLETE
+
+                        ]
+                    }
+                ]
             }
         }
     },
@@ -569,6 +637,18 @@ CONFIG = {
                             PROMPT_LOGIN,
                             PROMPT_CONSENT,
                             VERIFY_COMPLETE
+                        ]
+                    }
+                ]
+            },
+            "oidcc-login-hint": {
+                "browser": [
+                    {
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
+                        "tasks": [
+                            LOGIN_BASIC_WITHOUT_USERNAME,
+                            VERIFY_COMPLETE
+
                         ]
                     }
                 ]
@@ -680,6 +760,17 @@ CONFIG = {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             FORMPOST_LOGIN,
+                            VERIFY_COMPLETE_FORMPOST
+                        ]
+                    }
+                ]
+            },
+            "oidcc-login-hint": {
+                "browser": [
+                    {
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
+                        "tasks": [
+                            FORMPOST_LOGIN_WITHOUT_USERNAME,
                             VERIFY_COMPLETE_FORMPOST
                         ]
                     }
@@ -814,6 +905,17 @@ CONFIG = {
                         ]
                     }
                 ]
+            },
+            "oidcc-login-hint": {
+                "browser": [
+                    {
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
+                        "tasks": [
+                            FORMPOST_LOGIN_WITHOUT_USERNAME,
+                            VERIFY_COMPLETE_FORMPOST
+                        ]
+                    }
+                ]
             }
         }
     },
@@ -944,6 +1046,17 @@ CONFIG = {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             FORMPOST_LOGIN,
+                            VERIFY_COMPLETE_FORMPOST
+                        ]
+                    }
+                ]
+            },
+            "oidcc-login-hint": {
+                "browser": [
+                    {
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
+                        "tasks": [
+                            FORMPOST_LOGIN_WITHOUT_USERNAME,
                             VERIFY_COMPLETE_FORMPOST
                         ]
                     }

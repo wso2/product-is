@@ -169,24 +169,14 @@ public class NotificationSenderFailureTest extends NotificationSenderTestBase {
         String body = readResource("add-sms-sender.json");
         Response response =
                 getResponseOfPost(NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + SMS_SENDERS_PATH, body);
-        if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            response.then()
-                    .log().ifValidationFails()
-                    .assertThat()
-                    .statusCode(HttpStatus.SC_CREATED)
-                    .header(HttpHeaders.LOCATION, notNullValue());
-            String location = response.getHeader(HttpHeaders.LOCATION);
-            assertNotNull(location);
-            smsNotificationSenderName = location.substring(location.lastIndexOf("/") + 1);
-            assertNotNull(smsNotificationSenderName);
-            response = getResponseOfPost(NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + SMS_SENDERS_PATH, body);
-            validateErrorResponse(response, HttpStatus.SC_CONFLICT, "NSM-60002");
-        } else {
-            response.then()
-                    .log().ifValidationFails()
-                    .assertThat()
-                    .statusCode(HttpStatus.SC_METHOD_NOT_ALLOWED);
-        }
+        response.then().log().ifValidationFails().assertThat().statusCode(HttpStatus.SC_CREATED)
+                .header(HttpHeaders.LOCATION, notNullValue());
+        String location = response.getHeader(HttpHeaders.LOCATION);
+        assertNotNull(location);
+        smsNotificationSenderName = location.substring(location.lastIndexOf("/") + 1);
+        assertNotNull(smsNotificationSenderName);
+        response = getResponseOfPost(NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + SMS_SENDERS_PATH, body);
+        validateErrorResponse(response, HttpStatus.SC_CONFLICT, "NSM-60002");
     }
 
     @Test
@@ -195,14 +185,8 @@ public class NotificationSenderFailureTest extends NotificationSenderTestBase {
         String body = readResource("add-sms-sender-2.json");
         Response response =
                 getResponseOfPost(NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + SMS_SENDERS_PATH, body);
-        if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "NSM-60001");
-        } else {
-            response.then()
-                    .log().ifValidationFails()
-                    .assertThat()
-                    .statusCode(HttpStatus.SC_METHOD_NOT_ALLOWED);
-        }
+
+        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "NSM-60001");
     }
 
     @Test
@@ -211,14 +195,8 @@ public class NotificationSenderFailureTest extends NotificationSenderTestBase {
         String body = readResource("add-sms-sender-invalid-provider.json");
         Response response =
                 getResponseOfPost(NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + SMS_SENDERS_PATH, body);
-        if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "NSM-60004");
-        } else {
-            response.then()
-                    .log().ifValidationFails()
-                    .assertThat()
-                    .statusCode(HttpStatus.SC_METHOD_NOT_ALLOWED);
-        }
+
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "NSM-60004");
     }
 
     @Test
@@ -227,14 +205,7 @@ public class NotificationSenderFailureTest extends NotificationSenderTestBase {
         Response response = getResponseOfGet(
                 NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + SMS_SENDERS_PATH + PATH_SEPARATOR +
                         "randomName");
-        if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "NSM-60006");
-        } else {
-            response.then()
-                    .log().ifValidationFails()
-                    .assertThat()
-                    .statusCode(HttpStatus.SC_METHOD_NOT_ALLOWED);
-        }
+        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "NSM-60006");
     }
 
     @Test
@@ -243,13 +214,6 @@ public class NotificationSenderFailureTest extends NotificationSenderTestBase {
         Response response = getResponseOfDelete(
                 NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + SMS_SENDERS_PATH + PATH_SEPARATOR +
                         "randomName");
-        if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "NSM-60006");
-        } else {
-            response.then()
-                    .log().ifValidationFails()
-                    .assertThat()
-                    .statusCode(HttpStatus.SC_METHOD_NOT_ALLOWED);
-        }
+        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "NSM-60006");
     }
 }

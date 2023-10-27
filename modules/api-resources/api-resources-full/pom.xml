@@ -23,12 +23,12 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>api-resources</artifactId>
-        <version>7.0.0-m4-SNAPSHOT</version>
+        <version>7.0.0-alpha-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>api-resources-full</artifactId>
-    <version>7.0.0-m4-SNAPSHOT</version>
+    <version>7.0.0-alpha-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <name>WSO2 Identity Server - All Rest API</name>
@@ -67,6 +67,9 @@
                         WEB-INF/lib/org.wso2.carbon.api.*.jar,
                         WEB-INF/lib/org.wso2.carbon.rest.api.*.jar
                     </packagingIncludes>
+                    <packagingExcludes>
+                        WEB-INF/lib/org.wso2.carbon.identity.api.resource.mgt*.jar
+                    </packagingExcludes>
                 </configuration>
             </plugin>
             <plugin>
