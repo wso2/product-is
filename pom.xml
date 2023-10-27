@@ -1695,6 +1695,11 @@
                 <version>${authenticator.local.auth.emailotp.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.identity.local.auth.smsotp</groupId>
+                <artifactId>org.wso2.carbon.identity.local.auth.smsotp.feature</artifactId>
+                <version>${authenticator.local.auth.smsotp.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.identity.local.auth.emailotp</groupId>
                 <artifactId>org.wso2.carbon.identity.local.auth.emailotp.server.feature</artifactId>
                 <version>${authenticator.local.auth.emailotp.version}</version>
@@ -2325,7 +2330,7 @@
         <identity.inbound.auth.sts.version>5.10.17</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.4</identity.inbound.provisioning.scim.version>
         <identity.inbound.provisioning.scim2.version>3.4.38</identity.inbound.provisioning.scim2.version>
-      
+
         <!-- Identity workflow Versions -->
         <identity.user.workflow.version>5.6.0</identity.user.workflow.version>
         <identity.workflow.impl.bps.version>5.5.5</identity.workflow.impl.bps.version>
@@ -2400,6 +2405,7 @@
         <authenticator.magiclink.version>1.1.12</authenticator.magiclink.version>
         <authenticator.emailotp.version>4.1.20</authenticator.emailotp.version>
         <authenticator.local.auth.emailotp.version>1.0.6</authenticator.local.auth.emailotp.version>
+        <authenticator.local.auth.smsotp.version>1.0.1</authenticator.local.auth.smsotp.version>
         <authenticator.twitter.version>1.1.1</authenticator.twitter.version>
         <authenticator.x509.version>3.1.12</authenticator.x509.version>
         <identity.extension.utils>1.0.14</identity.extension.utils>
