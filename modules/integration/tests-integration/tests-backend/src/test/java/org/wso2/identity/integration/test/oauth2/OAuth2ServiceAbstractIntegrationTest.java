@@ -51,6 +51,8 @@ import org.wso2.identity.integration.common.clients.application.mgt.ApplicationM
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.APIResourceListItem;
+import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.ScopeGetModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.*;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration.DialectEnum;
 import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
@@ -897,5 +899,38 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		JSONParser parser = new JSONParser();
 		JSONObject json = (JSONObject) parser.parse(EntityUtils.toString(response.getEntity()));
 		return ((JSONArray) ((JSONObject)((JSONArray) json.get("keys")).get(0)).get("x5c")).get(0).toString();
+	}
+
+	/**
+	 * Authorize list of SYSTEM APIs to an application.
+	 *
+	 * @param applicationId Application id.
+	 * @param apiIdentifiers API identifiers to authorize.
+	 * @throws Exception Error occured while authorizing APIs.
+	 */
+	public void authorizeSystemAPIs(String applicationId, List<String> apiIdentifiers) throws Exception {
+
+		apiIdentifiers.stream().forEach(apiIdentifier -> {
+			try {
+				List<APIResourceListItem> filteredAPIResource =
+						restClient.getAPIResourcesWithFiltering("type+eq+SYSTEM+and+identifier+eq+" + apiIdentifier);
+				if (filteredAPIResource == null) {
+					return;
+				}
+				String apiId = filteredAPIResource.get(0).getId();
+				// Get API scopes.
+				List<ScopeGetModel> apiResourceScopes = restClient.getAPIResourceScopes(apiId);
+				AuthorizedAPICreationModel authorizedAPICreationModel = new AuthorizedAPICreationModel();
+				authorizedAPICreationModel.setId(apiId);
+				authorizedAPICreationModel.setPolicyIdentifier("RBAC");
+				apiResourceScopes.forEach(scope -> {
+					authorizedAPICreationModel.addScopesItem(scope.getName());
+				});
+				restClient.addAPIAuthorizationToApplication(applicationId, authorizedAPICreationModel);
+			} catch (Exception e) {
+				throw new RuntimeException("Error while authorizing system API " + apiIdentifier + " to application "
+						+ applicationId, e);
+			}
+		});
 	}
 }

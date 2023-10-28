@@ -40,6 +40,9 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
@@ -47,11 +50,19 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
+import java.io.ByteArrayInputStream;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import static org.wso2.identity.integration.test.utils.DataExtractUtil.KeyValue;
 
@@ -68,6 +79,8 @@ public class SystemScopePermissionValidationTestCase extends OAuth2ServiceAbstra
     private final TestUserMode testUserMode;
 
     private static final String SYSTEM_SCOPE = "SYSTEM";
+    private static final String ENABLE_LEGACY_AUTHZ_RUNTIME_CONFIG = "EnableLegacyAuthzRuntime";
+    private static boolean isLegacyRuntimeEnabled;
     private String applicationId;
 
     @DataProvider(name = "configProvider")
@@ -94,6 +107,7 @@ public class SystemScopePermissionValidationTestCase extends OAuth2ServiceAbstra
 
         setSystemproperties();
         client = HttpClientBuilder.create().build();
+        isLegacyRuntimeEnabled = isLegacyAuthzRuntimeEnabled();
     }
 
     @AfterClass(alwaysRun = true)
@@ -119,6 +133,12 @@ public class SystemScopePermissionValidationTestCase extends OAuth2ServiceAbstra
 
         consumerSecret = oidcConfig.getClientSecret();
         Assert.assertNotNull(consumerSecret, "Application creation failed.");
+
+        if (!isLegacyRuntimeEnabled) {
+            // Authorize few system APIs.
+            authorizeSystemAPIs(applicationId,
+                    new ArrayList<>(Arrays.asList("/api/server/v1/tenants", "/scim2/Users")));
+        }
     }
 
     @Test(groups = "wso2.is", description = "Send authorize user request and get access token", dependsOnMethods = "testRegisterApplication")
@@ -180,8 +200,10 @@ public class SystemScopePermissionValidationTestCase extends OAuth2ServiceAbstra
             AccessTokenResponse tokenResponse = AccessTokenResponse.parse(tokenHTTPResp);
             Assert.assertNotNull(tokenResponse, "Access token response is null.");
             accessToken = tokenResponse.getTokens().getAccessToken().getValue();
-            String scope = getScopesFromIntrospectionResponse();
-            doTheScopeValidationBasedOnTheTestUserMode(scope, false);
+            if (isLegacyRuntimeEnabled) {
+                String scope = getScopesFromIntrospectionResponse();
+                doTheScopeValidationBasedOnTheTestUserMode(scope, false);
+            }
         } finally {
             client.close();
         }
@@ -200,15 +222,17 @@ public class SystemScopePermissionValidationTestCase extends OAuth2ServiceAbstra
     private void doTheScopeValidationBasedOnTheTestUserMode(String scope, boolean isClientCredentialsGrant) {
 
         if (testUserMode == TestUserMode.SUPER_TENANT_ADMIN) {
-            Assert.assertTrue(scope.contains("internal_server_admin"), "Scope should contain " +
-                    "`internal_server_admin` scope");
+            if (isLegacyRuntimeEnabled) {
+                Assert.assertTrue(scope.contains("internal_server_admin"), "Scope should contain " +
+                        "`internal_server_admin` scope");
+            }
             Assert.assertTrue(scope.contains("internal_modify_tenants"), "Scope should contain " +
                     "`internal_modify_tenants` scope");
         } else if (testUserMode == TestUserMode.TENANT_ADMIN) {
             Assert.assertFalse(scope.contains("internal_server_admin"), "Scope should not contain " +
                     "`internal_server_admin` scope");
             Assert.assertFalse(scope.contains("internal_modify_tenants"), "Scope should not contain " +
-                    "`internal_modify_tenants` scope");
+                        "`internal_modify_tenants` scope");
         } else {
             // Normal user.
             if (isClientCredentialsGrant) {
@@ -221,7 +245,33 @@ public class SystemScopePermissionValidationTestCase extends OAuth2ServiceAbstra
             Assert.assertFalse(scope.contains("internal_server_admin"), "Scope should not contain " +
                     "`internal_server_admin` scope");
             Assert.assertFalse(scope.contains("internal_modify_tenants"), "Scope should not contain " +
-                    "`internal_modify_tenants` scope");
+                        "`internal_modify_tenants` scope");
         }
+    }
+
+    private static boolean isLegacyAuthzRuntimeEnabled() throws Exception {
+
+        String carbonHome = System.getProperty("carbon.home");
+        String carbonXMLFilePath = carbonHome + "/repository/conf/carbon.xml";
+        Path filePath = Paths.get(carbonXMLFilePath);
+        String xmlContent = new String(Files.readAllBytes(filePath));
+
+        // Parse the XML content
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document document = builder.parse(new ByteArrayInputStream(xmlContent.getBytes()));
+
+        // Get the root element
+        Element root = document.getDocumentElement();
+
+        // Find the element with the EnableLegacyAuthzRuntime tag.
+        NodeList nodeList = root.getElementsByTagName(ENABLE_LEGACY_AUTHZ_RUNTIME_CONFIG);
+
+        if (nodeList.getLength() > 0) {
+            // Get the value of EnableLegacyAuthzRuntime
+            String enableLegacyAuthzRuntimeValue = nodeList.item(0).getTextContent();
+            return Boolean.parseBoolean(enableLegacyAuthzRuntimeValue);
+        }
+        return true;
     }
 }
