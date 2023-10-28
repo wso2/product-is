@@ -30,10 +30,13 @@ import java.nio.file.Paths;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+/**
+ * Utility class for Carbon related operations.
+ */
 public class CarbonUtils {
 
     private static final String ENABLE_LEGACY_AUTHZ_RUNTIME_CONFIG = "EnableLegacyAuthzRuntime";
-    private static Boolean legacyRuntimeEnabled;
+    private static Boolean isLegacyRuntimeEnabled;
 
     private CarbonUtils() {
 
@@ -47,10 +50,10 @@ public class CarbonUtils {
      */
     public static boolean isLegacyAuthzRuntimeEnabled() throws Exception {
 
-        if (legacyRuntimeEnabled == null) {
-            legacyRuntimeEnabled = initializeLegacyAuthzRuntime();
+        if (isLegacyRuntimeEnabled == null) {
+            isLegacyRuntimeEnabled = initializeLegacyAuthzRuntimeEnabled();
         }
-        return legacyRuntimeEnabled;
+        return isLegacyRuntimeEnabled;
     }
 
     /**
@@ -59,7 +62,7 @@ public class CarbonUtils {
      * @return True if the EnableLegacyAuthzRuntime is set to true.
      * @throws Exception If an error occurs while intializing the config.
      */
-    private static boolean initializeLegacyAuthzRuntime() throws Exception {
+    private static boolean initializeLegacyAuthzRuntimeEnabled() throws Exception {
 
         String carbonXMLContent;
         // Read the carbon.xml file.
