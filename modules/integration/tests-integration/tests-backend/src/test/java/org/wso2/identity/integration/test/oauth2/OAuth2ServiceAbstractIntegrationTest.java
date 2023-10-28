@@ -914,7 +914,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 			try {
 				List<APIResourceListItem> filteredAPIResource =
 						restClient.getAPIResourcesWithFiltering("type+eq+SYSTEM+and+identifier+eq+" + apiIdentifier);
-				if (filteredAPIResource == null) {
+				if (filteredAPIResource == null || filteredAPIResource.isEmpty()) {
 					return;
 				}
 				String apiId = filteredAPIResource.get(0).getId();
