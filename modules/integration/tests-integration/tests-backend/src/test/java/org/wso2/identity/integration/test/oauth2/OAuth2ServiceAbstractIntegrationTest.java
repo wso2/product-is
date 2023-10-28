@@ -933,4 +933,13 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 			}
 		});
 	}
+
+	public String getRoleV2ResourceId(String roleName, String audienceType, String OrganizationId) throws Exception {
+
+		List<String> roles = restClient.getRoles(roleName, audienceType, OrganizationId);
+		if (roles.size() == 1) {
+			return roles.get(0);
+		}
+		return null;
+	}
 }
