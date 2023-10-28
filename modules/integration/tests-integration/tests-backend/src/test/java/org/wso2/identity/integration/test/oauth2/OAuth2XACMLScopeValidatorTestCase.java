@@ -44,9 +44,14 @@ import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.entitlement.stub.dto.PolicyDTO;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.identity.integration.common.clients.entitlement.EntitlementPolicyServiceClient;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AssociatedRolesConfig;
+import org.wso2.identity.integration.test.utils.CarbonUtils;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Test cases to check the functionality of the XACML based scope validator.
@@ -56,6 +61,7 @@ public class OAuth2XACMLScopeValidatorTestCase extends OAuth2ServiceAbstractInte
     private static final String VALIDATE_SCOPE_BASED_POLICY_ID = "validate_scope_based_policy_template";
     private static final String VALID_SCOPE = "SCOPE1";
     private static final String INTROSPECT_SCOPE = "internal_application_mgt_view";
+    private static final String INTROSPECT_SCOPE_IN_NEW_AUTHZ_RUNTIME = "internal_oauth2_introspect";
     private static final String SCOPE_VALIDATOR_NAME = "XACML Scope Validator";
     private static final String CALLBACK_URL = "https://localhost/callback";
     private static final String SCOPE_POLICY = "<Policy xmlns=\"urn:oasis:names:tc:xacml:3.0:core:schema:wd-17\" " +
@@ -105,11 +111,13 @@ public class OAuth2XACMLScopeValidatorTestCase extends OAuth2ServiceAbstractInte
             "</Policy>";
     private CloseableHttpClient client;
     private EntitlementPolicyServiceClient entitlementPolicyClient;
+    private static boolean isLegacyRuntimeEnabled;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
         super.init(TestUserMode.SUPER_TENANT_USER);
+        isLegacyRuntimeEnabled = CarbonUtils.isLegacyAuthzRuntimeEnabled();
         entitlementPolicyClient = new EntitlementPolicyServiceClient(backendURL, sessionCookie);
     }
 
@@ -134,6 +142,29 @@ public class OAuth2XACMLScopeValidatorTestCase extends OAuth2ServiceAbstractInte
         Assert.assertNotNull(serviceProvider, "OAuth App creation failed.");
         Assert.assertNotNull(consumerKey, "Consumer Key is null.");
         Assert.assertNotNull(consumerSecret, "Consumer Secret is null.");
+        String applicationId = serviceProvider.getApplicationResourceId();
+        if (!isLegacyRuntimeEnabled) {
+            // Authorize few system APIs.
+            authorizeSystemAPIs(applicationId,
+                    new ArrayList<>(Arrays.asList("/api/server/v1/tenants", "/scim2/Users", "/oauth2/introspect")));
+            // Associate roles.
+            ApplicationPatchModel applicationPatch = new ApplicationPatchModel();
+            AssociatedRolesConfig associatedRolesConfig =
+                    new AssociatedRolesConfig().allowedAudience(AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION);
+            // Get Roles.
+            String adminRoleId = getRoleV2ResourceId("admin",
+                    AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION.toString().toLowerCase(), null);
+            String everyoneRoleId = getRoleV2ResourceId("everyone",
+                    AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION.toString().toLowerCase(), null);
+            applicationPatch = applicationPatch.associatedRoles(associatedRolesConfig);
+            associatedRolesConfig.addRolesItem(
+                    new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Role().id(
+                            adminRoleId));
+            associatedRolesConfig.addRolesItem(
+                    new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Role().id(
+                            everyoneRoleId));
+            updateApplication(applicationId, applicationPatch);
+        }
     }
 
     @Test(groups = "wso2.is", description = "Check publishing a policy", dependsOnMethods = "testRegisterApplication")
@@ -163,7 +194,12 @@ public class OAuth2XACMLScopeValidatorTestCase extends OAuth2ServiceAbstractInte
             dependsOnMethods = "testValidateTokenWithInValidScope")
     public void testValidateTokenWithValidScope() throws Exception {
 
-        boolean result = getTokenAndValidate(new Scope(VALID_SCOPE, INTROSPECT_SCOPE));
+        boolean result;
+        if (isLegacyRuntimeEnabled) {
+            result = getTokenAndValidate(new Scope(VALID_SCOPE, INTROSPECT_SCOPE));
+        } else {
+            result = getTokenAndValidate(new Scope(VALID_SCOPE, INTROSPECT_SCOPE_IN_NEW_AUTHZ_RUNTIME));
+        }
         Assert.assertTrue(result, "Introspection is false.");
     }
 
@@ -171,7 +207,13 @@ public class OAuth2XACMLScopeValidatorTestCase extends OAuth2ServiceAbstractInte
             dependsOnMethods = "testValidateTokenWithValidScope")
     public void testValidateTokenWithMultipleScope() throws Exception {
 
-        boolean result = getTokenAndValidate(new Scope(VALID_SCOPE, OAuth2Constant.OAUTH2_SCOPE_EMAIL, INTROSPECT_SCOPE));
+        boolean result;
+        if (isLegacyRuntimeEnabled) {
+            result = getTokenAndValidate(new Scope(VALID_SCOPE, OAuth2Constant.OAUTH2_SCOPE_EMAIL, INTROSPECT_SCOPE));
+        } else {
+            result = getTokenAndValidate(new Scope(VALID_SCOPE, OAuth2Constant.OAUTH2_SCOPE_EMAIL,
+                    INTROSPECT_SCOPE_IN_NEW_AUTHZ_RUNTIME));
+        }
         Assert.assertTrue(result, "Introspection is false.");
     }
 
