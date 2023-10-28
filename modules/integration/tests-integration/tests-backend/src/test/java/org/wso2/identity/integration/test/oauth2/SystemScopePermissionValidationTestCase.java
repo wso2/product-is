@@ -42,7 +42,9 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AssociatedRolesConfig;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.utils.CarbonUtils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
@@ -128,6 +130,23 @@ public class SystemScopePermissionValidationTestCase extends OAuth2ServiceAbstra
             // Authorize few system APIs.
             authorizeSystemAPIs(applicationId,
                     new ArrayList<>(Arrays.asList("/api/server/v1/tenants", "/scim2/Users")));
+            // Associate roles.
+            ApplicationPatchModel applicationPatch = new ApplicationPatchModel();
+            AssociatedRolesConfig associatedRolesConfig =
+                    new AssociatedRolesConfig().allowedAudience(AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION);
+            // Get Roles.
+            String adminRoleId = getRoleV2ResourceId("admin",
+                    AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION.toString().toLowerCase(), null);
+            String everyoneRoleId = getRoleV2ResourceId("everyone",
+                    AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION.toString().toLowerCase(), null);
+            applicationPatch = applicationPatch.associatedRoles(associatedRolesConfig);
+            associatedRolesConfig.addRolesItem(
+                    new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Role().id(
+                            adminRoleId));
+            associatedRolesConfig.addRolesItem(
+                    new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Role().id(
+                            everyoneRoleId));
+            updateApplication(applicationId, applicationPatch);
         }
     }
 
@@ -190,10 +209,8 @@ public class SystemScopePermissionValidationTestCase extends OAuth2ServiceAbstra
             AccessTokenResponse tokenResponse = AccessTokenResponse.parse(tokenHTTPResp);
             Assert.assertNotNull(tokenResponse, "Access token response is null.");
             accessToken = tokenResponse.getTokens().getAccessToken().getValue();
-            if (isLegacyRuntimeEnabled) {
-                String scope = getScopesFromIntrospectionResponse();
-                doTheScopeValidationBasedOnTheTestUserMode(scope, false);
-            }
+            String scope = getScopesFromIntrospectionResponse();
+            doTheScopeValidationBasedOnTheTestUserMode(scope, false);
         } finally {
             client.close();
         }
