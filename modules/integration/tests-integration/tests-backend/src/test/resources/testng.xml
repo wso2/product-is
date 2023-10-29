@@ -228,7 +228,7 @@
     <test name="is-test-adaptive-authentication" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
             <class name="org.wso2.identity.integration.test.auth.AdaptiveScriptInitializerTestCase"/>
-<!--            <class name="org.wso2.identity.integration.test.auth.AdaptiveScriptTemporaryClaimPersistenceTestCase"/>-->
+            <class name="org.wso2.identity.integration.test.auth.AdaptiveScriptTemporaryClaimPersistenceTestCase"/>
             <class name="org.wso2.identity.integration.test.auth.SecondaryStoreUserLoginTestCase"/>
             <!-- This test has a restart-->
             <class name="org.wso2.identity.integration.test.auth.RiskBasedLoginTestCase" />
