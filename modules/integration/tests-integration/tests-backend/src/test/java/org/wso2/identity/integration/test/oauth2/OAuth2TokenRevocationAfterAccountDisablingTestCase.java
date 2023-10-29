@@ -59,6 +59,8 @@ import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AccessTokenConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AssociatedRolesConfig;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.ConnectorsPatchReq;
@@ -70,6 +72,7 @@ import org.wso2.identity.integration.test.rest.api.user.common.model.UserItemAdd
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 import org.wso2.identity.integration.test.restclients.IdentityGovernanceRestClient;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
+import org.wso2.identity.integration.test.utils.CarbonUtils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
@@ -77,6 +80,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -108,6 +112,9 @@ public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2Se
     private static final String SERVICE_PROVIDER_1_NAME = "PlaygroundServiceProvider1";
     private static final String SERVICE_PROVIDER_2_NAME = "PlaygroundServiceProvider2";
     private static final String TEST_NONCE = "test_nonce";
+    private static final String INTROSPECT_SCOPE = "internal_application_mgt_view";
+    private static final String INTROSPECT_SCOPE_IN_NEW_AUTHZ_RUNTIME = "internal_oauth2_introspect";
+    private static boolean isLegacyRuntimeEnabled;
 
     private final Map<String, String> applications = new HashMap<>();
     private final Map<String, AccessToken> accessTokens = new HashMap<>();
@@ -145,6 +152,7 @@ public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2Se
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
+        isLegacyRuntimeEnabled = CarbonUtils.isLegacyAuthzRuntimeEnabled();
         createServiceProviderApplication(SERVICE_PROVIDER_1_NAME);
         createServiceProviderApplication(SERVICE_PROVIDER_2_NAME);
 
@@ -278,6 +286,28 @@ public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2Se
 
         String applicationId = addApplication(application);
         applications.put(serviceProviderName, applicationId);
+
+        if (!isLegacyRuntimeEnabled) {
+            // Authorize /oauth2/introspect API.
+            authorizeSystemAPIs(applicationId, new ArrayList<>(Arrays.asList("/oauth2/introspect")));
+            // Associate roles.
+            ApplicationPatchModel applicationPatch = new ApplicationPatchModel();
+            AssociatedRolesConfig associatedRolesConfig =
+                    new AssociatedRolesConfig().allowedAudience(AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION);
+            // Get Roles.
+            String adminRoleId = getRoleV2ResourceId("admin",
+                    AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION.toString().toLowerCase(), null);
+            String everyoneRoleId = getRoleV2ResourceId("everyone",
+                    AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION.toString().toLowerCase(), null);
+            applicationPatch = applicationPatch.associatedRoles(associatedRolesConfig);
+            associatedRolesConfig.addRolesItem(
+                    new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Role().id(
+                            adminRoleId));
+            associatedRolesConfig.addRolesItem(
+                    new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Role().id(
+                            everyoneRoleId));
+            updateApplication(applicationId, applicationPatch);
+        }
     }
 
     private String addNewTestUser() throws Exception {
@@ -387,7 +417,12 @@ public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2Se
                 OAuth2Constant.ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()));
         AuthorizationGrant authorizationGrant = new ResourceOwnerPasswordCredentialsGrant(adminUsername,
                 new Secret(adminPassword));
-        Scope scope = new Scope("internal_application_mgt_view");
+        Scope scope;
+        if (isLegacyRuntimeEnabled) {
+            scope = new Scope(INTROSPECT_SCOPE);
+        } else {
+            scope = new Scope(INTROSPECT_SCOPE_IN_NEW_AUTHZ_RUNTIME);
+        }
         TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, authorizationGrant, scope);
         HTTPResponse tokenHTTPResp = request.toHTTPRequest().send();
         AccessTokenResponse accessTokenResponse = AccessTokenResponse.parse(tokenHTTPResp);
