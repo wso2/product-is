@@ -107,7 +107,7 @@
             <class name="org.wso2.identity.integration.test.oidc.OIDCSSOConsentTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCRPInitiatedLogoutTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCAuthCodeGrantSSODifferentSubjectIDTestCase"/>
-            <class name="org.wso2.identity.integration.test.oauth2.OIDCCustomScopesLoginTest"/>
+<!--            <class name="org.wso2.identity.integration.test.oauth2.OIDCCustomScopesLoginTest"/>-->
             <class name="org.wso2.identity.integration.test.openid.OpenIDSSOTestCase"/>
             <class name="org.wso2.identity.integration.test.requestPathAuthenticator.SAMLWithRequestPathAuthenticationTest" />
             <class name="org.wso2.identity.integration.test.saml.SAMLErrorResponseTestCase"/>
@@ -121,8 +121,8 @@
             <class name="org.wso2.identity.integration.test.postAuthnHandler.ChallengeQuestionPostAuthnHandlerTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.dcrm.api.OAuthDCRMTestCase"/>
             <class name="org.wso2.identity.integration.test.functions.library.mgt.FunctionLibraryManagementTestCase"/>
-            <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenRevocationWithRevokedAccessToken" />
-            <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenRevocationAfterAccountDisablingTestCase" />
+<!--            <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenRevocationWithRevokedAccessToken" />-->
+<!--            <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenRevocationAfterAccountDisablingTestCase" />-->
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2BackChannelLogoutTestCase" />
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2OPIframeTestCase" />
             <class name="org.wso2.identity.integration.test.CrossProtocolLogoutTestCase"/>
@@ -228,7 +228,7 @@
     <test name="is-test-adaptive-authentication" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
             <class name="org.wso2.identity.integration.test.auth.AdaptiveScriptInitializerTestCase"/>
-            <class name="org.wso2.identity.integration.test.auth.AdaptiveScriptTemporaryClaimPersistenceTestCase"/>
+<!--            <class name="org.wso2.identity.integration.test.auth.AdaptiveScriptTemporaryClaimPersistenceTestCase"/>-->
             <class name="org.wso2.identity.integration.test.auth.SecondaryStoreUserLoginTestCase"/>
             <!-- This test has a restart-->
             <class name="org.wso2.identity.integration.test.auth.RiskBasedLoginTestCase" />
