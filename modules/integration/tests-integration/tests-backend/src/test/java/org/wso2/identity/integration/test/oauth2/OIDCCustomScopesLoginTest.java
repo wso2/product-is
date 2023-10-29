@@ -616,7 +616,12 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
     private void deleteCustomOIDCScope() throws Exception {
 
         // Get a token with required scopes.
-        String accessToken = getAccessTokenToCallAPI("internal_oidc_scope_mgt_delete");
+        String accessToken;
+        if (isLegacyAuthzRuntimeEnabled()) {
+            accessToken = getAccessTokenToCallAPI("internal_application_mgt_delete");
+        } else {
+            accessToken = getAccessTokenToCallAPI("internal_oidc_scope_mgt_delete");
+        }
         Assert.assertNotNull(accessToken, "Could not get an access token to delete OIDC scope.");
         String authorizationHeader = "Bearer " + accessToken;
         // Delete custom OIDC scope.
