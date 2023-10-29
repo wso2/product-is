@@ -376,7 +376,9 @@ public class Utils {
         if (firstIndex != -1 && secondIndex != -1) {
             String claimString = resultPage.substring(firstIndex, secondIndex);
             String[] dataArray = StringUtils.substringsBetween(claimString, labelOpenTag, labelCloseTag);
-            Collections.addAll(attributeList, dataArray);
+            if (dataArray != null) {
+                Collections.addAll(attributeList, dataArray);
+            }
         }
         // Check if there's only one occurrence, it can be either OIDC scopes or API Resource scopes.
         else if (firstIndex != -1) {
@@ -385,7 +387,9 @@ public class Utils {
             // If label is available, it should be OIDC scopes. Hence, extract the labels to get the claims list.
             if (labelAvailable) {
                 String[] dataArray = StringUtils.substringsBetween(claimString, labelOpenTag, labelCloseTag);
-                Collections.addAll(attributeList, dataArray);
+                if (dataArray != null) {
+                    Collections.addAll(attributeList, dataArray);
+                }
             }
         }
         return attributeList;
