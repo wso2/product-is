@@ -24,6 +24,7 @@ import com.nimbusds.oauth2.sdk.AccessTokenResponse;
 import com.nimbusds.oauth2.sdk.AuthorizationCode;
 import com.nimbusds.oauth2.sdk.AuthorizationCodeGrant;
 import com.nimbusds.oauth2.sdk.AuthorizationGrant;
+import com.nimbusds.oauth2.sdk.ClientCredentialsGrant;
 import com.nimbusds.oauth2.sdk.ResourceOwnerPasswordCredentialsGrant;
 import com.nimbusds.oauth2.sdk.Scope;
 import com.nimbusds.oauth2.sdk.TokenErrorResponse;
@@ -89,6 +90,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static org.wso2.identity.integration.test.utils.CarbonUtils.isLegacyAuthzRuntimeEnabled;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN_ENDPOINT;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZATION_CODE_NAME;
@@ -223,6 +225,11 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
         applicationPatch.setClaimConfiguration(getCustomLocalClaimMapping());
         updateApplication(applicationId, applicationPatch);
 
+        if (!isLegacyAuthzRuntimeEnabled()) {
+            // Authorize few system APIs.
+            authorizeSystemAPIs(applicationId, new ArrayList<>(Arrays.asList("/api/server/v1/oidc/scopes")));
+        }
+
         application = getApplication(applicationId);
         List<ClaimMappings> claimMappings = application.getClaimConfiguration().getClaimMappings();
         Assert.assertNotNull(claimMappings);
@@ -248,8 +255,13 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
             dependsOnMethods = "testCreateCustomOIDCClaim")
     public void testCreateCustomOIDCScope() throws Exception {
 
+        String accessToken;
         // Get a token with required scopes.
-        String accessToken = getAccessTokenToCallAPI("internal_application_mgt_create", "internal_application_mgt_view");
+        if (isLegacyAuthzRuntimeEnabled()) {
+            accessToken = getAccessTokenToCallAPI("internal_application_mgt_create", "internal_application_mgt_view");
+        } else {
+            accessToken = getAccessTokenToCallAPI("internal_oidc_scope_mgt_create", "internal_oidc_scope_mgt_view");
+        }
         Assert.assertNotNull(accessToken, "Could not get an access token.");
         String authorizationHeader = "Bearer " + accessToken;
 
@@ -535,8 +547,13 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
     private String getAccessTokenToCallAPI(String... scopes) throws Exception {
 
         Secret adminSecret = new Secret(this.adminPassword);
-        AuthorizationGrant passwordGrant = new ResourceOwnerPasswordCredentialsGrant(adminUsernameWithoutTenantDomain
-                , adminSecret);
+        AuthorizationGrant authorizationGrant;
+        if (!isLegacyAuthzRuntimeEnabled()) {
+            authorizationGrant = new ClientCredentialsGrant();
+        } else {
+            authorizationGrant = new ResourceOwnerPasswordCredentialsGrant(adminUsernameWithoutTenantDomain
+                    , adminSecret);
+        }
 
         ClientID clientID = new ClientID(consumerKey);
         Secret clientSecret = new Secret(consumerSecret);
@@ -544,7 +561,7 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
 
         Scope requestedScope = Scope.parse(Arrays.asList(scopes));
         URI tokenEndpoint = new URI(getTenantQualifiedURL(ACCESS_TOKEN_ENDPOINT, tenantDomain));
-        TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, passwordGrant, requestedScope);
+        TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, authorizationGrant, requestedScope);
 
         HTTPResponse tokenHTTPResp = request.toHTTPRequest().send();
         if (tokenHTTPResp != null) {
@@ -587,7 +604,7 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
     private void deleteCustomOIDCScope() throws Exception {
 
         // Get a token with required scopes.
-        String accessToken = getAccessTokenToCallAPI("internal_application_mgt_delete");
+        String accessToken = getAccessTokenToCallAPI("internal_oidc_scope_mgt_delete");
         Assert.assertNotNull(accessToken, "Could not get an access token to delete OIDC scope.");
         String authorizationHeader = "Bearer " + accessToken;
         // Delete custom OIDC scope.

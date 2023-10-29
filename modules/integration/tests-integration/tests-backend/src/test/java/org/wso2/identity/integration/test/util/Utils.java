@@ -366,7 +366,9 @@ public class Utils {
         if (resultPage.contains("<div class=\"claim-list\">")) {
             String claimString = resultPage.substring(resultPage.lastIndexOf("<div class=\"claim-list\">"));
             String[] dataArray = StringUtils.substringsBetween(claimString, "<label for=\"", "\"");
-            Collections.addAll(attributeList, dataArray);
+            if (dataArray != null) {
+                Collections.addAll(attributeList, dataArray);
+            }
         }
         return attributeList;
     }
