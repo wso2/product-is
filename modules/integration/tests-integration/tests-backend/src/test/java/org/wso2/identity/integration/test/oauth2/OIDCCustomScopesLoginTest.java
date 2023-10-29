@@ -24,7 +24,6 @@ import com.nimbusds.oauth2.sdk.AccessTokenResponse;
 import com.nimbusds.oauth2.sdk.AuthorizationCode;
 import com.nimbusds.oauth2.sdk.AuthorizationCodeGrant;
 import com.nimbusds.oauth2.sdk.AuthorizationGrant;
-import com.nimbusds.oauth2.sdk.ClientCredentialsGrant;
 import com.nimbusds.oauth2.sdk.ResourceOwnerPasswordCredentialsGrant;
 import com.nimbusds.oauth2.sdk.Scope;
 import com.nimbusds.oauth2.sdk.TokenErrorResponse;
@@ -65,6 +64,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AssociatedRolesConfig;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration.DialectEnum;
@@ -85,6 +85,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -227,7 +228,23 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
 
         if (!isLegacyAuthzRuntimeEnabled()) {
             // Authorize few system APIs.
-            authorizeSystemAPIs(applicationId, new ArrayList<>(Arrays.asList("/api/server/v1/oidc/scopes")));
+            authorizeSystemAPIs(applicationId, new ArrayList<>(Collections.singletonList("/api/server/v1/oidc/scopes")));
+            // Associate roles.
+            AssociatedRolesConfig associatedRolesConfig =
+                    new AssociatedRolesConfig().allowedAudience(AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION);
+            // Get Roles.
+            String adminRoleId = getRoleV2ResourceId("admin",
+                    AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION.toString().toLowerCase(), null);
+            String everyoneRoleId = getRoleV2ResourceId("everyone",
+                    AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION.toString().toLowerCase(), null);
+            applicationPatch = applicationPatch.associatedRoles(associatedRolesConfig);
+            associatedRolesConfig.addRolesItem(
+                    new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Role().id(
+                            adminRoleId));
+            associatedRolesConfig.addRolesItem(
+                    new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Role().id(
+                            everyoneRoleId));
+            updateApplication(applicationId, applicationPatch);
         }
 
         application = getApplication(applicationId);
@@ -547,13 +564,8 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
     private String getAccessTokenToCallAPI(String... scopes) throws Exception {
 
         Secret adminSecret = new Secret(this.adminPassword);
-        AuthorizationGrant authorizationGrant;
-        if (!isLegacyAuthzRuntimeEnabled()) {
-            authorizationGrant = new ClientCredentialsGrant();
-        } else {
-            authorizationGrant = new ResourceOwnerPasswordCredentialsGrant(adminUsernameWithoutTenantDomain
-                    , adminSecret);
-        }
+        AuthorizationGrant passwordGrant = new ResourceOwnerPasswordCredentialsGrant(adminUsernameWithoutTenantDomain
+                , adminSecret);
 
         ClientID clientID = new ClientID(consumerKey);
         Secret clientSecret = new Secret(consumerSecret);
@@ -561,7 +573,7 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
 
         Scope requestedScope = Scope.parse(Arrays.asList(scopes));
         URI tokenEndpoint = new URI(getTenantQualifiedURL(ACCESS_TOKEN_ENDPOINT, tenantDomain));
-        TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, authorizationGrant, requestedScope);
+        TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, passwordGrant, requestedScope);
 
         HTTPResponse tokenHTTPResp = request.toHTTPRequest().send();
         if (tokenHTTPResp != null) {
