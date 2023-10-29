@@ -363,10 +363,30 @@ public class Utils {
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         String resultPage = rd.lines().collect(Collectors.joining());
         List<String> attributeList = new ArrayList<>();
-        if (resultPage.contains("<div class=\"claim-list\">")) {
-            String claimString = resultPage.substring(resultPage.lastIndexOf("<div class=\"claim-list\">"));
-            String[] dataArray = StringUtils.substringsBetween(claimString, "<label for=\"", "\"");
+        
+        String claimListDiv = "<div class=\"claim-list\">";
+        String labelOpenTag = "<label for=\"";
+        String labelCloseTag = "\"";
+
+        // There can be two occurrences of <div class="claim-list"> in the page for OIDC scopes and API Resource scopes.
+        int firstIndex = resultPage.indexOf(claimListDiv);
+        int secondIndex = resultPage.indexOf(claimListDiv, firstIndex + 1);
+
+        // If there are two occurrences, extract the labels between two occurrences to get the claim list.
+        if (firstIndex != -1 && secondIndex != -1) {
+            String claimString = resultPage.substring(firstIndex, secondIndex);
+            String[] dataArray = StringUtils.substringsBetween(claimString, labelOpenTag, labelCloseTag);
             Collections.addAll(attributeList, dataArray);
+        }
+        // Check if there's only one occurrence, it can be either OIDC scopes or API Resource scopes.
+        else if (firstIndex != -1) {
+            String claimString = resultPage.substring(firstIndex);
+            boolean labelAvailable = claimString.indexOf(labelOpenTag) != -1 ? true : false;
+            // If label is available, it should be OIDC scopes. Hence, extract the labels to get the claims list.
+            if (labelAvailable) {
+                String[] dataArray = StringUtils.substringsBetween(claimString, labelOpenTag, labelCloseTag);
+                Collections.addAll(attributeList, dataArray);
+            }
         }
         return attributeList;
     }
