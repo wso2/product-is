@@ -154,7 +154,7 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
     @AfterClass(alwaysRun = true)
     public void testClear() throws IOException, AutomationUtilException {
 
-        serverConfigurationManager.restoreToLastConfiguration(true);
+        serverConfigurationManager.restoreToLastConfiguration(false);
         tenantMgtRestClient.closeHttpClient();
         oAuth2RestClientTenant1.closeHttpClient();
         oAuth2RestClientTenant2.closeHttpClient();
