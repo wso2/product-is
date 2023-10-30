@@ -229,7 +229,7 @@ org.wso2.carbon.core.common_4.9.16.jar                                          
 org.wso2.carbon.identity.conditional.auth.functions.notification_1.2.36.jar                         bundle         apache2
 org.wso2.carbon.tenant.keystore.mgt_4.11.12.jar                                                     bundle         apache2
 org.wso2.carbon.xfer_4.2.0.jar                                                                      bundle         apache2
-org.wso2.carbon.identity.branding.preference.resolver_1.0.12.jar                                    bundle         apache2
+org.wso2.carbon.identity.branding.preference.resolver_1.0.13.jar                                    bundle         apache2
 org.wso2.carbon.cluster.mgt.core_4.9.16.jar                                                         bundle         apache2
 org.wso2.carbon.user.api_4.9.16.jar                                                                 bundle         apache2
 org.wso2.carbon.consent.mgt.core_2.5.2.jar                                                          bundle         apache2
@@ -433,7 +433,7 @@ org.eclipse.jgit_5.0.0.201805301535-rc2.jar                                     
 org.wso2.carbon.user.core_4.9.16.jar                                                                bundle         apache2
 org.wso2.carbon.security.mgt_5.25.477.jar                                                           bundle         apache2
 org.wso2.carbon.identity.user.store.configuration_5.25.477.jar                                      bundle         apache2
-org.wso2.carbon.identity.branding.preference.management.core_1.0.12.jar                             bundle         apache2
+org.wso2.carbon.identity.branding.preference.management.core_1.0.13.jar                             bundle         apache2
 org.wso2.carbon.identity.user.account.association.stub_5.5.6.jar                                    bundle         apache2
 org.wso2.carbon.identity.sts.passive_5.10.17.jar                                                    bundle         apache2
 cxf-rt-frontend-jaxws-3.5.5.jar                                                                     jarinbundle    apache2
