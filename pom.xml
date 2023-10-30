@@ -2412,7 +2412,7 @@
         <authenticator.auth.otp.commons.version>1.0.1</authenticator.auth.otp.commons.version>
 
         <identity.org.mgt.version>1.3.105</identity.org.mgt.version>
-        <identity.org.mgt.core.version>1.0.82</identity.org.mgt.core.version>
+        <identity.org.mgt.core.version>1.0.83</identity.org.mgt.core.version>
         <identity.organization.login.version>1.1.24</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.15</identity.oauth2.grant.organizationswitch.version>
 
