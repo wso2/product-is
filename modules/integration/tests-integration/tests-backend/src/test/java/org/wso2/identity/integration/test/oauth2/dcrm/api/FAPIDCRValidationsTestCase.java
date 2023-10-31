@@ -24,7 +24,11 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.json.simple.JSONObject;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
+import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
@@ -37,10 +41,12 @@ import java.io.File;
 
 import static org.testng.Assert.assertEquals;
 
+/**
+ * FAPI validation test case for the DCR flow
+ */
 public class FAPIDCRValidationsTestCase extends ISIntegrationTest {
 
     private HttpClient client;
-    private String client_id;
     private String username;
     private String password;
     private String tenant;
@@ -58,11 +64,13 @@ public class FAPIDCRValidationsTestCase extends ISIntegrationTest {
 
     @DataProvider(name = "dcrmConfigProvider")
     public static Object[][] dcrmConfigProvider() {
+
         return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}};
     }
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
+
         super.init();
         client = HttpClients.createDefault();
         changeISConfiguration();

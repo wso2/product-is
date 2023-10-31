@@ -26,11 +26,18 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * Utils for preparing DCR payloads
+ */
 public class DCRUtils {
 
     private static JSONParser parser = new JSONParser();
@@ -66,11 +73,13 @@ public class DCRUtils {
     }
 
     public static void setRequestHeaders(HttpPost request, String username, String password) {
+
         request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader(username, password));
         request.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
     }
 
     public static String getPath(String tenant) {
+
         if (tenant.equals("carbon.super")) {
             return OAuthDCRMConstants.DCR_ENDPOINT_HOST_PART + OAuthDCRMConstants.DCR_ENDPOINT_PATH_PART;
         } else {
@@ -79,6 +88,7 @@ public class DCRUtils {
         }
     }
     public static String getAuthzHeader(String username, String password) {
+
         return "Basic " + Base64.encodeBase64String((username + ":" + password).getBytes()).trim();
     }
 
