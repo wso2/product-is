@@ -154,7 +154,7 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
     @AfterClass(alwaysRun = true)
     public void testClear() throws IOException, AutomationUtilException {
 
-        serverConfigurationManager.restoreToLastConfiguration(true);
+        serverConfigurationManager.restoreToLastConfiguration(false);
         tenantMgtRestClient.closeHttpClient();
         oAuth2RestClientTenant1.closeHttpClient();
         oAuth2RestClientTenant2.closeHttpClient();
@@ -300,9 +300,24 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
         // Delete tenant 1 app and assert for tenant 2 app.
         getOAuthRestClient(TENANT_1_DOMAIN).deleteApplication(tenant1App.getId());
         ApplicationListResponse tenant1Apps = getOAuthRestClient(TENANT_1_DOMAIN).getAllApplications();
-        Assert.assertEquals(tenant1Apps.getApplications().size(), 0);
+        int appCount = getAppCount(tenant1Apps);
+        Assert.assertEquals(appCount, 0);
         ApplicationListResponse tenant2Apps = getOAuthRestClient(TENANT_2_DOMAIN).getAllApplications();
-        Assert.assertEquals(tenant2Apps.getApplications().size(), 1);
+        appCount = getAppCount(tenant2Apps);
+        Assert.assertEquals(appCount, 1);
+    }
+
+    private static int getAppCount(ApplicationListResponse apps) {
+
+        int appCount = 0;
+        for (ApplicationListItem application : apps.getApplications()) {
+            if ("Console".equalsIgnoreCase(application.getName())
+                    || "My Account".equalsIgnoreCase(application.getName())) {
+                continue;
+            }
+            appCount++;
+        }
+        return appCount;
     }
 
     @Test(description = "Create two OAuth apps in two tenants with the same client id and delete " +
@@ -508,6 +523,10 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
         OAuth2RestClient restClient = getOAuthRestClient(tenantDomain);
         ApplicationListResponse applications = restClient.getAllApplications();
         for (ApplicationListItem application : applications.getApplications()) {
+            if ("Console".equalsIgnoreCase(application.getName())
+                    || "My Account".equalsIgnoreCase(application.getName())) {
+                continue;
+            }
             restClient.deleteApplication(application.getId());
         }
     }
