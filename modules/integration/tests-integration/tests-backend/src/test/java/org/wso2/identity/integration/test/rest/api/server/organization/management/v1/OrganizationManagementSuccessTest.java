@@ -88,6 +88,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     private String consumerKey;
     private String consumerSecret;
     private String orgSwitchedToken;
+    private String applicationId;
     private static final String SYSTEM_SCOPE = "SYSTEM";
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
@@ -98,9 +99,12 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     }
 
     @BeforeClass(alwaysRun = true)
-    private void testInit() {
+    private void testInit() throws Exception {
 
         oAuth2RestClient = new OAuth2RestClient(serverURL, tenantInfo);
+        if (organizationLevel == OrganizationLevel.SUB_ORGANIZATION) {
+            applicationId = addApplication();
+        }
     }
 
     @AfterClass(alwaysRun = true)
@@ -108,6 +112,9 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     public void testFinish() throws Exception {
 
         cleanUpOrganizations(createdOrgs);
+        if (organizationLevel == OrganizationLevel.SUB_ORGANIZATION) {
+            deleteApplication(applicationId);
+        }
         oAuth2RestClient.closeHttpClient();
         super.testFinish();
     }
@@ -130,7 +137,6 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         } else {
             org = "Level2Org";
             parentId = subOrganizationId;
-            String applicationId = addApplication();
             shareApplication(applicationId);
 
             if (!isLegacyRuntimeEnabled) {
@@ -153,8 +159,6 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
                     .when()
                     .log().ifValidationFails()
                     .post(ORGANIZATION_MANAGEMENT_API_BASE_PATH);
-
-            deleteApp(applicationId);
         }
 
         responseOfPost.then()
@@ -337,7 +341,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         return null;
     }
 
-    private void deleteApp(String applicationId) throws Exception {
+    private void deleteApplication(String applicationId) throws Exception {
 
         oAuth2RestClient.deleteApplication(applicationId);
     }
