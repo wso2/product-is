@@ -1,0 +1,8 @@
+{
+  "claimConfiguration": {
+    "subject": {
+      "useMappedLocalSubject": false,
+      "mappedLocalSubjectMandatory": true
+    }
+  }
+}
