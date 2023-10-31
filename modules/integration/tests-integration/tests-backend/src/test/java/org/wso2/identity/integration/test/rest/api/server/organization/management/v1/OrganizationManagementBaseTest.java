@@ -34,6 +34,7 @@ import org.testng.annotations.DataProvider;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.common.B2BRESTAPIServerTestBase;
 import org.wso2.identity.integration.test.rest.api.server.organization.management.v1.model.OrganizationLevel;
+import org.wso2.identity.integration.test.utils.CarbonUtils;
 
 import java.io.IOException;
 import java.util.Set;
@@ -57,6 +58,7 @@ public class OrganizationManagementBaseTest extends B2BRESTAPIServerTestBase {
     protected String subOrganizationId;
     protected static final String ORGANIZATION_MANAGEMENT_API_BASE_PATH = "/organizations";
     protected static String swaggerDefinition;
+    static boolean isLegacyRuntimeEnabled;
 
     static {
         String apiPackageName = "org.wso2.carbon.identity.api.server.organization.management.v1";
@@ -81,6 +83,7 @@ public class OrganizationManagementBaseTest extends B2BRESTAPIServerTestBase {
     public void init(ITestContext context) throws Exception {
 
         ISuite suite = context.getSuite();
+        isLegacyRuntimeEnabled = CarbonUtils.isLegacyAuthzRuntimeEnabled();
         String orgId = (String) suite.getAttribute("createdOrgId");
         if (orgId == null) {
             orgId = SUPER_ORGANIZATION_ID;
@@ -90,8 +93,9 @@ public class OrganizationManagementBaseTest extends B2BRESTAPIServerTestBase {
             super.testInitWithoutTenantQualifiedPath(API_VERSION, swaggerDefinition);
         } else {
             this.tenant = subOrganizationId;
-            this.authenticatingUserName = "admin@" + SUPER_ORGANIZATION_ID;
-            super.testInit(API_VERSION, swaggerDefinition, tenant);
+            String tenantDomain = tenantInfo.getDomain();
+            this.authenticatingUserName = "admin@" + tenantDomain;
+            super.testInit(API_VERSION, swaggerDefinition, tenantDomain);
         }
     }
 
@@ -115,7 +119,7 @@ public class OrganizationManagementBaseTest extends B2BRESTAPIServerTestBase {
     }
 
     @AfterMethod(alwaysRun = true)
-    public void testFinish() {
+    public void testFinish() throws Exception{
 
         RestAssured.basePath = StringUtils.EMPTY;
     }
