@@ -364,6 +364,17 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
         assertEquals(mapper.readTree(updateResponsePayload.toJSONString()),
                 mapper.readTree(updateRequestPayload.toJSONString()), "Response payload should be equal.");
 
+        // Verify that updated attribute is correctly returned by retrieving data.
+        HttpGet getRequest = new HttpGet(DCRUtils.getPath(tenant) + client_id);
+        getRequest.addHeader(HttpHeaders.AUTHORIZATION, DCRUtils.getAuthzHeader(username, password));
+        getRequest.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
+
+        HttpResponse getResponse = client.execute(getRequest);
+        assertEquals(getResponse.getStatusLine().getStatusCode(), 200, "Service provider request " +
+                "has not returned with successful response");
+        JSONObject getResponsePayload = DCRUtils.getPayload(getResponse);
+        assertEquals(getResponsePayload.get("token_endpoint_auth_method"), "tls_client_auth");
+
         testDeleteServiceProvider();
     }
 }
