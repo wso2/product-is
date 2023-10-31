@@ -61,8 +61,4 @@ public class OAuthDCRMConstants {
     public static final String REQUEST_OBJECT_ENCRYPTION_ALGORITHM = "request_object_encryption_alg";
     public static final String REQUEST_OBJECT_ENCRYPTION_METHOD = "request_object_encryption_enc";
     public static final String JWKS_URI = "jwks_uri";
-
-
-
-
 }
