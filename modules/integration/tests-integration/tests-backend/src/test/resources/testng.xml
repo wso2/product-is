@@ -363,10 +363,10 @@
     </test>
 
     <!--     Disable the test case temporarily   -->
-    <!--<test name="org-mgt-test-rest-api" preserve-order="true" parallel="false" group-by-instances="true">
+    <test name="org-mgt-test-rest-api" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
             <class name="org.wso2.identity.integration.test.rest.api.server.organization.management.v1.OrganizationManagementSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.organization.management.v1.OrganizationManagementFailureTest"/>
         </classes>
-    </test>-->
+    </test>
 </suite>
