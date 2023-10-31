@@ -21,6 +21,7 @@ import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.json.simple.JSONObject;
@@ -127,6 +128,24 @@ public class FAPIDCRValidationsTestCase extends ISIntegrationTest {
     public void validateErrorScenarios(JSONObject requestJSON, String errorCode, String errorMessage) throws Exception {
 
         HttpPost request = new HttpPost(DCRUtils.getPath(tenant));
+        request.addHeader(HttpHeaders.AUTHORIZATION, DCRUtils.getAuthzHeader(username, password));
+        request.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
+        StringEntity entity = new StringEntity(requestJSON.toJSONString());
+        request.setEntity(entity);
+        HttpResponse response = client.execute(request);
+
+        assertEquals(response.getStatusLine().getStatusCode(), 400, "Service Provider " +
+                "has not been created successfully");
+        JSONObject errorResponse = DCRUtils.getPayload(response);
+        assertEquals(errorResponse.get("error"), errorCode);
+        assertEquals(errorResponse.get("error_description"), errorMessage);
+    }
+    @Test(alwaysRun = true, groups = "wso2.is", priority = 11,
+            description = "Check FAPI validations, PPID and SSA during DCR", dataProvider = "dcrConfigProvider")
+    public void validateErrorScenariosForDCRUpdate(JSONObject requestJSON, String errorCode, String errorMessage)
+            throws Exception {
+
+        HttpPut request = new HttpPut(DCRUtils.getPath(tenant));
         request.addHeader(HttpHeaders.AUTHORIZATION, DCRUtils.getAuthzHeader(username, password));
         request.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
         StringEntity entity = new StringEntity(requestJSON.toJSONString());
