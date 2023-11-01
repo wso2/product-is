@@ -1,0 +1,34 @@
+{
+    "alias": "test",
+    "description": "FAPI conformance suite for wso2 identity server.",
+    "server": {
+        "discoveryUrl": "https://iam:9443/oauth2/token/.well-known/openid-configuration"
+    },
+    "resource": {
+        "resourceUrl": "https://iam:9443x"
+    },
+    "client": {
+        "client_id": "RU9JaCD1MKr2BaKsGNvpssMhGjka",
+        "scope": "openid profile abc",
+        "jwks": {
+            "a": "A",
+            "b": "B"
+        }
+    },
+    "client2": {
+        "client_id": "IE9POhvMXOODs999F2dv1Fk5fOsa",
+        "scope": "openid profile abc",
+        "jwks": {
+            "a": "A",
+            "b": "B"
+        }
+    },
+    "mtls": {
+        "a": "A",
+        "b": "B"
+    },
+    "mtls2": {
+        "a": "A",
+        "b": "B"
+    }
+}

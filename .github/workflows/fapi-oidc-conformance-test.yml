@@ -13,24 +13,24 @@ on:
       tag:
         description: 'product-is tag name'
         required: false
-        default: 'v7.0.0-m1'
+        default: 'v7.0.0-alpha'
       download-url:
         description: 'URL to download product-is'
         required: false
-      jwt-authenticator-tag:
-        description: 'pvt-key-jwt-authenticator tag name'
-        required: false
-        default: 'v2.4.25'
-      jwt-authenticator-download-url:
-        description: 'URL to download pvt-key-jwt-authenticator jar'
-        required: false
+#      jwt-authenticator-tag:
+#        description: 'pvt-key-jwt-authenticator tag name'
+#        required: false
+#        default: 'v2.4.25'
+#      jwt-authenticator-download-url:
+#        description: 'URL to download pvt-key-jwt-authenticator jar'
+#        required: false
       conformance-suite-version:
         description: 'Conformance suite release tag in https://github.com/openid-certification/conformance-suite.git'
         required: false
         default: 'v5.1.1'
       resource-url:
         description: 'Resource url path'
-        default: '/oauth2/userinfo'
+        default: 'https://iam/resource'
       send-email:
         description: 'Send test results to email'
         required: false
@@ -94,52 +94,52 @@ jobs:
 
     - name: Download pvt key jwt authenticator & add configs to IS
       run: |
-        JWT_AUTH_INPUT_URL=${{github.event.inputs.jwt-authenticator-download-url}}
-        JWT_AUTH_INPUT_TAG=${{github.event.inputs.jwt-authenticator-tag}}
-        
-        echo "Downloading JWT Client Authenticator..."
-        
-        if [[ -z "${JWT_AUTH_INPUT_URL}" ]] && [[ -z "${JWT_AUTH_INPUT_TAG}" ]]; then
-          echo "[JWT Client Authenticator] Either 'tag' or 'download-url' must be provided."
-          exit 1
-        fi
-        if [[ -z "${JWT_AUTH_INPUT_URL}" ]]; then
-          echo "[JWT Client Authenticator] No URL provided."
-          owner="wso2-extensions"
-          repo="identity-oauth-addons"
-          
-          if [[ -z "${JWT_AUTH_INPUT_TAG}" ]]; then
-            echo "[JWT Client Authenticator] No Tag provided."
-            tag=${GITHUB_REF:10}
-            tag_trimmed=${tag// }
-          else
-            tag=${JWT_AUTH_INPUT_TAG}
-            tag_trimmed=${tag// }
-            echo "Tag = $tag_trimmed"
-          fi
-        
-          artifact="org.wso2.carbon.identity.oauth2.token.handler.clientauth.jwt-${tag_trimmed:1}.jar"
-          download_url="https://github.com/${owner}/${repo}/releases/download/${tag_trimmed}/${artifact}"
-          
-          echo "[JWT Client Authenticator] Artifact = $artifact"
-          echo "[JWT Client Authenticator] Downloading via: ${download_url}"
-  
-          authenticator_file="$(curl -vLJO -H 'Accept: application/octet-stream' --remote-name -s -w "%{filename_effective}" "${download_url}")"
-          echo "[JWT Client Authenticator] $authenticator_file downloaded"
-            
-          if [[ -f "$artifact" ]]; then
-            echo "[JWT Client Authenticator] $artifact downloaded."
-          else
-            echo "[JWT Client Authenticator] $artifact NOT Downloaded."
-            exit 1
-        fi
-        
-        else
-          echo "[JWT Client Authenticator] Downloading via the provided url: ${JWT_AUTH_INPUT_URL}"
-          authenticator_file="$(curl -vLJO -H 'Accept: application/octet-stream' --remote-name -s -w "%{filename_effective}" "${JWT_AUTH_INPUT_URL}")"
-          echo "[JWT Client Authenticator] $authenticator_file downloaded"
-        fi
-        
+#        JWT_AUTH_INPUT_URL=${{github.event.inputs.jwt-authenticator-download-url}}
+#        JWT_AUTH_INPUT_TAG=${{github.event.inputs.jwt-authenticator-tag}}
+#
+#        echo "Downloading JWT Client Authenticator..."
+#
+#        if [[ -z "${JWT_AUTH_INPUT_URL}" ]] && [[ -z "${JWT_AUTH_INPUT_TAG}" ]]; then
+#          echo "[JWT Client Authenticator] Either 'tag' or 'download-url' must be provided."
+#          exit 1
+#        fi
+#        if [[ -z "${JWT_AUTH_INPUT_URL}" ]]; then
+#          echo "[JWT Client Authenticator] No URL provided."
+#          owner="wso2-extensions"
+#          repo="identity-oauth-addons"
+#
+#          if [[ -z "${JWT_AUTH_INPUT_TAG}" ]]; then
+#            echo "[JWT Client Authenticator] No Tag provided."
+#            tag=${GITHUB_REF:10}
+#            tag_trimmed=${tag// }
+#          else
+#            tag=${JWT_AUTH_INPUT_TAG}
+#            tag_trimmed=${tag// }
+#            echo "Tag = $tag_trimmed"
+#          fi
+#
+#          artifact="org.wso2.carbon.identity.oauth2.token.handler.clientauth.jwt-${tag_trimmed:1}.jar"
+#          download_url="https://github.com/${owner}/${repo}/releases/download/${tag_trimmed}/${artifact}"
+#
+#          echo "[JWT Client Authenticator] Artifact = $artifact"
+#          echo "[JWT Client Authenticator] Downloading via: ${download_url}"
+#
+#          authenticator_file="$(curl -vLJO -H 'Accept: application/octet-stream' --remote-name -s -w "%{filename_effective}" "${download_url}")"
+#          echo "[JWT Client Authenticator] $authenticator_file downloaded"
+#
+#          if [[ -f "$artifact" ]]; then
+#            echo "[JWT Client Authenticator] $artifact downloaded."
+#          else
+#            echo "[JWT Client Authenticator] $artifact NOT Downloaded."
+#            exit 1
+#        fi
+#
+#        else
+#          echo "[JWT Client Authenticator] Downloading via the provided url: ${JWT_AUTH_INPUT_URL}"
+#          authenticator_file="$(curl -vLJO -H 'Accept: application/octet-stream' --remote-name -s -w "%{filename_effective}" "${JWT_AUTH_INPUT_URL}")"
+#          echo "[JWT Client Authenticator] $authenticator_file downloaded"
+#        fi
+
         # Move Downloaded JWT Client Authenticator to IS
         PRODUCT_IS_ZIP=$(find ./ -name 'wso2is*' -type f -printf "%f\n")
         echo "Unzipping Product IS: ${PRODUCT_IS_ZIP} ..."
@@ -147,10 +147,10 @@ jobs:
           
         PRODUCT_IS=$(find ./ -name 'wso2is*' -type d -printf "%f\n")
         echo "Directory Name: ${PRODUCT_IS}"
-          
-        MOVE_TO="${PRODUCT_IS}/repository/components/dropins"
-        echo "Moving $authenticator_file to ${MOVE_TO}..."
-        mv -i $authenticator_file $MOVE_TO
+
+#        MOVE_TO="${PRODUCT_IS}/repository/components/dropins"
+#        echo "Moving $authenticator_file to ${MOVE_TO}..."
+#        mv -i $authenticator_file $MOVE_TO
         
         # Add Client Authenticator configs to deployment.toml
         echo "Adding deployment-fapi-config.toml configs to deployment.toml..."
