@@ -17,6 +17,7 @@
  */
 package org.wso2.identity.integration.test.oauth2.dcrm.api;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -41,6 +42,7 @@ import org.wso2.identity.integration.test.util.Utils;
 import java.io.File;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 /**
  * FAPI validation test case for the DCR flow
@@ -48,6 +50,8 @@ import static org.testng.Assert.assertEquals;
 public class FAPIDCRValidationsTestCase extends ISIntegrationTest {
 
     private HttpClient client;
+    private String client_id;
+
     private String username;
     private String password;
     private String tenant;
@@ -145,12 +149,30 @@ public class FAPIDCRValidationsTestCase extends ISIntegrationTest {
     public void validateErrorScenariosForDCRUpdate(JSONObject requestJSON, String errorCode, String errorMessage)
             throws Exception {
 
-        HttpPut request = new HttpPut(DCRUtils.getPath(tenant));
+        // Create application.
+        HttpPost request = new HttpPost(DCRUtils.getPath(tenant));
+        JSONObject registerRequestJSON = DCRUtils.getRegisterRequestJSON("request6.json");
+
         request.addHeader(HttpHeaders.AUTHORIZATION, DCRUtils.getAuthzHeader(username, password));
         request.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
-        StringEntity entity = new StringEntity(requestJSON.toJSONString());
+        StringEntity entity = new StringEntity(registerRequestJSON.toJSONString());
         request.setEntity(entity);
+        ObjectMapper mapper = new ObjectMapper();
+
         HttpResponse response = client.execute(request);
+        assertEquals(response.getStatusLine().getStatusCode(), 201, "Service Provider " +
+                "has not been created successfully");
+        JSONObject createResponsePayload  = DCRUtils.getPayload(response);
+        client_id = ((JSONObject) createResponsePayload).get("client_id").toString();
+        assertNotNull(client_id, "client_id cannot be null");
+
+        // Check error scenarios for update request.
+        HttpPut updateRequest = new HttpPut(DCRUtils.getPath(tenant) + client_id);
+        request.addHeader(HttpHeaders.AUTHORIZATION, DCRUtils.getAuthzHeader(username, password));
+        request.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
+        entity = new StringEntity(requestJSON.toJSONString());
+        request.setEntity(entity);
+        response = client.execute(updateRequest);
 
         assertEquals(response.getStatusLine().getStatusCode(), 400, "Service Provider " +
                 "has not been created successfully");
@@ -158,11 +180,4 @@ public class FAPIDCRValidationsTestCase extends ISIntegrationTest {
         assertEquals(errorResponse.get("error"), errorCode);
         assertEquals(errorResponse.get("error_description"), errorMessage);
     }
-
-    @AfterClass(alwaysRun = true)
-    public void cleanup() throws Exception {
-
-        serverConfigurationManager.restoreToLastConfiguration();
-    }
-
 }
