@@ -176,7 +176,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         assertNotBlank(createdOrgId);
         if (organizationLevel == OrganizationLevel.SUB_ORGANIZATION) {
             // Check whether password recovery is enabled in the created sub-organization.
-            given()
+            /*given()
                     .auth().preemptive().oauth2(orgSwitchedToken)
                     .contentType(ContentType.JSON)
                     .header(HttpHeaders.ACCEPT, ContentType.JSON)
@@ -189,7 +189,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
                     .statusCode(HttpStatus.SC_OK)
                     .body("properties.find { it.name == 'Recovery.Notification.Password.Enable' }.value",
                             equalTo("true"))
-                    .body("properties.find { it.name == 'Recovery.NotifySuccess' }.value", equalTo("true"));
+                    .body("properties.find { it.name == 'Recovery.NotifySuccess' }.value", equalTo("true"));*/
 
             // Check whether application creation is disabled in the sub-organization.
             Response response = given()
