@@ -120,6 +120,9 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
 
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(isServer);
+        // We have to restart the server, since the configs were restored from the previous test,
+        // but has not restarted the server after that.
+        serverConfigurationManager.restartGracefully();
         tenantMgtRestClient = new TenantMgtRestClient(serverURL, tenantInfo);
 
         // Create the test tenants.
@@ -154,7 +157,7 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
     @AfterClass(alwaysRun = true)
     public void testClear() throws IOException, AutomationUtilException {
 
-        serverConfigurationManager.restoreToLastConfiguration(true);
+        serverConfigurationManager.restoreToLastConfiguration(false);
         tenantMgtRestClient.closeHttpClient();
         oAuth2RestClientTenant1.closeHttpClient();
         oAuth2RestClientTenant2.closeHttpClient();
