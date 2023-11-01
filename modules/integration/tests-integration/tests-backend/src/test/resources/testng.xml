@@ -346,7 +346,7 @@
             <class name="org.wso2.identity.integration.test.rest.api.user.liteUserRegister.LiteUserRegisterTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenScopeValidatorTestCase" />
             <class name="org.wso2.identity.integration.test.saml.SAMLSSOForAdminLoginTestCase"/>
-<!--            <class name="org.wso2.identity.integration.test.oauth2.OAuthAppsWithSameClientIdTestCase"/>-->
+            <class name="org.wso2.identity.integration.test.oauth2.OAuthAppsWithSameClientIdTestCase"/>
         </classes>
     </test>
 
@@ -363,12 +363,12 @@
     </test>
 
     <!--     Disable the test case temporarily   -->
-    <!--<test name="org-mgt-test-rest-api" preserve-order="true" parallel="false" group-by-instances="true">
+    <test name="org-mgt-test-rest-api" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
             <class name="org.wso2.identity.integration.test.rest.api.server.organization.management.v1.OrganizationManagementSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.organization.management.v1.OrganizationManagementFailureTest"/>
         </classes>
-    </test>-->
+    </test>
     <test name="fapi-dcr-validations" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
             <class name="org.wso2.identity.integration.test.oauth2.dcrm.api.FAPIDCRValidationsTestCase"/>

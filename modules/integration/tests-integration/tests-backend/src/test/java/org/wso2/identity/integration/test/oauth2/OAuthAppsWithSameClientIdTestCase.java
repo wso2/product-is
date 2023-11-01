@@ -120,6 +120,9 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
 
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(isServer);
+        // We have to restart the server, since the configs were restored from the previous test,
+        // but has not restarted the server after that.
+        serverConfigurationManager.restartGracefully();
         tenantMgtRestClient = new TenantMgtRestClient(serverURL, tenantInfo);
 
         // Create the test tenants.
