@@ -55,5 +55,12 @@ public class IdentityConstants {
         IDENTITY_PROVIDER_MGT,
         SAML_SSO_CONFIG,
         OAUTH_ADMIN,
+        USER_MGT,
+    }
+
+    public static enum AssertLocalSubjectMode {
+        DISABLED,
+        OPTIONAL,
+        MANDATORY
     }
 }
