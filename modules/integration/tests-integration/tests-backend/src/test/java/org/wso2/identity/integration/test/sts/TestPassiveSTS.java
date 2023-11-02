@@ -59,6 +59,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
     private static final String EMAIL_CLAIM_URI = "http://wso2.org/claims/emailaddress";
     private static final String GIVEN_NAME_CLAIM_URI = "http://wso2.org/claims/givenname";
     private static final String PASSIVE_STS_SAMPLE_APP_URL = "http://localhost:8490/PassiveSTSSampleApp";
+    private static final String PASSIVE_STS_SAMPLE_APP_LOGOUT_URL = "http://localhost:8490/PassiveSTSSampleApp";
     private static final String COMMON_AUTH_URL =
             "https://localhost:9853/commonauth";
     private static final String HTTP_RESPONSE_HEADER_LOCATION = "location";
@@ -148,10 +149,16 @@ public class TestPassiveSTS extends ISIntegrationTest {
         InboundAuthenticationRequestConfig opicAuthenticationRequest = new InboundAuthenticationRequestConfig();
         opicAuthenticationRequest.setInboundAuthKey(SERVICE_PROVIDER_NAME);
         opicAuthenticationRequest.setInboundAuthType("passivests");
-        Property property = new Property();
-        property.setName("passiveSTSWReply");
-        property.setValue(PASSIVE_STS_SAMPLE_APP_URL);
-        opicAuthenticationRequest.setProperties(new Property[]{property});
+        List<Property> propertiesArrList = new ArrayList<>();
+        Property propertyWReplyURL = new Property();
+        propertyWReplyURL.setName("passiveSTSWReply");
+        propertyWReplyURL.setValue(PASSIVE_STS_SAMPLE_APP_URL);
+        propertiesArrList.add(propertyWReplyURL);
+        Property propertyWReplyLogoutURL = new Property();
+        propertyWReplyLogoutURL.setName("passiveSTSWReplyLogout");
+        propertyWReplyLogoutURL.setValue(PASSIVE_STS_SAMPLE_APP_LOGOUT_URL);
+        propertiesArrList.add(propertyWReplyLogoutURL);
+        opicAuthenticationRequest.setProperties(propertiesArrList.toArray(new Property[0]));
         authRequestList.add(opicAuthenticationRequest);
 
         if (authRequestList.size() > 0) {
@@ -335,7 +342,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
             dependsOnMethods = {"testPassiveSAML2Assertion", "testSessionHijacking"})
     public void testSendLogoutRequest() throws Exception {
 
-        String passiveParams = "?wa=wsignout1.0&wreply=" + PASSIVE_STS_SAMPLE_APP_URL + "&wtrealm=PassiveSTSSampleApp";
+        String passiveParams = "?wa=wsignout1.0&wreply=" + PASSIVE_STS_SAMPLE_APP_LOGOUT_URL + "&wtrealm=PassiveSTSSampleApp";
         HttpGet request = new HttpGet(this.passiveStsURL + passiveParams);
         HttpResponse response = client.execute(request);
         Assert.assertNotNull(response, "PassiveSTSSampleApp logout response is null for tenant domain: " +
