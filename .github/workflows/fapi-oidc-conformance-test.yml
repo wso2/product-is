@@ -92,7 +92,7 @@ jobs:
            "${INPUT_URL}"
         fi
 
-    - name: Download pvt key jwt authenticator & add configs to IS
+    - name: Add configs to IS
       run: |
 #        JWT_AUTH_INPUT_URL=${{github.event.inputs.jwt-authenticator-download-url}}
 #        JWT_AUTH_INPUT_TAG=${{github.event.inputs.jwt-authenticator-tag}}
@@ -171,6 +171,28 @@ jobs:
       run: |
         sed -i '/^    volumes.*/i \ \ \ \ extra_hosts:\n \ \ \ \ - "localhost:\$IP\"\n \ \ \ \ - "iam:\$IP\"' ./conformance-suite/docker-compose-dev.yml
         sudo -- sh -c -e "echo '127.0.1.1 iam' >> /etc/hosts"
+
+    - name: Start FAPI resource server
+      run: |
+        # Install nginx and copy server certs
+        sudo apt update
+        sudo apt install nginx
+        sudo chmod 777 -R /etc/nginx
+        mkdir -p /etc/nginx/ssl
+        echo ${{secrets.FAPI_RESOURCE_SERVER_KEY}} >> /etc/nginx/ssl/serverCA.key
+        echo ${{secrets.FAPI_RESOURCE_SERVER_PEM}} >> /etc/nginx/ssl/serverCA.pem
+        
+        PATH_TO_RESOURCE_SERVER=./product-is/oidc-conformance-tests/fapi/resource-server
+        cd PATH_TO_RESOURCE_SERVER 
+        ls
+        cp -f PATH_TO_RESOURCE_SERVER/nginx-proxy /etc/nginx/sites-enabled
+        sudo nginx -t
+        sudo service nginx restart
+        
+        pip install virtualenv
+        python3 -m virtualenv venv
+        source ./venv/bin/activate
+        pip install -r requirements.txt
 
     - name: Run IS
       run: |
