@@ -185,6 +185,6 @@ public class FAPIDCRValidationsTestCase extends ISIntegrationTest {
 
         HttpResponse deleteResponse = client.execute(deleteRequest);
         assertEquals(deleteResponse.getStatusLine().getStatusCode(), 204, "Service provider " +
-                "deleted successfully");
+                "deletion failed");
     }
 }
