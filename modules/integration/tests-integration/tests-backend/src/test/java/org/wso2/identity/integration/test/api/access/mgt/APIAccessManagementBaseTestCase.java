@@ -12,7 +12,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.application.common.model.APIResource;
@@ -28,6 +30,8 @@ public class APIAccessManagementBaseTestCase extends RESTTestBase {
 
     public static final String SERVER_URL = "https://localhost:9853";
     public static final String API_RESOURCE_ENDPOINT = "/api/server/v1/api-resources";
+    public static final String SCOPE_PATH = "/scopes";
+
     public static final String API_RESOURCE_SCOPE_ENDPOINT = "/api/server/v1/scopes";
     public static final String APPLICATION_ENDPOINT = "/api/server/v1/applications";
     public static final String BUSINESS_API_FILTER_QUERY = "?filter=type+eq+BUSINESS";
@@ -57,17 +61,17 @@ public class APIAccessManagementBaseTestCase extends RESTTestBase {
         this.tenant = context.getContextTenant().getDomain();
     }
 
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeMethod(alwaysRun = true)
+    public void initTest() throws Exception {
 
-        super.init();
         client = HttpClients.createDefault();
+
     }
 
-    @AfterClass(alwaysRun = true)
-    public void testConclude() throws Exception {
+    @AfterMethod(alwaysRun = true)
+    public void concludeTest() throws Exception {
 
-        super.conclude();
+        client.close();
     }
 
     protected HttpResponse createAPIResource(APIResource apiResource) throws JSONException, IOException {

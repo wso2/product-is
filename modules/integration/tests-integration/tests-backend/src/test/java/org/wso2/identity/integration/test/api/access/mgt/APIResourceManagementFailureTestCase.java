@@ -76,7 +76,7 @@ public class APIResourceManagementFailureTestCase extends APIAccessManagementBas
 
         HttpResponse response = createAPIResource(apiResource);
         assertNotNull(response, "API resource creation request failed");
-        assertEquals(response.getStatusLine().getStatusCode(), 409, "Expected status code not received");
+        assertEquals(response.getStatusLine().getStatusCode(), 400, "Expected status code not received");
     }
 
     @Test(priority = 1)

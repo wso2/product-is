@@ -138,7 +138,7 @@ public class APIResourceManagementTestCase extends APIAccessManagementBaseTestCa
     }
 
     @Test(dependsOnMethods = "testAddDuplicateAPIResource")
-    public void addAPIWithDuplicateScope() throws JSONException, IOException {
+    public void testAddAPIWithDuplicateScope() throws JSONException, IOException {
 
         List<Scope> scopeList = new ArrayList<>();
 
@@ -164,7 +164,7 @@ public class APIResourceManagementTestCase extends APIAccessManagementBaseTestCa
     }
 
     @Test(dependsOnMethods = "testAddAPIResource")
-    public void getAPIResources() throws JSONException, IOException {
+    public void testGetAPIResources() throws JSONException, IOException {
 
         HttpGet request = new HttpGet(SERVER_URL + API_RESOURCE_ENDPOINT + BUSINESS_API_FILTER_QUERY);
         request.setHeader("Content-Type", "application/json");
@@ -178,5 +178,28 @@ public class APIResourceManagementTestCase extends APIAccessManagementBaseTestCa
         assertEquals(apiResourceArray.length(), 1, "API resource count expected to be 1");
         JSONObject apiResource = apiResourceArray.getJSONObject(0);
         assertEquals(apiResource.getString(API_ID_ATTRIBUTE), apiResourceId, "API resource retrieval failed");
+    }
+
+    @Test(dependsOnMethods = "testGetAPIResources")
+    public void testGetAPIScopes() throws IOException, JSONException {
+
+        HttpGet request = new HttpGet(SERVER_URL + API_RESOURCE_ENDPOINT + "/" + apiResourceId + SCOPE_PATH);
+        request.setHeader("Content-Type", "application/json");
+        request.setHeader("Authorization", getAuthzHeader());
+        HttpResponse response = null;
+        response = client.execute(request);
+        assertNotNull(response, "API scope retrieval failed");
+        assertEquals(response.getStatusLine().getStatusCode(), 200, "API scope retrieval failed");
+        JSONArray scopeArray = new JSONArray(EntityUtils.toString(response.getEntity()));
+        EntityUtils.consume(response.getEntity());
+        assertEquals(scopeArray.length(), 2, "API scope count expected to be 2");
+        for (int i = 0; i < scopeArray.length(); i++) {
+            JSONObject scopeObj = (JSONObject) scopeArray.get(i);
+            if (scopeObj.getString(API_SCOPE_NAME_ATTRIBUTE).equals(SCOPE_1_NAME)) {
+                assertEquals(scopeObj.getString(API_SCOPE_ID_ATTRIBUTE), scope1Id, "API scope retrieval failed");
+            } else if (scopeObj.getString(API_SCOPE_NAME_ATTRIBUTE).equals(SCOPE_2_NAME)) {
+                assertEquals(scopeObj.getString(API_SCOPE_ID_ATTRIBUTE), scope2Id, "API scope retrieval failed");
+            }
+        }
     }
 }
