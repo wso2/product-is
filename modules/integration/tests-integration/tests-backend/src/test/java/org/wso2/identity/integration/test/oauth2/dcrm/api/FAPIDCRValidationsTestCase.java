@@ -21,12 +21,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.json.simple.JSONObject;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
@@ -51,7 +51,6 @@ public class FAPIDCRValidationsTestCase extends ISIntegrationTest {
 
     private HttpClient client;
     private String client_id;
-
     private String username;
     private String password;
     private String tenant;
@@ -127,7 +126,7 @@ public class FAPIDCRValidationsTestCase extends ISIntegrationTest {
         serverConfigurationManager.restartGracefully();
     }
 
-    @Test(alwaysRun = true, groups = "wso2.is", priority = 11,
+    @Test(alwaysRun = true, groups = "wso2.is", priority = 1,
             description = "Check FAPI validations, PPID and SSA during DCR", dataProvider = "dcrConfigProvider")
     public void validateErrorScenarios(JSONObject requestJSON, String errorCode, String errorMessage) throws Exception {
 
@@ -139,12 +138,13 @@ public class FAPIDCRValidationsTestCase extends ISIntegrationTest {
         HttpResponse response = client.execute(request);
 
         assertEquals(response.getStatusLine().getStatusCode(), 400, "Service Provider " +
-                "has not been created successfully");
+                "should not be created successfully");
         JSONObject errorResponse = DCRUtils.getPayload(response);
         assertEquals(errorResponse.get("error"), errorCode);
         assertEquals(errorResponse.get("error_description"), errorMessage);
     }
-    @Test(alwaysRun = true, groups = "wso2.is", priority = 11,
+
+    @Test(alwaysRun = true, groups = "wso2.is", priority = 2,
             description = "Check FAPI validations, PPID and SSA during DCR", dataProvider = "dcrConfigProvider")
     public void validateErrorScenariosForDCRUpdate(JSONObject requestJSON, String errorCode, String errorMessage)
             throws Exception {
@@ -157,11 +157,10 @@ public class FAPIDCRValidationsTestCase extends ISIntegrationTest {
         request.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
         StringEntity entity = new StringEntity(registerRequestJSON.toJSONString());
         request.setEntity(entity);
-        ObjectMapper mapper = new ObjectMapper();
 
         HttpResponse response = client.execute(request);
         assertEquals(response.getStatusLine().getStatusCode(), 201, "Service Provider " +
-                "has not been created successfully");
+                "created successfully");
         JSONObject createResponsePayload  = DCRUtils.getPayload(response);
         client_id = ((JSONObject) createResponsePayload).get("client_id").toString();
         assertNotNull(client_id, "client_id cannot be null");
@@ -174,10 +173,18 @@ public class FAPIDCRValidationsTestCase extends ISIntegrationTest {
         request.setEntity(entity);
         response = client.execute(updateRequest);
 
-        assertEquals(response.getStatusLine().getStatusCode(), 400, "Service Provider " +
-                "has not been created successfully");
+        assertEquals(response.getStatusLine().getStatusCode(), 400, "Service Provider should " +
+                "not be created successfully");
         JSONObject errorResponse = DCRUtils.getPayload(response);
         assertEquals(errorResponse.get("error"), errorCode);
         assertEquals(errorResponse.get("error_description"), errorMessage);
+
+        // Delete application.
+        HttpDelete deleteRequest = new HttpDelete(DCRUtils.getPath(tenant) + client_id);
+        request.addHeader(HttpHeaders.AUTHORIZATION, DCRUtils.getAuthzHeader(username, password));
+
+        HttpResponse deleteResponse = client.execute(deleteRequest);
+        assertEquals(deleteResponse.getStatusLine().getStatusCode(), 204, "Service provider " +
+                "deleted successfully");
     }
 }
