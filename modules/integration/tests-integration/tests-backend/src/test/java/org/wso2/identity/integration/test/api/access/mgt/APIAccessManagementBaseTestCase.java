@@ -45,6 +45,8 @@ public class APIAccessManagementBaseTestCase extends RESTTestBase {
     public static final String API_SCOPE_NAME_ATTRIBUTE = "name";
     public static final String API_SCOPE_DISPLAY_NAME_ATTRIBUTE = "displayName";
     public static final String API_SCOPE_DESCRIPTION_ATTRIBUTE = "description";
+    public static final String ADDED_SCOPE_ATTRIBUTE = "addedScopes";
+
 
     protected CloseableHttpClient client;
     protected String adminUsername;
@@ -101,6 +103,14 @@ public class APIAccessManagementBaseTestCase extends RESTTestBase {
     protected HttpResponse getAPIResource(String apiId) throws IOException {
 
         HttpGet request = new HttpGet(SERVER_URL + API_RESOURCE_ENDPOINT + "/" + apiId);
+        request.setHeader("Content-Type", "application/json");
+        request.setHeader("Authorization", getAuthzHeader());
+        return client.execute(request);
+    }
+
+    protected HttpResponse getAPIScopes(String apiId) throws IOException {
+
+        HttpGet request = new HttpGet(SERVER_URL + API_RESOURCE_ENDPOINT + "/" + apiId + SCOPE_PATH);
         request.setHeader("Content-Type", "application/json");
         request.setHeader("Authorization", getAuthzHeader());
         return client.execute(request);
