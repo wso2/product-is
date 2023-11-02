@@ -42,13 +42,17 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AssociatedRolesConfig;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
+import org.wso2.identity.integration.test.utils.CarbonUtils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +72,7 @@ public class SystemScopePermissionValidationTestCase extends OAuth2ServiceAbstra
     private final TestUserMode testUserMode;
 
     private static final String SYSTEM_SCOPE = "SYSTEM";
+    private static boolean isLegacyRuntimeEnabled;
     private String applicationId;
 
     @DataProvider(name = "configProvider")
@@ -94,6 +99,7 @@ public class SystemScopePermissionValidationTestCase extends OAuth2ServiceAbstra
 
         setSystemproperties();
         client = HttpClientBuilder.create().build();
+        isLegacyRuntimeEnabled = CarbonUtils.isLegacyAuthzRuntimeEnabled();
     }
 
     @AfterClass(alwaysRun = true)
@@ -119,6 +125,29 @@ public class SystemScopePermissionValidationTestCase extends OAuth2ServiceAbstra
 
         consumerSecret = oidcConfig.getClientSecret();
         Assert.assertNotNull(consumerSecret, "Application creation failed.");
+
+        if (!isLegacyRuntimeEnabled) {
+            // Authorize few system APIs.
+            authorizeSystemAPIs(applicationId,
+                    new ArrayList<>(Arrays.asList("/api/server/v1/tenants", "/scim2/Users")));
+            // Associate roles.
+            ApplicationPatchModel applicationPatch = new ApplicationPatchModel();
+            AssociatedRolesConfig associatedRolesConfig =
+                    new AssociatedRolesConfig().allowedAudience(AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION);
+            // Get Roles.
+            String adminRoleId = getRoleV2ResourceId("admin",
+                    AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION.toString().toLowerCase(), null);
+            String everyoneRoleId = getRoleV2ResourceId("everyone",
+                    AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION.toString().toLowerCase(), null);
+            applicationPatch = applicationPatch.associatedRoles(associatedRolesConfig);
+            associatedRolesConfig.addRolesItem(
+                    new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Role().id(
+                            adminRoleId));
+            associatedRolesConfig.addRolesItem(
+                    new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Role().id(
+                            everyoneRoleId));
+            updateApplication(applicationId, applicationPatch);
+        }
     }
 
     @Test(groups = "wso2.is", description = "Send authorize user request and get access token", dependsOnMethods = "testRegisterApplication")
@@ -200,15 +229,17 @@ public class SystemScopePermissionValidationTestCase extends OAuth2ServiceAbstra
     private void doTheScopeValidationBasedOnTheTestUserMode(String scope, boolean isClientCredentialsGrant) {
 
         if (testUserMode == TestUserMode.SUPER_TENANT_ADMIN) {
-            Assert.assertTrue(scope.contains("internal_server_admin"), "Scope should contain " +
-                    "`internal_server_admin` scope");
+            if (isLegacyRuntimeEnabled) {
+                Assert.assertTrue(scope.contains("internal_server_admin"), "Scope should contain " +
+                        "`internal_server_admin` scope");
+            }
             Assert.assertTrue(scope.contains("internal_modify_tenants"), "Scope should contain " +
                     "`internal_modify_tenants` scope");
         } else if (testUserMode == TestUserMode.TENANT_ADMIN) {
             Assert.assertFalse(scope.contains("internal_server_admin"), "Scope should not contain " +
                     "`internal_server_admin` scope");
             Assert.assertFalse(scope.contains("internal_modify_tenants"), "Scope should not contain " +
-                    "`internal_modify_tenants` scope");
+                        "`internal_modify_tenants` scope");
         } else {
             // Normal user.
             if (isClientCredentialsGrant) {
@@ -221,7 +252,7 @@ public class SystemScopePermissionValidationTestCase extends OAuth2ServiceAbstra
             Assert.assertFalse(scope.contains("internal_server_admin"), "Scope should not contain " +
                     "`internal_server_admin` scope");
             Assert.assertFalse(scope.contains("internal_modify_tenants"), "Scope should not contain " +
-                    "`internal_modify_tenants` scope");
+                        "`internal_modify_tenants` scope");
         }
     }
 }

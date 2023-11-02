@@ -443,7 +443,7 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
         List<IdentityProvider> idpList = idpMgtServiceClient.getPaginatedIdPsInfo(filter, pageNumber);
         Assert.assertNotNull(idpList);
         if (idpList.size() > 0) {
-            Assert.assertEquals(idpList.size(), 2, "filtered identity provider size not matched" +
+            Assert.assertEquals(idpList.size(), 3, "filtered identity provider size not matched" +
                     " with the expected while testing getPaginatedIdPsInfo() with empty filter");
         } else {
             Assert.fail("Unable to find filtered identity provider while testing getPaginatedIdPsInfo(). Paginated " +
@@ -495,7 +495,7 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
     public void testGetAllIdPsCount() throws Exception {
 
         int idpCount = idpMgtServiceClient.getAllIdpCount();
-        Assert.assertEquals(idpCount, 2, "Total idp count did not match with the expected.");
+        Assert.assertEquals(idpCount, 3, "Total idp count did not match with the expected.");
     }
 
     @Test(priority = 13, groups = "wso2.is", description = "test getFilteredIdpCount operation with incorrect filter")
@@ -528,7 +528,7 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
 
         String filter = "";
         int idpCount = idpMgtServiceClient.getFilteredIdpCount(filter);
-        if (idpCount != 2) {
+        if (idpCount != 3) {
             Assert.fail("Invalid Idp count found while calling getFilteredIdpCount() with empty filter value ");
         }
     }

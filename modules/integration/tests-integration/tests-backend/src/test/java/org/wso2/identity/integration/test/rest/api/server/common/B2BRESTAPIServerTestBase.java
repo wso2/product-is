@@ -29,16 +29,16 @@ import java.rmi.RemoteException;
 public class B2BRESTAPIServerTestBase extends B2BRESTTestBase {
 
     protected static final String API_SERVER_BASE_PATH = "/api/server/%s";
-    protected static final String API_SERVER_BASE_PATH_IN_SWAGGER = "/o/\\{organization-domain\\}" +
+    protected static final String API_SERVER_BASE_PATH_IN_SWAGGER = "/t/\\{tenant-domain\\}" +
             API_SERVER_BASE_PATH;
-    protected static final String API_SERVER_BASE_PATH_WITH_ORGANIZATION_CONTEXT =
-            ORGANIZATION_CONTEXT_IN_URL + API_SERVER_BASE_PATH;
+    protected static final String API_SERVER_BASE_PATH_WITH_TENANT_CONTEXT =
+            TENANT_CONTEXT_IN_ORG_URL + API_SERVER_BASE_PATH;
 
-    protected void testInit(String apiVersion, String apiDefinition, String organizationID) throws RemoteException {
+    protected void testInit(String apiVersion, String apiDefinition, String tenantDomain) throws RemoteException {
 
         String basePathInSwagger = String.format(API_SERVER_BASE_PATH_IN_SWAGGER, apiVersion);
-        String basePath = String.format(API_SERVER_BASE_PATH_WITH_ORGANIZATION_CONTEXT,
-                organizationID, apiVersion);
+        String basePath = String.format(API_SERVER_BASE_PATH_WITH_TENANT_CONTEXT,
+                tenantDomain, apiVersion);
         super.init(apiDefinition, basePathInSwagger, basePath);
     }
 
