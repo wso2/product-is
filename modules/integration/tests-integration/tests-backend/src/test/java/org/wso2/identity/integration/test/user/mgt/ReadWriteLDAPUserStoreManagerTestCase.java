@@ -45,7 +45,7 @@ public class ReadWriteLDAPUserStoreManagerTestCase extends UserManagementService
 
     @Override
     protected void setUserPassword() {
-        newUserPassword = "ReadWriteLDAPUserName123";
+        newUserPassword = "ReadWriteLDAPUserName@123";
     }
 
     @Override

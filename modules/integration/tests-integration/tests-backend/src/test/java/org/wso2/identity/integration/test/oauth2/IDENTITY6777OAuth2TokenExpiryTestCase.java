@@ -59,7 +59,7 @@ public class IDENTITY6777OAuth2TokenExpiryTestCase extends OAuth2ServiceAbstract
 
     private static final String USER_EMAIL = "abc@wso2.com";
     private static final String USERNAME = "authcodegrantuser";
-    private static final String PASSWORD = "pass123";
+    private static final String PASSWORD = "Pass@123";
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {

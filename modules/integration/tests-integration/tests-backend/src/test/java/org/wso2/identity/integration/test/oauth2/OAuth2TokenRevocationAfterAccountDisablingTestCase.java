@@ -100,7 +100,7 @@ public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2Se
 
     private static final String TENANT_DOMAIN = "wso2.com";
     private static final String TEST_USER_USERNAME = "testUser";
-    private static final String TEST_USER_PASSWORD = "Ab@123";
+    private static final String TEST_USER_PASSWORD = "Abcd@123";
     private static final String ENABLE_ACCOUNT_DISABLING_PROPERTY = "account.disable.handler.enable";
     private static final String CONNECTOR_ACCOUNT_DISABLE_HANDLER = "YWNjb3VudC5kaXNhYmxlLmhhbmRsZXI";
     private static final String CATEGORY_ACCOUNT_MANAGEMENT = "QWNjb3VudCBNYW5hZ2VtZW50";

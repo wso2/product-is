@@ -45,17 +45,17 @@ public class RemoteUserStoreManagerServiceTestCase extends ISIntegrationTest {
     private String role2NewName = "testNewNameRole2";
 
     private String user1 = "UserStoreTestUser1";// for role1
-    private String user1Pwd = "testPassword1";
+    private String user1Pwd = "Wso2@test1";
     private String user2 = "UserStoreTestUser2";// for role1
-    private String user2Pwd = "testPassword2";
-    private String user2NewPwd = "testNewPassword2";
+    private String user2Pwd = "Wso2@test2";
+    private String user2NewPwd = "Wso2@testNew2";
     private String user3 = "UserStoreTestUser3";// for role2
-    private String user3Pwd = "testPassword3";
+    private String user3Pwd = "Wso2@test3";
     private String user4 = "UserStoreTestUser4";// for role2
-    private String user4Pwd = "testPassword4";
-    private String user4NewPwd = "testNewPassword4";
+    private String user4Pwd = "Wso2@test4";
+    private String user4NewPwd = "Wso2@testNew4";
     private String user5 = "UserStoreTestUser5";// for role1 and role2
-    private String user5Pwd = "testPassword5";
+    private String user5Pwd = "Wso2@test5";
 
     private String claimUri = "http://wso2.org/claims/organization";
     private String claimValue = "WSO2";

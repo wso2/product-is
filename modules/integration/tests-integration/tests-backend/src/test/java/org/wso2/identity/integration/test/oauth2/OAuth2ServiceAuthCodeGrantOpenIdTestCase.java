@@ -85,7 +85,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
     private static final String USERS_PATH = "users";
     private static final String USER_EMAIL = "abc@wso2.com";
     private static final String USERNAME = "authcodegrantuser";
-    private static final String PASSWORD = "pass123";
+    private static final String PASSWORD = "Pass@123";
 
     private final List<NameValuePair> consentParameters = new ArrayList<>();
     private final CookieStore cookieStore = new BasicCookieStore();

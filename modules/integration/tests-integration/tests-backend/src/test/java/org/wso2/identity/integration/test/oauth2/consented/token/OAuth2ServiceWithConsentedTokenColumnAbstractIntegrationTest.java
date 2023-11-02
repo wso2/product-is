@@ -81,7 +81,7 @@ import java.util.List;
 public class OAuth2ServiceWithConsentedTokenColumnAbstractIntegrationTest extends OAuth2ServiceAbstractIntegrationTest {
 
     protected static final String USERNAME = "TestUser_1";
-    protected static final String PASSWORD = "pass123";
+    protected static final String PASSWORD = "Pass@123";
     protected static final String COUNTRY = "Sri Lanka";
     protected static final String USER_EMAIL = "abcrqo@wso2.com";
     protected static final String ADDRESS_OIDC_CLAIM = "address";

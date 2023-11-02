@@ -65,7 +65,7 @@ import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.VALUE_P
 public class SCIM2GroupTestCase extends ISIntegrationTest {
 
     private static final String GROUPNAME = "scim2Group";
-    private static final String PASSWORD = "testPassword";
+    private static final String PASSWORD = "Wso2@test";
 
     private static final String FAMILY_NAME_CLAIM_VALUE_1 = "scim1";
     private static final String GIVEN_NAME_CLAIM_VALUE_1 = "user1";
