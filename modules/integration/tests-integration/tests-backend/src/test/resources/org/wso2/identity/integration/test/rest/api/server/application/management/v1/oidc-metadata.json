@@ -93,5 +93,72 @@
       "device-flow"
     ],
     "defaultValue": "None"
+  },
+  "tokenEndpointAuthMethod": {
+    "options": [
+      {
+        "name": "client_secret_post",
+        "displayName": "Client Secret Post"
+      },
+      {
+        "name": "private_key_jwt",
+        "displayName": "Private Key JWT"
+      },
+      {
+        "name": "tls_client_auth",
+        "displayName": "Mutual TLS"
+      },
+      {
+        "name": "client_secret_basic",
+        "displayName": "Client Secret Basic"
+      }
+    ]
+  },
+  "tokenEndpointSignatureAlgorithm": {
+    "options": [
+      "PS256",
+      "ES256",
+      "SHA256withRSA"
+    ]
+  },
+  "idTokenSignatureAlgorithm": {
+    "options": [
+      "None",
+      "PS256",
+      "ES256",
+      "SHA256withRSA"
+    ]
+  },
+  "requestObjectSignatureAlgorithm": {
+    "options": [
+      "None",
+      "PS256",
+      "ES256",
+      "SHA256withRSA"
+    ]
+  },
+  "requestObjectEncryptionAlgorithm": {
+    "options": [
+      "None",
+      "RSA-OAEP",
+      "RSA1_5"
+    ]
+  },
+  "requestObjectEncryptionMethod": {
+    "options": [
+      "None",
+      "A128GCM",
+      "A192GCM",
+      "A256GCM",
+      "A128CBC-HS256",
+      "A128CBC+HS256"
+    ]
+  },
+  "subjectType": {
+    "options": [
+      "public",
+      "pairwise"
+    ],
+    "defaultValue": "public"
   }
 }

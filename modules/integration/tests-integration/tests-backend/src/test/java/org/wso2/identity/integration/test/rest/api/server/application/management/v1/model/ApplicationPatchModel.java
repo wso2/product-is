@@ -33,6 +33,7 @@ public class ApplicationPatchModel {
     private String imageUrl;
     private String accessUrl;
     private String templateId;
+    private AssociatedRolesConfig associatedRoles;
     private ClaimConfiguration claimConfiguration;
     private AuthenticationSequence authenticationSequence;
     private AdvancedApplicationConfiguration advancedConfigurations;
@@ -46,11 +47,9 @@ public class ApplicationPatchModel {
         return this;
     }
 
-    @ApiModelProperty(example = "pickup", required = true)
+    @ApiModelProperty(example = "pickup", value = "")
     @JsonProperty("name")
     @Valid
-    @NotNull(message = "Property name cannot be null.")
-    @Pattern(regexp="^[a-zA-Z0-9._-]+(?: [a-zA-Z0-9._-]+)*$")
     public String getName() {
         return name;
     }
@@ -66,7 +65,7 @@ public class ApplicationPatchModel {
         return this;
     }
 
-    @ApiModelProperty(example = "This is the configuration for Pickup application.")
+    @ApiModelProperty(example = "This is the configuration for Pickup application.", value = "")
     @JsonProperty("description")
     @Valid
     public String getDescription() {
@@ -84,7 +83,7 @@ public class ApplicationPatchModel {
         return this;
     }
 
-    @ApiModelProperty(example = "https://example.com/logo/my-logo.png")
+    @ApiModelProperty(example = "https://example.com/logo/my-logo.png", value = "")
     @JsonProperty("imageUrl")
     @Valid
     public String getImageUrl() {
@@ -102,7 +101,7 @@ public class ApplicationPatchModel {
         return this;
     }
 
-    @ApiModelProperty(example = "https://example.com/accessUrl")
+    @ApiModelProperty(example = "https://example.com/login", value = "")
     @JsonProperty("accessUrl")
     @Valid
     public String getAccessUrl() {
@@ -120,7 +119,7 @@ public class ApplicationPatchModel {
         return this;
     }
 
-    @ApiModelProperty(example = "templateId")
+    @ApiModelProperty(example = "adwefi2429asdfdf94444rraf44", value = "")
     @JsonProperty("templateId")
     @Valid
     public String getTemplateId() {
@@ -132,13 +131,31 @@ public class ApplicationPatchModel {
 
     /**
      **/
+    public ApplicationPatchModel associatedRoles(AssociatedRolesConfig associatedRoles) {
+
+        this.associatedRoles = associatedRoles;
+        return this;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("associatedRoles")
+    @Valid
+    public AssociatedRolesConfig getAssociatedRoles() {
+        return associatedRoles;
+    }
+    public void setAssociatedRoles(AssociatedRolesConfig associatedRoles) {
+        this.associatedRoles = associatedRoles;
+    }
+
+    /**
+     **/
     public ApplicationPatchModel claimConfiguration(ClaimConfiguration claimConfiguration) {
 
         this.claimConfiguration = claimConfiguration;
         return this;
     }
 
-    @ApiModelProperty()
+    @ApiModelProperty(value = "")
     @JsonProperty("claimConfiguration")
     @Valid
     public ClaimConfiguration getClaimConfiguration() {
@@ -156,7 +173,7 @@ public class ApplicationPatchModel {
         return this;
     }
 
-    @ApiModelProperty()
+    @ApiModelProperty(value = "")
     @JsonProperty("authenticationSequence")
     @Valid
     public AuthenticationSequence getAuthenticationSequence() {
@@ -174,7 +191,7 @@ public class ApplicationPatchModel {
         return this;
     }
 
-    @ApiModelProperty()
+    @ApiModelProperty(value = "")
     @JsonProperty("advancedConfigurations")
     @Valid
     public AdvancedApplicationConfiguration getAdvancedConfigurations() {
@@ -192,7 +209,7 @@ public class ApplicationPatchModel {
         return this;
     }
 
-    @ApiModelProperty()
+    @ApiModelProperty(value = "")
     @JsonProperty("provisioningConfigurations")
     @Valid
     public ProvisioningConfiguration getProvisioningConfigurations() {
@@ -205,7 +222,7 @@ public class ApplicationPatchModel {
 
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(java.lang.Object o) {
 
         if (this == o) {
             return true;
@@ -219,6 +236,7 @@ public class ApplicationPatchModel {
                 Objects.equals(this.imageUrl, applicationPatchModel.imageUrl) &&
                 Objects.equals(this.accessUrl, applicationPatchModel.accessUrl) &&
                 Objects.equals(this.templateId, applicationPatchModel.templateId) &&
+                Objects.equals(this.associatedRoles, applicationPatchModel.associatedRoles) &&
                 Objects.equals(this.claimConfiguration, applicationPatchModel.claimConfiguration) &&
                 Objects.equals(this.authenticationSequence, applicationPatchModel.authenticationSequence) &&
                 Objects.equals(this.advancedConfigurations, applicationPatchModel.advancedConfigurations) &&
@@ -227,7 +245,7 @@ public class ApplicationPatchModel {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, description, imageUrl, accessUrl, templateId, claimConfiguration, authenticationSequence, advancedConfigurations, provisioningConfigurations);
+        return Objects.hash(name, description, imageUrl, accessUrl, templateId, associatedRoles, claimConfiguration, authenticationSequence, advancedConfigurations, provisioningConfigurations);
     }
 
     @Override
@@ -241,6 +259,7 @@ public class ApplicationPatchModel {
         sb.append("    imageUrl: ").append(toIndentedString(imageUrl)).append("\n");
         sb.append("    accessUrl: ").append(toIndentedString(accessUrl)).append("\n");
         sb.append("    templateId: ").append(toIndentedString(templateId)).append("\n");
+        sb.append("    associatedRoles: ").append(toIndentedString(associatedRoles)).append("\n");
         sb.append("    claimConfiguration: ").append(toIndentedString(claimConfiguration)).append("\n");
         sb.append("    authenticationSequence: ").append(toIndentedString(authenticationSequence)).append("\n");
         sb.append("    advancedConfigurations: ").append(toIndentedString(advancedConfigurations)).append("\n");
@@ -253,11 +272,11 @@ public class ApplicationPatchModel {
      * Convert the given object to string with each line indented by 4 spaces
      * (except the first line).
      */
-    private String toIndentedString(Object o) {
+    private String toIndentedString(java.lang.Object o) {
 
         if (o == null) {
             return "null";
         }
-        return o.toString();
+        return o.toString().replace("\n", "\n");
     }
 }

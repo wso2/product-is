@@ -42,7 +42,7 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
 
     @AfterMethod(alwaysRun = true)
     @Override
-    public void testFinish() {
+    public void testFinish() throws Exception {
 
         super.testFinish();
     }

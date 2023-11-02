@@ -18,9 +18,11 @@
 package org.wso2.identity.integration.test.restclients;
 
 import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.http.ContentType;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.StatusLine;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -29,27 +31,39 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
-import org.wso2.carbon.utils.StringUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.APIResourceListItem;
+import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.APIResourceListResponse;
+import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.APIResourceResponse;
+import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.ScopeGetModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationListItem;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationListResponse;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthorizedAPICreationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAML2ServiceProvider;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class OAuth2RestClient extends RestBaseClient {
 
     private static final String API_SERVER_BASE_PATH = "api/server/v1";
     private static final String APPLICATION_MANAGEMENT_PATH = "/applications";
+    private static final String API_RESOURCE_MANAGEMENT_PATH = "/api-resources";
     private static final String INBOUND_PROTOCOLS_BASE_PATH = "/inbound-protocols";
+    private static final String AUTHORIZED_API_BASE_PATH = "/authorized-apis";
+    private static final String SCIM_BASE_PATH = "scim2";
+    private static final String ROLE_V2_BASE_PATH = "/v2/Roles";
     private final String applicationManagementApiBasePath;
+    private final String apiResourceManagementApiBasePath;
+    private final String roleV2ApiBasePath;
     private final String username;
     private final String password;
 
@@ -59,6 +73,8 @@ public class OAuth2RestClient extends RestBaseClient {
 
         String tenantDomain = tenantInfo.getContextUser().getUserDomain();
         applicationManagementApiBasePath = getApplicationsPath(backendUrl, tenantDomain);
+        apiResourceManagementApiBasePath = getAPIResourcesPath(backendUrl, tenantDomain);
+        roleV2ApiBasePath = getSCIM2RoleV2Path(backendUrl, tenantDomain);
     }
 
     /**
@@ -250,6 +266,25 @@ public class OAuth2RestClient extends RestBaseClient {
         }
     }
 
+    private String getAPIResourcesPath(String serverUrl, String tenantDomain) {
+
+        if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+            return serverUrl + API_SERVER_BASE_PATH + API_RESOURCE_MANAGEMENT_PATH;
+        } else {
+            return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + API_SERVER_BASE_PATH +
+                    API_RESOURCE_MANAGEMENT_PATH;
+        }
+    }
+
+    private String getSCIM2RoleV2Path(String serverUrl, String tenantDomain) {
+
+        if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+            return serverUrl + SCIM_BASE_PATH + ROLE_V2_BASE_PATH;
+        } else {
+            return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + SCIM_BASE_PATH + ROLE_V2_BASE_PATH;
+        }
+    }
+
     private Header[] getHeaders() {
         Header[] headerList = new Header[3];
         headerList[0] = new BasicHeader(USER_AGENT_ATTRIBUTE, OAuth2Constant.USER_AGENT);
@@ -258,6 +293,117 @@ public class OAuth2RestClient extends RestBaseClient {
         headerList[2] = new BasicHeader(CONTENT_TYPE_ATTRIBUTE, String.valueOf(ContentType.JSON));
 
         return headerList;
+    }
+
+    /**
+     * Add API authorization to an application
+     *
+     * @param appId                      Application id.
+     * @param authorizedAPICreationModel AuthorizedAPICreationModel object with api authorization details.
+     * @return Status code of the response.
+     * @throws Exception Error when getting the response.
+     */
+    public int addAPIAuthorizationToApplication(String appId, AuthorizedAPICreationModel authorizedAPICreationModel)
+            throws IOException {
+
+        String jsonRequestBody = toJSONString(authorizedAPICreationModel);
+        String endPointUrl = applicationManagementApiBasePath + PATH_SEPARATOR + appId + AUTHORIZED_API_BASE_PATH;
+
+        try (CloseableHttpResponse response = getResponseOfHttpPost(endPointUrl, jsonRequestBody, getHeaders())) {
+            return response.getStatusLine().getStatusCode();
+        }
+    }
+
+    /**
+     * Get API resources by filtering.
+     *
+     * @param apiResourceFilter API resource filter.
+     * @return List of API resources.
+     * @throws IOException Error when getting the filtered API resource.
+     */
+    public List<APIResourceListItem> getAPIResourcesWithFiltering(String apiResourceFilter) throws IOException {
+
+        String endPointUrl = apiResourceManagementApiBasePath + "?filter=" + apiResourceFilter;
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
+            String responseBody = EntityUtils.toString(response.getEntity());
+            ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+            APIResourceListResponse apiResourceListResponse =
+                    jsonWriter.readValue(responseBody, APIResourceListResponse.class);
+            return apiResourceListResponse.getApiResources();
+        }
+    }
+
+    /**
+     * Get API resource scopes.
+     *
+     * @param apiIdentifier API identifier.
+     * @return List of API resource scopes.
+     * @throws IOException Error when getting the scopes.
+     */
+    public List<ScopeGetModel> getAPIResourceScopes(String apiIdentifier) throws IOException {
+
+        String endPointUrl = apiResourceManagementApiBasePath + PATH_SEPARATOR + apiIdentifier;
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
+            String responseBody = EntityUtils.toString(response.getEntity());
+            ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+            APIResourceResponse apiResourceResponse = jsonWriter.readValue(responseBody, APIResourceResponse.class);
+            return apiResourceResponse.getScopes();
+        }
+    }
+
+    public List<String> getRoles(String roleName, String audienceType, String audienceId) throws Exception {
+
+        String endPointUrl = buildRoleSearchEndpoint(roleName, audienceType, audienceId);
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
+            if (response.getStatusLine().getStatusCode() != 200) {
+                return Collections.emptyList();
+            }
+            String responseBody = EntityUtils.toString(response.getEntity());
+            ObjectMapper objectMapper = new ObjectMapper();
+            // Parse the JSON response.
+            JsonNode jsonNode = objectMapper.readTree(responseBody);
+            JsonNode totalResults = jsonNode.get("totalResults");
+            if (totalResults.asInt() <= 0) {
+                return Collections.emptyList();
+            }
+            // Extract the "Resources" array.
+            JsonNode resourcesArray = jsonNode.get("Resources");
+            // Initialize a list to store the "id" values
+            List<String> idList = new ArrayList<>();
+            // Iterate through the "Resources" array and extract "id" values.
+            for (JsonNode resource : resourcesArray) {
+                JsonNode idNode = resource.get("id");
+                if (idNode != null && idNode.isTextual()) {
+                    idList.add(idNode.asText());
+                }
+            }
+            return idList;
+        }
+    }
+
+    private String buildRoleSearchEndpoint(String roleName, String audienceType, String audienceId) {
+
+        StringBuilder filter = new StringBuilder(roleV2ApiBasePath + "?");
+        if (StringUtils.isNotBlank(roleName)) {
+            filter.append("filter=displayName+eq+").append(roleName);
+        }
+        if (StringUtils.isNotBlank(audienceType)) {
+            if (filter.length() > 0) {
+                filter.append("+and+");
+            }
+            filter.append("audience.type+eq+").append(audienceType);
+        }
+        if (StringUtils.isNotBlank(audienceId)) {
+            if (filter.length() > 0) {
+                filter.append("+and+");
+            }
+            filter.append("audience.id+eq+").append(audienceId);
+        }
+        // If no parameters were provided, return the base URL.
+        if (filter.toString().equals(roleV2ApiBasePath + "?")) {
+            return roleV2ApiBasePath;
+        }
+        return filter.toString();
     }
 
     /**

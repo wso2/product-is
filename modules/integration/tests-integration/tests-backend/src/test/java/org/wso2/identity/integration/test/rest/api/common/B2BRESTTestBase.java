@@ -25,6 +25,7 @@ import org.apache.http.HttpHeaders;
 import org.hamcrest.Matcher;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
+import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 
 import java.rmi.RemoteException;
 import java.util.ResourceBundle;
@@ -38,7 +39,7 @@ import static org.hamcrest.core.StringContains.containsString;
  */
 public class B2BRESTTestBase extends RESTTestBase {
 
-    protected static final String ORGANIZATION_CONTEXT_IN_URL = "/o/%s";
+    protected static final String TENANT_CONTEXT_IN_ORG_URL = "/t/%s/o";
     protected static final String SERVICES = "/services";
     private static ResourceBundle errorProperties = ResourceBundle.getBundle("RESTAPIErrors");
 
@@ -48,6 +49,7 @@ public class B2BRESTTestBase extends RESTTestBase {
     protected AutomationContext context;
 
     protected RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
+    protected OAuth2RestClient oAuth2RestClient;
     protected String swaggerDefinition;
 
     protected String basePath = StringUtils.EMPTY;

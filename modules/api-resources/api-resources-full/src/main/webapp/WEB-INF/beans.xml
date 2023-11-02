@@ -158,6 +158,7 @@
             <bean class="org.wso2.carbon.identity.api.server.authenticators.v1.AuthenticatorsApi"/>
             <bean class="org.wso2.carbon.identity.api.server.branding.preference.management.v1.BrandingPreferenceApi"/>
             <bean class="org.wso2.carbon.identity.api.server.input.validation.v1.ValidationRulesApi"/>
+            <bean class="org.wso2.carbon.identity.api.server.extension.management.v1.ExtensionsApi"/>
             <bean class="org.wso2.carbon.identity.api.server.idv.provider.v1.IdvProvidersApi"/>
             <bean class="org.wso2.carbon.identity.api.server.organization.management.v1.OrganizationsApi"/>
             <bean class="org.wso2.carbon.identity.api.server.organization.role.management.v1.OrganizationsApi"/>
@@ -237,6 +238,28 @@
         </jaxrs:inInterceptors>
     </jaxrs:server>
     <jaxrs:server id="orgUser" address="/users/v1/me/organizations">
+        <jaxrs:serviceBeans>
+            <bean class="org.wso2.carbon.identity.rest.api.user.organization.v1.RootApi"/>
+            <bean class="org.wso2.carbon.identity.rest.api.user.organization.v1.MeApi"/>
+        </jaxrs:serviceBeans>
+        <jaxrs:providers>
+            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">
+                <constructor-arg>
+                    <bean class="com.fasterxml.jackson.databind.ObjectMapper">
+                        <property name="serializationInclusion" value="NON_NULL" />
+                    </bean>
+                </constructor-arg>
+            </bean>
+            <bean class="org.wso2.carbon.identity.api.dispatcher.core.JsonProcessingExceptionMapper"/>
+            <bean class="org.wso2.carbon.identity.api.dispatcher.core.APIErrorExceptionMapper"/>
+            <bean class="org.wso2.carbon.identity.api.dispatcher.core.InputValidationExceptionMapper"/>
+            <bean class="org.wso2.carbon.identity.api.dispatcher.core.DefaultExceptionMapper"/>
+        </jaxrs:providers>
+        <jaxrs:inInterceptors>
+            <ref bean="validationInInterceptor"/>
+        </jaxrs:inInterceptors>
+    </jaxrs:server>
+    <jaxrs:server id="orgUserOrgPerspective" address="/o/users/v1/me/organizations">
         <jaxrs:serviceBeans>
             <bean class="org.wso2.carbon.identity.rest.api.user.organization.v1.RootApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.organization.v1.MeApi"/>
