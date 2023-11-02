@@ -169,7 +169,7 @@ public class ApplicationPatchTest extends ApplicationManagementBaseTest {
                 .statusCode(HttpStatus.SC_BAD_REQUEST);
     }
 
-    @Test(dependsOnMethods = "testUpdateInvalidClaimConfiguration")
+    @Test(dependsOnMethods = "testUpdateInvalidClaimConfiguration", alwaysRun = true)
     public void testDeleteApplicationById() throws Exception {
 
         getResponseOfDelete(APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + appId)
