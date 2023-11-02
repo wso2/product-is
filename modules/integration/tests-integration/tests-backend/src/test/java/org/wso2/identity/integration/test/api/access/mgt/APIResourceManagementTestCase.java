@@ -1,6 +1,5 @@
 package org.wso2.identity.integration.test.api.access.mgt;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -329,6 +328,7 @@ public class APIResourceManagementTestCase extends APIAccessManagementBaseTestCa
                 .build());
 
         assertNotNull(createResponse, "API resource creation failed");
+        assertEquals(createResponse.getStatusLine().getStatusCode(), 201, "API resource creation failed");
 
         HttpPut request = new HttpPut(SERVER_URL + API_RESOURCE_ENDPOINT + "/" + apiResourceId + SCOPE_PATH);
         request.setHeader("Content-Type", "application/json");
