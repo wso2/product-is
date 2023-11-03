@@ -1,0 +1,13 @@
+{
+  "claimConfiguration": {
+    "subject": {
+      "claim": {
+        "uri": "http://wso2.org/claims/username"
+      },
+      "includeUserDomain": false,
+      "includeTenantDomain": false,
+      "useMappedLocalSubject": true,
+      "mappedLocalSubjectMandatory": true
+    }
+  }
+}
