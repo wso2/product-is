@@ -41,7 +41,7 @@ public class OIDCMetaData  {
     private MetadataProperty requestObjectEncryptionAlgorithm;
     private MetadataProperty requestObjectEncryptionMethod;
     private MetadataProperty subjectType;
-
+    private FapiMetadata fapiMetadata;
 
     /**
      **/
@@ -349,6 +349,26 @@ public class OIDCMetaData  {
         this.subjectType = subjectType;
     }
 
+    /**
+    **/
+    public OIDCMetaData fapiMetadata(FapiMetadata fapiMetadata) {
+
+        this.fapiMetadata = fapiMetadata;
+        return this;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("fapiMetadata")
+    @Valid
+    public FapiMetadata getFapiMetadata() {
+        return fapiMetadata;
+    }
+    public void setFapiMetadata(FapiMetadata fapiMetadata) {
+        this.fapiMetadata = fapiMetadata;
+    }
+
+
+
     @Override
     public boolean equals(java.lang.Object o) {
 
@@ -375,7 +395,8 @@ public class OIDCMetaData  {
                 Objects.equals(this.tokenEndpointSignatureAlgorithm, oiDCMetaData.requestObjectSignatureAlgorithm) &&
                 Objects.equals(this.tokenEndpointSignatureAlgorithm, oiDCMetaData.requestObjectEncryptionAlgorithm) &&
                 Objects.equals(this.tokenEndpointSignatureAlgorithm, oiDCMetaData.requestObjectEncryptionMethod) &&
-                Objects.equals(this.subjectType, oiDCMetaData.subjectType);
+            Objects.equals(this.subjectType, oiDCMetaData.subjectType) &&
+            Objects.equals(this.fapiMetadata, oiDCMetaData.fapiMetadata);
     }
 
     @Override
@@ -385,7 +406,7 @@ public class OIDCMetaData  {
                 idTokenEncryptionAlgorithm, idTokenEncryptionMethod, scopeValidators, accessTokenType,
                 accessTokenBindingType, tokenEndpointAuthMethod, tokenEndpointSignatureAlgorithm,
                 idTokenSignatureAlgorithm, requestObjectSignatureAlgorithm, requestObjectEncryptionAlgorithm,
-                requestObjectEncryptionMethod, subjectType);
+                requestObjectEncryptionMethod, subjectType, fapiMetadata);
     }
 
     @Override
