@@ -134,7 +134,10 @@ jobs:
         source ./venv/bin/activate
         pip install -r requirements.txt
         echo ">>> FAPI resource server starting..."
-        python3 resource-server.py
+        . ./venv/bin/activate
+        nohup python3 fapi-resource-endpoint.py > output.log &
+        sleep 5
+        cat output.log
 
     - name: Run IS
       run: |
