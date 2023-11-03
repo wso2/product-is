@@ -3,7 +3,7 @@
     "https://abc/redirect1",
     "https://abcd/redirect2"
   ],
-  "client_name": "TestsSSAInvalid",
+  "client_name": "TestAdditionalProperties",
 
   "grant_types": [
     "client_credentials"

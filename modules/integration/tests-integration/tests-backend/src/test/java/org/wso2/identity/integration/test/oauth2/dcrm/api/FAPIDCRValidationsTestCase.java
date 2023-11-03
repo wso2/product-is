@@ -17,7 +17,6 @@
  */
 package org.wso2.identity.integration.test.oauth2.dcrm.api;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;

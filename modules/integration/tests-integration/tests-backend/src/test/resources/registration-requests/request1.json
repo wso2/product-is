@@ -3,7 +3,7 @@
     "https://abc/redirect1",
     "https://abc/redirect2"
   ],
-  "client_name": "TestsTokenAuthInvalid",
+  "client_name": "TestAdditionalProperties",
 
   "grant_types": [
     "client_credentials"
