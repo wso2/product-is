@@ -87,7 +87,6 @@ jobs:
 
     - name: Add configs to IS
       run: |
-        # Move Downloaded JWT Client Authenticator to IS
         PRODUCT_IS_ZIP=$(find ./ -name 'wso2is*' -type f -printf "%f\n")
         echo "Unzipping Product IS: ${PRODUCT_IS_ZIP} ..."
         unzip -qq ${PRODUCT_IS_ZIP}
@@ -96,10 +95,8 @@ jobs:
         echo "Directory Name: ${PRODUCT_IS}"
         
         echo "Adding deployment-fapi-config.toml configs to deployment.toml..."
-        echo "\n" >> ${PRODUCT_IS}/repository/conf/deployment.toml
-        cp -f ./product-is/oidc-conformance-tests/fapi/config/deployment-fapi-config.toml ${PRODUCT_IS}/repository/conf/deployment.toml
+        mv ./product-is/oidc-conformance-tests/fapi/config/deployment-fapi-config.toml ${PRODUCT_IS}/repository/conf/deployment.toml
         
-        # zip IS back
         echo "Zipping $PRODUCT_IS to $PRODUCT_IS_ZIP"
         zip -qq -r $PRODUCT_IS_ZIP $PRODUCT_IS
         rm -r $PRODUCT_IS
@@ -116,7 +113,6 @@ jobs:
 
     - name: Start FAPI resource server
       run: |
-        # Install nginx and copy server certs
         sudo apt update
         sudo apt install nginx
         sudo chmod 777 -R /etc/nginx

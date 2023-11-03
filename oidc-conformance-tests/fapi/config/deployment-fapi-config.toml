@@ -1,5 +1,5 @@
 [server]
-hostname = "localhost"
+hostname = "iam"
 node_ip = "127.0.0.1"
 base_path = "https://$ref{server.hostname}:${carbon.management.port}"
 
@@ -73,7 +73,35 @@ app_password= "dashboard"
 #hostname= "smtp.gmail.com"
 #port= 587
 
-# FAPI Related Configs
+
+# FAPI
+
+[oauth.oidc]
+id_token.signature_algorithm="PS256"
+
+# Token endpoint related configurations
+[oauth.oidc.token_endpoint]
+auth_methods=["private_key_jwt","tls_client_auth"]
+signing_algorithms=["PS256","ES256"]
+
+# Userinfo response signing algorithm
+[oauth.oidc.user_info]
+jwt_signature_algorithm="PS256"
+
+# FAPI specific configurations
+[oauth.oidc.fapi]
+enable_validation=true
+allowed_client_authentication_methods=["private_key_jwt","tls_client_auth"]
+allowed_signature_algorithms=["PS256","ES256"]
+
+# Set the priority order for MTLS authenticator (This should be a higher value to ensure other authenticators are engaged prior to MTLS authenticator)
+[event.default_listener.mutual_tls_authenticator]
+priority=9999
+
+# If TLSv1.2 is used, add the following configuration to limit the allowed cipher suites
+[transport.passthru_https.listener.parameters]
+HttpsProtocols = "TLSv1.2"
+PreferredCiphers = "TLS_DHE_RSA_WITH_AES_128_GCM_SHA256, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256, TLS_DHE_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
 
 # enable pvt key jwt authenticator
 [[event_listener]]
@@ -84,7 +112,7 @@ order = "899"
 [event_listener.properties]
 PreventTokenReuse= false
 RejectBeforeInMinutes= "100"
-TokenEndpointAlias= "https://localhost:9443/oauth2/token"
+TokenEndpointAlias= "https://iam:9443/oauth2/token"
 
 [[cache.manager]]
 name="PrivateKeyJWT"
@@ -98,6 +126,10 @@ enable = false
 [transport.https]
 trustManagerClassName="org.wso2.carbon.identity.core.util.ClientAuthX509TrustManager"
 clientAuth="want"
+
+[transport.https.sslHostConfig.properties]
+ciphers="TLS_DHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_DHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+
 
 [[event_listener]]
 id = "custom_event_listener"
@@ -132,8 +164,8 @@ grant_handler = "org.wso2.carbon.identity.oauth2.token.handler.clientauth.mutual
 [oauth.grant_type.uma_ticket]
 retrieve_uma_permission_info_through_introspection = true
 
-# [oauth.mutualtls]
-# client_certificate_header = "x-wso2-mtls-cert"
-
 [oauth.mutualtls]
-client_certificate_header = "javax.servlet.request.X509Certificate"
+client_certificate_header = "x-wso2-mtls-cert"
+
+[system_applications]
+read_only_apps = []
