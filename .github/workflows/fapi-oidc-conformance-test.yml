@@ -88,15 +88,15 @@ jobs:
     - name: Add configs to IS
       run: |
         PRODUCT_IS_ZIP=$(find ./ -name 'wso2is*' -type f -printf "%f\n")
-        echo "Unzipping Product IS: ${PRODUCT_IS_ZIP} ..."
+        echo ">>> Unzipping Product IS: ${PRODUCT_IS_ZIP} ..."
         unzip -qq ${PRODUCT_IS_ZIP}
 
         PRODUCT_IS=$(find ./ -maxdepth 1 -name 'wso2is*' -type d -printf "%f\n")
 
-        echo "Adding deployment-fapi-config.toml configs to deployment.toml..."
+        echo ">>> Adding deployment-fapi-config.toml configs to deployment.toml..."
         cp -f ./product-is/oidc-conformance-tests/fapi/config/deployment-fapi-config.toml $PRODUCT_IS/repository/conf/deployment.toml
 
-        echo "Zipping $PRODUCT_IS to $PRODUCT_IS_ZIP"
+        echo ">>> Zipping $PRODUCT_IS to $PRODUCT_IS_ZIP"
         zip -qq -r $PRODUCT_IS_ZIP $PRODUCT_IS
         rm -r $PRODUCT_IS
 
@@ -114,20 +114,19 @@ jobs:
       run: |
         sudo apt update
         sudo apt install nginx
-        echo "NGINX installed successfully !"
+        echo ">>> NGINX installed successfully !"
         sudo chmod 777 -R /etc/nginx
-        echo "Permission changed for /etc/nginx"
+        echo ">>> Permission changed for /etc/nginx"
         mkdir -p /etc/nginx/ssl
-        echo "/etc/nginx/ssl created successfully !"
-        echo "FAPI_RESOURCE_SERVER_KEY"
+        echo ">>> /etc/nginx/ssl created successfully!"
         echo "${{secrets.FAPI_RESOURCE_SERVER_KEY}}" >> /etc/nginx/ssl/serverCA.key
         echo "${{secrets.FAPI_RESOURCE_SERVER_PEM}}" >> /etc/nginx/ssl/serverCA.pem
-        echo "FAPI resource server keys added successfully !"
-        
-        PATH_TO_RESOURCE_SERVER=./product-is/oidc-conformance-tests/fapi/resource-server
-        cd PATH_TO_RESOURCE_SERVER 
+        echo ">>> FAPI resource server keys saved successfully!"
+        pwd
         ls
-        cp -f PATH_TO_RESOURCE_SERVER/nginx-proxy /etc/nginx/sites-enabled
+        cd product-is/oidc-conformance-tests/fapi/resource-server 
+        ls
+        cp -f nginx-proxy /etc/nginx/sites-enabled
         sudo nginx -t
         sudo service nginx restart
         
