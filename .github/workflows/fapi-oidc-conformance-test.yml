@@ -92,6 +92,9 @@ jobs:
         unzip -qq ${PRODUCT_IS_ZIP}
         
         PRODUCT_IS=$(find ./ -name 'wso2is*' -type d -printf "%f\n")
+        echo "=============="
+        ls
+        echo "==============="
         echo "Directory Name: ${PRODUCT_IS}"
         echo "Toml path: ${PRODUCT_IS}/repository/conf/deployment.toml"
         
