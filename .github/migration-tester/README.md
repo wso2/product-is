@@ -9,7 +9,8 @@ Welcome to Automating-Product-Migration-Testing! This project aims to automate t
 
 Click on the badge above to view the current status of the main migration workflow. The workflow ensures seamless execution of the migration client tests across various infrastructure combinations, including different databases and operating systems.
 
-
+## Notion User Guide 
+https://www.notion.so/User-Guide-Of-Product-Migration-Testing-Automation-Feature-17676cd5205a49a898d6527a03347199?pvs=4
 
 ## Directory Structure
 
