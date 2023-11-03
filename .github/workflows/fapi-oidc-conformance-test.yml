@@ -91,7 +91,7 @@ jobs:
         echo "Unzipping Product IS: ${PRODUCT_IS_ZIP} ..."
         unzip -qq ${PRODUCT_IS_ZIP}
         
-        PRODUCT_IS=${{github.event.inputs.tag}}
+        PRODUCT_IS="wso2is-${tag_trimmed:1}"
         echo "=============="
         ls
         echo "==============="
