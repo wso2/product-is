@@ -94,7 +94,7 @@ jobs:
         PRODUCT_IS=$(find ./ -maxdepth 1 -name 'wso2is*' -type d -printf "%f\n")
 
         echo "Adding deployment-fapi-config.toml configs to deployment.toml..."
-        cp -f deployment-fapi-config.toml $PRODUCT_IS/repository/conf/deployment.toml
+        cp -f ./product-is/oidc-conformance-tests/fapi/config/deployment-fapi-config.toml $PRODUCT_IS/repository/conf/deployment.toml
 
         echo "Zipping $PRODUCT_IS to $PRODUCT_IS_ZIP"
         zip -qq -r $PRODUCT_IS_ZIP $PRODUCT_IS
