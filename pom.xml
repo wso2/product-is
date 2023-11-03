@@ -2405,7 +2405,7 @@
         <authenticator.magiclink.version>1.1.13</authenticator.magiclink.version>
         <authenticator.emailotp.version>4.1.20</authenticator.emailotp.version>
         <authenticator.local.auth.emailotp.version>1.0.6</authenticator.local.auth.emailotp.version>
-        <authenticator.local.auth.smsotp.version>1.0.1</authenticator.local.auth.smsotp.version>
+        <authenticator.local.auth.smsotp.version>1.0.2</authenticator.local.auth.smsotp.version>
         <authenticator.twitter.version>1.1.1</authenticator.twitter.version>
         <authenticator.x509.version>3.1.12</authenticator.x509.version>
         <identity.extension.utils>1.0.14</identity.extension.utils>
