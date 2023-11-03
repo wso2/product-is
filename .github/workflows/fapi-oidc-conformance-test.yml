@@ -122,18 +122,19 @@ jobs:
         echo "${{secrets.FAPI_RESOURCE_SERVER_KEY}}" >> /etc/nginx/ssl/serverCA.key
         echo "${{secrets.FAPI_RESOURCE_SERVER_PEM}}" >> /etc/nginx/ssl/serverCA.pem
         echo ">>> FAPI resource server keys saved successfully!"
-        pwd
-        ls
+
         cd product-is/oidc-conformance-tests/fapi/resource-server 
-        ls
         cp -f nginx-proxy /etc/nginx/sites-enabled
         sudo nginx -t
         sudo service nginx restart
+        echo ">>> NGINX reverse proxy server started successfully!"
         
         pip install virtualenv
         python3 -m virtualenv venv
         source ./venv/bin/activate
-        pip install -r requirements.txt
+        pip install -r requirements.txt"
+        echo ">>> FAPI resource server starting..."
+        python3 resource-server.py
 
     - name: Run IS
       run: |
