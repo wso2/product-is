@@ -114,8 +114,11 @@ jobs:
       run: |
         sudo apt update
         sudo apt install nginx
+        echo "NGINX installed successfully !"
         sudo chmod 777 -R /etc/nginx
+        echo "Permission changed for /etc/nginx"
         mkdir -p /etc/nginx/ssl
+        echo "/etc/nginx/ssl created successfully !"
         echo ${{secrets.FAPI_RESOURCE_SERVER_KEY}} >> /etc/nginx/ssl/serverCA.key
         echo ${{secrets.FAPI_RESOURCE_SERVER_PEM}} >> /etc/nginx/ssl/serverCA.pem
         
