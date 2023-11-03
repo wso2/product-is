@@ -120,9 +120,9 @@ jobs:
         mkdir -p /etc/nginx/ssl
         echo "/etc/nginx/ssl created successfully !"
         echo "FAPI_RESOURCE_SERVER_KEY\n"
-        echo ${{secrets.FAPI_RESOURCE_SERVER_KEY}}
-        echo ${{secrets.FAPI_RESOURCE_SERVER_KEY}} >> /etc/nginx/ssl/serverCA.key
-        echo ${{secrets.FAPI_RESOURCE_SERVER_PEM}} >> /etc/nginx/ssl/serverCA.pem
+        echo ${secrets.FAPI_RESOURCE_SERVER_KEY}
+        echo "${secrets.FAPI_RESOURCE_SERVER_KEY}" >> /etc/nginx/ssl/serverCA.key
+        echo "${secrets.FAPI_RESOURCE_SERVER_PEM}" >> /etc/nginx/ssl/serverCA.pem
         echo "FAPI resource server keys added successfully !"
         
         PATH_TO_RESOURCE_SERVER=./product-is/oidc-conformance-tests/fapi/resource-server
