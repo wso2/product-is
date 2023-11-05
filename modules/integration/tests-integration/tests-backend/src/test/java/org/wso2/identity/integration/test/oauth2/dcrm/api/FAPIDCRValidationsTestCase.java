@@ -150,8 +150,11 @@ public class FAPIDCRValidationsTestCase extends ISIntegrationTest {
 
         // Create application.
         HttpPost request = new HttpPost(DCRUtils.getPath(tenant));
-        JSONObject registerRequestJSON = DCRUtils.getRegisterRequestJSON("request6.json");
-
+        JSONObject registerRequestJSON  = DCRUtils.getRegisterRequestJSON("request6.json");
+        // Removing sending sector identifier uri to validate error message during update request.
+        if (errorMessage.equals("Sector identifier URI is needed for PPID calculation")) {
+           registerRequestJSON.remove("sector_identifier_uri");
+        }
         request.addHeader(HttpHeaders.AUTHORIZATION, DCRUtils.getAuthzHeader(username, password));
         request.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
         StringEntity entity = new StringEntity(registerRequestJSON.toJSONString());
@@ -166,22 +169,21 @@ public class FAPIDCRValidationsTestCase extends ISIntegrationTest {
 
         // Check error scenarios for update request.
         HttpPut updateRequest = new HttpPut(DCRUtils.getPath(tenant) + client_id);
-        request.addHeader(HttpHeaders.AUTHORIZATION, DCRUtils.getAuthzHeader(username, password));
-        request.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
+        updateRequest.addHeader(HttpHeaders.AUTHORIZATION, DCRUtils.getAuthzHeader(username, password));
+        updateRequest.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
         entity = new StringEntity(requestJSON.toJSONString());
-        request.setEntity(entity);
-        response = client.execute(updateRequest);
+        updateRequest.setEntity(entity);
 
-        assertEquals(response.getStatusLine().getStatusCode(), 400, "Service Provider should " +
+        HttpResponse updateResponse = client.execute(updateRequest);
+        assertEquals(updateResponse.getStatusLine().getStatusCode(), 400, "Service Provider should " +
                 "not be created successfully");
-        JSONObject errorResponse = DCRUtils.getPayload(response);
+        JSONObject errorResponse = DCRUtils.getPayload(updateResponse);
         assertEquals(errorResponse.get("error"), errorCode);
         assertEquals(errorResponse.get("error_description"), errorMessage);
 
         // Delete application.
         HttpDelete deleteRequest = new HttpDelete(DCRUtils.getPath(tenant) + client_id);
-        request.addHeader(HttpHeaders.AUTHORIZATION, DCRUtils.getAuthzHeader(username, password));
-
+        deleteRequest.addHeader(HttpHeaders.AUTHORIZATION, DCRUtils.getAuthzHeader(username, password));
         HttpResponse deleteResponse = client.execute(deleteRequest);
         assertEquals(deleteResponse.getStatusLine().getStatusCode(), 204, "Service provider " +
                 "deletion failed");
