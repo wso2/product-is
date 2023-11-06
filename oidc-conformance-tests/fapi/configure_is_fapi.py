@@ -25,6 +25,7 @@ import os
 import sys
 from requests.exceptions import HTTPError
 import constants
+import base64
 from config import browser_configuration
 
 headers = {
@@ -35,13 +36,29 @@ headers = {
 # path to product is zip file
 path_to_is_zip = str(sys.argv[1])
 
+def decode_secret(secret):
+    decoded_string=base64.b64decode(secret+"=").decode("utf-8")
+    decoded_json = json.loads(decoded_string)
+    return decoded_json
+
+client1_jwks_en = str(sys.argv[3])
+client2_jwks_en = str(sys.argv[4])
+client1_mtls_en = str(sys.argv[5])
+client2_mtls_en = str(sys.argv[6])
+
+client1_jwks = decode_secret(client1_jwks_en)
+client2_jwks = decode_secret(client2_jwks_en)
+client1_mtls = decode_secret(client1_mtls_en)
+client2_mtls = decode_secret(client2_mtls_en)
+
+resource_url_path = str(sys.argv[7])
 
 # use dcr to register a client
 def dcr():
     print("\nDynamic Client Registration")
     try:
         response = requests.post(url=constants.DCR_ENDPOINT, headers=constants.DCR_HEADERS,
-                             data=json.dumps(constants.DCR_BODY), verify=False)
+                                 data=json.dumps(constants.DCR_BODY), verify=False)
         response.raise_for_status()
     except HTTPError as http_error:
         print(http_error)
@@ -118,7 +135,7 @@ def register_service_provider(config_file_path):
         response.raise_for_status()
         print("Service provider " + name + " registered")
         response = requests.get(url=constants.APPLICATION_ENDPOINT + "?filter=name+eq+" + name, headers=headers,
-                            verify=False)
+                                verify=False)
         response.raise_for_status()
         response_map = json.loads(response.content)
         print(response_map)
@@ -183,7 +200,7 @@ def add_claim_service_provider(application_id, config_file_path):
     print("\nAdding claims to service provider")
     try:
         response = requests.patch(url=constants.APPLICATION_ENDPOINT + "/" + application_id, headers=headers, data=json.dumps(body),
-                                verify=False)
+                                  verify=False)
         response.raise_for_status()
     except HTTPError as http_error:
         print(http_error)
@@ -253,7 +270,7 @@ def unpack_and_run(zip_file_name):
         dir_list = os.listdir()
         r = re.compile('(?=^wso2is)(?=^((?!zip).)*$)')
         for line in dir_list:
-           if r.match(line):
+            if r.match(line):
                 print(line)
                 dir_name = line
                 break
@@ -278,28 +295,25 @@ def unpack_and_run(zip_file_name):
 def json_config_builder(service_provider_1, service_provider_2, output_file_path, plan_name):
     config = {
         "alias": constants.ALIAS,
+        "description": "FAPI conformance suite for wso2 identity server.",
         "server": {
-            "issuer": constants.BASE_URL + "/oauth2/token",
-            "jwks_uri": constants.BASE_URL + "/oauth2/jwks",
-            "authorization_endpoint": constants.BASE_URL + "/oauth2/authorize",
-            "token_endpoint": constants.BASE_URL + "/oauth2/token",
-            "userinfo_endpoint": constants.BASE_URL + "/oauth2/userinfo",
-            "acr_values": "acr1"
+            "discoveryUrl": constants.IAM_BASE_URL + "/oauth2/token/.well-known/openid-configuration"
+        },
+        "resource": {
+            "resourceUrl": constants.IAM_BASE_URL + resource_url_path
         },
         "client": {
             "client_id": service_provider_1['clientId'],
-            "client_secret": service_provider_1['clientSecret']
+            "scope": "openid profile abc",
+            "jwks": client1_jwks
         },
         "client2": {
             "client_id": service_provider_2['clientId'],
-            "client_secret": service_provider_2['clientSecret']
+            "scope": "openid profile abc",
+            "jwks": client2_jwks
         },
-        "client_secret_post": {
-            "client_id": service_provider_1['clientId'],
-            "client_secret": service_provider_1['clientSecret']
-        },
-        "browser": browser_configuration.CONFIG[plan_name]["browser"],
-        "override": browser_configuration.CONFIG[plan_name]["override"]
+        "mtls": client1_mtls,
+        "mtls2": client2_mtls
     }
 
     json_config = json.dumps(config, indent=4)
@@ -353,7 +367,7 @@ else:
 
 dcr()
 access_token = get_access_token(constants.DCR_CLIENT_ID, constants.DCR_CLIENT_SECRET, constants.SCOPES,
-                                 constants.TOKEN_ENDPOINT)
+                                constants.TOKEN_ENDPOINT)
 headers['Authorization'] = "Bearer " + access_token
 
 set_user_claim_values("./config/user_claim_value_config.json")
@@ -390,32 +404,7 @@ edit_scope("openid", {
     "displayName": "openid"
 })
 
-generate_config_for_plan("./basic/config/service_provider1_config.json",
-                         "./basic/config/service_provider2_config.json",
-                         "basic/IS_config_basic.json",
-                         "basic")
-
-generate_config_for_plan("./implicit/config/service_provider1_config.json",
-                         "./implicit/config/service_provider2_config.json",
-                         "implicit/IS_config_implicit.json",
-                         "implicit")
-
-generate_config_for_plan("./hybrid/config/service_provider1_config.json",
-                         "./hybrid/config/service_provider2_config.json",
-                         "hybrid/IS_config_hybrid.json",
-                         "hybrid")
-
-generate_config_for_plan("./formpost-basic/config/service_provider1_config.json",
-                         "./formpost-basic/config/service_provider2_config.json",
-                         "formpost-basic/IS_config_formpost_basic.json",
-                         "formpost-basic")
-
-generate_config_for_plan("./formpost-implicit/config/service_provider1_config.json",
-                         "./formpost-implicit/config/service_provider2_config.json",
-                         "formpost-implicit/IS_config_formpost_implicit.json",
-                         "formpost-implicit")
-
-generate_config_for_plan("./formpost-hybrid/config/service_provider1_config.json",
-                         "./formpost-hybrid/config/service_provider2_config.json",
-                         "formpost-hybrid/IS_config_formpost_hybrid.json",
-                         "formpost-hybrid")
+generate_config_for_plan("./fapi/config/service_provider1_config.json",
+                             "./fapi/config/service_provider2_config.json",
+                             "fapi/IS_config_fapi.json",
+                             "fapi")

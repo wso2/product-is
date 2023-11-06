@@ -20,9 +20,6 @@ PATH_TO_SCRIPTS=./product-is/oidc-conformance-tests
 IS_SUCCESSFUL=false
 IS_LOCAL=false
 
-# Default the profile to "OIDC"
-PROFILE="${1:-OIDC}";
-
 if $IS_LOCAL; then
   PATH_TO_SCRIPTS=.
   PRODUCT_IS_ZIP_PATH=./wso2is-5.12.0-m7.zip
@@ -32,61 +29,40 @@ if $IS_LOCAL; then
   echo
   python3 ./configure_is.py $PRODUCT_IS_ZIP_PATH
 fi
-
 echo "========================"
 echo "Running Tests"
 echo "========================"
 echo
-
-if [ "$PROFILE" = "FAPI" ];
-then
-#  sed -i '/^.*all_test_modules\ =.*/a \ \ \ \ print("All available OIDC test modules:")\n\ \ \ \ print("==============================================")\n\ \ \ \ print(sorted(all_test_modules.keys()))' $CONFORMANCE_SUITE_PATH/scripts/run-test-plan.py
-  echo
-  echo "FAPI test plan - mtls, plain_fapi, plain_response, by_value"
-  echo "-----------------------------"
-  echo
-#  python3 $CONFORMANCE_SUITE_PATH/scripts/run-test-plan.py fapi1-advanced-final-test-plan[client_auth_type=mtls][fapi_profile=plain_fapi][fapi_response_mode=plain_response][fapi_auth_request_method=by_value] $PATH_TO_SCRIPTS/fapi/IS_config_fapi.json 2>&1 | tee fapi-mtls-test-log.txt
-  echo
-  echo
-  echo "FAPI test plan - private_key_jwt, plain_fapi, plain_response, by_value"
-  echo "-----------------------------"
-  echo
-  python3 $CONFORMANCE_SUITE_PATH/scripts/run-test-plan.py fapi1-advanced-final-test-plan[client_auth_type=private_key_jwt][fapi_profile=plain_fapi][fapi_response_mode=plain_response][fapi_auth_request_method=by_value] $PATH_TO_SCRIPTS/fapi/IS_config_fapi.json 2>&1 | tee fapi-private_key_jwt-test-log.txt
-  echo
-else
-  echo "Basic certification test plan"
-  echo "-----------------------------"
-  echo
-  python3 $CONFORMANCE_SUITE_PATH/scripts/run-test-plan.py oidcc-basic-certification-test-plan[server_metadata=static][client_registration=static_client] $PATH_TO_SCRIPTS/basic/IS_config_basic.json 2>&1 | tee basic-certification-test-plan-log.txt
-  echo
-  echo "Implicit certification test plan"
-  echo "-----------------------------"
-  echo
-  python3 $CONFORMANCE_SUITE_PATH/scripts/run-test-plan.py oidcc-implicit-certification-test-plan[server_metadata=static][client_registration=static_client] $PATH_TO_SCRIPTS/implicit/IS_config_implicit.json 2>&1 | tee implicit-certification-test-plan-log.txt
-  echo
-  echo "Hybrid certification test plan"
-  echo "-----------------------------"
-  echo
-  python3 $CONFORMANCE_SUITE_PATH/scripts/run-test-plan.py oidcc-hybrid-certification-test-plan[server_metadata=static][client_registration=static_client] $PATH_TO_SCRIPTS/hybrid/IS_config_hybrid.json 2>&1 | tee hybrid-certification-test-plan-log.txt
-  echo
-  echo "Formpost basic certification test plan"
-  echo "-----------------------------"
-  echo
-  python3 $CONFORMANCE_SUITE_PATH/scripts/run-test-plan.py oidcc-formpost-basic-certification-test-plan[server_metadata=static][client_registration=static_client] $PATH_TO_SCRIPTS/formpost-basic/IS_config_formpost_basic.json 2>&1 | tee formpost-basic-certification-test-plan-log.txt
-  echo
-  echo "Formpost implicit certification test plan"
-  echo "-----------------------------"
-  echo
-  python3 $CONFORMANCE_SUITE_PATH/scripts/run-test-plan.py oidcc-formpost-implicit-certification-test-plan[server_metadata=static][client_registration=static_client] $PATH_TO_SCRIPTS/formpost-implicit/IS_config_formpost_implicit.json 2>&1 | tee formpost-implicit-certification-test-plan-log.txt
-  echo
-  echo "Formpost hybrid certification test plan"
-  echo "-----------------------------"
-  echo
-  python3 $CONFORMANCE_SUITE_PATH/scripts/run-test-plan.py oidcc-formpost-hybrid-certification-test-plan[server_metadata=static][client_registration=static_client] $PATH_TO_SCRIPTS/formpost-hybrid/IS_config_formpost_hybrid.json 2>&1 | tee formpost-hybrid-certification-test-plan-log.txt
-  echo
-fi;
-
-
+echo "Basic certification test plan"
+echo "-----------------------------"
+echo
+python3 $CONFORMANCE_SUITE_PATH/scripts/run-test-plan.py oidcc-basic-certification-test-plan[server_metadata=static][client_registration=static_client] $PATH_TO_SCRIPTS/basic/IS_config_basic.json 2>&1 | tee basic-certification-test-plan-log.txt
+echo
+echo "Implicit certification test plan"
+echo "-----------------------------"
+echo
+python3 $CONFORMANCE_SUITE_PATH/scripts/run-test-plan.py oidcc-implicit-certification-test-plan[server_metadata=static][client_registration=static_client] $PATH_TO_SCRIPTS/implicit/IS_config_implicit.json 2>&1 | tee implicit-certification-test-plan-log.txt
+echo
+echo "Hybrid certification test plan"
+echo "-----------------------------"
+echo
+python3 $CONFORMANCE_SUITE_PATH/scripts/run-test-plan.py oidcc-hybrid-certification-test-plan[server_metadata=static][client_registration=static_client] $PATH_TO_SCRIPTS/hybrid/IS_config_hybrid.json 2>&1 | tee hybrid-certification-test-plan-log.txt
+echo
+echo "Formpost basic certification test plan"
+echo "-----------------------------"
+echo
+python3 $CONFORMANCE_SUITE_PATH/scripts/run-test-plan.py oidcc-formpost-basic-certification-test-plan[server_metadata=static][client_registration=static_client] $PATH_TO_SCRIPTS/formpost-basic/IS_config_formpost_basic.json 2>&1 | tee formpost-basic-certification-test-plan-log.txt
+echo
+echo "Formpost implicit certification test plan"
+echo "-----------------------------"
+echo
+python3 $CONFORMANCE_SUITE_PATH/scripts/run-test-plan.py oidcc-formpost-implicit-certification-test-plan[server_metadata=static][client_registration=static_client] $PATH_TO_SCRIPTS/formpost-implicit/IS_config_formpost_implicit.json 2>&1 | tee formpost-implicit-certification-test-plan-log.txt
+echo
+echo "Formpost hybrid certification test plan"
+echo "-----------------------------"
+echo
+python3 $CONFORMANCE_SUITE_PATH/scripts/run-test-plan.py oidcc-formpost-hybrid-certification-test-plan[server_metadata=static][client_registration=static_client] $PATH_TO_SCRIPTS/formpost-hybrid/IS_config_formpost_hybrid.json 2>&1 | tee formpost-hybrid-certification-test-plan-log.txt
+echo
 
 
 if $IS_LOCAL; then

@@ -143,7 +143,7 @@ jobs:
       run: |
         PRODUCT_IS_ZIP=$(find ./ -name wso2is* -type f -printf "%f\n")
         cd ./product-is/oidc-conformance-tests
-        python3 ./configure_is.py ../../$PRODUCT_IS_ZIP FAPI ${{secrets.FAPI_CLIENT1_JWKS}} ${{secrets.FAPI_CLIENT2_JWKS}} ${{secrets.FAPI_CLIENT1_MTLS}} ${{secrets.FAPI_CLIENT2_MTLS}} ${{github.event.inputs.resource-url}}
+        python3 ./configure_is_fapi.py ../../$PRODUCT_IS_ZIP ${{secrets.FAPI_CLIENT1_JWKS}} ${{secrets.FAPI_CLIENT2_JWKS}} ${{secrets.FAPI_CLIENT1_MTLS}} ${{secrets.FAPI_CLIENT2_MTLS}} ${{github.event.inputs.resource-url}}
         
     - name: Run Conformance Suite
       run: |
@@ -157,7 +157,7 @@ jobs:
         python3 ../product-is/oidc-conformance-tests/start_conformance_suite.py $DOCKER_COMPOSE_FILE
         
     - name: Run Tests
-      run: bash ./product-is/oidc-conformance-tests/test_runner.sh FAPI
+      run: bash ./product-is/oidc-conformance-tests/test_runner.sh
       
     - name: Test Results
       run: |

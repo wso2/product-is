@@ -89,7 +89,7 @@ jobs:
       run: |
         PRODUCT_IS_ZIP=$(find ./ -name wso2is* -type f -printf "%f\n")
         cd ./product-is/oidc-conformance-tests
-        python3 ./configure_is.py ../../$PRODUCT_IS_ZIP OIDC
+        python3 ./configure_is.py ../../$PRODUCT_IS_ZIP
         
     - name: Run Conformance Suite
       run: |
@@ -103,7 +103,7 @@ jobs:
         python3 ../product-is/oidc-conformance-tests/start_conformance_suite.py $DOCKER_COMPOSE_FILE
         
     - name: Run Tests
-      run: bash ./product-is/oidc-conformance-tests/test_runner.sh OIDC
+      run: bash ./product-is/oidc-conformance-tests/test_runner.sh
       
     - name: Test Results
       run: |
