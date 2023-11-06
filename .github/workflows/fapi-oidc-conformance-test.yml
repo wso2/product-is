@@ -24,14 +24,6 @@ on:
       resource-url:
         description: 'Resource url path'
         default: 'https://iam/resource'
-      send-email:
-        description: 'Send test results to email'
-        required: false
-        default: 'no'
-      send-chat:
-        description: 'Send test results to google chat'
-        required: false
-        default: 'no'
 
 jobs:
   build:
@@ -85,7 +77,7 @@ jobs:
            "${INPUT_URL}"
         fi
 
-    - name: Add configs to IS
+    - name: Add deployment toml configs to IS
       run: |
         PRODUCT_IS_ZIP=$(find ./ -name 'wso2is*' -type f -printf "%f\n")
         echo ">>> Unzipping Product IS: ${PRODUCT_IS_ZIP} ..."
@@ -94,7 +86,7 @@ jobs:
         PRODUCT_IS=$(find ./ -maxdepth 1 -name 'wso2is*' -type d -printf "%f\n")
 
         echo ">>> Adding deployment-fapi-config.toml configs to deployment.toml..."
-        cp -f ./product-is/oidc-conformance-tests/fapi/config/deployment-fapi-config.toml $PRODUCT_IS/repository/conf/deployment.toml
+        cp -f ./product-is/oidc-fapi-conformance-tests/config/deployment-fapi-config.toml $PRODUCT_IS/repository/conf/deployment.toml
 
         echo ">>> Zipping $PRODUCT_IS to $PRODUCT_IS_ZIP"
         zip -qq -r $PRODUCT_IS_ZIP $PRODUCT_IS
@@ -142,7 +134,7 @@ jobs:
     - name: Run IS
       run: |
         PRODUCT_IS_ZIP=$(find ./ -name wso2is* -type f -printf "%f\n")
-        cd ./product-is/oidc-conformance-tests/fapi
+        cd ./product-is/oidc-fapi-conformance-tests
         python3 ./configure_is_fapi.py ../../../$PRODUCT_IS_ZIP ${{secrets.FAPI_CLIENT1_JWKS}} ${{secrets.FAPI_CLIENT2_JWKS}} ${{secrets.FAPI_CLIENT1_MTLS}} ${{secrets.FAPI_CLIENT2_MTLS}} ${{github.event.inputs.resource-url}}
         
     - name: Run Conformance Suite
@@ -192,62 +184,6 @@ jobs:
       with:
         name: test-logs
         path: ./*log.txt
-    
-    - name: Send Email
-      if: always()
-      run: |
-        INPUT=${{github.event.inputs.send-email}}
-        if [[ -z "${INPUT}" ]]; then
-          INPUT="no"
-        fi
-        SEND_EMAIL=${INPUT^^}
-        if [ $SEND_EMAIL == "YES" ]; then
-          echo "============="
-          echo "Sending Email"
-          echo "============="
-          CONFORMANCE_SUITE_URL=https://localhost:8443
-          RESOURCE=${{github.event.inputs.download-url}}
-          if [[ -z "${RESOURCE}" ]]; then
-            RESOURCE=${{github.event.inputs.tag}}
-          fi
-          python3 ./product-is/oidc-conformance-tests/send_email.py $CONFORMANCE_SUITE_URL $GITHUB_RUN_NUMBER ${{job.status}} ${{github.repository}} ${{github.run_id}} ${{secrets.SENDER_EMAIL}} ${{secrets.PASSWORD}} ${{secrets.RECEIVER_LIST}} $RESOURCE
-        elif [ $SEND_EMAIL == "NO" ]; then
-          echo "========================================"
-          echo "Skipped Sending Email"
-          echo "========================================"
-        else
-          echo "================================================================="
-          echo "Invalid parameter value. Skipped sending email"
-          echo "================================================================="
-        fi
-        
-    - name: Send Chat message
-      if: always()
-      run: |
-        INPUT=${{github.event.inputs.send-chat}}
-        RESOURCE=${{github.event.inputs.download-url}}
-        if [[ -z "${RESOURCE}" ]]; then
-          RESOURCE=${{github.event.inputs.tag}}
-        fi
-        if [[ -z "${INPUT}" ]]; then
-          INPUT="yes"
-        fi
-        SEND_CHAT=${INPUT^^}
-        if [ $SEND_CHAT == "YES" ]; then
-          echo "==========================="
-          echo "Sending Google Chat Message"
-          echo "==========================="
-          CONFORMANCE_SUITE_URL=https://localhost:8443
-          python3 ./product-is/oidc-conformance-tests/send_chat.py "$CONFORMANCE_SUITE_URL" "$GITHUB_RUN_NUMBER" "${{job.status}}" "${{github.repository}}" "${{github.run_id}}" "${{secrets.GOOGLE_CHAT_WEBHOOK_OIDC_TEST}}" "$RESOURCE"
-        elif [ $SEND_CHAT == "NO" ]; then
-          echo "========================================"
-          echo "Skipped Sending Google Chat Message"
-          echo "========================================"
-        else
-          echo "================================================================="
-          echo "Invalid parameter value. Skipped sending google chat message"
-          echo "================================================================="
-        fi
        
    
     
