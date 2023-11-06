@@ -74,7 +74,6 @@ def get_application_id(name):
         print("\nCompleted with status: " + str(response.status_code))
         print(response.text)
 
-
 # subscribe to the required APIs
 def subscribe_apis():
     print("\nSubscribe to the required APIs")
