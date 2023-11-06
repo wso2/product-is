@@ -136,7 +136,6 @@ def subscribe_apis():
         print("\nCompleted with status: " + str(response.status_code))
         print(response.text)
 
-
 # obtain an access token with given client details and scope
 def get_access_token(client_id, client_secret, scope, url):
     body = {
