@@ -149,7 +149,7 @@ jobs:
         python3 ../product-is/oidc-conformance-tests/start_conformance_suite.py $DOCKER_COMPOSE_FILE
         
     - name: Run Tests
-      run: bash ./product-is/oidc-fapi-conformance-tests/fapi/test_runner_fapi.sh
+      run: bash ./product-is/oidc-fapi-conformance-tests/test_runner_fapi.sh
       
     - name: Test Results
       run: |
