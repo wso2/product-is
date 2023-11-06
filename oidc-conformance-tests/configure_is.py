@@ -435,7 +435,6 @@ def get_required_scopes():
     
     return scopes
 
-
 warnings.filterwarnings("ignore")
 if not is_process_running("wso2server"):
     unpack_and_run(path_to_is_zip)
