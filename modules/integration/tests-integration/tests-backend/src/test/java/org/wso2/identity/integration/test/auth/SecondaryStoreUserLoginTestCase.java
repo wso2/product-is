@@ -76,9 +76,9 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
     public static final String PLAYGROUND_APP_CALLBACK_URI = "http://localhost:" + TOMCAT_PORT +
             "/playground.app/oauth2client";
     private static final String PRIMARY_USERNAME = "primaryUsername";
-    private static final String PRIMARY_PASSWORD = "primaryPassword";
+    private static final String PRIMARY_PASSWORD = "Wso2@testPrimary123";
     private static final String SECONDARY_USERNAME = "secondaryUsername";
-    private static final String SECONDARY_PASSWORD = "secondaryPassword";
+    private static final String SECONDARY_PASSWORD = "Wso2@testSecondary123";
     private static final String PERMISSION_LOGIN = "/permission/admin/login";
     private static final String DOMAIN_ID = "WSO2TEST.COM";
     private static final String PRIMARY_USER_GROUP = "jdbcUserStoreGroup";

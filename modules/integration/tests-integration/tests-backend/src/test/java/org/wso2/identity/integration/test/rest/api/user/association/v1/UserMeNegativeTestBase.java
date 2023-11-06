@@ -44,7 +44,7 @@ public class UserMeNegativeTestBase extends UserAssociationTestBase {
 
     private static final Log log = LogFactory.getLog(UserMeNegativeTestBase.class);
     private static final String TEST_USER_1 = "TestUser01";
-    private static final String TEST_USER_PW = "Test123";
+    private static final String TEST_USER_PW = "Test@123";
     private TestUserMode userMode;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")

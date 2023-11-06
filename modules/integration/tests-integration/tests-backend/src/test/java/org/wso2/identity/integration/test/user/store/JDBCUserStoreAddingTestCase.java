@@ -54,7 +54,7 @@ public class JDBCUserStoreAddingTestCase extends ISIntegrationTest{
     private AuthenticatorClient authenticatorClient;
     private String newUserName = "WSO2TEST.COM/userStoreUser";
     private String newUserRole = "WSO2TEST.COM/jdsbUserStoreRole";
-    private String  newUserPassword = "password";
+    private String  newUserPassword = "Wso2@test";
 
 
     @BeforeClass(alwaysRun = true)
@@ -117,9 +117,9 @@ public class JDBCUserStoreAddingTestCase extends ISIntegrationTest{
 
         String loginRole = "login";
         String secondaryUsername = "WSO2TEST.COM/user4219";
-        String secondaryUserPassword = "password2";
+        String secondaryUserPassword = "Password@2";
         String primaryUsername = "user4219";
-        String primaryUserPassword = "password1";
+        String primaryUserPassword = "Password@1";
 
         userMgtClient = new UserManagementClient(backendURL, getSessionCookie());
         authenticatorClient = new AuthenticatorClient(backendURL);
@@ -140,7 +140,7 @@ public class JDBCUserStoreAddingTestCase extends ISIntegrationTest{
     @Test(groups = "wso2.is", dependsOnMethods = "addUserIntoJDBCUserStore")
     public void changePassWordByUserTest() throws Exception {
         try{
-            userMgtClient.changePasswordByUser(newUserName, newUserPassword, "password2");
+            userMgtClient.changePasswordByUser(newUserName, newUserPassword, "Password@2");
         } catch (UserAdminUserAdminException e) {
             Assert.fail("password change by user for secondary User Store failed");
         }

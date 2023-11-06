@@ -86,17 +86,17 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
     public final static String DUMMY_CLIENT_SECRET = "dummy_client_secret";
     private static final String TENANT_1_DOMAIN = "tenant1.com";
     private static final String TENANT_1_ADMIN_USERNAME = "admin@tenant1.com";
-    private static final String TENANT_1_ADMIN_PASSWORD = "admin";
+    private static final String TENANT_1_ADMIN_PASSWORD = "Admin@123";
     private static final String TENANT_1_ADMIN_TENANT_AWARE_USERNAME = "admin";
     private static final String TENANT_1_USER_USERNAME = "userTenant1";
-    private static final String TENANT_1_USER_PASSWORD = "userTenant1";
+    private static final String TENANT_1_USER_PASSWORD = "User@Tenant1";
     private static final String TENANT_1_USER_EMAIL = "userTenant1@wso2.com";
     private static final String TENANT_2_DOMAIN = "tenant2.com";
     private static final String TENANT_2_ADMIN_USERNAME = "admin@tenant2.com";
-    private static final String TENANT_2_ADMIN_PASSWORD = "admin";
+    private static final String TENANT_2_ADMIN_PASSWORD = "Admin@123";
     private static final String TENANT_2_ADMIN_TENANT_AWARE_USERNAME = "admin";
     private static final String TENANT_2_USER_USERNAME = "userTenant2";
-    private static final String TENANT_2_USER_PASSWORD = "userTenant2";
+    private static final String TENANT_2_USER_PASSWORD = "User@Tenant2";
     private static final String TENANT_2_USER_EMAIL = "userTenant2@wso2.com";
     public final static String TENANT_1_AUTHORIZE_URL = "https://localhost:9853/t/tenant1.com/oauth2/authorize";
 

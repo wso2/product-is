@@ -34,9 +34,9 @@ public class UserAccountConnectorTestCase extends ISIntegrationTest {
     private UserAccountConnectorServiceClient serviceClient;
     private final static String ADMIN_USER = "admin";
     private final static String USER_1 = "testuser11";
-    private final static String USER_PASSWORD_1 = "testuser11";
+    private final static String USER_PASSWORD_1 = "Wso2_test11";
     private final static String USER_2 = "testuser11@wso2.com";
-    private final static String USER_PASSWORD_2 = "testuser11";
+    private final static String USER_PASSWORD_2 = "Wso2_test11";
     private ConfigurationContext configContext;
     private UserManagementClient userMgtClient;
 
@@ -79,11 +79,11 @@ public class UserAccountConnectorTestCase extends ISIntegrationTest {
 
         String loginRole = "loginRole";
         String testAssociationUser1 = "testAssociationUser1";
-        String testPassword1 = "testPassword1";
+        String testPassword1 = "TestPassword@1";
         String testAssociationUser2 = "testAssociationUser2";
-        String testPassword2 = "testPassword2";
+        String testPassword2 = "TestPassword@2";
         String testAssociationUser3 = "testAssociationUser3";
-        String testPassword3 = "testPassword3";
+        String testPassword3 = "TestPassword@3";
 
 
         userMgtClient.addRole(loginRole, new String[0], new String[]{PERMISSION_ADMIN_LOGIN});

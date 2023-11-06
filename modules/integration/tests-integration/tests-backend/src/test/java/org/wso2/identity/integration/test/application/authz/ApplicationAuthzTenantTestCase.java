@@ -58,9 +58,9 @@ public class ApplicationAuthzTenantTestCase extends AbstractApplicationAuthzTest
     private static final String AZ_TEST_TENANT_ROLE = "Internal/azTestTenantRole";
     private static final String HTTP_REDIRECT = "HTTP-Redirect";
     private static final String AZ_TEST_TENANT_USER = "azTestTenantUser";
-    private static final String AZ_TEST_TENANT_USER_PW = "azTest123";
+    private static final String AZ_TEST_TENANT_USER_PW = "azTest@123";
     private static final String NON_AZ_TEST_TENANT_USER = "nonAzTestTenantUser";
-    private static final String NON_AZ_TEST_TENANT_USER_PW = "nonAzTest123";
+    private static final String NON_AZ_TEST_TENANT_USER_PW = "nonAzTest@123";
     private static final Log log = LogFactory.getLog(ApplicationAuthzTenantTestCase.class);
     private static final String APPLICATION_NAME = "travelocity.com-saml-tenantwithoutsigning";
     private static final String POLICY_ID = "spTenantAuthPolicy";

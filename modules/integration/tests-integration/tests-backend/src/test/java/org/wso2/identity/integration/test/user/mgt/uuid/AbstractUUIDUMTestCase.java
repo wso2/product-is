@@ -58,8 +58,8 @@ public abstract class AbstractUUIDUMTestCase extends ISIntegrationTest {
 
     private String defaultProfile = "default";
 
-    private String credential1 = "credential1";
-    private String credential2 = "credential2";
+    private String credential1 = "Wso2@test1";
+    private String credential2 = "Wso2@test2";
 
     private String userId;
 

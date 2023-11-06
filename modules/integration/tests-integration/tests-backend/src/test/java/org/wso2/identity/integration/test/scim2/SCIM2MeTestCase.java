@@ -74,7 +74,7 @@ public class SCIM2MeTestCase extends ISIntegrationTest {
     private static final String EMAIL_TYPE_HOME_CLAIM_VALUE = "scim2user@gmail.com";
     private static final String USERNAME = "scim2user";
     private static final String USERNAME_1 = "testScim2user";
-    private static final String PASSWORD = "password:123";
+    private static final String PASSWORD = "Wso2@test123";
 
     private CloseableHttpClient client;
 

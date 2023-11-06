@@ -89,7 +89,7 @@ public class RegistryMountTestCase extends ISIntegrationTest {
 
     private static final String TENANT_DOMAIN = "registrymount.com";
     private static final String TENANT_ADMIN_USERNAME = "admin@registrymount.com";
-    private static final String TENANT_ADMIN_PASSWORD = "admin";
+    private static final String TENANT_ADMIN_PASSWORD = "Admin_123";
     private static final String TENANT_ADMIN_TENANT_AWARE_USERNAME = "admin";
     private ServerConfigurationManager serverConfigurationManager;
     private final String artifact = "travelocity.com-registrymount";

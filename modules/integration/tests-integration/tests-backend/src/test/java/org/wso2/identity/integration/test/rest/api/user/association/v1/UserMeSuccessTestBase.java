@@ -51,7 +51,7 @@ public class UserMeSuccessTestBase extends UserAssociationTestBase {
     private static final Log log = LogFactory.getLog(UserMeSuccessTestBase.class);
     private static final String TEST_USER_1 = "TestUser01";
     private static final String TEST_USER_2 = "TestUser02";
-    private static final String TEST_USER_PW = "Test123";
+    private static final String TEST_USER_PW = "Test@123";
     private static final String EXTERNAL_IDP_NAME = "ExternalIDP";
     private static final String EXTERNAL_USER_ID_1 = "ExternalUser1";
     private static final String EXTERNAL_USER_ID_2 = "ExternalUser2";

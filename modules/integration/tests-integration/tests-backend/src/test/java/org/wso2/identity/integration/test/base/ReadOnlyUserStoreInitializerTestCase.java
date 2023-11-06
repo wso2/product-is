@@ -45,7 +45,7 @@ public class ReadOnlyUserStoreInitializerTestCase extends ISIntegrationTest {
     private AuthenticatorClient authenticatorClient;
     private String newUserName = "ReadOnlyLDAPUserName";
     private String newUserRole = "ReadOnlyLDAPUserRole";
-    private String newUserPassword = "ReadOnlyLDAPUserPass";
+    private String newUserPassword = "ReadOnlyLDAPUserPass@123";
 
     @BeforeTest(alwaysRun = true)
     public void initUserStoreConfig() throws Exception {

@@ -135,13 +135,13 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
 
     protected enum User {
 
-        SUPER_TENANT_USER("samluser1", "samluser1", "carbon.super", "samluser1", "samluser1@abc.com", "samlnickuser1",
+        SUPER_TENANT_USER("samluser1", "Samluser@1", "carbon.super", "samluser1", "samluser1@abc.com", "samlnickuser1",
                 true),
-        TENANT_USER("samluser2@wso2.com", "samluser2", "wso2.com", "samluser2", "samluser2@abc.com", "samlnickuser2",
+        TENANT_USER("samluser2@wso2.com", "Samluser@2", "wso2.com", "samluser2", "samluser2@abc.com", "samlnickuser2",
                 true),
-        SUPER_TENANT_USER_WITHOUT_MANDATORY_CLAIMS("samluser3", "samluser3", "carbon.super", "samluser3",
+        SUPER_TENANT_USER_WITHOUT_MANDATORY_CLAIMS("samluser3", "Samluser@3", "carbon.super", "samluser3",
                 "providedClaimValue", "providedClaimValue", false),
-        TENANT_USER_WITHOUT_MANDATORY_CLAIMS("samluser4@wso2.com", "samluser4", "wso2.com", "samluser4",
+        TENANT_USER_WITHOUT_MANDATORY_CLAIMS("samluser4@wso2.com", "Samluser@4", "wso2.com", "samluser4",
                 "providedClaimValue", "providedClaimValue", false);
 
         private String username;

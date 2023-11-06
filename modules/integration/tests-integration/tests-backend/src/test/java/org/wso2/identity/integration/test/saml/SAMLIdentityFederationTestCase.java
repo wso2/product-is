@@ -84,7 +84,7 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
     private String COMMON_AUTH_URL = "https://localhost:%s/commonauth";
 
     private String usrName = "testFederatedUser";
-    private String usrPwd = "testFederatePassword";
+    private String usrPwd = "TestFederatePassword@123";
     private String usrRole = "admin";
 
     //Claim Uris
