@@ -115,7 +115,7 @@ jobs:
         echo "${{secrets.FAPI_RESOURCE_SERVER_PEM}}" >> /etc/nginx/ssl/serverCA.pem
         echo ">>> FAPI resource server keys saved successfully!"
 
-        cd product-is/oidc-conformance-tests/fapi/resource-server 
+        cd product-is/oidc-fapi-conformance-tests/resource-server 
         cp -f nginx-proxy /etc/nginx/sites-enabled
         sudo nginx -t
         sudo service nginx restart
