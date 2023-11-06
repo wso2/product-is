@@ -2303,7 +2303,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.25.491</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.25.492</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2327,7 +2327,7 @@
         <identity.inbound.auth.saml.version>5.11.26</identity.inbound.auth.saml.version>
         <identity.inbound.auth.oauth.version>6.11.184</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.9.5</identity.inbound.auth.openid.version>
-        <identity.inbound.auth.sts.version>5.10.17</identity.inbound.auth.sts.version>
+        <identity.inbound.auth.sts.version>5.10.18</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.4</identity.inbound.provisioning.scim.version>
         <identity.inbound.provisioning.scim2.version>3.4.42</identity.inbound.provisioning.scim2.version>
 
@@ -2411,7 +2411,7 @@
         <identity.extension.utils>1.0.14</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.0.1</authenticator.auth.otp.commons.version>
 
-        <identity.org.mgt.version>1.3.107</identity.org.mgt.version>
+        <identity.org.mgt.version>1.3.108</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.0.84</identity.org.mgt.core.version>
         <identity.organization.login.version>1.1.24</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.16</identity.oauth2.grant.organizationswitch.version>
