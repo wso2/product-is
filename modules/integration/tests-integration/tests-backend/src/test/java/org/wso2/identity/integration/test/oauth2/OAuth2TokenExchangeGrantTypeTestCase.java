@@ -172,11 +172,12 @@ public class OAuth2TokenExchangeGrantTypeTestCase extends AbstractIdentityFedera
         }
     }
 
-    private void getAccessTokenFromSecondaryIS(String username, String password) throws Exception {
+    @Test(groups = "wso2.is", description = "Get a Access Token From Secondary IS")
+    public void testGetAccessTokenFromSecondaryIS() throws Exception {
 
         List<NameValuePair> postParameters = new ArrayList<>();
-        postParameters.add(new BasicNameValuePair("username", username));
-        postParameters.add(new BasicNameValuePair("password", password));
+        postParameters.add(new BasicNameValuePair("username", OAuth2TokenExchangeGrantTypeTestCase.NEW_USER_USERNAME));
+        postParameters.add(new BasicNameValuePair("password", OAuth2TokenExchangeGrantTypeTestCase.NEW_USER_PASSWORD));
         postParameters.add(new BasicNameValuePair("grant_type", OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER));
         postParameters.add(new BasicNameValuePair("scope", "email"));
         JSONObject responseObject = sendPOSTMessage(SECONDARY_IS_TOKEN_ENDPOINT, secondaryISClientID,
@@ -187,11 +188,9 @@ public class OAuth2TokenExchangeGrantTypeTestCase extends AbstractIdentityFedera
         secondaryISUserId = getTokenSubject(accessTokenFromSecondaryIS);
     }
 
-    @Test(groups = "wso2.is", description = "Exchange access token for federated user")
+    @Test(groups = "wso2.is", description = "Exchange access token for federated user",
+            dependsOnMethods = "testGetAccessTokenFromSecondaryIS")
     public void testTokenExchangeForFederatedUser() throws Exception {
-
-        // get an access token for a user that doesn't exist in primary IS
-        getAccessTokenFromSecondaryIS(NEW_USER_USERNAME, NEW_USER_PASSWORD);
 
         List<NameValuePair> postParameters = getTokenExchangePostParameters();
 
