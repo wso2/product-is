@@ -22,7 +22,7 @@ DCR_BODY = {
     "id_token_encrypted_response_enc" : "A128GCM",
     "request_object_signing_alg" : "PS256",
     "require_signed_request_object" : "true",
-    "require_pushed_authorization_requests" : "true",
+    "require_pushed_authorization_requests" : "false",
     "tls_client_certificate_bound_access_tokens":"true",
     "request_object_encryption_alg" : "RSA-OAEP",
     "request_object_encryption_enc" : "A128GCM",
