@@ -97,6 +97,7 @@ def get_service_provider_details(application_id):
 def set_service_provider_access_token_type(application_id, app_details, token_type):
     body = app_details
     body['accessToken']['type'] = token_type
+    body['pushAuthorizationRequest']['requirePushAuthorizationRequest'] = False
 
     print(">>> Set access token type...")
     try:
