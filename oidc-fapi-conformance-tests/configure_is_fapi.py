@@ -11,7 +11,7 @@ import sys
 from requests.exceptions import HTTPError
 import constants_fapi as constants
 import base64
-# from config import browser_configuration
+from config import browser_configuration
 
 # path to product is zip file
 path_to_is_zip = str(sys.argv[1])
@@ -167,7 +167,7 @@ def unpack_and_run(zip_file_name):
         raise
 
 # creates the IS_config.json file needed to run OIDC test plans and save in the given path
-def json_config_builder(service_provider_1, service_provider_2, output_file_path, test_plan_name):
+def json_config_builder(service_provider_1, service_provider_2, output_file_path, plan_name):
     config = {
         "alias": constants.ALIAS,
         "description": "FAPI conformance suite for wso2 identity server.",
@@ -188,7 +188,9 @@ def json_config_builder(service_provider_1, service_provider_2, output_file_path
             "jwks": client2_jwks
         },
         "mtls": client1_mtls,
-        "mtls2": client2_mtls
+        "mtls2": client2_mtls,
+        "browser": browser_configuration.CONFIG[plan_name]["browser"],
+        "override": browser_configuration.CONFIG[plan_name]["override"]
     }
 
     json_config = json.dumps(config, indent=4)
@@ -242,6 +244,6 @@ set_service_provider_access_token_type(app2_id, app2_details, "JWT")
 configure_acr(app2_id)
 
 # generate config file for OIDC FAPI test plan
-json_config_builder(app1_details, app2_details, "config/IS_config_fapi.json", "fapi-basic")
+json_config_builder(app1_details, app2_details, "config/IS_config_fapi.json", "basic")
 
 # If the SP app auth method is MTLS, add relevant CA certs to IS keystore
