@@ -522,7 +522,7 @@ public class OAuth2TokenExchangeGrantTypeTestCase extends AbstractIdentityFedera
             }
         }
 
-        if(!success) {
+        if (!success) {
             throw new Exception("Failed to update service provider with inbound OIDC configs in secondary IS");
         }
     }
