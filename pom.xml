@@ -2170,45 +2170,38 @@
             <dependency>
                 <groupId>org.wso2.orbit.com.google.api-services-playintegrity</groupId>
                 <artifactId>google-api-services-playintegrity</artifactId>
-                <version>2.0.0.wso2v1</version>
+                <version>${com.google.api.playintegrity.version}</version>
             </dependency>
 
             <!--Google Library for oauth credentials-->
             <dependency>
                 <groupId>org.wso2.orbit.com.google.auth-library-oauth2-http</groupId>
                 <artifactId>google-auth-library-oauth2-http</artifactId>
-                <version>1.20.0.wso2v1</version>
+                <version>${com.google.auth.version}</version>
             </dependency>
 
             <!--Google Library for http client-->
             <dependency>
                 <groupId>org.wso2.orbit.com.google.http-client</groupId>
                 <artifactId>google-http-client</artifactId>
-                <version>1.43.3.wso2v1</version>
+                <version>${com.google.http.client.version}</version>
             </dependency>
-
-<!--            // TODO check delete-->
-<!--            <dependency>-->
-<!--                <groupId>org.wso2.orbit.com.google.oauth-client</groupId>-->
-<!--                <artifactId>google-oauth-client</artifactId>-->
-<!--                <version>1.33.3.wso2v1</version>-->
-<!--            </dependency>-->
 
             <!--Google Library for gson client-->
             <dependency>
                 <groupId>org.wso2.orbit.com.google.api-client</groupId>
                 <artifactId>google-api-client</artifactId>
-                <version>2.2.0.wso2v1</version>
+                <version>${com.google.api.client.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.orbit.io.opencensus</groupId>
                 <artifactId>opencensus</artifactId>
-                <version>0.31.1.wso2v1</version>
+                <version>${org.wso2.orbit.io.opencensus.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.orbit.io.grpc</groupId>
                 <artifactId>grpc-context</artifactId>
-                <version>1.27.2.wso2v1</version>
+                <version>${org.wso2.orbit.io.grpc.version}</version>
             </dependency>
             <!-- Pax Logging -->
             <dependency>
@@ -2359,7 +2352,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.25.491</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.25.496</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2633,11 +2626,12 @@
         <org.apache.logging.log4j.version>2.17.1</org.apache.logging.log4j.version>
         <org.apache.log4j.wso2.version>1.2.17.wso2v1</org.apache.log4j.wso2.version>
 
-        <com.google.api.playintegrity.version>1.0.0.wso2v1</com.google.api.playintegrity.version>
+        <com.google.api.playintegrity.version>2.0.0.wso2v1</com.google.api.playintegrity.version>
         <com.google.auth.version>1.20.0.wso2v1</com.google.auth.version>
         <com.google.http.client.version>1.43.3.wso2v1</com.google.http.client.version>
-        <com.google.gson.client.version>2.2.0.wso2v1</com.google.gson.client.version>
-
+        <com.google.api.client.version>2.2.0.wso2v1</com.google.api.client.version>
+        <org.wso2.orbit.io.opencensus.version>0.31.1.wso2v1</org.wso2.orbit.io.opencensus.version>
+        <org.wso2.orbit.io.grpc.version>1.59.0.wso2v1</org.wso2.orbit.io.grpc.version>
         <project.scm.id>my-scm-server</project.scm.id>
 
     </properties>
