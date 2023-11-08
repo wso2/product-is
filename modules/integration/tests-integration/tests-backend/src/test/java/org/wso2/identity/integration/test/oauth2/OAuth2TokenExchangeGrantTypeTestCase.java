@@ -66,8 +66,8 @@ import org.wso2.identity.integration.test.utils.UserUtil;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class OAuth2TokenExchangeGrantTypeTestCase extends AbstractIdentityFederationTestCase {
 
@@ -192,14 +192,20 @@ public class OAuth2TokenExchangeGrantTypeTestCase extends AbstractIdentityFedera
             dependsOnMethods = "testGetAccessTokenFromSecondaryIS")
     public void testTokenExchangeForFederatedUser() throws Exception {
 
+        String exchangedToken;
         List<NameValuePair> postParameters = getTokenExchangePostParameters();
 
         // assert local subject identifier config is disabled
-        AssertExchangedTokenForFederatedUser(postParameters);
+        exchangedToken = exchangeToken(postParameters);
+        Assert.assertEquals(getTokenSubject(exchangedToken), secondaryISUserId, "Subject of the exchanged " +
+                "token should be the same as the subject of the federated user");
+
 
         // assert local subject identifier config is optional, no local user available
         updateAssertLocalSubjectIdentifierConfig(IdentityConstants.AssertLocalSubjectMode.OPTIONAL);
-        AssertExchangedTokenForFederatedUser(postParameters);
+        exchangedToken = exchangeToken(postParameters);
+        Assert.assertEquals(getTokenSubject(exchangedToken), secondaryISUserId, "Subject of the exchanged " +
+                "token should be the same as the subject of the federated user");
 
         // create a similar user in primary IS
         createUser(PORT_OFFSET_0);
@@ -207,38 +213,58 @@ public class OAuth2TokenExchangeGrantTypeTestCase extends AbstractIdentityFedera
                 isServer.getContextTenant());
 
         //assert local subject identifier config is optional, local user is available and implicit association config is disabled
-        AssertExchangedTokenForFederatedUser(postParameters);
+        exchangedToken = exchangeToken(postParameters);
+        Assert.assertEquals(getTokenSubject(exchangedToken), secondaryISUserId, "Subject of the exchanged " +
+                "token should be the same as the subject of the federated user");
+    }
+
+    @Test(groups = "wso2.is", description = "Exchange access token for local user with implicit association config disabled",
+            dependsOnMethods = "testTokenExchangeForFederatedUser")
+    public void testTokenExchangeForLocalUserWithImplicitAssociationConfigDisabled() throws Exception {
+
+        //assert local subject identifier config is mandatory, implicit association config disabled, no associations
+        updateIdentityProviderAssociationConfig(false);
+        updateAssertLocalSubjectIdentifierConfig(IdentityConstants.AssertLocalSubjectMode.MANDATORY);
+        List<NameValuePair> postParameters = getTokenExchangePostParameters();
+        int responseCode = getResponseStatus(postParameters);
+        Assert.assertEquals(responseCode, 401, "401 response expected but got: " + responseCode);
+
     }
 
     @Test(groups = "wso2.is", description = "Exchange access token for local user",
-            dependsOnMethods = "testTokenExchangeForFederatedUser")
+            dependsOnMethods = "testTokenExchangeForLocalUserWithImplicitAssociationConfigDisabled")
     public void testTokenExchangeForLocalUser() throws Exception {
 
         //enable implicit association config and set lookup attribute to email
         updateIdentityProviderAssociationConfig(true);
         List<NameValuePair> postParameters = getTokenExchangePostParameters();
-        AssertExchangedTokenForLocalUser(postParameters);
+        String exchangedToken = exchangeToken(postParameters);
+        Assert.assertEquals(getTokenSubject(exchangedToken), primaryISUserId, "Subject of the exchanged " +
+                "token should be the same as the subject of the matching local user.");
     }
 
     @Test(groups = "wso2.is", description = "Exchange access token for local user with implicit association config disabled",
             dependsOnMethods = "testTokenExchangeForLocalUser")
-    public void testTokenExchangeForLocalUserWithImplicitAssociationConfigDisabled() throws Exception {
+    public void testTokenExchangeForAssociatedLocalUserWithImplicitAssociationConfigDisabled() throws Exception {
 
-        //assert local subject identifier config is mandatory, implicit association config disabled
+        //assert local subject identifier config is mandatory, implicit association config disabled, association exists
         updateIdentityProviderAssociationConfig(false);
         updateAssertLocalSubjectIdentifierConfig(IdentityConstants.AssertLocalSubjectMode.MANDATORY);
         List<NameValuePair> postParameters = getTokenExchangePostParameters();
-        AssertUnauthorizedResponse(postParameters);
+        String exchangedToken = exchangeToken(postParameters);
+        Assert.assertEquals(getTokenSubject(exchangedToken), primaryISUserId, "Subject of the exchanged " +
+                "token should be the same as the subject of the matching local user.");
     }
 
     @Test(groups = "wso2.is", description = "Exchange access token for local user with no local account",
-            dependsOnMethods = "testTokenExchangeForLocalUserWithImplicitAssociationConfigDisabled")
+            dependsOnMethods = "testTokenExchangeForAssociatedLocalUserWithImplicitAssociationConfigDisabled")
     public void testTokenExchangeForLocalUserWithNoLocalAccount() throws Exception {
 
         //assert local subject identifier config is mandatory, no matching local user account
         deleteUser(PORT_OFFSET_0, NEW_USER_USERNAME);
         List<NameValuePair> postParameters = getTokenExchangePostParameters();
-        AssertUnauthorizedResponse(postParameters);
+        int responseCode = getResponseStatus(postParameters);
+        Assert.assertEquals(responseCode, 401, "401 response expected but got: " + responseCode);
     }
 
     private List<NameValuePair> getTokenExchangePostParameters() {
@@ -251,35 +277,26 @@ public class OAuth2TokenExchangeGrantTypeTestCase extends AbstractIdentityFedera
         return postParameters;
     }
 
-    private void AssertExchangedTokenForFederatedUser(List<NameValuePair> postParameters) throws Exception {
+    private String exchangeToken(List<NameValuePair> postParameters) throws Exception {
 
         JSONObject responseObject = sendPOSTMessage(PRIMARY_IS_TOKEN_ENDPOINT, primaryISClientID, primaryISClientSecret,
                 postParameters);
         String exchangedToken = responseObject.get("access_token").toString();
-        Assert.assertNotNull(exchangedToken, "Access token is null.");
-        Assert.assertEquals(getTokenSubject(exchangedToken), secondaryISUserId, "Subject of the exchanged " +
-                "token should be the same as the subject of the subject token.");
+        if (StringUtils.isBlank(exchangedToken)) {
+            throw new Exception("Access token is null.");
+        }
+
+        return exchangedToken;
     }
 
-    private void AssertExchangedTokenForLocalUser(List<NameValuePair> postParameters) throws Exception {
-
-        JSONObject responseObject = sendPOSTMessage(PRIMARY_IS_TOKEN_ENDPOINT, primaryISClientID, primaryISClientSecret,
-                postParameters);
-        String exchangedToken = responseObject.get("access_token").toString();
-        Assert.assertNotNull(exchangedToken, "Access token is null.");
-        Assert.assertEquals(getTokenSubject(exchangedToken), primaryISUserId, "Subject of the exchanged " +
-                "token should be the same as the subject of the matching local user.");
-    }
-
-    private void AssertUnauthorizedResponse(List<NameValuePair> postParameters) throws Exception {
+    private int getResponseStatus(List<NameValuePair> postParameters) throws Exception {
 
         HttpPost httpPost = new HttpPost(PRIMARY_IS_TOKEN_ENDPOINT);
         httpPost.setHeader("Authorization", "Basic " + getBase64EncodedString(primaryISClientID, primaryISClientSecret));
         httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
         httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
         HttpResponse response = client.execute(httpPost);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 401, "401 response expected but got: " + response
-                .getStatusLine().getStatusCode());
+        return response.getStatusLine().getStatusCode();
     }
 
     private String getTokenSubject(String token) throws Exception {
@@ -303,15 +320,18 @@ public class OAuth2TokenExchangeGrantTypeTestCase extends AbstractIdentityFedera
         claimValues.add(claimValue);
         super.addUser(portOffset, OAuth2TokenExchangeGrantTypeTestCase.NEW_USER_USERNAME,
                 OAuth2TokenExchangeGrantTypeTestCase.NEW_USER_PASSWORD, null, DEFAULT_PROFILE, claimValues.toArray(new ClaimValue[0]));
-        HashSet<String> users = super.getUserList(PORT_OFFSET_1);
-        Assert.assertTrue(users.contains(OAuth2TokenExchangeGrantTypeTestCase.NEW_USER_USERNAME), "User creation failed in IS: " +
-                portOffset);
+        Set<String> users = super.getUserList(PORT_OFFSET_1);
+        if (users == null || !users.contains(OAuth2TokenExchangeGrantTypeTestCase.NEW_USER_USERNAME)) {
+            throw new Exception("User creation failed in IS: " + portOffset);
+        }
     }
 
     private void updateAssertLocalSubjectIdentifierConfig(IdentityConstants.AssertLocalSubjectMode updateMode) throws Exception {
 
         ServiceProvider serviceProvider = getServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SP_NAME);
-        Assert.assertNotNull(serviceProvider, "Failed to get service provider 'primarySP' in primary IS");
+        if (serviceProvider == null) {
+            throw new Exception("Failed to get service provider 'primarySP' in primary IS");
+        }
 
         switch (updateMode) {
             case OPTIONAL:
@@ -333,29 +353,31 @@ public class OAuth2TokenExchangeGrantTypeTestCase extends AbstractIdentityFedera
 
         switch (updateMode) {
             case OPTIONAL:
-                Assert.assertTrue(updatedServiceProvider.getClaimConfig().getAlwaysSendMappedLocalSubjectId(),
-                        "Always send mapped local subject id is not updated properly");
-                Assert.assertFalse(updatedServiceProvider.getClaimConfig().getMappedLocalSubjectMandatory(),
-                        "Mapped local subject mandatory is not updated properly");
+                if (!updatedServiceProvider.getClaimConfig().getAlwaysSendMappedLocalSubjectId() ||
+                        updatedServiceProvider.getClaimConfig().getMappedLocalSubjectMandatory()) {
+                    throw new Exception("Assert local subject identifier configuration is not updated properly");
+                }
                 break;
             case MANDATORY:
-                Assert.assertTrue(updatedServiceProvider.getClaimConfig().getAlwaysSendMappedLocalSubjectId(),
-                        "Always send mapped local subject id is not updated properly");
-                Assert.assertTrue(updatedServiceProvider.getClaimConfig().getMappedLocalSubjectMandatory(),
-                        "Mapped local subject mandatory is not updated properly");
+                if (!updatedServiceProvider.getClaimConfig().getAlwaysSendMappedLocalSubjectId() ||
+                        !updatedServiceProvider.getClaimConfig().getMappedLocalSubjectMandatory()) {
+                    throw new Exception("Assert local subject identifier configuration is not updated properly");
+                }
                 break;
             default:
-                Assert.assertFalse(updatedServiceProvider.getClaimConfig().getAlwaysSendMappedLocalSubjectId(),
-                        "Always send mapped local subject id is not updated properly");
-                Assert.assertFalse(updatedServiceProvider.getClaimConfig().getMappedLocalSubjectMandatory(),
-                        "Mapped local subject mandatory is not updated properly");
+                if (updatedServiceProvider.getClaimConfig().getAlwaysSendMappedLocalSubjectId() ||
+                        updatedServiceProvider.getClaimConfig().getMappedLocalSubjectMandatory()) {
+                    throw new Exception("Assert local subject identifier configuration is not updated properly");
+                }
         }
     }
 
     private void updateIdentityProviderAssociationConfig(boolean enabled) throws Exception {
 
         IdentityProvider identityProvider = super.getIdentityProvider(PORT_OFFSET_0, PRIMARY_IS_IDP_NAME);
-        Assert.assertNotNull(identityProvider, "Failed to get identity provider 'trustedIdP' in primary IS");
+        if (identityProvider == null) {
+            throw new Exception("Failed to get identity provider 'trustedIdP' in primary IS");
+        }
 
         identityProvider.getFederatedAssociationConfig().setEnabled(enabled);
         if (enabled) {
@@ -366,15 +388,18 @@ public class OAuth2TokenExchangeGrantTypeTestCase extends AbstractIdentityFedera
         super.updateIdentityProvider(PORT_OFFSET_0, PRIMARY_IS_IDP_NAME, identityProvider);
 
         IdentityProvider updatedIdentityProvider = super.getIdentityProvider(PORT_OFFSET_0, PRIMARY_IS_IDP_NAME);
-        Assert.assertNotNull(updatedIdentityProvider, "Failed to get identity provider 'trustedIdP' in primary IS");
+        if (updatedIdentityProvider == null) {
+            throw new Exception("Failed to get updated identity provider 'trustedIdP' in primary IS");
+        }
         if (enabled) {
-            Assert.assertTrue(updatedIdentityProvider.getFederatedAssociationConfig().getEnabled(), "Federated " +
-                    "association config is not updated properly");
-            Assert.assertEquals(updatedIdentityProvider.getFederatedAssociationConfig().getLookupAttributes()[0],
-                    EMAIL_CLAIM_URI, "Federated association config is not updated properly");
+            if (!updatedIdentityProvider.getFederatedAssociationConfig().getEnabled() ||
+                    !EMAIL_CLAIM_URI.equals(updatedIdentityProvider.getFederatedAssociationConfig().getLookupAttributes()[0])) {
+                throw new Exception("Federated association config is not updated properly");
+            }
         } else {
-            Assert.assertFalse(updatedIdentityProvider.getFederatedAssociationConfig().getEnabled(), "Federated " +
-                    "association config is not updated properly");
+            if (updatedIdentityProvider.getFederatedAssociationConfig().getEnabled()) {
+                throw new Exception("Federated association config is not updated properly");
+            }
         }
 
     }
@@ -382,16 +407,22 @@ public class OAuth2TokenExchangeGrantTypeTestCase extends AbstractIdentityFedera
     private void updateServiceProviderRequestedClaimsInSecondaryIS() throws Exception {
 
         ServiceProvider serviceProvider = getServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SP_NAME);
-        Assert.assertNotNull(serviceProvider, "Failed to get service provider 'primarySP' in primary IS");
+        if (serviceProvider == null) {
+            throw new Exception("Failed to get service provider 'secondarySP' in secondary IS");
+        }
 
         List<ClaimMapping> claimMappings = getClaimMappings();
         serviceProvider.getClaimConfig().setClaimMappings(claimMappings.toArray(new ClaimMapping[0]));
 
         super.updateServiceProvider(PORT_OFFSET_1, serviceProvider);
         ServiceProvider updatedServiceProvider = getServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SP_NAME);
-        Assert.assertNotNull(updatedServiceProvider, "Failed to get service provider 'primarySP' in primary IS");
-        Assert.assertNotNull(updatedServiceProvider.getClaimConfig().getClaimMappings(), "Claim mappings are not " +
-                "updated properly");
+        if (updatedServiceProvider == null) {
+            throw new Exception("Failed to get updated service provider 'secondarySP' in secondary IS");
+        }
+
+        if (updatedServiceProvider.getClaimConfig().getClaimMappings() == null) {
+            throw new Exception("Claim mappings are not updated properly");
+        }
     }
 
     private List<ClaimMapping> getClaimMappings() {
@@ -440,7 +471,9 @@ public class OAuth2TokenExchangeGrantTypeTestCase extends AbstractIdentityFedera
         super.addServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SP_NAME);
 
         ServiceProvider serviceProvider = getServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SP_NAME);
-        Assert.assertNotNull(serviceProvider, "Failed to create service provider 'travelocity' in primary IS");
+        if (serviceProvider == null) {
+            throw new Exception("Failed to create service provider 'travelocity' in primary IS");
+        }
 
         updateServiceProviderWithOIDCConfigs(PORT_OFFSET_0, PRIMARY_IS_SP_NAME, serviceProvider);
 
@@ -457,7 +490,10 @@ public class OAuth2TokenExchangeGrantTypeTestCase extends AbstractIdentityFedera
                 }
             }
         }
-        Assert.assertTrue(success, "Failed to update service provider with inbound OIDC configs in primary IS");
+
+        if (!success) {
+            throw new Exception("Failed to update service provider with inbound OIDC configs in primary IS");
+        }
     }
 
     private void createServiceProviderInSecondaryIS() throws Exception {
@@ -465,7 +501,9 @@ public class OAuth2TokenExchangeGrantTypeTestCase extends AbstractIdentityFedera
         super.addServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SP_NAME);
 
         ServiceProvider serviceProvider = getServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SP_NAME);
-        Assert.assertNotNull(serviceProvider, "Failed to create service provider 'travelocity' in secondary IS");
+        if (serviceProvider == null) {
+            throw new Exception("Failed to create service provider 'travelocity' in secondary IS");
+        }
 
         updateServiceProviderWithOIDCConfigs(PORT_OFFSET_1, SECONDARY_IS_SP_NAME, serviceProvider);
 
@@ -483,7 +521,10 @@ public class OAuth2TokenExchangeGrantTypeTestCase extends AbstractIdentityFedera
 
             }
         }
-        Assert.assertTrue(success, "Failed to update service provider with inbound OIDC configs in secondary IS");
+
+        if(!success) {
+            throw new Exception("Failed to update service provider with inbound OIDC configs in secondary IS");
+        }
     }
 
     private void createIdentityProviderInPrimaryIS() throws Exception {
@@ -502,8 +543,9 @@ public class OAuth2TokenExchangeGrantTypeTestCase extends AbstractIdentityFedera
         identityProvider.setIdpProperties(properties);
 
         super.addIdentityProvider(PORT_OFFSET_0, identityProvider);
-        Assert.assertNotNull(getIdentityProvider(PORT_OFFSET_0, PRIMARY_IS_IDP_NAME), "Failed to create " +
-                "Identity Provider 'trustedIdP' in primary IS");
+        if (getIdentityProvider(PORT_OFFSET_0, PRIMARY_IS_IDP_NAME) == null) {
+            throw new Exception("Failed to create Identity Provider 'trustedIdP' in primary IS");
+        }
     }
 
     private OAuthConsumerAppDTO getOAuthConsumerAppDTO(OIDCApplication application) {
