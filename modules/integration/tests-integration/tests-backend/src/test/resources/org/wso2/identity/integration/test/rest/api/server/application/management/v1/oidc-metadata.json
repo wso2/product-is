@@ -101,12 +101,12 @@
         "displayName": "Client Secret Post"
       },
       {
-        "name": "tls_client_auth",
-        "displayName": "Mutual TLS"
-      },
-      {
         "name": "private_key_jwt",
         "displayName": "Private Key JWT"
+      },
+      {
+        "name": "tls_client_auth",
+        "displayName": "Mutual TLS"
       },
       {
         "name": "client_secret_basic",
