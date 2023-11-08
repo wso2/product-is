@@ -258,6 +258,31 @@ CONSENT = {
     ]
 }
 
+CONSENT_DENY = {
+    "task": "Consent",
+    "match": constants.BASE_URL + "/authenticationendpoint/oauth2_consent*",
+    "optional": True,
+    "commands": [
+        [
+            "wait",
+            "class",
+            "ui fluid large button secondary",
+            10
+        ],
+        [
+            "click",
+            "class",
+            "ui fluid large button secondary"
+        ],
+        [
+            "wait",
+            "contains",
+            "callback",
+            10
+        ]
+    ]
+}
+
 LOGIN_BASIC = {
     "task": "Login",
     "match": constants.BASE_URL + "/authenticationendpoint/login*",
@@ -367,12 +392,25 @@ CONFIG = {
                 "match": constants.BASE_URL + "/oauth2/authorize*",
                 "tasks": [
                     LOGIN_BASIC,
+                    WAIT_CONSENT,
                     VERIFY_COMPLETE
 
                 ]
             }
         ],
         "override": {
+            "fapi1-advanced-final-user-rejects-authentication":{
+                "browser": [
+                    {
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
+                        "tasks": [
+                            LOGIN_BASIC,
+                            CONSENT_DENY,
+                            VERIFY_COMPLETE
+                        ]
+                    }
+                ]
+            },
             "oidcc-refresh-token": {
                 "browser": [
                     {
@@ -389,7 +427,7 @@ CONFIG = {
                     }
                 ]
             },
-            "oidcc-ensure-registered-redirect-uri": {
+            "fapi1-advanced-final-ensure-registered-redirect-uri": {
                 "browser": [
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
@@ -399,7 +437,7 @@ CONFIG = {
                     }
                 ]
             },
-            "oidcc-ensure-request-object-with-redirect-uri": {
+            "fapi1-advanced-final-ensure-redirect-uri-in-authorization-request": {
                 "browser": [
                     {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
