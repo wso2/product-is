@@ -97,6 +97,8 @@ def get_service_provider_details(application_id):
 def set_service_provider_access_token_type(application_id, app_details, token_type):
     body = app_details
     body['accessToken']['type'] = token_type
+    body['accessToken']['bindingType'] = "certificate"
+    body['accessToken']['validateTokenBinding'] = "true"
     body['pushAuthorizationRequest']['requirePushAuthorizationRequest'] = False
 
     print(">>> Set access token type...")
@@ -248,3 +250,4 @@ configure_acr(app2_id)
 json_config_builder(app1_details, app2_details, "config/IS_config_fapi.json", "basic")
 
 # If the SP app auth method is MTLS, add relevant CA certs to IS keystore
+# Need seperate 2 users to deny consent
