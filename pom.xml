@@ -2381,7 +2381,7 @@
         <identity.outbound.auth.requestpath.oauth.version>5.5.4</identity.outbound.auth.requestpath.oauth.version>
 
         <!-- Social Authenticator Versions -->
-        <social.authenticator.facebook.version>5.2.7</social.authenticator.facebook.version>
+        <social.authenticator.facebook.version>5.2.8</social.authenticator.facebook.version>
         <social.authenticator.google.version>5.2.14</social.authenticator.google.version>
         <social.authenticator.windowslive.version>5.2.2</social.authenticator.windowslive.version>
         <social.authenticator.apple.version>1.0.4</social.authenticator.apple.version>
