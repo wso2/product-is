@@ -201,6 +201,21 @@ def json_config_builder(service_provider_1, service_provider_2, output_file_path
     f.write(json_config)
     f.close()
 
+def createNewUser(username, password):
+    try:
+        body = {"userName":username,"password":password}
+        response = requests.post(url=constants.CREATE_USER_ENDPOINT, headers=constants.HEADERS_WITH_AUTH,
+                                 data=json.dumps(body), verify=False)
+        response.raise_for_status()
+        print("\n>>> User created successfully.")
+    except HTTPError as http_error:
+        print(http_error)
+        print(response.text)
+        exit(1)
+    except Exception as error:
+        print("\nError occurred: " + str(error))
+        exit(1)
+
 # returns true if the process with given name is running
 def is_process_running(process_name):
     process_list = []
@@ -249,5 +264,6 @@ configure_acr(app2_id)
 # generate config file for OIDC FAPI test plan
 json_config_builder(app1_details, app2_details, "config/IS_config_fapi.json", "basic")
 
+createNewUser("user1", "password")
+
 # If the SP app auth method is MTLS, add relevant CA certs to IS keystore
-# Need seperate 2 users to deny consent
