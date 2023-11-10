@@ -2335,7 +2335,7 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.11.26</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.11.190</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.11.191</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.9.5</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.10.18</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.4</identity.inbound.provisioning.scim.version>
@@ -2402,7 +2402,7 @@
 
         <!-- OAuth2 Grant Type extensions -->
         <identity.oauth2.jwt.bearer.grant.version>2.2.1</identity.oauth2.jwt.bearer.grant.version>
-        <identity.oauth2.token.exchange.grant.version>1.1.4</identity.oauth2.token.exchange.grant.version>
+        <identity.oauth2.token.exchange.grant.version>1.1.5</identity.oauth2.token.exchange.grant.version>
 
         <!--SAML Metadata-->
         <identity.metadata.saml.version>1.7.7</identity.metadata.saml.version>
@@ -2421,7 +2421,7 @@
         <identity.extension.utils>1.0.14</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.0.1</authenticator.auth.otp.commons.version>
 
-        <identity.org.mgt.version>1.3.113</identity.org.mgt.version>
+        <identity.org.mgt.version>1.3.114</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.0.85</identity.org.mgt.core.version>
         <identity.organization.login.version>1.1.24</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.18</identity.oauth2.grant.organizationswitch.version>
@@ -2445,9 +2445,9 @@
         <conditional.authentication.functions.version>1.2.36</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.5.30</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.2.11</identity.apps.myaccount.version>
-        <identity.apps.core.version>2.0.44</identity.apps.core.version>
+        <identity.apps.console.version>2.5.31</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.2.12</identity.apps.myaccount.version>
+        <identity.apps.core.version>2.0.45</identity.apps.core.version>
         <identity.apps.tests.version>1.6.373</identity.apps.tests.version>
 
         <!-- Charon -->
