@@ -84,6 +84,8 @@ jobs:
 
           cp "$zip_file" ./../../
           cd ../..
+          ls
+          echo "Remove cloned-product-is directory"
           rm -rf cloned-product-is
           ls
         else
