@@ -264,6 +264,6 @@ configure_acr(app2_id)
 # generate config file for OIDC FAPI test plan
 json_config_builder(app1_details, app2_details, "config/IS_config_fapi.json", "basic")
 
-createNewUser("user1", "password")
+createNewUser("user1", "User1@password")
 
 # If the SP app auth method is MTLS, add relevant CA certs to IS keystore

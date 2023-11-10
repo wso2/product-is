@@ -118,7 +118,7 @@ LOGIN_BEFORE_CONSENT_USER1 = {
             "text",
             "id",
             "password",
-            "password"
+            "User1@password"
         ],
         [
             "click",
