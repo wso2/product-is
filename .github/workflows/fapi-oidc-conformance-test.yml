@@ -73,7 +73,7 @@ jobs:
           fi
 
           # Find a zip file with a specific name format
-          zip_file=$(find . -name 'wso2is-*.zip' -type f -print -quit)
+          zip_file=$(find . -name 'wso2is-*.zip' -type f -not -name 'wso2is-*-src.zip' -print -quit)
 
           # Check if a zip file was found
           if [[ -z "$zip_file" ]]; then
@@ -83,6 +83,7 @@ jobs:
 
           # Do something with the zip file
           echo "Zip file found: $zip_file"
+          echo "Copying zip file to the root directory ..."
 
           cp "$zip_file" ./../../
         else
