@@ -61,7 +61,7 @@ public class LegacyJDBCUserStoreAddingTestCase extends ISIntegrationTest {
 	private static final String DOMAIN_ID = "LEGACY.WSO2TEST.COM";
 	private static final String NEW_USER_NAME = DOMAIN_ID + "/legacyUserStoreUser";
 	private static final String NEW_USER_ROLE = DOMAIN_ID + "/jdbcLegacyUserStoreRole";
-	private static final String NEW_USER_PASSWORD = "password";
+	private static final String NEW_USER_PASSWORD = "Wso2@test";
 	private static final String USER_STORE_DB_NAME = "LEGACY_JDBC_USER_STORE_ADDING_DB";
 	private static final String DB_USER_NAME = "wso2automation";
 	private static final String DB_USER_PASSWORD = "wso2automation";
@@ -136,9 +136,9 @@ public class LegacyJDBCUserStoreAddingTestCase extends ISIntegrationTest {
 
 		String loginRole = "login";
 		String secondaryUsername = DOMAIN_ID + "/user4219";
-		String secondaryUserPassword = "password2";
+		String secondaryUserPassword = "Password@2";
 		String primaryUsername = "user4219";
-		String primaryUserPassword = "password1";
+		String primaryUserPassword = "Password@1";
 
 		userMgtClient = new UserManagementClient(backendURL, getSessionCookie());
 		authenticatorClient = new AuthenticatorClient(backendURL);
@@ -168,7 +168,7 @@ public class LegacyJDBCUserStoreAddingTestCase extends ISIntegrationTest {
 	public void changePassWordByUserTest() {
 
 		try {
-			userMgtClient.changePasswordByUser(NEW_USER_NAME, NEW_USER_PASSWORD, "password2");
+			userMgtClient.changePasswordByUser(NEW_USER_NAME, NEW_USER_PASSWORD, "Wso2@test2");
 		} catch (UserAdminUserAdminException | RemoteException e) {
 			Assert.fail("password change by user for secondary User Store failed");
 		}

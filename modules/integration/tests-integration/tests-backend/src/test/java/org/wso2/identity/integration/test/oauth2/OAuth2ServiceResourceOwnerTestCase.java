@@ -69,7 +69,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 	private SCIM2RestClient scim2RestClient;
 
 	private static final String lockedUser = "test_locked_user";
-	private static final String lockedUserPassword = "test_locked_user_pass";
+	private static final String lockedUserPassword = "Test_locked_user_pass@123";
 	private final String username;
 	private final String tenantAwareUsername;
 	private final String userPassword;

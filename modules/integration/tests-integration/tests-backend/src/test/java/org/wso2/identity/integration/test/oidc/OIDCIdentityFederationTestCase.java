@@ -109,7 +109,7 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
     private static final String PRIMARY_IS_IDP_CALLBACK_URL = "https://localhost:9853/commonauth";
 
     private static final String SECONDARY_IS_TEST_USERNAME = "testFederatedUser";
-    private static final String SECONDARY_IS_TEST_PASSWORD = "testFederatePassword";
+    private static final String SECONDARY_IS_TEST_PASSWORD = "TestFederatePassword@123";
     private static final String SECONDARY_IS_TEST_USER_ROLES = "admin";
 
     private static final String SECONDARY_IS_SP_NAME = "secondarySP";

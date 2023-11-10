@@ -43,7 +43,7 @@ public class ChallengeQuestionManagementAdminServiceTestCase extends ISIntegrati
     private static final String PROFILE_NAME = "default";
 
     private static final String BOB_USERNAME = "Bob";
-    private static final String BOB_PASSWORD = "Bob@123";
+    private static final String BOB_PASSWORD = "Bob@1234";
     private static final String BOB_LOCALE = "xx_YY";
     private static final String LOGIN_ROLE = "loginRole";
 

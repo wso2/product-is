@@ -5,7 +5,7 @@
     "lastName": "Berry"
   },
   "userName": "userkim",
-  "password": "abc123",
+  "password": "Wso2@test123",
   "urn:scim:wso2:schema": {
     "country": "France",
     "manager": {

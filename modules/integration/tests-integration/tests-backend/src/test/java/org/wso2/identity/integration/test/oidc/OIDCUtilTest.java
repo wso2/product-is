@@ -46,7 +46,7 @@ public class OIDCUtilTest {
     protected HttpClient client;
     protected static Map<String, OIDCApplication> applications = new HashMap<>(2);
     public static final String username = "oidcsessiontestuser";
-    public static final String password = "oidcsessiontestuser";
+    public static final String password = "Oidcsessiontestuser@123";
     public static final String email = "oidcsessiontestuser@wso2.com";
     public static final String firstName = "oidcsessiontestuser-first";
     public static final String lastName = "oidcsessiontestuser-last";
