@@ -84,7 +84,7 @@ jobs:
           # Do something with the zip file
           echo "Zip file found: $zip_file"
 
-          cp "$zip_file" /../../
+          cp "$zip_file" ./../../
         else
           if [[ -z "${INPUT_URL}" ]] && [[ -z "${INPUT_TAG}" ]]; then
             echo "Either 'tag' or 'download-url' must be provided."
