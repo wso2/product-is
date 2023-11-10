@@ -72,20 +72,20 @@ jobs:
             exit 1
           fi
 
-          # Find a zip file with a specific name format
           zip_file=$(find . -name 'wso2is-*.zip' -type f -not -name 'wso2is-*-src.zip' -print -quit)
 
-          # Check if a zip file was found
           if [[ -z "$zip_file" ]]; then
             echo "Zip file not found"
             exit 1
           fi
 
-          # Do something with the zip file
           echo "Zip file found: $zip_file"
           echo "Copying zip file to the root directory ..."
 
           cp "$zip_file" ./../../
+          cd ../..
+          rm -rf cloned-product-is
+          ls
         else
           if [[ -z "${INPUT_URL}" ]] && [[ -z "${INPUT_TAG}" ]]; then
             echo "Either 'tag' or 'download-url' must be provided."
