@@ -266,4 +266,4 @@ json_config_builder(app1_details, app2_details, "config/IS_config_fapi.json", "b
 
 createNewUser("user1", "User1@password")
 
-# If the SP app auth method is MTLS, add relevant CA certs to IS keystore
+# Add relevant CA certs to IS keystore

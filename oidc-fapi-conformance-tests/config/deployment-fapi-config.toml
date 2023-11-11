@@ -75,6 +75,8 @@ app_password= "dashboard"
 
 
 # FAPI
+[oauth.dcr]
+enable_fapi_enforcement = true
 
 [oauth.oidc]
 id_token.signature_algorithm="PS256"
@@ -138,28 +140,28 @@ name= "org.wso2.carbon.identity.oauth2.token.handler.clientauth.mutualtls.Mutual
 order = 158
 enable = true
 
-[[event_listener]]
-id = "introspection_response_interceptor"
-type = "org.wso2.carbon.identity.core.handler.AbstractIdentityHandler"
-name="org.wso2.carbon.identity.oauth2.token.handler.clientauth.mutualtls.introspection.IntrospectionResponseInterceptor"
-order=27
-enable=true
+# [[event_listener]]
+# id = "introspection_response_interceptor"
+# type = "org.wso2.carbon.identity.core.handler.AbstractIdentityHandler"
+# name="org.wso2.carbon.identity.oauth2.token.handler.clientauth.mutualtls.introspection.IntrospectionResponseInterceptor"
+# order=27
+# enable=true
 
-[[event_listener]]
-id = "is_introspection_data_provider"
-type = "org.wso2.carbon.identity.core.handler.AbstractIdentityHandler"
-name= "org.wso2.carbon.identity.oauth2.token.handler.clientauth.mutualtls.introspection.ISIntrospectionDataProvider"
-order=28
-enable=true
+# [[event_listener]]
+# id = "is_introspection_data_provider"
+# type = "org.wso2.carbon.identity.core.handler.AbstractIdentityHandler"
+# name= "org.wso2.carbon.identity.oauth2.token.handler.clientauth.mutualtls.introspection.ISIntrospectionDataProvider"
+# order=28
+# enable=true
 
-[oauth.grant_type.authorization_code]
-grant_handler = "org.wso2.carbon.identity.oauth2.token.handler.clientauth.mutualtls.handlers.MTLSTokenBindingAuthorizationCodeGrantHandler"
+# [oauth.grant_type.authorization_code]
+# grant_handler = "org.wso2.carbon.identity.oauth2.token.handler.clientauth.mutualtls.handlers.MTLSTokenBindingAuthorizationCodeGrantHandler"
 
-[oauth.grant_type.client_credentials]
-grant_handler = "org.wso2.carbon.identity.oauth2.token.handler.clientauth.mutualtls.handlers.MTLSTokenBindingClientCredentialsGrantHandler"
+# [oauth.grant_type.client_credentials]
+# grant_handler = "org.wso2.carbon.identity.oauth2.token.handler.clientauth.mutualtls.handlers.MTLSTokenBindingClientCredentialsGrantHandler"
 
-[oauth.grant_type.refresh_token]
-grant_handler = "org.wso2.carbon.identity.oauth2.token.handler.clientauth.mutualtls.handlers.MTLSTokenBindingRefreshGrantHandler"
+# [oauth.grant_type.refresh_token]
+# grant_handler = "org.wso2.carbon.identity.oauth2.token.handler.clientauth.mutualtls.handlers.MTLSTokenBindingRefreshGrantHandler"
 
 [oauth.grant_type.uma_ticket]
 retrieve_uma_permission_info_through_introspection = true
