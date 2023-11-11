@@ -135,6 +135,20 @@ def configure_acr(application_id):
     else:
         print(">>> ACR script saved successfully.")
 
+def addCertsToKeystore(rootCertPath, issuerCertPath, ISPath):
+    print(">>> Adding certs to keystore...")
+    try:
+        # add root cert to keystore
+        os.system("keytool -import -noprompt -trustcacerts -alias obroot -file " + rootCertPath + " -storetype JKS -keystore " + ISPath + "/repository/resources/security/client-truststore.jks -storepass wso2carbon")
+        # add issuer cert to keystore
+        os.system("keytool -import -noprompt -trustcacerts -alias obissuer -file " + issuerCertPath + " -storetype JKS -keystore " + ISPath + "/repository/resources/security/client-truststore.jks -storepass wso2carbon")
+    except Exception as error:
+        print("\nError occurred: " + str(error))
+        exit(1)
+    else:
+        print(">>> Certs added to keystore successfully.")
+
+
 # unpack product-is zip file and run
 def unpack_and_run(zip_file_name):
     try:
@@ -144,6 +158,7 @@ def unpack_and_run(zip_file_name):
             zip_file.extractall()
 
         dir_name = ''
+
         # start identity server
         print("\n>>> Starting Server")
         dir_list = os.listdir()
@@ -155,6 +170,11 @@ def unpack_and_run(zip_file_name):
                 break
 
         os.chmod("./" + dir_name + "/bin/wso2server.sh", 0o777)
+
+        # add root issuer certs to keystore
+        ISPath = "./" + dir_name
+        addCertsToKeystore("config/sandbox-certs/OB_SandBox_PP_Root_CA.cer", "config/sandbox-certs/OB_SandBox_PP_Issuing_CA.cer", ISPath)
+
         process = subprocess.Popen("./" + dir_name + "/bin/wso2server.sh", stdout=subprocess.PIPE)
         while True:
             output = process.stdout.readline()
