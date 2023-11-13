@@ -4,8 +4,8 @@ name: FAPI-OIDC-Conformance-Test
 
 on:
   schedule:
-    # Everyday at 02:30 UTC (8:00 AM SL time)
-    - cron:  '30 2 * * *'
+    # Everyday at 08:30 UTC (2:00 AM SL time)
+    - cron:  '30 20 * * *'
   # Allows the workflow to run automatically after a release
   release:
     types: [published]
