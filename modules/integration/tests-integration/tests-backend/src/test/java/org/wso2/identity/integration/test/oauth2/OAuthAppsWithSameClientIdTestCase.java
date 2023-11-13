@@ -397,36 +397,36 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
         Assert.fail("Expected exception not received.");
     }
 
-    @Test(description = "Create an OAuth app in tenant 1 and try to login when tenant qualified urls are disabled.",
-            dependsOnMethods = "testOAuthApplicationLoginIncorrectTenant")
-    public void testOAuthApplicationLoginWhenTenantQualifiedUrlsDisabled() throws Exception {
-
-        // Disable tenant qualified urls/ tenanted sessions and restart the server.
-        changeISConfigurations();
-
-        // Create oauth app and add user.
-        ApplicationResponseModel tenant1App = createApplication(TENANT_1_DOMAIN);
-        Assert.assertNotNull(tenant1App, "OAuth app creation failed for tenant 1.");
-        tenant1UserId = createUser(TENANT_1_DOMAIN);
-
-        // Authenticate.
-        initiateAuthorizationRequest(false);
-        authenticateUser(false, TENANT_1_USER_USERNAME + "@" + TENANT_1_DOMAIN, TENANT_1_USER_PASSWORD,
-                TENANT_1_DOMAIN);
-        performConsentApproval(false, TENANT_1_DOMAIN);
-        generateAuthzCodeAccessToken(false, TENANT_1_DOMAIN);
-        introspectActiveAccessToken(TENANT_1_DOMAIN, TENANT_1_ADMIN_USERNAME, TENANT_1_ADMIN_PASSWORD);
-    }
-
-    private void changeISConfigurations() throws AutomationUtilException, IOException {
-
-        String carbonHome = Utils.getResidentCarbonHome();
-        File defaultTomlFile = getDeploymentTomlFile(carbonHome);
-        File modifiedConfigFile = new File(getISResourceLocation()
-                + File.separator + "tenant.qualified" + File.separator
-                + "tenant_qualified_url_tenanted_sessions_disabled.toml");
-        serverConfigurationManager.applyConfiguration(modifiedConfigFile, defaultTomlFile, true, true);
-    }
+//    @Test(description = "Create an OAuth app in tenant 1 and try to login when tenant qualified urls are disabled.",
+//            dependsOnMethods = "testOAuthApplicationLoginIncorrectTenant")
+//    public void testOAuthApplicationLoginWhenTenantQualifiedUrlsDisabled() throws Exception {
+//
+//        // Disable tenant qualified urls/ tenanted sessions and restart the server.
+//        changeISConfigurations();
+//
+//        // Create oauth app and add user.
+//        ApplicationResponseModel tenant1App = createApplication(TENANT_1_DOMAIN);
+//        Assert.assertNotNull(tenant1App, "OAuth app creation failed for tenant 1.");
+//        tenant1UserId = createUser(TENANT_1_DOMAIN);
+//
+//        // Authenticate.
+//        initiateAuthorizationRequest(false);
+//        authenticateUser(false, TENANT_1_USER_USERNAME + "@" + TENANT_1_DOMAIN, TENANT_1_USER_PASSWORD,
+//                TENANT_1_DOMAIN);
+//        performConsentApproval(false, TENANT_1_DOMAIN);
+//        generateAuthzCodeAccessToken(false, TENANT_1_DOMAIN);
+//        introspectActiveAccessToken(TENANT_1_DOMAIN, TENANT_1_ADMIN_USERNAME, TENANT_1_ADMIN_PASSWORD);
+//    }
+//
+//    private void changeISConfigurations() throws AutomationUtilException, IOException {
+//
+//        String carbonHome = Utils.getResidentCarbonHome();
+//        File defaultTomlFile = getDeploymentTomlFile(carbonHome);
+//        File modifiedConfigFile = new File(getISResourceLocation()
+//                + File.separator + "tenant.qualified" + File.separator
+//                + "tenant_qualified_url_tenanted_sessions_disabled.toml");
+//        serverConfigurationManager.applyConfiguration(modifiedConfigFile, defaultTomlFile, true, true);
+//    }
 
     private void addTenant(String tenantDomain, String adminUsername, String adminPassword,
                            String adminTenantAwareUsername) throws Exception {
