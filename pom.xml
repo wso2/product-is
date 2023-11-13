@@ -2335,7 +2335,7 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.11.26</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.11.191</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.11.192</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.9.5</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.10.18</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.4</identity.inbound.provisioning.scim.version>
@@ -2390,7 +2390,7 @@
         <provisioning.connector.google.version>5.2.3</provisioning.connector.google.version>
         <provisioning.connector.salesforce.version>5.2.4</provisioning.connector.salesforce.version>
         <provisioning.connector.scim.version>5.3.1</provisioning.connector.scim.version>
-        <provisioning.connector.scim2.version>2.0.3</provisioning.connector.scim2.version>
+        <provisioning.connector.scim2.version>2.0.4</provisioning.connector.scim2.version>
 
         <!-- Local Authenticator Versions -->
         <identity.local.auth.basicauth.version>6.7.28</identity.local.auth.basicauth.version>
@@ -2414,7 +2414,7 @@
         <authenticator.smsotp.version>3.3.14</authenticator.smsotp.version>
         <authenticator.magiclink.version>1.1.15</authenticator.magiclink.version>
         <authenticator.emailotp.version>4.1.20</authenticator.emailotp.version>
-        <authenticator.local.auth.emailotp.version>1.0.6</authenticator.local.auth.emailotp.version>
+        <authenticator.local.auth.emailotp.version>1.0.7</authenticator.local.auth.emailotp.version>
         <authenticator.local.auth.smsotp.version>1.0.2</authenticator.local.auth.smsotp.version>
         <authenticator.twitter.version>1.1.1</authenticator.twitter.version>
         <authenticator.x509.version>3.1.12</authenticator.x509.version>
@@ -2445,9 +2445,9 @@
         <conditional.authentication.functions.version>1.2.36</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.6.0</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.2.13</identity.apps.myaccount.version>
-        <identity.apps.core.version>2.0.46</identity.apps.core.version>
+        <identity.apps.console.version>2.6.2</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.2.14</identity.apps.myaccount.version>
+        <identity.apps.core.version>2.0.47</identity.apps.core.version>
         <identity.apps.tests.version>1.6.373</identity.apps.tests.version>
 
         <!-- Charon -->
