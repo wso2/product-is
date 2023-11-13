@@ -90,7 +90,8 @@
       "None",
       "cookie",
       "sso-session",
-      "device-flow"
+      "device-flow",
+      "certificate"
     ],
     "defaultValue": "None"
   },
