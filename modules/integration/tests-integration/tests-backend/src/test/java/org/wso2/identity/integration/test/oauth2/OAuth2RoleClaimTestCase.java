@@ -57,7 +57,7 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
     private static final String WORK_ATTRIBUTE = "work";
     private static final String WORK_EMAIL = "testuser99@wso2.com";
     private static final String USER_USERNAME = "testuser99";
-    private static final String USER_PASSWORD = "testuser@123";
+    private static final String USER_PASSWORD = "Testuser@123";
     private static final String EMPLOYEE_NUMBER = "Abc123";
     private static final String MANAGER_NAME = "wso2TestManage";
 

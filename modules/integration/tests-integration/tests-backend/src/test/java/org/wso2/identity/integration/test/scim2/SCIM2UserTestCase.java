@@ -79,7 +79,7 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
     private static final String EMAIL_TYPE_HOME_CLAIM_VALUE = "scim2user@gmail.com";
     public static final String USERNAME = "scim2user";
     public static final String USERNAME_1 = "scim2user1";
-    public static final String PASSWORD = "testPassword";
+    public static final String PASSWORD = "Wso2@test";
     private ClaimMetadataManagementServiceClient claimMetadataManagementServiceClient = null;
     private String backendURL;
     private String sessionCookie;

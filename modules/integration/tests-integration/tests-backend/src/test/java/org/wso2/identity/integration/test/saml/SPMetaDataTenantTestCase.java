@@ -49,7 +49,7 @@ public class SPMetaDataTenantTestCase extends ISIntegrationTest {
     private static final String ISSUER = "metadata-sp";
     private static final String CERT_ALIAS = "metadata-sp";
     private static final String ADMIN_USERNAME = "admin@wso2.com";
-    private static final String ADMIN_PASSWORD = "admin";
+    private static final String ADMIN_PASSWORD = "Wso2@test";
 
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {

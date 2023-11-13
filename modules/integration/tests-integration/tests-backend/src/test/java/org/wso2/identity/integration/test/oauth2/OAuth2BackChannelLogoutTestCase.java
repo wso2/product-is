@@ -87,7 +87,7 @@ public class OAuth2BackChannelLogoutTestCase extends OAuth2ServiceAbstractIntegr
 
     private static final String USER_EMAIL = "abc@wso2.com";
     private static final String USERNAME = "testUser";
-    private static final String PASSWORD = "pass123";
+    private static final String PASSWORD = "Pass@123";
     private String applicationId;
     private SCIM2RestClient scim2RestClient;
     private String userId;

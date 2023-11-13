@@ -40,7 +40,7 @@ public class ReadOnlyLDAPUserStoreManagerTestCase extends ISIntegrationTest {
     private AuthenticatorClient authenticatorClient;
     private String newUserName = "ReadOnlyLDAPUserName";
     private String newUserRole = "ReadOnlyLDAPUserRole";
-    private String newUserPassword = "ReadOnlyLDAPUserPass";
+    private String newUserPassword = "ReadOnlyLDAPUserPass@123";
 
     @BeforeClass(alwaysRun = true)
     public void configureServer() throws Exception {

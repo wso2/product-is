@@ -121,7 +121,7 @@ public class UserMeApprovalTest extends UserApprovalTestBase {
 
         log.info("Adding users matching the workflow engagement " + addUserWorkflowName + " to tenant " + tenant);
         for (int taskCount = 1; taskCount <= userToAdd.length; taskCount++) {
-            usmClient.addUser(userToAdd[taskCount-1], "test12345", Arrays.copyOfRange(rolesToAdd,0, taskCount),
+            usmClient.addUser(userToAdd[taskCount-1], "Test@12345", Arrays.copyOfRange(rolesToAdd,0, taskCount),
                     new ClaimValue[0],null, false);
             verifyTaskCreation(taskCount);
         }

@@ -55,9 +55,9 @@ public class ApplicationAuthzTestCase extends AbstractApplicationAuthzTestCase {
     private static final String AZ_TEST_ROLE = "Internal/azTestRole";
     private static final String HTTP_REDIRECT = "HTTP-Redirect";
     private static final String AZ_TEST_USER = "azTestUser";
-    private static final String AZ_TEST_USER_PW = "azTest123";
+    private static final String AZ_TEST_USER_PW = "azTest@123";
     private static final String NON_AZ_TEST_USER = "nonAzTestUser";
-    private static final String NON_AZ_TEST_USER_PW = "nonAzTest123";
+    private static final String NON_AZ_TEST_USER_PW = "nonAzTest@123";
     private static final Log log = LogFactory.getLog(ApplicationAuthzTestCase.class);
     private static final String APPLICATION_NAME = "travelocity.com";
     private static final String POLICY_ID = "spAuthPolicy";
