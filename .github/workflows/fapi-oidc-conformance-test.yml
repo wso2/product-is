@@ -4,8 +4,8 @@ name: FAPI-OIDC-Conformance-Test
 
 on:
   schedule:
-    # Everyday at 01:30 UTC (7:00 AM SL time)
-    - cron:  '45 1 * * *'
+    # Everyday at 02:30 UTC (8:00 AM SL time)
+    - cron:  '30 2 * * *'
   # Allows the workflow to run automatically after a release
   release:
     types: [published]
@@ -58,7 +58,7 @@ jobs:
         INPUT_URL=${{github.event.inputs.download-url}}
         INPUT_TAG=${{github.event.inputs.tag}}
         if [[ "${INPUT_BUILD_IS}" == "true" ]]; then
-          echo "Building IS from source..."
+          echo ">>> Building IS from source..."
           mkdir cloned-product-is
           cd cloned-product-is
           git clone https://github.com/wso2/product-is
@@ -81,13 +81,13 @@ jobs:
             exit 1
           fi
 
-          echo "Zip file found: $zip_file"
-          echo "Copying zip file to the root directory ..."
+          echo ">>> Zip file found: $zip_file"
+          echo ">>> Copying zip file to the root directory ..."
 
           cp "$zip_file" ./../../
           cd ../..
           ls
-          echo "Remove cloned-product-is directory"
+          echo ">>> Remove cloned-product-is directory"
           rm -rf cloned-product-is
           ls
         else
@@ -139,9 +139,10 @@ jobs:
         CONFORMANCE_SUITE_BRANCH=${{github.event.inputs.conformance-suite-version}}
         git clone --depth 1 --branch ${CONFORMANCE_SUITE_BRANCH} https://gitlab.com/openid/conformance-suite.git
     
-    - name: Adding extra hosts to docker-compose-dev.yml and adding iam as a localhost to /etc/hosts
+    - name: Adding extra hosts to docker-compose.yml and adding iam as a localhost to /etc/hosts
       run: |
         sed -i '/^    volumes.*/i \ \ \ \ extra_hosts:\n \ \ \ \ - "localhost:\$IP\"\n \ \ \ \ - "iam:\$IP\"' ./conformance-suite/docker-compose-dev.yml
+        sed -i '/^    volumes.*/i \ \ \ \ extra_hosts:\n \ \ \ \ - "localhost:\$IP\"\n \ \ \ \ - "iam:\$IP\"' ./conformance-suite/docker-compose.yml
         sudo -- sh -c -e "echo '127.0.1.1 iam' >> /etc/hosts"
 
     - name: Start FAPI resource server
@@ -173,7 +174,7 @@ jobs:
         sleep 5
         cat resource-server.log
 
-    - name: Run IS
+    - name: Configure IS and Conformance Suite and run IS
       run: |
         PRODUCT_IS_ZIP=$(find ./ -name wso2is* -type f -printf "%f\n")
         cd ./product-is/oidc-fapi-conformance-tests
@@ -181,11 +182,11 @@ jobs:
         
     - name: Run Conformance Suite
       run: |
-        DOCKER_COMPOSE_FILE=./docker-compose-dev.yml
+        DOCKER_COMPOSE_FILE=./docker-compose.yml
         cd conformance-suite
         IP=$(/sbin/ip -o -4 addr list eth0 | awk '{print $4}' | cut -d/ -f1)
         export IP
-        echo "Host ip: " 
+        echo ">>> Host ip: " 
         printenv IP
         mvn clean package
         python3 ../product-is/oidc-conformance-tests/start_conformance_suite.py $DOCKER_COMPOSE_FILE
