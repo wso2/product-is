@@ -397,8 +397,8 @@ public class OIDCMetaData  {
                 Objects.equals(this.tokenEndpointSignatureAlgorithm, oiDCMetaData.requestObjectSignatureAlgorithm) &&
                 Objects.equals(this.tokenEndpointSignatureAlgorithm, oiDCMetaData.requestObjectEncryptionAlgorithm) &&
                 Objects.equals(this.tokenEndpointSignatureAlgorithm, oiDCMetaData.requestObjectEncryptionMethod) &&
-            Objects.equals(this.subjectType, oiDCMetaData.subjectType) &&
-            Objects.equals(this.fapiMetadata, oiDCMetaData.fapiMetadata);
+                Objects.equals(this.subjectType, oiDCMetaData.subjectType) &&
+                Objects.equals(this.fapiMetadata, oiDCMetaData.fapiMetadata);
     }
 
     @Override
@@ -435,6 +435,7 @@ public class OIDCMetaData  {
         sb.append("    requestObjectEncryptionAlgorithm: ").append(toIndentedString(requestObjectEncryptionAlgorithm)).append("\n");
         sb.append("    requestObjectEncryptionMethod: ").append(toIndentedString(requestObjectEncryptionMethod)).append("\n");
         sb.append("    subjectType: ").append(toIndentedString(subjectType)).append("\n");
+        sb.append("    fapiMetadata: ").append(toIndentedString(fapiMetadata)).append("\n");
         sb.append("}");
         return sb.toString();
     }
