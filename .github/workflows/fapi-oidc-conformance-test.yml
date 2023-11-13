@@ -1,5 +1,4 @@
-# This workflow will test IS for OIDC conformance
-# 
+# This workflow will test IS for OIDC FAPI conformance
 
 name: FAPI-OIDC-Conformance-Test
 
@@ -13,7 +12,7 @@ on:
       build-IS:
         description: 'Build Identity Server from wso2/product-is'
         required: false
-        default: 'false'
+        default: 'true'
       tag:
         description: 'product-is release tag name. If build-IS is true, this will not be used.'
         required: false
@@ -22,12 +21,15 @@ on:
         description: 'URL to download product-is. If build-IS is true, this will not be used.'
         required: false
       conformance-suite-version:
-        description: 'Conformance suite release tag in https://github.com/openid-certification/conformance-suite.git'
+        description: 'Conformance suite branch to clone in https://gitlab.com/openid/conformance-suite.git'
         required: false
-        default: 'v5.1.1'
+        default: 'release-v5.1.9'
       resource-url:
         description: 'Resource url path'
         default: 'https://iam/resource'
+  schedule:
+    # Everyday at 01:30 UTC (7:00 AM SL time)
+    - cron:  '30 1 * * *'
 
 jobs:
   build:
@@ -134,8 +136,8 @@ jobs:
 
     - name: Clone conformance suite
       run: |
-        CONFORMANCE_SUITE_VERSION=${{github.event.inputs.conformance-suite-version}}
-        git clone --depth 1 --branch release-${CONFORMANCE_SUITE_VERSION} https://github.com/openid-certification/conformance-suite.git
+        CONFORMANCE_SUITE_BRANCH=${{github.event.inputs.conformance-suite-version}}
+        git clone --depth 1 --branch ${CONFORMANCE_SUITE_BRANCH} https://gitlab.com/openid/conformance-suite.git
     
     - name: Adding extra hosts to docker-compose-dev.yml and adding iam as a localhost to /etc/hosts
       run: |
