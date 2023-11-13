@@ -54,7 +54,7 @@ jobs:
         
     - name: Get IS zip
       run: |
-        INPUT_BUILD_IS=${{github.event.inputs.build-IS}}
+        INPUT_BUILD_IS=${{github.event.inputs.build-IS || 'true'}}
         INPUT_URL=${{github.event.inputs.download-url}}
         INPUT_TAG=${{github.event.inputs.tag}}
         if [[ "${INPUT_BUILD_IS}" == "true" ]]; then
@@ -136,7 +136,7 @@ jobs:
 
     - name: Clone conformance suite
       run: |
-        CONFORMANCE_SUITE_BRANCH=${{github.event.inputs.conformance-suite-version}}
+        CONFORMANCE_SUITE_BRANCH=${{github.event.inputs.conformance-suite-version || 'release-v5.1.9'}}
         git clone --depth 1 --branch ${CONFORMANCE_SUITE_BRANCH} https://gitlab.com/openid/conformance-suite.git
     
     - name: Adding extra hosts to docker-compose.yml and adding iam as a localhost to /etc/hosts
@@ -178,7 +178,7 @@ jobs:
       run: |
         PRODUCT_IS_ZIP=$(find ./ -name wso2is* -type f -printf "%f\n")
         cd ./product-is/oidc-fapi-conformance-tests
-        python3 ./configure_is_fapi.py ../../$PRODUCT_IS_ZIP ${{secrets.FAPI_CLIENT1_JWKS}} ${{secrets.FAPI_CLIENT2_JWKS}} ${{secrets.FAPI_CLIENT1_MTLS}} ${{secrets.FAPI_CLIENT2_MTLS}} ${{github.event.inputs.resource-url}}
+        python3 ./configure_is_fapi.py ../../$PRODUCT_IS_ZIP ${{secrets.FAPI_CLIENT1_JWKS}} ${{secrets.FAPI_CLIENT2_JWKS}} ${{secrets.FAPI_CLIENT1_MTLS}} ${{secrets.FAPI_CLIENT2_MTLS}} ${{github.event.inputs.resource-url || 'https://iam/resource'}}
         
     - name: Run Conformance Suite
       run: |
