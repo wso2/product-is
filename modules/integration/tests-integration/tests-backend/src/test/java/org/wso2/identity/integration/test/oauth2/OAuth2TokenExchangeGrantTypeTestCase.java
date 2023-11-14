@@ -227,7 +227,7 @@ public class OAuth2TokenExchangeGrantTypeTestCase extends AbstractIdentityFedera
         updateAssertLocalSubjectIdentifierConfig(IdentityConstants.AssertLocalSubjectMode.MANDATORY);
         List<NameValuePair> postParameters = getTokenExchangePostParameters();
         int responseCode = getResponseStatus(postParameters);
-        Assert.assertEquals(responseCode, 401, "401 response expected but got: " + responseCode);
+        Assert.assertEquals(responseCode, 400, "400 response expected but got: " + responseCode);
 
     }
 
@@ -264,7 +264,7 @@ public class OAuth2TokenExchangeGrantTypeTestCase extends AbstractIdentityFedera
         deleteUser(PORT_OFFSET_0, NEW_USER_USERNAME);
         List<NameValuePair> postParameters = getTokenExchangePostParameters();
         int responseCode = getResponseStatus(postParameters);
-        Assert.assertEquals(responseCode, 401, "401 response expected but got: " + responseCode);
+        Assert.assertEquals(responseCode, 400, "400 response expected but got: " + responseCode);
     }
 
     private List<NameValuePair> getTokenExchangePostParameters() {
