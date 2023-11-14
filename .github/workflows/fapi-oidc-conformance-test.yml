@@ -196,7 +196,7 @@ jobs:
     - name: Test Results
       run: |
         IS_SUCCESSFUL=false
-        if python3 ./product-is/oidc-conformance-tests/export_results.py https://localhost:8443
+        if python3 ./product-is/oidc-fapi-conformance-tests/export_results_fapi.py https://localhost:8443
         then
           IS_SUCCESSFUL=true
         fi

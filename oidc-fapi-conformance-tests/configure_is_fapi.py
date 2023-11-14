@@ -266,27 +266,6 @@ print ("==============================================\n")
 # Create a new user to reject consent
 createNewUser("user1", "User1@password")
 
-# # CREATE AND CONFIGURE APP 1
-# dcr(constants.APP_1_CLIENT_NAME, constants.APP_1_REDIRECT_URIS, constants.APP_1_JWKS_URI, constants.APP_1_AUTH_METHOD,
-#     constants.APP_1_CLIENT_ID, constants.APP_1_CLIENT_SECRET)
-# app1_id = get_application_id_by_sp_name(constants.APP_1_CLIENT_NAME)
-# app1_details = get_service_provider_details(app1_id)
-# set_service_provider_access_token_type(app1_id, app1_details, "JWT")
-# configure_acr(app1_id)
-
-# print("\n")
-
-# # CREATE AND CONFIGURE APP 2
-# dcr(constants.APP_2_CLIENT_NAME, constants.APP_2_REDIRECT_URIS, constants.APP_2_JWKS_URI, constants.APP_2_AUTH_METHOD,
-#     constants.APP_2_CLIENT_ID, constants.APP_2_CLIENT_SECRET)
-# app2_id = get_application_id_by_sp_name(constants.APP_2_CLIENT_NAME)
-# app2_details = get_service_provider_details(app2_id)
-# set_service_provider_access_token_type(app2_id, app2_details, "JWT")
-# configure_acr(app2_id)
-
-# # generate config file for OIDC FAPI test plan
-# json_config_builder(app1_details, app2_details, "config/IS_config_fapi.json", "basic")
-
 def createSPApp(app_json):
     print("\n")
     dcr(app_json)
