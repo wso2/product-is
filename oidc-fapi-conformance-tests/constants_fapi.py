@@ -56,8 +56,8 @@ ACR = {
 PVTKEYJWT_APP1 = {
     "client_name": "pvtkeyjwt_fapi1",
     "token_endpoint_auth_method": "private_key_jwt",
-    "client_id": "a_fapi1_client_id",
-    "client_secret": "a_fapi1_client_secret",
+    "client_id": "pvtkeyjwt_fapi1_client_id",
+    "client_secret": "pvtkeyjwt_fapi1_client_secret",
     "redirect_uris": ["https://localhost.emobix.co.uk:8443/test/a/fapi-wso2is/callback"],
     "jwks_uri": "https://www.jsonkeeper.com/b/VEF7"
 }
@@ -65,8 +65,8 @@ PVTKEYJWT_APP1 = {
 PVTKEYJWT_APP2 = {
     "client_name": "pvtkeyjwt_fapi2",
     "token_endpoint_auth_method": "private_key_jwt",
-    "client_id": "a_fapi2_client_id",
-    "client_secret": "a_fapi2_client_secret",
+    "client_id": "pvtkeyjwt_fapi2_client_id",
+    "client_secret": "pvtkeyjwt_fapi2_client_secret",
     "redirect_uris": ["https://localhost.emobix.co.uk:8443/test/a/fapi-wso2is/callback?dummy1=lorem&dummy2=ipsum"],
     "jwks_uri": "https://www.jsonkeeper.com/b/F8CW"
 }

@@ -288,6 +288,7 @@ createNewUser("user1", "User1@password")
 # json_config_builder(app1_details, app2_details, "config/IS_config_fapi.json", "basic")
 
 def createSPApp(app_json):
+    print("\n")
     dcr(app_json)
     app_id = get_application_id_by_sp_name(app_json.get("client_name"))
     app_details = get_service_provider_details(app_id)
@@ -300,5 +301,8 @@ def generateConfigForPlan(app1, app2, consfigOutputFilePath, plan_name):
     app2_details = createSPApp(app2)
     json_config_builder(app1_details, app2_details, consfigOutputFilePath, plan_name)
 
+print("\n>>> Configs for pvtkeyjwt test plan")
 generateConfigForPlan(constants.PVTKEYJWT_APP1, constants.PVTKEYJWT_APP2, "config/IS_config_fapi_pvtkeyjwt.json", "pvtkeyjwt")
+
+print("\n>>> Configs for mtls test plan")
 generateConfigForPlan(constants.MTLS_APP1, constants.MTLS_APP2, "config/IS_config_fapi_mtls.json", "mtls")
