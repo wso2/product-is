@@ -138,11 +138,6 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.server.api</groupId>
-                <artifactId>org.wso2.carbon.identity.rest.api.server.challenge.v1</artifactId>
-                <version>${identity.server.api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.identity.server.api</groupId>
                 <artifactId>org.wso2.carbon.identity.api.server.identity.governance.v1</artifactId>
                 <version>${identity.server.api.version}</version>
             </dependency>
@@ -159,11 +154,6 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity.server.api</groupId>
                 <artifactId>org.wso2.carbon.identity.api.server.admin.advisory.management.common</artifactId>
-                <version>${identity.server.api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.identity.server.api</groupId>
-                <artifactId>org.wso2.carbon.identity.api.server.challenge.common</artifactId>
                 <version>${identity.server.api.version}</version>
             </dependency>
             <dependency>
