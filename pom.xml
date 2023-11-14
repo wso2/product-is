@@ -2335,11 +2335,11 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.11.26</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.11.192</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.11.194</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.9.5</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.10.18</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.4</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>3.4.42</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim2.version>3.4.43</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity workflow Versions -->
         <identity.user.workflow.version>5.6.0</identity.user.workflow.version>
@@ -2393,7 +2393,7 @@
         <provisioning.connector.scim2.version>2.0.4</provisioning.connector.scim2.version>
 
         <!-- Local Authenticator Versions -->
-        <identity.local.auth.basicauth.version>6.7.28</identity.local.auth.basicauth.version>
+        <identity.local.auth.basicauth.version>6.7.29</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.4.3</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.4.3</identity.local.auth.iwa.version>
 
@@ -2421,7 +2421,7 @@
         <identity.extension.utils>1.0.14</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.0.1</authenticator.auth.otp.commons.version>
 
-        <identity.org.mgt.version>1.3.115</identity.org.mgt.version>
+        <identity.org.mgt.version>1.3.116</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.0.87</identity.org.mgt.core.version>
         <identity.organization.login.version>1.1.24</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.19</identity.oauth2.grant.organizationswitch.version>
@@ -2445,9 +2445,9 @@
         <conditional.authentication.functions.version>1.2.36</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.6.4</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.2.14</identity.apps.myaccount.version>
-        <identity.apps.core.version>2.0.47</identity.apps.core.version>
+        <identity.apps.console.version>2.6.6</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.2.16</identity.apps.myaccount.version>
+        <identity.apps.core.version>2.0.48</identity.apps.core.version>
         <identity.apps.tests.version>1.6.373</identity.apps.tests.version>
 
         <!-- Charon -->
