@@ -13,6 +13,8 @@ SCOPES = "internal_user_mgt_update internal_application_mgt_create internal_appl
 HEADERS_WITH_AUTH = {'Content-Type': 'application/json', 'Connection': 'keep-alive',
                'Authorization': 'Basic YWRtaW46YWRtaW4='}
 
+# SP App common configs
+
 DCR_BODY = {
     "grant_types": ["client_credentials", "authorization_code", "refresh_token"],
     "backchannel_logout_uri": "https://www.google.com",
@@ -28,21 +30,6 @@ DCR_BODY = {
     "request_object_encryption_alg" : "RSA-OAEP",
     "request_object_encryption_enc" : "A128GCM",
 }
-
-APP_1_CLIENT_NAME = "a_fapi1"
-APP_1_REDIRECT_URIS = ["https://localhost.emobix.co.uk:8443/test/a/fapi-wso2is/callback"]
-APP_1_JWKS_URI = "https://www.jsonkeeper.com/b/VEF7"
-APP_1_AUTH_METHOD = "private_key_jwt"
-# If MTLS APP, use > tls_client_auth
-APP_1_CLIENT_ID = "a_fapi1_client_id"
-APP_1_CLIENT_SECRET = "a_fapi1_client_secret"
-
-APP_2_CLIENT_NAME = "a_fapi2"
-APP_2_REDIRECT_URIS = ["https://localhost.emobix.co.uk:8443/test/a/fapi-wso2is/callback?dummy1=lorem&dummy2=ipsum"]
-APP_2_JWKS_URI = "https://www.jsonkeeper.com/b/F8CW"
-APP_2_AUTH_METHOD = "private_key_jwt"
-APP_2_CLIENT_ID = "a_fapi2_client_id"
-APP_2_CLIENT_SECRET = "a_fapi2_client_secret"
 
 ACR = {
         "authenticationSequence": {
@@ -63,3 +50,42 @@ ACR = {
             "script": "var supportedAcrValues = ['acr1', 'urn:mace:incommon:iap:silver',];\n\nvar onLoginRequest = function(context) {\n    var selectedAcr = selectAcrFrom(context, supportedAcrValues);\n    Log.info('--------------- ACR selected: ' + selectedAcr);\n    context.selectedAcr = selectedAcr;\n    executeStep(1);\n};\n"
         }
 }
+
+# SP App configs
+
+PVTKEYJWT_APP1 = {
+    "client_name": "pvtkeyjwt_fapi1",
+    "token_endpoint_auth_method": "private_key_jwt",
+    "client_id": "a_fapi1_client_id",
+    "client_secret": "a_fapi1_client_secret",
+    "redirect_uris": ["https://localhost.emobix.co.uk:8443/test/a/fapi-wso2is/callback"],
+    "jwks_uri": "https://www.jsonkeeper.com/b/VEF7"
+}
+
+PVTKEYJWT_APP2 = {
+    "client_name": "pvtkeyjwt_fapi2",
+    "token_endpoint_auth_method": "private_key_jwt",
+    "client_id": "a_fapi2_client_id",
+    "client_secret": "a_fapi2_client_secret",
+    "redirect_uris": ["https://localhost.emobix.co.uk:8443/test/a/fapi-wso2is/callback?dummy1=lorem&dummy2=ipsum"],
+    "jwks_uri": "https://www.jsonkeeper.com/b/F8CW"
+}
+
+MTLS_APP1 = {
+    "client_name": "mtls_fapi1",
+    "token_endpoint_auth_method": "tls_client_auth",
+    "client_id": "mtls_fapi1_client_id",
+    "client_secret": "mtls_fapi1_client_secret",
+    "redirect_uris": ["https://localhost.emobix.co.uk:8443/test/a/fapi-wso2is/callback"],
+    "jwks_uri": "https://www.jsonkeeper.com/b/VEF7"
+}
+
+MTLS_APP2 = {
+    "client_name": "mtls_fapi2",
+    "token_endpoint_auth_method": "tls_client_auth",
+    "client_id": "mtls_fapi2_client_id",
+    "client_secret": "mtls_fapi2_client_secret",
+    "redirect_uris": ["https://localhost.emobix.co.uk:8443/test/a/fapi-wso2is/callback?dummy1=lorem&dummy2=ipsum"],
+    "jwks_uri": "https://www.jsonkeeper.com/b/F8CW"
+}
+

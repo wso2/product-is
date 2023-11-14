@@ -35,16 +35,16 @@ client2_mtls = decode_secret(client2_mtls_en)
 resource_url = str(sys.argv[6])
 
 # use dcr to register a client
-def dcr(client_name, redirect_uris, jwks_uri, auth_method, client_id, client_secret):
+def dcr(app_json):
     print(">>> Making DCR Request.")
-    print(">>> SP Name: " + client_name)
+    print(">>> SP Name: " + app_json.get("client_name"))
     DCR_BODY = constants.DCR_BODY
-    DCR_BODY['client_name'] = client_name
-    DCR_BODY['redirect_uris'] = redirect_uris
-    DCR_BODY['jwks_uri'] = jwks_uri
-    DCR_BODY['token_endpoint_auth_method'] = auth_method
-    DCR_BODY['ext_param_client_id'] = client_id
-    DCR_BODY['ext_param_client_secret'] = client_secret
+    DCR_BODY['client_name'] = app_json.get("client_name")
+    DCR_BODY['redirect_uris'] = app_json.get("redirect_uris")
+    DCR_BODY['jwks_uri'] = app_json.get("jwks_uri")
+    DCR_BODY['token_endpoint_auth_method'] = app_json.get("token_endpoint_auth_method")
+    DCR_BODY['ext_param_client_id'] = app_json.get("client_name")
+    DCR_BODY['ext_param_client_secret'] = app_json.get("client_secret")
     try:
         response = requests.post(url=constants.DCR_ENDPOINT, headers=constants.HEADERS_WITH_AUTH,
                                  data=json.dumps(DCR_BODY), verify=False)
@@ -193,7 +193,7 @@ def unpack_and_run(zip_file_name):
 def json_config_builder(service_provider_1, service_provider_2, output_file_path, plan_name):
     config = {
         "alias": constants.ALIAS,
-        "description": "FAPI conformance suite for wso2 identity server.",
+        "description": plan_name,
         "server": {
             "discoveryUrl": constants.BASE_URL + "/oauth2/token/.well-known/openid-configuration"
         },
@@ -212,8 +212,8 @@ def json_config_builder(service_provider_1, service_provider_2, output_file_path
         },
         "mtls": client1_mtls,
         "mtls2": client2_mtls,
-        "browser": browser_configuration.CONFIG[plan_name]["browser"],
-        "override": browser_configuration.CONFIG[plan_name]["override"]
+        "browser": browser_configuration.CONFIG["basic"]["browser"],
+        "override": browser_configuration.CONFIG["basic"]["override"]
     }
 
     json_config = json.dumps(config, indent=4)
@@ -263,27 +263,42 @@ else:
     print("\n>>> IS already running ...")
 print ("==============================================\n")
 
-# CREATE AND CONFIGURE APP 1
-dcr(constants.APP_1_CLIENT_NAME, constants.APP_1_REDIRECT_URIS, constants.APP_1_JWKS_URI, constants.APP_1_AUTH_METHOD,
-    constants.APP_1_CLIENT_ID, constants.APP_1_CLIENT_SECRET)
-app1_id = get_application_id_by_sp_name(constants.APP_1_CLIENT_NAME)
-app1_details = get_service_provider_details(app1_id)
-set_service_provider_access_token_type(app1_id, app1_details, "JWT")
-configure_acr(app1_id)
-
-print("\n")
-
-# CREATE AND CONFIGURE APP 2
-dcr(constants.APP_2_CLIENT_NAME, constants.APP_2_REDIRECT_URIS, constants.APP_2_JWKS_URI, constants.APP_2_AUTH_METHOD,
-    constants.APP_2_CLIENT_ID, constants.APP_2_CLIENT_SECRET)
-app2_id = get_application_id_by_sp_name(constants.APP_2_CLIENT_NAME)
-app2_details = get_service_provider_details(app2_id)
-set_service_provider_access_token_type(app2_id, app2_details, "JWT")
-configure_acr(app2_id)
-
-# generate config file for OIDC FAPI test plan
-json_config_builder(app1_details, app2_details, "config/IS_config_fapi.json", "basic")
-
+# Create a new user to reject consent
 createNewUser("user1", "User1@password")
 
-# Add relevant CA certs to IS keystore
+# # CREATE AND CONFIGURE APP 1
+# dcr(constants.APP_1_CLIENT_NAME, constants.APP_1_REDIRECT_URIS, constants.APP_1_JWKS_URI, constants.APP_1_AUTH_METHOD,
+#     constants.APP_1_CLIENT_ID, constants.APP_1_CLIENT_SECRET)
+# app1_id = get_application_id_by_sp_name(constants.APP_1_CLIENT_NAME)
+# app1_details = get_service_provider_details(app1_id)
+# set_service_provider_access_token_type(app1_id, app1_details, "JWT")
+# configure_acr(app1_id)
+
+# print("\n")
+
+# # CREATE AND CONFIGURE APP 2
+# dcr(constants.APP_2_CLIENT_NAME, constants.APP_2_REDIRECT_URIS, constants.APP_2_JWKS_URI, constants.APP_2_AUTH_METHOD,
+#     constants.APP_2_CLIENT_ID, constants.APP_2_CLIENT_SECRET)
+# app2_id = get_application_id_by_sp_name(constants.APP_2_CLIENT_NAME)
+# app2_details = get_service_provider_details(app2_id)
+# set_service_provider_access_token_type(app2_id, app2_details, "JWT")
+# configure_acr(app2_id)
+
+# # generate config file for OIDC FAPI test plan
+# json_config_builder(app1_details, app2_details, "config/IS_config_fapi.json", "basic")
+
+def createSPApp(app_json):
+    dcr(app_json)
+    app_id = get_application_id_by_sp_name(app_json.get("client_name"))
+    app_details = get_service_provider_details(app_id)
+    set_service_provider_access_token_type(app_id, app_details, "JWT")
+    configure_acr(app_id)
+    return app_details
+
+def generateConfigForPlan(app1, app2, consfigOutputFilePath, plan_name):
+    app1_details = createSPApp(app1)
+    app2_details = createSPApp(app2)
+    json_config_builder(app1_details, app2_details, consfigOutputFilePath, plan_name)
+
+generateConfigForPlan(constants.PVTKEYJWT_APP1, constants.PVTKEYJWT_APP2, "config/IS_config_fapi_pvtkeyjwt.json", "pvtkeyjwt")
+generateConfigForPlan(constants.MTLS_APP1, constants.MTLS_APP2, "config/IS_config_fapi_mtls.json", "mtls")

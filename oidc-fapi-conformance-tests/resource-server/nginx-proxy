@@ -6,10 +6,6 @@ server {
 
 server {
     listen 443 ssl;
-    # server_name fapi-resource.com www.fapi-resource.com;
-  
-	# ssl_certificate /home/wso2/Documents/test/action-build/fapi-resource-endpoint/security2/server/serverCA.pem;
-	# ssl_certificate_key /home/wso2/Documents/test/action-build/fapi-resource-endpoint/security2/server/serverCA.key;
     ssl_certificate /etc/nginx/ssl/serverCA.pem;
     ssl_certificate_key /etc/nginx/ssl/serverCA.key;
 
