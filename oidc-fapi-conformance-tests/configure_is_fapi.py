@@ -43,7 +43,7 @@ def dcr(app_json):
     DCR_BODY['redirect_uris'] = app_json.get("redirect_uris")
     DCR_BODY['jwks_uri'] = app_json.get("jwks_uri")
     DCR_BODY['token_endpoint_auth_method'] = app_json.get("token_endpoint_auth_method")
-    DCR_BODY['ext_param_client_id'] = app_json.get("client_name")
+    DCR_BODY['ext_param_client_id'] = app_json.get("client_id")
     DCR_BODY['ext_param_client_secret'] = app_json.get("client_secret")
     try:
         response = requests.post(url=constants.DCR_ENDPOINT, headers=constants.HEADERS_WITH_AUTH,
