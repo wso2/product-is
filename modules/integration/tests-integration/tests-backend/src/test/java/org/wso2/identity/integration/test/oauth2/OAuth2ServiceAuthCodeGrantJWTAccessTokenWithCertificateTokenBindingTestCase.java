@@ -307,21 +307,6 @@ public class OAuth2ServiceAuthCodeGrantJWTAccessTokenWithCertificateTokenBinding
         }
     }
 
-    private void validateUserClaims(OIDCTokens oidcTokens) throws JsonProcessingException {
-
-        Assert.assertNotNull(oidcTokens, "OIDC Tokens object is null in JWT token.");
-        accessToken = oidcTokens.getAccessToken().getValue();
-        refreshToken = oidcTokens.getRefreshToken().getValue();
-
-        ObjectMapper mapper = new ObjectMapper();
-        Map<String, Object> responseObject = mapper.readValue(new String(Base64.decodeBase64(
-                accessToken.split("\\.")[1])), Map.class);
-
-        Assert.assertNotNull(responseObject.get("cnf"), "TLS certificate thumbprint is not included in the response.");
-        Assert.assertEquals(((Map<String, String>) responseObject.get("cnf")).get("x5t#S256"),
-                "R4Hj_0nNzIzVSPdCcsWlhNKm0aB4Pszp6ZZ4K1iR8o4", "TLS certificate thumbprint is not matching.");
-    }
-
     protected void registerApplication() throws Exception {
 
         ApplicationModel application = new ApplicationModel();
@@ -386,6 +371,55 @@ public class OAuth2ServiceAuthCodeGrantJWTAccessTokenWithCertificateTokenBinding
         return httpResponse;
     }
 
+    private TokenResponse makeAccessTokenRequest(boolean isTlsCertificateSentInRequest) throws URISyntaxException,
+            IOException, ParseException {
+
+        URI callbackURI = new URI(OAuth2Constant.CALLBACK_URL);
+        AuthorizationCodeGrant authorizationCodeGrant =
+                new AuthorizationCodeGrant(new AuthorizationCode(authorizationCode), callbackURI);
+        ClientID clientID = new ClientID(consumerKey);
+        Secret clientSecret = new Secret(consumerSecret);
+        ClientAuthentication clientAuth = new ClientSecretBasic(clientID, clientSecret);
+        URI tokenEndpoint = new URI(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
+        TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, authorizationCodeGrant,
+                new Scope(OAuth2Constant.OAUTH2_SCOPE_OPENID));
+
+        HTTPRequest httpRequest = request.toHTTPRequest();
+        if (isTlsCertificateSentInRequest) {
+            httpRequest.setHeader(CERTIFICATE_HEADER, CERTIFICATE);
+        }
+        HTTPResponse tokenHTTPResp = httpRequest.send();
+        Assert.assertNotNull(tokenHTTPResp, "JWT access token http response is null.");
+
+        TokenResponse tokenResponse = OIDCTokenResponseParser.parse(tokenHTTPResp);
+        Assert.assertNotNull(tokenResponse, "Token response of JWT access token response is null.");
+
+        return tokenResponse;
+    }
+
+    private void validateUserClaims(OIDCTokens oidcTokens) throws JsonProcessingException {
+
+        Assert.assertNotNull(oidcTokens, "OIDC Tokens object is null in JWT token.");
+        accessToken = oidcTokens.getAccessToken().getValue();
+        refreshToken = oidcTokens.getRefreshToken().getValue();
+
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, Object> responseObject = mapper.readValue(new String(Base64.decodeBase64(
+                accessToken.split("\\.")[1])), Map.class);
+
+        Assert.assertNotNull(responseObject.get("cnf"), "TLS certificate thumbprint is not included in the response.");
+        Assert.assertEquals(((Map<String, String>) responseObject.get("cnf")).get("x5t#S256"),
+                "R4Hj_0nNzIzVSPdCcsWlhNKm0aB4Pszp6ZZ4K1iR8o4", "TLS certificate thumbprint is not matching.");
+    }
+
+    private JSONObject introspectToken() throws Exception {
+
+        String introspectionUrl = tenantInfo.getDomain().equalsIgnoreCase("carbon.super") ?
+                OAuth2Constant.INTRO_SPEC_ENDPOINT : OAuth2Constant.TENANT_INTRO_SPEC_ENDPOINT;
+        return introspectTokenWithTenant(client, accessToken, introspectionUrl,
+                USERNAME, PASSWORD);
+    }
+
     private HttpResponse sendRequestToUserInfoEndpoint(boolean isTlsCertificateSentInRequest) throws IOException {
 
         HttpGet request = new HttpGet(OAuth2Constant.USER_INFO_ENDPOINT);
@@ -420,40 +454,6 @@ public class OAuth2ServiceAuthCodeGrantJWTAccessTokenWithCertificateTokenBinding
         Assert.assertNotNull(tokenResponse, "Token response of JWT access token response is null.");
 
         return tokenResponse;
-    }
-
-    private TokenResponse makeAccessTokenRequest(boolean isTlsCertificateSentInRequest) throws URISyntaxException,
-            IOException, ParseException {
-
-        URI callbackURI = new URI(OAuth2Constant.CALLBACK_URL);
-        AuthorizationCodeGrant authorizationCodeGrant =
-                new AuthorizationCodeGrant(new AuthorizationCode(authorizationCode), callbackURI);
-        ClientID clientID = new ClientID(consumerKey);
-        Secret clientSecret = new Secret(consumerSecret);
-        ClientAuthentication clientAuth = new ClientSecretBasic(clientID, clientSecret);
-        URI tokenEndpoint = new URI(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
-        TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, authorizationCodeGrant,
-                new Scope(OAuth2Constant.OAUTH2_SCOPE_OPENID));
-
-        HTTPRequest httpRequest = request.toHTTPRequest();
-        if (isTlsCertificateSentInRequest) {
-            httpRequest.setHeader(CERTIFICATE_HEADER, CERTIFICATE);
-        }
-        HTTPResponse tokenHTTPResp = httpRequest.send();
-        Assert.assertNotNull(tokenHTTPResp, "JWT access token http response is null.");
-
-        TokenResponse tokenResponse = OIDCTokenResponseParser.parse(tokenHTTPResp);
-        Assert.assertNotNull(tokenResponse, "Token response of JWT access token response is null.");
-
-        return tokenResponse;
-    }
-
-    private JSONObject introspectToken() throws Exception {
-
-        String introspectionUrl = tenantInfo.getDomain().equalsIgnoreCase("carbon.super") ?
-                OAuth2Constant.INTRO_SPEC_ENDPOINT : OAuth2Constant.TENANT_INTRO_SPEC_ENDPOINT;
-        return introspectTokenWithTenant(client, accessToken, introspectionUrl,
-                USERNAME, PASSWORD);
     }
 
     private void resetUserAndGetAuthorizationCode() throws Exception {
