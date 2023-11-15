@@ -2,7 +2,6 @@ import base64
 import uuid
 import requests
 import jwt
-import ssl
 from flask import request
 from flask import Flask, jsonify
 from cryptography.hazmat.primitives import hashes
