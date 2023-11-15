@@ -17,17 +17,14 @@ on:
         required: false
         default: 'true'
       tag:
-        description: 'product-is release tag name(Ex: v7.0.0-alpha2). If build-IS is true, this will not be used.'
+        description: 'Product-is release tag (Ex: v7.0.0-alpha2). If build-IS is true, this will not be used.'
         required: false
       download-url:
         description: 'URL to download product-is. If build-IS is true, this will not be used.'
         required: false
       conformance-suite-version:
-        description: 'Conformance suite branch to clone in https://gitlab.com/openid/conformance-suite.git. If not provided, latest release tag is used.'
+        description: 'Conformance suite branch to clone in https://gitlab.com/openid/conformance-suite.git (Ex: release-v5.1.10). If not provided, latest release tag branch is used.'
         required: false
-      resource-url:
-        description: 'Resource url path'
-        default: 'https://iam/resource'
 
 jobs:
   build:
@@ -164,8 +161,8 @@ jobs:
         mkdir -p /etc/nginx/ssl
         echo ">>> /etc/nginx/ssl created successfully!"
         cd product-is/oidc-fapi-conformance-tests/resource-server/resource-server-keys
-        cp -f serverCA.key /etc/nginx/ssl
-        cp -f serverCA.pem /etc/nginx/ssl
+        cp -f example.key /etc/nginx/ssl
+        cp -f example.crt /etc/nginx/ssl
         cd ..
         echo ">>> FAPI resource server keys saved successfully!"
 
