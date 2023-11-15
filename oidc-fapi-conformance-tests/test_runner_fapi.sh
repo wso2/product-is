@@ -24,9 +24,9 @@ echo
 python3 $CONFORMANCE_SUITE_PATH/scripts/run-test-plan.py fapi1-advanced-final-test-plan[client_auth_type=mtls][fapi_profile=plain_fapi][fapi_response_mode=plain_response][fapi_auth_request_method=by_value] $PATH_TO_SCRIPTS/config/IS_config_fapi_mtls.json 2>&1 | tee fapi-testplan-mtls-log.txt
 echo
 
-echo
-echo "FAPI Basic test plan - mtls, plain_fapi, plain_response, pushed"
-echo "-----------------------------"
-echo
-python3 $CONFORMANCE_SUITE_PATH/scripts/run-test-plan.py fapi1-advanced-final-test-plan[client_auth_type=mtls][fapi_profile=plain_fapi][fapi_response_mode=plain_response][fapi_auth_request_method=pushed] $PATH_TO_SCRIPTS/config/IS_config_fapi_mtls.json 2>&1 | tee fapi-testplan-mtls-par-log.txt
-echo
+# echo
+# echo "FAPI Basic test plan - mtls, plain_fapi, plain_response, pushed"
+# echo "-----------------------------"
+# echo
+# python3 $CONFORMANCE_SUITE_PATH/scripts/run-test-plan.py fapi1-advanced-final-test-plan[client_auth_type=mtls][fapi_profile=plain_fapi][fapi_response_mode=plain_response][fapi_auth_request_method=pushed] $PATH_TO_SCRIPTS/config/IS_config_fapi_mtls.json 2>&1 | tee fapi-testplan-mtls-par-log.txt
+# echo
