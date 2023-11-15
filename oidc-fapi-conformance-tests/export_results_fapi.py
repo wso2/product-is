@@ -9,7 +9,7 @@ conformance_suite_url = sys.argv[1]
 # export test results of a given test plan
 def save_results(plan, i):
     response = requests.get(url=conformance_suite_url + "/api/plan/exporthtml/" + plan['_id'], stream=True, verify=False)
-    with open("./" + plan['planName_'] + i + "_test_results.zip", 'wb') as fileDir:
+    with open("./" + plan['planName'] + "_"+ i + "_test_results.zip", 'wb') as fileDir:
         for chunk in response.iter_content(chunk_size=128):
             fileDir.write(chunk)
 
