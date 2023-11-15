@@ -1109,6 +1109,12 @@
             <destName>carbon.properties</destName>
             <filtered>true</filtered>
         </file>
+        <file>
+            <source>src/repository/resources/identity/apple/attestation/apple_attestation_root_ca.pem</source>
+            <outputDirectory>wso2is-${pom.version}/repository/resources/identity/apple/attestation/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
 
     </files>
 
