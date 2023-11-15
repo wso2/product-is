@@ -1,0 +1,26 @@
+{
+  "redirect_uris": [
+    "https://abc/redirect1"
+  ],
+  "client_name": "TestAdditionalProperties",
+
+  "grant_types": [
+    "authorization_code",
+    "implicit"
+  ],
+  "jwks_uri": "https://localhost/jwks",
+  "token_endpoint_auth_method": "private_key_jwt",
+  "token_endpoint_auth_signing_alg" : "PS256",
+  "sector_identifier_uri" : "https://mocki.io/v1/04b49547-0ae2-4049-8d1c-42648e633001",
+  "id_token_signed_response_alg" : "PS256",
+  "id_token_encrypted_response_alg" : "RSA-OAEP",
+  "id_token_encrypted_response_enc" : "A128GCM",
+  "request_object_signing_alg" : "ES256",
+  "tls_client_auth_subject_dn" : "dfrrfc",
+  "require_signed_request_object" : true,
+  "require_pushed_authorization_requests" : true,
+  "subject_type" : "pairwise",
+  "request_object_encryption_alg" : "RSA-OAEP",
+  "request_object_encryption_enc" : "A128GCM",
+  "tls_client_certificate_bound_access_tokens":true
+}
