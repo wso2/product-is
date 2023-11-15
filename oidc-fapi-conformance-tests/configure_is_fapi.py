@@ -23,17 +23,7 @@ def decode_secret(secret):
     decoded_json = json.loads(decoded_string)
     return decoded_json
 
-client1_jwks_en = str(sys.argv[2])
-client2_jwks_en = str(sys.argv[3])
-client1_mtls_en = str(sys.argv[4])
-client2_mtls_en = str(sys.argv[5])
-
-client1_jwks = decode_secret(client1_jwks_en)
-client2_jwks = decode_secret(client2_jwks_en)
-client1_mtls = decode_secret(client1_mtls_en)
-client2_mtls = decode_secret(client2_mtls_en)
-
-resource_url = str(sys.argv[6])
+resource_url = str(sys.argv[2])
 
 # use dcr to register a client
 def dcr(app_json):

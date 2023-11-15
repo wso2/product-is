@@ -188,7 +188,7 @@ jobs:
       run: |
         PRODUCT_IS_ZIP=$(find ./ -name wso2is* -type f -printf "%f\n")
         cd ./product-is/oidc-fapi-conformance-tests
-        python3 ./configure_is_fapi.py ../../$PRODUCT_IS_ZIP ${{secrets.FAPI_CLIENT1_JWKS}} ${{secrets.FAPI_CLIENT2_JWKS}} ${{secrets.FAPI_CLIENT1_MTLS}} ${{secrets.FAPI_CLIENT2_MTLS}} ${{github.event.inputs.resource-url || 'https://iam/resource'}}
+        python3 ./configure_is_fapi.py ../../$PRODUCT_IS_ZIP 'https://iam/resource'
         
     - name: Run Conformance Suite
       run: |
