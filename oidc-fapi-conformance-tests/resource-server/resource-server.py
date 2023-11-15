@@ -40,27 +40,52 @@ def getAccessToken(request):
         raise Unauthorized('Bearer token is null.')
     return accessToken
 
-def getThumbprintFromAccessToken(accessToken):
+def isJwt(accessToken):
     try:
         decodedToken = jwt.decode(accessToken, options={"verify_signature": False}, algorithms=['RS256'])
-    except jwt.DecodeError as e:
-        print ("Decode Error: ", e)
-        raise Unauthorized('Unable to decode Access Token.')
-    try :
-        cnf = decodedToken.get('cnf')
-        if cnf is not None:
-            thumbprint_b64 = cnf.get('x5t#S256')
-            if thumbprint_b64 is not None:
-                thumbprint_bytes = base64.urlsafe_b64decode(thumbprint_b64 + '==')
-                thumbprint_hex = thumbprint_bytes.hex()
-                print ("[INFO] Thumbprint from Access Token: ", thumbprint_hex)
-                return thumbprint_hex
-            else:
-                raise Unauthorized('Unable to get x5t#S256 from cnf.')
+        return True
+    except jwt.DecodeError:
+        return False
+    
+def getCnfFromIntrospect(accessToken):
+    headers = {'Authorization': 'Basic ' +  "YWRtaW46YWRtaW4=", 'Content-Type': 'application/x-www-form-urlencoded'}
+    data = {'token': accessToken}
+    response = requests.post('https://localhost:9443/oauth2/introspect', headers=headers, data=data, verify=False)
+    if response.status_code == 200:
+        introspect = response.json()
+        print ("[INFO] Introspect response: \n", introspect)
+        cnf = introspect.get('cnf')
+        print ("[INFO] Introspect cnf: ", cnf)
+        if cnf == None:
+            raise Unauthorized('No cnf in introspect response.')
+        return cnf
+    else:
+        raise Exception('Failed to introspect: ' + response.text)
+
+def getThumbprintFromAccessToken(accessToken):
+    if not isJwt(accessToken):
+        cnf = getCnfFromIntrospect(accessToken)
+    else:
+        try:
+            decodedToken = jwt.decode(accessToken, options={"verify_signature": False}, algorithms=['RS256'])
+        except jwt.DecodeError as e:
+            print ("Decode Error: ", e)
+            raise Unauthorized('Unable to decode Access Token.')
+        try:
+            cnf = decodedToken.get('cnf')
+        except Exception as e:
+            raise Unauthorized('Unable to get cnf from Access Token jwt.')
+    if cnf is not None:
+        thumbprint_b64 = cnf.get('x5t#S256')
+        if thumbprint_b64 is not None:
+            thumbprint_bytes = base64.urlsafe_b64decode(thumbprint_b64 + '==')
+            thumbprint_hex = thumbprint_bytes.hex()
+            print ("[INFO] Thumbprint from Access Token: ", thumbprint_hex)
+            return thumbprint_hex
         else:
-            raise Unauthorized('cnf is null.')
-    except Exception as e:
-        raise Unauthorized('Unable to get cnf from Access Token.')
+            raise Unauthorized('Unable to get x5t#S256 from cnf.')
+    else:
+        raise Unauthorized('cnf is null.')
 
 def computeSHA256Thumbprint(clientCertificate):
     try:

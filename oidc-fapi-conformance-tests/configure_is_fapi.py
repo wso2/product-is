@@ -97,7 +97,7 @@ def get_service_provider_details(application_id):
 # set access token type of the service provider to JWT
 def set_service_provider_access_token_type(application_id, app_details, token_type):
     body = app_details
-    body['accessToken']['type'] = token_type
+    # body['accessToken']['type'] = token_type
     body['accessToken']['bindingType'] = "certificate"
     body['accessToken']['validateTokenBinding'] = "true"
     body['pushAuthorizationRequest']['requirePushAuthorizationRequest'] = False
