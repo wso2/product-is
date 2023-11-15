@@ -996,6 +996,11 @@
                 <version>${carbon.kernel.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.hazelcast</artifactId>
+                <version>${carbon.kernel.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.identity</groupId>
                 <artifactId>org.wso2.stratos.identity.dashboard.ui</artifactId>
                 <version>${stratos.version.221}</version>

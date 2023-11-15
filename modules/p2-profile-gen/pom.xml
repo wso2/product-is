@@ -331,6 +331,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.core.runtime.feature:${carbon.kernel.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.hazelcast.feature:${carbon.kernel.version}
+                                </featureArtifactDef>
 
                                 <!-- DepSync feature -->
                                 <featureArtifactDef>
@@ -483,10 +486,10 @@
 
                                 <!-- FIDO2/WebAuthn feature -->
                                 <featureArtifactDef>
-                                   org.wso2.carbon.identity.local.auth.fido:org.wso2.carbon.identity.application.authenticator.fido2.server.feature:${identity.local.auth.fido.version}
+                                    org.wso2.carbon.identity.local.auth.fido:org.wso2.carbon.identity.application.authenticator.fido2.server.feature:${identity.local.auth.fido.version}
                                 </featureArtifactDef>
 
-                                 <!-- UUID Generator feature -->
+                                <!-- UUID Generator feature -->
                                 <featureArtifactDef>
                                     org.wso2.carbon.commons:org.wso2.carbon.uuid.generator.feature:${carbon.commons.version}
                                 </featureArtifactDef>
@@ -827,6 +830,10 @@
                                     <id>org.wso2.carbon.deployment.synchronizer.feature.group</id>
                                     <version>${carbon.commons.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.hazelcast.feature.group</id>
+                                    <version>${carbon.kernel.version}</version>
+                                </feature>
 
                                 <feature>
                                     <id>
@@ -952,7 +959,7 @@
                                     <id>org.wso2.carbon.identity.provisioning.server.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
-                              
+
                                 <feature>
                                     <id>org.wso2.carbon.identity.tools.saml.validator.feature.group</id>
                                     <version>${identity.tool.samlsso.validator.version}</version>
@@ -1459,6 +1466,10 @@
                                     <id>org.wso2.carbon.deployment.synchronizer.feature.group</id>
                                     <version>${carbon.commons.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.hazelcast.feature.group</id>
+                                    <version>${carbon.kernel.version}</version>
+                                </feature>
 
                                 <feature>
                                     <id>
@@ -1945,6 +1956,10 @@
                                     <id>org.wso2.carbon.deployment.synchronizer.server.feature.group</id>
                                     <version>${carbon.commons.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.hazelcast.feature.group</id>
+                                    <version>${carbon.kernel.version}</version>
+                                </feature>
 
                                 <feature>
                                     <id>
@@ -2003,7 +2018,7 @@
                                     <id>org.wso2.identity.apps.myaccount.server.feature.group</id>
                                     <version>${identity.apps.myaccount.version}</version>
                                 </feature>
-                                
+
 
                                 <feature>
                                     <id>
@@ -2246,6 +2261,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.core.runtime.feature.group</id>
+                                    <version>${carbon.kernel.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.hazelcast.feature.group</id>
                                     <version>${carbon.kernel.version}</version>
                                 </feature>
 
