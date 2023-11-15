@@ -135,7 +135,18 @@ jobs:
 
     - name: Clone conformance suite
       run: |
-        CONFORMANCE_SUITE_BRANCH=${{github.event.inputs.conformance-suite-version || 'release-v5.1.9'}}
+        sudo snap install jq
+        LATEST_RELEASE_BRANCH=$(curl -s https://gitlab.com/api/v4/projects/4175605/releases/ | jq '.[]' | jq -r '.name' | head -1)
+        echo ">>> Conformance suite latest release branch: $LATEST_RELEASE_BRANCH"
+        PROVIDED_VERSION=${{github.event.inputs.conformance-suite-version}}
+        if [[ -z "${PROVIDED_VERSION}" ]]; then
+              CONFORMANCE_SUITE_BRANCH=$LATEST_RELEASE_BRANCH
+              echo ">>> Conformance suite latest release branch is taken: $CONFORMANCE_SUITE_BRANCH"
+            else
+              CONFORMANCE_SUITE_BRANCH=$PROVIDED_VERSION
+              echo ">>> Conformance suite provided branch is taken: $CONFORMANCE_SUITE_BRANCH"
+            fi
+        echo ">>> Selected conformance suite branch: $CONFORMANCE_SUITE_BRANCH"
         git clone --depth 1 --branch ${CONFORMANCE_SUITE_BRANCH} https://gitlab.com/openid/conformance-suite.git
     
     - name: Adding extra hosts to docker-compose.yml and adding iam as a localhost to /etc/hosts
