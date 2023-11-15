@@ -370,4 +370,9 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.organization.management.v1.OrganizationManagementFailureTest"/>
         </classes>
     </test>
+    <test name="fapi-dcr-validations" preserve-order="true" parallel="false" group-by-instances="true">
+        <classes>
+            <class name="org.wso2.identity.integration.test.oauth2.dcrm.api.FAPIDCRValidationsTestCase"/>
+        </classes>
+    </test>
 </suite>
