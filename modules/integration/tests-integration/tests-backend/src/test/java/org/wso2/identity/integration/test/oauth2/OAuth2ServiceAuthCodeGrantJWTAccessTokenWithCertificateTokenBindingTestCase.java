@@ -225,7 +225,7 @@ public class OAuth2ServiceAuthCodeGrantJWTAccessTokenWithCertificateTokenBinding
             dependsOnMethods = "testSendApprovalPost")
     public void testGetAccessTokenWithTlsCertificate() throws Exception {
 
-        TokenResponse tokenResponse = makeAccessTokenRequest(true);
+        TokenResponse tokenResponse = sendAccessTokenRequest(true);
         Assert.assertFalse(tokenResponse instanceof TokenErrorResponse, "JWT access token response contains errors.");
         OIDCTokenResponse oidcTokenResponse = (OIDCTokenResponse) tokenResponse;
         OIDCTokens oidcTokens = oidcTokenResponse.getOIDCTokens();
@@ -269,7 +269,7 @@ public class OAuth2ServiceAuthCodeGrantJWTAccessTokenWithCertificateTokenBinding
     public void testGetRefreshTokenWithoutTlsCertificate() throws Exception {
 
         AuthorizationGrant refreshGrant = new RefreshTokenGrant(new RefreshToken(refreshToken));
-        TokenResponse tokenResponse = makeRefreshTokenRequest(refreshGrant, false);
+        TokenResponse tokenResponse = sendRefreshTokenRequest(refreshGrant, false);
         Assert.assertTrue(tokenResponse instanceof TokenErrorResponse, "Client error not received when TLS certificate is not sent.");
         if (tokenResponse instanceof TokenErrorResponse) {
             TokenErrorResponse tokenErrorResponse = tokenResponse.toErrorResponse();
@@ -284,7 +284,7 @@ public class OAuth2ServiceAuthCodeGrantJWTAccessTokenWithCertificateTokenBinding
     public void testGetRefreshTokenWithTlsCertificate() throws Exception {
 
         AuthorizationGrant refreshGrant = new RefreshTokenGrant(new RefreshToken(refreshToken));
-        TokenResponse tokenResponse = makeRefreshTokenRequest(refreshGrant, true);
+        TokenResponse tokenResponse = sendRefreshTokenRequest(refreshGrant, true);
         Assert.assertFalse(tokenResponse instanceof TokenErrorResponse, "JWT access token response contains errors.");
         OIDCTokenResponse oidcTokenResponse = (OIDCTokenResponse) tokenResponse;
         OIDCTokens oidcTokens = oidcTokenResponse.getOIDCTokens();
@@ -296,7 +296,7 @@ public class OAuth2ServiceAuthCodeGrantJWTAccessTokenWithCertificateTokenBinding
     public void testGetAccessTokenWithoutTlsCertificate() throws Exception {
 
         resetUserAndGetAuthorizationCode();
-        TokenResponse tokenResponse = makeAccessTokenRequest(false);
+        TokenResponse tokenResponse = sendAccessTokenRequest(false);
         Assert.assertTrue(tokenResponse instanceof TokenErrorResponse,
                 "Client error not received when TLS certificate is not sent.");
         if (tokenResponse instanceof TokenErrorResponse) {
@@ -371,7 +371,7 @@ public class OAuth2ServiceAuthCodeGrantJWTAccessTokenWithCertificateTokenBinding
         return httpResponse;
     }
 
-    private TokenResponse makeAccessTokenRequest(boolean isTlsCertificateSentInRequest) throws URISyntaxException,
+    private TokenResponse sendAccessTokenRequest(boolean isTlsCertificateSentInRequest) throws URISyntaxException,
             IOException, ParseException {
 
         URI callbackURI = new URI(OAuth2Constant.CALLBACK_URL);
@@ -432,7 +432,7 @@ public class OAuth2ServiceAuthCodeGrantJWTAccessTokenWithCertificateTokenBinding
         return client.execute(request);
     }
 
-    private TokenResponse makeRefreshTokenRequest(AuthorizationGrant authorizationGrant, boolean isTlsCertificateSentInRequest)
+    private TokenResponse sendRefreshTokenRequest(AuthorizationGrant authorizationGrant, boolean isTlsCertificateSentInRequest)
             throws URISyntaxException, IOException, ParseException {
 
         ClientID clientID = new ClientID(consumerKey);
