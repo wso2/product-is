@@ -12,6 +12,7 @@ from requests.exceptions import HTTPError
 import constants_fapi as constants
 import base64
 from config import browser_configuration
+from config.client_configs import client_configs
 
 # path to product is zip file
 path_to_is_zip = str(sys.argv[1])
@@ -203,15 +204,15 @@ def json_config_builder(service_provider_1, service_provider_2, output_file_path
         "client": {
             "client_id": service_provider_1['clientId'],
             "scope": "openid profile abc",
-            "jwks": client1_jwks
+            "jwks": client_configs['client']['jwks']
         },
         "client2": {
             "client_id": service_provider_2['clientId'],
             "scope": "openid profile abc",
-            "jwks": client2_jwks
+            "jwks": client_configs['client2']['jwks']
         },
-        "mtls": client1_mtls,
-        "mtls2": client2_mtls,
+        "mtls": client_configs['mtls'],
+        "mtls2": client_configs['mtls2'],
         "browser": browser_configuration.CONFIG["basic"]["browser"],
         "override": browser_configuration.CONFIG["basic"]["override"]
     }
