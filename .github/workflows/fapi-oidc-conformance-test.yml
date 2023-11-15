@@ -25,7 +25,6 @@ on:
       conformance-suite-version:
         description: 'Conformance suite branch to clone in https://gitlab.com/openid/conformance-suite.git. If not provided, latest release tag is used.'
         required: false
-        default: 'release-v5.1.9'
       resource-url:
         description: 'Resource url path'
         default: 'https://iam/resource'
