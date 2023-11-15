@@ -5,7 +5,6 @@ import jwt
 import ssl
 from flask import request
 from flask import Flask, jsonify
-# from exceptions import Unauthorized
 from cryptography.hazmat.primitives import hashes
 from cryptography import x509
 from cryptography.hazmat.backends import default_backend
@@ -127,11 +126,4 @@ def handleUnauthorized(error):
     return response
 
 if __name__ == '__main__':
-
-    # context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
-    # context.load_cert_chain('security2/server/diagserverCA.pem', 'security2/server/diagserverCA.key')
-    # CIPHERS = 'DHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384'
-    # context.set_ciphers(CIPHERS)
-
-    # app.run(debug=True, ssl_context=context, port=5002, host='0.0.0.0')
-    app.run(debug=True, port=5002, host='0.0.0.0')
+    app.run(debug=False, port=5002, host='0.0.0.0')

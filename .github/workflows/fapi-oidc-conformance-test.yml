@@ -163,8 +163,6 @@ jobs:
         echo ">>> Permission changed for /etc/nginx"
         mkdir -p /etc/nginx/ssl
         echo ">>> /etc/nginx/ssl created successfully!"
-        echo "${{secrets.FAPI_RESOURCE_SERVER_KEY}}" >> /etc/nginx/ssl/serverCA.key
-        echo "${{secrets.FAPI_RESOURCE_SERVER_PEM}}" >> /etc/nginx/ssl/serverCA.pem
         echo ">>> FAPI resource server keys saved successfully!"
 
         cd product-is/oidc-fapi-conformance-tests/resource-server 
