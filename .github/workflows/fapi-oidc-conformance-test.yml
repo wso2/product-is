@@ -164,14 +164,9 @@ jobs:
         mkdir -p /etc/nginx/ssl
         echo ">>> /etc/nginx/ssl created successfully!"
         cd product-is/oidc-fapi-conformance-tests/resource-server/resource-server-keys
-        ls
         cp -f serverCA.key /etc/nginx/ssl
         cp -f serverCA.pem /etc/nginx/ssl
         cd ..
-        ls
-
-        # echo "${{secrets.FAPI_RESOURCE_SERVER_KEY}}" >> /etc/nginx/ssl/serverCA.key
-        # echo "${{secrets.FAPI_RESOURCE_SERVER_PEM}}" >> /etc/nginx/ssl/serverCA.pem
         echo ">>> FAPI resource server keys saved successfully!"
 
         cp -f nginx-proxy /etc/nginx/sites-enabled
