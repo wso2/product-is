@@ -27,4 +27,12 @@ server {
 
         proxy_pass http://localhost:5002/resource;
     }
+
+    location /jwks1 {
+        proxy_pass http://localhost:5002/jwks1;
+    }
+
+    location /jwks2 {
+        proxy_pass http://localhost:5002/jwks2;
+    }
 }

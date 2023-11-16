@@ -8,8 +8,7 @@ from cryptography.hazmat.primitives import hashes
 from cryptography import x509
 from cryptography.hazmat.backends import default_backend
 from urllib.parse import unquote
-from jwks_to_host.serverjwks import jwks as jwks1
-from jwks_to_host.serverjwks2 import jwks as jwks2
+from jwks_to_host import serverjwks, serverjwks2
 
 
 app = Flask(__name__)
@@ -146,14 +145,14 @@ def resource():
     return response
 
 @app.route('/jwks1')
-def jwks():
+def jwks1():
     print ("[INFO] JWKS endpoint 1")
-    return jwks1
+    return serverjwks.jwks
 
 @app.route('/jwks2')
-def jwks():
+def jwks2():
     print ("[INFO] JWKS endpoint 2")
-    return jwks2
+    return serverjwks2.jwks
 
 @app.errorhandler(Unauthorized)
 def handleUnauthorized(error):
