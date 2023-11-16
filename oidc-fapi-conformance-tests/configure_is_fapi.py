@@ -36,6 +36,7 @@ def dcr(app_json):
     DCR_BODY['token_endpoint_auth_method'] = app_json.get("token_endpoint_auth_method")
     DCR_BODY['ext_param_client_id'] = app_json.get("client_id")
     DCR_BODY['ext_param_client_secret'] = app_json.get("client_secret")
+    DCR_BODY['require_pushed_authorization_requests'] = app_json.get("require_pushed_authorization_requests")
     try:
         response = requests.post(url=constants.DCR_ENDPOINT, headers=constants.HEADERS_WITH_AUTH,
                                  data=json.dumps(DCR_BODY), verify=False)
@@ -83,29 +84,6 @@ def get_service_provider_details(application_id):
     except Exception as error:
         print("Error occurred: " + str(error))
         exit(1)
-
-# set access token type of the service provider to JWT
-def set_service_provider_access_token_type(application_id, app_details, token_type):
-    body = app_details
-    # body['accessToken']['type'] = token_type
-    # body['accessToken']['bindingType'] = "certificate"
-    # body['accessToken']['validateTokenBinding'] = "true"
-    # body['pushAuthorizationRequest']['requirePushAuthorizationRequest'] = False
-
-    print(">>> Set access token type...")
-    try:
-        response = requests.put(url=constants.APPLICATION_ENDPOINT + "/" + application_id + "/inbound-protocols/oidc",
-                                headers=constants.HEADERS_WITH_AUTH, data=json.dumps(body), verify=False)
-        response.raise_for_status()
-    except HTTPError as http_error:
-        print(http_error)
-        print(response.text)
-        exit(1)
-    except Exception as error:
-        print("\nError occurred: " + str(error))
-        exit(1)
-    else:
-        print(">>> Access token type saved successfully.")
 
 # perform advanced authentication configuration for given service provider
 def configure_acr(application_id):
@@ -262,7 +240,6 @@ def createSPApp(app_json):
     dcr(app_json)
     app_id = get_application_id_by_sp_name(app_json.get("client_name"))
     app_details = get_service_provider_details(app_id)
-    # set_service_provider_access_token_type(app_id, app_details, "JWT")
     configure_acr(app_id)
     return app_details
 
