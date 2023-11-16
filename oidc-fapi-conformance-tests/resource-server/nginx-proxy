@@ -6,8 +6,8 @@ server {
 
 server {
     listen 443 ssl;
-    ssl_certificate /etc/nginx/ssl/example.crt;
-    ssl_certificate_key /etc/nginx/ssl/example.key;
+    ssl_certificate /etc/nginx/ssl/serverCA.crt;
+    ssl_certificate_key /etc/nginx/ssl/serverCA.key;
 
     ssl_verify_client optional_no_ca;
 

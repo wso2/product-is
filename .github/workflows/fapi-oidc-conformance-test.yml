@@ -160,12 +160,11 @@ jobs:
         echo ">>> Permission changed for /etc/nginx"
         mkdir -p /etc/nginx/ssl
         echo ">>> /etc/nginx/ssl created successfully!"
-        cd product-is/oidc-fapi-conformance-tests/resource-server/resource-server-keys
-        cp -f example.key /etc/nginx/ssl
-        cp -f example.crt /etc/nginx/ssl
-        cd ..
+        
+        sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/serverCA.key -out /etc/nginx/ssl/serverCA.crt
         echo ">>> FAPI resource server keys saved successfully!"
 
+        cd product-is/oidc-fapi-conformance-tests/resource-server
         cp -f nginx-proxy /etc/nginx/sites-enabled
         sudo nginx -t
         sudo service nginx restart
