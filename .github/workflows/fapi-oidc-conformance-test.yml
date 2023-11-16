@@ -150,6 +150,7 @@ jobs:
         sed -i '/^    volumes.*/i \ \ \ \ extra_hosts:\n \ \ \ \ - "localhost:\$IP\"\n \ \ \ \ - "iam:\$IP\"' ./conformance-suite/docker-compose-dev.yml
         sed -i '/^    volumes.*/i \ \ \ \ extra_hosts:\n \ \ \ \ - "localhost:\$IP\"\n \ \ \ \ - "iam:\$IP\"' ./conformance-suite/docker-compose.yml
         sudo -- sh -c -e "echo '127.0.1.1 iam' >> /etc/hosts"
+        sudo -- sh -c -e "echo '127.0.1.1 www.iam.com' >> /etc/hosts"
 
     - name: Start FAPI resource server
       run: |

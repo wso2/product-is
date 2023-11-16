@@ -78,7 +78,7 @@ MTLS_APP1 = {
     "client_id": "mtls_fapi1_client_id",
     "client_secret": "mtls_fapi1_client_secret",
     "redirect_uris": ["https://localhost.emobix.co.uk:8443/test/a/fapi-wso2is/callback"],
-    "jwks_uri": "https://iam/jwks1",
+    "jwks_uri": "https://www.iam.com/jwks1",
     "require_pushed_authorization_requests" : "false",
 }
 
@@ -88,7 +88,7 @@ MTLS_APP2 = {
     "client_id": "mtls_fapi2_client_id",
     "client_secret": "mtls_fapi2_client_secret",
     "redirect_uris": ["https://localhost.emobix.co.uk:8443/test/a/fapi-wso2is/callback?dummy1=lorem&dummy2=ipsum"],
-    "jwks_uri": "https://iam/jwks2",
+    "jwks_uri": "https://www.iam.com/jwks2",
     "require_pushed_authorization_requests" : "false",
 }
 
