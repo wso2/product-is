@@ -88,9 +88,9 @@ def get_service_provider_details(application_id):
 def set_service_provider_access_token_type(application_id, app_details, token_type):
     body = app_details
     # body['accessToken']['type'] = token_type
-    body['accessToken']['bindingType'] = "certificate"
-    body['accessToken']['validateTokenBinding'] = "true"
-    body['pushAuthorizationRequest']['requirePushAuthorizationRequest'] = False
+    # body['accessToken']['bindingType'] = "certificate"
+    # body['accessToken']['validateTokenBinding'] = "true"
+    # body['pushAuthorizationRequest']['requirePushAuthorizationRequest'] = False
 
     print(">>> Set access token type...")
     try:
@@ -262,7 +262,7 @@ def createSPApp(app_json):
     dcr(app_json)
     app_id = get_application_id_by_sp_name(app_json.get("client_name"))
     app_details = get_service_provider_details(app_id)
-    set_service_provider_access_token_type(app_id, app_details, "JWT")
+    # set_service_provider_access_token_type(app_id, app_details, "JWT")
     configure_acr(app_id)
     return app_details
 

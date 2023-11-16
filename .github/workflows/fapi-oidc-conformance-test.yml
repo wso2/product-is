@@ -160,8 +160,8 @@ jobs:
         echo ">>> Permission changed for /etc/nginx"
         mkdir -p /etc/nginx/ssl
         echo ">>> /etc/nginx/ssl created successfully!"
-        
-        sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/serverCA.key -out /etc/nginx/ssl/serverCA.crt
+
+        sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/serverCA.key -out /etc/nginx/ssl/serverCA.crt -subj "/C=US/ST=California/L=San Francisco/O=My Company/OU=IT Department/CN=mycompany.com"
         echo ">>> FAPI resource server keys saved successfully!"
 
         cd product-is/oidc-fapi-conformance-tests/resource-server
