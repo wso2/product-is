@@ -83,7 +83,6 @@ id_token.signature_algorithm="PS256"
 
 # Token endpoint related configurations
 [oauth.oidc.token_endpoint]
-auth_methods=["private_key_jwt","tls_client_auth"]
 signing_algorithms=["PS256","ES256"]
 
 # Userinfo response signing algorithm
@@ -93,17 +92,10 @@ jwt_signature_algorithm="PS256"
 # FAPI specific configurations
 [oauth.oidc.fapi]
 enable_validation=true
-allowed_client_authentication_methods=["private_key_jwt","tls_client_auth"]
-allowed_signature_algorithms=["PS256","ES256"]
 
 # Set the priority order for MTLS authenticator (This should be a higher value to ensure other authenticators are engaged prior to MTLS authenticator)
 [event.default_listener.mutual_tls_authenticator]
 priority=9999
-
-# If TLSv1.2 is used, add the following configuration to limit the allowed cipher suites
-[transport.passthru_https.listener.parameters]
-HttpsProtocols = "TLSv1.2"
-PreferredCiphers = "TLS_DHE_RSA_WITH_AES_128_GCM_SHA256, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256, TLS_DHE_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
 
 # enable pvt key jwt authenticator
 [[event_listener]]
@@ -116,35 +108,8 @@ PreventTokenReuse= false
 RejectBeforeInMinutes= "100"
 TokenEndpointAlias= "https://iam:9443/oauth2/token"
 
-[[cache.manager]]
-name="PrivateKeyJWT"
-timeout="10"
-capacity="5000"
-
-# enable mtls authenticator
-[admin_console.authenticator.mutual_ssl_authenticator]
-enable = false
-
-[transport.https]
-trustManagerClassName="org.wso2.carbon.identity.core.util.ClientAuthX509TrustManager"
-clientAuth="want"
-
 [transport.https.sslHostConfig.properties]
 ciphers="TLS_DHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_DHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
 
-
-[[event_listener]]
-id = "custom_event_listener"
-type = "org.wso2.carbon.identity.core.handler.AbstractIdentityMessageHandler"
-name= "org.wso2.carbon.identity.oauth2.token.handler.clientauth.mutualtls.MutualTLSClientAuthenticator"
-order = 158
-enable = true
-
-[oauth.grant_type.uma_ticket]
-retrieve_uma_permission_info_through_introspection = true
-
 [oauth.mutualtls]
 client_certificate_header = "x-wso2-mtls-cert"
-
-[system_applications]
-read_only_apps = []
