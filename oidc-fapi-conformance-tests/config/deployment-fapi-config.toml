@@ -73,7 +73,6 @@ app_password= "dashboard"
 #hostname= "smtp.gmail.com"
 #port= 587
 
-
 # FAPI
 [oauth.dcr]
 enable_fapi_enforcement = true
@@ -96,17 +95,6 @@ enable_validation=true
 # Set the priority order for MTLS authenticator (This should be a higher value to ensure other authenticators are engaged prior to MTLS authenticator)
 [event.default_listener.mutual_tls_authenticator]
 priority=9999
-
-# enable pvt key jwt authenticator
-[[event_listener]]
-id = "private_key_jwt_authenticator"
-type = "org.wso2.carbon.identity.core.handler.AbstractIdentityHandler"
-name = "org.wso2.carbon.identity.oauth2.token.handler.clientauth.jwt.PrivateKeyJWTClientAuthenticator"
-order = "899"
-[event_listener.properties]
-PreventTokenReuse= false
-RejectBeforeInMinutes= "100"
-TokenEndpointAlias= "https://iam:9443/oauth2/token"
 
 [transport.https.sslHostConfig.properties]
 ciphers="TLS_DHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_DHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"

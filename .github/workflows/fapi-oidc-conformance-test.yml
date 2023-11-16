@@ -186,7 +186,7 @@ jobs:
         cd ./product-is/oidc-fapi-conformance-tests
         python3 ./configure_is_fapi.py ../../$PRODUCT_IS_ZIP 'https://iam/resource'
         
-    - name: Run Conformance Suite
+    - name: Start Conformance Suite server
       run: |
         DOCKER_COMPOSE_FILE=./docker-compose.yml
         cd conformance-suite
