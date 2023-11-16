@@ -8,6 +8,8 @@ from cryptography.hazmat.primitives import hashes
 from cryptography import x509
 from cryptography.hazmat.backends import default_backend
 from urllib.parse import unquote
+from jwks_to_host.serverjwks import jwks as jwks1
+from jwks_to_host.serverjwks2 import jwks as jwks2
 
 
 app = Flask(__name__)
@@ -142,6 +144,16 @@ def resource():
 
     response.headers['x-fapi-interaction-id'] = xFapi
     return response
+
+@app.route('/jwks1')
+def jwks():
+    print ("[INFO] JWKS endpoint 1")
+    return jwks1
+
+@app.route('/jwks2')
+def jwks():
+    print ("[INFO] JWKS endpoint 2")
+    return jwks2
 
 @app.errorhandler(Unauthorized)
 def handleUnauthorized(error):
