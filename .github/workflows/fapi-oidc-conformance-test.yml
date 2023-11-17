@@ -185,7 +185,7 @@ jobs:
       run: |
         PRODUCT_IS_ZIP=$(find ./ -name wso2is* -type f -printf "%f\n")
         cd ./product-is/oidc-fapi-conformance-tests
-        python3 ./configure_is_fapi.py ../../$PRODUCT_IS_ZIP 'https://iam/resource'
+        python3 ./configure_is_fapi.py ../../$PRODUCT_IS_ZIP
         
     - name: Start Conformance Suite server
       run: |

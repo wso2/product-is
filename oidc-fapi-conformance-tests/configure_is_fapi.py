@@ -23,8 +23,6 @@ def decode_secret(secret):
     decoded_json = json.loads(decoded_string)
     return decoded_json
 
-resource_url = str(sys.argv[2])
-
 # use dcr to register a client
 def dcr(app_json):
     print(">>> Making DCR Request.")
@@ -167,7 +165,7 @@ def json_config_builder(service_provider_1, service_provider_2, output_file_path
             "discoveryUrl": constants.BASE_URL + "/oauth2/token/.well-known/openid-configuration"
         },
         "resource": {
-            "resourceUrl": resource_url
+            "resourceUrl": constants.RESOURCE_ENDPOINT_URL
         },
         "client": {
             "client_id": service_provider_1['clientId'],

@@ -6,6 +6,7 @@ DCR_ENDPOINT = BASE_URL + "/api/identity/oauth2/dcr/v1.1/register"
 TOKEN_ENDPOINT = BASE_URL + "/oauth2/token"
 APPLICATION_ENDPOINT = BASE_URL + "/api/server/v1/applications"
 CREATE_USER_ENDPOINT = BASE_URL + "/scim2/Users"
+RESOURCE_ENDPOINT_URL = "https://iam/resource"
 
 SCOPES = "internal_user_mgt_update internal_application_mgt_create internal_application_mgt_view internal_login " \
          "internal_claim_meta_update internal_application_mgt_update internal_scope_mgt_create"
