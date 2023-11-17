@@ -46,6 +46,10 @@
         "displayName": "Organization Switch"
       },
       {
+        "name": "organization_switch_cc",
+        "displayName": "organization_switch_cc"
+      },
+      {
         "name": "urn:ietf:params:oauth:grant-type:jwt-bearer",
         "displayName": "urn:ietf:params:oauth:grant-type:jwt-bearer"
       }
