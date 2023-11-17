@@ -42,7 +42,7 @@ import java.util.Set;
 public class OIDCAuthCodeSessionTestCase extends OIDCAbstractUIIntegrationTest {
 
     private static final String username = "oidcsessiontestuser";
-    private static final String password = "oidcsessiontestuser";
+    private static final String password = "Oidcsessiontestuser@123";
     private static final String email = "oidcsessiontestuser@wso2.com";
     private static final String firstName = "oidcsessiontestuser-first";
     private static final String lastName = "oidcsessiontestuser-last";

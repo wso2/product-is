@@ -93,11 +93,11 @@ public class SAMLLocalAndOutboundAuthenticatorsTestCase extends ISIntegrationTes
     private HttpClient httpClient;
 
     private enum User {
-        SUPER_TENANT_USER("samluser1", "samluser1", "carbon.super", "samluser1@wso2.com", "samlnickuser1",
+        SUPER_TENANT_USER("samluser1", "Samluser@1", "carbon.super", "samluser1@wso2.com", "samlnickuser1",
                 "samluser1", ""),
         SUPER_TENANT_LOCKED_USER("isura", "Lakmal@123", "carbon.super", "isura@wso2.com", "samlnickuser2", "isura",
                 CommonConstants.USER_IS_LOCKED),
-        SUPER_TENANT_WRONG_CREDENTIAL_USER("samluser1", "wrongpass", "carbon.super", "samluser1@wso2.com",
+        SUPER_TENANT_WRONG_CREDENTIAL_USER("samluser1", "Wrong@pass9", "carbon.super", "samluser1@wso2.com",
                 "samlnickuser1", "samluser1", CommonConstants.INVALID_CREDENTIAL);
 
         private String username;

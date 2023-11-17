@@ -131,7 +131,7 @@ public class OIDCFederatedIdpInitLogoutTest extends AbstractIdentityFederationTe
             "-session?idpSessionKey=";
 
     private static final String SECONDARY_IS_TEST_USERNAME = "testFederatedUser";
-    private static final String SECONDARY_IS_TEST_PASSWORD = "testFederatePassword";
+    private static final String SECONDARY_IS_TEST_PASSWORD = "TestFederatePassword@123";
     private static final String SECONDARY_IS_TEST_USER_ROLES = "admin";
 
     private static final String SECONDARY_IS_SP_NAME = "secondarySP";

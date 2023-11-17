@@ -109,6 +109,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
     private static final String COUNTRY_CLAIM_ID = "Y291bnRyeQ";
     private static final String openIdScope = "openid";
     private static final String JWT_USER = "jwtUser";
+    private static final String JWT_USER_PASSWORD = "JwtUser@123";
 
     protected Log log = LogFactory.getLog(getClass());
     private ServerConfigurationManager serverConfigurationManager;
@@ -168,7 +169,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
     public void testPasswordGrantBasedSelfContainedAccessTokenGeneration()
             throws IOException, URISyntaxException, ParseException, java.text.ParseException {
 
-        Secret password = new Secret(JWT_USER);
+        Secret password = new Secret(JWT_USER_PASSWORD);
         AuthorizationGrant passwordGrant = new ResourceOwnerPasswordCredentialsGrant(JWT_USER, password);
         ClientID clientID = new ClientID(consumerKey);
         Secret clientSecret = new Secret(consumerSecret);
@@ -566,7 +567,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
 
         UserObject userInfo = new UserObject();
         userInfo.setUserName(JWT_USER);
-        userInfo.setPassword(JWT_USER);
+        userInfo.setPassword(JWT_USER_PASSWORD);
         userInfo.setName(new Name().givenName(JWT_USER));
         userInfo.addEmail(new Email().value(EMAIL_CLAIM_VALUE));
         userInfo.setScimSchemaExtensionEnterprise(new ScimSchemaExtensionEnterprise().country(COUNTRY_CLAIM_VALUE));

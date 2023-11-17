@@ -64,6 +64,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AssociatedRolesConfig;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration.DialectEnum;
@@ -84,11 +85,13 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static org.wso2.identity.integration.test.utils.CarbonUtils.isLegacyAuthzRuntimeEnabled;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN_ENDPOINT;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZATION_CODE_NAME;
@@ -223,6 +226,27 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
         applicationPatch.setClaimConfiguration(getCustomLocalClaimMapping());
         updateApplication(applicationId, applicationPatch);
 
+        if (!isLegacyAuthzRuntimeEnabled()) {
+            // Authorize few system APIs.
+            authorizeSystemAPIs(applicationId, new ArrayList<>(Collections.singletonList("/api/server/v1/oidc/scopes")));
+            // Associate roles.
+            AssociatedRolesConfig associatedRolesConfig =
+                    new AssociatedRolesConfig().allowedAudience(AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION);
+            // Get Roles.
+            String adminRoleId = getRoleV2ResourceId("admin",
+                    AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION.toString().toLowerCase(), null);
+            String everyoneRoleId = getRoleV2ResourceId("everyone",
+                    AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION.toString().toLowerCase(), null);
+            applicationPatch = applicationPatch.associatedRoles(associatedRolesConfig);
+            associatedRolesConfig.addRolesItem(
+                    new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Role().id(
+                            adminRoleId));
+            associatedRolesConfig.addRolesItem(
+                    new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Role().id(
+                            everyoneRoleId));
+            updateApplication(applicationId, applicationPatch);
+        }
+
         application = getApplication(applicationId);
         List<ClaimMappings> claimMappings = application.getClaimConfiguration().getClaimMappings();
         Assert.assertNotNull(claimMappings);
@@ -248,8 +272,13 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
             dependsOnMethods = "testCreateCustomOIDCClaim")
     public void testCreateCustomOIDCScope() throws Exception {
 
+        String accessToken;
         // Get a token with required scopes.
-        String accessToken = getAccessTokenToCallAPI("internal_application_mgt_create", "internal_application_mgt_view");
+        if (isLegacyAuthzRuntimeEnabled()) {
+            accessToken = getAccessTokenToCallAPI("internal_application_mgt_create", "internal_application_mgt_view");
+        } else {
+            accessToken = getAccessTokenToCallAPI("internal_oidc_scope_mgt_create", "internal_oidc_scope_mgt_view");
+        }
         Assert.assertNotNull(accessToken, "Could not get an access token.");
         String authorizationHeader = "Bearer " + accessToken;
 
@@ -587,7 +616,12 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
     private void deleteCustomOIDCScope() throws Exception {
 
         // Get a token with required scopes.
-        String accessToken = getAccessTokenToCallAPI("internal_application_mgt_delete");
+        String accessToken;
+        if (isLegacyAuthzRuntimeEnabled()) {
+            accessToken = getAccessTokenToCallAPI("internal_application_mgt_delete");
+        } else {
+            accessToken = getAccessTokenToCallAPI("internal_oidc_scope_mgt_delete");
+        }
         Assert.assertNotNull(accessToken, "Could not get an access token to delete OIDC scope.");
         String authorizationHeader = "Bearer " + accessToken;
         // Delete custom OIDC scope.

@@ -128,11 +128,11 @@
                 <users>
                     <user key="user1">
                         <userName>testuser11</userName>
-                        <password>testuser11</password>
+                        <password>Wso2_test11</password>
                     </user>
                     <user key="user2">
                         <userName>testuser21</userName>
-                        <password>testuser21</password>
+                        <password>Wso2_test21</password>
                     </user>
                 </users>
             </tenant>
@@ -148,11 +148,11 @@
                 <users>
                     <user key="user1">
                         <userName>testuser11</userName>
-                        <password>testuser11</password>
+                        <password>Wso2_test11</password>
                     </user>
                     <user key="user2">
                         <userName>testuser21</userName>
-                        <password>testuser21</password>
+                        <password>Wso2_test21</password>
                     </user>
                 </users>
             </tenant>
@@ -166,11 +166,11 @@
                 <users>
                     <user key="user1">
                         <userName>testuser11</userName>
-                        <password>testuser11</password>
+                        <password>Wso2_test11</password>
                     </user>
                     <user key="user2">
                         <userName>testuser21</userName>
-                        <password>testuser21</password>
+                        <password>Wso2_test21</password>
                     </user>
                 </users>
             </tenant>

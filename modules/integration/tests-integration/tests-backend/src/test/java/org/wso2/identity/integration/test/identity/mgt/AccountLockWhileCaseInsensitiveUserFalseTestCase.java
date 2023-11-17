@@ -50,7 +50,7 @@ public class AccountLockWhileCaseInsensitiveUserFalseTestCase extends ISIntegrat
 
     private static final String TEST_USER_1 = "testDemo";
     private static final String TEST_USER_2 = "TestDemo";
-    private static final String TEST_USER_1_PASSWORD = "testDemoPass";
+    private static final String TEST_USER_1_PASSWORD = "testDemo@Pass123";
     private static final String USERS_PATH = "users";
     private ServerConfigurationManager configurationManager;
     private SCIM2RestClient scim2RestClient;

@@ -40,13 +40,18 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AssociatedRolesConfig;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
+import org.wso2.identity.integration.test.utils.CarbonUtils;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Test cases to check the functionality of the Permission based scope validator.
@@ -54,15 +59,18 @@ import java.net.URISyntaxException;
 public class PermissionBasedScopeValidatorTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
     private static final String INTROSPECT_SCOPE = "internal_application_mgt_view";
+    private static final String INTROSPECT_SCOPE_IN_NEW_AUTHZ_RUNTIME = "internal_oauth2_introspect";
     private static final String SYSTEM_SCOPE = "SYSTEM";
     private static final String CALLBACK_URL = "https://localhost/callback";
     private CloseableHttpClient client;
     private String applicationId;
+    private static boolean isLegacyRuntimeEnabled;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
         super.init(TestUserMode.SUPER_TENANT_USER);
+        isLegacyRuntimeEnabled = CarbonUtils.isLegacyAuthzRuntimeEnabled();
         createOauthApplication();
     }
 
@@ -95,7 +103,13 @@ public class PermissionBasedScopeValidatorTestCase extends OAuth2ServiceAbstract
             dependsOnMethods = "testValidateTokenWithoutScope")
     public void testValidateTokenWithValidScope() throws Exception {
 
-        Assert.assertTrue(getTokenAndValidate(new Scope(INTROSPECT_SCOPE)), "Introspection endpoint cannot call with the valid scope");
+        if (isLegacyRuntimeEnabled) {
+            Assert.assertTrue(getTokenAndValidate(new Scope(INTROSPECT_SCOPE)),
+                    "Introspection endpoint cannot call with the valid scope");
+        } else {
+            Assert.assertTrue(getTokenAndValidate(new Scope(INTROSPECT_SCOPE_IN_NEW_AUTHZ_RUNTIME)),
+                    "Introspection endpoint cannot call with the valid scope");
+        }
     }
 
     @Test(groups = "wso2.is", description = "Request access token with valid system scope and validate it.",
@@ -165,5 +179,27 @@ public class PermissionBasedScopeValidatorTestCase extends OAuth2ServiceAbstract
         Assert.assertNotNull(consumerSecret, "Consumer Secret is null.");
 
         applicationId = application.getId();
+        if (!isLegacyRuntimeEnabled) {
+            // Authorize few system APIs.
+            authorizeSystemAPIs(applicationId,
+                    new ArrayList<>(Arrays.asList("/api/server/v1/tenants", "/scim2/Users", "/oauth2/introspect")));
+            // Associate roles.
+            ApplicationPatchModel applicationPatch = new ApplicationPatchModel();
+            AssociatedRolesConfig associatedRolesConfig =
+                    new AssociatedRolesConfig().allowedAudience(AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION);
+            // Get Roles.
+            String adminRoleId = getRoleV2ResourceId("admin",
+                    AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION.toString().toLowerCase(), null);
+            String everyoneRoleId = getRoleV2ResourceId("everyone",
+                    AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION.toString().toLowerCase(), null);
+            applicationPatch = applicationPatch.associatedRoles(associatedRolesConfig);
+            associatedRolesConfig.addRolesItem(
+                    new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Role().id(
+                            adminRoleId));
+            associatedRolesConfig.addRolesItem(
+                    new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Role().id(
+                            everyoneRoleId));
+            updateApplication(applicationId, applicationPatch);
+        }
     }
 }

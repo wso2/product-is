@@ -397,9 +397,9 @@ public class EmailOTPTestCase extends ISIntegrationTest {
     public static TestConfig[][] testConfigProvider(){
 
         return new TestConfig[][] {
-                {new TestConfig(TestUserMode.SUPER_TENANT_ADMIN, "testuser1", "testuser1",
+                {new TestConfig(TestUserMode.SUPER_TENANT_ADMIN, "testuser1", "Wso2@test1",
                 "carbon.super", "testuser1", "testuser1@abc.com", "travelocity.com")},
-                {new TestConfig(TestUserMode.TENANT_ADMIN, "testuser2@wso2.com", "testuser2",
+                {new TestConfig(TestUserMode.TENANT_ADMIN, "testuser2@wso2.com", "Wso2@test2",
                         "wso2.com", "testuser2", "testuser2@abc.com", "travelocity.com-saml-tenantwithoutsigning")}
         };
     }

@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>7.0.0-alpha-SNAPSHOT</version>
+        <version>7.0.0-beta-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -533,6 +533,9 @@
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.input.validation.mgt.server.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.client.attestation.mgt.server.feature:${carbon.identity.framework.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.consent.server.configs.mgt.server.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -558,6 +561,9 @@
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.local.auth.emailotp:org.wso2.carbon.identity.local.auth.emailotp.server.feature:${authenticator.local.auth.emailotp.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.local.auth.smsotp:org.wso2.carbon.identity.local.auth.smsotp.feature:${authenticator.local.auth.smsotp.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.auth.otp.commons:org.wso2.carbon.identity.auth.otp.core.server.feature:${authenticator.auth.otp.commons.version}
@@ -1093,6 +1099,10 @@
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.identity.client.attestation.mgt.server.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.identity.consent.server.configs.mgt.server.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
@@ -1148,6 +1158,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.local.auth.emailotp.server.feature.group</id>
                                     <version>${authenticator.local.auth.emailotp.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.local.auth.smsotp.feature.group</id>
+                                    <version>${authenticator.local.auth.smsotp.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.auth.otp.core.server.feature.group</id>

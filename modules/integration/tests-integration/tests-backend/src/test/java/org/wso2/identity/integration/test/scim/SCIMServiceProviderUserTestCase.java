@@ -51,7 +51,7 @@ import java.rmi.RemoteException;
 public class SCIMServiceProviderUserTestCase {
     private static final Log log = LogFactory.getLog(SCIMServiceProviderUserTestCase.class);
     private static final String USERNAME = "SCIMUser1";
-    public static final String PASSWORD = "password1";
+    public static final String PASSWORD = "Password@1";
     public static final String ADMIN_ROLE = "admin";
     public static final String SCIM_ME_ENDPOINT = "Users/me";
     String scimUserId = null;

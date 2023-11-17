@@ -21,9 +21,9 @@ package org.wso2.identity.integration.test.openid;
 public class OpenIDUtils {
 
     public enum User {
-        ADMIN("openidadmin","openidadmin", "openidadmin@wso2.com", "admin"),
-        USER1("openiduser1", "openiduser1", "openiduser1@wso2.com", "internal/everyone"),
-        USER2("openiduser2", "openiduser2", "openiduser2@wso2.com", "internal/everyone");
+        ADMIN("openidadmin","Wso2@test", "openidadmin@wso2.com", "admin"),
+        USER1("openiduser1", "Wso2@test1", "openiduser1@wso2.com", "internal/everyone"),
+        USER2("openiduser2", "Wso2@test2", "openiduser2@wso2.com", "internal/everyone");
 
         private String username;
         private String password;

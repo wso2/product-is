@@ -103,9 +103,9 @@ public abstract class AbstractAnalyticsLoginTestCase extends ISIntegrationTest {
 
     protected enum User {
 
-        SUPER_TENANT_USER("samlAnalyticsuser1", "samlAnalyticsuser1", "carbon.super", "samlAnalyticsuser1", "samlAnalyticsuser1@abc.com",
+        SUPER_TENANT_USER("samlAnalyticsuser1", "samlAnalyticsuser@1", "carbon.super", "samlAnalyticsuser1", "samlAnalyticsuser1@abc.com",
                 "samlnickuser1"),
-        TENANT_USER("samlAnalyticsuser2@wso2.com", "samlAnalyticsuser2", "wso2.com", "samlAnalyticsuser2", "samlAnalyticsuser2@abc.com",
+        TENANT_USER("samlAnalyticsuser2@wso2.com", "samlAnalyticsuser@2", "wso2.com", "samlAnalyticsuser2", "samlAnalyticsuser2@abc.com",
                 "samlnickuser2");
 
         private String username;
