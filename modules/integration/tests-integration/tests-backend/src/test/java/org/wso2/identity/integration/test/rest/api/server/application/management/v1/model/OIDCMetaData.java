@@ -19,6 +19,8 @@ package org.wso2.identity.integration.test.rest.api.server.application.managemen
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Objects;
 import javax.validation.Valid;
 
@@ -41,7 +43,7 @@ public class OIDCMetaData  {
     private MetadataProperty requestObjectEncryptionAlgorithm;
     private MetadataProperty requestObjectEncryptionMethod;
     private MetadataProperty subjectType;
-
+    private FapiMetadata fapiMetadata;
 
     /**
      **/
@@ -349,6 +351,26 @@ public class OIDCMetaData  {
         this.subjectType = subjectType;
     }
 
+    /**
+    **/
+    public OIDCMetaData fapiMetadata(FapiMetadata fapiMetadata) {
+
+        this.fapiMetadata = fapiMetadata;
+        return this;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("fapiMetadata")
+    @Valid
+    public FapiMetadata getFapiMetadata() {
+        return fapiMetadata;
+    }
+    public void setFapiMetadata(FapiMetadata fapiMetadata) {
+        this.fapiMetadata = fapiMetadata;
+    }
+
+
+
     @Override
     public boolean equals(java.lang.Object o) {
 
@@ -375,7 +397,8 @@ public class OIDCMetaData  {
                 Objects.equals(this.tokenEndpointSignatureAlgorithm, oiDCMetaData.requestObjectSignatureAlgorithm) &&
                 Objects.equals(this.tokenEndpointSignatureAlgorithm, oiDCMetaData.requestObjectEncryptionAlgorithm) &&
                 Objects.equals(this.tokenEndpointSignatureAlgorithm, oiDCMetaData.requestObjectEncryptionMethod) &&
-                Objects.equals(this.subjectType, oiDCMetaData.subjectType);
+                Objects.equals(this.subjectType, oiDCMetaData.subjectType) &&
+                Objects.equals(this.fapiMetadata, oiDCMetaData.fapiMetadata);
     }
 
     @Override
@@ -385,12 +408,13 @@ public class OIDCMetaData  {
                 idTokenEncryptionAlgorithm, idTokenEncryptionMethod, scopeValidators, accessTokenType,
                 accessTokenBindingType, tokenEndpointAuthMethod, tokenEndpointSignatureAlgorithm,
                 idTokenSignatureAlgorithm, requestObjectSignatureAlgorithm, requestObjectEncryptionAlgorithm,
-                requestObjectEncryptionMethod, subjectType);
+                requestObjectEncryptionMethod, subjectType, fapiMetadata);
     }
 
     @Override
     public String toString() {
 
+        sort();
         StringBuilder sb = new StringBuilder();
         sb.append("class OIDCMetaData {\n");
 
@@ -411,6 +435,7 @@ public class OIDCMetaData  {
         sb.append("    requestObjectEncryptionAlgorithm: ").append(toIndentedString(requestObjectEncryptionAlgorithm)).append("\n");
         sb.append("    requestObjectEncryptionMethod: ").append(toIndentedString(requestObjectEncryptionMethod)).append("\n");
         sb.append("    subjectType: ").append(toIndentedString(subjectType)).append("\n");
+        sb.append("    fapiMetadata: ").append(toIndentedString(fapiMetadata)).append("\n");
         sb.append("}");
         return sb.toString();
     }
@@ -425,5 +450,28 @@ public class OIDCMetaData  {
             return "null";
         }
         return o.toString().replace("\n", "\n");
+    }
+
+    private void sort() {
+
+        Comparator<ClientAuthenticationMethod> authMethodByName = Comparator
+                .comparing(ClientAuthenticationMethod::getName);
+        Comparator<GrantType> grantByName = Comparator.comparing(GrantType::getName);
+        allowedGrantTypes.getOptions().sort(grantByName);
+        tokenEndpointAuthMethod.getOptions().sort(authMethodByName);
+        fapiMetadata.getTokenEndpointAuthMethod().getOptions().sort(authMethodByName);
+        Collections.sort(idTokenEncryptionAlgorithm.getOptions());
+        Collections.sort(idTokenEncryptionMethod.getOptions());
+        Collections.sort(scopeValidators.getOptions());
+        Collections.sort(accessTokenType.getOptions());
+        Collections.sort(accessTokenBindingType.getOptions());
+        Collections.sort(tokenEndpointSignatureAlgorithm.getOptions());
+        Collections.sort(idTokenSignatureAlgorithm.getOptions());
+        Collections.sort(requestObjectSignatureAlgorithm.getOptions());
+        Collections.sort(requestObjectEncryptionAlgorithm.getOptions());
+        Collections.sort(requestObjectEncryptionMethod.getOptions());
+        Collections.sort(subjectType.getOptions());
+        Collections.sort(fapiMetadata.getAllowedSignatureAlgorithms().getOptions());
+        Collections.sort(fapiMetadata.getAllowedEncryptionAlgorithms().getOptions());
     }
 }

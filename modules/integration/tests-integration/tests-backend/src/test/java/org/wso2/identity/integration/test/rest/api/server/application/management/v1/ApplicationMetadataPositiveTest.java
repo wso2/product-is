@@ -42,7 +42,6 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -142,30 +141,22 @@ public class ApplicationMetadataPositiveTest extends ApplicationManagementBaseTe
                 "Response of the get all inbound protocols doesn't match.");
     }
 
-    @Test
-    public void testGetOIDCMetadata() throws IOException {
+     @Test
+     public void testGetOIDCMetadata() throws IOException {
 
-        Response response = getResponseOfGet(METADATA_API_BASE_PATH +
-                PATH_SEPARATOR + INBOUND_PROTOCOLS_PATH +
-                PATH_SEPARATOR + OIDC_PATH);
-        response.then()
-                .log()
-                .ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK);
-        ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
-        OIDCMetaData responseFound = jsonWriter.readValue(response.asString(), OIDCMetaData.class);
-        Assert.assertEquals(sortScopeValidators(responseFound).toString(), oidcMetaData.toString(),
-                "OIDC Metadata returned from the API doesn't match.");
-    }
-
-    private OIDCMetaData sortScopeValidators(OIDCMetaData oidcMetaData) {
-
-        List<String> scopeValidators = oidcMetaData.getScopeValidators().getOptions();
-        Collections.sort(scopeValidators);
-        oidcMetaData.getScopeValidators().setOptions(scopeValidators);
-        return oidcMetaData;
-    }
+         Response response = getResponseOfGet(METADATA_API_BASE_PATH +
+                 PATH_SEPARATOR + INBOUND_PROTOCOLS_PATH +
+                 PATH_SEPARATOR + OIDC_PATH);
+         response.then()
+                 .log()
+                 .ifValidationFails()
+                 .assertThat()
+                 .statusCode(HttpStatus.SC_OK);
+         ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+         OIDCMetaData responseFound = jsonWriter.readValue(response.asString(), OIDCMetaData.class);
+         Assert.assertEquals(responseFound.toString(), oidcMetaData.toString(),
+                 "OIDC Metadata returned from the API doesn't match.");
+     }
 
     @Test
     public void testGetSAMLMetadata() throws IOException {
