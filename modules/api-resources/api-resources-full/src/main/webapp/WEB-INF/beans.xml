@@ -125,7 +125,7 @@
             <bean class="org.wso2.carbon.identity.api.server.api.resource.v1.ApiResourcesApi"/>
             <bean class="org.wso2.carbon.identity.api.server.api.resource.v1.ScopesApi"/>
             <bean class="org.wso2.carbon.identity.api.server.organization.selfservice.v1.SelfServiceApi"/>
-            <bean class="org.wso2.carbon.identity.api.server.api.resource.v1.ApiResourceCollectionsApi"/>
+            <bean class="org.wso2.carbon.identity.api.server.api.resource.v1.MetaApi"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">
