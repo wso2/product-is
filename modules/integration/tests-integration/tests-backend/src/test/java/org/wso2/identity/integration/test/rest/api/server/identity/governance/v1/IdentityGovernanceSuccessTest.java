@@ -55,7 +55,7 @@ public class IdentityGovernanceSuccessTest extends IdentityGovernanceTestBase {
     private static final String CATEGORY_ACCOUNT_MANAGEMENT_PROPERTIES = "QWNjb3VudCBNYW5hZ2VtZW50";
     private static final String CONNECTOR_LOCK_IDLE_ACCOUNTS = "c3VzcGVuc2lvbi5ub3RpZmljYXRpb24";
     private static final String CATEGORY_PASSWORD_POLICIES = "UGFzc3dvcmQgUG9saWNpZXM";
-    private static final String CONNECTOR_PASSWORD_EXPIRY = "cGFzc3dvcmRFeHBpcnlWMg";
+    private static final String CONNECTOR_PASSWORD_EXPIRY = "cGFzc3dvcmRFeHBpcnk";
     private static final String CONNECTOR_PASSWORD_HISTORY = "cGFzc3dvcmRIaXN0b3J5";
     private Map<String, CategoriesRes> categories;
     private static List<PreferenceResp> connectors;
