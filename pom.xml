@@ -1538,11 +1538,6 @@
                 <artifactId>org.wso2.carbon.identity.application.authenticator.apple</artifactId>
                 <version>${social.authenticator.apple.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.extension.identity.authenticator</groupId>
-                <artifactId>org.wso2.carbon.extension.identity.authenticator.github.connector</artifactId>
-                <version>${social.authenticator.github.version}</version>
-            </dependency>
 
             <!-- Provisioning Connectors -->
             <dependency>
