@@ -125,6 +125,29 @@
                             </artifactItems>
                         </configuration>
                     </execution>
+                    <!-- Download github social-authenticator jar from nexus and copy to the socialauthenticatorCopied/jar folder-->
+                    <execution>
+                        <id>download_github_jar</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.carbon.extension.identity.authenticator</groupId>
+                                    <artifactId>org.wso2.carbon.extension.identity.authenticator.github.connector
+                                    </artifactId>
+                                    <version>${social.authenticator.github.version}</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${basedir}/target/socialauthenticatorCopied/jar
+                                    </outputDirectory>
+                                    <includes>**/*.jar</includes>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
