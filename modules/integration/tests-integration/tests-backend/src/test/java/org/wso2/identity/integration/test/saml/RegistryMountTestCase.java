@@ -76,7 +76,6 @@ public class RegistryMountTestCase extends ISIntegrationTest {
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
     private static final String APPLICATION_NAME = "SAML-SSO-TestApplication";
     private static final String ATTRIBUTE_CS_INDEX_VALUE = "1239245949";
-    private static final String TENANT_DOMAIN_PARAM = "tenantDomain";
 
     private static final String ACS_URL = "http://localhost:8490/%s/home.jsp";
     private static final String COMMON_AUTH_URL = "https://localhost:9853/commonauth";
@@ -90,7 +89,7 @@ public class RegistryMountTestCase extends ISIntegrationTest {
 
     private static final String TENANT_DOMAIN = "registrymount.com";
     private static final String TENANT_ADMIN_USERNAME = "admin@registrymount.com";
-    private static final String TENANT_ADMIN_PASSWORD = "admin";
+    private static final String TENANT_ADMIN_PASSWORD = "Admin_123";
     private static final String TENANT_ADMIN_TENANT_AWARE_USERNAME = "admin";
     private ServerConfigurationManager serverConfigurationManager;
     private final String artifact = "travelocity.com-registrymount";
@@ -214,10 +213,9 @@ public class RegistryMountTestCase extends ISIntegrationTest {
 
     private HttpResponse sendSAMLMessage(String url, String samlMsgKey, String samlMsgValue) throws IOException {
         List<NameValuePair> urlParameters = new ArrayList<>();
-        HttpPost post = new HttpPost(url);
+        HttpPost post = new HttpPost(getTenantQualifiedURL(url, tenantInfo.getDomain()));
         post.setHeader("User-Agent", USER_AGENT);
         urlParameters.add(new BasicNameValuePair(samlMsgKey, samlMsgValue));
-        urlParameters.add(new BasicNameValuePair(TENANT_DOMAIN_PARAM, TENANT_DOMAIN));
 
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
         return httpClient.execute(post);

@@ -47,12 +47,12 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
     private static final Log log = LogFactory.getLog(AccountLockEnabledTestCase.class.getName());
     private static final String DEFAULT_LOCALITY_CLAIM_VALUE = "en_US";
     private static final String TEST_LOCK_USER_1 = "TestLockUser1";
-    private static final String TEST_LOCK_USER_1_PASSWORD = "TestLockUser1Password";
-    private static final String TEST_LOCK_USER_1_WRONG_PASSWORD = "TestLockUser1WrongPassword";
+    private static final String TEST_LOCK_USER_1_PASSWORD = "TestLockUser1@Password";
+    private static final String TEST_LOCK_USER_1_WRONG_PASSWORD = "TestLockUser1Wrong@Password";
     private static final String TEST_LOCK_USER_2 = "TestLockUser2";
-    private static final String TEST_LOCK_USER_2_PASSWORD = "TestLockUser2Password";
+    private static final String TEST_LOCK_USER_2_PASSWORD = "TestLockUser2@Password";
     private static final String TEST_LOCK_USER_3 = "TestLockUser3";
-    private static final String TEST_LOCK_USER_3_PASSWORD = "TestLockUser3Password";
+    private static final String TEST_LOCK_USER_3_PASSWORD = "TestLockUser3@Password";
 
     private static final String ACCOUNT_LOCK_TEMPLATE_WHEN_USER_EXCEEDS_FAILED_ATTEMPTS = "accountlockfailedattempt";
     private static final String ACCOUNT_LOCK_TEMPLATE_WHEN_ADMIN_TRIGGERED = "accountlockadmin";

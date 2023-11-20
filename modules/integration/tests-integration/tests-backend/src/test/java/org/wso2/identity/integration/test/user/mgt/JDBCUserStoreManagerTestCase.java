@@ -44,7 +44,7 @@ public class JDBCUserStoreManagerTestCase extends UserManagementServiceAbstractT
     @Override
     protected void setUserPassword() {
 
-        newUserPassword = "JDBCUserName123";
+        newUserPassword = "JDBCUserName@123";
     }
 
     @Override

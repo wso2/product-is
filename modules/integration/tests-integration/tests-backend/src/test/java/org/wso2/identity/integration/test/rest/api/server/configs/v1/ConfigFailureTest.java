@@ -120,4 +120,13 @@ public class ConfigFailureTest extends ConfigTestBase {
         Response response = getResponseOfPatch(CORS_CONFIGS_API_BASE_PATH, body);
         validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "CNF-60003", "Unsupported patch operation");
     }
+
+    @Test
+    public void testUpdateSAMLInboundAuthConfigsWithEmptyDestinationUrls() throws IOException {
+
+        String body = readResource("update-saml-inbound-auth-configs-invalid.json");
+        Response response = getResponseOfPatch(SAML_INBOUND_AUTH_CONFIG_API_PATH, body);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "CNF-60003",
+                "One of the given inputs is invalid. Should contain at least one destination URL.");
+    }
 }

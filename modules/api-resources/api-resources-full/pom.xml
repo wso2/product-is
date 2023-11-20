@@ -23,12 +23,12 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>api-resources</artifactId>
-        <version>7.0.0-m2-SNAPSHOT</version>
+        <version>7.0.0-beta-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>api-resources-full</artifactId>
-    <version>7.0.0-m2-SNAPSHOT</version>
+    <version>7.0.0-beta-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <name>WSO2 Identity Server - All Rest API</name>
@@ -67,6 +67,9 @@
                         WEB-INF/lib/org.wso2.carbon.api.*.jar,
                         WEB-INF/lib/org.wso2.carbon.rest.api.*.jar
                     </packagingIncludes>
+                    <packagingExcludes>
+                        WEB-INF/lib/org.wso2.carbon.identity.api.resource.mgt*.jar
+                    </packagingExcludes>
                 </configuration>
             </plugin>
             <plugin>
@@ -137,6 +140,10 @@
         <dependency>
             <groupId>org.wso2.carbon.identity.user.api</groupId>
             <artifactId>org.wso2.carbon.identity.rest.api.user.recovery.v1</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.user.api</groupId>
+            <artifactId>org.wso2.carbon.identity.rest.api.user.recovery.v2</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.user.api</groupId>
@@ -237,6 +244,15 @@
         <dependency>
             <groupId>org.wso2.carbon.identity.user.api</groupId>
             <artifactId>org.wso2.carbon.identity.api.user.organization.common</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.wso2.carbon.identity.server.api</groupId>
+            <artifactId>org.wso2.carbon.identity.api.server.api.resource.v1</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.server.api</groupId>
+            <artifactId>org.wso2.carbon.identity.api.server.api.resource.common</artifactId>
         </dependency>
 
         <!-- Server REST API Dependencies. -->
@@ -479,6 +495,22 @@
         <dependency>
             <groupId>org.wso2.carbon.identity.server.api</groupId>
             <artifactId>org.wso2.carbon.identity.api.server.organization.role.management.common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.server.api</groupId>
+            <artifactId>org.wso2.carbon.identity.api.server.organization.configs.v1</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.server.api</groupId>
+            <artifactId>org.wso2.carbon.identity.api.server.organization.configs.common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.server.api</groupId>
+            <artifactId>org.wso2.carbon.identity.api.server.organization.selfservice.v1</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.server.api</groupId>
+            <artifactId>org.wso2.carbon.identity.api.server.organization.selfservice.common</artifactId>
         </dependency>
     </dependencies>
 </project>

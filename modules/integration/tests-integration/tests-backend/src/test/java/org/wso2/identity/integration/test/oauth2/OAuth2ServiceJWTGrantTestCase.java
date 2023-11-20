@@ -97,7 +97,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
     private static final String USERS_PATH = "users";
     private static final String BEGIN_CERTIFICATE = "-----BEGIN CERTIFICATE-----\n";
     private static final String END_CERTIFICATE = "\n-----END CERTIFICATE-----";
-    private static final String JWKS_BASE_PATH = "t/%s/oauth2/jwks";
+    private static final String JWKS_BASE_PATH = "/oauth2/jwks";
     private static final String COUNTRY_CLAIM_VALUE = "USA";
     private static final String COUNTRY_OIDC_CLAIM = "country";
     private static final String COUNTRY_NEW_OIDC_CLAIM = "customclaim";
@@ -109,6 +109,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
     private static final String COUNTRY_CLAIM_ID = "Y291bnRyeQ";
     private static final String openIdScope = "openid";
     private static final String JWT_USER = "jwtUser";
+    private static final String JWT_USER_PASSWORD = "JwtUser@123";
 
     protected Log log = LogFactory.getLog(getClass());
     private ServerConfigurationManager serverConfigurationManager;
@@ -168,7 +169,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
     public void testPasswordGrantBasedSelfContainedAccessTokenGeneration()
             throws IOException, URISyntaxException, ParseException, java.text.ParseException {
 
-        Secret password = new Secret(JWT_USER);
+        Secret password = new Secret(JWT_USER_PASSWORD);
         AuthorizationGrant passwordGrant = new ResourceOwnerPasswordCredentialsGrant(JWT_USER, password);
         ClientID clientID = new ClientID(consumerKey);
         Secret clientSecret = new Secret(consumerSecret);
@@ -517,7 +518,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
      */
     private String getEncodedCertificate() throws Exception {
         CloseableHttpClient client = HttpClients.createDefault();
-        String jwksEndpoint = serverURL + String.format(JWKS_BASE_PATH, tenantInfo.getDomain());
+        String jwksEndpoint = serverURL + getTenantedRelativePath(JWKS_BASE_PATH, tenantInfo.getDomain());
         String certificate = BEGIN_CERTIFICATE + getPublicCertificate(client, jwksEndpoint) + END_CERTIFICATE;
 
         return new String(Base64.getEncoder().encode(certificate.getBytes(StandardCharsets.UTF_8)),
@@ -566,7 +567,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
 
         UserObject userInfo = new UserObject();
         userInfo.setUserName(JWT_USER);
-        userInfo.setPassword(JWT_USER);
+        userInfo.setPassword(JWT_USER_PASSWORD);
         userInfo.setName(new Name().givenName(JWT_USER));
         userInfo.addEmail(new Email().value(EMAIL_CLAIM_VALUE));
         userInfo.setScimSchemaExtensionEnterprise(new ScimSchemaExtensionEnterprise().country(COUNTRY_CLAIM_VALUE));

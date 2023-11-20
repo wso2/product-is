@@ -1,4 +1,4 @@
-name: pr-builder-test 7.x.x
+name: "[Deprecated] pr-builder-test 7.x.x"
 
 on:
   workflow_dispatch:

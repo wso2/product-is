@@ -98,7 +98,7 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
     private static final String emailRemoteIdPClaimURI = "http://is.idp/claims/emailaddress";
     // User Profile Attributes
     private static final String userName = "samlFederatedUser1";
-    private static final String password = "samlFederatedUserPassword1";
+    private static final String password = "SamlFederatedUserPassword@1";
     private static final String email = "samlFederatedUser1@wso2.com";
     private static String COMMON_AUTH_URL = "https://localhost:%s/commonauth";
     private ServerConfigurationManager serverConfigurationManager;

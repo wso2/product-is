@@ -136,13 +136,20 @@ public class Utils {
     public static HttpResponse sendPOSTMessage(String sessionKey, String url, String userAgent, String
             acsUrl, String artifact, String userName, String password, HttpClient httpClient) throws Exception {
 
+        return sendPOSTMessage(sessionKey, url, userAgent, acsUrl, artifact, userName, password, httpClient,
+                SAML_SSO_URL);
+    }
+
+    public static HttpResponse sendPOSTMessage(String sessionKey, String url, String userAgent, String
+            acsUrl, String artifact, String userName, String password, HttpClient httpClient, String samlSSOUrl) throws Exception {
+
         HttpPost post = new HttpPost(url);
         post.setHeader("User-Agent", userAgent);
         post.addHeader("Referer", String.format(acsUrl, artifact));
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         urlParameters.add(new BasicNameValuePair("username", userName));
         urlParameters.add(new BasicNameValuePair("password", password));
-        if (StringUtils.equals(url, SAML_SSO_URL)) {
+        if (StringUtils.equals(url, samlSSOUrl)) {
             urlParameters.add(new BasicNameValuePair("tocommonauth", "true"));
         }
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionKey));
@@ -356,10 +363,34 @@ public class Utils {
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         String resultPage = rd.lines().collect(Collectors.joining());
         List<String> attributeList = new ArrayList<>();
-        if (resultPage.contains("<div class=\"claim-list\">")) {
-            String claimString = resultPage.substring(resultPage.lastIndexOf("<div class=\"claim-list\">"));
-            String[] dataArray = StringUtils.substringsBetween(claimString, "<label for=\"", "\"");
-            Collections.addAll(attributeList, dataArray);
+        
+        String claimListDiv = "<div class=\"claim-list\">";
+        String labelOpenTag = "<label for=\"";
+        String labelCloseTag = "\"";
+
+        // There can be two occurrences of <div class="claim-list"> in the page for OIDC scopes and API Resource scopes.
+        int firstIndex = resultPage.indexOf(claimListDiv);
+        int secondIndex = resultPage.indexOf(claimListDiv, firstIndex + 1);
+
+        // If there are two occurrences, extract the labels between two occurrences to get the claim list.
+        if (firstIndex != -1 && secondIndex != -1) {
+            String claimString = resultPage.substring(firstIndex, secondIndex);
+            String[] dataArray = StringUtils.substringsBetween(claimString, labelOpenTag, labelCloseTag);
+            if (dataArray != null) {
+                Collections.addAll(attributeList, dataArray);
+            }
+        }
+        // Check if there's only one occurrence, it can be either OIDC scopes or API Resource scopes.
+        else if (firstIndex != -1) {
+            String claimString = resultPage.substring(firstIndex);
+            boolean labelAvailable = claimString.indexOf(labelOpenTag) != -1 ? true : false;
+            // If label is available, it should be OIDC scopes. Hence, extract the labels to get the claims list.
+            if (labelAvailable) {
+                String[] dataArray = StringUtils.substringsBetween(claimString, labelOpenTag, labelCloseTag);
+                if (dataArray != null) {
+                    Collections.addAll(attributeList, dataArray);
+                }
+            }
         }
         return attributeList;
     }
@@ -452,16 +483,13 @@ public class Utils {
         return response;
     }
 
-    public static HttpResponse sendSAMLMessage(String url, Map<String, String> parameters, String userAgent, TestUserMode userMode, String tenantDomainParam, String tenantDomain, HttpClient httpClient) throws IOException {
+    public static HttpResponse sendSAMLMessage(String url, Map<String, String> parameters, String userAgent, HttpClient httpClient) throws IOException {
 
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         HttpPost post = new HttpPost(url);
         post.setHeader("User-Agent", userAgent);
         for (Map.Entry<String, String> entry : parameters.entrySet()) {
             urlParameters.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
-        }
-        if (userMode == TestUserMode.TENANT_ADMIN || userMode == TestUserMode.TENANT_USER) {
-            urlParameters.add(new BasicNameValuePair(tenantDomainParam, tenantDomain));
         }
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
         return httpClient.execute(post);

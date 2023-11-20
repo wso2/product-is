@@ -86,7 +86,7 @@ public class ProvisioningTestCase extends ISIntegrationTest {
     private static final String externalID = "test";
     private static final String[] emails = {"testProvisioningUser@gmail.com", "testProvisioningUser@wso2.com"};
     private static final String displayName = "dharshana";
-    private static final String password = "testPW";
+    private static final String password = "TestPW@123";
     private static final String language = "English";
     private static final String phone_number = "0112145300";
 

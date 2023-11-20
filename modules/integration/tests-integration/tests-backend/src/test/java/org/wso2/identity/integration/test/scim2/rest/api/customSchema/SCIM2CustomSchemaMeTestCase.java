@@ -92,7 +92,7 @@ public class SCIM2CustomSchemaMeTestCase extends SCIM2BaseTest {
     private static final String ME_ENDPOINT = "/Me";
 
     private static String USERNAME = "userkim";
-    private static String PASSWORD = "abc123";
+    private static String PASSWORD = "Wso2@test123";
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public SCIM2CustomSchemaMeTestCase(TestUserMode userMode) throws Exception {

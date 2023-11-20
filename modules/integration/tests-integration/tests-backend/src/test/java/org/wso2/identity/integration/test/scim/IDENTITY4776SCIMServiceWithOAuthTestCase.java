@@ -76,7 +76,7 @@ public class IDENTITY4776SCIMServiceWithOAuthTestCase extends OAuth2ServiceAbstr
     private static final String SCIM_USER_NAME = "scimUser";
     private static final String SECONDARY_STORE_USER_NAME = DOMAIN_ID + "/userStoreUser";
     private static final String SECONDARY_STORE_USER_ROLE = DOMAIN_ID + "/jdsbUserStoreRole";
-    private static final String SECONDARY_STORE_USER_PASSWORD = "password";
+    private static final String SECONDARY_STORE_USER_PASSWORD = "Password@123";
     private static final String SCOPE_DEFAULT = "default";
     private static final String GRANT_TYPE_CLIENT_CREDENTIALS = "client_credentials";
     private UserStoreConfigAdminServiceClient userStoreConfigAdminServiceClient;
@@ -137,7 +137,7 @@ public class IDENTITY4776SCIMServiceWithOAuthTestCase extends OAuth2ServiceAbstr
             //create SCIM client
             SCIMClient scimClient = new SCIMClient();
             String postData = SCIMUtils.getEncodedSCIMUser(scimClient, SCIM_USER_NAME, "test",
-                    new String[]{"scimUser@gmail.com", "scimUser@wso2.com"}, "SCIMUser", "password1",
+                    new String[]{"scimUser@gmail.com", "scimUser@wso2.com"}, "SCIMUser", "Wso2@test",
                     "Sinhala", "0711234567");
 
             //create a apache wink ClientHandler to intercept and identify response messages

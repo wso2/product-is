@@ -51,6 +51,8 @@ import org.wso2.identity.integration.common.clients.application.mgt.ApplicationM
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.APIResourceListItem;
+import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.ScopeGetModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.*;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration.DialectEnum;
 import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
@@ -464,7 +466,8 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		urlParameters.add(new BasicNameValuePair("password", userInfo.getPassword()));
 		urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
 		log.info(">>> sendLoginPost:sessionDataKey: " + sessionDataKey);
-		return sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.COMMON_AUTH_URL);
+		return sendPostRequestWithParameters(client, urlParameters,
+                getTenantQualifiedURL(OAuth2Constant.COMMON_AUTH_URL, tenantInfo.getDomain()));
 	}
 
 	/**
@@ -486,7 +489,33 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		urlParameters.add(new BasicNameValuePair("password", password));
 		urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
 		log.info(">>> sendLoginPost:sessionDataKey: " + sessionDataKey);
-		return sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.COMMON_AUTH_URL);
+		return sendPostRequestWithParameters(client, urlParameters,
+                getTenantQualifiedURL(OAuth2Constant.COMMON_AUTH_URL, tenantInfo.getDomain()));
+	}
+
+	/**
+	 * Send login post request for a tenant with given username and password credentials.
+	 *
+	 * @param client         Http client.
+	 * @param sessionDataKey Session data key.
+	 * @param username       Username.
+	 * @param password       Password.
+	 * @param tenantDomain	 Tenant domain.
+	 * @return Http response.
+	 * @throws ClientProtocolException 	ClientProtocolException
+	 * @throws IOException				IOException
+	 */
+	public HttpResponse sendLoginPostForCustomUsers(HttpClient client, String sessionDataKey, String username,
+													String password, String tenantDomain)
+			throws ClientProtocolException, IOException {
+
+		List<NameValuePair> urlParameters = new ArrayList<>();
+		urlParameters.add(new BasicNameValuePair("username", username));
+		urlParameters.add(new BasicNameValuePair("password", password));
+		urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
+		log.info(">>> sendLoginPost:sessionDataKey: " + sessionDataKey);
+		String url = OAuth2Constant.TENANT_COMMON_AUTH_URL.replace(OAuth2Constant.TENANT_PLACEHOLDER, tenantDomain);
+		return sendPostRequestWithParameters(client, urlParameters, url);
 	}
 
 	/**
@@ -504,7 +533,8 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		urlParameters.add(new BasicNameValuePair("consent", "approve"));
 		urlParameters.add(new BasicNameValuePair("sessionDataKeyConsent", sessionDataKeyConsent));
 
-		return sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.APPROVAL_URL);
+		return sendPostRequestWithParameters(client, urlParameters,
+                getTenantQualifiedURL(OAuth2Constant.APPROVAL_URL, tenantInfo.getDomain()));
 	}
 
 	/**
@@ -528,7 +558,35 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 			urlParameters.addAll(consentClaims);
 		}
 
-		return sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.APPROVAL_URL);
+		return sendPostRequestWithParameters(client, urlParameters,
+                getTenantQualifiedURL(OAuth2Constant.APPROVAL_URL, tenantInfo.getDomain()));
+	}
+
+	/**
+	 * Send approval post request for tenant with consent.
+	 *
+	 * @param client 				http client.
+	 * @param sessionDataKeyConsent session consent data.
+	 * @param consentClaims 		claims requiring user consent.
+	 * @param tenantDomain 			tenant domain.
+	 * @return http response.
+	 * @throws java.io.IOException IOException.
+	 */
+	public HttpResponse sendApprovalPostWithConsent(HttpClient client, String sessionDataKeyConsent,
+													List<NameValuePair> consentClaims, String tenantDomain)
+			throws IOException {
+
+		List<NameValuePair> urlParameters = new ArrayList<>();
+		urlParameters.add(new BasicNameValuePair("consent", "approve"));
+		urlParameters.add(new BasicNameValuePair("scope-approval", "approve"));
+		urlParameters.add(new BasicNameValuePair("sessionDataKeyConsent", sessionDataKeyConsent));
+
+		if (consentClaims != null) {
+			urlParameters.addAll(consentClaims);
+		}
+		String url = OAuth2Constant.TENANT_APPROVAL_URL.replace(OAuth2Constant.TENANT_PLACEHOLDER, tenantDomain);
+
+		return sendPostRequestWithParameters(client, urlParameters, url);
 	}
 
 	/**
@@ -545,7 +603,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
 		urlParameters.add(new BasicNameValuePair("callbackurl", OAuth2Constant.CALLBACK_URL));
 		urlParameters.add(new BasicNameValuePair("accessEndpoint",
-		                                         OAuth2Constant.ACCESS_TOKEN_ENDPOINT));
+                getTenantQualifiedURL(OAuth2Constant.ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain())));
 		urlParameters.add(new BasicNameValuePair("consumerSecret", consumerSecret));
 		return sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.GET_ACCESS_TOKEN_URL);
 	}
@@ -841,5 +899,47 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		JSONParser parser = new JSONParser();
 		JSONObject json = (JSONObject) parser.parse(EntityUtils.toString(response.getEntity()));
 		return ((JSONArray) ((JSONObject)((JSONArray) json.get("keys")).get(0)).get("x5c")).get(0).toString();
+	}
+
+	/**
+	 * Authorize list of SYSTEM APIs to an application.
+	 *
+	 * @param applicationId Application id.
+	 * @param apiIdentifiers API identifiers to authorize.
+	 * @throws Exception Error occured while authorizing APIs.
+	 */
+	public void authorizeSystemAPIs(String applicationId, List<String> apiIdentifiers) throws Exception {
+
+		apiIdentifiers.stream().forEach(apiIdentifier -> {
+			try {
+				List<APIResourceListItem> filteredAPIResource =
+						restClient.getAPIResourcesWithFiltering("type+eq+SYSTEM+and+identifier+eq+" + apiIdentifier);
+				if (filteredAPIResource == null || filteredAPIResource.isEmpty()) {
+					return;
+				}
+				String apiId = filteredAPIResource.get(0).getId();
+				// Get API scopes.
+				List<ScopeGetModel> apiResourceScopes = restClient.getAPIResourceScopes(apiId);
+				AuthorizedAPICreationModel authorizedAPICreationModel = new AuthorizedAPICreationModel();
+				authorizedAPICreationModel.setId(apiId);
+				authorizedAPICreationModel.setPolicyIdentifier("RBAC");
+				apiResourceScopes.forEach(scope -> {
+					authorizedAPICreationModel.addScopesItem(scope.getName());
+				});
+				restClient.addAPIAuthorizationToApplication(applicationId, authorizedAPICreationModel);
+			} catch (Exception e) {
+				throw new RuntimeException("Error while authorizing system API " + apiIdentifier + " to application "
+						+ applicationId, e);
+			}
+		});
+	}
+
+	public String getRoleV2ResourceId(String roleName, String audienceType, String OrganizationId) throws Exception {
+
+		List<String> roles = restClient.getRoles(roleName, audienceType, OrganizationId);
+		if (roles.size() == 1) {
+			return roles.get(0);
+		}
+		return null;
 	}
 }

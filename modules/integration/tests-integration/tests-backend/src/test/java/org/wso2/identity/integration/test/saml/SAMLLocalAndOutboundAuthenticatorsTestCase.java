@@ -77,7 +77,6 @@ public class SAMLLocalAndOutboundAuthenticatorsTestCase extends ISIntegrationTes
     private static final String CALLBACK_URL = "callbackUrl";
     private static final String SAML_SSO_LOGIN_URL = "http://localhost:8490/%s/samlsso?SAML2.HTTPBinding=%s";
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
-    public static final String TENANT_DOMAIN_PARAM = "tenantDomain";
     private static final String SAML_SSO_URL = "https://localhost:" + CommonConstants.IS_DEFAULT_HTTPS_PORT +
             "/samlsso";
     private static final String COMMON_AUTH_URL = "https://localhost:" + CommonConstants.IS_DEFAULT_HTTPS_PORT +
@@ -94,11 +93,11 @@ public class SAMLLocalAndOutboundAuthenticatorsTestCase extends ISIntegrationTes
     private HttpClient httpClient;
 
     private enum User {
-        SUPER_TENANT_USER("samluser1", "samluser1", "carbon.super", "samluser1@wso2.com", "samlnickuser1",
+        SUPER_TENANT_USER("samluser1", "Samluser@1", "carbon.super", "samluser1@wso2.com", "samlnickuser1",
                 "samluser1", ""),
         SUPER_TENANT_LOCKED_USER("isura", "Lakmal@123", "carbon.super", "isura@wso2.com", "samlnickuser2", "isura",
                 CommonConstants.USER_IS_LOCKED),
-        SUPER_TENANT_WRONG_CREDENTIAL_USER("samluser1", "wrongpass", "carbon.super", "samluser1@wso2.com",
+        SUPER_TENANT_WRONG_CREDENTIAL_USER("samluser1", "Wrong@pass9", "carbon.super", "samluser1@wso2.com",
                 "samlnickuser1", "samluser1", CommonConstants.INVALID_CREDENTIAL);
 
         private String username;
@@ -283,8 +282,8 @@ public class SAMLLocalAndOutboundAuthenticatorsTestCase extends ISIntegrationTes
                 String samlRequest = Utils.extractDataFromResponse(response, CommonConstants.SAML_REQUEST_PARAM, 5);
                 Map<String, String> paramters = new HashMap<String, String>();
                 paramters.put(CommonConstants.SAML_REQUEST_PARAM, samlRequest);
-                response = Utils.sendSAMLMessage(SAML_SSO_URL, paramters, USER_AGENT, config.getUserMode(),
-                        TENANT_DOMAIN_PARAM, config.getUser().getTenantDomain(), httpClient);
+                response = Utils.sendSAMLMessage(getTenantQualifiedURL(SAML_SSO_URL, config.getUser().getTenantDomain())
+                        , paramters, USER_AGENT, httpClient);
                 EntityUtils.consume(response.getEntity());
                 response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, config.getApplication()
                         .getArtifact(), httpClient);

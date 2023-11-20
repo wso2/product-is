@@ -38,15 +38,19 @@ public class BrandingPreferenceManagementTestBase extends RESTAPIServerTestBase 
     public static final String API_PACKAGE_NAME =
             "org.wso2.carbon.identity.api.server.branding.preference.management.v1";
     public static final String BRANDING_PREFERENCE_API_BASE_PATH = "/branding-preference";
+    public static final String CUSTOM_TEXT_API_BASE_PATH = "/branding-preference/text";
     public static final String PATH_SEPARATOR = "/";
     public static final String QUERY_PARAM_SEPARATOR = "?";
     public static final String ORGANIZATION_TYPE = "ORG";
     public static final String APPLICATION_TYPE = "APP";
     public static final String CUSTOM_TYPE = "CUSTOM";
     public static final String DEFAULT_LOCALE = "en-US";
+    public static final String LOGIN_SCREEN = "login";
     public static final String PREFERENCE_COMPONENT_WITH_QUERY_PARAM = "?type=%s&name=%s&locale=%s";
+    public static final String CUSTOM_TEXT_COMPONENT_WITH_QUERY_PARAM = "?type=%s&name=%s&screen=%s&locale=%s";
     public static final String TYPE_QUERY_PARAM = "type=%s";
     public static final String LOCALE_QUERY_PARAM = "locale=%s";
+    public static final String SCREEN_QUERY_PARAM = "screen=%s";
 
     protected static String swaggerDefinition;
 

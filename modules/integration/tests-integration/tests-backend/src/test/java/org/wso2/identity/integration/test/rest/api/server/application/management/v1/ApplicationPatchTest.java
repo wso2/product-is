@@ -35,6 +35,7 @@ public class ApplicationPatchTest extends ApplicationManagementBaseTest {
 
     private static final String APP_NAME = "testPatchApplication";
     public static final String UPDATED_APP_NAME = "testUpdateNameApplication";
+    public static final String SUBJECT_CLAIM_URI = "http://wso2.org/claims/username";
     private String appId;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
@@ -136,7 +137,39 @@ public class ApplicationPatchTest extends ApplicationManagementBaseTest {
                 .body("advancedConfigurations.find{ it.key == 'enableAuthorization' }.value", equalTo(true));
     }
 
-    @Test(dependsOnMethods = "testUpdateAdvancedConfiguration")
+    @Test(description = "Test updating the claim configuration of an application",
+            dependsOnMethods = "testUpdateAdvancedConfiguration")
+    public void testUpdateClaimConfiguration() throws Exception {
+
+        String requestBody = readResource("update-claim-configuration.json");
+        getResponseOfPatch(APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + appId, requestBody)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK);
+
+        getApplication(appId).then()
+                .body("claimConfiguration.subject.claim.uri", equalTo(SUBJECT_CLAIM_URI))
+                .body("claimConfiguration.subject.useMappedLocalSubject", equalTo(true))
+                .body("claimConfiguration.subject.mappedLocalSubjectMandatory", equalTo(true))
+                .body("claimConfiguration.subject.includeUserDomain", equalTo(false))
+                .body("claimConfiguration.subject.includeTenantDomain", equalTo(false));
+    }
+
+    @Test(description = "Test updating claim configuration by disabling useMappedLocalSubject and enabling " +
+            "mappedLocalSubjectMandatory",
+            dependsOnMethods = "testUpdateClaimConfiguration")
+    public void testUpdateInvalidClaimConfiguration() throws Exception {
+
+        String requestBody = readResource("invalid-claim-configuration.json");
+        getResponseOfPatch(APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + appId, requestBody)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_BAD_REQUEST);
+    }
+
+    @Test(dependsOnMethods = "testUpdateInvalidClaimConfiguration", alwaysRun = true)
     public void testDeleteApplicationById() throws Exception {
 
         getResponseOfDelete(APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + appId)

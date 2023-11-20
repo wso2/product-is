@@ -22,6 +22,36 @@
           "description": "Lock self registered user account until e-mail verification."
         },
         {
+          "name": "SelfRegistration.OTP.SendOTPInEmail",
+          "value": "false",
+          "displayName": "Send OTP in e-mail",
+          "description": "Enable to send OTP in verification e-mail instead of confirmation code."
+        },
+        {
+          "name": "SelfRegistration.OTP.UseUppercaseCharactersInOTP",
+          "value": "true",
+          "displayName": "Include uppercase characters in OTP",
+          "description": "Enable to include uppercase characters in SMS and e-mail OTPs."
+        },
+        {
+          "name": "SelfRegistration.OTP.UseLowercaseCharactersInOTP",
+          "value": "true",
+          "displayName": "Include lowercase characters in OTP",
+          "description": "Enable to include lowercase characters in SMS and e-mail OTPs."
+        },
+        {
+          "name": "SelfRegistration.OTP.UseNumbersInOTP",
+          "value": "true",
+          "displayName": "Include numbers in OTP",
+          "description": "Enable to include numbers in SMS and e-mail OTPs."
+        },
+        {
+          "name": "SelfRegistration.OTP.OTPLength",
+          "value": "6",
+          "displayName": "OTP length",
+          "description": "Length of the OTP for SMS and e-mail verifications. OTP length must be 4-10."
+        },
+        {
           "name": "SelfRegistration.SendConfirmationOnCreation",
           "value": "false",
           "displayName": "Enable Account Confirmation On Creation",
@@ -50,12 +80,6 @@
           "value": "1",
           "displayName": "User self registration SMS OTP expiry time",
           "description": "Specify the expiry time in minutes for the SMS OTP."
-        },
-        {
-          "name": "SelfRegistration.SMSOTP.Regex",
-          "value": "[a-zA-Z0-9]{6}",
-          "displayName": "User self registration SMS OTP regex",
-          "description": "Regex for SMS OTP in format [allowed characters]{length}. Supported character ranges are a-z, A-Z, 0-9. Minimum OTP length is 4"
         },
         {
           "name": "SelfRegistration.CallbackRegex",
@@ -142,6 +166,36 @@
           "value": "false",
           "displayName": "Enable user email verification",
           "description": "A verification notification will be triggered during user creation."
+        },
+        {
+          "name": "EmailVerification.OTP.SendOTPInEmail",
+          "value": "false",
+          "displayName": "Send OTP in e-mail",
+          "description": "Enable to send OTP in verification e-mail instead of confirmation code."
+        },
+        {
+          "name": "EmailVerification.OTP.UseUppercaseCharactersInOTP",
+          "value": "true",
+          "displayName": "Include uppercase characters in OTP",
+          "description": "Enable to include uppercase characters in SMS and e-mail OTPs."
+        },
+        {
+          "name": "EmailVerification.OTP.UseLowercaseCharactersInOTP",
+          "value": "true",
+          "displayName": "Include lowercase characters in OTP",
+          "description": "Enable to include lowercase characters in SMS and e-mail OTPs."
+        },
+        {
+          "name": "EmailVerification.OTP.UseNumbersInOTP",
+          "value": "true",
+          "displayName": "Include numbers in OTP",
+          "description": "Enable to include numbers in SMS and e-mail OTPs."
+        },
+        {
+          "name": "EmailVerification.OTP.OTPLength",
+          "value": "6",
+          "displayName": "OTP length",
+          "description": "Length of the OTP for SMS and e-mail verifications. OTP length must be 4-10."
         },
         {
           "name": "EmailVerification.LockOnCreation",

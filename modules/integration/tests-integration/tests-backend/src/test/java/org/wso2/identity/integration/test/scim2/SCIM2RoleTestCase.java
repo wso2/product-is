@@ -67,7 +67,7 @@ import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.VALUE_P
 public class SCIM2RoleTestCase extends ISIntegrationTest {
 
     private static final String TOTAL_COUNT_ATTRIBUTE = "totalResults";
-    private static final String PASSWORD = "testPassword";
+    private static final String PASSWORD = "Wso2@test";
 
     private static final String USERNAME_1 = "testUser1";
     private static final String USERNAME_2 = "testUser2";
