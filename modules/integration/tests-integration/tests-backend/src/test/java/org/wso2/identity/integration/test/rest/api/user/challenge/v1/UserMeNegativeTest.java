@@ -98,9 +98,9 @@ public class UserMeNegativeTest extends UserChallengeTestBase {
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
         return new Object[][]{
-                {TestUserMode.SUPER_TENANT_USER, "restApiMeUser1", "pass123", "testLoginRole",
+                {TestUserMode.SUPER_TENANT_USER, "restApiMeUser1", "Pass@123", "testLoginRole",
                         "/permission/admin/login", true},
-                {TestUserMode.TENANT_USER, "restApiMeUser1", "pass123", "testLoginRole",
+                {TestUserMode.TENANT_USER, "restApiMeUser1", "Pass@123", "testLoginRole",
                         "/permission/admin/login", true}
         };
     }

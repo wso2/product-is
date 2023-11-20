@@ -39,6 +39,8 @@ public class AdvancedApplicationConfiguration  {
 
     private Boolean fragment;
     private List<AdditionalSpProperties> additionalSpProperties;
+    private Boolean enableAPIBasedAuthentication;
+    private AdvancedApplicationConfigurationAttestationMetaData attestationMetaData;
 
     private Boolean useExternalConsentPage;
 
@@ -189,7 +191,43 @@ public class AdvancedApplicationConfiguration  {
     }
 
     /**
-     *
+     * Decides whether API Based Authentication is enabled for this application.
+     **/
+    public AdvancedApplicationConfiguration enableAPIBasedAuthentication(Boolean enableAPIBasedAuthentication) {
+
+        this.enableAPIBasedAuthentication = enableAPIBasedAuthentication;
+        return this;
+    }
+
+    @ApiModelProperty(example = "false", value = "Decides whether API Based Authentication is enabled for this application.")
+    @JsonProperty("enableAPIBasedAuthentication")
+    @Valid
+    public Boolean getEnableAPIBasedAuthentication() {
+        return enableAPIBasedAuthentication;
+    }
+    public void setEnableAPIBasedAuthentication(Boolean enableAPIBasedAuthentication) {
+        this.enableAPIBasedAuthentication = enableAPIBasedAuthentication;
+    }
+
+    /**
+     **/
+    public AdvancedApplicationConfiguration attestationMetaData(AdvancedApplicationConfigurationAttestationMetaData attestationMetaData) {
+
+        this.attestationMetaData = attestationMetaData;
+        return this;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("attestationMetaData")
+    @Valid
+    public AdvancedApplicationConfigurationAttestationMetaData getAttestationMetaData() {
+        return attestationMetaData;
+    }
+    public void setAttestationMetaData(AdvancedApplicationConfigurationAttestationMetaData attestationMetaData) {
+        this.attestationMetaData = attestationMetaData;
+    }
+
+    /**
      **/
     public AdvancedApplicationConfiguration additionalSpProperties(List<AdditionalSpProperties> additionalSpProperties) {
 
@@ -245,12 +283,14 @@ public class AdvancedApplicationConfiguration  {
                 Objects.equals(this.enableAuthorization, advancedApplicationConfiguration.enableAuthorization) &&
                 Objects.equals(this.fragment, advancedApplicationConfiguration.fragment) &&
                 Objects.equals(this.additionalSpProperties, advancedApplicationConfiguration.additionalSpProperties) &&
+                Objects.equals(this.enableAPIBasedAuthentication, advancedApplicationConfiguration.enableAPIBasedAuthentication) &&
+                Objects.equals(this.attestationMetaData, advancedApplicationConfiguration.attestationMetaData) &&
                 Objects.equals(this.useExternalConsentPage, advancedApplicationConfiguration.useExternalConsentPage);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(saas, discoverableByEndUsers, certificate, skipLoginConsent, skipLogoutConsent, returnAuthenticatedIdpList, enableAuthorization, fragment, additionalSpProperties, useExternalConsentPage);
+        return Objects.hash(saas, discoverableByEndUsers, certificate, skipLoginConsent, skipLogoutConsent, returnAuthenticatedIdpList, enableAuthorization, fragment, enableAPIBasedAuthentication, attestationMetaData, additionalSpProperties, useExternalConsentPage);
     }
 
     @Override
@@ -267,6 +307,8 @@ public class AdvancedApplicationConfiguration  {
         sb.append("    returnAuthenticatedIdpList: ").append(toIndentedString(returnAuthenticatedIdpList)).append("\n");
         sb.append("    enableAuthorization: ").append(toIndentedString(enableAuthorization)).append("\n");
         sb.append("    fragment: ").append(toIndentedString(fragment)).append("\n");
+        sb.append("    enableAPIBasedAuthentication: ").append(toIndentedString(enableAPIBasedAuthentication)).append("\n");
+        sb.append("    attestationMetaData: ").append(toIndentedString(attestationMetaData)).append("\n");
         sb.append("    additionalSpProperties: ").append(toIndentedString(additionalSpProperties)).append("\n");
         sb.append("    useExternalConsentPage: ").append(toIndentedString(useExternalConsentPage)).append("\n");
         sb.append("}");

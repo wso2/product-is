@@ -127,7 +127,7 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
         ClientAuthentication clientAuth = new ClientSecretBasic(clientID, clientSecret);
         Scope scope = new Scope(OAUTH2_SCOPE_OPENID, "xyz");
 
-        URI tokenEndpoint = new URI(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
+        URI tokenEndpoint = new URI(getTenantQualifiedURL(OAuth2Constant.ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()));
         TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, clientCredentialsGrant, scope);
         HTTPResponse tokenHTTPResp = request.toHTTPRequest().send();
         Assert.assertNotNull(tokenHTTPResp, "Access token http response is null.");

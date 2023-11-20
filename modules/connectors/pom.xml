@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>7.0.0-m2-SNAPSHOT</version>
+        <version>7.0.0-beta-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -157,7 +157,7 @@
                                 <artifactItem>
                                     <groupId>org.wso2.identity.apps</groupId>
                                     <artifactId>x509-certificate-authentication-portal</artifactId>
-                                    <version>${identity.apps.version}</version>
+                                    <version>${identity.apps.core.version}</version>
                                     <type>war</type>
                                     <overWrite>true</overWrite>
                                     <destFileName>x509certificateauthenticationendpoint.war</destFileName>

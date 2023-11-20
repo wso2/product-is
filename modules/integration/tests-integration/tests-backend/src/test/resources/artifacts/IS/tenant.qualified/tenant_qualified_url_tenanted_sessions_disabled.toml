@@ -1,0 +1,43 @@
+[server]
+hostname = "localhost"
+node_ip = "127.0.0.1"
+base_path = "https://$ref{server.hostname}:${carbon.management.port}"
+
+[super_admin]
+username = "admin"
+password = "admin"
+create_admin_account = true
+
+[user_store]
+type = "database_unique_id"
+
+[database.identity_db]
+driver = "$env{IDENTITY_DATABASE_DRIVER}"
+url = "$env{IDENTITY_DATABASE_URL}"
+username = "$env{IDENTITY_DATABASE_USERNAME}"
+password = "$env{IDENTITY_DATABASE_PASSWORD}"
+
+[database.shared_db]
+driver = "$env{SHARED_DATABASE_DRIVER}"
+url = "$env{SHARED_DATABASE_URL}"
+username = "$env{SHARED_DATABASE_USERNAME}"
+password = "$env{SHARED_DATABASE_PASSWORD}"
+
+[keystore.primary]
+file_name = "wso2carbon.jks"
+password = "wso2carbon"
+
+[truststore]
+file_name = "client-truststore.jks"
+password = "wso2carbon"
+type = "JKS"
+
+[account_recovery.endpoint.auth]
+hash = "66cd9688a2ae068244ea01e70f0e230f5623b7fa4cdecb65070a09ec06452262"
+
+[identity.auth_framework.endpoint]
+app_password = "dashboard"
+
+[tenant_context]
+enable_tenant_qualified_urls = false
+enable_tenanted_sessions = false

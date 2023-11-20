@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>7.0.0-m2-SNAPSHOT</version>
+        <version>7.0.0-beta-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -263,6 +263,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.extension.identity.authenticator.outbound.emailotp:org.wso2.carbon.identity.authenticator.emailotp.feature:${authenticator.emailotp.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.extension.identity.oauth.addons:org.wso2.carbon.identity.oauth2.token.handler.clientauth.jwt.feature:${identity.oauth.addons.version}
+                                </featureArtifactDef>
 
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.user.ws:org.wso2.carbon.um.ws.service.feature:${identity.user.ws.version}
@@ -296,6 +299,9 @@
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.role.mgt.core.server.feature:${carbon.identity.framework.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.role.v2.mgt.core.server.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.secret.mgt.core.server.feature:${carbon.identity.framework.version}
@@ -337,6 +343,11 @@
                                 <!-- Identity Provisioning Feature -->
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.provisioning.server.feature:${carbon.identity.framework.version}
+                                </featureArtifactDef>
+
+                                <!-- API Resource Management Feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.api.resource.mgt.server.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
 
                                 <!-- SAML Request/Response Validator Toolkit Feature -->
@@ -448,19 +459,26 @@
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.cors.mgt.server.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
 
-                                <!-- User portal feature -->
                                 <featureArtifactDef>
-                                    org.wso2.identity.apps:org.wso2.identity.apps.feature:${identity.apps.version}
+                                    org.wso2.identity.apps:org.wso2.identity.apps.common.server.feature:${identity.apps.core.version}
+                                </featureArtifactDef>
+
+                                <featureArtifactDef>
+                                    org.wso2.identity.apps:org.wso2.identity.apps.console.server.feature:${identity.apps.console.version}
+                                </featureArtifactDef>
+
+                                <featureArtifactDef>
+                                    org.wso2.identity.apps:org.wso2.identity.apps.myaccount.server.feature:${identity.apps.myaccount.version}
                                 </featureArtifactDef>
 
                                 <!-- Authentication portal feature -->
                                 <featureArtifactDef>
-                                    org.wso2.identity.apps:org.wso2.identity.apps.authentication.portal.server.feature:${identity.apps.version}
+                                    org.wso2.identity.apps:org.wso2.identity.apps.authentication.portal.server.feature:${identity.apps.core.version}
                                 </featureArtifactDef>
 
                                 <!-- Recovery portal feature -->
                                 <featureArtifactDef>
-                                    org.wso2.identity.apps:org.wso2.identity.apps.recovery.portal.server.feature:${identity.apps.version}
+                                    org.wso2.identity.apps:org.wso2.identity.apps.recovery.portal.server.feature:${identity.apps.core.version}
                                 </featureArtifactDef>
 
                                 <!-- FIDO2/WebAuthn feature -->
@@ -515,6 +533,9 @@
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.input.validation.mgt.server.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.client.attestation.mgt.server.feature:${carbon.identity.framework.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.consent.server.configs.mgt.server.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -540,6 +561,9 @@
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.local.auth.emailotp:org.wso2.carbon.identity.local.auth.emailotp.server.feature:${authenticator.local.auth.emailotp.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.local.auth.smsotp:org.wso2.carbon.identity.local.auth.smsotp.feature:${authenticator.local.auth.smsotp.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.auth.otp.commons:org.wso2.carbon.identity.auth.otp.core.server.feature:${authenticator.auth.otp.commons.version}
@@ -788,6 +812,10 @@
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.identity.role.v2.mgt.core.server.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.identity.secret.mgt.core.server.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
@@ -819,6 +847,10 @@
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.identity.api.resource.mgt.server.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
                                     <id>
                                         org.wso2.carbon.identity.unique.claim.mgt.server.feature.group
                                     </id>
@@ -838,25 +870,40 @@
                                     <id>org.wso2.carbon.identity.central.log.mgt.server.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
+
                                 <feature>
                                     <id>
-                                        org.wso2.identity.apps.feature.group
+                                        org.wso2.identity.apps.common.server.feature.group
                                     </id>
-                                    <version>${identity.apps.version}</version>
+                                    <version>${identity.apps.core.version}</version>
+                                </feature>
+
+                                <feature>
+                                    <id>
+                                        org.wso2.identity.apps.console.server.feature.group
+                                    </id>
+                                    <version>${identity.apps.console.version}</version>
+                                </feature>
+
+                                <feature>
+                                    <id>
+                                        org.wso2.identity.apps.myaccount.server.feature.group
+                                    </id>
+                                    <version>${identity.apps.myaccount.version}</version>
                                 </feature>
 
                                 <feature>
                                     <id>
                                         org.wso2.identity.apps.authentication.portal.server.feature.group
                                     </id>
-                                    <version>${identity.apps.version}</version>
+                                    <version>${identity.apps.core.version}</version>
                                 </feature>
 
                                 <feature>
                                     <id>
                                         org.wso2.identity.apps.recovery.portal.server.feature.group
                                     </id>
-                                    <version>${identity.apps.version}</version>
+                                    <version>${identity.apps.core.version}</version>
                                 </feature>
 
                                 <feature>
@@ -905,7 +952,7 @@
                                     <id>org.wso2.carbon.identity.provisioning.server.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
-
+                              
                                 <feature>
                                     <id>org.wso2.carbon.identity.tools.saml.validator.feature.group</id>
                                     <version>${identity.tool.samlsso.validator.version}</version>
@@ -1052,6 +1099,10 @@
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.identity.client.attestation.mgt.server.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.identity.consent.server.configs.mgt.server.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
@@ -1070,6 +1121,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.authenticator.emailotp.feature.group</id>
                                     <version>${authenticator.emailotp.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.oauth2.token.handler.clientauth.jwt.feature.group</id>
+                                    <version>${identity.oauth.addons.version}</version>
                                 </feature>
 
                                 <feature>
@@ -1103,6 +1158,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.local.auth.emailotp.server.feature.group</id>
                                     <version>${authenticator.local.auth.emailotp.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.local.auth.smsotp.feature.group</id>
+                                    <version>${authenticator.local.auth.smsotp.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.auth.otp.core.server.feature.group</id>
@@ -1420,6 +1479,10 @@
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.identity.api.resource.mgt.server.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
                                     <id>
                                         org.wso2.carbon.identity.unique.claim.mgt.server.feature.group
                                     </id>
@@ -1441,32 +1504,27 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.identity.apps.common.server.feature.group</id>
-                                    <version>${identity.apps.version}</version>
-                                </feature>
-
-                                <feature>
-                                    <id>org.wso2.identity.apps.myaccount.server.feature.group</id>
-                                    <version>${identity.apps.version}</version>
+                                    <version>${identity.apps.core.version}</version>
                                 </feature>
 
                                 <feature>
                                     <id>org.wso2.identity.apps.console.server.feature.group</id>
-                                    <version>${identity.apps.version}</version>
+                                    <version>${identity.apps.console.version}</version>
                                 </feature>
 
                                 <feature>
-                                    <id>org.wso2.identity.apps.feature.group</id>
-                                    <version>${identity.apps.version}</version>
+                                    <id>org.wso2.identity.apps.myaccount.server.feature.group</id>
+                                    <version>${identity.apps.myaccount.version}</version>
                                 </feature>
 
                                 <feature>
                                     <id>org.wso2.identity.apps.authentication.portal.server.feature.group</id>
-                                    <version>${identity.apps.version}</version>
+                                    <version>${identity.apps.core.version}</version>
                                 </feature>
 
                                 <feature>
                                     <id>org.wso2.identity.apps.recovery.portal.server.feature.group</id>
-                                    <version>${identity.apps.version}</version>
+                                    <version>${identity.apps.core.version}</version>
                                 </feature>
 
                                 <feature>
@@ -1642,6 +1700,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.authenticator.emailotp.feature.group</id>
                                     <version>${authenticator.emailotp.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.oauth2.token.handler.clientauth.jwt.feature.group</id>
+                                    <version>${identity.oauth.addons.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.extension.identity.verification.provider.feature.group</id>
@@ -1903,6 +1965,10 @@
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.identity.api.resource.mgt.server.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
                                     <id>
                                         org.wso2.carbon.identity.unique.claim.mgt.server.feature.group
                                     </id>
@@ -1922,12 +1988,22 @@
                                     <id>org.wso2.carbon.identity.central.log.mgt.server.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
+
                                 <feature>
-                                    <id>
-                                        org.wso2.identity.apps.feature.group
-                                    </id>
-                                    <version>${identity.apps.version}</version>
+                                    <id>org.wso2.identity.apps.common.server.feature.group</id>
+                                    <version>${identity.apps.core.version}</version>
                                 </feature>
+
+                                <feature>
+                                    <id>org.wso2.identity.apps.console.server.feature.group</id>
+                                    <version>${identity.apps.console.version}</version>
+                                </feature>
+
+                                <feature>
+                                    <id>org.wso2.identity.apps.myaccount.server.feature.group</id>
+                                    <version>${identity.apps.myaccount.version}</version>
+                                </feature>
+                                
 
                                 <feature>
                                     <id>
@@ -2103,6 +2179,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.authenticator.emailotp.feature.group</id>
                                     <version>${authenticator.emailotp.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.oauth2.token.handler.clientauth.jwt.feature.group</id>
+                                    <version>${identity.oauth.addons.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.extension.identity.verification.provider.feature.group</id>

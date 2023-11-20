@@ -288,7 +288,7 @@ public class SCIMServiceProviderGroupTestCase {
     public void createUser() throws CharonException {
         //create SCIM client
         String encodedUser = SCIMUtils.getEncodedSCIMUser(scimClient, USERNAME, "test",
-                             new String[] { "scimuser1@gmail.com", "scimuser2@wso2.com" }, "SCIMUser2", "password1",
+                             new String[] { "scimuser1@gmail.com", "scimuser2@wso2.com" }, "SCIMUser2", "Password@1",
                              "sinhala", "0772202595");
         //create a apache wink ClientHandler to intercept and identify response messages
         Resource userResource = SCIMUtils.getUserResource(scimClient, scim_url);
@@ -303,7 +303,7 @@ public class SCIMServiceProviderGroupTestCase {
 
 
         encodedUser = SCIMUtils.getEncodedSCIMUser(scimClient, USERNAME2, "test2",
-                                                          new String[] { "dkasunw2@gmail.com", "dharshanaw2@wso2.com" }, USERNAME2, "testPW2",
+                                                          new String[] { "dkasunw2@gmail.com", "dharshanaw2@wso2.com" }, USERNAME2, "testPW@2",
                                                           "sinhala", "0712202541");
         response =
                 userResource.header(SCIMConstants.AUTHORIZATION_HEADER, encodedBasicAuthInfo.getAuthorizationHeader())

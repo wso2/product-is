@@ -42,7 +42,7 @@ public class UserAuthorizedAppsBaseTest extends RESTAPIUserTestBase {
 
     public static final String AUTHORIZED_APPS_ENDPOINT_URI = "/%s/authorized-apps/";
     public static final String APPLICATION_ENDPOINT_URI = "/authorized-apps/%s/tokens";
-    public static final String DCR_ENDPOINT_PATH_URI = "/t/%s/api/identity/oauth2/dcr/v1.1/register/";
+    public static final String DCR_ENDPOINT_PATH_URI = "/api/identity/oauth2/dcr/v1.1/register/";
 
     protected String userAuthorizedAppsEndpointUri;
     protected String userApplicationEndpointUri;
@@ -64,8 +64,8 @@ public class UserAuthorizedAppsBaseTest extends RESTAPIUserTestBase {
 
         this.userAuthorizedAppsEndpointUri = String.format(AUTHORIZED_APPS_ENDPOINT_URI, pathParam);
         this.userApplicationEndpointUri = APPLICATION_ENDPOINT_URI;
-        this.dcrEndpointUri = String.format(DCR_ENDPOINT_PATH_URI, tenant);
-        this.tokenEndpointUri = "/oauth2/token";
+        this.dcrEndpointUri = getTenantedRelativePath(DCR_ENDPOINT_PATH_URI, tenant);
+        this.tokenEndpointUri = getTenantedRelativePath("/oauth2/token", tenant);
     }
 
     public void registerApplication(String appName, String clientId, String clientSecret) {

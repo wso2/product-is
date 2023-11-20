@@ -53,7 +53,7 @@ public class EntitlementJSONSupportMultiDecisionProfileTestCase extends ISIntegr
     private EntitlementPolicyServiceClient entitlementPolicyClient;
     private RemoteUserStoreManagerServiceClient remoteUserStoreManagerServiceClient;
     private final static String ENDPOINT_ADDRESS = "https://localhost:9853/api/identity/entitlement/decision";
-    private final static String PASSWORD = "abc123";
+    private final static String PASSWORD = "Wso2@test123";
     private final static String ROLE = "admin";
 
 

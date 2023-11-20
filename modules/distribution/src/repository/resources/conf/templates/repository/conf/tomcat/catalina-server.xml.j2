@@ -109,6 +109,11 @@
                 <Valve className="org.wso2.carbon.tomcat.ext.valves.CarbonStuckThreadDetectionValve" threshold="600"/>
                 <Valve className="org.wso2.carbon.tomcat.ext.valves.CompositeValve"/>
 
+                <!-- OAuthAppTenantResolverValve is required to be invoked when tenant qualified urls are disabled. This should be invoked before the AuthenticationValve -->
+                {% if tenant_context.enable_tenant_qualified_urls is sameas false %}
+                <Valve className="org.wso2.carbon.identity.auth.valve.OAuthAppTenantResolverValve"/>
+                {% endif %}
+
                 <!-- Authentication and Authorization valve for the rest apis and we can configure context for this in identity.xml.j2  -->
                 <Valve className="org.wso2.carbon.identity.auth.valve.AuthenticationValve"/>
                 <Valve className="org.wso2.carbon.identity.authz.valve.AuthorizationValve"/>

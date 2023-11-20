@@ -20,16 +20,18 @@ package org.wso2.identity.integration.common.utils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.automation.engine.configurations.UrlGenerationUtil;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.context.beans.ContextUrls;
+import org.wso2.carbon.automation.engine.context.beans.Instance;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.automation.engine.context.beans.User;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.automation.test.utils.common.TestConfigurationProvider;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
-import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
@@ -37,6 +39,9 @@ import java.io.File;
 public class ISIntegrationTest {
 
     public static final String URL_SEPARATOR = "/";
+    public static final String TENANTED_URL_PATH_SPECIFIER = "/t/";
+    private static final String PRODUCT_GROUP_PORT_HTTPS = "https";
+
     protected Log log = LogFactory.getLog(getClass());
     protected AutomationContext isServer;
     protected String backendURL;
@@ -141,6 +146,62 @@ public class ISIntegrationTest {
         System.setProperty("javax.net.ssl.trustStorePassword",
                 "wso2carbon");
         System.setProperty("javax.net.ssl.trustStoreType", "JKS");
+    }
+
+
+    /**
+     * Get the qualified endpoint URL with the hostname for the given tenant.
+     *
+     * @param endpointURL   The endpoint URL with the hostname.
+     * @param tenantDomain  Tenanted domain.
+     * @return Tenant qualified URL.
+     */
+    public String getTenantQualifiedURL(String endpointURL, String tenantDomain) {
+
+        try {
+            if(!tenantDomain.isBlank() && !tenantDomain.equalsIgnoreCase(
+                    MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+
+                String baseURL = getBaseURL();
+                endpointURL = endpointURL.replace(baseURL,
+                        baseURL + TENANTED_URL_PATH_SPECIFIER + tenantDomain);
+            }
+            return endpointURL;
+        } catch (XPathExpressionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Get the qualified endpoint URL without the hostname for the given tenant.
+     *
+     * @param endpointURLWithHostname   The endpoint URL without the hostname.
+     * @param tenantDomain              Tenanted domain.
+     * @return Tenant qualified URL without hostname.
+     */
+    public static String getTenantedRelativePath(String endpointURLWithHostname, String tenantDomain) {
+
+        if(!tenantDomain.isBlank() && !tenantDomain.equalsIgnoreCase(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+            endpointURLWithHostname = TENANTED_URL_PATH_SPECIFIER + tenantDomain + endpointURLWithHostname;
+        }
+        return endpointURLWithHostname;
+    }
+
+    /**
+     * Get the based URL eg: https://localhost:9443.
+     *
+     * @return The base URL.
+     */
+    private String getBaseURL() throws XPathExpressionException {
+
+        Instance instance = isServer.getInstance();
+        String httpsPort = isServer.getInstance().getPorts().get(PRODUCT_GROUP_PORT_HTTPS);
+        String hostName = UrlGenerationUtil.getWorkerHost(instance);
+
+        if(httpsPort != null) {
+            return PRODUCT_GROUP_PORT_HTTPS + "://" + hostName + ":" + httpsPort;
+        }
+        return PRODUCT_GROUP_PORT_HTTPS + "://" + hostName;
     }
 
 //    protected void addJDBCUserStore(String dbURI, String driverName, String userName, String password,

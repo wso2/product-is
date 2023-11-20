@@ -85,7 +85,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
     private static final String USERS_PATH = "users";
     private static final String USER_EMAIL = "abc@wso2.com";
     private static final String USERNAME = "authcodegrantuser";
-    private static final String PASSWORD = "pass123";
+    private static final String PASSWORD = "Pass@123";
 
     private final List<NameValuePair> consentParameters = new ArrayList<>();
     private final CookieStore cookieStore = new BasicCookieStore();
@@ -114,7 +114,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
 
         tenantInfo = context.getContextTenant();
         scim2RestClient =  new SCIM2RestClient(serverURL, tenantInfo);
-        
+
         cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
                 .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
                 .build();
@@ -160,7 +160,8 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
         urlParameters.add(new BasicNameValuePair("grantType", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
         urlParameters.add(new BasicNameValuePair("consumerKey", consumerKey));
         urlParameters.add(new BasicNameValuePair("callbackurl", OAuth2Constant.CALLBACK_URL));
-        urlParameters.add(new BasicNameValuePair("authorizeEndpoint", OAuth2Constant.APPROVAL_URL));
+        urlParameters.add(new BasicNameValuePair("authorizeEndpoint",
+                getTenantQualifiedURL(OAuth2Constant.APPROVAL_URL, tenantInfo.getDomain())));
         urlParameters.add(new BasicNameValuePair("authorize", OAuth2Constant.AUTHORIZE_PARAM));
         urlParameters.add(new BasicNameValuePair("scope", OAuth2Constant.OAUTH2_SCOPE_OPENID + " "
                 + OAuth2Constant.OAUTH2_SCOPE_EMAIL));
@@ -333,13 +334,15 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
         urlParameters.add(new BasicNameValuePair("password", PASSWORD));
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
 
-        return sendPostRequestWithParameters(client, urlParameters, COMMON_AUTH_URL);
+        return sendPostRequestWithParameters(client, urlParameters,
+                getTenantQualifiedURL(COMMON_AUTH_URL, tenantInfo.getDomain()));
     }
 
     private JSONObject introspectToken() throws Exception {
         String introspectionUrl = tenantInfo.getDomain().equalsIgnoreCase("carbon.super") ?
                 OAuth2Constant.INTRO_SPEC_ENDPOINT : OAuth2Constant.TENANT_INTRO_SPEC_ENDPOINT;
-        return introspectTokenWithTenant(client, accessToken, introspectionUrl, username, userPassword);
+        return introspectTokenWithTenant(client, accessToken, introspectionUrl,
+                username, userPassword);
     }
 
     private void addAdminUser() throws Exception {

@@ -110,7 +110,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
     private static final String externalClaimURI2 = "externalClaim2";
     private static final String USER_EMAIL = "abcrqo@wso2.com";
     private static final String USERNAME = "authcodegrantreqobjuser";
-    private static final String PASSWORD = "pass123";
+    private static final String PASSWORD = "Pass@123";
     private static final String GIVEN_NAME = "TestName";
     private static final String COUNTRY = "Country";
     private static final String CUSTOM_CLAIM1 = "customVal1";

@@ -27,6 +27,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
 import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Claims;
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.IdentityProviderPOSTRequest;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
@@ -38,7 +39,7 @@ public class IdpMgtRestClient extends RestBaseClient {
     private static final String CLAIMS_PATH = "/claims";
     private static final String FEDERATED_AUTHENTICATORS_PATH = "/federated-authenticators/";
     private final String serverUrl;
-    private final String IDENTITY_PROVIDER_BASE_PATH = "t/%s/api/server/v1/identity-providers";
+    private final String IDENTITY_PROVIDER_BASE_PATH = "/api/server/v1/identity-providers";
     private final String tenantDomain;
     private final String username;
     private final String password;
@@ -58,7 +59,7 @@ public class IdpMgtRestClient extends RestBaseClient {
      */
     public String createIdentityProvider(IdentityProviderPOSTRequest idpCreateReqObj) throws Exception {
         String jsonRequest = toJSONString(idpCreateReqObj);
-        String endPointUrl = serverUrl + String.format(IDENTITY_PROVIDER_BASE_PATH, tenantDomain);
+        String endPointUrl = serverUrl + ISIntegrationTest.getTenantedRelativePath(IDENTITY_PROVIDER_BASE_PATH, tenantDomain);
 
         try (CloseableHttpResponse response = getResponseOfHttpPost(endPointUrl, jsonRequest, getHeaders())) {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_CREATED,
@@ -76,8 +77,8 @@ public class IdpMgtRestClient extends RestBaseClient {
      * @return JSONObject with Federated Authenticator details.
      */
     public JSONObject getIdpFederatedAuthenticator(String idpId, String federatedAuthenticatorId) throws Exception {
-        String endPointUrl = serverUrl + String.format(IDENTITY_PROVIDER_BASE_PATH, tenantDomain)+ PATH_SEPARATOR + 
-                idpId + FEDERATED_AUTHENTICATORS_PATH + federatedAuthenticatorId;
+        String endPointUrl = serverUrl + ISIntegrationTest.getTenantedRelativePath(IDENTITY_PROVIDER_BASE_PATH,
+                tenantDomain) + PATH_SEPARATOR + idpId + FEDERATED_AUTHENTICATORS_PATH + federatedAuthenticatorId;
 
         try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
             String responseBody = EntityUtils.toString(response.getEntity());
@@ -93,8 +94,8 @@ public class IdpMgtRestClient extends RestBaseClient {
      */
     public void updateIdpClaimConfig(String idpId, Claims idpClaims) throws IOException {
         String jsonRequest = toJSONString(idpClaims);
-        String endPointUrl = serverUrl + String.format(IDENTITY_PROVIDER_BASE_PATH, tenantDomain) + PATH_SEPARATOR +
-                idpId + CLAIMS_PATH;
+        String endPointUrl = serverUrl + ISIntegrationTest.getTenantedRelativePath(IDENTITY_PROVIDER_BASE_PATH,
+                tenantDomain) + PATH_SEPARATOR + idpId + CLAIMS_PATH;
 
         try (CloseableHttpResponse response = getResponseOfHttpPut(endPointUrl, jsonRequest, getHeaders())) {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
@@ -108,8 +109,8 @@ public class IdpMgtRestClient extends RestBaseClient {
      * @param idpId Identity Provider Id
      */
     public void deleteIdp(String idpId) throws IOException {
-        String endPointUrl = serverUrl + String.format(IDENTITY_PROVIDER_BASE_PATH, tenantDomain) + PATH_SEPARATOR +
-                idpId;
+        String endPointUrl = serverUrl + ISIntegrationTest.getTenantedRelativePath(IDENTITY_PROVIDER_BASE_PATH,
+                tenantDomain) + PATH_SEPARATOR + idpId;
 
         try (CloseableHttpResponse response = getResponseOfHttpDelete(endPointUrl, getHeaders())) {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,

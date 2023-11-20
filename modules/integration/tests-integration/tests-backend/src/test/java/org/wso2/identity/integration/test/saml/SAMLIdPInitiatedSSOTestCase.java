@@ -61,7 +61,7 @@ public class SAMLIdPInitiatedSSOTestCase extends AbstractSAMLSSOTestCase {
 
     private static final String IDP_INIT_SSO_URL = "https://localhost:%s/samlsso?spEntityID=%s";
     private static final String IDP_INIT_SSO_TENANT_URL
-            = "https://localhost:%s/samlsso?tenantDomain=wso2.com&spEntityID=%s";
+            = "https://localhost:%s/t/wso2.com/samlsso?spEntityID=%s";
     private static final String SAML_SSO_URL = "https://localhost:%s/samlsso";
     private static final String SP_ACS_URL = "http://localhost:8490/%s/home.jsp";
     private HttpClient httpClient;

@@ -1,5 +1,5 @@
 # This workflow will update dependencies for product-is 7.x.x.
-name: Dependency Updater 7.x.x
+name: "[Deprecated] Dependency Updater 7.x.x"
 on:
   workflow_dispatch:
   # schedule:
