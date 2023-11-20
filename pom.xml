@@ -2040,6 +2040,11 @@
                 <version>${identity.organization.login.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.identity.organization.management.core</groupId>
+                <artifactId>org.wso2.carbon.identity.organization.management.service</artifactId>
+                <version>${identity.org.mgt.core.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.extension.identity.oauth2.grantType.organizationswitch</groupId>
                 <artifactId>org.wso2.carbon.identity.oauth2.grant.organizationswitch.server.feature</artifactId>
                 <version>${identity.oauth2.grant.organizationswitch.version}</version>
