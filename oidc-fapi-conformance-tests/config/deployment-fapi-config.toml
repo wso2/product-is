@@ -101,3 +101,7 @@ ciphers="TLS_DHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA2
 
 [oauth.mutualtls]
 client_certificate_header = "x-wso2-mtls-cert"
+
+[oauth.jwks_endpoint]
+read_timeout = 10s
+
