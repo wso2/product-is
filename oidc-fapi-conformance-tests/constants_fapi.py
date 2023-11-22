@@ -97,5 +97,45 @@ MTLS_APP2 = {
     "require_pushed_authorization_requests" : "false",
 }
 
+PVTKEYJWT_PAR_APP1 = {
+    "client_name": "pvtkeyjwt_par_fapi1",
+    "token_endpoint_auth_method": "private_key_jwt",
+    "client_id": "pvtkeyjwt_par_fapi1_client_id",
+    "client_secret": "pvtkeyjwt_par_fapi1_client_secret",
+    "redirect_uris": ["https://localhost.emobix.co.uk:8443/test/a/fapi-wso2is/callback"],
+    "jwks_uri": JWKS_1,
+    "require_pushed_authorization_requests" : "true",
+}
+
+PVTKEYJWT_PAR_APP2 = {
+    "client_name": "pvtkeyjwt_par_fapi2",
+    "token_endpoint_auth_method": "private_key_jwt",
+    "client_id": "pvtkeyjwt_par_fapi2_client_id",
+    "client_secret": "pvtkeyjwt_par_fapi2_client_secret",
+    "redirect_uris": ["https://localhost.emobix.co.uk:8443/test/a/fapi-wso2is/callback?dummy1=lorem&dummy2=ipsum"],
+    "jwks_uri": JWKS_2,
+    "require_pushed_authorization_requests" : "true",
+}
+
+MTLS_PAR_APP1 = {
+    "client_name": "mtls_par_fapi1",
+    "token_endpoint_auth_method": "tls_client_auth",
+    "client_id": "mtls_par_fapi1_client_id",
+    "client_secret": "mtls_par_fapi1_client_secret",
+    "redirect_uris": ["https://localhost.emobix.co.uk:8443/test/a/fapi-wso2is/callback"],
+    "jwks_uri": JWKS_1,
+    "require_pushed_authorization_requests" : "true",
+}
+
+MTLS_PAR_APP2 = {
+    "client_name": "mtls_par_fapi2",
+    "token_endpoint_auth_method": "tls_client_auth",
+    "client_id": "mtls_par_fapi2_client_id",
+    "client_secret": "mtls_par_fapi2_client_secret",
+    "redirect_uris": ["https://localhost.emobix.co.uk:8443/test/a/fapi-wso2is/callback?dummy1=lorem&dummy2=ipsum"],
+    "jwks_uri": JWKS_2,
+    "require_pushed_authorization_requests" : "true",
+}
+
 # "jwks_uri": "https://www.iam.com/jwks1",
 # "jwks_uri": "https://www.iam.com/jwks2",

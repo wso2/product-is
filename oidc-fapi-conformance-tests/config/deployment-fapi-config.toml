@@ -88,14 +88,6 @@ signing_algorithms=["PS256","ES256"]
 [oauth.oidc.user_info]
 jwt_signature_algorithm="PS256"
 
-# FAPI specific configurations
-[oauth.oidc.fapi]
-enable_validation=true
-
-# Set the priority order for MTLS authenticator (This should be a higher value to ensure other authenticators are engaged prior to MTLS authenticator)
-[event.default_listener.mutual_tls_authenticator]
-priority=9999
-
 [transport.https.sslHostConfig.properties]
 ciphers="TLS_DHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_DHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
 

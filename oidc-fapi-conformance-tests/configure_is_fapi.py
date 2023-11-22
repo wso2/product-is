@@ -251,3 +251,9 @@ generateConfigForPlan(constants.PVTKEYJWT_APP1, constants.PVTKEYJWT_APP2, "confi
 
 print("\n>>> Configs for mtls test plan")
 generateConfigForPlan(constants.MTLS_APP1, constants.MTLS_APP2, "config/IS_config_fapi_mtls.json", "mtls")
+
+print("\n>>> Configs for pvtkeyjwt par test plan")
+generateConfigForPlan(constants.PVTKEYJWT_PAR_APP1, constants.PVTKEYJWT_PAR_APP2, "config/IS_config_fapi_pvtkeyjwt_par.json", "pvtkeyjwt_par")
+
+print("\n>>> Configs for mtls par test plan")
+generateConfigForPlan(constants.MTLS_PAR_APP1, constants.MTLS_PAR_APP2, "config/IS_config_fapi_mtls_par.json", "mtls_par")
