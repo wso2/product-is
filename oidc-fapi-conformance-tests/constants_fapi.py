@@ -53,8 +53,8 @@ ACR = {
 
 # SP App configs
 
-JWKS_1 = "https://www.jsonkeeper.com/b/AY8R"
-JWKS_2 = "https://www.jsonkeeper.com/b/9WNK"
+JWKS_1 = "https://www.jsonkeeper.com/b/EN9F"
+JWKS_2 = "https://www.jsonkeeper.com/b/93VZ"
 
 
 PVTKEYJWT_APP1 = {
