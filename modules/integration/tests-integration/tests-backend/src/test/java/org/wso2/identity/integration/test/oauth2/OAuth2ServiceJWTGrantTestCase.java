@@ -214,14 +214,12 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
 
         addFederatedIdentityProvider();
         OIDCTokens oidcTokens = makeJWTBearerGrantRequest();
-        Assert.assertNull(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(COUNTRY_NEW_OIDC_CLAIM),
-                "User claims is returned back without mappings in SP and IDP side when ConvertToOIDCDialect is "
-                        + "set to true in identity.xml");
-        Assert.assertNull(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(EMAIL_OIDC_CLAIM),
-                "User claims is returned back without mappings in SP and IDP side when ConvertToOIDCDialect is "
-                        + "set to true in identity.xml");
-        Assert.assertNull(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(EMAIL_LOCAL_CLAIM_URI),
-                "User claims is returned back when IDP claim mapping is not set and with only SP Claim mapping");
+        Assert.assertEquals(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(COUNTRY_NEW_OIDC_CLAIM),
+                COUNTRY_CLAIM_VALUE, "User claims is not returned back with SP claim mapping set and " +
+                        "no IDP claim mapping when ConvertToOIDCDialect is set to true in identity.xml");
+        Assert.assertEquals(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(EMAIL_OIDC_CLAIM), EMAIL_CLAIM_VALUE,
+                "User claims is not returned back with SP claim mapping set and " +
+                        "no IDP claim mapping when ConvertToOIDCDialect is set to true in identity.xml");
     }
 
     @Test(description = "This test case tests the behaviour when ConvertOIDCDialect is set to true in identity.xml "
