@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>7.0.0-beta-SNAPSHOT</version>
+        <version>7.0.0-beta2-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -116,6 +116,29 @@
                                     <artifactId>org.wso2.carbon.identity.application.authenticator.apple
                                     </artifactId>
                                     <version>${social.authenticator.apple.version}</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${basedir}/target/socialauthenticatorCopied/jar
+                                    </outputDirectory>
+                                    <includes>**/*.jar</includes>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    <!-- Download github social-authenticator jar from nexus and copy to the socialauthenticatorCopied/jar folder-->
+                    <execution>
+                        <id>download_github_jar</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.carbon.extension.identity.authenticator</groupId>
+                                    <artifactId>org.wso2.carbon.extension.identity.authenticator.github.connector
+                                    </artifactId>
+                                    <version>${social.authenticator.github.version}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${basedir}/target/socialauthenticatorCopied/jar
