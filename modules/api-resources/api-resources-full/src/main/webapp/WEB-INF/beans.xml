@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~ Copyright (c) 2019-2023, WSO2 LLC. (http://www.wso2.com).
   ~
-  ~ Licensed under the Apache License, Version 2.0 (the "License");
-  ~ you may not use this file except in compliance with the License.
+  ~ WSO2 LLC. licenses this file to you under the Apache License,
+  ~ Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License.
   ~ You may obtain a copy of the License at
   ~
   ~ http://www.apache.org/licenses/LICENSE-2.0
   ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
   -->
 
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -238,6 +240,46 @@
             <ref bean="validationInInterceptor"/>
         </jaxrs:inInterceptors>
     </jaxrs:server>
+    <jaxrs:server id="orgPerspectiveUsers" address="/o/users/v1">
+        <jaxrs:serviceBeans>
+            <bean class="org.wso2.carbon.identity.rest.api.user.application.v1.MeApi"/>
+            <bean class="org.wso2.carbon.identity.rest.api.user.approval.v1.MeApi"/>
+            <bean class="org.wso2.carbon.identity.rest.api.user.association.v1.MeApi"/>
+            <bean class="org.wso2.carbon.identity.rest.api.user.association.v1.UserIdApi"/>
+            <bean class="org.wso2.carbon.identity.rest.api.user.authorized.apps.v1.MeApi"/>
+            <bean class="org.wso2.carbon.identity.rest.api.user.authorized.apps.v1.UserIdApi"/>
+            <bean class="org.wso2.carbon.identity.rest.api.user.backupcode.v1.MeApi"/>
+            <bean class="org.wso2.carbon.identity.rest.api.user.challenge.v1.MeApi"/>
+            <bean class="org.wso2.carbon.identity.rest.api.user.challenge.v1.UserIdApi"/>
+            <bean class="org.wso2.carbon.identity.rest.api.user.fido2.v1.MeApi"/>
+            <bean class="org.wso2.carbon.identity.rest.api.user.functionality.v1.MeApi"/>
+            <bean class="org.wso2.carbon.identity.rest.api.user.functionality.v1.UserIdApi"/>
+            <bean class="org.wso2.carbon.identity.rest.api.user.mfa.v1.MeApi"/>
+            <bean class="org.wso2.carbon.identity.rest.api.user.recovery.v1.RecoveryApi"/>
+            <bean class="org.wso2.carbon.identity.rest.api.user.session.v1.MeApi"/>
+            <bean class="org.wso2.carbon.identity.rest.api.user.session.v1.SessionsApi"/>
+            <bean class="org.wso2.carbon.identity.rest.api.user.session.v1.UserIdApi"/>
+            <bean class="org.wso2.carbon.identity.rest.api.user.totp.v1.MeApi"/>
+            <bean class="org.wso2.carbon.identity.rest.api.user.idv.v1.MeApi"/>
+            <bean class="org.wso2.carbon.identity.rest.api.user.idv.v1.DefaultApi"/>
+        </jaxrs:serviceBeans>
+        <jaxrs:providers>
+            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">
+                <constructor-arg>
+                    <bean class="com.fasterxml.jackson.databind.ObjectMapper">
+                        <property name="serializationInclusion" value="NON_NULL" />
+                    </bean>
+                </constructor-arg>
+            </bean>
+            <bean class="org.wso2.carbon.identity.api.dispatcher.core.JsonProcessingExceptionMapper"/>
+            <bean class="org.wso2.carbon.identity.api.dispatcher.core.APIErrorExceptionMapper"/>
+            <bean class="org.wso2.carbon.identity.api.dispatcher.core.InputValidationExceptionMapper"/>
+            <bean class="org.wso2.carbon.identity.api.dispatcher.core.DefaultExceptionMapper"/>
+        </jaxrs:providers>
+        <jaxrs:inInterceptors>
+            <ref bean="validationInInterceptor"/>
+        </jaxrs:inInterceptors>
+    </jaxrs:server>
     <jaxrs:server id="orgUser" address="/users/v1/me/organizations">
         <jaxrs:serviceBeans>
             <bean class="org.wso2.carbon.identity.rest.api.user.organization.v1.RootApi"/>
@@ -283,6 +325,30 @@
         </jaxrs:inInterceptors>
     </jaxrs:server>
     <jaxrs:server id="usersV2" address="/users/v2">
+        <jaxrs:serviceBeans>
+            <bean class="org.wso2.carbon.identity.rest.api.user.authorized.apps.v2.MeApi"/>
+            <bean class="org.wso2.carbon.identity.rest.api.user.authorized.apps.v2.UserIdApi"/>
+            <bean class="org.wso2.carbon.identity.rest.api.user.authorized.apps.v2.AuthorizedAppsApi"/>
+            <bean class="org.wso2.carbon.identity.rest.api.user.recovery.v2.RecoveryApi"/>
+        </jaxrs:serviceBeans>
+        <jaxrs:providers>
+            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">
+                <constructor-arg>
+                    <bean class="com.fasterxml.jackson.databind.ObjectMapper">
+                        <property name="serializationInclusion" value="NON_NULL" />
+                    </bean>
+                </constructor-arg>
+            </bean>
+            <bean class="org.wso2.carbon.identity.api.dispatcher.core.JsonProcessingExceptionMapper"/>
+            <bean class="org.wso2.carbon.identity.api.dispatcher.core.APIErrorExceptionMapper"/>
+            <bean class="org.wso2.carbon.identity.api.dispatcher.core.InputValidationExceptionMapper"/>
+            <bean class="org.wso2.carbon.identity.api.dispatcher.core.DefaultExceptionMapper"/>
+        </jaxrs:providers>
+        <jaxrs:inInterceptors>
+            <ref bean="validationInInterceptor"/>
+        </jaxrs:inInterceptors>
+    </jaxrs:server>
+    <jaxrs:server id="OrgPerspectiveUsersV2" address="/o/users/v2">
         <jaxrs:serviceBeans>
             <bean class="org.wso2.carbon.identity.rest.api.user.authorized.apps.v2.MeApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.authorized.apps.v2.UserIdApi"/>
