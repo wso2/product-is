@@ -913,7 +913,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		apiIdentifiers.stream().forEach(apiIdentifier -> {
 			try {
 				List<APIResourceListItem> filteredAPIResource =
-						restClient.getAPIResourcesWithFiltering("type+eq+SYSTEM+and+identifier+eq+" + apiIdentifier);
+						restClient.getAPIResourcesWithFiltering("identifier+eq+" + apiIdentifier);
 				if (filteredAPIResource == null || filteredAPIResource.isEmpty()) {
 					return;
 				}
