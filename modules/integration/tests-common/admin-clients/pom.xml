@@ -117,10 +117,14 @@
         <dependency>
             <groupId>org.wso2.carbon.identity.framework</groupId>
             <artifactId>org.wso2.carbon.identity.workflow.mgt.stub</artifactId>
+            <version>5.25.547</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.workflow.impl.bps</groupId>
             <artifactId>org.wso2.carbon.identity.workflow.impl.stub</artifactId>
+            <version>5.25.547</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
