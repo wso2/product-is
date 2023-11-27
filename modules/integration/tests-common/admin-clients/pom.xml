@@ -112,6 +112,8 @@
             <groupId>org.wso2.carbon.identity.association.account</groupId>
             <artifactId>org.wso2.carbon.identity.user.account.association.stub</artifactId>
         </dependency>
+
+        <!-- Using the previous stub version for compilation due to deprecation of the workflow feature in IS 7.0.0 and onwards -->
         <dependency>
             <groupId>org.wso2.carbon.identity.framework</groupId>
             <artifactId>org.wso2.carbon.identity.workflow.mgt.stub</artifactId>
@@ -120,6 +122,7 @@
             <groupId>org.wso2.carbon.identity.workflow.impl.bps</groupId>
             <artifactId>org.wso2.carbon.identity.workflow.impl.stub</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.wso2.carbon.deployment</groupId>
             <artifactId>org.wso2.carbon.service.mgt.stub</artifactId>
