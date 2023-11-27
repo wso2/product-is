@@ -79,10 +79,6 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
 
     public static final String ENCODED_OIDC_CLAIM_DIALECT = "aHR0cDovL3dzbzIub3JnL29pZGMvY2xhaW0";
     private static final String USERS_PATH = "users";
-    private static final String CHALLENGE_QUESTION_SET_ID1 = "challengeQuestion1";
-    private static final String CHALLENGE_QUESTION_SET_ID2 = "challengeQuestion2";
-    private static final String CHALLENGE_QUESTION_SET1_Q1 = "City where you were born ?";
-    private static final String CHALLENGE_QUESTION_SET2_Q1 = "Model of your first car ?";
     private static final String LOCALE = "en_US";
     private ServerConfigurationManager serverConfigurationManager;
 
@@ -104,8 +100,6 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
     private static final String emailClaimURI = "http://wso2.org/claims/emailaddress";
     private static final String givenNameClaimURI = "http://wso2.org/claims/givenname";
     private static final String countryClaimURI = "http://wso2.org/claims/country";
-    private static final String customClaimURI1 = "http://wso2.org/claims/challengeQuestion1";
-    private static final String customClaimURI2 = "http://wso2.org/claims/challengeQuestion2";
     private static final String externalClaimURI1 = "externalClaim1";
     private static final String externalClaimURI2 = "externalClaim2";
     private static final String USER_EMAIL = "abcrqo@wso2.com";
@@ -126,7 +120,6 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
 
     private SCIM2RestClient scim2RestClient;
     private ClaimManagementRestClient claimManagementRestClient;
-    private ChallengeQuestionsRestClient challengeQuestionsRestClient;
 
     private String applicationId;
     private String userId;
@@ -165,12 +158,9 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
         setSystemproperties();
 
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
-        challengeQuestionsRestClient = new ChallengeQuestionsRestClient(serverURL, tenantInfo);
         claimManagementRestClient = new ClaimManagementRestClient(serverURL, tenantInfo);
 
         addAdminUser();
-        claimId1 = addOIDCClaims(externalClaimURI1, customClaimURI1);
-        claimId2 = addOIDCClaims(externalClaimURI2, customClaimURI2);
 
     }
 
@@ -195,7 +185,6 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
         restClient.closeHttpClient();
         scim2RestClient.closeHttpClient();
         claimManagementRestClient.closeHttpClient();
-        challengeQuestionsRestClient.closeHttpClient();
         client.close();
     }
 
@@ -448,16 +437,5 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
         patchRoleItem.addValue(new ListObject().value(userId));
 
         scim2RestClient.updateUserRole(new PatchOperationRequestObject().addOperations(patchRoleItem), roleId);
-
-        setChallengeQuestion(CHALLENGE_QUESTION_SET_ID1, CHALLENGE_QUESTION_SET1_Q1, CUSTOM_CLAIM1);
-        setChallengeQuestion(CHALLENGE_QUESTION_SET_ID2, CHALLENGE_QUESTION_SET2_Q1, CUSTOM_CLAIM2);
-    }
-
-    private void setChallengeQuestion(String questionSetId, String question, String answer) throws Exception {
-        UserChallengeAnswer  challengeQuestionObj = new UserChallengeAnswer();
-        challengeQuestionObj.setChallengeQuestion(new Questions(LOCALE, question, null));
-        challengeQuestionObj.setAnswer(answer);
-
-        challengeQuestionsRestClient.setChallengeQuestionAnswer(userId, questionSetId, challengeQuestionObj);
     }
 }
