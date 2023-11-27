@@ -57,7 +57,6 @@
     <import resource="classpath:META-INF/cxf/tenant-management-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/cors-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-functionality-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/rfc-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/organization-user-invitation-mgt-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/organization-configs-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/self-service-mgt-v1-cxf.xml"/>
@@ -107,7 +106,6 @@
             <bean class="org.wso2.carbon.identity.api.server.tenant.management.v1.TenantsApi"/>
             <bean class="org.wso2.carbon.identity.api.server.tenant.management.v1.ChannelVerifiedTenantsApi"/>
             <bean class="org.wso2.carbon.identity.api.server.cors.v1.CorsApi"/>
-            <bean class="org.wso2.carbon.identity.api.server.fetch.remote.v1.RemoteFetchApi"/>
             <bean class="org.wso2.carbon.identity.api.server.notification.sender.v1.NotificationSendersApi"/>
             <bean class="org.wso2.carbon.identity.api.server.authenticators.v1.AuthenticatorsApi"/>
             <bean class="org.wso2.carbon.identity.api.server.secret.management.v1.SecretsApi"/>

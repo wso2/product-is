@@ -367,16 +367,6 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.server.api</groupId>
-                <artifactId>org.wso2.carbon.identity.api.server.fetch.remote.common</artifactId>
-                <version>${identity.server.api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.identity.server.api</groupId>
-                <artifactId>org.wso2.carbon.identity.api.server.fetch.remote.v1</artifactId>
-                <version>${identity.server.api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.identity.server.api</groupId>
                 <artifactId>org.wso2.carbon.identity.api.server.notification.sender.v1</artifactId>
                 <version>${identity.server.api.version}</version>
             </dependency>
