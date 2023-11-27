@@ -244,8 +244,6 @@
             <bean class="org.wso2.carbon.identity.rest.api.user.authorized.apps.v1.MeApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.authorized.apps.v1.UserIdApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.backupcode.v1.MeApi"/>
-            <bean class="org.wso2.carbon.identity.rest.api.user.challenge.v1.MeApi"/>
-            <bean class="org.wso2.carbon.identity.rest.api.user.challenge.v1.UserIdApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.fido2.v1.MeApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.functionality.v1.MeApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.functionality.v1.UserIdApi"/>
