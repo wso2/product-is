@@ -135,10 +135,6 @@
             <artifactId>org.wso2.carbon.identity.governance.stub</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.identity.governance</groupId>
-            <artifactId>org.wso2.carbon.identity.recovery.stub</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.wso2.carbon.registry</groupId>
             <artifactId>org.wso2.carbon.registry.resource.stub</artifactId>
             <scope>compile</scope>
@@ -271,6 +267,18 @@
         <dependency>
             <groupId>org.wso2.carbon.registry</groupId>
             <artifactId>org.wso2.carbon.registry.properties.stub</artifactId>
+        </dependency>
+        <!--
+            Using the previous stub version for compilation due to deprecation of the challenge question management feature in IS 7.0.0 and onwards
+            Note: Adding the version manually is temporary. After hosting the challenge questions as a connector,
+            we need to enhance the test cases to download it and run tests on top of it. Once this process is complete,
+            this manual version addition can be removed.
+        -->
+        <dependency>
+            <groupId>org.wso2.carbon.identity.governance</groupId>
+            <artifactId>org.wso2.carbon.identity.recovery.stub</artifactId>
+            <version>1.8.87</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
