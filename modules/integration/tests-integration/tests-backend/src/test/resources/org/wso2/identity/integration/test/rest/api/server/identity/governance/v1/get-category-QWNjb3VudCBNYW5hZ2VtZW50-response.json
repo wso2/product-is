@@ -132,12 +132,6 @@
           "description": ""
         },
         {
-          "name": "Recovery.Question.Password.NotifyStart",
-          "value": "false",
-          "displayName": "Notify when security questions based recovery starts",
-          "description": ""
-        },
-        {
           "name": "Recovery.ExpiryTime",
           "value": "1440",
           "displayName": "Recovery link expiry time in minutes",
