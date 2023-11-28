@@ -50,8 +50,7 @@
             <class name="org.wso2.identity.integration.test.AuthenticationAdminTestCase"/>
             <class name="org.wso2.identity.integration.test.identity.mgt.AccountLockEnabledTestCase"/>
             <class name="org.wso2.identity.integration.test.identity.mgt.IdentityGovernanceTestCase"/>
-            <!--Disabling since the Challenge Question is provided as a connector and it does not exist in the product by default.-->
-            <!--<class name="org.wso2.identity.integration.test.challenge.questions.mgt.ChallengeQuestionManagementAdminServiceTestCase"/>-->
+            <class name="org.wso2.identity.integration.test.challenge.questions.mgt.ChallengeQuestionManagementAdminServiceTestCase"/>
 
             <class name="org.wso2.identity.integration.test.user.store.config.UserStoreConfigAdminTestCase"/>
             <class name="org.wso2.identity.integration.test.user.store.config.UserStoreConfigTestForIDENTITY5573"/>
@@ -119,8 +118,7 @@
             <class name="org.wso2.identity.integration.test.saml.SAMLIdPInitiatedSLOTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.SAMLIdPInitiatedSSOTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.SAMLSSOConsentTestCase"/>
-            <!--Disabling since the Challenge Question is provided as a connector and it does not exist in the product by default.-->
-            <!--<class name="org.wso2.identity.integration.test.postAuthnHandler.ChallengeQuestionPostAuthnHandlerTestCase"/>-->
+            <class name="org.wso2.identity.integration.test.postAuthnHandler.ChallengeQuestionPostAuthnHandlerTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.dcrm.api.OAuthDCRMTestCase"/>
             <class name="org.wso2.identity.integration.test.functions.library.mgt.FunctionLibraryManagementTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenRevocationWithRevokedAccessToken" />
@@ -140,9 +138,8 @@
     <test name="is-test-rest-api" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
             <!--Test cases for user REST APIs-->
-            <!--Disabling since the Challenge Question is provided as a connector and it does not exist in the product by default.-->
-            <!--<class name="org.wso2.identity.integration.test.rest.api.user.challenge.v1.UserMeSuccessTest"/>-->
-            <!--<class name="org.wso2.identity.integration.test.rest.api.user.challenge.v1.UserMeNegativeTest"/>-->
+            <class name="org.wso2.identity.integration.test.rest.api.user.challenge.v1.UserMeSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.user.challenge.v1.UserMeNegativeTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.association.v1.UserMeSuccessTestBase"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.association.v1.UserMeNegativeTestBase"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.approval.v1.UserMeApprovalTest"/>
@@ -160,8 +157,7 @@
             <class name="org.wso2.identity.integration.test.rest.api.user.application.v1.UserDiscoverableApplicationSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.application.v1.UserDiscoverableApplicationFailureTest"/>
             <!--Test cases for server REST APIs-->
-            <!--Disabling since the Challenge Question is provided as a connector and it does not exist in the product by default.-->
-            <!--<class name="org.wso2.identity.integration.test.rest.api.server.challenge.v1.ServerChallengeTestCase"/>-->
+            <class name="org.wso2.identity.integration.test.rest.api.server.challenge.v1.ServerChallengeTestCase"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.claim.management.v1.ClaimManagementSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.claim.management.v1.ClaimManagementNegativeTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.email.template.v1.EmailTemplatesPositiveTest"/>
