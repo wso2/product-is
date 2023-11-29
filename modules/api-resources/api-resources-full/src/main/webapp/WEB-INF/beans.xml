@@ -34,7 +34,6 @@
     <import resource="classpath:META-INF/cxf/permission-management-v1-cxf.xml"/>
     <!--<import resource="classpath:META-INF/cxf/workflow-engine-server-v1-cxf.xml"/>-->
     <import resource="classpath:META-INF/cxf/claim-management-server-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/challenge-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/email-template-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/applications-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/application-user-v1-cxf.xml"/>
@@ -92,7 +91,6 @@
     </bean>
     <jaxrs:server id="server" address="/server/v1">
         <jaxrs:serviceBeans>
-            <bean class="org.wso2.carbon.identity.rest.api.server.challenge.v1.ChallengesApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.server.claim.management.v1.ClaimManagementApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.server.email.template.v1.EmailApi"/>
             <bean class="org.wso2.carbon.identity.api.server.identity.governance.v1.IdentityGovernanceApi"/>
