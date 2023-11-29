@@ -157,7 +157,8 @@
             <class name="org.wso2.identity.integration.test.rest.api.user.application.v1.UserDiscoverableApplicationSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.application.v1.UserDiscoverableApplicationFailureTest"/>
             <!--Test cases for server REST APIs-->
-            <class name="org.wso2.identity.integration.test.rest.api.server.challenge.v1.ServerChallengeTestCase"/>
+            <!--Disabling since the Challenge Question is provided as a connector and it does not exist in the product by default.-->
+            <!--<class name="org.wso2.identity.integration.test.rest.api.server.challenge.v1.ServerChallengeTestCase"/>-->
             <class name="org.wso2.identity.integration.test.rest.api.server.claim.management.v1.ClaimManagementSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.claim.management.v1.ClaimManagementNegativeTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.email.template.v1.EmailTemplatesPositiveTest"/>
