@@ -50,7 +50,8 @@
             <class name="org.wso2.identity.integration.test.AuthenticationAdminTestCase"/>
             <class name="org.wso2.identity.integration.test.identity.mgt.AccountLockEnabledTestCase"/>
             <class name="org.wso2.identity.integration.test.identity.mgt.IdentityGovernanceTestCase"/>
-            <class name="org.wso2.identity.integration.test.challenge.questions.mgt.ChallengeQuestionManagementAdminServiceTestCase"/>
+            <!--Disabling since the Challenge Question is provided as a connector and it does not exist in the product by default.-->
+            <!--<class name="org.wso2.identity.integration.test.challenge.questions.mgt.ChallengeQuestionManagementAdminServiceTestCase"/>-->
 
             <class name="org.wso2.identity.integration.test.user.store.config.UserStoreConfigAdminTestCase"/>
             <class name="org.wso2.identity.integration.test.user.store.config.UserStoreConfigTestForIDENTITY5573"/>
@@ -118,7 +119,8 @@
             <class name="org.wso2.identity.integration.test.saml.SAMLIdPInitiatedSLOTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.SAMLIdPInitiatedSSOTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.SAMLSSOConsentTestCase"/>
-            <class name="org.wso2.identity.integration.test.postAuthnHandler.ChallengeQuestionPostAuthnHandlerTestCase"/>
+            <!--Disabling since the Challenge Question is provided as a connector and it does not exist in the product by default.-->
+            <!--<class name="org.wso2.identity.integration.test.postAuthnHandler.ChallengeQuestionPostAuthnHandlerTestCase"/>-->
             <class name="org.wso2.identity.integration.test.oauth2.dcrm.api.OAuthDCRMTestCase"/>
             <class name="org.wso2.identity.integration.test.functions.library.mgt.FunctionLibraryManagementTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenRevocationWithRevokedAccessToken" />

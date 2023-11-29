@@ -395,10 +395,7 @@
             <bean class="org.wso2.carbon.identity.recovery.endpoint.ClaimsApi"/>
             <bean class="org.wso2.carbon.identity.recovery.endpoint.RecoverPasswordApi"/>
             <bean class="org.wso2.carbon.identity.recovery.endpoint.RecoverUsernameApi"/>
-            <bean class="org.wso2.carbon.identity.recovery.endpoint.SecurityQuestionApi"/>
-            <bean class="org.wso2.carbon.identity.recovery.endpoint.SecurityQuestionsApi"/>
             <bean class="org.wso2.carbon.identity.recovery.endpoint.SetPasswordApi"/>
-            <bean class="org.wso2.carbon.identity.recovery.endpoint.ValidateAnswerApi"/>
             <bean class="org.wso2.carbon.identity.recovery.endpoint.ValidateCodeApi"/>
             <bean class="org.wso2.carbon.identity.recovery.endpoint.CaptchaApi"/>
         </jaxrs:serviceBeans>

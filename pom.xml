@@ -1176,11 +1176,6 @@
                 <version>${identity.governance.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.identity.governance</groupId>
-                <artifactId>org.wso2.carbon.identity.recovery.stub</artifactId>
-                <version>${identity.governance.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.service.mgt.stub</artifactId>
                 <version>${carbon.deployment.version}</version>
@@ -2299,7 +2294,7 @@
         <carbon.consent.mgt.version>2.5.2</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.8.87</identity.governance.version>
+        <identity.governance.version>1.8.90</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.8.5</identity.carbon.auth.saml2.version>
