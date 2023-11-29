@@ -140,8 +140,9 @@
     <test name="is-test-rest-api" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
             <!--Test cases for user REST APIs-->
-            <class name="org.wso2.identity.integration.test.rest.api.user.challenge.v1.UserMeSuccessTest"/>
-            <class name="org.wso2.identity.integration.test.rest.api.user.challenge.v1.UserMeNegativeTest"/>
+            <!--Disabling since the Challenge Question is provided as a connector and it does not exist in the product by default.-->
+            <!--<class name="org.wso2.identity.integration.test.rest.api.user.challenge.v1.UserMeSuccessTest"/>-->
+            <!--<class name="org.wso2.identity.integration.test.rest.api.user.challenge.v1.UserMeNegativeTest"/>-->
             <class name="org.wso2.identity.integration.test.rest.api.user.association.v1.UserMeSuccessTestBase"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.association.v1.UserMeNegativeTestBase"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.approval.v1.UserMeApprovalTest"/>
