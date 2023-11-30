@@ -72,42 +72,6 @@
           "description": ""
         },
         {
-          "name": "Recovery.Question.Password.Enable",
-          "value": "false",
-          "displayName": "Security question based password recovery",
-          "description": ""
-        },
-        {
-          "name": "Recovery.Question.Password.MinAnswers",
-          "value": "2",
-          "displayName": "Number of questions required for password recovery",
-          "description": ""
-        },
-        {
-          "name": "Recovery.Question.Answer.Regex",
-          "value": ".*",
-          "displayName": "Security question answer regex",
-          "description": "Security question answer regex"
-        },
-        {
-          "name": "Recovery.Question.Answer.Uniqueness",
-          "value": "false",
-          "displayName": "Enforce security question answer uniqueness",
-          "description": "Enforce security question answer uniqueness"
-        },
-        {
-          "name": "Recovery.Question.Password.ReCaptcha.Enable",
-          "value": "true",
-          "displayName": "Enable reCaptcha for security questions based password recovery",
-          "description": "Prompt reCaptcha for security question based password recovery"
-        },
-        {
-          "name": "Recovery.Question.Password.ReCaptcha.MaxFailedAttempts",
-          "value": "2",
-          "displayName": "Max failed attempts for reCaptcha",
-          "description": ""
-        },
-        {
           "name": "Recovery.Notification.Username.Enable",
           "value": "false",
           "displayName": "Username recovery",
@@ -132,12 +96,6 @@
           "description": ""
         },
         {
-          "name": "Recovery.Question.Password.NotifyStart",
-          "value": "false",
-          "displayName": "Notify when security questions based recovery starts",
-          "description": ""
-        },
-        {
           "name": "Recovery.ExpiryTime",
           "value": "1440",
           "displayName": "Recovery link expiry time in minutes",
@@ -148,18 +106,6 @@
           "value": "1",
           "displayName": "SMS OTP expiry time",
           "description": "Expiration time of the SMS OTP code for password recovery"
-        },
-        {
-          "name": "Recovery.Question.Password.Forced.Enable",
-          "value": "false",
-          "displayName": "Enable forced security questions",
-          "description": "Force users to provide answers to security questions during sign in"
-        },
-        {
-          "name": "Recovery.Question.MinQuestionsToAnswer",
-          "value": "",
-          "displayName": "Minimum number of forced security questions to be answered",
-          "description": "Force users to provide answers to security questions during sign in if user has answered lesser than this value"
         },
         {
           "name": "Recovery.CallbackRegex",

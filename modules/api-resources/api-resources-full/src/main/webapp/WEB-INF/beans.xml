@@ -21,7 +21,6 @@
        xmlns:jaxrs="http://cxf.apache.org/jaxrs" xmlns:context="http://www.springframework.org/schema/context"
        xmlns:cxf="http://cxf.apache.org/core"
        xsi:schemaLocation="http://www.springframework.org/schema/beans  http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd">
-    <import resource="classpath:META-INF/cxf/user-challenge-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-association-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-approval-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/authorized-apps-user-v1-cxf.xml"/>
@@ -205,8 +204,6 @@
             <bean class="org.wso2.carbon.identity.rest.api.user.authorized.apps.v1.MeApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.authorized.apps.v1.UserIdApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.backupcode.v1.MeApi"/>
-            <bean class="org.wso2.carbon.identity.rest.api.user.challenge.v1.MeApi"/>
-            <bean class="org.wso2.carbon.identity.rest.api.user.challenge.v1.UserIdApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.fido2.v1.MeApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.functionality.v1.MeApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.functionality.v1.UserIdApi"/>
@@ -245,8 +242,6 @@
             <bean class="org.wso2.carbon.identity.rest.api.user.authorized.apps.v1.MeApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.authorized.apps.v1.UserIdApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.backupcode.v1.MeApi"/>
-            <bean class="org.wso2.carbon.identity.rest.api.user.challenge.v1.MeApi"/>
-            <bean class="org.wso2.carbon.identity.rest.api.user.challenge.v1.UserIdApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.fido2.v1.MeApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.functionality.v1.MeApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.functionality.v1.UserIdApi"/>
@@ -395,10 +390,7 @@
             <bean class="org.wso2.carbon.identity.recovery.endpoint.ClaimsApi"/>
             <bean class="org.wso2.carbon.identity.recovery.endpoint.RecoverPasswordApi"/>
             <bean class="org.wso2.carbon.identity.recovery.endpoint.RecoverUsernameApi"/>
-            <bean class="org.wso2.carbon.identity.recovery.endpoint.SecurityQuestionApi"/>
-            <bean class="org.wso2.carbon.identity.recovery.endpoint.SecurityQuestionsApi"/>
             <bean class="org.wso2.carbon.identity.recovery.endpoint.SetPasswordApi"/>
-            <bean class="org.wso2.carbon.identity.recovery.endpoint.ValidateAnswerApi"/>
             <bean class="org.wso2.carbon.identity.recovery.endpoint.ValidateCodeApi"/>
             <bean class="org.wso2.carbon.identity.recovery.endpoint.CaptchaApi"/>
         </jaxrs:serviceBeans>
