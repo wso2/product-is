@@ -123,7 +123,7 @@
         <dependency>
             <groupId>org.wso2.carbon.identity.workflow.impl.bps</groupId>
             <artifactId>org.wso2.carbon.identity.workflow.impl.stub</artifactId>
-            <version>5.25.547</version>
+            <version>5.5.5</version>
             <scope>compile</scope>
         </dependency>
 
