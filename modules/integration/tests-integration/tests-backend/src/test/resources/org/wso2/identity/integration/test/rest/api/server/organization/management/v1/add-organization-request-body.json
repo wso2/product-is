@@ -1,0 +1,14 @@
+{
+  "name": "Greater Hospital",
+  "description": "this is a construction company duplicate not shared",
+  "attributes": [
+    {
+      "key": "Country",
+      "value": "Sri Lanka"
+    },
+    {
+      "key": "Language",
+      "value": "Sinhala"
+    }
+  ]
+}

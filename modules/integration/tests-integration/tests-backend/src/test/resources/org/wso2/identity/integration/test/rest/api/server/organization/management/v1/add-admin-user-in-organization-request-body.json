@@ -1,0 +1,14 @@
+{
+  "emails": [
+    {
+      "primary": true,
+      "value": "orgAdmin@gmail.com"
+    }
+  ],
+  "name": {
+    "familyName": "one",
+    "givenName": "boit"
+  },
+  "password": "Kumar@2023",
+  "userName": "orgAdmin@gmail.com"
+}

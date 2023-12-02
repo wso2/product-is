@@ -43,6 +43,7 @@ public class RestBaseClient {
     public static final String AUTHORIZATION_ATTRIBUTE = "Authorization";
     public static final String USER_AGENT_ATTRIBUTE = "User-Agent";
     public static final String TENANT_PATH = "t/";
+    public static final String ORGANIZATION_PATH = "o/";
     public static final String PATH_SEPARATOR = "/";
     public static final String OIDC = "oidc";
     public static final String SAML = "saml";

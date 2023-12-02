@@ -13,7 +13,7 @@
 
     <test name="is-test-rest-api" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
-            <class name="org.wso2.identity.integration.test.rest.api.server.organization.management.v2.OrganizationManagementSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.organization.management.v1.OrganizationManagementSuccessTest"/>
         </classes>
     </test>
 </suite>
