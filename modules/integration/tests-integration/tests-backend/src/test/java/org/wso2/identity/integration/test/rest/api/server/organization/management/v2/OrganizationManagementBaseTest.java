@@ -24,6 +24,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.wso2.identity.integration.test.rest.api.server.common.RESTAPIServerTestBase;
+import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 
 import java.io.IOException;
 
@@ -39,6 +40,7 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
     static final String PATH_SEPARATOR = "/";
 
     protected static String swaggerDefinition;
+    protected OAuth2RestClient oAuth2RestClient;
 
     static {
         String API_PACKAGE_NAME = "org.wso2.carbon.identity.api.server.organization.management.v1";

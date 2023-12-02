@@ -17,7 +17,18 @@
  */
 package org.wso2.identity.integration.test.rest.api.server.organization.management.v2;
 
+import com.nimbusds.oauth2.sdk.AccessTokenResponse;
+import com.nimbusds.oauth2.sdk.AuthorizationGrant;
+import com.nimbusds.oauth2.sdk.ResourceOwnerPasswordCredentialsGrant;
+import com.nimbusds.oauth2.sdk.Scope;
+import com.nimbusds.oauth2.sdk.TokenRequest;
+import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
+import com.nimbusds.oauth2.sdk.auth.ClientSecretBasic;
+import com.nimbusds.oauth2.sdk.auth.Secret;
+import com.nimbusds.oauth2.sdk.http.HTTPResponse;
+import com.nimbusds.oauth2.sdk.id.ClientID;
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpHeaders;
@@ -31,13 +42,29 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationListItem;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AssociatedRolesConfig;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
+import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
+import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.IOException;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Tests for successful cases of the Organization Management REST APIs.
@@ -45,6 +72,8 @@ import static org.testng.Assert.assertNotNull;
 public class OrganizationManagementSuccessTest extends OrganizationManagementBaseTest {
 
     private String organizationId;
+    private String selfServiceAppId;
+    private String applicationId;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public OrganizationManagementSuccessTest(TestUserMode userMode) throws Exception {
@@ -57,9 +86,11 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     }
 
     @BeforeClass(alwaysRun = true)
-    public void init() throws IOException {
+    public void init() throws Exception {
 
         super.testInit(API_VERSION, swaggerDefinition, tenant);
+        oAuth2RestClient = new OAuth2RestClient(serverURL, tenantInfo);
+        //applicationId = addApplication();
     }
 
     @AfterClass(alwaysRun = true)
@@ -118,5 +149,72 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .body("id", equalTo(organizationId));
+    }
+
+    @Test
+    public void enableSelfOrganizationOnboardService() throws IOException {
+
+        String endpointURL = "self-service/preferences";
+        String body = readResource("enable-self-organization-onboard-request-body.json");
+
+        Response response = given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
+                .contentType(ContentType.JSON)
+                .body(body)
+                .when()
+                .patch(endpointURL);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK);
+
+        Optional<ApplicationListItem> b2bSelfServiceApp = oAuth2RestClient.getAllApplications().getApplications().stream()
+                .filter(application -> application.getName().equals("B2B-Self-Service-Mgt-Application"))
+                .findAny();
+        Assert.assertTrue(b2bSelfServiceApp.isPresent(), "B2B self organization onboard feature is not enabled properly");
+        selfServiceAppId = b2bSelfServiceApp.get().getId();
+    }
+
+    @Test(dependsOnMethods = "enableSelfOrganizationOnboardService")
+    public void createUser() throws Exception {
+
+        OpenIDConnectConfiguration openIDConnectConfiguration = oAuth2RestClient.getOIDCInboundDetails(selfServiceAppId);
+        String consumerKey = openIDConnectConfiguration.getClientId();
+        ClientID clientID = new ClientID(consumerKey);
+        String consumerSecret = openIDConnectConfiguration.getClientSecret();
+        Secret clientSecret = new Secret(consumerSecret);
+        Assert.assertNotNull(clientID);
+        Assert.assertNotNull(clientSecret);
+    }
+
+    private void associateRoles(String applicationId) throws Exception {
+
+        AssociatedRolesConfig associatedRolesConfig = new AssociatedRolesConfig().allowedAudience(
+                AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION);
+        String audienceType = AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION.toString().toLowerCase();
+        List<String> roles = oAuth2RestClient.getRoles("admin", audienceType, null);
+        String adminRoleId = null;
+        if (roles.size() == 1) {
+            adminRoleId =  roles.get(0);
+        }
+        ApplicationPatchModel applicationPatch = new ApplicationPatchModel();
+        applicationPatch.associatedRoles(associatedRolesConfig);
+        associatedRolesConfig.addRolesItem(
+                new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Role().id(
+                        adminRoleId));
+        oAuth2RestClient.updateApplication(applicationId, applicationPatch);
+    }
+
+    private String addApplication() throws Exception {
+
+        ApplicationModel application = new ApplicationModel();
+        List<String> grantTypes = new ArrayList<>();
+        Collections.addAll(grantTypes, "password", "organization_switch");
+        OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
+        oidcConfig.setGrantTypes(grantTypes);
+        InboundProtocols inboundProtocolsConfig = new InboundProtocols();
+        inboundProtocolsConfig.setOidc(oidcConfig);
+        application.setInboundProtocolConfiguration(inboundProtocolsConfig);
+        application.setName("org-mgt-token-app");
+        return oAuth2RestClient.createApplication(application);
     }
 }
