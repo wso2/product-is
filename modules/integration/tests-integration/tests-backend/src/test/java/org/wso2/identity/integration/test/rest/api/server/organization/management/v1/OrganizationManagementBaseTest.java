@@ -29,7 +29,7 @@ import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import java.io.IOException;
 
 /**
- * Base test class for the OIDC Scope Management REST APIs.
+ * Base test class for the Organization Management REST APIs.
  */
 public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
 
@@ -72,5 +72,4 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
 
         RestAssured.basePath = StringUtils.EMPTY;
     }
-
 }
