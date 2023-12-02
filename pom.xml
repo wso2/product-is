@@ -2283,7 +2283,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.25.567</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.25.570</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2364,7 +2364,7 @@
 
         <!-- Local Authenticator Versions -->
         <identity.local.auth.basicauth.version>6.7.30</identity.local.auth.basicauth.version>
-        <identity.local.auth.fido.version>5.4.4</identity.local.auth.fido.version>
+        <identity.local.auth.fido.version>5.4.7</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.4.3</identity.local.auth.iwa.version>
 
         <!-- Local Authentication API Connector Version -->
@@ -2378,7 +2378,7 @@
         <identity.metadata.saml.version>1.7.7</identity.metadata.saml.version>
 
         <!-- Connector Versions -->
-        <authenticator.totp.version>3.3.23</authenticator.totp.version>
+        <authenticator.totp.version>3.3.24</authenticator.totp.version>
         <authenticator.backupcode.version>0.0.16</authenticator.backupcode.version>
         <authenticator.office365.version>2.1.2</authenticator.office365.version>
         <authenticator.smsotp.version>3.3.16</authenticator.smsotp.version>
@@ -2415,7 +2415,7 @@
         <conditional.authentication.functions.version>1.2.38</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.9.31</identity.apps.console.version>
+        <identity.apps.console.version>2.9.34</identity.apps.console.version>
         <identity.apps.myaccount.version>2.2.41</identity.apps.myaccount.version>
         <identity.apps.core.version>2.0.68</identity.apps.core.version>
         <identity.apps.tests.version>1.6.373</identity.apps.tests.version>
