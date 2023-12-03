@@ -1,0 +1,14 @@
+{
+  "name": "Greater Hospital",
+  "description": "Hospital chain in South Asia",
+  "attributes": [
+    {
+      "key": "Country",
+      "value": "Sri Lanka"
+    },
+    {
+      "key": "Language",
+      "value": "Sinhala"
+    }
+  ]
+}
