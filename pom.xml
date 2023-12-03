@@ -2283,7 +2283,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.25.567</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.25.580</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2342,7 +2342,7 @@
         <callhome.version>4.5.x_1.0.14</callhome.version>
 
         <!-- Authenticator Versions -->
-        <identity.outbound.auth.oidc.version>5.11.28</identity.outbound.auth.oidc.version>
+        <identity.outbound.auth.oidc.version>5.11.29</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.oauth2.version>1.0.11</identity.outbound.auth.oauth2.version>
         <identity.outbound.auth.passive.sts.version>5.5.0</identity.outbound.auth.passive.sts.version>
         <identity.outbound.auth.samlsso.version>5.8.7</identity.outbound.auth.samlsso.version>
@@ -2350,7 +2350,7 @@
         <identity.outbound.auth.requestpath.oauth.version>5.5.4</identity.outbound.auth.requestpath.oauth.version>
 
         <!-- Social Authenticator Versions -->
-        <social.authenticator.facebook.version>5.2.10</social.authenticator.facebook.version>
+        <social.authenticator.facebook.version>5.2.11</social.authenticator.facebook.version>
         <social.authenticator.google.version>5.2.14</social.authenticator.google.version>
         <social.authenticator.windowslive.version>5.2.2</social.authenticator.windowslive.version>
         <social.authenticator.apple.version>1.0.4</social.authenticator.apple.version>
@@ -2382,7 +2382,7 @@
         <authenticator.backupcode.version>0.0.16</authenticator.backupcode.version>
         <authenticator.office365.version>2.1.2</authenticator.office365.version>
         <authenticator.smsotp.version>3.3.16</authenticator.smsotp.version>
-        <authenticator.magiclink.version>1.1.17</authenticator.magiclink.version>
+        <authenticator.magiclink.version>1.1.18</authenticator.magiclink.version>
         <authenticator.emailotp.version>4.1.21</authenticator.emailotp.version>
         <authenticator.local.auth.emailotp.version>1.0.13</authenticator.local.auth.emailotp.version>
         <authenticator.local.auth.smsotp.version>1.0.3</authenticator.local.auth.smsotp.version>
@@ -2400,12 +2400,12 @@
         <hashprovider.pbkdf2.version>0.1.4</hashprovider.pbkdf2.version>
 
         <!-- Identity Branding Preference Management Versions -->
-        <identity.branding.preference.management.version>1.0.13</identity.branding.preference.management.version>
+        <identity.branding.preference.management.version>1.0.14</identity.branding.preference.management.version>
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.13</identity.api.dispatcher.version>
         <identity.user.api.version>1.3.28</identity.user.api.version>
-        <identity.server.api.version>1.2.130</identity.server.api.version>
+        <identity.server.api.version>1.2.134</identity.server.api.version>
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
         <identity.tool.samlsso.validator.version>5.5.7</identity.tool.samlsso.validator.version>
