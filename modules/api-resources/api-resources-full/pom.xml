@@ -254,10 +254,6 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.server.api</groupId>
-            <artifactId>org.wso2.carbon.identity.rest.api.server.workflow.engine.v1</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.identity.server.api</groupId>
             <artifactId>org.wso2.carbon.identity.api.server.permission.management.v1</artifactId>
         </dependency>
         <dependency>
