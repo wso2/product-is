@@ -78,12 +78,9 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.testng.Assert.assertNotNull;
-import static org.wso2.identity.integration.test.rest.api.server.organization.management.v1.OrganizationManagementBaseTest.SUPER_ORGANIZATION_ID;
-import static org.wso2.identity.integration.test.rest.api.server.organization.management.v1.OrganizationManagementBaseTest.SUPER_TENANT_DOMAIN;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.CONTENT_TYPE_ATTRIBUTE;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.ORGANIZATION_PATH;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.TENANT_PATH;
-import static org.wso2.identity.integration.test.restclients.RestBaseClient.USER_AGENT_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SCIM2_USERS_ENDPOINT;
 
 /**
@@ -252,27 +249,27 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         EntityUtils.consume(response.getEntity());
         JSONParser parser = new JSONParser();
         org.json.simple.JSONObject json = (org.json.simple.JSONObject) parser.parse(responseString);
+        Assert.assertNotNull(json, "Access token response is null.");
         Assert.assertNotNull(json.get(OAuth2Constant.ACCESS_TOKEN), "Access token is null.");
         switchedM2MToken = (String) json.get(OAuth2Constant.ACCESS_TOKEN);
         Assert.assertNotNull(switchedM2MToken);
     }
 
     @Test(dependsOnMethods = "switchM2MToken")
-    public void createOnBoardUserInOrganization() throws IOException {
+    public void createUserInOrganization() throws IOException {
 
         String body = readResource("add-admin-user-in-organization-request-body.json");
         HttpPost request = new HttpPost(serverURL + TENANT_PATH + tenant + PATH_SEPARATOR + ORGANIZATION_PATH + SCIM2_USERS_ENDPOINT);
-        Header[] headerList = new Header[3];
-        headerList[0] = new BasicHeader(USER_AGENT_ATTRIBUTE, OAuth2Constant.USER_AGENT);
-        headerList[1] = new BasicHeader("Authorization", "Bearer " + switchedM2MToken);
-        headerList[2] = new BasicHeader(CONTENT_TYPE_ATTRIBUTE, "application/scim+json");
+        Header[] headerList = new Header[2];
+        headerList[0] = new BasicHeader("Authorization", "Bearer " + switchedM2MToken);
+        headerList[1] = new BasicHeader(CONTENT_TYPE_ATTRIBUTE, "application/scim+json");
         request.setHeaders(headerList);
         request.setEntity(new StringEntity(body));
         HttpResponse response = client.execute(request);
         Assert.assertEquals(response.getStatusLine().getStatusCode(), 201);
     }
 
-    @Test(dependsOnMethods = "createOnBoardUserInOrganization")
+    @Test(dependsOnMethods = "createUserInOrganization")
     public void addB2BApplication() throws Exception {
 
         ApplicationModel application = new ApplicationModel();
