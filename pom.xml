@@ -2415,9 +2415,9 @@
         <conditional.authentication.functions.version>1.2.38</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.9.48</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.2.53</identity.apps.myaccount.version>
-        <identity.apps.core.version>2.0.74</identity.apps.core.version>
+        <identity.apps.console.version>2.9.49</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.2.55</identity.apps.myaccount.version>
+        <identity.apps.core.version>2.0.83</identity.apps.core.version>
         <identity.apps.tests.version>1.6.373</identity.apps.tests.version>
 
         <!-- Charon -->
