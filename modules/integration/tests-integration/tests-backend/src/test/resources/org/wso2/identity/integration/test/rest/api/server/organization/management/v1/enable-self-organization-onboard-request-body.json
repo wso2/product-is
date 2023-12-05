@@ -1,0 +1,9 @@
+{
+  "operation": "UPDATE",
+  "properties": [
+    {
+      "name": "Organization.SelfService.Enable",
+      "value": "true"
+    }
+  ]
+}

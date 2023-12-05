@@ -63,6 +63,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang.StringUtils.isBlank;
@@ -364,31 +366,48 @@ public class Utils {
         String resultPage = rd.lines().collect(Collectors.joining());
         List<String> attributeList = new ArrayList<>();
         
-        String claimListDiv = "<div class=\"claim-list\">";
         String labelOpenTag = "<label for=\"";
-        String labelCloseTag = "\"";
-
-        // There can be two occurrences of <div class="claim-list"> in the page for OIDC scopes and API Resource scopes.
-        int firstIndex = resultPage.indexOf(claimListDiv);
-        int secondIndex = resultPage.indexOf(claimListDiv, firstIndex + 1);
-
-        // If there are two occurrences, extract the labels between two occurrences to get the claim list.
-        if (firstIndex != -1 && secondIndex != -1) {
-            String claimString = resultPage.substring(firstIndex, secondIndex);
-            String[] dataArray = StringUtils.substringsBetween(claimString, labelOpenTag, labelCloseTag);
-            if (dataArray != null) {
-                Collections.addAll(attributeList, dataArray);
+        String labelCloseTag = "\">";
+        
+        // Regular expression to match <div> tags containing "claim-list" class.
+        String regex = "<div[^>]*class=\"[^\"]*claim-list[^\"]*\"[^>]*>";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(resultPage);
+        
+        while (matcher.find()) {
+            int divStartIndex = matcher.start();
+            
+            // Count div tags to find the corresponding closing tag.
+            int openDivCount = 1;
+            int index = divStartIndex;
+            while (openDivCount > 0) {
+                int nextOpenDiv = resultPage.indexOf("<div", index + 1);
+                int nextCloseDiv = resultPage.indexOf("</div>", index + 1);
+                
+                // Break the loop if there are no more div tags.
+                if (nextOpenDiv == -1 && nextCloseDiv == -1) {
+                    break;
+                }
+                
+                // Check the closest next div tag (open or close).
+                if (nextCloseDiv != -1 && (nextOpenDiv == -1 || nextCloseDiv < nextOpenDiv)) {
+                    openDivCount--;
+                    index = nextCloseDiv;
+                } else if (nextOpenDiv != -1) {
+                    openDivCount++;
+                    index = nextOpenDiv;
+                }
             }
-        }
-        // Check if there's only one occurrence, it can be either OIDC scopes or API Resource scopes.
-        else if (firstIndex != -1) {
-            String claimString = resultPage.substring(firstIndex);
-            boolean labelAvailable = claimString.indexOf(labelOpenTag) != -1 ? true : false;
-            // If label is available, it should be OIDC scopes. Hence, extract the labels to get the claims list.
-            if (labelAvailable) {
-                String[] dataArray = StringUtils.substringsBetween(claimString, labelOpenTag, labelCloseTag);
-                if (dataArray != null) {
-                    Collections.addAll(attributeList, dataArray);
+            
+            // Index is now at the start of the closing </div> tag of the claim-list div.
+            if (openDivCount == 0) {
+                String claimString = resultPage.substring(divStartIndex, index + 6); // 6 is length of "</div>".
+                
+                // Use a matcher to find each label within the claimString.
+                Matcher labelMatcher = Pattern.compile(labelOpenTag + "(.*?)" + labelCloseTag).matcher(claimString);
+                while (labelMatcher.find()) {
+                    // Add the extracted label (from the 'for' attribute) to the list.
+                    attributeList.add(labelMatcher.group(1));
                 }
             }
         }
