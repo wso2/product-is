@@ -2331,7 +2331,7 @@
 
         <!-- Identity Event Handler Versions -->
         <identity.event.handler.account.lock.version>1.8.13</identity.event.handler.account.lock.version>
-        <identity.event.handler.notification.version>1.7.27</identity.event.handler.notification.version>
+        <identity.event.handler.notification.version>1.7.28</identity.event.handler.notification.version>
 
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
@@ -2342,7 +2342,7 @@
         <callhome.version>4.5.x_1.0.14</callhome.version>
 
         <!-- Authenticator Versions -->
-        <identity.outbound.auth.oidc.version>5.11.29</identity.outbound.auth.oidc.version>
+        <identity.outbound.auth.oidc.version>5.11.30</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.oauth2.version>1.0.11</identity.outbound.auth.oauth2.version>
         <identity.outbound.auth.passive.sts.version>5.5.0</identity.outbound.auth.passive.sts.version>
         <identity.outbound.auth.samlsso.version>5.8.7</identity.outbound.auth.samlsso.version>
@@ -2379,12 +2379,12 @@
 
         <!-- Connector Versions -->
         <authenticator.totp.version>3.3.24</authenticator.totp.version>
-        <authenticator.backupcode.version>0.0.16</authenticator.backupcode.version>
+        <authenticator.backupcode.version>0.0.17</authenticator.backupcode.version>
         <authenticator.office365.version>2.1.2</authenticator.office365.version>
         <authenticator.smsotp.version>3.3.16</authenticator.smsotp.version>
-        <authenticator.magiclink.version>1.1.18</authenticator.magiclink.version>
+        <authenticator.magiclink.version>1.1.19</authenticator.magiclink.version>
         <authenticator.emailotp.version>4.1.21</authenticator.emailotp.version>
-        <authenticator.local.auth.emailotp.version>1.0.12</authenticator.local.auth.emailotp.version>
+        <authenticator.local.auth.emailotp.version>1.0.16</authenticator.local.auth.emailotp.version>
         <authenticator.local.auth.smsotp.version>1.0.3</authenticator.local.auth.smsotp.version>
         <authenticator.twitter.version>1.1.1</authenticator.twitter.version>
         <authenticator.x509.version>3.1.12</authenticator.x509.version>
@@ -2415,9 +2415,9 @@
         <conditional.authentication.functions.version>1.2.38</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.9.48</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.2.53</identity.apps.myaccount.version>
-        <identity.apps.core.version>2.0.74</identity.apps.core.version>
+        <identity.apps.console.version>2.10.0</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.2.56</identity.apps.myaccount.version>
+        <identity.apps.core.version>2.0.82</identity.apps.core.version>
         <identity.apps.tests.version>1.6.373</identity.apps.tests.version>
 
         <!-- Charon -->
