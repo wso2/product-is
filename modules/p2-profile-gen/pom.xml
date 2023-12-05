@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>7.0.0-beta2-SNAPSHOT</version>
+        <version>7.0.0-rc1-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -489,10 +489,6 @@
                                  <!-- UUID Generator feature -->
                                 <featureArtifactDef>
                                     org.wso2.carbon.commons:org.wso2.carbon.uuid.generator.feature:${carbon.commons.version}
-                                </featureArtifactDef>
-                                <!--  RemoteFetch feature -->
-                                <featureArtifactDef>
-                                    org.wso2.carbon.identity.fetch.remote:org.wso2.carbon.identity.remotefetch.feature:${org.wso2.carbon.identity.remotefetch.version}
                                 </featureArtifactDef>
                                 <!-- Unique Claim Management feature -->
                                 <featureArtifactDef>
@@ -1081,10 +1077,6 @@
                                 <feature>
                                     <id>org.wso2.carbon.uuid.generator.feature.group</id>
                                     <version>${carbon.commons.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.remotefetch.feature.group</id>
-                                    <version>${org.wso2.carbon.identity.remotefetch.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.hash.provider.pbkdf2.server.feature.group</id>
