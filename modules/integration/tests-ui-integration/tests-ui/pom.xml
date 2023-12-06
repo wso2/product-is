@@ -123,7 +123,7 @@
                                     <type>zip</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${basedir}/target/tobeCopied/</outputDirectory>
-                                    <includes>**/*.jks,**/*.mar,**/axis2_client.xml</includes>
+                                    <includes>**/*.p12,**/*.mar,**/axis2_client.xml</includes>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
@@ -231,7 +231,7 @@
                                         ${basedir}/target/tobeCopied/wso2is-${project.version}/repository/resources/security/
                                     </directory>
                                     <includes>
-                                        <include>**/*.jks</include>
+                                        <include>**/*.p12</include>
                                     </includes>
                                 </resource>
                             </resources>

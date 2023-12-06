@@ -34,10 +34,10 @@
 	<!-- Security configurations -->
 	<Security>
 		<UserTrustedRPStore>
-			<Location>${carbon.home}/repository/resources/security/userRP.jks
+			<Location>${carbon.home}/repository/resources/security/userRP.p12
 			</Location>
 			<!-- Keystore type (JKS/PKCS12 etc.) -->
-			<Type>JKS</Type>
+			<Type>PKCS12</Type>
 			<!-- Keystore password -->
 			<Password>wso2carbon</Password>
 			<!-- Private Key password -->
@@ -251,7 +251,7 @@
 			<ReceivePort>${Ports.ThriftEntitlementReceivePort}</ReceivePort>
 			<ClientTimeout>10000</ClientTimeout>
 			<KeyStore>
-				<Location>${carbon.home}/repository/resources/security/wso2carbon.jks</Location>
+				<Location>${carbon.home}/repository/resources/security/wso2carbon.p12</Location>
 				<Password>wso2carbon</Password>
 			</KeyStore>
 		</ThirftBasedEntitlementConfig>
