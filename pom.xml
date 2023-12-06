@@ -2305,7 +2305,7 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.11.29</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.11.222</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.11.223</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.9.5</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.10.19</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.4</identity.inbound.provisioning.scim.version>
@@ -2379,12 +2379,12 @@
 
         <!-- Connector Versions -->
         <authenticator.totp.version>3.3.24</authenticator.totp.version>
-        <authenticator.backupcode.version>0.0.16</authenticator.backupcode.version>
+        <authenticator.backupcode.version>0.0.17</authenticator.backupcode.version>
         <authenticator.office365.version>2.1.2</authenticator.office365.version>
         <authenticator.smsotp.version>3.3.16</authenticator.smsotp.version>
-        <authenticator.magiclink.version>1.1.18</authenticator.magiclink.version>
+        <authenticator.magiclink.version>1.1.19</authenticator.magiclink.version>
         <authenticator.emailotp.version>4.1.21</authenticator.emailotp.version>
-        <authenticator.local.auth.emailotp.version>1.0.12</authenticator.local.auth.emailotp.version>
+        <authenticator.local.auth.emailotp.version>1.0.16</authenticator.local.auth.emailotp.version>
         <authenticator.local.auth.smsotp.version>1.0.3</authenticator.local.auth.smsotp.version>
         <authenticator.twitter.version>1.1.1</authenticator.twitter.version>
         <authenticator.x509.version>3.1.12</authenticator.x509.version>
