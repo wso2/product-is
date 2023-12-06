@@ -16,8 +16,11 @@
  * under the License.
  */
 
-package org.wso2.identity.integration.test.clientNativeAuthentication;
+package org.wso2.identity.integration.test.applicationNativeAuthentication;
 
+/**
+ * Constants for Application Native Authentication.
+ */
 public class Constants {
 
     // Common Constants

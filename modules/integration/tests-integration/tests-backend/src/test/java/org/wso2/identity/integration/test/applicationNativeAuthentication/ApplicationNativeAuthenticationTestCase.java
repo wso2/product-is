@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.identity.integration.test.clientNativeAuthentication;
+package org.wso2.identity.integration.test.applicationNativeAuthentication;
 
 import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
@@ -61,35 +61,42 @@ import java.util.Map;
 import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
-import static org.wso2.identity.integration.test.clientNativeAuthentication.Constants.AUTHENTICATOR;
-import static org.wso2.identity.integration.test.clientNativeAuthentication.Constants.AUTHENTICATORS;
-import static org.wso2.identity.integration.test.clientNativeAuthentication.Constants.AUTHENTICATOR_ID;
-import static org.wso2.identity.integration.test.clientNativeAuthentication.Constants.AUTH_DATA_CODE;
-import static org.wso2.identity.integration.test.clientNativeAuthentication.Constants.AUTH_DATA_SESSION_STATE;
-import static org.wso2.identity.integration.test.clientNativeAuthentication.Constants.CODE;
-import static org.wso2.identity.integration.test.clientNativeAuthentication.Constants.CONTENT_TYPE_APPLICATION_JSON;
-import static org.wso2.identity.integration.test.clientNativeAuthentication.Constants.ERROR_CODE_CLIENT_NATIVE_AUTHENTICATION_DISABLED;
-import static org.wso2.identity.integration.test.clientNativeAuthentication.Constants.FLOW_ID;
-import static org.wso2.identity.integration.test.clientNativeAuthentication.Constants.FLOW_STATUS;
-import static org.wso2.identity.integration.test.clientNativeAuthentication.Constants.FLOW_TYPE;
-import static org.wso2.identity.integration.test.clientNativeAuthentication.Constants.HREF;
-import static org.wso2.identity.integration.test.clientNativeAuthentication.Constants.IDP;
-import static org.wso2.identity.integration.test.clientNativeAuthentication.Constants.LINKS;
-import static org.wso2.identity.integration.test.clientNativeAuthentication.Constants.METADATA;
-import static org.wso2.identity.integration.test.clientNativeAuthentication.Constants.NEXT_STEP;
-import static org.wso2.identity.integration.test.clientNativeAuthentication.Constants.PARAMS;
-import static org.wso2.identity.integration.test.clientNativeAuthentication.Constants.PROMPT_TYPE;
-import static org.wso2.identity.integration.test.clientNativeAuthentication.Constants.REQUIRED_PARAMS;
-import static org.wso2.identity.integration.test.clientNativeAuthentication.Constants.RESPONSE_MODE;
-import static org.wso2.identity.integration.test.clientNativeAuthentication.Constants.STEP_TYPE;
-import static org.wso2.identity.integration.test.clientNativeAuthentication.Constants.SUCCESS_COMPLETED;
-import static org.wso2.identity.integration.test.clientNativeAuthentication.Constants.TEST_PASSWORD;
-import static org.wso2.identity.integration.test.clientNativeAuthentication.Constants.TEST_PROFILE;
-import static org.wso2.identity.integration.test.clientNativeAuthentication.Constants.TEST_USER_NAME;
-import static org.wso2.identity.integration.test.clientNativeAuthentication.Constants.TRACE_ID;
-import static org.wso2.identity.integration.test.clientNativeAuthentication.Constants.UTF_8;
+import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.AUTHENTICATOR;
+import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.AUTHENTICATORS;
+import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.AUTHENTICATOR_ID;
+import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.AUTH_DATA_CODE;
+import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.AUTH_DATA_SESSION_STATE;
+import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.CODE;
+import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.CONTENT_TYPE_APPLICATION_JSON;
+import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.ERROR_CODE_CLIENT_NATIVE_AUTHENTICATION_DISABLED;
+import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.FLOW_ID;
+import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.FLOW_STATUS;
+import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.FLOW_TYPE;
+import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.HREF;
+import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.IDP;
+import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.LINKS;
+import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.METADATA;
+import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.NEXT_STEP;
+import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.PARAMS;
+import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.PROMPT_TYPE;
+import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.REQUIRED_PARAMS;
+import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.RESPONSE_MODE;
+import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.STEP_TYPE;
+import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.SUCCESS_COMPLETED;
+import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.TEST_PASSWORD;
+import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.TEST_PROFILE;
+import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.TEST_USER_NAME;
+import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.TRACE_ID;
+import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.UTF_8;
 
-public class ClientNativeAuthenticationTestCase extends OAuth2ServiceAbstractIntegrationTest {
+/**
+ * Integration test class for testing the native authentication flow in an OAuth 2.0-enabled application.
+ * This test case extends {@link OAuth2ServiceAbstractIntegrationTest} and focuses on scenarios related
+ * to native authentication, covering the interaction between the application, authorization server, and user.
+ * It includes test cases for initiating authentication, handling responses, and ensuring the correct behavior
+ * of the OAuth 2.0 service in the context of native authentication.
+ */
+public class ApplicationNativeAuthenticationTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
     private String appId;
     private String flowId;
