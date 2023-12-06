@@ -136,6 +136,3 @@ MTLS_PAR_APP2 = {
     "jwks_uri": JWKS_2,
     "require_pushed_authorization_requests" : "true",
 }
-
-# "jwks_uri": "https://www.iam.com/jwks1",
-# "jwks_uri": "https://www.iam.com/jwks2",
