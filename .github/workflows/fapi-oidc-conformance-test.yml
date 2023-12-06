@@ -12,15 +12,8 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
     inputs:
-      build-IS:
-        description: 'Build Identity Server from wso2/product-is'
-        required: false
-        default: 'true'
       tag:
-        description: 'Product-is release tag (Ex: v7.0.0-alpha2). If build-IS is true, this will not be used.'
-        required: false
-      download-url:
-        description: 'URL to download product-is. If build-IS is true, this will not be used.'
+        description: 'Product-is release tag (Ex: v7.0.0-alpha2). If not provided, latest release tag is used.'
         required: false
       conformance-suite-version:
         description: 'Conformance suite branch to clone in https://gitlab.com/openid/conformance-suite.git (Ex: release-v5.1.10). If not provided, latest release tag branch is used.'
@@ -49,10 +42,8 @@ jobs:
         
     - name: Get IS zip
       run: |
-        INPUT_BUILD_IS=${{github.event.inputs.build-IS || 'true'}}
-        INPUT_URL=${{github.event.inputs.download-url}}
         INPUT_TAG=${{github.event.inputs.tag}}
-        if [[ "${INPUT_BUILD_IS}" == "true" ]]; then
+        if [[ -z "${INPUT_TAG}" ]]; then
           echo ">>> Building IS from source..."
           mkdir cloned-product-is
           cd cloned-product-is
@@ -86,32 +77,23 @@ jobs:
           rm -rf cloned-product-is
           ls
         else
-          if [[ -z "${INPUT_URL}" ]] && [[ -z "${INPUT_TAG}" ]]; then
-            echo "Either 'tag' or 'download-url' must be provided."
-            exit 1
-          fi
-          if [[ -z "${INPUT_URL}" ]]; then
-            owner="wso2"
-            repo="product-is"
-            if [[ -z "${INPUT_TAG}" ]]; then
-              tag=${GITHUB_REF:10}
-              tag_trimmed=${tag// }
-            else
-              tag=${{github.event.inputs.tag}}
-              tag_trimmed=${tag// }
-            fi
-
-            artifact="wso2is-${tag_trimmed:1}.zip"
-            echo "Tag=$tag"
-            echo "Artifact=$artifact"
-            list_asset_url="https://api.github.com/repos/${owner}/${repo}/releases/tags/${tag_trimmed}"
-            asset_url=$(curl "${list_asset_url}" | jq ".assets[] | select(.name==\"${artifact}\") | .url" | sed 's/\"//g')
-            curl -vLJO -H 'Accept: application/octet-stream' \
-              "${asset_url}"
+          owner="wso2"
+          repo="product-is"
+          if [[ -z "${INPUT_TAG}" ]]; then
+            tag=${GITHUB_REF:10}
+            tag_trimmed=${tag// }
           else
-            curl -vLJO -H 'Accept: application/octet-stream' \
-              "${INPUT_URL}"
+            tag=${{github.event.inputs.tag}}
+            tag_trimmed=${tag// }
           fi
+
+          artifact="wso2is-${tag_trimmed:1}.zip"
+          echo "Tag=$tag"
+          echo "Artifact=$artifact"
+          list_asset_url="https://api.github.com/repos/${owner}/${repo}/releases/tags/${tag_trimmed}"
+          asset_url=$(curl "${list_asset_url}" | jq ".assets[] | select(.name==\"${artifact}\") | .url" | sed 's/\"//g')
+          curl -vLJO -H 'Accept: application/octet-stream' \
+            "${asset_url}"
         fi
 
     - name: Add deployment toml configs to IS
