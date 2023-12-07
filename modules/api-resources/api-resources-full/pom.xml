@@ -119,14 +119,6 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.user.api</groupId>
-            <artifactId>org.wso2.carbon.identity.rest.api.user.approval.v1</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.identity.user.api</groupId>
-            <artifactId>org.wso2.carbon.identity.api.user.approval.common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.identity.user.api</groupId>
             <artifactId>org.wso2.carbon.identity.rest.api.user.fido2.v1</artifactId>
         </dependency>
         <dependency>
@@ -259,10 +251,6 @@
         <dependency>
             <groupId>org.wso2.carbon.identity.server.api</groupId>
             <artifactId>org.wso2.carbon.identity.api.server.claim.management.common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.identity.server.api</groupId>
-            <artifactId>org.wso2.carbon.identity.rest.api.server.workflow.engine.v1</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.server.api</groupId>
