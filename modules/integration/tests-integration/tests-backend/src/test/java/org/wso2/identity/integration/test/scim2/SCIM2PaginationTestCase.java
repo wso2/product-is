@@ -190,7 +190,7 @@ public class SCIM2PaginationTestCase extends ISIntegrationTest {
 
         for (int i = 0; i < 10; i++) {
             createUser(String.format("Family%s", i), String.format("user%s", i), String.format("user%s", i),
-                    String.format("user%s@gmail.com", i), String.format("user%s@gmail.com", i), String.format("dummyPW%s", i));
+                    String.format("user%s@gmail.com", i), String.format("user%s@gmail.com", i), String.format("dummy@PW%s", i));
         }
     }
 

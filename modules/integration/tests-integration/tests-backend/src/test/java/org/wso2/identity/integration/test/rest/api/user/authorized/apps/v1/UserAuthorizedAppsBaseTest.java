@@ -38,7 +38,7 @@ public class UserAuthorizedAppsBaseTest extends RESTAPIUserTestBase {
     static String API_PACKAGE_NAME = "org.wso2.carbon.identity.rest.api.user.authorized.apps.v1";
 
     public static final String AUTHORIZED_APPS_ENDPOINT_URI = "/%s/authorized-apps/";
-    public static final String DCR_ENDPOINT_PATH_URI = "/t/%s/api/identity/oauth2/dcr/v1.1/register/";
+    public static final String DCR_ENDPOINT_PATH_URI = "/api/identity/oauth2/dcr/v1.1/register/";
 
     protected String userAuthorizedAppsEndpointUri;
     protected String dcrEndpointUri;
@@ -58,8 +58,8 @@ public class UserAuthorizedAppsBaseTest extends RESTAPIUserTestBase {
     void initUrls(String pathParam) {
 
         this.userAuthorizedAppsEndpointUri = String.format(AUTHORIZED_APPS_ENDPOINT_URI, pathParam);
-        this.dcrEndpointUri = String.format(DCR_ENDPOINT_PATH_URI, tenant);
-        this.tokenEndpointUri = "/oauth2/token";
+        this.dcrEndpointUri = getTenantedRelativePath(DCR_ENDPOINT_PATH_URI, tenant);
+        this.tokenEndpointUri = getTenantedRelativePath("/oauth2/token", tenant);
     }
 
     public void registerApplication(String appName, String clientId, String clientSecret) {

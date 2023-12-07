@@ -11,6 +11,26 @@
         "value": "true"
       },
       {
+        "name": "SelfRegistration.OTP.SendOTPInEmail",
+        "value": "false"
+      },
+      {
+        "name": "SelfRegistration.OTP.UseUppercaseCharactersInOTP",
+        "value": "true"
+      },
+      {
+        "name": "SelfRegistration.OTP.UseLowercaseCharactersInOTP",
+        "value": "true"
+      },
+      {
+        "name": "SelfRegistration.OTP.UseNumbersInOTP",
+        "value": "true"
+      },
+      {
+        "name": "SelfRegistration.OTP.OTPLength",
+        "value": "6"
+      },
+      {
         "name": "SelfRegistration.SendConfirmationOnCreation",
         "value": "false"
       },
@@ -58,6 +78,26 @@
       {
         "name": "EmailVerification.Enable",
         "value": "false"
+      },
+      {
+        "name": "EmailVerification.OTP.SendOTPInEmail",
+        "value": "false"
+      },
+      {
+        "name": "EmailVerification.OTP.UseUppercaseCharactersInOTP",
+        "value": "true"
+      },
+      {
+        "name": "EmailVerification.OTP.UseLowercaseCharactersInOTP",
+        "value": "true"
+      },
+      {
+        "name": "EmailVerification.OTP.UseNumbersInOTP",
+        "value": "true"
+      },
+      {
+        "name": "EmailVerification.OTP.OTPLength",
+        "value": "6"
       },
       {
         "name": "EmailVerification.LockOnCreation",

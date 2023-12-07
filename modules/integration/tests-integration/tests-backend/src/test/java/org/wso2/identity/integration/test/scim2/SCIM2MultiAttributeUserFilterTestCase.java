@@ -83,7 +83,7 @@ public class SCIM2MultiAttributeUserFilterTestCase extends ISIntegrationTest {
     public static final List<String> USERNAMES = new ArrayList<>(
             Arrays.asList("scim2user1", "scim2user2", "scim2user3", "scim2user4", "scim2user5"));
     public static final List<String> PASSWORDS = new ArrayList<>(
-            Arrays.asList("testPassword1", "testPassword2", "testPassword3", "testPassword4", "testPassword5"));
+            Arrays.asList("Wso2@test1", "Wso2@test2", "Wso2@test3", "Wso2@test4", "Wso2@test5"));
 
     private CloseableHttpClient client;
 
@@ -399,6 +399,7 @@ public class SCIM2MultiAttributeUserFilterTestCase extends ISIntegrationTest {
 
     private String getAuthzHeader() {
 
+        System.out.println("adminUsernamefilter: " + adminUsername + " adminPasswordfilter: " + adminPassword);
         return "Basic " + Base64.encodeBase64String((adminUsername + ":" + adminPassword).getBytes()).trim();
     }
 

@@ -63,7 +63,6 @@ public abstract class AbstractAnalyticsLoginTestCase extends ISIntegrationTest {
     private static final String INBOUND_AUTH_TYPE = "samlsso";
     private static final String ATTRIBUTE_CS_INDEX_VALUE = "1239245949";
     private static final String ATTRIBUTE_CS_INDEX_NAME = "attrConsumServiceIndex";
-    private static final String TENANT_DOMAIN_PARAM = "tenantDomain";
 
     private static final String SAML_SSO_URL = "https://localhost:9853/samlsso";
     private static final String ACS_URL = "http://localhost:8490/%s/home.jsp";
@@ -104,9 +103,9 @@ public abstract class AbstractAnalyticsLoginTestCase extends ISIntegrationTest {
 
     protected enum User {
 
-        SUPER_TENANT_USER("samlAnalyticsuser1", "samlAnalyticsuser1", "carbon.super", "samlAnalyticsuser1", "samlAnalyticsuser1@abc.com",
+        SUPER_TENANT_USER("samlAnalyticsuser1", "samlAnalyticsuser@1", "carbon.super", "samlAnalyticsuser1", "samlAnalyticsuser1@abc.com",
                 "samlnickuser1"),
-        TENANT_USER("samlAnalyticsuser2@wso2.com", "samlAnalyticsuser2", "wso2.com", "samlAnalyticsuser2", "samlAnalyticsuser2@abc.com",
+        TENANT_USER("samlAnalyticsuser2@wso2.com", "samlAnalyticsuser@2", "wso2.com", "samlAnalyticsuser2", "samlAnalyticsuser2@abc.com",
                 "samlnickuser2");
 
         private String username;
@@ -390,12 +389,9 @@ public abstract class AbstractAnalyticsLoginTestCase extends ISIntegrationTest {
 
         HttpClient httpClient = sharedHttpClient;
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-        HttpPost post = new HttpPost(url);
+        HttpPost post = new HttpPost(getTenantQualifiedURL(url, tenantInfo.getDomain()));
         post.setHeader("User-Agent", USER_AGENT);
         urlParameters.add(new BasicNameValuePair(samlMsgKey, samlMsgValue));
-        if (config.getUserMode() == TestUserMode.TENANT_ADMIN || config.getUserMode() == TestUserMode.TENANT_USER) {
-            urlParameters.add(new BasicNameValuePair(TENANT_DOMAIN_PARAM, config.getUser().getTenantDomain()));
-        }
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
         return httpClient.execute(post);
     }

@@ -78,7 +78,7 @@ public class UserStoreDeployerTestCase extends ISIntegrationTest {
 
     @Test(groups = "wso2.is", description = "Test user store add user", dependsOnMethods = "testMultipleUserStores")
     public void testAddUser() throws Exception {
-        userMgtClient.addUser("wso2.com/pushpalanka", "pushpalanka", new String[] {}, null);
+        userMgtClient.addUser("wso2.com/pushpalanka", "Pushpalanka@123", new String[] {}, null);
         Assert.assertTrue("Couldn't add user to newly added user store",
                           userMgtClient.getUserList().contains("WSO2.COM/pushpalanka"));
     }

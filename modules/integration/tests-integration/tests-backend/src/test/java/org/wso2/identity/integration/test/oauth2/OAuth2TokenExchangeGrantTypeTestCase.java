@@ -17,6 +17,7 @@
  */
 package org.wso2.identity.integration.test.oauth2;
 
+import com.nimbusds.jwt.SignedJWT;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
@@ -45,6 +46,8 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.identity.application.common.model.xsd.Claim;
+import org.wso2.carbon.identity.application.common.model.xsd.ClaimMapping;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProviderProperty;
 import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
@@ -52,14 +55,19 @@ import org.wso2.carbon.identity.application.common.model.xsd.OutboundProvisionin
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.carbon.user.mgt.stub.types.carbon.ClaimValue;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.test.application.mgt.AbstractIdentityFederationTestCase;
 import org.wso2.identity.integration.test.oidc.bean.OIDCApplication;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
+import org.wso2.identity.integration.test.utils.UserUtil;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class OAuth2TokenExchangeGrantTypeTestCase extends AbstractIdentityFederationTestCase {
 
@@ -69,6 +77,10 @@ public class OAuth2TokenExchangeGrantTypeTestCase extends AbstractIdentityFedera
     private static final String SECONDARY_IS_SP_NAME = "secondarySP";
     private static final String SECONDARY_IS_TOKEN_ENDPOINT = "https://localhost:9854/oauth2/token";
     private static final String SECONDARY_IS_JWKS_URI = "https://localhost:9854/oauth2/jwks";
+    private static final String NEW_USER_USERNAME = "secondaryUser";
+    private static final String NEW_USER_EMAIL = "secondaryUser@gmail.com";
+    private static final String NEW_USER_PASSWORD = "Wso2@123";
+    public static final String EMAIL_CLAIM_URI = "http://wso2.org/claims/emailaddress";
 
     protected OauthAdminClient adminClient;
     private String secondaryISClientID;
@@ -79,9 +91,12 @@ public class OAuth2TokenExchangeGrantTypeTestCase extends AbstractIdentityFedera
     private final String userPassword;
     private final AutomationContext context;
     private String accessTokenFromSecondaryIS;
+    private String primaryISUserId;
+    private String secondaryISUserId;
 
     private static final int PORT_OFFSET_0 = 0;
     private static final int PORT_OFFSET_1 = 1;
+    private static final String DEFAULT_PROFILE = "default";
 
     CookieStore cookieStore;
     private CloseableHttpClient client;
@@ -114,16 +129,20 @@ public class OAuth2TokenExchangeGrantTypeTestCase extends AbstractIdentityFedera
                 new IdentityConstants.ServiceClientType[]{
                         IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT,
                         IdentityConstants.ServiceClientType.IDENTITY_PROVIDER_MGT,
+                        IdentityConstants.ServiceClientType.USER_MGT,
                         IdentityConstants.ServiceClientType.OAUTH_ADMIN});
 
         super.createServiceClients(PORT_OFFSET_1, null,
                 new IdentityConstants.ServiceClientType[]{
                         IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT,
+                        IdentityConstants.ServiceClientType.USER_MGT,
                         IdentityConstants.ServiceClientType.OAUTH_ADMIN});
 
         createServiceProviderInSecondaryIS();
         createServiceProviderInPrimaryIS();
         createIdentityProviderInPrimaryIS();
+        createUser(PORT_OFFSET_1);
+        updateServiceProviderRequestedClaimsInSecondaryIS();
 
         cookieStore = new BasicCookieStore();
         Lookup<CookieSpecProvider> cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
@@ -157,30 +176,269 @@ public class OAuth2TokenExchangeGrantTypeTestCase extends AbstractIdentityFedera
     public void testGetAccessTokenFromSecondaryIS() throws Exception {
 
         List<NameValuePair> postParameters = new ArrayList<>();
-        postParameters.add(new BasicNameValuePair("username", username));
-        postParameters.add(new BasicNameValuePair("password", userPassword));
+        postParameters.add(new BasicNameValuePair("username", OAuth2TokenExchangeGrantTypeTestCase.NEW_USER_USERNAME));
+        postParameters.add(new BasicNameValuePair("password", OAuth2TokenExchangeGrantTypeTestCase.NEW_USER_PASSWORD));
         postParameters.add(new BasicNameValuePair("grant_type", OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER));
+        postParameters.add(new BasicNameValuePair("scope", "email"));
         JSONObject responseObject = sendPOSTMessage(SECONDARY_IS_TOKEN_ENDPOINT, secondaryISClientID,
                 secondaryISClientSecret, postParameters);
         accessTokenFromSecondaryIS = responseObject.get("access_token").toString();
 
         Assert.assertNotNull(accessTokenFromSecondaryIS, "Access token is null.");
+        secondaryISUserId = getTokenSubject(accessTokenFromSecondaryIS);
     }
 
-    @Test(groups = "wso2.is", description = "Exchange Access Token", dependsOnMethods = {
-            "testGetAccessTokenFromSecondaryIS"})
-    public void testTokenExchange() throws Exception {
+    @Test(groups = "wso2.is", description = "Exchange access token for federated user",
+            dependsOnMethods = "testGetAccessTokenFromSecondaryIS")
+    public void testTokenExchangeForFederatedUser() throws Exception {
+
+        String exchangedToken;
+        List<NameValuePair> postParameters = getTokenExchangePostParameters();
+
+        // assert local subject identifier config is disabled
+        exchangedToken = exchangeToken(postParameters);
+        Assert.assertEquals(getTokenSubject(exchangedToken), secondaryISUserId, "Subject of the exchanged " +
+                "token should be the same as the subject of the federated user");
+
+
+        // assert local subject identifier config is optional, no local user available
+        updateAssertLocalSubjectIdentifierConfig(IdentityConstants.AssertLocalSubjectMode.OPTIONAL);
+        exchangedToken = exchangeToken(postParameters);
+        Assert.assertEquals(getTokenSubject(exchangedToken), secondaryISUserId, "Subject of the exchanged " +
+                "token should be the same as the subject of the federated user");
+
+        // create a similar user in primary IS
+        createUser(PORT_OFFSET_0);
+        primaryISUserId = UserUtil.getUserId(MultitenantUtils.getTenantAwareUsername(NEW_USER_USERNAME),
+                isServer.getContextTenant());
+
+        //assert local subject identifier config is optional, local user is available and implicit association config is disabled
+        exchangedToken = exchangeToken(postParameters);
+        Assert.assertEquals(getTokenSubject(exchangedToken), secondaryISUserId, "Subject of the exchanged " +
+                "token should be the same as the subject of the federated user");
+    }
+
+    @Test(groups = "wso2.is", description = "Exchange access token for local user with implicit association config disabled",
+            dependsOnMethods = "testTokenExchangeForFederatedUser")
+    public void testTokenExchangeForLocalUserWithImplicitAssociationConfigDisabled() throws Exception {
+
+        //assert local subject identifier config is mandatory, implicit association config disabled, no associations
+        updateIdentityProviderAssociationConfig(false);
+        updateAssertLocalSubjectIdentifierConfig(IdentityConstants.AssertLocalSubjectMode.MANDATORY);
+        List<NameValuePair> postParameters = getTokenExchangePostParameters();
+        int responseCode = getResponseStatus(postParameters);
+        Assert.assertEquals(responseCode, 400, "400 response expected but got: " + responseCode);
+
+    }
+
+    @Test(groups = "wso2.is", description = "Exchange access token for local user",
+            dependsOnMethods = "testTokenExchangeForLocalUserWithImplicitAssociationConfigDisabled")
+    public void testTokenExchangeForLocalUser() throws Exception {
+
+        //enable implicit association config and set lookup attribute to email
+        updateIdentityProviderAssociationConfig(true);
+        List<NameValuePair> postParameters = getTokenExchangePostParameters();
+        String exchangedToken = exchangeToken(postParameters);
+        Assert.assertEquals(getTokenSubject(exchangedToken), primaryISUserId, "Subject of the exchanged " +
+                "token should be the same as the subject of the matching local user.");
+    }
+
+    @Test(groups = "wso2.is", description = "Exchange access token for local user with implicit association config disabled",
+            dependsOnMethods = "testTokenExchangeForLocalUser")
+    public void testTokenExchangeForAssociatedLocalUserWithImplicitAssociationConfigDisabled() throws Exception {
+
+        //assert local subject identifier config is mandatory, implicit association config disabled, association exists
+        updateIdentityProviderAssociationConfig(false);
+        updateAssertLocalSubjectIdentifierConfig(IdentityConstants.AssertLocalSubjectMode.MANDATORY);
+        List<NameValuePair> postParameters = getTokenExchangePostParameters();
+        String exchangedToken = exchangeToken(postParameters);
+        Assert.assertEquals(getTokenSubject(exchangedToken), primaryISUserId, "Subject of the exchanged " +
+                "token should be the same as the subject of the matching local user.");
+    }
+
+    @Test(groups = "wso2.is", description = "Exchange access token for local user with no local account",
+            dependsOnMethods = "testTokenExchangeForAssociatedLocalUserWithImplicitAssociationConfigDisabled")
+    public void testTokenExchangeForLocalUserWithNoLocalAccount() throws Exception {
+
+        //assert local subject identifier config is mandatory, no matching local user account
+        deleteUser(PORT_OFFSET_0, NEW_USER_USERNAME);
+        List<NameValuePair> postParameters = getTokenExchangePostParameters();
+        int responseCode = getResponseStatus(postParameters);
+        Assert.assertEquals(responseCode, 400, "400 response expected but got: " + responseCode);
+    }
+
+    private List<NameValuePair> getTokenExchangePostParameters() {
 
         List<NameValuePair> postParameters = new ArrayList<>();
         postParameters.add(new BasicNameValuePair("subject_token", accessTokenFromSecondaryIS));
         postParameters.add(new BasicNameValuePair("subject_token_type", "urn:ietf:params:oauth:token-type:jwt"));
         postParameters.add(new BasicNameValuePair("requested_token_type", "urn:ietf:params:oauth:token-type:jwt"));
         postParameters.add(new BasicNameValuePair("grant_type", "urn:ietf:params:oauth:grant-type:token-exchange"));
+        return postParameters;
+    }
+
+    private String exchangeToken(List<NameValuePair> postParameters) throws Exception {
+
         JSONObject responseObject = sendPOSTMessage(PRIMARY_IS_TOKEN_ENDPOINT, primaryISClientID, primaryISClientSecret,
                 postParameters);
         String exchangedToken = responseObject.get("access_token").toString();
+        if (StringUtils.isBlank(exchangedToken)) {
+            throw new Exception("Access token is null.");
+        }
 
-        Assert.assertNotNull(exchangedToken, "Access token is null.");
+        return exchangedToken;
+    }
+
+    private int getResponseStatus(List<NameValuePair> postParameters) throws Exception {
+
+        HttpPost httpPost = new HttpPost(PRIMARY_IS_TOKEN_ENDPOINT);
+        httpPost.setHeader("Authorization", "Basic " + getBase64EncodedString(primaryISClientID, primaryISClientSecret));
+        httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
+        httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
+        HttpResponse response = client.execute(httpPost);
+        return response.getStatusLine().getStatusCode();
+    }
+
+    private String getTokenSubject(String token) throws Exception {
+
+        SignedJWT signedJWT;
+        try {
+            signedJWT = SignedJWT.parse(token);
+        } catch (ParseException e) {
+            throw new Exception("Error while parsing the JWT", e);
+        }
+
+        return signedJWT.getJWTClaimsSet().getSubject();
+    }
+
+    private void createUser(int portOffset) throws Exception {
+
+        List<ClaimValue> claimValues = new ArrayList<>();
+        ClaimValue claimValue = new ClaimValue();
+        claimValue.setClaimURI(EMAIL_CLAIM_URI);
+        claimValue.setValue(NEW_USER_EMAIL);
+        claimValues.add(claimValue);
+        super.addUser(portOffset, OAuth2TokenExchangeGrantTypeTestCase.NEW_USER_USERNAME,
+                OAuth2TokenExchangeGrantTypeTestCase.NEW_USER_PASSWORD, null, DEFAULT_PROFILE, claimValues.toArray(new ClaimValue[0]));
+        Set<String> users = super.getUserList(PORT_OFFSET_1);
+        if (users == null || !users.contains(OAuth2TokenExchangeGrantTypeTestCase.NEW_USER_USERNAME)) {
+            throw new Exception("User creation failed in IS: " + portOffset);
+        }
+    }
+
+    private void updateAssertLocalSubjectIdentifierConfig(IdentityConstants.AssertLocalSubjectMode updateMode) throws Exception {
+
+        ServiceProvider serviceProvider = getServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SP_NAME);
+        if (serviceProvider == null) {
+            throw new Exception("Failed to get service provider 'primarySP' in primary IS");
+        }
+
+        switch (updateMode) {
+            case OPTIONAL:
+                serviceProvider.getClaimConfig().setAlwaysSendMappedLocalSubjectId(true);
+                serviceProvider.getClaimConfig().setMappedLocalSubjectMandatory(false);
+                break;
+            case MANDATORY:
+                serviceProvider.getClaimConfig().setAlwaysSendMappedLocalSubjectId(true);
+                serviceProvider.getClaimConfig().setMappedLocalSubjectMandatory(true);
+                break;
+            default:
+                serviceProvider.getClaimConfig().setAlwaysSendMappedLocalSubjectId(false);
+                serviceProvider.getClaimConfig().setMappedLocalSubjectMandatory(false);
+        }
+
+        super.updateServiceProvider(PORT_OFFSET_0, serviceProvider);
+
+        ServiceProvider updatedServiceProvider = getServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SP_NAME);
+
+        switch (updateMode) {
+            case OPTIONAL:
+                if (!updatedServiceProvider.getClaimConfig().getAlwaysSendMappedLocalSubjectId() ||
+                        updatedServiceProvider.getClaimConfig().getMappedLocalSubjectMandatory()) {
+                    throw new Exception("Assert local subject identifier configuration is not updated properly");
+                }
+                break;
+            case MANDATORY:
+                if (!updatedServiceProvider.getClaimConfig().getAlwaysSendMappedLocalSubjectId() ||
+                        !updatedServiceProvider.getClaimConfig().getMappedLocalSubjectMandatory()) {
+                    throw new Exception("Assert local subject identifier configuration is not updated properly");
+                }
+                break;
+            default:
+                if (updatedServiceProvider.getClaimConfig().getAlwaysSendMappedLocalSubjectId() ||
+                        updatedServiceProvider.getClaimConfig().getMappedLocalSubjectMandatory()) {
+                    throw new Exception("Assert local subject identifier configuration is not updated properly");
+                }
+        }
+    }
+
+    private void updateIdentityProviderAssociationConfig(boolean enabled) throws Exception {
+
+        IdentityProvider identityProvider = super.getIdentityProvider(PORT_OFFSET_0, PRIMARY_IS_IDP_NAME);
+        if (identityProvider == null) {
+            throw new Exception("Failed to get identity provider 'trustedIdP' in primary IS");
+        }
+
+        identityProvider.getFederatedAssociationConfig().setEnabled(enabled);
+        if (enabled) {
+            identityProvider.getFederatedAssociationConfig().setLookupAttributes(new String[]{EMAIL_CLAIM_URI});
+
+        }
+
+        super.updateIdentityProvider(PORT_OFFSET_0, PRIMARY_IS_IDP_NAME, identityProvider);
+
+        IdentityProvider updatedIdentityProvider = super.getIdentityProvider(PORT_OFFSET_0, PRIMARY_IS_IDP_NAME);
+        if (updatedIdentityProvider == null) {
+            throw new Exception("Failed to get updated identity provider 'trustedIdP' in primary IS");
+        }
+        if (enabled) {
+            if (!updatedIdentityProvider.getFederatedAssociationConfig().getEnabled() ||
+                    !EMAIL_CLAIM_URI.equals(updatedIdentityProvider.getFederatedAssociationConfig().getLookupAttributes()[0])) {
+                throw new Exception("Federated association config is not updated properly");
+            }
+        } else {
+            if (updatedIdentityProvider.getFederatedAssociationConfig().getEnabled()) {
+                throw new Exception("Federated association config is not updated properly");
+            }
+        }
+
+    }
+
+    private void updateServiceProviderRequestedClaimsInSecondaryIS() throws Exception {
+
+        ServiceProvider serviceProvider = getServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SP_NAME);
+        if (serviceProvider == null) {
+            throw new Exception("Failed to get service provider 'secondarySP' in secondary IS");
+        }
+
+        List<ClaimMapping> claimMappings = getClaimMappings();
+        serviceProvider.getClaimConfig().setClaimMappings(claimMappings.toArray(new ClaimMapping[0]));
+
+        super.updateServiceProvider(PORT_OFFSET_1, serviceProvider);
+        ServiceProvider updatedServiceProvider = getServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SP_NAME);
+        if (updatedServiceProvider == null) {
+            throw new Exception("Failed to get updated service provider 'secondarySP' in secondary IS");
+        }
+
+        if (updatedServiceProvider.getClaimConfig().getClaimMappings() == null) {
+            throw new Exception("Claim mappings are not updated properly");
+        }
+    }
+
+    private List<ClaimMapping> getClaimMappings() {
+
+        List<ClaimMapping> claimMappings = new ArrayList<>();
+        ClaimMapping claimMapping = new ClaimMapping();
+        Claim localClaim = new Claim();
+        Claim remoteClaim = new Claim();
+
+        localClaim.setClaimUri(EMAIL_CLAIM_URI);
+        remoteClaim.setClaimUri(EMAIL_CLAIM_URI);
+        claimMapping.setLocalClaim(localClaim);
+        claimMapping.setRemoteClaim(remoteClaim);
+        claimMapping.setRequested(true);
+        claimMappings.add(claimMapping);
+        return claimMappings;
     }
 
     private JSONObject sendPOSTMessage(String endpoint, String clientID, String clientSecret,
@@ -213,7 +471,9 @@ public class OAuth2TokenExchangeGrantTypeTestCase extends AbstractIdentityFedera
         super.addServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SP_NAME);
 
         ServiceProvider serviceProvider = getServiceProvider(PORT_OFFSET_0, PRIMARY_IS_SP_NAME);
-        Assert.assertNotNull(serviceProvider, "Failed to create service provider 'travelocity' in primary IS");
+        if (serviceProvider == null) {
+            throw new Exception("Failed to create service provider 'travelocity' in primary IS");
+        }
 
         updateServiceProviderWithOIDCConfigs(PORT_OFFSET_0, PRIMARY_IS_SP_NAME, serviceProvider);
 
@@ -230,7 +490,10 @@ public class OAuth2TokenExchangeGrantTypeTestCase extends AbstractIdentityFedera
                 }
             }
         }
-        Assert.assertTrue(success, "Failed to update service provider with inbound OIDC configs in primary IS");
+
+        if (!success) {
+            throw new Exception("Failed to update service provider with inbound OIDC configs in primary IS");
+        }
     }
 
     private void createServiceProviderInSecondaryIS() throws Exception {
@@ -238,7 +501,9 @@ public class OAuth2TokenExchangeGrantTypeTestCase extends AbstractIdentityFedera
         super.addServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SP_NAME);
 
         ServiceProvider serviceProvider = getServiceProvider(PORT_OFFSET_1, SECONDARY_IS_SP_NAME);
-        Assert.assertNotNull(serviceProvider, "Failed to create service provider 'travelocity' in secondary IS");
+        if (serviceProvider == null) {
+            throw new Exception("Failed to create service provider 'travelocity' in secondary IS");
+        }
 
         updateServiceProviderWithOIDCConfigs(PORT_OFFSET_1, SECONDARY_IS_SP_NAME, serviceProvider);
 
@@ -256,7 +521,10 @@ public class OAuth2TokenExchangeGrantTypeTestCase extends AbstractIdentityFedera
 
             }
         }
-        Assert.assertTrue(success, "Failed to update service provider with inbound OIDC configs in secondary IS");
+
+        if (!success) {
+            throw new Exception("Failed to update service provider with inbound OIDC configs in secondary IS");
+        }
     }
 
     private void createIdentityProviderInPrimaryIS() throws Exception {
@@ -275,8 +543,9 @@ public class OAuth2TokenExchangeGrantTypeTestCase extends AbstractIdentityFedera
         identityProvider.setIdpProperties(properties);
 
         super.addIdentityProvider(PORT_OFFSET_0, identityProvider);
-        Assert.assertNotNull(getIdentityProvider(PORT_OFFSET_0, PRIMARY_IS_IDP_NAME), "Failed to create " +
-                "Identity Provider 'trustedIdP' in primary IS");
+        if (getIdentityProvider(PORT_OFFSET_0, PRIMARY_IS_IDP_NAME) == null) {
+            throw new Exception("Failed to create Identity Provider 'trustedIdP' in primary IS");
+        }
     }
 
     private OAuthConsumerAppDTO getOAuthConsumerAppDTO(OIDCApplication application) {

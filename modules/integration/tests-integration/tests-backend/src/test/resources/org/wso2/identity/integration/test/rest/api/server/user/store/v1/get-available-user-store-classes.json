@@ -3,24 +3,24 @@
     "typeId": "VW5pcXVlSURSZWFkT25seUxEQVBVc2VyU3RvcmVNYW5hZ2Vy",
     "typeName": "UniqueIDReadOnlyLDAPUserStoreManager",
     "className": "org.wso2.carbon.user.core.ldap.UniqueIDReadOnlyLDAPUserStoreManager",
-    "self": "/t/carbon.super/api/server/v1/userstores/meta/types/VW5pcXVlSURSZWFkT25seUxEQVBVc2VyU3RvcmVNYW5hZ2Vy"
+    "self": "/api/server/v1/userstores/meta/types/VW5pcXVlSURSZWFkT25seUxEQVBVc2VyU3RvcmVNYW5hZ2Vy"
   },
   {
     "typeId": "VW5pcXVlSURSZWFkV3JpdGVMREFQVXNlclN0b3JlTWFuYWdlcg",
     "typeName": "UniqueIDReadWriteLDAPUserStoreManager",
     "className": "org.wso2.carbon.user.core.ldap.UniqueIDReadWriteLDAPUserStoreManager",
-    "self": "/t/carbon.super/api/server/v1/userstores/meta/types/VW5pcXVlSURSZWFkV3JpdGVMREFQVXNlclN0b3JlTWFuYWdlcg"
+    "self": "/api/server/v1/userstores/meta/types/VW5pcXVlSURSZWFkV3JpdGVMREFQVXNlclN0b3JlTWFuYWdlcg"
   },
   {
     "typeId": "VW5pcXVlSURBY3RpdmVEaXJlY3RvcnlVc2VyU3RvcmVNYW5hZ2Vy",
     "typeName": "UniqueIDActiveDirectoryUserStoreManager",
     "className": "org.wso2.carbon.user.core.ldap.UniqueIDActiveDirectoryUserStoreManager",
-    "self": "/t/carbon.super/api/server/v1/userstores/meta/types/VW5pcXVlSURBY3RpdmVEaXJlY3RvcnlVc2VyU3RvcmVNYW5hZ2Vy"
+    "self": "/api/server/v1/userstores/meta/types/VW5pcXVlSURBY3RpdmVEaXJlY3RvcnlVc2VyU3RvcmVNYW5hZ2Vy"
   },
   {
     "typeId": "VW5pcXVlSURKREJDVXNlclN0b3JlTWFuYWdlcg",
     "typeName": "UniqueIDJDBCUserStoreManager",
     "className": "org.wso2.carbon.user.core.jdbc.UniqueIDJDBCUserStoreManager",
-    "self": "/t/carbon.super/api/server/v1/userstores/meta/types/VW5pcXVlSURKREJDVXNlclN0b3JlTWFuYWdlcg"
+    "self": "/api/server/v1/userstores/meta/types/VW5pcXVlSURKREJDVXNlclN0b3JlTWFuYWdlcg"
   }
 ]

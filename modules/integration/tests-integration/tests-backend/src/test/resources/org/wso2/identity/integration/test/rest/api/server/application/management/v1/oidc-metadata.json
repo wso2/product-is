@@ -46,6 +46,10 @@
         "displayName": "Organization Switch"
       },
       {
+        "name": "organization_switch_cc",
+        "displayName": "organization_switch_cc"
+      },
+      {
         "name": "urn:ietf:params:oauth:grant-type:jwt-bearer",
         "displayName": "urn:ietf:params:oauth:grant-type:jwt-bearer"
       }
@@ -90,8 +94,106 @@
       "None",
       "cookie",
       "sso-session",
-      "device-flow"
+      "device-flow",
+      "certificate"
     ],
     "defaultValue": "None"
+  },
+  "tokenEndpointAuthMethod": {
+    "options": [
+      {
+        "name":"",
+        "displayName":"Select Option"
+      },
+      {
+        "name": "client_secret_post",
+        "displayName": "Client Secret Post"
+      },
+      {
+        "name": "private_key_jwt",
+        "displayName": "Private Key JWT"
+      },
+      {
+        "name": "tls_client_auth",
+        "displayName": "Mutual TLS"
+      },
+      {
+        "name": "client_secret_basic",
+        "displayName": "Client Secret Basic"
+      }
+    ]
+  },
+  "tokenEndpointSignatureAlgorithm": {
+    "options": [
+      "PS256",
+      "ES256",
+      "SHA256withRSA"
+    ]
+  },
+  "idTokenSignatureAlgorithm": {
+    "options": [
+      "Select Option",
+      "PS256",
+      "ES256",
+      "SHA256withRSA"
+    ]
+  },
+  "requestObjectSignatureAlgorithm": {
+    "options": [
+      "Select Option",
+      "PS256",
+      "ES256",
+      "SHA256withRSA"
+    ]
+  },
+  "requestObjectEncryptionAlgorithm": {
+    "options": [
+      "Select Option",
+      "RSA-OAEP",
+      "RSA1_5"
+    ]
+  },
+  "requestObjectEncryptionMethod": {
+    "options": [
+      "Select Option",
+      "A128GCM",
+      "A192GCM",
+      "A256GCM",
+      "A128CBC-HS256",
+      "A128CBC+HS256"
+    ]
+  },
+  "subjectType": {
+    "options": [
+      "public",
+      "pairwise"
+    ],
+    "defaultValue": "public"
+  },
+    "fapiMetadata": {
+      "allowedSignatureAlgorithms": {
+        "options": [
+          "PS256",
+          "ES256"
+        ]
+      },
+      "allowedEncryptionAlgorithms": {
+        "options": [
+          "Select Option",
+          "RSA-OAEP"
+        ]
+      },
+      "tokenEndpointAuthMethod": {
+        "options": [
+          {
+            "name": "private_key_jwt",
+            "displayName": "Private Key JWT"
+          },
+          {
+            "name": "tls_client_auth",
+            "displayName": "Mutual TLS"
+          }
+        ]
+      }
   }
 }

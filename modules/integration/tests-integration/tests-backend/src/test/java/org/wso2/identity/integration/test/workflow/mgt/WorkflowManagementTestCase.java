@@ -234,11 +234,11 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
 
         try {
 
-            usmClient.addUser(userName1, "test12345", new String[]{"wfRole1"}, new ClaimValue[0], null, false);
+            usmClient.addUser(userName1, "Test@12345", new String[]{"wfRole1"}, new ClaimValue[0], null, false);
             Assert.assertFalse(usmClient.isExistingUser(userName1),
                     "User has been added, workflow has not been engaged.");
 
-            usmClient.addUser(userName2, "test12345", new String[]{"wfRole1", "wfRole2"}, new ClaimValue[0], null,
+            usmClient.addUser(userName2, "Test@12345", new String[]{"wfRole1", "wfRole2"}, new ClaimValue[0], null,
                     false);
             Assert.assertFalse(usmClient.isExistingUser(userName2),
                     "User has been added, workflow has not been engaged.");
@@ -266,19 +266,19 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         String userName5 = "TestUser5ForAddUserWorkflow";
         try {
             //test when multiple roles present
-            usmClient.addUser(userName3, "test12345", new String[]{"wfRole2", "wfRole3"}, new ClaimValue[0], null,
+            usmClient.addUser(userName3, "Test@12345", new String[]{"wfRole2", "wfRole3"}, new ClaimValue[0], null,
                     false);
             Assert.assertTrue(usmClient.isExistingUser(userName3),
                     "User has not been added, workflow has been engaged where it should have not.");
 
             //test when single role is present
-            usmClient.addUser(userName4, "test12345", new String[]{"wfRole3"}, new ClaimValue[0], null,
+            usmClient.addUser(userName4, "Test@12345", new String[]{"wfRole3"}, new ClaimValue[0], null,
                     false);
             Assert.assertTrue(usmClient.isExistingUser(userName4),
                     "User has not been added, workflow has been engaged where it should have not.");
 
             //test when no roles present
-            usmClient.addUser(userName5, "test12345", new String[0], new ClaimValue[0], null,
+            usmClient.addUser(userName5, "Test@12345", new String[0], new ClaimValue[0], null,
                     false);
             Assert.assertTrue(usmClient.isExistingUser(userName5),
                     "User has not been added, workflow has been engaged where it should have not.");
@@ -309,7 +309,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         String roleName1 = "TestRole1ForAddUserWorkflow";
         try {
 
-            usmClient.addUser(userName6, "test12345", new String[]{"wfRole1"}, new ClaimValue[0], null,
+            usmClient.addUser(userName6, "Test@12345", new String[]{"wfRole1"}, new ClaimValue[0], null,
                     false);
         } catch (Exception e) {
             log.error("Error occurred when adding test user, therefore ignoring testAssociation.", e);
@@ -369,11 +369,11 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
             Assert.fail("Failed to add deleteUser workflow.");
         }
         try {
-            usmClient.addUser(userName1, "test12345", new String[0], new ClaimValue[0], null, false);
-            usmClient.addUser(userName2, "test12345", new String[0], new ClaimValue[0], null, false);
-            usmClient.addUser(userName3, "test12345", new String[0], new ClaimValue[0], null, false);
-            usmClient.addUser(userName4, "test12345", new String[0], new ClaimValue[0], null, false);
-            usmClient.addUser(userName5, "test12345", new String[0], new ClaimValue[0], null, false);
+            usmClient.addUser(userName1, "Test@12345", new String[0], new ClaimValue[0], null, false);
+            usmClient.addUser(userName2, "Test@12345", new String[0], new ClaimValue[0], null, false);
+            usmClient.addUser(userName3, "Test@12345", new String[0], new ClaimValue[0], null, false);
+            usmClient.addUser(userName4, "Test@12345", new String[0], new ClaimValue[0], null, false);
+            usmClient.addUser(userName5, "Test@12345", new String[0], new ClaimValue[0], null, false);
 
         } catch (Exception e) {
             log.error("Error occurred when adding test user.", e);
@@ -511,7 +511,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         String roleName4 = "TestRole4ForAddRoleWorkflow";
 
         try {
-            usmClient.addUser(userName1, "test12345", new String[0], new ClaimValue[0], null, false);
+            usmClient.addUser(userName1, "Test@12345", new String[0], new ClaimValue[0], null, false);
             usmClient.addRole(roleName2, new String[0], new PermissionDTO[0]);
         } catch (Exception e) {
             log.error("Error occurred when adding test role.", e);
@@ -607,8 +607,8 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
         String roleName5 = "TestRole5DeleteRoleWorkflow";
         try {
 
-            usmClient.addUser(userName1, "test12345", new String[0], new ClaimValue[0], null, false);
-            usmClient.addUser(userName2, "test12345", new String[0], new ClaimValue[0], null, false);
+            usmClient.addUser(userName1, "Test@12345", new String[0], new ClaimValue[0], null, false);
+            usmClient.addUser(userName2, "Test@12345", new String[0], new ClaimValue[0], null, false);
             usmClient.addRole(roleName1, new String[]{}, new PermissionDTO[]{});
             usmClient.addRole(roleName2, new String[]{}, new PermissionDTO[]{});
             usmClient.addRole(roleName3, new String[]{}, new PermissionDTO[]{});
@@ -729,8 +729,8 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
 
             usmClient.addRole(roleName1, new String[]{}, new PermissionDTO[]{});
             usmClient.addRole(roleName2, new String[]{}, new PermissionDTO[]{});
-            usmClient.addUser(userName1, "test12345", new String[0], new ClaimValue[0], null, false);
-            usmClient.addUser(userName2, "test12345", new String[0], new ClaimValue[0], null, false);
+            usmClient.addUser(userName1, "Test@12345", new String[0], new ClaimValue[0], null, false);
+            usmClient.addUser(userName2, "Test@12345", new String[0], new ClaimValue[0], null, false);
         } catch (Exception e) {
             log.error("Error occurred when adding test user and role.", e);
         }
@@ -830,8 +830,8 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
 
             usmClient.addRole(roleName1, new String[]{}, new PermissionDTO[]{});
             usmClient.addRole(roleName2, new String[]{}, new PermissionDTO[]{});
-            usmClient.addUser(userName1, "test12345", new String[0], new ClaimValue[0], null, false);
-            usmClient.addUser(userName2, "test12345", new String[0], new ClaimValue[0], null, false);
+            usmClient.addUser(userName1, "Test@12345", new String[0], new ClaimValue[0], null, false);
+            usmClient.addUser(userName2, "Test@12345", new String[0], new ClaimValue[0], null, false);
         } catch (Exception e) {
             log.error("Error occurred when adding test user and role.", e);
         }

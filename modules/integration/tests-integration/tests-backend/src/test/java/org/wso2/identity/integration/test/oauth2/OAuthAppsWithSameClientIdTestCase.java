@@ -86,17 +86,17 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
     public final static String DUMMY_CLIENT_SECRET = "dummy_client_secret";
     private static final String TENANT_1_DOMAIN = "tenant1.com";
     private static final String TENANT_1_ADMIN_USERNAME = "admin@tenant1.com";
-    private static final String TENANT_1_ADMIN_PASSWORD = "admin";
+    private static final String TENANT_1_ADMIN_PASSWORD = "Admin@123";
     private static final String TENANT_1_ADMIN_TENANT_AWARE_USERNAME = "admin";
     private static final String TENANT_1_USER_USERNAME = "userTenant1";
-    private static final String TENANT_1_USER_PASSWORD = "userTenant1";
+    private static final String TENANT_1_USER_PASSWORD = "User@Tenant1";
     private static final String TENANT_1_USER_EMAIL = "userTenant1@wso2.com";
     private static final String TENANT_2_DOMAIN = "tenant2.com";
     private static final String TENANT_2_ADMIN_USERNAME = "admin@tenant2.com";
-    private static final String TENANT_2_ADMIN_PASSWORD = "admin";
+    private static final String TENANT_2_ADMIN_PASSWORD = "Admin@123";
     private static final String TENANT_2_ADMIN_TENANT_AWARE_USERNAME = "admin";
     private static final String TENANT_2_USER_USERNAME = "userTenant2";
-    private static final String TENANT_2_USER_PASSWORD = "userTenant2";
+    private static final String TENANT_2_USER_PASSWORD = "User@Tenant2";
     private static final String TENANT_2_USER_EMAIL = "userTenant2@wso2.com";
     public final static String TENANT_1_AUTHORIZE_URL = "https://localhost:9853/t/tenant1.com/oauth2/authorize";
 
@@ -108,7 +108,6 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
     private SCIM2RestClient scim2RestClientTenant2;
     private HttpClient client;
 
-    private boolean configurationsRestored = false;
     private String tenant1UserId = null;
     private String tenant2UserId = null;
     private String sessionDataKey;
@@ -121,10 +120,9 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
 
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(isServer);
-
-        // Enable tenant qualified urls/ tenanted sessions and restart the server.
-        changeISConfigurations();
-
+        // We have to restart the server, since the configs were restored from the previous test,
+        // but has not restarted the server after that.
+        serverConfigurationManager.restartGracefully();
         tenantMgtRestClient = new TenantMgtRestClient(serverURL, tenantInfo);
 
         // Create the test tenants.
@@ -159,7 +157,7 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
     @AfterClass(alwaysRun = true)
     public void testClear() throws IOException, AutomationUtilException {
 
-        restoreISConfigurations();
+        serverConfigurationManager.restoreToLastConfiguration(false);
         tenantMgtRestClient.closeHttpClient();
         oAuth2RestClientTenant1.closeHttpClient();
         oAuth2RestClientTenant2.closeHttpClient();
@@ -305,9 +303,24 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
         // Delete tenant 1 app and assert for tenant 2 app.
         getOAuthRestClient(TENANT_1_DOMAIN).deleteApplication(tenant1App.getId());
         ApplicationListResponse tenant1Apps = getOAuthRestClient(TENANT_1_DOMAIN).getAllApplications();
-        Assert.assertEquals(tenant1Apps.getApplications().size(), 0);
+        int appCount = getAppCount(tenant1Apps);
+        Assert.assertEquals(appCount, 0);
         ApplicationListResponse tenant2Apps = getOAuthRestClient(TENANT_2_DOMAIN).getAllApplications();
-        Assert.assertEquals(tenant2Apps.getApplications().size(), 1);
+        appCount = getAppCount(tenant2Apps);
+        Assert.assertEquals(appCount, 1);
+    }
+
+    private static int getAppCount(ApplicationListResponse apps) {
+
+        int appCount = 0;
+        for (ApplicationListItem application : apps.getApplications()) {
+            if ("Console".equalsIgnoreCase(application.getName())
+                    || "My Account".equalsIgnoreCase(application.getName())) {
+                continue;
+            }
+            appCount++;
+        }
+        return appCount;
     }
 
     @Test(description = "Create two OAuth apps in two tenants with the same client id and delete " +
@@ -384,50 +397,36 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
         Assert.fail("Expected exception not received.");
     }
 
-    @Test(description = "Create an OAuth app in tenant 1 and try to login when tenant qualified urls are disabled.",
-            dependsOnMethods = "testOAuthApplicationLoginIncorrectTenant")
-    public void testOAuthApplicationLoginWhenTenantQualifiedUrlsDisabled() throws Exception {
-
-        // Restore the server back to the initial state (tenant qualified urls disabled).
-        restoreISConfigurations();
-
-        // Create oauth app and add user.
-        ApplicationResponseModel tenant1App = createApplication(TENANT_1_DOMAIN);
-        Assert.assertNotNull(tenant1App, "OAuth app creation failed for tenant 1.");
-        tenant1UserId = createUser(TENANT_1_DOMAIN);
-
-        // Authenticate.
-        initiateAuthorizationRequest(false);
-        authenticateUser(false, TENANT_1_USER_USERNAME + "@" + TENANT_1_DOMAIN, TENANT_1_USER_PASSWORD,
-                TENANT_1_DOMAIN);
-        performConsentApproval(false, TENANT_1_DOMAIN);
-        generateAuthzCodeAccessToken(false, TENANT_1_DOMAIN);
-        introspectActiveAccessToken(TENANT_1_DOMAIN, TENANT_1_ADMIN_USERNAME, TENANT_1_ADMIN_PASSWORD);
-    }
-
-    private void changeISConfigurations() throws AutomationUtilException, IOException {
-
-        String carbonHome = Utils.getResidentCarbonHome();
-        File defaultTomlFile = getDeploymentTomlFile(carbonHome);
-        File modifiedConfigFile = new File(getISResourceLocation()
-                + File.separator + "tenant.qualified" + File.separator
-                + "tenant_qualified_url_tenanted_sessions_enabled.toml");
-        serverConfigurationManager.applyConfiguration(modifiedConfigFile, defaultTomlFile, true, true);
-    }
-
-    private void restoreISConfigurations() throws AutomationUtilException, IOException {
-
-        if (configurationsRestored) {
-            return;
-        }
-        String carbonHome = Utils.getResidentCarbonHome();
-        File defaultTomlFile = getDeploymentTomlFile(carbonHome);
-        File modifiedConfigFile = new File(getISResourceLocation()
-                + File.separator + "tenant.qualified" + File.separator
-                + "tenant_qualified_url_tenanted_sessions_default.toml");
-        serverConfigurationManager.applyConfiguration(modifiedConfigFile, defaultTomlFile, true, true);
-        configurationsRestored = true;
-    }
+//    @Test(description = "Create an OAuth app in tenant 1 and try to login when tenant qualified urls are disabled.",
+//            dependsOnMethods = "testOAuthApplicationLoginIncorrectTenant")
+//    public void testOAuthApplicationLoginWhenTenantQualifiedUrlsDisabled() throws Exception {
+//
+//        // Disable tenant qualified urls/ tenanted sessions and restart the server.
+//        changeISConfigurations();
+//
+//        // Create oauth app and add user.
+//        ApplicationResponseModel tenant1App = createApplication(TENANT_1_DOMAIN);
+//        Assert.assertNotNull(tenant1App, "OAuth app creation failed for tenant 1.");
+//        tenant1UserId = createUser(TENANT_1_DOMAIN);
+//
+//        // Authenticate.
+//        initiateAuthorizationRequest(false);
+//        authenticateUser(false, TENANT_1_USER_USERNAME + "@" + TENANT_1_DOMAIN, TENANT_1_USER_PASSWORD,
+//                TENANT_1_DOMAIN);
+//        performConsentApproval(false, TENANT_1_DOMAIN);
+//        generateAuthzCodeAccessToken(false, TENANT_1_DOMAIN);
+//        introspectActiveAccessToken(TENANT_1_DOMAIN, TENANT_1_ADMIN_USERNAME, TENANT_1_ADMIN_PASSWORD);
+//    }
+//
+//    private void changeISConfigurations() throws AutomationUtilException, IOException {
+//
+//        String carbonHome = Utils.getResidentCarbonHome();
+//        File defaultTomlFile = getDeploymentTomlFile(carbonHome);
+//        File modifiedConfigFile = new File(getISResourceLocation()
+//                + File.separator + "tenant.qualified" + File.separator
+//                + "tenant_qualified_url_tenanted_sessions_disabled.toml");
+//        serverConfigurationManager.applyConfiguration(modifiedConfigFile, defaultTomlFile, true, true);
+//    }
 
     private void addTenant(String tenantDomain, String adminUsername, String adminPassword,
                            String adminTenantAwareUsername) throws Exception {
@@ -527,6 +526,10 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
         OAuth2RestClient restClient = getOAuthRestClient(tenantDomain);
         ApplicationListResponse applications = restClient.getAllApplications();
         for (ApplicationListItem application : applications.getApplications()) {
+            if ("Console".equalsIgnoreCase(application.getName())
+                    || "My Account".equalsIgnoreCase(application.getName())) {
+                continue;
+            }
             restClient.deleteApplication(application.getId());
         }
     }

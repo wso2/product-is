@@ -51,6 +51,8 @@ import org.wso2.identity.integration.common.clients.application.mgt.ApplicationM
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.APIResourceListItem;
+import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.ScopeGetModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.*;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration.DialectEnum;
 import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
@@ -79,8 +81,6 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	protected static final String EMAIL_CLAIM_URI = "http://wso2.org/claims/emailaddress";
 	private static final String GIVEN_NAME_CLAIM_URI = "http://wso2.org/claims/givenname";
 	protected static final String COUNTRY_CLAIM_URI = "http://wso2.org/claims/country";
-	private static final String customClaimURI1 = "http://wso2.org/claims/challengeQuestion1";
-	private static final String customClaimURI2 = "http://wso2.org/claims/challengeQuestion2";
 	private static final String GRANT_TYPE_PASSWORD = "password";
 	private static final String SCOPE_PRODUCTION = "PRODUCTION";
 	public static final String OIDC = "oidc";
@@ -353,12 +353,6 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		claimConfiguration.addClaimMappingsItem(getClaimMapping(COUNTRY_CLAIM_URI));
 		claimConfiguration.addRequestedClaimsItem(getRequestedClaim(COUNTRY_CLAIM_URI));
 
-		claimConfiguration.addClaimMappingsItem(getClaimMapping(customClaimURI1));
-		claimConfiguration.addRequestedClaimsItem(getRequestedClaim(customClaimURI1));
-
-		claimConfiguration.addClaimMappingsItem(getClaimMapping(customClaimURI2));
-		claimConfiguration.addRequestedClaimsItem(getRequestedClaim(customClaimURI2));
-
 		return claimConfiguration;
 	}
 
@@ -464,7 +458,8 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		urlParameters.add(new BasicNameValuePair("password", userInfo.getPassword()));
 		urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
 		log.info(">>> sendLoginPost:sessionDataKey: " + sessionDataKey);
-		return sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.COMMON_AUTH_URL);
+		return sendPostRequestWithParameters(client, urlParameters,
+                getTenantQualifiedURL(OAuth2Constant.COMMON_AUTH_URL, tenantInfo.getDomain()));
 	}
 
 	/**
@@ -486,7 +481,8 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		urlParameters.add(new BasicNameValuePair("password", password));
 		urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
 		log.info(">>> sendLoginPost:sessionDataKey: " + sessionDataKey);
-		return sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.COMMON_AUTH_URL);
+		return sendPostRequestWithParameters(client, urlParameters,
+                getTenantQualifiedURL(OAuth2Constant.COMMON_AUTH_URL, tenantInfo.getDomain()));
 	}
 
 	/**
@@ -529,7 +525,8 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		urlParameters.add(new BasicNameValuePair("consent", "approve"));
 		urlParameters.add(new BasicNameValuePair("sessionDataKeyConsent", sessionDataKeyConsent));
 
-		return sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.APPROVAL_URL);
+		return sendPostRequestWithParameters(client, urlParameters,
+                getTenantQualifiedURL(OAuth2Constant.APPROVAL_URL, tenantInfo.getDomain()));
 	}
 
 	/**
@@ -553,7 +550,8 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 			urlParameters.addAll(consentClaims);
 		}
 
-		return sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.APPROVAL_URL);
+		return sendPostRequestWithParameters(client, urlParameters,
+                getTenantQualifiedURL(OAuth2Constant.APPROVAL_URL, tenantInfo.getDomain()));
 	}
 
 	/**
@@ -597,7 +595,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
 		urlParameters.add(new BasicNameValuePair("callbackurl", OAuth2Constant.CALLBACK_URL));
 		urlParameters.add(new BasicNameValuePair("accessEndpoint",
-		                                         OAuth2Constant.ACCESS_TOKEN_ENDPOINT));
+                getTenantQualifiedURL(OAuth2Constant.ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain())));
 		urlParameters.add(new BasicNameValuePair("consumerSecret", consumerSecret));
 		return sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.GET_ACCESS_TOKEN_URL);
 	}
@@ -893,5 +891,47 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		JSONParser parser = new JSONParser();
 		JSONObject json = (JSONObject) parser.parse(EntityUtils.toString(response.getEntity()));
 		return ((JSONArray) ((JSONObject)((JSONArray) json.get("keys")).get(0)).get("x5c")).get(0).toString();
+	}
+
+	/**
+	 * Authorize list of SYSTEM APIs to an application.
+	 *
+	 * @param applicationId Application id.
+	 * @param apiIdentifiers API identifiers to authorize.
+	 * @throws Exception Error occured while authorizing APIs.
+	 */
+	public void authorizeSystemAPIs(String applicationId, List<String> apiIdentifiers) throws Exception {
+
+		apiIdentifiers.stream().forEach(apiIdentifier -> {
+			try {
+				List<APIResourceListItem> filteredAPIResource =
+						restClient.getAPIResourcesWithFiltering("identifier+eq+" + apiIdentifier);
+				if (filteredAPIResource == null || filteredAPIResource.isEmpty()) {
+					return;
+				}
+				String apiId = filteredAPIResource.get(0).getId();
+				// Get API scopes.
+				List<ScopeGetModel> apiResourceScopes = restClient.getAPIResourceScopes(apiId);
+				AuthorizedAPICreationModel authorizedAPICreationModel = new AuthorizedAPICreationModel();
+				authorizedAPICreationModel.setId(apiId);
+				authorizedAPICreationModel.setPolicyIdentifier("RBAC");
+				apiResourceScopes.forEach(scope -> {
+					authorizedAPICreationModel.addScopesItem(scope.getName());
+				});
+				restClient.addAPIAuthorizationToApplication(applicationId, authorizedAPICreationModel);
+			} catch (Exception e) {
+				throw new RuntimeException("Error while authorizing system API " + apiIdentifier + " to application "
+						+ applicationId, e);
+			}
+		});
+	}
+
+	public String getRoleV2ResourceId(String roleName, String audienceType, String OrganizationId) throws Exception {
+
+		List<String> roles = restClient.getRoles(roleName, audienceType, OrganizationId);
+		if (roles.size() == 1) {
+			return roles.get(0);
+		}
+		return null;
 	}
 }

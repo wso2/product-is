@@ -43,13 +43,17 @@ import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AccessTokenConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AssociatedRolesConfig;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
+import org.wso2.identity.integration.test.utils.CarbonUtils;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -58,6 +62,11 @@ import java.util.List;
  */
 public class OAuth2TokenRevocationWithRevokedAccessToken extends OAuth2ServiceAbstractIntegrationTest {
 
+    private static final String TENANT_DOMAIN = "wso2.com";
+    private static final String INTROSPECT_SCOPE = "internal_application_mgt_view";
+    private static final String INTROSPECT_SCOPE_IN_NEW_AUTHZ_RUNTIME = "internal_oauth2_introspect";
+    private static boolean isLegacyRuntimeEnabled;
+
     private ClientID consumerKey;
     private Secret consumerSecret;
 
@@ -65,7 +74,6 @@ public class OAuth2TokenRevocationWithRevokedAccessToken extends OAuth2ServiceAb
     private final String username;
     private final String userPassword;
     private final String activeTenant;
-    private static final String TENANT_DOMAIN = "wso2.com";
     private String applicationId;
 
     @Factory(dataProvider = "oAuthConsumerApplicationProvider")
@@ -73,7 +81,7 @@ public class OAuth2TokenRevocationWithRevokedAccessToken extends OAuth2ServiceAb
 
         super.init(userMode);
         AutomationContext context = new AutomationContext("IDENTITY", userMode);
-        this.username = context.getContextTenant().getTenantAdmin().getUserName();
+        this.username = context.getContextTenant().getTenantAdmin().getUserNameWithoutDomain();
         this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
         this.activeTenant = context.getContextTenant().getDomain();
         this.tokenType = tokenType;
@@ -94,6 +102,7 @@ public class OAuth2TokenRevocationWithRevokedAccessToken extends OAuth2ServiceAb
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
+        isLegacyRuntimeEnabled = CarbonUtils.isLegacyAuthzRuntimeEnabled();
         ApplicationResponseModel application = createApp();
         applicationId = application.getId();
 
@@ -101,6 +110,27 @@ public class OAuth2TokenRevocationWithRevokedAccessToken extends OAuth2ServiceAb
 
         consumerKey = new ClientID(oidcConfig.getClientId());
         consumerSecret = new Secret(oidcConfig.getClientSecret());
+        if (!isLegacyRuntimeEnabled) {
+            // Authorize /oauth2/introspect API.
+            authorizeSystemAPIs(applicationId, new ArrayList<>(Arrays.asList("/oauth2/introspect")));
+            // Associate roles.
+            ApplicationPatchModel applicationPatch = new ApplicationPatchModel();
+            AssociatedRolesConfig associatedRolesConfig =
+                    new AssociatedRolesConfig().allowedAudience(AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION);
+            // Get Roles.
+            String adminRoleId = getRoleV2ResourceId("admin",
+                    AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION.toString().toLowerCase(), null);
+            String everyoneRoleId = getRoleV2ResourceId("everyone",
+                    AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION.toString().toLowerCase(), null);
+            applicationPatch = applicationPatch.associatedRoles(associatedRolesConfig);
+            associatedRolesConfig.addRolesItem(
+                    new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Role().id(
+                            adminRoleId));
+            associatedRolesConfig.addRolesItem(
+                    new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Role().id(
+                            everyoneRoleId));
+            updateApplication(applicationId, applicationPatch);
+        }
     }
 
     @Test(description = "Call revocation request with a revoked access token")
@@ -173,7 +203,7 @@ public class OAuth2TokenRevocationWithRevokedAccessToken extends OAuth2ServiceAb
     private AccessToken requestAccessToken() throws Exception {
 
         ClientAuthentication clientAuth = new ClientSecretBasic(consumerKey, consumerSecret);
-        URI tokenEndpoint = new URI(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
+        URI tokenEndpoint = new URI(getTenantQualifiedURL(OAuth2Constant.ACCESS_TOKEN_ENDPOINT, activeTenant));
         AuthorizationGrant authorizationGrant = new ResourceOwnerPasswordCredentialsGrant(username,
                 new Secret(userPassword));
 
@@ -187,12 +217,15 @@ public class OAuth2TokenRevocationWithRevokedAccessToken extends OAuth2ServiceAb
     private AccessToken requestPrivilegedAccessToken() throws Exception {
 
         ClientAuthentication clientAuth = new ClientSecretBasic(consumerKey, consumerSecret);
-        URI tokenEndpoint = new URI(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
+        URI tokenEndpoint = new URI(getTenantQualifiedURL(OAuth2Constant.ACCESS_TOKEN_ENDPOINT, activeTenant));
         AuthorizationGrant authorizationGrant = new ResourceOwnerPasswordCredentialsGrant(username,
                 new Secret(userPassword));
-
-        Scope scope = new Scope("internal_application_mgt_view");
-
+        Scope scope;
+        if (isLegacyRuntimeEnabled) {
+            scope = new Scope(INTROSPECT_SCOPE);
+        } else {
+            scope = new Scope(INTROSPECT_SCOPE_IN_NEW_AUTHZ_RUNTIME);
+        }
         TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, authorizationGrant, scope);
         HTTPResponse tokenHTTPResp = request.toHTTPRequest().send();
 
