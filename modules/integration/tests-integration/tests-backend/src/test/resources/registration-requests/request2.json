@@ -23,5 +23,6 @@
   "require_pushed_authorization_requests" : true,
   "subject_type" : "pairwise",
   "request_object_encryption_alg" : "RSA-OAEP",
-  "request_object_encryption_enc" : "A128GCM"
+  "request_object_encryption_enc" : "A128GCM",
+  "tls_client_certificate_bound_access_tokens" : true
 }
