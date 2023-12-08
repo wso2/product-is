@@ -152,6 +152,7 @@
             <bean class="org.wso2.carbon.identity.api.server.idp.v1.IdentityProvidersApi"/>
             <bean class="org.wso2.carbon.identity.api.server.configs.v1.ConfigsApi"/>
             <bean class="org.wso2.carbon.identity.api.server.cors.v1.CorsApi"/>
+            <bean class="org.wso2.carbon.identity.api.server.notification.sender.v1.NotificationSendersApi"/>
             <bean class="org.wso2.carbon.identity.api.server.authenticators.v1.AuthenticatorsApi"/>
             <bean class="org.wso2.carbon.identity.api.server.branding.preference.management.v1.BrandingPreferenceApi"/>
             <bean class="org.wso2.carbon.identity.api.server.input.validation.v1.ValidationRulesApi"/>
