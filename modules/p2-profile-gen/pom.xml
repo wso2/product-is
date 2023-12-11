@@ -370,6 +370,10 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.association.account:org.wso2.carbon.identity.user.account.association.feature:${identity.user.account.association.version}
                                 </featureArtifactDef>
+                                <!-- User Offline Onboard Feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.user.onboard.core.service.feature:${carbon.identity.framework.version}
+                                </featureArtifactDef>
                                 <!-- Cipher tool feature -->
                                 <featureArtifactDef>
                                     org.wso2.ciphertool:org.wso2.ciphertool.feature:${cipher-tool.version}
@@ -1119,6 +1123,11 @@
                                 <feature>
                                     <id>org.wso2.ciphertool.feature.group</id>
                                     <version>${cipher-tool.version}</version>
+                                </feature>
+                                <!-- User Offline Onboard Feature -->
+                                <feature>
+                                    <id>org.wso2.carbon.identity.user.onboard.core.service.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
                                 </feature>
                             </features>
                         </configuration>
