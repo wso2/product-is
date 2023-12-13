@@ -2355,7 +2355,7 @@
         <identity.extension.utils>1.0.14</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.0.1</authenticator.auth.otp.commons.version>
 
-        <identity.org.mgt.version>1.3.134</identity.org.mgt.version>
+        <identity.org.mgt.version>1.3.135</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.0.93</identity.org.mgt.core.version>
         <identity.organization.login.version>1.1.24</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.20</identity.oauth2.grant.organizationswitch.version>
@@ -2369,7 +2369,7 @@
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.13</identity.api.dispatcher.version>
         <identity.user.api.version>1.3.29</identity.user.api.version>
-        <identity.server.api.version>1.2.139</identity.server.api.version>
+        <identity.server.api.version>1.2.140</identity.server.api.version>
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
         <identity.tool.samlsso.validator.version>5.5.7</identity.tool.samlsso.validator.version>
@@ -2379,9 +2379,9 @@
         <conditional.authentication.functions.version>1.2.38</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.10.15</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.2.61</identity.apps.myaccount.version>
-        <identity.apps.core.version>2.0.93</identity.apps.core.version>
+        <identity.apps.console.version>2.10.19</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.2.63</identity.apps.myaccount.version>
+        <identity.apps.core.version>2.0.95</identity.apps.core.version>
         <identity.apps.tests.version>1.6.373</identity.apps.tests.version>
 
         <!-- Charon -->
