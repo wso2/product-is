@@ -10,6 +10,7 @@ env:
   MAVEN_OPTS: -Xmx4g -Xms1g
   REPOSITORY: product-is
   GIT_USERNAME: jenkins-is-staging
+  GIT_EMAIL: jenkins-is-staging@wso2.com
   PRODUCT_REPOSITORY_FORKED: $GIT_USERNAME'/'${REPOSITORY}
   REMOTE_PRODUCT_REPOSITORY_PUBLIC: wso2/$REPOSITORY
   PRODUCT_REPOSITORY_PUBLIC: wso2/$REPOSITORY
@@ -113,6 +114,7 @@ jobs:
             echo ""
             echo 'Commit Changes'
             echo "=========================================================="
+            git config --global user.email ${{ env.GIT_EMAIL }}
             git config --global user.name ${{ env.GIT_USERNAME }}
             git commit -a -m 'Bump dependencies from '${{ env.DEPENDENCY_UPGRADE_BRANCH_NAME }}
             git remote rm origin
