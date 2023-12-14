@@ -43,12 +43,15 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.entitlement.stub.dto.PolicyDTO;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
+import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.clients.entitlement.EntitlementPolicyServiceClient;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AssociatedRolesConfig;
+import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CarbonUtils;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
+import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -58,6 +61,7 @@ import java.util.Arrays;
  */
 public class OAuth2XACMLScopeValidatorTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
+    private ServerConfigurationManager serverConfigurationManager;
     private static final String VALIDATE_SCOPE_BASED_POLICY_ID = "validate_scope_based_policy_template";
     private static final String VALID_SCOPE = "SCOPE1";
     private static final String INTROSPECT_SCOPE = "internal_application_mgt_view";
@@ -117,6 +121,16 @@ public class OAuth2XACMLScopeValidatorTestCase extends OAuth2ServiceAbstractInte
     public void testInit() throws Exception {
 
         super.init(TestUserMode.SUPER_TENANT_USER);
+        String carbonHome = Utils.getResidentCarbonHome();
+        // Disabling dropping unregistered scopes to avoid scope validation failure.
+        File defaultTomlFile = getDeploymentTomlFile(carbonHome);
+        File configuredTomlFile = new File(getISResourceLocation() + File.separator
+                + "xacml_scope_validator.toml");
+
+        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
+        serverConfigurationManager.restartGracefully();
+        super.init(TestUserMode.SUPER_TENANT_USER);
         isLegacyRuntimeEnabled = CarbonUtils.isLegacyAuthzRuntimeEnabled();
         entitlementPolicyClient = new EntitlementPolicyServiceClient(backendURL, sessionCookie);
     }
@@ -126,6 +140,7 @@ public class OAuth2XACMLScopeValidatorTestCase extends OAuth2ServiceAbstractInte
 
         deleteApplication();
         removeOAuthApplicationData();
+        serverConfigurationManager.restoreToLastConfiguration(false);
         consumerKey = null;
         consumerSecret = null;
         entitlementPolicyClient.removePolicy(VALIDATE_SCOPE_BASED_POLICY_ID);

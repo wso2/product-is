@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.oauth2;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -73,6 +74,7 @@ public class OAuth2ServiceImplicitGrantTestCase extends OAuth2ServiceAbstractInt
 	private final AutomationContext context;
 	private Tenant tenantInfo;
 	private String applicationId;
+	private static final String VALID_SCOPES = "device_01";
 
 	@DataProvider(name = "configProvider")
 	public static Object[][] configProvider() {
@@ -104,7 +106,7 @@ public class OAuth2ServiceImplicitGrantTestCase extends OAuth2ServiceAbstractInt
 				.setDefaultRequestConfig(requestConfig)
 				.setDefaultCookieSpecRegistry(cookieSpecRegistry)
 				.build();
-		scopes = "abc";
+		scopes = "abc " + VALID_SCOPES;
 	}
 
 	@AfterClass(alwaysRun = true)
@@ -223,7 +225,7 @@ public class OAuth2ServiceImplicitGrantTestCase extends OAuth2ServiceAbstractInt
 		String urlScopes = DataExtractUtil.extractParamFromURIFragment(locationHeader.getValue(),
 				OAuth2Constant.OAUTH2_SCOPE);
 		Assert.assertNotNull(accessToken, "Access token is null.");
-		Assert.assertEquals(urlScopes, scopes, "Scopes are not equal.");
+		Assert.assertEquals(urlScopes, VALID_SCOPES, "Scopes are not equal.");
 		EntityUtils.consume(response.getEntity());
 	}
 
@@ -236,5 +238,7 @@ public class OAuth2ServiceImplicitGrantTestCase extends OAuth2ServiceAbstractInt
 				username, userPassword);
 		Assert.assertNotNull(responseObj, "Validate access token failed. response is invalid.");
 		Assert.assertEquals(responseObj.get("active"), true, "Token Validation failed");
+		// Only the allowed scopes should be returned and Random Scope should not be returned.
+		Assert.assertTrue(StringUtils.equals((String) responseObj.get("scope"), VALID_SCOPES), "Token Validation failed");
 	}
 }
