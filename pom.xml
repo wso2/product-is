@@ -2193,6 +2193,11 @@
                 <version>${apacheds.api.version}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.governance</groupId>
+                <artifactId>org.wso2.carbon.identity.user.onboard.core.service</artifactId>
+                <version>${identity.governance.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

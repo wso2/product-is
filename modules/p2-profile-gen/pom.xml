@@ -126,6 +126,11 @@
                                     org.wso2.carbon.identity.governance:org.wso2.carbon.identity.tenant.resource.manager.feature:${identity.governance.version}
                                 </featureArtifactDef>
 
+                                <!-- User Offline Onboard Feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.governance:org.wso2.carbon.identity.user.onboard.core.service.feature:${identity.governance.version}
+                                </featureArtifactDef>
+
                                 <!-- registry related features -->
                                 <featureArtifactDef>
                                     org.wso2.carbon.registry:org.wso2.carbon.registry.core.feature:${carbon.registry.version}
@@ -751,6 +756,12 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.tenant.resource.manager</id>
+                                    <version>${identity.governance.version}</version>
+                                </feature>
+
+                                <!-- User Offline Onboard Feature -->
+                                <feature>
+                                    <id>org.wso2.carbon.identity.user.onboard.core.service</id>
                                     <version>${identity.governance.version}</version>
                                 </feature>
 

@@ -49,6 +49,7 @@
     <import resource="classpath:META-INF/cxf/input-validation-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/idle-account-identification-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/expired-password-identification-cxf.xml"/>
+    <import resource="classpath:META-INF/cxf/user-onboard-management-cxf.xml"/>
 
     <import resource="classpath:META-INF/cxf/identity-governance-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/admin-advisory-management-server-v1-cxf.xml"/>
@@ -214,6 +215,7 @@
             <bean class="org.wso2.carbon.identity.rest.api.user.totp.v1.MeApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.idv.v1.MeApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.idv.v1.DefaultApi"/>
+            <bean class="org.wso2.carbon.identity.api.user.onboard.v1.OfflineInviteLinkApi"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">
@@ -251,6 +253,7 @@
             <bean class="org.wso2.carbon.identity.rest.api.user.totp.v1.MeApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.idv.v1.MeApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.idv.v1.DefaultApi"/>
+            <bean class="org.wso2.carbon.identity.api.user.onboard.v1.OfflineInviteLinkApi"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">
