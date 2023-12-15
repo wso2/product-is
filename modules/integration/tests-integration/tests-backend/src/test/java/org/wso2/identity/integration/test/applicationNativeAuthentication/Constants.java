@@ -51,6 +51,9 @@ public class Constants {
     public static final String REQUIRED_PARAMS = "requiredParams";
     public static final String PROMPT_TYPE = "promptType";
     public static final String PARAMS = "params";
+    public static final String ADDITIONAL_DATA ="additionalData";
+    public static final String REDIRECT_URL ="redirectUrl";
+    public static final String STATE ="state";
     public static final String HREF = "href";
     public static final String TRACE_ID = "traceId";
     public static final String CODE = "code";
