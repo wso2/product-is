@@ -35,7 +35,6 @@
     <modules>
         <module>modules/features</module>
         <module>modules/p2-profile-gen</module>
-        <module>modules/callhome</module>
         <module>modules/connectors</module>
         <module>modules/api-resources</module>
         <module>modules/authenticators</module>
@@ -2291,9 +2290,6 @@
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
         <!--<identity.userstore.cassandra.version>5.1.1</identity.userstore.cassandra.version>-->
         <!--<identity.agent-entitlement-filter.version>5.1.1</identity.agent-entitlement-filter.version>-->
-
-        <!-- CallHome version -->
-        <callhome.version>4.5.x_1.0.14</callhome.version>
 
         <!-- Authenticator Versions -->
         <identity.outbound.auth.oidc.version>5.11.30</identity.outbound.auth.oidc.version>

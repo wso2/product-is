@@ -287,12 +287,6 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
         </fileSet>
 
-        <!--copy the callhome jar -->
-        <fileSet>
-            <directory>../callhome/target/callhomeCopied/jar</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/components/dropins</outputDirectory>
-        </fileSet>
-
         <!--copy the social authenticator jars Facebook,Google,Windows-Live,Yahoo.-->
         <fileSet>
             <directory>../social-authenticators/target/socialauthenticatorCopied/jar</directory>
