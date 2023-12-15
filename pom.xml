@@ -1126,11 +1126,6 @@
                 <version>${carbon.identity.framework.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.identity.framework</groupId>
-                <artifactId>org.wso2.carbon.identity.template.mgt.endpoint</artifactId>
-                <version>${carbon.identity.framework.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.wso2.carbon.identity.inbound.auth.saml2</groupId>
                 <artifactId>org.wso2.carbon.identity.sso.saml.stub</artifactId>
                 <version>${identity.inbound.auth.saml.version}</version>
@@ -1907,11 +1902,6 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity.framework</groupId>
                 <artifactId>org.wso2.carbon.identity.unique.claim.mgt.server.feature</artifactId>
-                <version>${carbon.identity.framework.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.identity.framework</groupId>
-                <artifactId>org.wso2.carbon.identity.userstore.configuration.server.feature</artifactId>
                 <version>${carbon.identity.framework.version}</version>
             </dependency>
             <dependency>
