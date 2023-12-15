@@ -96,7 +96,7 @@
       "sso-session",
       "device-flow",
       "certificate",
-      "client-instance"
+      "client-request"
     ],
     "defaultValue": "None"
   },
