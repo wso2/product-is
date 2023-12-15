@@ -1600,11 +1600,6 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.conditional.auth.functions</groupId>
-                <artifactId>org.wso2.carbon.identity.conditional.auth.functions.cookie</artifactId>
-                <version>${conditional.authentication.functions.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.identity.conditional.auth.functions</groupId>
                 <artifactId>org.wso2.carbon.identity.conditional.auth.functions.analytics</artifactId>
                 <version>${conditional.authentication.functions.version}</version>
             </dependency>
