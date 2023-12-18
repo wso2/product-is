@@ -35,7 +35,6 @@
     <modules>
         <module>modules/features</module>
         <module>modules/p2-profile-gen</module>
-        <module>modules/callhome</module>
         <module>modules/connectors</module>
         <module>modules/api-resources</module>
         <module>modules/authenticators</module>
@@ -1126,11 +1125,6 @@
                 <version>${carbon.identity.framework.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.identity.framework</groupId>
-                <artifactId>org.wso2.carbon.identity.template.mgt.endpoint</artifactId>
-                <version>${carbon.identity.framework.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.wso2.carbon.identity.inbound.auth.saml2</groupId>
                 <artifactId>org.wso2.carbon.identity.sso.saml.stub</artifactId>
                 <version>${identity.inbound.auth.saml.version}</version>
@@ -1605,11 +1599,6 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.conditional.auth.functions</groupId>
-                <artifactId>org.wso2.carbon.identity.conditional.auth.functions.cookie</artifactId>
-                <version>${conditional.authentication.functions.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.identity.conditional.auth.functions</groupId>
                 <artifactId>org.wso2.carbon.identity.conditional.auth.functions.analytics</artifactId>
                 <version>${conditional.authentication.functions.version}</version>
             </dependency>
@@ -1907,11 +1896,6 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity.framework</groupId>
                 <artifactId>org.wso2.carbon.identity.unique.claim.mgt.server.feature</artifactId>
-                <version>${carbon.identity.framework.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.identity.framework</groupId>
-                <artifactId>org.wso2.carbon.identity.userstore.configuration.server.feature</artifactId>
                 <version>${carbon.identity.framework.version}</version>
             </dependency>
             <dependency>
@@ -2258,7 +2242,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.25.617</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.25.624</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2306,9 +2290,6 @@
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
         <!--<identity.userstore.cassandra.version>5.1.1</identity.userstore.cassandra.version>-->
         <!--<identity.agent-entitlement-filter.version>5.1.1</identity.agent-entitlement-filter.version>-->
-
-        <!-- CallHome version -->
-        <callhome.version>4.5.x_1.0.14</callhome.version>
 
         <!-- Authenticator Versions -->
         <identity.outbound.auth.oidc.version>5.11.30</identity.outbound.auth.oidc.version>
@@ -2360,8 +2341,8 @@
         <identity.extension.utils>1.0.14</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.0.2</authenticator.auth.otp.commons.version>
 
-        <identity.org.mgt.version>1.3.137</identity.org.mgt.version>
-        <identity.org.mgt.core.version>1.0.94</identity.org.mgt.core.version>
+        <identity.org.mgt.version>1.3.138</identity.org.mgt.version>
+        <identity.org.mgt.core.version>1.0.95</identity.org.mgt.core.version>
         <identity.organization.login.version>1.1.24</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.20</identity.oauth2.grant.organizationswitch.version>
 
@@ -2381,12 +2362,12 @@
         <identity.app.authz.xacml.version>2.3.1</identity.app.authz.xacml.version>
         <identity.oauth.addons.version>2.4.36</identity.oauth.addons.version>
         <org.wso2.carbon.extension.identity.x509certificate.version>1.1.3</org.wso2.carbon.extension.identity.x509certificate.version>
-        <conditional.authentication.functions.version>1.2.38</conditional.authentication.functions.version>
+        <conditional.authentication.functions.version>1.2.40</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.10.26</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.2.64</identity.apps.myaccount.version>
-        <identity.apps.core.version>2.0.98</identity.apps.core.version>
+        <identity.apps.console.version>2.10.31</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.2.65</identity.apps.myaccount.version>
+        <identity.apps.core.version>2.0.101</identity.apps.core.version>
         <identity.apps.tests.version>1.6.373</identity.apps.tests.version>
 
         <!-- Charon -->

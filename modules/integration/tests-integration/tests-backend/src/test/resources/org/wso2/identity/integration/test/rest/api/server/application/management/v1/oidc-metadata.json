@@ -95,8 +95,7 @@
       "cookie",
       "sso-session",
       "device-flow",
-      "certificate",
-      "client-request"
+      "certificate"
     ],
     "defaultValue": "None"
   },
