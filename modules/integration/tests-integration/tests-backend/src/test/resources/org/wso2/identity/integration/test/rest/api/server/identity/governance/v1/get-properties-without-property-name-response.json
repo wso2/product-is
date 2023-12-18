@@ -51,6 +51,10 @@
         "value": "1"
       },
       {
+        "name": "SelfRegistration.SMSOTP.Regex",
+        "value": "[a-zA-Z0-9]{6}"
+      },
+      {
         "name": "SelfRegistration.CallbackRegex",
         "value": "https:\\/\\/localhost:9853\\/.*"
       },

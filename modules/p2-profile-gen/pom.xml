@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>7.0.0-rc1-SNAPSHOT</version>
+        <version>7.0.0-beta4-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -124,6 +124,11 @@
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.governance:org.wso2.carbon.identity.tenant.resource.manager.feature:${identity.governance.version}
+                                </featureArtifactDef>
+
+                                <!-- User Offline Onboard Feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.governance:org.wso2.carbon.identity.user.onboard.core.service.feature:${identity.governance.version}
                                 </featureArtifactDef>
 
                                 <!-- registry related features -->
@@ -373,34 +378,6 @@
                                 <!-- Cipher tool feature -->
                                 <featureArtifactDef>
                                     org.wso2.ciphertool:org.wso2.ciphertool.feature:${cipher-tool.version}
-                                </featureArtifactDef>
-
-                                <!-- Workflow mgt Feature -->
-                                <featureArtifactDef>
-                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.workflow.mgt.feature:${carbon.identity.framework.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon.identity.workflow.user:org.wso2.carbon.user.mgt.workflow.feature:${identity.user.workflow.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon.identity.workflow.impl.bps:org.wso2.carbon.identity.workflow.impl.feature:${identity.workflow.impl.bps.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon.identity.workflow.template.multisteps:org.wso2.carbon.identity.workflow.template.server.feature:${identity.workflow.template.multisteps.version}
-                                </featureArtifactDef>
-
-                                <!--BPEL and HumanTask features -->
-                                <featureArtifactDef>
-                                    org.wso2.carbon.business-process:org.wso2.carbon.bpel.server.feature:${carbon.business-process.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon.business-process:org.wso2.carbon.humantask.server.feature:${carbon.business-process.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon.business-process:org.wso2.carbon.attachment.mgt.feature:${carbon.business-process.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon.business-process:org.wso2.carbon.unifiedendpoint.server.feature:${carbon.business-process.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.analytics-common:org.wso2.carbon.event.output.adapter.server.feature:${carbon.analytics-common.version}
@@ -782,6 +759,12 @@
                                     <version>${identity.governance.version}</version>
                                 </feature>
 
+                                <!-- User Offline Onboard Feature -->
+                                <feature>
+                                    <id>org.wso2.carbon.identity.user.onboard.core.service</id>
+                                    <version>${identity.governance.version}</version>
+                                </feature>
+
                                 <!-- Features required for Cloud Identity -->
                                 <feature>
                                     <id>org.wso2.carbon.tenant.mgt.common.feature.group</id>
@@ -972,41 +955,6 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.user.account.association.feature.group</id>
                                     <version>${identity.user.account.association.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.workflow.mgt.feature.group</id>
-                                    <version>${carbon.identity.framework.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.workflow.impl.feature.group</id>
-                                    <version>${identity.workflow.impl.bps.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.workflow.template.server.feature.group</id>
-                                    <version>${identity.workflow.template.multisteps.version}</version>
-                                </feature>
-
-                                <feature>
-                                    <id>org.wso2.carbon.user.mgt.workflow.feature.group</id>
-                                    <version>${identity.user.workflow.version}</version>
-                                </feature>
-
-                                <!--BPEL and HumanTask features -->
-                                <feature>
-                                    <id>org.wso2.carbon.bpel.server.feature.group</id>
-                                    <version>${carbon.business-process.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.humantask.server.feature.group</id>
-                                    <version>${carbon.business-process.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.attachment.mgt.feature.group</id>
-                                    <version>${carbon.business-process.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.unifiedendpoint.server.feature.group</id>
-                                    <version>${carbon.business-process.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.event.output.adapter.server.feature.group</id>

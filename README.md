@@ -218,5 +218,15 @@ WSO2 Oxygen Tank developer portal for addition resources.
 For further details, see the WSO2 Carbon documentation at
 https://docs.wso2.com/display/Carbon4411/WSO2+Carbon+Documentation
 
+Survey On Open Source Community Communication
+=============================================
+
+WSO2 wants to learn more about our open source software (OSS) community and your communication preferences to serve you better.
+
+In addition, we may reach out to a small number of respondents to ask additional questions and offer a small gift.
+
+Link to survey: https://forms.gle/h5q4M3K7vyXba3bK6
+
+
 ---------------------------------------------------------------------------
 (c) Copyright 2022 WSO2 LLC.

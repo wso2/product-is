@@ -194,8 +194,8 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
         updateResidentIDPProperty(superTenantResidentIDP, ENABLE_SELF_REGISTRATION_PROP_KEY, "true", true);
 
         String content = doCallSignUpDo("smith");
-        Assert.assertTrue(!content.contains("Password"));
-        Assert.assertTrue(!content.contains("Confirm password"));
+        Assert.assertTrue(content.contains("Password"));
+        Assert.assertTrue(content.contains("Confirm password"));
 
     }
 
@@ -206,8 +206,8 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
         updateResidentIDPProperty(tenantResidentIDP, ENABLE_SELF_REGISTRATION_PROP_KEY, "true", false);
 
         String content = doCallSignUpDo("smith@" + secondaryTenantDomain);
-        Assert.assertTrue(!content.contains("Password"));
-        Assert.assertTrue(!content.contains("Confirm password"));
+        Assert.assertTrue(content.contains("Password"));
+        Assert.assertTrue(content.contains("Confirm password"));
         Assert.assertTrue(!content.contains(FINANCIAL_PURPOSE_NAME));
     }
 
@@ -221,8 +221,8 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
         addFinancialPurpose();
         addFinancialPurposeCategory();
         String content = doCallSignUpDo("smith@" + secondaryTenantDomain);
-        Assert.assertTrue(!content.contains("Password"));
-        Assert.assertTrue(!content.contains("Confirm password"));
+        Assert.assertTrue(content.contains("Password"));
+        Assert.assertTrue(content.contains("Confirm password"));
         Assert.assertTrue(content.contains(FINANCIAL_PURPOSE_NAME));
     }
 

@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-integration-tests</artifactId>
-        <version>7.0.0-rc1-SNAPSHOT</version>
+        <version>7.0.0-beta4-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -112,14 +112,21 @@
             <groupId>org.wso2.carbon.identity.association.account</groupId>
             <artifactId>org.wso2.carbon.identity.user.account.association.stub</artifactId>
         </dependency>
+
+        <!-- Using the previous stub version for compilation due to deprecation of the workflow feature in IS 7.0.0 and onwards -->
         <dependency>
             <groupId>org.wso2.carbon.identity.framework</groupId>
             <artifactId>org.wso2.carbon.identity.workflow.mgt.stub</artifactId>
+            <version>5.25.547</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.workflow.impl.bps</groupId>
             <artifactId>org.wso2.carbon.identity.workflow.impl.stub</artifactId>
+            <version>5.5.5</version>
+            <scope>compile</scope>
         </dependency>
+
         <dependency>
             <groupId>org.wso2.carbon.deployment</groupId>
             <artifactId>org.wso2.carbon.service.mgt.stub</artifactId>
