@@ -239,6 +239,6 @@ public class OAuth2ServiceImplicitGrantTestCase extends OAuth2ServiceAbstractInt
 		Assert.assertNotNull(responseObj, "Validate access token failed. response is invalid.");
 		Assert.assertEquals(responseObj.get("active"), true, "Token Validation failed");
 		// Only the allowed scopes should be returned and Random Scope should not be returned.
-		Assert.assertTrue(StringUtils.equals((String) responseObj.get("scope"), VALID_SCOPES), "Token Validation failed");
+		Assert.assertTrue(StringUtils.equals((String) responseObj.get("scope"), VALID_SCOPES), "Scope Validation failed");
 	}
 }
