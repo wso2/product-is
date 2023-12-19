@@ -137,7 +137,7 @@ public class OAuth2TokenRevocationWithMultipleSessionTerminationTestCase extends
 
     private void testLoginToFirstSession() throws Exception {
 
-        initiateAuthorizationRequest(httpClientForFirstSession, OAuth2Constant.OAUTH2_SCOPE_OPENID + " " + "random");
+        initiateAuthorizationRequest(httpClientForFirstSession, OAuth2Constant.OAUTH2_SCOPE_OPENID + " " + "device_01");
         authenticateUser(httpClientForFirstSession);
         String authorizationCode = performConsentApproval(httpClientForFirstSession);
         accessTokenInFirstSession = generateAuthzCodeAccessToken(authorizationCode, httpClientForFirstSession);
