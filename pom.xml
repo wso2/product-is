@@ -2253,7 +2253,7 @@
         <carbon.consent.mgt.version>2.5.2</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.8.98</identity.governance.version>
+        <identity.governance.version>1.8.99</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.8.5</identity.carbon.auth.saml2.version>
@@ -2365,9 +2365,9 @@
         <conditional.authentication.functions.version>1.2.40</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.10.31</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.2.65</identity.apps.myaccount.version>
-        <identity.apps.core.version>2.0.101</identity.apps.core.version>
+        <identity.apps.console.version>2.10.38</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.2.68</identity.apps.myaccount.version>
+        <identity.apps.core.version>2.0.105</identity.apps.core.version>
         <identity.apps.tests.version>1.6.373</identity.apps.tests.version>
 
         <!-- Charon -->
