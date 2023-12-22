@@ -57,7 +57,6 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT
 public class Oauth2HashAlgorithmTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
     private String accessToken;
-    private String sessionDataKeyConsent;
     private String sessionDataKey;
     private String consumerKey;
     private String consumerSecret;
@@ -164,32 +163,6 @@ public class Oauth2HashAlgorithmTestCase extends OAuth2ServiceAbstractIntegratio
 
         response = sendGetRequest(client, locationHeader.getValue());
         Map<String, Integer> keyPositionMap = new HashMap<>(1);
-        keyPositionMap.put("name=\"" + OAuth2Constant.SESSION_DATA_KEY_CONSENT + "\"", 1);
-        List<DataExtractUtil.KeyValue> keyValues =
-                DataExtractUtil.extractSessionConsentDataFromResponse(response,
-                        keyPositionMap);
-        Assert.assertNotNull(keyValues, "SessionDataKeyConsent key value is null");
-        sessionDataKeyConsent = keyValues.get(0).getValue();
-        EntityUtils.consume(response.getEntity());
-
-        Assert.assertNotNull(sessionDataKeyConsent, "Invalid session key consent.");
-    }
-
-    @Test(groups = "wso2.is", description = "Send approval post request", dependsOnMethods = "testSendLoginPost")
-    public void testSendApprovalPost() throws Exception {
-
-        HttpResponse response = sendApprovalPost(client, sessionDataKeyConsent);
-        Assert.assertNotNull(response, "Approval response is invalid.");
-
-        Header locationHeader =
-                response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
-        Assert.assertNotNull(locationHeader, "Approval Location header is null.");
-        EntityUtils.consume(response.getEntity());
-
-        response = sendPostRequest(client, locationHeader.getValue());
-        Assert.assertNotNull(response, "Get Activation response is invalid.");
-
-        Map<String, Integer> keyPositionMap = new HashMap<>(1);
         keyPositionMap.put("Authorization Code", 1);
         List<DataExtractUtil.KeyValue> keyValues =
                 DataExtractUtil.extractTableRowDataFromResponse(response,
@@ -201,10 +174,9 @@ public class Oauth2HashAlgorithmTestCase extends OAuth2ServiceAbstractIntegratio
         }
         Assert.assertNotNull(authorizationCode, "Authorization code is null.");
         EntityUtils.consume(response.getEntity());
-
     }
 
-    @Test(groups = "wso2.is", description = "Get access token", dependsOnMethods = "testSendApprovalPost")
+    @Test(groups = "wso2.is", description = "Get access token", dependsOnMethods = "testSendLoginPost")
     public void testGetAccessToken() throws Exception {
 
         HttpResponse response = sendGetAccessTokenPost(client, consumerSecret);

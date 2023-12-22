@@ -66,6 +66,8 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
 
     private CloseableHttpClient client;
 
+    private static final String VALID_RANDOM_SCOPE = "device_01";
+
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
 
@@ -125,7 +127,7 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
         ClientID clientID = new ClientID(consumerKey);
         Secret clientSecret = new Secret(consumerSecret);
         ClientAuthentication clientAuth = new ClientSecretBasic(clientID, clientSecret);
-        Scope scope = new Scope(OAUTH2_SCOPE_OPENID, "xyz");
+        Scope scope = new Scope(OAUTH2_SCOPE_OPENID, "xyz", VALID_RANDOM_SCOPE);
 
         URI tokenEndpoint = new URI(getTenantQualifiedURL(OAuth2Constant.ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()));
         TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, clientCredentialsGrant, scope);
@@ -143,7 +145,10 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
         Assert.assertNotNull(accessToken, "Access Token is null in the token response.");
 
         Scope scopesInResponse = accessTokenResponse.getTokens().getAccessToken().getScope();
-        Assert.assertTrue(scopesInResponse.contains("xyz"), "Requested scope is missing in the token response");
+        Assert.assertFalse(scopesInResponse.contains("xyz"), "Not allowed random scope is issued for client credential " +
+                "grant type.");
+        Assert.assertTrue(scopesInResponse.contains(VALID_RANDOM_SCOPE), "Allowed random scope is not issued for " +
+                "client credential grant type.");
 
         // This ensures that openid scopes are not issued for client credential grant type.
         Assert.assertFalse(accessTokenResponse instanceof OIDCTokenResponse, "Client credential grant type cannot " +

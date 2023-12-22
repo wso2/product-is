@@ -22,7 +22,6 @@
        xmlns:cxf="http://cxf.apache.org/core"
        xsi:schemaLocation="http://www.springframework.org/schema/beans  http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd">
     <import resource="classpath:META-INF/cxf/user-association-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/user-approval-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/authorized-apps-user-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/authorized-apps-user-v2-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/session-user-v1-cxf.xml"/>
@@ -50,6 +49,7 @@
     <import resource="classpath:META-INF/cxf/input-validation-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/idle-account-identification-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/expired-password-identification-cxf.xml"/>
+    <import resource="classpath:META-INF/cxf/user-onboard-management-cxf.xml"/>
 
     <import resource="classpath:META-INF/cxf/identity-governance-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/admin-advisory-management-server-v1-cxf.xml"/>
@@ -153,6 +153,7 @@
             <bean class="org.wso2.carbon.identity.api.server.idp.v1.IdentityProvidersApi"/>
             <bean class="org.wso2.carbon.identity.api.server.configs.v1.ConfigsApi"/>
             <bean class="org.wso2.carbon.identity.api.server.cors.v1.CorsApi"/>
+            <bean class="org.wso2.carbon.identity.api.server.notification.sender.v1.NotificationSendersApi"/>
             <bean class="org.wso2.carbon.identity.api.server.authenticators.v1.AuthenticatorsApi"/>
             <bean class="org.wso2.carbon.identity.api.server.branding.preference.management.v1.BrandingPreferenceApi"/>
             <bean class="org.wso2.carbon.identity.api.server.input.validation.v1.ValidationRulesApi"/>
@@ -198,7 +199,6 @@
     <jaxrs:server id="users" address="/users/v1">
         <jaxrs:serviceBeans>
             <bean class="org.wso2.carbon.identity.rest.api.user.application.v1.MeApi"/>
-            <bean class="org.wso2.carbon.identity.rest.api.user.approval.v1.MeApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.association.v1.MeApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.association.v1.UserIdApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.authorized.apps.v1.MeApi"/>
@@ -215,6 +215,7 @@
             <bean class="org.wso2.carbon.identity.rest.api.user.totp.v1.MeApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.idv.v1.MeApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.idv.v1.DefaultApi"/>
+            <bean class="org.wso2.carbon.identity.api.user.onboard.v1.OfflineInviteLinkApi"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">
@@ -236,7 +237,6 @@
     <jaxrs:server id="orgPerspectiveUsers" address="/o/users/v1">
         <jaxrs:serviceBeans>
             <bean class="org.wso2.carbon.identity.rest.api.user.application.v1.MeApi"/>
-            <bean class="org.wso2.carbon.identity.rest.api.user.approval.v1.MeApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.association.v1.MeApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.association.v1.UserIdApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.authorized.apps.v1.MeApi"/>
@@ -253,6 +253,7 @@
             <bean class="org.wso2.carbon.identity.rest.api.user.totp.v1.MeApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.idv.v1.MeApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.user.idv.v1.DefaultApi"/>
+            <bean class="org.wso2.carbon.identity.api.user.onboard.v1.OfflineInviteLinkApi"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">
