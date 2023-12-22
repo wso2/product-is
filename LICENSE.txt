@@ -75,7 +75,7 @@ com.fasterxml.jackson.core.jackson-annotations_2.15.2.jar                       
 org.wso2.identity.styles_7.0.0.beta4.jar                                                            bundle         apache2             
 org.wso2.carbon.identity.authenticator.saml2.sso.ui_5.8.5.jar                                       bundle         apache2             
 org.wso2.carbon.identity.password.policy_1.8.100.jar                                                 bundle         apache2             
-org.wso2.identity.apps.common_2.0.109.jar                                                           bundle         apache2             
+org.wso2.identity.apps.common_2.0.110.jar                                                           bundle         apache2
 org.wso2.carbon.registry.properties.ui_4.8.15.jar                                                   bundle         apache2             
 org.wso2.carbon.identity.authenticator.saml2.sso.common_5.8.5.jar                                   bundle         apache2             
 org.wso2.carbon.identity.cors.mgt.core_5.25.637.jar                                                 bundle         apache2             
