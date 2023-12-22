@@ -2259,7 +2259,7 @@
         <identity.carbon.auth.saml2.version>5.8.5</identity.carbon.auth.saml2.version>
         <identity.carbon.auth.mutual.ssl.version>5.5.0</identity.carbon.auth.mutual.ssl.version>
         <identity.carbon.auth.iwa.version>5.5.0</identity.carbon.auth.iwa.version>
-        <identity.carbon.auth.rest.version>1.8.37</identity.carbon.auth.rest.version>
+        <identity.carbon.auth.rest.version>1.8.38</identity.carbon.auth.rest.version>
 
 
         <!-- Identity Inbound Versions   -->
@@ -2341,7 +2341,7 @@
         <identity.extension.utils>1.0.14</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.0.2</authenticator.auth.otp.commons.version>
 
-        <identity.org.mgt.version>1.3.143</identity.org.mgt.version>
+        <identity.org.mgt.version>1.3.144</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.0.95</identity.org.mgt.core.version>
         <identity.organization.login.version>1.1.24</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.20</identity.oauth2.grant.organizationswitch.version>
