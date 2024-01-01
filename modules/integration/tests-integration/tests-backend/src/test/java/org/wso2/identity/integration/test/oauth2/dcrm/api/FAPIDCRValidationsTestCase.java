@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2023, WSO2 LLC. (https://www.wso2.com) All Rights Reserved.
+/**
+ * Copyright (c) 2023, WSO2 LLC. (https://www.wso2.com/).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -129,7 +129,7 @@ public class FAPIDCRValidationsTestCase extends ISIntegrationTest {
             description = "Check FAPI validations, PPID and SSA during DCR", dataProvider = "dcrConfigProvider")
     public void validateErrorScenarios(JSONObject requestJSON, String errorCode, String errorMessage) throws Exception {
 
-        HttpPost request = new HttpPost(DCRUtils.getPath(tenant));
+        HttpPost request = new HttpPost(getTenantQualifiedURL(OAuthDCRMConstants.DCR_ENDPOINT_HOST_PART , tenant));
         request.addHeader(HttpHeaders.AUTHORIZATION, DCRUtils.getAuthzHeader(username, password));
         request.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
         StringEntity entity = new StringEntity(requestJSON.toJSONString());
@@ -149,7 +149,7 @@ public class FAPIDCRValidationsTestCase extends ISIntegrationTest {
             throws Exception {
 
         // Create application.
-        HttpPost request = new HttpPost(DCRUtils.getPath(tenant));
+        HttpPost request = new HttpPost(getTenantQualifiedURL(OAuthDCRMConstants.DCR_ENDPOINT_HOST_PART , tenant));
         JSONObject registerRequestJSON  = DCRUtils.getRegisterRequestJSON("request6.json");
         // Removing sending sector identifier uri to validate error message during update request.
         if (errorMessage.equals("Sector identifier URI is needed for PPID calculation")) {
@@ -168,7 +168,8 @@ public class FAPIDCRValidationsTestCase extends ISIntegrationTest {
         assertNotNull(client_id, "client_id cannot be null");
 
         // Check error scenarios for update request.
-        HttpPut updateRequest = new HttpPut(DCRUtils.getPath(tenant) + client_id);
+        HttpPut updateRequest = new HttpPut(getTenantQualifiedURL(OAuthDCRMConstants.DCR_ENDPOINT_HOST_PART ,
+                tenant) + client_id);
         updateRequest.addHeader(HttpHeaders.AUTHORIZATION, DCRUtils.getAuthzHeader(username, password));
         updateRequest.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
         entity = new StringEntity(requestJSON.toJSONString());
@@ -182,7 +183,8 @@ public class FAPIDCRValidationsTestCase extends ISIntegrationTest {
         assertEquals(errorResponse.get("error_description"), errorMessage);
 
         // Delete application.
-        HttpDelete deleteRequest = new HttpDelete(DCRUtils.getPath(tenant) + client_id);
+        HttpDelete deleteRequest = new HttpDelete(getTenantQualifiedURL(OAuthDCRMConstants.DCR_ENDPOINT_HOST_PART ,
+                tenant) + client_id);
         deleteRequest.addHeader(HttpHeaders.AUTHORIZATION, DCRUtils.getAuthzHeader(username, password));
         HttpResponse deleteResponse = client.execute(deleteRequest);
         assertEquals(deleteResponse.getStatusLine().getStatusCode(), 204, "Service provider " +

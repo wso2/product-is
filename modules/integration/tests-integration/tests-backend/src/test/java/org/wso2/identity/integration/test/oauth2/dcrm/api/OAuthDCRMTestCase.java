@@ -74,6 +74,7 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
     public static Object[][] dcrmConfigProvider() {
         return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}};
     }
+
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
         super.init();
@@ -81,7 +82,8 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
     }
     @Test(alwaysRun = true, groups = "wso2.is", priority = 1, description = "Create a service provider successfully")
     public void testCreateServiceProviderRequest() throws IOException {
-        HttpPost request = new HttpPost(DCRUtils.getPath(tenant));
+
+        HttpPost request = new HttpPost(getTenantQualifiedURL(OAuthDCRMConstants.DCR_ENDPOINT_HOST_PART , tenant));
         request.addHeader(HttpHeaders.AUTHORIZATION, DCRUtils.getAuthzHeader(username, password));
         request.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
 
@@ -118,7 +120,8 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
     @Test(alwaysRun = true, groups = "wso2.is", priority = 2, description =
             "Create a service provider with already registered client name")
     public void testCreateServiceProviderRequestWithExistingClientName() throws IOException {
-        HttpPost request = new HttpPost(DCRUtils.getPath(tenant));
+
+        HttpPost request = new HttpPost(getTenantQualifiedURL(OAuthDCRMConstants.DCR_ENDPOINT_HOST_PART , tenant));
         request.addHeader(HttpHeaders.AUTHORIZATION, DCRUtils.getAuthzHeader(username, password));
         request.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
 
@@ -154,7 +157,7 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
     @Test(alwaysRun = true, groups = "wso2.is", priority = 3, description = "Read service provider")
     public void testReadServiceProvider() throws IOException {
 
-        HttpGet request = new HttpGet(DCRUtils.getPath(tenant) + client_id);
+        HttpGet request = new HttpGet(getTenantQualifiedURL(OAuthDCRMConstants.DCR_ENDPOINT_HOST_PART , tenant)+ client_id);
         request.addHeader(HttpHeaders.AUTHORIZATION, DCRUtils.getAuthzHeader(username, password));
         request.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
 
@@ -172,7 +175,8 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
 
     @Test(alwaysRun = true, groups = "wso2.is", priority = 4, description = "Read request with an invalid client ID")
     public void testReadServiceProviderWithInvalidClientID() throws IOException {
-        HttpGet request = new HttpGet(DCRUtils.getPath(tenant) + OAuthDCRMConstants.INVALID_CLIENT_ID);
+
+        HttpGet request = new HttpGet(getTenantQualifiedURL(OAuthDCRMConstants.DCR_ENDPOINT_HOST_PART , tenant) + OAuthDCRMConstants.INVALID_CLIENT_ID);
         request.addHeader(HttpHeaders.AUTHORIZATION, DCRUtils.getAuthzHeader(username, password));
         request.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
 
@@ -185,7 +189,8 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
     @Test(alwaysRun = true, groups = "wso2.is", priority = 5, description = "Delete Service Provider")
     public void testDeleteServiceProvider() throws IOException {
 
-        HttpDelete request = new HttpDelete(DCRUtils.getPath(tenant) + client_id);
+        HttpDelete request = new HttpDelete(getTenantQualifiedURL(OAuthDCRMConstants.DCR_ENDPOINT_HOST_PART ,
+                tenant) + client_id);
         request.addHeader(HttpHeaders.AUTHORIZATION, DCRUtils.getAuthzHeader(username, password));
 
         HttpResponse response = client.execute(request);
@@ -194,7 +199,8 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
 
         EntityUtils.consume(response.getEntity());
 
-        HttpGet getRequest = new HttpGet(DCRUtils.getPath(tenant) + client_id);
+        HttpGet getRequest = new HttpGet(getTenantQualifiedURL(OAuthDCRMConstants.DCR_ENDPOINT_HOST_PART , tenant)
+                + client_id);
         getRequest.addHeader(HttpHeaders.AUTHORIZATION, DCRUtils.getAuthzHeader(username, password));
         getRequest.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
 
@@ -209,7 +215,9 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
     @Test(alwaysRun = true, groups = "wso2.is", priority = 6, description = "Delete service provider request with " +
             "invalid client id")
     public void testDeleteRequestWithInvalidClientID() throws IOException {
-        HttpDelete request = new HttpDelete(DCRUtils.getPath(tenant) + OAuthDCRMConstants.INVALID_CLIENT_ID);
+
+        HttpDelete request = new HttpDelete(getTenantQualifiedURL(OAuthDCRMConstants.DCR_ENDPOINT_HOST_PART ,
+                tenant) + OAuthDCRMConstants.INVALID_CLIENT_ID);
         request.addHeader(HttpHeaders.AUTHORIZATION, DCRUtils.getAuthzHeader(username, password));
 
         HttpResponse response = client.execute(request);
@@ -222,7 +230,8 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
     @Test(alwaysRun = true, groups = "wso2.is", description = "Try to register an OAuth app with authorization_code " +
             "grant without any redirect uris.", priority = 7)
     public void testRegisterAppWithAuthzCodeGrantAndNoRedirectUris() throws IOException {
-        HttpPost request = new HttpPost(DCRUtils.getPath(tenant));
+
+        HttpPost request = new HttpPost(getTenantQualifiedURL(OAuthDCRMConstants.DCR_ENDPOINT_HOST_PART , tenant));
         DCRUtils.setRequestHeaders(request, username, password);
 
         JSONArray grantTypes = new JSONArray();
@@ -246,6 +255,7 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
     @Test(alwaysRun = true, groups = "wso2.is", priority = 8, description = "Check whether created service providers " +
             "are cleaned up when OAuth app creation fails.")
     public void testRollbackOnInvalidRequest() throws IOException {
+
         // Basic Request
         JSONArray grantTypes = new JSONArray();
         grantTypes.add(OAuthDCRMConstants.GRANT_TYPE_AUTHORIZATION_CODE);
@@ -255,7 +265,8 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
         requestBody.put(OAuthDCRMConstants.GRANT_TYPES, grantTypes);
 
         //////////////////////// BAD REQUEST WITH EMPTY REDIRECT URI ///////////////////////////
-        HttpPost badRequestWithoutRedirectUris = new HttpPost(DCRUtils.getPath(tenant));
+        HttpPost badRequestWithoutRedirectUris = new HttpPost(getTenantQualifiedURL(
+                OAuthDCRMConstants.DCR_ENDPOINT_HOST_PART , tenant));
         DCRUtils.setRequestHeaders(badRequestWithoutRedirectUris, username, password);
         // We keep the redirect uris empty to make this a bad request.
         JSONObject badRequestBody = (JSONObject) requestBody.clone();
@@ -269,7 +280,7 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
         EntityUtils.consume(failedResponse.getEntity());
 
         ///////////////// VALID REQUEST WITH THE SAME CLIENT_NAME ///////////////////////////
-        HttpPost validRequest = new HttpPost(DCRUtils.getPath(tenant));
+        HttpPost validRequest = new HttpPost(getTenantQualifiedURL(OAuthDCRMConstants.DCR_ENDPOINT_HOST_PART , tenant));
         DCRUtils.setRequestHeaders(validRequest, username, password);
 
         JSONArray redirectURIs = new JSONArray();
@@ -297,7 +308,7 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
             "additional OIDC properties")
     public void testCreateServiceProviderRequestWithAdditionalParameters() throws Exception {
 
-        HttpPost request = new HttpPost(DCRUtils.getPath(tenant));
+        HttpPost request = new HttpPost(getTenantQualifiedURL(OAuthDCRMConstants.DCR_ENDPOINT_HOST_PART , tenant));
         JSONObject registerRequestJSON = DCRUtils.getRegisterRequestJSON("request6.json");
 
         request.addHeader(HttpHeaders.AUTHORIZATION, DCRUtils.getAuthzHeader(username, password));
@@ -320,7 +331,8 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
         assertEquals(mapper.readTree(createResponsePayload.toJSONString()), mapper.readTree(
                 registerRequestJSON.toJSONString()), "Response payload should be equal.");
 
-        HttpGet getRequest = new HttpGet(DCRUtils.getPath(tenant) + client_id);
+        HttpGet getRequest = new HttpGet(getTenantQualifiedURL(OAuthDCRMConstants.DCR_ENDPOINT_HOST_PART , tenant)
+                + client_id);
         getRequest.addHeader(HttpHeaders.AUTHORIZATION, DCRUtils.getAuthzHeader(username, password));
         getRequest.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
 
@@ -342,7 +354,8 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
             "additional OIDC properties")
     public void testUpdateServiceProviderRequestWithAdditionalParameters() throws Exception {
 
-        HttpPut request = new HttpPut(DCRUtils.getPath(tenant) + client_id);
+        HttpPut request = new HttpPut(getTenantQualifiedURL(OAuthDCRMConstants.DCR_ENDPOINT_HOST_PART , tenant)
+                + client_id);
         request.addHeader(HttpHeaders.AUTHORIZATION, DCRUtils.getAuthzHeader(username, password));
         request.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
         JSONObject updateRequestPayload =  DCRUtils.getRegisterRequestJSON("request7.json");
@@ -365,7 +378,8 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
                 mapper.readTree(updateRequestPayload.toJSONString()), "Response payload should be equal.");
 
         // Verify that updated attribute is correctly returned by retrieving data.
-        HttpGet getRequest = new HttpGet(DCRUtils.getPath(tenant) + client_id);
+        HttpGet getRequest = new HttpGet(getTenantQualifiedURL(OAuthDCRMConstants.DCR_ENDPOINT_HOST_PART , tenant)
+                + client_id);
         getRequest.addHeader(HttpHeaders.AUTHORIZATION, DCRUtils.getAuthzHeader(username, password));
         getRequest.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
 
