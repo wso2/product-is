@@ -25,6 +25,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
+import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -78,18 +79,9 @@ public class DCRUtils {
         request.addHeader(HttpHeaders.CONTENT_TYPE, OAuthDCRMConstants.CONTENT_TYPE);
     }
 
-    public static String getPath(String tenant) {
-
-        if (tenant.equals("carbon.super")) {
-            return OAuthDCRMConstants.DCR_ENDPOINT_HOST_PART + OAuthDCRMConstants.DCR_ENDPOINT_PATH_PART;
-        } else {
-            return OAuthDCRMConstants.DCR_ENDPOINT_HOST_PART + "/t/" + tenant + OAuthDCRMConstants
-                    .DCR_ENDPOINT_PATH_PART;
-        }
-    }
     public static String getAuthzHeader(String username, String password) {
 
-        return "Basic " + Base64.encodeBase64String((username + ":" + password).getBytes()).trim();
+        return OAuth2Constant.BASIC_HEADER + Base64.encodeBase64String((username + ":" + password).getBytes()).trim();
     }
 
     public static JSONObject getPayload(HttpResponse response) throws IOException {
