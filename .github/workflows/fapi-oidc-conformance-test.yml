@@ -18,6 +18,10 @@ on:
       conformance-suite-version:
         description: 'Conformance suite branch to clone in https://gitlab.com/openid/conformance-suite.git (Ex: release-v5.1.10). If not provided, latest release tag branch is used.'
         required: false
+      send-email:
+        description: 'Send test results to email'
+        required: true
+        default: 'no'
 
 jobs:
   build:
@@ -216,7 +220,34 @@ jobs:
       with:
         name: test-logs
         path: ./*log.txt
-       
-   
-    
+
+    - name: Send Email
+      if: always()
+      run: |
+        INPUT=${{github.event.inputs.send-email}}
+        if [[ -z "${INPUT}" ]]; then
+          INPUT="no"
+        fi
+        SEND_EMAIL=${INPUT^^}
+        if [ $SEND_EMAIL == "YES" ]; then
+          echo "============="
+          echo "Sending Email"
+          echo "============="
+          CONFORMANCE_SUITE_URL=https://localhost:8443
+          INPUT_TAG=${{github.event.inputs.tag}}
+          if [[ -z "${INPUT_TAG}" ]]; then
+            RESOURCE="built-from-latest-source"
+          else
+            RESOURCE=${{github.event.inputs.tag}}
+          fi
+          python3 ./product-is/oidc-conformance-tests/send_email.py $CONFORMANCE_SUITE_URL $GITHUB_RUN_NUMBER ${{job.status}} ${{github.repository}} ${{github.run_id}} ${{secrets.SENDER_EMAIL}} ${{secrets.PASSWORD}} ${{secrets.FAPI_RECEIVER_LIST}} $RESOURCE
+        elif [ $SEND_EMAIL == "NO" ]; then
+          echo "========================================"
+          echo "Skipped Sending Email"
+          echo "========================================"
+        else
+          echo "================================================================="
+          echo "Invalid parameter value. Skipped sending email"
+          echo "================================================================="
+        fi
 
