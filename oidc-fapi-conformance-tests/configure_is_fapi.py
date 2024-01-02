@@ -67,6 +67,42 @@ def get_application_id_by_sp_name(name):
         print("Error occurred: " + str(error))
         exit(1)
 
+# set application scope claims for the given application, this is needed to allow or deny consent with provided scope
+def set_application_scopes_for_consent(application_id):
+    print(">>> Setting Application scope claims.")
+    try:
+        body = json.dumps(constants.SET_SCOPE_CLAIMS_BODY_PAYLOAD)
+        response = requests.patch(url=constants.APPLICATION_ENDPOINT + "/" + application_id,
+                                headers=constants.HEADERS_WITH_AUTH, data=body, verify=False)
+        response.raise_for_status()
+    except HTTPError as http_error:
+        print(http_error)
+        print(response.text)
+        exit(1)
+    except Exception as error:
+        print("\nError occurred: " + str(error))
+        exit(1)
+    else:
+        print(">>> Application scope claims set successfully.")
+
+# Skip login consent is true by default, here we disable it to go consent flows
+def disable_skipping_consent(application_id):
+    print(">>> Setting Skip Login consent to false.")
+    try:
+        body = json.dumps(constants.DISABLE_SKIP_CONSENT_BODY_PAYLOAD)
+        response = requests.patch(url=constants.APPLICATION_ENDPOINT + "/" + application_id,
+                                headers=constants.HEADERS_WITH_AUTH, data=body, verify=False)
+        response.raise_for_status()
+    except HTTPError as http_error:
+        print(http_error)
+        print(response.text)
+        exit(1)
+    except Exception as error:
+        print("\nError occurred: " + str(error))
+        exit(1)
+    else:
+        print(">>> Disabled Skip Login consent successfully.")
+
 # returns service provider details with given application id
 def get_service_provider_details(application_id):
     try:
@@ -169,12 +205,12 @@ def json_config_builder(service_provider_1, service_provider_2, output_file_path
         },
         "client": {
             "client_id": service_provider_1['clientId'],
-            "scope": "openid profile abc",
+            "scope": "openid profile",
             "jwks": client_configs['client']['jwks']
         },
         "client2": {
             "client_id": service_provider_2['clientId'],
-            "scope": "openid profile abc",
+            "scope": "openid profile",
             "jwks": client_configs['client2']['jwks']
         },
         "mtls": client_configs['mtls'],
@@ -238,6 +274,8 @@ def createSPApp(app_json):
     dcr(app_json)
     app_id = get_application_id_by_sp_name(app_json.get("client_name"))
     app_details = get_service_provider_details(app_id)
+    set_application_scopes_for_consent(app_id)
+    disable_skipping_consent(app_id)
     configure_acr(app_id)
     return app_details
 
