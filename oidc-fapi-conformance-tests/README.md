@@ -15,8 +15,8 @@ OIDC FAPI conformance test workflow can be used to for this purpose.
    - test-logs - a log file is generated for each test plan. This log contains a summary of test cases with failures and warnings
    - test-results - a zip file is generated for each test plan. You can use a web browser to view a detailed report of the test plan by extracting this zip file
 
-An email containing the same test summary will also be sent to a pre-configured list of email addresses. The sender email, password and the receiver emil list are the same as for OIDC action build. If you need to have a seperate receiver email list for FAPI Conformance action,
-* Save the list of receiver email as 'FAPI_RECEIVER_LIST' seperated by comma.
+An email containing the same test summary will also be sent to a pre-configured list of email addresses. The sender email, password and the receiver emil list are the same as for OIDC action build. If you need to have a seperate receiver email list for FAPI Conformance action build,
+* Create a github secret with name `FAPI_RECEIVER_LIST` and add the list of receiver emails seperated by commas.
 
 Default configuration is to use Gmail SMTP server. You can change that by modifying `SMTP_SERVER` and `SMTP_SERVER_PORT` in `constants_fapi.py`
 
