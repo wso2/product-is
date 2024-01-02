@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
 
 <!--
-  ~ Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~ Copyright (c) (2019-2024), WSO2 LLC. (https://www.wso2.com).
   ~
-  ~  WSO2 Inc. licenses this file to you under the Apache License,
+  ~  WSO2 LLC. licenses this file to you under the Apache License,
   ~  Version 2.0 (the "License"); you may not use this file except
   ~  in compliance with the License.
   ~  You may obtain a copy of the License at
@@ -20,6 +20,9 @@
 
 <Server port="8005" shutdown="SHUTDOWN" xmlns:svns="http://org.wso2.securevault/configuration">
 
+    {% if transport.https.openssl_apr.enabled is sameas true %}
+    <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
+    {% endif %}
     <Service className="org.wso2.carbon.tomcat.ext.service.ExtendedStandardService" name="Catalina">
 
 
@@ -49,7 +52,11 @@
             Added sslEnabledProtocols="TLSv1,TLSv1.1,TLSv1.2" for poodle vulnerability fix
        -->
        {% if transport.https.enabled is sameas true %}
+       {% if transport.https.openssl_apr.enabled is sameas true %}
+       <Connector protocol="org.apache.coyote.http11.Http11AprProtocol"
+       {% else %}
        <Connector protocol="org.apache.coyote.http11.Http11NioProtocol"
+       {% endif %}
        {% for property_name,property_value in transport.https.properties.items() %}
                   {{property_name}}="{{property_value}}"
                   {% endfor %}
