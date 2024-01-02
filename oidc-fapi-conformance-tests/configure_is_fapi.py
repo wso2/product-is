@@ -14,10 +14,6 @@ import base64
 from config import browser_configuration
 from config.client_configs import client_configs
 
-# path to product is zip file
-path_to_is_zip = str(sys.argv[1])
-print("Path to zip: ", path_to_is_zip)
-
 def decode_secret(secret):
     decoded_string=base64.b64decode(secret+"=").decode("utf-8")
     decoded_json = json.loads(decoded_string)
@@ -153,7 +149,10 @@ def addCertsToKeystore(rootCertPath, issuerCertPath, ISPath):
 
 
 # unpack product-is zip file and run
-def unpack_and_run(zip_file_name):
+def unpack_and_run():
+    # path to product is zip file
+    zip_file_name = str(sys.argv[1])
+    print("Path to zip: ", zip_file_name)
     try:
         # extract IS zip
         with ZipFile(zip_file_name, 'r') as zip_file:
@@ -261,7 +260,7 @@ def is_process_running(process_name):
 warnings.filterwarnings("ignore")
 
 if not is_process_running("wso2server"):
-    unpack_and_run(path_to_is_zip)
+    unpack_and_run()
 else:
     print("\n>>> IS already running ...")
 print ("==============================================\n")

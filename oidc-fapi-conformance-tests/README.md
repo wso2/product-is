@@ -21,3 +21,12 @@ An email containing the same test summary will also be sent to a pre-configured 
 Default configuration is to use Gmail SMTP server. You can change that by modifying `SMTP_SERVER` and `SMTP_SERVER_PORT` in `constants_fapi.py`
 
 This workflow is scheduled to run daily at 08:30 UTC (2:00 AM SL time) and will also automatically trigger after a release or a pre-release.
+
+To locally setup and run the test suite, follow the [fapi-oidc-conformance-test.yml](.github/workflows/fapi-oidc-conformance-test.yml) script and execute the steps.
+
+## Test Profiles
+
+Running fapi test profiles are in [test_runner_fapi.sh](oidc-fapi-conformance-tests/test_runner_fapi.sh) script. Currently Running profiles,
+* private_key_jwt
+* mtls
+
