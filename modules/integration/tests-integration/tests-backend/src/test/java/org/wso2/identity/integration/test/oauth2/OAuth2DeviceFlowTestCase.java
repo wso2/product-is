@@ -134,7 +134,7 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(CLIENT_ID_PARAM, consumerKey));
-        urlParameters.add(new BasicNameValuePair(SCOPE_PLAYGROUND_NAME, "device"));
+        urlParameters.add(new BasicNameValuePair(SCOPE_PLAYGROUND_NAME, "device_01"));
         AutomationContext automationContext = new AutomationContext("IDENTITY",
                 TestUserMode.SUPER_TENANT_ADMIN);
         String deviceAuthEndpoint = automationContext.getContextUrls().getBackEndUrl()
