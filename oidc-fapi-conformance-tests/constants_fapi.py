@@ -156,3 +156,8 @@ MTLS_PAR_APP2 = {
     "jwks_uri": JWKS_2,
     "require_pushed_authorization_requests" : "true",
 }
+
+
+SMTP_SERVER = "smtp.gmail.com"
+
+SMTP_SERVER_PORT = 465

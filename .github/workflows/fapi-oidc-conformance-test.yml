@@ -1,6 +1,6 @@
 # This workflow will test IS for OIDC FAPI conformance
 
-name: FAPI-OIDC-Conformance-Test
+name: FAPI OIDC Conformance Test
 
 on:
   schedule:
@@ -239,6 +239,10 @@ jobs:
             RESOURCE="built-from-latest-source"
           else
             RESOURCE=${{github.event.inputs.tag}}
+          fi
+          RECEIVER_LIST=${{secrets.FAPI_RECEIVER_LIST}}
+          if [[ -z "${RECEIVER_LIST}" ]]; then
+            RECEIVER_LIST=${{secrets.RECEIVER_LIST}}
           fi
           python3 ./product-is/oidc-conformance-tests/send_email.py $CONFORMANCE_SUITE_URL $GITHUB_RUN_NUMBER ${{job.status}} ${{github.repository}} ${{github.run_id}} ${{secrets.SENDER_EMAIL}} ${{secrets.PASSWORD}} ${{secrets.FAPI_RECEIVER_LIST}} $RESOURCE
         elif [ $SEND_EMAIL == "NO" ]; then
