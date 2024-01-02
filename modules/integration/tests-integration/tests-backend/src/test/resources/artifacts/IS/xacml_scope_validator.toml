@@ -27,17 +27,6 @@ password = "$env{SHARED_DATABASE_PASSWORD}"
 file_name = "wso2carbon.jks"
 password = "wso2carbon"
 
-[truststore]
-file_name = "client-truststore.jks"
-password = "wso2carbon"
-type = "JKS"
-
-[account_recovery.endpoint.auth]
-hash = "66cd9688a2ae068244ea01e70f0e230f5623b7fa4cdecb65070a09ec06452262"
-
-[identity.auth_framework.endpoint]
-app_password = "dashboard"
-
 [oauth]
-drop_unregistered_scopes = false
-allowed_scopes = ["internal_test", "test"]
+drop_unregistered_scopes= false
+allowed_scopes= []
