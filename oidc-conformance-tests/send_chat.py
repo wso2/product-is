@@ -27,6 +27,7 @@ github_repository_name = sys.argv[4]
 github_run_id = str(sys.argv[5])
 google_chat_webhook = sys.argv[6]
 wso2_is_version = sys.argv[7]
+workflow_name = sys.argv[8]
 
 failed_count = 0
 warnings_count = 0
@@ -56,7 +57,7 @@ message = {
     "cards": [
         {
             "header": {
-                "title": "OIDC Conformance Test",
+                "title": workflow_name,
                 "subtitle": "GitHub Action #" + github_run_number
 
             },
@@ -65,7 +66,7 @@ message = {
                     "widgets": [
                         {
                             "textParagraph": {
-                                "text": f"<b>Identity Server {wso2_is_version} </b>"
+                                "text": f"Identity Server version: <b>{wso2_is_version}</b>"
                             }
                         },
                         {
