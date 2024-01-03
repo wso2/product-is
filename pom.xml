@@ -2242,7 +2242,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.25.642</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.25.644</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2284,7 +2284,7 @@
 
         <!-- Identity Event Handler Versions -->
         <identity.event.handler.account.lock.version>1.8.13</identity.event.handler.account.lock.version>
-        <identity.event.handler.notification.version>1.7.30</identity.event.handler.notification.version>
+        <identity.event.handler.notification.version>1.7.31</identity.event.handler.notification.version>
 
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
@@ -2365,8 +2365,8 @@
         <conditional.authentication.functions.version>1.2.41</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.10.53</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.2.75</identity.apps.myaccount.version>
+        <identity.apps.console.version>2.10.55</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.2.76</identity.apps.myaccount.version>
         <identity.apps.core.version>2.0.111</identity.apps.core.version>
         <identity.apps.tests.version>1.6.373</identity.apps.tests.version>
 
