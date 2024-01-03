@@ -22,6 +22,10 @@ on:
         description: 'Send test results to email'
         required: true
         default: 'no'
+      send-chat:
+        description: 'Send test results to google chat'
+        required: true
+        default: 'yes'
 
 jobs:
   build:
@@ -252,6 +256,38 @@ jobs:
         else
           echo "================================================================="
           echo "Invalid parameter value. Skipped sending email"
+          echo "================================================================="
+        fi
+    
+    - name: Send Chat message
+      if: always()
+      run: |
+        INPUT=${{github.event.inputs.send-chat}}
+        if [[ -z "${INPUT}" ]]; then
+          INPUT="yes"
+        fi
+        
+        INPUT_TAG=${{github.event.inputs.tag}}
+          if [[ -z "${INPUT_TAG}" ]]; then
+            RESOURCE="built from latest source"
+          else
+            RESOURCE=${{github.event.inputs.tag}}
+          fi
+        
+        SEND_CHAT=${INPUT^^}
+        if [ $SEND_CHAT == "YES" ]; then
+          echo "==========================="
+          echo "Sending Google Chat Message"
+          echo "==========================="
+          CONFORMANCE_SUITE_URL=https://localhost:8443
+          python3 ./product-is/oidc-conformance-tests/send_chat.py "$CONFORMANCE_SUITE_URL" "$GITHUB_RUN_NUMBER" "${{job.status}}" "${{github.repository}}" "${{github.run_id}}" "${{secrets.GOOGLE_CHAT_WEBHOOK_OIDC_TEST}}" "$RESOURCE"
+        elif [ $SEND_CHAT == "NO" ]; then
+          echo "========================================"
+          echo "Skipped Sending Google Chat Message"
+          echo "========================================"
+        else
+          echo "================================================================="
+          echo "Invalid parameter value. Skipped sending google chat message"
           echo "================================================================="
         fi
 

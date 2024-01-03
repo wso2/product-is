@@ -3,7 +3,7 @@ This folder contains the configuration files and scripts that can be used to aut
 ## Testing using GitHub actions
 
 OIDC FAPI conformance test workflow can be used to for this purpose.
-1. Go to Actions tab in your repository
+1. Go to the Actions tab in the wso2/product-is github repository
 2. Click on FAPI OIDC Conformance Test workflow
 3. Click on Run workflow
 4. You need to provide the product-is release tag version you want to test (by default, it builds the latest IS by source)
