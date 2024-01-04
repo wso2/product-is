@@ -336,6 +336,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.core.runtime.feature:${carbon.kernel.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.hazelcast.feature:${carbon.kernel.version}
+                                </featureArtifactDef>
 
                                 <!-- DepSync feature -->
                                 <featureArtifactDef>
@@ -805,6 +808,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.deployment.synchronizer.feature.group</id>
                                     <version>${carbon.commons.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.hazelcast.feature.group</id>
+                                    <version>${carbon.kernel.version}</version>
                                 </feature>
 
                                 <feature>

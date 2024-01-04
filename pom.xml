@@ -995,6 +995,11 @@
                 <version>${carbon.kernel.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.hazelcast</artifactId>
+                <version>${carbon.kernel.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.identity</groupId>
                 <artifactId>org.wso2.stratos.identity.dashboard.ui</artifactId>
                 <version>${stratos.version.221}</version>
@@ -2374,7 +2379,7 @@
         <charon.version>3.4.1</charon.version>
 
         <!-- Carbon Kernel -->
-        <carbon.kernel.version>4.9.20</carbon.kernel.version>
+        <carbon.kernel.version>4.9.21</carbon.kernel.version>
 
         <!-- Identity Verification -->
         <identity.verification.version>1.0.6</identity.verification.version>
