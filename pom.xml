@@ -2269,7 +2269,7 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.11.30</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.11.235</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>6.11.236</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.9.5</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.10.20</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.4</identity.inbound.provisioning.scim.version>
@@ -2355,7 +2355,7 @@
         <hashprovider.pbkdf2.version>0.1.4</hashprovider.pbkdf2.version>
 
         <!-- Identity Branding Preference Management Versions -->
-        <identity.branding.preference.management.version>1.0.14</identity.branding.preference.management.version>
+        <identity.branding.preference.management.version>1.0.15</identity.branding.preference.management.version>
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.13</identity.api.dispatcher.version>
@@ -2370,9 +2370,9 @@
         <conditional.authentication.functions.version>1.2.41</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.10.55</identity.apps.console.version>
+        <identity.apps.console.version>2.10.56</identity.apps.console.version>
         <identity.apps.myaccount.version>2.2.76</identity.apps.myaccount.version>
-        <identity.apps.core.version>2.0.111</identity.apps.core.version>
+        <identity.apps.core.version>2.0.113</identity.apps.core.version>
         <identity.apps.tests.version>1.6.373</identity.apps.tests.version>
 
         <!-- Charon -->
