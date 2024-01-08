@@ -4,10 +4,7 @@
      alt="WSO2 Identity Server" />
 </a>
 
-Welcome to WSO2 Identity Server
-===============================
-
----
+# Welcome to WSO2 Identity Server
 
 |  Branch | Build Status | Test Results |
 | :------------ |:------------- |:-------------
