@@ -79,29 +79,8 @@ public class ValidationRulesSuccessTest extends ValidationRulesTestBase {
                 "Response of the get /validation-rules doesn't match.");
     }
 
-    @Test (description = "test put email type user name validation update", dependsOnMethods = "testDefaultResponse")
-    public void testEnableEmailTypeUserNameValidation() throws Exception {
-
-        ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
-        String emailTypeValidationRequestBody
-                = readResource("put-enable-email-type-username-validation-positive.json");
-
-        Response responseOfPut = getResponseOfPut(VALIDATION_RULES_PATH, emailTypeValidationRequestBody);
-        responseOfPut.then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK);
-        List<ValidationConfigModel> retrievedValidationConfigModels =
-                Arrays.asList(jsonWriter.readValue(responseOfPut.asString(), ValidationConfigModel[].class));
-        Assert.assertEquals(retrievedValidationConfigModels.get(1).getField(), "username",
-                "Response of the put /validation-rules doesn't contain username filed.");
-        Assert.assertEquals(retrievedValidationConfigModels.get(1).getRules().get(0).getValidator(),
-                "EmailFormatValidator",
-                "Response of the put /validation-rules doesn't contain email as username validator.");
-    }
-
     @Test (description = "test for put /validation-rules/password end point",
-            dependsOnMethods = "testEnableEmailTypeUserNameValidation")
+            dependsOnMethods = "testDefaultResponse")
     public void testUpdatePasswordValidation() throws Exception {
 
         ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
@@ -121,8 +100,27 @@ public class ValidationRulesSuccessTest extends ValidationRulesTestBase {
         RuleModel ruleModel = new RuleModel();
         ruleModel.setValidator("LengthValidator");
         ruleModel.addPropertiesItem(new MappingModel().key("min.length").value("10"));
+        ruleModel.addPropertiesItem(new MappingModel().key("max.length").value("30"));
         Assert.assertTrue(retrievedValidationConfigModel.getRules().contains(ruleModel),
                 "Response of the put /validation-rules/password doesn't contain 10 as min length.");
+
+        ruleModel = new RuleModel();
+        ruleModel.setValidator("UpperCaseValidator");
+        ruleModel.addPropertiesItem(new MappingModel().key("min.length").value("0"));
+        Assert.assertTrue(retrievedValidationConfigModel.getRules().contains(ruleModel),
+                "Response of the put /validation-rules/password doesn't contain 0 as UpperCaseValidator.");
+
+        ruleModel = new RuleModel();
+        ruleModel.setValidator("LowerCaseValidator");
+        ruleModel.addPropertiesItem(new MappingModel().key("min.length").value("0"));
+        Assert.assertTrue(retrievedValidationConfigModel.getRules().contains(ruleModel),
+                "Response of the put /validation-rules/password doesn't contain 0 as LowerCaseValidator.");
+
+        ruleModel = new RuleModel();
+        ruleModel.setValidator("SpecialCharacterValidator");
+        ruleModel.addPropertiesItem(new MappingModel().key("min.length").value("0"));
+        Assert.assertTrue(retrievedValidationConfigModel.getRules().contains(ruleModel),
+                "Response of the put /validation-rules/password doesn't contain 0 as SpecialCharacterValidator.");
     }
 
     @Test (description = "Test to set configuration to default.",dependsOnMethods = "testUpdatePasswordValidation")

@@ -12,6 +12,15 @@
         ]
       },
       {
+        "validator": "LengthValidator",
+        "properties": [
+          {
+            "key": "max.length",
+            "value": "30"
+          }
+        ]
+      },
+      {
         "validator": "NumeralValidator",
         "properties": [
           {

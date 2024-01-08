@@ -216,7 +216,6 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.organization.management.v1.OrganizationManagementSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.validation.rules.v1.ValidationRulesSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.validation.rules.v1.ValidationRulesNegativeTest"/>
-            <class name="org.wso2.identity.integration.test.rest.api.server.validation.rules.v1.ValidationRulesTestBase"/>
         </classes>
     </test>
 
