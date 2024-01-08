@@ -2342,7 +2342,7 @@
         <authenticator.local.auth.emailotp.version>1.0.16</authenticator.local.auth.emailotp.version>
         <authenticator.local.auth.smsotp.version>1.0.3</authenticator.local.auth.smsotp.version>
         <authenticator.twitter.version>1.1.1</authenticator.twitter.version>
-        <authenticator.x509.version>3.1.12</authenticator.x509.version>
+        <authenticator.x509.version>3.1.13</authenticator.x509.version>
         <identity.extension.utils>1.0.14</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.0.2</authenticator.auth.otp.commons.version>
 
