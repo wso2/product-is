@@ -61,6 +61,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationListItem;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationSharePOSTRequest;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AssociatedRolesConfig;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
@@ -231,6 +232,11 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
     @Test(dependsOnMethods = "testSelfOnboardOrganization")
     public void switchM2MToken() throws IOException, ParseException {
+
+        ApplicationSharePOSTRequest applicationSharePOSTRequest = new ApplicationSharePOSTRequest();
+        applicationSharePOSTRequest.setShareWithAllChildren(false);
+        applicationSharePOSTRequest.setSharedOrganizations(Collections.singletonList(organizationID));
+        oAuth2RestClient.shareApplication(selfServiceAppId, applicationSharePOSTRequest);
 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.GRANT_TYPE_NAME, "organization_switch_cc"));
