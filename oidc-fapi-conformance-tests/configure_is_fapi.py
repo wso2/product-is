@@ -106,9 +106,9 @@ def addCertsToKeystore(rootCertPath, issuerCertPath, ISPath):
     print(">>> Adding certs to keystore...")
     try:
         # add root cert to keystore
-        os.system("keytool -import -noprompt -trustcacerts -alias obroot -file " + rootCertPath + " -storetype JKS -keystore " + ISPath + "/repository/resources/security/client-truststore.jks -storepass wso2carbon")
+        os.system("keytool -import -noprompt -trustcacerts -alias obroot -file " + rootCertPath + " -storetype PKCS12 -keystore " + ISPath + "/repository/resources/security/client-truststore.p12 -storepass wso2carbon")
         # add issuer cert to keystore
-        os.system("keytool -import -noprompt -trustcacerts -alias obissuer -file " + issuerCertPath + " -storetype JKS -keystore " + ISPath + "/repository/resources/security/client-truststore.jks -storepass wso2carbon")
+        os.system("keytool -import -noprompt -trustcacerts -alias obissuer -file " + issuerCertPath + " -storetype PKCS12 -keystore " + ISPath + "/repository/resources/security/client-truststore.p12 -storepass wso2carbon")
     except Exception as error:
         print("\nError occurred: " + str(error))
         exit(1)
