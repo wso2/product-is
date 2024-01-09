@@ -14,7 +14,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-BC_FIPS_VERSION=1.0.2.3;
+BC_FIPS_VERSION=1.0.2.4;
 BCPKIX_FIPS_VERSION=1.0.7;
 
 EXPECTED_BC_FIPS_CHECKSUM="da62b32cb72591f5b4d322e6ab0ce7de3247b534"
