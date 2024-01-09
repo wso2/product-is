@@ -231,12 +231,15 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     }
 
     @Test(dependsOnMethods = "testSelfOnboardOrganization")
-    public void switchM2MToken() throws IOException, ParseException {
+    public void switchM2MToken() throws IOException, ParseException, InterruptedException {
 
         ApplicationSharePOSTRequest applicationSharePOSTRequest = new ApplicationSharePOSTRequest();
         applicationSharePOSTRequest.setShareWithAllChildren(false);
         applicationSharePOSTRequest.setSharedOrganizations(Collections.singletonList(organizationID));
         oAuth2RestClient.shareApplication(selfServiceAppId, applicationSharePOSTRequest);
+
+        // Since application sharing is an async operation, wait for sometime before switching the organization.
+        Thread.sleep(5000);
 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.GRANT_TYPE_NAME, "organization_switch_cc"));
