@@ -16,7 +16,7 @@ rem KIND, either express or implied.  See the License for the
 rem specific language governing permissions and limitations
 rem under the License.
 
-set BC_FIPS_VERSION=1.0.2.3
+set BC_FIPS_VERSION=1.0.2.4
 set BCPKIX_FIPS_VERSION=1.0.7
 
 set EXPECTED_BC_FIPS_CHECKSUM=da62b32cb72591f5b4d322e6ab0ce7de3247b534
