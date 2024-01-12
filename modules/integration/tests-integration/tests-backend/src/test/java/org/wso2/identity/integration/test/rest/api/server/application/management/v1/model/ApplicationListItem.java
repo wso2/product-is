@@ -33,6 +33,8 @@ public class ApplicationListItem  {
     private String image;
     private String accessUrl;
     private String clientId;
+    private String issuer;
+    private String realm;
 
     @XmlType(name="AccessEnum")
     @XmlEnum(String.class)
@@ -68,6 +70,8 @@ public class ApplicationListItem  {
 
     private AccessEnum access = AccessEnum.READ;
     private String self;
+    private AdvancedApplicationConfiguration advancedConfigurations;
+    private String templateId;
     private AssociatedRolesConfig associatedRoles;
 
     /**
@@ -162,6 +166,60 @@ public class ApplicationListItem  {
 
     /**
      **/
+    public ApplicationListItem clientId(String clientId) {
+
+        this.clientId = clientId;
+        return this;
+    }
+
+    @ApiModelProperty(example = "SmrrDNXRYf1lMmDlnleeHTuXx_Ea", value = "")
+    @JsonProperty("clientId")
+    @Valid
+    public String getClientId() {
+        return clientId;
+    }
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
+    /**
+     **/
+    public ApplicationListItem issuer(String issuer) {
+
+        this.issuer = issuer;
+        return this;
+    }
+
+    @ApiModelProperty(example = "http://idp.example.com/metadata.php", value = "")
+    @JsonProperty("issuer")
+    @Valid
+    public String getIssuer() {
+        return issuer;
+    }
+    public void setIssuer(String issuer) {
+        this.issuer = issuer;
+    }
+
+    /**
+     **/
+    public ApplicationListItem realm(String realm) {
+
+        this.realm = realm;
+        return this;
+    }
+
+    @ApiModelProperty(example = "PassiveSTSSampleApp", value = "")
+    @JsonProperty("realm")
+    @Valid
+    public String getRealm() {
+        return realm;
+    }
+    public void setRealm(String realm) {
+        this.realm = realm;
+    }
+
+    /**
+     **/
     public ApplicationListItem access(AccessEnum access) {
 
         this.access = access;
@@ -196,27 +254,43 @@ public class ApplicationListItem  {
         this.self = self;
     }
 
-    public ApplicationListItem clientId(String clientId) {
+    /**
+     **/
+    public ApplicationListItem advancedConfigurations(AdvancedApplicationConfiguration advancedConfigurations) {
 
-        this.clientId = clientId;
+        this.advancedConfigurations = advancedConfigurations;
         return this;
     }
 
-    @ApiModelProperty(example = "clientId", value = "")
-    @JsonProperty("clientId")
+    @ApiModelProperty(value = "")
+    @JsonProperty("advancedConfigurations")
     @Valid
-    public String getClientId() {
-
-        return clientId;
+    public AdvancedApplicationConfiguration getAdvancedConfigurations() {
+        return advancedConfigurations;
     }
-
-    public void setClientId(String clientId) {
-
-        this.clientId = clientId;
+    public void setAdvancedConfigurations(AdvancedApplicationConfiguration advancedConfigurations) {
+        this.advancedConfigurations = advancedConfigurations;
     }
 
     /**
-     *
+     **/
+    public ApplicationListItem templateId(String templateId) {
+
+        this.templateId = templateId;
+        return this;
+    }
+
+    @ApiModelProperty(example = "980b8tester24c64a8a09a0d80abf8c337bd2555", value = "")
+    @JsonProperty("templateId")
+    @Valid
+    public String getTemplateId() {
+        return templateId;
+    }
+    public void setTemplateId(String templateId) {
+        this.templateId = templateId;
+    }
+
+    /**
      **/
     public ApplicationListItem associatedRoles(AssociatedRolesConfig associatedRoles) {
 
@@ -228,12 +302,9 @@ public class ApplicationListItem  {
     @JsonProperty("associatedRoles")
     @Valid
     public AssociatedRolesConfig getAssociatedRoles() {
-
         return associatedRoles;
     }
-
     public void setAssociatedRoles(AssociatedRolesConfig associatedRoles) {
-
         this.associatedRoles = associatedRoles;
     }
 
@@ -252,15 +323,19 @@ public class ApplicationListItem  {
                 Objects.equals(this.description, applicationListItem.description) &&
                 Objects.equals(this.image, applicationListItem.image) &&
                 Objects.equals(this.accessUrl, applicationListItem.accessUrl) &&
+                Objects.equals(this.clientId, applicationListItem.clientId) &&
+                Objects.equals(this.issuer, applicationListItem.issuer) &&
+                Objects.equals(this.realm, applicationListItem.realm) &&
                 Objects.equals(this.access, applicationListItem.access) &&
                 Objects.equals(this.self, applicationListItem.self) &&
+                Objects.equals(this.advancedConfigurations, applicationListItem.advancedConfigurations) &&
+                Objects.equals(this.templateId, applicationListItem.templateId) &&
                 Objects.equals(this.associatedRoles, applicationListItem.associatedRoles);
     }
 
     @Override
     public int hashCode() {
-
-        return Objects.hash(id, name, description, image, accessUrl, access, self, associatedRoles);
+        return Objects.hash(id, name, description, image, accessUrl, clientId, issuer, realm, access, self, advancedConfigurations, templateId, associatedRoles);
     }
 
     @Override
@@ -274,8 +349,13 @@ public class ApplicationListItem  {
         sb.append("    description: ").append(toIndentedString(description)).append("\n");
         sb.append("    image: ").append(toIndentedString(image)).append("\n");
         sb.append("    accessUrl: ").append(toIndentedString(accessUrl)).append("\n");
+        sb.append("    clientId: ").append(toIndentedString(clientId)).append("\n");
+        sb.append("    issuer: ").append(toIndentedString(issuer)).append("\n");
+        sb.append("    realm: ").append(toIndentedString(realm)).append("\n");
         sb.append("    access: ").append(toIndentedString(access)).append("\n");
         sb.append("    self: ").append(toIndentedString(self)).append("\n");
+        sb.append("    advancedConfigurations: ").append(toIndentedString(advancedConfigurations)).append("\n");
+        sb.append("    templateId: ").append(toIndentedString(templateId)).append("\n");
         sb.append("    associatedRoles: ").append(toIndentedString(associatedRoles)).append("\n");
         sb.append("}");
         return sb.toString();
