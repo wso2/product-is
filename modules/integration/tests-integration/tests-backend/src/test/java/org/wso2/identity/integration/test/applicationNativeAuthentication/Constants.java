@@ -29,6 +29,8 @@ public class Constants {
 
     // User Credentials
     public static final String TEST_USER_NAME = "attestationTestUser";
+    public static final String TEST_APP_NAME = "oauthTestANAApplication";
+
     public static final String TEST_PASSWORD = "passWord1@";
     public static final String TEST_PROFILE = "default";
 
