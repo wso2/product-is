@@ -19,7 +19,12 @@
     "identity_mgt_emailtemplate_menu",
     "identity_security_questions_menu",
     "metrics_menu",
-    "shutdown_restart_menu"
+    "shutdown_restart_menu",
+    "user_mgt_menu_add",
+    "identity_providers_menu",
+    "identity_admin_advisory_banner_menu",
+    "server-roles-mgt_menu",
+    "logging_config_menu"
   ],
   "http_access_log.directory": "${carbon.home}/repository/logs",
   "http_access_log.prefix": "http_access_",
@@ -51,5 +56,6 @@
   "user_store.properties.UsernameJavaScriptRegEx": "^[^\\s*?%]{3,50}$",
 
   "default_management_ui.path": "console",
-  "legacy_authz_runtime.enable": false
+  "legacy_authz_runtime.enable": false,
+  "resident_identity_provider.enable": "false"
 }
