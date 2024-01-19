@@ -16,7 +16,7 @@ rem KIND, either express or implied.  See the License for the
 rem specific language governing permissions and limitations
 rem under the License.
 
-set BC_FIPS_VERSION=1.0.2.3
+set BC_FIPS_VERSION=1.0.2.4
 set BCPKIX_FIPS_VERSION=1.0.7
 
 set EXPECTED_BC_FIPS_CHECKSUM=da62b32cb72591f5b4d322e6ab0ce7de3247b534
@@ -73,10 +73,10 @@ if exist "%CARBON_HOME%\repository\components\dropins\bcpkix_fips*.jar" (
     echo Successfully removed bcpkix-fips_%BCPKIX_FIPS_VERSION%.jar from components\dropins.
 )
 
-if not exist "%CARBON_HOME%\repository\components\plugins\bcprov-jdk15on*.jar" (
+if not exist "%CARBON_HOME%\repository\components\plugins\bcprov-jdk18on*.jar" (
     set server_restart_required=true
-    if exist "%homeDir%\.wso2-bc\backup\bcprov-jdk15on*.jar" (
-        for /r %homeDir%\.wso2-bc\backup\ %%G in (bcprov-jdk15on*.jar) do (
+    if exist "%homeDir%\.wso2-bc\backup\bcprov-jdk18on*.jar" (
+        for /r %homeDir%\.wso2-bc\backup\ %%G in (bcprov-jdk18on*.jar) do (
         set bcprov_location=%%G
         set file_name=%%~nG
 	    goto checkbcprovVersion
@@ -88,13 +88,13 @@ if not exist "%CARBON_HOME%\repository\components\plugins\bcprov-jdk15on*.jar" (
     :bbb
     move "%bcprov_location%" "%CARBON_HOME%\repository\components\plugins"
     echo Moved %bcprov_file_name% from %homeDir%\.wso2-bc\backup to components/plugins.
-    ) else ( echo "Required bcprov-jdk15on jar is not available in %homeDir%/.wso2-bc/backup. Download the jar from maven central repository." )
+    ) else ( echo "Required bcprov-jdk18on jar is not available in %homeDir%/.wso2-bc/backup. Download the jar from maven central repository." )
 )
 
-if not exist "%CARBON_HOME%\repository\components\plugins\bcpkix-jdk15on*.jar" (
+if not exist "%CARBON_HOME%\repository\components\plugins\bcpkix-jdk18on*.jar" (
     set server_restart_required=true
-    if exist "%homeDir%\.wso2-bc\backup\bcpkix-jdk15on*.jar" (
-        for /r %homeDir%\.wso2-bc\backup\ %%G in (bcpkix-jdk15on*.jar) do (
+    if exist "%homeDir%\.wso2-bc\backup\bcpkix-jdk18on*.jar" (
+        for /r %homeDir%\.wso2-bc\backup\ %%G in (bcpkix-jdk18on*.jar) do (
         set bcpkix_location=%%G
         set bcpkix_file_name=%%~nG
         set verify=false
@@ -107,7 +107,7 @@ if not exist "%CARBON_HOME%\repository\components\plugins\bcpkix-jdk15on*.jar" (
     :bbb
     move "%bcpkix_location%" "%CARBON_HOME%\repository\components\plugins"
     echo Moved %bcpkix_file_name% from %homeDir%\.wso2-bc\backup to components/plugins.
-    ) else ( echo "Required bcpkix-jdk15on jar is not available in %homeDir%/.wso2-bc/backup. Download the jar from maven central repository." )
+    ) else ( echo "Required bcpkix-jdk18on jar is not available in %homeDir%/.wso2-bc/backup. Download the jar from maven central repository." )
 )
 
 findstr /c:%bcprov_text% %bundles_info% > nul
@@ -140,9 +140,9 @@ if not exist "%homeDir%\.wso2-bc\backup" (
     mkdir "%homeDir%\.wso2-bc\backup"
 )
 
-if exist %CARBON_HOME%\repository\components\plugins\bcprov-jdk15on*.jar (
+if exist %CARBON_HOME%\repository\components\plugins\bcprov-jdk18on*.jar (
     set server_restart_required=true
-    for /r %CARBON_HOME%\repository\components\plugins\ %%G in (bcprov-jdk15on*.jar) do (
+    for /r %CARBON_HOME%\repository\components\plugins\ %%G in (bcprov-jdk18on*.jar) do (
         set bcprov_location=%%G
         set bcprov_file_name=%%~nG
 	goto checkBcVersion
@@ -152,17 +152,17 @@ if exist %CARBON_HOME%\repository\components\plugins\bcprov-jdk15on*.jar (
     goto removeBcProv
 
     :removeBcProv
-    echo Remove existing bcprov-jdk15on jar from plugins folder.
-    if exist "%homeDir%\.wso2-bc\backup\bcprov-jdk15on*.jar" (
-        DEL /F "%homeDir%\.wso2-bc\backup\bcprov-jdk15on*.jar"
+    echo Remove existing bcprov-jdk18on jar from plugins folder.
+    if exist "%homeDir%\.wso2-bc\backup\bcprov-jdk18on*.jar" (
+        DEL /F "%homeDir%\.wso2-bc\backup\bcprov-jdk18on*.jar"
     )
     move "%bcprov_location%" "%homeDir%\.wso2-bc\backup"
     echo Successfully removed %bcprov_file_name% from components\plugins.
 )
 
-if exist %CARBON_HOME%\repository\components\plugins\bcpkix-jdk15on*.jar (
+if exist %CARBON_HOME%\repository\components\plugins\bcpkix-jdk18on*.jar (
     set server_restart_required=true
-    for /r %CARBON_HOME%\repository\components\plugins\ %%G in (bcpkix-jdk15on*.jar) do (
+    for /r %CARBON_HOME%\repository\components\plugins\ %%G in (bcpkix-jdk18on*.jar) do (
         set bcpkix_location=%%G
         set bcpkix_file_name=%%~nG
 	goto checkBcpkixVersion
@@ -172,9 +172,9 @@ if exist %CARBON_HOME%\repository\components\plugins\bcpkix-jdk15on*.jar (
     goto removeBcPkix
 
     :removeBcPkix
-   	echo Remove existing bcpkix-jdk15on jar from plugins folder.
-   	if exist "%homeDir%\.wso2-bc\backup\bcpkix-jdk15on*.jar" (
-        DEL /F "%homeDir%\.wso2-bc\backup\bcpkix-jdk15on*.jar"
+   	echo Remove existing bcpkix-jdk18on jar from plugins folder.
+   	if exist "%homeDir%\.wso2-bc\backup\bcpkix-jdk18on*.jar" (
+        DEL /F "%homeDir%\.wso2-bc\backup\bcpkix-jdk18on*.jar"
     )
     move "%bcpkix_location%" "%homeDir%\.wso2-bc\backup"
     echo Successfully removed %bcpkix_file_name% from components\plugins.
@@ -292,8 +292,8 @@ if not exist "%CARBON_HOME%\repository\components\lib\bcpkix-fips*.jar" (
         )
     )
 )
-set bcprov_text=bcprov-jdk15on,%bcprov_version%,../plugins/bcprov-jdk15on_%bcprov_version%.jar,4,true
-set bcpkix_text=bcpkix-jdk15on,%bcpkix_version%,../plugins/bcpkix-jdk15on_%bcpkix_version%.jar,4,true
+set bcprov_text=bcprov-jdk18on,%bcprov_version%,../plugins/bcprov-jdk18on_%bcprov_version%.jar,4,true
+set bcpkix_text=bcpkix-jdk18on,%bcpkix_version%,../plugins/bcpkix-jdk18on_%bcpkix_version%.jar,4,true
 
 set temp_file=%CARBON_HOME%\repository\components\default\configuration\org.eclipse.equinox.simpleconfigurator\temp.info
 findstr /v /c:%bcprov_text% /c:%bcpkix_text% %bundles_info% > !temp_file!
@@ -302,8 +302,8 @@ goto printRestartMsg
 
 :verifyFipsMode
 set verify=true
-if exist %CARBON_HOME%\repository\components\plugins\bcprov-jdk15on*.jar (
-    for /r %CARBON_HOME%\repository\components\plugins\ %%G in (bcprov-jdk15on*.jar) do (
+if exist %CARBON_HOME%\repository\components\plugins\bcprov-jdk18on*.jar (
+    for /r %CARBON_HOME%\repository\components\plugins\ %%G in (bcprov-jdk18on*.jar) do (
         set bc_location=%%G
         set file_name=%%~nG
         set verify=false
@@ -313,8 +313,8 @@ if exist %CARBON_HOME%\repository\components\plugins\bcprov-jdk15on*.jar (
     echo Found %file_name% in plugins folder. This jar should be removed.
 )
 
-if exist %CARBON_HOME%\repository\components\plugins\bcpkix-jdk15on*.jar (
-    for /r %CARBON_HOME%\repository\components\plugins\ %%G in (bcpkix-jdk15on*.jar) do (
+if exist %CARBON_HOME%\repository\components\plugins\bcpkix-jdk18on*.jar (
+    for /r %CARBON_HOME%\repository\components\plugins\ %%G in (bcpkix-jdk18on*.jar) do (
         set bcpkix_location=%%G
         set file_name=%%~nG
         set verify=false
@@ -344,16 +344,16 @@ if exist "%CARBON_HOME%\repository\components\lib\bcpkix-fips*.jar" (
     echo can not be found bc-fips_%BC_FIPS_VERSION%.jar in components/lib folder. This jar should be added.
 )
 
-findstr /i /c:"bcprov-jdk15on" "%bundles_info%" >nul
+findstr /i /c:"bcprov-jdk18on" "%bundles_info%" >nul
 if %errorlevel%==0 (
 	set verify=false
-  	echo Found bcprov-jdk15on entry in bundles.info. This should be removed.
+  	echo Found bcprov-jdk18on entry in bundles.info. This should be removed.
 )
 
-findstr /i /c:"bcpkix-jdk15on" "%bundles_info%" >nul
+findstr /i /c:"bcpkix-jdk18on" "%bundles_info%" >nul
 if %errorlevel%==0 (
 	set verify=false
-  	echo Found bcpkix-jdk15on entry in bundles.info. This should be removed.
+  	echo Found bcpkix-jdk18on entry in bundles.info. This should be removed.
 )
 if "%verify%"=="true" (
 	echo Verified : Product is FIPS compliant.

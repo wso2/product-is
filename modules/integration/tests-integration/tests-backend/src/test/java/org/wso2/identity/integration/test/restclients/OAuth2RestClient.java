@@ -41,6 +41,7 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationSharePOSTRequest;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthorizedAPICreationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAML2ServiceProvider;
@@ -404,6 +405,24 @@ public class OAuth2RestClient extends RestBaseClient {
             return roleV2ApiBasePath;
         }
         return filter.toString();
+    }
+
+    /**
+     * Share the application with the organizations.
+     *
+     * @param appId                       The application ID.
+     * @param applicationSharePOSTRequest The application sharing details.
+     * @throws IOException Error when sharing the application.
+     */
+    public void shareApplication(String appId, ApplicationSharePOSTRequest applicationSharePOSTRequest) throws
+            IOException {
+
+        String jsonRequest = toJSONString(applicationSharePOSTRequest);
+        try (CloseableHttpResponse response = getResponseOfHttpPost(applicationManagementApiBasePath +
+                PATH_SEPARATOR + appId + PATH_SEPARATOR + "share", jsonRequest, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                    "Application sharing failed");
+        }
     }
 
     /**

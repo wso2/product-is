@@ -119,6 +119,7 @@ public class OAuth2ServiceRegexCallbackUrlTestCase extends OAuth2ServiceAbstract
 		urlParameters.add(new BasicNameValuePair("authorizeEndpoint", OAuth2Constant.APPROVAL_URL));
 		urlParameters.add(new BasicNameValuePair("authorize", OAuth2Constant.AUTHORIZE_PARAM));
 		urlParameters.add(new BasicNameValuePair("consumerSecret", consumerSecret));
+		urlParameters.add(new BasicNameValuePair("scope", "device_01"));
 
 		HttpResponse response =
 				sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.AUTHORIZED_USER_URL);

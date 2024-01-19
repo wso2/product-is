@@ -39,4 +39,5 @@ hash = "66cd9688a2ae068244ea01e70f0e230f5623b7fa4cdecb65070a09ec06452262"
 app_password = "dashboard"
 
 [oauth]
+drop_unregistered_scopes = false
 allowed_scopes = ["internal_test", "test"]

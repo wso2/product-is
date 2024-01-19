@@ -46,6 +46,10 @@
         "displayName": "Organization Switch"
       },
       {
+        "name": "organization_switch_cc",
+        "displayName": "organization_switch_cc"
+      },
+      {
         "name": "urn:ietf:params:oauth:grant-type:jwt-bearer",
         "displayName": "urn:ietf:params:oauth:grant-type:jwt-bearer"
       }
@@ -91,15 +95,16 @@
       "cookie",
       "sso-session",
       "device-flow",
-      "certificate"
+      "certificate",
+      "client-request"
     ],
     "defaultValue": "None"
   },
   "tokenEndpointAuthMethod": {
     "options": [
       {
-        "name":"None",
-        "displayName":"None"
+        "name":"",
+        "displayName":"Select Option"
       },
       {
         "name": "client_secret_post",
@@ -128,7 +133,7 @@
   },
   "idTokenSignatureAlgorithm": {
     "options": [
-      "None",
+      "Select Option",
       "PS256",
       "ES256",
       "SHA256withRSA"
@@ -136,7 +141,7 @@
   },
   "requestObjectSignatureAlgorithm": {
     "options": [
-      "None",
+      "Select Option",
       "PS256",
       "ES256",
       "SHA256withRSA"
@@ -144,14 +149,14 @@
   },
   "requestObjectEncryptionAlgorithm": {
     "options": [
-      "None",
+      "Select Option",
       "RSA-OAEP",
       "RSA1_5"
     ]
   },
   "requestObjectEncryptionMethod": {
     "options": [
-      "None",
+      "Select Option",
       "A128GCM",
       "A192GCM",
       "A256GCM",
@@ -175,7 +180,7 @@
       },
       "allowedEncryptionAlgorithms": {
         "options": [
-          "None",
+          "Select Option",
           "RSA-OAEP"
         ]
       },

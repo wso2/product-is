@@ -10,6 +10,7 @@ env:
   MAVEN_OPTS: -Xmx4g -Xms1g
   REPOSITORY: product-is
   GIT_USERNAME: jenkins-is-staging
+  GIT_EMAIL: jenkins-is-staging@wso2.com
   PRODUCT_REPOSITORY_FORKED: $GIT_USERNAME'/'${REPOSITORY}
   REMOTE_PRODUCT_REPOSITORY_PUBLIC: wso2/$REPOSITORY
   PRODUCT_REPOSITORY_PUBLIC: wso2/$REPOSITORY
@@ -78,7 +79,7 @@ jobs:
           echo ""
           echo 'Updating dependencies'
           echo "=========================================================="
-          mvn versions:update-properties -U -DgenerateBackupPoms=false -DallowMajorUpdates=false -Dincludes=org.wso2.carbon.identity.*,org.wso2.carbon.extension.identity.*,org.wso2.identity.*,org.wso2.carbon.consent.*,org.wso2.carbon.healthcheck.*,org.wso2.carbon.utils,org.wso2.charon,org.apache.rampart.wso2,org.apache.ws.security.wso2
+          mvn versions:update-properties -U -DgenerateBackupPoms=false -DallowMajorUpdates=false -Dincludes=org.wso2.carbon.identity.*,org.wso2.carbon.extension.identity.*,org.wso2.identity.*,org.wso2.carbon.consent.*,org.wso2.carbon.healthcheck.*,org.wso2.carbon.utils,org.wso2.charon,org.apache.rampart.wso2,org.apache.ws.security.wso2,org.wso2.carbon.identity.framework:*
           echo ""
           echo 'Available updates'
           echo "=========================================================="
@@ -113,6 +114,7 @@ jobs:
             echo ""
             echo 'Commit Changes'
             echo "=========================================================="
+            git config --global user.email ${{ env.GIT_EMAIL }}
             git config --global user.name ${{ env.GIT_USERNAME }}
             git commit -a -m 'Bump dependencies from '${{ env.DEPENDENCY_UPGRADE_BRANCH_NAME }}
             git remote rm origin
@@ -165,7 +167,7 @@ jobs:
           elif [[ ${{ job.status }} = "failure" ]];then echo "#ff0000";
           elif [[ ${{ job.status }} = "cancelled" ]];then echo "#ffc300"; fi)
 
-          curl --location --request POST '${{ secrets.GOOGLE_CHAT_WEBHOOK }}&threadKey=dep_updater' \
+          curl --location --request POST '${{ secrets.GOOGLE_CHAT_WEBHOOK }}&threadKey=dependency_updater&messageReplyOption=REPLY_MESSAGE_FALLBACK_TO_NEW_THREAD' \
           --header 'Content-Type: application/json' \
           --data-raw '{
               "cards": [

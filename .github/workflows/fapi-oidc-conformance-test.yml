@@ -1,0 +1,299 @@
+# This workflow will test IS for OIDC FAPI conformance
+
+name: FAPI OIDC Conformance Test
+
+on:
+  schedule:
+    # Everyday at 08:30 UTC (2:00 AM SL time)
+    - cron:  '30 20 * * *'
+  # Allows the workflow to run automatically after a release
+  release:
+    types: [published]
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Product-is release tag (Ex: v7.0.0-alpha2). If not provided, latest release tag is used.'
+        required: false
+      conformance-suite-version:
+        description: 'Conformance suite branch to clone in https://gitlab.com/openid/conformance-suite.git (Ex: release-v5.1.10). If not provided, latest release tag branch is used.'
+        required: false
+      send-email:
+        description: 'Send test results to email'
+        required: true
+        default: 'no'
+      send-chat:
+        description: 'Send test results to google chat'
+        required: true
+        default: 'yes'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        path: './product-is'
+      
+    - name: Set up JDK 11
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11.0.18+10
+    
+    - name: Setup Python
+      run: |
+        python3 -m pip install --upgrade pip setuptools wheel
+        pip3 install psutil
+        pip3 install httpx
+        pip3 install httplib2
+        
+    - name: Get IS zip
+      run: |
+        INPUT_TAG=${{github.event.inputs.tag}}
+        if [[ -z "${INPUT_TAG}" ]]; then
+          echo ">>> Building IS from source..."
+          mkdir cloned-product-is
+          cd cloned-product-is
+          git clone https://github.com/wso2/product-is
+          cd product-is
+          mvn clean install -Dmaven.test.skip=true | tee mvn-build.log
+
+          REPO_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
+          echo "==========================================================="
+          echo "BUILD $REPO_BUILD_STATUS"
+          echo "=========================================================="
+
+          if [[ "${REPO_BUILD_STATUS}" != "SUCCESS" ]]; then
+            exit 1
+          fi
+
+          zip_file=$(find . -name 'wso2is-*.zip' -type f -not -name 'wso2is-*-src.zip' -print -quit)
+
+          if [[ -z "$zip_file" ]]; then
+            echo "Zip file not found"
+            exit 1
+          fi
+
+          echo ">>> Zip file found: $zip_file"
+          echo ">>> Copying zip file to the root directory ..."
+
+          cp "$zip_file" ./../../
+          cd ../..
+          ls
+          echo ">>> Remove cloned-product-is directory"
+          rm -rf cloned-product-is
+          ls
+        else
+          owner="wso2"
+          repo="product-is"
+          if [[ -z "${INPUT_TAG}" ]]; then
+            tag=${GITHUB_REF:10}
+            tag_trimmed=${tag// }
+          else
+            tag=${{github.event.inputs.tag}}
+            tag_trimmed=${tag// }
+          fi
+
+          artifact="wso2is-${tag_trimmed:1}.zip"
+          echo "Tag=$tag"
+          echo "Artifact=$artifact"
+          list_asset_url="https://api.github.com/repos/${owner}/${repo}/releases/tags/${tag_trimmed}"
+          asset_url=$(curl "${list_asset_url}" | jq ".assets[] | select(.name==\"${artifact}\") | .url" | sed 's/\"//g')
+          curl -vLJO -H 'Accept: application/octet-stream' \
+            "${asset_url}"
+        fi
+
+    - name: Add deployment toml configs to IS
+      run: |
+        PRODUCT_IS_ZIP=$(find ./ -name 'wso2is*' -type f -printf "%f\n")
+        echo ">>> Unzipping Product IS: ${PRODUCT_IS_ZIP} ..."
+        unzip -qq ${PRODUCT_IS_ZIP}
+
+        PRODUCT_IS=$(find ./ -maxdepth 1 -name 'wso2is*' -type d -printf "%f\n")
+
+        echo ">>> Adding deployment-fapi-config.toml configs to deployment.toml..."
+        cp -f ./product-is/oidc-fapi-conformance-tests/config/deployment-fapi-config.toml $PRODUCT_IS/repository/conf/deployment.toml
+
+        echo ">>> Zipping $PRODUCT_IS to $PRODUCT_IS_ZIP"
+        zip -qq -r $PRODUCT_IS_ZIP $PRODUCT_IS
+        rm -r $PRODUCT_IS
+
+    - name: Clone conformance suite
+      run: |
+        sudo snap install jq
+        LATEST_RELEASE_BRANCH=$(curl -s https://gitlab.com/api/v4/projects/4175605/releases/ | jq '.[]' | jq -r '.name' | head -1)
+        echo ">>> Conformance suite latest release branch: $LATEST_RELEASE_BRANCH"
+        PROVIDED_VERSION=${{github.event.inputs.conformance-suite-version}}
+        if [[ -z "${PROVIDED_VERSION}" ]]; then
+              CONFORMANCE_SUITE_BRANCH=$LATEST_RELEASE_BRANCH
+              echo ">>> Conformance suite latest release branch is taken: $CONFORMANCE_SUITE_BRANCH"
+            else
+              CONFORMANCE_SUITE_BRANCH=$PROVIDED_VERSION
+              echo ">>> Conformance suite provided branch is taken: $CONFORMANCE_SUITE_BRANCH"
+            fi
+        echo ">>> Selected conformance suite branch: $CONFORMANCE_SUITE_BRANCH"
+        git clone --depth 1 --branch ${CONFORMANCE_SUITE_BRANCH} https://gitlab.com/openid/conformance-suite.git
+    
+    - name: Adding extra hosts to docker-compose.yml and adding iam as a localhost to /etc/hosts
+      run: |
+        sed -i '/^    volumes.*/i \ \ \ \ extra_hosts:\n \ \ \ \ - "localhost:\$IP\"\n \ \ \ \ - "iam:\$IP\"' ./conformance-suite/docker-compose-dev.yml
+        sed -i '/^    volumes.*/i \ \ \ \ extra_hosts:\n \ \ \ \ - "localhost:\$IP\"\n \ \ \ \ - "iam:\$IP\"' ./conformance-suite/docker-compose.yml
+        sudo -- sh -c -e "echo '127.0.1.1 iam' >> /etc/hosts"
+        sudo -- sh -c -e "echo '127.0.1.1 www.iam.com' >> /etc/hosts"
+
+    - name: Start FAPI resource server
+      run: |
+        sudo apt update
+        sudo apt install nginx
+        echo ">>> NGINX installed successfully !"
+        sudo chmod 777 -R /etc/nginx
+        echo ">>> Permission changed for /etc/nginx"
+        mkdir -p /etc/nginx/ssl
+        echo ">>> /etc/nginx/ssl created successfully!"
+
+        sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/serverCA.key -out /etc/nginx/ssl/serverCA.crt -subj "/C=US/ST=California/L=San Francisco/O=My Company/OU=IT Department/CN=mycompany.com"
+        echo ">>> FAPI resource server keys saved successfully!"
+
+        cd product-is/oidc-fapi-conformance-tests/resource-server
+        cp -f nginx-proxy /etc/nginx/sites-enabled
+        sudo nginx -t
+        sudo service nginx restart
+        echo ">>> NGINX reverse proxy server started successfully!"
+        
+        pip install virtualenv
+        python3 -m virtualenv venv
+        source ./venv/bin/activate
+        pip install -r requirements.txt
+        echo ">>> FAPI resource server starting..."
+        . ./venv/bin/activate
+        nohup python3 resource-server.py > resource-server.log &
+        sleep 5
+        cat resource-server.log
+
+    - name: Configure IS and Conformance Suite and run IS
+      run: |
+        PRODUCT_IS_ZIP=$(find ./ -name wso2is* -type f -printf "%f\n")
+        cd ./product-is/oidc-fapi-conformance-tests
+        python3 ./configure_is_fapi.py ../../$PRODUCT_IS_ZIP
+        
+    - name: Set up JDK 17
+      uses: actions/setup-java@v2
+      with:
+        java-version: 17
+        distribution: temurin
+
+    - name: Start Conformance Suite server
+      run: |
+        DOCKER_COMPOSE_FILE=./docker-compose.yml
+        cd conformance-suite
+        IP=$(/sbin/ip -o -4 addr list eth0 | awk '{print $4}' | cut -d/ -f1)
+        export IP
+        echo ">>> Host ip: " 
+        printenv IP
+        mvn clean package
+        python3 ../product-is/oidc-fapi-conformance-tests/start_conformance_suite.py $DOCKER_COMPOSE_FILE
+        
+    - name: Run Tests
+      run: bash ./product-is/oidc-fapi-conformance-tests/test_runner_fapi.sh
+      
+    - name: Test Results
+      run: |
+        IS_SUCCESSFUL=false
+        if python3 ./product-is/oidc-fapi-conformance-tests/export_results_fapi.py https://localhost:8443
+        then
+          IS_SUCCESSFUL=true
+        fi
+        if $IS_SUCCESSFUL
+        then
+          echo "======================"
+          echo "All Test Cases Passed!"
+          echo "======================"
+          exit 0
+        else      
+          echo "============================================="
+          echo "Failed Test Cases Found. Exiting with Failure"
+          echo "============================================="
+          exit 1
+        fi
+      
+    - name: Archive test results
+      uses: actions/upload-artifact@v2
+      if: always()
+      with:
+        name: test-results
+        path: ./*test_results.zip
+        
+    - name: Archive test logs
+      uses: actions/upload-artifact@v2
+      if: always()
+      with:
+        name: test-logs
+        path: ./*log.txt
+
+    - name: Send Email
+      if: always()
+      run: |
+        INPUT=${{github.event.inputs.send-email}}
+        if [[ -z "${INPUT}" ]]; then
+          INPUT="no"
+        fi
+        SEND_EMAIL=${INPUT^^}
+        if [ $SEND_EMAIL == "YES" ]; then
+          echo "============="
+          echo "Sending Email"
+          echo "============="
+          CONFORMANCE_SUITE_URL=https://localhost:8443
+          INPUT_TAG=${{github.event.inputs.tag}}
+          if [[ -z "${INPUT_TAG}" ]]; then
+            RESOURCE="built-from-latest-source"
+          else
+            RESOURCE=${{github.event.inputs.tag}}
+          fi
+          RECEIVER_LIST=${{secrets.FAPI_RECEIVER_LIST}}
+          if [[ -z "${RECEIVER_LIST}" ]]; then
+            RECEIVER_LIST=${{secrets.RECEIVER_LIST}}
+          fi
+          python3 ./product-is/oidc-conformance-tests/send_email.py $CONFORMANCE_SUITE_URL $GITHUB_RUN_NUMBER ${{job.status}} ${{github.repository}} ${{github.run_id}} ${{secrets.SENDER_EMAIL}} ${{secrets.PASSWORD}} ${{secrets.FAPI_RECEIVER_LIST}} $RESOURCE
+        elif [ $SEND_EMAIL == "NO" ]; then
+          echo "========================================"
+          echo "Skipped Sending Email"
+          echo "========================================"
+        else
+          echo "================================================================="
+          echo "Invalid parameter value. Skipped sending email"
+          echo "================================================================="
+        fi
+    
+    - name: Send Chat message
+      if: always()
+      run: |
+        INPUT=${{github.event.inputs.send-chat}}
+        if [[ -z "${INPUT}" ]]; then
+          INPUT="yes"
+        fi
+
+        INPUT_TAG=${{github.event.inputs.tag}}
+          if [[ -z "${INPUT_TAG}" ]]; then
+            RESOURCE="built from latest source"
+          else
+            RESOURCE=${{github.event.inputs.tag}}
+          fi
+        
+        SEND_CHAT=${INPUT^^}
+        if [ $SEND_CHAT == "YES" ]; then
+          echo "==========================="
+          echo "Sending Google Chat Message"
+          echo "==========================="
+          CONFORMANCE_SUITE_URL=https://localhost:8443
+          python3 ./product-is/oidc-conformance-tests/send_chat.py "$CONFORMANCE_SUITE_URL" "$GITHUB_RUN_NUMBER" "${{job.status}}" "${{github.repository}}" "${{github.run_id}}" "${{secrets.GOOGLE_CHAT_WEBHOOK_OIDC_TEST}}&threadKey=oidc_conformance&messageReplyOption=REPLY_MESSAGE_FALLBACK_TO_NEW_THREAD" "$RESOURCE" "FAPI OIDC Conformance Test"
+        elif [ $SEND_CHAT == "NO" ]; then
+          echo "========================================"
+          echo "Skipped Sending Google Chat Message"
+          echo "========================================"
+        else
+          echo "================================================================="
+          echo "Invalid parameter value. Skipped sending google chat message"
+          echo "================================================================="
+        fi
+

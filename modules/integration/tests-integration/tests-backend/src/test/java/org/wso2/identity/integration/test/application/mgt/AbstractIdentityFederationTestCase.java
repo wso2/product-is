@@ -40,7 +40,9 @@ import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderInfoDTO;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.carbon.user.mgt.stub.types.carbon.ClaimValue;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
+import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
@@ -62,6 +64,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -73,6 +76,7 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
     private Map<Integer, OauthAdminClient> oauthAdminClients;
     private Map<Integer, OAuth2RestClient> applicationManagementRestClients;
     private Map<Integer, IdpMgtRestClient> identityProviderMgtRestClients;
+    private Map<Integer, UserManagementClient> userManagementClients;
     protected Map<Integer, AutomationContext> automationContextMap;
     private MultipleServersManager manager;
     protected static final int DEFAULT_PORT = CommonConstants.IS_DEFAULT_HTTPS_PORT;
@@ -87,6 +91,7 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
         identityProviderMgtServiceClients = new HashMap<>();
         samlSSOConfigServiceClients = new HashMap<>();
         oauthAdminClients = new HashMap<>();
+        userManagementClients = new HashMap<>();
         automationContextMap = testDataHolder.getAutomationContextMap();
         manager = testDataHolder.getManager();
 
@@ -144,6 +149,8 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
                     samlSSOConfigServiceClients.put(portOffset, new SAMLSSOConfigServiceClient(serviceUrl, sessionCookie));
                 } else if (IdentityConstants.ServiceClientType.OAUTH_ADMIN.equals(clientType)) {
                     oauthAdminClients.put(portOffset, new OauthAdminClient(serviceUrl, sessionCookie));
+                } else if (IdentityConstants.ServiceClientType.USER_MGT.equals(clientType)) {
+                    userManagementClients.put(portOffset, new UserManagementClient(serviceUrl, sessionCookie));
                 }
             }
         }
@@ -167,6 +174,22 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
                 identityProviderMgtRestClients.put(portOffset, new IdpMgtRestClient(serviceUrl, tenantInfo));
             }
         }
+    }
+
+    public void addUser(int portOffset, String username, String password, String[] roles,
+                        String profileName, ClaimValue[] claims) throws Exception {
+
+        userManagementClients.get(portOffset).addUser(username, password, roles, profileName, claims);
+    }
+
+    public void deleteUser(int portOffset, String username) throws Exception {
+
+        userManagementClients.get(portOffset).deleteUser(username);
+    }
+
+    public HashSet<String> getUserList(int portOffset) throws Exception {
+
+        return userManagementClients.get(portOffset).getUserList();
     }
 
     public void addServiceProvider(int portOffset, String applicationName) throws Exception {

@@ -14,7 +14,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-BC_FIPS_VERSION=1.0.2.3;
+BC_FIPS_VERSION=1.0.2.4;
 BCPKIX_FIPS_VERSION=1.0.7;
 
 EXPECTED_BC_FIPS_CHECKSUM="da62b32cb72591f5b4d322e6ab0ce7de3247b534"
@@ -56,35 +56,35 @@ if [ "$ARGUMENT" = "DISABLE" ] || [ "$ARGUMENT" = "disable" ]; then
    		rm rm $CARBON_HOME/repository/components/dropins/bcpkix_fips*.jar 2> /dev/null
 		echo "Successfully removed bcpkix_fips_$BCPKIX_FIPS_VERSION.jar from component/dropins."
    	fi
-	if [ ! -e $CARBON_HOME/repository/components/plugins/bcprov-jdk15on*.jar ]; then
+	if [ ! -e $CARBON_HOME/repository/components/plugins/bcprov-jdk18on*.jar ]; then
 	    sever_restart_required=true
-	    if [ -e $homeDir/.wso2-bc/backup/bcprov-jdk15on*.jar ]; then
-	      location=$(find "$homeDir/.wso2-bc/backup/" -type f -name "bcprov-jdk15on*.jar" | head -1)
+	    if [ -e $homeDir/.wso2-bc/backup/bcprov-jdk18on*.jar ]; then
+	      location=$(find "$homeDir/.wso2-bc/backup/" -type f -name "bcprov-jdk18on*.jar" | head -1)
         bcprov_file_name=$(basename "$location")
         bcprov_version=${bcprov_file_name#*_}
         bcprov_version=${bcprov_version%.jar}
 		    mv "$location" "$CARBON_HOME/repository/components/plugins"
 		    echo "Moved $bcprov_file_name from $homeDir/.wso2-bc/backup to components/plugins."
 	    else
-		    echo "Required bcprov-jdk15on jar is not available in $homeDir/.wso2-bc/backup. Download the jar from maven central repository."
+		    echo "Required bcprov-jdk18on jar is not available in $homeDir/.wso2-bc/backup. Download the jar from maven central repository."
 	    fi
 	fi
-	if [ ! -e $CARBON_HOME/repository/components/plugins/bcpkix-jdk15on*.jar ]; then
+	if [ ! -e $CARBON_HOME/repository/components/plugins/bcpkix-jdk18on*.jar ]; then
 	    sever_restart_required=true
-	    if [ -e $homeDir/.wso2-bc/backup/bcpkix-jdk15on*.jar ]; then
-	      location=$(find "$homeDir/.wso2-bc/backup/" -type f -name "bcpkix-jdk15on*.jar" | head -1)
+	    if [ -e $homeDir/.wso2-bc/backup/bcpkix-jdk18on*.jar ]; then
+	      location=$(find "$homeDir/.wso2-bc/backup/" -type f -name "bcpkix-jdk18on*.jar" | head -1)
         bcpkix_file_name=$(basename "$location")
         bcpkix_version=${bcpkix_file_name#*_}
         bcpkix_version=${bcpkix_version%.jar}
 		    mv "$location" "$CARBON_HOME/repository/components/plugins"
 		    echo "Moved $bcpkix_file_name from $homeDir/.wso2-bc/backup to components/plugins."
 	    else
-		    echo "Required bcpkix-jdk15on jar is not available in $homeDir/.wso2-bc/backup. Download the jar from maven central repository."
+		    echo "Required bcpkix-jdk18on jar is not available in $homeDir/.wso2-bc/backup. Download the jar from maven central repository."
 	    fi
 	fi
 
-  bcprov_text="bcprov-jdk15on,$bcprov_version,../plugins/$bcprov_file_name,4,true";
-  bcpkix_text="bcpkix-jdk15on,$bcpkix_version,../plugins/$bcpkix_file_name,4,true";
+  bcprov_text="bcprov-jdk18on,$bcprov_version,../plugins/$bcprov_file_name,4,true";
+  bcpkix_text="bcpkix-jdk18on,$bcpkix_version,../plugins/$bcpkix_file_name,4,true";
 	if ! grep -q "$bcprov_text" "$bundles_info" ; then
 		echo  $bcprov_text >> $bundles_info;
 		sever_restart_required=true
@@ -96,14 +96,14 @@ if [ "$ARGUMENT" = "DISABLE" ] || [ "$ARGUMENT" = "disable" ]; then
 
 elif [ "$ARGUMENT" = "VERIFY" ] || [ "$ARGUMENT" = "verify" ]; then
 	verify=true;
-	if [ -f $CARBON_HOME/repository/components/plugins/bcprov-jdk15on*.jar ]; then
-		location=$(find "$CARBON_HOME/repository/components/plugins/" -type f -name "bcprov-jdk15on*.jar" | head -1)
+	if [ -f $CARBON_HOME/repository/components/plugins/bcprov-jdk18on*.jar ]; then
+		location=$(find "$CARBON_HOME/repository/components/plugins/" -type f -name "bcprov-jdk18on*.jar" | head -1)
 		file_name=$(basename "$location")
 		verify=false
 		echo "Found $file_name in plugins folder. This jar should be removed."
 	fi
-	if [ -f $CARBON_HOME/repository/components/plugins/bcprov-jdk15on*.jar ]; then
-		location=$(find "$CARBON_HOME/repository/components/plugins/" -type f -name "bcpkix-jdk15on*.jar" | head -1)
+	if [ -f $CARBON_HOME/repository/components/plugins/bcprov-jdk18on*.jar ]; then
+		location=$(find "$CARBON_HOME/repository/components/plugins/" -type f -name "bcpkix-jdk18on*.jar" | head -1)
 		file_name=$(basename "$location")
 		verify=false
 		echo "Found $file_name in plugins folder. This jar should be removed."
@@ -128,14 +128,14 @@ elif [ "$ARGUMENT" = "VERIFY" ] || [ "$ARGUMENT" = "verify" ]; then
 		echo "Can not be found bcpkix-fips_$BCPKIX_FIPS_VERSION.jar in components/lib folder. This jar should be added."
 
 	fi
-	if grep -q "bcprov-jdk15on" "$bundles_info" ; then
+	if grep -q "bcprov-jdk18on" "$bundles_info" ; then
     verify=false
-  	echo  "Found bcprov-jdk15on entry in bundles.info. This should be removed.";
+  	echo  "Found bcprov-jdk18on entry in bundles.info. This should be removed.";
 
   	fi
-  	if grep -q "bcpkix-jdk15on" "$bundles_info" ; then
+  	if grep -q "bcpkix-jdk18on" "$bundles_info" ; then
   		verify=false
-  		echo  "Found bcpkix-jdk15on entry in bundles.info. This should be removed.";
+  		echo  "Found bcpkix-jdk18on entry in bundles.info. This should be removed.";
   	fi
 
 	if [ $verify = true ]; then
@@ -165,12 +165,12 @@ while getopts "f:m:" opt; do
 	if [ ! -d "$homeDir/.wso2-bc/backup" ]; then
     		mkdir "$homeDir/.wso2-bc/backup"
 	fi
-	if [ -f $CARBON_HOME/repository/components/plugins/bcprov-jdk15on*.jar ]; then
+	if [ -f $CARBON_HOME/repository/components/plugins/bcprov-jdk18on*.jar ]; then
 	    sever_restart_required=true
-	    location=$(find "$CARBON_HOME/repository/components/plugins/" -type f -name "bcprov-jdk15on*.jar" | head -1)
-	    echo "Remove existing bcprov-jdk15on jar from plugins folder."
-	    if [ -f $homeDir/.wso2-bc/backup/bcprov-jdk15on*.jar ]; then
-	      rm $homeDir/.wso2-bc/backup/bcprov-jdk15on*.jar
+	    location=$(find "$CARBON_HOME/repository/components/plugins/" -type f -name "bcprov-jdk18on*.jar" | head -1)
+	    echo "Remove existing bcprov-jdk18on jar from plugins folder."
+	    if [ -f $homeDir/.wso2-bc/backup/bcprov-jdk18on*.jar ]; then
+	      rm $homeDir/.wso2-bc/backup/bcprov-jdk18on*.jar
 	    fi
 	    mv "$location" "$homeDir/.wso2-bc/backup"
 	    bcprov_file_name=$(basename "$location")
@@ -178,25 +178,25 @@ while getopts "f:m:" opt; do
       bcprov_version=${bcprov_version%.jar}
    	  echo "Successfully removed $bcprov_file_name from component/plugins."
 	fi
-	if [ -f $CARBON_HOME/repository/components/plugins/bcpkix-jdk15on*.jar ]; then
+	if [ -f $CARBON_HOME/repository/components/plugins/bcpkix-jdk18on*.jar ]; then
 	   	sever_restart_required=true
-   		echo "Remove existing bcpkix-jdk15on jar from plugins folder."
-   		location=$(find "$CARBON_HOME/repository/components/plugins/" -type f -name "bcpkix-jdk15on*.jar" | head -1)
-   		if [ -f $homeDir/.wso2-bc/backup/bcpkix-jdk15on*.jar ]; then
-        rm $homeDir/.wso2-bc/backup/bcpkix-jdk15on*.jar
+   		echo "Remove existing bcpkix-jdk18on jar from plugins folder."
+   		location=$(find "$CARBON_HOME/repository/components/plugins/" -type f -name "bcpkix-jdk18on*.jar" | head -1)
+   		if [ -f $homeDir/.wso2-bc/backup/bcpkix-jdk18on*.jar ]; then
+        rm $homeDir/.wso2-bc/backup/bcpkix-jdk18on*.jar
       fi
    		mv "$location" "$homeDir/.wso2-bc/backup"
    		bcpkix_file_name=$(basename "$location")
    		echo "Successfully removed $bcpkix_file_name from component/plugins."
 	fi
 
-	if grep -q "bcprov-jdk15on" "$bundles_info"; then
+	if grep -q "bcprov-jdk18on" "$bundles_info"; then
 		sever_restart_required=true
-		perl -i -ne 'print unless /bcprov-jdk15on/' $bundles_info
+		perl -i -ne 'print unless /bcprov-jdk18on/' $bundles_info
 	fi
-	if grep -q "bcpkix-jdk15on" "$bundles_info"; then
+	if grep -q "bcpkix-jdk18on" "$bundles_info"; then
 		sever_restart_required=true
-		perl -i -ne 'print unless /bcpkix-jdk15on/' $bundles_info
+		perl -i -ne 'print unless /bcpkix-jdk18on/' $bundles_info
 	fi
 
 	if [ -e $CARBON_HOME/repository/components/lib/bc-fips*.jar ]; then
