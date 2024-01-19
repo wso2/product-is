@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, WSO2 LLC. (https://www.wso2.com).
+ * Copyright (c) 2024, WSO2 LLC. (https://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -113,6 +113,11 @@ import static org.wso2.identity.integration.test.applicationNativeAuthentication
 
 /**
  * Integration test cases for Application Native Authentication federation scenario.
+ * Federated OIDC IDP set as the authenticator for the application.
+ * After getting response of the authentication init request, application performs an OIDC authentication
+ * in federated IDP which is similar to browser based login.
+ * After successful federated login, the application will acquire code and state from federated authenticator.
+ * Application will exchange those data for the auth_code from primary idp.
  */
 public class ApplicationNativeAuthenticationFederationTestCase extends AbstractIdentityFederationTestCase {
 
@@ -165,6 +170,7 @@ public class ApplicationNativeAuthenticationFederationTestCase extends AbstractI
 
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
+
         return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}};
     }
 
@@ -247,7 +253,7 @@ public class ApplicationNativeAuthenticationFederationTestCase extends AbstractI
         }
     }
 
-    @Test(groups = "wso2.is", description = "Send init authorize POST request.")
+    @Test(groups = "wso2.is", description = "Send init authorize POST request to primary IDP.")
     public void testSendInitAuthRequestPost() throws Exception {
 
         HttpResponse response = sendPostRequestWithParameters(client, buildOAuth2Parameters(appClientID,
@@ -263,9 +269,9 @@ public class ApplicationNativeAuthenticationFederationTestCase extends AbstractI
         validInitClientNativeAuthnResponse(json);
     }
 
-    @Test(groups = "wso2.is", description = "Send authorize user request with response types and response modes.",
+    @Test(groups = "wso2.is", description = "Send authorization request to federated IDP and retrieve code.",
             dependsOnMethods = "testSendInitAuthRequestPost")
-    public void testSendAuthRequestPost() throws Exception {
+    public void testSendFederatedAuthRequestPost() throws Exception {
 
         List<NameValuePair> urlParameters = new ArrayList<>();
 
@@ -308,9 +314,10 @@ public class ApplicationNativeAuthenticationFederationTestCase extends AbstractI
         EntityUtils.consume(response.getEntity());
     }
 
-    @Test(groups = "wso2.is", description = "Send Basic authentication POST request.",
-            dependsOnMethods = "testSendAuthRequestPost")
-    public void testSendBasicAuthRequestPost() {
+    @Test(groups = "wso2.is", description = "Send authentication POST request with code " +
+            "and state retrieved from federated IDP.",
+            dependsOnMethods = "testSendFederatedAuthRequestPost")
+    public void testSendAuthRequestPost() {
 
         String body = "{\n" +
                 "    \"flowId\": \"" + flowId + "\",\n" +
@@ -403,6 +410,7 @@ public class ApplicationNativeAuthenticationFederationTestCase extends AbstractI
      */
     private HttpResponse sendApprovalPost(HttpClient client, String sessionDataKeyConsent) throws ClientProtocolException,
             IOException {
+
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKeyConsent));
 
@@ -538,6 +546,7 @@ public class ApplicationNativeAuthenticationFederationTestCase extends AbstractI
     }
 
     private OpenIDConnectConfiguration getAppOIDCConfigurations() {
+
         List<String> grantTypes = new ArrayList<>();
         Collections.addAll(grantTypes, "authorization_code", "implicit", "password", "client_credentials",
                 "refresh_token", "urn:ietf:params:oauth:grant-type:saml2-bearer", "iwa:ntlm");
@@ -550,6 +559,7 @@ public class ApplicationNativeAuthenticationFederationTestCase extends AbstractI
     }
 
     private OpenIDConnectConfiguration getSP2OIDCConfigurations() {
+
         List<String> grantTypes = new ArrayList<>();
         Collections.addAll(grantTypes, "authorization_code", "implicit", "password", "client_credentials",
                 "refresh_token", "urn:ietf:params:oauth:grant-type:saml2-bearer", "iwa:ntlm");
