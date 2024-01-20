@@ -272,6 +272,7 @@
     <test name="is-tests-federation" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
             <class name="org.wso2.identity.integration.test.base.SecondaryCarbonServerInitializerTestCase"/>
+            <class name="org.wso2.identity.integration.test.applicationNativeAuthentication.ApplicationNativeAuthenticationFederationTestCase"/>
             <class name="org.wso2.identity.integration.test.sts.TestPassiveSTSFederation"/>
             <!--TODO: Temporary disabled ConditionalAuthenticationTestCase. Enable after fixing the issues. -->
             <!--<class name="org.wso2.identity.integration.test.auth.ConditionalAuthenticationTestCase" />-->
