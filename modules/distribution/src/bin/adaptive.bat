@@ -73,14 +73,14 @@ set LOCAL_JMS_VERSION=""
 
 call :removeLibrary "Nashorn", "lib", "%CARBON_HOME%\repository\components\lib\nashorn-core-*.jar"
 call :removeLibrary "Nashorn", "dropins", "%CARBON_HOME%\repository\components\dropins\nashorn_core_!LOCAL_NASHORN_VERSION!*.jar"
+call :removeLibrary "Geronimo Spec Jms", "lib", "%CARBON_HOME%\repository\components\lib\geronimo-spec-jms-*.jar"
+call :removeLibrary "Geronimo Spec Jms", "dropins", "%CARBON_HOME%\repository\components\dropins\geronimo_spec_jms_!LOCAL_JMS_VERSION!*.jar"
 call :removeLibrary "ASM Util", "lib", "%CARBON_HOME%\repository\components\lib\asm-util-*.jar"
 call :removeLibrary "ASM Util", "dropins", "%CARBON_HOME%\repository\components\dropins\asm_util_!LOCAL_ASM_VERSION!*.jar"
 call :removeLibrary "ASM Commons", "lib", "%CARBON_HOME%\repository\components\lib\asm-commons-*.jar"
 call :removeLibrary "ASM Commons", "dropins", "%CARBON_HOME%\repository\components\dropins\asm_commons_!LOCAL_ASM_VERSION!*.jar"
 call :removeLibrary "ASM Tree", "lib", "%CARBON_HOME%\repository\components\lib\asm-tree-*.jar"
 call :removeLibrary "ASM Tree", "dropins", "%CARBON_HOME%\repository\components\dropins\asm_tree_!LOCAL_ASM_VERSION!*.jar"
-call :removeLibrary "Geronimo Spec Jms", "lib", "%CARBON_HOME%\repository\components\lib\geronimo-spec-jms-*.jar"
-call :removeLibrary "Geronimo Spec Jms", "dropins", "%CARBON_HOME%\repository\components\dropins\geronimo_spec_jms_!LOCAL_JMS_VERSION!*.jar"
 
 echo Adaptive authentication successfully disabled.
 goto printRestartMsg
