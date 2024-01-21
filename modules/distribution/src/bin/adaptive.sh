@@ -141,7 +141,7 @@ if [[ "$DISABLE" == "DISABLE" || "$DISABLE" == "disable" ]]; then
         sever_restart_required=true
         location=$(find "$CARBON_HOME/repository/components/lib/" ~+ -type f -name "geronimo-spec-jms-*.jar" | head -1)
         full_artifact_name=$(basename ${location})
-        artifact_name=$(echo "$full_artifact_name" | awk -F'-' '{print $3}')
+        artifact_name=$(echo "$full_artifact_name" | awk -F'-' '{print $(NF-1)"."$(NF)}')
         LOCAL_JMS_VERSION=$(echo "$artifact_name" | awk -F'.' '{print $1 "." $2}')
         echo "Remove existing Geronimo Spec Jms library from lib folder: ${full_artifact_name}"
         rm $location
