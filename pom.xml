@@ -2252,11 +2252,11 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>5.26.4</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.26.8</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
-        <saml.common.util.version>1.3.0</saml.common.util.version>
+        <saml.common.util.version>1.4.0</saml.common.util.version>
         <saml.common.util.version.range>[1.0.0,2.0.0)</saml.common.util.version.range>
 
         <!--Carbon Consent Version-->
@@ -2266,17 +2266,17 @@
         <identity.governance.version>1.9.2</identity.governance.version>
 
         <!--Identity Carbon Versions-->
-        <identity.carbon.auth.saml2.version>5.9.0</identity.carbon.auth.saml2.version>
+        <identity.carbon.auth.saml2.version>5.9.1</identity.carbon.auth.saml2.version>
         <identity.carbon.auth.mutual.ssl.version>5.5.0</identity.carbon.auth.mutual.ssl.version>
         <identity.carbon.auth.iwa.version>5.5.0</identity.carbon.auth.iwa.version>
         <identity.carbon.auth.rest.version>1.9.0</identity.carbon.auth.rest.version>
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.saml.version>5.11.30</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>6.12.2</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.saml.version>5.11.32</identity.inbound.auth.saml.version>
+        <identity.inbound.auth.oauth.version>6.12.3</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.10.0</identity.inbound.auth.openid.version>
-        <identity.inbound.auth.sts.version>5.11.0</identity.inbound.auth.sts.version>
+        <identity.inbound.auth.sts.version>5.11.1</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.4</identity.inbound.provisioning.scim.version>
         <identity.inbound.provisioning.scim2.version>3.4.56</identity.inbound.provisioning.scim2.version>
 
@@ -2323,7 +2323,7 @@
         <provisioning.connector.scim2.version>2.0.5</provisioning.connector.scim2.version>
 
         <!-- Local Authenticator Versions -->
-        <identity.local.auth.basicauth.version>6.8.0</identity.local.auth.basicauth.version>
+        <identity.local.auth.basicauth.version>6.8.1</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.4.7</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.4.3</identity.local.auth.iwa.version>
 
@@ -2335,7 +2335,7 @@
         <identity.oauth2.token.exchange.grant.version>1.1.5</identity.oauth2.token.exchange.grant.version>
 
         <!--SAML Metadata-->
-        <identity.metadata.saml.version>1.8.0</identity.metadata.saml.version>
+        <identity.metadata.saml.version>1.8.2</identity.metadata.saml.version>
 
         <!-- Connector Versions -->
         <authenticator.totp.version>3.3.25</authenticator.totp.version>
@@ -2345,11 +2345,11 @@
         <authenticator.magiclink.version>1.1.21</authenticator.magiclink.version>
         <authenticator.emailotp.version>4.1.21</authenticator.emailotp.version>
         <authenticator.local.auth.emailotp.version>1.0.17</authenticator.local.auth.emailotp.version>
-        <authenticator.local.auth.smsotp.version>1.0.4</authenticator.local.auth.smsotp.version>
+        <authenticator.local.auth.smsotp.version>1.0.5</authenticator.local.auth.smsotp.version>
         <authenticator.twitter.version>1.1.1</authenticator.twitter.version>
         <authenticator.x509.version>3.1.13</authenticator.x509.version>
         <identity.extension.utils>1.0.14</identity.extension.utils>
-        <authenticator.auth.otp.commons.version>1.0.2</authenticator.auth.otp.commons.version>
+        <authenticator.auth.otp.commons.version>1.0.3</authenticator.auth.otp.commons.version>
 
         <identity.org.mgt.version>1.3.149</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.0.97</identity.org.mgt.core.version>
@@ -2375,9 +2375,9 @@
         <conditional.authentication.functions.version>1.2.42</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.10.84</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.2.94</identity.apps.myaccount.version>
-        <identity.apps.core.version>2.0.123</identity.apps.core.version>
+        <identity.apps.console.version>2.10.86</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.2.95</identity.apps.myaccount.version>
+        <identity.apps.core.version>2.0.124</identity.apps.core.version>
         <identity.apps.tests.version>1.6.373</identity.apps.tests.version>
 
         <!-- Charon -->
