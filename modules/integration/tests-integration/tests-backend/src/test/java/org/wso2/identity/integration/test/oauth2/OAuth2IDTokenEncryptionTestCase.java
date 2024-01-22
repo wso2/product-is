@@ -441,9 +441,9 @@ public class OAuth2IDTokenEncryptionTestCase extends OAuth2ServiceAbstractIntegr
      */
     private void initServiceProviderKeys() throws Exception {
 
-        KeyStore keyStore = KeyStore.getInstance("JKS");
+        KeyStore keyStore = KeyStore.getInstance("PKCS12");
         String jksPath = TestConfigurationProvider.getResourceLocation("IS") + File.separator + "sp" +
-                File.separator + "keystores" + File.separator + "sp1KeyStore.jks";
+                File.separator + "keystores" + File.separator + "sp1KeyStore.p12";
         String jksPassword = "wso2carbon";
 
         keyStore.load(Files.newInputStream(Paths.get(jksPath)), jksPassword.toCharArray());
