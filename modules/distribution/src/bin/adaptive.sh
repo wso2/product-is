@@ -25,11 +25,14 @@
 #                   	
 #   ASM_VERSION   	ASM Util, Commons Version.
 #
+#   JMS_VERSION   	Geronimo Spec JMS Version.
+#
 # -----------------------------------------------------------------------------
 
 
 NASHORN_VERSION=15.3;
 ASM_VERSION=9.2;
+JMS_VERSION=1.1.0.rc4-wso2v1;
 sever_restart_required=false
 
 DISABLE=$1;
@@ -61,6 +64,7 @@ if [[ "$DISABLE" == "DISABLE" || "$DISABLE" == "disable" ]]; then
     if [[ "$DECISION" == "Y" || "$DECISION" == "y" ]]; then
       LOCAL_NASHORN_VERSION=""
       LOCAL_ASM_VERSION=""
+      LOCAL_JMS_VERSION=""
       if compgen -G "$CARBON_HOME/repository/components/lib/nashorn-core-*.jar" > /dev/null; then
         sever_restart_required=true
         location=$(find "$CARBON_HOME/repository/components/lib/" ~+ -type f -name "nashorn-core-*.jar" | head -1)
@@ -96,6 +100,60 @@ if [[ "$DISABLE" == "DISABLE" || "$DISABLE" == "disable" ]]; then
         echo "Remove existing ASM Util library from dropins: ${full_artifact_name}"
         rm $location
         echo "ASM Util library Removed from component/dropins."
+      fi
+      if compgen -G "$CARBON_HOME/repository/components/lib/asm-commons-*.jar" > /dev/null; then
+        sever_restart_required=true
+        location=$(find "$CARBON_HOME/repository/components/lib/" ~+ -type f -name "asm-commons-*.jar" | head -1)
+        full_artifact_name=$(basename ${location})
+        artifact_name=$(echo "$full_artifact_name" | awk -F'-' '{print $3}')
+        LOCAL_ASM_VERSION=$(echo "$artifact_name" | awk -F'.' '{print $1 "." $2}')
+        echo "Remove existing ASM Commons library from lib folder: ${full_artifact_name}"
+        rm $location
+        echo "ASM Commons library Removed from component/lib."
+      fi
+      if compgen -G "$CARBON_HOME/repository/components/dropins/asm_commons_*.jar" > /dev/null; then
+        sever_restart_required=true
+        location=$(find "$CARBON_HOME/repository/components/dropins/" ~+ -type f -name "asm_commons_$LOCAL_ASM_VERSION*.jar" | head -1)
+        full_artifact_name=$(basename ${location})
+        echo "Remove existing ASM Commons library from dropins: ${full_artifact_name}"
+        rm $location
+        echo "ASM Commons library Removed from component/dropins."
+      fi
+      if compgen -G "$CARBON_HOME/repository/components/lib/asm-tree-*.jar" > /dev/null; then
+        sever_restart_required=true
+        location=$(find "$CARBON_HOME/repository/components/lib/" ~+ -type f -name "asm-tree-*.jar" | head -1)
+        full_artifact_name=$(basename ${location})
+        artifact_name=$(echo "$full_artifact_name" | awk -F'-' '{print $3}')
+        LOCAL_ASM_VERSION=$(echo "$artifact_name" | awk -F'.' '{print $1 "." $2}')
+        echo "Remove existing ASM Tree library from lib folder: ${full_artifact_name}"
+        rm $location
+        echo "ASM Tree library Removed from component/lib."
+      fi
+      if compgen -G "$CARBON_HOME/repository/components/dropins/asm_tree_*.jar" > /dev/null; then
+        sever_restart_required=true
+        location=$(find "$CARBON_HOME/repository/components/dropins/" ~+ -type f -name "asm_tree_$LOCAL_ASM_VERSION*.jar" | head -1)
+        full_artifact_name=$(basename ${location})
+        echo "Remove existing ASM Tree library from dropins: ${full_artifact_name}"
+        rm $location
+        echo "ASM Tree library Removed from component/dropins."
+      fi
+      if compgen -G "$CARBON_HOME/repository/components/lib/geronimo-spec-jms-*.jar" > /dev/null; then
+        sever_restart_required=true
+        location=$(find "$CARBON_HOME/repository/components/lib/" ~+ -type f -name "geronimo-spec-jms-*.jar" | head -1)
+        full_artifact_name=$(basename ${location})
+        artifact_name=$(echo "$full_artifact_name" | awk -F'-' '{print $(NF-1)"."$(NF)}')
+        LOCAL_JMS_VERSION=$(echo "$artifact_name" | awk -F'.' '{print $1 "." $2}')
+        echo "Remove existing Geronimo Spec Jms library from lib folder: ${full_artifact_name}"
+        rm $location
+        echo "Geronimo Spec Jms library Removed from component/lib."
+      fi
+      if compgen -G "$CARBON_HOME/repository/components/dropins/geronimo_spec_jms_*.jar" > /dev/null; then
+        sever_restart_required=true
+        location=$(find "$CARBON_HOME/repository/components/dropins/" ~+ -type f -name "geronimo_spec_jms_$LOCAL_JMS_VERSION*.jar" | head -1)
+        full_artifact_name=$(basename ${location})
+        echo "Remove existing Geronimo Spec Jms library from dropins: ${full_artifact_name}"
+        rm $location
+        echo "Geronimo Spec Jms library Removed from component/dropins."
       fi
       echo "Adaptive authentication successfully disabled."
     else
@@ -178,6 +236,123 @@ else
       exit $exit_code
     fi
     echo "ASM-Util download completed. Downloaded version : asm-util-${ASM_VERSION}"
+  fi
+
+  if compgen -G "$CARBON_HOME/repository/components/lib/asm-commons-*.jar" > /dev/null; then
+      location=$(find "$CARBON_HOME/repository/components/lib/" ~+ -type f -name "asm-commons-*.jar" | head -1)
+      full_artifact_name=$(basename ${location})
+      artifact_name=$(echo "$full_artifact_name" | awk -F'-' '{print $3}')
+      LOCAL_ASM_VERSION=$(echo "$artifact_name" | awk -F'.' '{print $1 "." $2}')
+      if [ "$ASM_VERSION" = "$LOCAL_ASM_VERSION" ]; then
+        echo "ASM-Commons library exists. No need to download."
+      else
+        sever_restart_required=true
+        echo "Required ASM-Commons library not found. Remove existing library : ${full_artifact_name}"
+        rm $location
+        if compgen -G "$CARBON_HOME/repository/components/dropins/asm_commons_*.jar" > /dev/null; then
+          location=$(find "$CARBON_HOME/repository/components/dropins/" ~+ -type f -name "asm_commons_$LOCAL_ASM_VERSION*.jar" | head -1)
+          full_artifact_name=$(basename ${location})
+          echo "Remove existing ASM Commons library from dropins: ${full_artifact_name}"
+          rm $location
+          echo "ASM Commons library Removed from component/dropins."
+        fi
+        echo "Downloading required ASM-Commons library : asm-commons-${ASM_VERSION}"
+        curl https://repo1.maven.org/maven2/org/ow2/asm/asm-commons/$ASM_VERSION/asm-commons-$ASM_VERSION.jar -o $CARBON_HOME/repository/components/lib/asm-commons-$ASM_VERSION.jar
+        exit_code=$?
+        if test "$exit_code" != "0"; then
+          echo "ASM-Commons library update failed with exit code: $exit_code"
+          exit $exit_code
+        fi
+        echo "ASM-Commons library updated."
+      fi
+  else
+    sever_restart_required=true
+    echo "ASM-Commons library not found. Starting to download....."
+    curl https://repo1.maven.org/maven2/org/ow2/asm/asm-commons/$ASM_VERSION/asm-commons-$ASM_VERSION.jar -o $CARBON_HOME/repository/components/lib/asm-commons-$ASM_VERSION.jar
+    exit_code=$?
+    if test "$exit_code" != "0"; then
+      echo "ASM-Commons library download failed with exit code: $exit_code"
+      exit $exit_code
+    fi
+    echo "ASM-Commons download completed. Downloaded version : asm-commons-${ASM_VERSION}"
+  fi
+
+  if compgen -G "$CARBON_HOME/repository/components/lib/asm-tree-*.jar" > /dev/null; then
+      location=$(find "$CARBON_HOME/repository/components/lib/" ~+ -type f -name "asm-tree-*.jar" | head -1)
+      full_artifact_name=$(basename ${location})
+      artifact_name=$(echo "$full_artifact_name" | awk -F'-' '{print $3}')
+      LOCAL_ASM_VERSION=$(echo "$artifact_name" | awk -F'.' '{print $1 "." $2}')
+      if [ "$ASM_VERSION" = "$LOCAL_ASM_VERSION" ]; then
+        echo "ASM-Tree library exists. No need to download."
+      else
+        sever_restart_required=true
+        echo "Required ASM-Tree library not found. Remove existing library : ${full_artifact_name}"
+        rm $location
+        if compgen -G "$CARBON_HOME/repository/components/dropins/asm_tree_*.jar" > /dev/null; then
+          location=$(find "$CARBON_HOME/repository/components/dropins/" ~+ -type f -name "asm_tree_$LOCAL_ASM_VERSION*.jar" | head -1)
+          full_artifact_name=$(basename ${location})
+          echo "Remove existing ASM Tree library from dropins: ${full_artifact_name}"
+          rm $location
+          echo "ASM Tree library Removed from component/dropins."
+        fi
+        echo "Downloading required ASM-Tree library : asm-tree-${ASM_VERSION}"
+        curl https://repo1.maven.org/maven2/org/ow2/asm/asm-tree/$ASM_VERSION/asm-tree-$ASM_VERSION.jar -o $CARBON_HOME/repository/components/lib/asm-tree-$ASM_VERSION.jar
+        exit_code=$?
+        if test "$exit_code" != "0"; then
+          echo "ASM-Tree library update failed with exit code: $exit_code"
+          exit $exit_code
+        fi
+        echo "ASM-Tree library updated."
+      fi
+  else
+    sever_restart_required=true
+    echo "ASM-Tree library not found. Starting to download....."
+    curl https://repo1.maven.org/maven2/org/ow2/asm/asm-tree/$ASM_VERSION/asm-tree-$ASM_VERSION.jar -o $CARBON_HOME/repository/components/lib/asm-tree-$ASM_VERSION.jar
+    exit_code=$?
+    if test "$exit_code" != "0"; then
+      echo "ASM-Tree library download failed with exit code: $exit_code"
+      exit $exit_code
+    fi
+    echo "ASM-Tree download completed. Downloaded version : asm-tree-${ASM_VERSION}"
+  fi
+
+  if compgen -G "$CARBON_HOME/repository/components/lib/geronimo-spec-jms-*.jar" > /dev/null; then
+      location=$(find "$CARBON_HOME/repository/components/lib/" ~+ -type f -name "geronimo-spec-jms-*.jar" | head -1)
+      full_artifact_name=$(basename ${location})
+      artifact_name=$(echo "$full_artifact_name" | awk -F'-' '{print $3}')
+      LOCAL_JMS_VERSION=$(echo "$artifact_name" | awk -F'.' '{print $1 "." $2}')
+      if [ "$JMS_VERSION" = "$LOCAL_JMS_VERSION" ]; then
+        echo "Geronimo-Spec-Jms library exists. No need to download."
+      else
+        sever_restart_required=true
+        echo "Required Geronimo-Spec-Jms library not found. Remove existing library : ${full_artifact_name}"
+        rm $location
+        if compgen -G "$CARBON_HOME/repository/components/dropins/geronimo_spec_jms_*.jar" > /dev/null; then
+          location=$(find "$CARBON_HOME/repository/components/dropins/" ~+ -type f -name "geronimo_spec_jms_$LOCAL_JMS_VERSION*.jar" | head -1)
+          full_artifact_name=$(basename ${location})
+          echo "Remove existing Geronimo Spec Jms library from dropins: ${full_artifact_name}"
+          rm $location
+          echo "Geronimo Spec Jms library Removed from component/dropins."
+        fi
+        echo "Downloading required Geronimo-Spec-Jms library : geronimo-spec-jms-${JMS_VERSION}"
+        curl https://dist.wso2.org/maven2/geronimo-spec/wso2/geronimo-spec-jms/$JMS_VERSION/geronimo-spec-jms-$JMS_VERSION.jar -o $CARBON_HOME/repository/components/lib/geronimo-spec-jms-$JMS_VERSION.jar
+        exit_code=$?
+        if test "$exit_code" != "0"; then
+          echo "Geronimo-Spec-Jms library update failed with exit code: $exit_code"
+          exit $exit_code
+        fi
+        echo "Geronimo-Spec-Jms library updated."
+      fi
+  else
+    sever_restart_required=true
+    echo "Geronimo-Spec-Jms library not found. Starting to download....."
+    curl https://dist.wso2.org/maven2/geronimo-spec/wso2/geronimo-spec-jms/$JMS_VERSION/geronimo-spec-jms-$JMS_VERSION.jar -o $CARBON_HOME/repository/components/lib/geronimo-spec-jms-$JMS_VERSION.jar
+    exit_code=$?
+    if test "$exit_code" != "0"; then
+      echo "Geronimo-Spec-Jms library download failed with exit code: $exit_code"
+      exit $exit_code
+    fi
+    echo "Geronimo-Spec-Jms download completed. Downloaded version : geronimo-spec-jms-${JMS_VERSION}"
   fi
   echo "Adaptive authentication successfully enabled."
 fi
