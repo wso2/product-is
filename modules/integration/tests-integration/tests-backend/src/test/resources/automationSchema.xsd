@@ -138,7 +138,7 @@
                                         </xs:element>
                                         <xs:element type="xs:string" name="type">
                                             <xs:annotation>
-                                                <xs:documentation>Keystore type (JKS/PKCS12 etc.)
+                                                <xs:documentation>Keystore type (PKCS12/PKCS12 etc.)
                                                 </xs:documentation>
                                             </xs:annotation>
                                         </xs:element>
@@ -181,7 +181,7 @@
                                         </xs:element>
                                         <xs:element type="xs:string" name="type">
                                             <xs:annotation>
-                                                <xs:documentation>trust-store type (JKS/PKCS12
+                                                <xs:documentation>trust-store type (PKCS12/PKCS12
                                                     etc.)
                                                 </xs:documentation>
                                             </xs:annotation>
