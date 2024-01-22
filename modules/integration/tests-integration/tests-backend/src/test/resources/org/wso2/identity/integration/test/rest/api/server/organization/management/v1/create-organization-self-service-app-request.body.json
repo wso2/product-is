@@ -1,0 +1,12 @@
+{
+  "name": "b2b-self-service-app",
+  "templateId": "custom-application-oidc",
+  "inboundProtocolConfiguration": {
+    "oidc": {
+      "grantTypes": [
+        "client_credentials",
+        "organization_switch"
+      ]
+    }
+  }
+}
