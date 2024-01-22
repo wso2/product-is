@@ -265,7 +265,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         Thread.sleep(5000);
 
         List<NameValuePair> urlParameters = new ArrayList<>();
-        urlParameters.add(new BasicNameValuePair(OAuth2Constant.GRANT_TYPE_NAME, "organization_switch_cc"));
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.GRANT_TYPE_NAME, "organization_switch"));
         urlParameters.add(new BasicNameValuePair("token", m2mToken));
         urlParameters.add(new BasicNameValuePair("scope", "SYSTEM"));
         urlParameters.add(new BasicNameValuePair("switching_organization", organizationID));
