@@ -24,7 +24,7 @@ rem
 rem    CARBON_HOME       Home of WSO2 Carbon installation. If not set I will  try
 rem                      to figure it out.
 rem    NASHORN_VERSION   OpenJDK Nashorn Version        	
-rem    ASM_VERSION       ASM Util, Commons Version.
+rem    ASM_VERSION       ASM Util, Commons, Tree Version.
 rem    JMS_VERSION       Geronimo Spec Jms Version.
 rem
 rem -----------------------------------------------------------------------------
