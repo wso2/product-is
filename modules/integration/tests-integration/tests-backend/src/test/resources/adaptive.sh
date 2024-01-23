@@ -109,13 +109,13 @@ if [[ "$DISABLE" == "DISABLE" || "$DISABLE" == "disable" ]]; then
       location=$(find "$CARBON_HOME/repository/components/lib/" ~+ -type f -name "geronimo-spec-jms-*.jar" | head -1)
       full_artifact_name=$(basename ${location})
       artifact_name=$(echo "$full_artifact_name" | awk -F'-' '{print $3}')
-      LOCAL_ASM_VERSION=$(echo "$artifact_name" | awk -F'.' '{print $1 "." $2}')
+      LOCAL_JMS_VERSION=$(echo "$artifact_name" | awk -F'.' '{print $1 "." $2}')
       echo "Remove existing Geronimo Spec Jms library from lib folder: ${full_artifact_name}"
       rm $location
       echo "Geronimo Spec Jms library Removed from component/lib."
     fi
     if compgen -G "$CARBON_HOME/repository/components/dropins/geronimo_spec_jms_*.jar" > /dev/null; then
-      location=$(find "$CARBON_HOME/repository/components/dropins/" ~+ -type f -name "geronimo_spec_jms_$LOCAL_ASM_VERSION*.jar" | head -1)
+      location=$(find "$CARBON_HOME/repository/components/dropins/" ~+ -type f -name "geronimo_spec_jms_$LOCAL_JMS_VERSION*.jar" | head -1)
       full_artifact_name=$(basename ${location})
       echo "Remove existing Geronimo Spec Jms library from dropins: ${full_artifact_name}"
       rm $location
