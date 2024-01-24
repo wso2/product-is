@@ -21,11 +21,13 @@
     "metrics_menu",
     "shutdown_restart_menu",
     "userstores_mgt_menu",
+    "service_providers_menu",
     "identity_providers_menu",
     "identity_admin_advisory_banner_menu",
     "server-roles-mgt_menu",
     "logging_config_menu"
   ],
+
   "http_access_log.directory": "${carbon.home}/repository/logs",
   "http_access_log.prefix": "http_access_",
   "http_access_log.suffix": ".log",
@@ -57,5 +59,5 @@
 
   "default_management_ui.path": "console",
   "legacy_authz_runtime.enable": false,
-  "resident_identity_provider.enable": "false"
+  "resident_identity_provider_ui.enable": "false"
 }

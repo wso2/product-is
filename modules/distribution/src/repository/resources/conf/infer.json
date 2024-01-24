@@ -32,8 +32,40 @@
         "tenantDomain", "t"]
     }
   },
-  "resident_identity_provider.enable": {
-    "true": {
+  "enable_legacy_ui": {
+    "resident_idp": {
+      "server.hide_menu_items": [
+        "claim_mgt_menu",
+        "remote_fetch_providers_menu",
+        "identity_mgt_emailtemplate_menu",
+        "identity_security_questions_menu",
+        "metrics_menu",
+        "shutdown_restart_menu",
+        "userstores_mgt_menu",
+        "service_providers_menu",
+        "identity_providers_add",
+        "identity_providers_list",
+        "identity_admin_advisory_banner_menu",
+        "server-roles-mgt_menu",
+        "logging_config_menu"
+      ]
+    },
+    "service_provider": {
+      "server.hide_menu_items": [
+        "claim_mgt_menu",
+        "remote_fetch_providers_menu",
+        "identity_mgt_emailtemplate_menu",
+        "identity_security_questions_menu",
+        "metrics_menu",
+        "shutdown_restart_menu",
+        "userstores_mgt_menu",
+        "identity_providers_menu",
+        "identity_admin_advisory_banner_menu",
+        "server-roles-mgt_menu",
+        "logging_config_menu"
+      ]
+    },
+    "all": {
       "server.hide_menu_items": [
         "claim_mgt_menu",
         "remote_fetch_providers_menu",
