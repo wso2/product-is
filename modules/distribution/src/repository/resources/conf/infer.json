@@ -32,7 +32,7 @@
         "tenantDomain", "t"]
     }
   },
-  "enable_legacy_ui": {
+  "legacy_ui.enable": {
     "resident_idp": {
       "server.hide_menu_items": [
         "claim_mgt_menu",
