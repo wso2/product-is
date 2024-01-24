@@ -20,7 +20,7 @@
     "identity_security_questions_menu",
     "metrics_menu",
     "shutdown_restart_menu",
-    "user_mgt_menu_add",
+    "userstores_mgt_menu",
     "identity_providers_menu",
     "identity_admin_advisory_banner_menu",
     "server-roles-mgt_menu",
