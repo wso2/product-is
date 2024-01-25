@@ -74,8 +74,6 @@ public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractInt
     private final String activeTenant;
     private final String OIDC_APP_NAME = "playground23";
     private String oidcAppClientId = "";
-    private String adminUsername;
-    private String adminPassword;
 
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
