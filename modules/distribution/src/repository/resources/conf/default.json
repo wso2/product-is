@@ -5,9 +5,9 @@
   },
   "user_store.type": "database_unique_id",
 
-  "keystore.primary.type" : "JKS",
+  "keystore.primary.type" : "PKCS12",
   "keystore.userstore_password_encryption": "",
-  "truststore.type" : "JKS",
+  "truststore.type" : "PKCS12",
 
   "transport.https.sslHostConfig.properties.certificateVerification": "want",
 
