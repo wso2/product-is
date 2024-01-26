@@ -2253,7 +2253,7 @@
 
         <!--Carbon Identity Framework Version-->
         <carbon.identity.framework.version>5.26.29</carbon.identity.framework.version>
-        <carbon.identity.framework.version.range>[5.14.67, 6.0.0]</carbon.identity.framework.version.range>
+        <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
         <saml.common.util.version>1.4.0</saml.common.util.version>
@@ -2276,7 +2276,7 @@
         <identity.inbound.auth.saml.version>5.11.34</identity.inbound.auth.saml.version>
         <identity.inbound.auth.oauth.version>6.12.11</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.10.1</identity.inbound.auth.openid.version>
-        <identity.inbound.auth.sts.version>5.11.3</identity.inbound.auth.sts.version>
+        <identity.inbound.auth.sts.version>5.11.4</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.4</identity.inbound.provisioning.scim.version>
         <identity.inbound.provisioning.scim2.version>3.4.59</identity.inbound.provisioning.scim2.version>
 
@@ -2304,17 +2304,17 @@
         <!-- Authenticator Versions -->
         <identity.outbound.auth.oidc.version>5.12.2</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.oauth2.version>1.0.12</identity.outbound.auth.oauth2.version>
-        <identity.outbound.auth.passive.sts.version>5.5.0</identity.outbound.auth.passive.sts.version>
+        <identity.outbound.auth.passive.sts.version>5.5.1</identity.outbound.auth.passive.sts.version>
         <identity.outbound.auth.samlsso.version>5.9.2</identity.outbound.auth.samlsso.version>
         <identity.outbound.auth.requestpath.basicauth.version>5.5.5</identity.outbound.auth.requestpath.basicauth.version>
-        <identity.outbound.auth.requestpath.oauth.version>5.5.4</identity.outbound.auth.requestpath.oauth.version>
+        <identity.outbound.auth.requestpath.oauth.version>5.5.5</identity.outbound.auth.requestpath.oauth.version>
 
         <!-- Social Authenticator Versions -->
         <social.authenticator.facebook.version>5.2.12</social.authenticator.facebook.version>
         <social.authenticator.google.version>5.2.15</social.authenticator.google.version>
         <social.authenticator.windowslive.version>5.2.3</social.authenticator.windowslive.version>
         <social.authenticator.apple.version>1.0.5</social.authenticator.apple.version>
-        <social.authenticator.github.version>1.1.12</social.authenticator.github.version>
+        <social.authenticator.github.version>1.1.13</social.authenticator.github.version>
 
         <!-- Provisioning connector Versions -->
         <provisioning.connector.google.version>5.2.4</provisioning.connector.google.version>
@@ -2324,11 +2324,11 @@
 
         <!-- Local Authenticator Versions -->
         <identity.local.auth.basicauth.version>6.8.2</identity.local.auth.basicauth.version>
-        <identity.local.auth.fido.version>5.4.7</identity.local.auth.fido.version>
-        <identity.local.auth.iwa.version>5.4.3</identity.local.auth.iwa.version>
+        <identity.local.auth.fido.version>5.4.8</identity.local.auth.fido.version>
+        <identity.local.auth.iwa.version>5.4.4</identity.local.auth.iwa.version>
 
         <!-- Local Authentication API Connector Version -->
-        <identity.local.auth.api.version>2.5.8</identity.local.auth.api.version>
+        <identity.local.auth.api.version>2.5.9</identity.local.auth.api.version>
 
         <!-- OAuth2 Grant Type extensions -->
         <identity.oauth2.jwt.bearer.grant.version>2.3.1</identity.oauth2.jwt.bearer.grant.version>
@@ -2340,15 +2340,15 @@
         <!-- Connector Versions -->
         <authenticator.totp.version>3.3.26</authenticator.totp.version>
         <authenticator.backupcode.version>0.0.18</authenticator.backupcode.version>
-        <authenticator.office365.version>2.1.2</authenticator.office365.version>
+        <authenticator.office365.version>2.1.3</authenticator.office365.version>
         <authenticator.smsotp.version>3.3.19</authenticator.smsotp.version>
         <authenticator.magiclink.version>1.1.22</authenticator.magiclink.version>
-        <authenticator.emailotp.version>4.1.21</authenticator.emailotp.version>
+        <authenticator.emailotp.version>4.1.22</authenticator.emailotp.version>
         <authenticator.local.auth.emailotp.version>1.0.18</authenticator.local.auth.emailotp.version>
         <authenticator.local.auth.smsotp.version>1.0.6</authenticator.local.auth.smsotp.version>
-        <authenticator.twitter.version>1.1.1</authenticator.twitter.version>
+        <authenticator.twitter.version>1.1.2</authenticator.twitter.version>
         <authenticator.x509.version>3.1.13</authenticator.x509.version>
-        <identity.extension.utils>1.0.14</identity.extension.utils>
+        <identity.extension.utils>1.0.15-SNAPSHOT</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.0.4</authenticator.auth.otp.commons.version>
 
         <identity.org.mgt.version>1.3.152</identity.org.mgt.version>
@@ -2393,7 +2393,7 @@
         <carbon.deployment.version>4.12.20</carbon.deployment.version>
         <carbon.commons.version>4.10.7</carbon.commons.version>
         <carbon.registry.version>4.8.15</carbon.registry.version>
-        <carbon.multitenancy.version>4.11.18</carbon.multitenancy.version>
+        <carbon.multitenancy.version>4.11.19</carbon.multitenancy.version>
         <carbon.metrics.version>1.3.12</carbon.metrics.version>
         <carbon.analytics-common.version>5.2.56</carbon.analytics-common.version>
         <carbon.dashboards.version>2.0.27</carbon.dashboards.version>
@@ -2433,7 +2433,7 @@
         <maven.checkstyle.plugin.version>3.1.1</maven.checkstyle.plugin.version>
 
         <!-- Sample dependency Versions -->
-        <samples.is.version>4.3.11</samples.is.version>
+        <samples.is.version>4.3.12</samples.is.version>
         <sevlet.api.version>2.5</sevlet.api.version>
         <jsp.api.version>2.0</jsp.api.version>
         <neethi.wso2.version>2.0.4.wso2v5</neethi.wso2.version>
