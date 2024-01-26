@@ -2307,7 +2307,7 @@
         <identity.outbound.auth.passive.sts.version>5.5.1</identity.outbound.auth.passive.sts.version>
         <identity.outbound.auth.samlsso.version>5.9.2</identity.outbound.auth.samlsso.version>
         <identity.outbound.auth.requestpath.basicauth.version>5.5.5</identity.outbound.auth.requestpath.basicauth.version>
-        <identity.outbound.auth.requestpath.oauth.version>5.5.5</identity.outbound.auth.requestpath.oauth.version>
+        <identity.outbound.auth.requestpath.oauth.version>5.5.6</identity.outbound.auth.requestpath.oauth.version>
 
         <!-- Social Authenticator Versions -->
         <social.authenticator.facebook.version>5.2.12</social.authenticator.facebook.version>
@@ -2348,7 +2348,7 @@
         <authenticator.local.auth.smsotp.version>1.0.6</authenticator.local.auth.smsotp.version>
         <authenticator.twitter.version>1.1.2</authenticator.twitter.version>
         <authenticator.x509.version>3.1.13</authenticator.x509.version>
-        <identity.extension.utils>1.0.15-SNAPSHOT</identity.extension.utils>
+        <identity.extension.utils>1.0.15</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.0.4</authenticator.auth.otp.commons.version>
 
         <identity.org.mgt.version>1.3.152</identity.org.mgt.version>
