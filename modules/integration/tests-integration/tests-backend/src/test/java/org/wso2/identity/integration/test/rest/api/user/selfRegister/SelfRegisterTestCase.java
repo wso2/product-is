@@ -69,6 +69,17 @@ public class SelfRegisterTestCase extends SelfRegisterTestBase {
         Assert.assertEquals(responseOfPost.statusCode(), HttpStatus.SC_BAD_REQUEST, "Self register user not enabled");
     }
 
+    @Test(alwaysRun = true, groups = "wso2.is", description = "Create self registered user with invalid password")
+    public void testSelfRegisterWithInvalidPassword() throws Exception {
+
+        updateResidentIDPProperty(ENABLE_SELF_SIGN_UP, "true", true);
+        String selfRegisterUserInfoWithInvalidPassword = selfRegisterUserInfo.replaceAll("Password12!", "123");
+        Response responseOfPost =
+                getResponseOfPost(SELF_REGISTRATION_ENDPOINT, selfRegisterUserInfoWithInvalidPassword);
+        Assert.assertEquals(responseOfPost.statusCode(), HttpStatus.SC_BAD_REQUEST,
+                "Self register user password invalid");
+    }
+
     @Test(alwaysRun = true, groups = "wso2.is", description = "Create self registered user")
     public void testSelfRegister() throws Exception {
 
@@ -88,17 +99,6 @@ public class SelfRegisterTestCase extends SelfRegisterTestBase {
         updateResidentIDPProperty(ENABLE_SELF_SIGN_UP, "true", true);
         Response responseOfPost = getResponseOfPost(SELF_REGISTRATION_ENDPOINT, selfRegisterUserInfo);
         Assert.assertEquals(responseOfPost.statusCode(), HttpStatus.SC_CONFLICT, "Self register user already exists");
-    }
-
-    @Test(alwaysRun = true, groups = "wso2.is", description = "Create self registered user with invalid password")
-    public void testSelfRegisterWithInvalidPassword() throws Exception {
-
-        updateResidentIDPProperty(ENABLE_SELF_SIGN_UP, "true", true);
-        String selfRegisterUserInfoWithInvalidPassword = selfRegisterUserInfo.replaceAll("Password12!", "123");
-        Response responseOfPost =
-                getResponseOfPost(SELF_REGISTRATION_ENDPOINT, selfRegisterUserInfoWithInvalidPassword);
-        Assert.assertEquals(responseOfPost.statusCode(), HttpStatus.SC_BAD_REQUEST,
-                "Self register user password invalid");
     }
 
     @Test(alwaysRun = true, groups = "wso2.is", description = "Create self registered user with invalid username")
