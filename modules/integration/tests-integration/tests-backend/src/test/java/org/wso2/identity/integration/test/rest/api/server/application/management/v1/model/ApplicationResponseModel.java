@@ -20,13 +20,12 @@ package org.wso2.identity.integration.test.rest.api.server.application.managemen
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import javax.xml.bind.annotation.*;
+import javax.validation.constraints.*;
 
 public class ApplicationResponseModel {
   
@@ -35,6 +34,7 @@ public class ApplicationResponseModel {
     private String description;
     private String imageUrl;
     private String accessUrl;
+    private String logoutReturnUrl;
     private String clientId;
     private String issuer;
     private String realm;
@@ -172,6 +172,24 @@ public class ApplicationResponseModel {
     }
     public void setAccessUrl(String accessUrl) {
         this.accessUrl = accessUrl;
+    }
+
+    /**
+     **/
+    public ApplicationResponseModel logoutReturnUrl(String logoutReturnUrl) {
+
+        this.logoutReturnUrl = logoutReturnUrl;
+        return this;
+    }
+
+    @ApiModelProperty(example = "https://example.com/app/logout", value = "")
+    @JsonProperty("logoutReturnUrl")
+    @Valid
+    public String getLogoutReturnUrl() {
+        return logoutReturnUrl;
+    }
+    public void setLogoutReturnUrl(String logoutReturnUrl) {
+        this.logoutReturnUrl = logoutReturnUrl;
     }
 
     /**
@@ -427,6 +445,7 @@ public class ApplicationResponseModel {
                 Objects.equals(this.description, applicationResponseModel.description) &&
                 Objects.equals(this.imageUrl, applicationResponseModel.imageUrl) &&
                 Objects.equals(this.accessUrl, applicationResponseModel.accessUrl) &&
+                Objects.equals(this.logoutReturnUrl, applicationResponseModel.logoutReturnUrl) &&
                 Objects.equals(this.clientId, applicationResponseModel.clientId) &&
                 Objects.equals(this.issuer, applicationResponseModel.issuer) &&
                 Objects.equals(this.realm, applicationResponseModel.realm) &&
@@ -444,34 +463,35 @@ public class ApplicationResponseModel {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, imageUrl, accessUrl, clientId, issuer, realm, templateId,
-                isManagementApp, isB2BSelfServiceApp, associatedRoles, claimConfiguration, inboundProtocols,
-                authenticationSequence, advancedConfigurations, provisioningConfigurations, access);
+        return Objects.hash(id, name, description, imageUrl, accessUrl, logoutReturnUrl, clientId, issuer, realm, templateId, isManagementApp, isB2BSelfServiceApp, associatedRoles, claimConfiguration, inboundProtocols, authenticationSequence, advancedConfigurations, provisioningConfigurations, access);
     }
 
     @Override
     public String toString() {
 
-        return "class ApplicationResponseModel {\n" +
-                "    id: " + toIndentedString(id) + "\n" +
-                "    name: " + toIndentedString(name) + "\n" +
-                "    description: " + toIndentedString(description) + "\n" +
-                "    imageUrl: " + toIndentedString(imageUrl) + "\n" +
-                "    accessUrl: " + toIndentedString(accessUrl) + "\n" +
-                "    clientId: " + toIndentedString(clientId) + "\n" +
-                "    issuer: " + toIndentedString(issuer) + "\n" +
-                "    realm: " + toIndentedString(realm) + "\n" +
-                "    templateId: " + toIndentedString(templateId) + "\n" +
-                "    isManagementApp: " + toIndentedString(isManagementApp) + "\n" +
-                "    isB2BSelfServiceApp: " + toIndentedString(isB2BSelfServiceApp) + "\n" +
-                "    associatedRoles: " + toIndentedString(associatedRoles) + "\n" +
-                "    claimConfiguration: " + toIndentedString(claimConfiguration) + "\n" +
-                "    inboundProtocols: " + toIndentedString(inboundProtocols) + "\n" +
-                "    authenticationSequence: " + toIndentedString(authenticationSequence) + "\n" +
-                "    advancedConfigurations: " + toIndentedString(advancedConfigurations) + "\n" +
-                "    provisioningConfigurations: " + toIndentedString(provisioningConfigurations) + "\n" +
-                "    access: " + toIndentedString(access) + "\n" +
-                "}";
+        StringBuilder sb = new StringBuilder();
+        sb.append("class ApplicationResponseModel {\n");
+        sb.append("    id: ").append(toIndentedString(id)).append("\n");
+        sb.append("    name: ").append(toIndentedString(name)).append("\n");
+        sb.append("    description: ").append(toIndentedString(description)).append("\n");
+        sb.append("    imageUrl: ").append(toIndentedString(imageUrl)).append("\n");
+        sb.append("    accessUrl: ").append(toIndentedString(accessUrl)).append("\n");
+        sb.append("    logoutReturnUrl: ").append(toIndentedString(logoutReturnUrl)).append("\n");
+        sb.append("    clientId: ").append(toIndentedString(clientId)).append("\n");
+        sb.append("    issuer: ").append(toIndentedString(issuer)).append("\n");
+        sb.append("    realm: ").append(toIndentedString(realm)).append("\n");
+        sb.append("    templateId: ").append(toIndentedString(templateId)).append("\n");
+        sb.append("    isManagementApp: ").append(toIndentedString(isManagementApp)).append("\n");
+        sb.append("    isB2BSelfServiceApp: ").append(toIndentedString(isB2BSelfServiceApp)).append("\n");
+        sb.append("    associatedRoles: ").append(toIndentedString(associatedRoles)).append("\n");
+        sb.append("    claimConfiguration: ").append(toIndentedString(claimConfiguration)).append("\n");
+        sb.append("    inboundProtocols: ").append(toIndentedString(inboundProtocols)).append("\n");
+        sb.append("    authenticationSequence: ").append(toIndentedString(authenticationSequence)).append("\n");
+        sb.append("    advancedConfigurations: ").append(toIndentedString(advancedConfigurations)).append("\n");
+        sb.append("    provisioningConfigurations: ").append(toIndentedString(provisioningConfigurations)).append("\n");
+        sb.append("    access: ").append(toIndentedString(access)).append("\n");
+        sb.append("}");
+        return sb.toString();
     }
 
     /**
