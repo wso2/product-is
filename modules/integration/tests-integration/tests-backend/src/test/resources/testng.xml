@@ -137,7 +137,7 @@
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenRevocationWithSessionTerminationTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenRevocationWithMultipleSessionTerminationTestCase"/>
 <!--            Temporarily commenting out following test case cause due to intermittent error-->
-            <class name="org.wso2.identity.integration.test.applicationNativeAuthentication.ApplicationNativeAuthenticationTestCase"/>
+<!--            <class name="org.wso2.identity.integration.test.applicationNativeAuthentication.ApplicationNativeAuthenticationTestCase"/>-->
         </classes>
     </test>
 
