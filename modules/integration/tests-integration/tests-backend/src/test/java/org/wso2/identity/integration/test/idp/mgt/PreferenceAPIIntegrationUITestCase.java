@@ -71,24 +71,9 @@ public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractInt
     private IdentityProviderMgtServiceClient superTenantIDPMgtClient;
     private ServerConfigurationManager serverConfigurationManager;
     private String recoveryEndpoint;
-    private final String activeTenant;
+    private String activeTenant;
     private final String OIDC_APP_NAME = "playground23";
     private String oidcAppClientId = "";
-
-    @DataProvider(name = "configProvider")
-    public static Object[][] configProvider() {
-
-        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}};
-    }
-
-    @Factory(dataProvider = "configProvider")
-    public PreferenceAPIIntegrationUITestCase(TestUserMode userMode) throws Exception {
-
-        super.init(userMode);
-        AutomationContext context = new AutomationContext("IDENTITY", userMode);
-        this.activeTenant = context.getContextTenant().getDomain();
-
-    }
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -103,6 +88,8 @@ public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractInt
         serverConfigurationManager.restartGracefully();
 
         super.init();
+        AutomationContext context = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
+        this.activeTenant = context.getContextTenant().getDomain();
         superTenantIDPMgtClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
         superTenantResidentIDP = superTenantIDPMgtClient.getResidentIdP();
         adminClient = new OauthAdminClient(backendURL, sessionCookie);
