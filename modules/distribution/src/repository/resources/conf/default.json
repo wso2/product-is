@@ -24,6 +24,9 @@
     "userstores_mgt_menu",
     "service_providers_menu",
     "identity_providers_menu",
+    "identity_verification_providers_menu",
+    "identity_emailtemplate_menu",
+    "scope_menu",
     "identity_admin_advisory_banner_menu",
     "server-roles-mgt_menu",
     "logging_config_menu"
