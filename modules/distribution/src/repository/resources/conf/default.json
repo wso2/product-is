@@ -20,6 +20,7 @@
     "identity_security_questions_menu",
     "metrics_menu",
     "shutdown_restart_menu",
+    "user_mgt_menu",
     "userstores_mgt_menu",
     "service_providers_menu",
     "identity_providers_menu",

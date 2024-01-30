@@ -313,7 +313,7 @@
                                 </featureArtifactDef>
                                 <!-- Features related to Cloud Identity -->
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity.framework:org.wso2.carbon.user.mgt.server.feature:${carbon.identity.framework.version}
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.user.mgt.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.role.mgt.ui.feature:${carbon.identity.framework.version}
@@ -786,7 +786,7 @@
                                     <version>${carbon.registry.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.user.mgt.server.feature.group</id>
+                                    <id>org.wso2.carbon.user.mgt.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
