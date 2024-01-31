@@ -117,6 +117,7 @@ public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractInt
     public void atEnd() throws Exception {
 
         adminClient.removeOAuthApplicationData(oidcAppClientId);
+        serverConfigurationManager.restoreToLastConfiguration(false);
     }
 
     @AfterMethod
