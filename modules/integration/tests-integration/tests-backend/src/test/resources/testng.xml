@@ -29,6 +29,7 @@
 
     <test name="is-tests-default-configuration" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
+            <class name="org.wso2.identity.integration.test.applicationNativeAuthentication.ApplicationNativeAuthenticationTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2DeviceFlowTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2PushedAuthRequestTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ResponseModeTestCase"/>
@@ -133,7 +134,6 @@
             <class name="org.wso2.identity.integration.test.identityServlet.ExtendSessionEndpointAuthCodeGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenRevocationWithSessionTerminationTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenRevocationWithMultipleSessionTerminationTestCase"/>
-            <class name="org.wso2.identity.integration.test.applicationNativeAuthentication.ApplicationNativeAuthenticationTestCase"/>
         </classes>
     </test>
 
