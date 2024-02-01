@@ -2351,7 +2351,7 @@
         <identity.extension.utils>1.0.15</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.0.4</authenticator.auth.otp.commons.version>
 
-        <identity.org.mgt.version>1.3.152</identity.org.mgt.version>
+        <identity.org.mgt.version>1.4.0</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.0.98</identity.org.mgt.core.version>
         <identity.organization.login.version>1.1.26</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.22</identity.oauth2.grant.organizationswitch.version>
