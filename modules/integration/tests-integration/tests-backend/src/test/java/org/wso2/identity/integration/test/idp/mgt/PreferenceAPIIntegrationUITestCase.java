@@ -35,12 +35,15 @@ import org.wso2.carbon.identity.application.common.model.idp.xsd.FederatedAuthen
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProviderProperty;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
+import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.test.oauth2.OAuth2ServiceAbstractIntegrationTest;
+import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
+import java.io.File;
 import java.io.IOException;
 
 import static org.wso2.identity.integration.test.utils.CommonConstants.DEFAULT_TOMCAT_PORT;
@@ -51,6 +54,7 @@ import static org.wso2.identity.integration.test.utils.CommonConstants.DEFAULT_T
 public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractIntegrationTest {
 
     private static final String ENABLE_SELF_REGISTRATION_PROP_KEY = "SelfRegistration.Enable";
+    public static final String ADD_CHALLENGE_QUESTIONS_CONFIG = "challenge_questions_config.toml";
     private static final String ENABLE_USERNAME_RECOVERY_PROP_KEY = "Recovery.Notification.Username.Enable";
     private static final String ENABLE_PASSWORD_QS_RECOVERY_PROP_KEY = "Recovery.Question.Password.Enable";
     private static final String ENABLE_PASSWORD_NOTIFICATION_RECOVERY_PROP_KEY =
@@ -65,8 +69,9 @@ public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractInt
 
     private IdentityProvider superTenantResidentIDP;
     private IdentityProviderMgtServiceClient superTenantIDPMgtClient;
+    private ServerConfigurationManager serverConfigurationManager;
     private String recoveryEndpoint;
-    private final String activeTenant;
+    private String activeTenant;
     private final String OIDC_APP_NAME = "playground23";
     private String oidcAppClientId = "";
 
@@ -82,11 +87,19 @@ public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractInt
         super.init(userMode);
         AutomationContext context = new AutomationContext("IDENTITY", userMode);
         this.activeTenant = context.getContextTenant().getDomain();
-
     }
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
+
+        super.init();
+        String carbonHome = Utils.getResidentCarbonHome();
+        File defaultConfigFile = getDeploymentTomlFile(carbonHome);
+        File challengeQuestionsConfigFile = new File(
+                getISResourceLocation() + File.separator + "challenge-questions" + File.separator + ADD_CHALLENGE_QUESTIONS_CONFIG);
+        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager.applyConfigurationWithoutRestart(challengeQuestionsConfigFile, defaultConfigFile, true);
+        serverConfigurationManager.restartGracefully();
 
         super.init();
         superTenantIDPMgtClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
