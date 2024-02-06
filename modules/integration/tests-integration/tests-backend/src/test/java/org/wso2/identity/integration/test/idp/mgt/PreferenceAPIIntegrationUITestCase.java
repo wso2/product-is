@@ -71,7 +71,7 @@ public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractInt
     private IdentityProviderMgtServiceClient superTenantIDPMgtClient;
     private ServerConfigurationManager serverConfigurationManager;
     private String recoveryEndpoint;
-    private String activeTenant;
+    private final String activeTenant;
     private final String OIDC_APP_NAME = "playground23";
     private String oidcAppClientId = "";
 
