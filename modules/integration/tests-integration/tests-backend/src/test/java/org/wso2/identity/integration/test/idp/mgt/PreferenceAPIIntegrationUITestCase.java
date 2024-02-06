@@ -87,10 +87,6 @@ public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractInt
         super.init(userMode);
         AutomationContext context = new AutomationContext("IDENTITY", userMode);
         this.activeTenant = context.getContextTenant().getDomain();
-    }
-
-    @BeforeClass(alwaysRun = true)
-    public void testInit() throws Exception {
 
         super.init();
         String carbonHome = Utils.getResidentCarbonHome();
@@ -100,7 +96,11 @@ public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractInt
         serverConfigurationManager = new ServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(challengeQuestionsConfigFile, defaultConfigFile, true);
         serverConfigurationManager.restartGracefully();
+        super.init(userMode);
+    }
 
+    @BeforeClass(alwaysRun = true)
+    public void testInit() throws Exception {
         super.init();
         superTenantIDPMgtClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
         superTenantResidentIDP = superTenantIDPMgtClient.getResidentIdP();
