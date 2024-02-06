@@ -101,6 +101,7 @@ public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractInt
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
+
         super.init();
         superTenantIDPMgtClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
         superTenantResidentIDP = superTenantIDPMgtClient.getResidentIdP();
