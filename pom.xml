@@ -2414,7 +2414,7 @@
         <axis2.jibx.wso2.version>1.6.1.wso2v11</axis2.jibx.wso2.version>
         <axis2.jaxb.wso2.version>${axis2.wso2.version}</axis2.jaxb.wso2.version>
         <axis2-transports.version>2.0.0-wso2v42</axis2-transports.version>
-        <h2database.wso2.version>2.2.220.wso2v1</h2database.wso2.version>
+        <h2database.wso2.version>2.2.224.wso2v2</h2database.wso2.version>
         <slf4j.version>1.7.28</slf4j.version>
 
         <!-- UI styles dependency versions -->
