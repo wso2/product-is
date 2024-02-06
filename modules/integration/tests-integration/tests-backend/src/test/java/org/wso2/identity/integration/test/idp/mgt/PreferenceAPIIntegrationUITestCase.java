@@ -35,6 +35,7 @@ import org.wso2.carbon.identity.application.common.model.idp.xsd.FederatedAuthen
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProviderProperty;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
+import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
@@ -70,6 +71,7 @@ public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractInt
     private IdentityProvider superTenantResidentIDP;
     private IdentityProviderMgtServiceClient superTenantIDPMgtClient;
     private ServerConfigurationManager serverConfigurationManager;
+    private TestUserMode userMode;
     private String recoveryEndpoint;
     private final String activeTenant;
     private final String OIDC_APP_NAME = "playground23";
@@ -84,19 +86,13 @@ public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractInt
     @Factory(dataProvider = "configProvider")
     public PreferenceAPIIntegrationUITestCase(TestUserMode userMode) throws Exception {
 
+        this.userMode = userMode;
         super.init(userMode);
         AutomationContext context = new AutomationContext("IDENTITY", userMode);
         this.activeTenant = context.getContextTenant().getDomain();
-
-        super.init();
-        String carbonHome = Utils.getResidentCarbonHome();
-        File defaultConfigFile = getDeploymentTomlFile(carbonHome);
-        File challengeQuestionsConfigFile = new File(
-                getISResourceLocation() + File.separator + "challenge-questions" + File.separator + ADD_CHALLENGE_QUESTIONS_CONFIG);
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
-        serverConfigurationManager.applyConfigurationWithoutRestart(challengeQuestionsConfigFile, defaultConfigFile, true);
-        serverConfigurationManager.restartGracefully();
-        super.init(userMode);
+        if (userMode == TestUserMode.SUPER_TENANT_ADMIN) {
+            changeISConfiguration();
+        }
     }
 
     @BeforeClass(alwaysRun = true)
@@ -130,6 +126,9 @@ public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractInt
     public void atEnd() throws Exception {
 
         adminClient.removeOAuthApplicationData(oidcAppClientId);
+        if (userMode == TestUserMode.SUPER_TENANT_ADMIN) {
+            restoreDefaultConfig();
+        }
     }
 
     @AfterMethod
@@ -261,4 +260,19 @@ public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractInt
         return content;
     }
 
+    private void restoreDefaultConfig() throws IOException, AutomationUtilException {
+        serverConfigurationManager.restoreToLastConfiguration(false);
+    }
+
+    private void changeISConfiguration() throws Exception {
+        super.init();
+        String carbonHome = Utils.getResidentCarbonHome();
+        File defaultConfigFile = getDeploymentTomlFile(carbonHome);
+        File challengeQuestionsConfigFile = new File(
+                getISResourceLocation() + File.separator + "challenge-questions" + File.separator + ADD_CHALLENGE_QUESTIONS_CONFIG);
+        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager.applyConfigurationWithoutRestart(challengeQuestionsConfigFile, defaultConfigFile, true);
+        serverConfigurationManager.restartGracefully();
+        super.init();
+    }
 }
