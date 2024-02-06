@@ -114,9 +114,9 @@ else
   cd $REPO
   if [ "$REPO" = "carbon-kernel" ]; then
     echo ""
-    echo "Checking out for 4.9.x branch..."
+    echo "Checking out for 4.10.x branch..."
     echo "=========================================================="
-    git checkout 4.9.x
+    git checkout 4.10.x
   elif [ "$REPO" = "carbon-deployment" ]; then
     echo ""
     echo "Checking out for 4.x.x branch in carbon-deployment..."
