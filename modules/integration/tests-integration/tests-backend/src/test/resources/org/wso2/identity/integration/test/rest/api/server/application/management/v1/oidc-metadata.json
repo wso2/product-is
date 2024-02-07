@@ -26,6 +26,10 @@
         "displayName": "IWA-NTLM"
       },
       {
+        "name": "urn:ietf:params:oauth:grant-type:jwt-bearer",
+        "displayName": "JWT Bearer"
+      },
+      {
         "name": "urn:ietf:params:oauth:grant-type:device_code",
         "displayName": "Device Code"
       },
