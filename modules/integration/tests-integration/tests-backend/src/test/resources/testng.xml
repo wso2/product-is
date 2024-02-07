@@ -91,10 +91,7 @@
             <class name="org.wso2.identity.integration.test.requestPathAuthenticator.RequestPathBasicAuthenticationSSOTest" />
             <class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderMgtServiceTestCase" />
             <class name="org.wso2.identity.integration.test.idp.mgt.ResidentIDPConfigsTestCase" />
-
-            <!--Temporarily disabling until the test is resolved.
             <class name="org.wso2.identity.integration.test.idp.mgt.PreferenceAPIIntegrationUITestCase" />
-            -->
 
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceSAML2BearerGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.application.authz.ApplicationAuthzTestCase"/>
@@ -354,6 +351,7 @@
             <class name="org.wso2.identity.integration.test.oidc.OIDCPasswordGrantTest"/>
             <!--<class name="org.wso2.identity.integration.test.saml.SAMLECPSSOTestCase"/>-->
             <class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileAdminTestCase"/>
+            <class name="org.wso2.identity.integration.test.idp.mgt.ChallengeQuestionsUITestCase"/>
             <class name="org.wso2.identity.integration.test.identity.mgt.AccountLockWhileCaseInsensitiveUserFalseTestCase"/>
             <class name="org.wso2.identity.integration.test.EmailOTPTestCase"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.liteUserRegister.LiteUserRegisterTestCase"/>
