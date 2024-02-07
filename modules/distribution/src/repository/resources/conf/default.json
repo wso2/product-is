@@ -5,9 +5,9 @@
   },
   "user_store.type": "database_unique_id",
 
-  "keystore.primary.type" : "JKS",
+  "keystore.primary.type" : "PKCS12",
   "keystore.userstore_password_encryption": "",
-  "truststore.type" : "JKS",
+  "truststore.type" : "PKCS12",
 
   "transport.https.sslHostConfig.properties.certificateVerification": "want",
 
@@ -20,8 +20,13 @@
     "identity_security_questions_menu",
     "metrics_menu",
     "shutdown_restart_menu",
-    "user_mgt_menu_add",
+    "user_mgt_menu",
+    "userstores_mgt_menu",
+    "service_providers_menu",
     "identity_providers_menu",
+    "identity_verification_providers_menu",
+    "identity_emailtemplate_menu",
+    "scope_menu",
     "identity_admin_advisory_banner_menu",
     "server-roles-mgt_menu",
     "logging_config_menu"
@@ -56,6 +61,5 @@
   "user_store.properties.UsernameJavaScriptRegEx": "^[^\\s*?%]{3,50}$",
 
   "default_management_ui.path": "console",
-  "legacy_authz_runtime.enable": false,
-  "resident_identity_provider.enable": "false"
+  "legacy_authz_runtime.enable": false
 }

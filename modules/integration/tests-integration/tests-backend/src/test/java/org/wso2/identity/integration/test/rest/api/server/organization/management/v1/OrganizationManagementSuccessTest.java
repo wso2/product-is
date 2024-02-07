@@ -47,6 +47,7 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.testng.Assert;
@@ -72,6 +73,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -97,6 +99,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     private String switchedM2MToken;
     private String b2bApplicationID;
     private HttpClient client;
+    protected OAuth2RestClient restClient;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public OrganizationManagementSuccessTest(TestUserMode userMode) throws Exception {
@@ -147,29 +150,49 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     }
 
     @Test
-    public void enableSelfOrganizationOnboardService() throws IOException {
+    public void createApplicationForSelfOrganizationOnboardService() throws IOException, JSONException {
 
-        String endpointURL = "self-service/preferences";
-        String body = readResource("enable-self-organization-onboard-request-body.json");
+        String endpointURL = "applications";
+        String body = readResource("create-organization-self-service-app-request.body.json");
 
         Response response = given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
                 .contentType(ContentType.JSON)
-                .body(body)
-                .when()
-                .patch(endpointURL);
+                .body(body).when().post(endpointURL);
         response.then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK);
+                .log().ifValidationFails().assertThat().statusCode(HttpStatus.SC_CREATED);
 
         Optional<ApplicationListItem> b2bSelfServiceApp = oAuth2RestClient.getAllApplications().getApplications().stream()
-                .filter(application -> application.getName().equals("B2B-Self-Service-Mgt-Application"))
+                .filter(application -> application.getName().equals("b2b-self-service-app"))
                 .findAny();
-        Assert.assertTrue(b2bSelfServiceApp.isPresent(), "B2B self organization onboard feature is not enabled properly");
+        Assert.assertTrue(b2bSelfServiceApp.isPresent(), "B2B self service application is not created");
         selfServiceAppId = b2bSelfServiceApp.get().getId();
+
+        JSONObject jsonObject = new JSONObject(readResource("organization-self-service-apis.json"));
+
+        for (Iterator<String> apiNameIterator = jsonObject.keys(); apiNameIterator.hasNext(); ) {
+            String apiName = apiNameIterator.next();
+            Object requiredScopes = jsonObject.get(apiName);
+
+            Response aPIResource =
+                    given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential).when()
+                            .queryParam("filter", "identifier eq " + apiName).get("api-resources");
+            aPIResource.then().log().ifValidationFails().assertThat().statusCode(HttpStatus.SC_OK);
+            String apiUUID = aPIResource.getBody().jsonPath().getString("apiResources[0].id");
+
+            JSONObject authorizedAPIRequestBody = new JSONObject();
+            authorizedAPIRequestBody.put("id", apiUUID);
+            authorizedAPIRequestBody.put("policyIdentifier", "RBAC");
+            authorizedAPIRequestBody.put("scopes", requiredScopes);
+
+            Response authorizedAPIResponse =
+                    given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
+                            .contentType(ContentType.JSON).body(authorizedAPIRequestBody.toString()).when()
+                            .post("applications/" + selfServiceAppId + "/authorized-apis");
+            authorizedAPIResponse.then().log().ifValidationFails().assertThat().statusCode(HttpStatus.SC_OK);
+        }
     }
 
-    @Test(dependsOnMethods = "enableSelfOrganizationOnboardService")
+    @Test(dependsOnMethods = "createApplicationForSelfOrganizationOnboardService")
     public void getM2MAccessToken() throws Exception {
 
         OpenIDConnectConfiguration openIDConnectConfiguration = oAuth2RestClient.getOIDCInboundDetails(selfServiceAppId);
@@ -242,7 +265,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         Thread.sleep(5000);
 
         List<NameValuePair> urlParameters = new ArrayList<>();
-        urlParameters.add(new BasicNameValuePair(OAuth2Constant.GRANT_TYPE_NAME, "organization_switch_cc"));
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.GRANT_TYPE_NAME, "organization_switch"));
         urlParameters.add(new BasicNameValuePair("token", m2mToken));
         urlParameters.add(new BasicNameValuePair("scope", "SYSTEM"));
         urlParameters.add(new BasicNameValuePair("switching_organization", organizationID));

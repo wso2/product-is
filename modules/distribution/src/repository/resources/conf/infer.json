@@ -32,7 +32,7 @@
         "tenantDomain", "t"]
     }
   },
-  "resident_identity_provider.enable": {
+  "resident_idp.enable": {
     "true": {
       "server.hide_menu_items": [
         "claim_mgt_menu",
@@ -41,9 +41,14 @@
         "identity_security_questions_menu",
         "metrics_menu",
         "shutdown_restart_menu",
-        "user_mgt_menu_add",
+        "user_mgt_menu",
+        "userstores_mgt_menu",
+        "service_providers_menu",
         "identity_providers_add",
         "identity_providers_list",
+        "identity_verification_providers_menu",
+        "identity_emailtemplate_menu",
+        "scope_menu",
         "identity_admin_advisory_banner_menu",
         "server-roles-mgt_menu",
         "logging_config_menu"

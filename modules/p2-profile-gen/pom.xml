@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>7.0.0-beta6-SNAPSHOT</version>
+        <version>7.0.0-beta7-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -165,7 +165,7 @@
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.event.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.mgt.server.feature:${carbon.identity.framework.version}
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.mgt.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.template.mgt.feature:${carbon.identity.framework.version}
@@ -177,7 +177,7 @@
                                     org.wso2.carbon.identity.event.handler.accountlock:org.wso2.carbon.identity.handler.event.account.lock.feature:${identity.event.handler.account.lock.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity.event.handler.notification:org.wso2.carbon.email.mgt.server.feature:${identity.event.handler.notification.version}
+                                    org.wso2.carbon.identity.event.handler.notification:org.wso2.carbon.email.mgt.feature:${identity.event.handler.notification.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.event.handler.notification:org.wso2.carbon.event.handler.notification.server.feature:${identity.event.handler.notification.version}
@@ -210,7 +210,7 @@
                                     org.wso2.carbon.identity.saml.common:org.wso2.carbon.identity.saml.common.util.feature:${saml.common.util.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.application.mgt.server.feature:${carbon.identity.framework.version}
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.application.mgt.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.functions.library.mgt.feature:${carbon.identity.framework.version}
@@ -314,6 +314,9 @@
                                 <!-- Features related to Cloud Identity -->
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.user.mgt.feature:${carbon.identity.framework.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.role.mgt.ui.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.commons:org.wso2.carbon.tenant.mgt.common.feature:${carbon.commons.version}
@@ -501,6 +504,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.extension.identity.verification:org.wso2.carbon.extension.identity.verification.provider.feature:${identity.verification.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.extension.identity.verification:org.wso2.carbon.extension.identity.verification.ui.feature:${identity.verification.version}
+                                </featureArtifactDef>
                                 <!-- input validation related features -->
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.input.validation.mgt.server.feature:${carbon.identity.framework.version}
@@ -651,11 +657,11 @@
                                     <version>${identity.event.handler.account.lock.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.identity.mgt.server.feature.group</id>
+                                    <id>org.wso2.carbon.identity.mgt.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.email.mgt.server.feature.group</id>
+                                    <id>org.wso2.carbon.email.mgt.feature.group</id>
                                     <version>${identity.event.handler.notification.version}</version>
                                 </feature>
                                 <feature>
@@ -691,7 +697,7 @@
                                     <version>${saml.common.util.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.identity.application.mgt.server.feature.group</id>
+                                    <id>org.wso2.carbon.identity.application.mgt.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
@@ -784,6 +790,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.user.mgt.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.role.mgt.ui.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
@@ -1121,6 +1131,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.extension.identity.verification.mgt.feature.group</id>
+                                    <version>${identity.verification.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.extension.identity.verification.ui.feature.group</id>
                                     <version>${identity.verification.version}</version>
                                 </feature>
                                 <feature>
