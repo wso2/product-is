@@ -164,6 +164,7 @@
             <bean class="org.wso2.carbon.identity.api.server.organization.user.invitation.management.v1.GuestsApi"/>
             <bean class="org.wso2.carbon.identity.api.server.organization.configs.v1.OrganizationConfigsApi"/>
             <bean class="org.wso2.carbon.identity.api.server.organization.selfservice.v1.SelfServiceApi"/>
+            <bean class="org.wso2.carbon.identity.api.expired.password.identification.v1.PasswordExpiredUsersApi"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">
