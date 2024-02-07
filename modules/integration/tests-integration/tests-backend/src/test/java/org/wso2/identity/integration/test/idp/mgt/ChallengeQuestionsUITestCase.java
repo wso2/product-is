@@ -52,7 +52,7 @@ public class ChallengeQuestionsUITestCase extends OAuth2ServiceAbstractIntegrati
     private static final String ENABLE_PASSWORD_QS_RECOVERY_PROP_KEY = "Recovery.Question.Password.Enable";
     private static final String ENABLE_PASSWORD_NOTIFICATION_RECOVERY_PROP_KEY =
             "Recovery.Notification.Password.Enable";
-    private final String OIDC_APP_NAME = "playground23";
+    private final String OIDC_APP_NAME = "playground2";
     private IdentityProvider superTenantResidentIDP;
     private ServerConfigurationManager serverConfigurationManager;
     private IdentityProviderMgtServiceClient superTenantIDPMgtClient;
