@@ -45,7 +45,7 @@ import static org.wso2.identity.integration.test.utils.CommonConstants.DEFAULT_T
 
 public class ChallengeQuestionsUITestCase extends OAuth2ServiceAbstractIntegrationTest {
 
-    public static final String ADD_CHALLENGE_QUESTIONS_CONFIG = "challenge_questions_config.toml";
+    private static final String ADD_CHALLENGE_QUESTIONS_CONFIG = "challenge_questions_config.toml";
     private static final String RECOVERY_ENDPOINT_URL = "/accountrecoveryendpoint/recoveraccountrouter.do";
     private static final String RECOVERY_ENDPOINT_QS_CONTENT = "name=\"recoveryOption\" value=\"SECURITY_QUESTIONS\"";
     private static final String RECOVERY_ENDPOINT_NOTIFICATION_CONTENT = "name=\"recoveryOption\" value=\"EMAIL\"";
