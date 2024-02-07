@@ -35,16 +35,12 @@ import org.wso2.carbon.identity.application.common.model.idp.xsd.FederatedAuthen
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProviderProperty;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
-import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
-import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.test.oauth2.OAuth2ServiceAbstractIntegrationTest;
-import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
-import java.io.File;
 import java.io.IOException;
 
 import static org.wso2.identity.integration.test.utils.CommonConstants.DEFAULT_TOMCAT_PORT;
@@ -69,7 +65,6 @@ public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractInt
 
     private IdentityProvider superTenantResidentIDP;
     private IdentityProviderMgtServiceClient superTenantIDPMgtClient;
-    private ServerConfigurationManager serverConfigurationManager;
     private String recoveryEndpoint;
     private final String activeTenant;
     private final String OIDC_APP_NAME = "playground23";
