@@ -2281,7 +2281,7 @@
         <identity.inbound.provisioning.scim2.version>3.4.62</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity User Versions -->
-        <identity.user.account.association.version>5.5.7</identity.user.account.association.version>
+        <identity.user.account.association.version>5.5.8</identity.user.account.association.version>
         <identity.user.ws.version>5.8.1</identity.user.ws.version>
 
         <!-- Identity Userstore Versions -->
