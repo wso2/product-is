@@ -90,8 +90,8 @@ public class UserStoreConfigUtils {
      */
     public PropertyDTO[] getJDBCUserStoreProperties() throws IOException, SQLException, ClassNotFoundException {
 
-        propertyDTOs = new PropertyDTO[11];
-        for (int i = 0; i < 11; i++) {
+        propertyDTOs = new PropertyDTO[12];
+        for (int i = 0; i < 12; i++) {
             propertyDTOs[i] = new PropertyDTO();
         }
         //creating database
@@ -136,6 +136,9 @@ public class UserStoreConfigUtils {
 
         propertyDTOs[10].setName("UserIDEnabled");
         propertyDTOs[10].setValue("true");
+
+        propertyDTOs[11].setName("GroupIDEnabled");
+        propertyDTOs[11].setValue("true");
         return propertyDTOs;
     }
 
@@ -150,8 +153,8 @@ public class UserStoreConfigUtils {
     public PropertyDTO[] getJDBCUserStoreProperties(final String userStoreDBName)
             throws IOException, SQLException, ClassNotFoundException {
 
-        propertyDTOs = new PropertyDTO[11];
-        for (int i = 0; i < 11; i++) {
+        propertyDTOs = new PropertyDTO[12];
+        for (int i = 0; i < 12; i++) {
             propertyDTOs[i] = new PropertyDTO();
         }
         //creating database
@@ -196,6 +199,9 @@ public class UserStoreConfigUtils {
 
         propertyDTOs[10].setName("UserIDEnabled");
         propertyDTOs[10].setValue("true");
+
+        propertyDTOs[11].setName("GroupIDEnabled");
+        propertyDTOs[11].setValue("true");
         return propertyDTOs;
     }
 }
