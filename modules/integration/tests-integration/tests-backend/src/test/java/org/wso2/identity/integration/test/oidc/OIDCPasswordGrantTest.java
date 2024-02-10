@@ -288,6 +288,7 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
         userStore.addPropertiesItem(new Property().name("userName").value(DB_USER_NAME));
         userStore.addPropertiesItem(new Property().name("password").value(DB_USER_PASSWORD));
         userStore.addPropertiesItem(new Property().name("UserIDEnabled").value("true"));
+        userStore.addPropertiesItem(new Property().name("GroupIDEnabled").value("true"));
 
         userStoreId = userStoreMgtRestClient.addUserStore(userStore);
 
