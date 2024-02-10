@@ -321,9 +321,6 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
                         .value("org.wso2.carbon.identity.user.store.count.jdbc.JDBCUserStoreCountRetriever"))
                 .addPropertiesItem(new Property()
                         .name("UserIDEnabled")
-                        .value("true"))
-                .addPropertiesItem(new Property()
-                        .name("GroupIDEnabled")
                         .value("true"));
 
         userStoreId = userStoreMgtRestClient.addUserStore(userStore);
