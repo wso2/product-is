@@ -166,8 +166,8 @@ public class IDENTITY4776SCIMServiceWithOAuthTestCase extends OAuth2ServiceAbstr
         dbmanager.executeUpdate(new File(Utils.getResidentCarbonHome() + "/dbscripts/h2.sql"));
         dbmanager.disconnect();
 
-        PropertyDTO[] propertyDTOs = new PropertyDTO[12];
-        for (int i = 0; i < 12; i++) {
+        PropertyDTO[] propertyDTOs = new PropertyDTO[11];
+        for (int i = 0; i < 11; i++) {
             propertyDTOs[i] = new PropertyDTO();
         }
 
@@ -203,9 +203,6 @@ public class IDENTITY4776SCIMServiceWithOAuthTestCase extends OAuth2ServiceAbstr
 
         propertyDTOs[10].setName("UserIDEnabled");
         propertyDTOs[10].setValue("true");
-
-        propertyDTOs[11].setName("GroupIDEnabled");
-        propertyDTOs[11].setValue("true");
 
         UserStoreDTO userStoreDTO = userStoreConfigAdminServiceClient
                 .createUserStoreDTO(jdbcClass, DOMAIN_ID, propertyDTOs);
