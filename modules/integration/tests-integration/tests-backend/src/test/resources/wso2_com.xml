@@ -26,4 +26,5 @@
     <Property name="DomainName">wso2.com</Property>
     <Property name="Description">Test multiple user stores</Property>
     <Property name="UserIDEnabled">true</Property>
+    <Property name="GroupIDEnabled">true</Property>
 </UserStoreManager>
