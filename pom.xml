@@ -2252,7 +2252,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>7.0.50</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.0.52</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2273,7 +2273,7 @@
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.saml.version>5.11.34</identity.inbound.auth.saml.version>
+        <identity.inbound.auth.saml.version>5.11.35</identity.inbound.auth.saml.version>
         <identity.inbound.auth.oauth.version>7.0.9</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.10.1</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.11.4</identity.inbound.auth.sts.version>
@@ -2375,9 +2375,9 @@
         <conditional.authentication.functions.version>1.2.44</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.12.6</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.3.20</identity.apps.myaccount.version>
-        <identity.apps.core.version>2.1.19</identity.apps.core.version>
+        <identity.apps.console.version>2.12.7</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.3.21</identity.apps.myaccount.version>
+        <identity.apps.core.version>2.1.20</identity.apps.core.version>
         <identity.apps.tests.version>1.6.375</identity.apps.tests.version>
 
         <!-- Charon -->
