@@ -245,16 +245,16 @@
         <parameter name="non-blocking" locked="false">true</parameter>
         <parameter name="keystore" locked="false">
             <KeyStore>
-                <Location>repository/resources/security/wso2carbon.p12</Location>
-                <Type>PKCS12</Type>
+                <Location>repository/resources/security/wso2carbon.jks</Location>
+                <type>JKS</type>
                 <Password>wso2carbon</Password>
                 <KeyPassword>wso2carbon</KeyPassword>
             </KeyStore>
         </parameter>
         <parameter name="truststore" locked="false">
             <TrustStore>
-                <Location>repository/resources/security/client-truststore.p12</Location>
-                <Type>PKCS12</Type>
+                <Location>repository/resources/security/client-truststore.jks</Location>
+                <type>JKS</type>
                 <Password>wso2carbon</Password>
             </TrustStore>
         </parameter>
@@ -416,16 +416,16 @@
         <parameter name="non-blocking" locked="false">true</parameter>
         <parameter name="keystore" locked="false">
             <KeyStore>
-                <Location>repository/resources/security/wso2carbon.p12</Location>
-                <Type>PKCS12</Type>
+                <Location>repository/resources/security/wso2carbon.jks</Location>
+                <type>JKS</type>
                 <Password>wso2carbon</Password>
                 <KeyPassword>wso2carbon</KeyPassword>
             </KeyStore>
         </parameter>
         <parameter name="truststore" locked="false">
             <TrustStore>
-                <Location>repository/resources/security/client-truststore.p12</Location>
-                <Type>PKCS12</Type>
+                <Location>repository/resources/security/client-truststore.jks</Location>
+                <type>JKS</type>
                 <Password>wso2carbon</Password>
             </TrustStore>
         </parameter>

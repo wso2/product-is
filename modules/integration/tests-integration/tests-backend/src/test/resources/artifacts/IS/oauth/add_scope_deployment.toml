@@ -24,13 +24,13 @@ username = "$env{SHARED_DATABASE_USERNAME}"
 password = "$env{SHARED_DATABASE_PASSWORD}"
 
 [keystore.primary]
-file_name = "wso2carbon.p12"
+file_name = "wso2carbon.jks"
 password = "wso2carbon"
 
 [truststore]
-file_name = "client-truststore.p12"
+file_name = "client-truststore.jks"
 password = "wso2carbon"
-type = "PKCS12"
+type = "JKS"
 
 [account_recovery.endpoint.auth]
 hash = "66cd9688a2ae068244ea01e70f0e230f5623b7fa4cdecb65070a09ec06452262"

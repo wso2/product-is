@@ -25,7 +25,7 @@ username = "wso2carbon"
 password = "wso2carbon"
 
 [keystore.primary]
-file_name = "wso2carbon.p12"
+file_name = "wso2carbon.jks"
 password = "wso2carbon"
 
 [user_store.properties]

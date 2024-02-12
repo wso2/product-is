@@ -384,7 +384,7 @@
             <ReceivePort>${Ports.ThriftEntitlementReceivePort}</ReceivePort>
             <ClientTimeout>10000</ClientTimeout>
             <KeyStore>
-                <Location>${carbon.home}/repository/resources/security/wso2carbon.p12</Location>
+                <Location>${carbon.home}/repository/resources/security/wso2carbon.jks</Location>
                 <Password>wso2carbon</Password>
             </KeyStore>
             <!-- Enable this element to mention the host-name of your IS machine -->

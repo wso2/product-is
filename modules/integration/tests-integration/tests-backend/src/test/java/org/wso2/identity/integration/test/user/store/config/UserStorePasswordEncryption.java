@@ -82,7 +82,7 @@ public class UserStorePasswordEncryption extends ISIntegrationTest {
         serverConfigurationManager = new ServerConfigurationManager(isServer);
         keyStoreFilePath =
                 getTestArtifactLocation() + File.separator + "keystores" + File.separator + "products" + File.separator
-                        + "wso2carbon.p12";
+                        + "wso2carbon.jks";
         userstoreDeploymentDir = Utils.getResidentCarbonHome() + File.separator + "repository" + File.separator +
                 "deployment" + File.separator + "server" + File.separator + "userstores";
     }
@@ -183,7 +183,7 @@ public class UserStorePasswordEncryption extends ISIntegrationTest {
         InputStream inputStream = null;
         try {
             inputStream = new FileInputStream(new File(keyStoreFilePath).getAbsolutePath());
-            store = KeyStore.getInstance("PKCS12");
+            store = KeyStore.getInstance("JKS");
             store.load(inputStream, password.toCharArray());
             return store;
         } catch (FileNotFoundException e) {

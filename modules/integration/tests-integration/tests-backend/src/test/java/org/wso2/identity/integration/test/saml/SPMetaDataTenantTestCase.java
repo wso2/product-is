@@ -87,7 +87,7 @@ public class SPMetaDataTenantTestCase extends ISIntegrationTest {
         KeyStoreData[] keyStoreDataArray = keyStoreAdminClient.getKeyStores();
         Assert.assertTrue(keyStoreDataArray != null && keyStoreDataArray.length > 0);
 
-        String [] storeEntries = keyStoreAdminClient.getStoreEntries("wso2-com.p12");
+        String [] storeEntries = keyStoreAdminClient.getStoreEntries("wso2-com.jks");
         Assert.assertTrue(storeEntries != null && storeEntries.length > 0);
         Assert.assertTrue(Arrays.asList(storeEntries).contains(CERT_ALIAS));
     }
@@ -104,7 +104,7 @@ public class SPMetaDataTenantTestCase extends ISIntegrationTest {
         KeyStoreData[] keyStoreDataArray = keyStoreAdminClient.getKeyStores();
         Assert.assertTrue(keyStoreDataArray != null && keyStoreDataArray.length > 0);
 
-        String [] storeEntries = keyStoreAdminClient.getStoreEntries("wso2-com.p12");
+        String [] storeEntries = keyStoreAdminClient.getStoreEntries("wso2-com.jks");
         Assert.assertTrue(storeEntries != null && storeEntries.length > 0);
         Assert.assertTrue(Arrays.asList(storeEntries).contains(CERT_ALIAS));
     }
