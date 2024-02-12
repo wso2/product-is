@@ -115,6 +115,7 @@ public class ApplicationNativeAuthenticationTestCase extends OAuth2ServiceAbstra
     private CloseableHttpClient client;
     private UserManagementClient userMgtServiceClient;
     private String code;
+    private static final String basicAuthenticatorId = "QmFzaWNBdXRoZW50aWNhdG9yOkxPQ0FM";
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -346,6 +347,8 @@ public class ApplicationNativeAuthenticationTestCase extends OAuth2ServiceAbstra
                             authenticator.containsKey(REQUIRED_PARAMS)) {
 
                         authenticatorId = (String) authenticator.get(AUTHENTICATOR_ID);
+                        Assert.assertEquals(authenticatorId, basicAuthenticatorId, "Authenticator Id is not " +
+                                "equal for basic authenticator ID");
                         JSONObject metadataNode = (JSONObject) authenticator.get(METADATA);
                         if (metadataNode.containsKey(PROMPT_TYPE) && metadataNode.containsKey(PARAMS)) {
                             paramsArray = (JSONArray) metadataNode.get(PARAMS);
