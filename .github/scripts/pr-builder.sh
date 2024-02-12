@@ -28,7 +28,7 @@ echo "=========================================================="
 echo "Cloning product-is"
 echo "=========================================================="
 
-git clone https://github.com/wso2/product-is
+git clone -b change-default-keystore-type --single-branch https://github.com/wso2/product-is
 
 if [ "$REPO" = "product-is" ]; then
 
