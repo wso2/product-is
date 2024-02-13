@@ -25,7 +25,7 @@ username = "$env{SHARED_DATABASE_USERNAME}"
 password = "$env{SHARED_DATABASE_PASSWORD}"
 
 [keystore.primary]
-name = "wso2carbon.p12"
+name = "wso2carbon.jks"
 password = "wso2carbon"
 
 [authentication.authenticator.email_otp.parameters]

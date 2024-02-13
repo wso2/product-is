@@ -419,11 +419,11 @@ public class TestPassiveSTS extends ISIntegrationTest {
 
     private void setSystemProperties() {
         URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "keystores" + ISIntegrationTest.URL_SEPARATOR
-                + "products" + ISIntegrationTest.URL_SEPARATOR + "wso2carbon.p12");
+                + "products" + ISIntegrationTest.URL_SEPARATOR + "wso2carbon.jks");
         System.setProperty("javax.net.ssl.trustStore", resourceUrl.getPath());
         System.setProperty("javax.net.ssl.trustStorePassword",
                 "wso2carbon");
-        System.setProperty("javax.net.ssl.trustStoreType", "PKCS12");
+        System.setProperty("javax.net.ssl.trustStoreType", "JKS");
     }
 
     private ClaimMapping[] getClaimMappings() {

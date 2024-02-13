@@ -175,10 +175,10 @@ public class SAMLErrorResponseTestCase extends ISIntegrationTest {
     private void setSystemProperties() {
 
         URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "keystores" + ISIntegrationTest.URL_SEPARATOR
-                + "products" + ISIntegrationTest.URL_SEPARATOR + "wso2carbon.p12");
+                + "products" + ISIntegrationTest.URL_SEPARATOR + "wso2carbon.jks");
         System.setProperty(JAVAX_NET_SSL_TRUSTORE, resourceUrl.getPath());
         System.setProperty(JAVAX_NET_SSL_TRUSTORE_PASSWORD, "wso2carbon");
-        System.setProperty(JAVAX_NET_SSL_TRUSTORE_TYPE, "PKCS12");
+        System.setProperty(JAVAX_NET_SSL_TRUSTORE_TYPE, "JKS");
     }
 
     private HttpResponse sendSAMLMessage(String url, Map<String, String> parameters) throws Exception {

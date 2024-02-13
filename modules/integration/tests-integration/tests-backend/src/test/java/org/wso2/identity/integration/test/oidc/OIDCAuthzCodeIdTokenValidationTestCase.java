@@ -275,9 +275,9 @@ public class OIDCAuthzCodeIdTokenValidationTestCase extends OAuth2ServiceAbstrac
 
     private void initServiceProviderKeys() throws Exception {
 
-        KeyStore keyStore = KeyStore.getInstance("PKCS12");
+        KeyStore keyStore = KeyStore.getInstance("JKS");
         String jksPath = TestConfigurationProvider.getResourceLocation("IS") + File.separator + "sp" +
-                File.separator + "keystores" + File.separator + "sp1KeyStore.p12";
+                File.separator + "keystores" + File.separator + "sp1KeyStore.jks";
         String jksPassword = "wso2carbon";
 
         keyStore.load(new FileInputStream(jksPath), jksPassword.toCharArray());

@@ -27,7 +27,7 @@ username = "$env{SHARED_DATABASE_USERNAME}"
 password = "$env{SHARED_DATABASE_PASSWORD}"
 
 [keystore.primary]
-file_name = "wso2carbon.p12"
+file_name = "wso2carbon.jks"
 password = "wso2carbon"
 
 [tenant_mgt]

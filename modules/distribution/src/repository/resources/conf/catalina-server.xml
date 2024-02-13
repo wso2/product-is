@@ -73,7 +73,7 @@
                    disableUploadTimeout="false"
                    secure="true"
                    keystorePass="wso2carbon"
-                   keystoreFile="${carbon.home}/repository/resources/security/wso2carbon.p12"
+                   keystoreFile="${carbon.home}/repository/resources/security/wso2carbon.jks"
                    maxThreads="250"
                    acceptCount="200"
                    bindOnInit="false"

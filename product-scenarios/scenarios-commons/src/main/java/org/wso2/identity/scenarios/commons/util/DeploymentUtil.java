@@ -33,7 +33,7 @@ public class DeploymentUtil {
     private static final String DEPLOYMENT_PROPERTIES = "deployment.properties";
     private static final String JOB_PROPERTIES = "testplan-props.properties";
     private static final Logger LOG = LoggerFactory.getLogger(DeploymentUtil.class);
-    private static final String PATH_TO_WSO2CARBON_JKS = "keystores/products/wso2carbon.p12";
+    private static final String PATH_TO_WSO2CARBON_JKS = "keystores/products/wso2carbon.jks";
     private static final String DATA_BUCKET_LOCATION = "DATA_BUCKET_LOCATION";
 
 
@@ -42,7 +42,7 @@ public class DeploymentUtil {
         String RESOURCE_LOCATION = System.getProperty("common.resource.location");
         System.setProperty("javax.net.ssl.trustStore", RESOURCE_LOCATION + PATH_TO_WSO2CARBON_JKS);
         System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
-        System.setProperty("javax.net.ssl.trustStoreType", "PKCS12");
+        System.setProperty("javax.net.ssl.trustStoreType", "JKS");
     }
 
     /**
