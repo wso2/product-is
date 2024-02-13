@@ -27,14 +27,14 @@ public class KeyStoreUtil {
 
 	public static void setTrustStoreParams() {
 		String trustStore = filePath.getAbsolutePath();
-		System.setProperty("javax.net.ssl.trustStore", trustStore + "/client-truststore.p12");
+		System.setProperty("javax.net.ssl.trustStore", trustStore + "/client-truststore.jks");
 		System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
 
 	}
 
 	public static void setKeyStoreParams() {
 		String keyStore = filePath.getAbsolutePath();
-		System.setProperty("Security.KeyStore.Location", keyStore + "/wso2carbon.p12");
+		System.setProperty("Security.KeyStore.Location", keyStore + "/wso2carbon.jks");
 		System.setProperty("Security.KeyStore.Password", "wso2carbon");
 
 	}

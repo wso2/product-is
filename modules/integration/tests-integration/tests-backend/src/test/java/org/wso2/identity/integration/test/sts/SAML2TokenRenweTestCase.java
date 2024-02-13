@@ -45,7 +45,7 @@ public class SAML2TokenRenweTestCase extends ISIntegrationTest {
         super.init();
         scm = new ServerConfigurationManager(isServer);
         sasc = new SecurityAdminServiceClient(backendURL, sessionCookie);
-        String KeyStoreName = "wso2carbon.p12";
+        String KeyStoreName = "wso2carbon.jks";
         SecurityAdminServiceClient securityAdminServiceClient = new SecurityAdminServiceClient(
                 backendURL, sessionCookie);
         securityAdminServiceClient.applySecurity("wso2carbon-sts", "1",

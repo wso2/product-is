@@ -12,7 +12,7 @@
 		"SAML.IdPCertAlias" : "wso2carbon",
 		"SAML.PrivateKeyAlias": "wso2carbon",
 		"SAML.PrivateKeyPassword" : "wso2carbon",
-		"SAML.KeyStore" : "{carbon.home}/repository/resources/security/wso2carbon.p12"
+		"SAML.KeyStore" : "{carbon.home}/repository/resources/security/wso2carbon.jks"
 		
 	}
 }

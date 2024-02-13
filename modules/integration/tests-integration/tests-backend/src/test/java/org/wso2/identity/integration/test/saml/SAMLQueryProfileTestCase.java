@@ -256,7 +256,7 @@ public class SAMLQueryProfileTestCase extends AbstractSAMLSSOTestCase {
             log.info("RESPONSE " + this.samlResponse);
             String id = QueryClientUtils.getAssertionId(this.samlResponse);
             URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "keystores" + ISIntegrationTest.URL_SEPARATOR
-                    + "products" + ISIntegrationTest.URL_SEPARATOR + "wso2carbon.p12");
+                    + "products" + ISIntegrationTest.URL_SEPARATOR + "wso2carbon.jks");
             ClientSignKeyDataHolder signKeyDataHolder = null;
             try {
                 signKeyDataHolder = new ClientSignKeyDataHolder(resourceUrl.getPath(),
@@ -279,7 +279,7 @@ public class SAMLQueryProfileTestCase extends AbstractSAMLSSOTestCase {
 
         try {
             URL resourceUrl = getClass().getResource(ISIntegrationTest.URL_SEPARATOR + "keystores" + ISIntegrationTest.URL_SEPARATOR
-                    + "products" + ISIntegrationTest.URL_SEPARATOR + "wso2carbon.p12");
+                    + "products" + ISIntegrationTest.URL_SEPARATOR + "wso2carbon.jks");
             ClientSignKeyDataHolder signKeyDataHolder = new ClientSignKeyDataHolder(resourceUrl.getPath(),
                     "wso2carbon", "wso2carbon");
             String serverURL = TestUserMode.TENANT_ADMIN.equals(config.getUserMode()) ? WSO2IS_TENANT_URL : WSO2IS_URL;

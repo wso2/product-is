@@ -278,9 +278,9 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
 
     private void initServiceProviderKeys() throws Exception {
 
-        KeyStore keyStore = KeyStore.getInstance("PKCS12");
+        KeyStore keyStore = KeyStore.getInstance("JKS");
         String jksPath = TestConfigurationProvider.getResourceLocation("IS") + File.separator + "sp" +
-                File.separator + "keystores" + File.separator + "sp1KeyStore.p12";
+                File.separator + "keystores" + File.separator + "sp1KeyStore.jks";
         String jksPassword = "wso2carbon";
 
         keyStore.load(Files.newInputStream(Paths.get(jksPath)), jksPassword.toCharArray());
@@ -297,7 +297,7 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
 
         // Use another keystore to get sp2 private key.
         jksPath = TestConfigurationProvider.getResourceLocation("IS") + File.separator + "sp" +
-                File.separator + "keystores" + File.separator + "sp2KeyStore.p12";
+                File.separator + "keystores" + File.separator + "sp2KeyStore.jks";
 
         keyStore.load(Files.newInputStream(Paths.get(jksPath)), jksPassword.toCharArray());
 

@@ -24,14 +24,14 @@ username = "$env{SHARED_DATABASE_USERNAME}"
 password = "$env{SHARED_DATABASE_PASSWORD}"
 
 [keystore.primary]
-file_name = "wso2carbon.p12"
+file_name = "wso2carbon.jks"
 password = "wso2carbon"
-type = "PKCS12"
+type = "JKS"
 
 [truststore]
-file_name = "client-truststore.p12"
+file_name = "client-truststore.jks"
 password = "wso2carbon"
-type = "PKCS12"
+type = "JKS"
 
 [connector.challenge_questions]
 enable = true
