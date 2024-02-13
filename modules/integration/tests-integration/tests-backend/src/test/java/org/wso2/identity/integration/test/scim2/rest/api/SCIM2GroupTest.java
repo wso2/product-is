@@ -328,7 +328,7 @@ public class SCIM2GroupTest extends SCIM2BaseTest {
                 + "/dbscripts/h2.sql"));
         dataBaseManager.disconnect();
 
-        PropertyDTO[] userStoreProperties = new PropertyDTO[11];
+        PropertyDTO[] userStoreProperties = new PropertyDTO[12];
 
         IntStream.range(0, userStoreProperties.length).forEach(index -> userStoreProperties[index] = new PropertyDTO());
 
@@ -367,6 +367,9 @@ public class SCIM2GroupTest extends SCIM2BaseTest {
 
         userStoreProperties[10].setName("UserIDEnabled");
         userStoreProperties[10].setValue("true");
+
+        userStoreProperties[11].setName("GroupIDEnabled");
+        userStoreProperties[11].setValue("true");
 
         return userStoreProperties;
     }
