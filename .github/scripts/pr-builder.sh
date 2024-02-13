@@ -28,7 +28,7 @@ echo "=========================================================="
 echo "Cloning product-is"
 echo "=========================================================="
 
-git clone https://github.com/wso2/product-is
+git clone -b udesh-patch-1 --single-branch https://github.com/wso2/product-is
 
 if [ "$REPO" = "product-is" ]; then
 
