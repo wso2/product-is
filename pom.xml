@@ -2274,7 +2274,7 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.11.35</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>7.0.11</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.0.12</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.10.1</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.11.4</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.7</identity.inbound.provisioning.scim.version>
@@ -2378,7 +2378,7 @@
         <identity.apps.console.version>2.12.23</identity.apps.console.version>
         <identity.apps.myaccount.version>2.3.31</identity.apps.myaccount.version>
         <identity.apps.core.version>2.1.24</identity.apps.core.version>
-        <identity.apps.tests.version>1.6.376</identity.apps.tests.version>
+        <identity.apps.tests.version>1.6.377</identity.apps.tests.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
