@@ -65,5 +65,6 @@
   "user_store.properties.UsernameJavaScriptRegEx": "^[^\\s*?%]{3,50}$",
 
   "default_management_ui.path": "console",
-  "legacy_authz_runtime.enable": false
+  "legacy_authz_runtime.enable": false,
+  "management_console_deprecation_banner.enable": true
 }
