@@ -42,7 +42,7 @@
             <class name="org.wso2.identity.integration.test.user.mgt.UserMgtTestCase"/>
             <class name="org.wso2.identity.integration.test.user.mgt.UserMgtUISecurityTestCase"/>
             <class name="org.wso2.identity.integration.test.scim.SCIMServiceProviderUserTestCase" />
-            <!--<class name="org.wso2.identity.integration.test.scim.SCIMServiceProviderGroupTestCase" />-->
+            <class name="org.wso2.identity.integration.test.scim.SCIMServiceProviderGroupTestCase" />
             <class name="org.wso2.identity.integration.test.application.mgt.ImportExportServiceProviderTest"/>
             <class name="org.wso2.identity.integration.test.application.mgt.ApplicationTemplateMgtTestCase"/>
             <!--<class name="org.wso2.identity.integration.test.application.mgt.DefaultAuthSeqManagementTestCase"/>-->
@@ -341,7 +341,7 @@
             <class name="org.wso2.identity.integration.test.provisioning.DBSeperationTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceAuthCodeGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCFileBasedSkipLoginConsentTestCase"/>
-            <!--<class name="org.wso2.identity.integration.test.scim.IDENTITY4776SCIMServiceWithOAuthTestCase" />-->
+            <class name="org.wso2.identity.integration.test.scim.IDENTITY4776SCIMServiceWithOAuthTestCase"/>
             <class name="org.wso2.identity.integration.test.identity.mgt.UserInformationRecoveryServiceTenantEmailUserTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2HashAlgorithmTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2PersistenceProcessorInsertTokenTestCase"/>
