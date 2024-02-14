@@ -14,6 +14,7 @@
   "truststore.file_name": "client-truststore.jks",
 
   "transport.https.sslHostConfig.properties.certificateVerification": "want",
+  "transport.https.sslHostConfig.properties.protocols": "+TLSv1,+TLSv1.1,+TLSv1.2",
 
   "authentication.consent.data_source": "jdbc/WSO2IdentityDB",
 
