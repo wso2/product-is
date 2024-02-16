@@ -2390,7 +2390,7 @@
         <identity.verification.version>1.0.7</identity.verification.version>
 
         <!-- Carbon Repo Versions -->
-        <carbon.deployment.version>4.12.20</carbon.deployment.version>
+        <carbon.deployment.version>4.12.22</carbon.deployment.version>
         <carbon.commons.version>4.10.7</carbon.commons.version>
         <carbon.registry.version>4.8.24</carbon.registry.version>
         <carbon.multitenancy.version>4.11.19</carbon.multitenancy.version>
