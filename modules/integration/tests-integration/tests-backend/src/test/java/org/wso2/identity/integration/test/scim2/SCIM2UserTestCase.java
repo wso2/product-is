@@ -19,6 +19,8 @@
 package org.wso2.identity.integration.test.scim2;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpDelete;
@@ -43,6 +45,7 @@ import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.identity.integration.common.clients.claim.metadata.mgt.ClaimMetadataManagementServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.AuthenticationAdminTestCase;
 
 import java.io.IOException;
 
@@ -71,6 +74,7 @@ import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.VALUE_P
 
 public class SCIM2UserTestCase extends ISIntegrationTest {
 
+    private static Log LOG = LogFactory.getLog(SCIM2UserTestCase.class);
     private static final String FAMILY_NAME_CLAIM_VALUE = "scim";
     private static final String GIVEN_NAME_CLAIM_VALUE = "user";
     private static final String FAMILY_NAME_CLAIM_VALUE_1 = "scim1";
@@ -261,6 +265,8 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
 
         Object responseObj = JSONValue.parse(EntityUtils.toString(response.getEntity()));
         EntityUtils.consume(response.getEntity());
+
+        LOG.info("Response of testAddUserFailure method:" + responseObj.toString());
 
         JSONArray schemasArray = (JSONArray)((JSONObject) responseObj).get("schemas");
         Assert.assertNotNull(schemasArray);
