@@ -45,7 +45,6 @@ import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.identity.integration.common.clients.claim.metadata.mgt.ClaimMetadataManagementServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
-import org.wso2.identity.integration.test.AuthenticationAdminTestCase;
 
 import java.io.IOException;
 
