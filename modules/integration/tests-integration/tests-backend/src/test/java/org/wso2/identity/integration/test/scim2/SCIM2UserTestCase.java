@@ -19,6 +19,8 @@
 package org.wso2.identity.integration.test.scim2;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpDelete;
@@ -70,6 +72,8 @@ import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.USER_NA
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.VALUE_PARAM;
 
 public class SCIM2UserTestCase extends ISIntegrationTest {
+
+    private static final Log LOG = LogFactory.getLog(SCIM2UserTestCase.class);
 
     private static final String FAMILY_NAME_CLAIM_VALUE = "scim";
     private static final String GIVEN_NAME_CLAIM_VALUE = "user";
@@ -259,7 +263,10 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
 
         HttpResponse response = client.execute(request);
 
-        Object responseObj = JSONValue.parse(EntityUtils.toString(response.getEntity()));
+        String responseString = EntityUtils.toString(response.getEntity());
+        LOG.info("Response for SCIM2UserTestCase.testAddUserFailure" + responseString);
+
+        Object responseObj = JSONValue.parse(responseString);
         EntityUtils.consume(response.getEntity());
 
         JSONArray schemasArray = (JSONArray)((JSONObject) responseObj).get("schemas");
