@@ -2318,7 +2318,7 @@
 
         <!-- Provisioning connector Versions -->
         <provisioning.connector.google.version>5.2.4</provisioning.connector.google.version>
-        <provisioning.connector.salesforce.version>5.2.5</provisioning.connector.salesforce.version>
+        <provisioning.connector.salesforce.version>5.2.6</provisioning.connector.salesforce.version>
         <provisioning.connector.scim.version>5.3.2</provisioning.connector.scim.version>
         <provisioning.connector.scim2.version>2.0.6</provisioning.connector.scim2.version>
 
