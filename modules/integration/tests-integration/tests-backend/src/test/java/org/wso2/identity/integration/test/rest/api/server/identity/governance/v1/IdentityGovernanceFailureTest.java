@@ -115,7 +115,7 @@ public class IdentityGovernanceFailureTest extends IdentityGovernanceTestBase {
                 "SelfRegistration.Enble");
     }
 
-    @Test
+    @Test(description = "Update governance connectors with incorrect category ID.")
     public void testUpdateGovernanceConnectorsIncorrectCategoryID() throws IOException {
 
         String body = readResource("update-multiple-connector-properties.json");
@@ -124,7 +124,7 @@ public class IdentityGovernanceFailureTest extends IdentityGovernanceTestBase {
         validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "IDG-50008");
     }
 
-    @Test
+    @Test(description = "Update governance connectors with incorrect connector ID.")
     public void testUpdateGovernanceConnectorsIncorrectConnectorID() throws IOException {
 
         String body = readResource("update-multiple-connector-properties-incorrect.json");
@@ -133,7 +133,7 @@ public class IdentityGovernanceFailureTest extends IdentityGovernanceTestBase {
         validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "IDG-50009");
     }
 
-    @Test
+    @Test(description = "Update governance connectors with a mismatching category.")
     public void testUpdateGovernanceConnectorsMismatch() throws IOException {
 
         String body = readResource("update-multiple-connector-properties.json");
