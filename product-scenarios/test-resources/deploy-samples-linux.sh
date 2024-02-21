@@ -23,9 +23,9 @@ cd target
 wget archive.apache.org/dist/tomcat/tomcat-8/v8.5.35/bin/apache-tomcat-8.5.35.zip
 unzip apache-tomcat-8.5.35.zip
 
-wget https://github.com/wso2/samples-is/releases/latest/download/travelocity.war
+wget https://github.com/wso2/samples-is/releases/latest/download/travelocity.com.war
 rm -rf apache-tomcat-8.5.35/webapps/travelocity.com
-unzip travelocity.war -d travelocity.com
+unzip travelocity.com.war -d travelocity.com
 mv travelocity.com apache-tomcat-8.5.35/webapps/
 
 wget https://github.com/wso2/samples-is/releases/latest/download/PassiveSTSSampleApp.war
