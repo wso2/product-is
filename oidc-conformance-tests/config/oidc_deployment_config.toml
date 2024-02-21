@@ -1,0 +1,3 @@
+[oauth]
+drop_unregistered_scopes = "false"
+allowed_scopes = []

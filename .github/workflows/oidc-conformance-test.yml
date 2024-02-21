@@ -16,6 +16,9 @@ on:
       download-url:
         description: 'URL to download product-is'
         required: false
+      conformance-suite-version:
+        description: 'Conformance suite branch to clone in https://gitlab.com/openid/conformance-suite.git (Ex: release-v5.1.10). If not provided, latest release tag branch is used.'
+        required: false
       send-email:
         description: 'Send test results to email'
         required: true
@@ -37,7 +40,7 @@ jobs:
     - name: Set up JDK 11
       uses: actions/setup-java@v1
       with:
-        java-version: 11
+        java-version: 11.0.18+10
     
     - name: Setup Python
       run: |
@@ -50,9 +53,11 @@ jobs:
       run: |
         INPUT_URL=${{github.event.inputs.download-url}}
         INPUT_TAG=${{github.event.inputs.tag}}
-        if [[ -z "${INPUT_URL}" ]] && [[ -z "${INPUT_TAG}" ]]; then
-          echo "Either 'tag' or 'download-url' must be provided."
-          exit 1
+        if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+          if [[ -z "${INPUT_URL}" ]] && [[ -z "${INPUT_TAG}" ]]; then
+            echo "Either 'tag' or 'download-url' must be provided."
+            exit 1
+          fi
         fi
         if [[ -z "${INPUT_URL}" ]]; then
           owner="wso2"
@@ -79,8 +84,19 @@ jobs:
       
     - name: Clone conformance suite
       run: |
-        CONFORMANCE_SUITE_VERSION=v4.1.42
-        git clone --depth 1 --branch release-${CONFORMANCE_SUITE_VERSION} https://github.com/openid-certification/conformance-suite.git
+        sudo snap install jq
+        LATEST_RELEASE_BRANCH=$(curl -s https://gitlab.com/api/v4/projects/4175605/releases/ | jq '.[]' | jq -r '.name' | head -1)
+        echo ">>> Conformance suite latest release branch: $LATEST_RELEASE_BRANCH"
+        PROVIDED_VERSION=${{github.event.inputs.conformance-suite-version}}
+        if [[ -z "${PROVIDED_VERSION}" ]]; then
+              CONFORMANCE_SUITE_BRANCH=$LATEST_RELEASE_BRANCH
+              echo ">>> Conformance suite latest release branch is taken: $CONFORMANCE_SUITE_BRANCH"
+            else
+              CONFORMANCE_SUITE_BRANCH=$PROVIDED_VERSION
+              echo ">>> Conformance suite provided branch is taken: $CONFORMANCE_SUITE_BRANCH"
+            fi
+        echo ">>> Selected conformance suite branch: $CONFORMANCE_SUITE_BRANCH"
+        git clone --depth 1 --branch ${CONFORMANCE_SUITE_BRANCH} https://gitlab.com/openid/conformance-suite.git
     
     - name: Adding extra hosts to docker-compose-dev.yml
       run: sed -i '/^    volumes.*/i \ \ \ \ extra_hosts:\n \ \ \ \ - "localhost:\$IP\"' ./conformance-suite/docker-compose-dev.yml
@@ -90,6 +106,12 @@ jobs:
         PRODUCT_IS_ZIP=$(find ./ -name wso2is* -type f -printf "%f\n")
         cd ./product-is/oidc-conformance-tests
         python3 ./configure_is.py ../../$PRODUCT_IS_ZIP
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v2
+      with:
+        java-version: 17
+        distribution: temurin
         
     - name: Run Conformance Suite
       run: |

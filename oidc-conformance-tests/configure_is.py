@@ -340,10 +340,11 @@ def unpack_and_run(zip_file_name):
                 break
 
         os.chmod("./" + dir_name + "/bin/wso2server.sh", 0o777)
+        append_toml_config("./config/oidc_deployment_config.toml", "./" + dir_name + "/repository/conf/deployment.toml")
         process = subprocess.Popen("./" + dir_name + "/bin/wso2server.sh", stdout=subprocess.PIPE)
         while True:
             output = process.stdout.readline()
-            if b'..................................' in output:
+            if b'WSO2 Carbon started' in output:
                 print("\nServer Started")
                 break
             if output:
@@ -353,6 +354,29 @@ def unpack_and_run(zip_file_name):
     except FileNotFoundError:
         print()
         raise
+
+
+# Append additional toml configs to the existing deployment toml file.
+def append_toml_config(source_file, destination_file):
+    try:
+        # Read the content from the source TOML file
+        with open(source_file, 'r') as source:
+            source_content = source.read()
+
+        # Read the content from the destination TOML file
+        with open(destination_file, 'r') as destination:
+            destination_content = destination.read()
+
+        # Append the source content to the destination content
+        merged_content = destination_content + '\n' + source_content
+
+        # Write the merged content back to the destination file
+        with open(destination_file, 'w') as destination:
+            destination.write(merged_content)
+    except FileNotFoundError as e:
+        print(f"The file does not exist: {e}")
+    except IOError as e:
+        print(f"An error occurred: {e}")
 
 
 # creates the IS_config.json file needed to run OIDC test plans and save in the given path
