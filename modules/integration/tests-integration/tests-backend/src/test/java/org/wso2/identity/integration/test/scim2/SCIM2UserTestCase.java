@@ -243,34 +243,34 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
 
     @Test
     public void testAddUserFailure() throws Exception {
-//        HttpPost request = new HttpPost(getPath());
-//        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
-//        request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
-//
-//        JSONObject rootObject = new JSONObject();
-//
-//        JSONArray schemas = new JSONArray();
-//        rootObject.put(SCHEMAS_ATTRIBUTE, schemas);
-//
-//        JSONObject names = new JSONObject();
-//        rootObject.put(NAME_ATTRIBUTE, names);
-//        rootObject.put(USER_NAME_ATTRIBUTE, "passwordIncompatibleUser");
-//        rootObject.put(PASSWORD_ATTRIBUTE, "a");
-//
-//        StringEntity entity = new StringEntity(rootObject.toString());
-//        request.setEntity(entity);
-//
-//        HttpResponse response = client.execute(request);
-//
-//        Object responseObj = JSONValue.parse(EntityUtils.toString(response.getEntity()));
-//        EntityUtils.consume(response.getEntity());
-//
-//        LOG.info("Response of testAddUserFailure method:" + responseObj.toString());
-//
-//        JSONArray schemasArray = (JSONArray)((JSONObject) responseObj).get("schemas");
-//        Assert.assertNotNull(schemasArray);
-//        Assert.assertEquals(schemasArray.size(), 1);
-//        Assert.assertEquals(schemasArray.get(0).toString(), ERROR_SCHEMA);
+        HttpPost request = new HttpPost(getPath());
+        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+        request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+
+        JSONObject rootObject = new JSONObject();
+
+        JSONArray schemas = new JSONArray();
+        rootObject.put(SCHEMAS_ATTRIBUTE, schemas);
+
+        JSONObject names = new JSONObject();
+        rootObject.put(NAME_ATTRIBUTE, names);
+        rootObject.put(USER_NAME_ATTRIBUTE, "passwordIncompatibleUser");
+        rootObject.put(PASSWORD_ATTRIBUTE, "a");
+
+        StringEntity entity = new StringEntity(rootObject.toString());
+        request.setEntity(entity);
+
+        HttpResponse response = client.execute(request);
+
+        Object responseObj = JSONValue.parse(EntityUtils.toString(response.getEntity()));
+        EntityUtils.consume(response.getEntity());
+
+        LOG.info("Response of testAddUserFailure method:" + responseObj.toString());
+
+        JSONArray schemasArray = (JSONArray)((JSONObject) responseObj).get("schemas");
+        Assert.assertNotNull(schemasArray);
+        Assert.assertEquals(schemasArray.size(), 1);
+        Assert.assertEquals(schemasArray.get(0).toString(), ERROR_SCHEMA);
     }
 
     @Test(dependsOnMethods = "testCreateUser")
