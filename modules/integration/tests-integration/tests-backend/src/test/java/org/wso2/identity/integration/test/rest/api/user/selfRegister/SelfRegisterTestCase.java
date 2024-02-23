@@ -69,8 +69,7 @@ public class SelfRegisterTestCase extends SelfRegisterTestBase {
         Assert.assertEquals(responseOfPost.statusCode(), HttpStatus.SC_BAD_REQUEST, "Self register user not enabled");
     }
 
-    @Test(alwaysRun = true, dependsOnMethods = "testSelfRegisterBeforeEnable", groups = "wso2.is",
-            description = "Create self registered user with invalid password")
+    @Test(alwaysRun = true, groups = "wso2.is", description = "Create self registered user with invalid password")
     public void testSelfRegisterWithInvalidPassword() throws Exception {
 
         updateResidentIDPProperty(ENABLE_SELF_SIGN_UP, "true", true);
@@ -81,8 +80,7 @@ public class SelfRegisterTestCase extends SelfRegisterTestBase {
                 "Self register user password invalid");
     }
 
-    @Test(alwaysRun = true, dependsOnMethods = "testSelfRegisterWithInvalidPassword", groups = "wso2.is",
-            description = "Create self registered user")
+    @Test(alwaysRun = true, groups = "wso2.is", description = "Create self registered user")
     public void testSelfRegister() throws Exception {
 
         updateResidentIDPProperty(ENABLE_SELF_SIGN_UP, "true", true);
@@ -103,8 +101,7 @@ public class SelfRegisterTestCase extends SelfRegisterTestBase {
         Assert.assertEquals(responseOfPost.statusCode(), HttpStatus.SC_CONFLICT, "Self register user already exists");
     }
 
-    @Test(alwaysRun = true, dependsOnMethods = "testSelfRegisterWithExistingUsername", groups = "wso2.is",
-            description = "Create self registered user with invalid username")
+    @Test(alwaysRun = true, groups = "wso2.is", description = "Create self registered user with invalid username")
     public void testSelfRegisterWithInvalidUsername() throws Exception {
 
         updateResidentIDPProperty(ENABLE_SELF_SIGN_UP, "true", true);
