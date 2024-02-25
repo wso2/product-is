@@ -2252,7 +2252,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>7.0.73</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.0.74</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2375,7 +2375,7 @@
         <conditional.authentication.functions.version>1.2.44</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.12.42</identity.apps.console.version>
+        <identity.apps.console.version>2.12.43</identity.apps.console.version>
         <identity.apps.myaccount.version>2.3.37</identity.apps.myaccount.version>
         <identity.apps.core.version>2.1.29</identity.apps.core.version>
         <identity.apps.tests.version>1.6.377</identity.apps.tests.version>
