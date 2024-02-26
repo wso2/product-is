@@ -20,19 +20,19 @@ echo "ISHttpsURL is set to: $ISHttpsUrl"
 mkdir target
 cd target
 
-wget archive.apache.org/dist/tomcat/tomcat-8/v8.5.35/bin/apache-tomcat-8.5.35.zip
-unzip apache-tomcat-8.5.35.zip
+wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.86/bin/apache-tomcat-9.0.86.zip
+unzip apache-tomcat-9.0.86.zip
 
 wget https://github.com/wso2/samples-is/releases/latest/download/travelocity.com.war
-rm -rf apache-tomcat-8.5.35/webapps/travelocity.com
+rm -rf apache-tomcat-9.0.86/webapps/travelocity.com
 unzip travelocity.com.war -d travelocity.com
-mv travelocity.com apache-tomcat-8.5.35/webapps/
+mv travelocity.com apache-tomcat-9.0.86/webapps/
 
 wget https://github.com/wso2/samples-is/releases/latest/download/PassiveSTSSampleApp.war
 unzip PassiveSTSSampleApp.war -d PassiveSTSSampleApp
-mv PassiveSTSSampleApp apache-tomcat-8.5.35/webapps/
+mv PassiveSTSSampleApp apache-tomcat-9.0.86/webapps/
 
-cd apache-tomcat-8.5.35/
+cd apache-tomcat-9.0.86/
 
 echo 'export CATALINA_OPTS="-Xms128m -Xmx256m -Xss128m"' >> bin/setenv.sh
 
