@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>4-single-sign-on</artifactId>
-        <version>5.8.0</version>
+        <version>7.0.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -33,12 +33,8 @@
 
     <modules>
         <module>4.1.1-sso-with-saml</module>
-<!--        <module>4.1.2-saml-eidas</module>-->
-<!--        <module>4.1.3-saml-2-artifact-binding</module>-->
         <module>4.1.4-sso-with-oidc</module>
         <module>4.1.5-sso-with-ws-federation</module>
-<!--        <module>4.1.6-sso-with-cross-protocol</module>-->
-<!--        <module>4.1.7-sso-with-end-user-consent</module>-->
     </modules>
 
 </project>

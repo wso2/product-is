@@ -29,5 +29,5 @@ public class SCIMConstants {
     static final String ID_ATTRIBUTE = "id";
     static final String GIVEN_NAME_CLAIM_VALUE = "user1";
     static final String USERNAME = "scim1user";
-    static final String PASSWORD = "scim1pwd";
+    static final String PASSWORD = "Scim1#pwd";
 }

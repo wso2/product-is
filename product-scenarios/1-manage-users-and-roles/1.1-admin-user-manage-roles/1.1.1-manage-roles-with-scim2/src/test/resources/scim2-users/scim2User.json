@@ -5,7 +5,7 @@
     "givenName": "jackson"
   },
   "userName": "john",
-  "password": "johnwso2",
+  "password": "John#wso2",
   "emails": [
     {
       "primary": true,

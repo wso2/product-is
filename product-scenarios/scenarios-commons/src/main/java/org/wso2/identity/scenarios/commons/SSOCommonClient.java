@@ -26,6 +26,7 @@ import org.wso2.identity.scenarios.commons.util.DataExtractUtil;
 import org.wso2.identity.scenarios.commons.util.SSOConstants;
 
 import java.io.FileNotFoundException;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -86,6 +87,11 @@ public class SSOCommonClient {
             return keyValues.get(0).getValue();
         }
         return null;
+    }
+
+    public String getSessionDataKeyFromURLParam(String url) throws URISyntaxException {
+
+        return DataExtractUtil.getParamFromURIString(url, "sessionDataKey");
     }
 
     /**
