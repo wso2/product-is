@@ -1,0 +1,1159 @@
+[[1;34mINFO[m] Scanning for projects...
+[[1;33mWARNING[m] 
+[[1;33mWARNING[m] Some problems were encountered while building the effective model for org.wso2.is:api-resources-full:war:7.0.0
+[[1;33mWARNING[m] 'dependencyManagement.dependencies.dependency.(groupId:artifactId:type:classifier)' must be unique: org.wso2.carbon.consent.mgt:org.wso2.carbon.api.server.consent.mgt:jar -> duplicate declaration of version ${carbon.consent.mgt.version} @ org.wso2.is:api-resources:7.0.0, /home/thisara/Documents/Repos/Repos/product-is/modules/api-resources/pom.xml, line 535, column 25
+[[1;33mWARNING[m] 
+[[1;33mWARNING[m] Some problems were encountered while building the effective model for org.wso2.is:api-resources:pom:7.0.0
+[[1;33mWARNING[m] 'dependencyManagement.dependencies.dependency.(groupId:artifactId:type:classifier)' must be unique: org.wso2.carbon.consent.mgt:org.wso2.carbon.api.server.consent.mgt:jar -> duplicate declaration of version ${carbon.consent.mgt.version} @ line 535, column 25
+[[1;33mWARNING[m] 
+[[1;33mWARNING[m] Some problems were encountered while building the effective model for org.wso2.is:wso2is:jar:7.0.0
+[[1;33mWARNING[m] 'build.plugins.plugin.(groupId:artifactId)' must be unique but found duplicate declaration of plugin com.google.code.maven-config-processor-plugin:config-processor-maven-plugin @ line 635, column 21
+[[1;33mWARNING[m] Reporting configuration should be done in <reporting> section, not in maven-site-plugin <configuration> as reportPlugins parameter. @ line 578, column 32
+[[1;33mWARNING[m] 
+[[1;33mWARNING[m] It is highly recommended to fix these problems because they threaten the stability of your build.
+[[1;33mWARNING[m] 
+[[1;33mWARNING[m] For this reason, future Maven versions might no longer support building such malformed projects.
+[[1;33mWARNING[m] 
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] [1mReactor Build Order:[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] WSO2 Identity Server                                               [pom]
+[[1;34mINFO[m] WSO2 Identity Server Styles Parent                                 [pom]
+[[1;34mINFO[m] Identity Server: UI styles                                      [bundle]
+[[1;34mINFO[m] WSO2 IS - Features Aggregator Module                               [pom]
+[[1;34mINFO[m] WSO2 IS - Style Features                                           [pom]
+[[1;34mINFO[m] WSO2 IS - Utils Features                                           [pom]
+[[1;34mINFO[m] WSO2 Carbon - Identity UI Feature                                  [pom]
+[[1;34mINFO[m] WSO2 IS - IS Profile Generation                                    [pom]
+[[1;34mINFO[m] Identity Server : Connector                                        [pom]
+[[1;34mINFO[m] WSO2 Identity Server - Rest API                                    [pom]
+[[1;34mINFO[m] WSO2 Identity Server - All Rest API                                [war]
+[[1;34mINFO[m] Identity Server : identity-authenticators                          [pom]
+[[1;34mINFO[m] Identity Server : Social-authenticators                            [pom]
+[[1;34mINFO[m] Identity Server : Provisioning Connectors                          [pom]
+[[1;34mINFO[m] Identity Server : identity-local-authenticators                    [pom]
+[[1;34mINFO[m] Identity Server : oauth2-grant-types                               [pom]
+[[1;34mINFO[m] Identity Server                                                    [jar]
+[[1;34mINFO[m] WSO2 Identity Integration Test Utils                               [pom]
+[[1;34mINFO[m] org.wso2.carbon.identity.test.integration.service               [bundle]
+[[1;34mINFO[m] org.wso2.carbon.identity.test.integration.service.stubs         [bundle]
+[[1;34mINFO[m] Identity Server Integration Tests                                  [pom]
+[[1;34mINFO[m] WSO2 IS - Integration Test Admin Clients Module                    [jar]
+[[1;34mINFO[m] WSO2 IS - Integration UI Pages Module                              [jar]
+[[1;34mINFO[m] WSO2 IS - Integration Test Utils Module                            [jar]
+[[1;34mINFO[m] Custom Attribute Finder                                            [jar]
+[[1;34mINFO[m] WSO2 Identity Integration Test Common                              [pom]
+[[1;34mINFO[m] Identity Test Back-end Module                                      [jar]
+[[1;34mINFO[m] org.wso2.identity.integration.test                                 [pom]
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m-----------------< [0;36morg.wso2.is:identity-server-parent[0;1m >-----------------[m
+[[1;34mINFO[m] [1mBuilding WSO2 Identity Server 7.0.0                               [1/28][m
+[[1;34mINFO[m] [1m--------------------------------[ pom ]---------------------------------[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-dependency-plugin:3.1.1:tree[m [1m(default-cli)[m @ [36midentity-server-parent[0;1m ---[m
+[[1;34mINFO[m] org.wso2.is:identity-server-parent:pom:7.0.0
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m-------------< [0;36morg.wso2.is:identity-server-styles-parent[0;1m >--------------[m
+[[1;34mINFO[m] [1mBuilding WSO2 Identity Server Styles Parent 7.0.0                 [2/28][m
+[[1;34mINFO[m] [1m--------------------------------[ pom ]---------------------------------[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-dependency-plugin:3.1.1:tree[m [1m(default-cli)[m @ [36midentity-server-styles-parent[0;1m ---[m
+[[1;34mINFO[m] org.wso2.is:identity-server-styles-parent:pom:7.0.0
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m----------------< [0;36morg.wso2.is:org.wso2.identity.styles[0;1m >----------------[m
+[[1;34mINFO[m] [1mBuilding Identity Server: UI styles 7.0.0                         [3/28][m
+[[1;34mINFO[m] [1m-------------------------------[ bundle ]-------------------------------[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-dependency-plugin:3.1.1:tree[m [1m(default-cli)[m @ [36morg.wso2.identity.styles[0;1m ---[m
+[[1;34mINFO[m] org.wso2.is:org.wso2.identity.styles:bundle:7.0.0
+[[1;34mINFO[m] +- org.wso2.carbon:org.wso2.carbon.ui:jar:4.10.5:compile
+[[1;34mINFO[m] |  +- org.eclipse.platform:org.eclipse.osgi:jar:3.14.0:compile
+[[1;34mINFO[m] |  +- org.wso2.eclipse.osgi:org.eclipse.osgi.services:jar:3.5.100.v20160504-1419:compile
+[[1;34mINFO[m] |  +- org.apache.ws.commons.axiom.wso2:axiom:jar:1.2.11-wso2v16:compile
+[[1;34mINFO[m] |  |  +- org.apache.geronimo.specs.wso2:geronimo-stax-api_1.0_spec:jar:1.0.1.wso2v2:compile
+[[1;34mINFO[m] |  |  |  \- org.apache.geronimo.specs:geronimo-stax-api_1.0_spec:jar:1.0.1:compile
+[[1;34mINFO[m] |  |  +- org.codehaus.woodstox:woodstox-core-asl:jar:4.2.0:compile
+[[1;34mINFO[m] |  |  \- org.codehaus.woodstox:stax2-api:jar:3.1.4:compile
+[[1;34mINFO[m] |  +- org.apache.tiles.wso2:tiles-jsp:jar:2.0.5.wso2v2:compile
+[[1;34mINFO[m] |  +- org.wso2.carbon:org.wso2.carbon.core:jar:4.10.5:compile
+[[1;34mINFO[m] |  |  +- org.wso2.orbit.org.bouncycastle:bcprov-jdk18on:jar:1.74.0.wso2v1:compile
+[[1;34mINFO[m] |  |  |  \- org.bouncycastle:bcprov-jdk18on:jar:1.74:compile
+[[1;34mINFO[m] |  |  +- org.wso2.carbon:javax.cache.wso2:jar:4.10.5:compile
+[[1;34mINFO[m] |  |  |  \- org.apache.geronimo.specs:geronimo-jta_1.1_spec:jar:1.1:compile
+[[1;34mINFO[m] |  |  +- org.wso2.carbon:org.wso2.carbon.user.core:jar:4.10.5:compile
+[[1;34mINFO[m] |  |  +- org.wso2.carbon.crypto:org.wso2.carbon.crypto.api:jar:1.1.14:compile
+[[1;34mINFO[m] |  |  |  \- org.eclipse.osgi:org.eclipse.osgi:jar:3.9.1.v20130814-1242:compile
+[[1;34mINFO[m] |  |  +- org.wso2.orbit.commons-collections:commons-collections:jar:3.2.2.wso2v1:compile
+[[1;34mINFO[m] |  |  +- org.wso2.orbit.org.apache.neethi:neethi:jar:2.0.4.wso2v5:compile
+[[1;34mINFO[m] |  |  +- org.apache.httpcomponents.wso2:httpcore:jar:4.4.15.wso2v1:compile
+[[1;34mINFO[m] |  |  +- com.google.code.gson:gson:jar:2.9.0:compile
+[[1;34mINFO[m] |  |  +- org.apache.tomcat:tomcat-catalina-ha:jar:9.0.82:compile
+[[1;34mINFO[m] |  |  |  +- org.apache.tomcat:tomcat-juli:jar:9.0.82:compile
+[[1;34mINFO[m] |  |  |  +- org.apache.tomcat:tomcat-tribes:jar:9.0.82:compile
+[[1;34mINFO[m] |  |  |  +- org.apache.tomcat:tomcat-catalina:jar:9.0.82:compile
+[[1;34mINFO[m] |  |  |  |  +- org.apache.tomcat:tomcat-jsp-api:jar:9.0.82:compile
+[[1;34mINFO[m] |  |  |  |  |  \- org.apache.tomcat:tomcat-el-api:jar:9.0.82:compile
+[[1;34mINFO[m] |  |  |  |  +- org.apache.tomcat:tomcat-annotations-api:jar:9.0.82:compile
+[[1;34mINFO[m] |  |  |  |  +- org.apache.tomcat:tomcat-api:jar:9.0.82:compile
+[[1;34mINFO[m] |  |  |  |  +- org.apache.tomcat:tomcat-jni:jar:9.0.82:compile
+[[1;34mINFO[m] |  |  |  |  \- org.apache.tomcat:tomcat-jaspic-api:jar:9.0.82:compile
+[[1;34mINFO[m] |  |  |  +- org.apache.tomcat:tomcat-util:jar:9.0.82:compile
+[[1;34mINFO[m] |  |  |  \- org.apache.tomcat:tomcat-util-scan:jar:9.0.82:compile
+[[1;34mINFO[m] |  |  \- wsdl4j.wso2:wsdl4j:jar:1.6.2.wso2v2:compile
+[[1;34mINFO[m] |  |     \- wsdl4j:wsdl4j:jar:1.6.2:compile
+[[1;34mINFO[m] |  +- org.wso2.carbon:org.wso2.carbon.authenticator.proxy:jar:4.10.5:compile
+[[1;34mINFO[m] |  |  \- org.wso2.carbon:org.wso2.carbon.authenticator.stub:jar:4.10.5:compile
+[[1;34mINFO[m] |  +- org.wso2.carbon:org.wso2.carbon.tomcat:jar:4.10.5:compile
+[[1;34mINFO[m] |  |  +- org.wso2.eclipse.equinox:org.eclipse.equinox.common:jar:3.8.0.v20160509-1230:compile
+[[1;34mINFO[m] |  |  \- org.wso2.securevault:org.wso2.securevault:jar:1.1.7:compile
+[[1;34mINFO[m] |  |     +- org.apache.ws.commons.axiom:axiom-api:jar:1.2.11-wso2v6:compile
+[[1;34mINFO[m] |  |     |  +- org.apache.geronimo.specs:geronimo-activation_1.1_spec:jar:1.0.2:compile
+[[1;34mINFO[m] |  |     |  \- org.apache.geronimo.specs:geronimo-javamail_1.4_spec:jar:1.6:compile
+[[1;34mINFO[m] |  |     +- org.apache.ws.commons.axiom:axiom-impl:jar:1.2.12:compile
+[[1;34mINFO[m] |  |     |  \- org.codehaus.woodstox:wstx-asl:jar:3.2.9:compile
+[[1;34mINFO[m] |  |     +- jline:jline:jar:0.9.94:compile
+[[1;34mINFO[m] |  |     |  \- junit:junit:jar:4.13.1:test
+[[1;34mINFO[m] |  |     |     \- org.hamcrest:hamcrest-core:jar:1.3:test
+[[1;34mINFO[m] |  |     \- commons-codec:commons-codec:jar:1.8:compile
+[[1;34mINFO[m] |  +- org.wso2.carbon:org.wso2.carbon.core.common:jar:4.10.5:compile
+[[1;34mINFO[m] |  +- org.wso2.org.ops4j.pax.logging:pax-logging-api:jar:2.1.0-wso2v4:compile
+[[1;34mINFO[m] |  |  +- org.osgi:osgi.core:jar:7.0.0:compile
+[[1;34mINFO[m] |  |  \- org.osgi:osgi.cmpn:jar:7.0.0:compile
+[[1;34mINFO[m] |  +- org.wso2.carbon:org.wso2.carbon.utils:jar:4.10.5:compile
+[[1;34mINFO[m] |  |  +- org.wso2.carbon:org.wso2.carbon.user.api:jar:4.10.5:compile
+[[1;34mINFO[m] |  |  +- org.wso2.carbon:org.wso2.carbon.bootstrap:jar:4.10.5:compile
+[[1;34mINFO[m] |  |  |  \- wrapper:wrapper:jar:3.2.3:compile
+[[1;34mINFO[m] |  |  +- org.wso2.org.ops4j.pax.logging:pax-logging-log4j2:jar:2.1.0-wso2v4:compile
+[[1;34mINFO[m] |  |  +- org.wso2.carbon:org.wso2.carbon.queuing:jar:4.10.5:compile
+[[1;34mINFO[m] |  |  +- org.wso2.carbon:org.wso2.carbon.base:jar:4.10.5:compile
+[[1;34mINFO[m] |  |  |  +- org.wso2.carbon:org.wso2.carbon.securevault:jar:4.10.5:compile
+[[1;34mINFO[m] |  |  |  \- xml-apis:xml-apis:jar:1.4.01:compile
+[[1;34mINFO[m] |  |  +- org.igniterealtime.smack.wso2:smack:jar:3.0.4.wso2v1:compile
+[[1;34mINFO[m] |  |  +- org.igniterealtime.smack.wso2:smackx:jar:3.0.4.wso2v1:compile
+[[1;34mINFO[m] |  |  +- org.wso2.orbit.xerces:xercesImpl:jar:2.12.2.wso2v1:compile
+[[1;34mINFO[m] |  |  +- jaxen:jaxen:jar:1.1.1:compile
+[[1;34mINFO[m] |  |  |  +- jdom:jdom:jar:1.0:compile
+[[1;34mINFO[m] |  |  |  +- xerces:xercesImpl:jar:2.12.2:compile
+[[1;34mINFO[m] |  |  |  \- xom:xom:jar:1.0:compile
+[[1;34mINFO[m] |  |  |     +- xerces:xmlParserAPIs:jar:2.6.2:compile
+[[1;34mINFO[m] |  |  |     \- com.ibm.icu:icu4j:jar:2.6.1:compile
+[[1;34mINFO[m] |  |  +- org.wso2.orbit.commons-fileupload:commons-fileupload:jar:1.5.0.wso2v2:compile
+[[1;34mINFO[m] |  |  +- org.apache.ant.wso2:ant:jar:1.10.12.wso2v1:compile
+[[1;34mINFO[m] |  |  |  \- org.apache.ant:ant:jar:1.10.12:compile
+[[1;34mINFO[m] |  |  |     \- org.apache.ant:ant-launcher:jar:1.10.12:compile
+[[1;34mINFO[m] |  |  +- org.wso2.orbit.commons-httpclient:commons-httpclient:jar:3.1.0.wso2v6:compile
+[[1;34mINFO[m] |  |  +- org.wso2.carbon:org.wso2.carbon.registry.api:jar:4.10.5:compile
+[[1;34mINFO[m] |  |  +- org.wso2.orbit.org.apache.httpcomponents:httpclient:jar:4.5.13.wso2v1:compile
+[[1;34mINFO[m] |  |  \- org.wso2.orbit.org.apache.commons:commons-lang3:jar:3.4.0.wso2v1:compile
+[[1;34mINFO[m] |  +- org.wso2.carbon:org.wso2.carbon.registry.core:jar:4.10.5:compile
+[[1;34mINFO[m] |  |  +- commons-io.wso2:commons-io:jar:2.11.0.wso2v1:compile
+[[1;34mINFO[m] |  |  +- net.sourceforge.findbugs:annotations:jar:1.3.2:compile
+[[1;34mINFO[m] |  |  +- org.apache.ws.commons.schema.wso2:XmlSchema:jar:1.4.7-wso2v5:compile
+[[1;34mINFO[m] |  |  +- org.wso2.carbon:org.wso2.carbon.registry.xboot:jar:4.10.5:compile
+[[1;34mINFO[m] |  |  +- org.compass-project.wso2:compass:jar:2.0.1.wso2v2:compile
+[[1;34mINFO[m] |  |  +- org.apache.abdera.wso2:abdera:jar:1.0.0.wso2v3:compile
+[[1;34mINFO[m] |  |  +- org.wso2.orbit.org.apache.tomcat:jdbc-pool:jar:9.0.65.wso2v1:compile
+[[1;34mINFO[m] |  |  +- commons-pool.wso2:commons-pool:jar:1.5.6.wso2v1:compile
+[[1;34mINFO[m] |  |  |  \- commons-pool:commons-pool:jar:1.5.6:compile
+[[1;34mINFO[m] |  |  \- org.apache.felix:org.apache.felix.scr.ds-annotations:jar:1.2.10:compile
+[[1;34mINFO[m] |  +- org.apache.axis2.wso2:axis2:jar:1.6.1-wso2v42:compile
+[[1;34mINFO[m] |  +- org.wso2.carbon:org.wso2.carbon.core.commons.stub:jar:4.10.5:compile
+[[1;34mINFO[m] |  |  \- org.apache.axis2.wso2:axis2-client:jar:1.6.1-wso2v42:compile
+[[1;34mINFO[m] |  |     +- org.apache.axis2.wso2:axis2-json:jar:1.6.1-wso2v42:compile
+[[1;34mINFO[m] |  |     +- org.apache.woden.wso2:woden:jar:1.0.0.M8-wso2v1:compile
+[[1;34mINFO[m] |  |     +- commons-codec.wso2:commons-codec:jar:1.3.0.wso2v1:compile
+[[1;34mINFO[m] |  |     +- commons-logging:commons-logging:jar:1.2:test
+[[1;34mINFO[m] |  |     \- org.wso2.orbit.javax.activation:activation:jar:1.1.1.wso2v1:compile
+[[1;34mINFO[m] |  +- org.wso2.orbit.javax.servlet.jsp.jstl:jstl:jar:1.2.2.wso2v1:compile
+[[1;34mINFO[m] |  +- org.eclipse.equinox:javax.servlet:jar:3.0.0.v201112011016:compile
+[[1;34mINFO[m] |  +- commons-lang.wso2:commons-lang:jar:2.6.0.wso2v1:test
+[[1;34mINFO[m] |  +- org.wso2.orbit.org.owasp.encoder:encoder:jar:1.2.0.wso2v1:compile
+[[1;34mINFO[m] |  +- org.wso2.orbit.org.apache.tomcat:tomcat:jar:9.0.82.wso2v1:compile
+[[1;34mINFO[m] |  +- org.osgi:org.osgi.service.component.annotations:jar:1.3.0:compile
+[[1;34mINFO[m] |  +- org.osgi:org.osgi.annotation:jar:6.0.0:compile
+[[1;34mINFO[m] |  \- org.osgi:org.osgi.service.metatype.annotations:jar:1.3.0:compile
+[[1;34mINFO[m] +- org.eclipse.equinox:org.eclipse.equinox.http.servlet:jar:2.2.2:compile
+[[1;34mINFO[m] +- org.eclipse.equinox:org.eclipse.equinox.http.helper:jar:1.0.0:compile
+[[1;34mINFO[m] +- org.eclipse.equinox:org.eclipse.equinox.jsp.jasper:jar:1.0.1.R33x_v20070816:compile
+[[1;34mINFO[m] \- org.eclipse.equinox:javax.servlet.jsp:jar:2.0.0.v200706191603:compile
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m-------------------< [0;36morg.wso2.is:identity-features[0;1m >--------------------[m
+[[1;34mINFO[m] [1mBuilding WSO2 IS - Features Aggregator Module 7.0.0               [4/28][m
+[[1;34mINFO[m] [1m--------------------------------[ pom ]---------------------------------[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-dependency-plugin:3.1.1:tree[m [1m(default-cli)[m @ [36midentity-features[0;1m ---[m
+[[1;34mINFO[m] org.wso2.is:identity-features:pom:7.0.0
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m------------< [0;36morg.wso2.is:org.wso2.identity.styles.feature[0;1m >------------[m
+[[1;34mINFO[m] [1mBuilding WSO2 IS - Style Features 7.0.0                           [5/28][m
+[[1;34mINFO[m] [1m--------------------------------[ pom ]---------------------------------[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-dependency-plugin:3.1.1:tree[m [1m(default-cli)[m @ [36morg.wso2.identity.styles.feature[0;1m ---[m
+[[1;34mINFO[m] org.wso2.is:org.wso2.identity.styles.feature:pom:7.0.0
+[[1;34mINFO[m] +- org.wso2.is:org.wso2.identity.styles:jar:7.0.0:compile
+[[1;34mINFO[m] |  +- org.wso2.carbon:org.wso2.carbon.ui:jar:4.10.5:compile
+[[1;34mINFO[m] |  |  +- org.eclipse.platform:org.eclipse.osgi:jar:3.14.0:compile
+[[1;34mINFO[m] |  |  +- org.wso2.eclipse.osgi:org.eclipse.osgi.services:jar:3.5.100.v20160504-1419:compile
+[[1;34mINFO[m] |  |  +- org.apache.ws.commons.axiom.wso2:axiom:jar:1.2.11-wso2v16:compile
+[[1;34mINFO[m] |  |  |  +- org.apache.geronimo.specs.wso2:geronimo-stax-api_1.0_spec:jar:1.0.1.wso2v2:compile
+[[1;34mINFO[m] |  |  |  |  \- org.apache.geronimo.specs:geronimo-stax-api_1.0_spec:jar:1.0.1:compile
+[[1;34mINFO[m] |  |  |  +- org.codehaus.woodstox:woodstox-core-asl:jar:4.2.0:compile
+[[1;34mINFO[m] |  |  |  \- org.codehaus.woodstox:stax2-api:jar:3.1.4:compile
+[[1;34mINFO[m] |  |  +- org.apache.tiles.wso2:tiles-jsp:jar:2.0.5.wso2v2:compile
+[[1;34mINFO[m] |  |  +- org.wso2.carbon:org.wso2.carbon.core:jar:4.10.5:compile
+[[1;34mINFO[m] |  |  |  +- org.wso2.orbit.org.bouncycastle:bcprov-jdk18on:jar:1.74.0.wso2v1:compile
+[[1;34mINFO[m] |  |  |  |  \- org.bouncycastle:bcprov-jdk18on:jar:1.74:compile
+[[1;34mINFO[m] |  |  |  +- org.wso2.carbon:javax.cache.wso2:jar:4.10.5:compile
+[[1;34mINFO[m] |  |  |  |  \- org.apache.geronimo.specs:geronimo-jta_1.1_spec:jar:1.1:compile
+[[1;34mINFO[m] |  |  |  +- org.wso2.carbon:org.wso2.carbon.user.core:jar:4.10.5:compile
+[[1;34mINFO[m] |  |  |  +- org.wso2.carbon.crypto:org.wso2.carbon.crypto.api:jar:1.1.14:compile
+[[1;34mINFO[m] |  |  |  |  \- org.eclipse.osgi:org.eclipse.osgi:jar:3.9.1.v20130814-1242:compile
+[[1;34mINFO[m] |  |  |  +- org.wso2.orbit.commons-collections:commons-collections:jar:3.2.2.wso2v1:compile
+[[1;34mINFO[m] |  |  |  +- org.wso2.orbit.org.apache.neethi:neethi:jar:2.0.4.wso2v5:compile
+[[1;34mINFO[m] |  |  |  +- org.apache.httpcomponents.wso2:httpcore:jar:4.4.15.wso2v1:compile
+[[1;34mINFO[m] |  |  |  +- com.google.code.gson:gson:jar:2.9.0:compile
+[[1;34mINFO[m] |  |  |  +- org.apache.tomcat:tomcat-catalina-ha:jar:9.0.82:compile
+[[1;34mINFO[m] |  |  |  |  +- org.apache.tomcat:tomcat-juli:jar:9.0.82:compile
+[[1;34mINFO[m] |  |  |  |  +- org.apache.tomcat:tomcat-tribes:jar:9.0.82:compile
+[[1;34mINFO[m] |  |  |  |  +- org.apache.tomcat:tomcat-catalina:jar:9.0.82:compile
+[[1;34mINFO[m] |  |  |  |  |  +- org.apache.tomcat:tomcat-jsp-api:jar:9.0.82:compile
+[[1;34mINFO[m] |  |  |  |  |  |  \- org.apache.tomcat:tomcat-el-api:jar:9.0.82:compile
+[[1;34mINFO[m] |  |  |  |  |  +- org.apache.tomcat:tomcat-annotations-api:jar:9.0.82:compile
+[[1;34mINFO[m] |  |  |  |  |  +- org.apache.tomcat:tomcat-api:jar:9.0.82:compile
+[[1;34mINFO[m] |  |  |  |  |  +- org.apache.tomcat:tomcat-jni:jar:9.0.82:compile
+[[1;34mINFO[m] |  |  |  |  |  \- org.apache.tomcat:tomcat-jaspic-api:jar:9.0.82:compile
+[[1;34mINFO[m] |  |  |  |  +- org.apache.tomcat:tomcat-util:jar:9.0.82:compile
+[[1;34mINFO[m] |  |  |  |  \- org.apache.tomcat:tomcat-util-scan:jar:9.0.82:compile
+[[1;34mINFO[m] |  |  |  \- wsdl4j.wso2:wsdl4j:jar:1.6.2.wso2v2:compile
+[[1;34mINFO[m] |  |  |     \- wsdl4j:wsdl4j:jar:1.6.2:compile
+[[1;34mINFO[m] |  |  +- org.wso2.carbon:org.wso2.carbon.authenticator.proxy:jar:4.10.5:compile
+[[1;34mINFO[m] |  |  |  \- org.wso2.carbon:org.wso2.carbon.authenticator.stub:jar:4.10.5:compile
+[[1;34mINFO[m] |  |  +- org.wso2.carbon:org.wso2.carbon.tomcat:jar:4.10.5:compile
+[[1;34mINFO[m] |  |  |  +- org.wso2.eclipse.equinox:org.eclipse.equinox.common:jar:3.8.0.v20160509-1230:compile
+[[1;34mINFO[m] |  |  |  \- org.wso2.securevault:org.wso2.securevault:jar:1.1.7:compile
+[[1;34mINFO[m] |  |  |     +- org.apache.ws.commons.axiom:axiom-api:jar:1.2.11-wso2v6:compile
+[[1;34mINFO[m] |  |  |     |  +- org.apache.geronimo.specs:geronimo-activation_1.1_spec:jar:1.0.2:compile
+[[1;34mINFO[m] |  |  |     |  \- org.apache.geronimo.specs:geronimo-javamail_1.4_spec:jar:1.6:compile
+[[1;34mINFO[m] |  |  |     +- org.apache.ws.commons.axiom:axiom-impl:jar:1.2.12:compile
+[[1;34mINFO[m] |  |  |     |  \- org.codehaus.woodstox:wstx-asl:jar:3.2.9:compile
+[[1;34mINFO[m] |  |  |     +- jline:jline:jar:0.9.94:compile
+[[1;34mINFO[m] |  |  |     |  \- junit:junit:jar:4.13.1:test
+[[1;34mINFO[m] |  |  |     |     \- org.hamcrest:hamcrest-core:jar:1.3:test
+[[1;34mINFO[m] |  |  |     \- commons-codec:commons-codec:jar:1.8:compile
+[[1;34mINFO[m] |  |  +- org.wso2.carbon:org.wso2.carbon.core.common:jar:4.10.5:compile
+[[1;34mINFO[m] |  |  +- org.wso2.org.ops4j.pax.logging:pax-logging-api:jar:2.1.0-wso2v4:compile
+[[1;34mINFO[m] |  |  |  +- org.osgi:osgi.core:jar:7.0.0:compile
+[[1;34mINFO[m] |  |  |  \- org.osgi:osgi.cmpn:jar:7.0.0:compile
+[[1;34mINFO[m] |  |  +- org.wso2.carbon:org.wso2.carbon.utils:jar:4.10.5:compile
+[[1;34mINFO[m] |  |  |  +- org.wso2.carbon:org.wso2.carbon.user.api:jar:4.10.5:compile
+[[1;34mINFO[m] |  |  |  +- org.wso2.carbon:org.wso2.carbon.bootstrap:jar:4.10.5:compile
+[[1;34mINFO[m] |  |  |  |  \- wrapper:wrapper:jar:3.2.3:compile
+[[1;34mINFO[m] |  |  |  +- org.wso2.org.ops4j.pax.logging:pax-logging-log4j2:jar:2.1.0-wso2v4:compile
+[[1;34mINFO[m] |  |  |  +- org.wso2.carbon:org.wso2.carbon.queuing:jar:4.10.5:compile
+[[1;34mINFO[m] |  |  |  +- org.wso2.carbon:org.wso2.carbon.base:jar:4.10.5:compile
+[[1;34mINFO[m] |  |  |  |  +- org.wso2.carbon:org.wso2.carbon.securevault:jar:4.10.5:compile
+[[1;34mINFO[m] |  |  |  |  \- xml-apis:xml-apis:jar:1.4.01:compile
+[[1;34mINFO[m] |  |  |  +- org.igniterealtime.smack.wso2:smack:jar:3.0.4.wso2v1:compile
+[[1;34mINFO[m] |  |  |  +- org.igniterealtime.smack.wso2:smackx:jar:3.0.4.wso2v1:compile
+[[1;34mINFO[m] |  |  |  +- org.wso2.orbit.xerces:xercesImpl:jar:2.12.2.wso2v1:compile
+[[1;34mINFO[m] |  |  |  +- jaxen:jaxen:jar:1.1.1:compile
+[[1;34mINFO[m] |  |  |  |  +- jdom:jdom:jar:1.0:compile
+[[1;34mINFO[m] |  |  |  |  +- xerces:xercesImpl:jar:2.12.2:compile
+[[1;34mINFO[m] |  |  |  |  \- xom:xom:jar:1.0:compile
+[[1;34mINFO[m] |  |  |  |     +- xerces:xmlParserAPIs:jar:2.6.2:compile
+[[1;34mINFO[m] |  |  |  |     \- com.ibm.icu:icu4j:jar:2.6.1:compile
+[[1;34mINFO[m] |  |  |  +- org.wso2.orbit.commons-fileupload:commons-fileupload:jar:1.5.0.wso2v2:compile
+[[1;34mINFO[m] |  |  |  +- org.apache.ant.wso2:ant:jar:1.10.12.wso2v1:compile
+[[1;34mINFO[m] |  |  |  |  \- org.apache.ant:ant:jar:1.10.12:compile
+[[1;34mINFO[m] |  |  |  |     \- org.apache.ant:ant-launcher:jar:1.10.12:compile
+[[1;34mINFO[m] |  |  |  +- org.wso2.orbit.commons-httpclient:commons-httpclient:jar:3.1.0.wso2v6:compile
+[[1;34mINFO[m] |  |  |  +- org.wso2.carbon:org.wso2.carbon.registry.api:jar:4.10.5:compile
+[[1;34mINFO[m] |  |  |  +- org.wso2.orbit.org.apache.httpcomponents:httpclient:jar:4.5.13.wso2v1:compile
+[[1;34mINFO[m] |  |  |  \- org.wso2.orbit.org.apache.commons:commons-lang3:jar:3.4.0.wso2v1:compile
+[[1;34mINFO[m] |  |  +- org.wso2.carbon:org.wso2.carbon.registry.core:jar:4.10.5:compile
+[[1;34mINFO[m] |  |  |  +- commons-io.wso2:commons-io:jar:2.11.0.wso2v1:compile
+[[1;34mINFO[m] |  |  |  +- net.sourceforge.findbugs:annotations:jar:1.3.2:compile
+[[1;34mINFO[m] |  |  |  +- org.apache.ws.commons.schema.wso2:XmlSchema:jar:1.4.7-wso2v5:compile
+[[1;34mINFO[m] |  |  |  +- org.wso2.carbon:org.wso2.carbon.registry.xboot:jar:4.10.5:compile
+[[1;34mINFO[m] |  |  |  +- org.compass-project.wso2:compass:jar:2.0.1.wso2v2:compile
+[[1;34mINFO[m] |  |  |  +- org.apache.abdera.wso2:abdera:jar:1.0.0.wso2v3:compile
+[[1;34mINFO[m] |  |  |  +- org.wso2.orbit.org.apache.tomcat:jdbc-pool:jar:9.0.65.wso2v1:compile
+[[1;34mINFO[m] |  |  |  +- commons-pool.wso2:commons-pool:jar:1.5.6.wso2v1:compile
+[[1;34mINFO[m] |  |  |  |  \- commons-pool:commons-pool:jar:1.5.6:compile
+[[1;34mINFO[m] |  |  |  \- org.apache.felix:org.apache.felix.scr.ds-annotations:jar:1.2.10:compile
+[[1;34mINFO[m] |  |  +- org.apache.axis2.wso2:axis2:jar:1.6.1-wso2v42:compile
+[[1;34mINFO[m] |  |  +- org.wso2.carbon:org.wso2.carbon.core.commons.stub:jar:4.10.5:compile
+[[1;34mINFO[m] |  |  |  \- org.apache.axis2.wso2:axis2-client:jar:1.6.1-wso2v42:compile
+[[1;34mINFO[m] |  |  |     +- org.apache.axis2.wso2:axis2-json:jar:1.6.1-wso2v42:compile
+[[1;34mINFO[m] |  |  |     +- org.apache.woden.wso2:woden:jar:1.0.0.M8-wso2v1:compile
+[[1;34mINFO[m] |  |  |     +- commons-codec.wso2:commons-codec:jar:1.3.0.wso2v1:compile
+[[1;34mINFO[m] |  |  |     +- commons-logging:commons-logging:jar:1.2:test
+[[1;34mINFO[m] |  |  |     \- org.wso2.orbit.javax.activation:activation:jar:1.1.1.wso2v1:compile
+[[1;34mINFO[m] |  |  +- org.wso2.orbit.javax.servlet.jsp.jstl:jstl:jar:1.2.2.wso2v1:compile
+[[1;34mINFO[m] |  |  +- org.eclipse.equinox:javax.servlet:jar:3.0.0.v201112011016:compile
+[[1;34mINFO[m] |  |  +- commons-lang.wso2:commons-lang:jar:2.6.0.wso2v1:test
+[[1;34mINFO[m] |  |  +- org.wso2.orbit.org.owasp.encoder:encoder:jar:1.2.0.wso2v1:compile
+[[1;34mINFO[m] |  |  +- org.wso2.orbit.org.apache.tomcat:tomcat:jar:9.0.82.wso2v1:compile
+[[1;34mINFO[m] |  |  +- org.osgi:org.osgi.service.component.annotations:jar:1.3.0:compile
+[[1;34mINFO[m] |  |  +- org.osgi:org.osgi.annotation:jar:6.0.0:compile
+[[1;34mINFO[m] |  |  \- org.osgi:org.osgi.service.metatype.annotations:jar:1.3.0:compile
+[[1;34mINFO[m] |  +- org.eclipse.equinox:org.eclipse.equinox.http.servlet:jar:2.2.2:compile
+[[1;34mINFO[m] |  +- org.eclipse.equinox:org.eclipse.equinox.http.helper:jar:1.0.0:compile
+[[1;34mINFO[m] |  +- org.eclipse.equinox:org.eclipse.equinox.jsp.jasper:jar:1.0.1.R33x_v20070816:compile
+[[1;34mINFO[m] |  \- org.eclipse.equinox:javax.servlet.jsp:jar:2.0.0.v200706191603:compile
+[[1;34mINFO[m] \- org.wso2.carbon:org.wso2.carbon.core.ui.feature:zip:4.10.5:compile
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m------------< [0;36morg.wso2.is:org.wso2.identity.utils.feature[0;1m >-------------[m
+[[1;34mINFO[m] [1mBuilding WSO2 IS - Utils Features 7.0.0                           [6/28][m
+[[1;34mINFO[m] [1m--------------------------------[ pom ]---------------------------------[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-dependency-plugin:3.1.1:tree[m [1m(default-cli)[m @ [36morg.wso2.identity.utils.feature[0;1m ---[m
+[[1;34mINFO[m] org.wso2.is:org.wso2.identity.utils.feature:pom:7.0.0
+[[1;34mINFO[m] +- net.sf.ehcache.wso2:ehcache:jar:1.5.0.wso2v3:compile
+[[1;34mINFO[m] |  \- net.sf.ehcache:ehcache:jar:1.5.0-wso2v3:compile
+[[1;34mINFO[m] |     +- backport-util-concurrent:backport-util-concurrent:jar:3.1:compile
+[[1;34mINFO[m] |     +- commons-logging:commons-logging:jar:1.2:test
+[[1;34mINFO[m] |     +- commons-collections:commons-collections:jar:3.2.2:compile
+[[1;34mINFO[m] |     \- net.sf.jsr107cache:jsr107cache:jar:1.0:compile
+[[1;34mINFO[m] +- org.apache.bcel.wso2:bcel:jar:6.7.0.wso2v1:compile
+[[1;34mINFO[m] |  \- org.apache.bcel:bcel:jar:6.7.0:compile
+[[1;34mINFO[m] |     \- org.apache.commons:commons-lang3:jar:3.12.0:compile
+[[1;34mINFO[m] +- org.ow2.asm:asm-all:jar:5.2:compile
+[[1;34mINFO[m] +- cglib.wso2:cglib:jar:2.2.wso2v1:compile
+[[1;34mINFO[m] |  \- cglib:cglib:jar:2.2:compile
+[[1;34mINFO[m] |     \- asm:asm:jar:3.1:compile
+[[1;34mINFO[m] +- org.apache.axis2.wso2:axis2-jibx:jar:1.6.1.wso2v11:compile
+[[1;34mINFO[m] +- org.jibx.wso2:jibx:jar:1.2.1.wso2v1:compile
+[[1;34mINFO[m] |  +- org.jibx:jibx-bind:jar:1.2.1:compile
+[[1;34mINFO[m] |  |  \- bcel:bcel:jar:5.1:compile
+[[1;34mINFO[m] |  |     \- regexp:regexp:jar:1.2:compile
+[[1;34mINFO[m] |  \- org.jibx:jibx-run:jar:1.2.1:compile
+[[1;34mINFO[m] |     \- org.codehaus.woodstox:wstx-asl:jar:3.2.1:compile
+[[1;34mINFO[m] |        \- stax:stax-api:jar:1.0.1:compile
+[[1;34mINFO[m] \- org.apache.axis2.wso2:axis2-jaxbri:jar:1.6.1-wso2v42:compile
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--------------< [0;36morg.wso2.is:org.wso2.identity.ui.feature[0;1m >--------------[m
+[[1;34mINFO[m] [1mBuilding WSO2 Carbon - Identity UI Feature 7.0.0                  [7/28][m
+[[1;34mINFO[m] [1m--------------------------------[ pom ]---------------------------------[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-dependency-plugin:3.1.1:tree[m [1m(default-cli)[m @ [36morg.wso2.identity.ui.feature[0;1m ---[m
+[[1;34mINFO[m] org.wso2.is:org.wso2.identity.ui.feature:pom:7.0.0
+[[1;34mINFO[m] \- org.wso2.identity:org.wso2.stratos.identity.dashboard.ui:jar:2.2.1:compile
+[[1;34mINFO[m]    +- org.wso2.carbon:org.wso2.carbon.ui:jar:4.10.5:compile
+[[1;34mINFO[m]    |  +- org.eclipse.platform:org.eclipse.osgi:jar:3.14.0:compile
+[[1;34mINFO[m]    |  +- org.wso2.eclipse.osgi:org.eclipse.osgi.services:jar:3.5.100.v20160504-1419:compile
+[[1;34mINFO[m]    |  +- org.apache.ws.commons.axiom.wso2:axiom:jar:1.2.11-wso2v16:compile
+[[1;34mINFO[m]    |  |  +- org.apache.geronimo.specs.wso2:geronimo-stax-api_1.0_spec:jar:1.0.1.wso2v2:compile
+[[1;34mINFO[m]    |  |  |  \- org.apache.geronimo.specs:geronimo-stax-api_1.0_spec:jar:1.0.1:compile
+[[1;34mINFO[m]    |  |  +- org.codehaus.woodstox:woodstox-core-asl:jar:4.2.0:compile
+[[1;34mINFO[m]    |  |  \- org.codehaus.woodstox:stax2-api:jar:3.1.4:compile
+[[1;34mINFO[m]    |  +- org.apache.tiles.wso2:tiles-jsp:jar:2.0.5.wso2v2:compile
+[[1;34mINFO[m]    |  +- org.wso2.carbon:org.wso2.carbon.core:jar:4.10.5:compile
+[[1;34mINFO[m]    |  |  +- org.eclipse.equinox:org.eclipse.equinox.http.helper:jar:1.0.0:compile
+[[1;34mINFO[m]    |  |  +- org.wso2.orbit.org.bouncycastle:bcprov-jdk18on:jar:1.74.0.wso2v1:compile
+[[1;34mINFO[m]    |  |  |  \- org.bouncycastle:bcprov-jdk18on:jar:1.74:compile
+[[1;34mINFO[m]    |  |  +- org.wso2.carbon:javax.cache.wso2:jar:4.10.5:compile
+[[1;34mINFO[m]    |  |  |  \- org.apache.geronimo.specs:geronimo-jta_1.1_spec:jar:1.1:compile
+[[1;34mINFO[m]    |  |  +- org.wso2.carbon.crypto:org.wso2.carbon.crypto.api:jar:1.1.14:compile
+[[1;34mINFO[m]    |  |  |  \- org.eclipse.osgi:org.eclipse.osgi:jar:3.9.1.v20130814-1242:compile
+[[1;34mINFO[m]    |  |  +- org.wso2.orbit.commons-collections:commons-collections:jar:3.2.2.wso2v1:compile
+[[1;34mINFO[m]    |  |  +- org.wso2.orbit.org.apache.neethi:neethi:jar:2.0.4.wso2v5:compile
+[[1;34mINFO[m]    |  |  +- org.apache.httpcomponents.wso2:httpcore:jar:4.4.15.wso2v1:compile
+[[1;34mINFO[m]    |  |  +- com.google.code.gson:gson:jar:2.9.0:compile
+[[1;34mINFO[m]    |  |  +- org.apache.tomcat:tomcat-catalina-ha:jar:9.0.82:compile
+[[1;34mINFO[m]    |  |  |  +- org.apache.tomcat:tomcat-juli:jar:9.0.82:compile
+[[1;34mINFO[m]    |  |  |  +- org.apache.tomcat:tomcat-tribes:jar:9.0.82:compile
+[[1;34mINFO[m]    |  |  |  +- org.apache.tomcat:tomcat-catalina:jar:9.0.82:compile
+[[1;34mINFO[m]    |  |  |  |  +- org.apache.tomcat:tomcat-jsp-api:jar:9.0.82:compile
+[[1;34mINFO[m]    |  |  |  |  |  \- org.apache.tomcat:tomcat-el-api:jar:9.0.82:compile
+[[1;34mINFO[m]    |  |  |  |  +- org.apache.tomcat:tomcat-annotations-api:jar:9.0.82:compile
+[[1;34mINFO[m]    |  |  |  |  +- org.apache.tomcat:tomcat-api:jar:9.0.82:compile
+[[1;34mINFO[m]    |  |  |  |  +- org.apache.tomcat:tomcat-jni:jar:9.0.82:compile
+[[1;34mINFO[m]    |  |  |  |  \- org.apache.tomcat:tomcat-jaspic-api:jar:9.0.82:compile
+[[1;34mINFO[m]    |  |  |  +- org.apache.tomcat:tomcat-util:jar:9.0.82:compile
+[[1;34mINFO[m]    |  |  |  \- org.apache.tomcat:tomcat-util-scan:jar:9.0.82:compile
+[[1;34mINFO[m]    |  |  \- wsdl4j.wso2:wsdl4j:jar:1.6.2.wso2v2:compile
+[[1;34mINFO[m]    |  |     \- wsdl4j:wsdl4j:jar:1.6.2:compile
+[[1;34mINFO[m]    |  +- org.wso2.carbon:org.wso2.carbon.authenticator.proxy:jar:4.10.5:compile
+[[1;34mINFO[m]    |  |  \- org.wso2.carbon:org.wso2.carbon.authenticator.stub:jar:4.10.5:compile
+[[1;34mINFO[m]    |  +- org.wso2.carbon:org.wso2.carbon.tomcat:jar:4.10.5:compile
+[[1;34mINFO[m]    |  |  +- org.wso2.eclipse.equinox:org.eclipse.equinox.common:jar:3.8.0.v20160509-1230:compile
+[[1;34mINFO[m]    |  |  \- org.wso2.securevault:org.wso2.securevault:jar:1.1.7:compile
+[[1;34mINFO[m]    |  |     +- org.apache.ws.commons.axiom:axiom-api:jar:1.2.11-wso2v6:compile
+[[1;34mINFO[m]    |  |     |  +- org.apache.geronimo.specs:geronimo-activation_1.1_spec:jar:1.0.2:compile
+[[1;34mINFO[m]    |  |     |  \- org.apache.geronimo.specs:geronimo-javamail_1.4_spec:jar:1.6:compile
+[[1;34mINFO[m]    |  |     +- org.apache.ws.commons.axiom:axiom-impl:jar:1.2.12:compile
+[[1;34mINFO[m]    |  |     |  \- org.codehaus.woodstox:wstx-asl:jar:3.2.9:compile
+[[1;34mINFO[m]    |  |     +- jline:jline:jar:0.9.94:compile
+[[1;34mINFO[m]    |  |     |  \- junit:junit:jar:4.13.1:test
+[[1;34mINFO[m]    |  |     |     \- org.hamcrest:hamcrest-core:jar:1.3:test
+[[1;34mINFO[m]    |  |     \- commons-codec:commons-codec:jar:1.8:compile
+[[1;34mINFO[m]    |  +- org.wso2.carbon:org.wso2.carbon.core.common:jar:4.10.5:compile
+[[1;34mINFO[m]    |  +- org.wso2.org.ops4j.pax.logging:pax-logging-api:jar:2.1.0-wso2v4:compile
+[[1;34mINFO[m]    |  |  +- org.osgi:osgi.core:jar:7.0.0:compile
+[[1;34mINFO[m]    |  |  \- org.osgi:osgi.cmpn:jar:7.0.0:compile
+[[1;34mINFO[m]    |  +- org.wso2.carbon:org.wso2.carbon.utils:jar:4.10.5:compile
+[[1;34mINFO[m]    |  |  +- org.wso2.carbon:org.wso2.carbon.user.api:jar:4.10.5:compile
+[[1;34mINFO[m]    |  |  +- org.wso2.carbon:org.wso2.carbon.bootstrap:jar:4.10.5:compile
+[[1;34mINFO[m]    |  |  |  \- wrapper:wrapper:jar:3.2.3:compile
+[[1;34mINFO[m]    |  |  +- org.wso2.org.ops4j.pax.logging:pax-logging-log4j2:jar:2.1.0-wso2v4:compile
+[[1;34mINFO[m]    |  |  +- org.wso2.carbon:org.wso2.carbon.queuing:jar:4.10.5:compile
+[[1;34mINFO[m]    |  |  +- org.wso2.carbon:org.wso2.carbon.base:jar:4.10.5:compile
+[[1;34mINFO[m]    |  |  |  +- org.wso2.carbon:org.wso2.carbon.securevault:jar:4.10.5:compile
+[[1;34mINFO[m]    |  |  |  \- xml-apis:xml-apis:jar:1.4.01:compile
+[[1;34mINFO[m]    |  |  +- org.igniterealtime.smack.wso2:smack:jar:3.0.4.wso2v1:compile
+[[1;34mINFO[m]    |  |  +- org.igniterealtime.smack.wso2:smackx:jar:3.0.4.wso2v1:compile
+[[1;34mINFO[m]    |  |  +- org.wso2.orbit.xerces:xercesImpl:jar:2.12.2.wso2v1:compile
+[[1;34mINFO[m]    |  |  +- jaxen:jaxen:jar:1.1.1:compile
+[[1;34mINFO[m]    |  |  |  +- jdom:jdom:jar:1.0:compile
+[[1;34mINFO[m]    |  |  |  +- xerces:xercesImpl:jar:2.12.2:compile
+[[1;34mINFO[m]    |  |  |  \- xom:xom:jar:1.0:compile
+[[1;34mINFO[m]    |  |  |     +- xerces:xmlParserAPIs:jar:2.6.2:compile
+[[1;34mINFO[m]    |  |  |     \- com.ibm.icu:icu4j:jar:2.6.1:compile
+[[1;34mINFO[m]    |  |  +- org.wso2.orbit.commons-fileupload:commons-fileupload:jar:1.5.0.wso2v2:compile
+[[1;34mINFO[m]    |  |  +- org.apache.ant.wso2:ant:jar:1.10.12.wso2v1:compile
+[[1;34mINFO[m]    |  |  |  \- org.apache.ant:ant:jar:1.10.12:compile
+[[1;34mINFO[m]    |  |  |     \- org.apache.ant:ant-launcher:jar:1.10.12:compile
+[[1;34mINFO[m]    |  |  +- org.wso2.orbit.commons-httpclient:commons-httpclient:jar:3.1.0.wso2v6:compile
+[[1;34mINFO[m]    |  |  +- org.wso2.carbon:org.wso2.carbon.registry.api:jar:4.10.5:compile
+[[1;34mINFO[m]    |  |  +- org.wso2.orbit.org.apache.httpcomponents:httpclient:jar:4.5.13.wso2v1:compile
+[[1;34mINFO[m]    |  |  \- org.wso2.orbit.org.apache.commons:commons-lang3:jar:3.4.0.wso2v1:compile
+[[1;34mINFO[m]    |  +- org.wso2.carbon:org.wso2.carbon.registry.core:jar:4.10.5:compile
+[[1;34mINFO[m]    |  |  +- commons-io.wso2:commons-io:jar:2.11.0.wso2v1:compile
+[[1;34mINFO[m]    |  |  +- net.sourceforge.findbugs:annotations:jar:1.3.2:compile
+[[1;34mINFO[m]    |  |  +- org.apache.ws.commons.schema.wso2:XmlSchema:jar:1.4.7-wso2v5:compile
+[[1;34mINFO[m]    |  |  +- org.wso2.carbon:org.wso2.carbon.registry.xboot:jar:4.10.5:compile
+[[1;34mINFO[m]    |  |  +- org.compass-project.wso2:compass:jar:2.0.1.wso2v2:compile
+[[1;34mINFO[m]    |  |  +- org.apache.abdera.wso2:abdera:jar:1.0.0.wso2v3:compile
+[[1;34mINFO[m]    |  |  +- org.wso2.orbit.org.apache.tomcat:jdbc-pool:jar:9.0.65.wso2v1:compile
+[[1;34mINFO[m]    |  |  +- commons-pool.wso2:commons-pool:jar:1.5.6.wso2v1:compile
+[[1;34mINFO[m]    |  |  |  \- commons-pool:commons-pool:jar:1.5.6:compile
+[[1;34mINFO[m]    |  |  \- org.apache.felix:org.apache.felix.scr.ds-annotations:jar:1.2.10:compile
+[[1;34mINFO[m]    |  +- org.apache.axis2.wso2:axis2:jar:1.6.1-wso2v42:compile
+[[1;34mINFO[m]    |  +- org.eclipse.equinox:org.eclipse.equinox.http.servlet:jar:2.2.2:compile
+[[1;34mINFO[m]    |  +- org.eclipse.equinox:javax.servlet.jsp:jar:2.0.0.v200706191603:compile
+[[1;34mINFO[m]    |  +- org.wso2.carbon:org.wso2.carbon.core.commons.stub:jar:4.10.5:compile
+[[1;34mINFO[m]    |  |  \- org.apache.axis2.wso2:axis2-client:jar:1.6.1-wso2v42:compile
+[[1;34mINFO[m]    |  |     +- org.apache.axis2.wso2:axis2-json:jar:1.6.1-wso2v42:compile
+[[1;34mINFO[m]    |  |     +- org.apache.woden.wso2:woden:jar:1.0.0.M8-wso2v1:compile
+[[1;34mINFO[m]    |  |     +- commons-codec.wso2:commons-codec:jar:1.3.0.wso2v1:compile
+[[1;34mINFO[m]    |  |     +- commons-logging:commons-logging:jar:1.2:test
+[[1;34mINFO[m]    |  |     \- org.wso2.orbit.javax.activation:activation:jar:1.1.1.wso2v1:compile
+[[1;34mINFO[m]    |  +- org.wso2.orbit.javax.servlet.jsp.jstl:jstl:jar:1.2.2.wso2v1:compile
+[[1;34mINFO[m]    |  +- org.eclipse.equinox:javax.servlet:jar:3.0.0.v201112011016:compile
+[[1;34mINFO[m]    |  +- commons-lang.wso2:commons-lang:jar:2.6.0.wso2v1:test
+[[1;34mINFO[m]    |  +- org.wso2.orbit.org.owasp.encoder:encoder:jar:1.2.0.wso2v1:compile
+[[1;34mINFO[m]    |  +- org.wso2.orbit.org.apache.tomcat:tomcat:jar:9.0.82.wso2v1:compile
+[[1;34mINFO[m]    |  +- org.osgi:org.osgi.service.component.annotations:jar:1.3.0:compile
+[[1;34mINFO[m]    |  +- org.osgi:org.osgi.annotation:jar:6.0.0:compile
+[[1;34mINFO[m]    |  \- org.osgi:org.osgi.service.metatype.annotations:jar:1.3.0:compile
+[[1;34mINFO[m]    +- org.wso2.carbon:org.wso2.carbon.stratos.common:jar:2.2.0:compile
+[[1;34mINFO[m]    |  +- org.wso2.carbon:org.wso2.carbon.user.core:jar:4.10.5:compile
+[[1;34mINFO[m]    |  \- org.wso2.carbon:org.wso2.carbon.user.mgt:jar:4.2.0:compile
+[[1;34mINFO[m]    |     +- org.wso2.carbon:org.wso2.carbon.user.mgt.common:jar:4.2.0:compile
+[[1;34mINFO[m]    |     +- au.com.bytecode.opencsv.wso2:opencsv:jar:1.8.wso2v1:compile
+[[1;34mINFO[m]    |     +- org.apache.poi.wso2:poi-scratchpad:jar:3.9.0.wso2v1:compile
+[[1;34mINFO[m]    |     |  \- org.apache.poi:poi-scratchpad:jar:3.9:compile
+[[1;34mINFO[m]    |     |     \- org.apache.poi:poi:jar:3.9:compile
+[[1;34mINFO[m]    |     +- org.apache.poi.wso2:poi-ooxml:jar:3.9.0.wso2v1:compile
+[[1;34mINFO[m]    |     |  \- org.apache.poi:poi-ooxml:jar:3.9:compile
+[[1;34mINFO[m]    |     |     +- org.apache.poi:poi-ooxml-schemas:jar:3.9:compile
+[[1;34mINFO[m]    |     |     |  \- org.apache.xmlbeans:xmlbeans:jar:2.3.0:compile
+[[1;34mINFO[m]    |     |     |     \- stax:stax-api:jar:1.0.1:compile
+[[1;34mINFO[m]    |     |     \- dom4j:dom4j:jar:1.6.1:compile
+[[1;34mINFO[m]    |     \- org.wso2.carbon:org.wso2.carbon.logging:jar:4.2.0:compile
+[[1;34mINFO[m]    |        \- org.eclipse.equinox:org.apache.log4j:jar:1.2.13.v200706111418:compile
+[[1;34mINFO[m]    \- bouncycastle:bcprov-jdk15:jar:132:compile
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m------------------< [0;36morg.wso2.is:identity-profile-gen[0;1m >------------------[m
+[[1;34mINFO[m] [1mBuilding WSO2 IS - IS Profile Generation 7.0.0                    [8/28][m
+[[1;34mINFO[m] [1m--------------------------------[ pom ]---------------------------------[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-dependency-plugin:3.1.1:tree[m [1m(default-cli)[m @ [36midentity-profile-gen[0;1m ---[m
+[[1;34mINFO[m] org.wso2.is:identity-profile-gen:pom:7.0.0
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m---------------< [0;36morg.wso2.is:wso2is-identity-connector[0;1m >----------------[m
+[[1;34mINFO[m] [1mBuilding Identity Server : Connector 7.0.0                        [9/28][m
+[[1;34mINFO[m] [1m--------------------------------[ pom ]---------------------------------[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-dependency-plugin:3.1.1:tree[m [1m(default-cli)[m @ [36mwso2is-identity-connector[0;1m ---[m
+[[1;34mINFO[m] org.wso2.is:wso2is-identity-connector:pom:7.0.0
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m---------------------< [0;36morg.wso2.is:api-resources[0;1m >----------------------[m
+[[1;34mINFO[m] [1mBuilding WSO2 Identity Server - Rest API 7.0.0                   [10/28][m
+[[1;34mINFO[m] [1m--------------------------------[ pom ]---------------------------------[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-dependency-plugin:3.1.1:tree[m [1m(default-cli)[m @ [36mapi-resources[0;1m ---[m
+[[1;34mINFO[m] org.wso2.is:api-resources:pom:7.0.0
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m-------------------< [0;36morg.wso2.is:api-resources-full[0;1m >-------------------[m
+[[1;34mINFO[m] [1mBuilding WSO2 Identity Server - All Rest API 7.0.0               [11/28][m
+[[1;34mINFO[m] [1m--------------------------------[ war ]---------------------------------[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-dependency-plugin:3.1.1:tree[m [1m(default-cli)[m @ [36mapi-resources-full[0;1m ---[m
+[[1;34mINFO[m] org.wso2.is:api-resources-full:war:7.0.0
+[[1;34mINFO[m] +- org.wso2.carbon.identity.rest.dispatcher:org.wso2.carbon.identity.api.dispatcher.core:jar:2.0.16:compile
+[[1;34mINFO[m] |  +- org.apache.olingo:olingo-odata2-core-incubating:jar:1.1.0:compile
+[[1;34mINFO[m] |  |  +- org.apache.olingo:olingo-odata2-api-incubating:jar:1.1.0:compile
+[[1;34mINFO[m] |  |  +- commons-codec:commons-codec:jar:1.8:compile
+[[1;34mINFO[m] |  |  \- com.google.code.gson:gson:jar:2.9.0:compile
+[[1;34mINFO[m] |  +- org.apache.cxf:cxf-rt-frontend-jaxrs:jar:3.5.0:compile
+[[1;34mINFO[m] |  |  +- org.apache.cxf:cxf-core:jar:3.5.0:compile
+[[1;34mINFO[m] |  |  |  +- org.glassfish.jaxb:jaxb-runtime:jar:2.3.5:compile
+[[1;34mINFO[m] |  |  |  |  +- org.glassfish.jaxb:txw2:jar:2.3.5:compile
+[[1;34mINFO[m] |  |  |  |  \- com.sun.istack:istack-commons-runtime:jar:3.0.12:compile
+[[1;34mINFO[m] |  |  |  +- org.apache.ws.xmlschema:xmlschema-core:jar:2.3.0:compile
+[[1;34mINFO[m] |  |  |  \- jakarta.xml.bind:jakarta.xml.bind-api:jar:2.3.3:compile
+[[1;34mINFO[m] |  |  +- jakarta.ws.rs:jakarta.ws.rs-api:jar:2.1.6:compile
+[[1;34mINFO[m] |  |  +- jakarta.annotation:jakarta.annotation-api:jar:1.3.5:compile
+[[1;34mINFO[m] |  |  +- org.apache.cxf:cxf-rt-transports-http:jar:3.5.0:compile
+[[1;34mINFO[m] |  |  +- org.apache.cxf:cxf-rt-security:jar:3.5.0:compile
+[[1;34mINFO[m] |  |  +- jakarta.xml.ws:jakarta.xml.ws-api:jar:2.3.3:compile
+[[1;34mINFO[m] |  |  +- jakarta.jws:jakarta.jws-api:jar:2.1.0:compile
+[[1;34mINFO[m] |  |  +- jakarta.xml.soap:jakarta.xml.soap-api:jar:1.4.2:compile
+[[1;34mINFO[m] |  |  |  \- jakarta.activation:jakarta.activation-api:jar:1.2.2:compile
+[[1;34mINFO[m] |  |  +- com.sun.activation:jakarta.activation:jar:1.2.2:compile
+[[1;34mINFO[m] |  |  +- com.sun.xml.messaging.saaj:saaj-impl:jar:1.5.3:runtime
+[[1;34mINFO[m] |  |  |  \- org.jvnet.staxex:stax-ex:jar:1.8.3:runtime
+[[1;34mINFO[m] |  |  \- org.apache.geronimo.specs:geronimo-jta_1.1_spec:jar:1.1.1:compile
+[[1;34mINFO[m] |  +- org.apache.cxf:cxf-rt-rs-service-description:jar:3.5.0:compile
+[[1;34mINFO[m] |  +- org.springframework:spring-web:jar:5.3.19:compile
+[[1;34mINFO[m] |  |  \- org.springframework:spring-core:jar:5.3.19:compile
+[[1;34mINFO[m] |  |     \- org.springframework:spring-jcl:jar:5.3.19:compile
+[[1;34mINFO[m] |  +- javax.ws.rs:javax.ws.rs-api:jar:2.1.1:compile
+[[1;34mINFO[m] |  +- org.apache.commons:commons-lang3:jar:3.4:compile
+[[1;34mINFO[m] |  +- commons-logging:commons-logging:jar:1.2:test
+[[1;34mINFO[m] |  +- io.swagger:swagger-jaxrs:jar:1.6.6:compile
+[[1;34mINFO[m] |  |  +- io.swagger:swagger-core:jar:1.6.6:compile
+[[1;34mINFO[m] |  |  |  +- com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:jar:2.13.2:compile
+[[1;34mINFO[m] |  |  |  +- io.swagger:swagger-models:jar:1.6.6:compile
+[[1;34mINFO[m] |  |  |  |  \- io.swagger:swagger-annotations:jar:1.5.22:test
+[[1;34mINFO[m] |  |  |  \- javax.validation:validation-api:jar:1.1.0.Final:compile
+[[1;34mINFO[m] |  |  +- javax.ws.rs:jsr311-api:jar:1.1.1:compile
+[[1;34mINFO[m] |  |  +- org.reflections:reflections:jar:0.9.11:compile
+[[1;34mINFO[m] |  |  |  \- org.javassist:javassist:jar:3.21.0-GA:compile
+[[1;34mINFO[m] |  |  \- com.google.guava:guava:jar:31.0.1-android:compile
+[[1;34mINFO[m] |  |     +- com.google.guava:failureaccess:jar:1.0.1:compile
+[[1;34mINFO[m] |  |     +- com.google.guava:listenablefuture:jar:9999.0-empty-to-avoid-conflict-with-guava:compile
+[[1;34mINFO[m] |  |     +- com.google.code.findbugs:jsr305:jar:3.0.2:compile
+[[1;34mINFO[m] |  |     +- org.checkerframework:checker-qual:jar:3.12.0:compile
+[[1;34mINFO[m] |  |     +- org.checkerframework:checker-compat-qual:jar:2.5.5:compile
+[[1;34mINFO[m] |  |     +- com.google.errorprone:error_prone_annotations:jar:2.7.1:compile
+[[1;34mINFO[m] |  |     \- com.google.j2objc:j2objc-annotations:jar:1.3:compile
+[[1;34mINFO[m] |  +- com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:jar:2.15.2:compile
+[[1;34mINFO[m] |  |  +- com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:jar:2.15.2:compile
+[[1;34mINFO[m] |  |  \- com.fasterxml.jackson.module:jackson-module-jaxb-annotations:jar:2.15.2:compile
+[[1;34mINFO[m] |  +- com.fasterxml.jackson.dataformat:jackson-dataformat-xml:jar:2.15.2:compile
+[[1;34mINFO[m] |  |  +- com.fasterxml.jackson.core:jackson-core:jar:2.13.2:compile
+[[1;34mINFO[m] |  |  +- com.fasterxml.jackson.core:jackson-annotations:jar:2.13.2:compile
+[[1;34mINFO[m] |  |  +- org.codehaus.woodstox:stax2-api:jar:4.2.1:compile
+[[1;34mINFO[m] |  |  \- com.fasterxml.woodstox:woodstox-core:jar:6.5.1:compile
+[[1;34mINFO[m] |  \- com.fasterxml.jackson.core:jackson-databind:jar:2.13.4.2:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.user.api:org.wso2.carbon.identity.api.user.common:jar:1.3.35:compile
+[[1;34mINFO[m] |  \- commons-lang.wso2:commons-lang:jar:2.6.0.wso2v1:test
+[[1;34mINFO[m] +- org.wso2.carbon.identity.user.api:org.wso2.carbon.identity.rest.api.user.association.v1:jar:1.3.35:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.user.api:org.wso2.carbon.identity.rest.api.user.authorized.apps.v1:jar:1.3.35:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.user.api:org.wso2.carbon.identity.rest.api.user.authorized.apps.v2:jar:1.3.35:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.user.api:org.wso2.carbon.identity.rest.api.user.fido2.v1:jar:1.3.35:compile
+[[1;34mINFO[m] |  \- org.wso2.carbon.identity.user.api:org.wso2.carbon.identity.api.user.fido2.common:jar:1.3.35:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.user.api:org.wso2.carbon.identity.rest.api.user.recovery.v1:jar:1.3.35:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.user.api:org.wso2.carbon.identity.rest.api.user.recovery.v2:jar:1.3.35:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.user.api:org.wso2.carbon.identity.api.user.recovery.commons:jar:1.3.35:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.identity.governance.v1:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.identity.governance.common:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.admin.advisory.management.v1:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.admin.advisory.management.common:jar:1.2.173:compile
+[[1;34mINFO[m] |  \- org.wso2.carbon:org.wso2.carbon.utils:jar:4.10.5:compile
+[[1;34mINFO[m] |     +- org.wso2.orbit.org.bouncycastle:bcprov-jdk18on:jar:1.74.0.wso2v1:compile
+[[1;34mINFO[m] |     |  \- org.bouncycastle:bcprov-jdk18on:jar:1.74:compile
+[[1;34mINFO[m] |     +- org.wso2.carbon:org.wso2.carbon.user.api:jar:4.10.5:compile
+[[1;34mINFO[m] |     +- org.wso2.carbon:org.wso2.carbon.bootstrap:jar:4.10.5:compile
+[[1;34mINFO[m] |     |  \- wrapper:wrapper:jar:3.2.3:compile
+[[1;34mINFO[m] |     +- org.wso2.org.ops4j.pax.logging:pax-logging-api:jar:2.1.0-wso2v4:compile
+[[1;34mINFO[m] |     +- org.wso2.org.ops4j.pax.logging:pax-logging-log4j2:jar:2.1.0-wso2v4:compile
+[[1;34mINFO[m] |     |  +- org.osgi:osgi.core:jar:7.0.0:compile
+[[1;34mINFO[m] |     |  \- org.osgi:osgi.cmpn:jar:7.0.0:compile
+[[1;34mINFO[m] |     +- org.wso2.carbon:org.wso2.carbon.queuing:jar:4.10.5:compile
+[[1;34mINFO[m] |     +- org.wso2.carbon:org.wso2.carbon.base:jar:4.10.5:compile
+[[1;34mINFO[m] |     |  \- org.wso2.carbon:org.wso2.carbon.securevault:jar:4.10.5:compile
+[[1;34mINFO[m] |     +- org.eclipse.platform:org.eclipse.osgi:jar:3.14.0:compile
+[[1;34mINFO[m] |     +- org.apache.axis2.wso2:axis2:jar:1.6.1-wso2v42:compile
+[[1;34mINFO[m] |     +- org.igniterealtime.smack.wso2:smack:jar:3.0.4.wso2v1:compile
+[[1;34mINFO[m] |     +- org.igniterealtime.smack.wso2:smackx:jar:3.0.4.wso2v1:compile
+[[1;34mINFO[m] |     +- org.wso2.orbit.xerces:xercesImpl:jar:2.12.2.wso2v1:compile
+[[1;34mINFO[m] |     +- jaxen:jaxen:jar:1.1.1:compile
+[[1;34mINFO[m] |     |  +- jdom:jdom:jar:1.0:compile
+[[1;34mINFO[m] |     |  +- xerces:xercesImpl:jar:2.12.2:compile
+[[1;34mINFO[m] |     |  \- xom:xom:jar:1.0:compile
+[[1;34mINFO[m] |     |     +- xerces:xmlParserAPIs:jar:2.6.2:compile
+[[1;34mINFO[m] |     |     \- com.ibm.icu:icu4j:jar:2.6.1:compile
+[[1;34mINFO[m] |     +- org.wso2.orbit.commons-fileupload:commons-fileupload:jar:1.5.0.wso2v2:compile
+[[1;34mINFO[m] |     +- org.apache.ant.wso2:ant:jar:1.10.12.wso2v1:compile
+[[1;34mINFO[m] |     |  \- org.apache.ant:ant:jar:1.10.12:compile
+[[1;34mINFO[m] |     |     \- org.apache.ant:ant-launcher:jar:1.10.12:compile
+[[1;34mINFO[m] |     +- org.eclipse.equinox:javax.servlet:jar:3.0.0.v201112011016:compile
+[[1;34mINFO[m] |     +- org.wso2.orbit.commons-httpclient:commons-httpclient:jar:3.1.0.wso2v6:compile
+[[1;34mINFO[m] |     +- org.wso2.carbon:org.wso2.carbon.registry.api:jar:4.10.5:compile
+[[1;34mINFO[m] |     +- org.osgi:org.osgi.service.component.annotations:jar:1.3.0:compile
+[[1;34mINFO[m] |     +- org.osgi:org.osgi.annotation:jar:6.0.0:compile
+[[1;34mINFO[m] |     +- org.osgi:org.osgi.service.metatype.annotations:jar:1.3.0:compile
+[[1;34mINFO[m] |     +- org.wso2.orbit.org.apache.httpcomponents:httpclient:jar:4.5.13.wso2v1:compile
+[[1;34mINFO[m] |     \- org.wso2.orbit.org.apache.commons:commons-lang3:jar:3.4.0.wso2v1:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.idv.provider.v1:jar:1.2.173:compile
+[[1;34mINFO[m] |  +- org.wso2.carbon.extension.identity.verification:org.wso2.carbon.extension.identity.verification.provider:jar:1.0.7:compile
+[[1;34mINFO[m] |  |  +- org.eclipse.osgi:org.eclipse.osgi.services:jar:3.3.100.v20130513-1956:compile
+[[1;34mINFO[m] |  |  \- org.powermock:powermock-api-mockito2:jar:2.0.9:compile
+[[1;34mINFO[m] |  |     +- org.powermock:powermock-api-support:jar:2.0.9:compile
+[[1;34mINFO[m] |  |     |  +- org.powermock:powermock-reflect:jar:2.0.9:compile
+[[1;34mINFO[m] |  |     |  |  +- net.bytebuddy:byte-buddy:jar:1.10.14:compile
+[[1;34mINFO[m] |  |     |  |  \- net.bytebuddy:byte-buddy-agent:jar:1.10.14:compile
+[[1;34mINFO[m] |  |     |  \- org.powermock:powermock-core:jar:2.0.9:compile
+[[1;34mINFO[m] |  |     \- org.mockito:mockito-core:jar:3.3.3:compile
+[[1;34mINFO[m] |  |        \- org.objenesis:objenesis:jar:2.6:compile
+[[1;34mINFO[m] |  \- org.wso2.carbon.extension.identity.verification:org.wso2.carbon.extension.identity.verification.mgt:jar:1.0.7:compile
+[[1;34mINFO[m] |     +- org.json:json:jar:20230227:compile
+[[1;34mINFO[m] |     +- org.apache.httpcomponents:httpclient:jar:4.5.13:compile
+[[1;34mINFO[m] |     |  \- org.apache.httpcomponents:httpcore:jar:4.4.13:compile
+[[1;34mINFO[m] |     +- org.apache.httpcomponents:httpmime:jar:4.5.13:compile
+[[1;34mINFO[m] |     \- org.wso2.carbon.multitenancy:org.wso2.carbon.tenant.mgt:jar:4.11.8:compile
+[[1;34mINFO[m] |        +- org.wso2.carbon.multitenancy:org.wso2.carbon.tenant.mgt.core:jar:4.11.8:compile
+[[1;34mINFO[m] |        \- org.wso2.carbon.identity.user.ws:org.wso2.carbon.um.ws.api:jar:5.8.1:compile
+[[1;34mINFO[m] |           +- org.wso2.carbon.identity.framework:org.wso2.carbon.user.mgt.common:jar:7.0.63:compile
+[[1;34mINFO[m] |           \- org.wso2.carbon.identity.user.ws:org.wso2.carbon.um.ws.api.stub:jar:5.8.1:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.idv.provider.common:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.organization.user.invitation.management.v1:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.organization.user.invitation.management.common:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.user.api:org.wso2.carbon.identity.rest.api.user.totp.v1:jar:1.3.35:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.user.api:org.wso2.carbon.identity.rest.api.user.totp.common:jar:1.3.35:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.user.api:org.wso2.carbon.identity.rest.api.user.backupcode.v1:jar:1.3.35:compile
+[[1;34mINFO[m] |  \- org.wso2.carbon.extension.identity.authenticator.outbound.backupcode:org.wso2.carbon.extension.identity.authenticator.backupcode.connector:jar:0.0.18:compile
+[[1;34mINFO[m] |     +- org.wso2.carbon.identity.framework:org.wso2.carbon.identity.application.authentication.framework:jar:7.0.63:compile
+[[1;34mINFO[m] |     |  +- org.wso2.orbit.commons-codec:commons-codec:jar:1.14.0.wso2v1:compile
+[[1;34mINFO[m] |     |  +- org.wso2.carbon.identity.framework:org.wso2.carbon.identity.functions.library.mgt:jar:7.0.63:compile
+[[1;34mINFO[m] |     |  +- org.wso2.carbon.identity.framework:org.wso2.carbon.identity.multi.attribute.login.mgt:jar:7.0.63:compile
+[[1;34mINFO[m] |     |  +- org.wso2.carbon.identity.framework:org.wso2.carbon.claim.mgt:jar:7.0.63:compile
+[[1;34mINFO[m] |     |  \- org.wso2.carbon.identity.framework:org.wso2.carbon.identity.role.v2.mgt.core:jar:7.0.63:compile
+[[1;34mINFO[m] |     +- org.wso2.carbon.extension.identity.authenticator.utils:org.wso2.carbon.extension.identity.helper:jar:1.0.8:compile
+[[1;34mINFO[m] |     |  +- org.wso2.carbon.identity:org.wso2.carbon.idp.mgt:jar:5.0.7:compile
+[[1;34mINFO[m] |     |  |  +- opensaml.wso2:opensaml2:jar:2.4.1.wso2v1:compile
+[[1;34mINFO[m] |     |  |  \- org.wso2.carbon.identity:org.wso2.carbon.identity.base:jar:5.0.7:compile
+[[1;34mINFO[m] |     |  |     +- org.apache.rampart.wso2:rampart-core:jar:1.6.1-wso2v43:compile
+[[1;34mINFO[m] |     |  |     |  +- org.opensaml:opensaml1:jar:1.1:compile
+[[1;34mINFO[m] |     |  |     |  \- org.opensaml:opensaml:jar:2.6.6:compile
+[[1;34mINFO[m] |     |  |     |     +- org.opensaml:openws:jar:1.5.4:compile
+[[1;34mINFO[m] |     |  |     |     +- org.apache.velocity:velocity:jar:1.7:compile
+[[1;34mINFO[m] |     |  |     |     +- org.owasp.esapi:esapi:jar:2.0.1:compile
+[[1;34mINFO[m] |     |  |     |     +- joda-time:joda-time:jar:2.2:compile
+[[1;34mINFO[m] |     |  |     |     \- org.slf4j:jul-to-slf4j:jar:1.7.5:compile
+[[1;34mINFO[m] |     |  |     \- org.apache.neethi.wso2:neethi:jar:2.0.4.wso2v4:compile
+[[1;34mINFO[m] |     |  +- org.wso2.carbon:org.wso2.carbon.logging:jar:4.4.3:compile
+[[1;34mINFO[m] |     |  |  \- org.apache.log4j.wso2:log4j:jar:1.2.17.wso2v1:compile
+[[1;34mINFO[m] |     |  +- org.wso2.carbon.identity:org.wso2.carbon.identity.application.common:jar:5.0.7:compile
+[[1;34mINFO[m] |     |  +- org.wso2.carbon.identity:org.wso2.carbon.identity.user.profile:jar:5.0.7:compile
+[[1;34mINFO[m] |     |  |  +- org.wso2.carbon.identity:org.wso2.carbon.user.mgt:jar:5.0.7:compile
+[[1;34mINFO[m] |     |  |  |  +- org.wso2.carbon.identity:org.wso2.carbon.user.mgt.common:jar:5.0.7:compile
+[[1;34mINFO[m] |     |  |  |  \- org.apache.poi.wso2:poi-ooxml:jar:3.9.0.wso2v1:compile
+[[1;34mINFO[m] |     |  |  |     \- org.apache.poi:poi-ooxml:jar:3.9:compile
+[[1;34mINFO[m] |     |  |  |        +- org.apache.poi:poi-ooxml-schemas:jar:3.9:compile
+[[1;34mINFO[m] |     |  |  |        |  \- org.apache.xmlbeans:xmlbeans:jar:2.3.0:compile
+[[1;34mINFO[m] |     |  |  |        |     \- stax:stax-api:jar:1.0.1:compile
+[[1;34mINFO[m] |     |  |  |        \- dom4j:dom4j:jar:1.6.1:compile
+[[1;34mINFO[m] |     |  |  \- org.wso2.carbon.identity:org.wso2.carbon.identity.user.store.configuration:jar:5.0.7:compile
+[[1;34mINFO[m] |     |  +- org.wso2.carbon.identity:org.wso2.carbon.identity.user.account.association:jar:5.0.7:compile
+[[1;34mINFO[m] |     |  |  \- org.wso2.carbon:org.wso2.carbon.core.services:jar:4.10.5:compile
+[[1;34mINFO[m] |     |  +- org.wso2.carbon.identity:org.wso2.carbon.identity.core:jar:5.0.7:compile
+[[1;34mINFO[m] |     |  |  \- org.apache.ws.security.wso2:wss4j:jar:1.6.0-wso2v7:compile
+[[1;34mINFO[m] |     |  +- org.wso2.carbon.identity:org.wso2.carbon.identity.application.authentication.framework:jar:5.0.7:compile
+[[1;34mINFO[m] |     |  |  \- org.wso2.carbon.identity:org.wso2.carbon.claim.mgt:jar:5.0.7:compile
+[[1;34mINFO[m] |     |  +- org.wso2.carbon.identity:org.wso2.carbon.identity.notification.mgt:jar:5.0.7:compile
+[[1;34mINFO[m] |     |  +- org.wso2.carbon.identity:org.wso2.carbon.identity.provisioning:jar:5.0.7:compile
+[[1;34mINFO[m] |     |  +- org.wso2.carbon.identity:org.wso2.carbon.identity.application.mgt:jar:5.0.7:compile
+[[1;34mINFO[m] |     |  |  +- commons-collections.wso2:commons-collections:jar:3.2.0.wso2v1:compile
+[[1;34mINFO[m] |     |  |  +- org.wso2.carbon.identity:org.wso2.carbon.directory.server.manager:jar:5.0.7:compile
+[[1;34mINFO[m] |     |  |  |  +- org.wso2.carbon.commons:org.wso2.carbon.wsdl2form:jar:4.4.8:compile
+[[1;34mINFO[m] |     |  |  |  |  \- xalan.wso2:xalan:jar:2.7.0.wso2v1:compile
+[[1;34mINFO[m] |     |  |  |  |     \- xalan:xalan:jar:2.7.2:compile
+[[1;34mINFO[m] |     |  |  |  |        \- xalan:serializer:jar:2.7.2:compile
+[[1;34mINFO[m] |     |  |  |  \- org.wso2.carbon.identity:org.wso2.carbon.directory.server.manager.common:jar:5.0.7:compile
+[[1;34mINFO[m] |     |  |  +- commons-codec.wso2:commons-codec:jar:1.4.0.wso2v1:compile
+[[1;34mINFO[m] |     |  |  \- org.wso2.carbon.identity:org.wso2.carbon.security.mgt:jar:5.0.7:compile
+[[1;34mINFO[m] |     |  |     +- org.apache.rampart.wso2:rampart-policy:jar:1.6.1-wso2v43:compile
+[[1;34mINFO[m] |     |  |     \- org.apache.rampart.wso2:rampart-trust:jar:1.6.1-wso2v43:compile
+[[1;34mINFO[m] |     |  |        \- org.apache.rampart:rampart-trust:jar:1.6.1-wso2v43:compile
+[[1;34mINFO[m] |     |  |           \- org.opensaml:xmltooling:jar:1.3.1:compile
+[[1;34mINFO[m] |     |  |              +- org.bouncycastle:bcprov-jdk15:jar:1.45:compile
+[[1;34mINFO[m] |     |  |              +- ca.juliusdavies:not-yet-commons-ssl:jar:0.3.9:compile
+[[1;34mINFO[m] |     |  |              \- xml-resolver:xml-resolver:jar:1.2:runtime
+[[1;34mINFO[m] |     |  +- org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.openid:jar:5.0.7:compile
+[[1;34mINFO[m] |     |  |  \- org.wso2.orbit.org.openid4java:openid4java:jar:1.0.0.wso2v2:compile
+[[1;34mINFO[m] |     |  +- org.wso2.carbon.identity:org.wso2.carbon.identity.application.authenticator.oidc:jar:5.0.7:compile
+[[1;34mINFO[m] |     |  \- org.wso2.carbon.identity:org.wso2.carbon.identity.mgt:jar:5.2.0:compile
+[[1;34mINFO[m] |     |     \- org.wso2.carbon.identity:org.wso2.carbon.captcha.mgt:jar:4.5.2:compile
+[[1;34mINFO[m] |     +- org.wso2.carbon.identity.event.handler.accountlock:org.wso2.carbon.identity.handler.event.account.lock:jar:1.1.12:compile
+[[1;34mINFO[m] |     +- org.wso2.orbit.org.owasp.encoder:encoder:jar:1.2.0.wso2v1:compile
+[[1;34mINFO[m] |     \- org.wso2.carbon.identity.framework:org.wso2.carbon.identity.event:jar:5.25.522:compile
+[[1;34mINFO[m] |        \- org.apache.axis2.transport:axis2-transport-mail:jar:2.0.0-wso2v42:compile
+[[1;34mINFO[m] |           +- javax.mail:mail:jar:1.4.1:compile
+[[1;34mINFO[m] |           |  \- javax.activation:activation:jar:1.1:compile
+[[1;34mINFO[m] |           +- org.apache.axis2:axis2-transport-base:jar:1.6.1-wso2v40:compile
+[[1;34mINFO[m] |           +- org.apache.axis2:axis2-kernel:jar:1.6.1-wso2v40:compile
+[[1;34mINFO[m] |           |  +- org.apache.geronimo.specs:geronimo-ws-metadata_2.0_spec:jar:1.1.2:compile
+[[1;34mINFO[m] |           |  +- commons-httpclient:commons-httpclient:jar:3.1:compile
+[[1;34mINFO[m] |           |  +- org.apache.neethi:neethi:jar:2.0.4:compile
+[[1;34mINFO[m] |           |  +- org.apache.woden:woden-api:jar:1.0M9:compile
+[[1;34mINFO[m] |           |  \- org.apache.woden:woden-impl-dom:jar:1.0M9:compile
+[[1;34mINFO[m] |           |     \- org.apache.woden:woden-impl-commons:jar:1.0M9:compile
+[[1;34mINFO[m] |           \- org.wso2.orbit.javax.activation:activation:jar:1.1.1.wso2v2:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.user.api:org.wso2.carbon.identity.rest.api.user.backupcode.common:jar:1.3.35:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.user.api:org.wso2.carbon.identity.rest.api.user.mfa.v1:jar:1.3.35:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.user.api:org.wso2.carbon.identity.rest.api.user.mfa.common:jar:1.3.35:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.user.api:org.wso2.carbon.identity.rest.api.user.session.v1:jar:1.3.35:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.user.api:org.wso2.carbon.identity.api.user.session.common:jar:1.3.35:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.user.api:org.wso2.carbon.identity.api.user.application.common:jar:1.3.35:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.user.api:org.wso2.carbon.identity.rest.api.user.application.v1:jar:1.3.35:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.user.api:org.wso2.carbon.identity.rest.api.user.functionality.v1:jar:1.3.35:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.user.api:org.wso2.carbon.identity.api.user.functionality.common:jar:1.3.35:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.user.api:org.wso2.carbon.identity.api.user.idv.v1:jar:1.3.35:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.user.api:org.wso2.carbon.identity.api.user.idv.common:jar:1.3.35:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.user.api:org.wso2.carbon.identity.rest.api.user.organization.v1:jar:1.3.35:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.user.api:org.wso2.carbon.identity.api.user.organization.common:jar:1.3.35:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.api.resource.v1:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.api.resource.common:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.common:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.rest.api.server.claim.management.v1:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.claim.management.common:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.permission.management.v1:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.permission.management.common:jar:1.2.173:compile
+[[1;34mINFO[m] |  \- org.springframework:spring-beans:jar:5.3.25:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.rest.api.server.email.template.v1:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.email.template.common:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.application.management.common:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.application.management.v1:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.userstore.v1:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.userstore.common:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.keystore.management.v1:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.keystore.management.common:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.idp.v1:jar:1.2.173:compile
+[[1;34mINFO[m] |  \- commons-beanutils:commons-beanutils:jar:1.9.4:compile
+[[1;34mINFO[m] |     \- commons-collections:commons-collections:jar:3.2.2:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.idp.common:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.script.library.v1:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.script.library.common:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.oidc.scope.management.v1:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.oidc.scope.management.common:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.configs.v1:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.configs.common:jar:1.2.173:compile
+[[1;34mINFO[m] |  \- org.wso2.carbon.extension.identity.oauth.addons:org.wso2.carbon.identity.oauth2.token.handler.clientauth.jwt:jar:2.5.1:compile
+[[1;34mINFO[m] |     +- org.wso2.carbon.identity.framework:org.wso2.carbon.idp.mgt:jar:5.20.322:compile
+[[1;34mINFO[m] |     |  \- org.wso2.carbon.identity.framework:org.wso2.carbon.identity.role.mgt.core:jar:7.0.63:compile
+[[1;34mINFO[m] |     +- org.wso2.carbon.identity.framework:org.wso2.carbon.identity.application.common:jar:7.0.63:compile
+[[1;34mINFO[m] |     |  \- org.wso2.orbit.javax.xml.bind:jaxb-api:jar:2.3.1.wso2v1:compile
+[[1;34mINFO[m] |     +- org.wso2.carbon.identity.framework:org.wso2.carbon.identity.user.profile:jar:5.20.322:compile
+[[1;34mINFO[m] |     |  +- org.wso2.carbon.identity.framework:org.wso2.carbon.user.mgt:jar:5.20.322:compile
+[[1;34mINFO[m] |     |  |  +- au.com.bytecode.opencsv.wso2:opencsv:jar:1.8.wso2v1:compile
+[[1;34mINFO[m] |     |  |  +- org.wso2.orbit.org.apache.poi:poi-scratchpad:jar:3.17.0.wso2v1:compile
+[[1;34mINFO[m] |     |  |  |  \- org.apache.poi:poi-scratchpad:jar:3.17:compile
+[[1;34mINFO[m] |     |  |  |     \- org.apache.poi:poi:jar:3.17:compile
+[[1;34mINFO[m] |     |  |  |        \- org.apache.commons:commons-collections4:jar:4.1:compile
+[[1;34mINFO[m] |     |  |  +- org.wso2.orbit.org.apache.poi:poi-ooxml:jar:3.17.0.wso2v1:compile
+[[1;34mINFO[m] |     |  |  \- org.ops4j.pax.logging:pax-logging-log4j2:jar:1.10.1:compile
+[[1;34mINFO[m] |     |  \- org.wso2.carbon.identity.framework:org.wso2.carbon.identity.user.store.configuration:jar:5.20.322:compile
+[[1;34mINFO[m] |     |     +- org.wso2.carbon:org.wso2.carbon.ndatasource.core:jar:4.7.0-m6:compile
+[[1;34mINFO[m] |     |     |  \- org.wso2.carbon:org.wso2.carbon.ndatasource.common:jar:4.7.0-m6:compile
+[[1;34mINFO[m] |     |     \- org.wso2.carbon:org.wso2.carbon.ndatasource.rdbms:jar:4.7.0-m6:compile
+[[1;34mINFO[m] |     +- org.wso2.carbon.identity.framework:org.wso2.carbon.identity.notification.mgt:jar:5.20.322:compile
+[[1;34mINFO[m] |     +- org.wso2.carbon:org.wso2.carbon.core:jar:4.10.5:compile
+[[1;34mINFO[m] |     |  +- org.eclipse.equinox:org.eclipse.equinox.http.helper:jar:1.0.0:compile
+[[1;34mINFO[m] |     |  +- org.wso2.orbit.org.apache.neethi:neethi:jar:2.0.4.wso2v5:compile
+[[1;34mINFO[m] |     |  +- org.apache.httpcomponents.wso2:httpcore:jar:4.4.15.wso2v1:compile
+[[1;34mINFO[m] |     |  +- org.apache.tomcat:tomcat-catalina-ha:jar:9.0.82:compile
+[[1;34mINFO[m] |     |  |  +- org.apache.tomcat:tomcat-juli:jar:9.0.82:compile
+[[1;34mINFO[m] |     |  |  +- org.apache.tomcat:tomcat-tribes:jar:9.0.82:compile
+[[1;34mINFO[m] |     |  |  +- org.apache.tomcat:tomcat-catalina:jar:9.0.82:compile
+[[1;34mINFO[m] |     |  |  |  +- org.apache.tomcat:tomcat-jsp-api:jar:9.0.82:compile
+[[1;34mINFO[m] |     |  |  |  |  \- org.apache.tomcat:tomcat-el-api:jar:9.0.82:compile
+[[1;34mINFO[m] |     |  |  |  +- org.apache.tomcat:tomcat-annotations-api:jar:9.0.82:compile
+[[1;34mINFO[m] |     |  |  |  +- org.apache.tomcat:tomcat-api:jar:9.0.82:compile
+[[1;34mINFO[m] |     |  |  |  \- org.apache.tomcat:tomcat-jaspic-api:jar:9.0.82:compile
+[[1;34mINFO[m] |     |  |  +- org.apache.tomcat:tomcat-util:jar:9.0.82:compile
+[[1;34mINFO[m] |     |  |  \- org.apache.tomcat:tomcat-util-scan:jar:9.0.82:compile
+[[1;34mINFO[m] |     |  \- wsdl4j.wso2:wsdl4j:jar:1.6.2.wso2v2:compile
+[[1;34mINFO[m] |     |     \- wsdl4j:wsdl4j:jar:1.6.2:compile
+[[1;34mINFO[m] |     +- org.wso2.carbon.identity.framework:org.wso2.carbon.identity.application.mgt:jar:7.0.63:compile
+[[1;34mINFO[m] |     |  +- org.wso2.carbon.identity.framework:org.wso2.carbon.security.mgt:jar:7.0.63:compile
+[[1;34mINFO[m] |     |  |  \- backport-util-concurrent.wso2:backport-util-concurrent:jar:3.1.0.wso2v1:compile
+[[1;34mINFO[m] |     |  +- org.jacoco:org.jacoco.agent:jar:runtime:0.8.4:compile
+[[1;34mINFO[m] |     |  \- org.wso2.carbon.identity.framework:org.wso2.carbon.identity.secret.mgt.core:jar:7.0.63:compile
+[[1;34mINFO[m] |     +- org.apache.oltu.oauth2:org.apache.oltu.oauth2.client:jar:1.0.0:compile
+[[1;34mINFO[m] |     +- org.apache.oltu.oauth2:org.apache.oltu.oauth2.common:jar:1.0.1:compile
+[[1;34mINFO[m] |     +- org.wso2.carbon:org.wso2.carbon.ui:jar:4.10.5:compile
+[[1;34mINFO[m] |     |  +- org.apache.tiles.wso2:tiles-jsp:jar:2.0.5.wso2v2:compile
+[[1;34mINFO[m] |     |  +- org.wso2.carbon:org.wso2.carbon.authenticator.proxy:jar:4.10.5:compile
+[[1;34mINFO[m] |     |  |  \- org.wso2.carbon:org.wso2.carbon.authenticator.stub:jar:4.10.5:compile
+[[1;34mINFO[m] |     |  +- org.wso2.carbon:org.wso2.carbon.tomcat:jar:4.10.5:compile
+[[1;34mINFO[m] |     |  |  \- org.wso2.eclipse.equinox:org.eclipse.equinox.common:jar:3.8.0.v20160509-1230:compile
+[[1;34mINFO[m] |     |  +- org.wso2.carbon:org.wso2.carbon.core.common:jar:4.10.5:compile
+[[1;34mINFO[m] |     |  +- org.eclipse.equinox:org.eclipse.equinox.http.servlet:jar:2.2.2:compile
+[[1;34mINFO[m] |     |  +- org.eclipse.equinox:javax.servlet.jsp:jar:2.0.0.v200706191603:compile
+[[1;34mINFO[m] |     |  +- org.wso2.carbon:org.wso2.carbon.core.commons.stub:jar:4.10.5:compile
+[[1;34mINFO[m] |     |  |  \- org.apache.axis2.wso2:axis2-client:jar:1.6.1-wso2v42:compile
+[[1;34mINFO[m] |     |  |     +- org.apache.axis2.wso2:axis2-json:jar:1.6.1-wso2v42:compile
+[[1;34mINFO[m] |     |  |     \- org.apache.woden.wso2:woden:jar:1.0.0.M8-wso2v1:compile
+[[1;34mINFO[m] |     |  \- org.wso2.orbit.javax.servlet.jsp.jstl:jstl:jar:1.2.2.wso2v1:compile
+[[1;34mINFO[m] |     +- org.apache.taglibs:taglibs-standard-impl:jar:1.2.5:compile
+[[1;34mINFO[m] |     +- org.wso2.orbit.com.nimbusds:nimbus-jose-jwt:jar:7.3.0.wso2v1:compile
+[[1;34mINFO[m] |     +- org.wso2.orbit.org.apache.oltu.oauth2:oltu:jar:1.0.0.wso2v3:compile
+[[1;34mINFO[m] |     +- org.wso2.carbon.identity.inbound.auth.oauth2:org.wso2.carbon.identity.oauth:jar:7.0.14:compile
+[[1;34mINFO[m] |     |  +- org.apache.tomcat:tomcat-coyote:jar:9.0.58:compile
+[[1;34mINFO[m] |     |  |  +- org.apache.tomcat:tomcat-servlet-api:jar:9.0.58:compile
+[[1;34mINFO[m] |     |  |  \- org.apache.tomcat:tomcat-jni:jar:9.0.58:compile
+[[1;34mINFO[m] |     |  +- com.google.gdata.wso2:gdata-core:jar:1.47.0.wso2v1:compile
+[[1;34mINFO[m] |     |  +- org.wso2.carbon.identity.inbound.auth.oauth2:org.wso2.carbon.identity.oauth.common:jar:7.0.14:compile
+[[1;34mINFO[m] |     |  +- org.wso2.carbon.identity.framework:org.wso2.carbon.identity.entitlement:jar:7.0.63:compile
+[[1;34mINFO[m] |     |  |  +- org.wso2.balana:org.wso2.balana:jar:1.2.13:compile
+[[1;34mINFO[m] |     |  |  |  \- org.wso2.balana:org.wso2.balana.utils:jar:1.2.13:compile
+[[1;34mINFO[m] |     |  |  |     \- xerces.wso2:xercesImpl:jar:2.8.1.wso2v2:compile
+[[1;34mINFO[m] |     |  |  +- org.wso2.carbon.identity.framework:org.wso2.carbon.identity.authenticator.thrift:jar:7.0.63:compile
+[[1;34mINFO[m] |     |  |  +- org.wso2.carbon.identity.framework:org.wso2.carbon.identity.entitlement.common:jar:7.0.63:compile
+[[1;34mINFO[m] |     |  |  |  \- org.wso2.carbon.identity.framework:org.wso2.carbon.identity.entitlement.stub:jar:7.0.63:compile
+[[1;34mINFO[m] |     |  |  +- libthrift.wso2:libthrift:jar:0.16.0.wso2v1:compile
+[[1;34mINFO[m] |     |  |  |  \- org.apache.thrift:libthrift:jar:0.16.0:compile
+[[1;34mINFO[m] |     |  |  |     \- javax.annotation:javax.annotation-api:jar:1.3.2:compile
+[[1;34mINFO[m] |     |  |  \- org.apache.santuario:xmlsec:jar:2.3.4:compile
+[[1;34mINFO[m] |     |  +- org.wso2.carbon.identity.saml.common:org.wso2.carbon.identity.saml.common.util:jar:1.4.0:compile
+[[1;34mINFO[m] |     |  +- org.wso2.orbit.com.github.dblock.waffle:waffle-jna:jar:1.6.wso2v6:compile
+[[1;34mINFO[m] |     |  +- net.minidev:json-smart:jar:2.4.10:compile
+[[1;34mINFO[m] |     |  |  \- net.minidev:accessors-smart:jar:2.4.9:compile
+[[1;34mINFO[m] |     |  |     \- org.ow2.asm:asm:jar:9.3:compile
+[[1;34mINFO[m] |     |  +- javax.servlet:servlet-api:jar:2.5:compile
+[[1;34mINFO[m] |     |  +- org.wso2.orbit.joda-time:joda-time:jar:2.9.4.wso2v1:compile
+[[1;34mINFO[m] |     |  +- org.wso2.carbon.identity.organization.management:org.wso2.carbon.identity.organization.management.role.management.service:jar:1.3.96:compile
+[[1;34mINFO[m] |     |  +- org.wso2.carbon.identity.framework:org.wso2.carbon.identity.consent.server.configs.mgt:jar:7.0.63:compile
+[[1;34mINFO[m] |     |  +- org.wso2.carbon.identity.organization.management:org.wso2.carbon.identity.organization.management.organization.user.sharing:jar:1.3.96:compile
+[[1;34mINFO[m] |     |  +- com.google.code.findbugs:annotations:jar:3.0.1:compile
+[[1;34mINFO[m] |     |  |  \- net.jcip:jcip-annotations:jar:1.0:compile
+[[1;34mINFO[m] |     |  +- org.wso2.carbon.identity.framework:org.wso2.carbon.identity.api.resource.mgt:jar:7.0.63:compile
+[[1;34mINFO[m] |     |  \- org.wso2.carbon.identity.framework:org.wso2.carbon.identity.cors.mgt.core:jar:7.0.43:compile
+[[1;34mINFO[m] |     +- org.wso2.carbon.identity.framework:org.wso2.carbon.identity.configuration.mgt.core:jar:5.20.322:compile
+[[1;34mINFO[m] |     \- org.testng:testng:jar:6.1.1:test
+[[1;34mINFO[m] |        +- junit:junit:jar:4.13.1:test
+[[1;34mINFO[m] |        |  \- org.hamcrest:hamcrest-core:jar:1.3:test
+[[1;34mINFO[m] |        +- org.beanshell:bsh:jar:2.0b4:test
+[[1;34mINFO[m] |        +- com.beust:jcommander:jar:1.12:test
+[[1;34mINFO[m] |        \- org.yaml:snakeyaml:jar:1.6:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.extension.management.v1:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.extension.management.common:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.framework:org.wso2.carbon.identity.extension.mgt:jar:7.0.63:provided
+[[1;34mINFO[m] |  +- org.wso2.carbon.utils:org.wso2.carbon.database.utils:jar:2.1.7:compile
+[[1;34mINFO[m] |  |  +- org.slf4j:slf4j-api:jar:1.7.35:compile
+[[1;34mINFO[m] |  |  \- commons-dbcp:commons-dbcp:jar:1.4:compile
+[[1;34mINFO[m] |  |     \- commons-pool:commons-pool:jar:1.5.4:compile
+[[1;34mINFO[m] |  +- org.wso2.eclipse.osgi:org.eclipse.osgi.services:jar:3.5.100.v20160504-1419:compile
+[[1;34mINFO[m] |  +- org.ops4j.pax.logging:pax-logging-api:jar:1.10.1:compile
+[[1;34mINFO[m] |  +- org.apache.felix:org.apache.felix.scr.ds-annotations:jar:1.2.10:compile
+[[1;34mINFO[m] |  +- org.eclipse.osgi:org.eclipse.osgi:jar:3.9.1.v20130814-1242:compile
+[[1;34mINFO[m] |  +- org.wso2.carbon.identity.framework:org.wso2.carbon.identity.core:jar:7.0.63:compile
+[[1;34mINFO[m] |  |  +- org.wso2.orbit.org.opensaml:opensaml:jar:2.6.6.wso2v3:compile
+[[1;34mINFO[m] |  |  +- org.wso2.carbon:org.wso2.carbon.registry.core:jar:4.10.5:compile
+[[1;34mINFO[m] |  |  |  +- commons-io.wso2:commons-io:jar:2.11.0.wso2v1:compile
+[[1;34mINFO[m] |  |  |  +- net.sourceforge.findbugs:annotations:jar:1.3.2:compile
+[[1;34mINFO[m] |  |  |  +- org.apache.ws.commons.schema.wso2:XmlSchema:jar:1.4.7-wso2v5:compile
+[[1;34mINFO[m] |  |  |  +- org.wso2.carbon:org.wso2.carbon.registry.xboot:jar:4.10.5:compile
+[[1;34mINFO[m] |  |  |  +- org.compass-project.wso2:compass:jar:2.0.1.wso2v2:compile
+[[1;34mINFO[m] |  |  |  +- org.apache.abdera.wso2:abdera:jar:1.0.0.wso2v3:compile
+[[1;34mINFO[m] |  |  |  \- commons-pool.wso2:commons-pool:jar:1.5.6.wso2v1:compile
+[[1;34mINFO[m] |  |  +- org.wso2.carbon.identity.framework:org.wso2.carbon.identity.base:jar:7.0.63:compile
+[[1;34mINFO[m] |  |  +- org.wso2.carbon.identity.organization.management.core:org.wso2.carbon.identity.organization.management.service:jar:1.0.90:compile
+[[1;34mINFO[m] |  |  |  \- com.github.spotbugs:spotbugs-annotations:jar:4.1.3:compile
+[[1;34mINFO[m] |  |  +- org.apache.ws.commons.axiom.wso2:axiom:jar:1.2.11-wso2v16:compile
+[[1;34mINFO[m] |  |  |  +- org.apache.geronimo.specs.wso2:geronimo-stax-api_1.0_spec:jar:1.0.1.wso2v2:compile
+[[1;34mINFO[m] |  |  |  \- org.codehaus.woodstox:woodstox-core-asl:jar:4.2.0:compile
+[[1;34mINFO[m] |  |  +- org.wso2.carbon.commons:org.wso2.carbon.tenant.common:jar:4.7.39:compile
+[[1;34mINFO[m] |  |  +- ua.parser.wso2:ua-parser:jar:1.5.4.wso2v2:compile
+[[1;34mINFO[m] |  |  \- xml-apis:xml-apis:jar:1.4.01:compile
+[[1;34mINFO[m] |  +- org.json.wso2:json:jar:3.0.0.wso2v1:compile
+[[1;34mINFO[m] |  \- org.wso2.carbon:org.wso2.carbon.user.core:jar:4.10.5:compile
+[[1;34mINFO[m] |     +- org.wso2.carbon:javax.cache.wso2:jar:4.10.5:compile
+[[1;34mINFO[m] |     +- org.wso2.orbit.org.apache.tomcat:jdbc-pool:jar:9.0.65.wso2v1:compile
+[[1;34mINFO[m] |     +- org.wso2.orbit.org.apache.tomcat:tomcat:jar:9.0.82.wso2v1:compile
+[[1;34mINFO[m] |     +- org.wso2.orbit.commons-collections:commons-collections:jar:3.2.2.wso2v1:compile
+[[1;34mINFO[m] |     \- org.wso2.carbon.crypto:org.wso2.carbon.crypto.api:jar:1.1.14:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.authenticators.v1:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.authenticators.common:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.tenant.management.common:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.tenant.management.v1:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.cors.common:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.cors.v1:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.notification.sender.v1:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.notification.sender.common:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.secret.management.v1:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.secret.management.common:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.branding.preference.management.v1:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.idle.account.identification.v1:jar:1.2.173:compile
+[[1;34mINFO[m] |  \- org.wso2.carbon.identity.governance:org.wso2.carbon.identity.idle.account.identification:jar:1.8.62:compile
+[[1;34mINFO[m] |     \- org.wso2.carbon.identity.governance:org.wso2.carbon.identity.governance:jar:1.8.62:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.idle.account.identification.common:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.branding.preference.management.common:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.input.validation.v1:jar:1.2.173:compile
+[[1;34mINFO[m] |  \- org.wso2.carbon.identity.framework:org.wso2.carbon.identity.input.validation.mgt:jar:7.0.63:compile
+[[1;34mINFO[m] |     +- org.wso2.carbon.identity.framework:org.wso2.carbon.identity.mgt:jar:7.0.63:compile
+[[1;34mINFO[m] |     |  +- org.wso2.carbon.identity.framework:org.wso2.carbon.captcha.mgt:jar:7.0.63:compile
+[[1;34mINFO[m] |     |  |  \- kaptcha.wso2:kaptcha:jar:2.3.0.wso2v1:compile
+[[1;34mINFO[m] |     |  +- org.wso2.carbon.registry:org.wso2.carbon.registry.common:jar:4.8.12:compile
+[[1;34mINFO[m] |     |  |  +- org.wso2.carbon.registry:org.wso2.carbon.registry.admin.api:jar:4.8.12:compile
+[[1;34mINFO[m] |     |  |  |  \- org.wso2.carbon.commons:org.wso2.carbon.ntask.core:jar:4.7.19:compile
+[[1;34mINFO[m] |     |  |  |     +- org.wso2.carbon.commons:org.wso2.carbon.ntask.common:jar:4.7.19:compile
+[[1;34mINFO[m] |     |  |  |     +- org.wso2.carbon.commons:org.wso2.carbon.remote-tasks.stub:jar:4.7.19:compile
+[[1;34mINFO[m] |     |  |  |     \- org.quartz-scheduler.wso2:quartz:jar:2.1.1.wso2v1:compile
+[[1;34mINFO[m] |     |  |  |        \- org.quartz-scheduler:quartz:jar:2.1.1:compile
+[[1;34mINFO[m] |     |  |  |           \- c3p0:c3p0:jar:0.9.1.1:compile
+[[1;34mINFO[m] |     |  |  +- commons-beanutils.wso2:commons-beanutils:jar:1.8.0.wso2v1:compile
+[[1;34mINFO[m] |     |  |  +- commons-digester:commons-digester:jar:1.8:compile
+[[1;34mINFO[m] |     |  |  \- org.wso2.carbon:org.wso2.carbon.feature.mgt.services:jar:4.5.3:compile
+[[1;34mINFO[m] |     |  |     +- org.wso2.carbon:org.wso2.carbon.feature.mgt.core:jar:4.5.3:compile
+[[1;34mINFO[m] |     |  |     |  +- org.wso2.eclipse.equinox:org.eclipse.equinox.p2.artifact.repository:jar:1.1.300.v20131211-1531:compile
+[[1;34mINFO[m] |     |  |     |  +- org.wso2.eclipse.equinox:org.eclipse.equinox.p2.director:jar:2.3.100.v20140224-1921:compile
+[[1;34mINFO[m] |     |  |     |  +- org.wso2.eclipse.equinox:org.eclipse.equinox.p2.metadata.repository:jar:1.2.100.v20131209-2144:compile
+[[1;34mINFO[m] |     |  |     |  \- org.wso2.eclipse.equinox:org.eclipse.equinox.simpleconfigurator:jar:1.1.200.v20160504-1450:compile
+[[1;34mINFO[m] |     |  |     +- org.wso2.eclipse.equinox:org.eclipse.equinox.p2.core:jar:2.3.0.v20131211-1531:compile
+[[1;34mINFO[m] |     |  |     +- org.wso2.eclipse.equinox:org.eclipse.equinox.p2.engine:jar:2.3.0.v20140506-1720:compile
+[[1;34mINFO[m] |     |  |     +- org.wso2.eclipse.equinox:org.eclipse.equinox.p2.metadata:jar:2.2.0.v20131211-1531:compile
+[[1;34mINFO[m] |     |  |     \- org.wso2.eclipse.equinox:org.eclipse.equinox.p2.repository:jar:2.3.0.v20131211-1531:compile
+[[1;34mINFO[m] |     |  \- org.wso2.carbon.registry:org.wso2.carbon.registry.indexing:jar:4.8.12:compile
+[[1;34mINFO[m] |     |     +- org.wso2.carbon.registry:org.wso2.carbon.registry.extensions:jar:4.8.12:compile
+[[1;34mINFO[m] |     |     |  +- org.wso2.orbit.xalan:xalan:jar:2.7.2.wso2v2:compile
+[[1;34mINFO[m] |     |     |  +- org.wso2.carbon.registry:org.wso2.carbon.registry.servlet:jar:4.8.12:compile
+[[1;34mINFO[m] |     |     |  +- org.wso2.carbon.registry:org.wso2.carbon.registry.uddi:jar:4.8.12:compile
+[[1;34mINFO[m] |     |     |  |  +- org.apache.juddi:juddi-core:jar:3.1.5.wso2v1:compile
+[[1;34mINFO[m] |     |     |  |  |  +- org.apache.juddi:uddi-ws:jar:3.1.5.wso2v1:compile
+[[1;34mINFO[m] |     |     |  |  |  +- org.apache.juddi:uddi-tck-base:jar:3.1.5.wso2v1:compile
+[[1;34mINFO[m] |     |     |  |  |  |  \- xmlunit:xmlunit:jar:1.3:compile
+[[1;34mINFO[m] |     |     |  |  |  +- commons-configuration:commons-configuration:jar:1.6:compile
+[[1;34mINFO[m] |     |     |  |  |  |  \- commons-beanutils:commons-beanutils-core:jar:1.8.0:compile
+[[1;34mINFO[m] |     |     |  |  |  +- javax.persistence:persistence-api:jar:1.0:compile
+[[1;34mINFO[m] |     |     |  |  |  +- org.hibernate:hibernate:jar:3.2.5.ga:compile
+[[1;34mINFO[m] |     |     |  |  |  |  +- net.sf.ehcache:ehcache:jar:1.2.3:compile
+[[1;34mINFO[m] |     |     |  |  |  |  +- javax.transaction:jta:jar:1.0.1B:compile
+[[1;34mINFO[m] |     |     |  |  |  |  +- asm:asm-attrs:jar:1.5.3:compile
+[[1;34mINFO[m] |     |     |  |  |  |  \- antlr:antlr:jar:2.7.6:compile
+[[1;34mINFO[m] |     |     |  |  |  +- org.hibernate:hibernate-entitymanager:jar:3.3.1.ga:compile
+[[1;34mINFO[m] |     |     |  |  |  |  +- org.hibernate:hibernate-annotations:jar:3.3.0.ga:compile
+[[1;34mINFO[m] |     |     |  |  |  |  +- org.hibernate:hibernate-commons-annotations:jar:3.0.0.ga:compile
+[[1;34mINFO[m] |     |     |  |  |  |  +- org.hibernate:hibernate-validator:jar:3.0.0.ga:compile
+[[1;34mINFO[m] |     |     |  |  |  |  +- javassist:javassist:jar:3.3.GA:compile
+[[1;34mINFO[m] |     |     |  |  |  |  \- jboss:jboss-common-core:jar:2.0.4.GA:compile
+[[1;34mINFO[m] |     |     |  |  |  +- cglib:cglib-nodep:jar:2.1_3:compile
+[[1;34mINFO[m] |     |     |  |  |  \- commons-logging:commons-logging-api:jar:1.1:compile
+[[1;34mINFO[m] |     |     |  |  +- org.apache.juddi:juddi-client:jar:3.1.5.wso2v1:compile
+[[1;34mINFO[m] |     |     |  |  +- org.apache.geronimo.specs:geronimo-jpa_2.0_spec:jar:1.0:compile
+[[1;34mINFO[m] |     |     |  |  \- org.apache.openjpa:openjpa:jar:2.2.0-wso2v1:compile
+[[1;34mINFO[m] |     |     |  |     +- net.sourceforge.serp:serp:jar:1.13.1:compile
+[[1;34mINFO[m] |     |     |  |     \- asm:asm:jar:3.2:compile
+[[1;34mINFO[m] |     |     |  +- commons-fileupload:commons-fileupload:jar:1.1.1:compile
+[[1;34mINFO[m] |     |     |  +- org.apache.ws.commons.schema:XmlSchema:jar:1.4.3:compile
+[[1;34mINFO[m] |     |     |  +- org.apache.derby:derby:jar:10.4.2.0:compile
+[[1;34mINFO[m] |     |     |  +- eclipse:validateutility:jar:0.95:compile
+[[1;34mINFO[m] |     |     |  +- org.wso2.wsdl.validator.wso2:wsdl-validator:jar:1.2.0.wso2v1:compile
+[[1;34mINFO[m] |     |     |  +- org.wso2.orbit.wadl.core:wadl-core:jar:1.1.6.wso2v1:compile
+[[1;34mINFO[m] |     |     |  |  +- org.jvnet.ws.wadl:wadl-core:jar:1.1.6:compile
+[[1;34mINFO[m] |     |     |  |  |  +- org.glassfish.jersey.core:jersey-common:jar:2.5.1:compile
+[[1;34mINFO[m] |     |     |  |  |  |  +- org.glassfish.hk2:hk2-api:jar:2.2.0-b21:compile
+[[1;34mINFO[m] |     |     |  |  |  |  |  \- org.glassfish.hk2:hk2-utils:jar:2.2.0-b21:compile
+[[1;34mINFO[m] |     |     |  |  |  |  +- org.glassfish.hk2.external:javax.inject:jar:2.2.0-b21:compile
+[[1;34mINFO[m] |     |     |  |  |  |  +- org.glassfish.hk2:hk2-locator:jar:2.2.0-b21:compile
+[[1;34mINFO[m] |     |     |  |  |  |  |  +- org.glassfish.hk2.external:asm-all-repackaged:jar:2.2.0-b21:compile
+[[1;34mINFO[m] |     |     |  |  |  |  |  \- org.glassfish.hk2.external:cglib:jar:2.2.0-b21:compile
+[[1;34mINFO[m] |     |     |  |  |  |  \- org.glassfish.hk2:osgi-resource-locator:jar:1.0.1:compile
+[[1;34mINFO[m] |     |     |  |  |  +- org.jsonschema2pojo:jsonschema2pojo-core:jar:0.4.0:compile
+[[1;34mINFO[m] |     |     |  |  |  \- org.jvnet.ws.wadl:wadl-xslt:jar:1.1.6:compile
+[[1;34mINFO[m] |     |     |  |  +- com.googlecode.jsonschema2pojo:jsonschema2pojo-core:jar:0.3.4:compile
+[[1;34mINFO[m] |     |     |  |  |  +- org.codehaus.jackson:jackson-mapper-asl:jar:1.9.9:compile
+[[1;34mINFO[m] |     |     |  |  |  |  \- org.codehaus.jackson:jackson-core-asl:jar:1.9.13:compile
+[[1;34mINFO[m] |     |     |  |  |  \- com.sun.codemodel:codemodel:jar:2.4.1:compile
+[[1;34mINFO[m] |     |     |  |  +- com.sun.localizer:localizer:jar:1.0:compile
+[[1;34mINFO[m] |     |     |  |  +- com.sun.localizer:comresrcgen:jar:1.0:compile
+[[1;34mINFO[m] |     |     |  |  +- com.sun.jersey:jersey-client:jar:1.12:compile
+[[1;34mINFO[m] |     |     |  |  |  \- com.sun.jersey:jersey-core:jar:1.12:compile
+[[1;34mINFO[m] |     |     |  |  +- com.sun.jersey:jersey-server:jar:1.12:compile
+[[1;34mINFO[m] |     |     |  |  +- com.sun.xml.bind:jaxb-impl:jar:2.2.6:compile
+[[1;34mINFO[m] |     |     |  |  \- com.sun.xml.bind:jaxb-xjc:jar:2.2.6:compile
+[[1;34mINFO[m] |     |     |  +- uddi:uddi4j:jar:1.0.1:compile
+[[1;34mINFO[m] |     |     |  +- org.eclipse.core:org.eclipse.core.runtime:jar:3.5.0.v20090429-1800:compile
+[[1;34mINFO[m] |     |     |  +- org.wso2.carbon:org.wso2.carbon.registry.server:jar:4.5.3:compile
+[[1;34mINFO[m] |     |     |  \- org.apache.juddi.wso2:juddi:jar:3.1.5.wso2v1:compile
+[[1;34mINFO[m] |     |     +- org.apache.poi.wso2:poi-scratchpad:jar:3.9.0.wso2v1:compile
+[[1;34mINFO[m] |     |     \- org.wso2.orbit.org.apache.solr:solr:jar:8.11.1.wso2v7:compile
+[[1;34mINFO[m] |     |        +- org.rrd4j:rrd4j:jar:3.8.1:compile
+[[1;34mINFO[m] |     |        +- org.eclipse.jetty:jetty-client:jar:9.4.48.v20220622:compile
+[[1;34mINFO[m] |     |        +- org.eclipse.jetty:jetty-http:jar:9.4.48.v20220622:compile
+[[1;34mINFO[m] |     |        +- org.eclipse.jetty:jetty-util:jar:9.4.48.v20220622:compile
+[[1;34mINFO[m] |     |        +- org.eclipse.jetty:jetty-io:jar:9.4.48.v20220622:compile
+[[1;34mINFO[m] |     |        +- org.eclipse.jetty.http2:http2-client:jar:9.4.48.v20220622:compile
+[[1;34mINFO[m] |     |        |  \- org.eclipse.jetty:jetty-alpn-client:jar:9.4.48.v20220622:compile
+[[1;34mINFO[m] |     |        +- org.eclipse.jetty.http2:http2-http-client-transport:jar:9.4.48.v20220622:compile
+[[1;34mINFO[m] |     |        |  \- org.eclipse.jetty:jetty-alpn-java-client:jar:9.4.48.v20220622:compile
+[[1;34mINFO[m] |     |        +- org.eclipse.jetty.http2:http2-common:jar:9.4.48.v20220622:compile
+[[1;34mINFO[m] |     |        |  \- org.eclipse.jetty.http2:http2-hpack:jar:9.4.48.v20220622:compile
+[[1;34mINFO[m] |     |        +- org.apache.calcite:calcite-core:jar:1.32.0:compile
+[[1;34mINFO[m] |     |        |  +- org.locationtech.jts:jts-core:jar:1.19.0:compile
+[[1;34mINFO[m] |     |        |  +- org.locationtech.jts.io:jts-io-common:jar:1.19.0:compile
+[[1;34mINFO[m] |     |        |  |  \- com.googlecode.json-simple:json-simple:jar:1.1.1:compile
+[[1;34mINFO[m] |     |        |  +- org.locationtech.proj4j:proj4j:jar:1.1.5:compile
+[[1;34mINFO[m] |     |        |  +- org.apiguardian:apiguardian-api:jar:1.1.2:compile
+[[1;34mINFO[m] |     |        |  +- com.google.uzaygezen:uzaygezen-core:jar:0.2:runtime
+[[1;34mINFO[m] |     |        |  +- com.jayway.jsonpath:json-path:jar:2.7.0:runtime
+[[1;34mINFO[m] |     |        |  +- com.yahoo.datasketches:sketches-core:jar:0.9.0:runtime
+[[1;34mINFO[m] |     |        |  |  \- com.yahoo.datasketches:memory:jar:0.9.0:runtime
+[[1;34mINFO[m] |     |        |  +- net.hydromatic:aggdesigner-algorithm:jar:6.0:runtime
+[[1;34mINFO[m] |     |        |  +- org.apache.commons:commons-dbcp2:jar:2.6.0:runtime
+[[1;34mINFO[m] |     |        |  |  \- org.apache.commons:commons-pool2:jar:2.6.1:runtime
+[[1;34mINFO[m] |     |        |  +- org.codehaus.janino:commons-compiler:jar:3.1.8:runtime
+[[1;34mINFO[m] |     |        |  \- org.codehaus.janino:janino:jar:3.1.8:runtime
+[[1;34mINFO[m] |     |        +- org.apache.calcite:calcite-linq4j:jar:1.32.0:compile
+[[1;34mINFO[m] |     |        +- org.apache.calcite.avatica:avatica-core:jar:1.22.0:compile
+[[1;34mINFO[m] |     |        |  +- org.apache.calcite.avatica:avatica-metrics:jar:1.22.0:compile
+[[1;34mINFO[m] |     |        |  +- com.google.protobuf:protobuf-java:jar:3.17.1:compile
+[[1;34mINFO[m] |     |        |  +- org.apache.httpcomponents.client5:httpclient5:jar:5.1.3:runtime
+[[1;34mINFO[m] |     |        |  |  \- org.apache.httpcomponents.core5:httpcore5-h2:jar:5.1.3:runtime
+[[1;34mINFO[m] |     |        |  \- org.apache.httpcomponents.core5:httpcore5:jar:5.1.3:runtime
+[[1;34mINFO[m] |     |        +- com.github.ben-manes.caffeine:caffeine:jar:2.9.2:compile
+[[1;34mINFO[m] |     |        +- org.apache.zookeeper:zookeeper:jar:3.8.0:compile
+[[1;34mINFO[m] |     |        |  +- org.apache.zookeeper:zookeeper-jute:jar:3.8.0:compile
+[[1;34mINFO[m] |     |        |  +- org.apache.yetus:audience-annotations:jar:0.12.0:compile
+[[1;34mINFO[m] |     |        |  +- io.netty:netty-handler:jar:4.1.73.Final:compile
+[[1;34mINFO[m] |     |        |  |  +- io.netty:netty-common:jar:4.1.73.Final:compile
+[[1;34mINFO[m] |     |        |  |  +- io.netty:netty-resolver:jar:4.1.73.Final:compile
+[[1;34mINFO[m] |     |        |  |  +- io.netty:netty-buffer:jar:4.1.73.Final:compile
+[[1;34mINFO[m] |     |        |  |  +- io.netty:netty-transport:jar:4.1.73.Final:compile
+[[1;34mINFO[m] |     |        |  |  \- io.netty:netty-codec:jar:4.1.73.Final:compile
+[[1;34mINFO[m] |     |        |  +- io.netty:netty-tcnative:jar:2.0.48.Final:compile
+[[1;34mINFO[m] |     |        |  |  \- io.netty:netty-tcnative-classes:jar:2.0.48.Final:compile
+[[1;34mINFO[m] |     |        |  +- io.netty:netty-transport-native-epoll:jar:4.1.73.Final:compile
+[[1;34mINFO[m] |     |        |  |  +- io.netty:netty-transport-native-unix-common:jar:4.1.73.Final:compile
+[[1;34mINFO[m] |     |        |  |  \- io.netty:netty-transport-classes-epoll:jar:4.1.73.Final:compile
+[[1;34mINFO[m] |     |        |  +- ch.qos.logback:logback-core:jar:1.2.10:compile
+[[1;34mINFO[m] |     |        |  \- ch.qos.logback:logback-classic:jar:1.2.10:compile
+[[1;34mINFO[m] |     |        \- io.dropwizard.metrics:metrics-core:jar:4.2.9:compile
+[[1;34mINFO[m] |     \- org.wso2.carbon.identity.framework:org.wso2.carbon.identity.claim.metadata.mgt:jar:7.0.63:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.input.validation.common:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.expired.password.identification.v1:jar:1.2.173:compile
+[[1;34mINFO[m] |  \- commons-lang:commons-lang:jar:2.6:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.expired.password.identification.common:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.user.api:org.wso2.carbon.identity.api.user.onboard.v1:jar:1.3.35:compile
+[[1;34mINFO[m] |  \- org.wso2.carbon.identity.governance:org.wso2.carbon.identity.recovery:jar:1.9.5:compile
+[[1;34mINFO[m] |     +- org.wso2.carbon.identity.framework:org.wso2.carbon.identity.consent.mgt:jar:7.0.63:compile
+[[1;34mINFO[m] |     +- org.wso2.carbon.consent.mgt:org.wso2.carbon.consent.mgt.core:jar:2.2.4:compile
+[[1;34mINFO[m] |     +- org.wso2.carbon.identity.governance:org.wso2.carbon.identity.auth.attribute.handler:jar:1.9.5:compile
+[[1;34mINFO[m] |     +- org.wso2.carbon.identity.framework:org.wso2.carbon.identity.user.functionality.mgt:jar:7.0.63:compile
+[[1;34mINFO[m] |     \- org.wso2.carbon.identity.framework:org.wso2.carbon.identity.central.log.mgt:jar:7.0.63:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.user.api:org.wso2.carbon.identity.api.user.onboard.common:jar:1.3.35:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.local.auth.fido:org.wso2.carbon.identity.api.user.fido2:jar:5.4.8:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.governance:org.wso2.carbon.identity.api.user.recovery:jar:1.9.5:compile
+[[1;34mINFO[m] |  \- org.wso2.securevault:org.wso2.securevault:jar:1.1.7:compile
+[[1;34mINFO[m] |     +- org.apache.ws.commons.axiom:axiom-api:jar:1.2.11-wso2v6:compile
+[[1;34mINFO[m] |     |  +- org.apache.geronimo.specs:geronimo-activation_1.1_spec:jar:1.0.2:compile
+[[1;34mINFO[m] |     |  +- org.apache.geronimo.specs:geronimo-javamail_1.4_spec:jar:1.6:compile
+[[1;34mINFO[m] |     |  \- org.apache.geronimo.specs:geronimo-stax-api_1.0_spec:jar:1.0.1:compile
+[[1;34mINFO[m] |     +- org.apache.ws.commons.axiom:axiom-impl:jar:1.2.12:compile
+[[1;34mINFO[m] |     |  \- org.codehaus.woodstox:wstx-asl:jar:3.2.9:compile
+[[1;34mINFO[m] |     +- jline:jline:jar:0.9.94:compile
+[[1;34mINFO[m] |     +- commons-cli:commons-cli:jar:1.0:compile
+[[1;34mINFO[m] |     \- commons-io:commons-io:jar:2.0:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.governance:org.wso2.carbon.identity.api.user.governance:jar:1.9.5:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.framework:org.wso2.carbon.identity.api.server.entitlement:jar:7.0.63:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.framework:org.wso2.carbon.identity.api.server.configuration.mgt:jar:7.0.63:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.inbound.auth.oauth2:org.wso2.carbon.identity.api.server.oauth.scope:jar:7.0.14:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.inbound.auth.oauth2:org.wso2.carbon.identity.api.server.dcr:jar:7.0.14:compile
+[[1;34mINFO[m] +- org.wso2.carbon.consent.mgt:org.wso2.carbon.api.server.consent.mgt:jar:2.6.2:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.local.auth.api:org.wso2.carbon.api.server.local.auth.api:jar:2.5.10:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.organization.management.v1:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.organization.management.common:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.organization.role.management.v1:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.organization.role.management.common:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.organization.configs.v1:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.organization.configs.common:jar:1.2.173:compile
+[[1;34mINFO[m] +- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.organization.selfservice.v1:jar:1.2.173:compile
+[[1;34mINFO[m] \- org.wso2.carbon.identity.server.api:org.wso2.carbon.identity.api.server.organization.selfservice.common:jar:1.2.173:compile
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m-------------< [0;36morg.wso2.is:wso2is-identity-authenticators[0;1m >-------------[m
+[[1;34mINFO[m] [1mBuilding Identity Server : identity-authenticators 7.0.0         [12/28][m
+[[1;34mINFO[m] [1m--------------------------------[ pom ]---------------------------------[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-dependency-plugin:3.1.1:tree[m [1m(default-cli)[m @ [36mwso2is-identity-authenticators[0;1m ---[m
+[[1;34mINFO[m] org.wso2.is:wso2is-identity-authenticators:pom:7.0.0
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m---------< [0;36morg.wso2.is:wso2is-identity-social-authenticators[0;1m >----------[m
+[[1;34mINFO[m] [1mBuilding Identity Server : Social-authenticators 7.0.0           [13/28][m
+[[1;34mINFO[m] [1m--------------------------------[ pom ]---------------------------------[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-dependency-plugin:3.1.1:tree[m [1m(default-cli)[m @ [36mwso2is-identity-social-authenticators[0;1m ---[m
+[[1;34mINFO[m] org.wso2.is:wso2is-identity-social-authenticators:pom:7.0.0
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--------< [0;36morg.wso2.is:wso2is-identity-provisioning-connectors[0;1m >---------[m
+[[1;34mINFO[m] [1mBuilding Identity Server : Provisioning Connectors 7.0.0         [14/28][m
+[[1;34mINFO[m] [1m--------------------------------[ pom ]---------------------------------[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-dependency-plugin:3.1.1:tree[m [1m(default-cli)[m @ [36mwso2is-identity-provisioning-connectors[0;1m ---[m
+[[1;34mINFO[m] org.wso2.is:wso2is-identity-provisioning-connectors:pom:7.0.0
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m----------< [0;36morg.wso2.is:wso2is-identity-local-authenticators[0;1m >----------[m
+[[1;34mINFO[m] [1mBuilding Identity Server : identity-local-authenticators 7.0.0   [15/28][m
+[[1;34mINFO[m] [1m--------------------------------[ pom ]---------------------------------[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-dependency-plugin:3.1.1:tree[m [1m(default-cli)[m @ [36mwso2is-identity-local-authenticators[0;1m ---[m
+[[1;34mINFO[m] org.wso2.is:wso2is-identity-local-authenticators:pom:7.0.0
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m-----------< [0;36morg.wso2.is:wso2is-identity-oauth2-grant-types[0;1m >-----------[m
+[[1;34mINFO[m] [1mBuilding Identity Server : oauth2-grant-types 7.0.0              [16/28][m
+[[1;34mINFO[m] [1m--------------------------------[ pom ]---------------------------------[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m--- [0;32mmaven-dependency-plugin:3.1.1:tree[m [1m(default-cli)[m @ [36mwso2is-identity-oauth2-grant-types[0;1m ---[m
+[[1;34mINFO[m] org.wso2.is:wso2is-identity-oauth2-grant-types:pom:7.0.0
+[[1;34mINFO[m] 
+[[1;34mINFO[m] [1m-------------------------< [0;36morg.wso2.is:wso2is[0;1m >-------------------------[m
+[[1;34mINFO[m] [1mBuilding Identity Server 7.0.0                                   [17/28][m
+[[1;34mINFO[m] [1m--------------------------------[ jar ]---------------------------------[m
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] [1mReactor Summary for WSO2 Identity Server 7.0.0:[m
+[[1;34mINFO[m] 
+[[1;34mINFO[m] WSO2 Identity Server ............................... [1;32mSUCCESS[m [  0.500 s]
+[[1;34mINFO[m] WSO2 Identity Server Styles Parent ................. [1;32mSUCCESS[m [  0.005 s]
+[[1;34mINFO[m] Identity Server: UI styles ......................... [1;32mSUCCESS[m [  0.490 s]
+[[1;34mINFO[m] WSO2 IS - Features Aggregator Module ............... [1;32mSUCCESS[m [  0.004 s]
+[[1;34mINFO[m] WSO2 IS - Style Features ........................... [1;32mSUCCESS[m [  0.070 s]
+[[1;34mINFO[m] WSO2 IS - Utils Features ........................... [1;32mSUCCESS[m [  0.050 s]
+[[1;34mINFO[m] WSO2 Carbon - Identity UI Feature .................. [1;32mSUCCESS[m [  0.112 s]
+[[1;34mINFO[m] WSO2 IS - IS Profile Generation .................... [1;32mSUCCESS[m [  0.004 s]
+[[1;34mINFO[m] Identity Server : Connector ........................ [1;32mSUCCESS[m [  0.004 s]
+[[1;34mINFO[m] WSO2 Identity Server - Rest API .................... [1;32mSUCCESS[m [  0.003 s]
+[[1;34mINFO[m] WSO2 Identity Server - All Rest API ................ [1;32mSUCCESS[m [  2.467 s]
+[[1;34mINFO[m] Identity Server : identity-authenticators .......... [1;32mSUCCESS[m [  0.004 s]
+[[1;34mINFO[m] Identity Server : Social-authenticators ............ [1;32mSUCCESS[m [  0.004 s]
+[[1;34mINFO[m] Identity Server : Provisioning Connectors .......... [1;32mSUCCESS[m [  0.003 s]
+[[1;34mINFO[m] Identity Server : identity-local-authenticators .... [1;32mSUCCESS[m [  0.004 s]
+[[1;34mINFO[m] Identity Server : oauth2-grant-types ............... [1;32mSUCCESS[m [  0.004 s]
+[[1;34mINFO[m] Identity Server .................................... [1;31mFAILURE[m [  0.009 s]
+[[1;34mINFO[m] WSO2 Identity Integration Test Utils ............... [1;33mSKIPPED[m
+[[1;34mINFO[m] org.wso2.carbon.identity.test.integration.service .. [1;33mSKIPPED[m
+[[1;34mINFO[m] org.wso2.carbon.identity.test.integration.service.stubs [1;33mSKIPPED[m
+[[1;34mINFO[m] Identity Server Integration Tests .................. [1;33mSKIPPED[m
+[[1;34mINFO[m] WSO2 IS - Integration Test Admin Clients Module .... [1;33mSKIPPED[m
+[[1;34mINFO[m] WSO2 IS - Integration UI Pages Module .............. [1;33mSKIPPED[m
+[[1;34mINFO[m] WSO2 IS - Integration Test Utils Module ............ [1;33mSKIPPED[m
+[[1;34mINFO[m] Custom Attribute Finder ............................ [1;33mSKIPPED[m
+[[1;34mINFO[m] WSO2 Identity Integration Test Common .............. [1;33mSKIPPED[m
+[[1;34mINFO[m] Identity Test Back-end Module ...................... [1;33mSKIPPED[m
+[[1;34mINFO[m] org.wso2.identity.integration.test ................. [1;33mSKIPPED[m
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] [1;31mBUILD FAILURE[m
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;34mINFO[m] Total time:  4.539 s
+[[1;34mINFO[m] Finished at: 2024-02-16T15:25:17+05:30
+[[1;34mINFO[m] [1m------------------------------------------------------------------------[m
+[[1;31mERROR[m] Could not find goal 'tree' in plugin org.apache.maven.plugins:maven-dependency-plugin:2.0-alpha-4 among available goals analyze-dep-mgt, analyze, build-classpath, copy-dependencies, copy, unpack, purge-local-repository, go-offline, resolve, sources, resolve-plugins, unpack-dependencies -> [1m[Help 1][m
+[[1;31mERROR[m] 
+[[1;31mERROR[m] To see the full stack trace of the errors, re-run Maven with the [1m-e[m switch.
+[[1;31mERROR[m] Re-run Maven using the [1m-X[m switch to enable full debug logging.
+[[1;31mERROR[m] 
+[[1;31mERROR[m] For more information about the errors and possible solutions, please read the following articles:
+[[1;31mERROR[m] [1m[Help 1][m http://cwiki.apache.org/confluence/display/MAVEN/MojoNotFoundException
