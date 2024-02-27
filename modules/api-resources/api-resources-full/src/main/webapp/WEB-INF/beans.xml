@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (c) 2019-2023, WSO2 LLC. (http://www.wso2.com).
+  ~ Copyright (c) 2019-2024, WSO2 LLC. (http://www.wso2.com).
   ~
   ~ WSO2 LLC. licenses this file to you under the Apache License,
   ~ Version 2.0 (the "License"); you may not use this file except
@@ -33,6 +33,7 @@
     <!--<import resource="classpath:META-INF/cxf/workflow-engine-server-v1-cxf.xml"/>-->
     <import resource="classpath:META-INF/cxf/claim-management-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/email-template-server-v1-cxf.xml"/>
+    <import resource="classpath:META-INF/cxf/email-template-server-v2-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/applications-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/application-user-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/keystore-server-v1-cxf.xml"/>
@@ -88,6 +89,25 @@
           class="org.apache.cxf.jaxrs.validation.JAXRSBeanValidationInInterceptor">
         <property name="provider" ref="validationProvider"/>
     </bean>
+    <jaxrs:server id="serverV2" address="/server/v2">
+        <jaxrs:serviceBeans>
+            <bean class="org.wso2.carbon.identity.rest.api.server.email.template.v2.EmailApi"/>
+        </jaxrs:serviceBeans>
+        <jaxrs:providers>
+            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">
+                <constructor-arg>
+                    <bean class="com.fasterxml.jackson.databind.ObjectMapper">
+                        <property name="serializationInclusion" value="NON_NULL" />
+                    </bean>
+                </constructor-arg>
+            </bean>
+            <bean class="org.wso2.carbon.identity.api.dispatcher.core.JsonProcessingExceptionMapper"/>
+            <bean class="org.wso2.carbon.identity.api.dispatcher.core.APIErrorExceptionMapper"/>
+            <bean class="org.wso2.carbon.identity.api.dispatcher.core.InputValidationExceptionMapper"/>
+            <bean class="org.wso2.carbon.identity.api.dispatcher.core.DefaultExceptionMapper"/>
+            <bean class="org.apache.cxf.jaxrs.ext.search.SearchContextProvider"/>
+        </jaxrs:providers>
+    </jaxrs:server>
     <jaxrs:server id="server" address="/server/v1">
         <jaxrs:serviceBeans>
             <bean class="org.wso2.carbon.identity.rest.api.server.claim.management.v1.ClaimManagementApi"/>
@@ -142,6 +162,26 @@
         <jaxrs:inInterceptors>
             <ref bean="validationInInterceptor"/>
         </jaxrs:inInterceptors>
+    </jaxrs:server>
+    <jaxrs:server id="organization v2" address="/o/server/v2">
+        <jaxrs:serviceBeans>
+            <bean class="org.wso2.carbon.identity.rest.api.server.email.template.v2.EmailApi"/>
+        </jaxrs:serviceBeans>
+        <jaxrs:providers>
+            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">
+                <constructor-arg>
+                    <bean class="com.fasterxml.jackson.databind.ObjectMapper">
+                        <property name="serializationInclusion" value="NON_NULL" />
+                    </bean>
+                </constructor-arg>
+            </bean>
+            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
+            <bean class="org.wso2.carbon.identity.api.dispatcher.core.JsonProcessingExceptionMapper"/>
+            <bean class="org.wso2.carbon.identity.api.dispatcher.core.APIErrorExceptionMapper"/>
+            <bean class="org.wso2.carbon.identity.api.dispatcher.core.InputValidationExceptionMapper"/>
+            <bean class="org.wso2.carbon.identity.api.dispatcher.core.DefaultExceptionMapper"/>
+            <bean class="org.apache.cxf.jaxrs.ext.search.SearchContextProvider"/>
+        </jaxrs:providers>
     </jaxrs:server>
     <jaxrs:server id="organization" address="/o/server/v1">
         <jaxrs:serviceBeans>
