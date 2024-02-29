@@ -2351,7 +2351,7 @@
         <identity.extension.utils>1.0.16</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.0.4</authenticator.auth.otp.commons.version>
 
-        <identity.org.mgt.version>1.4.7</identity.org.mgt.version>
+        <identity.org.mgt.version>1.4.8</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.1.2</identity.org.mgt.core.version>
         <identity.organization.login.version>1.1.30</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.22</identity.oauth2.grant.organizationswitch.version>
@@ -2377,7 +2377,7 @@
         <!-- Identity Portal Versions -->
         <identity.apps.console.version>2.12.46</identity.apps.console.version>
         <identity.apps.myaccount.version>2.3.38</identity.apps.myaccount.version>
-        <identity.apps.core.version>2.1.30</identity.apps.core.version>
+        <identity.apps.core.version>2.1.31</identity.apps.core.version>
         <identity.apps.tests.version>1.6.377</identity.apps.tests.version>
 
         <!-- Charon -->
