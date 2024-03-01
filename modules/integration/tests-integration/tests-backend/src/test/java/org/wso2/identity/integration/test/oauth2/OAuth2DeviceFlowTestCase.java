@@ -70,6 +70,12 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
     private static final String DEVICE_CODE = "device_code";
     private static final String USER_CODE = "user_code";
     private static final String CLIENT_ID_PARAM = "client_id";
+
+    private static final String INVALID_CONSUMER_KEY = "invalid_client_id";
+    private static final String ERROR = "error";
+    private static final String INVALID_REQUEST = "invalid_request";
+    private static final String DEVICE_SCOPE = "device_01";
+
     private String sessionDataKeyConsent;
     private String sessionDataKey;
     private String consumerKey;
@@ -126,6 +132,35 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
         consumerSecret = oidcConfig.getClientSecret();
         Assert.assertNotNull(consumerSecret, "Application creation failed.");
         appId = application.getId();
+    }
+
+    @Test(groups = "wso2.is", description = "Send authorize user request from invalid client")
+    public void testSendInvalidClientAuthorize() throws Exception {
+
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair(CLIENT_ID_PARAM, INVALID_CONSUMER_KEY));
+        urlParameters.add(new BasicNameValuePair(SCOPE_PLAYGROUND_NAME, DEVICE_SCOPE));
+        AutomationContext automationContext = new AutomationContext("IDENTITY",
+                TestUserMode.SUPER_TENANT_ADMIN);
+        String deviceAuthEndpoint = automationContext.getContextUrls().getBackEndUrl()
+                .replace("services/", "oauth2/device_authorize");
+        JSONObject responseObject = responseObjectNew(urlParameters, deviceAuthEndpoint);
+        String errorCode = responseObject.get(ERROR).toString();
+        Assert.assertEquals(errorCode, INVALID_REQUEST);
+    }
+
+    @Test(groups = "wso2.is", description = "Send authorize user request without client id.")
+    public void testSendWithoutClientAuthorize() throws Exception {
+
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair(SCOPE_PLAYGROUND_NAME, DEVICE_SCOPE));
+        AutomationContext automationContext = new AutomationContext("IDENTITY",
+                TestUserMode.SUPER_TENANT_ADMIN);
+        String deviceAuthEndpoint = automationContext.getContextUrls().getBackEndUrl()
+                .replace("services/", "oauth2/device_authorize");
+        JSONObject responseObject = responseObjectNew(urlParameters, deviceAuthEndpoint);
+        String errorCode = responseObject.get(ERROR).toString();
+        Assert.assertEquals(errorCode, INVALID_REQUEST);
     }
 
     @Test(groups = "wso2.is", description = "Send authorize user request without redirect_uri param", dependsOnMethods
