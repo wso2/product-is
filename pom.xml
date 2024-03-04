@@ -2192,6 +2192,11 @@
                 <artifactId>org.wso2.carbon.identity.user.onboard.core.service</artifactId>
                 <version>${identity.governance.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.extension.identity.authenticator.utils</groupId>
+                <artifactId>org.wso2.carbon.extension.identity.helper</artifactId>
+                <version>${identity.extension.utils}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
