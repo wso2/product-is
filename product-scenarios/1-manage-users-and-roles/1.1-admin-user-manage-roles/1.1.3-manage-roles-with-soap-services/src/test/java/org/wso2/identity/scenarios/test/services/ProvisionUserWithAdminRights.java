@@ -53,7 +53,7 @@ public class ProvisionUserWithAdminRights extends ScenarioTestBase {
 
         return new Object[][] {
                 {
-                        "testUser", "password", new String[] { "admin" }
+                        "testUser", "Password#123", new String[] { "admin" }
                 }
         };
     }

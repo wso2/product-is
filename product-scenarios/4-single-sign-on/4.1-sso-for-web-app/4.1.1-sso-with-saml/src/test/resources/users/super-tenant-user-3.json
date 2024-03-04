@@ -69,7 +69,7 @@
     "http://wso2.org/claims/country": "United States",
     "http://wso2.org/claims/emailaddress": "ayesha@wso2.com",
     "http://wso2.org/claims/lastname": "Dissanayaka",
-    "password" : "testpass3",
+    "password" : "Testpass#3",
     "tenantDomain" : "carbon.super"
   }
 }

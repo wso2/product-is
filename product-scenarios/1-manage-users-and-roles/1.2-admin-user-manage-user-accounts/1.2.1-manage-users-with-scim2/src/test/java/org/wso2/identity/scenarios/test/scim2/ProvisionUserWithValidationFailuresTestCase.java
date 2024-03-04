@@ -82,7 +82,7 @@ public class ProvisionUserWithValidationFailuresTestCase extends ScenarioTestBas
 
         assertEquals(((JSONArray) ((JSONObject) responseObj).get("schemas")).get(0), SCIMConstants.ERROR_SCHEMA,
                 "Expected ERROR_SCHEMA " + "not returned");
-        assertTrue(responseObj.toString().contains("Credential is not valid"));
+        assertTrue(responseObj.toString().contains("The minimum length of password should be 8."), responseObj.toString());
     }
 
 }

@@ -102,7 +102,7 @@ public class ManageInternalRolesWithPermissionTestCase extends ScenarioTestBase 
     public void addUsers() {
 
         for (int i = 0; i < userList.length; i++) {
-            boolean status = addUser(userList[i], "password", new String[0], null);
+            boolean status = addUser(userList[i], "Password#123", new String[0], null);
             assertEquals(status, true, "User has not been created successfully");
         }
     }

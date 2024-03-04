@@ -42,7 +42,7 @@ public class ProvisionExistingUserTestCase extends ScenarioTestBase {
     private String userId;
     private CloseableHttpClient client;
     private String USERNAME = "scim2userProvisionExistingUserTestCase";
-    private String PASSWORD = "scim2pwd";
+    private String PASSWORD = "Scim2#pwd";
     private String userNameResponse;
     HttpResponse response, errorResponse;
     JSONObject rootObject;

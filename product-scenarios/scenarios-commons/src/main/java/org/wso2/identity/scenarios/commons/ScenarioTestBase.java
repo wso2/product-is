@@ -37,6 +37,7 @@ import org.wso2.identity.scenarios.commons.clients.login.AuthenticatorClient;
 import org.wso2.identity.scenarios.commons.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.scenarios.commons.data.DeploymentDataHolder;
 
+import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.Base64;
 import java.util.Map;
@@ -95,7 +96,11 @@ public class ScenarioTestBase {
 
     public void init() throws Exception {
 
-        backendURL = getDeploymentProperty(IS_HTTPS_URL);
+        backendURL = getDeploymentProperty(IS_HTTPS_URL).toLowerCase();
+        URL url = new URL(backendURL);
+        if (url.getPort() == 443) {
+            backendURL = url.getProtocol() + "://" + url.getHost() + url.getPath();
+        }
         webAppHost = getDeploymentProperty(IS_SAMPLES_HTTP_URL);
         backendServiceURL = backendURL + SERVICES;
         configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem(null, null);

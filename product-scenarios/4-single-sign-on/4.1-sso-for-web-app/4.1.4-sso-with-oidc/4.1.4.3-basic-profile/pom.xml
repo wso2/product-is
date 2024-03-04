@@ -22,7 +22,7 @@
     <parent>
         <artifactId>4.1.4-sso-with-oidc</artifactId>
         <groupId>org.wso2.is</groupId>
-        <version>5.8.0</version>
+        <version>7.0.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -144,10 +144,6 @@
                 <exclusion>
                     <groupId>org.apache.axis2.wso2</groupId>
                     <artifactId>axis2-client</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.axis2.wso2</groupId>
-                    <artifactId>axis2</artifactId>
                 </exclusion>
             </exclusions>
             <scope>test</scope>
