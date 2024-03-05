@@ -45,8 +45,6 @@ public class Oauth2JWKSEndpointTestCase {
     private static final String JKWS_URI_SUPER_TENANT = "https://localhost:9853/oauth2/jwks";
     private static final String JKWS_URI_TENANT = "https://localhost:9853/t/wso2.com/oauth2/jwks";
     private static final String X_509 = "X.509";
-    private static final String BEGIN_CERT = "-----BEGIN CERTIFICATE-----";
-    private static final String END_CERT = "-----END CERTIFICATE-----";
     private static final String KEY_TYPE = "kty";
     private static final String EXPONENT = "e";
     private static final String USAGE = "use";
@@ -103,8 +101,7 @@ public class Oauth2JWKSEndpointTestCase {
     private HttpResponse sendGetRequest(HttpClient client, String jwksEndpoint) throws IOException {
 
         HttpGet getRequest = new HttpGet(jwksEndpoint);
-        HttpResponse response = client.execute(getRequest);
-        return response;
+        return client.execute(getRequest);
     }
 
     private String getX509CertSHA256Thumbprint(String cert) {
