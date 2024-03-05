@@ -55,7 +55,7 @@ public class Oauth2JWKSEndpointTestCase {
     private static final String MODULUS = "n";
     private static final String KEYS = "keys";
     private static final String X5C = "x5c";
-    private static final String X5C_SHA256 = "x5t#S256";
+    private static final String X5T_SHA256 = "x5t#S256";
 
     @Test(groups = "wso2.is", description = "This test JWKS endpoints.")
     public void testJWKSEndpoint() throws IOException, JSONException {
@@ -81,14 +81,14 @@ public class Oauth2JWKSEndpointTestCase {
         validateKey(publicKeySet, MODULUS, "The modulus value of the public key");
 
         if ((publicKeySet.getJSONArray(KEYS).getJSONObject(0).has(X5C))
-                && (publicKeySet.getJSONArray(KEYS).getJSONObject(0).has(X5C_SHA256))) {
+                && (publicKeySet.getJSONArray(KEYS).getJSONObject(0).has(X5T_SHA256))) {
 
             String x5c = String.valueOf(publicKeySet.getJSONArray(KEYS).getJSONObject(0)
                     .getJSONArray(X5C).getString(0));
 
             String calculatedThumbPrint = getX509CertSHA256Thumbprint(x5c);
 
-            Assert.assertEquals(String.valueOf(publicKeySet.getJSONArray(KEYS).getJSONObject(0).get(X5C_SHA256)),
+            Assert.assertEquals(String.valueOf(publicKeySet.getJSONArray(KEYS).getJSONObject(0).get(X5T_SHA256)),
                     calculatedThumbPrint,"Incorrect x5t#S256 value");
         }
     }
@@ -121,10 +121,7 @@ public class Oauth2JWKSEndpointTestCase {
 
     private X509Certificate parseCertificate(String content) throws CertificateException {
 
-        byte[] decodedContent = java.util.Base64.getDecoder().decode(StringUtils.trim(content
-                .replaceAll(BEGIN_CERT, StringUtils.EMPTY)
-                .replaceAll(END_CERT, StringUtils.EMPTY)
-        ));
+        byte[] decodedContent = java.util.Base64.getDecoder().decode(StringUtils.trim(content));
 
         return (X509Certificate) CertificateFactory.getInstance(X_509)
                 .generateCertificate(new ByteArrayInputStream(decodedContent));
