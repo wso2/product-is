@@ -483,6 +483,14 @@
                                 </unzip>
                                 <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/accountrecoveryendpoint.war" />
 
+                                <!-- Explode the x509certificateauthenticationendpoint.war -->
+                                <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/x509certificateauthenticationendpoint">
+                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
+                                        <include name="x509certificateauthenticationendpoint.war" />
+                                    </fileset>
+                                </unzip>
+                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/x509certificateauthenticationendpoint.war" />
+
                                 <!-- Explode the myaccount.war -->
                                 <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/myaccount">
                                     <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">

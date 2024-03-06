@@ -464,6 +464,11 @@
                                     org.wso2.identity.apps:org.wso2.identity.apps.recovery.portal.server.feature:${identity.apps.core.version}
                                 </featureArtifactDef>
 
+                                <!-- X509 certificate authentication portal feature -->
+                                <featureArtifactDef>
+                                    org.wso2.identity.apps:org.wso2.identity.apps.x509certificate.portal.server.feature:${identity.apps.core.version}
+                                </featureArtifactDef>
+
                                 <!-- FIDO2/WebAuthn feature -->
                                 <featureArtifactDef>
                                    org.wso2.carbon.identity.local.auth.fido:org.wso2.carbon.identity.application.authenticator.fido2.server.feature:${identity.local.auth.fido.version}
@@ -895,6 +900,13 @@
                                 <feature>
                                     <id>
                                         org.wso2.identity.apps.recovery.portal.server.feature.group
+                                    </id>
+                                    <version>${identity.apps.core.version}</version>
+                                </feature>
+
+                                <feature>
+                                    <id>
+                                        org.wso2.identity.apps.x509certificate.portal.server.feature.group
                                     </id>
                                     <version>${identity.apps.core.version}</version>
                                 </feature>
