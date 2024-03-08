@@ -167,7 +167,7 @@ jobs:
           elif [[ ${{ job.status }} = "failure" ]];then echo "#ff0000";
           elif [[ ${{ job.status }} = "cancelled" ]];then echo "#ffc300"; fi)
 
-          curl --location --request POST '${{ secrets.GOOGLE_CHAT_WEBHOOK }}&threadKey=dependency_updater&messageReplyOption=REPLY_MESSAGE_FALLBACK_TO_NEW_THREAD' \
+          curl --location --request POST '${{ secrets.GOOGLE_CHAT_WEBHOOK }}' \
           --header 'Content-Type: application/json' \
           --data-raw '{
               "cards": [
