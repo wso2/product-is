@@ -285,6 +285,8 @@
             <class name="org.wso2.identity.integration.test.provisioning.JustInTimeProvisioningTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCFederatedIdpInitLogoutTest"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenExchangeGrantTypeTestCase" />
+            <class name="org.wso2.identity.integration.test.oauth2.FederatedTokenSharingTestCase" />
+            <class name="org.wso2.identity.integration.test.oauth2.FederatedTokenSharingIDPConfigDisabledTestCase" />
         </classes>
     </test>
 
