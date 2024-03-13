@@ -2304,7 +2304,7 @@
 
         <!-- Identity Event Handler Versions -->
         <identity.event.handler.account.lock.version>1.9.2</identity.event.handler.account.lock.version>
-        <identity.event.handler.notification.version>1.8.7</identity.event.handler.notification.version>
+        <identity.event.handler.notification.version>1.8.8</identity.event.handler.notification.version>
 
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
@@ -2354,7 +2354,7 @@
         <authenticator.smsotp.version>3.3.20</authenticator.smsotp.version>
         <authenticator.magiclink.version>1.1.22</authenticator.magiclink.version>
         <authenticator.emailotp.version>4.1.23</authenticator.emailotp.version>
-        <authenticator.local.auth.emailotp.version>1.0.18</authenticator.local.auth.emailotp.version>
+        <authenticator.local.auth.emailotp.version>1.0.19</authenticator.local.auth.emailotp.version>
         <authenticator.local.auth.smsotp.version>1.0.7</authenticator.local.auth.smsotp.version>
         <authenticator.twitter.version>1.1.2</authenticator.twitter.version>
         <authenticator.x509.version>3.1.17</authenticator.x509.version>
