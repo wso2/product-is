@@ -31,6 +31,10 @@ public class Constants {
     public static final String TEST_USER_NAME = "attestationTestUser";
     public static final String TEST_APP_NAME = "oauthTestANAApplication";
 
+    // Basic Authenticator
+    public static final String LOCAL = "LOCAL";
+    public static final String BASIC_AUTHENTICATOR = "BasicAuthenticator";
+
     public static final String TEST_PASSWORD = "passWord1@";
     public static final String TEST_PROFILE = "default";
 

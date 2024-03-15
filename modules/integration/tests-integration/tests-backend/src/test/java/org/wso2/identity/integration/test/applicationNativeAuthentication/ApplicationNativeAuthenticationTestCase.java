@@ -49,6 +49,9 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthenticationSequence;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthenticationStep;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Authenticator;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
@@ -66,6 +69,7 @@ import static org.wso2.identity.integration.test.applicationNativeAuthentication
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.AUTHENTICATOR_ID;
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.AUTH_DATA_CODE;
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.AUTH_DATA_SESSION_STATE;
+import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.BASIC_AUTHENTICATOR;
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.CODE;
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.CONTENT_TYPE_APPLICATION_JSON;
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.ERROR_CODE_CLIENT_NATIVE_AUTHENTICATION_DISABLED;
@@ -75,6 +79,7 @@ import static org.wso2.identity.integration.test.applicationNativeAuthentication
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.HREF;
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.IDP;
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.LINKS;
+import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.LOCAL;
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.METADATA;
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.NEXT_STEP;
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.PARAMS;
@@ -110,6 +115,7 @@ public class ApplicationNativeAuthenticationTestCase extends OAuth2ServiceAbstra
     private CloseableHttpClient client;
     private UserManagementClient userMgtServiceClient;
     private String code;
+    private static final String basicAuthenticatorId = "QmFzaWNBdXRoZW50aWNhdG9yOkxPQ0FM";
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -274,6 +280,22 @@ public class ApplicationNativeAuthenticationTestCase extends OAuth2ServiceAbstra
         application.setInboundProtocolConfiguration(inboundProtocolsConfig);
         application.setName(TEST_APP_NAME);
 
+        // Set Basic authenticator as 1st step.
+        List<Authenticator> authenticators = new ArrayList<>();
+        List<AuthenticationStep> authenticationSteps = new ArrayList<>();
+        Authenticator basicAuthenticator = new Authenticator()
+                .idp(LOCAL)
+                .authenticator(BASIC_AUTHENTICATOR);
+        authenticators.add(basicAuthenticator);
+        AuthenticationSequence authenticationSequence = new AuthenticationSequence();
+        authenticationSequence.setType(AuthenticationSequence.TypeEnum.USER_DEFINED);
+        AuthenticationStep authenticationStep = new AuthenticationStep();
+        authenticationStep.setId(1);
+        authenticationStep.setOptions(authenticators);
+        authenticationSteps.add(authenticationStep);
+        authenticationSequence.setSteps(authenticationSteps);
+        application.setAuthenticationSequence(authenticationSequence);
+
         String appId = addApplication(application);
         return getApplication(appId);
     }
@@ -325,6 +347,8 @@ public class ApplicationNativeAuthenticationTestCase extends OAuth2ServiceAbstra
                             authenticator.containsKey(REQUIRED_PARAMS)) {
 
                         authenticatorId = (String) authenticator.get(AUTHENTICATOR_ID);
+                        Assert.assertEquals(authenticatorId, basicAuthenticatorId, "Authenticator Id is not " +
+                                "equal for basic authenticator ID");
                         JSONObject metadataNode = (JSONObject) authenticator.get(METADATA);
                         if (metadataNode.containsKey(PROMPT_TYPE) && metadataNode.containsKey(PARAMS)) {
                             paramsArray = (JSONArray) metadataNode.get(PARAMS);
