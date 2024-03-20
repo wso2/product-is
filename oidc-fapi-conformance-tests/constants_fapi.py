@@ -11,6 +11,26 @@ RESOURCE_ENDPOINT_URL = "https://iam/resource"
 SCOPES = "internal_user_mgt_update internal_application_mgt_create internal_application_mgt_view internal_login " \
          "internal_claim_meta_update internal_application_mgt_update internal_scope_mgt_create"
 
+SET_SCOPE_CLAIMS_BODY_PAYLOAD = {
+    "claimConfiguration": {
+        "dialect": "LOCAL",
+        "requestedClaims": [
+            {
+                "claim": {
+                    "uri": "http://wso2.org/claims/username"
+                },
+                "mandatory": "false"
+            }
+        ]
+    }
+}
+
+DISABLE_SKIP_CONSENT_BODY_PAYLOAD = {
+    "advancedConfigurations": {
+        "skipLoginConsent": "false"
+    }
+}
+
 HEADERS_WITH_AUTH = {'Content-Type': 'application/json', 'Connection': 'keep-alive',
                'Authorization': 'Basic YWRtaW46YWRtaW4='}
 
@@ -136,3 +156,8 @@ MTLS_PAR_APP2 = {
     "jwks_uri": JWKS_2,
     "require_pushed_authorization_requests" : "true",
 }
+
+
+SMTP_SERVER = "smtp.gmail.com"
+
+SMTP_SERVER_PORT = 465

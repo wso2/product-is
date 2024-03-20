@@ -14,10 +14,6 @@ import base64
 from config import browser_configuration
 from config.client_configs import client_configs
 
-# path to product is zip file
-path_to_is_zip = str(sys.argv[1])
-print("Path to zip: ", path_to_is_zip)
-
 def decode_secret(secret):
     decoded_string=base64.b64decode(secret+"=").decode("utf-8")
     decoded_json = json.loads(decoded_string)
@@ -66,6 +62,42 @@ def get_application_id_by_sp_name(name):
     except Exception as error:
         print("Error occurred: " + str(error))
         exit(1)
+
+# set application scope claims for the given application, this is needed to allow or deny consent with provided scope
+def set_application_scopes_for_consent(application_id):
+    print(">>> Setting Application scope claims.")
+    try:
+        body = json.dumps(constants.SET_SCOPE_CLAIMS_BODY_PAYLOAD)
+        response = requests.patch(url=constants.APPLICATION_ENDPOINT + "/" + application_id,
+                                headers=constants.HEADERS_WITH_AUTH, data=body, verify=False)
+        response.raise_for_status()
+    except HTTPError as http_error:
+        print(http_error)
+        print(response.text)
+        exit(1)
+    except Exception as error:
+        print("\nError occurred: " + str(error))
+        exit(1)
+    else:
+        print(">>> Application scope claims set successfully.")
+
+# Skip login consent is true by default, here we disable it to go consent flows
+def disable_skipping_consent(application_id):
+    print(">>> Setting Skip Login consent to false.")
+    try:
+        body = json.dumps(constants.DISABLE_SKIP_CONSENT_BODY_PAYLOAD)
+        response = requests.patch(url=constants.APPLICATION_ENDPOINT + "/" + application_id,
+                                headers=constants.HEADERS_WITH_AUTH, data=body, verify=False)
+        response.raise_for_status()
+    except HTTPError as http_error:
+        print(http_error)
+        print(response.text)
+        exit(1)
+    except Exception as error:
+        print("\nError occurred: " + str(error))
+        exit(1)
+    else:
+        print(">>> Disabled Skip Login consent successfully.")
 
 # returns service provider details with given application id
 def get_service_provider_details(application_id):
@@ -117,7 +149,10 @@ def addCertsToKeystore(rootCertPath, issuerCertPath, ISPath):
 
 
 # unpack product-is zip file and run
-def unpack_and_run(zip_file_name):
+def unpack_and_run():
+    # path to product is zip file
+    zip_file_name = str(sys.argv[1])
+    print("Path to zip: ", zip_file_name)
     try:
         # extract IS zip
         with ZipFile(zip_file_name, 'r') as zip_file:
@@ -169,12 +204,12 @@ def json_config_builder(service_provider_1, service_provider_2, output_file_path
         },
         "client": {
             "client_id": service_provider_1['clientId'],
-            "scope": "openid profile abc",
+            "scope": "openid profile",
             "jwks": client_configs['client']['jwks']
         },
         "client2": {
             "client_id": service_provider_2['clientId'],
-            "scope": "openid profile abc",
+            "scope": "openid profile",
             "jwks": client_configs['client2']['jwks']
         },
         "mtls": client_configs['mtls'],
@@ -225,7 +260,7 @@ def is_process_running(process_name):
 warnings.filterwarnings("ignore")
 
 if not is_process_running("wso2server"):
-    unpack_and_run(path_to_is_zip)
+    unpack_and_run()
 else:
     print("\n>>> IS already running ...")
 print ("==============================================\n")
@@ -238,6 +273,8 @@ def createSPApp(app_json):
     dcr(app_json)
     app_id = get_application_id_by_sp_name(app_json.get("client_name"))
     app_details = get_service_provider_details(app_id)
+    set_application_scopes_for_consent(app_id)
+    disable_skipping_consent(app_id)
     configure_acr(app_id)
     return app_details
 

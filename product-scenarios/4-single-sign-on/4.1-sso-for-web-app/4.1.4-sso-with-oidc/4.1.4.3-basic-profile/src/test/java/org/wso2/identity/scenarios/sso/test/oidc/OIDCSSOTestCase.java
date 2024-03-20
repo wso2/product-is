@@ -46,8 +46,6 @@ public class OIDCSSOTestCase extends ScenarioTestBase {
 
     private String dcrRequestFile1;
 
-    private String dcrRequestFile2;
-
     private String appCreatorUsername;
 
     private String appCreatorPassword;
@@ -63,12 +61,6 @@ public class OIDCSSOTestCase extends ScenarioTestBase {
     private String clientSecret1;
 
     private String redirectUri1;
-
-    private String clientId2;
-
-    private String clientSecret2;
-
-    private String redirectUri2;
 
     private String sessionDataKey;
 
@@ -87,13 +79,12 @@ public class OIDCSSOTestCase extends ScenarioTestBase {
     private SSOCommonClient ssoCommonClient;
 
     @Factory(dataProvider = "oidcSSOConfigProvider")
-    public OIDCSSOTestCase(String dcrRequestFile1, String dcrRequestFile2, String appCreatorUsername,
+    public OIDCSSOTestCase(String dcrRequestFile1,String appCreatorUsername,
             String appCreatorPassword, String username, String password, String tenantDomain) {
 
         this.appCreatorUsername = appCreatorUsername;
         this.appCreatorPassword = appCreatorPassword;
         this.dcrRequestFile1 = dcrRequestFile1;
-        this.dcrRequestFile2 = dcrRequestFile2;
         this.username = username;
         this.password = password;
         this.tenantDomain = tenantDomain;
@@ -104,7 +95,11 @@ public class OIDCSSOTestCase extends ScenarioTestBase {
 
         return new Object[][] {
                 {
-                        "dcr-request-1.json", "dcr-request-2.json", ADMIN_USERNAME, ADMIN_PASSWORD, ADMIN_USERNAME,
+                        "dcr-request-1.json", ADMIN_USERNAME, ADMIN_PASSWORD, ADMIN_USERNAME,
+                        ADMIN_PASSWORD, SUPER_TENANT_DOMAIN
+                },
+                {
+                        "dcr-request-2.json", ADMIN_USERNAME, ADMIN_PASSWORD, ADMIN_USERNAME,
                         ADMIN_PASSWORD, SUPER_TENANT_DOMAIN
                 }
         };
@@ -132,20 +127,6 @@ public class OIDCSSOTestCase extends ScenarioTestBase {
         redirectUri1 = ((JSONArray) responseJSON.get(REDIRECT_URIS)).get(0).toString();
 
         httpCommonClient.consume(response);
-
-        // Register OAuth2 application 2.
-        response = oAuth2CommonClient.createOAuth2Application(dcrRequestFile2, appCreatorUsername, appCreatorPassword);
-        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED,
-                "OAuth2 Application creation failed. Request File: " + dcrRequestFile2);
-
-        responseJSON = httpCommonClient.getJSONFromResponse(response);
-        // Validate application creation.
-        oAuth2CommonClient.validateApplicationCreationResponse(dcrRequestFile2, responseJSON);
-        clientId2 = responseJSON.get(CLIENT_ID).toString();
-        clientSecret2 = responseJSON.get(CLIENT_SECRET).toString();
-        redirectUri2 = ((JSONArray) responseJSON.get(REDIRECT_URIS)).get(0).toString();
-
-        httpCommonClient.consume(response);
     }
 
     @AfterClass(alwaysRun = true)
@@ -156,13 +137,6 @@ public class OIDCSSOTestCase extends ScenarioTestBase {
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_NO_CONTENT,
                 "Delete application failed for client id: " + clientId1 + ", Request File: " + dcrRequestFile1);
         httpCommonClient.consume(response);
-
-        response = oAuth2CommonClient.deleteOAuth2Application(clientId2, appCreatorUsername, appCreatorPassword);
-        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_NO_CONTENT,
-                "Delete application failed for client id: " + clientId2 + ", Request File: " + dcrRequestFile2);
-        httpCommonClient.consume(response);
-
-        httpCommonClient.closeHttpClient();
     }
 
     @Test(description = "4.1.4.3.1")
@@ -192,7 +166,7 @@ public class OIDCSSOTestCase extends ScenarioTestBase {
     public void initOAuthConsentForApp1() throws Exception {
 
         HttpResponse response = httpCommonClient.sendGetRequest(consentUrl, null, null);
-        sessionDataKeyConsent = ssoCommonClient.getSessionDataKeyConsent(response);
+        sessionDataKeyConsent = ssoCommonClient.getSessionDataKeyFromURLParam(consentUrl);
         assertNotNull(sessionDataKeyConsent, "sessionDataKeyConsent parameter value is null");
 
         httpCommonClient.consume(response);
@@ -226,54 +200,6 @@ public class OIDCSSOTestCase extends ScenarioTestBase {
     @Test(description = "4.1.4.3.6",
           dependsOnMethods = { "getOAccessTokenForApp1" })
     public void introspectAccessTokenForApp1() throws Exception {
-
-        HttpResponse response = oAuth2CommonClient.sendIntrospectRequest(accessToken, username, password);
-        JSONObject responseJSON = httpCommonClient.getJSONFromResponse(response);
-        oAuth2CommonClient.validateIntrospectResponse(responseJSON);
-
-        httpCommonClient.consume(response);
-    }
-
-    @Test(description = "4.1.4.3.7",
-          dependsOnMethods = { "introspectAccessTokenForApp1" })
-    public void intiAuthorizeRequestForApp2() throws Exception {
-
-        HttpResponse response = oAuth2CommonClient
-                .sendAuthorizeGet(clientId2, "openid", redirectUri2, OAuth2Constants.ResponseTypes.CODE, null);
-        sessionDataKeyConsent = ssoCommonClient.getSessionDataKeyConsent(response);
-        assertNotNull(sessionDataKeyConsent, "sessionDataKeyConsent parameter value is null");
-
-        httpCommonClient.consume(response);
-    }
-
-    @Test(description = "4.1.4.3.8",
-          dependsOnMethods = { "intiAuthorizeRequestForApp2" })
-    public void submitOAuthConsentForApp2() throws Exception {
-
-        HttpResponse response = oAuth2CommonClient
-                .sendOAuthConsentApprovePost(sessionDataKeyConsent, SSOConstants.ApprovalType.APPROVE_ONCE);
-        authorizeCode = oAuth2CommonClient.getAuthorizeCode(response);
-        assertNotNull(authorizeCode, "code parameter value is null. Invalid authorization code.");
-
-        httpCommonClient.consume(response);
-    }
-
-    @Test(description = "4.1.4.3.9",
-          dependsOnMethods = "submitOAuthConsentForApp2")
-    public void getOAccessTokenForApp2() throws Exception {
-
-        HttpResponse response = oAuth2CommonClient
-                .sendCodeGrantTokenRequest(authorizeCode, redirectUri2, clientId2, clientSecret2, null);
-        JSONObject responseJSON = httpCommonClient.getJSONFromResponse(response);
-        oAuth2CommonClient.validateAccessToken(responseJSON, false);
-        accessToken = responseJSON.get(OAuth2Constants.TokenResponseElements.ACCESS_TOKEN).toString();
-
-        httpCommonClient.consume(response);
-    }
-
-    @Test(description = "4.1.4.3.10",
-          dependsOnMethods = "getOAccessTokenForApp2")
-    public void introspectAccessTokenForApp2() throws Exception {
 
         HttpResponse response = oAuth2CommonClient.sendIntrospectRequest(accessToken, username, password);
         JSONObject responseJSON = httpCommonClient.getJSONFromResponse(response);

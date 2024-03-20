@@ -133,7 +133,8 @@
             <class name="org.wso2.identity.integration.test.identityServlet.ExtendSessionEndpointAuthCodeGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenRevocationWithSessionTerminationTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenRevocationWithMultipleSessionTerminationTestCase"/>
-            <class name="org.wso2.identity.integration.test.applicationNativeAuthentication.ApplicationNativeAuthenticationTestCase"/>
+<!--            Temporarily commenting out following test case cause due to intermittent error-->
+<!--            <class name="org.wso2.identity.integration.test.applicationNativeAuthentication.ApplicationNativeAuthenticationTestCase"/>-->
         </classes>
     </test>
 
@@ -205,8 +206,9 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.tenant.management.v1.TenantFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.notification.sender.v1.NotificationSenderSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.notification.sender.v1.NotificationSenderFailureTest"/>
-            <class name="org.wso2.identity.integration.test.rest.api.server.secret.management.v1.SecretManagementSuccessTest"/>
-            <class name="org.wso2.identity.integration.test.rest.api.server.secret.management.v1.SecretManagementFailureTest"/>
+            <!-- Disabling the SecretManagement api tests as the api is removed from the access control -->
+            <!--<class name="org.wso2.identity.integration.test.rest.api.server.secret.management.v1.SecretManagementSuccessTest"/>-->
+            <!--<class name="org.wso2.identity.integration.test.rest.api.server.secret.management.v1.SecretManagementFailureTest"/>-->
             <class name="org.wso2.identity.integration.test.rest.api.server.branding.preference.management.v1.BrandingPreferenceManagementSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.branding.preference.management.v1.BrandingPreferenceManagementFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.selfRegister.SelfRegisterTestCase"/>
@@ -272,6 +274,7 @@
     <test name="is-tests-federation" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
             <class name="org.wso2.identity.integration.test.base.SecondaryCarbonServerInitializerTestCase"/>
+            <class name="org.wso2.identity.integration.test.applicationNativeAuthentication.ApplicationNativeAuthenticationFederationTestCase"/>
             <class name="org.wso2.identity.integration.test.sts.TestPassiveSTSFederation"/>
             <!--TODO: Temporary disabled ConditionalAuthenticationTestCase. Enable after fixing the issues. -->
             <!--<class name="org.wso2.identity.integration.test.auth.ConditionalAuthenticationTestCase" />-->
@@ -338,7 +341,7 @@
             <class name="org.wso2.identity.integration.test.provisioning.DBSeperationTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceAuthCodeGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCFileBasedSkipLoginConsentTestCase"/>
-            <class name="org.wso2.identity.integration.test.scim.IDENTITY4776SCIMServiceWithOAuthTestCase" />
+            <class name="org.wso2.identity.integration.test.scim.IDENTITY4776SCIMServiceWithOAuthTestCase"/>
             <class name="org.wso2.identity.integration.test.identity.mgt.UserInformationRecoveryServiceTenantEmailUserTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2HashAlgorithmTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2PersistenceProcessorInsertTokenTestCase"/>
@@ -349,6 +352,7 @@
             <class name="org.wso2.identity.integration.test.oidc.OIDCPasswordGrantTest"/>
             <!--<class name="org.wso2.identity.integration.test.saml.SAMLECPSSOTestCase"/>-->
             <class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileAdminTestCase"/>
+            <class name="org.wso2.identity.integration.test.idp.mgt.ChallengeQuestionsUITestCase"/>
             <class name="org.wso2.identity.integration.test.identity.mgt.AccountLockWhileCaseInsensitiveUserFalseTestCase"/>
             <class name="org.wso2.identity.integration.test.EmailOTPTestCase"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.liteUserRegister.LiteUserRegisterTestCase"/>

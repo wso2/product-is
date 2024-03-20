@@ -26,6 +26,7 @@ password = "wso2carbon"
 [keystore.primary]
 file_name = "wso2carbon.jks"
 password = "wso2carbon"
+type="JKS"
 
 [truststore]
 file_name="client-truststore.jks"

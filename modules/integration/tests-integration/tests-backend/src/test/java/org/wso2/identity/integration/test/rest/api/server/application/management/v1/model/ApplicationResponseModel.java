@@ -20,13 +20,12 @@ package org.wso2.identity.integration.test.rest.api.server.application.managemen
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import javax.xml.bind.annotation.*;
+import javax.validation.constraints.*;
 
 public class ApplicationResponseModel {
   
@@ -35,8 +34,10 @@ public class ApplicationResponseModel {
     private String description;
     private String imageUrl;
     private String accessUrl;
+    private String logoutReturnUrl;
     private String clientId;
     private String issuer;
+    private String realm;
     private String templateId;
     private Boolean isManagementApp;
     private Boolean isB2BSelfServiceApp;
@@ -44,7 +45,6 @@ public class ApplicationResponseModel {
     private ClaimConfiguration claimConfiguration;
     private List<InboundProtocolListItem> inboundProtocols = null;
     private AuthenticationSequence authenticationSequence;
-    private List<java.lang.Object> appRoleConfigurations = null;
     private AdvancedApplicationConfiguration advancedConfigurations;
     private ProvisioningConfiguration provisioningConfigurations;
 
@@ -70,8 +70,8 @@ public class ApplicationResponseModel {
             return String.valueOf(value);
         }
 
-        public static ApplicationResponseModel.AccessEnum fromValue(String value) {
-            for (ApplicationResponseModel.AccessEnum b : ApplicationResponseModel.AccessEnum.values()) {
+        public static AccessEnum fromValue(String value) {
+            for (AccessEnum b : AccessEnum.values()) {
                 if (b.value.equals(value)) {
                     return b;
                 }
@@ -83,7 +83,7 @@ public class ApplicationResponseModel {
     private AccessEnum access = AccessEnum.READ;
 
     /**
-    **/
+     **/
     public ApplicationResponseModel id(String id) {
 
         this.id = id;
@@ -101,7 +101,7 @@ public class ApplicationResponseModel {
     }
 
     /**
-    **/
+     **/
     public ApplicationResponseModel name(String name) {
 
         this.name = name;
@@ -121,7 +121,7 @@ public class ApplicationResponseModel {
     }
 
     /**
-    **/
+     **/
     public ApplicationResponseModel description(String description) {
 
         this.description = description;
@@ -139,7 +139,7 @@ public class ApplicationResponseModel {
     }
 
     /**
-    **/
+     **/
     public ApplicationResponseModel imageUrl(String imageUrl) {
 
         this.imageUrl = imageUrl;
@@ -157,7 +157,7 @@ public class ApplicationResponseModel {
     }
 
     /**
-    **/
+     **/
     public ApplicationResponseModel accessUrl(String accessUrl) {
 
         this.accessUrl = accessUrl;
@@ -170,8 +170,26 @@ public class ApplicationResponseModel {
     public String getAccessUrl() {
         return accessUrl;
     }
-    public void setAccessUrl(String loginUrl) {
-        this.accessUrl = loginUrl;
+    public void setAccessUrl(String accessUrl) {
+        this.accessUrl = accessUrl;
+    }
+
+    /**
+     **/
+    public ApplicationResponseModel logoutReturnUrl(String logoutReturnUrl) {
+
+        this.logoutReturnUrl = logoutReturnUrl;
+        return this;
+    }
+
+    @ApiModelProperty(example = "https://example.com/app/logout", value = "")
+    @JsonProperty("logoutReturnUrl")
+    @Valid
+    public String getLogoutReturnUrl() {
+        return logoutReturnUrl;
+    }
+    public void setLogoutReturnUrl(String logoutReturnUrl) {
+        this.logoutReturnUrl = logoutReturnUrl;
     }
 
     /**
@@ -191,7 +209,6 @@ public class ApplicationResponseModel {
     public void setClientId(String clientId) {
         this.clientId = clientId;
     }
-
 
     /**
      **/
@@ -213,6 +230,24 @@ public class ApplicationResponseModel {
 
     /**
      **/
+    public ApplicationResponseModel realm(String realm) {
+
+        this.realm = realm;
+        return this;
+    }
+
+    @ApiModelProperty(example = "PassiveSTSSampleApp")
+    @JsonProperty("realm")
+    @Valid
+    public String getRealm() {
+        return realm;
+    }
+    public void setRealm(String realm) {
+        this.realm = realm;
+    }
+
+    /**
+     **/
     public ApplicationResponseModel templateId(String templateId) {
 
         this.templateId = templateId;
@@ -230,8 +265,9 @@ public class ApplicationResponseModel {
     }
 
     /**
+     * Decides whether the application used to access System APIs
      **/
-    public ApplicationResponseModel templateId(Boolean isManagementApp) {
+    public ApplicationResponseModel isManagementApp(Boolean isManagementApp) {
 
         this.isManagementApp = isManagementApp;
         return this;
@@ -248,7 +284,25 @@ public class ApplicationResponseModel {
     }
 
     /**
-     *
+     * Decides whether the application used to for B2B self service
+     **/
+    public ApplicationResponseModel isB2BSelfServiceApp(Boolean isB2BSelfServiceApp) {
+
+        this.isB2BSelfServiceApp = isB2BSelfServiceApp;
+        return this;
+    }
+
+    @ApiModelProperty(example = "false", value = "Decides whether the application used to for B2B self service")
+    @JsonProperty("isB2BSelfServiceApp")
+    @Valid
+    public Boolean getIsB2BSelfServiceApp() {
+        return isB2BSelfServiceApp;
+    }
+    public void setIsB2BSelfServiceApp(Boolean isB2BSelfServiceApp) {
+        this.isB2BSelfServiceApp = isB2BSelfServiceApp;
+    }
+
+    /**
      **/
     public ApplicationResponseModel associatedRoles(AssociatedRolesConfig associatedRoles) {
 
@@ -256,21 +310,18 @@ public class ApplicationResponseModel {
         return this;
     }
 
-    @ApiModelProperty(value = "")
+    @ApiModelProperty()
     @JsonProperty("associatedRoles")
     @Valid
     public AssociatedRolesConfig getAssociatedRoles() {
-
         return associatedRoles;
     }
-
     public void setAssociatedRoles(AssociatedRolesConfig associatedRoles) {
-
         this.associatedRoles = associatedRoles;
     }
 
     /**
-    **/
+     **/
     public ApplicationResponseModel claimConfiguration(ClaimConfiguration claimConfiguration) {
 
         this.claimConfiguration = claimConfiguration;
@@ -288,7 +339,7 @@ public class ApplicationResponseModel {
     }
 
     /**
-    **/
+     **/
     public ApplicationResponseModel inboundProtocols(List<InboundProtocolListItem> inboundProtocols) {
 
         this.inboundProtocols = inboundProtocols;
@@ -306,7 +357,7 @@ public class ApplicationResponseModel {
     }
 
     /**
-    **/
+     **/
     public ApplicationResponseModel authenticationSequence(AuthenticationSequence authenticationSequence) {
 
         this.authenticationSequence = authenticationSequence;
@@ -325,24 +376,6 @@ public class ApplicationResponseModel {
 
     /**
      **/
-    public ApplicationResponseModel appRoleConfigurations(List<java.lang.Object> appRoleConfigurations) {
-
-        this.appRoleConfigurations = appRoleConfigurations;
-        return this;
-    }
-
-    @ApiModelProperty()
-    @JsonProperty("appRoleConfigurations")
-    @Valid
-    public List<java.lang.Object> getAppRoleConfigurations() {
-        return appRoleConfigurations;
-    }
-    public void setAppRoleConfigurations(List<java.lang.Object> appRoleConfigurations) {
-        this.appRoleConfigurations = appRoleConfigurations;
-    }
-
-    /**
-    **/
     public ApplicationResponseModel advancedConfigurations(AdvancedApplicationConfiguration advancedConfigurations) {
 
         this.advancedConfigurations = advancedConfigurations;
@@ -360,7 +393,7 @@ public class ApplicationResponseModel {
     }
 
     /**
-    **/
+     **/
     public ApplicationResponseModel provisioningConfigurations(ProvisioningConfiguration provisioningConfigurations) {
 
         this.provisioningConfigurations = provisioningConfigurations;
@@ -379,7 +412,7 @@ public class ApplicationResponseModel {
 
     /**
      **/
-    public ApplicationResponseModel access(ApplicationResponseModel.AccessEnum access) {
+    public ApplicationResponseModel access(AccessEnum access) {
 
         this.access = access;
         return this;
@@ -388,10 +421,10 @@ public class ApplicationResponseModel {
     @ApiModelProperty()
     @JsonProperty("access")
     @Valid
-    public ApplicationResponseModel.AccessEnum getAccess() {
+    public AccessEnum getAccess() {
         return access;
     }
-    public void setAccess(ApplicationResponseModel.AccessEnum access) {
+    public void setAccess(AccessEnum access) {
         this.access = access;
     }
 
@@ -408,64 +441,68 @@ public class ApplicationResponseModel {
         }
         ApplicationResponseModel applicationResponseModel = (ApplicationResponseModel) o;
         return Objects.equals(this.id, applicationResponseModel.id) &&
-            Objects.equals(this.name, applicationResponseModel.name) &&
-            Objects.equals(this.description, applicationResponseModel.description) &&
-            Objects.equals(this.imageUrl, applicationResponseModel.imageUrl) &&
-            Objects.equals(this.accessUrl, applicationResponseModel.accessUrl) &&
-            Objects.equals(this.clientId, applicationResponseModel.clientId) &&
-            Objects.equals(this.issuer, applicationResponseModel.issuer) &&
-            Objects.equals(this.templateId, applicationResponseModel.templateId) &&
-            Objects.equals(this.isManagementApp, applicationResponseModel.isManagementApp) &&
-            Objects.equals(this.claimConfiguration, applicationResponseModel.claimConfiguration) &&
-            Objects.equals(this.inboundProtocols, applicationResponseModel.inboundProtocols) &&
-            Objects.equals(this.authenticationSequence, applicationResponseModel.authenticationSequence) &&
-            Objects.equals(this.appRoleConfigurations, applicationResponseModel.appRoleConfigurations) &&
-            Objects.equals(this.advancedConfigurations, applicationResponseModel.advancedConfigurations) &&
-            Objects.equals(this.provisioningConfigurations, applicationResponseModel.provisioningConfigurations) && Objects.equals(this.access, applicationResponseModel.access) && Objects.equals(this.associatedRoles, applicationResponseModel.associatedRoles);
+                Objects.equals(this.name, applicationResponseModel.name) &&
+                Objects.equals(this.description, applicationResponseModel.description) &&
+                Objects.equals(this.imageUrl, applicationResponseModel.imageUrl) &&
+                Objects.equals(this.accessUrl, applicationResponseModel.accessUrl) &&
+                Objects.equals(this.logoutReturnUrl, applicationResponseModel.logoutReturnUrl) &&
+                Objects.equals(this.clientId, applicationResponseModel.clientId) &&
+                Objects.equals(this.issuer, applicationResponseModel.issuer) &&
+                Objects.equals(this.realm, applicationResponseModel.realm) &&
+                Objects.equals(this.templateId, applicationResponseModel.templateId) &&
+                Objects.equals(this.isManagementApp, applicationResponseModel.isManagementApp) &&
+                Objects.equals(this.isB2BSelfServiceApp, applicationResponseModel.isB2BSelfServiceApp) &&
+                Objects.equals(this.associatedRoles, applicationResponseModel.associatedRoles) &&
+                Objects.equals(this.claimConfiguration, applicationResponseModel.claimConfiguration) &&
+                Objects.equals(this.inboundProtocols, applicationResponseModel.inboundProtocols) &&
+                Objects.equals(this.authenticationSequence, applicationResponseModel.authenticationSequence) &&
+                Objects.equals(this.advancedConfigurations, applicationResponseModel.advancedConfigurations) &&
+                Objects.equals(this.provisioningConfigurations, applicationResponseModel.provisioningConfigurations) &&
+                Objects.equals(this.access, applicationResponseModel.access);
     }
 
     @Override
     public int hashCode() {
-
-        return Objects.hash(id, name, description, imageUrl, accessUrl, clientId, issuer, templateId, isManagementApp,
-                claimConfiguration, inboundProtocols, associatedRoles, authenticationSequence, appRoleConfigurations,
-                advancedConfigurations, provisioningConfigurations, access);
+        return Objects.hash(id, name, description, imageUrl, accessUrl, logoutReturnUrl, clientId, issuer, realm, templateId, isManagementApp, isB2BSelfServiceApp, associatedRoles, claimConfiguration, inboundProtocols, authenticationSequence, advancedConfigurations, provisioningConfigurations, access);
     }
 
     @Override
     public String toString() {
 
-        return "class ApplicationResponseModel {\n" +
-                "    id: " + toIndentedString(id) + "\n" +
-                "    name: " + toIndentedString(name) + "\n" +
-                "    description: " + toIndentedString(description) + "\n" +
-                "    imageUrl: " + toIndentedString(imageUrl) + "\n" +
-                "    accessUrl: " + toIndentedString(accessUrl) + "\n" +
-                "    clientId: " + toIndentedString(clientId) + "\n" +
-                "    issuer: " + toIndentedString(issuer) + "\n" +
-                "    templateId: " + toIndentedString(templateId) + "\n" +
-                "    isManagementApp: " + toIndentedString(isManagementApp) + "\n" +
-                "    associatedRoles: " + toIndentedString(associatedRoles) + "\n" +
-                "    claimConfiguration: " + toIndentedString(claimConfiguration) + "\n" +
-                "    inboundProtocols: " + toIndentedString(inboundProtocols) + "\n" +
-                "    authenticationSequence: " + toIndentedString(authenticationSequence) + "\n" +
-                "    appRoleConfigurations: " + toIndentedString(appRoleConfigurations) + "\n" +
-                "    advancedConfigurations: " + toIndentedString(advancedConfigurations) + "\n" +
-                "    provisioningConfigurations: " + toIndentedString(provisioningConfigurations) + "\n" +
-                "    access: " + toIndentedString(access) + "\n" +
-                "}";
+        StringBuilder sb = new StringBuilder();
+        sb.append("class ApplicationResponseModel {\n");
+        sb.append("    id: ").append(toIndentedString(id)).append("\n");
+        sb.append("    name: ").append(toIndentedString(name)).append("\n");
+        sb.append("    description: ").append(toIndentedString(description)).append("\n");
+        sb.append("    imageUrl: ").append(toIndentedString(imageUrl)).append("\n");
+        sb.append("    accessUrl: ").append(toIndentedString(accessUrl)).append("\n");
+        sb.append("    logoutReturnUrl: ").append(toIndentedString(logoutReturnUrl)).append("\n");
+        sb.append("    clientId: ").append(toIndentedString(clientId)).append("\n");
+        sb.append("    issuer: ").append(toIndentedString(issuer)).append("\n");
+        sb.append("    realm: ").append(toIndentedString(realm)).append("\n");
+        sb.append("    templateId: ").append(toIndentedString(templateId)).append("\n");
+        sb.append("    isManagementApp: ").append(toIndentedString(isManagementApp)).append("\n");
+        sb.append("    isB2BSelfServiceApp: ").append(toIndentedString(isB2BSelfServiceApp)).append("\n");
+        sb.append("    associatedRoles: ").append(toIndentedString(associatedRoles)).append("\n");
+        sb.append("    claimConfiguration: ").append(toIndentedString(claimConfiguration)).append("\n");
+        sb.append("    inboundProtocols: ").append(toIndentedString(inboundProtocols)).append("\n");
+        sb.append("    authenticationSequence: ").append(toIndentedString(authenticationSequence)).append("\n");
+        sb.append("    advancedConfigurations: ").append(toIndentedString(advancedConfigurations)).append("\n");
+        sb.append("    provisioningConfigurations: ").append(toIndentedString(provisioningConfigurations)).append("\n");
+        sb.append("    access: ").append(toIndentedString(access)).append("\n");
+        sb.append("}");
+        return sb.toString();
     }
 
     /**
-    * Convert the given object to string with each line indented by 4 spaces
-    * (except the first line).
-    */
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
+     */
     private String toIndentedString(Object o) {
 
         if (o == null) {
             return "null";
         }
-        return o.toString();
+        return o.toString().replace("\n", "\n");
     }
-
 }

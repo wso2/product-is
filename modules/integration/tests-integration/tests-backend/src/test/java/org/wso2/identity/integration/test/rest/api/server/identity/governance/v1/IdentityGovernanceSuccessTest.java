@@ -257,7 +257,7 @@ public class IdentityGovernanceSuccessTest extends IdentityGovernanceTestBase {
                         equalTo("91"));
     }
 
-    @Test
+    @Test(description = "Update governance connectors with correct data.")
     public void testUpdateGovernanceConnectors() throws IOException {
 
         String body = readResource("update-multiple-connector-properties.json");

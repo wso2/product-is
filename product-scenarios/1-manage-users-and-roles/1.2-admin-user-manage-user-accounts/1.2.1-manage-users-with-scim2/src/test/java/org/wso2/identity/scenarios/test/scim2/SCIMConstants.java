@@ -45,12 +45,12 @@ public class SCIMConstants {
    public static final String HONORIFIC_PREFIX_CLAIM_VALUE = "Mr";
    public static final String HONORIFIC_SURFIX_CLAIM_VALUE = "III";
    public static final String USERNAME = "scim2user";
-   public static final String PASSWORD = "scim2pwd";
+   public static final String PASSWORD = "Scim2#pwd";
    public static final String CONTENT_TYPE_APPLICATION_JSON = "application/json";
    public static final String GIVEN_NAME_CLAIM_VALUE = "user1";
    public static final String MIDDLE_NAME_CLAIM_VALUE = "user1";
    public static final String SCIM2USER = "scim2user";
-   public static final String SCIM2PASSWORD = "scim2pwd";
+   public static final String SCIM2PASSWORD = "Scim2#pwd";
    public static final String DISPLAY_NAME = "displayName";
    public static final String DISPLAY_NAME_CLAIM_VALUE = "III";
    public static final String NICK_NAME = "nickName";

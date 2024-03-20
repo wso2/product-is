@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>7.0.0-beta5-SNAPSHOT</version>
+        <version>7.0.1-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -316,6 +316,9 @@
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.user.mgt.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.role.mgt.ui.feature:${carbon.identity.framework.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon.commons:org.wso2.carbon.tenant.mgt.common.feature:${carbon.commons.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -335,6 +338,9 @@
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.core.runtime.feature:${carbon.kernel.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.hazelcast.feature:${carbon.kernel.version}
                                 </featureArtifactDef>
 
                                 <!-- DepSync feature -->
@@ -456,6 +462,11 @@
                                 <!-- Recovery portal feature -->
                                 <featureArtifactDef>
                                     org.wso2.identity.apps:org.wso2.identity.apps.recovery.portal.server.feature:${identity.apps.core.version}
+                                </featureArtifactDef>
+
+                                <!-- X509 certificate authentication portal feature -->
+                                <featureArtifactDef>
+                                    org.wso2.identity.apps:org.wso2.identity.apps.x509certificate.portal.server.feature:${identity.apps.core.version}
                                 </featureArtifactDef>
 
                                 <!-- FIDO2/WebAuthn feature -->
@@ -787,6 +798,10 @@
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.role.mgt.ui.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.identity.role.mgt.core.server.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
@@ -805,6 +820,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.deployment.synchronizer.feature.group</id>
                                     <version>${carbon.commons.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.hazelcast.feature.group</id>
+                                    <version>${carbon.kernel.version}</version>
                                 </feature>
 
                                 <feature>
@@ -881,6 +900,13 @@
                                 <feature>
                                     <id>
                                         org.wso2.identity.apps.recovery.portal.server.feature.group
+                                    </id>
+                                    <version>${identity.apps.core.version}</version>
+                                </feature>
+
+                                <feature>
+                                    <id>
+                                        org.wso2.identity.apps.x509certificate.portal.server.feature.group
                                     </id>
                                     <version>${identity.apps.core.version}</version>
                                 </feature>

@@ -35,6 +35,8 @@ import org.wso2.identity.scenarios.commons.util.Constants;
 import org.wso2.identity.scenarios.commons.util.OAuth2Constants;
 import org.wso2.identity.scenarios.commons.util.SSOConstants;
 
+import java.net.URL;
+
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
@@ -180,8 +182,14 @@ public class OAuth2SelfContainedTokenImplicitGrantTest extends ScenarioTestBase 
         assertNotNull(accessToken, "access_token parameter value is null. Invalid access token.");
         signedJWT = SignedJWT.parse(accessToken);
         assertNotNull(signedJWT, "JWT token value is null. Invalid self-contained access token.");
-        assertEquals(SignedJWT.parse(accessToken).getJWTClaimsSet().getIssuer(), getDeploymentProperty(IS_HTTPS_URL) +
-                Constants.OAUTH_TOKEN_URI_CONTEXT, "Invalid issuer id in the signed jwt");
+
+        String expectedIssuerURL = getDeploymentProperty(IS_HTTPS_URL).toLowerCase() + Constants.OAUTH_TOKEN_URI_CONTEXT;
+        URL url = new URL(expectedIssuerURL);
+        if (url.getPort() == 443) {
+            expectedIssuerURL = url.getProtocol() + "://" + url.getHost() + url.getPath();
+        }
+        assertEquals(SignedJWT.parse(accessToken).getJWTClaimsSet().getIssuer(), expectedIssuerURL,
+                "Invalid issuer id in the signed jwt");
 
         httpCommonClient.consume(response);
     }

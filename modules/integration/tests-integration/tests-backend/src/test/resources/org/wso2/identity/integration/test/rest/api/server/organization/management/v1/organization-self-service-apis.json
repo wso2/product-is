@@ -1,0 +1,21 @@
+{
+  "/api/server/v1/organizations": [
+    "internal_organization_view",
+    "internal_organization_create"
+    ],
+  "/scim2/Users": [
+    "internal_user_mgt_view",
+    "internal_user_mgt_create"
+    ],
+  "/o/scim2/Users": [
+    "internal_org_user_mgt_create",
+    "internal_org_user_mgt_list"
+  ],
+  "/o/scim2/Roles": [
+    "internal_org_role_mgt_view",
+    "internal_org_role_mgt_update"
+  ],
+  "/o/api/server/v1/applications": [
+    "internal_org_application_mgt_view"
+  ]
+}

@@ -60,10 +60,12 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 import static org.wso2.carbon.utils.multitenancy.MultitenantConstants.SUPER_TENANT_DOMAIN_NAME;
-import static org.wso2.identity.scenarios.commons.util.Constants.CONTENT_TYPE_APPLICATION_FORM;
+import static org.wso2.identity.scenarios.commons.ScenarioTestBase.getDeploymentProperty;
 import static org.wso2.identity.scenarios.commons.util.Constants.CONTENT_TYPE_APPLICATION_JSON;
+import static org.wso2.identity.scenarios.commons.util.Constants.CONTENT_TYPE_APPLICATION_FORM;
 import static org.wso2.identity.scenarios.commons.util.Constants.HTTP_RESPONSE_HEADER_LOCATION;
 import static org.wso2.identity.scenarios.commons.util.Constants.IS_HTTPS_URL;
+import static org.wso2.identity.scenarios.commons.util.Constants.IS_SAMPLES_HTTP_URL;
 
 public class OAuth2CommonClient {
 
@@ -122,7 +124,13 @@ public class OAuth2CommonClient {
     public HttpResponse createOAuth2Application(String dcrRequestFile, String username, String password)
             throws IOException, ParseException {
 
-        return httpCommonClient.sendPostRequestWithJSON(dcrEndpoint, getRequestJSON(dcrRequestFile),
+        JSONObject jsonObject = getRequestJSON(dcrRequestFile);
+        JSONArray redirectURIs = (JSONArray) jsonObject.get("redirect_uris");
+        if (redirectURIs != null){
+            redirectURIs.clear();
+            redirectURIs.add(getDeploymentProperty(IS_SAMPLES_HTTP_URL));
+        }
+        return httpCommonClient.sendPostRequestWithJSON(dcrEndpoint, jsonObject,
                 getCommonHeadersJSON(username, password));
     }
 
@@ -152,7 +160,13 @@ public class OAuth2CommonClient {
     public void validateApplicationCreationResponse(String dcrRequestFile, JSONObject responseJSON)
             throws IOException, ParseException {
 
-        validateApplicationCreationResponse(getRequestJSON(dcrRequestFile), responseJSON);
+        JSONObject jsonObject = getRequestJSON(dcrRequestFile);
+        JSONArray redirectURIs = (JSONArray) jsonObject.get("redirect_uris");
+        if (redirectURIs != null){
+            redirectURIs.clear();
+            redirectURIs.add(getDeploymentProperty(IS_SAMPLES_HTTP_URL));
+        }
+        validateApplicationCreationResponse(jsonObject, responseJSON);
     }
 
     /**

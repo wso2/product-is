@@ -83,6 +83,7 @@ import static org.wso2.identity.integration.test.applicationNativeAuthentication
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.RESPONSE_MODE;
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.STEP_TYPE;
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.SUCCESS_COMPLETED;
+import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.TEST_APP_NAME;
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.TEST_PASSWORD;
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.TEST_PROFILE;
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.TEST_USER_NAME;
@@ -271,7 +272,7 @@ public class ApplicationNativeAuthenticationTestCase extends OAuth2ServiceAbstra
         inboundProtocolsConfig.setOidc(oidcConfig);
 
         application.setInboundProtocolConfiguration(inboundProtocolsConfig);
-        application.setName(OAuth2Constant.OAUTH_APPLICATION_NAME);
+        application.setName(TEST_APP_NAME);
 
         String appId = addApplication(application);
         return getApplication(appId);

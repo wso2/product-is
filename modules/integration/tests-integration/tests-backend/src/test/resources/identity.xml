@@ -42,9 +42,9 @@
     -->
 	<Security>
 		<UserTrustedRPStore>
-			<Location>${carbon.home}/repository/resources/security/userRP.jks</Location>
+			<Location>${carbon.home}/repository/resources/security/userRP.p12</Location>
 			<!-- Keystore type (JKS/PKCS12 etc.)-->
-			<Type>JKS</Type>
+			<type>JKS</type>
 			<!-- Keystore password-->
 			<Password>wso2carbon</Password>
 			<!-- Private Key password-->

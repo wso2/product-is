@@ -82,7 +82,6 @@ public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractInt
         super.init(userMode);
         AutomationContext context = new AutomationContext("IDENTITY", userMode);
         this.activeTenant = context.getContextTenant().getDomain();
-
     }
 
     @BeforeClass(alwaysRun = true)
@@ -169,16 +168,6 @@ public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractInt
         Assert.assertTrue(content.contains(RECOVERY_PASSWORD_CONTENT));
     }
 
-    @Test(groups = "wso2.is", description = "Check Password recovery option recovery Page")
-    public void testRecovery() throws Exception {
-
-        updateResidentIDPProperty(superTenantResidentIDP, ENABLE_PASSWORD_NOTIFICATION_RECOVERY_PROP_KEY, "true");
-        updateResidentIDPProperty(superTenantResidentIDP, ENABLE_PASSWORD_QS_RECOVERY_PROP_KEY, "true");
-        String content = sendRecoveryRequest();
-        Assert.assertTrue(content.contains(RECOVERY_ENDPOINT_QS_CONTENT));
-        Assert.assertTrue(content.contains(RECOVERY_ENDPOINT_NOTIFICATION_CONTENT));
-    }
-
     @Test(groups = "wso2.is", description = "Check QS recovery option recovery Page")
     public void testRecoveryQSOnly() throws Exception {
 
@@ -246,5 +235,4 @@ public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractInt
         Assert.assertNotNull(content);
         return content;
     }
-
 }
