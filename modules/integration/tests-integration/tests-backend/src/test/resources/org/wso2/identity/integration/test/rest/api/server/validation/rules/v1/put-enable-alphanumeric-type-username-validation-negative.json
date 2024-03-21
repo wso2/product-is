@@ -1,0 +1,66 @@
+[
+  {
+    "field": "password",
+    "rules": [
+      {
+        "validator": "NumeralValidator",
+        "properties": [
+          {
+            "key": "min.length",
+            "value": "1"
+          }
+        ]
+      },
+      {
+        "validator": "LengthValidator",
+        "properties": [
+          {
+            "key": "min.length",
+            "value": "8"
+          }
+        ]
+      },
+      {
+        "validator": "UpperCaseValidator",
+        "properties": [
+          {
+            "key": "min.length",
+            "value": "1"
+          }
+        ]
+      },
+      {
+        "validator": "LowerCaseValidator",
+        "properties": [
+          {
+            "key": "min.length",
+            "value": "1"
+          }
+        ]
+      },
+      {
+        "validator": "SpecialCharacterValidator",
+        "properties": [
+          {
+            "key": "min.length",
+            "value": "1"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "field": "username",
+    "rules": [
+      {
+        "validator": "AlphanumericValidator",
+        "properties": [
+          {
+            "key": "enable.validator",
+            "value": "true"
+          }
+        ]
+      }
+    ]
+  }
+]
