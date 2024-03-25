@@ -77,6 +77,7 @@ public class SCIM2PaginationTestCase extends ISIntegrationTest {
     public static final String ITEMS_PER_PAGE_ATTRIBUTE = "itemsPerPage";
     public static final String START_INDEX = "2";
     public static final String COUNT = "4";
+    public static final String DEFAULT_ITEMS_PER_PAGE_COUNT = "15";
     private final String adminUsername;
     private final String adminPassword;
     private final String tenant;
@@ -176,7 +177,11 @@ public class SCIM2PaginationTestCase extends ISIntegrationTest {
         assertEquals(startIndex, "1", "StartIndex in pagination listing is incorrect.");
 
         String itemsPerPage = ((JSONObject) responseObj).get(ITEMS_PER_PAGE_ATTRIBUTE).toString();
-        assertEquals(itemsPerPage, String.valueOf(currentUsers), "ItemsPerPage in pagination listing is incorrect.");
+        if (currentUsers > Integer.parseInt(DEFAULT_ITEMS_PER_PAGE_COUNT)) {
+            assertEquals(itemsPerPage, DEFAULT_ITEMS_PER_PAGE_COUNT, "ItemsPerPage in pagination listing is incorrect.");
+        } else {
+            assertEquals(itemsPerPage, String.valueOf(currentUsers), "ItemsPerPage in pagination listing is incorrect.");
+        }
 
         int resourcesSize = ((JSONArray) ((JSONObject) responseObj).get(RESOURCES_ATTRIBUTE)).size();
         assertEquals(resourcesSize, currentUsers, "Resources size in pagination listing is incorrect.");
