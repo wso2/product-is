@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OAuth2ServiceRefreshTokenGrantTestCase extends OAuth2ServiceAbstractIntegrationTest {
+
     private String adminUsername;
     private String adminPassword;
     private String refreshToken;
@@ -52,6 +53,7 @@ public class OAuth2ServiceRefreshTokenGrantTestCase extends OAuth2ServiceAbstrac
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
+
         super.init(TestUserMode.SUPER_TENANT_USER);
         adminUsername = userInfo.getUserNameWithoutDomain();
         adminPassword = userInfo.getPassword();
@@ -62,6 +64,7 @@ public class OAuth2ServiceRefreshTokenGrantTestCase extends OAuth2ServiceAbstrac
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
+
         deleteApp(applicationId);
 
         consumerKey = null;
@@ -73,6 +76,7 @@ public class OAuth2ServiceRefreshTokenGrantTestCase extends OAuth2ServiceAbstrac
 
     @Test(alwaysRun = true, description = "Check Oauth2 application registration")
     public void testRegisterApplication() throws Exception {
+
         ApplicationResponseModel application = addApplication();
         Assert.assertNotNull(application, "OAuth App creation failed.");
 
@@ -89,6 +93,7 @@ public class OAuth2ServiceRefreshTokenGrantTestCase extends OAuth2ServiceAbstrac
 
     @Test(groups = "wso2.is", description = "Validate refresh token", dependsOnMethods = "testRegisterApplication")
     public void testSendAuthorizedPost() throws Exception {
+
         List<NameValuePair> postParameters = new ArrayList<>();
         postParameters.add(new BasicNameValuePair("username", adminUsername));
         postParameters.add(new BasicNameValuePair("password", adminPassword));
@@ -101,6 +106,7 @@ public class OAuth2ServiceRefreshTokenGrantTestCase extends OAuth2ServiceAbstrac
 
     @Test(groups = "wso2.is", description = "Validate refresh token", dependsOnMethods = "testSendAuthorizedPost")
     public void testRefreshTokenGrant() throws Exception {
+
         List<NameValuePair> postParameters = new ArrayList<>();
         postParameters.add(new BasicNameValuePair("grant_type", OAuth2Constant.OAUTH2_GRANT_TYPE_REFRESH_TOKEN));
         postParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_GRANT_TYPE_REFRESH_TOKEN, refreshToken));
@@ -111,6 +117,7 @@ public class OAuth2ServiceRefreshTokenGrantTestCase extends OAuth2ServiceAbstrac
     }
 
     private JSONObject responseObject(List<NameValuePair> postParameters) throws Exception {
+
         HttpPost httpPost = new HttpPost(getTenantQualifiedURL(
                 OAuth2Constant.ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()));
         //generate post request

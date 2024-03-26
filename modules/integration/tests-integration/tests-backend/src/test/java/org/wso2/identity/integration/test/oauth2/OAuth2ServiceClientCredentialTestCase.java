@@ -76,6 +76,7 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
 
     @Factory(dataProvider = "configProvider")
     public OAuth2ServiceClientCredentialTestCase(TestUserMode userMode) throws Exception {
+
         super.init(userMode);
         context = new AutomationContext("IDENTITY", userMode);
         this.username = context.getContextTenant().getTenantAdmin().getUserName();
@@ -84,6 +85,7 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
+
         tenantInfo = context.getContextTenant();
         userInfo = tenantInfo.getContextUser();
         restClient = new OAuth2RestClient(serverURL, tenantInfo);
@@ -94,6 +96,7 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
+
         deleteApp(applicationId);
         client.close();
         restClient.closeHttpClient();

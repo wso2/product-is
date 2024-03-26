@@ -217,7 +217,7 @@ public class OAuth2TokenRevocationWithMultipleSessionTerminationTestCase extends
      * @param key            Basic authentication key.
      * @param secret         Basic authentication secret.
      * @return JSON object of the response.
-     * @throws Exception Exception
+     * @throws Exception Exception.
      */
     private JSONObject responseObject(HttpClient client, String endpoint, List<NameValuePair> postParameters,
                                       String key, String secret) throws Exception {

@@ -60,6 +60,7 @@ public class RestBaseClient {
      * @return Relevant json string.
      */
     public String toJSONString(java.lang.Object object) {
+
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         return gson.toJson(object);
     }
@@ -69,8 +70,10 @@ public class RestBaseClient {
      *
      * @param responseString Respective Http response.
      * @return Relevant json object.
+     * @throws Exception Exception.
      */
     public JSONObject getJSONObject(String responseString) throws Exception {
+
         JSONParser parser = new JSONParser();
         JSONObject json = (JSONObject) parser.parse(responseString);
         if (json == null) {
@@ -85,8 +88,10 @@ public class RestBaseClient {
      *
      * @param responseString Respective Http response.
      * @return Relevant JSONArray object.
+     * @throws Exception Exception.
      */
     public JSONArray getJSONArray(String responseString) throws Exception {
+
         JSONParser parser = new JSONParser();
         JSONArray jsonArray = (JSONArray) parser.parse(responseString);
         if (jsonArray == null) {
@@ -97,15 +102,17 @@ public class RestBaseClient {
     }
 
     /**
-     * Execute and get the response of HTTP POST
+     * Execute and get the response of HTTP POST.
      *
      * @param endPointUrl REST endpoint.
-     * @param jsonRequest json body.
-     * @param headers header list of the request.
+     * @param jsonRequest Json body.
+     * @param headers Header list of the request.
      * @return Response of the Http request.
+     * @throws IOException Exception.
      */
     public CloseableHttpResponse getResponseOfHttpPost(String endPointUrl, String jsonRequest, Header[] headers)
             throws IOException {
+
         HttpPost request = new HttpPost(endPointUrl);
         request.setHeaders(headers);
         request.setEntity(new StringEntity(jsonRequest));
@@ -114,14 +121,16 @@ public class RestBaseClient {
     }
 
     /**
-     * Execute and get the response of HTTP GET
+     * Execute and get the response of HTTP GET.
      *
      * @param endPointUrl REST endpoint.
      * @param headers header list of the request.
      * @return Response of the Http request.
+     * @throws IOException Exception.
      */
     public CloseableHttpResponse getResponseOfHttpGet(String endPointUrl, Header[] headers)
             throws IOException {
+
         HttpGet request = new HttpGet(endPointUrl);
         request.setHeaders(headers);
 
@@ -129,14 +138,16 @@ public class RestBaseClient {
     }
 
     /**
-     * Execute and get the response of HTTP PATCH
+     * Execute and get the response of HTTP PATCH.
      *
      * @param endPointUrl REST endpoint.
      * @param jsonRequest json body.
      * @param headers header list of the request.
      * @return Response of the Http request.
+     * @throws IOException Exception.
      */
     public CloseableHttpResponse getResponseOfHttpPatch(String endPointUrl, String jsonRequest, Header[] headers) throws IOException {
+
         HttpPatch request = new HttpPatch(endPointUrl);
         request.setHeaders(headers);
         request.setEntity(new StringEntity(jsonRequest));
@@ -145,13 +156,15 @@ public class RestBaseClient {
     }
 
     /**
-     * Execute and get the response of HTTP DELETE
+     * Execute and get the response of HTTP DELETE.
      *
      * @param endPointUrl REST endpoint.
      * @param headers header list of the request.
      * @return Response of the Http request.
+     * @throws IOException Exception.
      */
     public CloseableHttpResponse getResponseOfHttpDelete(String endPointUrl, Header[] headers) throws IOException {
+
         HttpDelete request = new HttpDelete(endPointUrl);
         request.setHeaders(headers);
 
@@ -159,20 +172,21 @@ public class RestBaseClient {
     }
 
     /**
-     * Execute and get the response of HTTP PUT
+     * Execute and get the response of HTTP PUT.
      *
      * @param endPointUrl REST endpoint.
      * @param jsonRequest json body.
      * @param headers header list of the request.
      * @return Response of the Http request.
+     * @throws IOException Exception.
      */
     public CloseableHttpResponse getResponseOfHttpPut(String endPointUrl, String jsonRequest, Header[] headers)
             throws IOException {
+
         HttpPut request = new HttpPut(endPointUrl);
         request.setHeaders(headers);
         request.setEntity(new StringEntity(jsonRequest));
 
         return client.execute(request);
     }
-
 }

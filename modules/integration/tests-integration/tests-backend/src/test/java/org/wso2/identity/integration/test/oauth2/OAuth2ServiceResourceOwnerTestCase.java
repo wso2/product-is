@@ -80,6 +80,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 
 	@DataProvider(name = "configProvider")
 	public static Object[][] configProvider() {
+
 		return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}};
 	}
 
@@ -123,6 +124,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 
 	@Test(groups = "wso2.is", description = "Check Oauth2 application registration")
 	public void testRegisterApplication() throws Exception {
+
 		ApplicationResponseModel application = addApplication();
 		Assert.assertNotNull(application, "OAuth App creation failed.");
 		applicationId = application.getId();
@@ -138,6 +140,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 
 	@Test(groups = "wso2.is", description = "Send authorize user request", dependsOnMethods = "testRegisterApplication")
 	public void testSendAuthorozedPost() throws Exception {
+
 		List<NameValuePair> urlParameters = new ArrayList<>();
 		urlParameters.add(new BasicNameValuePair("grantType",
 		                                         OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER));
