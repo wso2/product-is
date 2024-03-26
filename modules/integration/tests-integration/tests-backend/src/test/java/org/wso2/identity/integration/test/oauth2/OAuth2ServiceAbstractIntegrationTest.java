@@ -81,6 +81,8 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	protected static final String EMAIL_CLAIM_URI = "http://wso2.org/claims/emailaddress";
 	private static final String GIVEN_NAME_CLAIM_URI = "http://wso2.org/claims/givenname";
 	protected static final String COUNTRY_CLAIM_URI = "http://wso2.org/claims/country";
+	private static final String customClaimURI1 = "http://wso2.org/claims/department";
+	private static final String customClaimURI2 = "http://wso2.org/claims/stateorprovince";
 	private static final String GRANT_TYPE_PASSWORD = "password";
 	private static final String SCOPE_PRODUCTION = "PRODUCTION";
 	public static final String OIDC = "oidc";
@@ -352,6 +354,12 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 
 		claimConfiguration.addClaimMappingsItem(getClaimMapping(COUNTRY_CLAIM_URI));
 		claimConfiguration.addRequestedClaimsItem(getRequestedClaim(COUNTRY_CLAIM_URI));
+
+		claimConfiguration.addClaimMappingsItem(getClaimMapping(customClaimURI1));
+		claimConfiguration.addRequestedClaimsItem(getRequestedClaim(customClaimURI1));
+
+		claimConfiguration.addClaimMappingsItem(getClaimMapping(customClaimURI2));
+		claimConfiguration.addRequestedClaimsItem(getRequestedClaim(customClaimURI2));
 
 		return claimConfiguration;
 	}
