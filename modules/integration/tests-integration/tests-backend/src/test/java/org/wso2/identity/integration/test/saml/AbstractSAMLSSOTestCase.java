@@ -113,7 +113,6 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
     protected Lookup<CookieSpecProvider> cookieSpecRegistry;
     protected RequestConfig requestConfig;
 
-
     protected enum HttpBinding {
 
         HTTP_REDIRECT("HTTP-Redirect"),
@@ -556,6 +555,7 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
      * @return the created SAMLSSOServiceProviderDTO.
      */
     public SAML2Configuration getSAMLConfigurationsForIdPInit(SAMLConfig config){
+
         SAML2Configuration idpInitSamlConfig = getSAMLConfigurations(config);
         idpInitSamlConfig.getManualConfiguration().getSingleSignOnProfile().setEnableIdpInitiatedSingleSignOn(true);
         return idpInitSamlConfig;
@@ -568,6 +568,7 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
      * @return the created SAMLSSOServiceProviderDTO.
      */
     public SAMLSSOServiceProviderDTO createSsoSPDTOForSAMLartifactBinding(SAMLConfig config){
+
         SAMLSSOServiceProviderDTO idpInitSpDTO = createSsoSPDTO(config);
         idpInitSpDTO.setEnableSAML2ArtifactBinding(true);
         return idpInitSpDTO;
