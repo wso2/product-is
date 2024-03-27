@@ -54,7 +54,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This class defines basic functionality needed to initiate an OIDC test
+ * This class defines basic functionality needed to initiate an OIDC test.
  */
 public class OIDCAbstractIntegrationTest extends OAuth2ServiceAbstractIntegrationTest {
 
@@ -84,12 +84,13 @@ public class OIDCAbstractIntegrationTest extends OAuth2ServiceAbstractIntegratio
     }
 
     /**
-     * Creates a user
+     * Creates a user.
      *
-     * @param user user instance
-     * @throws Exception Exception
+     * @param user user instance.
+     * @throws Exception If an error occurred while creating a user.
      */
     public void createUser(UserObject user) throws Exception {
+
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
         userId = scim2RestClient.createUser(user);
 
@@ -103,10 +104,10 @@ public class OIDCAbstractIntegrationTest extends OAuth2ServiceAbstractIntegratio
     }
 
     /**
-     * Deletes a user
+     * Deletes a user.
      *
-     * @param user user instance
-     * @throws Exception Exception
+     * @param user user instance.
+     * @throws Exception If an error occurred while deleting a user.
      */
     public void deleteUser(UserObject user) throws Exception {
 
@@ -115,10 +116,10 @@ public class OIDCAbstractIntegrationTest extends OAuth2ServiceAbstractIntegratio
     }
 
     /**
-     * Create an OIDC application
+     * Create an OIDC application.
      *
-     * @param application application instance
-     * @throws Exception Exception
+     * @param application application instance.
+     * @throws Exception If an error creating an application.
      */
     public void createApplication(OIDCApplication application) throws Exception {
 
@@ -163,10 +164,10 @@ public class OIDCAbstractIntegrationTest extends OAuth2ServiceAbstractIntegratio
     }
 
     /**
-     * Deletes the registered OIDC application in OP
+     * Deletes the registered OIDC application in OP.
      *
-     * @param application application instance
-     * @throws Exception Exception
+     * @param application application instance.
+     * @throws Exception If an error deleting an application.
      */
     public void deleteApplication(OIDCApplication application) throws Exception {
 
@@ -176,10 +177,10 @@ public class OIDCAbstractIntegrationTest extends OAuth2ServiceAbstractIntegratio
 
     /**
      * Sends Authentication Request for an OIDC Flow.
-     * @param application application
+     * @param application application.
      * @param isFirstAuthenticationRequest true if the request is the first authentication request.
-     * @param client http  client
-     * @param cookieStore cookie store
+     * @param client http client.
+     * @param cookieStore cookie store.
      * @throws Exception throws if an error occurs when sending the authentication request.
      */
     public void testSendAuthenticationRequest(OIDCApplication application, boolean isFirstAuthenticationRequest,

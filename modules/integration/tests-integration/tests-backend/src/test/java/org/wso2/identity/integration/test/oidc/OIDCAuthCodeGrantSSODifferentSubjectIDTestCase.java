@@ -25,19 +25,20 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SubjectConfig;
 
 /**
- * This test class tests OIDC SSO functionality for two relying party applications with different subject identifiers
+ * This test class tests OIDC SSO functionality for two relying party applications with different subject identifiers.
  */
 public class OIDCAuthCodeGrantSSODifferentSubjectIDTestCase extends OIDCAuthCodeGrantSSOTestCase {
 
-
     @Override
     protected void initUser() throws Exception {
+
         super.initUser();
         user.setUserName("oidcsessiontestuser1");
     }
 
     @Override
     protected void initApplications() throws Exception {
+
         super.initApplications();
 
         applications.get(OIDCUtilTest.playgroundAppOneAppName).setSubjectClaimURI(OIDCUtilTest.emailClaimUri);

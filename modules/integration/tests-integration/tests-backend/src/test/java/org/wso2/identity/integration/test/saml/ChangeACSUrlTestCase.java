@@ -318,6 +318,7 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
     }
 
     private Map<String, String> getSAMLResponseFromSecondaryIS(HttpClient client, String redirectURL) throws Exception {
+
         HttpPost request = new HttpPost(redirectURL);
         request.addHeader("User-Agent", USER_AGENT);
         request.addHeader("Referer", PRIMARY_IS_SAML_ACS_URL);
@@ -379,6 +380,7 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
     }
 
     public boolean validateSAMLResponse(HttpResponse response, String userName) throws IOException {
+
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         StringBuffer buffer = new StringBuffer();
         String line = "";

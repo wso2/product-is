@@ -109,6 +109,7 @@ public class OIDCAuthzCodeIdTokenValidationTestCase extends OAuth2ServiceAbstrac
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
+
         deleteApp(applicationId);
 
         consumerKey = null;

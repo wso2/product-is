@@ -288,6 +288,7 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
     }
 
     public boolean validateSAMLResponse(HttpResponse response, String userName) throws IOException {
+
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         StringBuffer buffer = new StringBuffer();
         String line = "";
@@ -301,6 +302,7 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
     }
 
     protected void assertLocalClaims(String resultPage) {
+
         String claimString = resultPage.substring(resultPage.lastIndexOf("<table>"));
         Map<String, String> attributeMap = extractClaims(claimString);
         Assert.assertTrue(attributeMap.containsKey(firstNameLocalClaimURI), "Claim firstname is expected");
@@ -311,6 +313,7 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
     }
 
     private Map<String, String> extractClaims(String claimString) {
+
         String[] dataArray = StringUtils.substringsBetween(claimString, "<td>", "</td>");
         Map<String, String> attributeMap = new HashMap<>();
         String key = null;
@@ -387,6 +390,7 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
     }
 
     protected void createUserInSecondaryIS() {
+
         log.info("Creating User " + userName);
         try {
             UserObject user = new UserObject()
@@ -402,6 +406,7 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
     }
 
     protected void deleteUserInSecondaryIS() {
+
         log.info("Deleting User " + userName);
         try {
             scim2RestClient.deleteUser(userId);
@@ -446,6 +451,7 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
     }
 
     protected String getSecondaryISURI() {
+
         return String.format("https://localhost:%s/", DEFAULT_PORT + PORT_OFFSET_1);
     }
 
