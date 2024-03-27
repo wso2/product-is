@@ -151,6 +151,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
+
         deleteApp(applicationId);
         scim2RestClient.deleteUser(userId);
         idpMgtRestClient.deleteIdp(idpId);
@@ -452,7 +453,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
     /**
      * To reset configurations to default configurations after the change needed for
      *
-     * @throws Exception Exception
+     * @throws Exception Exception.
      */
     private void resetISConfiguration() throws Exception {
 
@@ -463,7 +464,8 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
     /**
      * To create consumer application that supports JWT bearer grant type
      *
-     * @return ApplicationResponseModel
+     * @return ApplicationResponseModel.
+     * @throws Exception Exception.
      */
     private ApplicationResponseModel createApplicationWithJWTGrantType() throws Exception {
 
@@ -511,10 +513,11 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
     /**
      * Get public certificate.
      *
-     * @return Encoded certificate string
+     * @return Encoded certificate string.
      * @throws Exception Exception.
      */
     private String getEncodedCertificate() throws Exception {
+
         CloseableHttpClient client = HttpClients.createDefault();
         String jwksEndpoint = serverURL + getTenantedRelativePath(JWKS_BASE_PATH, tenantInfo.getDomain());
         String certificate = BEGIN_CERTIFICATE + getPublicCertificate(client, jwksEndpoint) + END_CERTIFICATE;
@@ -541,8 +544,8 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
     /**
      * To change the identity.xml with the configurations needed.
      *
-     * @param fileName the name of the file.
-     * @throws Exception Exception
+     * @param fileName The name of the file.
+     * @throws Exception Exception.
      */
     private void changeISConfiguration(String fileName) throws Exception {
 

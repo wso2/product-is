@@ -47,6 +47,7 @@ public class ClaimManagementRestClient extends RestBaseClient {
     private final String serverBasePath;
 
     public ClaimManagementRestClient(String backendURL, Tenant tenantInfo) {
+
         client = HttpClients.createDefault();
 
         this.username = tenantInfo.getContextUser().getUserName();
@@ -58,12 +59,14 @@ public class ClaimManagementRestClient extends RestBaseClient {
     }
 
     /**
-     * Add External Claim
+     * Add External Claim.
      *
      * @param dialectId Claim dialect id.
      * @param claimRequest External Claim request object.
+     * @throws Exception Exception.
      */
     public String addExternalClaim(String dialectId, ExternalClaimReq claimRequest) throws Exception {
+
         String endPointUrl = serverBasePath + CLAIM_DIALECTS_ENDPOINT_URI + PATH_SEPARATOR + dialectId +
                 CLAIMS_ENDPOINT_URI;
         String jsonRequest = toJSONString(claimRequest);
@@ -82,6 +85,7 @@ public class ClaimManagementRestClient extends RestBaseClient {
      * @throws Exception Exception.
      */
     public JSONObject getExternalClaim(String dialectId, String claimId) throws Exception {
+
         String endPointUrl = serverBasePath + CLAIM_DIALECTS_ENDPOINT_URI + PATH_SEPARATOR + dialectId +
                 CLAIMS_ENDPOINT_URI + PATH_SEPARATOR + claimId;
 
@@ -98,6 +102,7 @@ public class ClaimManagementRestClient extends RestBaseClient {
      * @throws IOException IOException.
      */
     public void deleteExternalClaim(String dialectId, String claimId) throws IOException {
+
         String endPointUrl = serverBasePath + CLAIM_DIALECTS_ENDPOINT_URI + PATH_SEPARATOR + dialectId +
                 CLAIMS_ENDPOINT_URI + PATH_SEPARATOR + claimId;
         try (CloseableHttpResponse response = getResponseOfHttpDelete(endPointUrl, getHeaders())) {
@@ -107,6 +112,7 @@ public class ClaimManagementRestClient extends RestBaseClient {
     }
 
     private Header[] getHeaders() {
+
         Header[] headerList = new Header[2];
         headerList[0] = new BasicHeader(AUTHORIZATION_ATTRIBUTE, BASIC_AUTHORIZATION_ATTRIBUTE +
                 Base64.encodeBase64String((username + ":" + password).getBytes()).trim());
@@ -117,8 +123,11 @@ public class ClaimManagementRestClient extends RestBaseClient {
 
     /**
      * Close the HTTP client.
+     *
+     * @throws IOException Exception.
      */
     public void closeHttpClient() throws IOException {
+
         client.close();
     }
 }

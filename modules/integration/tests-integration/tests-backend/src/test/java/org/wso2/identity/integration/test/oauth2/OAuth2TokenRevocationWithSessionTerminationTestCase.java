@@ -207,7 +207,7 @@ public class OAuth2TokenRevocationWithSessionTerminationTestCase extends OAuth2S
     /**
      * Playground app will initiate authorization request to IS and obtain session data key.
      *
-     * @throws IOException IOException
+     * @throws IOException IOException.
      */
     private void initiateAuthorizationRequest() throws IOException {
 
@@ -228,7 +228,7 @@ public class OAuth2TokenRevocationWithSessionTerminationTestCase extends OAuth2S
     /**
      * Provide user credentials and authenticate to the system.
      *
-     * @throws IOException IOException
+     * @throws IOException IOException.
      */
     private void authenticateUser() throws Exception {
 
@@ -253,7 +253,7 @@ public class OAuth2TokenRevocationWithSessionTerminationTestCase extends OAuth2S
     /**
      * Approve the consent.
      *
-     * @throws IOException IOException
+     * @throws IOException IOException.
      */
     private void performConsentApproval() throws IOException {
 
@@ -277,7 +277,7 @@ public class OAuth2TokenRevocationWithSessionTerminationTestCase extends OAuth2S
     /**
      * Exchange authorization code and get accesstoken.
      *
-     * @throws Exception IOException
+     * @throws Exception IOException.
      */
     private void generateAuthzCodeAccessToken() throws Exception {
 
@@ -309,7 +309,7 @@ public class OAuth2TokenRevocationWithSessionTerminationTestCase extends OAuth2S
     /**
      * Introspect the obtained accesstoken and it should be an active token.
      *
-     * @throws Exception Exception
+     * @throws Exception Exception.
      */
     private void introspectActiveAccessToken() throws Exception {
 
@@ -353,8 +353,8 @@ public class OAuth2TokenRevocationWithSessionTerminationTestCase extends OAuth2S
     /**
      * Get introspection endpoint response by callling introspection endpoint.
      *
-     * @return JSONObject
-     * @throws Exception Exception
+     * @return JSONObject.
+     * @throws Exception Exception.
      */
     private JSONObject testIntrospectionEndpoint() throws Exception {
 
@@ -371,7 +371,7 @@ public class OAuth2TokenRevocationWithSessionTerminationTestCase extends OAuth2S
      * @param key            Basic authentication key.
      * @param secret         Basic authentication secret.
      * @return JSON object of the response.
-     * @throws Exception Exception
+     * @throws Exception Exception.
      */
     private JSONObject responseObject(String endpoint, List<NameValuePair> postParameters, String key, String secret)
             throws Exception {
@@ -394,8 +394,10 @@ public class OAuth2TokenRevocationWithSessionTerminationTestCase extends OAuth2S
     /**
      * Create a user with admin role assigned.
      *
+     * @throws Exception Exception.
      */
     private void addAdminUser() throws Exception {
+
         UserObject userInfo = new UserObject();
         userInfo.setUserName(USERNAME);
         userInfo.setPassword(PASSWORD);

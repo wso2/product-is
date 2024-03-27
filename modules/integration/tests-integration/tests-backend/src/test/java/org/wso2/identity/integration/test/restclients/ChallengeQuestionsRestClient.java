@@ -53,6 +53,7 @@ public class ChallengeQuestionsRestClient extends RestBaseClient {
      * @param userId userId.
      * @param questionSetId Challenge Question Set id.
      * @param challengeAsnwerObj Challenge Question request object.
+     * @throws Exception Exception.
      */
     public void setChallengeQuestionAnswer(String userId, String questionSetId,
                                            UserChallengeAnswer challengeAsnwerObj) throws Exception {
@@ -68,6 +69,7 @@ public class ChallengeQuestionsRestClient extends RestBaseClient {
     }
 
     private Header[] getHeaders() {
+
         Header[] headerList = new Header[3];
         headerList[0] = new BasicHeader(USER_AGENT_ATTRIBUTE, OAuth2Constant.USER_AGENT);
         headerList[1] = new BasicHeader(AUTHORIZATION_ATTRIBUTE, BASIC_AUTHORIZATION_ATTRIBUTE +
@@ -79,8 +81,11 @@ public class ChallengeQuestionsRestClient extends RestBaseClient {
 
     /**
      * Close the HTTP client.
+     *
+     * @throws IOException Exception.
      */
     public void closeHttpClient() throws IOException {
+
         client.close();
     }
 }

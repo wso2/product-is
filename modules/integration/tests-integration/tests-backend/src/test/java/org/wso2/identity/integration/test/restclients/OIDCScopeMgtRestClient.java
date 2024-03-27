@@ -56,8 +56,10 @@ public class OIDCScopeMgtRestClient extends RestBaseClient {
      *
      * @param scopeId userId.
      * @return Scope object.
+     * @throws Exception Exception.
      */
     public JSONObject getScope(String scopeId) throws Exception {
+
         String endPointUrl = serverUrl + ISIntegrationTest.getTenantedRelativePath(OIDC_SCOPE_MGT_BASE_PATH,
                 tenantDomain) + PATH_SEPARATOR +  scopeId;
 
@@ -71,8 +73,10 @@ public class OIDCScopeMgtRestClient extends RestBaseClient {
      *
      * @param scopeId userId.
      * @param scopeUpdateObj Scope update request object.
+     * @throws Exception Exception.
      */
     public void updateScope(String scopeId, ScopeUpdateRequest scopeUpdateObj) throws Exception {
+
         String jsonRequest = toJSONString(scopeUpdateObj);
         String endPointUrl = serverUrl + ISIntegrationTest.getTenantedRelativePath(OIDC_SCOPE_MGT_BASE_PATH,
                 tenantDomain) + PATH_SEPARATOR +  scopeId;
@@ -84,6 +88,7 @@ public class OIDCScopeMgtRestClient extends RestBaseClient {
     }
 
     private Header[] getHeaders() {
+
         Header[] headerList = new Header[3];
         headerList[0] = new BasicHeader(USER_AGENT_ATTRIBUTE, OAuth2Constant.USER_AGENT);
         headerList[1] = new BasicHeader(AUTHORIZATION_ATTRIBUTE, BASIC_AUTHORIZATION_ATTRIBUTE +
@@ -95,8 +100,11 @@ public class OIDCScopeMgtRestClient extends RestBaseClient {
 
     /**
      * Close the HTTP client.
+     *
+     * @throws IOException Exception.
      */
     public void closeHttpClient() throws IOException {
+
         client.close();
     }
 }

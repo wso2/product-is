@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class IdpMgtRestClient extends RestBaseClient {
+
     private static final String CLAIMS_PATH = "/claims";
     private static final String FEDERATED_AUTHENTICATORS_PATH = "/federated-authenticators/";
     private final String serverUrl;
@@ -56,6 +57,7 @@ public class IdpMgtRestClient extends RestBaseClient {
      * Create an Identity Provider.
      *
      * @param idpCreateReqObj Identity Provider request object.
+     * @throws Exception Exception.
      */
     public String createIdentityProvider(IdentityProviderPOSTRequest idpCreateReqObj) throws Exception {
         String jsonRequest = toJSONString(idpCreateReqObj);
@@ -75,8 +77,10 @@ public class IdpMgtRestClient extends RestBaseClient {
      * @param idpId identity provider id.
      * @param federatedAuthenticatorId Federated Authenticator id.
      * @return JSONObject with Federated Authenticator details.
+     * @throws Exception Exception.
      */
     public JSONObject getIdpFederatedAuthenticator(String idpId, String federatedAuthenticatorId) throws Exception {
+
         String endPointUrl = serverUrl + ISIntegrationTest.getTenantedRelativePath(IDENTITY_PROVIDER_BASE_PATH,
                 tenantDomain) + PATH_SEPARATOR + idpId + FEDERATED_AUTHENTICATORS_PATH + federatedAuthenticatorId;
 
@@ -89,10 +93,12 @@ public class IdpMgtRestClient extends RestBaseClient {
     /**
      * Update an Identity Provider claim configurations.
      *
-     * @param idpId Identity Provider Id
+     * @param idpId Identity Provider Id.
      * @param idpClaims Identity Provider claim request object.
+     * @throws IOException Exception.
      */
     public void updateIdpClaimConfig(String idpId, Claims idpClaims) throws IOException {
+
         String jsonRequest = toJSONString(idpClaims);
         String endPointUrl = serverUrl + ISIntegrationTest.getTenantedRelativePath(IDENTITY_PROVIDER_BASE_PATH,
                 tenantDomain) + PATH_SEPARATOR + idpId + CLAIMS_PATH;
@@ -106,9 +112,11 @@ public class IdpMgtRestClient extends RestBaseClient {
     /**
      * Delete an Identity Provider.
      *
-     * @param idpId Identity Provider Id
+     * @param idpId Identity Provider Id.
+     * @throws IOException Exception.
      */
     public void deleteIdp(String idpId) throws IOException {
+
         String endPointUrl = serverUrl + ISIntegrationTest.getTenantedRelativePath(IDENTITY_PROVIDER_BASE_PATH,
                 tenantDomain) + PATH_SEPARATOR + idpId;
 
@@ -119,6 +127,7 @@ public class IdpMgtRestClient extends RestBaseClient {
     }
 
     private Header[] getHeaders() {
+
         Header[] headerList = new Header[3];
         headerList[0] = new BasicHeader(USER_AGENT_ATTRIBUTE, OAuth2Constant.USER_AGENT);
         headerList[1] = new BasicHeader(AUTHORIZATION_ATTRIBUTE, BASIC_AUTHORIZATION_ATTRIBUTE +
@@ -130,8 +139,11 @@ public class IdpMgtRestClient extends RestBaseClient {
 
     /**
      * Close the HTTP client.
+     *
+     * @throws IOException Exception.
      */
     public void closeHttpClient() throws IOException {
+
         client.close();
     }
 }

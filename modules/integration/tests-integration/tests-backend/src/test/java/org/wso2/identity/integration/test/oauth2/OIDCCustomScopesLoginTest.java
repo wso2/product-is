@@ -646,6 +646,7 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
     }
 
     private void updateUserAttribute(String loginUserId, String attributePath, String attributeValue) throws IOException {
+
         UserItemAddGroupobj updateUserPatchOp = new UserItemAddGroupobj().op(OpEnum.ADD);
         updateUserPatchOp.setPath(attributePath);
         updateUserPatchOp.setValue(attributeValue);
