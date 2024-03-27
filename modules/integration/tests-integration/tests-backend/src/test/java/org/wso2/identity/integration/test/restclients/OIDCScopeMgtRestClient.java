@@ -56,7 +56,7 @@ public class OIDCScopeMgtRestClient extends RestBaseClient {
      *
      * @param scopeId userId.
      * @return Scope object.
-     * @throws Exception Exception.
+     * @throws Exception If an error occurred while getting an OIDC scope.
      */
     public JSONObject getScope(String scopeId) throws Exception {
 
@@ -73,9 +73,9 @@ public class OIDCScopeMgtRestClient extends RestBaseClient {
      *
      * @param scopeId userId.
      * @param scopeUpdateObj Scope update request object.
-     * @throws Exception Exception.
+     * @throws IOException If an error occurred while updating the scope.
      */
-    public void updateScope(String scopeId, ScopeUpdateRequest scopeUpdateObj) throws Exception {
+    public void updateScope(String scopeId, ScopeUpdateRequest scopeUpdateObj) throws IOException {
 
         String jsonRequest = toJSONString(scopeUpdateObj);
         String endPointUrl = serverUrl + ISIntegrationTest.getTenantedRelativePath(OIDC_SCOPE_MGT_BASE_PATH,
@@ -101,7 +101,7 @@ public class OIDCScopeMgtRestClient extends RestBaseClient {
     /**
      * Close the HTTP client.
      *
-     * @throws IOException Exception.
+     * @throws IOException If an error occurred while closing the Http Client.
      */
     public void closeHttpClient() throws IOException {
 

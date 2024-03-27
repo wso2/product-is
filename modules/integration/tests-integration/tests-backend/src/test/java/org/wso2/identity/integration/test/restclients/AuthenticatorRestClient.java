@@ -68,7 +68,7 @@ public class AuthenticatorRestClient extends RestBaseClient {
     /**
      * Close the HTTP client.
      *
-     * @throws IOException Exception.
+     * @throws IOException If an error occurred while closing the Http Client.
      */
     public void closeHttpClient() throws IOException {
 

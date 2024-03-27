@@ -53,10 +53,10 @@ public class ChallengeQuestionsRestClient extends RestBaseClient {
      * @param userId userId.
      * @param questionSetId Challenge Question Set id.
      * @param challengeAsnwerObj Challenge Question request object.
-     * @throws Exception Exception.
+     * @throws IOException If an error occurred while setting the challenge question answer.
      */
     public void setChallengeQuestionAnswer(String userId, String questionSetId,
-                                           UserChallengeAnswer challengeAsnwerObj) throws Exception {
+                                           UserChallengeAnswer challengeAsnwerObj) throws IOException {
 
         String jsonRequest = toJSONString(challengeAsnwerObj);
         String endPointUrl = serverUrl + ISIntegrationTest.getTenantedRelativePath(String.format(
@@ -82,7 +82,7 @@ public class ChallengeQuestionsRestClient extends RestBaseClient {
     /**
      * Close the HTTP client.
      *
-     * @throws IOException Exception.
+     * @throws IOException If an error occurred while closing the Http Client.
      */
     public void closeHttpClient() throws IOException {
 

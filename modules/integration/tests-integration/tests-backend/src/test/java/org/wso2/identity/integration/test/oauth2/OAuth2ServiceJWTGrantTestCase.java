@@ -453,7 +453,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
     /**
      * To reset configurations to default configurations after the change needed for
      *
-     * @throws Exception Exception.
+     * @throws Exception If an error occurred while resetting IS configurations to default.
      */
     private void resetISConfiguration() throws Exception {
 
@@ -465,7 +465,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
      * To create consumer application that supports JWT bearer grant type
      *
      * @return ApplicationResponseModel.
-     * @throws Exception Exception.
+     * @throws Exception If an error occurred while creating an application with jwt grant type.
      */
     private ApplicationResponseModel createApplicationWithJWTGrantType() throws Exception {
 
@@ -499,7 +499,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
     /**
      * To add the identity provider.
      *
-     * @throws Exception Exception.
+     * @throws Exception If an error occurred while adding the identity provider.
      */
     private void addFederatedIdentityProvider() throws Exception {
 
@@ -514,7 +514,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
      * Get public certificate.
      *
      * @return Encoded certificate string.
-     * @throws Exception Exception.
+     * @throws Exception If an error occurred while getting the public certificate.
      */
     private String getEncodedCertificate() throws Exception {
 
@@ -529,7 +529,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
     /**
      * To update identity provider with claim mappings.
      *
-     * @throws Exception Exception.
+     * @throws Exception If an error occurred while updating identity provider with claim mappings.
      */
     private void updateIdentityProviderWithClaimMappings() throws Exception {
 
@@ -545,7 +545,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
      * To change the identity.xml with the configurations needed.
      *
      * @param fileName The name of the file.
-     * @throws Exception Exception.
+     * @throws Exception If an error occurred while changing IS configurations.
      */
     private void changeISConfiguration(String fileName) throws Exception {
 
@@ -562,7 +562,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
     /**
      * Add a new user with admin role.
      *
-     * @throws Exception Exception.
+     * @throws Exception If an error occurred while adding a new user with admin role.
      */
     private void addAdminUser() throws Exception {
 
@@ -587,7 +587,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
     /**
      * Change the OIDC dialect claim for local claim country.
      *
-     * @throws Exception Exception.
+     * @throws Exception If an error occurred while changing the OIDC dialect claim for local claim.
      */
     private void changeCountryOIDCDialect() throws Exception {
 

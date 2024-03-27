@@ -57,7 +57,7 @@ public class IdpMgtRestClient extends RestBaseClient {
      * Create an Identity Provider.
      *
      * @param idpCreateReqObj Identity Provider request object.
-     * @throws Exception Exception.
+     * @throws Exception If an error occurred while creating an idp.
      */
     public String createIdentityProvider(IdentityProviderPOSTRequest idpCreateReqObj) throws Exception {
         String jsonRequest = toJSONString(idpCreateReqObj);
@@ -77,7 +77,7 @@ public class IdpMgtRestClient extends RestBaseClient {
      * @param idpId identity provider id.
      * @param federatedAuthenticatorId Federated Authenticator id.
      * @return JSONObject with Federated Authenticator details.
-     * @throws Exception Exception.
+     * @throws Exception If an error occurred while getting idp's federated authenticator.
      */
     public JSONObject getIdpFederatedAuthenticator(String idpId, String federatedAuthenticatorId) throws Exception {
 
@@ -95,7 +95,7 @@ public class IdpMgtRestClient extends RestBaseClient {
      *
      * @param idpId Identity Provider Id.
      * @param idpClaims Identity Provider claim request object.
-     * @throws IOException Exception.
+     * @throws IOException If an error occurred while updating idp claim configurations.
      */
     public void updateIdpClaimConfig(String idpId, Claims idpClaims) throws IOException {
 
@@ -113,7 +113,7 @@ public class IdpMgtRestClient extends RestBaseClient {
      * Delete an Identity Provider.
      *
      * @param idpId Identity Provider Id.
-     * @throws IOException Exception.
+     * @throws IOException If an error occurred while deleting an idp.
      */
     public void deleteIdp(String idpId) throws IOException {
 
@@ -140,7 +140,7 @@ public class IdpMgtRestClient extends RestBaseClient {
     /**
      * Close the HTTP client.
      *
-     * @throws IOException Exception.
+     * @throws IOException If an error occurred while closing the Http Client.
      */
     public void closeHttpClient() throws IOException {
 

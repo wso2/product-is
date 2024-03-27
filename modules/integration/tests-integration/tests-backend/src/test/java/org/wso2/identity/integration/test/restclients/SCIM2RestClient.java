@@ -67,7 +67,7 @@ public class SCIM2RestClient extends RestBaseClient {
      *
      * @param userInfo object with user creation details.
      * @return Id of the created user.
-     * @throws Exception Exception.
+     * @throws Exception If an error occurred while creating a group.
      */
     public String createUser(UserObject userInfo) throws Exception {
 
@@ -91,7 +91,7 @@ public class SCIM2RestClient extends RestBaseClient {
      * @param userId     id of the user.
      * @param attribute  requested user attributes
      * @return JSONObject of the HTTP response.
-     * @throws Exception Exception.
+     * @throws Exception If an error occurred while getting a user.
      */
     public JSONObject getUser(String userId, String attribute) throws Exception {
 
@@ -112,7 +112,7 @@ public class SCIM2RestClient extends RestBaseClient {
      *
      * @param patchUserInfo user patch request object.
      * @param userId id of the user.
-     * @throws IOException Exception.
+     * @throws IOException If an error occurred while updating a user.
      */
     public void updateUser(PatchOperationRequestObject patchUserInfo, String userId) throws IOException {
 
@@ -130,7 +130,7 @@ public class SCIM2RestClient extends RestBaseClient {
      *
      * @param userSearchReq json String of user search request.
      * @return JSONObject of the user search response.
-     * @throws Exception Exception.
+     * @throws Exception If an error occurred while getting a user.
      */
     public JSONObject searchUser(String userSearchReq) throws Exception {
 
@@ -147,7 +147,7 @@ public class SCIM2RestClient extends RestBaseClient {
      * Delete an existing user.
      *
      * @param userId id of the user.
-     * @throws IOException Exception.
+     * @throws IOException If an error occurred while deleting a user.
      */
     public void deleteUser(String userId) throws IOException {
 
@@ -164,7 +164,7 @@ public class SCIM2RestClient extends RestBaseClient {
      *
      * @param roleInfo Role request object.
      * @return Role id.
-     * @throws Exception Exception.
+     * @throws Exception If an error occurred while adding a role.
      */
     public String addRole(RoleRequestObject roleInfo) throws Exception {
 
@@ -183,7 +183,7 @@ public class SCIM2RestClient extends RestBaseClient {
      *
      * @param patchRoleInfo Role patch request object.
      * @param roleId Role id.
-     * @throws IOException Exception.
+     * @throws IOException If an error occurred while updating a role.
      */
     public void updateUserRole(PatchOperationRequestObject patchRoleInfo, String roleId) throws IOException {
 
@@ -201,7 +201,7 @@ public class SCIM2RestClient extends RestBaseClient {
      *
      * @param roleName Role name.
      * @return Role id.
-     * @throws Exception Exception.
+     * @throws Exception If an error occurred while getting a role by name.
      */
     public String getRoleIdByName(String roleName) throws Exception {
 
@@ -228,7 +228,7 @@ public class SCIM2RestClient extends RestBaseClient {
      * Delete an existing role.
      *
      * @param roleId Role id.
-     * @throws IOException Exception.
+     * @throws IOException If an error occurred while deleting a role.
      */
     public void deleteRole(String roleId) throws IOException {
 
@@ -245,7 +245,7 @@ public class SCIM2RestClient extends RestBaseClient {
      *
      * @param groupInfo Group request object.
      * @return Group id.
-     * @throws Exception Exception.
+     * @throws Exception If an error occurred while adding a group.
      */
     public String createGroup(GroupRequestObject groupInfo) throws Exception {
         String jsonRequest = toJSONString(groupInfo);
@@ -262,7 +262,7 @@ public class SCIM2RestClient extends RestBaseClient {
      * Delete an existing group.
      *
      * @param groupId Group id.
-     * @throws IOException Exception.
+     * @throws IOException If an error occurred while deleting a group.
      */
     public void deleteGroup(String groupId) throws IOException {
 
@@ -315,7 +315,7 @@ public class SCIM2RestClient extends RestBaseClient {
     /**
      * Close the HTTP client.
      *
-     * @throws IOException Exception.
+     * @throws IOException If an error occurred while closing the Http Client.
      */
     public void closeHttpClient() throws IOException {
 

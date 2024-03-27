@@ -84,8 +84,8 @@ public class OAuth2RestClient extends RestBaseClient {
      *
      * @param application Application Model with application creation details.
      * @return Id of the created application.
-     * @throws IOException Exception.
-     * @throws JSONException JSON Exception.
+     * @throws IOException If an error occurred while creating an application.
+     * @throws JSONException If an error occurred while creating the json string.
      */
     public String createApplication(ApplicationModel application) throws IOException, JSONException {
         String jsonRequest = toJSONString(application);
@@ -102,7 +102,7 @@ public class OAuth2RestClient extends RestBaseClient {
      *
      * @param application Application Model with application creation details.
      * @return Application creation response.
-     * @throws IOException Exception.
+     * @throws IOException If an error occurred while creating an application.
      */
     public StatusLine createApplicationWithResponse(ApplicationModel application) throws IOException {
 
@@ -118,7 +118,7 @@ public class OAuth2RestClient extends RestBaseClient {
      *
      * @param appId Application id.
      * @return ApplicationResponseModel object.
-     * @throws IOException Exception.
+     * @throws IOException If an error occurred while getting an application.
      */
     public ApplicationResponseModel getApplication(String appId) throws IOException {
 
@@ -137,7 +137,7 @@ public class OAuth2RestClient extends RestBaseClient {
      *
      * @param clientId Client id of the application.
      * @return Application list.
-     * @throws IOException Error when getting the response.
+     * @throws IOException If an error occurred while filtering an application using client id.
      */
     public List<ApplicationListItem> getApplicationsByClientId(String clientId) throws IOException {
 
@@ -158,7 +158,7 @@ public class OAuth2RestClient extends RestBaseClient {
      *
      * @param appId Application id.
      * @param application Updated application patch object.
-     * @throws IOException Exception.
+     * @throws IOException If an error occurred while updating an application.
      */
     public void updateApplication(String appId, ApplicationPatchModel application) throws IOException {
 
@@ -175,7 +175,7 @@ public class OAuth2RestClient extends RestBaseClient {
      * Get all applications.
      *
      * @return ApplicationListResponse object.
-     * @throws IOException Exception.
+     * @throws IOException If an error occurred while getting all applications.
      */
     public ApplicationListResponse getAllApplications() throws IOException {
 
@@ -191,7 +191,7 @@ public class OAuth2RestClient extends RestBaseClient {
      * Delete an application.
      *
      * @param appId Application id.
-     * @throws IOException Exception.
+     * @throws IOException If an error occurred while deleting an application.
      */
     public void deleteApplication(String appId) throws IOException {
 
@@ -208,7 +208,7 @@ public class OAuth2RestClient extends RestBaseClient {
      *
      * @param appId Application id.
      * @return OpenIDConnectConfiguration object with oidc configuration details.
-     * @throws Exception Exception.
+     * @throws Exception If an error occurred while getting OIDC inbound configuration details.
      */
     public OpenIDConnectConfiguration getOIDCInboundDetails(String appId) throws Exception {
 
@@ -222,7 +222,7 @@ public class OAuth2RestClient extends RestBaseClient {
      *
      * @param appId Application id.
      * @return SAML2ServiceProvider object with saml configuration details.
-     * @throws Exception Exception.
+     * @throws Exception If an error occurred while getting SAML inbound configuration details.
      */
     public SAML2ServiceProvider getSAMLInboundDetails(String appId) throws Exception {
 
@@ -248,7 +248,7 @@ public class OAuth2RestClient extends RestBaseClient {
      * @param appId Application id.
      * @param inboundConfig Inbound configuration object to be updated.
      * @param inboundType Type of the inbound configuration.
-     * @throws IOException Exception.
+     * @throws IOException If an error occurred while updating an inbound configuration.
      */
     public void updateInboundDetailsOfApplication(String appId, Object inboundConfig, String inboundType)
             throws IOException {
@@ -268,7 +268,7 @@ public class OAuth2RestClient extends RestBaseClient {
      *
      * @param appId Application id.
      * @param inboundType Inbound Type to be deleted.
-     * @throws IOException Exception.
+     * @throws IOException If an error occurred while deleting an inbound configuration.
      */
     public Boolean deleteInboundConfiguration(String appId, String inboundType) throws IOException {
 
@@ -451,7 +451,7 @@ public class OAuth2RestClient extends RestBaseClient {
     /**
      * Close the HTTP client.
      *
-     * @throws IOException Exception.
+     * @throws IOException If an error occurred while closing the Http Client.
      */
     public void closeHttpClient() throws IOException {
 

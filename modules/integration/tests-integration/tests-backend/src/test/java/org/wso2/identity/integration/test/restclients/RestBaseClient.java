@@ -70,7 +70,7 @@ public class RestBaseClient {
      *
      * @param responseString Respective Http response.
      * @return Relevant json object.
-     * @throws Exception Exception.
+     * @throws Exception If an error occurred while getting a JSON object from a json string.
      */
     public JSONObject getJSONObject(String responseString) throws Exception {
 
@@ -88,7 +88,7 @@ public class RestBaseClient {
      *
      * @param responseString Respective Http response.
      * @return Relevant JSONArray object.
-     * @throws Exception Exception.
+     * @throws Exception If an error occurred while getting a JSON array from a JSON string.
      */
     public JSONArray getJSONArray(String responseString) throws Exception {
 
@@ -108,7 +108,7 @@ public class RestBaseClient {
      * @param jsonRequest Json body.
      * @param headers Header list of the request.
      * @return Response of the Http request.
-     * @throws IOException Exception.
+     * @throws IOException If an error occurred while executing http POST request.
      */
     public CloseableHttpResponse getResponseOfHttpPost(String endPointUrl, String jsonRequest, Header[] headers)
             throws IOException {
@@ -126,7 +126,7 @@ public class RestBaseClient {
      * @param endPointUrl REST endpoint.
      * @param headers header list of the request.
      * @return Response of the Http request.
-     * @throws IOException Exception.
+     * @throws IOException If an error occurred while executing http GET request.
      */
     public CloseableHttpResponse getResponseOfHttpGet(String endPointUrl, Header[] headers)
             throws IOException {
@@ -144,7 +144,7 @@ public class RestBaseClient {
      * @param jsonRequest json body.
      * @param headers header list of the request.
      * @return Response of the Http request.
-     * @throws IOException Exception.
+     * @throws IOException If an error occurred while executing http PATCH request.
      */
     public CloseableHttpResponse getResponseOfHttpPatch(String endPointUrl, String jsonRequest, Header[] headers) throws IOException {
 
@@ -161,7 +161,7 @@ public class RestBaseClient {
      * @param endPointUrl REST endpoint.
      * @param headers header list of the request.
      * @return Response of the Http request.
-     * @throws IOException Exception.
+     * @throws IOException If an error occurred while executing http DELETE request.
      */
     public CloseableHttpResponse getResponseOfHttpDelete(String endPointUrl, Header[] headers) throws IOException {
 
@@ -178,7 +178,7 @@ public class RestBaseClient {
      * @param jsonRequest json body.
      * @param headers header list of the request.
      * @return Response of the Http request.
-     * @throws IOException Exception.
+     * @throws IOException If an error occurred while executing http PUT request.
      */
     public CloseableHttpResponse getResponseOfHttpPut(String endPointUrl, String jsonRequest, Header[] headers)
             throws IOException {
