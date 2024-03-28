@@ -120,7 +120,7 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
         addUserIntoJDBCUserStore(PRIMARY_USERNAME, PRIMARY_PASSWORD, false);
         addUserIntoJDBCUserStore(SECONDARY_USERNAME, SECONDARY_PASSWORD, true);
 
-        // Creating, registering and starting application on tomcat
+        // Creating, registering and starting application on tomcat.
         createAndRegisterPlaygroundApplication();
         startTomcat();
     }
@@ -131,9 +131,9 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
 
         CookieStore cookieStore = new BasicCookieStore();
         client = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
-        // Sending authorization request to IS
+        // Sending authorization request to IS.
         sendAuthorizedPost();
-        // User (resource owner) authentication
+        // User (resource owner) authentication.
         HttpResponse response = sendLoginPostForCustomUsers(client, sessionDataKey, username, password);
         Assert.assertNotNull(response, "Login request failed. Login response is null.");
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
@@ -148,7 +148,7 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
         Assert.assertNotNull(keyValues, "SessionDataKeyConsent key value is null");
         String sessionDataKeyConsent = keyValues.get(0).getValue();
         EntityUtils.consume(response.getEntity());
-        // Authorization
+        // Authorization.
         checkAuthorizationCode(sessionDataKeyConsent);
     }
 
@@ -201,7 +201,7 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
         String locationHeaderValue = locationHeader.getValue();
         Assert.assertNotNull(locationHeader, "Approval Location header is null.");
         String authorizationCodeString = StringUtils.substringAfterLast(locationHeaderValue, "?code=");
-        // Assuring that the authorization code is received, which confirms that the login is successful
+        // Assuring that the authorization code is received, which confirms that the login is successful.
         Assert.assertNotNull(authorizationCodeString, "Authorization code not present, hence login unsuccessful.");
         EntityUtils.consume(response.getEntity());
     }
@@ -276,13 +276,13 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
 
     private void addSecondaryJDBCUserStore() throws Exception {
 
-        //creating database
+        // Creating database.
         H2DataBaseManager dbmanager = new H2DataBaseManager("jdbc:h2:" + ServerConfigurationManager.getCarbonHome()
                 + "/repository/database/" + USER_STORE_DB_NAME, DB_USER_NAME, DB_USER_PASSWORD);
         dbmanager.executeUpdate(new File(ServerConfigurationManager.getCarbonHome() + "/dbscripts/h2.sql"));
         dbmanager.disconnect();
 
-        // Register a secondary user store
+        // Register a secondary user store.
         UserStoreReq userStore = new UserStoreReq()
                 .typeId(USER_STORE_TYPE)
                 .name(DOMAIN_ID)
