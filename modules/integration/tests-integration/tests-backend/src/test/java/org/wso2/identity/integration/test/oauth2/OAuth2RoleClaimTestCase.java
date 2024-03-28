@@ -91,6 +91,7 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
+
         deleteApp(applicationId);
         scim2RestClient.deleteRole(roleId);
         scim2RestClient.deleteUser(userId);
@@ -189,6 +190,7 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
     }
 
     private UserObject getUserCreationInfo() {
+
         UserObject userInfo = new UserObject();
 
         userInfo.setUserName(USER_USERNAME);
@@ -221,6 +223,7 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
     }
 
     private RoleRequestObject getRoleCreationInfo() {
+
         RoleRequestObject roleInfo = new RoleRequestObject();
         roleInfo.setDisplayName(OAUTH_ROLE);
 
@@ -228,6 +231,7 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
     }
 
     private PatchOperationRequestObject getAddUserPatchRole(String userId) {
+
         RoleItemAddGroupobj patchRoleItem = new RoleItemAddGroupobj();
         patchRoleItem.setOp(RoleItemAddGroupobj.OpEnum.ADD);
         patchRoleItem.setPath(USERS_PATH);

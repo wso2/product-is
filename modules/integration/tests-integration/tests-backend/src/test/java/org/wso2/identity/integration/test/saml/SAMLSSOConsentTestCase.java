@@ -175,6 +175,7 @@ public class SAMLSSOConsentTestCase extends AbstractSAMLSSOTestCase{
     }
 
     private void testSAMLSSOLogout() {
+
         try {
             HttpResponse response;
 
@@ -208,6 +209,7 @@ public class SAMLSSOConsentTestCase extends AbstractSAMLSSOTestCase{
     }
 
     private String extractDataFromResponse(HttpResponse response) throws IOException {
+
         BufferedReader rd = new BufferedReader(
                 new InputStreamReader(response.getEntity().getContent()));
         StringBuilder result = new StringBuilder();
@@ -220,6 +222,7 @@ public class SAMLSSOConsentTestCase extends AbstractSAMLSSOTestCase{
     }
 
     private Map<String,String> extractClaims(String claimString){
+
         String[] dataArray = StringUtils.substringsBetween(claimString, "<td>", "</td>");
         Map<String,String> attributeMap = new HashMap<>();
         String key = null;

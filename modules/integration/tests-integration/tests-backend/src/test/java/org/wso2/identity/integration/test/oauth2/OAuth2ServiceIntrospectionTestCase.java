@@ -54,11 +54,13 @@ public class OAuth2ServiceIntrospectionTestCase extends OAuth2ServiceAbstractInt
 
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
+
         return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}};
     }
 
     @Factory(dataProvider = "configProvider")
     public OAuth2ServiceIntrospectionTestCase(TestUserMode userMode) throws Exception {
+
         super.init(userMode);
     }
 
@@ -82,6 +84,7 @@ public class OAuth2ServiceIntrospectionTestCase extends OAuth2ServiceAbstractInt
 
     @Test(groups = "wso2.is", description = "Check Oauth2 application registration")
     public void testRegisterApplication() throws Exception {
+
         ApplicationResponseModel application = addApplication();
         Assert.assertNotNull(application, "OAuth App creation failed.");
 
@@ -98,6 +101,7 @@ public class OAuth2ServiceIntrospectionTestCase extends OAuth2ServiceAbstractInt
 
     @Test(groups = "wso2.is", description = "Send authorize user request and get access token", dependsOnMethods = "testRegisterApplication")
     public void testGetAccessToken() throws Exception {
+
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(
                 "grantType",
@@ -130,6 +134,7 @@ public class OAuth2ServiceIntrospectionTestCase extends OAuth2ServiceAbstractInt
 
     @Test(groups = "wso2.is", description = "Test introspection endpoint", dependsOnMethods = "testGetAccessToken")
     public void testIntrospectionEndpoint() throws Exception {
+
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("accessToken", accessToken));
         urlParameters.add(new BasicNameValuePair("resource_url", "https://localhost:9443/oauth2/introspect"));

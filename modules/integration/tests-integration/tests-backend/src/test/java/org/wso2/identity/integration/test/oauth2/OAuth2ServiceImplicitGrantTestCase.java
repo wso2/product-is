@@ -78,6 +78,7 @@ public class OAuth2ServiceImplicitGrantTestCase extends OAuth2ServiceAbstractInt
 
 	@DataProvider(name = "configProvider")
 	public static Object[][] configProvider() {
+
 		return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}};
 	}
 
@@ -122,6 +123,7 @@ public class OAuth2ServiceImplicitGrantTestCase extends OAuth2ServiceAbstractInt
 
 	@Test(groups = "wso2.is", description = "Check Oauth2 application registration")
 	public void testRegisterApplication() throws Exception {
+
 		ApplicationResponseModel application = addApplication();
 		Assert.assertNotNull(application, "OAuth App creation failed.");
 
@@ -138,6 +140,7 @@ public class OAuth2ServiceImplicitGrantTestCase extends OAuth2ServiceAbstractInt
 
 	@Test(groups = "wso2.is", description = "Send authorize user request", dependsOnMethods = "testRegisterApplication")
 	public void testSendAuthorozedPost() throws Exception {
+
 		List<NameValuePair> urlParameters = new ArrayList<>();
 		urlParameters.add(new BasicNameValuePair("grantType",
 		                                         OAuth2Constant.OAUTH2_GRANT_TYPE_IMPLICIT));
@@ -175,6 +178,7 @@ public class OAuth2ServiceImplicitGrantTestCase extends OAuth2ServiceAbstractInt
 
 	@Test(groups = "wso2.is", description = "Send login post request", dependsOnMethods = "testSendAuthorozedPost")
 	public void testSendLoginPost() throws Exception {
+
 		HttpResponse response = sendLoginPost(client, sessionDataKey);
 		Assert.assertNotNull(response, "Login request failed. Login response is null.");
 

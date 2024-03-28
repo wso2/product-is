@@ -217,7 +217,7 @@ public class OAuth2TokenRevocationWithMultipleSessionTerminationTestCase extends
      * @param key            Basic authentication key.
      * @param secret         Basic authentication secret.
      * @return JSON object of the response.
-     * @throws Exception Exception
+     * @throws Exception If an error occurred while executing http POST request and getting response object.
      */
     private JSONObject responseObject(HttpClient client, String endpoint, List<NameValuePair> postParameters,
                                       String key, String secret) throws Exception {
@@ -362,8 +362,8 @@ public class OAuth2TokenRevocationWithMultipleSessionTerminationTestCase extends
     /**
      * Get introspection endpoint response by callling introspection endpoint.
      *
-     * @return JSONObject
-     * @throws Exception Exception
+     * @return JSONObject.
+     * @throws Exception If an error occurred while getting introspection endpoint response.
      */
     private JSONObject testIntrospectionEndpoint(String accessToken, HttpClient client) throws Exception {
 

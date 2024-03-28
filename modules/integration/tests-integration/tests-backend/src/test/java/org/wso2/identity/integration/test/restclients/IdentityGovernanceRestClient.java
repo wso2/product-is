@@ -47,6 +47,7 @@ public class IdentityGovernanceRestClient extends RestBaseClient {
     private final String password;
 
     public IdentityGovernanceRestClient(String backendURL, Tenant tenantInfo) {
+
         client = HttpClients.createDefault();
 
         this.username = tenantInfo.getContextUser().getUserName();
@@ -59,14 +60,16 @@ public class IdentityGovernanceRestClient extends RestBaseClient {
     }
 
     /**
-     * Update connector properties
+     * Update connector properties.
      *
-     * @param categoryId Connector category id.
-     * @param connectorId Connector id.
+     * @param categoryId     Connector category id.
+     * @param connectorId    Connector id.
      * @param connectorPatch Connector patch request object.
+     * @throws IOException If an error occurred while updating the governance connectors.
      */
     public void updateConnectors(String categoryId, String connectorId, ConnectorsPatchReq connectorPatch)
             throws IOException {
+
         String jsonRequest = toJSONString(connectorPatch);
         String endPointUrl = identityGovernanceApiBasePath + PATH_SEPARATOR + categoryId +
                 CONNECTORS_BASE_PATH + PATH_SEPARATOR + connectorId;
@@ -89,8 +92,11 @@ public class IdentityGovernanceRestClient extends RestBaseClient {
 
     /**
      * Close the HTTP client.
+     *
+     * @throws IOException If an error occurred while closing the Http Client.
      */
     public void closeHttpClient() throws IOException {
+
         client.close();
     }
 }

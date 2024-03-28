@@ -273,6 +273,7 @@ public class OAuth2TokenRevocationWithRevokedAccessToken extends OAuth2ServiceAb
     }
 
     private ApplicationResponseModel createApp() throws Exception {
+
         ApplicationModel application = new ApplicationModel();
 
         List<String> grantTypes = new ArrayList<>();

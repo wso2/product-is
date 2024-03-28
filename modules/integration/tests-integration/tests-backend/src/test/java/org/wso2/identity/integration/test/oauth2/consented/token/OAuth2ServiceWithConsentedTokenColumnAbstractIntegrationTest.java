@@ -135,6 +135,7 @@ public class OAuth2ServiceWithConsentedTokenColumnAbstractIntegrationTest extend
     }
 
     protected void removeUser() throws Exception {
+
         scim2RestClient.deleteUser(userId);
     }
 

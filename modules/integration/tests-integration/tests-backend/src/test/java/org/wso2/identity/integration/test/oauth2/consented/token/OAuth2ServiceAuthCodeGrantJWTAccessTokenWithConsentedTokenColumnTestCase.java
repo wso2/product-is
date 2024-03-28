@@ -110,8 +110,8 @@ public class OAuth2ServiceAuthCodeGrantJWTAccessTokenWithConsentedTokenColumnTes
         urlParameters.add(new BasicNameValuePair("callbackurl", OAuth2Constant.CALLBACK_URL));
         urlParameters.add(new BasicNameValuePair("authorizeEndpoint", OAuth2Constant.APPROVAL_URL));
         urlParameters.add(new BasicNameValuePair("authorize", OAuth2Constant.AUTHORIZE_PARAM));
-        // email scope is to retrieve the email address of the user.
-        // address scope is to retrieve the country number of the user.
+        // Email scope is to retrieve the email address of the user.
+        // Address scope is to retrieve the country of the user.
         urlParameters.add(new BasicNameValuePair("scope", OAuth2Constant.OAUTH2_SCOPE_OPENID + " "
                 + OAuth2Constant.OAUTH2_SCOPE_EMAIL + " " + OAuth2Constant.OAUTH2_SCOPE_ADDRESS));
 
@@ -194,8 +194,8 @@ public class OAuth2ServiceAuthCodeGrantJWTAccessTokenWithConsentedTokenColumnTes
         Secret clientSecret = new Secret(consumerSecret);
         ClientAuthentication clientAuth = new ClientSecretBasic(clientID, clientSecret);
         URI tokenEndpoint = new URI(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
-        // email scope is to retrieve the email address of the user.
-        // address scope is to retrieve the country of the user.
+        // Email scope is to retrieve the email address of the user.
+        // Address scope is to retrieve the country of the user.
         TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, authorizationCodeGrant,
                 new Scope(OAuth2Constant.OAUTH2_SCOPE_OPENID, OAuth2Constant.OAUTH2_SCOPE_EMAIL,
                         OAuth2Constant.OAUTH2_SCOPE_ADDRESS));

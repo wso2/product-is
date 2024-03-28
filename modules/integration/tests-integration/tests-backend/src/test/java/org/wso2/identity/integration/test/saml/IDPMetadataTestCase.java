@@ -42,7 +42,7 @@ import java.nio.file.Paths;
 import java.rmi.RemoteException;
 
 /**
- * This tests adds an Identity Provider using metadata file, checks for the validity of properties
+ * This tests adds an Identity Provider using metadata file, checks for the validity of properties.
  */
 public class IDPMetadataTestCase extends ISIntegrationTest {
 
@@ -59,9 +59,9 @@ public class IDPMetadataTestCase extends ISIntegrationTest {
     private IdpMgtRestClient identityProviderMgtRestClient;
     private String idpId;
 
-
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
+
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         identityProviderMgtRestClient = new IdpMgtRestClient(serverURL, tenantInfo);
     }
@@ -128,6 +128,7 @@ public class IDPMetadataTestCase extends ISIntegrationTest {
 
     @AfterClass(alwaysRun = true)
     public void endTest() throws RemoteException, IdentitySAMLSSOConfigServiceIdentityException {
+
         try {
             identityProviderMgtRestClient.deleteIdp(idpId);
         } catch (Exception ex) {

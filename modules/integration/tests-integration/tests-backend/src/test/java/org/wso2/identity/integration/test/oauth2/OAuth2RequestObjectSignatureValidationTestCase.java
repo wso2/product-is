@@ -42,7 +42,8 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.test.utils.common.TestConfigurationProvider;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.*;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.File;
@@ -57,7 +58,7 @@ import java.util.Date;
 import java.util.UUID;
 
 /**
-    Integration tests for Signed Request Object validation.
+ * Integration tests for Signed Request Object validation.
  */
 public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
@@ -76,6 +77,7 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
+
         deleteApp(application.getId());
 
         consumerKey = null;
@@ -264,6 +266,7 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
     }
 
     private String buildSignedJWT(String consumerKey, RSAPrivateKey privateKey) throws Exception {
+
         // Create RSA-signer with the private key
         JWSSigner rsaSigner = new RSASSASigner(privateKey);
 

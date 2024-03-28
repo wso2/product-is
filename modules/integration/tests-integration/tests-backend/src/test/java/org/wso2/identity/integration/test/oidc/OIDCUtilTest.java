@@ -104,7 +104,8 @@ public class OIDCUtilTest {
 
     /**
      * To set and get name-value pairs.
-     * @param application application
+     *
+     * @param application application.
      * @return name-value pairs.
      */
     public static List<NameValuePair> getNameValuePairs(OIDCApplication application) {
@@ -126,9 +127,10 @@ public class OIDCUtilTest {
     }
 
     /**
-     * Set sessionDataKey
-     * @param response response
-     * @param keyPositionMap map to preserve the sessionDataKey
+     * Set sessionDataKey.
+     *
+     * @param response       response
+     * @param keyPositionMap map to preserve the sessionDataKey.
      * @throws IOException if an error occurs when extracting data from the response.
      */
     public static void setSessionDataKey(HttpResponse response, Map<String, Integer> keyPositionMap) throws IOException {

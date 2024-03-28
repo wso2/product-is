@@ -194,9 +194,10 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
      * Create a SAML Application for testing.
      *
      * @return ApplicationResponseModel application.
-     * @throws Exception Exception
+     * @throws Exception If an error occurred while creating a SAML application.
      */
     private ApplicationResponseModel createSAMLApplication() throws Exception {
+
         ApplicationModel applicationCreationModel = new ApplicationModel().name(SERVICE_PROVIDER_NAME);
         applicationCreationModel.inboundProtocolConfiguration(new InboundProtocols().oidc(getOIDCConfigurations()));
         applicationCreationModel.getInboundProtocolConfiguration().setSaml(getSAMLConfigurations());
@@ -209,9 +210,10 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
     /**
      * Create OIDC Configured ApplicationModel object.
      *
-     * @return ApplicationModel application.
+     * @return ApplicationModel Application.
      */
     private OpenIDConnectConfiguration getOIDCConfigurations() {
+
         List<String> grantTypes = new ArrayList<>();
         Collections.addAll(grantTypes, "urn:ietf:params:oauth:grant-type:saml2-bearer");
 
@@ -231,6 +233,7 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
      * @return ApplicationModel application.
      */
     private SAML2Configuration getSAMLConfigurations() {
+
         SAML2ServiceProvider serviceProvider = new SAML2ServiceProvider();
         serviceProvider.setIssuer(ISSUER);
         serviceProvider.addAssertionConsumerUrl(String.format("http://localhost:8490/%s/home.jsp", ISSUER));
@@ -258,7 +261,7 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
      * Get the SAML response by calling the default SAML endpoint.
      *
      * @return SAML response.
-     * @throws Exception Exception
+     * @throws Exception If an error occurred while getting the SAML response.
      */
     private String getSAMLResponse() throws Exception {
 
@@ -318,9 +321,9 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
      *
      * @param samlResponse SAML response.
      * @return Extracted SAML assertion.
-     * @throws ParserConfigurationException Exception
-     * @throws IOException Exception
-     * @throws SAXException Exception
+     * @throws ParserConfigurationException If an error occurred while creating document builder.
+     * @throws IOException                  If an error occurred while getting the SAML assersion.
+     * @throws SAXException                 If an error occurred while parsing.
      */
     private String getSAMLAssersion(String samlResponse) throws ParserConfigurationException, IOException,
             SAXException {
@@ -348,7 +351,7 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
      *
      * @param samlMsgValue Message value.
      * @return HTTP Response object that we get from calling the SAML endpoint.
-     * @throws IOException Exception
+     * @throws IOException If an error occurred while sending the SAML request.
      */
     private HttpResponse sendSAMLRequest(String samlMsgValue) throws IOException {
 
@@ -369,7 +372,7 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
      *
      * @param samlAssertion SAML assertion.
      * @return HTTP Response object that we get from calling the token endpoint.
-     * @throws IOException Exception
+     * @throws IOException If an error occurred while sending the SAML assersion to the token endpoint.
      */
     private HttpResponse sendSAMLAssertion(String samlAssertion) throws IOException {
 

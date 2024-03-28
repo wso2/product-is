@@ -69,6 +69,7 @@ public class OAuth2ServiceRegexCallbackUrlTestCase extends OAuth2ServiceAbstract
 
 	@BeforeClass(alwaysRun = true)
 	public void testInit() throws Exception {
+
 		super.init(TestUserMode.SUPER_TENANT_USER);
 
 		setSystemproperties();
@@ -98,6 +99,7 @@ public class OAuth2ServiceRegexCallbackUrlTestCase extends OAuth2ServiceAbstract
 
 	@Test(groups = "wso2.is", description = "Check Oauth2 application registration")
 	public void testRegisterApplication() throws Exception {
+
 		ApplicationResponseModel application = createTestApplication();
 		applicationId = application.getId();
 
@@ -111,6 +113,7 @@ public class OAuth2ServiceRegexCallbackUrlTestCase extends OAuth2ServiceAbstract
 
 	@Test(groups = "wso2.is", description = "Send authorize user request", dependsOnMethods = "testRegisterApplication")
 	public void testSendAuthorozedPost() throws Exception {
+
 		List<NameValuePair> urlParameters = new ArrayList<>();
 		urlParameters.add(new BasicNameValuePair("grantType",
 				OAuth2Constant.OAUTH2_GRANT_TYPE_IMPLICIT));
@@ -146,6 +149,7 @@ public class OAuth2ServiceRegexCallbackUrlTestCase extends OAuth2ServiceAbstract
 
 	@Test(groups = "wso2.is", description = "Send login post request", dependsOnMethods = "testSendAuthorozedPost")
 	public void testSendLoginPost() throws Exception {
+
 		HttpResponse response = sendLoginPost(client, sessionDataKey);
 		Assert.assertNotNull(response, "Login request failed. Login response is null.");
 
@@ -200,6 +204,7 @@ public class OAuth2ServiceRegexCallbackUrlTestCase extends OAuth2ServiceAbstract
 
 	@Test(groups = "wso2.is", description = "Validate access token", dependsOnMethods = "testSendApprovalPost")
 	public void testValidateAccessToken() throws Exception {
+
 		HttpResponse response = sendValidateAccessTokenPost(client, accessToken);
 		Assert.assertNotNull(response, "Validate access token response is invalid.");
 
@@ -217,6 +222,7 @@ public class OAuth2ServiceRegexCallbackUrlTestCase extends OAuth2ServiceAbstract
 	}
 
 	private ApplicationResponseModel createTestApplication() throws Exception {
+
 		ApplicationModel application = new ApplicationModel();
 
 		List<String> grantTypes = new ArrayList<>();

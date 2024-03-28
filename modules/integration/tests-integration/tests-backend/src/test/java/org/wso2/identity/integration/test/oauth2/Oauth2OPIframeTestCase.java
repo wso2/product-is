@@ -55,6 +55,7 @@ public class Oauth2OPIframeTestCase extends OAuth2ServiceAbstractIntegrationTest
 
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
+
         return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}};
     }
 

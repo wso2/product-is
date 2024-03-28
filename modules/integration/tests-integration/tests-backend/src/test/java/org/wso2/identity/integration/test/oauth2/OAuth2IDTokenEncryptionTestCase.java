@@ -123,6 +123,7 @@ public class OAuth2IDTokenEncryptionTestCase extends OAuth2ServiceAbstractIntegr
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
+
         deleteApp(application.getId());
 
         consumerKey = null;
@@ -437,7 +438,7 @@ public class OAuth2IDTokenEncryptionTestCase extends OAuth2ServiceAbstractIntegr
     /**
      * Initiate service provider keys required for the tests.
      *
-     * @throws Exception error
+     * @throws Exception If an error occurred while getting certificate.
      */
     private void initServiceProviderKeys() throws Exception {
 
@@ -464,8 +465,8 @@ public class OAuth2IDTokenEncryptionTestCase extends OAuth2ServiceAbstractIntegr
      * @param client         CloseableHttpClient object to send the login post.
      * @param sessionDataKey String sessionDataKey obtained.
      * @return Extracted sessionDataKeyConsent.
-     * @throws IOException Error
-     * @throws URISyntaxException Error
+     * @throws IOException        If an error occurred while getting Session Data key Consent.
+     * @throws URISyntaxException If an error occurred while extracting Session Data key parameter.
      */
     private String getSessionDataKeyConsent(CloseableHttpClient client, String sessionDataKey)
             throws IOException, URISyntaxException {
@@ -497,8 +498,8 @@ public class OAuth2IDTokenEncryptionTestCase extends OAuth2ServiceAbstractIntegr
      * @param idToken  Encrypted ID token to be decrypted and checked.
      * @param audience Audience value that should be appeared in the token.
      * @return Boolean True if audience matches, False otherwise.
-     * @throws ParseException Error
-     * @throws JOSEException Error
+     * @throws ParseException If an error occurred while getting jwt.
+     * @throws JOSEException  If an error occurred while decrypting jwt.
      */
     private boolean decryptAndCheckIDToken(String idToken, String audience) throws ParseException, JOSEException {
 

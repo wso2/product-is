@@ -39,11 +39,12 @@ public class AuthenticatorRestClient extends RestBaseClient {
     }
 
     /**
-     * Login operation
+     * Login operation.
      *
      * @param username username.
      * @param password password.
      * @return JSONObject with login details.
+     * @throws Exception If an error occurred while authenticating.
      */
     public JSONObject login(String username, String password) throws Exception {
 
@@ -60,13 +61,17 @@ public class AuthenticatorRestClient extends RestBaseClient {
     }
 
     private Header[] getHeaders() {
+
         return new Header[]{new BasicHeader(CONTENT_TYPE_ATTRIBUTE, String.valueOf(ContentType.JSON))};
     }
 
     /**
      * Close the HTTP client.
+     *
+     * @throws IOException If an error occurred while closing the Http Client.
      */
     public void closeHttpClient() throws IOException {
+
         client.close();
     }
 }
