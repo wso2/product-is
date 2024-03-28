@@ -247,7 +247,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	/**
 	 * Get Application details with a given id.
 	 *
-	 * @param appId Application Id.
+	 * @param appId       Application Id.
 	 * @param application Application update patch object.
 	 * @throws Exception If an error occurred while updating an application.
 	 */
@@ -283,9 +283,9 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	/**
 	 * Update Application inbound configuration details with a given id and the inbound Type.
 	 *
-	 * @param appId Application Id.
+	 * @param appId         Application Id.
 	 * @param InboundConfig InboundConfig object.
-	 * @param inboundType inbound configuration type.
+	 * @param inboundType   inbound configuration type.
 	 * @throws IOException If an error occurred while updating Inbound configurations of an application.
 	 */
 	public void updateApplicationInboundConfig(String appId, Object InboundConfig, String inboundType)
@@ -402,12 +402,13 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 
 	/**
 	 * Send post request with parameters.
-	 * @param client HttpClient.
+	 *
+	 * @param client        HttpClient.
 	 * @param urlParameters Url parameters.
-	 * @param url Endpoint.
+	 * @param url           Endpoint.
 	 * @return HttpResponse.
 	 * @throws ClientProtocolException If an error occurred while executing http POST request.
-	 * @throws java.io.IOException If an error occurred while executing http POST request.
+	 * @throws java.io.IOException     If an error occurred while executing http POST request.
 	 */
 	public HttpResponse sendPostRequestWithParameters(HttpClient client, List<NameValuePair> urlParameters, String url)
 			throws ClientProtocolException, IOException {
@@ -422,11 +423,11 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	/**
 	 * Send Get request.
 	 *
-	 * @param client - Http Client.
+	 * @param client      - Http Client.
 	 * @param locationURL - Get url location.
 	 * @return Http response.
 	 * @throws ClientProtocolException If an error occurred while executing http GET request.
-	 * @throws java.io.IOException If an error occurred while executing http GET request.
+	 * @throws java.io.IOException     If an error occurred while executing http GET request.
 	 */
 	public HttpResponse sendGetRequest(HttpClient client, String locationURL) throws ClientProtocolException, IOException {
 
@@ -463,11 +464,11 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	/**
 	 * Send Post request.
 	 *
-	 * @param client - Http Client.
+	 * @param client      - Http Client.
 	 * @param locationURL - Post url location.
 	 * @return Http response.
 	 * @throws ClientProtocolException If an error occurred while executing http POST request.
-	 * @throws java.io.IOException If an error occurred while executing http POST request.
+	 * @throws java.io.IOException     If an error occurred while executing http POST request.
 	 */
 	public HttpResponse sendPostRequest(HttpClient client, String locationURL) throws ClientProtocolException,
 			IOException {
@@ -480,11 +481,11 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	/**
 	 * Send login post request.
 	 *
-	 * @param client - Http client.
+	 * @param client         - Http client.
 	 * @param sessionDataKey - Session data key.
 	 * @return Http response.
 	 * @throws ClientProtocolException If an error occurred while executing login post request.
-	 * @throws java.io.IOException If an error occurred while executing login post request.
+	 * @throws java.io.IOException     If an error occurred while executing login post request.
 	 */
 	public HttpResponse sendLoginPost(HttpClient client, String sessionDataKey) throws ClientProtocolException,
 			IOException {
@@ -506,8 +507,8 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	 * @param username       Username.
 	 * @param password       Password.
 	 * @return Http response.
-	 * @throws ClientProtocolException 	If an error occurred while executing login post request.
-	 * @throws IOException				If an error occurred while executing login post request.
+	 * @throws ClientProtocolException If an error occurred while executing login post request.
+	 * @throws IOException             If an error occurred while executing login post request.
 	 */
 	public HttpResponse sendLoginPostForCustomUsers(HttpClient client, String sessionDataKey, String username,
 													String password) throws ClientProtocolException, IOException {
@@ -528,10 +529,10 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	 * @param sessionDataKey Session data key.
 	 * @param username       Username.
 	 * @param password       Password.
-	 * @param tenantDomain	 Tenant domain.
+	 * @param tenantDomain   Tenant domain.
 	 * @return Http response.
-	 * @throws ClientProtocolException 	If an error occurred while executing login post request.
-	 * @throws IOException				If an error occurred while executing login post request.
+	 * @throws ClientProtocolException If an error occurred while executing login post request.
+	 * @throws IOException             If an error occurred while executing login post request.
 	 */
 	public HttpResponse sendLoginPostForCustomUsers(HttpClient client, String sessionDataKey, String username,
 													String password, String tenantDomain)
@@ -549,11 +550,11 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	/**
 	 * Send approval post request.
 	 *
-	 * @param client - Http client.
+	 * @param client                - Http client.
 	 * @param sessionDataKeyConsent - Session consent data.
 	 * @return Http response.
 	 * @throws ClientProtocolException If an error occurred while executing approval post request.
-	 * @throws java.io.IOException If an error occurred while executing approval post request.
+	 * @throws java.io.IOException     If an error occurred while executing approval post request.
 	 */
 	public HttpResponse sendApprovalPost(HttpClient client, String sessionDataKeyConsent) throws ClientProtocolException,
 			IOException {
@@ -569,9 +570,9 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	/**
 	 * Send approval post request with consent.
 	 *
-	 * @param client Http client.
+	 * @param client                Http client.
 	 * @param sessionDataKeyConsent Session consent data.
-	 * @param consentClaims Claims requiring user consent.
+	 * @param consentClaims         Claims requiring user consent.
 	 * @return Http response.
 	 * @throws java.io.IOException If an error occurred while executing approval post request with consent.
 	 */
@@ -594,10 +595,10 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	/**
 	 * Send approval post request for tenant with consent.
 	 *
-	 * @param client 				Http client.
+	 * @param client                Http client.
 	 * @param sessionDataKeyConsent Session consent data.
-	 * @param consentClaims 		Claims requiring user consent.
-	 * @param tenantDomain 			Tenant domain.
+	 * @param consentClaims         Claims requiring user consent.
+	 * @param tenantDomain          Tenant domain.
 	 * @return Http response.
 	 * @throws java.io.IOException If an error occurred while executing approval post request for a tenant.
 	 */
@@ -621,11 +622,11 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	/**
 	 * Send access token post request.
 	 *
-	 * @param client - Http client.
+	 * @param client         - Http client.
 	 * @param consumerSecret - Consumer secret.
 	 * @return Http response.
 	 * @throws ClientProtocolException If an error occurred while executing access token post request.
-	 * @throws java.io.IOException If an error occurred while executing access token post request.
+	 * @throws java.io.IOException     If an error occurred while executing access token post request.
 	 */
 	public HttpResponse sendGetAccessTokenPost(HttpClient client, String consumerSecret) throws ClientProtocolException,
 	                                                                                    IOException {
@@ -639,11 +640,12 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 
 	/**
 	 * Send validate access token post request.
-	 * @param client - Http client.
+	 *
+	 * @param client      - Http client.
 	 * @param accessToken - Access token.
 	 * @return Http response.
 	 * @throws ClientProtocolException If an error occurred while executing validate access token post request.
-	 * @throws java.io.IOException If an error occurred while executing validate access token post request.
+	 * @throws java.io.IOException     If an error occurred while executing validate access token post request.
 	 */
 	public HttpResponse sendValidateAccessTokenPost(HttpClient client, String accessToken)
 	                                                                                    throws ClientProtocolException,
@@ -656,9 +658,10 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 
 	/**
 	 * Send token introspection post request according to the tenant domain.
-	 * @param client - Http client.
+	 *
+	 * @param client      - Http client.
 	 * @param accessToken - Access token.
-	 * @param endpoint - Introspection URL of the tenant domain.
+	 * @param endpoint    - Introspection URL of the tenant domain.
 	 * @return JSON object of the response.
 	 * @throws Exception If an error occurred while executing token introspection post request.
 	 */
@@ -700,15 +703,15 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		adminClient.removeOAuthApplicationData(consumerKey);
 	}
 
-    /**
-     * Request access token from the given token generation endpoint.
-     *
-     * @param consumerKey    Consumer key of the application.
-     * @param consumerSecret Consumer secret of the application.
-     * @param backendUrl     Token generation API endpoint.
-     * @return Token.
-     * @throws Exception If something went wrong when requesting token.
-     */
+	/**
+	 * Request access token from the given token generation endpoint.
+	 *
+	 * @param consumerKey    Consumer key of the application.
+	 * @param consumerSecret Consumer secret of the application.
+	 * @param backendUrl     Token generation API endpoint.
+	 * @return Token.
+	 * @throws Exception If something went wrong when requesting token.
+	 */
     public String requestAccessToken(String consumerKey, String consumerSecret,
                                      String backendUrl, String username, String password) throws Exception {
 
@@ -737,13 +740,13 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
         return accessToken.toString();
     }
 
-    /**
-     * Get base64 encoded string of consumer key and secret.
-     *
-     * @param consumerKey    Consumer key of the application.
-     * @param consumerSecret Consumer secret of the application.
-     * @return Base 64 encoded string.
-     */
+	/**
+	 * Get base64 encoded string of consumer key and secret.
+	 *
+	 * @param consumerKey    Consumer key of the application.
+	 * @param consumerSecret Consumer secret of the application.
+	 * @return Base 64 encoded string.
+	 */
     public String getBase64EncodedString(String consumerKey, String consumerSecret) {
 
 		return new String(Base64.encodeBase64((consumerKey + ":" + consumerSecret).getBytes()));
@@ -752,7 +755,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	/**
 	 * Update the certificate of an application.
 	 *
-	 * @param appId Application Id.
+	 * @param appId             Application Id.
 	 * @param sp1X509PublicCert X509 certificate of the application.
 	 * @throws Exception If an error occurred while updating the certificate of the application.
 	 */
@@ -906,10 +909,10 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	/**
 	 * Build post request and return json response object.
 	 *
-	 * @param endpoint      		Endpoint.
-	 * @param postParameters 		postParameters.
-	 * @param client            	httpclient.
-	 * @param authorizationHeader  	Authentication header.
+	 * @param endpoint            Endpoint.
+	 * @param postParameters      postParameters.
+	 * @param client              httpclient.
+	 * @param authorizationHeader Authentication header.
 	 * @return JSON object of the response.
 	 * @throws Exception If an error occurred while executing http POST request and generating response object.
 	 */
@@ -934,7 +937,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	/**
 	 * Get public certificate from jwks endpoint.
 	 *
-	 * @param client HttpClient.
+	 * @param client   HttpClient.
 	 * @param endPoint jwks endpoint.
 	 * @return String object of the certificate.
 	 * @throws Exception If an error occurred while getting the public certificate from jwks endpoint.
@@ -952,7 +955,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	/**
 	 * Authorize list of SYSTEM APIs to an application.
 	 *
-	 * @param applicationId Application id.
+	 * @param applicationId  Application id.
 	 * @param apiIdentifiers API identifiers to authorize.
 	 * @throws Exception Error occured while authorizing APIs.
 	 */

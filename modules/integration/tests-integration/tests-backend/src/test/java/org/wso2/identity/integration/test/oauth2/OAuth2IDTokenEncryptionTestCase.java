@@ -465,7 +465,7 @@ public class OAuth2IDTokenEncryptionTestCase extends OAuth2ServiceAbstractIntegr
      * @param client         CloseableHttpClient object to send the login post.
      * @param sessionDataKey String sessionDataKey obtained.
      * @return Extracted sessionDataKeyConsent.
-     * @throws IOException If an error occurred while getting Session Data key Consent.
+     * @throws IOException        If an error occurred while getting Session Data key Consent.
      * @throws URISyntaxException If an error occurred while extracting Session Data key parameter.
      */
     private String getSessionDataKeyConsent(CloseableHttpClient client, String sessionDataKey)
@@ -499,7 +499,7 @@ public class OAuth2IDTokenEncryptionTestCase extends OAuth2ServiceAbstractIntegr
      * @param audience Audience value that should be appeared in the token.
      * @return Boolean True if audience matches, False otherwise.
      * @throws ParseException If an error occurred while getting jwt.
-     * @throws JOSEException If an error occurred while decrypting jwt.
+     * @throws JOSEException  If an error occurred while decrypting jwt.
      */
     private boolean decryptAndCheckIDToken(String idToken, String audience) throws ParseException, JOSEException {
 

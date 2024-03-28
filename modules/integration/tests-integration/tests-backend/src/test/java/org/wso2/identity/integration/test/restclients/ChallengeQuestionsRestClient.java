@@ -50,8 +50,8 @@ public class ChallengeQuestionsRestClient extends RestBaseClient {
     /**
      * Set Answers for the user challenge questions
      *
-     * @param userId userId.
-     * @param questionSetId Challenge Question Set id.
+     * @param userId             userId.
+     * @param questionSetId      Challenge Question Set id.
      * @param challengeAsnwerObj Challenge Question request object.
      * @throws IOException If an error occurred while setting the challenge question answer.
      */

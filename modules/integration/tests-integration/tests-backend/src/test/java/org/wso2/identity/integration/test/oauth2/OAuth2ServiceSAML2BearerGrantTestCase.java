@@ -321,9 +321,9 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
      *
      * @param samlResponse SAML response.
      * @return Extracted SAML assertion.
-     * @throws ParserConfigurationException Exception.
-     * @throws IOException If an error occurred while getting the SAML assersion.
-     * @throws SAXException If an error occurred while getting the SAML assersion.
+     * @throws ParserConfigurationException If an error occurred while creating document builder.
+     * @throws IOException                  If an error occurred while getting the SAML assersion.
+     * @throws SAXException                 If an error occurred while parsing.
      */
     private String getSAMLAssersion(String samlResponse) throws ParserConfigurationException, IOException,
             SAXException {

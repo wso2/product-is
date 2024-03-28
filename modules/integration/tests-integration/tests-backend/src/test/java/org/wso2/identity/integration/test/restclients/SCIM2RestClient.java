@@ -88,8 +88,8 @@ public class SCIM2RestClient extends RestBaseClient {
     /**
      * Get the details of a user.
      *
-     * @param userId     id of the user.
-     * @param attribute  requested user attributes
+     * @param userId    Id of the user.
+     * @param attribute Requested user attributes.
      * @return JSONObject of the HTTP response.
      * @throws Exception If an error occurred while getting a user.
      */
@@ -110,8 +110,8 @@ public class SCIM2RestClient extends RestBaseClient {
     /**
      * Update the details of an existing user.
      *
-     * @param patchUserInfo user patch request object.
-     * @param userId id of the user.
+     * @param patchUserInfo User patch request object.
+     * @param userId        Id of the user.
      * @throws IOException If an error occurred while updating a user.
      */
     public void updateUser(PatchOperationRequestObject patchUserInfo, String userId) throws IOException {
@@ -128,7 +128,7 @@ public class SCIM2RestClient extends RestBaseClient {
     /**
      * Search a user and get requested attributes.
      *
-     * @param userSearchReq json String of user search request.
+     * @param userSearchReq Json String of user search request.
      * @return JSONObject of the user search response.
      * @throws Exception If an error occurred while getting a user.
      */
@@ -146,7 +146,7 @@ public class SCIM2RestClient extends RestBaseClient {
     /**
      * Delete an existing user.
      *
-     * @param userId id of the user.
+     * @param userId Id of the user.
      * @throws IOException If an error occurred while deleting a user.
      */
     public void deleteUser(String userId) throws IOException {
@@ -182,7 +182,7 @@ public class SCIM2RestClient extends RestBaseClient {
      * Update an existing role.
      *
      * @param patchRoleInfo Role patch request object.
-     * @param roleId Role id.
+     * @param roleId        Role id.
      * @throws IOException If an error occurred while updating a role.
      */
     public void updateUserRole(PatchOperationRequestObject patchRoleInfo, String roleId) throws IOException {

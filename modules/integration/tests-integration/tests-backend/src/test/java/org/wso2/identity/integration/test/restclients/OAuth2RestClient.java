@@ -84,7 +84,7 @@ public class OAuth2RestClient extends RestBaseClient {
      *
      * @param application Application Model with application creation details.
      * @return Id of the created application.
-     * @throws IOException If an error occurred while creating an application.
+     * @throws IOException   If an error occurred while creating an application.
      * @throws JSONException If an error occurred while creating the json string.
      */
     public String createApplication(ApplicationModel application) throws IOException, JSONException {
@@ -156,7 +156,7 @@ public class OAuth2RestClient extends RestBaseClient {
     /**
      * Update an existing application.
      *
-     * @param appId Application id.
+     * @param appId       Application id.
      * @param application Updated application patch object.
      * @throws IOException If an error occurred while updating an application.
      */
@@ -245,9 +245,9 @@ public class OAuth2RestClient extends RestBaseClient {
     /**
      * Update inbound configuration details of an application.
      *
-     * @param appId Application id.
+     * @param appId         Application id.
      * @param inboundConfig Inbound configuration object to be updated.
-     * @param inboundType Type of the inbound configuration.
+     * @param inboundType   Type of the inbound configuration.
      * @throws IOException If an error occurred while updating an inbound configuration.
      */
     public void updateInboundDetailsOfApplication(String appId, Object inboundConfig, String inboundType)
@@ -266,7 +266,7 @@ public class OAuth2RestClient extends RestBaseClient {
     /**
      * Delete an Inbound Configuration.
      *
-     * @param appId Application id.
+     * @param appId       Application id.
      * @param inboundType Inbound Type to be deleted.
      * @throws IOException If an error occurred while deleting an inbound configuration.
      */

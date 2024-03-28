@@ -61,7 +61,7 @@ public class EmailTemplatesRestClient extends RestBaseClient {
      * Get Email template.
      *
      * @param templateTypeId Template type id.
-     * @param templateId Template id.
+     * @param templateId     Template id.
      * @return JSONObject with email template details.
      * @throws Exception If an error occurred while getting Email Template.
      */

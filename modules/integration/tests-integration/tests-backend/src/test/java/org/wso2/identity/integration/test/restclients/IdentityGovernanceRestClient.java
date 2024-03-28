@@ -62,8 +62,8 @@ public class IdentityGovernanceRestClient extends RestBaseClient {
     /**
      * Update connector properties.
      *
-     * @param categoryId Connector category id.
-     * @param connectorId Connector id.
+     * @param categoryId     Connector category id.
+     * @param connectorId    Connector id.
      * @param connectorPatch Connector patch request object.
      * @throws IOException If an error occurred while updating the governance connectors.
      */

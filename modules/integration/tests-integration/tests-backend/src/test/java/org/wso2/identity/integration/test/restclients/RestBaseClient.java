@@ -124,7 +124,7 @@ public class RestBaseClient {
      * Execute and get the response of HTTP GET.
      *
      * @param endPointUrl REST endpoint.
-     * @param headers header list of the request.
+     * @param headers     Header list of the request.
      * @return Response of the Http request.
      * @throws IOException If an error occurred while executing http GET request.
      */
@@ -141,8 +141,8 @@ public class RestBaseClient {
      * Execute and get the response of HTTP PATCH.
      *
      * @param endPointUrl REST endpoint.
-     * @param jsonRequest json body.
-     * @param headers header list of the request.
+     * @param jsonRequest Json body.
+     * @param headers     Header list of the request.
      * @return Response of the Http request.
      * @throws IOException If an error occurred while executing http PATCH request.
      */
@@ -159,7 +159,7 @@ public class RestBaseClient {
      * Execute and get the response of HTTP DELETE.
      *
      * @param endPointUrl REST endpoint.
-     * @param headers header list of the request.
+     * @param headers     Header list of the request.
      * @return Response of the Http request.
      * @throws IOException If an error occurred while executing http DELETE request.
      */
@@ -175,8 +175,8 @@ public class RestBaseClient {
      * Execute and get the response of HTTP PUT.
      *
      * @param endPointUrl REST endpoint.
-     * @param jsonRequest json body.
-     * @param headers header list of the request.
+     * @param jsonRequest Json body.
+     * @param headers     Header list of the request.
      * @return Response of the Http request.
      * @throws IOException If an error occurred while executing http PUT request.
      */

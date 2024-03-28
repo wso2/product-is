@@ -74,7 +74,7 @@ public class IdpMgtRestClient extends RestBaseClient {
     /**
      * Get an Identity Provider's federated authenticator
      *
-     * @param idpId identity provider id.
+     * @param idpId                    identity provider id.
      * @param federatedAuthenticatorId Federated Authenticator id.
      * @return JSONObject with Federated Authenticator details.
      * @throws Exception If an error occurred while getting idp's federated authenticator.
@@ -93,7 +93,7 @@ public class IdpMgtRestClient extends RestBaseClient {
     /**
      * Update an Identity Provider claim configurations.
      *
-     * @param idpId Identity Provider Id.
+     * @param idpId     Identity Provider Id.
      * @param idpClaims Identity Provider claim request object.
      * @throws IOException If an error occurred while updating idp claim configurations.
      */

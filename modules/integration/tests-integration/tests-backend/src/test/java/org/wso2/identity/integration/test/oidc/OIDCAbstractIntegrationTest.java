@@ -75,7 +75,7 @@ public class OIDCAbstractIntegrationTest extends OAuth2ServiceAbstractIntegratio
     }
 
     /**
-     * Clear the intialized clients.
+     * Clear the initialized clients.
      */
     public void clear() {
 
@@ -177,10 +177,11 @@ public class OIDCAbstractIntegrationTest extends OAuth2ServiceAbstractIntegratio
 
     /**
      * Sends Authentication Request for an OIDC Flow.
-     * @param application application.
+     *
+     * @param application                  application.
      * @param isFirstAuthenticationRequest true if the request is the first authentication request.
-     * @param client http client.
-     * @param cookieStore cookie store.
+     * @param client                       http client.
+     * @param cookieStore                  cookie store.
      * @throws Exception throws if an error occurs when sending the authentication request.
      */
     public void testSendAuthenticationRequest(OIDCApplication application, boolean isFirstAuthenticationRequest,

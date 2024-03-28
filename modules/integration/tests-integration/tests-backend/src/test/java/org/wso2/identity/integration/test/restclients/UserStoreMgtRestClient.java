@@ -61,12 +61,12 @@ public class UserStoreMgtRestClient extends RestBaseClient {
     /**
      * Add a secondary user store.
      *
-     * @param UserStoreReq Secondary user store request object.
+     * @param userStoreReq Secondary user store request object.
      * @throws IOException If an error occurred while adding a user store.
      */
-    public String addUserStore(UserStoreReq UserStoreReq) throws IOException {
+    public String addUserStore(UserStoreReq userStoreReq) throws IOException {
 
-        String jsonRequest = toJSONString(UserStoreReq);
+        String jsonRequest = toJSONString(userStoreReq);
         try (CloseableHttpResponse response = getResponseOfHttpPost(userStoreBasePath, jsonRequest, getHeaders())) {
             String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
             return locationElements[locationElements.length - 1];
@@ -87,7 +87,7 @@ public class UserStoreMgtRestClient extends RestBaseClient {
     }
 
     /**
-     * Delete a user store
+     * Delete a user store.
      *
      * @param domain User store domain(id).
      * @throws IOException If an error occurred while deleting a user store.
@@ -103,9 +103,9 @@ public class UserStoreMgtRestClient extends RestBaseClient {
     }
 
     /**
-     * Check user store deployment
+     * Check user store deployment.
      *
-     * @param domain User Store name
+     * @param domain User Store name.
      * @return boolean response of the user store deployment.
      * @throws Exception If an error occurred while checking the user store creation.
      */

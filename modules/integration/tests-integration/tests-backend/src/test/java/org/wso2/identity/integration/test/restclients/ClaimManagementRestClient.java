@@ -61,7 +61,7 @@ public class ClaimManagementRestClient extends RestBaseClient {
     /**
      * Add External Claim.
      *
-     * @param dialectId Claim dialect id.
+     * @param dialectId    Claim dialect id.
      * @param claimRequest External Claim request object.
      * @throws Exception If an error occurred while adding an external claim.
      */
@@ -80,7 +80,7 @@ public class ClaimManagementRestClient extends RestBaseClient {
      * Get an External Claim.
      *
      * @param dialectId Claim dialect id.
-     * @param claimId claim id.
+     * @param claimId   Claim id.
      * @return JSONObject JSON object of the response.
      * @throws Exception If an error occurred while getting an external claim.
      */
@@ -98,7 +98,7 @@ public class ClaimManagementRestClient extends RestBaseClient {
      * Delete an External Claim.
      *
      * @param dialectId Claim dialect id.
-     * @param claimId claim id.
+     * @param claimId   Claim id.
      * @throws IOException If an error occurred while deleting an external claim.
      */
     public void deleteExternalClaim(String dialectId, String claimId) throws IOException {

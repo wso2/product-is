@@ -104,6 +104,7 @@ public class OIDCUtilTest {
 
     /**
      * To set and get name-value pairs.
+     *
      * @param application application.
      * @return name-value pairs.
      */
@@ -127,7 +128,8 @@ public class OIDCUtilTest {
 
     /**
      * Set sessionDataKey.
-     * @param response response
+     *
+     * @param response       response
      * @param keyPositionMap map to preserve the sessionDataKey.
      * @throws IOException if an error occurs when extracting data from the response.
      */
