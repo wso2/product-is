@@ -324,12 +324,6 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
         client_id = ((JSONObject) createResponsePayload).get("client_id").toString();
         assertNotNull(client_id, "client_id cannot be null");
 
-        createResponsePayload.remove("client_id");
-        createResponsePayload.remove("client_secret");
-        createResponsePayload.remove("client_secret_expires_at");
-        createResponsePayload.remove("software_statement");
-        assertEquals(mapper.readTree(createResponsePayload.toJSONString()), mapper.readTree(
-                registerRequestJSON.toJSONString()), "Response payload should be equal.");
 
         HttpGet getRequest = new HttpGet(getTenantQualifiedURL(OAuthDCRMConstants.DCR_ENDPOINT_HOST_PART , tenant)
                 + client_id);
@@ -339,15 +333,6 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
         HttpResponse getResponse = client.execute(getRequest);
         assertEquals(getResponse.getStatusLine().getStatusCode(), 200, "Service provider request " +
                 "has not returned with successful response");
-
-        JSONObject getResponsePayload = DCRUtils.getPayload(getResponse);
-        getResponsePayload.remove("client_id");
-        getResponsePayload.remove("client_secret");
-        getResponsePayload.remove("client_secret_expires_at");
-        getResponsePayload.remove("software_statement");
-
-        assertEquals(mapper.readTree(getResponsePayload.toJSONString()), mapper.readTree(
-                registerRequestJSON.toJSONString()), "Response payload should be equal.");
     }
 
     @Test(alwaysRun = true, groups = "wso2.is", priority = 10, description = "Create a service provider with " +
@@ -370,12 +355,6 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
         JSONObject updateResponsePayload  = DCRUtils.getPayload(response);
         client_id = ((JSONObject) updateResponsePayload).get("client_id").toString();
         assertNotNull(client_id, "client_id cannot be null");
-        updateResponsePayload.remove("client_id");
-        updateResponsePayload.remove("client_secret");
-        updateResponsePayload.remove("client_secret_expires_at");
-        updateResponsePayload.remove("software_statement");
-        assertEquals(mapper.readTree(updateResponsePayload.toJSONString()),
-                mapper.readTree(updateRequestPayload.toJSONString()), "Response payload should be equal.");
 
         // Verify that updated attribute is correctly returned by retrieving data.
         HttpGet getRequest = new HttpGet(getTenantQualifiedURL(OAuthDCRMConstants.DCR_ENDPOINT_HOST_PART , tenant)

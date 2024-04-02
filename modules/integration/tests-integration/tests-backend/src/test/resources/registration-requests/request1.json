@@ -13,7 +13,7 @@
   "backchannel_logout_session_required": true,
   "token_endpoint_auth_method": "client_secret",
   "token_endpoint_auth_signing_alg" : "PS256",
-  "sector_identifier_uri" : "https://mocki.io/v1/04b49547-0ae2-4049-8d1c-42648e633001",
+  "sector_identifier_uri" : "https://gist.githubusercontent.com/SachiniSiriwardene/87efb254413da5fed5610deb7e1b9261/raw/d817580c8d4810fa01d31312fff16c33a4816c1f/redirecturi.json",
   "id_token_signed_response_alg" : "PS256",
   "id_token_encrypted_response_alg" : "RSA-OAEP",
   "id_token_encrypted_response_enc" : "A128GCM",

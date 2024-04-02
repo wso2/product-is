@@ -99,7 +99,8 @@ public class FAPIDCRValidationsTestCase extends ISIntegrationTest {
                 },
                 {
                         DCRUtils.getRegisterRequestJSON("request4.json"), INVALID_CLIENT_METADATA,
-                        "Sector identifier URI is needed for PPID calculation"
+                        "Sector Identifier URI is mandatory if multiple redirect URIs with different" +
+                                "hostnames are configured."
                 },
                 {
                         DCRUtils.getRegisterRequestJSON("request5.json"), INVALID_CLIENT_METADATA,
