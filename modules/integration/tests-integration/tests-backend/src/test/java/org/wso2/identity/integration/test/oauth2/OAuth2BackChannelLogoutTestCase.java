@@ -145,6 +145,7 @@ public class OAuth2BackChannelLogoutTestCase extends OAuth2ServiceAbstractIntegr
     }
 
     private void createOIDCApplication() throws Exception {
+
         ApplicationModel application = new ApplicationModel();
 
         List<String> grantTypes = new ArrayList<>();
@@ -310,6 +311,7 @@ public class OAuth2BackChannelLogoutTestCase extends OAuth2ServiceAbstractIntegr
     }
 
     private void addAdminUser() throws Exception {
+
         UserObject userInfo = new UserObject();
         userInfo.setUserName(USERNAME);
         userInfo.setPassword(PASSWORD);

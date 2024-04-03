@@ -81,6 +81,7 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
+
         super.init();
         authenticatorRestClient = new AuthenticatorRestClient(serverURL);
         enableAccountLocking();
@@ -91,6 +92,7 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     @Test(groups = "wso2.is", description = "Check whether the user account lock successfully")
     public void testSuccessfulLockedInitially() {
+
         try {
             testLockUserId = addAdminUser(TEST_LOCK_USER_1, TEST_LOCK_USER_1_PASSWORD, null);
 
@@ -156,6 +158,7 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
+
         scim2RestClient.deleteUser(testLockUserId);
         scim2RestClient.deleteUser(testLockUser2Id);
         scim2RestClient.deleteUser(testLockUser3Id);
@@ -171,6 +174,7 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
     }
 
     protected void enableAccountLocking() throws Exception {
+
         identityGovernanceRestClient = new IdentityGovernanceRestClient(serverURL, tenantInfo);
 
         PropertyReq property = new PropertyReq();
@@ -186,12 +190,14 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
     }
 
     protected void disableAccountLocking() throws Exception {
+
         connectorPatchRequest.getProperties().get(0).setValue("false");
         identityGovernanceRestClient.updateConnectors(CATEGORY_LOGIN_ATTEMPTS_SECURITY , CONNECTOR_ACCOUNT_LOCK_HANDLER,
                 connectorPatchRequest);
     }
 
     protected String addAdminUser(String username, String password, String locale) throws Exception {
+
         UserObject userInfo = new UserObject();
         userInfo.setUserName(username);
         userInfo.setPassword(password);

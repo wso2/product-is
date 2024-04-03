@@ -107,6 +107,7 @@ public class RegistryMountTestCase extends ISIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
+
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(isServer);
 
@@ -133,6 +134,7 @@ public class RegistryMountTestCase extends ISIntegrationTest {
 
     @AfterClass(alwaysRun = true)
     public void testClear() throws Exception{
+
         deleteApplication();
         serverConfigurationManager.restoreToLastConfiguration(false);
         tenantMgtRestClient.closeHttpClient();
@@ -143,6 +145,7 @@ public class RegistryMountTestCase extends ISIntegrationTest {
 
     @Test(alwaysRun = true, description = "Testing SAML SSO login", groups = "wso2.is")
     public void testSAMLSSOLogin() {
+
         try {
             HttpResponse response;
 
@@ -178,6 +181,7 @@ public class RegistryMountTestCase extends ISIntegrationTest {
 
     private String extractDataFromResponse(HttpResponse response, String key, int token)
             throws IOException {
+
         BufferedReader rd = new BufferedReader(
                 new InputStreamReader(response.getEntity().getContent()));
         String line;
@@ -194,6 +198,7 @@ public class RegistryMountTestCase extends ISIntegrationTest {
     }
 
     private HttpResponse sendPOSTMessage(String sessionKey) throws Exception {
+
         HttpPost post = new HttpPost(COMMON_AUTH_URL);
         post.setHeader("User-Agent", USER_AGENT);
         post.addHeader("Referer", String.format(ACS_URL, artifact));
@@ -206,12 +211,14 @@ public class RegistryMountTestCase extends ISIntegrationTest {
     }
 
     private HttpResponse sendGetRequest(String url) throws Exception {
+
         HttpGet request = new HttpGet(url);
         request.addHeader("User-Agent", USER_AGENT);
         return httpClient.execute(request);
     }
 
     private HttpResponse sendSAMLMessage(String url, String samlMsgKey, String samlMsgValue) throws IOException {
+
         List<NameValuePair> urlParameters = new ArrayList<>();
         HttpPost post = new HttpPost(getTenantQualifiedURL(url, tenantInfo.getDomain()));
         post.setHeader("User-Agent", USER_AGENT);
@@ -222,6 +229,7 @@ public class RegistryMountTestCase extends ISIntegrationTest {
     }
 
     private HttpResponse sendRedirectRequest(HttpResponse response) throws IOException {
+
         Header[] headers = response.getAllHeaders();
         String url = "";
         for (Header header : headers) {
@@ -237,6 +245,7 @@ public class RegistryMountTestCase extends ISIntegrationTest {
     }
 
     private String extractDataFromResponse(HttpResponse response) throws IOException {
+
         BufferedReader rd = new BufferedReader(
                 new InputStreamReader(response.getEntity().getContent()));
         StringBuilder result = new StringBuilder();
@@ -249,6 +258,7 @@ public class RegistryMountTestCase extends ISIntegrationTest {
     }
 
     private void addRegistryMountTenant() throws Exception {
+
         Owner tenantAdminUser = new Owner();
         tenantAdminUser.setUsername(TENANT_ADMIN_TENANT_AWARE_USERNAME);
         tenantAdminUser.setPassword(TENANT_ADMIN_PASSWORD);
@@ -265,6 +275,7 @@ public class RegistryMountTestCase extends ISIntegrationTest {
     }
 
     private Tenant getRegistryMountTenantInfo() {
+
         User registryMountTenantAdmin = new User();
         registryMountTenantAdmin.setUserName(TENANT_ADMIN_USERNAME);
         registryMountTenantAdmin.setPassword(TENANT_ADMIN_PASSWORD);
@@ -287,6 +298,7 @@ public class RegistryMountTestCase extends ISIntegrationTest {
     }
 
     private void deleteApplication() throws Exception{
+
         applicationMgtRestClient.deleteApplication(appId);
     }
 

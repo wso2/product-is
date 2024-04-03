@@ -55,6 +55,7 @@ public class TenantMgtRestClient extends RestBaseClient {
      *
      * @param TenantReqModel object with tenant creation details.
      * @return Id of the created tenant.
+     * @throws Exception If an error occurred while adding a tenant.
      */
     public String addTenant(TenantModel TenantReqModel) throws Exception {
         String endPoint = serverUrl + TENANT_MGT_BASE_PATH;
@@ -79,8 +80,11 @@ public class TenantMgtRestClient extends RestBaseClient {
 
     /**
      * Close the HTTP client.
+     *
+     * @throws IOException If an error occurred while closing the Http Client.
      */
     public void closeHttpClient() throws IOException {
+
         client.close();
     }
 }

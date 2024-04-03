@@ -634,6 +634,7 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
     }
 
     private String getLoginUserId() throws Exception {
+
         String userSearchReq = new JSONObject()
                 .put("schemas", new JSONArray().put("urn:ietf:params:scim:api:messages:2.0:SearchRequest"))
                 .put("attributes", new JSONArray().put("id"))
@@ -646,6 +647,7 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
     }
 
     private void updateUserAttribute(String loginUserId, String attributePath, String attributeValue) throws IOException {
+
         UserItemAddGroupobj updateUserPatchOp = new UserItemAddGroupobj().op(OpEnum.ADD);
         updateUserPatchOp.setPath(attributePath);
         updateUserPatchOp.setValue(attributeValue);

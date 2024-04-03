@@ -45,6 +45,7 @@ public class OAuth2ServiceErrorResponseTest extends OAuth2ServiceAbstractIntegra
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
+
         super.init(TestUserMode.SUPER_TENANT_USER);
 
         setSystemproperties();
@@ -53,6 +54,7 @@ public class OAuth2ServiceErrorResponseTest extends OAuth2ServiceAbstractIntegra
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
+
         deleteApp(applicationId);
         consumerKey = null;
         applicationId = null;
@@ -77,6 +79,7 @@ public class OAuth2ServiceErrorResponseTest extends OAuth2ServiceAbstractIntegra
     @Test(groups = "wso2.is", description = "Test unsupported grant type error response", dependsOnMethods =
             "testRegisterApplication")
     public void testUnsupportedGrantTypeErrorResponse() throws Exception {
+
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("response_type",
                                                  OAuth2Constant.OAUTH2_GRANT_TYPE_IMPLICIT));

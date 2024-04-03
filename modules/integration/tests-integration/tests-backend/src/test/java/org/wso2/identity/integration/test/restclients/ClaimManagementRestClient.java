@@ -47,6 +47,7 @@ public class ClaimManagementRestClient extends RestBaseClient {
     private final String serverBasePath;
 
     public ClaimManagementRestClient(String backendURL, Tenant tenantInfo) {
+
         client = HttpClients.createDefault();
 
         this.username = tenantInfo.getContextUser().getUserName();
@@ -58,12 +59,14 @@ public class ClaimManagementRestClient extends RestBaseClient {
     }
 
     /**
-     * Add External Claim
+     * Add External Claim.
      *
-     * @param dialectId Claim dialect id.
+     * @param dialectId    Claim dialect id.
      * @param claimRequest External Claim request object.
+     * @throws Exception If an error occurred while adding an external claim.
      */
     public String addExternalClaim(String dialectId, ExternalClaimReq claimRequest) throws Exception {
+
         String endPointUrl = serverBasePath + CLAIM_DIALECTS_ENDPOINT_URI + PATH_SEPARATOR + dialectId +
                 CLAIMS_ENDPOINT_URI;
         String jsonRequest = toJSONString(claimRequest);
@@ -77,11 +80,12 @@ public class ClaimManagementRestClient extends RestBaseClient {
      * Get an External Claim.
      *
      * @param dialectId Claim dialect id.
-     * @param claimId claim id.
+     * @param claimId   Claim id.
      * @return JSONObject JSON object of the response.
-     * @throws Exception Exception.
+     * @throws Exception If an error occurred while getting an external claim.
      */
     public JSONObject getExternalClaim(String dialectId, String claimId) throws Exception {
+
         String endPointUrl = serverBasePath + CLAIM_DIALECTS_ENDPOINT_URI + PATH_SEPARATOR + dialectId +
                 CLAIMS_ENDPOINT_URI + PATH_SEPARATOR + claimId;
 
@@ -94,10 +98,11 @@ public class ClaimManagementRestClient extends RestBaseClient {
      * Delete an External Claim.
      *
      * @param dialectId Claim dialect id.
-     * @param claimId claim id.
-     * @throws IOException IOException.
+     * @param claimId   Claim id.
+     * @throws IOException If an error occurred while deleting an external claim.
      */
     public void deleteExternalClaim(String dialectId, String claimId) throws IOException {
+
         String endPointUrl = serverBasePath + CLAIM_DIALECTS_ENDPOINT_URI + PATH_SEPARATOR + dialectId +
                 CLAIMS_ENDPOINT_URI + PATH_SEPARATOR + claimId;
         try (CloseableHttpResponse response = getResponseOfHttpDelete(endPointUrl, getHeaders())) {
@@ -107,6 +112,7 @@ public class ClaimManagementRestClient extends RestBaseClient {
     }
 
     private Header[] getHeaders() {
+
         Header[] headerList = new Header[2];
         headerList[0] = new BasicHeader(AUTHORIZATION_ATTRIBUTE, BASIC_AUTHORIZATION_ATTRIBUTE +
                 Base64.encodeBase64String((username + ":" + password).getBytes()).trim());
@@ -117,8 +123,11 @@ public class ClaimManagementRestClient extends RestBaseClient {
 
     /**
      * Close the HTTP client.
+     *
+     * @throws IOException If an error occurred while closing the Http Client.
      */
     public void closeHttpClient() throws IOException {
+
         client.close();
     }
 }

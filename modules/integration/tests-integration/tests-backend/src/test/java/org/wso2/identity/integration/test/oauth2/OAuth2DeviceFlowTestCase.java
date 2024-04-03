@@ -326,10 +326,10 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
     }
 
     /**
-     * Create Application with the given app configurations
+     * Create Application with the given app configurations.
      *
-     * @return ApplicationResponseModel
-     * @throws Exception exception
+     * @return ApplicationResponseModel.
+     * @throws Exception If an error occurred while creating the application.
      */
     private ApplicationResponseModel createApp() throws Exception {
 

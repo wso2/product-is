@@ -51,8 +51,10 @@ public class KeystoreMgtRestClient extends RestBaseClient {
      * Upload the certificate to the tenant keystore. This API is not supported for super tenant.
      *
      * @param certificateRequest Certificate request object.
+     * @throws IOException If an error occurred while uploading the certificate.
      */
-    public void importCertToStore(CertificateRequest certificateRequest) throws Exception {
+    public void importCertToStore(CertificateRequest certificateRequest) throws IOException {
+
         String jsonRequest = toJSONString(certificateRequest);
         String endPointUrl = serverUrl + ISIntegrationTest.getTenantedRelativePath(KEYSTORE_BASE_PATH, tenantDomain);
 
@@ -67,8 +69,10 @@ public class KeystoreMgtRestClient extends RestBaseClient {
      *
      * @param alias alias.
      * @return Boolean status of certificate availability in tenant keystore.
+     * @throws IOException If an error occurred while checking the certificate.
      */
-    public Boolean checkCertInStore(String alias) throws Exception {
+    public Boolean checkCertInStore(String alias) throws IOException {
+
         String endPointUrl = serverUrl + ISIntegrationTest.getTenantedRelativePath(KEYSTORE_BASE_PATH, tenantDomain)
                 + PATH_SEPARATOR + alias;
 
@@ -78,6 +82,7 @@ public class KeystoreMgtRestClient extends RestBaseClient {
     }
 
     private Header[] getHeaders() {
+
         Header[] headerList = new Header[2];
         headerList[0] = new BasicHeader(AUTHORIZATION_ATTRIBUTE, BASIC_AUTHORIZATION_ATTRIBUTE +
                 Base64.encodeBase64String((username + ":" + password).getBytes()).trim());
@@ -88,8 +93,11 @@ public class KeystoreMgtRestClient extends RestBaseClient {
 
     /**
      * Close the HTTP client.
+     *
+     * @throws IOException If an error occurred while closing the Http Client.
      */
     public void closeHttpClient() throws IOException {
+
         client.close();
     }
 }

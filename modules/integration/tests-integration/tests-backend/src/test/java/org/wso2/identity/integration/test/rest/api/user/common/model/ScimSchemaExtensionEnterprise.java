@@ -29,6 +29,8 @@ public class ScimSchemaExtensionEnterprise {
     private String employeeNumber;
     private Boolean accountLocked;
     private String country;
+    private String department;
+    private String stateorprovince;
 
     /**
      *
@@ -110,6 +112,28 @@ public class ScimSchemaExtensionEnterprise {
         this.country = country;
     }
 
+    @ApiModelProperty(example = "Western")
+    @JsonProperty("stateorprovince")
+    @Valid
+    public String getStateorprovince() {
+        return stateorprovince;
+    }
+
+    public void setStateorprovince(String stateorprovince) {
+        this.stateorprovince = stateorprovince;
+    }
+
+    @ApiModelProperty(example = "Engineering")
+    @JsonProperty("department")
+    @Valid
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
     @Override
     public boolean equals(Object o) {
 
@@ -123,7 +147,9 @@ public class ScimSchemaExtensionEnterprise {
         return Objects.equals(this.manager, scimSchemaExtensionEnterprise.manager) &&
                 Objects.equals(this.employeeNumber, scimSchemaExtensionEnterprise.employeeNumber) &&
                 Objects.equals(this.accountLocked, scimSchemaExtensionEnterprise.accountLocked) &&
-                Objects.equals(this.country, scimSchemaExtensionEnterprise.country);
+                Objects.equals(this.country, scimSchemaExtensionEnterprise.country) &&
+                Objects.equals(this.department, scimSchemaExtensionEnterprise.department) &&
+                Objects.equals(this.stateorprovince, scimSchemaExtensionEnterprise.stateorprovince);
     }
 
     @Override
@@ -139,6 +165,8 @@ public class ScimSchemaExtensionEnterprise {
                 "    employeeNumber: " + toIndentedString(employeeNumber) + "\n" +
                 "    accountLocked: " + toIndentedString(accountLocked) + "\n" +
                 "    country: " + toIndentedString(country) + "\n" +
+                "    department: " + toIndentedString(department) + "\n" +
+                "    stateorprovince: " + toIndentedString(stateorprovince) + "\n" +
                 "}";
     }
 

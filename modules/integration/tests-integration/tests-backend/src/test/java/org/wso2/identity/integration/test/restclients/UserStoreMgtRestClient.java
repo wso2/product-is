@@ -47,6 +47,7 @@ public class UserStoreMgtRestClient extends RestBaseClient {
     private final String userStoreBasePath;
 
     public UserStoreMgtRestClient(String backendURL, Tenant tenantInfo) {
+
         client = HttpClients.createDefault();
 
         this.username = tenantInfo.getContextUser().getUserName();
@@ -60,10 +61,12 @@ public class UserStoreMgtRestClient extends RestBaseClient {
     /**
      * Add a secondary user store.
      *
-     * @param UserStoreReq Secondary user store request object.
+     * @param userStoreReq Secondary user store request object.
+     * @throws IOException If an error occurred while adding a user store.
      */
-    public String addUserStore(UserStoreReq UserStoreReq) throws Exception {
-        String jsonRequest = toJSONString(UserStoreReq);
+    public String addUserStore(UserStoreReq userStoreReq) throws IOException {
+
+        String jsonRequest = toJSONString(userStoreReq);
         try (CloseableHttpResponse response = getResponseOfHttpPost(userStoreBasePath, jsonRequest, getHeaders())) {
             String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
             return locationElements[locationElements.length - 1];
@@ -74,6 +77,7 @@ public class UserStoreMgtRestClient extends RestBaseClient {
      * Get secondary user stores.
      *
      * @return JSONArray element of the user stores.
+     * @throws Exception If an error occurred while getting a user store.
      */
     public JSONArray getUserStores() throws Exception {
 
@@ -83,11 +87,13 @@ public class UserStoreMgtRestClient extends RestBaseClient {
     }
 
     /**
-     * Delete a user store
+     * Delete a user store.
      *
      * @param domain User store domain(id).
+     * @throws IOException If an error occurred while deleting a user store.
      */
     public void deleteUserStore(String domain) throws IOException {
+
         String endpointUrl = userStoreBasePath + PATH_SEPARATOR + domain;
 
         try (CloseableHttpResponse response = getResponseOfHttpDelete(endpointUrl, getHeaders())) {
@@ -97,10 +103,11 @@ public class UserStoreMgtRestClient extends RestBaseClient {
     }
 
     /**
-     * Check user store deployment
+     * Check user store deployment.
      *
-     * @param domain User Store name
+     * @param domain User Store name.
      * @return boolean response of the user store deployment.
+     * @throws Exception If an error occurred while checking the user store creation.
      */
     public boolean waitForUserStoreDeployment(String domain) throws Exception {
 
@@ -119,6 +126,7 @@ public class UserStoreMgtRestClient extends RestBaseClient {
     }
 
     private Header[] getHeaders() {
+
         Header[] headerList = new Header[2];
         headerList[0] = new BasicHeader(AUTHORIZATION_ATTRIBUTE, BASIC_AUTHORIZATION_ATTRIBUTE +
                 Base64.encodeBase64String((username + ":" + password).getBytes()).trim());
@@ -129,8 +137,11 @@ public class UserStoreMgtRestClient extends RestBaseClient {
 
     /**
      * Close the HTTP client.
+     *
+     * @throws IOException If an error occurred while closing the Http Client.
      */
     public void closeHttpClient() throws IOException {
+
         client.close();
     }
 }

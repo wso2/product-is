@@ -69,6 +69,7 @@ public class OAuth2RestClient extends RestBaseClient {
     private final String password;
 
     public OAuth2RestClient(String backendUrl, Tenant tenantInfo) {
+
         this.username = tenantInfo.getContextUser().getUserName();
         this.password = tenantInfo.getContextUser().getPassword();
 
@@ -79,10 +80,12 @@ public class OAuth2RestClient extends RestBaseClient {
     }
 
     /**
-     * Create an Application
+     * Create an Application.
      *
      * @param application Application Model with application creation details.
      * @return Id of the created application.
+     * @throws IOException   If an error occurred while creating an application.
+     * @throws JSONException If an error occurred while creating the json string.
      */
     public String createApplication(ApplicationModel application) throws IOException, JSONException {
         String jsonRequest = toJSONString(application);
@@ -99,8 +102,9 @@ public class OAuth2RestClient extends RestBaseClient {
      *
      * @param application Application Model with application creation details.
      * @return Application creation response.
+     * @throws IOException If an error occurred while creating an application.
      */
-    public StatusLine createApplicationWithResponse(ApplicationModel application) throws IOException, JSONException {
+    public StatusLine createApplicationWithResponse(ApplicationModel application) throws IOException {
 
         String jsonRequest = toJSONString(application);
         try (CloseableHttpResponse response = getResponseOfHttpPost(applicationManagementApiBasePath, jsonRequest,
@@ -110,12 +114,14 @@ public class OAuth2RestClient extends RestBaseClient {
     }
 
     /**
-     * Get Application details
+     * Get Application details.
      *
      * @param appId Application id.
      * @return ApplicationResponseModel object.
+     * @throws IOException If an error occurred while getting an application.
      */
     public ApplicationResponseModel getApplication(String appId) throws IOException {
+
         String endPointUrl = applicationManagementApiBasePath + PATH_SEPARATOR + appId;
 
         try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
@@ -131,7 +137,7 @@ public class OAuth2RestClient extends RestBaseClient {
      *
      * @param clientId Client id of the application.
      * @return Application list.
-     * @throws IOException Error when getting the response.
+     * @throws IOException If an error occurred while filtering an application using client id.
      */
     public List<ApplicationListItem> getApplicationsByClientId(String clientId) throws IOException {
 
@@ -148,12 +154,14 @@ public class OAuth2RestClient extends RestBaseClient {
     }
 
     /**
-     * Update an existing application
+     * Update an existing application.
      *
-     * @param appId Application id.
+     * @param appId       Application id.
      * @param application Updated application patch object.
+     * @throws IOException If an error occurred while updating an application.
      */
     public void updateApplication(String appId, ApplicationPatchModel application) throws IOException {
+
         String jsonRequest = toJSONString(application);
         String endPointUrl = applicationManagementApiBasePath + PATH_SEPARATOR + appId;
 
@@ -164,11 +172,13 @@ public class OAuth2RestClient extends RestBaseClient {
     }
 
     /**
-     * Get all applications
+     * Get all applications.
      *
      * @return ApplicationListResponse object.
+     * @throws IOException If an error occurred while getting all applications.
      */
     public ApplicationListResponse getAllApplications() throws IOException {
+
         try (CloseableHttpResponse response = getResponseOfHttpGet(applicationManagementApiBasePath, getHeaders())) {
             String responseBody = EntityUtils.toString(response.getEntity());
 
@@ -178,11 +188,13 @@ public class OAuth2RestClient extends RestBaseClient {
     }
 
     /**
-     * Delete an application
+     * Delete an application.
      *
      * @param appId Application id.
+     * @throws IOException If an error occurred while deleting an application.
      */
     public void deleteApplication(String appId) throws IOException {
+
         String endpointUrl = applicationManagementApiBasePath + PATH_SEPARATOR + appId;
 
         try (CloseableHttpResponse response = getResponseOfHttpDelete(endpointUrl, getHeaders())) {
@@ -192,24 +204,28 @@ public class OAuth2RestClient extends RestBaseClient {
     }
 
     /**
-     * Get OIDC inbound configuration details of an application
+     * Get OIDC inbound configuration details of an application.
      *
      * @param appId Application id.
      * @return OpenIDConnectConfiguration object with oidc configuration details.
+     * @throws Exception If an error occurred while getting OIDC inbound configuration details.
      */
     public OpenIDConnectConfiguration getOIDCInboundDetails(String appId) throws Exception {
+
         String responseBody = getConfig(appId, OIDC);
         ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
         return jsonWriter.readValue(responseBody, OpenIDConnectConfiguration.class);
     }
 
     /**
-     * Get SAML inbound configuration details of an application
+     * Get SAML inbound configuration details of an application.
      *
      * @param appId Application id.
      * @return SAML2ServiceProvider object with saml configuration details.
+     * @throws Exception If an error occurred while getting SAML inbound configuration details.
      */
     public SAML2ServiceProvider getSAMLInboundDetails(String appId) throws Exception {
+
         String responseBody = getConfig(appId, SAML);
         ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
 
@@ -217,6 +233,7 @@ public class OAuth2RestClient extends RestBaseClient {
     }
 
     private String getConfig(String appId, String inboundType) throws Exception {
+
         String endPointUrl = applicationManagementApiBasePath + PATH_SEPARATOR + appId + INBOUND_PROTOCOLS_BASE_PATH +
                 PATH_SEPARATOR + inboundType;
 
@@ -226,14 +243,16 @@ public class OAuth2RestClient extends RestBaseClient {
     }
 
     /**
-     * Update inbound configuration details of an application
+     * Update inbound configuration details of an application.
      *
-     * @param appId Application id.
-     * @param inboundConfig inbound configuration object to be updated.
-     * @param inboundType Type of the inbound configuration.
+     * @param appId         Application id.
+     * @param inboundConfig Inbound configuration object to be updated.
+     * @param inboundType   Type of the inbound configuration.
+     * @throws IOException If an error occurred while updating an inbound configuration.
      */
     public void updateInboundDetailsOfApplication(String appId, Object inboundConfig, String inboundType)
             throws IOException {
+
         String jsonRequest = toJSONString(inboundConfig);
         String endPointUrl = applicationManagementApiBasePath + PATH_SEPARATOR + appId + INBOUND_PROTOCOLS_BASE_PATH +
                 PATH_SEPARATOR + inboundType;
@@ -245,12 +264,14 @@ public class OAuth2RestClient extends RestBaseClient {
     }
 
     /**
-     * Delete an Inbound Configuration
+     * Delete an Inbound Configuration.
      *
-     * @param appId Application id.
+     * @param appId       Application id.
      * @param inboundType Inbound Type to be deleted.
+     * @throws IOException If an error occurred while deleting an inbound configuration.
      */
     public Boolean deleteInboundConfiguration(String appId, String inboundType) throws IOException {
+
         String endpointUrl = applicationManagementApiBasePath + PATH_SEPARATOR + appId + INBOUND_PROTOCOLS_BASE_PATH +
                 PATH_SEPARATOR + inboundType;
 
@@ -260,6 +281,7 @@ public class OAuth2RestClient extends RestBaseClient {
     }
 
     private String getApplicationsPath(String serverUrl, String tenantDomain) {
+
         if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
             return serverUrl + API_SERVER_BASE_PATH + APPLICATION_MANAGEMENT_PATH;
         } else {
@@ -287,6 +309,7 @@ public class OAuth2RestClient extends RestBaseClient {
     }
 
     private Header[] getHeaders() {
+
         Header[] headerList = new Header[3];
         headerList[0] = new BasicHeader(USER_AGENT_ATTRIBUTE, OAuth2Constant.USER_AGENT);
         headerList[1] = new BasicHeader(AUTHORIZATION_ATTRIBUTE, BASIC_AUTHORIZATION_ATTRIBUTE +
@@ -297,7 +320,7 @@ public class OAuth2RestClient extends RestBaseClient {
     }
 
     /**
-     * Add API authorization to an application
+     * Add API authorization to an application.
      *
      * @param appId                      Application id.
      * @param authorizedAPICreationModel AuthorizedAPICreationModel object with api authorization details.
@@ -426,9 +449,12 @@ public class OAuth2RestClient extends RestBaseClient {
     }
 
     /**
-     * Close the HTTP client
+     * Close the HTTP client.
+     *
+     * @throws IOException If an error occurred while closing the Http Client.
      */
     public void closeHttpClient() throws IOException {
+
         client.close();
     }
 }

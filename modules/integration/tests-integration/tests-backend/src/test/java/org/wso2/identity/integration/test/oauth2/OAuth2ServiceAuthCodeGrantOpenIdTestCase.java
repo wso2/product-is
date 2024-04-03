@@ -97,6 +97,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
 
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
+
         return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}};
     }
 
@@ -131,6 +132,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
+
         deleteApp(applicationId);
         scim2RestClient.deleteUser(userId);
 
@@ -144,6 +146,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
 
     @Test(groups = "wso2.is", description = "Check Oauth2 application registration")
     public void testRegisterApplication() throws Exception {
+
         ApplicationResponseModel application = addApplication();
         Assert.assertNotNull(application, "OAuth App creation failed.");
         applicationId = application.getId();
@@ -156,6 +159,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
 
     @Test(groups = "wso2.is", description = "Send authorize user request", dependsOnMethods = "testRegisterApplication")
     public void testSendAuthorizedPost() throws Exception {
+
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("grantType", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
         urlParameters.add(new BasicNameValuePair("consumerKey", consumerKey));
@@ -194,6 +198,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
 
     @Test(groups = "wso2.is", description = "Send login post request", dependsOnMethods = "testSendAuthorizedPost")
     public void testSendLoginPost() throws Exception {
+
         HttpResponse response = sendLoginPost(client, sessionDataKey);
         Assert.assertNotNull(response, "Login request failed. response is null.");
 
@@ -244,6 +249,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
 
     @Test(groups = "wso2.is", description = "Get access token", dependsOnMethods = "testSendApprovalPost")
     public void testGetAccessToken() throws Exception {
+
         HttpResponse response = sendGetAccessTokenPost(client, consumerSecret);
         Assert.assertNotNull(response, "Approval response is invalid.");
         EntityUtils.consume(response.getEntity());
@@ -307,6 +313,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
     @Test(groups = "wso2.is", description = "Validate Token Expiration Time",
             dependsOnMethods = "testValidateAccessToken")
     public void testValidateTokenExpirationTime() throws Exception {
+
         JSONObject tokenResponse = introspectToken();
 
         Assert.assertNotNull(tokenResponse.get("exp"), "'exp' value is not included");
@@ -318,6 +325,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
     @Test(groups = "wso2.is", description = "Validate Authorization Context of jwt Token", dependsOnMethods =
             "testValidateAccessToken")
     public void testValidateTokenScope() throws Exception {
+
         JSONObject tokenResponse = introspectToken();
 
         Assert.assertTrue(tokenResponse.size() > 1, "Invalid JWT token received");
@@ -329,6 +337,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
     }
 
     public HttpResponse sendLoginPost(HttpClient client, String sessionDataKey) throws IOException {
+
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("username", USERNAME));
         urlParameters.add(new BasicNameValuePair("password", PASSWORD));
@@ -339,6 +348,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
     }
 
     private JSONObject introspectToken() throws Exception {
+
         String introspectionUrl = tenantInfo.getDomain().equalsIgnoreCase("carbon.super") ?
                 OAuth2Constant.INTRO_SPEC_ENDPOINT : OAuth2Constant.TENANT_INTRO_SPEC_ENDPOINT;
         return introspectTokenWithTenant(client, accessToken, introspectionUrl,
@@ -346,6 +356,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
     }
 
     private void addAdminUser() throws Exception {
+
         UserObject userInfo = new UserObject();
         userInfo.setUserName(USERNAME);
         userInfo.setPassword(PASSWORD);

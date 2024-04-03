@@ -160,6 +160,7 @@ public class SAMLInvalidIssuerTestCase extends AbstractSAMLSSOTestCase {
 
     @DataProvider(name = "samlConfigProvider")
     public static Object[][] samlConfigProvider(){
+
         return  new SAMLConfig[][]{
                 {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_REDIRECT,
                         ClaimType.NONE, App.SUPER_TENANT_APP_WITH_SIGNING)},

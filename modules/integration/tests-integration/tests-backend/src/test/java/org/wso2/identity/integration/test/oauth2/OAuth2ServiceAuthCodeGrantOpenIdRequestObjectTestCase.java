@@ -97,6 +97,8 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
     private static final String emailClaimURI = "http://wso2.org/claims/emailaddress";
     private static final String givenNameClaimURI = "http://wso2.org/claims/givenname";
     private static final String countryClaimURI = "http://wso2.org/claims/country";
+    private static final String customClaimURI1 = "http://wso2.org/claims/department";
+    private static final String customClaimURI2 = "http://wso2.org/claims/stateorprovince";
     private static final String externalClaimURI1 = "externalClaim1";
     private static final String externalClaimURI2 = "externalClaim2";
     private static final String USER_EMAIL = "abcrqo@wso2.com";
@@ -138,6 +140,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
+
         super.init(TestUserMode.SUPER_TENANT_USER);
 
         adminUsername = userInfo.getUserName();
@@ -158,10 +161,13 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
         claimManagementRestClient = new ClaimManagementRestClient(serverURL, tenantInfo);
 
         addAdminUser();
+        claimId1 = addOIDCClaims(externalClaimURI1, customClaimURI1);
+        claimId2 = addOIDCClaims(externalClaimURI2, customClaimURI2);
 
     }
 
     private String addOIDCClaims(String externalClaim, String localClaim) throws Exception {
+
         ExternalClaimReq externalClaimReq = new ExternalClaimReq();
         externalClaimReq.setClaimURI(externalClaim);
         externalClaimReq.setMappedLocalClaimURI(localClaim);
@@ -201,6 +207,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
 
     @Test(groups = "wso2.is", description = "Send authorize user request", dependsOnMethods = "testRegisterApplication")
     public void testSendAuthorozedPost() throws Exception {
+
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("grantType", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
         urlParameters.add(new BasicNameValuePair("consumerKey", consumerKey));
@@ -208,8 +215,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
         urlParameters.add(new BasicNameValuePair("authorizeEndpoint", OAuth2Constant.APPROVAL_URL
                 + "?request=" + REQUEST));
         urlParameters.add(new BasicNameValuePair("authorize", OAuth2Constant.AUTHORIZE_PARAM));
-        urlParameters.add(new BasicNameValuePair("scope", OAuth2Constant.OAUTH2_SCOPE_OPENID + " " +
-                OAuth2Constant.OAUTH2_SCOPE_EMAIL + " " + OAuth2Constant.OAUTH2_SCOPE_PROFILE));
+        urlParameters.add(new BasicNameValuePair("scope", OAuth2Constant.OAUTH2_SCOPE_OPENID));
 
         HttpResponse response =
                 sendPostRequestWithParameters(client, urlParameters,
@@ -239,6 +245,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
 
     @Test(groups = "wso2.is", description = "Send login post request", dependsOnMethods = "testSendAuthorozedPost")
     public void testSendLoginPost() throws Exception {
+
         HttpResponse response = sendLoginPost(client, sessionDataKey);
         Assert.assertNotNull(response, "Login request failed. response is null.");
 
@@ -289,6 +296,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
 
     @Test(groups = "wso2.is", description = "Get access token", dependsOnMethods = "testSendApprovalPost")
     public void testGetAccessToken() throws Exception {
+
         HttpResponse response = sendGetAccessTokenPost(client, consumerSecret);
         Assert.assertNotNull(response, "Approval response is invalid.");
         EntityUtils.consume(response.getEntity());
@@ -322,6 +330,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
 
     @Test(groups = "wso2.is", description = "Validate access token", dependsOnMethods = "testGetAccessToken")
     public void testValidateAccessToken() throws Exception {
+
         HttpResponse response = sendValidateAccessTokenPost(client, accessToken);
         Assert.assertNotNull(response, "Validate access token response is invalid.");
 
@@ -339,6 +348,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
 
     @Test(groups = "wso2.is", description = "Validate the user claim values", dependsOnMethods = "testGetAccessToken")
     public void testClaims() throws Exception {
+
         HttpGet request = new HttpGet(OAuth2Constant.USER_INFO_ENDPOINT);
 
         request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
@@ -351,18 +361,20 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
         Object obj = JSONValue.parse(rd);
         String email = ((JSONObject) obj).get("email").toString();
         String givenName = ((JSONObject) obj).get("given_name").toString();
+        Object externalClaim1 = ((JSONObject) obj).get("externalClaim1");
+        Object externalClaim2 = ((JSONObject) obj).get("externalClaim2");
 
         EntityUtils.consume(response.getEntity());
         Assert.assertEquals(USER_EMAIL, email, "Incorrect email claim value");
         Assert.assertEquals(GIVEN_NAME, givenName, "Incorrect given_name claim value");
-        // externalClaim1 and externalClaim2 are not included in the requested scopes.
-        Assert.assertNull(((JSONObject) obj).get("externalClaim1"));
-        Assert.assertNull(((JSONObject) obj).get("externalClaim2"));
+        Assert.assertEquals(CUSTOM_CLAIM1, externalClaim1, "Incorrect externalClaim1 claim value");
+        Assert.assertNull(externalClaim2, "A value for externalClaim2 claim is present in the response.");
     }
 
     @Test(groups = "wso2.is", description = "Validate Token Expiration Time",
             dependsOnMethods = "testValidateAccessToken")
     public void testValidateTokenExpirationTime() throws Exception {
+
         JSONObject tokenResponse = introspectToken();
         
         Assert.assertNotNull(tokenResponse.get("exp"), "'exp' value is not included");
@@ -375,12 +387,12 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
     @Test(groups = "wso2.is", description = "Validate Authorization Context of jwt Token", dependsOnMethods =
             "testValidateAccessToken")
     public void testValidateTokenScope() throws Exception {
+
         JSONObject tokenResponse = introspectToken();
         Assert.assertTrue(tokenResponse.size() > 1, "Invalid JWT token received");
         Assert.assertNotNull(tokenResponse.get("scope"), "'scope' is not included");
 
         String scopes = tokenResponse.get("scope").toString();
-        Assert.assertTrue(scopes.contains("email"), "Invalid JWT Token scope Value");
         Assert.assertTrue(scopes.contains("openid"), "Invalid JWT Token scope Value");
     }
 
@@ -403,6 +415,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
     }
 
     public HttpResponse sendLoginPost(HttpClient client, String sessionDataKey) throws IOException {
+
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("username", USERNAME));
         urlParameters.add(new BasicNameValuePair("password", PASSWORD));
@@ -412,18 +425,25 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
     }
 
     private JSONObject introspectToken() throws Exception {
+
         String introspectionUrl = tenantInfo.getDomain().equalsIgnoreCase("carbon.super") ?
                 OAuth2Constant.INTRO_SPEC_ENDPOINT : OAuth2Constant.TENANT_INTRO_SPEC_ENDPOINT;
         return introspectTokenWithTenant(client, accessToken, introspectionUrl, adminUsername, adminPassword);
     }
 
     private void addAdminUser() throws Exception {
+
         UserObject userInfo = new UserObject();
         userInfo.setUserName(USERNAME);
         userInfo.setPassword(PASSWORD);
         userInfo.setName(new Name().givenName(GIVEN_NAME));
         userInfo.addEmail(new Email().value(USER_EMAIL));
-        userInfo.setScimSchemaExtensionEnterprise(new ScimSchemaExtensionEnterprise().country(COUNTRY));
+
+        ScimSchemaExtensionEnterprise scimSchemaExtensionEnterprise = new ScimSchemaExtensionEnterprise();
+        scimSchemaExtensionEnterprise.setCountry(COUNTRY);
+        scimSchemaExtensionEnterprise.setDepartment(CUSTOM_CLAIM1);
+        scimSchemaExtensionEnterprise.setStateorprovince(CUSTOM_CLAIM2);
+        userInfo.setScimSchemaExtensionEnterprise(scimSchemaExtensionEnterprise);
 
         userId = scim2RestClient.createUser(userInfo);
         String roleId = scim2RestClient.getRoleIdByName("admin");

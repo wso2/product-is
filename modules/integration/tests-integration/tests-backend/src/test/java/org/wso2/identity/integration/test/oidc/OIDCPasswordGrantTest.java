@@ -182,12 +182,12 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
     /**
      * Invoke given endpointUri for Form POST request with given body, headers and Basic authentication credentials.
      *
-     * @param endpointUri endpoint to be invoked
-     * @param params      map of parameters to be added to the request
-     * @param headers     map of headers to be added to the request
-     * @param username    basic auth username
-     * @param password    basic auth password
-     * @return response
+     * @param endpointUri endpoint to be invoked.
+     * @param params      map of parameters to be added to the request.
+     * @param headers     map of headers to be added to the request.
+     * @param username    basic auth username.
+     * @param password    basic auth password.
+     * @return response.
      */
     protected Response getResponseOfFormPostWithAuth(String endpointUri, Map<String, String> params, Map<String, String>
             headers, String username, String password) {
@@ -202,12 +202,12 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
     /**
      * Invoke given endpointUri for JSON POST request with given body, headers and Basic authentication credentials.
      *
-     * @param endpointUri endpoint to be invoked
-     * @param payload     json payload
-     * @param headers     map of headers to be added to the request
-     * @param username    basic auth username
-     * @param password    basic auth password
-     * @return response
+     * @param endpointUri endpoint to be invoked.
+     * @param payload     json payload.
+     * @param headers     map of headers to be added to the request.
+     * @param username    basic auth username.
+     * @param password    basic auth password.
+     * @return response.
      */
     protected Response getResponseOfJsonPostWithAuth(String endpointUri, String payload, Map<String, String>
             headers, String username, String password) {

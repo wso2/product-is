@@ -45,6 +45,7 @@ public class EmailTemplatesRestClient extends RestBaseClient {
     private final String password;
 
     public EmailTemplatesRestClient(String backendURL, Tenant tenantInfo) {
+
         client = HttpClients.createDefault();
 
         this.username = tenantInfo.getContextUser().getUserName();
@@ -57,13 +58,15 @@ public class EmailTemplatesRestClient extends RestBaseClient {
     }
 
     /**
-     * Get Email template
+     * Get Email template.
      *
      * @param templateTypeId Template type id.
-     * @param templateId Template id.
+     * @param templateId     Template id.
      * @return JSONObject with email template details.
+     * @throws Exception If an error occurred while getting Email Template.
      */
     public JSONObject getEmailTemplate(String templateTypeId, String templateId) throws Exception {
+
         String endPointUrl = emailTemplateApiBasePath + PATH_SEPARATOR +
                 getEncodedEmailTemplateTypeId(templateTypeId) + EMAIL_TEMPLATES_PATH + PATH_SEPARATOR + templateId;
 
@@ -74,6 +77,7 @@ public class EmailTemplatesRestClient extends RestBaseClient {
     }
 
     private Header[] getHeaders() {
+
         Header[] headerList = new Header[2];
         headerList[0] = new BasicHeader(AUTHORIZATION_ATTRIBUTE, BASIC_AUTHORIZATION_ATTRIBUTE +
                 Base64.encodeBase64String((username + ":" + password).getBytes()).trim());
@@ -83,13 +87,17 @@ public class EmailTemplatesRestClient extends RestBaseClient {
     }
 
     private String getEncodedEmailTemplateTypeId(String emailTemplateTypeId) {
+
         return Base64.encodeBase64String(emailTemplateTypeId.getBytes());
     }
 
     /**
      * Close the HTTP client.
+     *
+     * @throws IOException If an error occurred while closing the Http Client.
      */
     public void closeHttpClient() throws IOException {
+
         client.close();
     }
 }

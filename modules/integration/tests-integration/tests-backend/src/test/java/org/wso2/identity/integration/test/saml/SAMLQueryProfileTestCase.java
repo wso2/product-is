@@ -60,7 +60,7 @@ import java.util.Map;
 import static org.wso2.identity.integration.test.util.Utils.requestMissingClaims;
 
 /**
- * Test case of SAMLQuery service
+ * Test case of SAMLQuery service.
  */
 public class SAMLQueryProfileTestCase extends AbstractSAMLSSOTestCase {
 
@@ -97,6 +97,7 @@ public class SAMLQueryProfileTestCase extends AbstractSAMLSSOTestCase {
 
     @BeforeTest
     public void initiateTenant() throws Exception {
+
         // Since all the requests sign with default wso2 key, upload that public key to tenants
         super.init(TestUserMode.TENANT_ADMIN);
         tenantedSamlSSOUrl = getTenantQualifiedURL(WSO2IS_URL + "samlsso", config.getUser().getTenantDomain());
@@ -350,6 +351,7 @@ public class SAMLQueryProfileTestCase extends AbstractSAMLSSOTestCase {
     }
 
     public SAML2Configuration getSAMLConfigurations(SAMLConfig config) {
+
         SAML2Configuration samlConfig = super.getSAMLConfigurations(config);
         samlConfig.getManualConfiguration().setRequestValidation(new SAMLRequestValidation()
                 .enableSignatureValidation(false)

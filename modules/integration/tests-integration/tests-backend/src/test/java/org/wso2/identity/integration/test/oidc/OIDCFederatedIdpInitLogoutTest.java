@@ -514,6 +514,7 @@ public class OIDCFederatedIdpInitLogoutTest extends AbstractIdentityFederationTe
     }
 
     private OpenIDConnectConfiguration getOIDCConfigurations() {
+
         List<String> grantTypes = new ArrayList<>();
         Collections.addAll(grantTypes, "authorization_code", "implicit", "password", "client_credentials",
                 "refresh_token", "urn:ietf:params:oauth:grant-type:saml2-bearer", "iwa:ntlm");

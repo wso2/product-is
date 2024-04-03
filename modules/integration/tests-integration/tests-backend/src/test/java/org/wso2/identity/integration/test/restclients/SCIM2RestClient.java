@@ -55,6 +55,7 @@ public class SCIM2RestClient extends RestBaseClient {
     private final String password;
 
     public SCIM2RestClient(String serverUrl, Tenant tenantInfo){
+
         this.serverUrl = serverUrl;
         this.tenantDomain = tenantInfo.getContextUser().getUserDomain();
         this.username = tenantInfo.getContextUser().getUserName();
@@ -62,12 +63,14 @@ public class SCIM2RestClient extends RestBaseClient {
     }
 
     /**
-     * Create a user
+     * Create a user.
      *
      * @param userInfo object with user creation details.
      * @return Id of the created user.
+     * @throws Exception If an error occurred while creating a group.
      */
     public String createUser(UserObject userInfo) throws Exception {
+
         String jsonRequest = toJSONString(userInfo);
         if (userInfo.getScimSchemaExtensionEnterprise() != null) {
             jsonRequest = jsonRequest.replace("scimSchemaExtensionEnterprise",
@@ -83,13 +86,15 @@ public class SCIM2RestClient extends RestBaseClient {
     }
 
     /**
-     * Get the details of a user
+     * Get the details of a user.
      *
-     * @param userId     id of the user.
-     * @param attribute  requested user attributes
+     * @param userId    Id of the user.
+     * @param attribute Requested user attributes.
      * @return JSONObject of the HTTP response.
+     * @throws Exception If an error occurred while getting a user.
      */
     public JSONObject getUser(String userId, String attribute) throws Exception {
+
         String endPointUrl;
         if (StringUtils.isEmpty(attribute)) {
             endPointUrl = getUsersPath() + PATH_SEPARATOR + userId;
@@ -103,12 +108,14 @@ public class SCIM2RestClient extends RestBaseClient {
     }
 
     /**
-     * Update the details of an existing user
+     * Update the details of an existing user.
      *
-     * @param patchUserInfo user patch request object.
-     * @param userId id of the user.
+     * @param patchUserInfo User patch request object.
+     * @param userId        Id of the user.
+     * @throws IOException If an error occurred while updating a user.
      */
     public void updateUser(PatchOperationRequestObject patchUserInfo, String userId) throws IOException {
+
         String jsonRequest = toJSONString(patchUserInfo);
         String endPointUrl = getUsersPath() + PATH_SEPARATOR + userId;
 
@@ -119,12 +126,14 @@ public class SCIM2RestClient extends RestBaseClient {
     }
 
     /**
-     * Search a user and get requested attributes
+     * Search a user and get requested attributes.
      *
-     * @param userSearchReq json String of user search request.
+     * @param userSearchReq Json String of user search request.
      * @return JSONObject of the user search response.
+     * @throws Exception If an error occurred while getting a user.
      */
     public JSONObject searchUser(String userSearchReq) throws Exception {
+
         String endPointUrl = getUsersPath() + SCIM2_SEARCH_PATH;
 
         try (CloseableHttpResponse response = getResponseOfHttpPost(endPointUrl, userSearchReq, getHeaders())) {
@@ -135,11 +144,13 @@ public class SCIM2RestClient extends RestBaseClient {
     }
 
     /**
-     * Delete an existing user
+     * Delete an existing user.
      *
-     * @param userId id of the user.
+     * @param userId Id of the user.
+     * @throws IOException If an error occurred while deleting a user.
      */
     public void deleteUser(String userId) throws IOException {
+
         String endPointUrl = getUsersPath() + PATH_SEPARATOR + userId;
 
         try (CloseableHttpResponse response = getResponseOfHttpDelete(endPointUrl, getHeaders())) {
@@ -149,12 +160,14 @@ public class SCIM2RestClient extends RestBaseClient {
     }
 
     /**
-     * Add a new role
+     * Add a new role.
      *
      * @param roleInfo Role request object.
      * @return Role id.
+     * @throws Exception If an error occurred while adding a role.
      */
     public String addRole(RoleRequestObject roleInfo) throws Exception {
+
         String jsonRequest = toJSONString(roleInfo);
 
         try (CloseableHttpResponse response = getResponseOfHttpPost(getRolesPath(), jsonRequest, getHeaders())) {
@@ -166,12 +179,14 @@ public class SCIM2RestClient extends RestBaseClient {
     }
 
     /**
-     * Update an existing role
+     * Update an existing role.
      *
      * @param patchRoleInfo Role patch request object.
-     * @param roleId Role id.
+     * @param roleId        Role id.
+     * @throws IOException If an error occurred while updating a role.
      */
     public void updateUserRole(PatchOperationRequestObject patchRoleInfo, String roleId) throws IOException {
+
         String jsonRequest = toJSONString(patchRoleInfo);
         String endPointUrl = getRolesPath() + PATH_SEPARATOR + roleId;
 
@@ -182,10 +197,11 @@ public class SCIM2RestClient extends RestBaseClient {
     }
 
     /**
-     * Search and get the id of a role by the name
+     * Search and get the id of a role by the name.
      *
      * @param roleName Role name.
      * @return Role id.
+     * @throws Exception If an error occurred while getting a role by name.
      */
     public String getRoleIdByName(String roleName) throws Exception {
 
@@ -209,11 +225,13 @@ public class SCIM2RestClient extends RestBaseClient {
     }
 
     /**
-     * Delete an existing role
+     * Delete an existing role.
      *
      * @param roleId Role id.
+     * @throws IOException If an error occurred while deleting a role.
      */
     public void deleteRole(String roleId) throws IOException {
+
         String endPointUrl = getRolesPath() + PATH_SEPARATOR + roleId;
 
         try (CloseableHttpResponse response = getResponseOfHttpDelete(endPointUrl, getHeaders())) {
@@ -223,10 +241,11 @@ public class SCIM2RestClient extends RestBaseClient {
     }
 
     /**
-     * Add a new group
+     * Add a new group.
      *
      * @param groupInfo Group request object.
      * @return Group id.
+     * @throws Exception If an error occurred while adding a group.
      */
     public String createGroup(GroupRequestObject groupInfo) throws Exception {
         String jsonRequest = toJSONString(groupInfo);
@@ -240,11 +259,13 @@ public class SCIM2RestClient extends RestBaseClient {
     }
 
     /**
-     * Delete an existing group
+     * Delete an existing group.
      *
      * @param groupId Group id.
+     * @throws IOException If an error occurred while deleting a group.
      */
     public void deleteGroup(String groupId) throws IOException {
+
         String endPointUrl = getGroupsPath() + PATH_SEPARATOR + groupId;
 
         try (CloseableHttpResponse response = getResponseOfHttpDelete(endPointUrl, getHeaders())) {
@@ -265,6 +286,7 @@ public class SCIM2RestClient extends RestBaseClient {
     }
 
     private String getUsersPath() {
+
         if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
             return serverUrl + SCIM2_USERS_ENDPOINT;
         } else {
@@ -273,6 +295,7 @@ public class SCIM2RestClient extends RestBaseClient {
     }
 
     private String getRolesPath() {
+
         if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
             return serverUrl + SCIM2_ROLES_ENDPOINT;
         } else {
@@ -281,6 +304,7 @@ public class SCIM2RestClient extends RestBaseClient {
     }
 
     private String getGroupsPath() {
+
         if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
             return serverUrl + SCIM2_GROUPS_ENDPOINT;
         } else {
@@ -290,8 +314,11 @@ public class SCIM2RestClient extends RestBaseClient {
 
     /**
      * Close the HTTP client.
+     *
+     * @throws IOException If an error occurred while closing the Http Client.
      */
     public void closeHttpClient() throws IOException {
+
         client.close();
     }
 }

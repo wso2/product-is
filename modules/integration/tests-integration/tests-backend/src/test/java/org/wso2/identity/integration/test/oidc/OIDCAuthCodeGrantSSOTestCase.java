@@ -58,7 +58,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This test class tests OIDC SSO functionality for two replying party applications
+ * This test class tests OIDC SSO functionality for two replying party applications.
  */
 public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
 
@@ -76,7 +76,6 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
     protected RequestConfig requestConfig;
     protected HttpClient client;
     protected List<NameValuePair> consentParameters = new ArrayList<>();
-
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -109,7 +108,6 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
         deleteUser(user);
         deleteApplications();
         clear();
-
     }
 
     @Test(groups = "wso2.is", description = "Test authz endpoint before creating a valid session")
