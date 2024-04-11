@@ -2363,7 +2363,7 @@
 
         <identity.org.mgt.version>1.4.14</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.1.4</identity.org.mgt.core.version>
-        <identity.organization.login.version>1.1.31</identity.organization.login.version>
+        <identity.organization.login.version>1.1.32</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.22</identity.oauth2.grant.organizationswitch.version>
 
         <!-- Hash Provider Versions-->
