@@ -214,13 +214,14 @@ public class ApplicationNativeAuthenticationTestCase extends OAuth2ServiceAbstra
         EntityUtils.consume(response.getEntity());
         JSONParser parser = new JSONParser();
         JSONObject json = (org.json.simple.JSONObject) parser.parse(responseString);
+        System.out.println("Init response: " + json.toJSONString());
         Assert.assertNotNull(json, "Client Native Authentication Init response is null.");
         validInitClientNativeAuthnResponse(json);
     }
 
     @Test(groups = "wso2.is", description = "Send Basic authentication POST request.",
             dependsOnMethods = "testSendInitAuthRequestPost")
-    public void testSendBasicAuthRequestPost() {
+    public void testSendBasicAuthRequestPost() throws Exception {
 
         String body = "{\n" +
                 "    \"flowId\": \"" + flowId + "\",\n" +
@@ -233,6 +234,9 @@ public class ApplicationNativeAuthenticationTestCase extends OAuth2ServiceAbstra
                 "    }\n" +
                 "}";
 
+        System.out.println("Authenticator ID: " + authenticatorId);
+        ApplicationResponseModel application = getApplication(appId);
+        System.out.println("App authenticator: " + application.getAuthenticationSequence().getSteps().toString());
         Response authnResponse = getResponseOfJSONPost( href, body, new HashMap<>());
         ExtractableResponse<Response> extractableResponse = authnResponse.then()
                 .log().ifValidationFails()
