@@ -243,7 +243,7 @@ public class ApplicationNativeAuthenticationTestCase extends OAuth2ServiceAbstra
         System.out.println("Authenticator ID: " + authenticatorId);
         ApplicationResponseModel application = getApplication(appId);
         System.out.println("App authenticator: " + application.getAuthenticationSequence().getSteps().toString());
-        System.out.println("App id: " + application.getInboundProtocols().toString());
+        System.out.println("App id: " + application);
         Response authnResponse = getResponseOfJSONPost( href, body, new HashMap<>());
         ExtractableResponse<Response> extractableResponse = authnResponse.then()
                 .log().ifValidationFails()
