@@ -49,6 +49,8 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthenticationSequence;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Authenticator;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
@@ -89,6 +91,7 @@ import static org.wso2.identity.integration.test.applicationNativeAuthentication
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.TEST_USER_NAME;
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.TRACE_ID;
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.UTF_8;
+import static org.wso2.identity.integration.test.utils.CommonConstants.BASIC_AUTHENTICATOR;
 
 /**
  * Integration test class for testing the native authentication flow in an OAuth 2.0-enabled application.
@@ -284,6 +287,13 @@ public class ApplicationNativeAuthenticationTestCase extends OAuth2ServiceAbstra
 
         application.setInboundProtocolConfiguration(inboundProtocolsConfig);
         application.setName(TEST_APP_NAME);
+        application.authenticationSequence(new AuthenticationSequence()
+                .type(AuthenticationSequence.TypeEnum.USER_DEFINED)
+                .addStepsItem(new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthenticationStep()
+                        .id(1)
+                        .addOptionsItem(new Authenticator()
+                                .idp("LOCAL")
+                                .authenticator(BASIC_AUTHENTICATOR))));
 
         String appId = addApplication(application);
         return getApplication(appId);
