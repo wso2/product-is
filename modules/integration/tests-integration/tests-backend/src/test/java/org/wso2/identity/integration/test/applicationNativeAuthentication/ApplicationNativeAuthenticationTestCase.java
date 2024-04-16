@@ -160,6 +160,7 @@ public class ApplicationNativeAuthenticationTestCase extends OAuth2ServiceAbstra
 
         OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(application.getId());
         consumerKey = oidcConfig.getClientId();
+        System.out.println("Registering app: " + consumerKey);
         Assert.assertNotNull(consumerKey, "Application creation failed.");
 
         appId = application.getId();
@@ -174,6 +175,8 @@ public class ApplicationNativeAuthenticationTestCase extends OAuth2ServiceAbstra
 
         HttpResponse response = sendPostRequestWithParameters(client, buildOAuth2Parameters(consumerKey),
                 OAuth2Constant.AUTHORIZE_ENDPOINT_URL);
+        System.out.println("Default test app: " + consumerKey);
+
         Assert.assertNotNull(response, "Authorization request failed. Authorized response is null.");
 
         String responseString = EntityUtils.toString(response.getEntity(), UTF_8);
@@ -208,6 +211,8 @@ public class ApplicationNativeAuthenticationTestCase extends OAuth2ServiceAbstra
 
         HttpResponse response = sendPostRequestWithParameters(client, buildOAuth2Parameters(consumerKey),
                 OAuth2Constant.AUTHORIZE_ENDPOINT_URL);
+        System.out.println("Init request app: " + consumerKey);
+
         Assert.assertNotNull(response, "Authorization request failed. Authorized response is null.");
 
         String responseString = EntityUtils.toString(response.getEntity(), UTF_8);
@@ -234,9 +239,11 @@ public class ApplicationNativeAuthenticationTestCase extends OAuth2ServiceAbstra
                 "    }\n" +
                 "}";
 
+        System.out.println("Flow id: " + flowId);
         System.out.println("Authenticator ID: " + authenticatorId);
         ApplicationResponseModel application = getApplication(appId);
         System.out.println("App authenticator: " + application.getAuthenticationSequence().getSteps().toString());
+        System.out.println("App id: " + application.getInboundProtocols().toString());
         Response authnResponse = getResponseOfJSONPost( href, body, new HashMap<>());
         ExtractableResponse<Response> extractableResponse = authnResponse.then()
                 .log().ifValidationFails()
