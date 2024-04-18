@@ -21,6 +21,7 @@ package org.wso2.identity.integration.test.applicationNativeAuthentication;
 import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -43,6 +44,9 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.identity.application.common.model.idp.xsd.FederatedAuthenticatorConfig;
+import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
+import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.identity.integration.test.oauth2.OAuth2ServiceAbstractIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AdvancedApplicationConfiguration;
@@ -110,6 +114,7 @@ public class ApplicationNativeAuthenticationTestCase extends OAuth2ServiceAbstra
     private CloseableHttpClient client;
     private UserManagementClient userMgtServiceClient;
     private String code;
+    private IdentityProviderMgtServiceClient superTenantIDPMgtClient;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -130,6 +135,8 @@ public class ApplicationNativeAuthenticationTestCase extends OAuth2ServiceAbstra
         userMgtServiceClient.addUser(TEST_USER_NAME, TEST_PASSWORD, null, TEST_PROFILE);
 
         setSystemproperties();
+        // Reset the idp cache object to remove effects from previous test cases.
+        resetResidentIDPCache();
     }
 
     @AfterClass(alwaysRun = true)
@@ -395,5 +402,23 @@ public class ApplicationNativeAuthenticationTestCase extends OAuth2ServiceAbstra
         Assert.assertNotNull(extractableResponse
                 .jsonPath()
                 .getString(AUTH_DATA_SESSION_STATE), "Session state is null in the authData");
+    }
+
+    private void resetResidentIDPCache() throws Exception {
+
+        superTenantIDPMgtClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
+        IdentityProvider residentIdp = superTenantIDPMgtClient.getResidentIdP();
+
+        FederatedAuthenticatorConfig[] federatedAuthenticatorConfigs =
+                residentIdp.getFederatedAuthenticatorConfigs();
+        for (FederatedAuthenticatorConfig authenticatorConfig : federatedAuthenticatorConfigs) {
+            if (!authenticatorConfig.getName().equalsIgnoreCase("samlsso")) {
+                federatedAuthenticatorConfigs = (FederatedAuthenticatorConfig[])
+                        ArrayUtils.removeElement(federatedAuthenticatorConfigs,
+                                authenticatorConfig);
+            }
+        }
+        residentIdp.setFederatedAuthenticatorConfigs(federatedAuthenticatorConfigs);
+        superTenantIDPMgtClient.updateResidentIdP(residentIdp);
     }
 }
