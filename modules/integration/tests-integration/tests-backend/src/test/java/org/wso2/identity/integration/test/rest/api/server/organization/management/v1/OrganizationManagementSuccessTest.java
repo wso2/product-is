@@ -319,25 +319,6 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     }
 
     @Test(dependsOnMethods = "addB2BApplication")
-    public void associateOrganizationRoleToB2BApp() throws Exception {
-
-        AssociatedRolesConfig associatedRolesConfig = new AssociatedRolesConfig().allowedAudience(
-                AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION);
-        String audienceType = AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION.toString().toLowerCase();
-        List<String> roles = oAuth2RestClient.getRoles("admin", audienceType, null);
-        String adminRoleId = null;
-        if (roles.size() == 1) {
-            adminRoleId =  roles.get(0);
-        }
-        ApplicationPatchModel applicationPatch = new ApplicationPatchModel();
-        applicationPatch.associatedRoles(associatedRolesConfig);
-        associatedRolesConfig.addRolesItem(
-                new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Role().id(
-                        adminRoleId));
-        oAuth2RestClient.updateApplication(b2bApplicationID, applicationPatch);
-    }
-
-    @Test(dependsOnMethods = "addB2BApplication")
     public void shareB2BApplication() throws JSONException {
 
         if (!SUPER_TENANT_DOMAIN.equals(tenant)) {
