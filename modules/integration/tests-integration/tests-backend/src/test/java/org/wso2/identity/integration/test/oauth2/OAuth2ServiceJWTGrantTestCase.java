@@ -77,7 +77,6 @@ import org.wso2.identity.integration.test.restclients.IdpMgtRestClient;
 import org.wso2.identity.integration.test.restclients.OIDCScopeMgtRestClient;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.util.Utils;
-import org.wso2.identity.integration.test.utils.CarbonUtils;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.File;
@@ -127,7 +126,6 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
     private String userId;
     private String idpId;
     private String countryClaimId;
-    private static boolean isLegacyRuntimeEnabled;
 
     @BeforeClass
     public void setup() throws Exception {
@@ -135,7 +133,6 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         changeISConfiguration("jwt_token_issuer_enabled.toml");
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
-        isLegacyRuntimeEnabled = CarbonUtils.isLegacyAuthzRuntimeEnabled();
         ApplicationResponseModel application = createApplicationWithJWTGrantType();
         applicationId = application.getId();
         OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(applicationId);

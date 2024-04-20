@@ -175,8 +175,7 @@ public class OAuth2RestClient extends RestBaseClient {
                             "Application update failed");
                 }
             }
-            
-            if (isLegacyAuthzRuntimeEnabled()) {
+            if (!isLegacyAuthzRuntimeEnabled()) {
                 if ((application.getAssociatedRoles() != null) && application.getAssociatedRoles().getRoles() != null) {
                     try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeaders())) {
                         Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_FORBIDDEN,
