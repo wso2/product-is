@@ -45,7 +45,6 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthorizedAPICreationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAML2ServiceProvider;
-import org.wso2.identity.integration.test.utils.CarbonUtils;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import javax.servlet.http.HttpServletResponse;
@@ -53,6 +52,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static org.wso2.identity.integration.test.utils.CarbonUtils.isLegacyAuthzRuntimeEnabled;
 
 public class OAuth2RestClient extends RestBaseClient {
 
@@ -161,31 +162,39 @@ public class OAuth2RestClient extends RestBaseClient {
      * @param application Updated application patch object.
      * @throws IOException If an error occurred while updating an application.
      */
-    public void updateApplication(String appId, ApplicationPatchModel application) throws IOException {
+    public void updateApplication(String appId, ApplicationPatchModel application )
+            throws IOException {
 
         String jsonRequest = toJSONString(application);
         String endPointUrl = applicationManagementApiBasePath + PATH_SEPARATOR + appId;
-        boolean isLegacyRuntimeEnabled;
+
         try {
-            isLegacyRuntimeEnabled = !CarbonUtils.isLegacyAuthzRuntimeEnabled();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        if (isLegacyRuntimeEnabled) {
-            if ((application.getAssociatedRoles() != null) && application.getAssociatedRoles().getRoles() != null &&
-                    !application.getAssociatedRoles().getRoles().isEmpty()) {
+            if (isLegacyAuthzRuntimeEnabled()) {
                 try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeaders())) {
-                    Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_FORBIDDEN,
+                    Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
                             "Application update failed");
                 }
             }
-        } else {
-            try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeaders())) {
-                Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
-                        "Application update failed");
+
+            if (!isLegacyAuthzRuntimeEnabled()) {
+                if ((application.getAssociatedRoles() != null) && application.getAssociatedRoles().getRoles() != null) {
+                    try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeaders())) {
+                        Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_FORBIDDEN,
+                                "Application update failed");
+                    }
+                } else {
+                    try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeaders())) {
+                        Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                                "Application update failed");
+                    }
+                }
             }
         }
+        catch (Exception e) {
+            throw new Error("Unable to update the Application");
+        }
     }
+
 
     /**
      * Get all applications.
