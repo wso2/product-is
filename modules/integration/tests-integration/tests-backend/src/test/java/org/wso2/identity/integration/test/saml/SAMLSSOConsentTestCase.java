@@ -36,6 +36,7 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.RequestedClaimConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAML2ServiceProvider;
 import org.wso2.identity.integration.test.util.Utils;
+import org.wso2.identity.integration.test.utils.CarbonUtils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 
 import java.io.BufferedReader;
@@ -63,11 +64,14 @@ public class SAMLSSOConsentTestCase extends AbstractSAMLSSOTestCase{
     private String userId;
     private String appId;
 
+    private static boolean isLegacyRuntimeEnabled;
+
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
         config = new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_REDIRECT,
                 ClaimType.LOCAL, App.SUPER_TENANT_APP_WITH_SIGNING);
+        isLegacyRuntimeEnabled = CarbonUtils.isLegacyAuthzRuntimeEnabled();
         super.init(config.getUserMode());
         super.testInit();
 
