@@ -226,6 +226,11 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
         applicationPatch.setClaimConfiguration(getCustomLocalClaimMapping());
         updateApplication(applicationId, applicationPatch);
 
+        application = getApplication(applicationId);
+        List<ClaimMappings> claimMappings = application.getClaimConfiguration().getClaimMappings();
+        Assert.assertNotNull(claimMappings);
+        Assert.assertEquals(claimMappings.size(), 1);
+        Assert.assertEquals(claimMappings.get(0).getLocalClaim().getUri(), CUSTOM_MAPPED_LOCAL_CLAIM_URI);
         if (!isLegacyAuthzRuntimeEnabled()) {
             // Authorize few system APIs.
             authorizeSystemAPIs(applicationId, new ArrayList<>(Collections.singletonList("/api/server/v1/oidc/scopes")));
@@ -246,12 +251,6 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
                             everyoneRoleId));
             updateApplication(applicationId, applicationPatch);
         }
-
-        application = getApplication(applicationId);
-        List<ClaimMappings> claimMappings = application.getClaimConfiguration().getClaimMappings();
-        Assert.assertNotNull(claimMappings);
-        Assert.assertEquals(claimMappings.size(), 1);
-        Assert.assertEquals(claimMappings.get(0).getLocalClaim().getUri(), CUSTOM_MAPPED_LOCAL_CLAIM_URI);
     }
 
     @Test(groups = "wso2.is", description = "Test custom OIDC claim creation.",
