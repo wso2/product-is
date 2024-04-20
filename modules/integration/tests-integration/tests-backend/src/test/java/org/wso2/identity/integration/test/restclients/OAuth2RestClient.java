@@ -162,7 +162,7 @@ public class OAuth2RestClient extends RestBaseClient {
      * @param application Updated application patch object.
      * @throws IOException If an error occurred while updating an application.
      */
-    public void updateApplication(String appId, ApplicationPatchModel application )
+    public void updateApplication(String appId, ApplicationPatchModel application)
             throws IOException {
 
         String jsonRequest = toJSONString(application);
@@ -175,7 +175,6 @@ public class OAuth2RestClient extends RestBaseClient {
                             "Application update failed");
                 }
             }
-
             if (!isLegacyAuthzRuntimeEnabled()) {
                 if ((application.getAssociatedRoles() != null) && application.getAssociatedRoles().getRoles() != null) {
                     try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeaders())) {
