@@ -2370,7 +2370,7 @@
         <hashprovider.pbkdf2.version>0.1.4</hashprovider.pbkdf2.version>
 
         <!-- Identity Branding Preference Management Versions -->
-        <identity.branding.preference.management.version>1.1.6</identity.branding.preference.management.version>
+        <identity.branding.preference.management.version>1.1.7</identity.branding.preference.management.version>
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.17</identity.api.dispatcher.version>
@@ -2385,9 +2385,9 @@
         <conditional.authentication.functions.version>1.2.46</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.15.7</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.5.20</identity.apps.myaccount.version>
-        <identity.apps.core.version>2.1.56</identity.apps.core.version>
+        <identity.apps.console.version>2.15.14</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.5.27</identity.apps.myaccount.version>
+        <identity.apps.core.version>2.1.57</identity.apps.core.version>
         <identity.apps.tests.version>1.6.378</identity.apps.tests.version>
 
         <!-- Charon -->
