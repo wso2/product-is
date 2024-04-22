@@ -133,7 +133,6 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         changeISConfiguration("jwt_token_issuer_enabled.toml");
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
-
         ApplicationResponseModel application = createApplicationWithJWTGrantType();
         applicationId = application.getId();
         OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(applicationId);

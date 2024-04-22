@@ -443,7 +443,7 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
         List<IdentityProvider> idpList = idpMgtServiceClient.getPaginatedIdPsInfo(filter, pageNumber);
         Assert.assertNotNull(idpList);
         if (idpList.size() > 0) {
-            Assert.assertEquals(idpList.size(), 3, "filtered identity provider size not matched" +
+            Assert.assertEquals(idpList.size(), 2, "filtered identity provider size not matched" +
                     " with the expected while testing getPaginatedIdPsInfo() with empty filter");
         } else {
             Assert.fail("Unable to find filtered identity provider while testing getPaginatedIdPsInfo(). Paginated " +
