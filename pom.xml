@@ -2315,7 +2315,7 @@
         <identity.outbound.auth.oidc.version>5.12.8</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.oauth2.version>1.0.12</identity.outbound.auth.oauth2.version>
         <identity.outbound.auth.passive.sts.version>5.5.1</identity.outbound.auth.passive.sts.version>
-        <identity.outbound.auth.samlsso.version>5.9.2</identity.outbound.auth.samlsso.version>
+        <identity.outbound.auth.samlsso.version>5.9.3</identity.outbound.auth.samlsso.version>
         <identity.outbound.auth.requestpath.basicauth.version>5.5.5</identity.outbound.auth.requestpath.basicauth.version>
         <identity.outbound.auth.requestpath.oauth.version>5.5.6</identity.outbound.auth.requestpath.oauth.version>
 
@@ -2334,7 +2334,7 @@
 
         <!-- Local Authenticator Versions -->
         <identity.local.auth.basicauth.version>6.8.4</identity.local.auth.basicauth.version>
-        <identity.local.auth.fido.version>5.4.11</identity.local.auth.fido.version>
+        <identity.local.auth.fido.version>5.4.12</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.4.4</identity.local.auth.iwa.version>
 
         <!-- Local Authentication API Connector Version -->
@@ -2385,8 +2385,8 @@
         <conditional.authentication.functions.version>1.2.46</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.15.29</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.5.42</identity.apps.myaccount.version>
+        <identity.apps.console.version>2.15.35</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.5.49</identity.apps.myaccount.version>
         <identity.apps.core.version>2.1.65</identity.apps.core.version>
         <identity.apps.tests.version>1.6.378</identity.apps.tests.version>
 
