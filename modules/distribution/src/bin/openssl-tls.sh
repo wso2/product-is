@@ -198,6 +198,10 @@ done
 
 # Check for build dependencies
 check_dependencies make cmake wget tar gcc
+# Check for Perl on RHEL-based systems
+if [ -f "/etc/redhat-release" ]; then
+    check_dependencies perl
+fi
 
 if [ $BUILD_OPENSSL = false ]; then
     OPENSSL_VERSION=$(openssl version | awk '{print $2}')
@@ -207,7 +211,7 @@ if [ $BUILD_OPENSSL = false ]; then
             ;;
         *)
             echo "Requires OpenSSL version 3.0.0 or higher. Found version $OPENSSL_VERSION"
-                    exit 1
+            exit 1
             ;;
     esac
     if [ "$(uname)" != "Darwin" ]; then
@@ -249,6 +253,11 @@ mkdir -p "$TMP_DIR"
 
 if [ $BUILD_OPENSSL = true ]; then
     OPENSSL_INSTALL_DIR="$CARBON_HOME/native/openssl"
+    if [ ! -d "$OPENSSL_INSTALL_DIR" ]; then
+        install_openssl "$TMP_DIR" "$OPENSSL_INSTALL_DIR"
+    else
+        echo "OpenSSL is already installed"
+    fi
 elif [ "$(uname)" = "Darwin" ]; then
     if [ "$(uname -m)" = "arm64" ]; then
         # For M1 (ARM) architecture
@@ -257,12 +266,6 @@ elif [ "$(uname)" = "Darwin" ]; then
         # For Intel (x86_64) architecture
         OPENSSL_INSTALL_DIR=$(ls -d '/usr/local/Cellar/openssl@3/'*)
     fi
-fi
-
-if [ $BUILD_OPENSSL = true ] && [ ! -d "$OPENSSL_INSTALL_DIR" ]; then
-    install_openssl "$TMP_DIR" "$OPENSSL_INSTALL_DIR"
-else
-    echo "OpenSSL is already installed"
 fi
 
 # =============================== Install OQS Provider ============================================
