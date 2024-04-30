@@ -25,21 +25,21 @@ APR_VERSION=1.7.4
 # $2: The extension of the library file
 configure_openssl_conf() {
     echo "Configuring OpenSSL.conf"
-    cd "$1/repository/conf/tomcat" \
-        && wget -O openssl.cnf https://raw.githubusercontent.com/openssl/openssl/openssl-$OPENSSL_VERSION/apps/openssl.cnf \
-        && echo "[provider_sect]" >> openssl.cnf \
-        && echo "oqsprovider = oqsprovider_sect" >> openssl.cnf \
-        && echo "[oqsprovider_sect]" >> openssl.cnf \
-        && echo "activate = 1" >> openssl.cnf \
-        && echo "module = $1/lib/oqsprovider.$2" >> openssl.cnf \
-        && echo "[default_sect]" >> openssl.cnf \
-        && echo "activate = 1" >> openssl.cnf \
-        && echo "[openssl_init]" >> openssl.cnf \
-        && echo "ssl_conf = ssl_sect" >> openssl.cnf \
-        && echo "[ssl_sect]" >> openssl.cnf \
-        && echo "system_default = system_default_sect" >> openssl.cnf \
-        && echo "[system_default_sect]" >> openssl.cnf \
-        && echo "Groups = x25519_kyber768:x25519" >> openssl.cnf
+    cd "$1/repository/resources/conf/templates/repository/conf/tomcat" \
+        && wget -O openssl.cnf.j2 https://raw.githubusercontent.com/openssl/openssl/openssl-$OPENSSL_VERSION/apps/openssl.cnf \
+        && echo "[provider_sect]" >> openssl.cnf.j2 \
+        && echo "oqsprovider = oqsprovider_sect" >> openssl.cnf.j2 \
+        && echo "[oqsprovider_sect]" >> openssl.cnf.j2 \
+        && echo "activate = 1" >> openssl.cnf.j2 \
+        && echo "module = $1/lib/oqsprovider.$2" >> openssl.cnf.j2 \
+        && echo "[default_sect]" >> openssl.cnf.j2 \
+        && echo "activate = 1" >> openssl.cnf.j2 \
+        && echo "[openssl_init]" >> openssl.cnf.j2 \
+        && echo "ssl_conf = ssl_sect" >> openssl.cnf.j2 \
+        && echo "[ssl_sect]" >> openssl.cnf.j2 \
+        && echo "system_default = system_default_sect" >> openssl.cnf.j2 \
+        && echo "[system_default_sect]" >> openssl.cnf.j2 \
+        && echo "Groups = {{transport.https.openssl.named_groups}}" >> openssl.cnf.j2
 }
 
 # Parameters
@@ -182,17 +182,19 @@ if [ -z "$JAVA_HOME" ]; then
     exit 1
 fi
 
-ARGUMENT=$1;
+BUILD_OPENSSL=false
+BUILD_PQCLIB=false
 
-if [ "$ARGUMENT" = "BUILD_OPENSSL" ] || [ "$ARGUMENT" = "build_openssl" ]; then
-    # Install OpenSSL from source
-    echo "[Mode]: Building OpenSSL"
-    BUILD_OPENSSL=true
-else
-    # Use the system OpenSSL
-    echo "[Mode]: Using system OpenSSL"
-    BUILD_OPENSSL=false
-fi
+# Parse command line arguments
+for arg in "$@"; do
+    if [ "$arg" = "--build_openssl" ] || [ "$arg" = "-build_openssl" ] || [ "$arg" = "build_openssl" ]; then
+        BUILD_OPENSSL=true
+        echo "[Mode]: Building OpenSSL"
+    elif [ "$arg" = "--build_pqclib" ] || [ "$arg" = "-build_pqclib" ] || [ "$arg" = "build_pqclib" ]; then
+        BUILD_PQCLIB=true
+        echo "[Mode]: Building OQS Provider"
+    fi
+done
 
 # Check for build dependencies
 check_dependencies make cmake wget tar gcc
@@ -237,7 +239,7 @@ if [ $BUILD_OPENSSL = false ]; then
     check_dependencies apr-1-config
 fi
 
-TMP_DIR="$CARBON_HOME"/pqc-tmp
+TMP_DIR="$CARBON_HOME"/openssl-tmp
 if [ -d "$TMP_DIR" ]; then
     rm -rf "$TMP_DIR"
 fi
@@ -265,22 +267,24 @@ fi
 
 # =============================== Install OQS Provider ============================================
 
-if [ -d "$OPENSSL_INSTALL_DIR/lib64" ]; then
-    OPENSSL_LIB_DIR="$OPENSSL_INSTALL_DIR/lib64"
-else
-    OPENSSL_LIB_DIR="$OPENSSL_INSTALL_DIR/lib"
-fi
-
-# Check if OQS Provider is already installed
-if [ ! -f "$CARBON_HOME/lib/oqsprovider.$LIBEXT" ]; then
-    if [ $BUILD_OPENSSL = true ] || [ "$(uname)" = "Darwin" ]; then
-        install_oqs_provider "$TMP_DIR" "$OPENSSL_INSTALL_DIR" "$OPENSSL_LIB_DIR/libcrypto.$LIBEXT"
+if [ $BUILD_PQCLIB = true ]; then
+    if [ -d "$OPENSSL_INSTALL_DIR/lib64" ]; then
+        OPENSSL_LIB_DIR="$OPENSSL_INSTALL_DIR/lib64"
     else
-        install_oqs_provider "$TMP_DIR"
+        OPENSSL_LIB_DIR="$OPENSSL_INSTALL_DIR/lib"
     fi
-    mv "$TMP_DIR/oqs-provider-$OQS_PROVIDER_VERSION/_build/lib/oqsprovider.$LIBEXT" "$CARBON_HOME/lib"
-else
-    echo "OQS Provider is already installed"
+
+    # Check if OQS Provider is already installed
+    if [ ! -f "$CARBON_HOME/lib/oqsprovider.$LIBEXT" ]; then
+        if [ $BUILD_OPENSSL = true ] || [ "$(uname)" = "Darwin" ]; then
+            install_oqs_provider "$TMP_DIR" "$OPENSSL_INSTALL_DIR" "$OPENSSL_LIB_DIR/libcrypto.$LIBEXT"
+        else
+            install_oqs_provider "$TMP_DIR"
+        fi
+        mv "$TMP_DIR/oqs-provider-$OQS_PROVIDER_VERSION/_build/lib/oqsprovider.$LIBEXT" "$CARBON_HOME/lib"
+    else
+        echo "OQS Provider is already installed"
+    fi
 fi
 
 # =============================== Install APR ====================================================
@@ -306,9 +310,11 @@ fi
 
 # ================================ Configure OpenSSL ==============================================
 
-configure_openssl_conf "$CARBON_HOME" $LIBEXT
+if [ $BUILD_PQCLIB = true ]; then
+    configure_openssl_conf "$CARBON_HOME" $LIBEXT
+    echo "Post-quantum security mode is installed successfully"
+fi
 
 echo "Cleaning up"
 rm -rf "$TMP_DIR"
 
-echo "Post-quantum security mode is installed successfully"

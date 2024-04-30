@@ -20,12 +20,11 @@
 
 <Server port="8005" shutdown="SHUTDOWN" xmlns:svns="http://org.wso2.securevault/configuration">
 
-    {% if transport.https.pqcEnabled is sameas true %}
+    {% if transport.https.openssl.enabled is sameas true %}
     <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
     {% endif %}
 
     <Service className="org.wso2.carbon.tomcat.ext.service.ExtendedStandardService" name="Catalina">
-
 
        {% for transport in custom_transport %}
         <Connector
@@ -53,7 +52,7 @@
             Added sslEnabledProtocols="TLSv1,TLSv1.1,TLSv1.2" for poodle vulnerability fix
        -->
        {% if transport.https.enabled is sameas true %}
-       {% if transport.https.pqcEnabled is sameas true %}
+       {% if transport.https.openssl.enabled is sameas true %}
        <Connector protocol="org.apache.coyote.http11.Http11AprProtocol"
        {% else %}
        <Connector protocol="org.apache.coyote.http11.Http11NioProtocol"
