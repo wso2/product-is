@@ -246,6 +246,10 @@ do
     CARBON_CLASSPATH="$CARBON_CLASSPATH":$t
 done
 
+# Add the openssl.conf
+if [ -f "$CARBON_HOME/repository/resources/conf/templates/repository/conf/tomcat/openssl.cnf.j2" ]; then
+    export OPENSSL_CONF="$CARBON_HOME/repository/conf/tomcat/openssl.cnf"
+fi
 
 # For Cygwin, switch paths to Windows format before running java
 if $cygwin; then
@@ -308,6 +312,7 @@ do
     -Dcarbon.registry.root=/ \
     -Djava.command="$JAVACMD" \
     -Dcarbon.home="$CARBON_HOME" \
+    -Djava.library.path="$CARBON_HOME/lib" \
     -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager \
     -Dcarbon.config.dir.path="$CARBON_HOME/repository/conf" \
     -Djava.util.logging.config.file="$CARBON_HOME/repository/conf/etc/logging-bridge.properties" \
