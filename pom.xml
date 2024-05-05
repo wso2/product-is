@@ -2284,7 +2284,7 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.11.41</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>7.0.61</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.0.62</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.11.5</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.7</identity.inbound.provisioning.scim.version>
@@ -2363,7 +2363,7 @@
 
         <identity.org.mgt.version>1.4.19</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.1.6</identity.org.mgt.core.version>
-        <identity.organization.login.version>1.1.32</identity.organization.login.version>
+        <identity.organization.login.version>1.1.33</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.22</identity.oauth2.grant.organizationswitch.version>
 
         <!-- Hash Provider Versions-->
@@ -2385,9 +2385,9 @@
         <conditional.authentication.functions.version>1.2.46</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.16.6</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.5.66</identity.apps.myaccount.version>
-        <identity.apps.core.version>2.1.69</identity.apps.core.version>
+        <identity.apps.console.version>2.16.10</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.5.70</identity.apps.myaccount.version>
+        <identity.apps.core.version>2.1.70</identity.apps.core.version>
         <identity.apps.tests.version>1.6.378</identity.apps.tests.version>
 
         <!-- Charon -->
