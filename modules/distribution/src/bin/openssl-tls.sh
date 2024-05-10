@@ -47,7 +47,7 @@ configure_openssl_conf() {
 check_dependencies() {
     for cmd in "$@"; do
         if ! command -v "$cmd" >/dev/null 2>&1; then
-            echo "$cmd could not be found. Please install it before running this script."
+            echo "[Error]: $cmd could not be found. Please install it before running this script."
             exit 1
         fi
     done
@@ -176,9 +176,15 @@ PRGDIR=$(dirname "$PRG")
 # Only set CARBON_HOME if not already set
 [ -z "$CARBON_HOME" ] && CARBON_HOME=$(cd "$PRGDIR/.." ; pwd)
 
+# Check if $CARBON_HOME has spaces
+if echo "$CARBON_HOME" | grep -q ' '; then
+    echo "[Error]: Please make sure the path CARBON_HOME does not contain spaces."
+    exit 1
+fi
+
 # Check if JAVA_HOME is set
 if [ -z "$JAVA_HOME" ]; then
-    echo "JAVA_HOME is not set. Please set it before running this script."
+    echo "[Error]: JAVA_HOME is not set. Please set it before running this script."
     exit 1
 fi
 
@@ -210,7 +216,7 @@ if [ $BUILD_OPENSSL = false ]; then
             echo "OpenSSL version $OPENSSL_VERSION"
             ;;
         *)
-            echo "Requires OpenSSL version 3.0.0 or higher. Found version $OPENSSL_VERSION"
+            echo "[Error]: Requires OpenSSL version 3.0.0 or higher. Found version $OPENSSL_VERSION"
             exit 1
             ;;
     esac
@@ -218,24 +224,24 @@ if [ $BUILD_OPENSSL = false ]; then
         # Check if libssl-dev is installed
         if [ -f "/etc/debian_version" ]; then
             if ! dpkg -s libssl-dev > /dev/null 2>&1; then
-                echo "libssl-dev is not installed. Please install it before running this script."
+                echo "[Error]: libssl-dev is not installed. Please install it before running this script."
                 exit 1
             fi
         else
             if ! rpm -q openssl-devel > /dev/null 2>&1; then
-                echo "openssl-devel is not installed. Please install it before running this script."
+                echo "[Error]: openssl-devel is not installed. Please install it before running this script."
                 exit 1
             fi
         fi
         # Check if libapr1-dev is installed
         if [ -f "/etc/debian_version" ]; then
             if ! dpkg -s libapr1-dev > /dev/null 2>&1; then
-                echo "libapr1-dev is not installed. Please install it before running this script."
+                echo "[Error]: libapr1-dev is not installed. Please install it before running this script."
                 exit 1
             fi
         else
             if ! rpm -q apr-devel > /dev/null 2>&1; then
-                echo "apr-devel is not installed. Please install it before running this script."
+                echo "[Error]: apr-devel is not installed. Please install it before running this script."
                 exit 1
             fi
         fi
@@ -320,4 +326,3 @@ fi
 
 echo "Cleaning up"
 rm -rf "$TMP_DIR"
-
