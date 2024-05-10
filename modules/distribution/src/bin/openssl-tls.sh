@@ -178,7 +178,7 @@ PRGDIR=$(dirname "$PRG")
 
 # Check if $CARBON_HOME has spaces
 if echo "$CARBON_HOME" | grep -q ' '; then
-    echo "[Error]: Please make sure the path CARBON_HOME does not contain spaces."
+    echo "[Error]: Please make sure the absolute path of WSO2 Identity Server does not contain spaces for successful execution of this script."
     exit 1
 fi
 
