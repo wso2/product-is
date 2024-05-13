@@ -48,6 +48,7 @@
 
   "transport.http.enabled" : true,
   "transport.https.enabled" : true,
+  "transport.https.openssl.enabled": false,
 
   "axis2_transport.receiver.http.enabled": true,
   "axis2_transport.receiver.https.enabled": true,

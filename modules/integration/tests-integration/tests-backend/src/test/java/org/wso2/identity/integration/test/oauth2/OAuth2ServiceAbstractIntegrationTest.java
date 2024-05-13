@@ -39,6 +39,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -66,6 +67,8 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.RequestedClaimConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAML2ServiceProvider;
+import org.wso2.identity.integration.test.rest.api.server.roles.v2.model.Permission;
+import org.wso2.identity.integration.test.rest.api.server.roles.v2.model.RoleV2;
 import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
@@ -77,7 +80,9 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import static org.wso2.identity.integration.test.saml.SAMLFederationDynamicQueryParametersTestCase.INBOUND_AUTH_TYPE;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH_APPLICATION_NAME;
 
 /**
@@ -232,6 +237,11 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		return restClient.createApplication(application);
 	}
 
+	public String addRole(RoleV2 role) throws JSONException, IOException {
+
+		return restClient.createV2Roles(role);
+	}
+
 	/**
 	 * Get Application details with a given id.
 	 *
@@ -253,7 +263,14 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	 */
 	public void updateApplication(String appId, ApplicationPatchModel application) throws Exception {
 
-		restClient.updateApplication(appId, application);
+		restClient.updateApplication(appId, application , null);
+	}
+
+	public void updateRolesOfApplication(String appId, ApplicationPatchModel application ,
+										 org.wso2.identity.integration.test.rest.api.server.application.management.v1
+												 .model.AssociatedRolesConfig associatedRolesConfig) throws Exception {
+
+		restClient.updateApplication(appId, application , associatedRolesConfig);
 	}
 
 	/**
@@ -362,7 +379,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 
 		ApplicationPatchModel applicationPatch = new ApplicationPatchModel();
 		applicationPatch.setClaimConfiguration(getClaimConfigurations());
-		restClient.updateApplication(appId, applicationPatch);
+		restClient.updateApplication(appId, applicationPatch ,null);
 	}
 
 	private ClaimConfiguration getClaimConfigurations() {
@@ -712,8 +729,9 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	 * @return Token.
 	 * @throws Exception If something went wrong when requesting token.
 	 */
-    public String requestAccessToken(String consumerKey, String consumerSecret,
-                                     String backendUrl, String username, String password) throws Exception {
+	public String requestAccessToken(String consumerKey, String consumerSecret,
+									 String backendUrl, String username, String password, List<Permission>
+											 permissions) throws Exception {
 
 		List<NameValuePair> postParameters;
         HttpClient client = new DefaultHttpClient();
@@ -724,7 +742,18 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
         postParameters = new ArrayList<NameValuePair>();
         postParameters.add(new BasicNameValuePair("username", username));
         postParameters.add(new BasicNameValuePair("password", password));
-        postParameters.add(new BasicNameValuePair("scope", SCOPE_PRODUCTION));
+		List<String> permissionsList = new ArrayList<>();
+		if (permissions != null) {
+			for (Permission permission : permissions) {
+				permissionsList.add(permission.getValue());
+			}
+			String nativeScopes = permissionsList.stream()
+					.map(String::toLowerCase) // Ensure uniform case
+					.collect(Collectors.joining(" "));
+			postParameters.add(new BasicNameValuePair("scope", nativeScopes));
+		} else {
+			postParameters.add(new BasicNameValuePair("scope", SCOPE_PRODUCTION));
+		}
         postParameters.add(new BasicNameValuePair("grant_type", GRANT_TYPE_PASSWORD));
         httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
         HttpResponse response = client.execute(httpPost);
@@ -847,11 +876,20 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	public ServiceProvider registerServiceProviderWithOAuthInboundConfigs(OAuthConsumerAppDTO appDTO)
 			throws Exception {
 
-		ServiceProvider serviceProvider = generateServiceProvider(appDTO);
+		ServiceProvider serviceProvider = generateServiceProvider(appDTO ,null );
 		return getServiceProvider(serviceProvider);
 	}
 
-	protected ServiceProvider generateServiceProvider(OAuthConsumerAppDTO appDTO) throws Exception {
+	public ServiceProvider registerApplicationAudienceServiceProvider(OAuthConsumerAppDTO appDTO , AssociatedRolesConfig
+			associatedRolesConfig )
+			throws Exception {
+
+		ServiceProvider serviceProvider = generateServiceProvider(appDTO, associatedRolesConfig);
+		return getServiceProvider(serviceProvider);
+	}
+
+	protected ServiceProvider generateServiceProvider(OAuthConsumerAppDTO appDTO,
+													  AssociatedRolesConfig associatedRolesConfig) throws Exception {
 
 		adminClient.registerOAuthApplicationData(appDTO);
 
@@ -859,15 +897,39 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		consumerKey = oauthConsumerApp.getOauthConsumerKey();
 		consumerSecret = oauthConsumerApp.getOauthConsumerSecret();
 
+		InboundAuthenticationRequestConfig requestConfig = new InboundAuthenticationRequestConfig();
+		requestConfig.setInboundAuthType(INBOUND_AUTH_TYPE);
+
 		ServiceProvider serviceProvider = new ServiceProvider();
-		serviceProvider.setApplicationName(SERVICE_PROVIDER_NAME);
+		if (associatedRolesConfig != null) {
+			serviceProvider.setAssociatedRolesConfig(associatedRolesConfig);
+		}
+
+		if (appDTO.getApplicationName() == null) {
+			serviceProvider.setApplicationName(SERVICE_PROVIDER_NAME);
+			requestConfig.setInboundAuthKey(SERVICE_PROVIDER_NAME);
+
+		} else {
+			serviceProvider.setApplicationName(appDTO.getApplicationName());
+			requestConfig.setInboundAuthKey(SERVICE_PROVIDER_NAME);
+		}
 		serviceProvider.setManagementApp(true);
 		appMgtclient.createApplication(serviceProvider);
 
-		serviceProvider = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
+		if (appDTO.getApplicationName() == null) {
+			serviceProvider = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
+		} else {
+			serviceProvider = appMgtclient.getApplication(appDTO.getApplicationName());
+		}
 
 		List<InboundAuthenticationRequestConfig> authRequestList = new ArrayList<>();
 		setInboundOAuthConfig(authRequestList);
+
+		InboundAuthenticationConfig inboundAuthenticationConfig = new InboundAuthenticationConfig();
+		inboundAuthenticationConfig.setInboundAuthenticationRequestConfigs(
+				new InboundAuthenticationRequestConfig[]{requestConfig});
+
+		serviceProvider.setInboundAuthenticationConfig(inboundAuthenticationConfig);
 
 		if (authRequestList.size() > 0) {
 			serviceProvider.getInboundAuthenticationConfig()
@@ -880,7 +942,10 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	protected ServiceProvider getServiceProvider(ServiceProvider serviceProvider) throws Exception {
 
 		appMgtclient.updateApplicationData(serviceProvider);
-		return appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
+		if (serviceProvider.getApplicationName() == null) {
+			return appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
+		}
+		return appMgtclient.getApplication(serviceProvider.getApplicationName());
 	}
 
 	/**

@@ -209,7 +209,7 @@ public class SAMLSSOConsentTestCase extends AbstractSAMLSSOTestCase{
                         .addRequestedClaimsItem(new RequestedClaimConfiguration()
                                 .claim(new Claim().uri(emailClaimURI))));
 
-        applicationMgtRestClient.updateApplication(appId, applicationPatch);
+        applicationMgtRestClient.updateApplication(appId, applicationPatch , null);
     }
 
     private String extractDataFromResponse(HttpResponse response) throws IOException {

@@ -29,8 +29,11 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
+import org.opensaml.xml.signature.P;
 import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
+import org.wso2.carbon.identity.role.v2.mgt.core.model.Permission;
+import org.wso2.carbon.identity.role.v2.mgt.core.model.Role;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.APIResourceListItem;
 import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.APIResourceListResponse;
@@ -42,9 +45,11 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationSharePOSTRequest;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AssociatedRolesConfig;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthorizedAPICreationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAML2ServiceProvider;
+import org.wso2.identity.integration.test.rest.api.server.roles.v2.model.RoleV2;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import javax.servlet.http.HttpServletResponse;
@@ -58,6 +63,7 @@ import static org.wso2.identity.integration.test.utils.CarbonUtils.isLegacyAuthz
 public class OAuth2RestClient extends RestBaseClient {
 
     private static final String API_SERVER_BASE_PATH = "api/server/v1";
+    private static final String SCIM_V2_PATH = "scim2/v2";
     private static final String APPLICATION_MANAGEMENT_PATH = "/applications";
     private static final String API_RESOURCE_MANAGEMENT_PATH = "/api-resources";
     private static final String INBOUND_PROTOCOLS_BASE_PATH = "/inbound-protocols";
@@ -93,6 +99,16 @@ public class OAuth2RestClient extends RestBaseClient {
         String jsonRequest = toJSONString(application);
 
         try (CloseableHttpResponse response = getResponseOfHttpPost(applicationManagementApiBasePath, jsonRequest,
+                getHeaders())) {
+            String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
+            return locationElements[locationElements.length - 1];
+        }
+    }
+
+    public String createV2Roles(RoleV2 role) throws IOException {
+
+        String jsonRequest = toJSONString(role);
+        try (CloseableHttpResponse response = getResponseOfHttpPost(roleV2ApiBasePath, jsonRequest,
                 getHeaders())) {
             String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
             return locationElements[locationElements.length - 1];
@@ -162,7 +178,8 @@ public class OAuth2RestClient extends RestBaseClient {
      * @param application Updated application patch object.
      * @throws IOException If an error occurred while updating an application.
      */
-    public void updateApplication(String appId, ApplicationPatchModel application)
+    public void updateApplication(String appId, ApplicationPatchModel application ,
+                                  AssociatedRolesConfig associatedRolesConfig)
             throws IOException {
 
         String jsonRequest = toJSONString(application);
