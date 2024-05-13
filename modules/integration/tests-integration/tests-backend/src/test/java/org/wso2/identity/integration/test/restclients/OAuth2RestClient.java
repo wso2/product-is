@@ -29,11 +29,8 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
-import org.opensaml.xml.signature.P;
 import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
-import org.wso2.carbon.identity.role.v2.mgt.core.model.Permission;
-import org.wso2.carbon.identity.role.v2.mgt.core.model.Role;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.APIResourceListItem;
 import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.APIResourceListResponse;
@@ -105,6 +102,13 @@ public class OAuth2RestClient extends RestBaseClient {
         }
     }
 
+    /**
+     * To create V2 roles.
+     *
+     * @param role an instance of RoleV2
+     * @return the roleID
+     * @throws IOException throws if an error occurs while creating the role.
+     */
     public String createV2Roles(RoleV2 role) throws IOException {
 
         String jsonRequest = toJSONString(role);
@@ -112,6 +116,21 @@ public class OAuth2RestClient extends RestBaseClient {
                 getHeaders())) {
             String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
             return locationElements[locationElements.length - 1];
+        }
+    }
+
+    /**
+     * To delete V2 roles.
+     *
+     * @param roleId roleID
+     * @throws IOException if an error occurs while deleting the role.
+     */
+    public void deleteV2Role(String roleId) throws IOException {
+
+        String endpointUrl = roleV2ApiBasePath + PATH_SEPARATOR + roleId;
+        try (CloseableHttpResponse response = getResponseOfHttpDelete(endpointUrl, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
+                    "Application deletion failed");
         }
     }
 
@@ -178,8 +197,7 @@ public class OAuth2RestClient extends RestBaseClient {
      * @param application Updated application patch object.
      * @throws IOException If an error occurred while updating an application.
      */
-    public void updateApplication(String appId, ApplicationPatchModel application ,
-                                  AssociatedRolesConfig associatedRolesConfig)
+    public void updateApplication(String appId, ApplicationPatchModel application)
             throws IOException {
 
         String jsonRequest = toJSONString(application);

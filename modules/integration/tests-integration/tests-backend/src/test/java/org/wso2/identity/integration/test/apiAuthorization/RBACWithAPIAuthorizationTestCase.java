@@ -61,7 +61,7 @@ import java.util.List;
  * to API authorization, covering the association of API resources with applications, users, and roles.
  * It encompasses API authorization with both organization audience roles and application audience roles.
  */
-public class AuthorizeUsingAPIAuthorizationTestCase extends OAuth2ServiceAbstractIntegrationTest {
+public class RBACWithAPIAuthorizationTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
     private static final String CALLBACK_URL = "https://localhost/callback";
     private static final String USERS = "users";
@@ -73,7 +73,6 @@ public class AuthorizeUsingAPIAuthorizationTestCase extends OAuth2ServiceAbstrac
     private static final String TEST_ROLE_ORGANIZATION = "test_role_organization";
     private static final String INTERNAL_OFFLINE_INVITE = "internal_offline_invite";
     private static final String INTERNAL_BULK_RESOURCE_CREATE = "internal_bulk_resource_create";
-    private static final String APPLICATION = "APPLICATION";
     private static final String PASSWORD = "password";
     private static final String JWT = "JWT";
     private static final String API_USERS_V1_OFFLINE_INVITE_LINK = "/api/users/v1/offline-invite-link/";
@@ -83,6 +82,9 @@ public class AuthorizeUsingAPIAuthorizationTestCase extends OAuth2ServiceAbstrac
     private String appId;
     private SCIM2RestClient scim2RestClient;
     private String roleID;
+    private String orgRoleID;
+    private String orgAppID;
+    private String applicationAppID;
     private String userID;
     private String tokenURL = "https://localhost:9853/oauth2/token";
     private List<String> consumerKeys = new ArrayList<>();
@@ -100,7 +102,9 @@ public class AuthorizeUsingAPIAuthorizationTestCase extends OAuth2ServiceAbstrac
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
-        deleteApp(appId);
+        restClient.deleteV2Role(orgRoleID);
+        deleteApp(orgAppID);
+        deleteApp(applicationAppID);
         scim2RestClient.deleteUser(userID);
         consumerKey = null;
         consumerSecret = null;
@@ -128,10 +132,14 @@ public class AuthorizeUsingAPIAuthorizationTestCase extends OAuth2ServiceAbstrac
     private void testRegisterPreRequisites(String appName, String allowedAudience) throws Exception {
 
         appId = registerApplication(appName, allowedAudience);
+        if ("APPLICATION".equals(allowedAudience)) {
+            applicationAppID = appId;
+        } else {
+            orgAppID = appId;
+        }
         roleID = createRoles(appId, allowedAudience);
-        if (!"SampleApp2".equals(appName)) {
+        if ("APPLICATION".equals(allowedAudience)) {
             createUser();
-            associateRolesOfTheApplication();
         }
         RoleItemAddGroupobj rolePatchReqObject = new RoleItemAddGroupobj();
         rolePatchReqObject.setOp(RoleItemAddGroupobj.OpEnum.ADD);
@@ -159,7 +167,7 @@ public class AuthorizeUsingAPIAuthorizationTestCase extends OAuth2ServiceAbstrac
         String displayName;
         RoleV2 role;
         List<String> schemas = Collections.emptyList();
-        if (APPLICATION.equals(audience)) {
+        if ("APPLICATION".equals(audience)) {
             displayName = TEST_ROLE_APPLICATION;
             Audience roleAudience = new Audience(audience, appID);
             role = new RoleV2(roleAudience, displayName, permissions, schemas);
@@ -168,6 +176,9 @@ public class AuthorizeUsingAPIAuthorizationTestCase extends OAuth2ServiceAbstrac
             role = new RoleV2(displayName, permissions, schemas);
         }
         roleID = addRole(role);
+        if ("ORGANIZATION".equals(audience)) {
+            orgRoleID = roleID;
+        }
         return roleID;
     }
 
@@ -194,22 +205,6 @@ public class AuthorizeUsingAPIAuthorizationTestCase extends OAuth2ServiceAbstrac
             }
 
         return applicationId;
-    }
-
-    private void associateRolesOfTheApplication() throws Exception {
-
-        ApplicationPatchModel applicationPatch = new ApplicationPatchModel();
-        org.wso2.identity.integration.test.rest.api.server.application.management.v1
-                .model.AssociatedRolesConfig  associatedRolesConfig = new org.wso2.identity.integration.test.rest.api.server.application.management.v1
-                .model.AssociatedRolesConfig();
-
-        Role role = new Role();
-        role.setName(TEST_ROLE_APPLICATION);
-        role.setId(roleID);
-        List<Role> roles =new ArrayList<>();
-        roles.add(role);
-        associatedRolesConfig.setRoles(roles);
-        updateRolesOfApplication(appId, applicationPatch , associatedRolesConfig);
     }
 
     /**
@@ -241,7 +236,7 @@ public class AuthorizeUsingAPIAuthorizationTestCase extends OAuth2ServiceAbstrac
                 TEST_USER, ADMIN_WSO2, permissions);
         JWTClaimsSet jwtClaimsSet = extractJwt(token);
         String validScopes = jwtClaimsSet.getStringClaim(SCOPE);
-        Assert.assertEquals(validScopes, INTERNAL_BULK_RESOURCE_CREATE + " "+INTERNAL_OFFLINE_INVITE);
+        Assert.assertEquals(validScopes, INTERNAL_BULK_RESOURCE_CREATE + " " + INTERNAL_OFFLINE_INVITE);
     }
 
     private JWTClaimsSet extractJwt(String jwtToken) throws ParseException {

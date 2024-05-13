@@ -242,6 +242,11 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		return restClient.createV2Roles(role);
 	}
 
+	public void deleteRole(String roleID) throws JSONException, IOException {
+
+		restClient.deleteV2Role(roleID);
+	}
+
 	/**
 	 * Get Application details with a given id.
 	 *
@@ -263,14 +268,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	 */
 	public void updateApplication(String appId, ApplicationPatchModel application) throws Exception {
 
-		restClient.updateApplication(appId, application , null);
-	}
-
-	public void updateRolesOfApplication(String appId, ApplicationPatchModel application ,
-										 org.wso2.identity.integration.test.rest.api.server.application.management.v1
-												 .model.AssociatedRolesConfig associatedRolesConfig) throws Exception {
-
-		restClient.updateApplication(appId, application , associatedRolesConfig);
+		restClient.updateApplication(appId, application);
 	}
 
 	/**
@@ -379,7 +377,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 
 		ApplicationPatchModel applicationPatch = new ApplicationPatchModel();
 		applicationPatch.setClaimConfiguration(getClaimConfigurations());
-		restClient.updateApplication(appId, applicationPatch ,null);
+		restClient.updateApplication(appId, applicationPatch);
 	}
 
 	private ClaimConfiguration getClaimConfigurations() {
@@ -876,23 +874,31 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	public ServiceProvider registerServiceProviderWithOAuthInboundConfigs(OAuthConsumerAppDTO appDTO)
 			throws Exception {
 
-		ServiceProvider serviceProvider = generateServiceProvider(appDTO ,null );
+		ServiceProvider serviceProvider = generateServiceProvider(appDTO);
 		return getServiceProvider(serviceProvider);
 	}
 
-	public ServiceProvider registerApplicationAudienceServiceProvider(OAuthConsumerAppDTO appDTO , AssociatedRolesConfig
-			associatedRolesConfig )
+	/**
+	 * Register a service provider with application audience.
+	 *
+	 * @param appDTO OAuthConsumerAppDTO of the service provider.
+	 * @param associatedRolesConfig associatedRolesConfig
+	 * @return
+	 * @throws Exception
+	 */
+	public ServiceProvider registerApplicationAudienceServiceProvider(OAuthConsumerAppDTO appDTO,
+																	  AssociatedRolesConfig associatedRolesConfig)
 			throws Exception {
 
-		ServiceProvider serviceProvider = generateServiceProvider(appDTO, associatedRolesConfig);
+		ServiceProvider serviceProvider = generateServiceProviderWithRoles(appDTO, associatedRolesConfig);
 		return getServiceProvider(serviceProvider);
 	}
 
-	protected ServiceProvider generateServiceProvider(OAuthConsumerAppDTO appDTO,
-													  AssociatedRolesConfig associatedRolesConfig) throws Exception {
+	protected ServiceProvider generateServiceProviderWithRoles(OAuthConsumerAppDTO appDTO,
+															   AssociatedRolesConfig associatedRolesConfig)
+			throws Exception {
 
 		adminClient.registerOAuthApplicationData(appDTO);
-
 		OAuthConsumerAppDTO oauthConsumerApp = adminClient.getOAuthAppByName(appDTO.getApplicationName());
 		consumerKey = oauthConsumerApp.getOauthConsumerKey();
 		consumerSecret = oauthConsumerApp.getOauthConsumerSecret();
@@ -905,31 +911,45 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 			serviceProvider.setAssociatedRolesConfig(associatedRolesConfig);
 		}
 
-		if (appDTO.getApplicationName() == null) {
-			serviceProvider.setApplicationName(SERVICE_PROVIDER_NAME);
-			requestConfig.setInboundAuthKey(SERVICE_PROVIDER_NAME);
-
-		} else {
-			serviceProvider.setApplicationName(appDTO.getApplicationName());
-			requestConfig.setInboundAuthKey(SERVICE_PROVIDER_NAME);
-		}
+		serviceProvider.setApplicationName(appDTO.getApplicationName());
+		requestConfig.setInboundAuthKey(appDTO.getApplicationName());
 		serviceProvider.setManagementApp(true);
 		appMgtclient.createApplication(serviceProvider);
-
-		if (appDTO.getApplicationName() == null) {
-			serviceProvider = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
-		} else {
-			serviceProvider = appMgtclient.getApplication(appDTO.getApplicationName());
-		}
-
-		List<InboundAuthenticationRequestConfig> authRequestList = new ArrayList<>();
-		setInboundOAuthConfig(authRequestList);
-
+		serviceProvider = appMgtclient.getApplication(appDTO.getApplicationName());
 		InboundAuthenticationConfig inboundAuthenticationConfig = new InboundAuthenticationConfig();
 		inboundAuthenticationConfig.setInboundAuthenticationRequestConfigs(
 				new InboundAuthenticationRequestConfig[]{requestConfig});
 
 		serviceProvider.setInboundAuthenticationConfig(inboundAuthenticationConfig);
+
+		List<InboundAuthenticationRequestConfig> authRequestList = new ArrayList<>();
+		setInboundOAuthConfig(authRequestList);
+
+		if (authRequestList.size() > 0) {
+			serviceProvider.getInboundAuthenticationConfig()
+					.setInboundAuthenticationRequestConfigs(authRequestList.toArray(
+							new InboundAuthenticationRequestConfig[authRequestList.size()]));
+		}
+		return serviceProvider;
+	}
+
+	protected ServiceProvider generateServiceProvider(OAuthConsumerAppDTO appDTO) throws Exception {
+
+		adminClient.registerOAuthApplicationData(appDTO);
+
+		OAuthConsumerAppDTO oauthConsumerApp = adminClient.getOAuthAppByName(appDTO.getApplicationName());
+		consumerKey = oauthConsumerApp.getOauthConsumerKey();
+		consumerSecret = oauthConsumerApp.getOauthConsumerSecret();
+
+		ServiceProvider serviceProvider = new ServiceProvider();
+		serviceProvider.setApplicationName(SERVICE_PROVIDER_NAME);
+		serviceProvider.setManagementApp(true);
+		appMgtclient.createApplication(serviceProvider);
+
+		serviceProvider = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
+
+		List<InboundAuthenticationRequestConfig> authRequestList = new ArrayList<>();
+		setInboundOAuthConfig(authRequestList);
 
 		if (authRequestList.size() > 0) {
 			serviceProvider.getInboundAuthenticationConfig()

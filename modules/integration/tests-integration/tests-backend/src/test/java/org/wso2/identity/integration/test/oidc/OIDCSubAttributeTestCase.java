@@ -555,7 +555,7 @@ public class OIDCSubAttributeTestCase extends OAuth2ServiceAbstractIntegrationTe
     public ServiceProvider registerServiceProviderWithOAuthInboundConfigs(OAuthConsumerAppDTO appDTO)
             throws Exception {
 
-        ServiceProvider serviceProvider = generateServiceProvider(appDTO, null);
+        ServiceProvider serviceProvider = generateServiceProvider(appDTO);
 
         if (legacyMode) {
             ArrayList<ServiceProviderProperty> serviceProviderProperties

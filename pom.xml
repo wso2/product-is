@@ -2361,15 +2361,9 @@
         <identity.extension.utils>1.0.18</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.0.6</authenticator.auth.otp.commons.version>
 
-<<<<<<< HEAD
-        <identity.org.mgt.version>1.4.15</identity.org.mgt.version>
-        <identity.org.mgt.core.version>1.1.6</identity.org.mgt.core.version>
-        <identity.organization.login.version>1.1.32</identity.organization.login.version>
-=======
         <identity.org.mgt.version>1.4.25</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.1.7</identity.org.mgt.core.version>
         <identity.organization.login.version>1.1.33</identity.organization.login.version>
->>>>>>> 64f2e87ec7121757b271aa0774cf0720b6bc42b3
         <identity.oauth2.grant.organizationswitch.version>1.1.22</identity.oauth2.grant.organizationswitch.version>
 
         <!-- Hash Provider Versions-->
