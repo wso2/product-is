@@ -50,8 +50,10 @@ public class ChallengeQuestionsUITestCase extends OAuth2ServiceAbstractIntegrati
     private static final String RECOVERY_ENDPOINT_QS_CONTENT = "name=\"recoveryOption\" value=\"SECURITY_QUESTIONS\"";
     private static final String RECOVERY_ENDPOINT_NOTIFICATION_CONTENT = "name=\"recoveryOption\" value=\"EMAIL\"";
     private static final String ENABLE_PASSWORD_QS_RECOVERY_PROP_KEY = "Recovery.Question.Password.Enable";
-    private static final String ENABLE_PASSWORD_NOTIFICATION_RECOVERY_PROP_KEY =
-            "Recovery.Notification.Password.Enable";
+    private static final String ENABLE_PASSWORD_EMAIL_LINK_RECOVERY_PROP_KEY =
+            "Recovery.Notification.Password.emailLink.Enable";
+    private static final String ENABLE_PASSWORD_SMS_OTP_RECOVERY_PROP_KEY =
+            "Recovery.Notification.Password.smsOtp.Enable";
     private static final String OIDC_APP_NAME = "playground2";
     private IdentityProvider superTenantResidentIDP;
     private ServerConfigurationManager serverConfigurationManager;
@@ -112,7 +114,8 @@ public class ChallengeQuestionsUITestCase extends OAuth2ServiceAbstractIntegrati
     @Test(groups = "wso2.is", description = "Check Password recovery option recovery Page")
     public void testRecovery() throws Exception {
 
-        updateResidentIDPProperty(superTenantResidentIDP, ENABLE_PASSWORD_NOTIFICATION_RECOVERY_PROP_KEY, "true");
+        updateResidentIDPProperty(superTenantResidentIDP, ENABLE_PASSWORD_EMAIL_LINK_RECOVERY_PROP_KEY, "true");
+        updateResidentIDPProperty(superTenantResidentIDP, ENABLE_PASSWORD_SMS_OTP_RECOVERY_PROP_KEY, "true");
         updateResidentIDPProperty(superTenantResidentIDP, ENABLE_PASSWORD_QS_RECOVERY_PROP_KEY, "true");
         String content = sendRecoveryRequest();
         Assert.assertTrue(content.contains(RECOVERY_ENDPOINT_QS_CONTENT));
