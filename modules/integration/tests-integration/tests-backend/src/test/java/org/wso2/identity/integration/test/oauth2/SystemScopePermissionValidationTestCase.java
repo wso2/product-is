@@ -134,18 +134,7 @@ public class SystemScopePermissionValidationTestCase extends OAuth2ServiceAbstra
             ApplicationPatchModel applicationPatch = new ApplicationPatchModel();
             AssociatedRolesConfig associatedRolesConfig =
                     new AssociatedRolesConfig().allowedAudience(AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION);
-            // Get Roles.
-            String adminRoleId = getRoleV2ResourceId("admin",
-                    AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION.toString().toLowerCase(), null);
-            String everyoneRoleId = getRoleV2ResourceId("everyone",
-                    AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION.toString().toLowerCase(), null);
             applicationPatch = applicationPatch.associatedRoles(associatedRolesConfig);
-            associatedRolesConfig.addRolesItem(
-                    new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Role().id(
-                            adminRoleId));
-            associatedRolesConfig.addRolesItem(
-                    new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Role().id(
-                            everyoneRoleId));
             updateApplication(applicationId, applicationPatch);
         }
     }
