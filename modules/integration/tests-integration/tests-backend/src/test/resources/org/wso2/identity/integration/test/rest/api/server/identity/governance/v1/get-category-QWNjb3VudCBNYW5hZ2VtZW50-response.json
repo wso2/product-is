@@ -30,6 +30,28 @@
       ]
     },
     {
+      "id": "bXVsdGlhdHRyaWJ1dGUubG9naW4uaGFuZGxlcg",
+      "name": "multiattribute.login.handler",
+      "category": "Account Management",
+      "friendlyName": "Multi Attribute Login",
+      "order": 0,
+      "subCategory": "DEFAULT",
+      "properties": [
+        {
+          "name": "account.multiattributelogin.handler.enable",
+          "value": "false",
+          "displayName": "Enable Multi Attribute Login",
+          "description": "Enable using multiple attributes as login identifier"
+        },
+        {
+          "name": "account.multiattributelogin.handler.allowedattributes",
+          "value": "http://wso2.org/claims/username",
+          "displayName": "Allowed Attribute Claim List",
+          "description": "Allowed claim list separated by commas"
+        }
+      ]
+    },
+    {
       "id": "YWNjb3VudC5kaXNhYmxlLmhhbmRsZXI",
       "name": "account.disable.handler",
       "category": "Account Management",
@@ -60,15 +82,83 @@
       "subCategory": "DEFAULT",
       "properties": [
         {
-          "name": "Recovery.Notification.Password.Enable",
+          "name": "Recovery.Notification.Password.OTP.SendOTPInEmail",
           "value": "false",
-          "displayName": "Notification based password recovery",
-          "description": ""
+          "displayName": "Send OTP in e-mail",
+          "description": "Enable to send OTP in verification e-mail instead of confirmation code."
+          
+        },
+        {
+          "name": "Recovery.Notification.Password.OTP.UseUppercaseCharactersInOTP",
+          "value": "true",
+          "displayName": "Include uppercase characters in OTP",
+          "description": "Enable to include uppercase characters in SMS and e-mail OTPs."
+          
+        },
+        {
+          "name": "Recovery.Notification.Password.OTP.UseLowercaseCharactersInOTP",
+          "value": "true",
+          "displayName": "Include lowercase characters in OTP",
+          "description": "Enable to include lowercase characters in SMS and e-mail OTPs."
+          
+        },
+        {
+          "name": "Recovery.Notification.Password.OTP.UseNumbersInOTP",
+          "value": "true",
+          "displayName": "Include numbers in OTP",
+          "description": "Enable to include numbers in SMS and e-mail OTPs."
+          
+        },
+        {
+          "name": "Recovery.Notification.Password.OTP.OTPLength",
+          "value": "6",
+          "displayName": "OTP length",
+          "description": "Length of the OTP for SMS and e-mail verifications. OTP length must be 4-10."
         },
         {
           "name": "Recovery.ReCaptcha.Password.Enable",
           "value": "false",
           "displayName": "Enable reCaptcha for password recovery",
+          "description": ""
+          
+        },
+        {
+          "name": "Recovery.Question.Password.Enable",
+          "value": "false",
+          "displayName": "Security question based password recovery",
+          "description": ""
+          
+        },
+        {
+          "name": "Recovery.Question.Password.MinAnswers",
+          "value": "2",
+          "displayName": "Number of questions required for password recovery",
+          "description": ""
+        },
+        {
+          "name": "Recovery.Question.Answer.Regex",
+          "value": ".*",
+          "displayName": "Security question answer regex",
+          "description": "Security question answer regex"
+        },
+        {
+          "name": "Recovery.Question.Answer.Uniqueness",
+          "value": "false",
+          "displayName": "Enforce security question answer uniqueness",
+          "description": "Enforce security question answer uniqueness"
+          
+        },
+        {
+          "name": "Recovery.Question.Password.ReCaptcha.Enable",
+          "value": "true",
+          "displayName": "Enable reCaptcha for security questions based password recovery",
+          "description": "Prompt reCaptcha for security question based password recovery"
+          
+        },
+        {
+          "name": "Recovery.Question.Password.ReCaptcha.MaxFailedAttempts",
+          "value": "2",
+          "displayName": "Max failed attempts for reCaptcha",
           "description": ""
         },
         {
@@ -76,24 +166,35 @@
           "value": "false",
           "displayName": "Username recovery",
           "description": ""
+          
         },
         {
           "name": "Recovery.ReCaptcha.Username.Enable",
           "value": "false",
           "displayName": "Enable reCaptcha for username recovery",
           "description": ""
+          
         },
         {
           "name": "Recovery.Notification.InternallyManage",
           "value": "true",
           "displayName": "Manage notifications sending internally",
           "description": "Disable if the client application handles notification sending"
+          
         },
         {
           "name": "Recovery.NotifySuccess",
           "value": "false",
           "displayName": "Notify when recovery success",
           "description": ""
+          
+        },
+        {
+          "name": "Recovery.Question.Password.NotifyStart",
+          "value": "false",
+          "displayName": "Notify when security questions based recovery starts",
+          "description": ""
+          
         },
         {
           "name": "Recovery.ExpiryTime",
@@ -108,10 +209,60 @@
           "description": "Expiration time of the SMS OTP code for password recovery"
         },
         {
+          "name": "Recovery.Notification.Password.smsOtp.Regex",
+          "value": "[a-zA-Z0-9]{6}",
+          "displayName": "SMS OTP regex",
+          "description": "Regex for SMS OTP in format [allowed characters]{length}. Supported character ranges are a-z, A-Z, 0-9. Minimum OTP length is 4"
+
+        },
+        {
+          "name": "Recovery.Question.Password.Forced.Enable",
+          "value": "false",
+          "displayName": "Enable forced security questions",
+          "description": "Force users to provide answers to security questions during sign in"
+        },
+        {
+          "name": "Recovery.Question.MinQuestionsToAnswer",
+          "value": "1",
+          "displayName": "Minimum number of forced security questions to be answered",
+          "description": "Force users to provide answers to security questions during sign in if user has answered lesser than this value"
+        },
+        {
           "name": "Recovery.CallbackRegex",
-          "value": ".*",
+          "value": "https:\/\/localhost:9443\/.*",
           "displayName": "Recovery callback URL regex",
           "description": "Recovery callback URL regex"
+        },
+        {
+          "name": "Recovery.AutoLogin.Enable",
+          "value": "false",
+          "displayName": "Enable Auto Login After Password Reset",
+          "description": "User will be logged in automatically after completing the Password Reset wizard"
+          
+        },
+        {
+          "name": "Recovery.Notification.Password.MaxFailedAttempts",
+          "value": "3",
+          "displayName": "Max failed attempts for password recovery",
+          "description": ""
+        },
+        {
+          "name": "Recovery.Notification.Password.MaxResendAttempts",
+          "value": "5",
+          "displayName": "Max resend attempts for password recovery",
+          "description": ""
+        },
+        {
+          "name": "Recovery.Notification.Password.emailLink.Enable",
+          "value": "false",
+          "displayName": "Notification based password recovery via an email",
+          "description": ""
+        },
+        {
+          "name": "Recovery.Notification.Password.smsOtp.Enable",
+          "value": "false",
+          "displayName": "Notification based password recovery using SMS OTP",
+          "description": ""
         }
       ]
     },
@@ -140,6 +291,12 @@
           "value": "false",
           "displayName": "Enable password reset offline",
           "description": "An OTP generated and stored in users claims"
+        },
+        {
+          "name": "Recovery.AdminPasswordReset.ExpiryTime",
+          "value": "1440",
+          "displayName": "Admin forced password reset code expiry time",
+          "description": "Validity time of the admin forced password reset code in minutes"
         }
       ]
     }
