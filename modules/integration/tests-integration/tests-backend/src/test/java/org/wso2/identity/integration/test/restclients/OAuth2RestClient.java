@@ -42,9 +42,11 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationSharePOSTRequest;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AssociatedRolesConfig;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthorizedAPICreationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAML2ServiceProvider;
+import org.wso2.identity.integration.test.rest.api.server.roles.v2.model.RoleV2;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import javax.servlet.http.HttpServletResponse;
@@ -58,6 +60,7 @@ import static org.wso2.identity.integration.test.utils.CarbonUtils.isLegacyAuthz
 public class OAuth2RestClient extends RestBaseClient {
 
     private static final String API_SERVER_BASE_PATH = "api/server/v1";
+    private static final String SCIM_V2_PATH = "scim2/v2";
     private static final String APPLICATION_MANAGEMENT_PATH = "/applications";
     private static final String API_RESOURCE_MANAGEMENT_PATH = "/api-resources";
     private static final String INBOUND_PROTOCOLS_BASE_PATH = "/inbound-protocols";
@@ -96,6 +99,38 @@ public class OAuth2RestClient extends RestBaseClient {
                 getHeaders())) {
             String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
             return locationElements[locationElements.length - 1];
+        }
+    }
+
+    /**
+     * To create V2 roles.
+     *
+     * @param role an instance of RoleV2
+     * @return the roleID
+     * @throws IOException throws if an error occurs while creating the role.
+     */
+    public String createV2Roles(RoleV2 role) throws IOException {
+
+        String jsonRequest = toJSONString(role);
+        try (CloseableHttpResponse response = getResponseOfHttpPost(roleV2ApiBasePath, jsonRequest,
+                getHeaders())) {
+            String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
+            return locationElements[locationElements.length - 1];
+        }
+    }
+
+    /**
+     * To delete V2 roles.
+     *
+     * @param roleId roleID
+     * @throws IOException if an error occurs while deleting the role.
+     */
+    public void deleteV2Role(String roleId) throws IOException {
+
+        String endpointUrl = roleV2ApiBasePath + PATH_SEPARATOR + roleId;
+        try (CloseableHttpResponse response = getResponseOfHttpDelete(endpointUrl, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
+                    "Application deletion failed");
         }
     }
 

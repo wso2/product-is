@@ -69,14 +69,14 @@ public class OAuth2TokenRevokeAfterCacheTimeOutTestCase extends OAuth2ServiceAbs
         consumerSecret = appDto.getOauthConsumerSecret();
         //request for token
         String token = requestAccessToken(consumerKey, consumerSecret, TOKEN_API_ENDPOINT,
-                "admin", "admin");
+                "admin", "admin", null);
         //Sleep for 1m for cache timeout
         Thread.sleep(60 * 1000);
         //Revoke access token
         revokeAccessToken(consumerKey, consumerSecret, token, REVOKE_TOKEN_API_ENDPOINT);
         //Generate new token
         String newToken = requestAccessToken(consumerKey, consumerSecret, TOKEN_API_ENDPOINT,
-                "admin", "admin");
+                "admin", "admin", null);
         Assert.assertNotEquals(token, newToken, "Token revocation failed");
     }
 
