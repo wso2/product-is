@@ -2362,7 +2362,7 @@
         <authenticator.auth.otp.commons.version>1.0.6</authenticator.auth.otp.commons.version>
 
         <identity.org.mgt.version>1.4.30</identity.org.mgt.version>
-        <identity.org.mgt.core.version>1.1.7</identity.org.mgt.core.version>
+        <identity.org.mgt.core.version>1.1.8</identity.org.mgt.core.version>
         <identity.organization.login.version>1.1.33</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.23</identity.oauth2.grant.organizationswitch.version>
 
@@ -2385,7 +2385,7 @@
         <conditional.authentication.functions.version>1.2.47</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.18.12</identity.apps.console.version>
+        <identity.apps.console.version>2.18.13</identity.apps.console.version>
         <identity.apps.myaccount.version>2.6.0</identity.apps.myaccount.version>
         <identity.apps.core.version>2.2.3</identity.apps.core.version>
         <identity.apps.tests.version>1.6.378</identity.apps.tests.version>
