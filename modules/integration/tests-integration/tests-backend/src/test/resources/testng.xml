@@ -245,16 +245,16 @@
         </classes>
     </test>
 
-    <test name="is-test-adaptive-authentication-graaljs" preserve-order="true" parallel="false" group-by-instances="true">
+    <test name="is-test-adaptive-authentication-nashorn" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
-            <class name="org.wso2.identity.integration.test.auth.GraalJsAdaptiveScriptInitializerTestCase"/>
+            <class name="org.wso2.identity.integration.test.auth.NashornAdaptiveScriptInitializerTestCase"/>
             <class name="org.wso2.identity.integration.test.auth.AdaptiveScriptTemporaryClaimPersistenceTestCase"/>
             <class name="org.wso2.identity.integration.test.auth.SecondaryStoreUserLoginTestCase"/>
         </classes>
     </test>
 
-    <test name="is-test-adaptive-authentication-graaljs-with-restart" preserve-order="true" parallel="false" group-by-instances="true">
-        <parameter name="scriptEngine" value="graaljs"/>
+    <test name="is-test-adaptive-authentication-nashorn-with-restart" preserve-order="true" parallel="false" group-by-instances="true">
+        <parameter name="scriptEngine" value="nashorn"/>
         <classes>
             <class name="org.wso2.identity.integration.test.auth.RiskBasedLoginTestCase" />
         </classes>

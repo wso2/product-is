@@ -74,4 +74,4 @@ app_password= "dashboard"
 #port= 587
 
 [AdaptiveAuth]
-ScriptEngine = "graaljs"
+ScriptEngine = "nashorn"

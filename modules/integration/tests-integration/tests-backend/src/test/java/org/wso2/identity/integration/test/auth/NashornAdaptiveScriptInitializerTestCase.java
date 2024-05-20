@@ -26,7 +26,7 @@ import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 import java.io.File;
 
-public class GraalJsAdaptiveScriptInitializerTestCase extends ISIntegrationTest {
+public class NashornAdaptiveScriptInitializerTestCase extends ISIntegrationTest {
 
     private ServerConfigurationManager scm;
     private File defaultConfigFile;
@@ -39,7 +39,7 @@ public class GraalJsAdaptiveScriptInitializerTestCase extends ISIntegrationTest 
         defaultConfigFile = getDeploymentTomlFile(carbonHome);
         File scriptEngineConfigFile = new File(
                 getISResourceLocation() + File.separator + "scriptEngine" + File.separator +
-                        "graaljs_script_engine_config.toml");
+                        "nashorn_script_engine_config.toml");
         scm = new ServerConfigurationManager(isServer);
         scm.applyConfiguration(scriptEngineConfigFile, defaultConfigFile, true, true);
     }

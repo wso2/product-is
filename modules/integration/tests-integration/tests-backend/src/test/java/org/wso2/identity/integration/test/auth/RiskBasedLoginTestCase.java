@@ -195,8 +195,8 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
     private void changeISConfiguration(String scriptEngine) throws Exception {
 
         String identityNewResourceFileName = "identity_new_resource.toml";
-        if (scriptEngine.equalsIgnoreCase("graaljs")) {
-            identityNewResourceFileName = "identity_new_resource_graaljs.toml";
+        if (scriptEngine.equalsIgnoreCase("nashorn")) {
+            identityNewResourceFileName = "identity_new_resource_nashorn.toml";
         }
 
         String carbonHome = Utils.getResidentCarbonHome();
