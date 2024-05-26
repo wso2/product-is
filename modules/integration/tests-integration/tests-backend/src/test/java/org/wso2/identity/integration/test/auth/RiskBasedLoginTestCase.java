@@ -39,6 +39,8 @@ import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.carbon.identity.application.common.model.xsd.AuthenticationStep;
@@ -67,6 +69,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -100,7 +103,8 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
     MicroserviceServer microserviceServer;
 
     @BeforeClass(alwaysRun = true)
-    public void testInit() throws Exception {
+    @Parameters({"scriptEngine"})
+    public void testInit(@Optional("nashorn") String scriptEngine) throws Exception {
 
         super.init();
 
@@ -143,7 +147,7 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
 
         log.info("Restarting the server at: " + isServer.getContextUrls().getBackEndUrl());
         serverConfigurationManager = new ServerConfigurationManager(isServer);
-        changeISConfiguration();
+        changeISConfiguration(scriptEngine);
         log.info("Restarting the server at: " + isServer.getContextUrls().getBackEndUrl() + " is successful");
 
         super.init();
@@ -188,12 +192,17 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
         userRiskScores.put(userInfo.getUserName(), 0);
     }
 
-    private void changeISConfiguration() throws Exception {
+    private void changeISConfiguration(String scriptEngine) throws Exception {
+
+        String identityNewResourceFileName = "identity_new_resource.toml";
+        if (scriptEngine.equalsIgnoreCase("nashorn")) {
+            identityNewResourceFileName = "identity_new_resource_nashorn.toml";
+        }
 
         String carbonHome = Utils.getResidentCarbonHome();
         File defaultTomlFile = getDeploymentTomlFile(carbonHome);
         File configuredTomlFile = new File(getISResourceLocation() + File.separator
-                + "identity_new_resource.toml");
+                + identityNewResourceFileName);
         serverConfigurationManager = new ServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartGracefully();
