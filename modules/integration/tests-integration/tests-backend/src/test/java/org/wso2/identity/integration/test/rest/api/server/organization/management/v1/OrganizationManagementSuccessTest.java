@@ -61,9 +61,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationListItem;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationSharePOSTRequest;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AssociatedRolesConfig;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
@@ -149,7 +147,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         };
     }
 
-    @Test
+    @Test(groups = "selfOnboardingTests")
     public void createApplicationForSelfOrganizationOnboardService() throws IOException, JSONException {
 
         String endpointURL = "applications";
@@ -192,7 +190,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         }
     }
 
-    @Test(dependsOnMethods = "createApplicationForSelfOrganizationOnboardService")
+    @Test(groups = "selfOnboardingTests", dependsOnMethods = "createApplicationForSelfOrganizationOnboardService")
     public void getM2MAccessToken() throws Exception {
 
         OpenIDConnectConfiguration openIDConnectConfiguration = oAuth2RestClient.getOIDCInboundDetails(selfServiceAppId);
@@ -218,7 +216,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         Assert.assertTrue(scopesInResponse.contains("internal_organization_create"), "Requested scope is missing in the token response");
     }
 
-    @Test(dependsOnMethods = "getM2MAccessToken")
+    @Test(groups = "selfOnboardingTests", dependsOnMethods = "getM2MAccessToken")
     public void testSelfOnboardOrganization() throws IOException {
 
         String body = readResource("add-organization-request-body.json");
@@ -240,7 +238,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         assertNotNull(organizationID);
     }
 
-    @Test(dependsOnMethods = "testSelfOnboardOrganization")
+    @Test(groups = "organizationManagementTests", dependsOnGroups = "selfOnboardingTests")
     public void testGetOrganization() {
 
         Response response = getResponseOfGet(ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationID);
@@ -253,7 +251,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
                 .body("id", equalTo(organizationID));
     }
 
-    @Test(dependsOnMethods = "testSelfOnboardOrganization")
+    @Test(groups = "organizationManagementTests", dependsOnMethods = "testGetOrganization")
     public void switchM2MToken() throws IOException, ParseException, InterruptedException {
 
         ApplicationSharePOSTRequest applicationSharePOSTRequest = new ApplicationSharePOSTRequest();
@@ -287,7 +285,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         Assert.assertNotNull(switchedM2MToken);
     }
 
-    @Test(dependsOnMethods = "switchM2MToken")
+    @Test(groups = "organizationManagementTests", dependsOnMethods = "switchM2MToken")
     public void createUserInOrganization() throws IOException {
 
         String body = readResource("add-admin-user-in-organization-request-body.json");
@@ -301,7 +299,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         Assert.assertEquals(response.getStatusLine().getStatusCode(), 201);
     }
 
-    @Test(dependsOnMethods = "createUserInOrganization")
+    @Test(groups = "organizationManagementTests", dependsOnMethods = "createUserInOrganization")
     public void addB2BApplication() throws Exception {
 
         ApplicationModel application = new ApplicationModel();
@@ -318,7 +316,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         Assert.assertNotNull(b2bApplicationID);
     }
 
-    @Test(dependsOnMethods = "addB2BApplication")
+    @Test(groups = "organizationManagementTests", dependsOnMethods = "addB2BApplication")
     public void shareB2BApplication() throws JSONException {
 
         if (!SUPER_TENANT_DOMAIN.equals(tenant)) {
@@ -331,7 +329,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         getResponseOfPost(shareApplicationUrl, shareAppObject.toString());
     }
 
-    @Test(dependsOnMethods = "shareB2BApplication")
+    @Test(groups = "organizationManagementTests", dependsOnMethods = "shareB2BApplication")
     public void unShareB2BApplication() throws JSONException {
 
         if (!SUPER_TENANT_DOMAIN.equals(tenant)) {
@@ -344,7 +342,57 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         getResponseOfPost(shareApplicationUrl, shareAppObject.toString());
     }
 
-    @Test(dependsOnMethods = "unShareB2BApplication")
+    @Test(groups = "discoveryConfigTests", dependsOnGroups = "selfOnboardingTests")
+    public void testAddDiscoveryConfig() throws IOException {
+
+        String endpointURL = ORGANIZATION_CONFIGS_API_BASE_PATH + PATH_SEPARATOR + "discovery";
+        String requestBody = readResource("add-discovery-config-request-body.json");
+        Response response = given().auth().preemptive().oauth2(m2mToken)
+                .contentType(ContentType.JSON)
+                .body(requestBody)
+                .when()
+                .post(endpointURL);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .contentType(ContentType.JSON)
+                .body("properties[0].key", equalTo("emailDomain.enable"))
+                .body("properties[0].value", equalTo("true"));
+    }
+
+    @Test(groups = "discoveryConfigTests", dependsOnMethods = "testAddDiscoveryConfig")
+    public void testGetDiscoveryConfig() {
+
+        String endpointURL = ORGANIZATION_CONFIGS_API_BASE_PATH + PATH_SEPARATOR + "discovery";
+        Response response = given().auth().preemptive().oauth2(m2mToken)
+                .accept(ContentType.JSON)
+                .when()
+                .get(endpointURL);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .contentType(ContentType.JSON)
+                .body("properties[0].key", equalTo("emailDomain.enable"))
+                .body("properties[0].value", equalTo("true"));
+    }
+
+    @Test(groups = "discoveryConfigTests", dependsOnMethods = "testGetDiscoveryConfig")
+    public void testDeleteDiscoveryConfig() {
+
+        String endpointURL = ORGANIZATION_CONFIGS_API_BASE_PATH + PATH_SEPARATOR + "discovery";
+        Response response = given().auth().preemptive().oauth2(m2mToken)
+                .accept(ContentType.JSON)
+                .when()
+                .delete(endpointURL);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
+    }
+
+    @Test(dependsOnGroups = {"organizationManagementTests", "discoveryConfigTests"})
     public void testDisablingOrganization() throws IOException {
 
         String endpoint = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationID;

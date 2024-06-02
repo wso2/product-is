@@ -39,6 +39,7 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
     static final String API_VERSION = "v1";
 
     static final String ORGANIZATION_MANAGEMENT_API_BASE_PATH = "/organizations";
+    static final String ORGANIZATION_CONFIGS_API_BASE_PATH = "/organization-configs";
     static final String PATH_SEPARATOR = "/";
 
     protected static String swaggerDefinition;

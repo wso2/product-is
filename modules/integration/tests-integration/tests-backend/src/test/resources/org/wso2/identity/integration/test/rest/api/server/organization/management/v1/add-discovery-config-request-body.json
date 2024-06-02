@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "key": "emailDomain.enable",
+      "value": true
+    }
+  ]
+}
