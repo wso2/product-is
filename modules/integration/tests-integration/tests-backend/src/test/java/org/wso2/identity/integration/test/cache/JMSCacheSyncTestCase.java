@@ -65,7 +65,7 @@ public class JMSCacheSyncTestCase extends SelfRegisterTestBase {
     private static final String RECEIVED_MESSAGE = "Received cache invalidation message from other cluster nodes";
     private static final String SENT_MESSAGE = "Sending cache invalidation message to other cluster nodes";
     public static final String CACHE_SYNC_JMS_MANAGER_JAR =
-            "org.wso2.carbon.cache.sync.jms.manager-2.0.14-SNAPSHOT.jar";
+            "org.wso2.carbon.cache.sync.jms.manager-2.0.14.jar";
     public static final String JMS_API_JAR = "jms-api_2-2.0.1.wso2v1.jar";
 
     private static Connection connection;

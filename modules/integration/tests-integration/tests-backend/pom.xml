@@ -46,7 +46,7 @@
                         <inherited>false</inherited>
                         <version>2.22.1</version>
                         <configuration>
-<!--                            <argLine>-Xmx1024m -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006</argLine>-->
+                            <!--<argLine>-Xmx1024m -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006</argLine>-->
                             <argLine>-Xmx1024m
                                 -Dorg.apache.jasper.compiler.disablejsr199=true
                                 --add-opens=java.base/java.lang=ALL-UNNAMED
@@ -202,13 +202,6 @@
             </build>
         </profile>
     </profiles>
-
-    <properties>
-        <java.version>11</java.version>
-        <activemq.version>5.16.3</activemq.version>
-        <slf4j.version>1.7.32</slf4j.version>
-        <logback.version>1.2.6</logback.version>
-    </properties>
 
     <build>
         <plugins>
@@ -417,18 +410,18 @@
                                 <artifactItem>
                                     <groupId>org.wso2.carbon.cache.sync.manager</groupId>
                                     <artifactId>org.wso2.carbon.cache.sync.jms.manager</artifactId>
-                                    <version>2.0.14-SNAPSHOT</version>
+                                    <version>${cache.sync.jms.manager.version}</version>
                                     <type>jar</type>
                                     <overWrite>false</overWrite>
                                     <outputDirectory>
                                         ${basedir}/target/test-classes/samples/cache
                                     </outputDirectory>
-                                    <destFileName>org.wso2.carbon.cache.sync.jms.manager-2.0.14-SNAPSHOT.jar</destFileName>
+                                    <destFileName>org.wso2.carbon.cache.sync.jms.manager-2.0.14.jar</destFileName>
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.apache.geronimo.specs</groupId>
                                     <artifactId>geronimo-j2ee-management_1.1_spec</artifactId>
-                                    <version>1.0.1</version>
+                                    <version>${geronimo-j2ee-management_1.1_spec.version}</version>
                                     <type>jar</type>
                                     <overWrite>false</overWrite>
                                     <outputDirectory>
@@ -439,7 +432,7 @@
                                 <artifactItem>
                                     <groupId>org.apache.activemq</groupId>
                                     <artifactId>activemq-broker</artifactId>
-                                    <version>5.16.3</version>
+                                    <version>${activemq.version}</version>
                                     <type>jar</type>
                                     <overWrite>false</overWrite>
                                     <outputDirectory>
@@ -450,7 +443,7 @@
                                 <artifactItem>
                                     <groupId>org.apache.activemq</groupId>
                                     <artifactId>activemq-client</artifactId>
-                                    <version>5.16.3</version>
+                                    <version>${activemq.version}</version>
                                     <type>jar</type>
                                     <overWrite>false</overWrite>
                                     <outputDirectory>
@@ -461,7 +454,7 @@
                                 <artifactItem>
                                     <groupId>org.apache.geronimo.specs</groupId>
                                     <artifactId>geronimo-jms_1.1_spec</artifactId>
-                                    <version>1.1.1</version>
+                                    <version>${geronimo-jms_1.1_spec.version}</version>
                                     <type>jar</type>
                                     <overWrite>false</overWrite>
                                     <outputDirectory>
@@ -472,7 +465,7 @@
                                 <artifactItem>
                                     <groupId>org.fusesource.hawtbuf</groupId>
                                     <artifactId>hawtbuf</artifactId>
-                                    <version>1.11</version>
+                                    <version>${hawtbuf.version}</version>
                                     <type>jar</type>
                                     <overWrite>false</overWrite>
                                     <outputDirectory>
@@ -483,7 +476,7 @@
                                 <artifactItem>
                                     <groupId>org.slf4j</groupId>
                                     <artifactId>slf4j-api</artifactId>
-                                    <version>1.7.31</version>
+                                    <version>${slf4j-api-server.version}</version>
                                     <type>jar</type>
                                     <overWrite>false</overWrite>
                                     <outputDirectory>
@@ -494,7 +487,7 @@
                                 <artifactItem>
                                     <groupId>org.wso2.orbit.javax.jms</groupId>
                                     <artifactId>jms-api</artifactId>
-                                    <version>2.0.1.wso2v1</version>
+                                    <version>${jms-api.version}</version>
                                     <type>jar</type>
                                     <overWrite>false</overWrite>
                                     <outputDirectory>
@@ -730,18 +723,13 @@
             <dependency>
                 <groupId>org.apache.activemq</groupId>
                 <artifactId>activemq-all</artifactId>
-                <version>5.16.3</version>
+                <version>${activemq.version}</version>
                 <scope>compile</scope>
-            </dependency>
-            <dependency>
-                <groupId>javax.jms</groupId>
-                <artifactId>javax.jms-api</artifactId>
-                <version>2.0.1</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.activemq</groupId>
                 <artifactId>activemq-core</artifactId>
-                <version>5.7.0</version>
+                <version>${old-activemq-core.version}</version>
                 <scope>compile</scope>
                 <exclusions>
                     <exclusion>
@@ -755,15 +743,6 @@
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j.version}</version>
             </dependency>
-
-            <!-- Logback implementation for SLF4J -->
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-                <version>${logback.version}</version>
-            </dependency>
-
-            <!-- Log4j to SLF4J bridge -->
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>log4j-over-slf4j</artifactId>
@@ -799,11 +778,6 @@
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.jms</groupId>
-            <artifactId>javax.jms-api</artifactId>
-            <version>2.0.1</version>
         </dependency>
         <dependency>
             <groupId>io.rest-assured</groupId>
@@ -1102,22 +1076,22 @@
         <dependency>
             <groupId>org.wso2.carbon.cache.sync.manager</groupId>
             <artifactId>org.wso2.carbon.cache.sync.jms.manager</artifactId>
-            <version>2.0.14-SNAPSHOT</version>
+            <version>${cache.sync.jms.manager.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-broker</artifactId>
-            <version>5.16.3</version>
+            <version>${activemq.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-client</artifactId>
-            <version>5.16.3</version>
+            <version>${activemq.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-all</artifactId>
-            <version>5.16.3</version>
+            <version>${activemq.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>log4j</groupId>
@@ -1130,101 +1104,50 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.apache.activemq</groupId>
-            <artifactId>activemq-core</artifactId>
-            <version>5.7.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.activemq</groupId>
-                    <artifactId>activemq-core</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
-
-        <!-- Logback implementation for SLF4J -->
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${logback.version}</version>
-        </dependency>
-
-        <!-- Log4j to SLF4J bridge -->
-<!--        <dependency>-->
-<!--            <groupId>org.slf4j</groupId>-->
-<!--            <artifactId>log4j-over-slf4j</artifactId>-->
-<!--            <version>${slf4j.version}</version>-->
-<!--        </dependency>-->
-
-        <!-- JUnit for testing -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.2</version>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
-            <version>2.17.1</version>
+            <version>${logging.log4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
-            <version>2.17.1</version>
+            <version>${logging.log4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-slf4j-impl</artifactId>
-            <version>2.17.1</version>
-        </dependency>
-<!--        <dependency>-->
-<!--            <groupId>javax.management</groupId>-->
-<!--            <artifactId>jmx</artifactId>-->
-<!--            <version>1.2.1</version>-->
-<!--        </dependency>-->
-
-        <!-- JavaEE API for javax.management -->
-        <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-api</artifactId>
-            <version>8.0</version>
-            <scope>provided</scope>
+            <version>${logging.log4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>geronimo-j2ee-management_1.1_spec</artifactId>
-            <version>1.0.1</version>
+            <version>${geronimo-j2ee-management_1.1_spec.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>geronimo-jms_1.1_spec</artifactId>
-            <version>1.1.1</version>
+            <version>${geronimo-jms_1.1_spec.version}</version>
         </dependency>
         <dependency>
             <groupId>org.fusesource.hawtbuf</groupId>
             <artifactId>hawtbuf</artifactId>
-            <version>1.11</version>
+            <version>${hawtbuf.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.31</version>
+            <version>${slf4j-api-server.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.orbit.javax.jms</groupId>
             <artifactId>jms-api</artifactId>
-            <version>2.0.1.wso2v1</version>
+            <version>${jms-api.version}</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.apache.activemq</groupId>-->
-<!--            <artifactId>activemq-broker</artifactId>-->
-<!--            <version>5.16.3</version>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>org.wso2.samples.is</groupId>
             <artifactId>org.wso2.carbon.identity.sample.extension.authenticators</artifactId>
@@ -1352,4 +1275,19 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <properties>
+        <java.version>11</java.version>
+        <activemq.version>5.16.3</activemq.version>
+        <slf4j.version>1.7.32</slf4j.version>
+        <logback.version>1.2.6</logback.version>
+        <geronimo-jms_1.1_spec.version>1.1.1</geronimo-jms_1.1_spec.version>
+        <geronimo-j2ee-management_1.1_spec.version>1.0.1</geronimo-j2ee-management_1.1_spec.version>
+        <hawtbuf.version>1.11</hawtbuf.version>
+        <slf4j-api-server.version>1.7.31</slf4j-api-server.version>
+        <jms-api.version>2.0.1.wso2v1</jms-api.version>
+        <cache.sync.jms.manager.version>2.0.14</cache.sync.jms.manager.version>
+        <logging.log4j.version>2.17.1</logging.log4j.version>
+        <old-activemq-core.version>5.7.0</old-activemq-core.version>
+    </properties>
 </project>
