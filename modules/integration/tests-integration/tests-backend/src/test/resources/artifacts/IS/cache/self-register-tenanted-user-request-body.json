@@ -1,0 +1,31 @@
+{
+  "user": {
+    "username": "selfRegisterTenantedTestUser@wso2.com",
+    "realm": "PRIMARY",
+    "password": "Password12!",
+    "claims": [
+      {
+        "uri": "http://wso2.org/claims/givenname",
+        "value": "selfRegisterTenantedTestUser"
+      },
+      {
+        "uri": "http://wso2.org/claims/emailaddress",
+        "value": "selfRegisterTenantedTestUser@gmail.com"
+      },
+      {
+        "uri": "http://wso2.org/claims/lastname",
+        "value": "selfRegisterTenantedTestUser"
+      },
+      {
+        "uri": "http://wso2.org/claims/mobile",
+        "value": "+947721584558"
+      }
+    ]
+  },
+  "properties": [
+    {
+      "key": "callback",
+      "value": "https://localhost:9853/myaccount/login"
+    }
+  ]
+}

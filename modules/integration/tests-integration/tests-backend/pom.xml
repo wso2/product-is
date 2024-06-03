@@ -46,7 +46,7 @@
                         <inherited>false</inherited>
                         <version>2.22.1</version>
                         <configuration>
-                            <!--<argLine>-Xmx1024m -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006</argLine>-->
+<!--                            <argLine>-Xmx1024m -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006</argLine>-->
                             <argLine>-Xmx1024m
                                 -Dorg.apache.jasper.compiler.disablejsr199=true
                                 --add-opens=java.base/java.lang=ALL-UNNAMED
@@ -202,6 +202,13 @@
             </build>
         </profile>
     </profiles>
+
+    <properties>
+        <java.version>11</java.version>
+        <activemq.version>5.16.3</activemq.version>
+        <slf4j.version>1.7.32</slf4j.version>
+        <logback.version>1.2.6</logback.version>
+    </properties>
 
     <build>
         <plugins>
@@ -718,6 +725,53 @@
         </plugins>
     </build>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.activemq</groupId>
+                <artifactId>activemq-all</artifactId>
+                <version>5.16.3</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>javax.jms</groupId>
+                <artifactId>javax.jms-api</artifactId>
+                <version>2.0.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.activemq</groupId>
+                <artifactId>activemq-core</artifactId>
+                <version>5.7.0</version>
+                <scope>compile</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.activemq</groupId>
+                        <artifactId>activemq-core</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+
+            <!-- Logback implementation for SLF4J -->
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+
+            <!-- Log4j to SLF4J bridge -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>log4j-over-slf4j</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <!-- Rest assured dependency requires the http client 4.5.1 or above. -->
         <dependency>
@@ -745,6 +799,11 @@
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.jms</groupId>
+            <artifactId>javax.jms-api</artifactId>
+            <version>2.0.1</version>
         </dependency>
         <dependency>
             <groupId>io.rest-assured</groupId>
@@ -1061,10 +1120,80 @@
             <version>5.16.3</version>
             <exclusions>
                 <exclusion>
-                    <groupId>org.apache.activemq</groupId>
-                    <artifactId>activemq-all</artifactId>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-core</artifactId>
+            <version>5.7.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.activemq</groupId>
+                    <artifactId>activemq-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+
+        <!-- Logback implementation for SLF4J -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+
+        <!-- Log4j to SLF4J bridge -->
+<!--        <dependency>-->
+<!--            <groupId>org.slf4j</groupId>-->
+<!--            <artifactId>log4j-over-slf4j</artifactId>-->
+<!--            <version>${slf4j.version}</version>-->
+<!--        </dependency>-->
+
+        <!-- JUnit for testing -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.17.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.17.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>2.17.1</version>
+        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>javax.management</groupId>-->
+<!--            <artifactId>jmx</artifactId>-->
+<!--            <version>1.2.1</version>-->
+<!--        </dependency>-->
+
+        <!-- JavaEE API for javax.management -->
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>8.0</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
