@@ -1,0 +1,10 @@
+{
+  "attributes": [
+    {
+      "type": "emailDomain",
+      "values": [
+        "xyz.com"
+      ]
+    }
+  ]
+}

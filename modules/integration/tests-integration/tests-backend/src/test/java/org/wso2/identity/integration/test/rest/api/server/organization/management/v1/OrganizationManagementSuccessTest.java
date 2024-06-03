@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2023-2024, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -342,7 +342,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         getResponseOfPost(shareApplicationUrl, shareAppObject.toString());
     }
 
-    @Test(groups = "discoveryConfigTests", dependsOnGroups = "selfOnboardingTests")
+    @Test(groups = "discoveryConfigTests", dependsOnGroups = "organizationManagementTests")
     public void testAddDiscoveryConfig() throws IOException {
 
         String endpointURL = ORGANIZATION_CONFIGS_API_BASE_PATH + PATH_SEPARATOR + "discovery";
@@ -378,7 +378,107 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
                 .body("properties[0].value", equalTo("true"));
     }
 
-    @Test(groups = "discoveryConfigTests", dependsOnMethods = "testGetDiscoveryConfig")
+    @Test(groups = "discoveryTests", dependsOnGroups = "discoveryConfigTests")
+    public void testAddDiscoveryAttributesToOrganization() throws IOException {
+
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + "discovery";
+        String requestBody = readResource("add-discovery-attributes-request-body.json");
+        requestBody = requestBody.replace("${organizationID}", organizationID);
+        Response response = given().auth().preemptive().oauth2(m2mToken)
+                .contentType(ContentType.JSON)
+                .body(requestBody)
+                .when()
+                .post(endpointURL);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED);
+    }
+
+    @Test(groups = "discoveryTests", dependsOnMethods = "testAddDiscoveryAttributesToOrganization")
+    public void testGetDiscoveryAttributesOfOrganizations() {
+
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + "discovery";
+        Response response = given().auth().preemptive().oauth2(m2mToken)
+                .contentType(ContentType.JSON)
+                .when()
+                .get(endpointURL);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("totalResults", equalTo(1))
+                .body("organizations[0].organizationId", equalTo(organizationID))
+                .body("organizations[0].organizationName", equalTo("Greater Hospital"))
+                .body("organizations[0].attributes[0].type", equalTo("emailDomain"))
+                .body("organizations[0].attributes[0].values[0]", equalTo("abc.com"));
+    }
+
+    @Test(groups = "discoveryTests", dependsOnMethods = "testGetDiscoveryAttributesOfOrganizations")
+    public void testGetDiscoveryAttributesOfOrganization() {
+
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationID + "/discovery";
+        Response response = given().auth().preemptive().oauth2(m2mToken)
+                .contentType(ContentType.JSON)
+                .when()
+                .get(endpointURL);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("attributes[0].type", equalTo("emailDomain"))
+                .body("attributes[0].values[0]", equalTo("abc.com"));
+    }
+
+    @Test(groups = "discoveryTests", dependsOnMethods = "testGetDiscoveryAttributesOfOrganization")
+    public void testUpdateDiscoveryAttributesOfOrganization() throws IOException {
+
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationID + "/discovery";
+        String requestBody = readResource("update-discovery-config-request-body.json");
+        Response response = given().auth().preemptive().oauth2(m2mToken)
+                .contentType(ContentType.JSON)
+                .body(requestBody)
+                .when()
+                .put(endpointURL);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("attributes[0].values[0]", equalTo("xyz.com"));
+    }
+
+    @Test(groups = "discoveryTests", dependsOnMethods = "testGetDiscoveryAttributesOfOrganization")
+    public void testCheckDiscoveryAttributeExists() throws IOException {
+
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + "check-discovery";
+        String requestBody = readResource("check-discovery-attributes-request-body.json");
+        Response response = given().auth().preemptive().oauth2(m2mToken)
+                .contentType(ContentType.JSON)
+                .body(requestBody)
+                .when()
+                .post(endpointURL);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("available", equalTo(true));
+    }
+
+    @Test(groups = "discoveryTests", dependsOnMethods = "testUpdateDiscoveryAttributesOfOrganization")
+    public void testDeleteDiscoveryAttributesOfOrganization() {
+
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationID + "/discovery";
+        Response response = given().auth().preemptive().oauth2(m2mToken)
+                .contentType(ContentType.JSON)
+                .when()
+                .delete(endpointURL);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
+    }
+
+    @Test(dependsOnGroups = "discoveryTests")
     public void testDeleteDiscoveryConfig() {
 
         String endpointURL = ORGANIZATION_CONFIGS_API_BASE_PATH + PATH_SEPARATOR + "discovery";
@@ -392,7 +492,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
                 .statusCode(HttpStatus.SC_NO_CONTENT);
     }
 
-    @Test(dependsOnGroups = {"organizationManagementTests", "discoveryConfigTests"})
+    @Test(dependsOnMethods = "testDeleteDiscoveryConfig")
     public void testDisablingOrganization() throws IOException {
 
         String endpoint = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationID;
