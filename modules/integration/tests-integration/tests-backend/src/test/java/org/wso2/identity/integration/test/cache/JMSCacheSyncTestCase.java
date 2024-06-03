@@ -18,19 +18,23 @@
 
 package org.wso2.identity.integration.test.cache;
 
+import io.restassured.response.Response;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.broker.BrokerPlugin;
 import org.apache.activemq.broker.BrokerService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpStatus;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.rest.api.user.selfRegister.SelfRegisterTestBase;
 import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
@@ -51,7 +55,7 @@ import javax.jms.Session;
 import javax.jms.TextMessage;
 import javax.jms.Topic;
 
-public class JMSCacheSyncTestCase extends ISIntegrationTest {
+public class JMSCacheSyncTestCase extends SelfRegisterTestBase {
 
     private static final Log log = LogFactory.getLog(JMSCacheSyncTestCase.class);
     private static final String BROKER_URL = "tcp://localhost:61616";
@@ -60,7 +64,8 @@ public class JMSCacheSyncTestCase extends ISIntegrationTest {
             "Cache Sync JMS Manager Service bundle activated successfully.";
     private static final String RECEIVED_MESSAGE = "Received cache invalidation message from other cluster nodes";
     private static final String SENT_MESSAGE = "Sending cache invalidation message to other cluster nodes";
-    public static final String CACHE_SYNC_JMS_MANAGER_JAR = "org.wso2.carbon.cache.sync.jms.manager-2.0.14-SNAPSHOT.jar";
+    public static final String CACHE_SYNC_JMS_MANAGER_JAR =
+            "org.wso2.carbon.cache.sync.jms.manager-2.0.14-SNAPSHOT.jar";
     public static final String JMS_API_JAR = "jms-api_2-2.0.1.wso2v1.jar";
 
     private static Connection connection;
@@ -83,24 +88,33 @@ public class JMSCacheSyncTestCase extends ISIntegrationTest {
                 + File.separator + "logs" + File.separator + "wso2carbon.log");
         removeExistingCarbonLog();
 
-        super.init();
+        super.init(TestUserMode.SUPER_TENANT_ADMIN);
         applyDropinJar(CACHE_SYNC_JMS_MANAGER_JAR);
         applyDropinJar(JMS_API_JAR);
         applyAllActiveMQJars();
 
         scm = new ServerConfigurationManager(isServer);
-
         applyCacheSyncDeploymentConfigurations(carbonHome);
         applyCacheSyncDebugLogConfigurations(carbonHome);
+
+        super.init(TestUserMode.SUPER_TENANT_ADMIN);
+        initUpdateIDPProperty();
+        this.context = isServer;
+        this.authenticatingUserName = context.getContextTenant().getTenantAdmin().getUserName();
+        this.authenticatingCredential = context.getContextTenant().getTenantAdmin().getPassword();
+        this.tenant = context.getContextTenant().getDomain();
+
+        super.testInit(API_VERSION_SELF_REGISTER, swaggerDefinitionSelfRegister, tenant,
+                API_SELF_REGISTER_BASE_PATH_IN_SWAGGER, API_SELF_REGISTER_BASE_PATH);
     }
 
     @AfterClass(alwaysRun = true)
     public void testClear() throws Exception {
 
         stopBroker();
-//        removeDropinsJar(CACHE_SYNC_JMS_MANAGER_JAR);
-//        removeDropinsJar(JMS_API_JAR);
-//        removeAllActiveMQJars();
+        removeDropinsJar(CACHE_SYNC_JMS_MANAGER_JAR);
+        removeDropinsJar(JMS_API_JAR);
+        removeAllActiveMQJars();
         resetISConfiguration();
     }
 
@@ -126,8 +140,7 @@ public class JMSCacheSyncTestCase extends ISIntegrationTest {
 
         Thread.sleep(50000);
         sendMessage();
-        System.out.println("Message send successfully");
-        Thread.sleep(50000);
+        Thread.sleep(30000);
 
         Assert.assertTrue(
                 checkLogForMessage(RECEIVED_MESSAGE),
@@ -135,11 +148,29 @@ public class JMSCacheSyncTestCase extends ISIntegrationTest {
     }
 
     @Test
-    public void isMessageSent() {
+    public void isMessageSent() throws Exception {
 
+        doSelfRegister();
+        Thread.sleep(30000);
         Assert.assertTrue(
                 checkLogForMessage(SENT_MESSAGE),
                 "Error while sending message to jms broker.");
+    }
+
+    private void doSelfRegister() throws Exception {
+
+        updateResidentIDPProperty(ENABLE_SELF_SIGN_UP, "true", true);
+        String selfRegisterPath = getISResourceLocation() + File.separator + "cache" + File.separator
+                + "self-register-tenanted-user-request-body.json";
+        String selfRegisterUserInfo = readFileAsString(selfRegisterPath);
+        Response responseOfPost = getResponseOfPost(SELF_REGISTRATION_ENDPOINT, selfRegisterUserInfo);
+        Assert.assertEquals(responseOfPost.statusCode(), HttpStatus.SC_CREATED,
+                "Self register user unsuccessful" + responseOfPost.asString());
+    }
+
+    public String readFileAsString(String filePath) throws IOException {
+
+        return new String(Files.readAllBytes(Paths.get(filePath)));
     }
 
     private enum ActiveMQJars {
@@ -154,10 +185,12 @@ public class JMSCacheSyncTestCase extends ISIntegrationTest {
         private final String jarName;
 
         ActiveMQJars(String jarName) {
+
             this.jarName = jarName;
         }
 
         public String getJarName() {
+
             return jarName;
         }
     }
@@ -228,6 +261,7 @@ public class JMSCacheSyncTestCase extends ISIntegrationTest {
     }
 
     private String transformJarName(String originalName) {
+
         return originalName.replace("-", "_").replaceAll("(\\.\\w+)$", "_1.0.0$1");
     }
 
@@ -251,7 +285,7 @@ public class JMSCacheSyncTestCase extends ISIntegrationTest {
 
         File jarDestFile = getLibFilePath(jarName);
         if (jarDestFile.exists()) {
-            jarDestFile.delete();;
+            jarDestFile.delete();
         }
     }
 
@@ -259,7 +293,7 @@ public class JMSCacheSyncTestCase extends ISIntegrationTest {
 
         File jarDestFile = getDropinsFilePath(jarName);
         if (jarDestFile.exists()) {
-            jarDestFile.delete();;
+            jarDestFile.delete();
         }
     }
 
@@ -317,9 +351,9 @@ public class JMSCacheSyncTestCase extends ISIntegrationTest {
 
         try {
             broker.stop();
-            System.out.println("ActiveMQ broker stopped successfully.");
+            log.info("ActiveMQ broker stopped successfully.");
         } catch (Exception e) {
-            log.error("Error while stopping the ActiveMQ broker.");;
+            log.error("Error while stopping the ActiveMQ broker.");
         }
     }
 
