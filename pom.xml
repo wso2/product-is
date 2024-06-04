@@ -2351,9 +2351,9 @@
         <authenticator.totp.version>3.3.27</authenticator.totp.version>
         <authenticator.backupcode.version>0.0.20</authenticator.backupcode.version>
         <authenticator.office365.version>2.1.3</authenticator.office365.version>
-        <authenticator.smsotp.version>3.3.26</authenticator.smsotp.version>
+        <authenticator.smsotp.version>3.3.27</authenticator.smsotp.version>
         <authenticator.magiclink.version>1.1.25</authenticator.magiclink.version>
-        <authenticator.emailotp.version>4.1.27</authenticator.emailotp.version>
+        <authenticator.emailotp.version>4.1.28</authenticator.emailotp.version>
         <authenticator.local.auth.emailotp.version>1.0.23</authenticator.local.auth.emailotp.version>
         <authenticator.local.auth.smsotp.version>1.0.8</authenticator.local.auth.smsotp.version>
         <authenticator.twitter.version>1.1.2</authenticator.twitter.version>
@@ -2385,7 +2385,7 @@
         <conditional.authentication.functions.version>1.2.53</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.19.12</identity.apps.console.version>
+        <identity.apps.console.version>2.19.13</identity.apps.console.version>
         <identity.apps.myaccount.version>2.7.11</identity.apps.myaccount.version>
         <identity.apps.core.version>2.3.6</identity.apps.core.version>
         <identity.apps.tests.version>1.6.378</identity.apps.tests.version>
