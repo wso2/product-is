@@ -345,7 +345,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @Test(groups = "discoveryConfigTests", dependsOnGroups = "organizationManagementTests")
     public void testAddDiscoveryConfig() throws IOException {
 
-        String endpointURL = ORGANIZATION_CONFIGS_API_BASE_PATH + PATH_SEPARATOR + "discovery";
+        String endpointURL = ORGANIZATION_CONFIGS_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH;
         String requestBody = readResource("add-discovery-config-request-body.json");
         Response response = given().auth().preemptive().oauth2(m2mToken)
                 .contentType(ContentType.JSON)
@@ -364,7 +364,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @Test(groups = "discoveryConfigTests", dependsOnMethods = "testAddDiscoveryConfig")
     public void testGetDiscoveryConfig() {
 
-        String endpointURL = ORGANIZATION_CONFIGS_API_BASE_PATH + PATH_SEPARATOR + "discovery";
+        String endpointURL = ORGANIZATION_CONFIGS_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH;
         Response response = given().auth().preemptive().oauth2(m2mToken)
                 .accept(ContentType.JSON)
                 .when()
@@ -381,7 +381,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @Test(groups = "discoveryTests", dependsOnGroups = "discoveryConfigTests")
     public void testAddDiscoveryAttributesToOrganization() throws IOException {
 
-        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + "discovery";
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH;
         String requestBody = readResource("add-discovery-attributes-request-body.json");
         requestBody = requestBody.replace("${organizationID}", organizationID);
         Response response = given().auth().preemptive().oauth2(m2mToken)
@@ -398,7 +398,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @Test(groups = "discoveryTests", dependsOnMethods = "testAddDiscoveryAttributesToOrganization")
     public void testGetDiscoveryAttributesOfOrganizations() {
 
-        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + "discovery";
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH;
         Response response = given().auth().preemptive().oauth2(m2mToken)
                 .contentType(ContentType.JSON)
                 .when()
@@ -417,7 +417,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @Test(groups = "discoveryTests", dependsOnMethods = "testGetDiscoveryAttributesOfOrganizations")
     public void testGetDiscoveryAttributesOfOrganization() {
 
-        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationID + "/discovery";
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationID
+                                + ORGANIZATION_DISCOVERY_API_PATH;
         Response response = given().auth().preemptive().oauth2(m2mToken)
                 .contentType(ContentType.JSON)
                 .when()
@@ -433,7 +434,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @Test(groups = "discoveryTests", dependsOnMethods = "testGetDiscoveryAttributesOfOrganization")
     public void testUpdateDiscoveryAttributesOfOrganization() throws IOException {
 
-        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationID + "/discovery";
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationID
+                                + ORGANIZATION_DISCOVERY_API_PATH;
         String requestBody = readResource("update-discovery-config-request-body.json");
         Response response = given().auth().preemptive().oauth2(m2mToken)
                 .contentType(ContentType.JSON)
@@ -467,7 +469,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @Test(groups = "discoveryTests", dependsOnMethods = "testUpdateDiscoveryAttributesOfOrganization")
     public void testDeleteDiscoveryAttributesOfOrganization() {
 
-        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationID + "/discovery";
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationID
+                                + ORGANIZATION_DISCOVERY_API_PATH;
         Response response = given().auth().preemptive().oauth2(m2mToken)
                 .contentType(ContentType.JSON)
                 .when()
@@ -481,7 +484,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @Test(dependsOnGroups = "discoveryTests")
     public void testDeleteDiscoveryConfig() {
 
-        String endpointURL = ORGANIZATION_CONFIGS_API_BASE_PATH + PATH_SEPARATOR + "discovery";
+        String endpointURL = ORGANIZATION_CONFIGS_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH;
         Response response = given().auth().preemptive().oauth2(m2mToken)
                 .accept(ContentType.JSON)
                 .when()
