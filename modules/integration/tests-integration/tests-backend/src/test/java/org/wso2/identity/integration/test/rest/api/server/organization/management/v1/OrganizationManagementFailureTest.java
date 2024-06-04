@@ -15,41 +15,29 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.wso2.identity.integration.test.rest.api.server.organization.management.v1;
 
-import com.nimbusds.oauth2.sdk.AccessTokenResponse;
-import com.nimbusds.oauth2.sdk.AuthorizationGrant;
-import com.nimbusds.oauth2.sdk.ClientCredentialsGrant;
-import com.nimbusds.oauth2.sdk.Scope;
-import com.nimbusds.oauth2.sdk.TokenRequest;
-import com.nimbusds.oauth2.sdk.TokenResponse;
-import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
-import com.nimbusds.oauth2.sdk.auth.ClientSecretBasic;
-import com.nimbusds.oauth2.sdk.auth.Secret;
-import com.nimbusds.oauth2.sdk.http.HTTPResponse;
-import com.nimbusds.oauth2.sdk.id.ClientID;
-import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.testng.Assert;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
+import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationListItem;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
+import org.wso2.identity.integration.test.utils.OAuth2Util;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.Iterator;
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
-import static io.restassured.RestAssured.given;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.testng.Assert.assertNotNull;
 
@@ -58,13 +46,12 @@ import static org.testng.Assert.assertNotNull;
  */
 public class OrganizationManagementFailureTest extends OrganizationManagementBaseTest {
 
-    private String organizationID;
-    private String selfServiceAppId;
-    private String selfServiceAppClientId;
-    private String selfServiceAppClientSecret;
-    private String m2mToken;
     private final String invalidM2MToken = "06c1f4e2-3339-44e4-a825-96585e3653b1";
     private final String invalidOrganizationID = "06c1f4e2-3339-44e4-a825-96585e3653b1";
+
+    private List<String> organizationIDs = new ArrayList<>();
+    private String applicationID;
+    private String m2mToken;
     private HttpClient client;
     protected OAuth2RestClient restClient;
 
@@ -90,7 +77,7 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     public void testConclude() throws Exception {
 
         super.conclude();
-        deleteApplication(selfServiceAppId);
+        OAuth2Util.deleteApplication(oAuth2RestClient, applicationID);
         oAuth2RestClient.closeHttpClient();
     }
 
@@ -103,366 +90,253 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
         };
     }
 
-    @Test(groups = "selfOnboardingTests")
-    public void createApplicationForSelfOrganizationOnboardService() throws IOException, JSONException {
+    @DataProvider(name = "organizationRequestBodies")
+    public Object[][] organizationRequestBodyFilePaths() {
 
-        String endpointURL = "applications";
-        String body = readResource("create-organization-self-service-app-request.body.json");
-
-        Response response = given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
-                .contentType(ContentType.JSON)
-                .body(body).when().post(endpointURL);
-        response.then()
-                .log().ifValidationFails().assertThat().statusCode(HttpStatus.SC_CREATED);
-
-        Optional<ApplicationListItem> b2bSelfServiceApp = oAuth2RestClient.getAllApplications().getApplications()
-                .stream().filter(application -> application.getName().equals("b2b-self-service-app")).findAny();
-        Assert.assertTrue(b2bSelfServiceApp.isPresent(), "B2B self service application is not created");
-        selfServiceAppId = b2bSelfServiceApp.get().getId();
-
-        JSONObject jsonObject = new JSONObject(readResource("organization-self-service-apis.json"));
-
-        for (Iterator<String> apiNameIterator = jsonObject.keys(); apiNameIterator.hasNext(); ) {
-            String apiName = apiNameIterator.next();
-            Object requiredScopes = jsonObject.get(apiName);
-
-            Response aPIResource =
-                    given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential).when()
-                            .queryParam("filter", "identifier eq " + apiName).get("api-resources");
-            aPIResource.then().log().ifValidationFails().assertThat().statusCode(HttpStatus.SC_OK);
-            String apiUUID = aPIResource.getBody().jsonPath().getString("apiResources[0].id");
-
-            JSONObject authorizedAPIRequestBody = new JSONObject();
-            authorizedAPIRequestBody.put("id", apiUUID);
-            authorizedAPIRequestBody.put("policyIdentifier", "RBAC");
-            authorizedAPIRequestBody.put("scopes", requiredScopes);
-
-            Response authorizedAPIResponse =
-                    given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
-                            .contentType(ContentType.JSON).body(authorizedAPIRequestBody.toString()).when()
-                            .post("applications/" + selfServiceAppId + "/authorized-apis");
-            authorizedAPIResponse.then().log().ifValidationFails().assertThat().statusCode(HttpStatus.SC_OK);
-        }
+        return new Object[][] {
+                {"add-greater-hospital-organization-request-body.json"},
+                {"add-smaller-hospital-organization-request-body.json"}
+        };
     }
 
-    @Test(groups = "selfOnboardingTests", dependsOnMethods = "createApplicationForSelfOrganizationOnboardService")
-    public void getM2MAccessToken() throws Exception {
+    @Test
+    public void testGetM2MAccessToken() throws Exception {
 
-        OpenIDConnectConfiguration openIDConnectConfiguration = oAuth2RestClient
-                .getOIDCInboundDetails(selfServiceAppId);
-        selfServiceAppClientId = openIDConnectConfiguration.getClientId();
-        selfServiceAppClientSecret = openIDConnectConfiguration.getClientSecret();
-        AuthorizationGrant clientCredentialsGrant = new ClientCredentialsGrant();
-        ClientID clientID = new ClientID(selfServiceAppClientId);
-        Secret clientSecret = new Secret(selfServiceAppClientSecret);
-        ClientAuthentication clientAuth = new ClientSecretBasic(clientID, clientSecret);
-        Scope scope = new Scope("SYSTEM");
-
+        String apiAuthorizations = readResource("organization-self-service-apis.json");
         URI tokenEndpoint = new URI(getTenantQualifiedURL(OAuth2Constant.ACCESS_TOKEN_ENDPOINT,
-                tenantInfo.getDomain()));
-        TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, clientCredentialsGrant, scope);
-        HTTPResponse tokenHTTPResp = request.toHTTPRequest().send();
-        Assert.assertNotNull(tokenHTTPResp, "Access token http response is null.");
-
-        TokenResponse tokenResponse = TokenResponse.parse(tokenHTTPResp);
-        AccessTokenResponse accessTokenResponse = tokenResponse.toSuccessResponse();
-        m2mToken = accessTokenResponse.getTokens().getAccessToken().getValue();
-        Assert.assertNotNull(m2mToken, "The retrieved M2M Token is null in the token response.");
-
-        Scope scopesInResponse = accessTokenResponse.getTokens().getAccessToken().getScope();
-        Assert.assertTrue(scopesInResponse.contains("internal_organization_create"),
-                "Requested scope is missing in the token response");
+                                tenantInfo.getDomain()));
+        applicationID = OAuth2Util.createOIDCApplication(oAuth2RestClient, apiAuthorizations, authenticatingUserName,
+                                                    authenticatingCredential);
+        m2mToken = OAuth2Util.getM2MAccessToken(oAuth2RestClient, applicationID, tokenEndpoint);
     }
 
-    @Test(groups = "selfOnboardingTests", dependsOnMethods = "getM2MAccessToken")
-    public void testSelfOnboardOrganization() throws IOException {
+    @Test(dependsOnMethods = "testGetM2MAccessToken", dataProvider = "organizationRequestBodies")
+    public void testSelfOnboardOrganization(String requestBodyPath) throws Exception {
 
-        String body = readResource("add-organization-request-body.json");
-        Response response = given().auth().preemptive().oauth2(m2mToken)
-                .contentType(ContentType.JSON)
-                .body(body)
-                .when()
-                .post(ORGANIZATION_MANAGEMENT_API_BASE_PATH);
+        String body = readResource(requestBodyPath);
+        Response response = getResponseOfPostWithOAuth2(ORGANIZATION_MANAGEMENT_API_BASE_PATH, body, m2mToken);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED)
                 .header(HttpHeaders.LOCATION, notNullValue());
-
         String location = response.getHeader(HttpHeaders.LOCATION);
         assertNotNull(location);
-        organizationID = location.substring(location.lastIndexOf("/") + 1);
+        String organizationID = location.substring(location.lastIndexOf("/") + 1);
         assertNotNull(organizationID);
+        organizationIDs.add(organizationID);
     }
 
-    @Test(groups = "discoveryConfigTests", dependsOnGroups = "selfOnboardingTests")
+    @Test(dependsOnMethods = "testSelfOnboardOrganization")
+    public void testGetDiscoveryConfigWithoutAddingConfig() {
+
+        String endpointURL = ORGANIZATION_CONFIGS_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH;
+        Response response = getResponseOfGetWithOAuth2(endpointURL, m2mToken);
+        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "OCM-60002");
+    }
+
+    @Test(dependsOnMethods = "testGetDiscoveryConfigWithoutAddingConfig")
     public void testAddDiscoveryAttributesWithoutAddingConfig() throws IOException {
 
         String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH;
         String requestBody = readResource("add-discovery-attributes-request-body.json");
-        Response response = given().auth().preemptive().oauth2(invalidM2MToken)
-                .contentType(ContentType.JSON)
-                .body(requestBody)
-                .when()
-                .post(endpointURL);
-        validateHttpStatusCode(response, HttpStatus.SC_UNAUTHORIZED);
+        requestBody = requestBody.replace("${organizationID}", organizationIDs.get(0));
+        Response response = getResponseOfPostWithOAuth2(endpointURL, requestBody, m2mToken);
+        validateErrorResponseWithoutTraceId(response, HttpStatus.SC_BAD_REQUEST, "ORG-60080");
     }
 
-    @Test(groups = "discoveryConfigTests", dependsOnMethods = "testAddDiscoveryAttributesWithoutAddingConfig")
+    @Test(dependsOnMethods = "testAddDiscoveryAttributesWithoutAddingConfig")
     public void testAddInvalidDiscoveryConfig() throws IOException {
 
         String endpointURL = ORGANIZATION_CONFIGS_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH;
         String invalidRequestBody = readResource("invalid-discovery-config-request-body.json");
-        Response response = given().auth().preemptive().oauth2(m2mToken)
-                .contentType(ContentType.JSON)
-                .body(invalidRequestBody)
-                .when()
-                .post(endpointURL);
-        validateHttpStatusCode(response, HttpStatus.SC_BAD_REQUEST);
+        Response response = getResponseOfPostWithOAuth2(endpointURL, invalidRequestBody, m2mToken);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "UE-10000");
     }
 
-    @Test(groups = "discoveryConfigTests", dependsOnMethods = "testAddInvalidDiscoveryConfig")
+    @Test(dependsOnMethods = "testAddInvalidDiscoveryConfig")
     public void testAddDiscoveryConfigUnauthorized() throws IOException {
 
         String endpointURL = ORGANIZATION_CONFIGS_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH;
         String requestBody = readResource("add-discovery-config-request-body.json");
-        Response response = given().auth().preemptive().oauth2(invalidM2MToken)
-                .contentType(ContentType.JSON)
-                .body(requestBody)
-                .when()
-                .post(endpointURL);
+        Response response = getResponseOfPostWithOAuth2(endpointURL, requestBody, invalidM2MToken);
         validateHttpStatusCode(response, HttpStatus.SC_UNAUTHORIZED);
     }
 
-    @Test(groups = "discoveryConfigTests", dependsOnMethods = "testAddDiscoveryConfigUnauthorized")
+    @Test(dependsOnMethods = "testAddDiscoveryConfigUnauthorized")
     public void testAddExistingDiscoveryConfig() throws IOException {
 
         String endpointURL = ORGANIZATION_CONFIGS_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH;
         String requestBody = readResource("add-discovery-config-request-body.json");
-        Response firstResponse = given().auth().preemptive().oauth2(m2mToken)
-                .contentType(ContentType.JSON)
-                .body(requestBody)
-                .when()
-                .post(endpointURL);
+        Response firstResponse = getResponseOfPostWithOAuth2(endpointURL, requestBody, m2mToken);
         validateHttpStatusCode(firstResponse, HttpStatus.SC_CREATED);
-        Response secondResponse = given().auth().preemptive().oauth2(m2mToken)
-                .contentType(ContentType.JSON)
-                .body(requestBody)
-                .when()
-                .post(endpointURL);
-        validateHttpStatusCode(secondResponse, HttpStatus.SC_CONFLICT);
+        Response secondResponse = getResponseOfPostWithOAuth2(endpointURL, requestBody, m2mToken);
+        validateErrorResponse(secondResponse, HttpStatus.SC_CONFLICT, "OCM-60003");
     }
 
-    @Test(groups = "discoveryConfigTests", dependsOnMethods = "testAddExistingDiscoveryConfig")
+    @Test(dependsOnMethods = "testAddExistingDiscoveryConfig")
     public void testGetDiscoveryConfigUnauthorized() {
 
         String endpointURL = ORGANIZATION_CONFIGS_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH;
-        Response response = given().auth().preemptive().oauth2(invalidM2MToken)
-                .contentType(ContentType.JSON)
-                .when()
-                .get(endpointURL);
+        Response response = getResponseOfGetWithOAuth2(endpointURL, invalidM2MToken);
         validateHttpStatusCode(response, HttpStatus.SC_UNAUTHORIZED);
     }
 
-    @Test(groups = "discoveryTests", dependsOnGroups = "discoveryConfigTests")
+    @Test(dependsOnMethods = "testGetDiscoveryConfigUnauthorized")
     public void testAddInvalidDiscoveryAttributesToOrganization() throws IOException {
 
         String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH;
         String invalidRequestBody = readResource("add-invalid-discovery-attributes-request-body.json");
-        invalidRequestBody = invalidRequestBody.replace("${organizationID}", organizationID);
-        Response response = given().auth().preemptive().oauth2(m2mToken)
-                .contentType(ContentType.JSON)
-                .body(invalidRequestBody)
-                .when()
-                .post(endpointURL);
-        validateHttpStatusCode(response, HttpStatus.SC_BAD_REQUEST);
+        invalidRequestBody = invalidRequestBody.replace("${organizationID}", organizationIDs.get(0));
+        Response response = getResponseOfPostWithOAuth2(endpointURL, invalidRequestBody, m2mToken);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "UE-10000");
     }
 
-    @Test(groups = "discoveryTests", dependsOnMethods = "testAddInvalidDiscoveryAttributesToOrganization")
+    @Test(dependsOnMethods = "testAddInvalidDiscoveryAttributesToOrganization")
     public void testAddDiscoveryAttributesToNonExistingOrganization() throws IOException {
 
         String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH;
-        String invalidRequestBody = readResource("add-discovery-attributes-request-body.json");
-        invalidRequestBody = invalidRequestBody.replace(invalidOrganizationID, organizationID);
-        Response response = given().auth().preemptive().oauth2(m2mToken)
-                .contentType(ContentType.JSON)
-                .body(invalidRequestBody)
-                .when()
-                .post(endpointURL);
-        validateHttpStatusCode(response, HttpStatus.SC_NOT_FOUND);
+        String requestBody = readResource("add-discovery-attributes-request-body.json");
+        requestBody = requestBody.replace("${organizationID}", invalidOrganizationID);
+        Response response = getResponseOfPostWithOAuth2(endpointURL, requestBody, m2mToken);
+        validateErrorResponseWithoutTraceId(response, HttpStatus.SC_NOT_FOUND, "ORG-60015",
+                                        invalidOrganizationID);
     }
 
-    @Test(groups = "discoveryTests", dependsOnMethods = "testAddDiscoveryAttributesToNonExistingOrganization")
+    @Test(dependsOnMethods = "testAddDiscoveryAttributesToNonExistingOrganization")
     public void testAddDiscoveryAttributesToOrganizationUnauthorized() throws IOException {
 
         String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH;
         String requestBody = readResource("add-discovery-attributes-request-body.json");
-        Response response = given().auth().preemptive().oauth2(invalidM2MToken)
-                .contentType(ContentType.JSON)
-                .body(requestBody)
-                .when()
-                .post(endpointURL);
+        requestBody = requestBody.replace("${organizationID}", organizationIDs.get(0));
+        Response response = getResponseOfPostWithOAuth2(endpointURL, requestBody, invalidM2MToken);
         validateHttpStatusCode(response, HttpStatus.SC_UNAUTHORIZED);
     }
 
-    @Test(groups = "discoveryTests", dependsOnMethods = "testAddDiscoveryAttributesToOrganizationUnauthorized")
-    public void testAddExistingDiscoveryAttributesToOrganization() throws IOException {
+    @Test(dependsOnMethods = "testAddDiscoveryAttributesToOrganizationUnauthorized")
+    public void testAddDiscoveryAttributesWhenAlreadyAdded() throws IOException {
 
         String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH;
         String requestBody = readResource("add-discovery-attributes-request-body.json");
-        requestBody = requestBody.replace("${organizationID}", organizationID);
-        Response firstResponse = given().auth().preemptive().oauth2(m2mToken)
-                .contentType(ContentType.JSON)
-                .body(requestBody)
-                .when()
-                .post(endpointURL);
+        requestBody = requestBody.replace("${organizationID}", organizationIDs.get(0));
+        Response firstResponse = getResponseOfPostWithOAuth2(endpointURL, requestBody, m2mToken);
         validateHttpStatusCode(firstResponse, HttpStatus.SC_CREATED);
-        Response secondResponse = given().auth().preemptive().oauth2(m2mToken)
-                .contentType(ContentType.JSON)
-                .body(requestBody)
-                .when()
-                .post(endpointURL);
-        validateHttpStatusCode(secondResponse, HttpStatus.SC_BAD_REQUEST);
+        Response secondResponse = getResponseOfPostWithOAuth2(endpointURL, requestBody, m2mToken);
+        validateErrorResponseWithoutTraceId(secondResponse, HttpStatus.SC_BAD_REQUEST, "ORG-60085",
+                                        organizationIDs.get(0));
     }
 
-    @Test(groups = "discoveryTests", dependsOnMethods = "testAddExistingDiscoveryAttributesToOrganization")
-    public void testGetDiscoveryAttributesToOrganizationsUnauthorized() {
+    @Test(dependsOnMethods = "testAddDiscoveryAttributesWhenAlreadyAdded")
+    public void testGetDiscoveryAttributesOfOrganizationsUnauthorized() {
 
         String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH;
-        Response response = given().auth().preemptive().oauth2(invalidM2MToken)
-                .contentType(ContentType.JSON)
-                .when()
-                .get(endpointURL);
+        Response response = getResponseOfGetWithOAuth2(endpointURL, invalidM2MToken);
         validateHttpStatusCode(response, HttpStatus.SC_UNAUTHORIZED);
     }
 
-    @Test(groups = "discoveryTests", dependsOnMethods = "testGetDiscoveryAttributesToOrganizationsUnauthorized")
+    @Test(dependsOnMethods = "testGetDiscoveryAttributesOfOrganizationsUnauthorized")
     public void testGetDiscoveryAttributesOfNonExistingOrganization() {
 
         String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + invalidOrganizationID
-                + ORGANIZATION_DISCOVERY_API_PATH;
-        Response response = given().auth().preemptive().oauth2(m2mToken)
-                .contentType(ContentType.JSON)
-                .when()
-                .get(endpointURL);
-        validateHttpStatusCode(response, HttpStatus.SC_NOT_FOUND);
+                        + ORGANIZATION_DISCOVERY_API_PATH;
+        Response response = getResponseOfGetWithOAuth2(endpointURL, m2mToken);
+        validateErrorResponseWithoutTraceId(response, HttpStatus.SC_NOT_FOUND, "ORG-60015",
+                                        invalidOrganizationID);
     }
 
-    @Test(groups = "discoveryTests", dependsOnMethods = "testGetDiscoveryAttributesOfNonExistingOrganization")
+    @Test(dependsOnMethods = "testGetDiscoveryAttributesOfNonExistingOrganization")
     public void testGetDiscoveryAttributesToOrganizationUnauthorized() {
 
-        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationID
-                + ORGANIZATION_DISCOVERY_API_PATH;
-        Response response = given().auth().preemptive().oauth2(invalidM2MToken)
-                .contentType(ContentType.JSON)
-                .when()
-                .get(endpointURL);
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationIDs.get(0)
+                        + ORGANIZATION_DISCOVERY_API_PATH;
+        Response response = getResponseOfGetWithOAuth2(endpointURL, invalidM2MToken);
         validateHttpStatusCode(response, HttpStatus.SC_UNAUTHORIZED);
     }
 
-    @Test(groups = "discoveryTests", dependsOnMethods = "testGetDiscoveryAttributesToOrganizationUnauthorized")
+    @Test(dependsOnMethods = "testGetDiscoveryAttributesToOrganizationUnauthorized")
     public void testDeleteDiscoveryAttributesOfNonExistingOrganization() {
 
         String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + invalidOrganizationID
-                + ORGANIZATION_DISCOVERY_API_PATH;
-        Response response = given().auth().preemptive().oauth2(m2mToken)
-                .contentType(ContentType.JSON)
-                .when()
-                .get(endpointURL);
-        validateHttpStatusCode(response, HttpStatus.SC_NOT_FOUND);
+                        + ORGANIZATION_DISCOVERY_API_PATH;
+        Response response = getResponseOfDeleteWithOAuth2(endpointURL, m2mToken);
+        validateErrorResponseWithoutTraceId(response, HttpStatus.SC_NOT_FOUND, "ORG-60015",
+                                        invalidOrganizationID);
     }
 
-    @Test(groups = "discoveryTests", dependsOnMethods = "testDeleteDiscoveryAttributesOfNonExistingOrganization")
+    @Test(dependsOnMethods = "testDeleteDiscoveryAttributesOfNonExistingOrganization")
     public void testDeleteDiscoveryAttributesUnauthorized() {
 
-        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationID
-                + ORGANIZATION_DISCOVERY_API_PATH;
-        Response response = given().auth().preemptive().oauth2(invalidM2MToken)
-                .contentType(ContentType.JSON)
-                .when()
-                .delete(endpointURL);
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationIDs.get(0)
+                        + ORGANIZATION_DISCOVERY_API_PATH;
+        Response response = getResponseOfDeleteWithOAuth2(endpointURL, invalidM2MToken);
         validateHttpStatusCode(response, HttpStatus.SC_UNAUTHORIZED);
     }
 
-    @Test(groups = "discoveryTests", dependsOnMethods = "testDeleteDiscoveryAttributesUnauthorized")
+    @Test(dependsOnMethods = "testDeleteDiscoveryAttributesUnauthorized")
+    public void testUpdateWithUnavailableDiscoveryAttributes() throws IOException {
+
+        String firstEndpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationIDs.get(0)
+                        + ORGANIZATION_DISCOVERY_API_PATH;
+        String secondEndpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationIDs.get(1)
+                        + ORGANIZATION_DISCOVERY_API_PATH;
+        String requestBody = readResource("update-discovery-attributes-request-body.json");
+        Response firstResponse = getResponseOfPutWithOAuth2(firstEndpointURL, requestBody, m2mToken);
+        validateHttpStatusCode(firstResponse, HttpStatus.SC_OK);
+        Response secondResponse = getResponseOfPutWithOAuth2(secondEndpointURL, requestBody, m2mToken);
+        validateErrorResponseWithoutTraceId(secondResponse, HttpStatus.SC_BAD_REQUEST, "ORG-60083");
+    }
+
+    @Test(dependsOnMethods = "testUpdateWithUnavailableDiscoveryAttributes")
     public void testUpdateDiscoveryAttributesOfNonExistingOrganization() throws IOException {
 
         String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + invalidOrganizationID
-                + ORGANIZATION_DISCOVERY_API_PATH;
-        String requestBody = readResource("update-discovery-config-request-body.json");
-        Response response = given().auth().preemptive().oauth2(m2mToken)
-                .contentType(ContentType.JSON)
-                .body(requestBody)
-                .when()
-                .put(endpointURL);
-        validateHttpStatusCode(response, HttpStatus.SC_NOT_FOUND);
+                        + ORGANIZATION_DISCOVERY_API_PATH;
+        String requestBody = readResource("update-discovery-attributes-request-body.json");
+        Response response = getResponseOfPutWithOAuth2(endpointURL, requestBody, m2mToken);
+        validateErrorResponseWithoutTraceId(response, HttpStatus.SC_NOT_FOUND, "ORG-60015",
+                                        invalidOrganizationID);
     }
 
-    @Test(groups = "discoveryTests", dependsOnMethods = "testUpdateDiscoveryAttributesOfNonExistingOrganization")
+    @Test(dependsOnMethods = "testUpdateDiscoveryAttributesOfNonExistingOrganization")
     public void testUpdateDiscoveryAttributesUnauthorized() throws IOException {
 
-        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationID
-                + ORGANIZATION_DISCOVERY_API_PATH;
-        String requestBody = readResource("update-discovery-config-request-body.json");
-        Response response = given().auth().preemptive().oauth2(invalidM2MToken)
-                .contentType(ContentType.JSON)
-                .body(requestBody)
-                .when()
-                .put(endpointURL);
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationIDs.get(0)
+                        + ORGANIZATION_DISCOVERY_API_PATH;
+        String requestBody = readResource("update-discovery-attributes-request-body.json");
+        Response response = getResponseOfPutWithOAuth2(endpointURL, requestBody, invalidM2MToken);
         validateHttpStatusCode(response, HttpStatus.SC_UNAUTHORIZED);
     }
 
-    @Test(groups = "discoveryTests", dependsOnMethods = "testUpdateDiscoveryAttributesUnauthorized")
+    @Test(dependsOnMethods = "testUpdateDiscoveryAttributesUnauthorized")
     public void testCheckDiscoveryAttributeExistsUnauthorized() throws IOException {
 
         String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + "check-discovery";
-        String requestBody = readResource("check-discovery-attributes-request-body.json");
-        Response response = given().auth().preemptive().oauth2(invalidM2MToken)
-                .contentType(ContentType.JSON)
-                .body(requestBody)
-                .when()
-                .post(endpointURL);
+        String requestBody = readResource("check-discovery-attributes-available-request-body.json");
+        Response response = getResponseOfPostWithOAuth2(endpointURL, requestBody, invalidM2MToken);
         validateHttpStatusCode(response, HttpStatus.SC_UNAUTHORIZED);
     }
 
-    @Test(groups = "discoveryTests", dependsOnMethods = "testCheckDiscoveryAttributeExistsUnauthorized")
-    public void testGetDeletedDiscoveryAttributes() {
-
-        deleteDiscoveryAttributes();
-        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationID
-                + ORGANIZATION_DISCOVERY_API_PATH;
-        Response response = given().auth().preemptive().oauth2(m2mToken)
-                .contentType(ContentType.JSON)
-                .when()
-                .get(endpointURL);
-        //Returns an empty "attributes": []
-        validateHttpStatusCode(response, HttpStatus.SC_OK);
-    }
-
-    @Test(dependsOnGroups = "discoveryTests", dependsOnMethods = "testGetDeletedDiscoveryAttributes")
+    @Test(dependsOnMethods = "testCheckDiscoveryAttributeExistsUnauthorized")
     public void testDeleteDiscoveryConfigUnauthorized() {
 
         String endpointURL = ORGANIZATION_CONFIGS_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH;
-        Response response = given().auth().preemptive().oauth2(invalidM2MToken)
-                .accept(ContentType.JSON)
-                .when()
-                .delete(endpointURL);
-        validateHttpStatusCode(response, HttpStatus.SC_UNAUTHORIZED);
+        Response firstResponse = getResponseOfDeleteWithOAuth2(endpointURL, invalidM2MToken);
+        validateHttpStatusCode(firstResponse, HttpStatus.SC_UNAUTHORIZED);
+        Response secondResponse = getResponseOfDeleteWithOAuth2(endpointURL, m2mToken);
+        validateHttpStatusCode(secondResponse, HttpStatus.SC_NO_CONTENT);
     }
 
-    private void deleteDiscoveryAttributes() {
+    @Test(dependsOnMethods = "testDeleteDiscoveryConfigUnauthorized")
+    public void deleteOrganizations() {
 
-        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationID
-                                + ORGANIZATION_DISCOVERY_API_PATH;
-        Response response = given().auth().preemptive().oauth2(m2mToken)
-                .accept(ContentType.JSON)
-                .when()
-                .delete(endpointURL);
-        validateHttpStatusCode(response, HttpStatus.SC_NO_CONTENT);
-    }
-
-    private void deleteApplication(String applicationId) throws Exception {
-
-        oAuth2RestClient.deleteApplication(applicationId);
+        for (String organizationID : organizationIDs) {
+            String organizationPath = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationID;
+            Response responseOfDelete = getResponseOfDelete(organizationPath);
+            responseOfDelete.then()
+                    .log()
+                    .ifValidationFails()
+                    .assertThat()
+                    .statusCode(HttpStatus.SC_NO_CONTENT);
+        }
     }
 }

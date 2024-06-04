@@ -15,6 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.wso2.identity.integration.test.rest.api.server.organization.management.v1;
 
 import io.restassured.RestAssured;

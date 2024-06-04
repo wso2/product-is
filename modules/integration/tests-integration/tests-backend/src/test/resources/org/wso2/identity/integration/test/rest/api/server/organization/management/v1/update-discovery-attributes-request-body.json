@@ -3,7 +3,8 @@
     {
       "type": "emailDomain",
       "values": [
-        "xyz.com"
+        "xyz.com",
+        "example.com"
       ]
     }
   ]
