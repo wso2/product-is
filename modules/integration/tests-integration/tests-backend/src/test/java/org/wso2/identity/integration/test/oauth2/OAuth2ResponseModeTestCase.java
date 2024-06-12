@@ -127,10 +127,11 @@ public class OAuth2ResponseModeTestCase extends OAuth2ServiceAbstractIntegration
                 {OAuth2Constant.AUTHORIZATION_CODE_NAME, OAuth2Constant.RESPONSE_MODE_JWT, OAuth2Constant.RESPONSE_MODE_QUERY_JWT},
                 {OAuth2Constant.AUTHORIZATION_CODE_NAME, OAuth2Constant.RESPONSE_MODE_QUERY_JWT, OAuth2Constant.RESPONSE_MODE_QUERY_JWT},
 
-                {OAuth2Constant.RESPONSE_TYPE_CODE_ID_TOKEN, null, OAuth2Constant.RESPONSE_MODE_FRAGMENT},
-                {OAuth2Constant.RESPONSE_TYPE_CODE_ID_TOKEN, OAuth2Constant.RESPONSE_MODE_FRAGMENT, OAuth2Constant.RESPONSE_MODE_FRAGMENT},
-                {OAuth2Constant.RESPONSE_TYPE_CODE_ID_TOKEN, OAuth2Constant.RESPONSE_MODE_JWT, OAuth2Constant.RESPONSE_MODE_FRAGMENT_JWT},
-                {OAuth2Constant.RESPONSE_TYPE_CODE_ID_TOKEN, OAuth2Constant.RESPONSE_MODE_FRAGMENT_JWT, OAuth2Constant.RESPONSE_MODE_FRAGMENT_JWT},
+                // This test data is being commented out temporarily until the hybrid flow response type application configuration is onboarded.
+                // {OAuth2Constant.RESPONSE_TYPE_CODE_ID_TOKEN, null, OAuth2Constant.RESPONSE_MODE_FRAGMENT},
+                // {OAuth2Constant.RESPONSE_TYPE_CODE_ID_TOKEN, OAuth2Constant.RESPONSE_MODE_FRAGMENT, OAuth2Constant.RESPONSE_MODE_FRAGMENT},
+                // {OAuth2Constant.RESPONSE_TYPE_CODE_ID_TOKEN, OAuth2Constant.RESPONSE_MODE_JWT, OAuth2Constant.RESPONSE_MODE_FRAGMENT_JWT},
+                // {OAuth2Constant.RESPONSE_TYPE_CODE_ID_TOKEN, OAuth2Constant.RESPONSE_MODE_FRAGMENT_JWT, OAuth2Constant.RESPONSE_MODE_FRAGMENT_JWT},
         };
     }
 
