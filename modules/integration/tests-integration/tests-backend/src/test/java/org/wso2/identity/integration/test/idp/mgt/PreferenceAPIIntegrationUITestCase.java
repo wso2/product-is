@@ -42,6 +42,7 @@ import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.IOException;
+import java.util.Map;
 
 import static org.wso2.identity.integration.test.utils.CommonConstants.DEFAULT_TOMCAT_PORT;
 
@@ -53,6 +54,8 @@ public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractInt
     private static final String ENABLE_SELF_REGISTRATION_PROP_KEY = "SelfRegistration.Enable";
     private static final String ENABLE_USERNAME_RECOVERY_PROP_KEY = "Recovery.Notification.Username.Enable";
     private static final String ENABLE_PASSWORD_QS_RECOVERY_PROP_KEY = "Recovery.Question.Password.Enable";
+    private static final String ENABLE_PASSWORD_NOTIFICATION_RECOVERY_PROP_KEY =
+            "Recovery.Notification.Password.Enable";
     private static final String ENABLE_PASSWORD_EMAIL_LINK_RECOVERY_PROP_KEY =
             "Recovery.Notification.Password.emailLink.Enable";
     private static final String ENABLE_PASSWORD_SMS_OTP_RECOVERY_PROP_KEY =
@@ -123,11 +126,13 @@ public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractInt
     @AfterMethod
     public void resetResidentIDP() throws Exception {
 
-        updateResidentIDPProperty(superTenantResidentIDP, ENABLE_SELF_REGISTRATION_PROP_KEY, "false");
-        updateResidentIDPProperty(superTenantResidentIDP, ENABLE_USERNAME_RECOVERY_PROP_KEY, "false");
-        updateResidentIDPProperty(superTenantResidentIDP, ENABLE_PASSWORD_QS_RECOVERY_PROP_KEY, "false");
-        updateResidentIDPProperty(superTenantResidentIDP, ENABLE_PASSWORD_EMAIL_LINK_RECOVERY_PROP_KEY, "false");
-        updateResidentIDPProperty(superTenantResidentIDP, ENABLE_PASSWORD_SMS_OTP_RECOVERY_PROP_KEY, "false");
+        updateResidentIDPProperties(superTenantResidentIDP, Map.of(
+                ENABLE_SELF_REGISTRATION_PROP_KEY, "false",
+                ENABLE_USERNAME_RECOVERY_PROP_KEY, "false",
+                ENABLE_PASSWORD_QS_RECOVERY_PROP_KEY, "false",
+                ENABLE_PASSWORD_NOTIFICATION_RECOVERY_PROP_KEY, "false",
+                ENABLE_PASSWORD_EMAIL_LINK_RECOVERY_PROP_KEY, "false",
+                ENABLE_PASSWORD_SMS_OTP_RECOVERY_PROP_KEY, "false"));
     }
 
     @Test(groups = "wso2.is", description = "Check Initial Login Page")
@@ -166,7 +171,9 @@ public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractInt
     @Test(groups = "wso2.is", description = "Check Notification Password recovery Login Page")
     public void testNotificationPasswordEmailLinkRecovery() throws Exception {
 
-        updateResidentIDPProperty(superTenantResidentIDP, ENABLE_PASSWORD_EMAIL_LINK_RECOVERY_PROP_KEY, "true");
+        updateResidentIDPProperties(superTenantResidentIDP, Map.of(
+                ENABLE_PASSWORD_EMAIL_LINK_RECOVERY_PROP_KEY, "true",
+                ENABLE_PASSWORD_NOTIFICATION_RECOVERY_PROP_KEY, "true"));
         String content = sendAuthorizeRequest();
         Assert.assertTrue(content.contains(RECOVERY_PASSWORD_CONTENT));
     }
@@ -174,7 +181,9 @@ public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractInt
     @Test(groups = "wso2.is", description = "Check Notification Password recovery Login Page")
     public void testNotificationPasswordSMSOTPRecovery() throws Exception {
 
-        updateResidentIDPProperty(superTenantResidentIDP, ENABLE_PASSWORD_SMS_OTP_RECOVERY_PROP_KEY, "true");
+        updateResidentIDPProperties(superTenantResidentIDP, Map.of(
+                ENABLE_PASSWORD_SMS_OTP_RECOVERY_PROP_KEY, "true",
+                ENABLE_PASSWORD_NOTIFICATION_RECOVERY_PROP_KEY, "true"));
         String content = sendAuthorizeRequest();
         Assert.assertTrue(content.contains(RECOVERY_PASSWORD_CONTENT));
     }
@@ -192,9 +201,10 @@ public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractInt
     @Test(groups = "wso2.is", description = "Check Notification recovery option recovery Page")
     public void testRecoveryNotificationEmailLinkOnly() throws Exception {
 
-        updateResidentIDPProperty(superTenantResidentIDP, ENABLE_PASSWORD_EMAIL_LINK_RECOVERY_PROP_KEY, "true");
+        updateResidentIDPProperties(superTenantResidentIDP, Map.of(
+                ENABLE_PASSWORD_EMAIL_LINK_RECOVERY_PROP_KEY, "true",
+                ENABLE_PASSWORD_NOTIFICATION_RECOVERY_PROP_KEY, "true"));
         String content = sendRecoveryRequest();
-        System.out.println(content);
         Assert.assertFalse(content.contains(RECOVERY_ENDPOINT_QS_CONTENT));
         Assert.assertFalse(content.contains(RECOVERY_ENDPOINT_NOTIFICATION_SMS_OTP_CONTENT));
         Assert.assertTrue(content.contains(RECOVERY_ENDPOINT_NOTIFICATION_EMAIL_LINK_CONTENT));
@@ -203,9 +213,11 @@ public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractInt
     @Test(groups = "wso2.is", description = "Check Notification recovery option recovery Page")
     public void testRecoveryNotificationSMSOTPOnly() throws Exception {
 
-        updateResidentIDPProperty(superTenantResidentIDP, ENABLE_PASSWORD_SMS_OTP_RECOVERY_PROP_KEY, "true");
+
+        updateResidentIDPProperties(superTenantResidentIDP, Map.of(
+                ENABLE_PASSWORD_SMS_OTP_RECOVERY_PROP_KEY, "true",
+                ENABLE_PASSWORD_NOTIFICATION_RECOVERY_PROP_KEY, "true"));
         String content = sendRecoveryRequest();
-        System.out.println(content);
         Assert.assertFalse(content.contains(RECOVERY_ENDPOINT_QS_CONTENT));
         Assert.assertFalse(content.contains(RECOVERY_ENDPOINT_NOTIFICATION_EMAIL_LINK_CONTENT));
         Assert.assertTrue(content.contains(RECOVERY_ENDPOINT_NOTIFICATION_SMS_OTP_CONTENT));
@@ -217,6 +229,18 @@ public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractInt
         for (IdentityProviderProperty providerProperty : idpProperties) {
             if (propertyKey.equalsIgnoreCase(providerProperty.getName())) {
                 providerProperty.setValue(value);
+            }
+        }
+        updateResidentIDP(residentIdp);
+    }
+
+    private void updateResidentIDPProperties(IdentityProvider residentIdp, Map<String,String> properties)
+            throws Exception {
+
+        IdentityProviderProperty[] idpProperties = residentIdp.getIdpProperties();
+        for (IdentityProviderProperty providerProperty : idpProperties) {
+            if (properties.containsKey(providerProperty.getName())) {
+                providerProperty.setValue(properties.get(providerProperty.getName()));
             }
         }
         updateResidentIDP(residentIdp);
