@@ -131,7 +131,6 @@
                 <Valve className="org.wso2.carbon.identity.cors.valve.CORSValve"/>
                 <Valve className="org.wso2.carbon.tomcat.ext.valves.SameSiteCookieValve"/>
                 <Valve className="org.wso2.carbon.identity.context.rewrite.valve.OrganizationContextRewriteValve"/>
-                <Valve className="org.wso2.carbon.identity.context.rewrite.valve.TenantContextRewriteValve"/>
                 <!--Error pages -->
                 <Valve className="org.apache.catalina.valves.ErrorReportValve" showServerInfo="false" showReport="false"/>
                 {% for valve in catalina.valves %}
@@ -141,6 +140,7 @@
                     {% endfor %}
                  />
                 {% endfor %}
+                <Valve className="org.wso2.carbon.identity.context.rewrite.valve.TenantContextRewriteValve"/>
             </Host>
         </Engine>
     </Service>
