@@ -2385,7 +2385,7 @@
         <conditional.authentication.functions.version>1.2.56</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.20.1</identity.apps.console.version>
+        <identity.apps.console.version>2.20.4</identity.apps.console.version>
         <identity.apps.myaccount.version>2.7.30</identity.apps.myaccount.version>
         <identity.apps.core.version>2.4.2</identity.apps.core.version>
         <identity.apps.tests.version>1.6.378</identity.apps.tests.version>
