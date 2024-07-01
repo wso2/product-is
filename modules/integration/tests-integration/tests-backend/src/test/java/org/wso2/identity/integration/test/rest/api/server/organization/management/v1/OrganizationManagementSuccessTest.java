@@ -149,15 +149,6 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         };
     }
 
-    @DataProvider(name = "checkDiscoveryAttributes")
-    public Object[][] checkDiscoveryAttributeFilePaths() {
-
-        return new Object[][]{
-                {"check-discovery-attributes-available-request-body.json", true},
-                {"check-discovery-attributes-unavailable-request-body.json", false}
-        };
-    }
-
     @Test
     public void createApplicationForSelfOrganizationOnboardService() throws IOException, JSONException {
 
@@ -258,7 +249,44 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
                 .body("id", equalTo(organizationID));
     }
 
-    @Test(dependsOnMethods = "testGetOrganization")
+    @DataProvider(name = "filterQueries")
+    public Object[][] createFilterQueries() {
+        return new Object[][] {
+                {"?filter=name co G&limit=10&recursive=false", false, false},
+                {"?filter=attributes.Country co S&limit=10&recursive=false", true, false},
+                {"?filter=attributes.Country eq Sri Lanka&limit=10&recursive=false", true, false},
+                {"?filter=attributes.Country eq USA&limit=10&recursive=false", false, true}
+        };
+    }
+
+    @Test(dependsOnMethods = "testGetOrganization", dataProvider = "filterQueries")
+    public void testGetOrganizations(String filterQuery, boolean expectAttributes, boolean expectEmptyList) {
+
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + filterQuery;
+        Response response = getResponseOfGetWithOAuth2(endpointURL, m2mToken);
+        Assert.assertNotNull(response.asString());
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK);
+
+        if (expectEmptyList) {
+            response.then()
+                    .assertThat().body(equalTo("{}"));
+        } else {
+            response.then()
+                    .body("organizations.size()", equalTo(1))
+                    .body("organizations[0].id", equalTo(organizationID));
+            if (expectAttributes) {
+                response.then()
+                        .body("organizations[0].attributes.size()", equalTo(2))
+                        .body("organizations[0].attributes[0].key", equalTo("Country"))
+                        .body("organizations[0].attributes[0].value", equalTo("Sri Lanka"));
+            }
+        }
+    }
+
+    @Test(dependsOnMethods = "testGetOrganizations")
     public void switchM2MToken() throws IOException, ParseException, InterruptedException {
 
         ApplicationSharePOSTRequest applicationSharePOSTRequest = new ApplicationSharePOSTRequest();
@@ -432,6 +460,15 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
                 .statusCode(HttpStatus.SC_OK)
                 .body("attributes[0].type", equalTo("emailDomain"))
                 .body("attributes[0].values", containsInAnyOrder("xyz.com", "example.com"));
+    }
+
+    @DataProvider(name = "checkDiscoveryAttributes")
+    public Object[][] checkDiscoveryAttributeFilePaths() {
+
+        return new Object[][]{
+                {"check-discovery-attributes-available-request-body.json", true},
+                {"check-discovery-attributes-unavailable-request-body.json", false}
+        };
     }
 
     @Test(dependsOnMethods = "testUpdateDiscoveryAttributesOfOrganization", dataProvider = "checkDiscoveryAttributes")
