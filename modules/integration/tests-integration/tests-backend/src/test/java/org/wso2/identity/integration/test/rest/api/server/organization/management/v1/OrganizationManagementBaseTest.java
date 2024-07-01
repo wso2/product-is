@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2023-2024, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -15,6 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.wso2.identity.integration.test.rest.api.server.organization.management.v1;
 
 import io.restassured.RestAssured;
@@ -39,6 +40,8 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
     static final String API_VERSION = "v1";
 
     static final String ORGANIZATION_MANAGEMENT_API_BASE_PATH = "/organizations";
+    static final String ORGANIZATION_CONFIGS_API_BASE_PATH = "/organization-configs";
+    static final String ORGANIZATION_DISCOVERY_API_PATH = "/discovery";
     static final String PATH_SEPARATOR = "/";
 
     protected static String swaggerDefinition;

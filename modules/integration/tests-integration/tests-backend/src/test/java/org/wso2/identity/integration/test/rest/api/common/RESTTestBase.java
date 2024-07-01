@@ -1,17 +1,19 @@
 /*
- * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019-2024, WSO2 LLC. (http://www.wso2.com).
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
  * You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 package org.wso2.identity.integration.test.rest.api.common;
@@ -322,6 +324,21 @@ public class RESTTestBase extends ISIntegrationTest {
     }
 
     /**
+     * Invoke given endpointURL for GET with OAuth2 authentication, using the provided token.
+     *
+     * @param endpointURL Endpoint to be invoked.
+     * @param accessToken OAuth2 access token.
+     * @return Response.
+     */
+    protected Response getResponseOfGetWithOAuth2(String endpointURL, String accessToken) {
+
+        return given().auth().preemptive().oauth2(accessToken)
+                .contentType(ContentType.JSON)
+                .when()
+                .get(endpointURL);
+    }
+
+    /**
      * Invoke given endpointUri for GET without authentication.
      *
      * @param endpointUri endpoint to be invoked
@@ -386,6 +403,24 @@ public class RESTTestBase extends ISIntegrationTest {
                 .when()
                 .log().ifValidationFails()
                 .post(endpointUri);
+    }
+
+    /**
+     * Invoke the given endpointURL for POST with the provided body and OAuth2 authentication, using the provided
+     * access token.
+     *
+     * @param endpointURL Endpoint to be invoked.
+     * @param body Payload.
+     * @param accessToken OAuth2 access token.
+     * @return Response.
+     */
+    protected Response getResponseOfPostWithOAuth2(String endpointURL, String body, String accessToken) {
+
+        return given().auth().preemptive().oauth2(accessToken)
+                .contentType(ContentType.JSON)
+                .body(body)
+                .when()
+                .post(endpointURL);
     }
 
     /**
@@ -644,6 +679,24 @@ public class RESTTestBase extends ISIntegrationTest {
     }
 
     /**
+     * Invoke the given endpointURL for PUT with the provided body and OAuth2 authentication, using the provided
+     * access token.
+     *
+     * @param endpointURL Endpoint to be invoked.
+     * @param body Payload.
+     * @param accessToken OAuth2 access token.
+     * @return Response.
+     */
+    protected Response getResponseOfPutWithOAuth2(String endpointURL, String body, String accessToken) {
+
+        return given().auth().preemptive().oauth2(accessToken)
+                .contentType(ContentType.JSON)
+                .body(body)
+                .when()
+                .put(endpointURL);
+    }
+
+    /**
      * Invoke given endpointUri for  PATCH request with given body, headers and Basic authentication, authentication
      * credential being the authenticatingUserName and authenticatingCredential.
      *
@@ -750,12 +803,27 @@ public class RESTTestBase extends ISIntegrationTest {
     }
 
     /**
+     * Invoke the given endpointURL for DELETE with OAuth2 authentication, using the provided access token.
+     *
+     * @param endpointURL Endpoint to be invoked.
+     * @param accessToken OAuth2 access token.
+     * @return Response.
+     */
+    protected Response getResponseOfDeleteWithOAuth2(String endpointURL, String accessToken) {
+
+        return given().auth().preemptive().oauth2(accessToken)
+                .contentType(ContentType.JSON)
+                .when()
+                .delete(endpointURL);
+    }
+
+    /**
      * Validate the response to be in the following desired format of Error Response
      * {
      * "code": "some_error_code",
      * "message": "Some Error Message",
      * "description": "Some Error Description",
-     * "traceId"" : "corelation-id",
+     * "traceId"" : "correlation-id",
      * }
      *
      * @param response             API error response
@@ -770,6 +838,29 @@ public class RESTTestBase extends ISIntegrationTest {
         validateHttpStatusCode(response, httpStatusCode);
         validateResponseElement(response, "code", is(errorCode));
         validateResponseElement(response, "traceId", notNullValue());
+        validateErrorMessage(response, errorCode);
+        validateErrorDescription(response, errorCode, errorDescriptionArgs);
+    }
+
+    /**
+     * Validate the response to be in the following desired format of Error Response.
+     * {
+     * "code": "some_error_code",
+     * "message": "Some Error Message",
+     * "description": "Some Error Description"
+     * }
+     *
+     * @param response API error response.
+     * @param httpStatusCode HTTP status code.
+     * @param errorCode Error code.
+     * @param errorDescriptionArgs Placeholder values if error description in RESTAPIErrors.properties contains
+     *                             dynamic values.
+     */
+    protected void validateErrorResponseWithoutTraceId(Response response, int httpStatusCode, String errorCode,
+                                                       String... errorDescriptionArgs) {
+
+        validateHttpStatusCode(response, httpStatusCode);
+        validateResponseElement(response, "code", is(errorCode));
         validateErrorMessage(response, errorCode);
         validateErrorDescription(response, errorCode, errorDescriptionArgs);
     }
