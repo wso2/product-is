@@ -3,6 +3,16 @@
     "internal_organization_view",
     "internal_organization_create"
     ],
+  "/api/server/v1/organizations/discovery": [
+    "internal_organization_discovery_view",
+    "internal_organization_discovery_update",
+    "internal_organization_discovery_delete"
+  ],
+  "/api/server/v1/organization-configs/discovery": [
+    "internal_organization_config_view",
+    "internal_organization_config_add",
+    "internal_organization_config_delete"
+  ],
   "/scim2/Users": [
     "internal_user_mgt_view",
     "internal_user_mgt_create"
