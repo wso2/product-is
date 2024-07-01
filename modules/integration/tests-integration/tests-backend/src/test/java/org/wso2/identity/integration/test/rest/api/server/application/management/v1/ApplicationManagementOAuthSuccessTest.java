@@ -229,6 +229,7 @@ public class ApplicationManagementOAuthSuccessTest extends ApplicationManagement
                 .statusCode(HttpStatus.SC_OK)
                 .body("idToken.idTokenSignedResponseAlg", equalTo("PS256"))
                 .body("clientAuthentication.tokenEndpointAuthMethod", equalTo("private_key_jwt"))
+                .body("clientAuthentication.tokenEndpointAllowReusePvtKeyJwt", equalTo(false))
                 .body("clientAuthentication.tokenEndpointAuthSigningAlg", equalTo("PS256"))
                 .body("requestObject.requestObjectSigningAlg", equalTo("PS256"))
                 .body("requestObject.encryption.algorithm", equalTo("RSA-OAEP"))

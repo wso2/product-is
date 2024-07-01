@@ -27,6 +27,7 @@ import java.util.Objects;
 public class ClientAuthenticationConfiguration {
 
     private String tokenEndpointAuthMethod;
+    private Boolean tokenEndpointAllowReusePvtKeyJWT;
     private String tokenEndpointAuthSigningAlg;
     private String tlsClientAuthSubjectDn;
 
@@ -48,6 +49,33 @@ public class ClientAuthenticationConfiguration {
 
     public void setTokenEndpointAuthMethod(String tokenEndpointAuthMethod) {
         this.tokenEndpointAuthMethod = tokenEndpointAuthMethod;
+    }
+
+    /**
+     *
+     */
+    public ClientAuthenticationConfiguration tokenEndpointAllowReusePvtKeyJWT(Boolean tokenEndpointAllowReusePvtKeyJWT) {
+
+        this.tokenEndpointAllowReusePvtKeyJWT = tokenEndpointAllowReusePvtKeyJWT;
+        return this;
+    }
+
+    @ApiModelProperty(example = "true", value = "")
+    @JsonProperty("tokenEndpointAllowReusePvtKeyJWT")
+    @Valid
+    public Boolean getTokenEndpointAllowReusePvtKeyJWT() {
+
+        return tokenEndpointAllowReusePvtKeyJWT;
+    }
+
+    /**
+     * Sets the tokenEndpointAllowReusePvtKeyJWT.
+     *
+     * @param tokenEndpointAllowReusePvtKeyJWT the tokenEndpointAllowReusePvtKeyJWT
+     */
+    public void setTokenEndpointAllowReusePvtKeyJWT(Boolean tokenEndpointAllowReusePvtKeyJWT) {
+
+        this.tokenEndpointAllowReusePvtKeyJWT = tokenEndpointAllowReusePvtKeyJWT;
     }
 
     /**
