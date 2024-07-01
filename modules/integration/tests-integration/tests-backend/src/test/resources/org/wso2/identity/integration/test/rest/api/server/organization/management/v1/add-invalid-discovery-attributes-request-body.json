@@ -1,0 +1,10 @@
+{
+  "organizationId": "${organizationID}",
+  "attributes": [
+    {
+      "values": [
+        "abc.com"
+      ]
+    }
+  ]
+}

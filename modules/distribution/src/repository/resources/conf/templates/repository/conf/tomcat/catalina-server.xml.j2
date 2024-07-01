@@ -114,7 +114,10 @@
                        prefix="{{http_access_log.prefix}}" suffix="{{http_access_log.suffix}}" pattern="{{http_access_log.pattern}}"/>
                 {% endif %}
                 <Valve className="org.wso2.carbon.extension.identity.x509Certificate.valve.X509CertificateAuthenticationValve"/>
-                <Valve className="org.wso2.carbon.tomcat.ext.valves.CarbonStuckThreadDetectionValve" threshold="600"/>
+                <Valve
+                    className="org.wso2.carbon.tomcat.ext.valves.CarbonStuckThreadDetectionValve"
+                    threshold="{{catalinaValves.CarbonStuckThreadDetectionValve.threshold | default('600')}}"
+                />
                 <Valve className="org.wso2.carbon.tomcat.ext.valves.CompositeValve"/>
 
                 <!-- OAuthAppTenantResolverValve is required to be invoked when tenant qualified urls are disabled. This should be invoked before the AuthenticationValve -->
@@ -128,7 +131,6 @@
                 <Valve className="org.wso2.carbon.identity.cors.valve.CORSValve"/>
                 <Valve className="org.wso2.carbon.tomcat.ext.valves.SameSiteCookieValve"/>
                 <Valve className="org.wso2.carbon.identity.context.rewrite.valve.OrganizationContextRewriteValve"/>
-                <Valve className="org.wso2.carbon.identity.context.rewrite.valve.TenantContextRewriteValve"/>
                 <!--Error pages -->
                 <Valve className="org.apache.catalina.valves.ErrorReportValve" showServerInfo="false" showReport="false"/>
                 {% for valve in catalina.valves %}
@@ -138,6 +140,7 @@
                     {% endfor %}
                  />
                 {% endfor %}
+                <Valve className="org.wso2.carbon.identity.context.rewrite.valve.TenantContextRewriteValve"/>
             </Host>
         </Engine>
     </Service>

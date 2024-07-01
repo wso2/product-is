@@ -1,0 +1,11 @@
+{
+  "organizationId": "${organizationID}",
+  "attributes": [
+    {
+      "type": "emailDomain",
+      "values": [
+        "abc.com"
+      ]
+    }
+  ]
+}

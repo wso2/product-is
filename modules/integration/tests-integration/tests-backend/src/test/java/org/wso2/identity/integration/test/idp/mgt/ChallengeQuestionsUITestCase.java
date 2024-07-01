@@ -40,6 +40,7 @@ import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 import static org.wso2.identity.integration.test.utils.CommonConstants.DEFAULT_TOMCAT_PORT;
 
@@ -52,6 +53,10 @@ public class ChallengeQuestionsUITestCase extends OAuth2ServiceAbstractIntegrati
     private static final String ENABLE_PASSWORD_QS_RECOVERY_PROP_KEY = "Recovery.Question.Password.Enable";
     private static final String ENABLE_PASSWORD_NOTIFICATION_RECOVERY_PROP_KEY =
             "Recovery.Notification.Password.Enable";
+    private static final String ENABLE_PASSWORD_EMAIL_LINK_RECOVERY_PROP_KEY =
+            "Recovery.Notification.Password.emailLink.Enable";
+    private static final String ENABLE_PASSWORD_SMS_OTP_RECOVERY_PROP_KEY =
+            "Recovery.Notification.Password.smsOtp.Enable";
     private static final String OIDC_APP_NAME = "playground2";
     private IdentityProvider superTenantResidentIDP;
     private ServerConfigurationManager serverConfigurationManager;
@@ -112,8 +117,12 @@ public class ChallengeQuestionsUITestCase extends OAuth2ServiceAbstractIntegrati
     @Test(groups = "wso2.is", description = "Check Password recovery option recovery Page")
     public void testRecovery() throws Exception {
 
-        updateResidentIDPProperty(superTenantResidentIDP, ENABLE_PASSWORD_NOTIFICATION_RECOVERY_PROP_KEY, "true");
-        updateResidentIDPProperty(superTenantResidentIDP, ENABLE_PASSWORD_QS_RECOVERY_PROP_KEY, "true");
+        updateResidentIDPProperties(superTenantResidentIDP, Map.of(
+                ENABLE_PASSWORD_NOTIFICATION_RECOVERY_PROP_KEY, "true",
+                ENABLE_PASSWORD_EMAIL_LINK_RECOVERY_PROP_KEY, "true",
+                ENABLE_PASSWORD_SMS_OTP_RECOVERY_PROP_KEY, "true",
+                ENABLE_PASSWORD_QS_RECOVERY_PROP_KEY, "true"
+        ));
         String content = sendRecoveryRequest();
         Assert.assertTrue(content.contains(RECOVERY_ENDPOINT_QS_CONTENT));
         Assert.assertTrue(content.contains(RECOVERY_ENDPOINT_NOTIFICATION_CONTENT));
@@ -125,6 +134,18 @@ public class ChallengeQuestionsUITestCase extends OAuth2ServiceAbstractIntegrati
         for (IdentityProviderProperty providerProperty : idpProperties) {
             if (propertyKey.equalsIgnoreCase(providerProperty.getName())) {
                 providerProperty.setValue(value);
+            }
+        }
+        updateResidentIDP(residentIdp);
+    }
+
+    private void updateResidentIDPProperties(IdentityProvider residentIdp, Map<String,String> properties)
+            throws Exception {
+
+        IdentityProviderProperty[] idpProperties = residentIdp.getIdpProperties();
+        for (IdentityProviderProperty providerProperty : idpProperties) {
+            if (properties.containsKey(providerProperty.getName())) {
+                providerProperty.setValue(properties.get(providerProperty.getName()));
             }
         }
         updateResidentIDP(residentIdp);
