@@ -27,7 +27,7 @@ import java.util.Objects;
 public class ClientAuthenticationConfiguration {
 
     private String tokenEndpointAuthMethod;
-    private Boolean tokenEndpointAllowReusePvtKeyJWT;
+    private Boolean tokenEndpointAllowReusePvtKeyJwt;
     private String tokenEndpointAuthSigningAlg;
     private String tlsClientAuthSubjectDn;
 
@@ -54,28 +54,28 @@ public class ClientAuthenticationConfiguration {
     /**
      *
      */
-    public ClientAuthenticationConfiguration tokenEndpointAllowReusePvtKeyJWT(Boolean tokenEndpointAllowReusePvtKeyJWT) {
+    public ClientAuthenticationConfiguration tokenEndpointAllowReusePvtKeyJwt(Boolean tokenEndpointAllowReusePvtKeyJwt) {
 
-        this.tokenEndpointAllowReusePvtKeyJWT = tokenEndpointAllowReusePvtKeyJWT;
+        this.tokenEndpointAllowReusePvtKeyJwt = tokenEndpointAllowReusePvtKeyJwt;
         return this;
     }
 
     @ApiModelProperty(example = "true", value = "")
-    @JsonProperty("tokenEndpointAllowReusePvtKeyJWT")
+    @JsonProperty("tokenEndpointAllowReusePvtKeyJwt")
     @Valid
-    public Boolean getTokenEndpointAllowReusePvtKeyJWT() {
+    public Boolean getTokenEndpointAllowReusePvtKeyJwt() {
 
-        return tokenEndpointAllowReusePvtKeyJWT;
+        return tokenEndpointAllowReusePvtKeyJwt;
     }
 
     /**
-     * Sets the tokenEndpointAllowReusePvtKeyJWT.
+     * Sets the tokenEndpointAllowReusePvtKeyJwt.
      *
-     * @param tokenEndpointAllowReusePvtKeyJWT the tokenEndpointAllowReusePvtKeyJWT
+     * @param tokenEndpointAllowReusePvtKeyJwt the tokenEndpointAllowReusePvtKeyJwt
      */
-    public void setTokenEndpointAllowReusePvtKeyJWT(Boolean tokenEndpointAllowReusePvtKeyJWT) {
+    public void setTokenEndpointAllowReusePvtKeyJwt(Boolean tokenEndpointAllowReusePvtKeyJwt) {
 
-        this.tokenEndpointAllowReusePvtKeyJWT = tokenEndpointAllowReusePvtKeyJWT;
+        this.tokenEndpointAllowReusePvtKeyJwt = tokenEndpointAllowReusePvtKeyJwt;
     }
 
     /**
