@@ -89,7 +89,7 @@ public final class OAuth2Constant {
     public static final String GRANT_TYPE_NAME = "grant_type";
     public static final String AUTHORIZATION_CODE_NAME = "code";
     public static final String REDIRECT_URI_NAME = "redirect_uri";
-    public static final String BASIC_HEADER = "Basic";
+    public static final String BASIC_HEADER = "Basic ";
     public static final String INVALID_GRANT_ERROR = "invalid_grant";
     public static final String SESSION_DATA_KEY_CONSENT = "sessionDataKeyConsent";
     public static final String SESSION_DATA_KEY = "sessionDataKey";
