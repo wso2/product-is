@@ -2304,7 +2304,7 @@
 
         <!-- Identity Event Handler Versions -->
         <identity.event.handler.account.lock.version>1.9.9</identity.event.handler.account.lock.version>
-        <identity.event.handler.notification.version>1.8.21</identity.event.handler.notification.version>
+        <identity.event.handler.notification.version>1.8.22</identity.event.handler.notification.version>
 
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
@@ -2362,7 +2362,7 @@
         <authenticator.auth.otp.commons.version>1.0.7</authenticator.auth.otp.commons.version>
 
         <identity.org.mgt.version>1.4.40</identity.org.mgt.version>
-        <identity.org.mgt.core.version>1.1.8</identity.org.mgt.core.version>
+        <identity.org.mgt.core.version>1.1.9</identity.org.mgt.core.version>
         <identity.organization.login.version>1.1.33</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.25</identity.oauth2.grant.organizationswitch.version>
 
@@ -2385,8 +2385,8 @@
         <conditional.authentication.functions.version>1.2.56</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.20.5</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.7.33</identity.apps.myaccount.version>
+        <identity.apps.console.version>2.20.7</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.7.35</identity.apps.myaccount.version>
         <identity.apps.core.version>2.4.4</identity.apps.core.version>
         <identity.apps.tests.version>1.6.378</identity.apps.tests.version>
 
