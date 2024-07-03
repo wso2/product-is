@@ -249,18 +249,20 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
                 .body("id", equalTo(organizationID));
     }
 
-    @DataProvider(name = "filterQueries")
-    public Object[][] createFilterQueries() {
+    @DataProvider(name = "dataProviderForFilterOrganizations")
+    public Object[][] dataProviderForFilterOrganizations() {
+
         return new Object[][] {
                 {"?filter=name co G&limit=10&recursive=false", false, false},
                 {"?filter=attributes.Country co S&limit=10&recursive=false", true, false},
                 {"?filter=attributes.Country eq Sri Lanka&limit=10&recursive=false", true, false},
+                {"?filter=attributes.Country eq Sri Lanka and name co Greater&limit=10&recursive=false", true, false},
                 {"?filter=attributes.Country eq USA&limit=10&recursive=false", false, true}
         };
     }
 
-    @Test(dependsOnMethods = "testGetOrganization", dataProvider = "filterQueries")
-    public void testGetOrganizations(String filterQuery, boolean expectAttributes, boolean expectEmptyList) {
+    @Test(dependsOnMethods = "testGetOrganization", dataProvider = "dataProviderForFilterOrganizations")
+    public void testFilterOrganizations(String filterQuery, boolean expectAttributes, boolean expectEmptyList) {
 
         String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + filterQuery;
         Response response = getResponseOfGetWithOAuth2(endpointURL, m2mToken);
@@ -286,7 +288,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         }
     }
 
-    @Test(dependsOnMethods = "testGetOrganizations")
+    @Test(dependsOnMethods = "testFilterOrganizations")
     public void switchM2MToken() throws IOException, ParseException, InterruptedException {
 
         ApplicationSharePOSTRequest applicationSharePOSTRequest = new ApplicationSharePOSTRequest();
