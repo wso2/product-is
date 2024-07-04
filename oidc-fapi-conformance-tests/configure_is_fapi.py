@@ -81,6 +81,26 @@ def set_application_scopes_for_consent(application_id):
     else:
         print(">>> Application scope claims set successfully.")
 
+#set hybrid flow response type for the application
+def set_hybridFlow_config(application_id):
+    print(">>> Setting hybrid flow configuration.")
+    try:
+        app_details = get_service_provider_details(application_id)
+        app_details['hybridFlow'] = constants.ENABLE_HYBRID_FLOW
+        body = json.dumps(app_details)
+        response = requests.put(url=constants.APPLICATION_ENDPOINT + "/" + application_id + "/inbound-protocols/oidc",
+                                headers=constants.HEADERS_WITH_AUTH, data=body, verify=False)
+        response.raise_for_status()
+    except HTTPError as http_error:
+        print(http_error)
+        print(response.text)
+        exit(1)
+    except Exception as error:
+        print("\nError occurred: " + str(error))
+        exit(1)
+    else:
+        print(">>> Hybrid flow configuration added successfully.")
+
 # Skip login consent is true by default, here we disable it to go consent flows
 def disable_skipping_consent(application_id):
     print(">>> Setting Skip Login consent to false.")
@@ -275,6 +295,7 @@ def createSPApp(app_json):
     app_details = get_service_provider_details(app_id)
     set_application_scopes_for_consent(app_id)
     disable_skipping_consent(app_id)
+    set_hybridFlow_config(app_id)
     configure_acr(app_id)
     return app_details
 
