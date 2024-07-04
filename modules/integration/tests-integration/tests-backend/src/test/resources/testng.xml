@@ -218,6 +218,8 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.admin.advisory.management.v1.AdminAdvisoryManagementSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.organization.management.v1.OrganizationManagementSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.organization.management.v1.OrganizationManagementFailureTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.action.management.v1.ActionsSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.action.management.v1.ActionsFailureTest"/>
         </classes>
     </test>
 

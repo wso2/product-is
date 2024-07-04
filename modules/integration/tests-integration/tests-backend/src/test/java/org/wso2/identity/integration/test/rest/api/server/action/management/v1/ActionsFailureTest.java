@@ -1,0 +1,227 @@
+package org.wso2.identity.integration.test.rest.api.server.action.management.v1;
+
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
+import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpStatus;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Factory;
+import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.ActionModel;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.AuthenticationType;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.Endpoint;
+
+import java.io.IOException;
+import java.util.HashMap;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+
+/**
+ * Tests for negative paths of the Action Management REST API.
+ */
+public class ActionsFailureTest extends ActionsTestBase {
+
+    private static final String PRE_ISSUE_ACCESS_TOKEN_INVALID_PATH = "/preissueaccesstoken";
+    private static final String TEST_USERNAME_INVALID_AUTH_PROPERTY = "invalidUsername";
+    private static final String TEST_ACTION_INVALID_ID = "invalid_id";
+    private static ActionModel action1;
+    private static ActionModel action2;
+    private static String testActionId2;
+
+    @Factory(dataProvider = "restAPIUserConfigProvider")
+    public ActionsFailureTest(TestUserMode userMode) throws Exception {
+
+        super.init(userMode);
+        this.context = isServer;
+        this.authenticatingUserName = context.getContextTenant().getTenantAdmin().getUserName();
+        this.authenticatingCredential = context.getContextTenant().getTenantAdmin().getPassword();
+        this.tenant = context.getContextTenant().getDomain();
+    }
+
+    @BeforeClass(alwaysRun = true)
+    public void init() throws IOException {
+
+        super.testInit(API_VERSION, swaggerDefinition, tenant);
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void testConclude() throws Exception {
+
+        action1 = null;
+        action2 = null;
+        testActionId2 = null;
+        super.conclude();
+    }
+
+    @BeforeMethod(alwaysRun = true)
+    public void testInit() {
+
+        RestAssured.basePath = basePath;
+    }
+
+    @AfterMethod(alwaysRun = true)
+    public void testFinish() {
+
+        RestAssured.basePath = StringUtils.EMPTY;
+    }
+
+    @Test
+    public void testCreateActionWithInvalidActionType() {
+
+         action1 = new ActionModel()
+                .name(TEST_ACTION_NAME)
+                .description(TEST_ACTION_DESCRIPTION)
+                .endpoint(new Endpoint()
+                        .uri(TEST_ENDPOINT_URI)
+                        .authentication(new AuthenticationType()
+                                .type(AuthenticationType.TypeEnum.BASIC)
+                                .properties(new HashMap<String, Object>() {{
+                                    put(TEST_USERNAME_AUTH_PROPERTY, TEST_USERNAME_AUTH_PROPERTY_VALUE);
+                                    put(TEST_PASSWORD_AUTH_PROPERTY, TEST_PASSWORD_AUTH_PROPERTY_VALUE);
+                                }})));
+
+        String body = toJSONString(action1);
+        Response responseOfPost = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_INVALID_PATH, body);
+        responseOfPost.then()
+                .log().ifValidationFails()
+                .assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("description", equalTo("Invalid action type used for path parameter."));
+    }
+
+    @Test(dependsOnMethods = {"testCreateActionWithInvalidActionType"})
+    public void testCreateActionWithInvalidEndpointAuthProperties(){
+
+        action1.getEndpoint().getAuthentication().setProperties(new HashMap<String, Object>() {{
+            put(TEST_USERNAME_INVALID_AUTH_PROPERTY, TEST_USERNAME_AUTH_PROPERTY_VALUE);
+            put(TEST_PASSWORD_AUTH_PROPERTY, TEST_PASSWORD_AUTH_PROPERTY_VALUE);
+        }});
+
+        String body = toJSONString(action1);
+        Response responseOfPost = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH, body);
+        responseOfPost.then()
+                .log().ifValidationFails()
+                .assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("description", equalTo("Required authentication properties are not " +
+                        "provided or invalid."));
+    }
+
+    @Test(dependsOnMethods = {"testCreateActionWithInvalidEndpointAuthProperties"})
+    public void testCreateActionAfterReachingMaxActionCount(){
+
+        // Create an action.
+        testActionId2 = createAction(PRE_ISSUE_ACCESS_TOKEN_PATH);
+
+        // Create another action to exceed the maximum action count.
+        ActionModel action = new ActionModel()
+                .name(TEST_ACTION_NAME)
+                .description(TEST_ACTION_DESCRIPTION)
+                .endpoint(new Endpoint()
+                        .uri(TEST_ENDPOINT_URI)
+                        .authentication(new AuthenticationType()
+                                .type(AuthenticationType.TypeEnum.BASIC)
+                                .properties(new HashMap<String, Object>() {{
+                                    put(TEST_USERNAME_AUTH_PROPERTY, TEST_USERNAME_AUTH_PROPERTY_VALUE);
+                                    put(TEST_PASSWORD_AUTH_PROPERTY, TEST_PASSWORD_AUTH_PROPERTY_VALUE);
+                                }})));
+
+        String body = toJSONString(action);
+        Response responseOfPost = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH, body);
+        responseOfPost.then()
+                .log().ifValidationFails()
+                .assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("description", equalTo("Maximum number of actions per action type is reached."));
+    }
+
+    @Test(dependsOnMethods = {"testCreateActionAfterReachingMaxActionCount"})
+    public void testUpdateActionWithInvalidEndpointAuthProperties(){
+
+        action2.getEndpoint().getAuthentication().setProperties(new HashMap<String, Object>() {{
+            put(TEST_USERNAME_INVALID_AUTH_PROPERTY, TEST_USERNAME_AUTH_PROPERTY_VALUE);
+            put(TEST_PASSWORD_AUTH_PROPERTY, TEST_PASSWORD_AUTH_PROPERTY_VALUE);
+        }});
+
+        String body = toJSONString(action2);
+        Response responseOfPut = getResponseOfPut(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + testActionId2, body);
+        responseOfPut.then()
+                .log().ifValidationFails()
+                .assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("description", equalTo("Required authentication properties are not " +
+                        "provided or invalid."));
+    }
+
+    @Test(dependsOnMethods = {"testUpdateActionWithInvalidEndpointAuthProperties"})
+    public void testUpdateActionWithInvalidID(){
+
+        action2.setName(TEST_ACTION_UPDATED_NAME);
+
+        String body = toJSONString(action2);
+        Response responseOfPut = getResponseOfPut(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + TEST_ACTION_INVALID_ID, body);
+        responseOfPut.then()
+                .log().ifValidationFails()
+                .assertThat().statusCode(HttpStatus.SC_NOT_FOUND)
+                .body("description", equalTo("No Action is configured for the given action ID."));
+    }
+
+    @Test(dependsOnMethods = {"testUpdateActionWithInvalidID"})
+    public void testActivateActionWithInvalidID(){
+
+        getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH + PRE_ISSUE_ACCESS_TOKEN_PATH +
+                "/" + TEST_ACTION_INVALID_ID + ACTION_ACTIVATE_PATH, "")
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NOT_FOUND)
+                .body("description", equalTo("No Action is configured for the given action ID."));
+    }
+
+    @Test(dependsOnMethods = {"testActivateActionWithInvalidID"})
+    public void testDeactivateActionWithInvalidID(){
+
+        getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH + PRE_ISSUE_ACCESS_TOKEN_PATH +
+                "/" + TEST_ACTION_INVALID_ID + ACTION_DEACTIVATE_PATH, "")
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NOT_FOUND)
+                .body("description", equalTo("No Action is configured for the given action ID."));
+
+        // Delete, created action.
+        deleteAction(PRE_ISSUE_ACCESS_TOKEN_PATH , testActionId2);
+    }
+
+    /**
+     * Create a sample Action.
+     *
+     * @return ID of the created Action.
+     */
+    private String createAction(String actionTypePath) {
+
+        action2 = new ActionModel()
+                .name(TEST_ACTION_NAME)
+                .description(TEST_ACTION_DESCRIPTION)
+                .endpoint(new Endpoint()
+                        .uri(TEST_ENDPOINT_URI)
+                        .authentication(new AuthenticationType()
+                                .type(AuthenticationType.TypeEnum.BASIC)
+                                .properties(new HashMap<String, Object>() {{
+                                    put(TEST_USERNAME_AUTH_PROPERTY, TEST_USERNAME_AUTH_PROPERTY_VALUE);
+                                    put(TEST_PASSWORD_AUTH_PROPERTY, TEST_PASSWORD_AUTH_PROPERTY_VALUE);
+                                }})));
+
+        String body = toJSONString(action2);
+        Response responseOfPost = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
+                actionTypePath, body);
+        responseOfPost.then().assertThat().statusCode(HttpStatus.SC_CREATED);
+
+        return responseOfPost.getBody().jsonPath().getString("id");
+    }
+}
