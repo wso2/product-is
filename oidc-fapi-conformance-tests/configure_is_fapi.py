@@ -81,6 +81,24 @@ def set_application_scopes_for_consent(application_id):
     else:
         print(">>> Application scope claims set successfully.")
 
+#set hybrid flow response type for the application
+def set_hybridFlow_config(application_id):
+    print(">>> Setting hybrid flow configuration.")
+    try:
+        body = json.dumps(constants.ENABLE_HYBRID_FLOW)
+        response = requests.patch(url=constants.APPLICATION_ENDPOINT + "/" + application_id,
+                                headers=constants.HEADERS_WITH_AUTH, data=body, verify=False)
+        response.raise_for_status()
+    except HTTPError as http_error:
+        print(http_error)
+        print(response.text)
+        exit(1)
+    except Exception as error:
+        print("\nError occurred: " + str(error))
+        exit(1)
+    else:
+        print(">>> Hybrid flow configuration added successfully.")
+
 # Skip login consent is true by default, here we disable it to go consent flows
 def disable_skipping_consent(application_id):
     print(">>> Setting Skip Login consent to false.")

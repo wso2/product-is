@@ -157,6 +157,12 @@ MTLS_PAR_APP2 = {
     "require_pushed_authorization_requests" : "true",
 }
 
+ENABLE_HYBRID_FLOW = {
+    "hybridFlow": {
+        "enable": true,
+        "responseType": "code id_token"
+    }
+}
 
 SMTP_SERVER = "smtp.gmail.com"
 
