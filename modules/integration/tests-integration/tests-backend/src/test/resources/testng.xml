@@ -88,6 +88,7 @@
             <class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderManagementTestCase" />
             <class name="org.wso2.identity.integration.test.entitlement.EntitlementSecurityTestCase"/>
             <class name="org.wso2.identity.integration.test.entitlement.EntitlementRestServiceTestCase"/>
+            <class name="org.wso2.identity.integration.test.entitlement.EntitlementPolicyAdminServiceTestCase"/>
             <class name="org.wso2.identity.integration.test.requestPathAuthenticator.RequestPathBasicAuthenticationSSOTest" />
             <class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderMgtServiceTestCase" />
             <class name="org.wso2.identity.integration.test.idp.mgt.ResidentIDPConfigsTestCase" />
