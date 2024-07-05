@@ -74,8 +74,10 @@ public enum StateEnum {
 
     private Boolean publicClient = false;
     private OAuth2PKCEConfiguration pkce;
+    private HybridFlowConfiguration hybridFlow;
     private AccessTokenConfiguration accessToken;
     private RefreshTokenConfiguration refreshToken;
+    private SubjectTokenConfiguration subjectToken;
     private IdTokenConfiguration idToken;
     private OIDCLogoutConfiguration logout;
     private Boolean validateRequestObjectSignature = false;
@@ -258,6 +260,24 @@ public enum StateEnum {
     }
 
     /**
+     **/
+    public OpenIDConnectConfiguration hybridFlow(HybridFlowConfiguration hybridFlow) {
+
+        this.hybridFlow = hybridFlow;
+        return this;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("hybridFlow")
+    @Valid
+    public HybridFlowConfiguration getHybridFlow() {
+        return hybridFlow;
+    }
+    public void setHybridFlow(HybridFlowConfiguration hybridFlow) {
+        this.hybridFlow = hybridFlow;
+    }
+
+    /**
     **/
     public OpenIDConnectConfiguration accessToken(AccessTokenConfiguration accessToken) {
 
@@ -291,6 +311,24 @@ public enum StateEnum {
     }
     public void setRefreshToken(RefreshTokenConfiguration refreshToken) {
         this.refreshToken = refreshToken;
+    }
+
+    /**
+     **/
+    public OpenIDConnectConfiguration subjectToken(SubjectTokenConfiguration subjectToken) {
+
+        this.subjectToken = subjectToken;
+        return this;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("subjectToken")
+    @Valid
+    public SubjectTokenConfiguration getSubjectToken() {
+        return subjectToken;
+    }
+    public void setSubjectToken(SubjectTokenConfiguration subjectToken) {
+        this.subjectToken = subjectToken;
     }
 
     /**
@@ -500,8 +538,10 @@ public enum StateEnum {
             Objects.equals(this.allowedOrigins, openIDConnectConfiguration.allowedOrigins) &&
             Objects.equals(this.publicClient, openIDConnectConfiguration.publicClient) &&
             Objects.equals(this.pkce, openIDConnectConfiguration.pkce) &&
+            Objects.equals(this.hybridFlow, openIDConnectConfiguration.hybridFlow) &&
             Objects.equals(this.accessToken, openIDConnectConfiguration.accessToken) &&
             Objects.equals(this.refreshToken, openIDConnectConfiguration.refreshToken) &&
+            Objects.equals(this.subjectToken, openIDConnectConfiguration.subjectToken) &&
             Objects.equals(this.idToken, openIDConnectConfiguration.idToken) &&
             Objects.equals(this.logout, openIDConnectConfiguration.logout) &&
             Objects.equals(this.validateRequestObjectSignature, openIDConnectConfiguration.validateRequestObjectSignature) &&
@@ -516,7 +556,7 @@ public enum StateEnum {
 
     @Override
     public int hashCode() {
-        return Objects.hash(clientId, clientSecret, state, grantTypes, callbackURLs, allowedOrigins, publicClient, pkce, accessToken, refreshToken, idToken, logout, validateRequestObjectSignature, scopeValidators, clientAuthentication, requestObject, pushAuthorizationRequest, subject, isFAPIApplication, fapiMetadata);
+        return Objects.hash(clientId, clientSecret, state, grantTypes, callbackURLs, allowedOrigins, publicClient, pkce, hybridFlow, accessToken, refreshToken, subjectToken, idToken, logout, validateRequestObjectSignature, scopeValidators, clientAuthentication, requestObject, pushAuthorizationRequest, subject, isFAPIApplication, fapiMetadata);
     }
 
     @Override
@@ -533,8 +573,10 @@ public enum StateEnum {
         sb.append("    allowedOrigins: ").append(toIndentedString(allowedOrigins)).append("\n");
         sb.append("    publicClient: ").append(toIndentedString(publicClient)).append("\n");
         sb.append("    pkce: ").append(toIndentedString(pkce)).append("\n");
+        sb.append("    hybridFlow: ").append(toIndentedString(hybridFlow)).append("\n");
         sb.append("    accessToken: ").append(toIndentedString(accessToken)).append("\n");
         sb.append("    refreshToken: ").append(toIndentedString(refreshToken)).append("\n");
+        sb.append("    subjectToken: ").append(toIndentedString(subjectToken)).append("\n");
         sb.append("    idToken: ").append(toIndentedString(idToken)).append("\n");
         sb.append("    logout: ").append(toIndentedString(logout)).append("\n");
         sb.append("    validateRequestObjectSignature: ").append(toIndentedString(validateRequestObjectSignature)).append("\n");

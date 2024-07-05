@@ -143,9 +143,9 @@ public class OAuth2XACMLScopeValidatorTestCase extends OAuth2ServiceAbstractInte
         serverConfigurationManager.restoreToLastConfiguration(false);
         consumerKey = null;
         consumerSecret = null;
-        entitlementPolicyClient.removePolicy(VALIDATE_SCOPE_BASED_POLICY_ID);
         entitlementPolicyClient.publishPolicies(new String[]{VALIDATE_SCOPE_BASED_POLICY_ID}, new String[]{"PDP " +
                 "Subscriber"}, "DELETE", true, null, 1);
+        entitlementPolicyClient.removePolicy(VALIDATE_SCOPE_BASED_POLICY_ID);
     }
 
     @Test(groups = "wso2.is", description = "Check Oauth2 application registration.")
