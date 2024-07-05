@@ -363,7 +363,7 @@
 
                                 <!-- Action Management Feature -->
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.action.mgt.server.feature:${carbon.identity.framework.version}
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.action.management.server.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
 
                                 <!-- SAML Request/Response Validator Toolkit Feature -->
@@ -854,7 +854,7 @@
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.identity.action.mgt.server.feature.group</id>
+                                    <id>org.wso2.carbon.identity.action.management.server.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
