@@ -18,6 +18,7 @@ package org.wso2.identity.integration.test.rest.api.server.application.managemen
 import io.restassured.response.Response;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
+import org.hamcrest.Matchers;
 import org.json.JSONObject;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
@@ -25,6 +26,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static org.hamcrest.core.IsNull.nullValue;
 import static org.wso2.identity.integration.test.rest.api.server.application.management.v1.Utils.assertNotBlank;
 import static org.wso2.identity.integration.test.rest.api.server.application.management.v1.Utils.extractApplicationIdFromLocationHeader;
 
@@ -118,7 +120,8 @@ public class ApplicationPatchTest extends ApplicationManagementBaseTest {
                 .body("advancedConfigurations.find{ it.key == 'skipLoginConsent' }.value", equalTo(false))
                 .body("advancedConfigurations.find{ it.key == 'skipLogoutConsent' }.value", equalTo(false))
                 .body("advancedConfigurations.find{ it.key == 'returnAuthenticatedIdpList' }.value", equalTo(false))
-                .body("advancedConfigurations.find{ it.key == 'enableAuthorization' }.value", equalTo(false));
+                .body("advancedConfigurations.find{ it.key == 'enableAuthorization' }.value", equalTo(false))
+                .body("advancedConfigurations.trustedAppConfiguration", nullValue());
 
         // Do the PATCH update request.
         String patchRequest = readResource("patch-application-advanced-configuration.json");
@@ -134,7 +137,17 @@ public class ApplicationPatchTest extends ApplicationManagementBaseTest {
                 .body("advancedConfigurations.find{ it.key == 'skipLoginConsent' }.value", equalTo(true))
                 .body("advancedConfigurations.find{ it.key == 'skipLogoutConsent' }.value", equalTo(true))
                 .body("advancedConfigurations.find{ it.key == 'returnAuthenticatedIdpList' }.value", equalTo(true))
-                .body("advancedConfigurations.find{ it.key == 'enableAuthorization' }.value", equalTo(true));
+                .body("advancedConfigurations.find{ it.key == 'enableAuthorization' }.value", equalTo(true))
+                .body("advancedConfigurations.trustedAppConfiguration.find{ it.key == 'isFIDOTrustedApp' }.value",
+                        equalTo(true))
+                .body("advancedConfigurations.trustedAppConfiguration.find{ it.key == 'isConsentGranted' }.value",
+                        equalTo(true))
+                .body("advancedConfigurations.trustedAppConfiguration.find{ it.key == 'androidPackageName' }.value",
+                        equalTo("sample.package.name"))
+                .body("advancedConfigurations.trustedAppConfiguration.find{ it.key == 'androidThumbprints' }.value",
+                        Matchers.hasItem("sampleThumbprint"))
+                .body("advancedConfigurations.trustedAppConfiguration.find{ it.key == 'appleAppId' }.value",
+                        equalTo("sample.app.id"));
     }
 
     @Test(description = "Test updating the claim configuration of an application",
