@@ -140,6 +140,20 @@ public class ActionsFailureTest extends ActionsTestBase {
     }
 
     @Test(dependsOnMethods = {"testCreateActionAfterReachingMaxActionCount"})
+    public void testUpdateActionWithInvalidID(){
+
+        action2.setName(TEST_ACTION_UPDATED_NAME);
+
+        String body = toJSONString(action2);
+        Response responseOfPut = getResponseOfPut(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + TEST_ACTION_INVALID_ID, body);
+        responseOfPut.then()
+                .log().ifValidationFails()
+                .assertThat().statusCode(HttpStatus.SC_NOT_FOUND)
+                .body("description", equalTo("No Action is configured on the given action Id."));
+    }
+
+    @Test(dependsOnMethods = {"testUpdateActionWithInvalidID"})
     public void testUpdateActionWithInvalidEndpointAuthProperties(){
 
         action2.getEndpoint().getAuthentication().setProperties(new HashMap<String, Object>() {{
@@ -158,20 +172,6 @@ public class ActionsFailureTest extends ActionsTestBase {
     }
 
     @Test(dependsOnMethods = {"testUpdateActionWithInvalidEndpointAuthProperties"})
-    public void testUpdateActionWithInvalidID(){
-
-        action2.setName(TEST_ACTION_UPDATED_NAME);
-
-        String body = toJSONString(action2);
-        Response responseOfPut = getResponseOfPut(ACTION_MANAGEMENT_API_BASE_PATH +
-                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + TEST_ACTION_INVALID_ID, body);
-        responseOfPut.then()
-                .log().ifValidationFails()
-                .assertThat().statusCode(HttpStatus.SC_NOT_FOUND)
-                .body("description", equalTo("No Action is configured for the given action ID."));
-    }
-
-    @Test(dependsOnMethods = {"testUpdateActionWithInvalidID"})
     public void testActivateActionWithInvalidID(){
 
         getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH + PRE_ISSUE_ACCESS_TOKEN_PATH +
@@ -180,7 +180,7 @@ public class ActionsFailureTest extends ActionsTestBase {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_NOT_FOUND)
-                .body("description", equalTo("No Action is configured for the given action ID."));
+                .body("description", equalTo("No Action is configured on the given action Id."));
     }
 
     @Test(dependsOnMethods = {"testActivateActionWithInvalidID"})
@@ -192,7 +192,7 @@ public class ActionsFailureTest extends ActionsTestBase {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_NOT_FOUND)
-                .body("description", equalTo("No Action is configured for the given action ID."));
+                .body("description", equalTo("No Action is configured on the given action Id."));
 
         // Delete, created action.
         deleteAction(PRE_ISSUE_ACCESS_TOKEN_PATH , testActionId2);
