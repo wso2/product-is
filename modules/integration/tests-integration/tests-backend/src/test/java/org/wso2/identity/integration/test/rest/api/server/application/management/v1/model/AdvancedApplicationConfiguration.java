@@ -41,6 +41,7 @@ public class AdvancedApplicationConfiguration  {
     private List<AdditionalSpProperties> additionalSpProperties;
     private Boolean enableAPIBasedAuthentication;
     private AdvancedApplicationConfigurationAttestationMetaData attestationMetaData;
+    private TrustedAppConfiguration trustedAppConfiguration;
 
     private Boolean useExternalConsentPage;
 
@@ -228,6 +229,24 @@ public class AdvancedApplicationConfiguration  {
     }
 
     /**
+    **/
+    public AdvancedApplicationConfiguration trustedAppConfiguration(TrustedAppConfiguration trustedAppConfiguration) {
+
+        this.trustedAppConfiguration = trustedAppConfiguration;
+        return this;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("trustedAppConfiguration")
+    @Valid
+    public TrustedAppConfiguration getTrustedAppConfiguration() {
+        return trustedAppConfiguration;
+    }
+    public void setTrustedAppConfiguration(TrustedAppConfiguration trustedAppConfiguration) {
+        this.trustedAppConfiguration = trustedAppConfiguration;
+    }
+
+    /**
      **/
     public AdvancedApplicationConfiguration additionalSpProperties(List<AdditionalSpProperties> additionalSpProperties) {
 
@@ -285,12 +304,13 @@ public class AdvancedApplicationConfiguration  {
                 Objects.equals(this.additionalSpProperties, advancedApplicationConfiguration.additionalSpProperties) &&
                 Objects.equals(this.enableAPIBasedAuthentication, advancedApplicationConfiguration.enableAPIBasedAuthentication) &&
                 Objects.equals(this.attestationMetaData, advancedApplicationConfiguration.attestationMetaData) &&
+                Objects.equals(this.trustedAppConfiguration, advancedApplicationConfiguration.trustedAppConfiguration) &&
                 Objects.equals(this.useExternalConsentPage, advancedApplicationConfiguration.useExternalConsentPage);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(saas, discoverableByEndUsers, certificate, skipLoginConsent, skipLogoutConsent, returnAuthenticatedIdpList, enableAuthorization, fragment, enableAPIBasedAuthentication, attestationMetaData, additionalSpProperties, useExternalConsentPage);
+        return Objects.hash(saas, discoverableByEndUsers, certificate, skipLoginConsent, skipLogoutConsent, returnAuthenticatedIdpList, enableAuthorization, fragment, enableAPIBasedAuthentication, attestationMetaData, trustedAppConfiguration, additionalSpProperties, useExternalConsentPage);
     }
 
     @Override
@@ -309,6 +329,7 @@ public class AdvancedApplicationConfiguration  {
         sb.append("    fragment: ").append(toIndentedString(fragment)).append("\n");
         sb.append("    enableAPIBasedAuthentication: ").append(toIndentedString(enableAPIBasedAuthentication)).append("\n");
         sb.append("    attestationMetaData: ").append(toIndentedString(attestationMetaData)).append("\n");
+        sb.append("    trustedAppConfiguration: ").append(toIndentedString(trustedAppConfiguration)).append("\n");
         sb.append("    additionalSpProperties: ").append(toIndentedString(additionalSpProperties)).append("\n");
         sb.append("    useExternalConsentPage: ").append(toIndentedString(useExternalConsentPage)).append("\n");
         sb.append("}");
