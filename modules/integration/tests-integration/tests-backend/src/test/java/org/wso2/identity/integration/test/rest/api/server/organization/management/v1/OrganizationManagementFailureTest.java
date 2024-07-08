@@ -128,6 +128,24 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     }
 
     @Test(dependsOnMethods = "testSelfOnboardOrganization")
+    public void testGetOrganizationsWithInvalidOperator() {
+
+        String filterQuery = "?filter=name ca G&limit=10&recursive=false";
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + filterQuery;
+        Response response = getResponseOfGetWithOAuth2(endpointURL, m2mToken);
+        validateErrorResponseWithoutTraceId(response, HttpStatus.SC_BAD_REQUEST, "ORG-60059");
+    }
+
+    @Test(dependsOnMethods = "testGetOrganizationsWithInvalidOperator")
+    public void testGetOrganizationsWithUnsupportedAttribute() {
+
+        String filterQuery = "?filter=attribute.Country co S&limit=10&recursive=false";
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + filterQuery;
+        Response response = getResponseOfGetWithOAuth2(endpointURL, m2mToken);
+        validateErrorResponseWithoutTraceId(response, HttpStatus.SC_BAD_REQUEST, "ORG-60023");
+    }
+
+    @Test(dependsOnMethods = "testGetOrganizationsWithUnsupportedAttribute")
     public void testGetDiscoveryConfigWithoutAddingConfig() {
 
         String endpointURL = ORGANIZATION_CONFIGS_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH;
