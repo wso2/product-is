@@ -134,7 +134,7 @@ public class ActionsSuccessTest extends ActionsTestBase {
     @Test(dependsOnMethods = {"testCreateAction"})
     public void testGetActions() {
 
-        Response responseOfGet = getResponseOfGet(ACTION_MANAGEMENT_API_BASE_PATH);
+        Response responseOfGet = getResponseOfGet(ACTION_MANAGEMENT_API_BASE_PATH + TYPES_API_PATH);
         responseOfGet.then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -222,7 +222,7 @@ public class ActionsSuccessTest extends ActionsTestBase {
                 .assertThat()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
 
-        Response responseOfGet = getResponseOfGet(ACTION_MANAGEMENT_API_BASE_PATH);
+        Response responseOfGet = getResponseOfGet(ACTION_MANAGEMENT_API_BASE_PATH + TYPES_API_PATH);
         responseOfGet.then()
                 .log().ifValidationFails()
                 .assertThat().statusCode(HttpStatus.SC_OK)
