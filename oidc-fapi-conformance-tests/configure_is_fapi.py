@@ -85,8 +85,10 @@ def set_application_scopes_for_consent(application_id):
 def set_hybridFlow_config(application_id):
     print(">>> Setting hybrid flow configuration.")
     try:
-        body = json.dumps(constants.ENABLE_HYBRID_FLOW)
-        response = requests.patch(url=constants.APPLICATION_ENDPOINT + "/" + application_id,
+        app_details = get_service_provider_details(application_id)
+        app_details['hybridFlow'] = constants.ENABLE_HYBRID_FLOW
+        body = json.dumps(app_details)
+        response = requests.put(url=constants.APPLICATION_ENDPOINT + "/" + application_id,
                                 headers=constants.HEADERS_WITH_AUTH, data=body, verify=False)
         response.raise_for_status()
     except HTTPError as http_error:

@@ -158,10 +158,8 @@ MTLS_PAR_APP2 = {
 }
 
 ENABLE_HYBRID_FLOW = {
-    "hybridFlow": {
-        "enable": true,
-        "responseType": "code id_token"
-    }
+    "enable": "true",
+    "responseType": "code id_token"
 }
 
 SMTP_SERVER = "smtp.gmail.com"
