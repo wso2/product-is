@@ -234,6 +234,14 @@ public class EntitlementPolicyServiceClient {
         }
     }
 
+    public void dePromotePolicy(String policyId) throws RemoteException {
+        try {
+            entitlementPolicyAdminServiceStub.dePromotePolicy(policyId);
+        } catch (EntitlementPolicyAdminServiceEntitlementException e) {
+            log.error(e);
+        }
+    }
+
     private String convertXMLFileToString(File fileName)
             throws IOException, ParserConfigurationException, SAXException, TransformerException {
 
