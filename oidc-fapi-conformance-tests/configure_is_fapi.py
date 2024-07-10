@@ -295,6 +295,7 @@ def createSPApp(app_json):
     app_details = get_service_provider_details(app_id)
     set_application_scopes_for_consent(app_id)
     disable_skipping_consent(app_id)
+    set_hybridFlow_config(app_id)
     configure_acr(app_id)
     return app_details
 
