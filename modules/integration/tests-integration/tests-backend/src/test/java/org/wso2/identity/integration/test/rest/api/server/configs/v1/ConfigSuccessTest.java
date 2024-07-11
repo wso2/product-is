@@ -224,6 +224,46 @@ public class ConfigSuccessTest extends ConfigTestBase {
         getResponseOfPut(CONFIGS_INBOUND_SCIM_API_BASE_PATH, defaultBody);
     }
 
+    @Test
+    public void testGetImpersonationConfigs() throws Exception {
+
+        Response response = getResponseOfGet(IMPERSONATION_CONFIGS_API_BASE_PATH);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("enableEmailNotification", equalTo(true));
+    }
+
+    @Test(dependsOnMethods = {"testGetImpersonationConfigs"})
+    public void testPatchImpersonationConfigs() throws Exception {
+
+
+        String body = readResource("patch-modify-impersonation-configs.json");
+        Response response = getResponseOfPatch(IMPERSONATION_CONFIGS_API_BASE_PATH, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK);
+
+        response = getResponseOfGet(IMPERSONATION_CONFIGS_API_BASE_PATH);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("enableEmailNotification", equalTo(false));
+
+        // Clearing added inbound scim config.
+        String defaultBody = readResource("default-impersonation-configs.json");
+        getResponseOfPatch(IMPERSONATION_CONFIGS_API_BASE_PATH, defaultBody);
+        response = getResponseOfGet(IMPERSONATION_CONFIGS_API_BASE_PATH);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("enableEmailNotification", equalTo(true));
+    }
+
     @Test(priority = 1)
     public void testGetCORSConfigs() throws Exception {
 
