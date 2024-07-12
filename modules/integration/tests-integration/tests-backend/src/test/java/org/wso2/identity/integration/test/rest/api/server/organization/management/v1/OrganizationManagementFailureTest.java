@@ -114,6 +114,7 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     public void testSelfOnboardOrganization(String requestBodyPath) throws Exception {
 
         String body = readResource(requestBodyPath);
+        body = body.replace("${parentId}", "");
         Response response = getResponseOfPostWithOAuth2(ORGANIZATION_MANAGEMENT_API_BASE_PATH, body, m2mToken);
         response.then()
                 .log().ifValidationFails()
@@ -146,6 +147,24 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     }
 
     @Test(dependsOnMethods = "testGetOrganizationsWithUnsupportedAttribute")
+    public void testGetOrganizationsMetaAttributesWithInvalidOperator() {
+
+        String filterQuery = "?filter=attributes ca C&limit=10&recursive=false";
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + "/meta-attributes" + filterQuery;
+        Response response = getResponseOfGetWithOAuth2(endpointURL, m2mToken);
+        validateErrorResponseWithoutTraceId(response, HttpStatus.SC_BAD_REQUEST, "ORG-60059");
+    }
+
+    @Test(dependsOnMethods = "testGetOrganizationsMetaAttributesWithInvalidOperator")
+    public void testGetOrganizationsMetaAttributesWithUnsupportedAttribute() {
+
+        String filterQuery = "?filter=attribute co S&limit=10&recursive=false";
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + "/meta-attributes" + filterQuery;
+        Response response = getResponseOfGetWithOAuth2(endpointURL, m2mToken);
+        validateErrorResponseWithoutTraceId(response, HttpStatus.SC_BAD_REQUEST, "ORG-60023");
+    }
+
+    @Test(dependsOnMethods = "testGetOrganizationsMetaAttributesWithUnsupportedAttribute")
     public void testGetDiscoveryConfigWithoutAddingConfig() {
 
         String endpointURL = ORGANIZATION_CONFIGS_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH;

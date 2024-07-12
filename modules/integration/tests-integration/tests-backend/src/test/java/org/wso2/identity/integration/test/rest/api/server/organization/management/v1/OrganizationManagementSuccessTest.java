@@ -18,6 +18,8 @@
 
 package org.wso2.identity.integration.test.rest.api.server.organization.management.v1;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.nimbusds.oauth2.sdk.AccessTokenResponse;
 import com.nimbusds.oauth2.sdk.AuthorizationGrant;
 import com.nimbusds.oauth2.sdk.ClientCredentialsGrant;
@@ -41,6 +43,7 @@ import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -81,6 +84,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.testng.Assert.assertNotNull;
+import static org.wso2.identity.integration.test.restclients.RestBaseClient.API_SERVER_PATH;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.CONTENT_TYPE_ATTRIBUTE;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.ORGANIZATION_PATH;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.TENANT_PATH;
@@ -92,6 +96,7 @@ import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SCIM2_U
 public class OrganizationManagementSuccessTest extends OrganizationManagementBaseTest {
 
     private String organizationID;
+    private String childOrganizationID;
     private String selfServiceAppId;
     private String selfServiceAppClientId;
     private String selfServiceAppClientSecret;
@@ -223,6 +228,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     public void testSelfOnboardOrganization() throws IOException {
 
         String body = readResource("add-greater-hospital-organization-request-body.json");
+        body = body.replace("${parentId}", "");
         Response response = getResponseOfPostWithOAuth2(ORGANIZATION_MANAGEMENT_API_BASE_PATH, body, m2mToken);
         response.then()
                 .log().ifValidationFails()
@@ -381,6 +387,64 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     }
 
     @Test(dependsOnMethods = "unShareB2BApplication")
+    public void testOnboardChildOrganization() throws IOException {
+
+        String body = readResource("add-smaller-hospital-organization-request-body.json");
+        body = body.replace("${parentId}", organizationID);
+        HttpPost request = new HttpPost(serverURL + TENANT_PATH + tenant + PATH_SEPARATOR + ORGANIZATION_PATH
+                                    + API_SERVER_PATH + ORGANIZATION_MANAGEMENT_API_BASE_PATH);
+        Header[] headerList = new Header[3];
+        headerList[0] = new BasicHeader("Authorization", "Bearer " + switchedM2MToken);
+        headerList[1] = new BasicHeader(CONTENT_TYPE_ATTRIBUTE, "application/json");
+        headerList[2] = new BasicHeader(HttpHeaders.ACCEPT, "application/json");
+        request.setHeaders(headerList);
+        request.setEntity(new StringEntity(body));
+        HttpResponse response = client.execute(request);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED);
+
+        String jsonResponse = EntityUtils.toString(response.getEntity());
+        JsonObject responseObject = JsonParser.parseString(jsonResponse).getAsJsonObject();
+        childOrganizationID = responseObject.get("id").getAsString();
+        assertNotNull(childOrganizationID);
+    }
+
+    @DataProvider(name = "dataProviderForGetOrganizationsMetaAttributes")
+    public Object[][] dataProviderForGetOrganizationsMetaAttributes() {
+
+        return new Object[][] {
+                {"?filter=attributes eq Country&limit=10&recursive=false", false, false},
+                {"?filter=attributes eq Region&limit=10&recursive=true", true, false},
+                {"?filter=attributes sw C and attributes ew try&limit=10&recursive=false", false, false},
+                {"?filter=attributes co A&limit=10&recursive=true", false, true},
+        };
+    }
+
+    @Test(dependsOnMethods  = "testOnboardChildOrganization",
+          dataProvider      = "dataProviderForGetOrganizationsMetaAttributes")
+    public void testGetOrganizationsMetaAttributes(String filterQuery, boolean isRecursive, boolean expectEmptyList) {
+
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + "/meta-attributes" + filterQuery;
+        Response response = getResponseOfGetWithOAuth2(endpointURL, m2mToken);
+        Assert.assertNotNull(response.asString());
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK);
+        if (expectEmptyList) {
+            response.then()
+                    .assertThat().body(equalTo("{}"));
+        } else if (isRecursive) {
+            response.then()
+                    .body("attributes.size()", equalTo(1))
+                    .body("attributes[0]", equalTo("Region"));
+        } else {
+            response.then()
+                    .body("attributes.size()", equalTo(1))
+                    .body("attributes[0]", equalTo("Country"));
+        }
+    }
+
+    @Test(dependsOnMethods = "testGetOrganizationsMetaAttributes")
     public void testAddDiscoveryConfig() throws IOException {
 
         String endpointURL = ORGANIZATION_CONFIGS_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH;
@@ -505,6 +569,19 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     }
 
     @Test(dependsOnMethods = "testDeleteDiscoveryConfig")
+    public void testDeleteChildOrganization() throws IOException {
+
+        HttpDelete request = new HttpDelete(serverURL + TENANT_PATH + tenant + PATH_SEPARATOR + ORGANIZATION_PATH
+                                        + API_SERVER_PATH + ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR
+                                        + childOrganizationID);
+        Header[] headerList = new Header[1];
+        headerList[0] = new BasicHeader("Authorization", "Bearer " + switchedM2MToken);
+        request.setHeaders(headerList);
+        HttpResponse response = client.execute(request);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_NO_CONTENT);
+    }
+
+    @Test(dependsOnMethods = "testDeleteChildOrganization")
     public void testDisablingOrganization() throws IOException {
 
         String endpoint = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationID;

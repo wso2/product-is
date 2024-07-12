@@ -2,7 +2,7 @@
   "/api/server/v1/organizations": [
     "internal_organization_view",
     "internal_organization_create"
-    ],
+  ],
   "/api/server/v1/organizations/discovery": [
     "internal_organization_discovery_view",
     "internal_organization_discovery_update",
@@ -16,7 +16,7 @@
   "/scim2/Users": [
     "internal_user_mgt_view",
     "internal_user_mgt_create"
-    ],
+  ],
   "/o/scim2/Users": [
     "internal_org_user_mgt_create",
     "internal_org_user_mgt_list"
@@ -27,5 +27,9 @@
   ],
   "/o/api/server/v1/applications": [
     "internal_org_application_mgt_view"
+  ],
+  "/o/api/server/v1/organizations": [
+    "internal_org_organization_create",
+    "internal_org_organization_delete"
   ]
 }
