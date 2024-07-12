@@ -1,0 +1,7 @@
+[
+  {
+    "operation": "REPLACE",
+    "path": "/enableEmailNotification",
+    "value": true
+  }
+]
