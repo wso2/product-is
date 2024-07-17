@@ -128,6 +128,7 @@ public final class OAuth2Constant {
     public static final String TENANT_INTROSPECT_ENDPOINT =
             "https://localhost:9853/t/<TENANT_PLACEHOLDER>/oauth2/introspect";
 
+    public static final String SUBJECT_TOKEN = "subject_token";
     public static final class PlaygroundAppPaths {
 
         public static final String callBackPath = "/oauth2client";

@@ -39,6 +39,7 @@ public class ConfigTestBase extends RESTAPIServerTestBase {
     public static final String CONFIGS_AUTHENTICATOR_API_BASE_PATH = "/configs/authenticators";
     public static final String CONFIGS_INBOUND_SCIM_API_BASE_PATH = "/configs/provisioning/inbound/scim";
     public static final String CORS_CONFIGS_API_BASE_PATH = "/configs/cors";
+    public static final String IMPERSONATION_CONFIGS_API_BASE_PATH = "/configs/impersonation";
     public static final String HOME_REALM_IDENTIFIERS_API_BASE_PATH = "/configs/home-realm-identifiers";
     public static final String SAML_INBOUND_AUTH_CONFIG_API_PATH = "/configs/authentication/inbound/saml2";
     public static final String PASSIVE_STS_INBOUND_AUTH_CONFIG_API_PATH = "/configs/authentication/inbound/passivests";
