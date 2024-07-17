@@ -28,7 +28,9 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.ActionModel;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.ActionUpdateModel;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.AuthenticationType;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.AuthenticationTypeProperties;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.Endpoint;
 
 import java.io.IOException;
@@ -104,8 +106,7 @@ public class ActionsSuccessTest extends ActionsTestBase {
                 .body("description", equalTo(TEST_ACTION_DESCRIPTION))
                 .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
-                .body("endpoint.authentication.properties.username", equalTo(TEST_USERNAME_AUTH_PROPERTY_VALUE))
-                .body("endpoint.authentication.properties.password", equalTo(TEST_PASSWORD_AUTH_PROPERTY_VALUE));
+                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)));
 
         testActionId = responseOfPost.getBody().jsonPath().getString("id");
     }
@@ -125,13 +126,11 @@ public class ActionsSuccessTest extends ActionsTestBase {
                 .body( "find { it.id == '" + testActionId + "' }.endpoint.uri", equalTo(TEST_ENDPOINT_URI))
                 .body( "find { it.id == '" + testActionId + "' }.endpoint.authentication.type",
                         equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
-                .body( "find { it.id == '" + testActionId + "' }.endpoint.authentication.properties.username",
-                        equalTo(TEST_USERNAME_AUTH_PROPERTY_VALUE))
-                .body( "find { it.id == '" + testActionId + "' }.endpoint.authentication.properties.password",
-                        equalTo(TEST_PASSWORD_AUTH_PROPERTY_VALUE));
+                .body( "find { it.id == '" + testActionId + "' }.endpoint.authentication",
+                        not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)));
     }
 
-    @Test(dependsOnMethods = {"testCreateAction"})
+    @Test(dependsOnMethods = {"testGetActionByActionType"})
     public void testGetActions() {
 
         Response responseOfGet = getResponseOfGet(ACTION_MANAGEMENT_API_BASE_PATH + TYPES_API_PATH);
@@ -155,21 +154,18 @@ public class ActionsSuccessTest extends ActionsTestBase {
                 .body( "find { it.type == '" + PRE_UPDATE_PASSWORD_ACTION_TYPE + "' }.self", notNullValue());
     }
 
-    @Test(dependsOnMethods = {"testGetActionByActionType"})
-    public void testUpdateAction() {
+    @Test(dependsOnMethods = {"testGetActions"})
+    public void testUpdateActionBasicInfo() {
 
-        action.setName(TEST_ACTION_UPDATED_NAME);
-        action.getEndpoint().setAuthentication(new AuthenticationType()
-                .type(AuthenticationType.TypeEnum.BEARER)
-                .properties(new HashMap<String, Object>() {{
-                    put(TEST_ACCESS_TOKEN_AUTH_PROPERTY, TEST_ACCESS_TOKEN_AUTH_PROPERTY_VALUE);
-                }}));
+        ActionUpdateModel actionUpdateModel = new ActionUpdateModel()
+                .name(TEST_ACTION_UPDATED_NAME)
+                .endpointUri(TEST_UPDATED_ENDPOINT_URI);
 
-        String body = toJSONString(action);
-        Response responseOfPut = getResponseOfPut(ACTION_MANAGEMENT_API_BASE_PATH +
+        String body = toJSONString(actionUpdateModel);
+        Response responseOfPatch = getResponseOfPatch(ACTION_MANAGEMENT_API_BASE_PATH +
                 PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + testActionId, body);
 
-        responseOfPut.then()
+        responseOfPatch.then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
@@ -177,13 +173,51 @@ public class ActionsSuccessTest extends ActionsTestBase {
                 .body("name", equalTo(TEST_ACTION_UPDATED_NAME))
                 .body("description", equalTo(TEST_ACTION_DESCRIPTION))
                 .body("status", equalTo(TEST_ACTION_ACTIVE_STATUS))
-                .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
-                .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BEARER.toString()))
-                .body("endpoint.authentication.properties.accessToken",
-                        equalTo(TEST_ACCESS_TOKEN_AUTH_PROPERTY_VALUE));
+                .body("endpoint.uri", equalTo(TEST_UPDATED_ENDPOINT_URI))
+                .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
+                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)));
     }
 
-    @Test(dependsOnMethods = {"testUpdateAction"})
+    @Test(dependsOnMethods = {"testUpdateActionBasicInfo"})
+    public void testUpdateEndpointAuthentication() {
+
+        AuthenticationTypeProperties newAuthProperties = new AuthenticationTypeProperties()
+                .properties(new HashMap<String, Object>() {{
+                    put(TEST_ACCESS_TOKEN_AUTH_PROPERTY, TEST_ACCESS_TOKEN_AUTH_PROPERTY_VALUE);
+                }});
+
+        String body = toJSONString(newAuthProperties);
+        Response responseOfPut = getResponseOfPut(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + testActionId + ACTION_BEARER_AUTH_PATH, body);
+
+        responseOfPut.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("endpoint.uri", equalTo(TEST_UPDATED_ENDPOINT_URI))
+                .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BEARER.toString()));
+    }
+
+    @Test(dependsOnMethods = {"testUpdateEndpointAuthentication"})
+    public void testUpdateEndpointAuthProperties() {
+
+        AuthenticationTypeProperties newAuthProperties = new AuthenticationTypeProperties()
+                .properties(new HashMap<String, Object>() {{
+                    put(TEST_ACCESS_TOKEN_AUTH_PROPERTY, TEST_UPDATED_ACCESS_TOKEN_AUTH_PROPERTY_VALUE);
+                }});
+
+        String body = toJSONString(newAuthProperties);
+        Response responseOfPut = getResponseOfPut(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + testActionId + ACTION_BEARER_AUTH_PATH, body);
+
+        responseOfPut.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BEARER.toString()));
+    }
+
+    @Test(dependsOnMethods = {"testUpdateEndpointAuthProperties"})
     public void testDeactivateAction() {
 
         getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH + PRE_ISSUE_ACCESS_TOKEN_PATH +
@@ -253,10 +287,7 @@ public class ActionsSuccessTest extends ActionsTestBase {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED)
-                .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
-                .body("endpoint.authentication.properties.username", equalTo(TEST_USERNAME_AUTH_PROPERTY_VALUE))
-                .body("endpoint.authentication.properties.password", equalTo(TEST_PASSWORD_AUTH_PROPERTY_VALUE))
-                .body("endpoint.authentication.properties", not(hasKey(TEST_ACCESS_TOKEN_AUTH_PROPERTY)));
+                .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()));
 
         testActionId = responseOfPost.getBody().jsonPath().getString("id");
     }
@@ -264,27 +295,21 @@ public class ActionsSuccessTest extends ActionsTestBase {
     @Test(dependsOnMethods = {"testCreateActionWithExtraEndpointAuthProperties"})
     public void testUpdateActionWithExtraEndpointAuthProperties() {
 
-        action.setName(TEST_ACTION_UPDATED_NAME);
-        action.getEndpoint().setAuthentication(new AuthenticationType()
-                .type(AuthenticationType.TypeEnum.BEARER)
+        AuthenticationTypeProperties newAuthProperties = new AuthenticationTypeProperties()
                 .properties(new HashMap<String, Object>() {{
                     put(TEST_ACCESS_TOKEN_AUTH_PROPERTY, TEST_ACCESS_TOKEN_AUTH_PROPERTY_VALUE);
                     put(TEST_USERNAME_AUTH_PROPERTY, TEST_USERNAME_AUTH_PROPERTY_VALUE);
-                }}));
+                }});
 
-        String body = toJSONString(action);
+        String body = toJSONString(newAuthProperties);
         Response responseOfPut = getResponseOfPut(ACTION_MANAGEMENT_API_BASE_PATH +
-                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + testActionId, body);
+                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + testActionId + ACTION_BEARER_AUTH_PATH, body);
 
         responseOfPut.then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("name", equalTo(TEST_ACTION_UPDATED_NAME))
-                .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BEARER.toString()))
-                .body("endpoint.authentication.properties.accessToken",
-                        equalTo(TEST_ACCESS_TOKEN_AUTH_PROPERTY_VALUE))
-                .body("endpoint.authentication.properties", not(hasKey(TEST_USERNAME_AUTH_PROPERTY)));
+                .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BEARER.toString()));
 
         // Delete, created action.
         deleteAction(PRE_ISSUE_ACCESS_TOKEN_PATH , testActionId);

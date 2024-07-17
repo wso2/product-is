@@ -42,6 +42,8 @@ public class ActionsTestBase extends RESTAPIServerTestBase {
     protected static final String PRE_ISSUE_ACCESS_TOKEN_PATH = "/preIssueAccessToken";
     protected static final String ACTION_DEACTIVATE_PATH = "/deactivate";
     protected static final String ACTION_ACTIVATE_PATH = "/activate";
+    protected static final String ACTION_BEARER_AUTH_PATH = "/bearer";
+    protected static final String ACTION_BASIC_AUTH_PATH = "/basic";
 
     protected static final String PRE_ISSUE_ACCESS_TOKEN_ACTION_TYPE = "PRE_ISSUE_ACCESS_TOKEN";
     protected static final String PRE_UPDATE_PASSWORD_ACTION_TYPE = "PRE_UPDATE_PASSWORD";
@@ -56,8 +58,11 @@ public class ActionsTestBase extends RESTAPIServerTestBase {
     protected static final String TEST_USERNAME_AUTH_PROPERTY_VALUE = "admin";
     protected static final String TEST_PASSWORD_AUTH_PROPERTY_VALUE = "myPassword123";
     protected static final String TEST_ACTION_UPDATED_NAME = "Access Token Pre Issue Updated";
+    protected static final String TEST_UPDATED_ENDPOINT_URI = "https://abc.com/tokenUpdated";
+    protected static final String TEST_PROPERTIES_AUTH_ATTRIBUTE = "properties";
     protected static final String TEST_ACCESS_TOKEN_AUTH_PROPERTY = "accessToken";
     protected static final String TEST_ACCESS_TOKEN_AUTH_PROPERTY_VALUE = "24f64d17-9824-4e28-8413-de45728d8e84";
+    protected static final String TEST_UPDATED_ACCESS_TOKEN_AUTH_PROPERTY_VALUE = "88f63a16-9824-4e28-e463-de11118d8e84";
 
     protected static String swaggerDefinition;
 

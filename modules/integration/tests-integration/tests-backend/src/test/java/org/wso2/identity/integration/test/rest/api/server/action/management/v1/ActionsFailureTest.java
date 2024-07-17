@@ -30,7 +30,9 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.ActionModel;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.ActionUpdateModel;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.AuthenticationType;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.AuthenticationTypeProperties;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.Endpoint;
 
 import java.io.IOException;
@@ -43,7 +45,6 @@ import static org.hamcrest.CoreMatchers.equalTo;
  */
 public class ActionsFailureTest extends ActionsTestBase {
 
-    private static final String PRE_ISSUE_ACCESS_TOKEN_INVALID_PATH = "/preissueaccesstoken";
     private static final String TEST_USERNAME_INVALID_AUTH_PROPERTY = "invalidUsername";
     private static final String TEST_ACTION_INVALID_ID = "invalid_id";
     private static ActionModel action1;
@@ -88,36 +89,19 @@ public class ActionsFailureTest extends ActionsTestBase {
     }
 
     @Test
-    public void testCreateActionWithInvalidActionType() {
-
-         action1 = new ActionModel()
-                .name(TEST_ACTION_NAME)
-                .description(TEST_ACTION_DESCRIPTION)
-                .endpoint(new Endpoint()
-                        .uri(TEST_ENDPOINT_URI)
-                        .authentication(new AuthenticationType()
-                                .type(AuthenticationType.TypeEnum.BASIC)
-                                .properties(new HashMap<String, Object>() {{
-                                    put(TEST_USERNAME_AUTH_PROPERTY, TEST_USERNAME_AUTH_PROPERTY_VALUE);
-                                    put(TEST_PASSWORD_AUTH_PROPERTY, TEST_PASSWORD_AUTH_PROPERTY_VALUE);
-                                }})));
-
-        String body = toJSONString(action1);
-        Response responseOfPost = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
-                PRE_ISSUE_ACCESS_TOKEN_INVALID_PATH, body);
-        responseOfPost.then()
-                .log().ifValidationFails()
-                .assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
-                .body("description", equalTo("Invalid action type used for path parameter."));
-    }
-
-    @Test(dependsOnMethods = {"testCreateActionWithInvalidActionType"})
     public void testCreateActionWithInvalidEndpointAuthProperties(){
 
-        action1.getEndpoint().getAuthentication().setProperties(new HashMap<String, Object>() {{
-            put(TEST_USERNAME_INVALID_AUTH_PROPERTY, TEST_USERNAME_AUTH_PROPERTY_VALUE);
-            put(TEST_PASSWORD_AUTH_PROPERTY, TEST_PASSWORD_AUTH_PROPERTY_VALUE);
-        }});
+         action1 = new ActionModel()
+                 .name(TEST_ACTION_NAME)
+                 .description(TEST_ACTION_DESCRIPTION)
+                 .endpoint(new Endpoint()
+                         .uri(TEST_ENDPOINT_URI)
+                         .authentication(new AuthenticationType()
+                                 .type(AuthenticationType.TypeEnum.BASIC)
+                                 .properties(new HashMap<String, Object>() {{
+                                     put(TEST_USERNAME_INVALID_AUTH_PROPERTY, TEST_USERNAME_AUTH_PROPERTY_VALUE);
+                                     put(TEST_PASSWORD_AUTH_PROPERTY, TEST_PASSWORD_AUTH_PROPERTY_VALUE);
+                                 }})));
 
         String body = toJSONString(action1);
         Response responseOfPost = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
@@ -130,6 +114,23 @@ public class ActionsFailureTest extends ActionsTestBase {
     }
 
     @Test(dependsOnMethods = {"testCreateActionWithInvalidEndpointAuthProperties"})
+    public void testCreateActionWithEmptyEndpointAuthPropertyValues(){
+
+        action1.getEndpoint().getAuthentication().setProperties(new HashMap<String, Object>() {{
+            put(TEST_USERNAME_AUTH_PROPERTY, "");
+            put(TEST_PASSWORD_AUTH_PROPERTY, TEST_PASSWORD_AUTH_PROPERTY_VALUE);
+        }});
+
+        String body = toJSONString(action1);
+        Response responseOfPost = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH, body);
+        responseOfPost.then()
+                .log().ifValidationFails()
+                .assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("description", equalTo("Authentication property values cannot be empty."));
+    }
+
+    @Test(dependsOnMethods = {"testCreateActionWithEmptyEndpointAuthPropertyValues"})
     public void testCreateActionAfterReachingMaxActionCount(){
 
         // Create an action.
@@ -160,11 +161,27 @@ public class ActionsFailureTest extends ActionsTestBase {
     @Test(dependsOnMethods = {"testCreateActionAfterReachingMaxActionCount"})
     public void testUpdateActionWithInvalidID(){
 
-        action2.setName(TEST_ACTION_UPDATED_NAME);
+        // Update Action basic information with an invalid action id.
+        ActionUpdateModel actionUpdateModel = new ActionUpdateModel()
+                .name(TEST_ACTION_UPDATED_NAME);
 
-        String body = toJSONString(action2);
-        Response responseOfPut = getResponseOfPut(ACTION_MANAGEMENT_API_BASE_PATH +
+        String body = toJSONString(actionUpdateModel);
+        Response responseOfPatch = getResponseOfPatch(ACTION_MANAGEMENT_API_BASE_PATH +
                 PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + TEST_ACTION_INVALID_ID, body);
+        responseOfPatch.then()
+                .log().ifValidationFails()
+                .assertThat().statusCode(HttpStatus.SC_NOT_FOUND)
+                .body("description", equalTo("No Action is configured on the given action Id."));
+
+        // Update Action Endpoint Authentication Properties with an invalid action id.
+        AuthenticationTypeProperties authenticationType = new AuthenticationTypeProperties()
+                .properties(new HashMap<String, Object>() {{
+                    put(TEST_ACCESS_TOKEN_AUTH_PROPERTY, TEST_ACCESS_TOKEN_AUTH_PROPERTY_VALUE);
+                }});
+
+        body = toJSONString(authenticationType);
+        Response responseOfPut = getResponseOfPut(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + TEST_ACTION_INVALID_ID + ACTION_BEARER_AUTH_PATH, body);
         responseOfPut.then()
                 .log().ifValidationFails()
                 .assertThat().statusCode(HttpStatus.SC_NOT_FOUND)
@@ -174,14 +191,15 @@ public class ActionsFailureTest extends ActionsTestBase {
     @Test(dependsOnMethods = {"testUpdateActionWithInvalidID"})
     public void testUpdateActionWithInvalidEndpointAuthProperties(){
 
-        action2.getEndpoint().getAuthentication().setProperties(new HashMap<String, Object>() {{
-            put(TEST_USERNAME_INVALID_AUTH_PROPERTY, TEST_USERNAME_AUTH_PROPERTY_VALUE);
-            put(TEST_PASSWORD_AUTH_PROPERTY, TEST_PASSWORD_AUTH_PROPERTY_VALUE);
-        }});
+        AuthenticationTypeProperties authenticationType = new AuthenticationTypeProperties()
+                .properties(new HashMap<String, Object>() {{
+                    put(TEST_USERNAME_INVALID_AUTH_PROPERTY, TEST_USERNAME_AUTH_PROPERTY_VALUE);
+                    put(TEST_PASSWORD_AUTH_PROPERTY, TEST_PASSWORD_AUTH_PROPERTY_VALUE);
+                }});
 
-        String body = toJSONString(action2);
+        String body = toJSONString(authenticationType);
         Response responseOfPut = getResponseOfPut(ACTION_MANAGEMENT_API_BASE_PATH +
-                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + testActionId2, body);
+                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + testActionId2 + ACTION_BASIC_AUTH_PATH, body);
         responseOfPut.then()
                 .log().ifValidationFails()
                 .assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
@@ -190,6 +208,24 @@ public class ActionsFailureTest extends ActionsTestBase {
     }
 
     @Test(dependsOnMethods = {"testUpdateActionWithInvalidEndpointAuthProperties"})
+    public void testUpdateActionWithEmptyEndpointAuthPropertyValues(){
+
+        AuthenticationTypeProperties authenticationType = new AuthenticationTypeProperties()
+                .properties(new HashMap<String, Object>() {{
+                    put(TEST_USERNAME_AUTH_PROPERTY, "");
+                    put(TEST_PASSWORD_AUTH_PROPERTY, TEST_PASSWORD_AUTH_PROPERTY_VALUE);
+                }});
+
+        String body = toJSONString(authenticationType);
+        Response responseOfPut = getResponseOfPut(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + testActionId2 + ACTION_BASIC_AUTH_PATH, body);
+        responseOfPut.then()
+                .log().ifValidationFails()
+                .assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("description", equalTo("Authentication property values cannot be empty."));
+    }
+
+    @Test(dependsOnMethods = {"testUpdateActionWithEmptyEndpointAuthPropertyValues"})
     public void testActivateActionWithInvalidID(){
 
         getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH + PRE_ISSUE_ACCESS_TOKEN_PATH +
@@ -206,6 +242,18 @@ public class ActionsFailureTest extends ActionsTestBase {
 
         getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH + PRE_ISSUE_ACCESS_TOKEN_PATH +
                 "/" + TEST_ACTION_INVALID_ID + ACTION_DEACTIVATE_PATH, "")
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NOT_FOUND)
+                .body("description", equalTo("No Action is configured on the given action Id."));
+    }
+
+    @Test(dependsOnMethods = {"testDeactivateActionWithInvalidID"})
+    public void testDeleteActionWithInvalidID(){
+
+        getResponseOfDelete(ACTION_MANAGEMENT_API_BASE_PATH + PRE_ISSUE_ACCESS_TOKEN_PATH +
+                "/" + TEST_ACTION_INVALID_ID)
                 .then()
                 .log().ifValidationFails()
                 .assertThat()
