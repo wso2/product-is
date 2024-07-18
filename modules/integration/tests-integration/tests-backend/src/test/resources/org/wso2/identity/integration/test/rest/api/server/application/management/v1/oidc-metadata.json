@@ -127,6 +127,7 @@
       "SHA256withRSA"
     ]
   },
+  "tokenEndpointAllowReusePvtKeyJwt": false,
   "idTokenSignatureAlgorithm": {
     "options": [
       "Select Option",
