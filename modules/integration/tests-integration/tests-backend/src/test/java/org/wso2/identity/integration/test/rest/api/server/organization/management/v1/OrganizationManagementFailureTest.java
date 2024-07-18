@@ -19,6 +19,7 @@
 package org.wso2.identity.integration.test.rest.api.server.organization.management.v1;
 
 import io.restassured.response.Response;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
@@ -114,7 +115,7 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     public void testSelfOnboardOrganization(String requestBodyPath) throws Exception {
 
         String body = readResource(requestBodyPath);
-        body = body.replace("${parentId}", "");
+        body = body.replace("${parentId}", StringUtils.EMPTY);
         Response response = getResponseOfPostWithOAuth2(ORGANIZATION_MANAGEMENT_API_BASE_PATH, body, m2mToken);
         response.then()
                 .log().ifValidationFails()

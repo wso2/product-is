@@ -228,7 +228,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     public void testSelfOnboardOrganization() throws IOException {
 
         String body = readResource("add-greater-hospital-organization-request-body.json");
-        body = body.replace("${parentId}", "");
+        body = body.replace("${parentId}", StringUtils.EMPTY);
         Response response = getResponseOfPostWithOAuth2(ORGANIZATION_MANAGEMENT_API_BASE_PATH, body, m2mToken);
         response.then()
                 .log().ifValidationFails()
