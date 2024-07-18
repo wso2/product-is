@@ -2272,7 +2272,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>7.3.37</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.3.40</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2352,7 +2352,7 @@
 
         <!-- OAuth2 Grant Type extensions -->
         <identity.oauth2.jwt.bearer.grant.version>2.3.1</identity.oauth2.jwt.bearer.grant.version>
-        <identity.oauth2.token.exchange.grant.version>1.1.11</identity.oauth2.token.exchange.grant.version>
+        <identity.oauth2.token.exchange.grant.version>1.1.12</identity.oauth2.token.exchange.grant.version>
 
         <!--SAML Metadata-->
         <identity.metadata.saml.version>1.8.3</identity.metadata.saml.version>
@@ -2395,8 +2395,8 @@
         <conditional.authentication.functions.version>1.2.56</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.20.38</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.7.67</identity.apps.myaccount.version>
+        <identity.apps.console.version>2.21.1</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.7.69</identity.apps.myaccount.version>
         <identity.apps.core.version>2.4.13</identity.apps.core.version>
         <identity.apps.tests.version>1.6.378</identity.apps.tests.version>
 
