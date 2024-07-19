@@ -28,6 +28,7 @@ def dcr(app_json):
     DCR_BODY['redirect_uris'] = app_json.get("redirect_uris")
     DCR_BODY['jwks_uri'] = app_json.get("jwks_uri")
     DCR_BODY['token_endpoint_auth_method'] = app_json.get("token_endpoint_auth_method")
+    DCR_BODY['token_endpoint_allow_reuse_pvt_key_jwt'] = app_json.get("token_endpoint_allow_reuse_pvt_key_jwt")
     DCR_BODY['ext_param_client_id'] = app_json.get("client_id")
     DCR_BODY['ext_param_client_secret'] = app_json.get("client_secret")
     DCR_BODY['require_pushed_authorization_requests'] = app_json.get("require_pushed_authorization_requests")
