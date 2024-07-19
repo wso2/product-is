@@ -80,6 +80,7 @@ JWKS_2 = "http://localhost:5002/jwks2"
 PVTKEYJWT_APP1 = {
     "client_name": "pvtkeyjwt_fapi1",
     "token_endpoint_auth_method": "private_key_jwt",
+    "token_endpoint_allow_reuse_pvt_key_jwt": "false",
     "client_id": "pvtkeyjwt_fapi1_client_id",
     "client_secret": "pvtkeyjwt_fapi1_client_secret",
     "redirect_uris": ["https://localhost.emobix.co.uk:8443/test/a/fapi-wso2is/callback"],
@@ -90,6 +91,7 @@ PVTKEYJWT_APP1 = {
 PVTKEYJWT_APP2 = {
     "client_name": "pvtkeyjwt_fapi2",
     "token_endpoint_auth_method": "private_key_jwt",
+    "token_endpoint_allow_reuse_pvt_key_jwt": "false",
     "client_id": "pvtkeyjwt_fapi2_client_id",
     "client_secret": "pvtkeyjwt_fapi2_client_secret",
     "redirect_uris": ["https://localhost.emobix.co.uk:8443/test/a/fapi-wso2is/callback?dummy1=lorem&dummy2=ipsum"],
@@ -120,6 +122,7 @@ MTLS_APP2 = {
 PVTKEYJWT_PAR_APP1 = {
     "client_name": "pvtkeyjwt_par_fapi1",
     "token_endpoint_auth_method": "private_key_jwt",
+    "token_endpoint_allow_reuse_pvt_key_jwt": "false",
     "client_id": "pvtkeyjwt_par_fapi1_client_id",
     "client_secret": "pvtkeyjwt_par_fapi1_client_secret",
     "redirect_uris": ["https://localhost.emobix.co.uk:8443/test/a/fapi-wso2is/callback"],
@@ -130,6 +133,7 @@ PVTKEYJWT_PAR_APP1 = {
 PVTKEYJWT_PAR_APP2 = {
     "client_name": "pvtkeyjwt_par_fapi2",
     "token_endpoint_auth_method": "private_key_jwt",
+    "token_endpoint_allow_reuse_pvt_key_jwt": "false",
     "client_id": "pvtkeyjwt_par_fapi2_client_id",
     "client_secret": "pvtkeyjwt_par_fapi2_client_secret",
     "redirect_uris": ["https://localhost.emobix.co.uk:8443/test/a/fapi-wso2is/callback?dummy1=lorem&dummy2=ipsum"],
