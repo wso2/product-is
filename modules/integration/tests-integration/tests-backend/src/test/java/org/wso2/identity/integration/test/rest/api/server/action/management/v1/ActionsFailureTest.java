@@ -34,6 +34,7 @@ import org.wso2.identity.integration.test.rest.api.server.action.management.v1.m
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.AuthenticationType;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.AuthenticationTypeProperties;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.Endpoint;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.EndpointUpdateModel;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -166,9 +167,9 @@ public class ActionsFailureTest extends ActionsTestBase {
                 .name(TEST_ACTION_UPDATED_NAME);
 
         String body = toJSONString(actionUpdateModel);
-        Response responseOfPatch = getResponseOfPatch(ACTION_MANAGEMENT_API_BASE_PATH +
+        Response responseOfPut = getResponseOfPut(ACTION_MANAGEMENT_API_BASE_PATH +
                 PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + TEST_ACTION_INVALID_ID, body);
-        responseOfPatch.then()
+        responseOfPut.then()
                 .log().ifValidationFails()
                 .assertThat().statusCode(HttpStatus.SC_NOT_FOUND)
                 .body("description", equalTo("No Action is configured on the given action Id."));
@@ -180,7 +181,7 @@ public class ActionsFailureTest extends ActionsTestBase {
                 }});
 
         body = toJSONString(authenticationType);
-        Response responseOfPut = getResponseOfPut(ACTION_MANAGEMENT_API_BASE_PATH +
+        responseOfPut = getResponseOfPut(ACTION_MANAGEMENT_API_BASE_PATH +
                 PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + TEST_ACTION_INVALID_ID + ACTION_BEARER_AUTH_PATH, body);
         responseOfPut.then()
                 .log().ifValidationFails()
