@@ -2377,7 +2377,7 @@
         <identity.oauth2.grant.organizationswitch.version>1.1.25</identity.oauth2.grant.organizationswitch.version>
 
         <!-- Hash Provider Versions-->
-        <hashprovider.pbkdf2.version>0.1.4</hashprovider.pbkdf2.version>
+        <hashprovider.pbkdf2.version>0.1.5</hashprovider.pbkdf2.version>
 
         <!-- Identity Branding Preference Management Versions -->
         <identity.branding.preference.management.version>1.1.13</identity.branding.preference.management.version>
