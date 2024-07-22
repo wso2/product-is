@@ -172,10 +172,10 @@ public class ActionsSuccessTest extends ActionsTestBase {
                                 }})));
 
         String body = toJSONString(actionUpdateModel);
-        Response responseOfPut = getResponseOfPut(ACTION_MANAGEMENT_API_BASE_PATH +
+        Response responseOfPatch = getResponseOfPatch(ACTION_MANAGEMENT_API_BASE_PATH +
                 PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + testActionId, body);
 
-        responseOfPut.then()
+        responseOfPatch.then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
@@ -191,10 +191,10 @@ public class ActionsSuccessTest extends ActionsTestBase {
         actionUpdateModel = new ActionUpdateModel().name(TEST_ACTION_NAME);
 
         body = toJSONString(actionUpdateModel);
-        responseOfPut = getResponseOfPut(ACTION_MANAGEMENT_API_BASE_PATH +
+        responseOfPatch = getResponseOfPatch(ACTION_MANAGEMENT_API_BASE_PATH +
                 PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + testActionId, body);
 
-        responseOfPut.then()
+        responseOfPatch.then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
@@ -210,10 +210,10 @@ public class ActionsSuccessTest extends ActionsTestBase {
         actionUpdateModel = new ActionUpdateModel().endpoint(new EndpointUpdateModel().uri(TEST_ENDPOINT_URI));
 
         body = toJSONString(actionUpdateModel);
-        responseOfPut = getResponseOfPut(ACTION_MANAGEMENT_API_BASE_PATH +
+        responseOfPatch = getResponseOfPatch(ACTION_MANAGEMENT_API_BASE_PATH +
                 PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + testActionId, body);
 
-        responseOfPut.then()
+        responseOfPatch.then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
@@ -235,10 +235,10 @@ public class ActionsSuccessTest extends ActionsTestBase {
                                 }})));
 
         body = toJSONString(actionUpdateModel);
-        responseOfPut = getResponseOfPut(ACTION_MANAGEMENT_API_BASE_PATH +
+        responseOfPatch = getResponseOfPatch(ACTION_MANAGEMENT_API_BASE_PATH +
                 PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + testActionId, body);
 
-        responseOfPut.then()
+        responseOfPatch.then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
@@ -260,10 +260,10 @@ public class ActionsSuccessTest extends ActionsTestBase {
                                 }})));
 
         body = toJSONString(actionUpdateModel);
-        responseOfPut = getResponseOfPut(ACTION_MANAGEMENT_API_BASE_PATH +
+        responseOfPatch = getResponseOfPatch(ACTION_MANAGEMENT_API_BASE_PATH +
                 PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + testActionId, body);
 
-        responseOfPut.then()
+        responseOfPatch.then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
@@ -287,10 +287,10 @@ public class ActionsSuccessTest extends ActionsTestBase {
                                 }})));
 
         body = toJSONString(actionUpdateModel);
-        responseOfPut = getResponseOfPut(ACTION_MANAGEMENT_API_BASE_PATH +
+        responseOfPatch = getResponseOfPatch(ACTION_MANAGEMENT_API_BASE_PATH +
                 PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + testActionId, body);
 
-        responseOfPut.then()
+        responseOfPatch.then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
@@ -314,10 +314,10 @@ public class ActionsSuccessTest extends ActionsTestBase {
                                 }})));
 
         body = toJSONString(actionUpdateModel);
-        responseOfPut = getResponseOfPut(ACTION_MANAGEMENT_API_BASE_PATH +
+        responseOfPatch = getResponseOfPatch(ACTION_MANAGEMENT_API_BASE_PATH +
                 PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + testActionId, body);
 
-        responseOfPut.then()
+        responseOfPatch.then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
