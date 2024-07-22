@@ -19,6 +19,7 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
 import io.restassured.response.Response;
+import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
@@ -38,6 +39,7 @@ import java.util.Map;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.wso2.identity.integration.test.rest.api.server.application.management.v1.Utils.assertNotBlank;
 import static org.wso2.identity.integration.test.rest.api.server.application.management.v1.Utils.extractApplicationIdFromLocationHeader;
@@ -49,6 +51,10 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
 
     private static final String MY_ACCOUNT = "My Account";
     private static final String CREATED_APP_NAME = "My SAMPLE APP";
+    private static final String CREATED_APP_TEMPLATE_ID = "Test_template_1";
+    private static final String UPDATED_APP_TEMPLATE_ID = "Test_template_2";
+    private static final String CREATED_APP_TEMPLATE_VERSION = "v1.0.0";
+    private static final String UPDATED_APP_TEMPLATE_VERSION = "v1.0.1";
     private String createdAppId;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
@@ -274,6 +280,91 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
     @Test(dependsOnMethods = {"testGetApplicationById", "testGetConfiguredAuthenticatorsOfApplication"})
     public void testDeleteApplicationById() throws Exception {
 
+        getResponseOfDelete(APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
+
+        // Verify that the application is not available.
+        getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NOT_FOUND);
+    }
+
+    @Test(dependsOnMethods = {"testDeleteApplicationById"})
+    public void testCreateApplicationWithTemplateIDAndTemplateVersion() throws Exception {
+
+        String body = readResource("create-application-with-template-id-and-template-version.json");
+        Response responseOfPost = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, body);
+        responseOfPost.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .header(HttpHeaders.LOCATION, notNullValue());
+
+        String location = responseOfPost.getHeader(HttpHeaders.LOCATION);
+        createdAppId = extractApplicationIdFromLocationHeader(location);
+        assertNotBlank(createdAppId);
+    }
+
+    @Test(dependsOnMethods = {"testCreateApplicationWithTemplateIDAndTemplateVersion"})
+    public void testGetApplicationByIdForApplicationCreatedWithTemplateIdAndTemplateVersion() throws Exception {
+
+        getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("name", equalTo(CREATED_APP_NAME))
+                .body("templateId", equalTo(CREATED_APP_TEMPLATE_ID))
+                .body("templateVersion", equalTo(CREATED_APP_TEMPLATE_VERSION));
+    }
+
+    @Test(dependsOnMethods = {"testCreateApplicationWithTemplateIDAndTemplateVersion"})
+    public void testGetApplicationsWithTemplateIdAndTemplateVersion() throws Exception {
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("filter", "name eq " + CREATED_APP_NAME);
+        params.put("attributes", "templateId,templateVersion");
+        Response response = getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH, params);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("totalResults", equalTo(1));
+
+        List<Map<String, Object>> applications = response.jsonPath().getList("applications");
+        for (Map<String, Object> application: applications) {
+            assertEquals(application.get("name"), CREATED_APP_NAME);
+            assertEquals(application.get("templateId"), CREATED_APP_TEMPLATE_ID);
+            assertEquals(application.get("templateVersion"), CREATED_APP_TEMPLATE_VERSION);
+        }
+    }
+
+    @Test(dependsOnMethods = {"testGetApplicationByIdForApplicationCreatedWithTemplateIdAndTemplateVersion",
+            "testGetApplicationsWithTemplateIdAndTemplateVersion"})
+    public void testUpdateApplicationByIdWithTemplateIdAndTemplateVersion() throws Exception {
+
+        String body = readResource("update-application-template-id-and-template-version.json");
+        Response responseOfPatch = getResponseOfPatch(APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId, body);
+        responseOfPatch.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK);
+
+        getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("name", equalTo(CREATED_APP_NAME))
+                .body("templateId", equalTo(UPDATED_APP_TEMPLATE_ID))
+                .body("templateVersion", equalTo(UPDATED_APP_TEMPLATE_VERSION));
+
+        // Delete the application.
         getResponseOfDelete(APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId)
                 .then()
                 .log().ifValidationFails()

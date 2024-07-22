@@ -1,0 +1,8 @@
+{
+  "name": "My SAMPLE APP",
+  "description": "my application 2",
+  "imageUrl": "https://localhost/image",
+  "accessUrl": "https://localhost/accessUrl",
+  "templateId": "Test_template_1",
+  "templateVersion": "v1.0.0"
+}
