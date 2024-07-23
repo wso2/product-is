@@ -173,6 +173,7 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.email.template.v2.EmailTemplatesPositiveTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.email.template.v2.EmailTemplatesNegativeTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationMetadataPositiveTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.extension.management.v1.ExtensionManagementSuccessTest"/>
             <!-- Disabling /user/{user-id}/* type of API tests as they will not be exposed in 5.9.0 -->
             <!--<class name="org.wso2.identity.integration.test.rest.api.user.challenge.v1.UserSuccessTest"/>-->
             <!--<class name="org.wso2.identity.integration.test.rest.api.user.challenge.v1.UserNegativeTest"/>-->
