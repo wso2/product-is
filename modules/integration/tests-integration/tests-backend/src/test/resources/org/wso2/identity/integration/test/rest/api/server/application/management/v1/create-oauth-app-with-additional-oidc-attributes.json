@@ -26,6 +26,7 @@
       },
       "clientAuthentication": {
         "tokenEndpointAuthMethod": "private_key_jwt",
+        "tokenEndpointAllowReusePvtKeyJwt": false,
         "tokenEndpointAuthSigningAlg": "PS256"
       },
       "requestObject": {

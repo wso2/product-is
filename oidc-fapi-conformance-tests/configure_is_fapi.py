@@ -28,6 +28,7 @@ def dcr(app_json):
     DCR_BODY['redirect_uris'] = app_json.get("redirect_uris")
     DCR_BODY['jwks_uri'] = app_json.get("jwks_uri")
     DCR_BODY['token_endpoint_auth_method'] = app_json.get("token_endpoint_auth_method")
+    DCR_BODY['token_endpoint_allow_reuse_pvt_key_jwt'] = app_json.get("token_endpoint_allow_reuse_pvt_key_jwt")
     DCR_BODY['ext_param_client_id'] = app_json.get("client_id")
     DCR_BODY['ext_param_client_secret'] = app_json.get("client_secret")
     DCR_BODY['require_pushed_authorization_requests'] = app_json.get("require_pushed_authorization_requests")
@@ -80,6 +81,26 @@ def set_application_scopes_for_consent(application_id):
         exit(1)
     else:
         print(">>> Application scope claims set successfully.")
+
+#set hybrid flow response type for the application
+def set_hybridFlow_config(application_id):
+    print(">>> Setting hybrid flow configuration.")
+    try:
+        app_details = get_service_provider_details(application_id)
+        app_details['hybridFlow'] = constants.ENABLE_HYBRID_FLOW
+        body = json.dumps(app_details)
+        response = requests.put(url=constants.APPLICATION_ENDPOINT + "/" + application_id + "/inbound-protocols/oidc",
+                                headers=constants.HEADERS_WITH_AUTH, data=body, verify=False)
+        response.raise_for_status()
+    except HTTPError as http_error:
+        print(http_error)
+        print(response.text)
+        exit(1)
+    except Exception as error:
+        print("\nError occurred: " + str(error))
+        exit(1)
+    else:
+        print(">>> Hybrid flow configuration added successfully.")
 
 # Skip login consent is true by default, here we disable it to go consent flows
 def disable_skipping_consent(application_id):
@@ -275,6 +296,7 @@ def createSPApp(app_json):
     app_details = get_service_provider_details(app_id)
     set_application_scopes_for_consent(app_id)
     disable_skipping_consent(app_id)
+    set_hybridFlow_config(app_id)
     configure_acr(app_id)
     return app_details
 
