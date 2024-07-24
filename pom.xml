@@ -2272,7 +2272,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>7.3.46</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.3.47</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2294,11 +2294,11 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.11.42</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>7.0.121</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.0.122</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.11.7</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.7</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>3.4.87</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim2.version>3.4.88</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity User Versions -->
         <identity.user.account.association.version>5.5.8</identity.user.account.association.version>
@@ -2392,11 +2392,11 @@
         <identity.app.authz.xacml.version>2.3.2</identity.app.authz.xacml.version>
         <identity.oauth.addons.version>2.5.16</identity.oauth.addons.version>
         <org.wso2.carbon.extension.identity.x509certificate.version>1.1.11</org.wso2.carbon.extension.identity.x509certificate.version>
-        <conditional.authentication.functions.version>1.2.57</conditional.authentication.functions.version>
+        <conditional.authentication.functions.version>1.2.59</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
         <identity.apps.console.version>2.21.21</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.7.85</identity.apps.myaccount.version>
+        <identity.apps.myaccount.version>2.7.87</identity.apps.myaccount.version>
         <identity.apps.core.version>2.4.19</identity.apps.core.version>
         <identity.apps.tests.version>1.6.378</identity.apps.tests.version>
 
