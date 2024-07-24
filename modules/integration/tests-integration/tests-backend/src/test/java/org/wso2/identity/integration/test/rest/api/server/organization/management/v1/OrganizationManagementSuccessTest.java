@@ -259,18 +259,19 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     public Object[][] dataProviderForFilterOrganizations() {
 
         return new Object[][] {
-                {"?filter=name co G&limit=10&recursive=false", false, false},
-                {"?filter=attributes.Country co S&limit=10&recursive=false", true, false},
-                {"?filter=attributes.Country eq Sri Lanka&limit=10&recursive=false", true, false},
-                {"?filter=attributes.Country eq Sri Lanka and name co Greater&limit=10&recursive=false", true, false},
-                {"?filter=attributes.Country eq USA&limit=10&recursive=false", false, true}
+                {"name co G", false, false},
+                {"attributes.Country co S", true, false},
+                {"attributes.Country eq Sri Lanka", true, false},
+                {"attributes.Country eq Sri Lanka and name co Greater", true, false},
+                {"attributes.Country eq USA", false, true}
         };
     }
 
     @Test(dependsOnMethods = "testGetOrganization", dataProvider = "dataProviderForFilterOrganizations")
     public void testFilterOrganizations(String filterQuery, boolean expectAttributes, boolean expectEmptyList) {
 
-        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + filterQuery;
+        String query = "?filter=" + filterQuery + "&limit=1&recursive=false";
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + query;
         Response response = getResponseOfGetWithOAuth2(endpointURL, m2mToken);
         Assert.assertNotNull(response.asString());
         response.then()
@@ -412,18 +413,19 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     public Object[][] dataProviderForGetOrganizationsMetaAttributes() {
 
         return new Object[][] {
-                {"?filter=attributes eq Country&limit=10&recursive=false", false, false},
-                {"?filter=attributes eq Region&limit=10&recursive=true", true, false},
-                {"?filter=attributes sw C and attributes ew try&limit=10&recursive=false", false, false},
-                {"?filter=attributes co A&limit=10&recursive=true", false, true},
+                {"attributes eq Country", false, false},
+                {"attributes sw C and attributes ew try", false, false},
+                {"attributes eq Region", true, false},
+                {"attributes co A", true, true},
         };
     }
 
     @Test(dependsOnMethods  = "testOnboardChildOrganization",
           dataProvider      = "dataProviderForGetOrganizationsMetaAttributes")
-    public void testGetOrganizationsMetaAttributes(String filterQuery, boolean isRecursive, boolean expectEmptyList) {
+    public void testGetOrganizationsMetaAttributes(String filter, boolean isRecursive, boolean expectEmptyList) {
 
-        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + "/meta-attributes" + filterQuery;
+        String query = "?filter=" + filter + "&limit=1&recursive=" + isRecursive;
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + "/meta-attributes" + query;
         Response response = getResponseOfGetWithOAuth2(endpointURL, m2mToken);
         Assert.assertNotNull(response.asString());
         response.then()
