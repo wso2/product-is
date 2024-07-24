@@ -1,7 +1,7 @@
 /*
- * Copyright (c) 2021, WSO2 Inc. (http://www.wso2.com).
+ * Copyright (c) 2021-2024, WSO2 LLC. (http://www.wso2.com).
  *
- * WSO2 Inc. licenses this file to you under the Apache License,
+ * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
@@ -96,7 +96,7 @@ public class BrandingPreferenceManagementFailureTest extends BrandingPreferenceM
     @Test
     public void testAddBrandingPreferenceConflict() throws IOException {
 
-        String body = readResource("add-branding-preference.json");
+        String body = readResource(ADD_ROOT_ORG_BRANDING_RESOURCE_FILE);
         // Add Branding Preference.
         Response response = getResponseOfPost(BRANDING_PREFERENCE_API_BASE_PATH, body);
         response.then()
@@ -129,7 +129,7 @@ public class BrandingPreferenceManagementFailureTest extends BrandingPreferenceM
     @Test
     public void testUpdateNotExistingBrandingPreference() throws IOException {
 
-        String body = readResource("update-branding-preference.json");
+        String body = readResource(UPDATE_ROOT_ORG_BRANDING_RESOURCE_FILE);
         Response response = getResponseOfPut(BRANDING_PREFERENCE_API_BASE_PATH, body);
         validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "BPM-60002");
     }
@@ -137,7 +137,7 @@ public class BrandingPreferenceManagementFailureTest extends BrandingPreferenceM
     @Test
     public void testUpdateBrandingPreferenceWithEmptyJsonPreference() throws IOException {
 
-        String body = readResource("add-branding-preference.json");
+        String body = readResource(ADD_ROOT_ORG_BRANDING_RESOURCE_FILE);
         // Add Branding Preference.
         Response response = getResponseOfPost(BRANDING_PREFERENCE_API_BASE_PATH, body);
         response.then()

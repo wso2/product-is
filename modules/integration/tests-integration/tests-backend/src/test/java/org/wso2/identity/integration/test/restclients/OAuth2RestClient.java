@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, WSO2 LLC. (https://www.wso2.com).
+ * Copyright (c) 2023-2024, WSO2 LLC. (https://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -42,7 +42,6 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationSharePOSTRequest;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AssociatedRolesConfig;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthorizedAPICreationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAML2ServiceProvider;
@@ -50,6 +49,7 @@ import org.wso2.identity.integration.test.rest.api.server.roles.v2.model.RoleV2;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -68,6 +68,7 @@ public class OAuth2RestClient extends RestBaseClient {
     private static final String SCIM_BASE_PATH = "scim2";
     private static final String ROLE_V2_BASE_PATH = "/v2/Roles";
     private final String applicationManagementApiBasePath;
+    private final String subOrgApplicationManagementApiBasePath;
     private final String apiResourceManagementApiBasePath;
     private final String roleV2ApiBasePath;
     private final String username;
@@ -80,6 +81,7 @@ public class OAuth2RestClient extends RestBaseClient {
 
         String tenantDomain = tenantInfo.getContextUser().getUserDomain();
         applicationManagementApiBasePath = getApplicationsPath(backendUrl, tenantDomain);
+        subOrgApplicationManagementApiBasePath = getSubOrgApplicationsPath(backendUrl, tenantDomain);
         apiResourceManagementApiBasePath = getAPIResourcesPath(backendUrl, tenantDomain);
         roleV2ApiBasePath = getSCIM2RoleV2Path(backendUrl, tenantDomain);
     }
@@ -93,6 +95,7 @@ public class OAuth2RestClient extends RestBaseClient {
      * @throws JSONException If an error occurred while creating the json string.
      */
     public String createApplication(ApplicationModel application) throws IOException, JSONException {
+
         String jsonRequest = toJSONString(application);
 
         try (CloseableHttpResponse response = getResponseOfHttpPost(applicationManagementApiBasePath, jsonRequest,
@@ -191,6 +194,35 @@ public class OAuth2RestClient extends RestBaseClient {
     }
 
     /**
+     * Get application id using application name in an organization.
+     *
+     * @param appName          Application name.
+     * @param switchedM2MToken Switched m2m token generated for the given organization.
+     * @return Application id.
+     * @throws IOException If an error occurred while retrieving the application.
+     */
+    public String getAppIdUsingAppNameInOrganization(String appName, String switchedM2MToken) throws IOException {
+
+        String endPointUrl = subOrgApplicationManagementApiBasePath + "?filter=name eq " + appName;
+        endPointUrl = endPointUrl.replace(" ", "%20");
+
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl,
+                getHeadersWithBearerToken(switchedM2MToken))) {
+            String responseBody = EntityUtils.toString(response.getEntity());
+
+            ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+            ApplicationListResponse applicationResponse =
+                    jsonWriter.readValue(responseBody, ApplicationListResponse.class);
+            List<ApplicationListItem> applications = applicationResponse.getApplications();
+            if (applications != null && !applications.isEmpty()) {
+                return applications.get(0).getId();
+            } else {
+                return StringUtils.EMPTY;
+            }
+        }
+    }
+
+    /**
      * Update an existing application.
      *
      * @param appId       Application id.
@@ -212,23 +244,23 @@ public class OAuth2RestClient extends RestBaseClient {
             }
             if (!isLegacyAuthzRuntimeEnabled()) {
                 if ((application.getAssociatedRoles() != null) && application.getAssociatedRoles().getRoles() != null) {
-                    try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeaders())) {
+                    try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest,
+                            getHeaders())) {
                         Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_FORBIDDEN,
                                 "Application update failed");
                     }
                 } else {
-                    try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeaders())) {
+                    try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest,
+                            getHeaders())) {
                         Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
                                 "Application update failed");
                     }
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new Error("Unable to update the Application");
         }
     }
-
 
     /**
      * Get all applications.
@@ -344,7 +376,18 @@ public class OAuth2RestClient extends RestBaseClient {
         if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
             return serverUrl + API_SERVER_BASE_PATH + APPLICATION_MANAGEMENT_PATH;
         } else {
-            return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + API_SERVER_BASE_PATH + APPLICATION_MANAGEMENT_PATH;
+            return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + API_SERVER_BASE_PATH +
+                    APPLICATION_MANAGEMENT_PATH;
+        }
+    }
+
+    private String getSubOrgApplicationsPath(String serverUrl, String tenantDomain) {
+
+        if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+            return serverUrl + ORGANIZATION_PATH + API_SERVER_BASE_PATH + APPLICATION_MANAGEMENT_PATH;
+        } else {
+            return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + ORGANIZATION_PATH + API_SERVER_BASE_PATH +
+                    APPLICATION_MANAGEMENT_PATH;
         }
     }
 
@@ -373,6 +416,17 @@ public class OAuth2RestClient extends RestBaseClient {
         headerList[0] = new BasicHeader(USER_AGENT_ATTRIBUTE, OAuth2Constant.USER_AGENT);
         headerList[1] = new BasicHeader(AUTHORIZATION_ATTRIBUTE, BASIC_AUTHORIZATION_ATTRIBUTE +
                 Base64.encodeBase64String((username + ":" + password).getBytes()).trim());
+        headerList[2] = new BasicHeader(CONTENT_TYPE_ATTRIBUTE, String.valueOf(ContentType.JSON));
+
+        return headerList;
+    }
+
+    private Header[] getHeadersWithBearerToken(String accessToken) {
+
+        Header[] headerList = new Header[3];
+        headerList[0] = new BasicHeader(USER_AGENT_ATTRIBUTE, OAuth2Constant.USER_AGENT);
+        headerList[1] = new BasicHeader(AUTHORIZATION_ATTRIBUTE, BEARER_TOKEN_AUTHORIZATION_ATTRIBUTE +
+                accessToken);
         headerList[2] = new BasicHeader(CONTENT_TYPE_ATTRIBUTE, String.valueOf(ContentType.JSON));
 
         return headerList;
