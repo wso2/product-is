@@ -2272,7 +2272,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>7.3.47</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.3.48</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2294,7 +2294,7 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.saml.version>5.11.42</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.oauth.version>7.0.123</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.0.125</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.11.7</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.7</identity.inbound.provisioning.scim.version>
@@ -2371,7 +2371,7 @@
         <identity.extension.utils>1.0.18</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.0.7</authenticator.auth.otp.commons.version>
 
-        <identity.org.mgt.version>1.4.42</identity.org.mgt.version>
+        <identity.org.mgt.version>1.4.43</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.1.13</identity.org.mgt.core.version>
         <identity.organization.login.version>1.1.34</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.25</identity.oauth2.grant.organizationswitch.version>
@@ -2397,7 +2397,7 @@
         <!-- Identity Portal Versions -->
         <identity.apps.console.version>2.21.21</identity.apps.console.version>
         <identity.apps.myaccount.version>2.7.87</identity.apps.myaccount.version>
-        <identity.apps.core.version>2.4.19</identity.apps.core.version>
+        <identity.apps.core.version>2.4.20</identity.apps.core.version>
         <identity.apps.tests.version>1.6.378</identity.apps.tests.version>
 
         <!-- Charon -->
