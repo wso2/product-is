@@ -126,6 +126,7 @@ public class AppBrandingPreferenceManagementFailureTest extends AppBrandingPrefe
     @Test
     public void testUpdateAppBrandingPreferenceWithEmptyJsonPreference() throws Exception {
 
+        // Add app branding preference.
         addValidAppBranding();
 
         // Update Branding Preference with empty JSON preference.

@@ -216,9 +216,8 @@ public class OAuth2RestClient extends RestBaseClient {
             List<ApplicationListItem> applications = applicationResponse.getApplications();
             if (applications != null && !applications.isEmpty()) {
                 return applications.get(0).getId();
-            } else {
-                return StringUtils.EMPTY;
             }
+            return StringUtils.EMPTY;
         }
     }
 
@@ -385,10 +384,9 @@ public class OAuth2RestClient extends RestBaseClient {
 
         if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
             return serverUrl + ORGANIZATION_PATH + API_SERVER_BASE_PATH + APPLICATION_MANAGEMENT_PATH;
-        } else {
-            return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + ORGANIZATION_PATH + API_SERVER_BASE_PATH +
-                    APPLICATION_MANAGEMENT_PATH;
         }
+        return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + ORGANIZATION_PATH + API_SERVER_BASE_PATH +
+                APPLICATION_MANAGEMENT_PATH;
     }
 
     private String getAPIResourcesPath(String serverUrl, String tenantDomain) {

@@ -67,9 +67,9 @@ public class AppBrandingPreferenceManagementTestBase extends BrandingPreferenceM
 
     protected void shareAppWithAllChildren(String appId) throws IOException, InterruptedException {
 
-        ApplicationSharePOSTRequest ppSharePOSTRequest = new ApplicationSharePOSTRequest();
-        ppSharePOSTRequest.setShareWithAllChildren(true);
-        oAuth2RestClient.shareApplication(appId, ppSharePOSTRequest);
+        ApplicationSharePOSTRequest appSharePOSTRequest = new ApplicationSharePOSTRequest();
+        appSharePOSTRequest.setShareWithAllChildren(true);
+        oAuth2RestClient.shareApplication(appId, appSharePOSTRequest);
 
         // Since application sharing is an async operation, wait for some time for it to finish.
         Thread.sleep(5000);

@@ -71,7 +71,7 @@ public class OrgMgtRestClient extends RestBaseClient {
     private static final String ORGANIZATION_MANAGEMENT_PATH = "/organizations";
     private static final String API_RESOURCE_MANAGEMENT_PATH = "/api-resources";
     private static final String AUTHORIZED_APIS_PATH = "/authorized-apis";
-    private static final String B2B_SELF_SERVICE_APP_NAME = "b2b-self-service-app";
+    private static final String B2B_APP_NAME = "b2b-app";
 
     private final OAuth2RestClient oAuth2RestClient;
     private final Tenant tenantInfo;
@@ -83,9 +83,9 @@ public class OrgMgtRestClient extends RestBaseClient {
     private final String authenticatingUserName;
     private final String authenticatingCredential;
 
-    private String selfServiceAppId;
-    private String selfServiceAppClientId;
-    private String selfServiceAppClientSecret;
+    private String b2bAppId;
+    private String b2bAppClientId;
+    private String b2bAppClientSecret;
 
     public OrgMgtRestClient(AutomationContext context, Tenant tenantInfo, String baseUrl, JSONObject authorizedAPIs)
             throws Exception {
@@ -102,9 +102,10 @@ public class OrgMgtRestClient extends RestBaseClient {
                 buildPath(baseUrl, tenantInfo.getDomain(), ORGANIZATION_MANAGEMENT_PATH);
         this.apiResourceManagementApiBasePath =
                 buildPath(baseUrl, tenantInfo.getDomain(), API_RESOURCE_MANAGEMENT_PATH);
-        this.subOrganizationManagementApiBasePath = getSubOrgOrganizationsPath(baseUrl, tenantInfo.getDomain());
+        this.subOrganizationManagementApiBasePath =
+                buildSubOrgPath(baseUrl, tenantInfo.getDomain(), ORGANIZATION_MANAGEMENT_PATH);
 
-        createB2BSelfServiceApplication(authorizedAPIs);
+        createB2BApplication(authorizedAPIs);
     }
 
     /**
@@ -178,15 +179,15 @@ public class OrgMgtRestClient extends RestBaseClient {
     }
 
     /**
-     * Get an M2M access token from the B2B self-service application.
+     * Get an M2M access token from the B2B application.
      *
-     * @return Access token of the B2B self-service application.
+     * @return Access token of the B2B application.
      * @throws Exception If an error occurs while retrieving the access token.
      */
     public String getM2MAccessToken() throws Exception {
 
         OpenIDConnectConfiguration openIDConnectConfiguration =
-                oAuth2RestClient.getOIDCInboundDetails(selfServiceAppId);
+                oAuth2RestClient.getOIDCInboundDetails(b2bAppId);
 
         URI tokenEndpoint = new URI(getTenantQualifiedURL(OAuth2Constant.ACCESS_TOKEN_ENDPOINT,
                 tenantInfo.getDomain()));
@@ -216,7 +217,7 @@ public class OrgMgtRestClient extends RestBaseClient {
         HttpPost httpPost =
                 new HttpPost(getTenantQualifiedURL(OAuth2Constant.ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()));
         httpPost.setHeader(AUTHORIZATION_ATTRIBUTE, BASIC_AUTHORIZATION_ATTRIBUTE + new String(Base64.encodeBase64(
-                (selfServiceAppClientId + ":" + selfServiceAppClientSecret).getBytes())));
+                (b2bAppClientId + ":" + b2bAppClientSecret).getBytes())));
         httpPost.setHeader(CONTENT_TYPE_ATTRIBUTE, "application/x-www-form-urlencoded");
         httpPost.setEntity(new UrlEncodedFormEntity(urlParameters));
 
@@ -232,31 +233,31 @@ public class OrgMgtRestClient extends RestBaseClient {
         return (String) responseJSONBody.get(OAuth2Constant.ACCESS_TOKEN);
     }
 
-    private void createB2BSelfServiceApplication(JSONObject authorizedAPIs)
+    private void createB2BApplication(JSONObject authorizedAPIs)
             throws IOException, JSONException, InterruptedException {
 
-        String body = getB2BSelfServiceAppCreationRequestBody();
+        String body = getB2BAppCreationRequestBody();
 
         try (CloseableHttpResponse appCreationResponse = getResponseOfHttpPost(applicationManagementApiBasePath, body,
                 getHeaders())) {
             String[] locationElements =
                     appCreationResponse.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
-            selfServiceAppId = locationElements[locationElements.length - 1];
+            b2bAppId = locationElements[locationElements.length - 1];
         }
 
-        // Authorize necessary APIs for self-service app.
-        updateSelfServiceAppAuthorizedAPIs(authorizedAPIs);
+        // Authorize necessary APIs for app.
+        updateB2BAppAuthorizedAPIs(authorizedAPIs);
 
-        // Share the B2B self-service app with all child organizations.
+        // Share the B2B app with all child organizations.
         ApplicationSharePOSTRequest applicationSharePOSTRequest = new ApplicationSharePOSTRequest();
         applicationSharePOSTRequest.setShareWithAllChildren(true);
-        oAuth2RestClient.shareApplication(selfServiceAppId, applicationSharePOSTRequest);
+        oAuth2RestClient.shareApplication(b2bAppId, applicationSharePOSTRequest);
 
         // Since application sharing is an async operation, wait for some time for it to finish.
         Thread.sleep(5000);
     }
 
-    private void updateSelfServiceAppAuthorizedAPIs(JSONObject authorizedAPIs) throws JSONException, IOException {
+    private void updateB2BAppAuthorizedAPIs(JSONObject authorizedAPIs) throws JSONException, IOException {
 
         for (Iterator<String> apiNameIterator = authorizedAPIs.keys(); apiNameIterator.hasNext(); ) {
             String apiName = apiNameIterator.next();
@@ -277,16 +278,16 @@ public class OrgMgtRestClient extends RestBaseClient {
             authorizedAPIRequestBody.put("scopes", requiredScopes);
 
             try (CloseableHttpResponse appAuthorizedAPIsResponse = getResponseOfHttpPost(
-                    applicationManagementApiBasePath + PATH_SEPARATOR + selfServiceAppId + AUTHORIZED_APIS_PATH,
+                    applicationManagementApiBasePath + PATH_SEPARATOR + b2bAppId + AUTHORIZED_APIS_PATH,
                     authorizedAPIRequestBody.toString(), getHeaders())) {
                 assertEquals(appAuthorizedAPIsResponse.getStatusLine().getStatusCode(), HttpStatus.SC_OK,
                         String.format("Authorized APIs update failed for application with ID: %s for API: %s.",
-                                selfServiceAppId, apiName));
+                                b2bAppId, apiName));
             }
         }
     }
 
-    private String getB2BSelfServiceAppCreationRequestBody() throws JSONException {
+    private String getB2BAppCreationRequestBody() throws JSONException {
 
         JSONObject oidc = new JSONObject();
         oidc.put("grantTypes", new String[]{"client_credentials", "organization_switch"});
@@ -295,13 +296,12 @@ public class OrgMgtRestClient extends RestBaseClient {
         inboundProtocolConfiguration.put("oidc", oidc);
 
         JSONObject b2bSelfServiceApp = new JSONObject();
-        b2bSelfServiceApp.put("name", B2B_SELF_SERVICE_APP_NAME);
+        b2bSelfServiceApp.put("name", B2B_APP_NAME);
         b2bSelfServiceApp.put("templateId", "custom-application-oidc");
         b2bSelfServiceApp.put("inboundProtocolConfiguration", inboundProtocolConfiguration);
 
         return b2bSelfServiceApp.toString();
     }
-
 
     private String buildOrgCreationRequestBody(String orgName, String parentOrgId) throws JSONException {
 
@@ -316,10 +316,10 @@ public class OrgMgtRestClient extends RestBaseClient {
     private TokenRequest getTokenRequest(URI tokenEndpoint,
                                          OpenIDConnectConfiguration openIDConnectConfiguration) {
 
-        selfServiceAppClientId = openIDConnectConfiguration.getClientId();
-        selfServiceAppClientSecret = openIDConnectConfiguration.getClientSecret();
-        ClientID clientID = new ClientID(selfServiceAppClientId);
-        Secret clientSecret = new Secret(selfServiceAppClientSecret);
+        b2bAppClientId = openIDConnectConfiguration.getClientId();
+        b2bAppClientSecret = openIDConnectConfiguration.getClientSecret();
+        ClientID clientID = new ClientID(b2bAppClientId);
+        Secret clientSecret = new Secret(b2bAppClientSecret);
         ClientAuthentication clientAuth = new ClientSecretBasic(clientID, clientSecret);
 
         AuthorizationGrant clientCredentialsGrant = new ClientCredentialsGrant();
@@ -365,19 +365,17 @@ public class OrgMgtRestClient extends RestBaseClient {
 
         if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
             return serverUrl + API_SERVER_BASE_PATH + endpointURL;
-        } else {
-            return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + API_SERVER_BASE_PATH + endpointURL;
         }
+        return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + API_SERVER_BASE_PATH + endpointURL;
     }
 
-    private String getSubOrgOrganizationsPath(String serverUrl, String tenantDomain) {
+    private String buildSubOrgPath(String serverUrl, String tenantDomain, String endpointURL) {
 
         if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
-            return serverUrl + ORGANIZATION_PATH + API_SERVER_BASE_PATH + ORGANIZATION_MANAGEMENT_PATH;
-        } else {
-            return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + ORGANIZATION_PATH + API_SERVER_BASE_PATH +
-                    ORGANIZATION_MANAGEMENT_PATH;
+            return serverUrl + ORGANIZATION_PATH + API_SERVER_BASE_PATH + endpointURL;
         }
+        return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + ORGANIZATION_PATH + API_SERVER_BASE_PATH +
+                endpointURL;
     }
 
     /**
@@ -387,7 +385,7 @@ public class OrgMgtRestClient extends RestBaseClient {
      */
     public void closeHttpClient() throws IOException {
 
-        oAuth2RestClient.deleteApplication(selfServiceAppId);
+        oAuth2RestClient.deleteApplication(b2bAppId);
         oAuth2RestClient.closeHttpClient();
         client.close();
     }
