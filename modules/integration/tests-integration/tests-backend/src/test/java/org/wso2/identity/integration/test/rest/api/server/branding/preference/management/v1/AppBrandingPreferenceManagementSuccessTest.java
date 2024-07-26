@@ -101,7 +101,6 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
 
         super.conclude();
         deleteTestApp(rootAppId);
-        deleteOrgBranding();
         deleteOrganizations();
         oAuth2RestClient.closeHttpClient();
         orgMgtRestClient.closeHttpClient();
@@ -590,6 +589,39 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
     }
 
     @Test(dependsOnMethods = {"testDeleteL2AppBrandingPreference"})
+    public void testResolveL2AppBrandingAfterL2AppBrandingDelete() throws Exception {
+
+        Response response = getResolvedAppBrandingInOrg(level2OrgId, level2AppId);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("type", equalTo(ORGANIZATION_TYPE))
+                .body("name", equalTo(level2OrgId))
+                .body("locale", equalTo(DEFAULT_LOCALE));
+
+        assertBrandingPreferences(ADD_L2_ORG_BRANDING_RESOURCE_FILE, response);
+    }
+
+    @Test(dependsOnMethods = {"testResolveL2AppBrandingAfterL2AppBrandingDelete"})
+    public void testResolveL2AppBrandingAfterL2OrgBrandingDelete() throws Exception {
+
+        // Delete level 2 organization's org-level branding preferences.
+        deleteOrgBrandingPreference(level2OrgId);
+
+        Response response = getResolvedAppBrandingInOrg(level2OrgId, level2AppId);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("type", equalTo(APPLICATION_TYPE))
+                .body("name", equalTo(level1AppId))
+                .body("locale", equalTo(DEFAULT_LOCALE));
+
+        assertBrandingPreferences(UPDATE_L1_APP_BRANDING_RESOURCE_FILE, response);
+    }
+
+    @Test(dependsOnMethods = {"testResolveL2AppBrandingAfterL2OrgBrandingDelete"})
     public void testDeleteL1AppBrandingPreference() throws Exception {
 
         RestAssured.basePath = buildTenantedBasePathForOrg(tenant);
@@ -603,6 +635,69 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
     }
 
     @Test(dependsOnMethods = {"testDeleteL1AppBrandingPreference"})
+    public void testResolveL1AppBrandingAfterL1AppBrandingDelete() throws Exception {
+
+        Response response = getResolvedAppBrandingInOrg(level1OrgId, level1AppId);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("type", equalTo(ORGANIZATION_TYPE))
+                .body("name", equalTo(level1OrgId))
+                .body("locale", equalTo(DEFAULT_LOCALE));
+
+        assertBrandingPreferences(ADD_L1_ORG_BRANDING_RESOURCE_FILE, response);
+    }
+
+    @Test(dependsOnMethods = {"testResolveL1AppBrandingAfterL1AppBrandingDelete"})
+    public void testResolveL2AppBrandingAfterL1AppBrandingDelete() throws Exception {
+
+        Response response = getResolvedAppBrandingInOrg(level2OrgId, level2AppId);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("type", equalTo(ORGANIZATION_TYPE))
+                .body("name", equalTo(level1OrgId))
+                .body("locale", equalTo(DEFAULT_LOCALE));
+
+        assertBrandingPreferences(ADD_L1_ORG_BRANDING_RESOURCE_FILE, response);
+    }
+
+    @Test(dependsOnMethods = {"testResolveL2AppBrandingAfterL1AppBrandingDelete"})
+    public void testResolveL1AppBrandingAfterL1OrgBrandingDelete() throws Exception {
+
+        // Delete level 1 organization's org-level branding preferences.
+        deleteOrgBrandingPreference(level1OrgId);
+
+        Response response = getResolvedAppBrandingInOrg(level1OrgId, level1AppId);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("type", equalTo(APPLICATION_TYPE))
+                .body("name", equalTo(rootAppId))
+                .body("locale", equalTo(DEFAULT_LOCALE));
+
+        assertBrandingPreferences(UPDATE_ROOT_APP_BRANDING_RESOURCE_FILE, response);
+    }
+
+    @Test(dependsOnMethods = {"testResolveL1AppBrandingAfterL1OrgBrandingDelete"})
+    public void testResolveL2AppBrandingAfterL1OrgBrandingDelete() throws Exception {
+
+        Response response = getResolvedAppBrandingInOrg(level2OrgId, level2AppId);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("type", equalTo(APPLICATION_TYPE))
+                .body("name", equalTo(rootAppId))
+                .body("locale", equalTo(DEFAULT_LOCALE));
+
+        assertBrandingPreferences(UPDATE_ROOT_APP_BRANDING_RESOURCE_FILE, response);
+    }
+
+    @Test(dependsOnMethods = {"testResolveL2AppBrandingAfterL1OrgBrandingDelete"})
     public void testDeleteRootAppBrandingPreference() throws IOException {
 
         Response response = getResponseOfDelete(BRANDING_PREFERENCE_API_BASE_PATH + String.format
@@ -611,6 +706,98 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
+    }
+
+    @Test(dependsOnMethods = {"testDeleteRootAppBrandingPreference"})
+    public void testGetRootAppBrandingAfterRootAppBrandingDelete() throws Exception {
+
+        Response response = getResponseOfGet(BRANDING_PREFERENCE_API_BASE_PATH + String.format
+                (PREFERENCE_COMPONENT_WITH_QUERY_PARAM, APPLICATION_TYPE, rootAppId, DEFAULT_LOCALE));
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NOT_FOUND);
+    }
+
+    @Test(dependsOnMethods = {"testGetRootAppBrandingAfterRootAppBrandingDelete"})
+    public void testResolveRootAppBrandingAfterRootAppBrandingDelete() throws Exception {
+
+        Response response = getResponseOfGet(BRANDING_PREFERENCE_RESOLVE_PATH + String.format
+                (PREFERENCE_COMPONENT_WITH_QUERY_PARAM, APPLICATION_TYPE, rootAppId, DEFAULT_LOCALE));
+
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("type", equalTo(ORGANIZATION_TYPE))
+                .body("name", equalTo(tenant))
+                .body("locale", equalTo(DEFAULT_LOCALE));
+
+        assertBrandingPreferences(ADD_ROOT_ORG_BRANDING_RESOURCE_FILE, response);
+    }
+
+    @Test(dependsOnMethods = {"testResolveRootAppBrandingAfterRootAppBrandingDelete"})
+    public void testResolveL1AppBrandingAfterRootAppBrandingDelete() throws Exception {
+
+        Response response = getResolvedAppBrandingInOrg(level1OrgId, level1AppId);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("type", equalTo(ORGANIZATION_TYPE))
+                .body("name", equalTo(tenant))
+                .body("locale", equalTo(DEFAULT_LOCALE));
+
+        assertBrandingPreferences(ADD_ROOT_ORG_BRANDING_RESOURCE_FILE, response);
+    }
+
+    @Test(dependsOnMethods = {"testResolveL1AppBrandingAfterRootAppBrandingDelete"})
+    public void testResolveL2AppBrandingAfterRootAppBrandingDelete() throws Exception {
+
+        Response response = getResolvedAppBrandingInOrg(level2OrgId, level2AppId);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("type", equalTo(ORGANIZATION_TYPE))
+                .body("name", equalTo(tenant))
+                .body("locale", equalTo(DEFAULT_LOCALE));
+
+        assertBrandingPreferences(ADD_ROOT_ORG_BRANDING_RESOURCE_FILE, response);
+    }
+
+    @Test(dependsOnMethods = {"testResolveL2AppBrandingAfterRootAppBrandingDelete"})
+    public void testResolveRootAppBrandingAfterRootOrgBrandingDelete() throws Exception {
+
+        // Delete root organization's org-level branding preferences.
+        deleteRootOrgBrandingPreference();
+
+        Response response = getResponseOfGet(BRANDING_PREFERENCE_RESOLVE_PATH + String.format
+                (PREFERENCE_COMPONENT_WITH_QUERY_PARAM, APPLICATION_TYPE, rootAppId, DEFAULT_LOCALE));
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NOT_FOUND);
+    }
+
+    @Test(dependsOnMethods = {"testResolveRootAppBrandingAfterRootOrgBrandingDelete"})
+    public void testResolveL1AppBrandingAfterRootOrgBrandingDelete() throws Exception {
+
+        Response response = getResolvedAppBrandingInOrg(level1OrgId, level1AppId);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NOT_FOUND);
+    }
+
+    @Test(dependsOnMethods = {"testResolveL1AppBrandingAfterRootOrgBrandingDelete"})
+    public void testResolveL2AppBrandingAfterRootOrgBrandingDelete() throws Exception {
+
+        Response response = getResolvedAppBrandingInOrg(level2OrgId, level2AppId);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
     private void assertBrandingPreferences(String filename, Response response) throws Exception {
@@ -628,13 +815,6 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
 
         orgMgtRestClient.deleteSubOrganization(level2OrgId, level1OrgId);
         orgMgtRestClient.deleteOrganization(level1OrgId);
-    }
-
-    private void deleteOrgBranding() throws Exception {
-
-        deleteOrgBrandingPreference(level2OrgId);
-        deleteOrgBrandingPreference(level1OrgId);
-        deleteRootOrgBrandingPreference();
     }
 
     private void addRootOrgBrandingPreference() throws IOException, JSONException {
@@ -666,14 +846,12 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
 
     private void deleteRootOrgBrandingPreference() throws Exception {
 
-        RestAssured.basePath = basePath;
         Response response = getResponseOfDelete(BRANDING_PREFERENCE_API_BASE_PATH + String.format
                 (PREFERENCE_COMPONENT_WITH_QUERY_PARAM, ORGANIZATION_TYPE, tenant, DEFAULT_LOCALE));
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
-        RestAssured.basePath = StringUtils.EMPTY;
     }
 
     private void deleteOrgBrandingPreference(String orgId) throws Exception {
