@@ -72,6 +72,7 @@ public class ApplicationListItem  {
     private String self;
     private AdvancedApplicationConfiguration advancedConfigurations;
     private String templateId;
+    private String templateVersion;
     private AssociatedRolesConfig associatedRoles;
 
     /**
@@ -291,6 +292,25 @@ public class ApplicationListItem  {
     }
 
     /**
+     * Version of the template used to create the application.
+     **/
+    public ApplicationListItem templateVersion(String templateVersion) {
+
+        this.templateVersion = templateVersion;
+        return this;
+    }
+
+    @ApiModelProperty(example = "v1.0.0", value = "Version of the template used to create the application.")
+    @JsonProperty("templateVersion")
+    @Valid
+    public String getTemplateVersion() {
+        return templateVersion;
+    }
+    public void setTemplateVersion(String templateVersion) {
+        this.templateVersion = templateVersion;
+    }
+
+    /**
      **/
     public ApplicationListItem associatedRoles(AssociatedRolesConfig associatedRoles) {
 
@@ -330,12 +350,13 @@ public class ApplicationListItem  {
                 Objects.equals(this.self, applicationListItem.self) &&
                 Objects.equals(this.advancedConfigurations, applicationListItem.advancedConfigurations) &&
                 Objects.equals(this.templateId, applicationListItem.templateId) &&
+                Objects.equals(this.templateVersion, applicationListItem.templateVersion) &&
                 Objects.equals(this.associatedRoles, applicationListItem.associatedRoles);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, image, accessUrl, clientId, issuer, realm, access, self, advancedConfigurations, templateId, associatedRoles);
+        return Objects.hash(id, name, description, image, accessUrl, clientId, issuer, realm, access, self, advancedConfigurations, templateId, templateVersion, associatedRoles);
     }
 
     @Override
@@ -356,6 +377,7 @@ public class ApplicationListItem  {
         sb.append("    self: ").append(toIndentedString(self)).append("\n");
         sb.append("    advancedConfigurations: ").append(toIndentedString(advancedConfigurations)).append("\n");
         sb.append("    templateId: ").append(toIndentedString(templateId)).append("\n");
+        sb.append("    templateVersion: ").append(toIndentedString(templateVersion)).append("\n");
         sb.append("    associatedRoles: ").append(toIndentedString(associatedRoles)).append("\n");
         sb.append("}");
         return sb.toString();

@@ -19,7 +19,9 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
 import io.restassured.response.Response;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
@@ -29,6 +31,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.application.mgt.ApplicationConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationListItem;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationListResponse;
 
 import java.io.IOException;
@@ -64,32 +67,6 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
     }
 
     @Test
-    public void testGetAllApplications() throws IOException {
-
-        Response response = getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH);
-        response.then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK);
-        ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
-        ApplicationListResponse listResponse = jsonWriter.readValue(response.asString(), ApplicationListResponse.class);
-
-        assertNotNull(listResponse);
-        Assert.assertFalse(listResponse.getApplications()
-                        .stream()
-                        .anyMatch(appBasicInfo -> appBasicInfo.getName().equals(ApplicationConstants.LOCAL_SP)),
-                "Default resident service provider '" + ApplicationConstants.LOCAL_SP + "' is listed by the API");
-
-        if (StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            // Check whether the default "My Account" app exists.
-            Assert.assertTrue(listResponse.getApplications()
-                            .stream()
-                            .anyMatch(appBasicInfo -> appBasicInfo.getName().equals(MY_ACCOUNT)),
-                    "Default application 'My Account' is not listed by the API.");
-        }
-    }
-
-    @Test
     public void testGetResidentApplication() throws IOException {
 
         Response response = getResponseOfGet(RESIDENT_APP_API_BASE_PATH);
@@ -118,6 +95,43 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
     }
 
     @Test(dependsOnMethods = {"createApplication"})
+    public void testGetAllApplications() throws IOException {
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("attributes", "templateId,templateVersion");
+        Response response = getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH, params);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK);
+        System.out.println(response.asString());
+        ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+        ApplicationListResponse listResponse = jsonWriter.readValue(response.asString(), ApplicationListResponse.class);
+
+        assertNotNull(listResponse);
+        Assert.assertFalse(listResponse.getApplications()
+                        .stream()
+                        .anyMatch(appBasicInfo -> appBasicInfo.getName().equals(ApplicationConstants.LOCAL_SP)),
+                "Default resident service provider '" + ApplicationConstants.LOCAL_SP + "' is listed by the API");
+
+        if (StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
+            // Check whether the default "My Account" app exists.
+            Assert.assertTrue(listResponse.getApplications()
+                            .stream()
+                            .anyMatch(appBasicInfo -> appBasicInfo.getName().equals(MY_ACCOUNT)),
+                    "Default application 'My Account' is not listed by the API.");
+        }
+
+        // Verify that the newly created app exists and has the required properties.
+        Optional<ApplicationListItem> newlyCreatedAppData = listResponse.getApplications().stream()
+                .filter(appBasicInfo -> appBasicInfo.getName().equals(CREATED_APP_NAME)).findFirst();
+        Assert.assertTrue(newlyCreatedAppData.isPresent(),
+                "Newly Created application '" + CREATED_APP_NAME + "' is not listed by the API.");
+        Assert.assertEquals(newlyCreatedAppData.get().getTemplateId(), CREATED_APP_TEMPLATE_ID);
+        Assert.assertEquals(newlyCreatedAppData.get().getTemplateVersion(), CREATED_APP_TEMPLATE_VERSION);
+    }
+
+    @Test(dependsOnMethods = {"createApplication"})
     public void testGetApplicationById() throws Exception {
 
         getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId)
@@ -125,7 +139,9 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("name", equalTo(CREATED_APP_NAME));
+                .body("name", equalTo(CREATED_APP_NAME))
+                .body("templateId", equalTo(CREATED_APP_TEMPLATE_ID))
+                .body("templateVersion", equalTo(CREATED_APP_TEMPLATE_VERSION));
     }
 
     @Test(dependsOnMethods = {"createApplication"})
@@ -277,78 +293,10 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
                 .statusCode(HttpStatus.SC_NO_CONTENT);
     }
 
-    @Test(dependsOnMethods = {"testGetApplicationById", "testGetConfiguredAuthenticatorsOfApplication"})
-    public void testDeleteApplicationById() throws Exception {
+    @Test(dependsOnMethods = {"createApplication"})
+    public void testUpdateApplicationById() throws Exception {
 
-        getResponseOfDelete(APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId)
-                .then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_NO_CONTENT);
-
-        // Verify that the application is not available.
-        getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId)
-                .then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_NOT_FOUND);
-    }
-
-    @Test(dependsOnMethods = {"testDeleteApplicationById"})
-    public void testCreateApplicationWithTemplateIDAndTemplateVersion() throws Exception {
-
-        String body = readResource("create-application-with-template-id-and-template-version.json");
-        Response responseOfPost = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, body);
-        responseOfPost.then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_CREATED)
-                .header(HttpHeaders.LOCATION, notNullValue());
-
-        String location = responseOfPost.getHeader(HttpHeaders.LOCATION);
-        createdAppId = extractApplicationIdFromLocationHeader(location);
-        assertNotBlank(createdAppId);
-    }
-
-    @Test(dependsOnMethods = {"testCreateApplicationWithTemplateIDAndTemplateVersion"})
-    public void testGetApplicationByIdForApplicationCreatedWithTemplateIdAndTemplateVersion() throws Exception {
-
-        getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId)
-                .then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK)
-                .body("name", equalTo(CREATED_APP_NAME))
-                .body("templateId", equalTo(CREATED_APP_TEMPLATE_ID))
-                .body("templateVersion", equalTo(CREATED_APP_TEMPLATE_VERSION));
-    }
-
-    @Test(dependsOnMethods = {"testCreateApplicationWithTemplateIDAndTemplateVersion"})
-    public void testGetApplicationsWithTemplateIdAndTemplateVersion() throws Exception {
-
-        Map<String, Object> params = new HashMap<>();
-        params.put("filter", "name eq " + CREATED_APP_NAME);
-        params.put("attributes", "templateId,templateVersion");
-        Response response = getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH, params);
-        response.then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK)
-                .body("totalResults", equalTo(1));
-
-        List<Map<String, Object>> applications = response.jsonPath().getList("applications");
-        for (Map<String, Object> application: applications) {
-            assertEquals(application.get("name"), CREATED_APP_NAME);
-            assertEquals(application.get("templateId"), CREATED_APP_TEMPLATE_ID);
-            assertEquals(application.get("templateVersion"), CREATED_APP_TEMPLATE_VERSION);
-        }
-    }
-
-    @Test(dependsOnMethods = {"testGetApplicationByIdForApplicationCreatedWithTemplateIdAndTemplateVersion",
-            "testGetApplicationsWithTemplateIdAndTemplateVersion"})
-    public void testUpdateApplicationByIdWithTemplateIdAndTemplateVersion() throws Exception {
-
-        String body = readResource("update-application-template-id-and-template-version.json");
+        String body = readResource("update-application.json");
         Response responseOfPatch = getResponseOfPatch(APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId, body);
         responseOfPatch.then()
                 .log().ifValidationFails()
@@ -363,8 +311,11 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
                 .body("name", equalTo(CREATED_APP_NAME))
                 .body("templateId", equalTo(UPDATED_APP_TEMPLATE_ID))
                 .body("templateVersion", equalTo(UPDATED_APP_TEMPLATE_VERSION));
+    }
 
-        // Delete the application.
+    @Test(dependsOnMethods = {"testGetApplicationById", "testGetConfiguredAuthenticatorsOfApplication", "testUpdateApplicationById"})
+    public void testDeleteApplicationById() throws Exception {
+
         getResponseOfDelete(APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId)
                 .then()
                 .log().ifValidationFails()
