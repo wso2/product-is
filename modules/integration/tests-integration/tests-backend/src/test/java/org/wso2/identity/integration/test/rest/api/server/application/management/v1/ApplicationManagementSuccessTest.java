@@ -74,7 +74,6 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK);
-        System.out.println(response.asString());
         ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
         ApplicationListResponse listResponse = jsonWriter.readValue(response.asString(), ApplicationListResponse.class);
 
