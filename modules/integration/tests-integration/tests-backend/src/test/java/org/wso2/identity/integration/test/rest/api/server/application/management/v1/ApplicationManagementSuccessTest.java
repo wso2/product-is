@@ -67,6 +67,33 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
     }
 
     @Test
+    public void testGetAllApplications() throws IOException {
+
+        Response response = getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK);
+        System.out.println(response.asString());
+        ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+        ApplicationListResponse listResponse = jsonWriter.readValue(response.asString(), ApplicationListResponse.class);
+
+        assertNotNull(listResponse);
+        Assert.assertFalse(listResponse.getApplications()
+                        .stream()
+                        .anyMatch(appBasicInfo -> appBasicInfo.getName().equals(ApplicationConstants.LOCAL_SP)),
+                "Default resident service provider '" + ApplicationConstants.LOCAL_SP + "' is listed by the API");
+
+        if (StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
+            // Check whether the default "My Account" app exists.
+            Assert.assertTrue(listResponse.getApplications()
+                            .stream()
+                            .anyMatch(appBasicInfo -> appBasicInfo.getName().equals(MY_ACCOUNT)),
+                    "Default application 'My Account' is not listed by the API.");
+        }
+    }
+
+    @Test
     public void testGetResidentApplication() throws IOException {
 
         Response response = getResponseOfGet(RESIDENT_APP_API_BASE_PATH);
@@ -95,7 +122,7 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
     }
 
     @Test(dependsOnMethods = {"createApplication"})
-    public void testGetAllApplications() throws IOException {
+    public void testGetAllApplicationsWithParams() throws IOException {
 
         Map<String, Object> params = new HashMap<>();
         params.put("attributes", "templateId,templateVersion");
@@ -104,23 +131,10 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK);
-        System.out.println(response.asString());
         ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
         ApplicationListResponse listResponse = jsonWriter.readValue(response.asString(), ApplicationListResponse.class);
 
         assertNotNull(listResponse);
-        Assert.assertFalse(listResponse.getApplications()
-                        .stream()
-                        .anyMatch(appBasicInfo -> appBasicInfo.getName().equals(ApplicationConstants.LOCAL_SP)),
-                "Default resident service provider '" + ApplicationConstants.LOCAL_SP + "' is listed by the API");
-
-        if (StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            // Check whether the default "My Account" app exists.
-            Assert.assertTrue(listResponse.getApplications()
-                            .stream()
-                            .anyMatch(appBasicInfo -> appBasicInfo.getName().equals(MY_ACCOUNT)),
-                    "Default application 'My Account' is not listed by the API.");
-        }
 
         // Verify that the newly created app exists and has the required properties.
         Optional<ApplicationListItem> newlyCreatedAppData = listResponse.getApplications().stream()
