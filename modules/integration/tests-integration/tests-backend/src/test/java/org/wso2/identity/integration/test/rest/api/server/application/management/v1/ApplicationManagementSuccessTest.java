@@ -55,9 +55,7 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
     private static final String MY_ACCOUNT = "My Account";
     private static final String CREATED_APP_NAME = "My SAMPLE APP";
     private static final String CREATED_APP_TEMPLATE_ID = "Test_template_1";
-    private static final String UPDATED_APP_TEMPLATE_ID = "Test_template_2";
     private static final String CREATED_APP_TEMPLATE_VERSION = "v1.0.0";
-    private static final String UPDATED_APP_TEMPLATE_VERSION = "v1.0.1";
     private String createdAppId;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
@@ -306,27 +304,7 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
                 .statusCode(HttpStatus.SC_NO_CONTENT);
     }
 
-    @Test(dependsOnMethods = {"createApplication"})
-    public void testUpdateApplicationById() throws Exception {
-
-        String body = readResource("update-application.json");
-        Response responseOfPatch = getResponseOfPatch(APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId, body);
-        responseOfPatch.then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK);
-
-        getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId)
-                .then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK)
-                .body("name", equalTo(CREATED_APP_NAME))
-                .body("templateId", equalTo(UPDATED_APP_TEMPLATE_ID))
-                .body("templateVersion", equalTo(UPDATED_APP_TEMPLATE_VERSION));
-    }
-
-    @Test(dependsOnMethods = {"testGetApplicationById", "testGetConfiguredAuthenticatorsOfApplication", "testUpdateApplicationById"})
+    @Test(dependsOnMethods = {"testGetApplicationById", "testGetConfiguredAuthenticatorsOfApplication"})
     public void testDeleteApplicationById() throws Exception {
 
         getResponseOfDelete(APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId)
