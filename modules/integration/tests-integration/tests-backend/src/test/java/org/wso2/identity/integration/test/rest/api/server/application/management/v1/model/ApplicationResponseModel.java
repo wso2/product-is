@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2023-2024, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -39,6 +39,7 @@ public class ApplicationResponseModel {
     private String issuer;
     private String realm;
     private String templateId;
+    private String templateVersion;
     private Boolean isManagementApp;
     private Boolean isB2BSelfServiceApp;
     private Boolean applicationEnabled;
@@ -266,6 +267,25 @@ public class ApplicationResponseModel {
     }
 
     /**
+     * Version of the template used to create the application.
+     **/
+    public ApplicationResponseModel templateVersion(String templateVersion) {
+
+        this.templateVersion = templateVersion;
+        return this;
+    }
+
+    @ApiModelProperty(example = "v1.0.0", value = "Version of the template used to create the application.")
+    @JsonProperty("templateVersion")
+    @Valid
+    public String getTemplateVersion() {
+        return templateVersion;
+    }
+    public void setTemplateVersion(String templateVersion) {
+        this.templateVersion = templateVersion;
+    }
+
+    /**
      * Decides whether the application used to access System APIs
      **/
     public ApplicationResponseModel isManagementApp(Boolean isManagementApp) {
@@ -470,6 +490,7 @@ public class ApplicationResponseModel {
                 Objects.equals(this.issuer, applicationResponseModel.issuer) &&
                 Objects.equals(this.realm, applicationResponseModel.realm) &&
                 Objects.equals(this.templateId, applicationResponseModel.templateId) &&
+                Objects.equals(this.templateVersion, applicationResponseModel.templateVersion) &&
                 Objects.equals(this.isManagementApp, applicationResponseModel.isManagementApp) &&
                 Objects.equals(this.isB2BSelfServiceApp, applicationResponseModel.isB2BSelfServiceApp) &&
                 Objects.equals(this.applicationEnabled, applicationResponseModel.applicationEnabled) &&
@@ -484,7 +505,7 @@ public class ApplicationResponseModel {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, imageUrl, accessUrl, logoutReturnUrl, clientId, issuer, realm, templateId, isManagementApp, isB2BSelfServiceApp, applicationEnabled, associatedRoles, claimConfiguration, inboundProtocols, authenticationSequence, advancedConfigurations, provisioningConfigurations, access);
+        return Objects.hash(id, name, description, imageUrl, accessUrl, logoutReturnUrl, clientId, issuer, realm, templateId, templateVersion, isManagementApp, isB2BSelfServiceApp, applicationEnabled, associatedRoles, claimConfiguration, inboundProtocols, authenticationSequence, advancedConfigurations, provisioningConfigurations, access);
     }
 
     @Override
@@ -502,6 +523,7 @@ public class ApplicationResponseModel {
         sb.append("    issuer: ").append(toIndentedString(issuer)).append("\n");
         sb.append("    realm: ").append(toIndentedString(realm)).append("\n");
         sb.append("    templateId: ").append(toIndentedString(templateId)).append("\n");
+        sb.append("    templateVersion: ").append(toIndentedString(templateVersion)).append("\n");
         sb.append("    isManagementApp: ").append(toIndentedString(isManagementApp)).append("\n");
         sb.append("    isB2BSelfServiceApp: ").append(toIndentedString(isB2BSelfServiceApp)).append("\n");
         sb.append("    applicationEnabled: ").append(toIndentedString(applicationEnabled)).append("\n");

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, WSO2 LLC. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019-2024, WSO2 LLC. (http://www.wso2.org) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,9 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
 import io.restassured.response.Response;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
@@ -28,6 +31,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.application.mgt.ApplicationConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationListItem;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationListResponse;
 
 import java.io.IOException;
@@ -38,6 +42,7 @@ import java.util.Map;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.wso2.identity.integration.test.rest.api.server.application.management.v1.Utils.assertNotBlank;
 import static org.wso2.identity.integration.test.rest.api.server.application.management.v1.Utils.extractApplicationIdFromLocationHeader;
@@ -49,6 +54,8 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
 
     private static final String MY_ACCOUNT = "My Account";
     private static final String CREATED_APP_NAME = "My SAMPLE APP";
+    private static final String CREATED_APP_TEMPLATE_ID = "Test_template_1";
+    private static final String CREATED_APP_TEMPLATE_VERSION = "v1.0.0";
     private String createdAppId;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
@@ -112,6 +119,30 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
     }
 
     @Test(dependsOnMethods = {"createApplication"})
+    public void testGetAllApplicationsWithParams() throws IOException {
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("attributes", "templateId,templateVersion");
+        Response response = getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH, params);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK);
+        ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+        ApplicationListResponse listResponse = jsonWriter.readValue(response.asString(), ApplicationListResponse.class);
+
+        assertNotNull(listResponse);
+
+        // Verify that the newly created app exists and has the required properties.
+        Optional<ApplicationListItem> newlyCreatedAppData = listResponse.getApplications().stream()
+                .filter(appBasicInfo -> appBasicInfo.getName().equals(CREATED_APP_NAME)).findFirst();
+        Assert.assertTrue(newlyCreatedAppData.isPresent(),
+                "Newly Created application '" + CREATED_APP_NAME + "' is not listed by the API.");
+        Assert.assertEquals(newlyCreatedAppData.get().getTemplateId(), CREATED_APP_TEMPLATE_ID);
+        Assert.assertEquals(newlyCreatedAppData.get().getTemplateVersion(), CREATED_APP_TEMPLATE_VERSION);
+    }
+
+    @Test(dependsOnMethods = {"createApplication"})
     public void testGetApplicationById() throws Exception {
 
         getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId)
@@ -119,7 +150,9 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("name", equalTo(CREATED_APP_NAME));
+                .body("name", equalTo(CREATED_APP_NAME))
+                .body("templateId", equalTo(CREATED_APP_TEMPLATE_ID))
+                .body("templateVersion", equalTo(CREATED_APP_TEMPLATE_VERSION));
     }
 
     @Test(dependsOnMethods = {"createApplication"})
