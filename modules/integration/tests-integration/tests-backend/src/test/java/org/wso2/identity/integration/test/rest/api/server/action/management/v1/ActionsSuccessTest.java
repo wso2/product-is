@@ -32,6 +32,7 @@ import org.wso2.identity.integration.test.rest.api.server.action.management.v1.m
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.AuthenticationType;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.AuthenticationTypeProperties;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.Endpoint;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.EndpointUpdateModel;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -155,11 +156,20 @@ public class ActionsSuccessTest extends ActionsTestBase {
     }
 
     @Test(dependsOnMethods = {"testGetActions"})
-    public void testUpdateActionBasicInfo() {
+    public void testUpdateAction() {
 
+        // Update all the attributes of the action.
         ActionUpdateModel actionUpdateModel = new ActionUpdateModel()
                 .name(TEST_ACTION_UPDATED_NAME)
-                .endpointUri(TEST_UPDATED_ENDPOINT_URI);
+                .description(TEST_ACTION_UPDATED_DESCRIPTION)
+                .endpoint(new EndpointUpdateModel()
+                        .uri(TEST_UPDATED_ENDPOINT_URI)
+                        .authentication(new AuthenticationType()
+                                .type(AuthenticationType.TypeEnum.API_KEY)
+                                .properties(new HashMap<String, Object>() {{
+                                    put(TEST_APIKEY_HEADER_AUTH_PROPERTY, TEST_APIKEY_HEADER_AUTH_PROPERTY_VALUE);
+                                    put(TEST_APIKEY_VALUE_AUTH_PROPERTY, TEST_APIKEY_VALUE_AUTH_PROPERTY_VALUE);
+                                }})));
 
         String body = toJSONString(actionUpdateModel);
         Response responseOfPatch = getResponseOfPatch(ACTION_MANAGEMENT_API_BASE_PATH +
@@ -171,14 +181,156 @@ public class ActionsSuccessTest extends ActionsTestBase {
                 .statusCode(HttpStatus.SC_OK)
                 .body("id", equalTo(testActionId))
                 .body("name", equalTo(TEST_ACTION_UPDATED_NAME))
-                .body("description", equalTo(TEST_ACTION_DESCRIPTION))
+                .body("description", equalTo(TEST_ACTION_UPDATED_DESCRIPTION))
+                .body("status", equalTo(TEST_ACTION_ACTIVE_STATUS))
+                .body("endpoint.uri", equalTo(TEST_UPDATED_ENDPOINT_URI))
+                .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.API_KEY.toString()))
+                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)));
+
+        // Update name only.
+        actionUpdateModel = new ActionUpdateModel().name(TEST_ACTION_NAME);
+
+        body = toJSONString(actionUpdateModel);
+        responseOfPatch = getResponseOfPatch(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + testActionId, body);
+
+        responseOfPatch.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("id", equalTo(testActionId))
+                .body("name", equalTo(TEST_ACTION_NAME))
+                .body("description", equalTo(TEST_ACTION_UPDATED_DESCRIPTION))
+                .body("status", equalTo(TEST_ACTION_ACTIVE_STATUS))
+                .body("endpoint.uri", equalTo(TEST_UPDATED_ENDPOINT_URI))
+                .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.API_KEY.toString()))
+                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)));
+
+        // Update endpoint uri only.
+        actionUpdateModel = new ActionUpdateModel().endpoint(new EndpointUpdateModel().uri(TEST_ENDPOINT_URI));
+
+        body = toJSONString(actionUpdateModel);
+        responseOfPatch = getResponseOfPatch(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + testActionId, body);
+
+        responseOfPatch.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("id", equalTo(testActionId))
+                .body("name", equalTo(TEST_ACTION_NAME))
+                .body("description", equalTo(TEST_ACTION_UPDATED_DESCRIPTION))
+                .body("status", equalTo(TEST_ACTION_ACTIVE_STATUS))
+                .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
+                .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.API_KEY.toString()))
+                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)));
+
+        // Update authentication only.
+        actionUpdateModel = new ActionUpdateModel()
+                .endpoint(new EndpointUpdateModel()
+                        .authentication(new AuthenticationType()
+                                .type(AuthenticationType.TypeEnum.BEARER)
+                                .properties(new HashMap<String, Object>() {{
+                                    put(TEST_ACCESS_TOKEN_AUTH_PROPERTY, TEST_ACCESS_TOKEN_AUTH_PROPERTY_VALUE);
+                                }})));
+
+        body = toJSONString(actionUpdateModel);
+        responseOfPatch = getResponseOfPatch(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + testActionId, body);
+
+        responseOfPatch.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("id", equalTo(testActionId))
+                .body("name", equalTo(TEST_ACTION_NAME))
+                .body("description", equalTo(TEST_ACTION_UPDATED_DESCRIPTION))
+                .body("status", equalTo(TEST_ACTION_ACTIVE_STATUS))
+                .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
+                .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BEARER.toString()))
+                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)));
+
+        // Update authentication properties only.
+        actionUpdateModel = new ActionUpdateModel()
+                .endpoint(new EndpointUpdateModel()
+                        .authentication(new AuthenticationType()
+                                .type(AuthenticationType.TypeEnum.BEARER)
+                                .properties(new HashMap<String, Object>() {{
+                                    put(TEST_ACCESS_TOKEN_AUTH_PROPERTY, TEST_UPDATED_ACCESS_TOKEN_AUTH_PROPERTY_VALUE);
+                                }})));
+
+        body = toJSONString(actionUpdateModel);
+        responseOfPatch = getResponseOfPatch(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + testActionId, body);
+
+        responseOfPatch.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("id", equalTo(testActionId))
+                .body("name", equalTo(TEST_ACTION_NAME))
+                .body("description", equalTo(TEST_ACTION_UPDATED_DESCRIPTION))
+                .body("status", equalTo(TEST_ACTION_ACTIVE_STATUS))
+                .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
+                .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BEARER.toString()))
+                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)));
+
+        // Update endpoint uri and authentication.
+        actionUpdateModel = new ActionUpdateModel()
+                .endpoint(new EndpointUpdateModel()
+                        .uri(TEST_UPDATED_ENDPOINT_URI)
+                        .authentication(new AuthenticationType()
+                                .type(AuthenticationType.TypeEnum.BASIC)
+                                .properties(new HashMap<String, Object>() {{
+                                    put(TEST_USERNAME_AUTH_PROPERTY, TEST_USERNAME_AUTH_PROPERTY_VALUE);
+                                    put(TEST_PASSWORD_AUTH_PROPERTY, TEST_PASSWORD_AUTH_PROPERTY_VALUE);
+                                }})));
+
+        body = toJSONString(actionUpdateModel);
+        responseOfPatch = getResponseOfPatch(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + testActionId, body);
+
+        responseOfPatch.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("id", equalTo(testActionId))
+                .body("name", equalTo(TEST_ACTION_NAME))
+                .body("description", equalTo(TEST_ACTION_UPDATED_DESCRIPTION))
                 .body("status", equalTo(TEST_ACTION_ACTIVE_STATUS))
                 .body("endpoint.uri", equalTo(TEST_UPDATED_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
                 .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)));
+
+        // Update endpoint uri and authentication properties only.
+        actionUpdateModel = new ActionUpdateModel()
+                .endpoint(new EndpointUpdateModel()
+                        .uri(TEST_ENDPOINT_URI)
+                        .authentication(new AuthenticationType()
+                                .type(AuthenticationType.TypeEnum.BASIC)
+                                .properties(new HashMap<String, Object>() {{
+                                    put(TEST_USERNAME_AUTH_PROPERTY, TEST_UPDATED_USERNAME_AUTH_PROPERTY_VALUE);
+                                    put(TEST_PASSWORD_AUTH_PROPERTY, TEST_UPDATED_PASSWORD_AUTH_PROPERTY_VALUE);
+                                }})));
+
+        body = toJSONString(actionUpdateModel);
+        responseOfPatch = getResponseOfPatch(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + testActionId, body);
+
+        responseOfPatch.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("id", equalTo(testActionId))
+                .body("name", equalTo(TEST_ACTION_NAME))
+                .body("description", equalTo(TEST_ACTION_UPDATED_DESCRIPTION))
+                .body("status", equalTo(TEST_ACTION_ACTIVE_STATUS))
+                .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
+                .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
+                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)));
     }
 
-    @Test(dependsOnMethods = {"testUpdateActionBasicInfo"})
+    @Test(dependsOnMethods = {"testUpdateAction"})
     public void testUpdateEndpointAuthentication() {
 
         AuthenticationTypeProperties newAuthProperties = new AuthenticationTypeProperties()
@@ -194,7 +346,7 @@ public class ActionsSuccessTest extends ActionsTestBase {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("endpoint.uri", equalTo(TEST_UPDATED_ENDPOINT_URI))
+                .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BEARER.toString()));
     }
 
@@ -227,8 +379,8 @@ public class ActionsSuccessTest extends ActionsTestBase {
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .body("id", equalTo(testActionId))
-                .body("name", equalTo(TEST_ACTION_UPDATED_NAME))
-                .body("description", equalTo(TEST_ACTION_DESCRIPTION))
+                .body("name", equalTo(TEST_ACTION_NAME))
+                .body("description", equalTo(TEST_ACTION_UPDATED_DESCRIPTION))
                 .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS));
     }
 
@@ -242,8 +394,8 @@ public class ActionsSuccessTest extends ActionsTestBase {
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .body("id", equalTo(testActionId))
-                .body("name", equalTo(TEST_ACTION_UPDATED_NAME))
-                .body("description", equalTo(TEST_ACTION_DESCRIPTION))
+                .body("name", equalTo(TEST_ACTION_NAME))
+                .body("description", equalTo(TEST_ACTION_UPDATED_DESCRIPTION))
                 .body("status", equalTo(TEST_ACTION_ACTIVE_STATUS));
     }
 

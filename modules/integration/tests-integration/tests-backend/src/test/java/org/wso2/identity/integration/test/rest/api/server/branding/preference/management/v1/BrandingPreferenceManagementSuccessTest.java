@@ -1,7 +1,7 @@
 /*
- * Copyright (c) 2021, WSO2 Inc. (http://www.wso2.com).
+ * Copyright (c) 2021-2024, WSO2 LLC. (http://www.wso2.com).
  *
- * WSO2 Inc. licenses this file to you under the Apache License,
+ * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
@@ -93,7 +93,7 @@ public class BrandingPreferenceManagementSuccessTest extends BrandingPreferenceM
     @Test
     public void testAddBrandingPreference() throws IOException, JSONException {
 
-        String body = readResource("add-branding-preference.json");
+        String body = readResource(ADD_ROOT_ORG_BRANDING_RESOURCE_FILE);
         Response response = getResponseOfPost(BRANDING_PREFERENCE_API_BASE_PATH, body);
 
         response.then()
@@ -104,8 +104,9 @@ public class BrandingPreferenceManagementSuccessTest extends BrandingPreferenceM
         String location = response.getHeader(HttpHeaders.LOCATION);
         assertNotNull(location);
 
-        JSONObject expectedPreference = new JSONObject(new JSONObject(readResource("add-branding-preference.json")).
-                get("preference").toString());
+        JSONObject expectedPreference =
+                new JSONObject(new JSONObject(readResource(ADD_ROOT_ORG_BRANDING_RESOURCE_FILE)).
+                        get("preference").toString());
         JSONObject receivedPreference = new JSONObject(new JSONObject(response.asString()).
                 get("preference").toString());
         Assert.assertTrue(areJSONObjectsEqual(expectedPreference, receivedPreference),
@@ -124,8 +125,9 @@ public class BrandingPreferenceManagementSuccessTest extends BrandingPreferenceM
                 .body("name", equalTo(tenant))
                 .body("locale", equalTo(DEFAULT_LOCALE));
 
-        JSONObject expectedPreference = new JSONObject(new JSONObject(readResource("add-branding-preference.json")).
-                get("preference").toString());
+        JSONObject expectedPreference =
+                new JSONObject(new JSONObject(readResource(ADD_ROOT_ORG_BRANDING_RESOURCE_FILE)).
+                        get("preference").toString());
         JSONObject receivedPreference = new JSONObject(new JSONObject(response.asString()).
                 get("preference").toString());
         Assert.assertTrue(areJSONObjectsEqual(expectedPreference, receivedPreference),
@@ -145,8 +147,9 @@ public class BrandingPreferenceManagementSuccessTest extends BrandingPreferenceM
                 .body("name", equalTo(tenant))
                 .body("locale", equalTo(DEFAULT_LOCALE));
 
-        JSONObject expectedPreference = new JSONObject(new JSONObject(readResource("add-branding-preference.json")).
-                get("preference").toString());
+        JSONObject expectedPreference =
+                new JSONObject(new JSONObject(readResource(ADD_ROOT_ORG_BRANDING_RESOURCE_FILE)).
+                        get("preference").toString());
         JSONObject receivedPreference = new JSONObject(new JSONObject(response.asString()).
                 get("preference").toString());
         Assert.assertTrue(areJSONObjectsEqual(expectedPreference, receivedPreference),
@@ -166,8 +169,9 @@ public class BrandingPreferenceManagementSuccessTest extends BrandingPreferenceM
                 .body("name", equalTo(tenant))
                 .body("locale", equalTo(DEFAULT_LOCALE));
 
-        JSONObject expectedPreference = new JSONObject(new JSONObject(readResource("add-branding-preference.json")).
-                get("preference").toString());
+        JSONObject expectedPreference =
+                new JSONObject(new JSONObject(readResource(ADD_ROOT_ORG_BRANDING_RESOURCE_FILE)).
+                        get("preference").toString());
         JSONObject receivedPreference = new JSONObject(new JSONObject(response.asString()).
                 get("preference").toString());
         Assert.assertTrue(areJSONObjectsEqual(expectedPreference, receivedPreference),
@@ -187,8 +191,9 @@ public class BrandingPreferenceManagementSuccessTest extends BrandingPreferenceM
                 .body("name", equalTo(tenant))
                 .body("locale", equalTo(DEFAULT_LOCALE));
 
-        JSONObject expectedPreference = new JSONObject(new JSONObject(readResource("add-branding-preference.json")).
-                get("preference").toString());
+        JSONObject expectedPreference =
+                new JSONObject(new JSONObject(readResource(ADD_ROOT_ORG_BRANDING_RESOURCE_FILE)).
+                        get("preference").toString());
         JSONObject receivedPreference = new JSONObject(new JSONObject(response.asString()).
                 get("preference").toString());
         Assert.assertTrue(areJSONObjectsEqual(expectedPreference, receivedPreference),
@@ -198,7 +203,7 @@ public class BrandingPreferenceManagementSuccessTest extends BrandingPreferenceM
     @Test(dependsOnMethods = {"testGetBrandingPreferenceByLocaleQueryParam"})
     public void testUpdateBrandingPreference() throws IOException, JSONException {
 
-        String body = readResource("update-branding-preference.json");
+        String body = readResource(UPDATE_ROOT_ORG_BRANDING_RESOURCE_FILE);
         Response response = getResponseOfPut(BRANDING_PREFERENCE_API_BASE_PATH, body);
 
         response.then()
@@ -209,8 +214,9 @@ public class BrandingPreferenceManagementSuccessTest extends BrandingPreferenceM
                 .body("name", equalTo(tenant))
                 .body("locale", equalTo(DEFAULT_LOCALE));
 
-        JSONObject expectedPreference = new JSONObject(new JSONObject(readResource("update-branding-preference.json")).
-                get("preference").toString());
+        JSONObject expectedPreference =
+                new JSONObject(new JSONObject(readResource(UPDATE_ROOT_ORG_BRANDING_RESOURCE_FILE)).
+                        get("preference").toString());
         JSONObject receivedPreference = new JSONObject(new JSONObject(response.asString()).
                 get("preference").toString());
         Assert.assertTrue(areJSONObjectsEqual(expectedPreference, receivedPreference),
@@ -229,8 +235,9 @@ public class BrandingPreferenceManagementSuccessTest extends BrandingPreferenceM
                 .body("name", equalTo(tenant))
                 .body("locale", equalTo(DEFAULT_LOCALE));
 
-        JSONObject expectedPreference = new JSONObject(new JSONObject(readResource("update-branding-preference.json")).
-                get("preference").toString());
+        JSONObject expectedPreference =
+                new JSONObject(new JSONObject(readResource(UPDATE_ROOT_ORG_BRANDING_RESOURCE_FILE)).
+                        get("preference").toString());
         JSONObject receivedPreference = new JSONObject(new JSONObject(response.asString()).
                 get("preference").toString());
         Assert.assertTrue(areJSONObjectsEqual(expectedPreference, receivedPreference),
@@ -250,7 +257,7 @@ public class BrandingPreferenceManagementSuccessTest extends BrandingPreferenceM
     @Test(dependsOnMethods = {"testDeleteBrandingPreference"})
     public void testDeleteBrandingPreferenceByQueryParams() throws IOException {
 
-        String body = readResource("add-branding-preference.json");
+        String body = readResource(ADD_ROOT_ORG_BRANDING_RESOURCE_FILE);
         // Add Branding preference.
         Response response = getResponseOfPost(BRANDING_PREFERENCE_API_BASE_PATH, body);
 
@@ -274,7 +281,7 @@ public class BrandingPreferenceManagementSuccessTest extends BrandingPreferenceM
     @Test(dependsOnMethods = {"testDeleteBrandingPreferenceByQueryParams"})
     public void testDeleteBrandingPreferenceByTypeQueryParam() throws IOException {
 
-        String body = readResource("add-branding-preference.json");
+        String body = readResource(ADD_ROOT_ORG_BRANDING_RESOURCE_FILE);
         // Add Branding preference.
         Response response = getResponseOfPost(BRANDING_PREFERENCE_API_BASE_PATH, body);
 
@@ -298,7 +305,7 @@ public class BrandingPreferenceManagementSuccessTest extends BrandingPreferenceM
     @Test(dependsOnMethods = {"testDeleteBrandingPreferenceByTypeQueryParam"})
     public void testDeleteBrandingPreferenceByLocaleQueryParam() throws IOException {
 
-        String body = readResource("add-branding-preference.json");
+        String body = readResource(ADD_ROOT_ORG_BRANDING_RESOURCE_FILE);
         // Add Branding preference.
         Response response = getResponseOfPost(BRANDING_PREFERENCE_API_BASE_PATH, body);
 
