@@ -40,6 +40,7 @@ public class ActionsTestBase extends RESTAPIServerTestBase {
     protected static final String ACTION_MANAGEMENT_API_BASE_PATH = "/actions";
     protected static final String TYPES_API_PATH = "/types";
     protected static final String PRE_ISSUE_ACCESS_TOKEN_PATH = "/preIssueAccessToken";
+    protected static final String PRE_UPDATE_PASSWORD_PATH = "/preUpdatePassword";
     protected static final String ACTION_DEACTIVATE_PATH = "/deactivate";
     protected static final String ACTION_ACTIVATE_PATH = "/activate";
     protected static final String ACTION_BEARER_AUTH_PATH = "/bearer";
@@ -57,12 +58,19 @@ public class ActionsTestBase extends RESTAPIServerTestBase {
     protected static final String TEST_PASSWORD_AUTH_PROPERTY = "password";
     protected static final String TEST_USERNAME_AUTH_PROPERTY_VALUE = "admin";
     protected static final String TEST_PASSWORD_AUTH_PROPERTY_VALUE = "myPassword123";
+    protected static final String TEST_UPDATED_USERNAME_AUTH_PROPERTY_VALUE = "adminUpdated";
+    protected static final String TEST_UPDATED_PASSWORD_AUTH_PROPERTY_VALUE = "myPassword123Updated";
     protected static final String TEST_ACTION_UPDATED_NAME = "Access Token Pre Issue Updated";
+    protected static final String TEST_ACTION_UPDATED_DESCRIPTION = "This is the updated configuration of pre-action for issuing access token.";
     protected static final String TEST_UPDATED_ENDPOINT_URI = "https://abc.com/tokenUpdated";
     protected static final String TEST_PROPERTIES_AUTH_ATTRIBUTE = "properties";
     protected static final String TEST_ACCESS_TOKEN_AUTH_PROPERTY = "accessToken";
     protected static final String TEST_ACCESS_TOKEN_AUTH_PROPERTY_VALUE = "24f64d17-9824-4e28-8413-de45728d8e84";
     protected static final String TEST_UPDATED_ACCESS_TOKEN_AUTH_PROPERTY_VALUE = "88f63a16-9824-4e28-e463-de11118d8e84";
+    protected static final String TEST_APIKEY_HEADER_AUTH_PROPERTY = "header";
+    protected static final String TEST_APIKEY_HEADER_AUTH_PROPERTY_VALUE = "key";
+    protected static final String TEST_APIKEY_VALUE_AUTH_PROPERTY = "value";
+    protected static final String TEST_APIKEY_VALUE_AUTH_PROPERTY_VALUE = "secret";
 
     protected static String swaggerDefinition;
 

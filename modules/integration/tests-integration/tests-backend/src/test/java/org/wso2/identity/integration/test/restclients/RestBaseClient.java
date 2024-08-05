@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, WSO2 LLC. (https://www.wso2.com).
+ * Copyright (c) 2023-2024, WSO2 LLC. (https://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -39,9 +39,11 @@ public class RestBaseClient {
 
     public static final String LOCATION_HEADER = "Location";
     public static final String BASIC_AUTHORIZATION_ATTRIBUTE = "Basic ";
+    public static final String BEARER_TOKEN_AUTHORIZATION_ATTRIBUTE = "Bearer ";
     public static final String CONTENT_TYPE_ATTRIBUTE = "Content-Type";
     public static final String AUTHORIZATION_ATTRIBUTE = "Authorization";
     public static final String USER_AGENT_ATTRIBUTE = "User-Agent";
+    public static final String API_SERVER_PATH = "api/server/v1";
     public static final String TENANT_PATH = "t/";
     public static final String ORGANIZATION_PATH = "o/";
     public static final String PATH_SEPARATOR = "/";
