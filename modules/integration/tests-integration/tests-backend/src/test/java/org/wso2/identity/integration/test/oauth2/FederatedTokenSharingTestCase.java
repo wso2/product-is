@@ -137,7 +137,6 @@ import static org.wso2.identity.integration.test.applicationNativeAuthentication
 public class FederatedTokenSharingTestCase extends AbstractIdentityFederationTestCase {
 
     private static final String SHARE_FEDERATED_TOKEN_CONFIG = "ShareFederatedToken";
-    private static final String FEDERATED_TOKEN_ALLOWED_SCOPE = "FederatedTokenAllowedScope";
     private static final String SHARE_FEDERATED_TOKEN_PARAM = "share_federated_token";
     private static final String FEDERATED_TOKEN_SCOPE = "federated_token_scope";
 
@@ -597,10 +596,6 @@ public class FederatedTokenSharingTestCase extends AbstractIdentityFederationTes
                 .addProperty(new org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Property()
                         .key(SHARE_FEDERATED_TOKEN_CONFIG)
                         .value(TRUE))
-                // Configuring the allowed scope for federated sharing
-                .addProperty(new org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Property()
-                        .key(FEDERATED_TOKEN_ALLOWED_SCOPE)
-                        .value(SCOPES_APPROVED_FOR_TOKEN_SHARING))
                 .addProperty(new org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Property()
                         .key("commonAuthQueryParams")
                         .value("scope=" + OAuth2Constant.OAUTH2_SCOPE_OPENID_WITH_INTERNAL_LOGIN));
