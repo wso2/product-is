@@ -42,6 +42,7 @@
         <module>modules/provisioning-connectors</module>
         <module>modules/local-authenticators</module>
         <module>modules/oauth2-grant-types</module>
+        <module>modules/integration-ui-templates</module>
         <module>modules/distribution</module>
         <module>modules/styles</module>
         <module>modules/tests-utils</module>
@@ -2212,6 +2213,44 @@
                 <artifactId>org.wso2.carbon.extension.identity.helper</artifactId>
                 <version>${identity.extension.utils}</version>
             </dependency>
+
+            <!-- Integration UI Templates -->
+            <dependency>
+                <groupId>org.wso2.carbon.identity.integration.ui.templates</groupId>
+                <artifactId>org.wso2.carbon.identity.integration.ui.templates.applications.custom-application</artifactId>
+                <version>${identity.integration.ui.templates.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.integration.ui.templates</groupId>
+                <artifactId>org.wso2.carbon.identity.integration.ui.templates.applications.custom-protocol-application</artifactId>
+                <version>${identity.integration.ui.templates.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.integration.ui.templates</groupId>
+                <artifactId>org.wso2.carbon.identity.integration.ui.templates.applications.m2m-application</artifactId>
+                <version>${identity.integration.ui.templates.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.integration.ui.templates</groupId>
+                <artifactId>org.wso2.carbon.identity.integration.ui.templates.applications.mobile-application</artifactId>
+                <version>${identity.integration.ui.templates.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.integration.ui.templates</groupId>
+                <artifactId>org.wso2.carbon.identity.integration.ui.templates.applications.single-page-application</artifactId>
+                <version>${identity.integration.ui.templates.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.integration.ui.templates</groupId>
+                <artifactId>org.wso2.carbon.identity.integration.ui.templates.applications.traditional-web-application</artifactId>
+                <version>${identity.integration.ui.templates.version}</version>
+                <type>zip</type>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -2537,6 +2576,9 @@
         <org.apache.log4j.wso2.version>1.2.17.wso2v1</org.apache.log4j.wso2.version>
 
         <project.scm.id>my-scm-server</project.scm.id>
+
+        <!-- Integration UI Templates Version -->
+        <identity.integration.ui.templates.version>1.0.6</identity.integration.ui.templates.version>
 
     </properties>
 
