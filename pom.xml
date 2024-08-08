@@ -2339,7 +2339,7 @@
         <!-- Provisioning connector Versions -->
         <provisioning.connector.google.version>5.2.4</provisioning.connector.google.version>
         <provisioning.connector.salesforce.version>5.2.6</provisioning.connector.salesforce.version>
-        <provisioning.connector.scim.version>5.3.2</provisioning.connector.scim.version>
+        <provisioning.connector.scim.version>5.3.3</provisioning.connector.scim.version>
         <provisioning.connector.scim2.version>2.0.6</provisioning.connector.scim2.version>
 
         <!-- Local Authenticator Versions -->
@@ -2380,7 +2380,7 @@
         <hashprovider.pbkdf2.version>0.1.7</hashprovider.pbkdf2.version>
 
         <!-- Identity Branding Preference Management Versions -->
-        <identity.branding.preference.management.version>1.1.14</identity.branding.preference.management.version>
+        <identity.branding.preference.management.version>1.1.15</identity.branding.preference.management.version>
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.17</identity.api.dispatcher.version>
@@ -2392,11 +2392,11 @@
         <identity.app.authz.xacml.version>2.3.2</identity.app.authz.xacml.version>
         <identity.oauth.addons.version>2.5.17</identity.oauth.addons.version>
         <org.wso2.carbon.extension.identity.x509certificate.version>1.1.11</org.wso2.carbon.extension.identity.x509certificate.version>
-        <conditional.authentication.functions.version>1.2.60</conditional.authentication.functions.version>
+        <conditional.authentication.functions.version>1.2.61</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.21.43</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.7.109</identity.apps.myaccount.version>
+        <identity.apps.console.version>2.21.44</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.7.110</identity.apps.myaccount.version>
         <identity.apps.core.version>2.4.23</identity.apps.core.version>
         <identity.apps.tests.version>1.6.378</identity.apps.tests.version>
 
