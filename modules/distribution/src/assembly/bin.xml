@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
- ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~ Copyright (c) 2005-2024, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  ~
  ~ WSO2 Inc. licenses this file to you under the Apache License,
  ~ Version 2.0 (the "License"); you may not use this file except
@@ -505,6 +505,15 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps</outputDirectory>
             <includes>
                 <include>x509certificateauthenticationendpoint/</include>
+            </includes>
+        </fileSet>
+
+        <!--Copy integration UI templates.-->
+        <fileSet>
+            <directory>../integration-ui-templates/target/templates</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/resources/identity/extensions</outputDirectory>
+            <includes>
+                <include>**/*</include>
             </includes>
         </fileSet>
     </fileSets>
