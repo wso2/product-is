@@ -261,8 +261,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         return new Object[][] {
                 {"name co G", false, false},
                 {"attributes.Country co S", true, false},
-                {"attributes.Country eq Sri Lanka", true, false},
                 {"attributes.Country eq Sri Lanka and name co Greater", true, false},
+                {"attributes.Country eq Sri Lanka and attributes.Language eq Sinhala", true, false},
                 {"attributes.Country eq USA", false, true}
         };
     }
