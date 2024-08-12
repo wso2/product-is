@@ -357,7 +357,7 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
     @Test(dependsOnMethods = {"testResolveL1AppBrandingAfterRootAppBrandingUpdate"})
     public void testResolveL1AppBrandingRestrictedToPublishedAfterRootAppBrandingUpdate() throws Exception {
 
-        // Resolve the branding preference without setting the restrictToPublished query parameter.
+        // Resolve the branding preference by setting the restrictToPublished query parameter to true.
         Response response = getResolvedAppBrandingRestrictedToPublishedInOrg(level1OrgId, level1AppId);
         response.then()
                 .log().ifValidationFails()
@@ -388,7 +388,7 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
     @Test(dependsOnMethods = {"testResolveL2AppBrandingAfterRootAppBrandingUpdate"})
     public void testResolveL2AppBrandingRestrictedToPublishedAfterRootAppBrandingUpdate() throws Exception {
 
-        // Resolve the branding preference without setting the restrictToPublished query parameter.
+        // Resolve the branding preference by setting the restrictToPublished query parameter to true.
         Response response = getResolvedAppBrandingRestrictedToPublishedInOrg(level2OrgId, level2AppId);
         response.then()
                 .log().ifValidationFails()
@@ -523,7 +523,7 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
     @Test(dependsOnMethods = {"testResolveL1AppBrandingAfterL1AppBrandingUpdate"})
     public void testResolveL1AppBrandingRestrictedToPublishedAfterL1AppBrandingUpdate() throws Exception {
 
-        // Resolve the branding preference without setting the restrictToPublished query parameter.
+        // Resolve the branding preference by setting the restrictToPublished query parameter to true.
         Response response = getResolvedAppBrandingRestrictedToPublishedInOrg(level1OrgId, level1AppId);
         response.then()
                 .log().ifValidationFails()
@@ -554,7 +554,7 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
     @Test(dependsOnMethods = {"testResolveL2AppBrandingAfterL1AppBrandingUpdate"})
     public void testResolveL2AppBrandingRestrictedToPublishedAfterL1AppBrandingUpdate() throws Exception {
 
-        // Resolve the branding preference without setting the restrictToPublished query parameter.
+        // Resolve the branding preference by setting the restrictToPublished query parameter to true.
         Response response = getResolvedAppBrandingRestrictedToPublishedInOrg(level2OrgId, level2AppId);
         response.then()
                 .log().ifValidationFails()
@@ -660,7 +660,7 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
     @Test(dependsOnMethods = {"testResolveL2AppBrandingAfterL2AppBrandingUpdate"})
     public void testResolveL2AppBrandingRestrictedToPublishedAfterL2AppBrandingUpdate() throws Exception {
 
-        // Resolve the branding preference without setting the restrictToPublished query parameter.
+        // Resolve the branding preference by setting the restrictToPublished query parameter to true.
         Response response = getResolvedAppBrandingRestrictedToPublishedInOrg(level2OrgId, level2AppId);
         response.then()
                 .log().ifValidationFails()
