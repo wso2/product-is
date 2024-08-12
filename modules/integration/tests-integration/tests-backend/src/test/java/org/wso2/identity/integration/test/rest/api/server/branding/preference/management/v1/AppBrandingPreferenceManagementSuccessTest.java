@@ -326,7 +326,7 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
 
         // Resolve the branding preference by setting the restrictToPublished query parameter to true.
         Response response = getResponseOfGet(BRANDING_PREFERENCE_RESOLVE_PATH +
-                String.format(PREFERENCE_COMPONENT_WITH_QUERY_PARAM + "&" + RESTRICTED_TO_PUBLISHED_QUERY_PARAM,
+                String.format(PREFERENCE_COMPONENT_WITH_QUERY_PARAM + AMPERSAND + RESTRICTED_TO_PUBLISHED_QUERY_PARAM,
                         APPLICATION_TYPE, rootAppId, DEFAULT_LOCALE, TRUE));
         response.then()
                 .log().ifValidationFails()
