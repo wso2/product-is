@@ -54,9 +54,12 @@ public class BrandingPreferenceManagementTestBase extends RESTAPIServerTestBase 
     public static final String TYPE_QUERY_PARAM = "type=%s";
     public static final String LOCALE_QUERY_PARAM = "locale=%s";
     public static final String SCREEN_QUERY_PARAM = "screen=%s";
+    public static final String RESTRICTED_TO_PUBLISHED_QUERY_PARAM = "restrictToPublished=%s";
     public static final String CONTENT_TYPE_ATTRIBUTE = "Content-Type";
     public static final String AUTHORIZATION_ATTRIBUTE = "Authorization";
     public static final String ORG_NAME_PLACEHOLDER = "organization-name";
+    public static final String TRUE = "true";
+    public static final String AMPERSAND = "&";
 
     public static final String ADD_ROOT_ORG_BRANDING_RESOURCE_FILE = "add-root-org-branding-preference.json";
     public static final String UPDATE_ROOT_ORG_BRANDING_RESOURCE_FILE = "update-root-org-branding-preference.json";

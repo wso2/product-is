@@ -271,7 +271,7 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
     }
 
     @Test(dependsOnMethods = {"testResolveL2AppBrandingAfterRootAppBrandingAddition"})
-    public void testUpdateRootAppBrandingPreference() throws Exception {
+    public void testUpdateUnpublishedRootAppBrandingPreference() throws Exception {
 
         String body = readResource(UPDATE_ROOT_APP_BRANDING_RESOURCE_FILE)
                 .replace(APP_ID_PLACEHOLDER, rootAppId);
@@ -288,7 +288,7 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
         assertBrandingPreferences(UPDATE_ROOT_APP_BRANDING_RESOURCE_FILE, response);
     }
 
-    @Test(dependsOnMethods = {"testUpdateRootAppBrandingPreference"})
+    @Test(dependsOnMethods = {"testUpdateUnpublishedRootAppBrandingPreference"})
     public void testGetRootAppBrandingAfterRootAppBrandingUpdate() throws Exception {
 
         Response response = getResponseOfGet(BRANDING_PREFERENCE_API_BASE_PATH + String.format
@@ -322,6 +322,24 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
     }
 
     @Test(dependsOnMethods = {"testResolveRootAppBrandingAfterRootAppBrandingUpdate"})
+    public void testResolveRootAppBrandingRestrictedToPublishedAfterRootAppBrandingUpdate() throws Exception {
+
+        // Resolve the branding preference by setting the restrictToPublished query parameter to true.
+        Response response = getResponseOfGet(BRANDING_PREFERENCE_RESOLVE_PATH +
+                String.format(PREFERENCE_COMPONENT_WITH_QUERY_PARAM + AMPERSAND + RESTRICTED_TO_PUBLISHED_QUERY_PARAM,
+                        APPLICATION_TYPE, rootAppId, DEFAULT_LOCALE, TRUE));
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("type", equalTo(ORGANIZATION_TYPE))
+                .body("name", equalTo(tenant))
+                .body("locale", equalTo(DEFAULT_LOCALE));
+
+        assertBrandingPreferences(ADD_ROOT_ORG_BRANDING_RESOURCE_FILE, response);
+    }
+
+    @Test(dependsOnMethods = {"testResolveRootAppBrandingRestrictedToPublishedAfterRootAppBrandingUpdate"})
     public void testResolveL1AppBrandingAfterRootAppBrandingUpdate() throws Exception {
 
         Response response = getResolvedAppBrandingInOrg(level1OrgId, level1AppId);
@@ -337,6 +355,22 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
     }
 
     @Test(dependsOnMethods = {"testResolveL1AppBrandingAfterRootAppBrandingUpdate"})
+    public void testResolveL1AppBrandingRestrictedToPublishedAfterRootAppBrandingUpdate() throws Exception {
+
+        // Resolve the branding preference by setting the restrictToPublished query parameter to true.
+        Response response = getResolvedAppBrandingRestrictedToPublishedInOrg(level1OrgId, level1AppId);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("type", equalTo(ORGANIZATION_TYPE))
+                .body("name", equalTo(tenant))
+                .body("locale", equalTo(DEFAULT_LOCALE));
+
+        assertBrandingPreferences(ADD_ROOT_ORG_BRANDING_RESOURCE_FILE, response);
+    }
+
+    @Test(dependsOnMethods = {"testResolveL1AppBrandingRestrictedToPublishedAfterRootAppBrandingUpdate"})
     public void testResolveL2AppBrandingAfterRootAppBrandingUpdate() throws Exception {
 
         Response response = getResolvedAppBrandingInOrg(level2OrgId, level2AppId);
@@ -352,6 +386,22 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
     }
 
     @Test(dependsOnMethods = {"testResolveL2AppBrandingAfterRootAppBrandingUpdate"})
+    public void testResolveL2AppBrandingRestrictedToPublishedAfterRootAppBrandingUpdate() throws Exception {
+
+        // Resolve the branding preference by setting the restrictToPublished query parameter to true.
+        Response response = getResolvedAppBrandingRestrictedToPublishedInOrg(level2OrgId, level2AppId);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("type", equalTo(ORGANIZATION_TYPE))
+                .body("name", equalTo(tenant))
+                .body("locale", equalTo(DEFAULT_LOCALE));
+
+        assertBrandingPreferences(ADD_ROOT_ORG_BRANDING_RESOURCE_FILE, response);
+    }
+
+    @Test(dependsOnMethods = {"testResolveL2AppBrandingRestrictedToPublishedAfterRootAppBrandingUpdate"})
     public void testResolveL1AppBrandingAfterL1OrgBrandingAddition() throws Exception {
 
         addOrgBrandingPreference(level1OrgId, ADD_L1_ORG_BRANDING_RESOURCE_FILE);
@@ -437,7 +487,7 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
     }
 
     @Test(dependsOnMethods = {"testResolveL2AppBrandingAfterL1AppBrandingAddition"})
-    public void testUpdateL1AppBrandingPreference() throws Exception {
+    public void testUpdateUnpublishedL1AppBrandingPreference() throws Exception {
 
         RestAssured.basePath = buildTenantedBasePathForOrg(tenant);
         String body = readResource(UPDATE_L1_APP_BRANDING_RESOURCE_FILE)
@@ -455,7 +505,7 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
         assertBrandingPreferences(UPDATE_L1_APP_BRANDING_RESOURCE_FILE, response);
     }
 
-    @Test(dependsOnMethods = {"testUpdateL1AppBrandingPreference"})
+    @Test(dependsOnMethods = {"testUpdateUnpublishedL1AppBrandingPreference"})
     public void testResolveL1AppBrandingAfterL1AppBrandingUpdate() throws Exception {
 
         Response response = getResolvedAppBrandingInOrg(level1OrgId, level1AppId);
@@ -468,6 +518,22 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
                 .body("locale", equalTo(DEFAULT_LOCALE));
 
         assertBrandingPreferences(UPDATE_L1_APP_BRANDING_RESOURCE_FILE, response);
+    }
+
+    @Test(dependsOnMethods = {"testResolveL1AppBrandingAfterL1AppBrandingUpdate"})
+    public void testResolveL1AppBrandingRestrictedToPublishedAfterL1AppBrandingUpdate() throws Exception {
+
+        // Resolve the branding preference by setting the restrictToPublished query parameter to true.
+        Response response = getResolvedAppBrandingRestrictedToPublishedInOrg(level1OrgId, level1AppId);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("type", equalTo(ORGANIZATION_TYPE))
+                .body("name", equalTo(level1OrgId))
+                .body("locale", equalTo(DEFAULT_LOCALE));
+
+        assertBrandingPreferences(ADD_L1_ORG_BRANDING_RESOURCE_FILE, response);
     }
 
     @Test(dependsOnMethods = {"testResolveL1AppBrandingAfterL1AppBrandingUpdate"})
@@ -486,6 +552,22 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
     }
 
     @Test(dependsOnMethods = {"testResolveL2AppBrandingAfterL1AppBrandingUpdate"})
+    public void testResolveL2AppBrandingRestrictedToPublishedAfterL1AppBrandingUpdate() throws Exception {
+
+        // Resolve the branding preference by setting the restrictToPublished query parameter to true.
+        Response response = getResolvedAppBrandingRestrictedToPublishedInOrg(level2OrgId, level2AppId);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("type", equalTo(ORGANIZATION_TYPE))
+                .body("name", equalTo(level1OrgId))
+                .body("locale", equalTo(DEFAULT_LOCALE));
+
+        assertBrandingPreferences(ADD_L1_ORG_BRANDING_RESOURCE_FILE, response);
+    }
+
+    @Test(dependsOnMethods = {"testResolveL2AppBrandingRestrictedToPublishedAfterL1AppBrandingUpdate"})
     public void testResolveL2AppBrandingAfterL2OrgBrandingAddition() throws Exception {
 
         addOrgBrandingPreference(level2OrgId, ADD_L2_ORG_BRANDING_RESOURCE_FILE);
@@ -541,7 +623,7 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
     }
 
     @Test(dependsOnMethods = {"testResolveL2AppBrandingAfterL2AppBrandingAddition"})
-    public void testUpdateL2AppBrandingPreference() throws Exception {
+    public void testUpdateUnpublishedL2AppBrandingPreference() throws Exception {
 
         RestAssured.basePath = buildTenantedBasePathForOrg(tenant);
         String body = readResource(UPDATE_L2_APP_BRANDING_RESOURCE_FILE)
@@ -560,7 +642,7 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
         assertBrandingPreferences(UPDATE_L2_APP_BRANDING_RESOURCE_FILE, response);
     }
 
-    @Test(dependsOnMethods = {"testUpdateL2AppBrandingPreference"})
+    @Test(dependsOnMethods = {"testUpdateUnpublishedL2AppBrandingPreference"})
     public void testResolveL2AppBrandingAfterL2AppBrandingUpdate() throws Exception {
 
         Response response = getResolvedAppBrandingInOrg(level2OrgId, level2AppId);
@@ -576,6 +658,22 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
     }
 
     @Test(dependsOnMethods = {"testResolveL2AppBrandingAfterL2AppBrandingUpdate"})
+    public void testResolveL2AppBrandingRestrictedToPublishedAfterL2AppBrandingUpdate() throws Exception {
+
+        // Resolve the branding preference by setting the restrictToPublished query parameter to true.
+        Response response = getResolvedAppBrandingRestrictedToPublishedInOrg(level2OrgId, level2AppId);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("type", equalTo(ORGANIZATION_TYPE))
+                .body("name", equalTo(level2OrgId))
+                .body("locale", equalTo(DEFAULT_LOCALE));
+
+        assertBrandingPreferences(ADD_L2_ORG_BRANDING_RESOURCE_FILE, response);
+    }
+
+    @Test(dependsOnMethods = {"testResolveL2AppBrandingRestrictedToPublishedAfterL2AppBrandingUpdate"})
     public void testDeleteL2AppBrandingPreference() throws Exception {
 
         RestAssured.basePath = buildTenantedBasePathForOrg(tenant);
@@ -873,6 +971,15 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
         return getResponseOfGetWithOAuth2(BRANDING_PREFERENCE_RESOLVE_PATH +
                 String.format(PREFERENCE_COMPONENT_WITH_QUERY_PARAM, APPLICATION_TYPE, appId,
                         DEFAULT_LOCALE), orgMgtRestClient.switchM2MToken(orgId));
+    }
+
+    private Response getResolvedAppBrandingRestrictedToPublishedInOrg(String orgId, String appId)
+            throws Exception {
+
+        RestAssured.basePath = PATH_SEPARATOR + ORGANIZATION_PATH + orgId + PATH_SEPARATOR + API_SERVER_BASE_PATH;
+        return getResponseOfGetWithOAuth2(BRANDING_PREFERENCE_RESOLVE_PATH +
+                String.format(PREFERENCE_COMPONENT_WITH_QUERY_PARAM + AMPERSAND + RESTRICTED_TO_PUBLISHED_QUERY_PARAM,
+                        APPLICATION_TYPE, appId, DEFAULT_LOCALE, TRUE), orgMgtRestClient.switchM2MToken(orgId));
     }
 
     private String buildTenantedBasePathForOrg(String tenantDomain) {
