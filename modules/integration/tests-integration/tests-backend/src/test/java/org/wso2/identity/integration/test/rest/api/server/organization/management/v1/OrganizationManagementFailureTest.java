@@ -135,7 +135,7 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
         String filterQuery = "?filter=name ca G&limit=10&recursive=false";
         String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + filterQuery;
         Response response = getResponseOfGetWithOAuth2(endpointURL, m2mToken);
-        validateErrorResponseWithoutTraceId(response, HttpStatus.SC_BAD_REQUEST, "ORG-60059");
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "ORG-60059");
     }
 
     @Test(dependsOnMethods = "testGetOrganizationsWithInvalidOperator")
@@ -144,7 +144,7 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
         String filterQuery = "?filter=attribute.Country co S&limit=10&recursive=false";
         String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + filterQuery;
         Response response = getResponseOfGetWithOAuth2(endpointURL, m2mToken);
-        validateErrorResponseWithoutTraceId(response, HttpStatus.SC_BAD_REQUEST, "ORG-60023");
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "ORG-60023");
     }
 
     @Test(dependsOnMethods = "testGetOrganizationsWithUnsupportedAttribute")
@@ -153,7 +153,7 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
         String filterQuery = "?filter=attributes ca C&limit=10&recursive=false";
         String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + "/meta-attributes" + filterQuery;
         Response response = getResponseOfGetWithOAuth2(endpointURL, m2mToken);
-        validateErrorResponseWithoutTraceId(response, HttpStatus.SC_BAD_REQUEST, "ORG-60059");
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "ORG-60059");
     }
 
     @Test(dependsOnMethods = "testGetOrganizationsMetaAttributesWithInvalidOperator")
@@ -162,7 +162,7 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
         String filterQuery = "?filter=attribute co S&limit=10&recursive=false";
         String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + "/meta-attributes" + filterQuery;
         Response response = getResponseOfGetWithOAuth2(endpointURL, m2mToken);
-        validateErrorResponseWithoutTraceId(response, HttpStatus.SC_BAD_REQUEST, "ORG-60023");
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "ORG-60023");
     }
 
     @Test(dependsOnMethods = "testGetOrganizationsMetaAttributesWithUnsupportedAttribute")
@@ -180,7 +180,7 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
         String requestBody = readResource("add-discovery-attributes-request-body.json");
         requestBody = requestBody.replace("${organizationID}", organizationIDs.get(0));
         Response response = getResponseOfPostWithOAuth2(endpointURL, requestBody, m2mToken);
-        validateErrorResponseWithoutTraceId(response, HttpStatus.SC_BAD_REQUEST, "ORG-60080");
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "ORG-60080");
     }
 
     @Test(dependsOnMethods = "testAddDiscoveryAttributesWithoutAddingConfig")
@@ -237,8 +237,7 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
         String requestBody = readResource("add-discovery-attributes-request-body.json");
         requestBody = requestBody.replace("${organizationID}", invalidOrganizationID);
         Response response = getResponseOfPostWithOAuth2(endpointURL, requestBody, m2mToken);
-        validateErrorResponseWithoutTraceId(response, HttpStatus.SC_NOT_FOUND, "ORG-60015",
-                                        invalidOrganizationID);
+        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "ORG-60015", invalidOrganizationID);
     }
 
     @Test(dependsOnMethods = "testAddDiscoveryAttributesToNonExistingOrganization")
@@ -260,8 +259,7 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
         Response firstResponse = getResponseOfPostWithOAuth2(endpointURL, requestBody, m2mToken);
         validateHttpStatusCode(firstResponse, HttpStatus.SC_CREATED);
         Response secondResponse = getResponseOfPostWithOAuth2(endpointURL, requestBody, m2mToken);
-        validateErrorResponseWithoutTraceId(secondResponse, HttpStatus.SC_BAD_REQUEST, "ORG-60085",
-                                        organizationIDs.get(0));
+        validateErrorResponse(secondResponse, HttpStatus.SC_BAD_REQUEST, "ORG-60085", organizationIDs.get(0));
     }
 
     @Test(dependsOnMethods = "testAddDiscoveryAttributesWhenAlreadyAdded")
@@ -278,8 +276,7 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
         String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + invalidOrganizationID
                         + ORGANIZATION_DISCOVERY_API_PATH;
         Response response = getResponseOfGetWithOAuth2(endpointURL, m2mToken);
-        validateErrorResponseWithoutTraceId(response, HttpStatus.SC_NOT_FOUND, "ORG-60015",
-                                        invalidOrganizationID);
+        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "ORG-60015", invalidOrganizationID);
     }
 
     @Test(dependsOnMethods = "testGetDiscoveryAttributesOfNonExistingOrganization")
@@ -297,8 +294,7 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
         String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + invalidOrganizationID
                         + ORGANIZATION_DISCOVERY_API_PATH;
         Response response = getResponseOfDeleteWithOAuth2(endpointURL, m2mToken);
-        validateErrorResponseWithoutTraceId(response, HttpStatus.SC_NOT_FOUND, "ORG-60015",
-                                        invalidOrganizationID);
+        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "ORG-60015", invalidOrganizationID);
     }
 
     @Test(dependsOnMethods = "testDeleteDiscoveryAttributesOfNonExistingOrganization")
@@ -321,7 +317,7 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
         Response firstResponse = getResponseOfPutWithOAuth2(firstEndpointURL, requestBody, m2mToken);
         validateHttpStatusCode(firstResponse, HttpStatus.SC_OK);
         Response secondResponse = getResponseOfPutWithOAuth2(secondEndpointURL, requestBody, m2mToken);
-        validateErrorResponseWithoutTraceId(secondResponse, HttpStatus.SC_BAD_REQUEST, "ORG-60083");
+        validateErrorResponse(secondResponse, HttpStatus.SC_BAD_REQUEST, "ORG-60083");
     }
 
     @Test(dependsOnMethods = "testUpdateWithUnavailableDiscoveryAttributes")
@@ -331,8 +327,7 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
                         + ORGANIZATION_DISCOVERY_API_PATH;
         String requestBody = readResource("update-discovery-attributes-request-body.json");
         Response response = getResponseOfPutWithOAuth2(endpointURL, requestBody, m2mToken);
-        validateErrorResponseWithoutTraceId(response, HttpStatus.SC_NOT_FOUND, "ORG-60015",
-                                        invalidOrganizationID);
+        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "ORG-60015", invalidOrganizationID);
     }
 
     @Test(dependsOnMethods = "testUpdateDiscoveryAttributesOfNonExistingOrganization")
