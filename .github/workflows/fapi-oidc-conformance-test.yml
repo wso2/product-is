@@ -286,7 +286,7 @@ jobs:
           echo "Sending Google Chat Message"
           echo "==========================="
           CONFORMANCE_SUITE_URL=https://localhost:8443
-          python3 ./product-is/oidc-conformance-tests/send_chat.py "$CONFORMANCE_SUITE_URL" "$GITHUB_RUN_NUMBER" "${{job.status}}" "${{github.repository}}" "${{github.run_id}}" "${{secrets.GOOGLE_CHAT_WEBHOOK_OIDC_TEST}}" "$RESOURCE" "FAPI OIDC Conformance Test"
+          python3 ./product-is/oidc-conformance-tests/send_chat.py "$CONFORMANCE_SUITE_URL" "$GITHUB_RUN_NUMBER" "${{job.status}}" "${{github.repository}}" "${{github.run_id}}" "${{secrets.GOOGLE_CHAT_WEBHOOK}}" "$RESOURCE" "FAPI OIDC Conformance Test"
         elif [ $SEND_CHAT == "NO" ]; then
           echo "========================================"
           echo "Skipped Sending Google Chat Message"
