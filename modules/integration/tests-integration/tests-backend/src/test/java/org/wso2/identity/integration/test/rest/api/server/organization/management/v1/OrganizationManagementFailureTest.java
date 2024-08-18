@@ -372,4 +372,29 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
                     .statusCode(HttpStatus.SC_NO_CONTENT);
         }
     }
+
+    @Test(dependsOnMethods = "testUpdateDiscoveryAttributesUnauthorized")
+    public void testGetPaginatedOrganizationsWithInvalidLimit() {
+
+        String invalidLimitUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + "?limit=-1";
+        Response response = getResponseOfGetWithOAuth2(invalidLimitUrl, m2mToken);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "UE-10000");
+    }
+
+    @Test(dependsOnMethods = "testGetPaginatedOrganizationsWithInvalidLimit")
+    public void testGetPaginatedOrganizationsWithInvalidAfterCursor() {
+
+        String invalidAfterCursorUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + "?limit=10&after=invalid-cursor";
+        Response response = getResponseOfGetWithOAuth2(invalidAfterCursorUrl, m2mToken);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "ORG-60026");
+    }
+
+    @Test(dependsOnMethods = "testGetPaginatedOrganizationsWithInvalidAfterCursor")
+    public void testGetPaginatedOrganizationsWithInvalidBeforeCursor() {
+
+        String invalidBeforeCursorUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + "?limit=10&before=invalid-cursor";
+        Response response = getResponseOfGetWithOAuth2(invalidBeforeCursorUrl, m2mToken);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "ORG-60026");
+    }
+
 }

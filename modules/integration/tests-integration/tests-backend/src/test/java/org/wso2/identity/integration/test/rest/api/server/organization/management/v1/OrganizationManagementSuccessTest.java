@@ -75,8 +75,10 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static io.restassured.RestAssured.given;
@@ -105,6 +107,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     private String b2bApplicationID;
     private HttpClient client;
     protected OAuth2RestClient restClient;
+    private final int totalCreatedOrganizations = 20;
+    private List<Map<String, String>> createdOrganizations;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public OrganizationManagementSuccessTest(TestUserMode userMode) throws Exception {
@@ -604,4 +608,197 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         oAuth2RestClient.deleteApplication(applicationId);
     }
+
+    @Test(dependsOnMethods = "testDeleteOrganization")
+    public void createOrganizationsForPaginationTests() {
+
+        int createdOrganizationsCount = createOrganizations(totalCreatedOrganizations);
+
+        if (createdOrganizationsCount != totalCreatedOrganizations) {
+            throw new RuntimeException("Failed to create the expected number of organizations for testing.");
+        }
+    }
+
+    @DataProvider(name = "paginationLimitsDataProvider")
+    public Object[][] paginationLimitsDataProvider() {
+        return new Object[][]{
+                {10},
+                {20},
+                {25},
+        };
+    }
+
+    @Test(dataProvider = "paginationLimitsDataProvider", dependsOnMethods = "createOrganizationsForPaginationTests")
+    public void testGetPaginatedOrganizationsWithLimit(int limit) {
+
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + "?limit=" + limit;
+        Response response = getResponseOfGetWithOAuth2(endpointURL, m2mToken);
+
+        validateHttpStatusCode(response, HttpStatus.SC_OK);
+
+        int actualOrganizationCount = response.jsonPath().getList("organizations").size();
+        int expectedOrganizationCount = Math.min(limit, totalCreatedOrganizations);
+        Assert.assertEquals(actualOrganizationCount, expectedOrganizationCount);
+
+        String nextLink = response.jsonPath().getString("links.find { it.rel == 'next' }.href");
+        String afterValue = null;
+
+        if (nextLink != null && nextLink.contains("after=")) {
+            afterValue = nextLink.substring(nextLink.indexOf("after=") + 6);
+        }
+
+        String storedAfterValue = afterValue;
+
+        if (totalCreatedOrganizations > limit) {
+            Assert.assertNotNull(storedAfterValue);
+        } else {
+            Assert.assertNull(storedAfterValue);
+        }
+    }
+
+    @Test(dependsOnMethods = "createOrganizationsForPaginationTests")
+    public void testGetPaginatedOrganizationsWithCursor() {
+
+        String after;
+        String before;
+        int limit = 2;
+        int orgLimit = 20;
+        int largeLimit = 30;
+
+        // Step 1: Call the first page
+        String firstPageUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + "?limit=" + limit + "&recursive=false";
+        Response firstPageResponse = getResponseOfGetWithOAuth2(firstPageUrl, m2mToken);
+
+        validateHttpStatusCode(firstPageResponse, HttpStatus.SC_OK);
+
+        int firstPageOrgCount = firstPageResponse.jsonPath().getList("organizations").size();
+        Assert.assertEquals(firstPageOrgCount, Math.min(limit, totalCreatedOrganizations));
+
+        List<Map<String, String>> firstPageLinks = firstPageResponse.jsonPath().getList("links");
+        after = getLink(firstPageLinks, "next");
+        before = getLink(firstPageLinks, "previous");
+
+        Assert.assertNotNull(after, "After value should not be null on the first page.");
+        Assert.assertNull(before, "Before value should be null on the first page.");
+
+        // Step 2: Call the second page using the 'after' value
+        String secondPageUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + "?limit=" + limit
+                + "&recursive=false&after=" + after;
+        Response secondPageResponse = getResponseOfGetWithOAuth2(secondPageUrl, m2mToken);
+
+        validateHttpStatusCode(secondPageResponse, HttpStatus.SC_OK);
+
+        int secondPageOrgCount = secondPageResponse.jsonPath().getList("organizations").size();
+        Assert.assertEquals(secondPageOrgCount, Math.min(limit, totalCreatedOrganizations - firstPageOrgCount));
+
+        List<Map<String, String>> secondPageLinks = secondPageResponse.jsonPath().getList("links");
+        before = getLink(secondPageLinks, "previous");
+        after = getLink(secondPageLinks, "next");
+
+        Assert.assertNotNull(before, "Before value should not be null on the second page.");
+        if (totalCreatedOrganizations > limit * 2) {
+            Assert.assertNotNull(after, "After value should not be null if there are more pages.");
+        } else {
+            Assert.assertNull(after, "After value should be null if this is the last page.");
+        }
+
+        // Step 3: Call the previous page using the 'before' value
+        String previousPageUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + "?limit=" + limit
+                + "&recursive=false&before=" + before;
+        Response previousPageResponse = getResponseOfGetWithOAuth2(previousPageUrl, m2mToken);
+
+        validateHttpStatusCode(previousPageResponse, HttpStatus.SC_OK);
+
+        int previousPageOrgCount = previousPageResponse.jsonPath().getList("organizations").size();
+        Assert.assertEquals(previousPageOrgCount, firstPageOrgCount);
+
+        // Ensure that the organizations match the first page organizations
+        Assert.assertEquals(previousPageResponse.jsonPath().getList("organizations"),
+                firstPageResponse.jsonPath().getList("organizations"),
+                "The previous page should return the same organizations as the first page.");
+
+        // Extract only the name and description from the previousPageResponse for comparison
+        List<Map<String, String>> actualOrganizations = previousPageResponse.jsonPath().getList("organizations");
+
+        List<Map<String, String>> actualOrganizationsSimplified = new ArrayList<>();
+        for (Map<String, String> org : actualOrganizations) {
+            Map<String, String> simplifiedOrg = new HashMap<>();
+            simplifiedOrg.put("name", org.get("name"));
+            simplifiedOrg.put("description", "Test " + org.get("name"));
+            actualOrganizationsSimplified.add(simplifiedOrg);
+        }
+
+        // Additional validation: Check that the previousPageResponse contains the last 'limit' organizations
+        List<Map<String, String>> expectedLastOrganizations =
+                createdOrganizations.subList(totalCreatedOrganizations - limit, totalCreatedOrganizations);
+        Collections.reverse(expectedLastOrganizations); // Reverse the order to match the expected response
+        Assert.assertEquals(actualOrganizationsSimplified, expectedLastOrganizations,
+                "The previous page should return the last created organizations.");
+
+
+        // Step 4: Test with orgLimit (equal to total org count)
+        validatePaginationForNonPaginatedLimit(orgLimit);
+
+        // Step 5: Test with largeLimit (greater than total org count)
+        validatePaginationForNonPaginatedLimit(largeLimit);
+
+    }
+
+    private int createOrganizations(int numberOfOrganizations) {
+        createdOrganizations = new ArrayList<>();
+        int createdOrganizationsCount = 0;
+
+        for (int i = 0; i < numberOfOrganizations; i++) {
+            String body = String.format("{\"name\": \"Org-%d\", \"description\": \"Test Organization %d\"}", i, i);
+            Response response = getResponseOfPostWithOAuth2(ORGANIZATION_MANAGEMENT_API_BASE_PATH, body, m2mToken);
+
+            if (response.getStatusCode() == HttpStatus.SC_CREATED) {
+                // Store the created organization details
+                Map<String, String> org = new HashMap<>();
+                org.put("name", String.format("Org-%d", i));
+                org.put("description", String.format("Test Org-%d", i));
+                createdOrganizations.add(org);
+
+                createdOrganizationsCount++;
+            } else {
+                throw new RuntimeException("Failed to create organization " + i);
+            }
+        }
+
+        return createdOrganizationsCount;
+    }
+
+    private void validatePaginationForNonPaginatedLimit(int limit) {
+
+        String limitUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + "?limit=" + limit + "&recursive=false";
+        Response response = getResponseOfGetWithOAuth2(limitUrl, m2mToken);
+
+        validateHttpStatusCode(response, HttpStatus.SC_OK);
+
+        List<Map<String, String>> links = response.jsonPath().getList("links");
+
+        Assert.assertNull(links, "Links should be null when all organizations are returned in one page.");
+
+        int returnedOrgCount = response.jsonPath().getList("organizations").size();
+        Assert.assertEquals(returnedOrgCount, totalCreatedOrganizations,
+                "The number of returned organizations should match the total created organizations.");
+
+    }
+
+    private String getLink(List<Map<String, String>> links, String rel) {
+
+        for (Map<String, String> link : links) {
+            if (rel.equals(link.get("rel"))) {
+                String href = link.get("href");
+                if (href.contains("after=")) {
+                    return href.substring(href.indexOf("after=") + 6);
+                } else if (href.contains("before=")) {
+                    return href.substring(href.indexOf("before=") + 7);
+                }
+            }
+        }
+        return null;
+
+    }
+
 }
