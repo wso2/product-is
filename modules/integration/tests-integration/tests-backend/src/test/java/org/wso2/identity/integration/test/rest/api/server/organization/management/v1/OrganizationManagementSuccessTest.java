@@ -610,7 +610,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     }
 
     @Test(dependsOnMethods = "testDeleteOrganization")
-    public void createOrganizationsForPaginationTests() {
+    public void createOrganizationsForPaginationTests() throws JSONException {
 
         int createdOrganizationsCount = createOrganizations(totalCreatedOrganizations);
 
@@ -621,6 +621,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
     @DataProvider(name = "paginationLimitsDataProvider")
     public Object[][] paginationLimitsDataProvider() {
+
         return new Object[][]{
                 {10},
                 {20},
@@ -631,7 +632,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @Test(dataProvider = "paginationLimitsDataProvider", dependsOnMethods = "createOrganizationsForPaginationTests")
     public void testGetPaginatedOrganizationsWithLimit(int limit) {
 
-        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + "?limit=" + limit;
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + LIMIT_ARG + limit;
         Response response = getResponseOfGetWithOAuth2(endpointURL, m2mToken);
 
         validateHttpStatusCode(response, HttpStatus.SC_OK);
@@ -643,8 +644,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         String nextLink = response.jsonPath().getString("links.find { it.rel == 'next' }.href");
         String afterValue = null;
 
-        if (nextLink != null && nextLink.contains("after=")) {
-            afterValue = nextLink.substring(nextLink.indexOf("after=") + 6);
+        if (nextLink != null && nextLink.contains(AFTER_CURSOR_ARG)) {
+            afterValue = nextLink.substring(nextLink.indexOf(AFTER_CURSOR_ARG) + 6);
         }
 
         String storedAfterValue = afterValue;
@@ -666,7 +667,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         int largeLimit = 30;
 
         // Step 1: Call the first page
-        String firstPageUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + "?limit=" + limit + "&recursive=false";
+        String firstPageUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + LIMIT_ARG + limit + "&recursive=false";
         Response firstPageResponse = getResponseOfGetWithOAuth2(firstPageUrl, m2mToken);
 
         validateHttpStatusCode(firstPageResponse, HttpStatus.SC_OK);
@@ -682,7 +683,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         Assert.assertNull(before, "Before value should be null on the first page.");
 
         // Step 2: Call the second page using the 'after' value
-        String secondPageUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + "?limit=" + limit
+        String secondPageUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + LIMIT_ARG + limit
                 + "&recursive=false&after=" + after;
         Response secondPageResponse = getResponseOfGetWithOAuth2(secondPageUrl, m2mToken);
 
@@ -703,7 +704,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         }
 
         // Step 3: Call the previous page using the 'before' value
-        String previousPageUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + "?limit=" + limit
+        String previousPageUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + LIMIT_ARG + limit
                 + "&recursive=false&before=" + before;
         Response previousPageResponse = getResponseOfGetWithOAuth2(previousPageUrl, m2mToken);
 
@@ -723,8 +724,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         List<Map<String, String>> actualOrganizationsSimplified = new ArrayList<>();
         for (Map<String, String> org : actualOrganizations) {
             Map<String, String> simplifiedOrg = new HashMap<>();
-            simplifiedOrg.put("name", org.get("name"));
-            simplifiedOrg.put("description", "Test " + org.get("name"));
+            simplifiedOrg.put(ORGANIZATION_NAME, org.get(ORGANIZATION_NAME));
+            simplifiedOrg.put(ORGANIZATION_DESCRIPTION, "Test " + org.get(ORGANIZATION_NAME));
             actualOrganizationsSimplified.add(simplifiedOrg);
         }
 
@@ -741,22 +742,26 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         // Step 5: Test with largeLimit (greater than total org count)
         validatePaginationForNonPaginatedLimit(largeLimit);
-
     }
 
-    private int createOrganizations(int numberOfOrganizations) {
+    private int createOrganizations(int numberOfOrganizations) throws JSONException {
+
         createdOrganizations = new ArrayList<>();
         int createdOrganizationsCount = 0;
 
         for (int i = 0; i < numberOfOrganizations; i++) {
-            String body = String.format("{\"name\": \"Org-%d\", \"description\": \"Test Organization %d\"}", i, i);
-            Response response = getResponseOfPostWithOAuth2(ORGANIZATION_MANAGEMENT_API_BASE_PATH, body, m2mToken);
+            JSONObject body = new JSONObject()
+                    .put(ORGANIZATION_NAME, String.format("Org-%d", i))
+                    .put(ORGANIZATION_DESCRIPTION, String.format("Test Organization %d", i));
+
+            Response response =
+                    getResponseOfPostWithOAuth2(ORGANIZATION_MANAGEMENT_API_BASE_PATH, body.toString(), m2mToken);
 
             if (response.getStatusCode() == HttpStatus.SC_CREATED) {
                 // Store the created organization details
                 Map<String, String> org = new HashMap<>();
-                org.put("name", String.format("Org-%d", i));
-                org.put("description", String.format("Test Org-%d", i));
+                org.put(ORGANIZATION_NAME, String.format("Org-%d", i));
+                org.put(ORGANIZATION_DESCRIPTION, String.format("Test Org-%d", i));
                 createdOrganizations.add(org);
 
                 createdOrganizationsCount++;
@@ -770,7 +775,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
     private void validatePaginationForNonPaginatedLimit(int limit) {
 
-        String limitUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + "?limit=" + limit + "&recursive=false";
+        String limitUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + LIMIT_ARG + limit + "&recursive=false";
         Response response = getResponseOfGetWithOAuth2(limitUrl, m2mToken);
 
         validateHttpStatusCode(response, HttpStatus.SC_OK);
@@ -782,7 +787,6 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         int returnedOrgCount = response.jsonPath().getList("organizations").size();
         Assert.assertEquals(returnedOrgCount, totalCreatedOrganizations,
                 "The number of returned organizations should match the total created organizations.");
-
     }
 
     private String getLink(List<Map<String, String>> links, String rel) {
@@ -790,15 +794,14 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         for (Map<String, String> link : links) {
             if (rel.equals(link.get("rel"))) {
                 String href = link.get("href");
-                if (href.contains("after=")) {
-                    return href.substring(href.indexOf("after=") + 6);
-                } else if (href.contains("before=")) {
-                    return href.substring(href.indexOf("before=") + 7);
+                if (href.contains(AFTER_CURSOR_ARG)) {
+                    return href.substring(href.indexOf(AFTER_CURSOR_ARG) + 6);
+                } else if (href.contains(BEFORE_CURSOR_ARG)) {
+                    return href.substring(href.indexOf(BEFORE_CURSOR_ARG) + 7);
                 }
             }
         }
         return null;
-
     }
 
 }

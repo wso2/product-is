@@ -44,6 +44,12 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
     static final String ORGANIZATION_DISCOVERY_API_PATH = "/discovery";
     static final String PATH_SEPARATOR = "/";
 
+    static final String ORGANIZATION_NAME = "name";
+    static final String ORGANIZATION_DESCRIPTION = "description";
+    static final String LIMIT_ARG = "?limit=";
+    static final String AFTER_CURSOR_ARG = "after";
+    static final String BEFORE_CURSOR_ARG = "before";
+
     protected static String swaggerDefinition;
     protected OAuth2RestClient oAuth2RestClient;
 
