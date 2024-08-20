@@ -49,6 +49,12 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
 
     private final String invalidM2MToken = "06c1f4e2-3339-44e4-a825-96585e3653b1";
     private final String invalidOrganizationID = "06c1f4e2-3339-44e4-a825-96585e3653b1";
+    protected static final String INVALID_CURSOR = "invalid-cursor";
+
+    private static final String ERROR_CODE_BAD_REQUEST = "UE-10000";
+    private static final String ERROR_CODE_INVALID_PAGINATION_CURSOR = "ORG-60026";
+
+
 
     private List<String> organizationIDs = new ArrayList<>();
     private String applicationID;
@@ -376,25 +382,26 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     @Test(dependsOnMethods = "testUpdateDiscoveryAttributesUnauthorized")
     public void testGetPaginatedOrganizationsWithInvalidLimit() {
 
-        String invalidLimitUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + "?limit=-1";
+        String invalidLimitUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + "-1";
         Response response = getResponseOfGetWithOAuth2(invalidLimitUrl, m2mToken);
-        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "UE-10000");
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, ERROR_CODE_BAD_REQUEST);
     }
 
     @Test(dependsOnMethods = "testGetPaginatedOrganizationsWithInvalidLimit")
     public void testGetPaginatedOrganizationsWithInvalidAfterCursor() {
 
-        String invalidAfterCursorUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + "?limit=10&after=invalid-cursor";
+        String invalidAfterCursorUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + "10"
+                + AMPERSAND + AFTER_QUERY_PARAM + INVALID_CURSOR;
         Response response = getResponseOfGetWithOAuth2(invalidAfterCursorUrl, m2mToken);
-        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "ORG-60026");
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, ERROR_CODE_INVALID_PAGINATION_CURSOR);
     }
 
     @Test(dependsOnMethods = "testGetPaginatedOrganizationsWithInvalidAfterCursor")
     public void testGetPaginatedOrganizationsWithInvalidBeforeCursor() {
 
-        String invalidBeforeCursorUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + "?limit=10&before=invalid-cursor";
+        String invalidBeforeCursorUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + "10"
+                + AMPERSAND + BEFORE_QUERY_PARAM + INVALID_CURSOR;
         Response response = getResponseOfGetWithOAuth2(invalidBeforeCursorUrl, m2mToken);
-        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "ORG-60026");
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, ERROR_CODE_INVALID_PAGINATION_CURSOR);
     }
-
 }
