@@ -46,9 +46,27 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
 
     static final String ORGANIZATION_NAME = "name";
     static final String ORGANIZATION_DESCRIPTION = "description";
-    static final String LIMIT_ARG = "?limit=";
-    static final String AFTER_CURSOR_ARG = "after";
-    static final String BEFORE_CURSOR_ARG = "before";
+    static final String ORGANIZATION_NAME_FORMAT = "Org-%d";
+    static final String ORGANIZATION_DESCRIPTION_FORMAT = "Org-Description-%d";
+
+    static final String LIMIT_QUERY_PARAM = "limit=";
+    static final String AFTER_QUERY_PARAM = "after=";
+    static final String BEFORE_QUERY_PARAM = "before=";
+    static final String RECURSIVE_QUERY_PARAM = "recursive=";
+
+    static final String ORGANIZATIONS_PATH_PARAM = "organizations";
+    static final String LINKS_PATH_PARAM = "links";
+
+    static final String LINK_REL_PREVIOUS = "previous";
+    static final String LINK_REL_NEXT = "next";
+    static final String REL = "rel";
+    static final String HREF = "href";
+
+    static final String AMPERSAND = "&";
+    static final String QUESTION_MARK = "?";
+    static final String EQUAL = "=";
+
+    static final String FALSE = "false";
 
     protected static String swaggerDefinition;
     protected OAuth2RestClient oAuth2RestClient;
