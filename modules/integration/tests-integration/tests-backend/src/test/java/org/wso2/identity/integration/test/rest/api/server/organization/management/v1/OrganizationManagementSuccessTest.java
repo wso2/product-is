@@ -613,9 +613,9 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @Test(dependsOnMethods = "testDeleteOrganization")
     public void createOrganizationsForPaginationTests() throws JSONException {
 
-        int organizationsCount = createOrganizations(NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS);
+        organizations = createOrganizations(NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS);
 
-        if (organizationsCount != NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS) {
+        if (organizations.size() != NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS) {
             throw new RuntimeException("Failed to create the expected number of organizations for testing pagination.");
         }
     }
@@ -675,9 +675,6 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         validateHttpStatusCode(firstPageResponse, HttpStatus.SC_OK);
 
-        int firstPageOrgCount = firstPageResponse.jsonPath().getList(ORGANIZATIONS_PATH_PARAM).size();
-        Assert.assertEquals(firstPageOrgCount, Math.min(limit, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS));
-
         List<Map<String, String>> firstPageLinks = firstPageResponse.jsonPath().getList(LINKS_PATH_PARAM);
         after = getLink(firstPageLinks, LINK_REL_NEXT);
         before = getLink(firstPageLinks, LINK_REL_PREVIOUS);
@@ -685,15 +682,15 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         Assert.assertNotNull(after, "After value should not be null on the first page.");
         Assert.assertNull(before, "Before value should be null on the first page.");
 
+        // Validate the first page organizations
+        validateOrganizationsOnPage(firstPageResponse, 1, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, limit);
+
         // Step 2: Call the second page using the 'after' value.
         String secondPageUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + limit
                 + AMPERSAND + RECURSIVE_QUERY_PARAM + FALSE + AMPERSAND + AFTER_QUERY_PARAM + after;
         Response secondPageResponse = getResponseOfGetWithOAuth2(secondPageUrl, m2mToken);
 
         validateHttpStatusCode(secondPageResponse, HttpStatus.SC_OK);
-
-        int secondPageOrgCount = secondPageResponse.jsonPath().getList(ORGANIZATIONS_PATH_PARAM).size();
-        Assert.assertEquals(secondPageOrgCount, Math.min(limit, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS - firstPageOrgCount));
 
         List<Map<String, String>> secondPageLinks = secondPageResponse.jsonPath().getList(LINKS_PATH_PARAM);
         before = getLink(secondPageLinks, LINK_REL_PREVIOUS);
@@ -706,6 +703,9 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
             Assert.assertNull(after, "After value should be null if this is the last page.");
         }
 
+        // Validate the second page organizations
+        validateOrganizationsOnPage(secondPageResponse, 2, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, limit);
+
         // Step 3: Call the previous page using the 'before' value.
         String previousPageUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + limit
                 + AMPERSAND + RECURSIVE_QUERY_PARAM + FALSE + AMPERSAND + BEFORE_QUERY_PARAM + before;
@@ -713,32 +713,15 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         validateHttpStatusCode(previousPageResponse, HttpStatus.SC_OK);
 
-        int previousPageOrgCount = previousPageResponse.jsonPath().getList(ORGANIZATIONS_PATH_PARAM).size();
-        Assert.assertEquals(previousPageOrgCount, firstPageOrgCount);
+        List<Map<String, String>> previousPageLinks = previousPageResponse.jsonPath().getList(LINKS_PATH_PARAM);
+        after = getLink(previousPageLinks, LINK_REL_NEXT);
+        before = getLink(previousPageLinks, LINK_REL_PREVIOUS);
 
-        // Ensure that the organizations match the first page organizations.
-        Assert.assertEquals(previousPageResponse.jsonPath().getList(ORGANIZATIONS_PATH_PARAM),
-                firstPageResponse.jsonPath().getList(ORGANIZATIONS_PATH_PARAM),
-                "The previous page should return the same organizations as the first page.");
+        Assert.assertNotNull(after, "After value should not be null on the previous (first) page.");
+        Assert.assertNull(before, "Before value should be null on the previous (first) page.");
 
-        // Extract only the name and description from the previousPageResponse for comparison.
-        List<Map<String, String>> actualOrganizations =
-                previousPageResponse.jsonPath().getList(ORGANIZATIONS_PATH_PARAM);
-
-        List<Map<String, String>> actualOrganizationsSimplified = new ArrayList<>();
-        for (Map<String, String> org : actualOrganizations) {
-            Map<String, String> simplifiedOrg = new HashMap<>();
-            simplifiedOrg.put(ORGANIZATION_NAME, org.get(ORGANIZATION_NAME));
-            simplifiedOrg.put(ORGANIZATION_DESCRIPTION, org.get(ORGANIZATION_DESCRIPTION));
-            actualOrganizationsSimplified.add(simplifiedOrg);
-        }
-
-        // Additional validation: Check that the previousPageResponse contains the last 'limit' organizations.
-        List<Map<String, String>> expectedLastOrganizations =
-                organizations.subList(NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS - limit, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS);
-        Collections.reverse(expectedLastOrganizations); // Reverse the order to match the expected response
-        Assert.assertEquals(actualOrganizationsSimplified, expectedLastOrganizations,
-                "The previous page should return the last created organizations.");
+        // Validate the previous page organizations
+        validateOrganizationsOnPage(previousPageResponse, 1, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, limit);
 
         // Step 4: Test with orgLimit. (equal to total org count)
         validatePaginationForNonPaginatedLimit(orgLimit);
@@ -747,10 +730,9 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         validatePaginationForNonPaginatedLimit(largeLimit);
     }
 
-    private int createOrganizations(int numberOfOrganizations) throws JSONException {
+    private List<Map<String, String>> createOrganizations(int numberOfOrganizations) throws JSONException {
 
-        organizations = new ArrayList<>();
-        int organizationsCount = 0;
+        List<Map<String, String>> newOrganizations = new ArrayList<>();
 
         for (int i = 0; i < numberOfOrganizations; i++) {
             JSONObject body = new JSONObject()
@@ -765,15 +747,14 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
                 Map<String, String> org = new HashMap<>();
                 org.put(ORGANIZATION_NAME, String.format(ORGANIZATION_NAME_FORMAT, i));
                 org.put(ORGANIZATION_DESCRIPTION, String.format(ORGANIZATION_DESCRIPTION_FORMAT, i));
-                organizations.add(org);
+                newOrganizations.add(org);
 
-                organizationsCount++;
             } else {
                 throw new RuntimeException("Failed to create organization " + i);
             }
         }
 
-        return organizationsCount;
+        return newOrganizations;
     }
 
     private void validatePaginationForNonPaginatedLimit(int limit) {
@@ -808,4 +789,25 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         }
         return null;
     }
+
+    private void validateOrganizationsOnPage(Response response, int pageNum, int totalOrganizations, int limit) {
+
+        // Validate the organization count
+        int expectedOrgCount = Math.min(limit, totalOrganizations - (pageNum - 1) * limit);
+        int actualOrgCount = response.jsonPath().getList(ORGANIZATIONS_PATH_PARAM).size();
+        Assert.assertEquals(actualOrgCount, expectedOrgCount, "Organization count mismatch on page " + pageNum);
+
+        // Validate the organization names and descriptions
+        List<String> actualOrgNames = response.jsonPath().getList(ORGANIZATIONS_PATH_PARAM + ".name");
+
+        for (int i = 0; i < expectedOrgCount; i++) {
+            int orgIndex = totalOrganizations - ((pageNum - 1) * limit) - i - 1;
+
+            String expectedOrgName = String.format(ORGANIZATION_NAME_FORMAT, orgIndex);
+            Assert.assertEquals(actualOrgNames.get(i), expectedOrgName,
+                    "Organization name mismatch on page " + pageNum + " at index " + i);
+        }
+    }
+
+
 }
