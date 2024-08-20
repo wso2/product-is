@@ -18,6 +18,9 @@
 
 package org.wso2.identity.integration.test.auth;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
@@ -80,6 +83,21 @@ public class AbstractAdaptiveAuthenticationTestCase extends OAuth2ServiceAbstrac
     }
 
     protected String getConditionalAuthScript(String filename) throws IOException {
+
+        return readResource(filename);
+    }
+
+    protected JsonObject getJsonObjectFromFile(String filename) throws Exception {
+
+        String jsonString = readResource(filename);
+        JsonElement jsonElement = JsonParser.parseString(jsonString);
+        if (jsonElement.isJsonObject()) {
+            return jsonElement.getAsJsonObject();
+        } else {
+            throw new Exception("The JSON file does not contain a valid JSON object: " + filename);
+        }
+    }
+    protected String readResource(String filename) throws IOException {
 
         try (InputStream resourceAsStream = this.getClass().getResourceAsStream(filename);
              BufferedInputStream bufferedInputStream = new BufferedInputStream(resourceAsStream)) {
