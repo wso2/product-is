@@ -106,10 +106,10 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     private String switchedM2MToken;
     private String b2bApplicationID;
     private HttpClient client;
-    private final int NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS = 20;
-    private List<Map<String, String>> organizations;
 
     protected OAuth2RestClient restClient;
+
+    private static final int NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS = 20;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public OrganizationManagementSuccessTest(TestUserMode userMode) throws Exception {
@@ -613,7 +613,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @Test(dependsOnMethods = "testDeleteOrganization")
     public void createOrganizationsForPaginationTests() throws JSONException {
 
-        organizations = createOrganizations(NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS);
+        List<Map<String, String>> organizations = createOrganizations(NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS);
 
         if (organizations.size() != NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS) {
             throw new RuntimeException("Failed to create the expected number of organizations for testing pagination.");
@@ -642,7 +642,9 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         int expectedOrganizationCount = Math.min(limit, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS);
         Assert.assertEquals(actualOrganizationCount, expectedOrganizationCount);
 
-        String nextLink = response.jsonPath().getString("links.find { it.rel == 'next' }.href");
+        String nextLink = response.jsonPath().getString(
+                String.format("links.find { it.%s == '%s' }.%s", REL, LINK_REL_NEXT, HREF));
+
         String afterValue = null;
 
         if (nextLink != null && nextLink.contains(AFTER_QUERY_PARAM)) {
@@ -736,8 +738,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         for (int i = 0; i < numberOfOrganizations; i++) {
             JSONObject body = new JSONObject()
-                    .put(ORGANIZATION_NAME, String.format(ORGANIZATION_NAME_FORMAT, i))
-                    .put(ORGANIZATION_DESCRIPTION, String.format(ORGANIZATION_DESCRIPTION_FORMAT, i));
+                    .put(ORGANIZATION_NAME, String.format(ORGANIZATION_NAME_FORMAT, i));
 
             Response response =
                     getResponseOfPostWithOAuth2(ORGANIZATION_MANAGEMENT_API_BASE_PATH, body.toString(), m2mToken);
@@ -746,7 +747,6 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
                 // Store the created organization details.
                 Map<String, String> org = new HashMap<>();
                 org.put(ORGANIZATION_NAME, String.format(ORGANIZATION_NAME_FORMAT, i));
-                org.put(ORGANIZATION_DESCRIPTION, String.format(ORGANIZATION_DESCRIPTION_FORMAT, i));
                 newOrganizations.add(org);
 
             } else {

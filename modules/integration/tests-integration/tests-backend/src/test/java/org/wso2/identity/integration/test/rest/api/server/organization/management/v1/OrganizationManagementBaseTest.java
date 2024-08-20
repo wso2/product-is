@@ -44,29 +44,26 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
     static final String ORGANIZATION_DISCOVERY_API_PATH = "/discovery";
     static final String PATH_SEPARATOR = "/";
 
-    static final String ORGANIZATION_NAME = "name";
-    static final String ORGANIZATION_DESCRIPTION = "description";
-    static final String ORGANIZATION_NAME_FORMAT = "Org-%d";
-    static final String ORGANIZATION_DESCRIPTION_FORMAT = "Org-Description-%d";
+    protected static final String ORGANIZATION_NAME = "name";
+    protected static final String ORGANIZATION_NAME_FORMAT = "Org-%d";
 
-    static final String LIMIT_QUERY_PARAM = "limit=";
-    static final String AFTER_QUERY_PARAM = "after=";
-    static final String BEFORE_QUERY_PARAM = "before=";
-    static final String RECURSIVE_QUERY_PARAM = "recursive=";
+    protected static final String LIMIT_QUERY_PARAM = "limit=";
+    protected static final String AFTER_QUERY_PARAM = "after=";
+    protected static final String BEFORE_QUERY_PARAM = "before=";
+    protected static final String RECURSIVE_QUERY_PARAM = "recursive=";
 
-    static final String ORGANIZATIONS_PATH_PARAM = "organizations";
-    static final String LINKS_PATH_PARAM = "links";
+    protected static final String ORGANIZATIONS_PATH_PARAM = "organizations";
+    protected static final String LINKS_PATH_PARAM = "links";
 
-    static final String LINK_REL_PREVIOUS = "previous";
-    static final String LINK_REL_NEXT = "next";
-    static final String REL = "rel";
-    static final String HREF = "href";
+    protected static final String LINK_REL_PREVIOUS = "previous";
+    protected static final String LINK_REL_NEXT = "next";
+    protected static final String REL = "rel";
+    protected static final String HREF = "href";
 
-    static final String AMPERSAND = "&";
-    static final String QUESTION_MARK = "?";
-    static final String EQUAL = "=";
+    protected static final String AMPERSAND = "&";
+    protected static final String QUESTION_MARK = "?";
 
-    static final String FALSE = "false";
+    protected static final String FALSE = "false";
 
     protected static String swaggerDefinition;
     protected OAuth2RestClient oAuth2RestClient;
