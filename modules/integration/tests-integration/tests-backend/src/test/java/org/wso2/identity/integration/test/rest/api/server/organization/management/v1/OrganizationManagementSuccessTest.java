@@ -110,6 +110,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     protected OAuth2RestClient restClient;
 
     private static final int NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS = 20;
+    private static final int DEFAULT_ORG_LIMIT = 15;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public OrganizationManagementSuccessTest(TestUserMode userMode) throws Exception {
@@ -757,6 +758,32 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         validateOrganizationsOnPage(response, 1, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, limit);
     }
 
+    @Test(dependsOnMethods = "createOrganizationsForPaginationTests")
+    public void testGetPaginatedOrganizationsWithDefaultLimit() {
+
+        // Test case 1: URL with LIMIT_QUERY_PARAM but no value
+        String endpointURLWithEmptyLimit =
+                ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + AMPERSAND +
+                        RECURSIVE_QUERY_PARAM + FALSE;
+
+        Response responseWithEmptyLimit = getResponseOfGetWithOAuth2(endpointURLWithEmptyLimit, m2mToken);
+
+        validateHttpStatusCode(responseWithEmptyLimit, HttpStatus.SC_OK);
+
+        validateOrganizationsForDefaultLimit(responseWithEmptyLimit, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS);
+
+        // Test case 2: URL without LIMIT_QUERY_PARAM
+        String endpointURLWithoutLimit =
+                ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + RECURSIVE_QUERY_PARAM + FALSE;
+
+        Response responseWithoutLimit = getResponseOfGetWithOAuth2(endpointURLWithoutLimit, m2mToken);
+
+        validateHttpStatusCode(responseWithoutLimit, HttpStatus.SC_OK);
+
+        validateOrganizationsForDefaultLimit(responseWithoutLimit, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS);
+    }
+
+
     private List<Map<String, String>> createOrganizations(int numberOfOrganizations) throws JSONException {
 
         List<Map<String, String>> newOrganizations = new ArrayList<>();
@@ -803,9 +830,10 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         List<Map<String, String>> actualOrganizations = response.jsonPath().getList(ORGANIZATIONS_PATH_PARAM);
         int actualOrgCount = (actualOrganizations != null) ? actualOrganizations.size() : 0;
 
-        Assert.assertEquals(actualOrgCount, expectedOrgCount, "Organization count mismatch on page " + pageNum);
+        Assert.assertEquals(actualOrgCount, expectedOrgCount,
+                "Organization count mismatch on page " + pageNum);
 
-        // Validate the organization names and descriptions
+        // Validate the organization names
         List<String> actualOrgNames = response.jsonPath().getList(ORGANIZATIONS_PATH_PARAM + ".name");
 
         for (int i = 0; i < expectedOrgCount; i++) {
@@ -814,6 +842,40 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
             String expectedOrgName = String.format(ORGANIZATION_NAME_FORMAT, orgIndex);
             Assert.assertEquals(actualOrgNames.get(i), expectedOrgName,
                     "Organization name mismatch on page " + pageNum + " at index " + i);
+        }
+    }
+
+    private void validateOrganizationsForDefaultLimit(Response response, int totalOrganizations) {
+
+        // Validate the organization count
+        int expectedOrgCount = Math.min(DEFAULT_ORG_LIMIT, totalOrganizations);
+        List<Map<String, String>> actualOrganizations = response.jsonPath().getList(ORGANIZATIONS_PATH_PARAM);
+        int actualOrgCount = (actualOrganizations != null) ? actualOrganizations.size() : 0;
+
+        Assert.assertEquals(actualOrgCount, expectedOrgCount,
+                "Organization count mismatch with default limit.");
+
+        // Validate the organization names
+        List<String> actualOrgNames = response.jsonPath().getList(ORGANIZATIONS_PATH_PARAM + ".name");
+
+        for (int i = 0; i < expectedOrgCount; i++) {
+            int orgIndex = totalOrganizations - i - 1;
+
+            String expectedOrgName = String.format(ORGANIZATION_NAME_FORMAT, orgIndex);
+            Assert.assertEquals(actualOrgNames.get(i), expectedOrgName,
+                    "Organization name mismatch with default limit at index " + i);
+        }
+
+        // Validate pagination links
+        List<Map<String, String>> links = response.jsonPath().getList(LINKS_PATH_PARAM);
+
+        if (totalOrganizations > DEFAULT_ORG_LIMIT) {
+            String after = getLink(links, LINK_REL_NEXT);
+            Assert.assertNotNull(after,
+                    "'after' link should be present when organizations exceed default limit.");
+        } else {
+            Assert.assertNull(getLink(links, LINK_REL_NEXT),
+                    "'after' link should not be present when organizations are within default limit.");
         }
     }
 }
