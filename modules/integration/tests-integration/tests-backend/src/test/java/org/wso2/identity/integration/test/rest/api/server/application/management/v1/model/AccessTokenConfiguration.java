@@ -21,6 +21,8 @@ package org.wso2.identity.integration.test.rest.api.server.application.managemen
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import javax.validation.Valid;
 
@@ -31,6 +33,8 @@ public class AccessTokenConfiguration  {
     private Long applicationAccessTokenExpiryInSeconds;
     private Boolean revokeTokensWhenIDPSessionTerminated;
     private Boolean validateTokenBinding;
+    private List<String> accessTokenAttributes = null;
+    private Boolean accessTokenAttributesEnabled;
 
     /**
     **/
@@ -122,6 +126,50 @@ public class AccessTokenConfiguration  {
         this.revokeTokensWhenIDPSessionTerminated = revokeTokensWhenIDPSessionTerminated;
     }
 
+    /**
+     **/
+    public AccessTokenConfiguration accessTokenAttributes(List<String> accessTokenAttributes) {
+
+        this.accessTokenAttributes = accessTokenAttributes;
+        return this;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("accessTokenAttributes")
+    @Valid
+    public List<String> getAccessTokenAttributes() {
+        return accessTokenAttributes;
+    }
+    public void setAccessTokenAttributes(List<String> accessTokenAttributes) {
+        this.accessTokenAttributes = accessTokenAttributes;
+    }
+
+    public AccessTokenConfiguration addAccessTokenAttributesItem(String accessTokenAttributesItem) {
+        if (this.accessTokenAttributes == null) {
+            this.accessTokenAttributes = new ArrayList<>();
+        }
+        this.accessTokenAttributes.add(accessTokenAttributesItem);
+        return this;
+    }
+
+    /**
+     **/
+    public AccessTokenConfiguration accessTokenAttributesEnabled(Boolean accessTokenAttributesEnabled) {
+
+        this.accessTokenAttributesEnabled = accessTokenAttributesEnabled;
+        return this;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("accessTokenAttributesEnabled")
+    @Valid
+    public Boolean getAccessTokenAttributesEnabled() {
+        return accessTokenAttributesEnabled;
+    }
+    public void setAccessTokenAttributesEnabled(Boolean accessTokenAttributesEnabled) {
+        this.accessTokenAttributesEnabled = accessTokenAttributesEnabled;
+    }
+
     @Override
     public boolean equals(Object o) {
 
@@ -134,12 +182,15 @@ public class AccessTokenConfiguration  {
         AccessTokenConfiguration accessTokenConfiguration = (AccessTokenConfiguration) o;
         return Objects.equals(this.type, accessTokenConfiguration.type) &&
             Objects.equals(this.userAccessTokenExpiryInSeconds, accessTokenConfiguration.userAccessTokenExpiryInSeconds) &&
-            Objects.equals(this.applicationAccessTokenExpiryInSeconds, accessTokenConfiguration.applicationAccessTokenExpiryInSeconds);
+            Objects.equals(this.applicationAccessTokenExpiryInSeconds, accessTokenConfiguration.applicationAccessTokenExpiryInSeconds) &&
+                Objects.equals(this.accessTokenAttributes, accessTokenConfiguration.accessTokenAttributes) &&
+                Objects.equals(this.accessTokenAttributesEnabled, accessTokenConfiguration.accessTokenAttributesEnabled);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, userAccessTokenExpiryInSeconds, applicationAccessTokenExpiryInSeconds);
+        return Objects.hash(type, userAccessTokenExpiryInSeconds, applicationAccessTokenExpiryInSeconds,
+                accessTokenAttributes, accessTokenAttributesEnabled);
     }
 
     @Override
@@ -151,6 +202,8 @@ public class AccessTokenConfiguration  {
         sb.append("    type: ").append(toIndentedString(type)).append("\n");
         sb.append("    userAccessTokenExpiryInSeconds: ").append(toIndentedString(userAccessTokenExpiryInSeconds)).append("\n");
         sb.append("    applicationAccessTokenExpiryInSeconds: ").append(toIndentedString(applicationAccessTokenExpiryInSeconds)).append("\n");
+        sb.append("    accessTokenAttributes: ").append(toIndentedString(accessTokenAttributes)).append("\n");
+        sb.append("    accessTokenAttributesEnabled: ").append(toIndentedString(accessTokenAttributesEnabled)).append("\n");
         sb.append("}");
         return sb.toString();
     }

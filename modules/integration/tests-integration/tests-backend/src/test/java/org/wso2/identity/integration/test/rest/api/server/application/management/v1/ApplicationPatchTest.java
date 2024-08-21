@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019-2024, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,6 +37,8 @@ public class ApplicationPatchTest extends ApplicationManagementBaseTest {
 
     private static final String APP_NAME = "testPatchApplication";
     public static final String UPDATED_APP_NAME = "testUpdateNameApplication";
+    private static final String APP_TEMPLATE_ID = "Test_template_1";
+    private static final String APP_TEMPLATE_VERSION = "v1.0.0";
     public static final String SUBJECT_CLAIM_URI = "http://wso2.org/claims/username";
     private String appId;
 
@@ -51,6 +53,8 @@ public class ApplicationPatchTest extends ApplicationManagementBaseTest {
 
         JSONObject createRequest = new JSONObject();
         createRequest.put("name", APP_NAME);
+        createRequest.put("templateId", APP_TEMPLATE_ID);
+        createRequest.put("templateVersion", APP_TEMPLATE_VERSION);
         String payload = createRequest.toString();
 
         Response responseOfPost = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, payload);
@@ -69,7 +73,9 @@ public class ApplicationPatchTest extends ApplicationManagementBaseTest {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("name", equalTo(APP_NAME));
+                .body("name", equalTo(APP_NAME))
+                .body("templateId", equalTo(APP_TEMPLATE_ID))
+                .body("templateVersion", equalTo(APP_TEMPLATE_VERSION));
     }
 
     @Test(dependsOnMethods = "testCreateApplication")
@@ -93,11 +99,15 @@ public class ApplicationPatchTest extends ApplicationManagementBaseTest {
         String description = "This is my application.";
         String imageUrl = "https://localhost/image.png";
         String accessUrl = "https://app.test.com/login";
+        String templateId = "Test_template_2";
+        String templateVersion = "v1.0.1";
 
         JSONObject patchRequest = new JSONObject();
         patchRequest.put("description", description);
         patchRequest.put("imageUrl", imageUrl);
         patchRequest.put("accessUrl", accessUrl);
+        patchRequest.put("templateId", templateId);
+        patchRequest.put("templateVersion", templateVersion);
 
         String path = APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + appId;
         getResponseOfPatch(path, patchRequest.toString()).then()
@@ -107,7 +117,9 @@ public class ApplicationPatchTest extends ApplicationManagementBaseTest {
         getApplication(appId).then()
                 .body("description", equalTo(description))
                 .body("imageUrl", equalTo(imageUrl))
-                .body("accessUrl", equalTo(accessUrl));
+                .body("accessUrl", equalTo(accessUrl))
+                .body("templateId", equalTo(templateId))
+                .body("templateVersion", equalTo(templateVersion));
     }
 
     @Test(dependsOnMethods = "testUpdateBasicInformation")
