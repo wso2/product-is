@@ -75,6 +75,8 @@ public enum StateEnum {
     private Boolean publicClient = false;
     private OAuth2PKCEConfiguration pkce;
     private HybridFlowConfiguration hybridFlow;
+    private Boolean useClientIdAsSubClaimForAppTokens;
+    private Boolean omitUsernameInIntrospectionRespForAppTokens;
     private AccessTokenConfiguration accessToken;
     private RefreshTokenConfiguration refreshToken;
     private SubjectTokenConfiguration subjectToken;
@@ -261,6 +263,43 @@ public enum StateEnum {
 
     /**
      **/
+    public OpenIDConnectConfiguration useClientIdAsSubClaimForAppTokens(Boolean useClientIdAsSubClaimForAppTokens) {
+
+        this.useClientIdAsSubClaimForAppTokens = useClientIdAsSubClaimForAppTokens;
+        return this;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("useClientIdAsSubClaimForAppTokens")
+    @Valid
+    public Boolean getUseClientIdAsSubClaimForAppTokens() {
+        return useClientIdAsSubClaimForAppTokens;
+    }
+    public void setUseClientIdAsSubClaimForAppTokens(Boolean useClientIdAsSubClaimForAppTokens) {
+        this.useClientIdAsSubClaimForAppTokens = useClientIdAsSubClaimForAppTokens;
+    }
+
+    /**
+     **/
+    public OpenIDConnectConfiguration omitUsernameInIntrospectionRespForAppTokens(
+            Boolean omitUsernameInIntrospectionRespForAppTokens) {
+
+        this.omitUsernameInIntrospectionRespForAppTokens = omitUsernameInIntrospectionRespForAppTokens;
+        return this;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("omitUsernameInIntrospectionRespForAppTokens")
+    @Valid
+    public Boolean getOmitUsernameInIntrospectionRespForAppTokens() {
+        return omitUsernameInIntrospectionRespForAppTokens;
+    }
+    public void setOmitUsernameInIntrospectionRespForAppTokens(Boolean omitUsernameInIntrospectionRespForAppTokens) {
+        this.omitUsernameInIntrospectionRespForAppTokens = omitUsernameInIntrospectionRespForAppTokens;
+    }
+
+    /**
+     **/
     public OpenIDConnectConfiguration hybridFlow(HybridFlowConfiguration hybridFlow) {
 
         this.hybridFlow = hybridFlow;
@@ -276,6 +315,8 @@ public enum StateEnum {
     public void setHybridFlow(HybridFlowConfiguration hybridFlow) {
         this.hybridFlow = hybridFlow;
     }
+
+
 
     /**
     **/
