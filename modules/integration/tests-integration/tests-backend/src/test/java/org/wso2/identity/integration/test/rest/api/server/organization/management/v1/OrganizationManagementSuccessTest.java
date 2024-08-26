@@ -621,8 +621,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         }
     }
 
-    @DataProvider(name = "paginationLimitsDataProvider")
-    public Object[][] paginationLimitsDataProvider() {
+    @DataProvider(name = "organizationLimitValidationProvider")
+    public Object[][] organizationLimitValidationProvider() {
 
         return new Object[][]{
                 {10},
@@ -631,7 +631,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         };
     }
 
-    @Test(dataProvider = "paginationLimitsDataProvider", dependsOnMethods = "createOrganizationsForPaginationTests")
+    @Test(dependsOnMethods = "createOrganizationsForPaginationTests", dataProvider = "organizationLimitValidationProvider")
     public void testGetPaginatedOrganizationsWithLimit(int limit) {
 
         String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + limit;
@@ -661,15 +661,15 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         }
     }
 
-    @DataProvider(name = "paginationLimits")
-    public Object[][] paginationLimits() {
+    @DataProvider(name = "organizationCursorValidationProvider")
+    public Object[][] organizationCursorValidationProvider() {
 
         return new Object[][]{
                 {1}, {2}, {5}, {6}, {10}, {17}
         };
     }
 
-    @Test(dependsOnMethods = "createOrganizationsForPaginationTests", dataProvider = "paginationLimits")
+    @Test(dependsOnMethods = "createOrganizationsForPaginationTests", dataProvider = "organizationCursorValidationProvider")
     public void testGetPaginatedOrganizationsWithCursor(int limit) {
 
         String after;
@@ -690,7 +690,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         Assert.assertNotNull(after, "After value should not be null on the first page.");
         Assert.assertNull(before, "Before value should be null on the first page.");
 
-        // Validate the first page organizations
+        // Validate the first page organizations.
         validateOrganizationsOnPage(firstPageResponse, 1, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, limit);
 
         // Step 2: Call the second page using the 'after' value.
@@ -711,7 +711,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
             Assert.assertNull(after, "After value should be null if this is the last page.");
         }
 
-        // Validate the second page organizations
+        // Validate the second page organizations.
         validateOrganizationsOnPage(secondPageResponse, 2, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, limit);
 
         // Step 3: Call the previous page using the 'before' value.
@@ -728,19 +728,19 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         Assert.assertNotNull(after, "After value should not be null on the previous (first) page.");
         Assert.assertNull(before, "Before value should be null on the previous (first) page.");
 
-        // Validate the previous page organizations
+        // Validate the previous page organizations.
         validateOrganizationsOnPage(previousPageResponse, 1, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, limit);
     }
 
-    @DataProvider(name = "edgeCaseLimits")
-    public Object[][] edgeCaseLimits() {
+    @DataProvider(name = "organizationCursorEdgeCasesProvider")
+    public Object[][] organizationCursorEdgeCasesProvider() {
 
         return new Object[][]{
                 {0}, {20}, {25}
         };
     }
 
-    @Test(dependsOnMethods = "createOrganizationsForPaginationTests", dataProvider = "edgeCaseLimits")
+    @Test(dependsOnMethods = "createOrganizationsForPaginationTests", dataProvider = "organizationCursorEdgeCasesProvider")
     public void testGetPaginatedOrganizationsForEdgeCases(int limit) {
 
         String limitUrl =
@@ -754,14 +754,14 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         Assert.assertNull(links, "Links should be null when all organizations are returned in one page.");
 
-        // Validate the only page organizations
+        // Validate the only page organizations.
         validateOrganizationsOnPage(response, 1, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, limit);
     }
 
     @Test(dependsOnMethods = "createOrganizationsForPaginationTests")
     public void testGetPaginatedOrganizationsWithDefaultLimit() {
 
-        // Test case 1: URL with LIMIT_QUERY_PARAM but no value
+        // Test case 1: URL with LIMIT_QUERY_PARAM but no value.
         String endpointURLWithEmptyLimit =
                 ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + AMPERSAND +
                         RECURSIVE_QUERY_PARAM + FALSE;
@@ -772,7 +772,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         validateOrganizationsForDefaultLimit(responseWithEmptyLimit, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS);
 
-        // Test case 2: URL without LIMIT_QUERY_PARAM
+        // Test case 2: URL without LIMIT_QUERY_PARAM.
         String endpointURLWithoutLimit =
                 ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + RECURSIVE_QUERY_PARAM + FALSE;
 
@@ -782,7 +782,6 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         validateOrganizationsForDefaultLimit(responseWithoutLimit, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS);
     }
-
 
     private List<Map<String, String>> createOrganizations(int numberOfOrganizations) throws JSONException {
 
@@ -825,7 +824,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
     private void validateOrganizationsOnPage(Response response, int pageNum, int totalOrganizations, int limit) {
 
-        // Validate the organization count
+        // Validate the organization count.
         int expectedOrgCount = Math.min(limit, totalOrganizations - (pageNum - 1) * limit);
         List<Map<String, String>> actualOrganizations = response.jsonPath().getList(ORGANIZATIONS_PATH_PARAM);
         int actualOrgCount = (actualOrganizations != null) ? actualOrganizations.size() : 0;
@@ -833,7 +832,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         Assert.assertEquals(actualOrgCount, expectedOrgCount,
                 "Organization count mismatch on page " + pageNum);
 
-        // Validate the organization names
+        // Validate the organization names.
         List<String> actualOrgNames = response.jsonPath().getList(ORGANIZATIONS_PATH_PARAM + ".name");
 
         for (int i = 0; i < expectedOrgCount; i++) {
@@ -847,7 +846,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
     private void validateOrganizationsForDefaultLimit(Response response, int totalOrganizations) {
 
-        // Validate the organization count
+        // Validate the organization count.
         int expectedOrgCount = Math.min(DEFAULT_ORG_LIMIT, totalOrganizations);
         List<Map<String, String>> actualOrganizations = response.jsonPath().getList(ORGANIZATIONS_PATH_PARAM);
         int actualOrgCount = (actualOrganizations != null) ? actualOrganizations.size() : 0;
@@ -855,7 +854,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         Assert.assertEquals(actualOrgCount, expectedOrgCount,
                 "Organization count mismatch with default limit.");
 
-        // Validate the organization names
+        // Validate the organization names.
         List<String> actualOrgNames = response.jsonPath().getList(ORGANIZATIONS_PATH_PARAM + ".name");
 
         for (int i = 0; i < expectedOrgCount; i++) {
@@ -866,7 +865,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
                     "Organization name mismatch with default limit at index " + i);
         }
 
-        // Validate pagination links
+        // Validate pagination links.
         List<Map<String, String>> links = response.jsonPath().getList(LINKS_PATH_PARAM);
 
         if (totalOrganizations > DEFAULT_ORG_LIMIT) {
