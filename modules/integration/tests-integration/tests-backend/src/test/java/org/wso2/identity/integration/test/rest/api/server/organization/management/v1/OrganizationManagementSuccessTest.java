@@ -795,9 +795,14 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
                     getResponseOfPostWithOAuth2(ORGANIZATION_MANAGEMENT_API_BASE_PATH, body.toString(), m2mToken);
 
             if (response.getStatusCode() == HttpStatus.SC_CREATED) {
+                // Extract the organization ID (UUID) from the response body.
+                JSONObject responseBody = new JSONObject(response.getBody().asString());
+                String organizationId = responseBody.getString("id");
+
                 // Store the created organization details.
                 Map<String, String> org = new HashMap<>();
                 org.put(ORGANIZATION_NAME, String.format(ORGANIZATION_NAME_FORMAT, i));
+                org.put(ORGANIZATION_ID, organizationId);
                 newOrganizations.add(org);
             } else {
                 throw new RuntimeException("Failed to create organization " + i);
