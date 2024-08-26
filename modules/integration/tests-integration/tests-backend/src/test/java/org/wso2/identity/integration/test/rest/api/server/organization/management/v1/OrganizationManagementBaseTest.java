@@ -48,10 +48,10 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
     protected static final String ORGANIZATION_NAME = "name";
     protected static final String ORGANIZATION_NAME_FORMAT = "Org-%d";
 
-    protected static final String LIMIT_QUERY_PARAM = "limit=";
-    protected static final String AFTER_QUERY_PARAM = "after=";
-    protected static final String BEFORE_QUERY_PARAM = "before=";
-    protected static final String RECURSIVE_QUERY_PARAM = "recursive=";
+    protected static final String LIMIT_QUERY_PARAM = "limit";
+    protected static final String AFTER_QUERY_PARAM = "after";
+    protected static final String BEFORE_QUERY_PARAM = "before";
+    protected static final String RECURSIVE_QUERY_PARAM = "recursive";
 
     protected static final String ORGANIZATIONS_PATH_PARAM = "organizations";
     protected static final String LINKS_PATH_PARAM = "links";
@@ -63,6 +63,7 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
 
     protected static final String AMPERSAND = "&";
     protected static final String QUESTION_MARK = "?";
+    protected static final String EQUAL = "=";
 
     protected static final String FALSE = "false";
 

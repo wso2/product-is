@@ -634,7 +634,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @Test(dependsOnMethods = "createOrganizationsForPaginationTests", dataProvider = "organizationLimitValidationProvider")
     public void testGetPaginatedOrganizationsWithLimit(int limit) {
 
-        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + limit;
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + EQUAL + limit;
         Response response = getResponseOfGetWithOAuth2(endpointURL, m2mToken);
 
         validateHttpStatusCode(response, HttpStatus.SC_OK);
@@ -648,8 +648,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         String afterValue = null;
 
-        if (nextLink != null && nextLink.contains(AFTER_QUERY_PARAM)) {
-            afterValue = nextLink.substring(nextLink.indexOf(AFTER_QUERY_PARAM) + 6);
+        if (nextLink != null && nextLink.contains(AFTER_QUERY_PARAM + EQUAL)) {
+            afterValue = nextLink.substring(nextLink.indexOf(AFTER_QUERY_PARAM + EQUAL) + 6);
         }
 
         String storedAfterValue = afterValue;
@@ -676,9 +676,9 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         String before;
 
         // Step 1: Call the first page.
-        String firstPageUrl =
-                ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + limit + AMPERSAND +
-                        RECURSIVE_QUERY_PARAM + FALSE;
+        String firstPageUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + EQUAL + limit
+                + AMPERSAND + RECURSIVE_QUERY_PARAM + EQUAL + FALSE;
+
         Response firstPageResponse = getResponseOfGetWithOAuth2(firstPageUrl, m2mToken);
 
         validateHttpStatusCode(firstPageResponse, HttpStatus.SC_OK);
@@ -694,8 +694,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         validateOrganizationsOnPage(firstPageResponse, 1, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, limit);
 
         // Step 2: Call the second page using the 'after' value.
-        String secondPageUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + limit
-                + AMPERSAND + RECURSIVE_QUERY_PARAM + FALSE + AMPERSAND + AFTER_QUERY_PARAM + after;
+        String secondPageUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + EQUAL + limit
+                + AMPERSAND + RECURSIVE_QUERY_PARAM + EQUAL + FALSE + AMPERSAND + AFTER_QUERY_PARAM + EQUAL + after;
         Response secondPageResponse = getResponseOfGetWithOAuth2(secondPageUrl, m2mToken);
 
         validateHttpStatusCode(secondPageResponse, HttpStatus.SC_OK);
@@ -715,8 +715,10 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         validateOrganizationsOnPage(secondPageResponse, 2, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, limit);
 
         // Step 3: Call the previous page using the 'before' value.
-        String previousPageUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + limit
-                + AMPERSAND + RECURSIVE_QUERY_PARAM + FALSE + AMPERSAND + BEFORE_QUERY_PARAM + before;
+        String previousPageUrl =
+                ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + EQUAL + limit
+                        + AMPERSAND + RECURSIVE_QUERY_PARAM + EQUAL + FALSE + AMPERSAND + BEFORE_QUERY_PARAM + EQUAL +
+                        before;
         Response previousPageResponse = getResponseOfGetWithOAuth2(previousPageUrl, m2mToken);
 
         validateHttpStatusCode(previousPageResponse, HttpStatus.SC_OK);
@@ -744,8 +746,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     public void testGetPaginatedOrganizationsForEdgeCases(int limit) {
 
         String limitUrl =
-                ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + limit + AMPERSAND +
-                        RECURSIVE_QUERY_PARAM + FALSE;
+                ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + EQUAL + limit + AMPERSAND +
+                        RECURSIVE_QUERY_PARAM + EQUAL + FALSE;
         Response response = getResponseOfGetWithOAuth2(limitUrl, m2mToken);
 
         validateHttpStatusCode(response, HttpStatus.SC_OK);
@@ -763,8 +765,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         // Test case 1: URL with LIMIT_QUERY_PARAM but no value.
         String endpointURLWithEmptyLimit =
-                ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + AMPERSAND +
-                        RECURSIVE_QUERY_PARAM + FALSE;
+                ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + EQUAL + AMPERSAND +
+                        RECURSIVE_QUERY_PARAM + EQUAL + FALSE;
 
         Response responseWithEmptyLimit = getResponseOfGetWithOAuth2(endpointURLWithEmptyLimit, m2mToken);
 
@@ -774,7 +776,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         // Test case 2: URL without LIMIT_QUERY_PARAM.
         String endpointURLWithoutLimit =
-                ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + RECURSIVE_QUERY_PARAM + FALSE;
+                ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + RECURSIVE_QUERY_PARAM + EQUAL + FALSE;
 
         Response responseWithoutLimit = getResponseOfGetWithOAuth2(endpointURLWithoutLimit, m2mToken);
 
@@ -817,10 +819,10 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         for (Map<String, String> link : links) {
             if (rel.equals(link.get(REL))) {
                 String href = link.get(HREF);
-                if (href.contains(AFTER_QUERY_PARAM)) {
-                    return href.substring(href.indexOf(AFTER_QUERY_PARAM) + 6);
-                } else if (href.contains(BEFORE_QUERY_PARAM)) {
-                    return href.substring(href.indexOf(BEFORE_QUERY_PARAM) + 7);
+                if (href.contains(AFTER_QUERY_PARAM + EQUAL)) {
+                    return href.substring(href.indexOf(AFTER_QUERY_PARAM + EQUAL) + 6);
+                } else if (href.contains(BEFORE_QUERY_PARAM + EQUAL)) {
+                    return href.substring(href.indexOf(BEFORE_QUERY_PARAM + EQUAL) + 7);
                 }
             }
         }

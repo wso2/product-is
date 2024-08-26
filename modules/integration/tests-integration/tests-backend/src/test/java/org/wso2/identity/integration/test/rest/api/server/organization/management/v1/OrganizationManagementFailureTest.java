@@ -382,7 +382,7 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     @Test(dependsOnMethods = "testUpdateDiscoveryAttributesUnauthorized")
     public void testGetPaginatedOrganizationsWithInvalidLimit() {
 
-        String invalidLimitUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + "-1";
+        String invalidLimitUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + EQUAL + "-1";
         Response response = getResponseOfGetWithOAuth2(invalidLimitUrl, m2mToken);
         validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, ERROR_CODE_BAD_REQUEST);
     }
@@ -390,8 +390,8 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     @Test(dependsOnMethods = "testGetPaginatedOrganizationsWithInvalidLimit")
     public void testGetPaginatedOrganizationsWithInvalidAfterCursor() {
 
-        String invalidAfterCursorUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + "10"
-                + AMPERSAND + AFTER_QUERY_PARAM + INVALID_CURSOR;
+        String invalidAfterCursorUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + EQUAL + "10"
+                + AMPERSAND + AFTER_QUERY_PARAM + EQUAL + INVALID_CURSOR;
         Response response = getResponseOfGetWithOAuth2(invalidAfterCursorUrl, m2mToken);
         validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, ERROR_CODE_INVALID_PAGINATION_CURSOR);
     }
@@ -399,8 +399,8 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     @Test(dependsOnMethods = "testGetPaginatedOrganizationsWithInvalidAfterCursor")
     public void testGetPaginatedOrganizationsWithInvalidBeforeCursor() {
 
-        String invalidBeforeCursorUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + "10"
-                + AMPERSAND + BEFORE_QUERY_PARAM + INVALID_CURSOR;
+        String invalidBeforeCursorUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + EQUAL + "10"
+                + AMPERSAND + BEFORE_QUERY_PARAM + EQUAL + INVALID_CURSOR;
         Response response = getResponseOfGetWithOAuth2(invalidBeforeCursorUrl, m2mToken);
         validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, ERROR_CODE_INVALID_PAGINATION_CURSOR);
     }
