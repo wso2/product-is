@@ -80,6 +80,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -106,6 +107,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     private String switchedM2MToken;
     private String b2bApplicationID;
     private HttpClient client;
+    private List<Map<String, String>> organizations;
 
     protected OAuth2RestClient restClient;
 
@@ -614,7 +616,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @Test(dependsOnMethods = "testDeleteOrganization")
     public void createOrganizationsForPaginationTests() throws JSONException {
 
-        List<Map<String, String>> organizations = createOrganizations(NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS);
+        organizations = createOrganizations(NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS);
 
         if (organizations.size() != NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS) {
             throw new RuntimeException("Failed to create the expected number of organizations for testing pagination.");
