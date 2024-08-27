@@ -80,12 +80,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.API_SERVER_PATH;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.CONTENT_TYPE_ATTRIBUTE;
@@ -617,10 +617,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     public void createOrganizationsForPaginationTests() throws JSONException {
 
         organizations = createOrganizations(NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS);
-
-        if (organizations.size() != NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS) {
-            throw new RuntimeException("Failed to create the expected number of organizations for testing pagination.");
-        }
+        assertEquals(organizations.size(), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS);
     }
 
     @DataProvider(name = "organizationLimitValidationProvider")
@@ -633,7 +630,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         };
     }
 
-    @Test(dependsOnMethods = "createOrganizationsForPaginationTests", dataProvider = "organizationLimitValidationProvider")
+    @Test(dependsOnMethods = "createOrganizationsForPaginationTests",
+            dataProvider = "organizationLimitValidationProvider")
     public void testGetPaginatedOrganizationsWithLimit(int limit) {
 
         String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + EQUAL + limit;
@@ -822,9 +820,9 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
             if (rel.equals(link.get(REL))) {
                 String href = link.get(HREF);
                 if (href.contains(AFTER_QUERY_PARAM + EQUAL)) {
-                    return href.substring(href.indexOf(AFTER_QUERY_PARAM + EQUAL) + 6);
+                    return href.substring(href.indexOf(AFTER_QUERY_PARAM + EQUAL) + AFTER_QUERY_PARAM.length() + 1);
                 } else if (href.contains(BEFORE_QUERY_PARAM + EQUAL)) {
-                    return href.substring(href.indexOf(BEFORE_QUERY_PARAM + EQUAL) + 7);
+                    return href.substring(href.indexOf(BEFORE_QUERY_PARAM + EQUAL) + BEFORE_QUERY_PARAM.length() + 1);
                 }
             }
         }

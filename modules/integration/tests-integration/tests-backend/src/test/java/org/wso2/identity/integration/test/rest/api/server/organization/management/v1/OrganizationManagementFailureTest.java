@@ -54,8 +54,6 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     private static final String ERROR_CODE_BAD_REQUEST = "UE-10000";
     private static final String ERROR_CODE_INVALID_PAGINATION_CURSOR = "ORG-60026";
 
-
-
     private List<String> organizationIDs = new ArrayList<>();
     private String applicationID;
     private String m2mToken;
