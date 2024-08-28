@@ -162,6 +162,35 @@ public class ApplicationPatchTest extends ApplicationManagementBaseTest {
                         equalTo("sample.app.id"));
     }
 
+    @Test(description = "Test updating values in the application's general section " +
+            "does not clear values in trusted app configurations",
+            dependsOnMethods = "testUpdateAdvancedConfiguration")
+    public void testUpdateApplicationWithTrustedAppConfigs() throws Exception {
+
+        // Update the application with new values for app name
+        JSONObject updateRequest = new JSONObject();
+        updateRequest.put("name", UPDATED_APP_NAME);
+
+        String path = APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + appId;
+        getResponseOfPatch(path, updateRequest.toString()).then()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK);
+
+        // Verify that the trusted app configurations are still available.
+        getApplication(appId).then()
+                .body("name", equalTo(UPDATED_APP_NAME))
+                .body("advancedConfigurations.trustedAppConfiguration.find{ it.key == 'isFIDOTrustedApp' }.value",
+                        equalTo(true))
+                .body("advancedConfigurations.trustedAppConfiguration.find{ it.key == 'isConsentGranted' }.value",
+                        equalTo(true))
+                .body("advancedConfigurations.trustedAppConfiguration.find{ it.key == 'androidPackageName' }.value",
+                        equalTo("sample.package.name"))
+                .body("advancedConfigurations.trustedAppConfiguration.find{ it.key == 'androidThumbprints' }.value",
+                        Matchers.hasItem("sampleThumbprint"))
+                .body("advancedConfigurations.trustedAppConfiguration.find{ it.key == 'appleAppId' }.value",
+                        equalTo("sample.app.id"));
+    }
+
     @Test(description = "Test updating the claim configuration of an application",
             dependsOnMethods = "testUpdateAdvancedConfiguration")
     public void testUpdateClaimConfiguration() throws Exception {
