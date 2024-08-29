@@ -39,10 +39,12 @@ import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationListItem;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationListResponse;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.DomainAPICreationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationSharePOSTRequest;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthorizedAPICreationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthorizedDomainAPIResponse;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAML2ServiceProvider;
 import org.wso2.identity.integration.test.rest.api.server.roles.v2.model.RoleV2;
@@ -52,6 +54,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -483,6 +486,39 @@ public class OAuth2RestClient extends RestBaseClient {
             ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
             APIResourceResponse apiResourceResponse = jsonWriter.readValue(responseBody, APIResourceResponse.class);
             return apiResourceResponse.getScopes();
+        }
+    }
+
+    /**
+     * Creates a domain API.
+     *
+     * @param domainAPICreationModel Domain API create request model
+     * @return ID of the created domain API resource
+     */
+    public String createDomainAPIResource(DomainAPICreationModel domainAPICreationModel) throws IOException {
+
+        String jsonRequestBody = toJSONString(domainAPICreationModel);
+
+        try (CloseableHttpResponse response = getResponseOfHttpPost(apiResourceManagementApiBasePath, jsonRequestBody,
+                getHeaders())) {
+            String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
+            return locationElements[locationElements.length - 1];
+        }
+    }
+
+    /**
+     * Deletes a domain API.
+     *
+     * @param domainAPIId ID of the domain API to be deleted
+     * @return Status code of the action creation
+     * @throws IOException If an error occurred while deleting the domain API
+     */
+    public int deleteDomainAPIResource(String domainAPIId) throws IOException {
+
+        String endpointUrl = apiResourceManagementApiBasePath + "/" + domainAPIId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpDelete(endpointUrl, getHeaders())) {
+            return response.getStatusLine().getStatusCode();
         }
     }
 

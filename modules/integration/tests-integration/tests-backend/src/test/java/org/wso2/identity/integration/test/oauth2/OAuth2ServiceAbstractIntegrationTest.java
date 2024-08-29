@@ -54,6 +54,7 @@ import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserSto
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.APIResourceListItem;
 import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.ScopeGetModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AccessTokenConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AdvancedApplicationConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
@@ -63,6 +64,7 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration.DialectEnum;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimMappings;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.DomainAPICreationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.RequestedClaimConfiguration;
@@ -105,7 +107,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	public static final String OIDC = "oidc";
 	public static final String SAML = "saml";
 	private final static int TOMCAT_PORT = 8490;
-
+	private static final boolean REQUIRES_AUTHORIZATION = true;
 	protected ApplicationManagementServiceClient appMgtclient;
 	protected OauthAdminClient adminClient;
 	protected RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
@@ -168,6 +170,35 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 
 		application.setClaimConfiguration(setApplicationClaimConfig()); ;
 
+		String appId = addApplication(application);
+
+		return getApplication(appId);
+	}
+
+	public ApplicationResponseModel addApplicationWithGrantType(String grantType) throws Exception {
+
+		ApplicationModel application = new ApplicationModel();
+
+		List<String> grantTypes = new ArrayList<>();
+		Collections.addAll(grantTypes, grantType);
+
+		List<String> callBackUrls = new ArrayList<>();
+		Collections.addAll(callBackUrls, OAuth2Constant.CALLBACK_URL);
+
+		OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
+		oidcConfig.setGrantTypes(grantTypes);
+		oidcConfig.setCallbackURLs(callBackUrls);
+		AccessTokenConfiguration accessTokenConfig = new AccessTokenConfiguration().type("JWT");
+		accessTokenConfig.setUserAccessTokenExpiryInSeconds(3600L);
+		accessTokenConfig.setApplicationAccessTokenExpiryInSeconds(3600L);
+		oidcConfig.setAccessToken(accessTokenConfig);
+
+		InboundProtocols inboundProtocolsConfig = new InboundProtocols();
+		inboundProtocolsConfig.setOidc(oidcConfig);
+
+		application.setInboundProtocolConfiguration(inboundProtocolsConfig);
+		application.setName(SERVICE_PROVIDER_NAME);
+		application.setIsManagementApp(true);
 		String appId = addApplication(application);
 
 		return getApplication(appId);
@@ -1077,5 +1108,91 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 			return roles.get(0);
 		}
 		return null;
+	}
+
+	/**
+	 * Create a domain API.
+	 *
+	 * @param domainAPICreationModel Domain API creation request model
+	 * @return ID of the created Domain API
+	 */
+	public String createDomainAPI(DomainAPICreationModel domainAPICreationModel) {
+
+		try {
+			return restClient.createDomainAPIResource(domainAPICreationModel);
+		} catch (Exception e) {
+			throw new RuntimeException("Error while creating domain API " +
+					domainAPICreationModel.getName());
+		}
+	}
+
+	/**
+	 * Create a domain API with an external service integrated.
+	 *
+	 * @param externalServiceName Name of the external service to be integrated
+	 * @param externalServiceURI  URL of the external service
+	 * @param domainScopes        Custom scopes related to the domain API
+	 * @return ID of the created domain API resource
+	 */
+	public String createDomainAPI(String externalServiceName, String externalServiceURI,
+								  List<String> domainScopes) {
+
+		DomainAPICreationModel domainAPICreationModel = new DomainAPICreationModel();
+		domainAPICreationModel.setName(externalServiceName);
+		domainAPICreationModel.setIdentifier(externalServiceURI);
+		domainAPICreationModel.setDescription("This is a test external service");
+		domainAPICreationModel.setRequiresAuthorization(REQUIRES_AUTHORIZATION);
+		List<ScopeGetModel> newScopes = new ArrayList<>();
+		domainScopes.forEach(scope -> {
+			ScopeGetModel newCustomScope = new ScopeGetModel();
+			newCustomScope.setName(scope);
+			newCustomScope.setDescription("This is a test scope");
+			newCustomScope.setDisplayName(scope);
+			newScopes.add(newCustomScope);
+		});
+		domainAPICreationModel.setScopes(newScopes);
+		try {
+			return restClient.createDomainAPIResource(domainAPICreationModel);
+		} catch (Exception e) {
+			throw new RuntimeException("Error while creating domain API " +
+					domainAPICreationModel.getName());
+		}
+	}
+
+	/**
+	 * Delete a domain API.
+	 *
+	 * @param domainAPIId ID of the domain API
+	 * @return Status code of the domain API deletion
+	 */
+	public int deleteDomainAPI(String domainAPIId) {
+
+		try {
+			return restClient.deleteDomainAPIResource(domainAPIId);
+		} catch (IOException e) {
+			throw new RuntimeException("Error while deleting domain API of Id " + domainAPIId);
+		}
+	}
+
+	/**
+	 * Authorize a domain API to an application.
+	 *
+	 * @param applicationId ID of the application
+	 * @param domainAPIId ID of the domain API to be authorized
+	 * @param domainScopes Custom scopes related to the domain API
+	 */
+	public void authorizeDomainAPIs(String applicationId, String domainAPIId, List<String> domainScopes) {
+
+		AuthorizedAPICreationModel authorizedDomainAPICreationModel = new AuthorizedAPICreationModel();
+		authorizedDomainAPICreationModel.setId(domainAPIId);
+		authorizedDomainAPICreationModel.setPolicyIdentifier("RBAC");
+		authorizedDomainAPICreationModel.setScopes(domainScopes);
+		try {
+			restClient.addAPIAuthorizationToApplication(applicationId, authorizedDomainAPICreationModel);
+		} catch (Exception e) {
+			throw new RuntimeException("Error while authorizing domain API " +
+					authorizedDomainAPICreationModel.getId() +
+					" to application " + applicationId, e);
+		}
 	}
 }

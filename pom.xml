@@ -2060,6 +2060,18 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
+                <groupId>org.wiremock</groupId>
+                <artifactId>wiremock</artifactId>
+                <version>${wiremock.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.yaml</groupId>
+                <artifactId>snakeyaml</artifactId>
+                <version>${snakeyaml.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
                 <groupId>io.swagger</groupId>
                 <artifactId>swagger-annotations</artifactId>
                 <version>${swagger-core-version}</version>
@@ -2561,6 +2573,8 @@
         <nimbus.oidc.sdk.version>6.13</nimbus.oidc.sdk.version>
         <apacheds.core.version>2.0.0.AM26</apacheds.core.version>
         <apacheds.api.version>2.0.0.AM4</apacheds.api.version>
+        <wiremock.version>3.9.1</wiremock.version>
+        <snakeyaml.version>2.2</snakeyaml.version>
         <!--Rest API test -->
         <rest.assured.version>5.0.0</rest.assured.version>
         <swagger-core-version>1.5.22</swagger-core-version>
