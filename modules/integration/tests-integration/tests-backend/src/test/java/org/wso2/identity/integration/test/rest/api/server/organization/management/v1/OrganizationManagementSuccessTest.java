@@ -75,6 +75,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -86,6 +87,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.API_SERVER_PATH;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.CONTENT_TYPE_ATTRIBUTE;
@@ -110,9 +112,6 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     private List<Map<String, String>> organizations;
 
     protected OAuth2RestClient restClient;
-
-    private static final int NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS = 20;
-    private static final int DEFAULT_ORG_LIMIT = 15;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public OrganizationManagementSuccessTest(TestUserMode userMode) throws Exception {
@@ -669,7 +668,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         };
     }
 
-    @Test(dependsOnMethods = "createOrganizationsForPaginationTests", dataProvider = "organizationCursorValidationProvider")
+    @Test(dependsOnMethods = "createOrganizationsForPaginationTests",
+            dataProvider = "organizationCursorValidationProvider")
     public void testGetPaginatedOrganizationsWithCursor(int limit) {
 
         String after;
@@ -742,7 +742,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         };
     }
 
-    @Test(dependsOnMethods = "createOrganizationsForPaginationTests", dataProvider = "organizationCursorEdgeCasesProvider")
+    @Test(dependsOnMethods = "createOrganizationsForPaginationTests",
+            dataProvider = "organizationCursorEdgeCasesProvider")
     public void testGetPaginatedOrganizationsForEdgeCases(int limit) {
 
         String limitUrl =
@@ -785,48 +786,206 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         validateOrganizationsForDefaultLimit(responseWithoutLimit, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS);
     }
 
-    private List<Map<String, String>> createOrganizations(int numberOfOrganizations) throws JSONException {
+    @Test(dependsOnMethods = "createOrganizationsForPaginationTests")
+    public void testEnableEmailDomainDiscovery() {
 
-        List<Map<String, String>> newOrganizations = new ArrayList<>();
+        String enableDiscoveryPayload = "{\"properties\":[{\"key\":\"emailDomain.enable\",\"value\":true}]}";
 
-        for (int i = 0; i < numberOfOrganizations; i++) {
-            JSONObject body = new JSONObject()
-                    .put(ORGANIZATION_NAME, String.format(ORGANIZATION_NAME_FORMAT, i));
+        // Send POST request to enable email domain discovery
+        Response response = getResponseOfPostWithOAuth2(
+                ORGANIZATION_CONFIGS_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH,
+                enableDiscoveryPayload,
+                m2mToken);
 
-            Response response =
-                    getResponseOfPostWithOAuth2(ORGANIZATION_MANAGEMENT_API_BASE_PATH, body.toString(), m2mToken);
+        // Validate that the request was successful
+        validateHttpStatusCode(response, HttpStatus.SC_CREATED);
 
-            if (response.getStatusCode() == HttpStatus.SC_CREATED) {
-                // Extract the organization ID (UUID) from the response body.
-                JSONObject responseBody = new JSONObject(response.getBody().asString());
-                String organizationId = responseBody.getString("id");
-
-                // Store the created organization details.
-                Map<String, String> org = new HashMap<>();
-                org.put(ORGANIZATION_NAME, String.format(ORGANIZATION_NAME_FORMAT, i));
-                org.put(ORGANIZATION_ID, organizationId);
-                newOrganizations.add(org);
-            } else {
-                throw new RuntimeException("Failed to create organization " + i);
-            }
-        }
-
-        return newOrganizations;
+        // Validate the response content
+        boolean isEnabled = response.jsonPath().getBoolean("properties.find { it.key == 'emailDomain.enable' }.value");
+        Assert.assertTrue(isEnabled, "Email domain discovery was not successfully enabled.");
     }
 
-    private String getLink(List<Map<String, String>> links, String rel) {
+    @Test(dependsOnMethods = "testEnableEmailDomainDiscovery")
+    public void testAddEmailDomainsToOrganization() {
 
-        for (Map<String, String> link : links) {
-            if (rel.equals(link.get(REL))) {
-                String href = link.get(HREF);
-                if (href.contains(AFTER_QUERY_PARAM + EQUAL)) {
-                    return href.substring(href.indexOf(AFTER_QUERY_PARAM + EQUAL) + AFTER_QUERY_PARAM.length() + 1);
-                } else if (href.contains(BEFORE_QUERY_PARAM + EQUAL)) {
-                    return href.substring(href.indexOf(BEFORE_QUERY_PARAM + EQUAL) + BEFORE_QUERY_PARAM.length() + 1);
-                }
-            }
+        for (int i = 0; i < NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS; i++) {
+            String organizationId = organizations.get(i).get(ORGANIZATION_ID);
+            addEmailDomainsToOrganization(organizationId, String.format(ORGANIZATION_EMAIL_FORMAT_1, i),
+                    String.format(ORGANIZATION_EMAIL_FORMAT_2, i));
         }
-        return null;
+
+    }
+
+    @DataProvider(name = "organizationDiscoveryLimitProvider")
+    public Object[][] organizationDiscoveryLimitProvider() {
+
+        return new Object[][]{
+                {3}, {5}, {10}, {15}, {17}, {20}, {25}
+        };
+    }
+
+    @Test(dependsOnMethods = "testAddEmailDomainsToOrganization",
+            dataProvider = "organizationDiscoveryLimitProvider")
+    public void testOrganizationDiscoveryGetLimit(int limit) {
+
+        int offset = 0;
+        List<String> accumulatedOrganizationNames = new ArrayList<>();
+
+        // Loop through each page to test the organization discovery GET API limit
+        while (offset < NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS) {
+            String queryUrl =
+                    ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH + QUESTION_MARK +
+                            OFFSET_QUERY_PARAM + EQUAL + offset +
+                            AMPERSAND + LIMIT_QUERY_PARAM + EQUAL + limit;
+            Response response = getResponseOfGetWithOAuth2(queryUrl, m2mToken);
+
+            validateHttpStatusCode(response, HttpStatus.SC_OK);
+
+            List<Map<String, String>> returnedOrganizations = response.jsonPath().getList(ORGANIZATIONS_PATH_PARAM);
+
+            Assert.assertEquals(returnedOrganizations.size(),
+                    Math.min(limit, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS - offset));
+
+            // Validate no duplicate organization names
+            for (Map<String, String> org : returnedOrganizations) {
+                String orgName = org.get(ORGANIZATION_NAME_ATTRIBUTE);
+                assertFalse(accumulatedOrganizationNames.contains(orgName),
+                        "Duplicate organization found: " + orgName);
+                accumulatedOrganizationNames.add(orgName);
+            }
+
+            offset += limit;
+        }
+
+        // Sort the list based on the numeric part of the organization name
+        accumulatedOrganizationNames.sort(Comparator.comparingInt(s -> Integer.parseInt(s.split("-")[1])));
+
+        // Compare accumulated organization names with the original list (order does not matter)
+        validateOrgNamesForOrganizationDiscoveryGet(accumulatedOrganizationNames);
+    }
+
+    @DataProvider(name = "organizationDiscoveryPaginationProvider")
+    public Object[][] organizationDiscoveryPaginationProvider() {
+
+        return new Object[][]{
+                {1}, {2}, {5}, {6}, {10}, {17}
+        };
+    }
+
+    @Test(dependsOnMethods = "testAddEmailDomainsToOrganization",
+            dataProvider = "organizationDiscoveryPaginationProvider")
+    public void testGetPaginatedOrganizationsDiscovery(int limit) {
+
+        int offset = 0;
+        String nextLink;
+        String previousLink;
+        String queryUrl = buildQueryUrl(offset, limit);
+
+        List<Map<String, String>> links;
+        List<String> forwardAccumulatedOrganizationNames = new ArrayList<>();
+        List<String> backwardAccumulatedOrganizationNames = new ArrayList<>();
+
+        // Forward Pagination
+        do {
+            links = getPaginationLinksForOrganizationDiscovery(queryUrl, offset, limit,
+                    forwardAccumulatedOrganizationNames, true);
+            nextLink = getLink(links, LINK_REL_NEXT);
+            previousLink = getLink(links, LINK_REL_PREVIOUS);
+            queryUrl = buildNewQueryUrl(nextLink, queryUrl);
+
+            validatePaginationLinksForOrganizationDiscovery(offset == 0,
+                    offset + limit >= NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS,
+                    nextLink, previousLink);
+
+            offset += limit;
+
+        } while (nextLink != null);
+
+        // Backward Pagination
+        do {
+            links = getPaginationLinksForOrganizationDiscovery(queryUrl, offset, limit,
+                    backwardAccumulatedOrganizationNames, false);
+            nextLink = getLink(links, LINK_REL_NEXT);
+            previousLink = getLink(links, LINK_REL_PREVIOUS);
+            queryUrl = buildNewQueryUrl(previousLink, queryUrl);
+
+            validatePaginationLinksForOrganizationDiscovery(offset == limit,
+                    offset >= NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS,
+                    nextLink, previousLink);
+
+            offset -= limit;
+
+        } while (previousLink != null);
+
+        forwardAccumulatedOrganizationNames.sort(Comparator.comparingInt(s -> Integer.parseInt(s.split("-")[1])));
+        validateOrgNamesForOrganizationDiscoveryGet(forwardAccumulatedOrganizationNames);
+
+        backwardAccumulatedOrganizationNames.sort(Comparator.comparingInt(s -> Integer.parseInt(s.split("-")[1])));
+        validateOrgNamesForOrganizationDiscoveryGet(backwardAccumulatedOrganizationNames);
+    }
+
+    @DataProvider(name = "organizationDiscoveryPaginationEdgeCaseDataProvider")
+    public Object[][] organizationDiscoveryPaginationEdgeCaseDataProvider() {
+
+        return new Object[][]{
+                {0}, {20}, {25}
+        };
+    }
+
+    @Test(dependsOnMethods = "testAddEmailDomainsToOrganization",
+            dataProvider = "organizationDiscoveryPaginationEdgeCaseDataProvider")
+    public void testOrganizationDiscoveryPaginationEdgeCases(int limit) {
+
+        String queryUrl = buildQueryUrl(0, limit);
+
+        // Send GET request with the specified limit
+        Response response = getResponseOfGetWithOAuth2(queryUrl, m2mToken);
+
+        // Validate the HTTP status code
+        validateHttpStatusCode(response, HttpStatus.SC_OK);
+
+        int expectedCount = Math.min(limit, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS);
+
+        // Validate the response content
+        int actualCount = response.jsonPath().getInt("count");
+        int totalResults = response.jsonPath().getInt("totalResults");
+        int startIndex = response.jsonPath().getInt("startIndex");
+        List<Map<String, String>> links = response.jsonPath().getList(LINKS_PATH_PARAM);
+        List<Map<String, String>> returnedOrganizations = response.jsonPath().getList("organizations");
+
+        Assert.assertEquals(actualCount, expectedCount,
+                "Unexpected number of organizations returned for limit: " + limit);
+        Assert.assertEquals(totalResults, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS,
+                "Total results should match the number of organizations available.");
+        Assert.assertEquals(startIndex, 1, "Start index should always be 1 for offset 0.");
+
+        validateOrganizationDiscoveryEdgeCaseLinks(links, limit);
+        validateOrganizationDiscoveryEdgeCaseOrganizations(returnedOrganizations, limit);
+    }
+
+    @Test(dependsOnMethods = "testAddEmailDomainsToOrganization")
+    public void testOrganizationDiscoveryGetLimitEdgeCases() {
+
+        // Test case 1: URL with LIMIT_QUERY_PARAM but no value.
+        String endpointURLWithEmptyLimit =
+                ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH + QUESTION_MARK +
+                        FILTER_QUERY_PARAM + EQUAL + AMPERSAND + LIMIT_QUERY_PARAM + EQUAL + AMPERSAND +
+                        OFFSET_QUERY_PARAM + EQUAL + ZERO;
+
+        Response responseWithEmptyLimit = getResponseOfGetWithOAuth2(endpointURLWithEmptyLimit, m2mToken);
+        validateHttpStatusCode(responseWithEmptyLimit, HttpStatus.SC_OK);
+
+        validateResponseForOrganizationDiscoveryLDefaultCases(responseWithEmptyLimit);
+
+        // Test case 2: URL without LIMIT_QUERY_PARAM.
+        String endpointURLWithoutLimit =
+                ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH + QUESTION_MARK +
+                        FILTER_QUERY_PARAM + EQUAL + AMPERSAND + OFFSET_QUERY_PARAM + EQUAL + ZERO;
+
+        Response responseWithoutLimit = getResponseOfGetWithOAuth2(endpointURLWithoutLimit, m2mToken);
+        validateHttpStatusCode(responseWithoutLimit, HttpStatus.SC_OK);
+
+        validateResponseForOrganizationDiscoveryLDefaultCases(responseWithoutLimit);
     }
 
     private void validateOrganizationsOnPage(Response response, int pageNum, int totalOrganizations, int limit) {
@@ -883,5 +1042,196 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
             Assert.assertNull(getLink(links, LINK_REL_NEXT),
                     "'after' link should not be present when organizations are within default limit.");
         }
+    }
+
+    private void validateOrgNamesForOrganizationDiscoveryGet(List<String> accumulatedOrganizationNames) {
+
+        // Ensure both sets contain the same organization names
+        for (int i = 0; i < NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS; i++) {
+            assertEquals(accumulatedOrganizationNames.get(i), organizations.get(i).get(ORGANIZATION_NAME),
+                    "Organization names do not match.");
+        }
+    }
+
+    private void validatePaginationLinksForOrganizationDiscovery(boolean isFirstPage, boolean isLastPage,
+                                                                 String nextLink,
+                                                                 String previousLink) {
+
+        if (isFirstPage) {
+            Assert.assertNotNull(nextLink, "Next link should be available on the first page.");
+            Assert.assertNull(previousLink, "Previous link should be null on the first page.");
+        } else if (isLastPage) {
+            Assert.assertNull(nextLink, "Next link should be null on the last page.");
+            Assert.assertNotNull(previousLink, "Previous link should be available on the last page.");
+        } else {
+            Assert.assertNotNull(nextLink, "Next link should be available on middle pages.");
+            Assert.assertNotNull(previousLink, "Previous link should be available on middle pages.");
+        }
+    }
+
+    private void validateOrganizationDiscoveryEdgeCaseLinks(List<Map<String, String>> links, int limit) {
+
+        if (limit == 0) {
+            Assert.assertNotNull(getLink(links, LINK_REL_NEXT),
+                    "'next' link should be present when the limit is 0.");
+        } else {
+            Assert.assertTrue(links.isEmpty(),
+                    "'links' should be empty for non-zero edge case limits.");
+        }
+    }
+
+    private void validateOrganizationDiscoveryEdgeCaseOrganizations(List<Map<String, String>> organizations,
+                                                                    int limit) {
+
+        if (limit == 0) {
+            Assert.assertNull(organizations,
+                    "No organizations should be returned when limit is 0.");
+        } else {
+            Assert.assertEquals(organizations.size(), Math.min(limit, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS),
+                    "Number of organizations in the response does not match the expected count.");
+
+            // Validation to ensure correct organization data is returned
+            validateOrgNamesOfOrganizationDiscoveryGet(organizations);
+        }
+    }
+
+    private void validateOrgNamesOfOrganizationDiscoveryGet(List<Map<String, String>> organizations) {
+
+        List<String> accumulatedOrganizationNames = new ArrayList<>();
+        for (Map<String, String> org : organizations) {
+            String orgName = org.get(ORGANIZATION_NAME_ATTRIBUTE);
+            accumulatedOrganizationNames.add(orgName);
+        }
+        accumulatedOrganizationNames.sort(Comparator.comparingInt(s -> Integer.parseInt(s.split("-")[1])));
+
+        validateOrgNamesForOrganizationDiscoveryGet(accumulatedOrganizationNames);
+    }
+
+    private void validateResponseForOrganizationDiscoveryLDefaultCases(Response response) {
+
+        int actualCount = response.jsonPath().getInt("count");
+        int totalResults = response.jsonPath().getInt("totalResults");
+        int startIndex = response.jsonPath().getInt("startIndex");
+        List<Map<String, String>> links = response.jsonPath().getList(LINKS_PATH_PARAM);
+        List<Map<String, String>> returnedOrganizations = response.jsonPath().getList("organizations");
+
+        Assert.assertEquals(actualCount, DEFAULT_ORG_LIMIT, "Unexpected count of organizations returned.");
+        Assert.assertEquals(totalResults, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, "Unexpected total results.");
+        Assert.assertEquals(startIndex, 1, "Start index should be 1.");
+
+        if (totalResults > DEFAULT_ORG_LIMIT) {
+            Assert.assertNotNull(getLink(links, LINK_REL_NEXT), "'next' link should be present.");
+        } else {
+            Assert.assertTrue(links.isEmpty(), "'links' should be empty for non-zero edge case limits.");
+        }
+
+        Assert.assertEquals(returnedOrganizations.size(),
+                Math.min(DEFAULT_ORG_LIMIT, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS),
+                "Number of organizations in the response does not match the expected count.");
+    }
+
+    private String getLink(List<Map<String, String>> links, String rel) {
+
+        for (Map<String, String> link : links) {
+            if (rel.equals(link.get(REL))) {
+                String href = link.get(HREF);
+                if (href.contains(AFTER_QUERY_PARAM + EQUAL)) {
+                    return href.substring(href.indexOf(AFTER_QUERY_PARAM + EQUAL) + AFTER_QUERY_PARAM.length() + 1);
+                } else if (href.contains(BEFORE_QUERY_PARAM + EQUAL)) {
+                    return href.substring(href.indexOf(BEFORE_QUERY_PARAM + EQUAL) + BEFORE_QUERY_PARAM.length() + 1);
+                } else {
+                    return href;
+                }
+            }
+        }
+        return null;
+    }
+
+    private List<Map<String, String>> getPaginationLinksForOrganizationDiscovery(
+            String queryUrl, int offset, int limit, List<String> accumulatedOrganizationNames, boolean isForward) {
+
+        Response response = getResponseOfGetWithOAuth2(queryUrl, m2mToken);
+        validateHttpStatusCode(response, HttpStatus.SC_OK);
+
+        List<Map<String, String>> returnedOrganizations = response.jsonPath().getList(ORGANIZATIONS_PATH_PARAM);
+
+        int expectedSize = isForward
+                ? Math.min(limit, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS - offset)
+                : Math.min(limit, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS - offset + limit);
+
+        Assert.assertEquals(returnedOrganizations.size(), expectedSize);
+
+        addReturnedOrganizationsToList(returnedOrganizations, accumulatedOrganizationNames);
+
+        return response.jsonPath().getList(LINKS_PATH_PARAM);
+    }
+
+    private void addEmailDomainsToOrganization(String organizationId, String... domains) {
+
+        String addDomainsPayload = String.format(
+                "{" +
+                        "\"attributes\": [{" +
+                        "\"type\": \"emailDomain\"," +
+                        "\"values\": [\"%s\"]" +
+                        "}]," +
+                        "\"organizationId\": \"%s\"" +
+                        "}",
+                String.join("\",\"", domains),
+                organizationId);
+
+        Response response =
+                getResponseOfPostWithOAuth2(ORGANIZATION_MANAGEMENT_API_BASE_PATH +
+                        ORGANIZATION_DISCOVERY_API_PATH, addDomainsPayload, m2mToken);
+        validateHttpStatusCode(response, HttpStatus.SC_CREATED);
+    }
+
+    private void addReturnedOrganizationsToList(List<Map<String, String>> returnedOrganizations,
+                                                List<String> accumulatedOrganizationNames) {
+
+        for (Map<String, String> org : returnedOrganizations) {
+            accumulatedOrganizationNames.add(org.get(ORGANIZATION_NAME_ATTRIBUTE));
+        }
+    }
+
+    private List<Map<String, String>> createOrganizations(int numberOfOrganizations) throws JSONException {
+
+        List<Map<String, String>> newOrganizations = new ArrayList<>();
+
+        for (int i = 0; i < numberOfOrganizations; i++) {
+            JSONObject body = new JSONObject()
+                    .put(ORGANIZATION_NAME, String.format(ORGANIZATION_NAME_FORMAT, i));
+
+            Response response =
+                    getResponseOfPostWithOAuth2(ORGANIZATION_MANAGEMENT_API_BASE_PATH, body.toString(), m2mToken);
+
+            if (response.getStatusCode() == HttpStatus.SC_CREATED) {
+                // Extract the organization ID (UUID) from the response body.
+                JSONObject responseBody = new JSONObject(response.getBody().asString());
+                String organizationId = responseBody.getString("id");
+
+                // Store the created organization details.
+                Map<String, String> org = new HashMap<>();
+                org.put(ORGANIZATION_NAME, String.format(ORGANIZATION_NAME_FORMAT, i));
+                org.put(ORGANIZATION_ID, organizationId);
+                newOrganizations.add(org);
+            } else {
+                throw new RuntimeException("Failed to create organization " + i);
+            }
+        }
+
+        return newOrganizations;
+    }
+
+    private String buildQueryUrl(int offset, int limit) {
+
+        return ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH + QUESTION_MARK +
+                OFFSET_QUERY_PARAM + EQUAL + offset + AMPERSAND + LIMIT_QUERY_PARAM + EQUAL + limit;
+    }
+
+    private String buildNewQueryUrl(String link, String queryUrl) {
+
+        return link != null ?
+                link.substring(link.lastIndexOf(
+                        ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH)) : queryUrl;
     }
 }
