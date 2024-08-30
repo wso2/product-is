@@ -928,15 +928,16 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     public Object[][] organizationDiscoveryPaginationNumericLimitEdgeCasesProvider() {
 
         return new Object[][]{
-                {0}, {20}, {25}
+                {0, 0}, {0, 20}, {0, 25},
+                {2, 0}, {2, 20}, {2, 25}
         };
     }
 
     @Test(dependsOnMethods = "testAddEmailDomainsToOrganization",
             dataProvider = "organizationDiscoveryPaginationNumericLimitEdgeCasesProvider")
-    public void testGetPaginatedOrganizationsDiscoveryForNumericEdgeCasesOfLimit(int limit) {
+    public void testGetPaginatedOrganizationsDiscoveryForNumericEdgeCasesOfLimit(int offset, int limit) {
 
-        String queryUrl = buildQueryUrl(0, limit);
+        String queryUrl = buildQueryUrl(offset, limit);
 
         // Send GET request with the specified limit
         Response response = getResponseOfGetWithOAuth2(queryUrl, m2mToken);
@@ -944,7 +945,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         // Validate the HTTP status code
         validateHttpStatusCode(response, HttpStatus.SC_OK);
 
-        int expectedCount = Math.min(limit, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS);
+        int expectedCount = Math.min(limit, (NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS - offset));
 
         // Validate the response content
         int actualCount = response.jsonPath().getInt("count");
@@ -957,10 +958,10 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
                 "Unexpected number of organizations returned for limit: " + limit);
         Assert.assertEquals(totalResults, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS,
                 "Total results should match the number of organizations available.");
-        Assert.assertEquals(startIndex, 1, "Start index should always be 1 for offset 0.");
+        Assert.assertEquals(startIndex, offset + 1, "Start index should always be 1 greater than the offset.");
 
-        validateOrganizationDiscoveryEdgeCaseLinks(links, limit);
-        validateOrganizationDiscoveryEdgeCaseOrganizations(returnedOrganizations, limit);
+        validateOrganizationDiscoveryEdgeCaseLinks(links, limit, offset);
+        validateOrganizationDiscoveryEdgeCaseOrganizations(returnedOrganizations, limit, offset);
     }
 
     @Test(dependsOnMethods = "testAddEmailDomainsToOrganization")
@@ -989,12 +990,12 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     }
 
     //Numeric and Non-Numeric Offset Edge Cases
-        //Numeric - Limit != 0 & Offset = {0}, {20}, {25}
-        //Non-Numeric - Limit != 0 & Offset =, and no Offset param
+    //Numeric - Limit != 0 & Offset = {0}, {20}, {25}
+    //Non-Numeric - Limit != 0 & Offset =, and no Offset param
 
     //Numeric and Non-Numeric Limit & Offset Edge Cases
-        //Numeric - Limit = {0}, {20}, {25} & Offset = {0}, {20}, {25}
-        //Non-Numeric - Limit=&Offset=, and no Limit and Offset params
+    //Numeric - Limit = {0}, {20}, {25} & Offset = {0}, {20}, {25}
+    //Non-Numeric - Limit=&Offset=, and no Limit and Offset params
 
     private void validateOrganizationsOnPage(Response response, int pageNum, int totalOrganizations, int limit) {
 
@@ -1077,29 +1078,47 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         }
     }
 
-    private void validateOrganizationDiscoveryEdgeCaseLinks(List<Map<String, String>> links, int limit) {
+    private void validateOrganizationDiscoveryEdgeCaseLinks(List<Map<String, String>> links, int limit, int offset) {
 
         if (limit == 0) {
-            Assert.assertNotNull(getLink(links, LINK_REL_NEXT),
-                    "'next' link should be present when the limit is 0.");
+            if (offset == 0) {
+                Assert.assertNotNull(getLink(links, LINK_REL_NEXT),
+                        "'next' link should be present when the limit and offset is 0.");
+            } else {
+                Assert.assertNotNull(getLink(links, LINK_REL_NEXT),
+                        "'next' link should be present when the limit is 0 but the offset is non-zero.");
+                Assert.assertNotNull(getLink(links, LINK_REL_PREVIOUS),
+                        "'previous' link should be present when the limit is 0 but the offset is non-zero.");
+            }
         } else {
-            Assert.assertTrue(links.isEmpty(),
-                    "'links' should be empty for non-zero edge case limits.");
+            if (offset == 0) {
+                Assert.assertTrue(links.isEmpty(),
+                        "'links' should be empty for non-zero edge case limits.");
+            } else {
+                Assert.assertNotNull(getLink(links, LINK_REL_PREVIOUS),
+                        "'previous' link should be present for non-zero edge case limits with non-zero offset.");
+            }
         }
+
     }
 
     private void validateOrganizationDiscoveryEdgeCaseOrganizations(List<Map<String, String>> organizations,
-                                                                    int limit) {
+                                                                    int limit, int offset) {
 
         if (limit == 0) {
             Assert.assertNull(organizations,
                     "No organizations should be returned when limit is 0.");
         } else {
-            Assert.assertEquals(organizations.size(), Math.min(limit, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS),
+            Assert.assertEquals(organizations.size(), Math.min(limit,
+                            (NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS - offset)),
                     "Number of organizations in the response does not match the expected count.");
 
-            // Validation to ensure correct organization data is returned
-            validateOrgNamesOfOrganizationDiscoveryGet(organizations);
+            // Validation to ensure correct organization data is returned - Only for non-zero offset.
+            /* Since, the organizations are ordered in ORG_ID, we cannot validate the OrganizationName results
+            for non-zero offsets.*/
+            if (offset == 0) {
+                validateOrgNamesOfOrganizationDiscoveryGet(organizations);
+            }
         }
     }
 
