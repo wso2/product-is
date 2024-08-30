@@ -2365,7 +2365,7 @@
 
         <!-- Identity Event Handler Versions -->
         <identity.event.handler.account.lock.version>1.9.11</identity.event.handler.account.lock.version>
-        <identity.event.handler.notification.version>1.8.27</identity.event.handler.notification.version>
+        <identity.event.handler.notification.version>1.9.0</identity.event.handler.notification.version>
 
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
@@ -2446,9 +2446,9 @@
         <conditional.authentication.functions.version>1.2.63</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.27.0</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.7.146</identity.apps.myaccount.version>
-        <identity.apps.core.version>2.4.30</identity.apps.core.version>
+        <identity.apps.console.version>2.28.0</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.7.150</identity.apps.myaccount.version>
+        <identity.apps.core.version>2.4.31</identity.apps.core.version>
         <identity.apps.tests.version>1.6.378</identity.apps.tests.version>
 
         <!-- Charon -->
