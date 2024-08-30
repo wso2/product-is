@@ -619,8 +619,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         assertEquals(organizations.size(), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS);
     }
 
-    @DataProvider(name = "organizationLimitValidationProvider")
-    public Object[][] organizationLimitValidationProvider() {
+    @DataProvider(name = "organizationLimitValidationDataProvider")
+    public Object[][] organizationLimitValidationDataProvider() {
 
         return new Object[][]{
                 {10},
@@ -630,7 +630,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     }
 
     @Test(dependsOnMethods = "createOrganizationsForPaginationTests",
-            dataProvider = "organizationLimitValidationProvider")
+            dataProvider = "organizationLimitValidationDataProvider")
     public void testGetPaginatedOrganizationsWithLimit(int limit) {
 
         String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + EQUAL + limit;
@@ -660,8 +660,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         }
     }
 
-    @DataProvider(name = "organizationCursorValidationProvider")
-    public Object[][] organizationCursorValidationProvider() {
+    @DataProvider(name = "organizationPaginationValidationProvider")
+    public Object[][] organizationPaginationValidationProvider() {
 
         return new Object[][]{
                 {1}, {2}, {5}, {6}, {10}, {17}
@@ -669,8 +669,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     }
 
     @Test(dependsOnMethods = "createOrganizationsForPaginationTests",
-            dataProvider = "organizationCursorValidationProvider")
-    public void testGetPaginatedOrganizationsWithCursor(int limit) {
+            dataProvider = "organizationPaginationValidationProvider")
+    public void testGetPaginatedOrganizations(int limit) {
 
         String after;
         String before;
@@ -734,8 +734,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         validateOrganizationsOnPage(previousPageResponse, 1, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, limit);
     }
 
-    @DataProvider(name = "organizationCursorEdgeCasesProvider")
-    public Object[][] organizationCursorEdgeCasesProvider() {
+    @DataProvider(name = "organizationPaginationNumericLimitEdgeCasesProvider")
+    public Object[][] organizationPaginationNumericLimitEdgeCasesProvider() {
 
         return new Object[][]{
                 {0}, {20}, {25}
@@ -743,8 +743,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     }
 
     @Test(dependsOnMethods = "createOrganizationsForPaginationTests",
-            dataProvider = "organizationCursorEdgeCasesProvider")
-    public void testGetPaginatedOrganizationsForEdgeCases(int limit) {
+            dataProvider = "organizationPaginationNumericLimitEdgeCasesProvider")
+    public void testGetPaginatedOrganizationsForNumericEdgeCasesOfLimit(int limit) {
 
         String limitUrl =
                 ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + EQUAL + limit + AMPERSAND +
@@ -762,7 +762,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     }
 
     @Test(dependsOnMethods = "createOrganizationsForPaginationTests")
-    public void testGetPaginatedOrganizationsWithDefaultLimit() {
+    public void testGetPaginatedOrganizationsForNonNumericEdgeCasesOfLimit() {
 
         // Test case 1: URL with LIMIT_QUERY_PARAM but no value.
         String endpointURLWithEmptyLimit =
@@ -816,8 +816,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
     }
 
-    @DataProvider(name = "organizationDiscoveryLimitProvider")
-    public Object[][] organizationDiscoveryLimitProvider() {
+    @DataProvider(name = "organizationDiscoveryLimitValidationDataProvider")
+    public Object[][] organizationDiscoveryLimitValidationDataProvider() {
 
         return new Object[][]{
                 {3}, {5}, {10}, {15}, {17}, {20}, {25}
@@ -825,8 +825,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     }
 
     @Test(dependsOnMethods = "testAddEmailDomainsToOrganization",
-            dataProvider = "organizationDiscoveryLimitProvider")
-    public void testOrganizationDiscoveryGetLimit(int limit) {
+            dataProvider = "organizationDiscoveryLimitValidationDataProvider")
+    public void testGetOrganizationDiscoveryLimit(int limit) {
 
         int offset = 0;
         List<String> accumulatedOrganizationNames = new ArrayList<>();
@@ -864,8 +864,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         validateOrgNamesForOrganizationDiscoveryGet(accumulatedOrganizationNames);
     }
 
-    @DataProvider(name = "organizationDiscoveryPaginationProvider")
-    public Object[][] organizationDiscoveryPaginationProvider() {
+    @DataProvider(name = "organizationDiscoveryPaginationValidationProvider")
+    public Object[][] organizationDiscoveryPaginationValidationProvider() {
 
         return new Object[][]{
                 {1}, {2}, {5}, {6}, {10}, {17}
@@ -873,7 +873,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     }
 
     @Test(dependsOnMethods = "testAddEmailDomainsToOrganization",
-            dataProvider = "organizationDiscoveryPaginationProvider")
+            dataProvider = "organizationDiscoveryPaginationValidationProvider")
     public void testGetPaginatedOrganizationsDiscovery(int limit) {
 
         int offset = 0;
@@ -924,8 +924,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         validateOrgNamesForOrganizationDiscoveryGet(backwardAccumulatedOrganizationNames);
     }
 
-    @DataProvider(name = "organizationDiscoveryPaginationEdgeCaseDataProvider")
-    public Object[][] organizationDiscoveryPaginationEdgeCaseDataProvider() {
+    @DataProvider(name = "organizationDiscoveryPaginationNumericLimitEdgeCasesProvider")
+    public Object[][] organizationDiscoveryPaginationNumericLimitEdgeCasesProvider() {
 
         return new Object[][]{
                 {0}, {20}, {25}
@@ -933,8 +933,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     }
 
     @Test(dependsOnMethods = "testAddEmailDomainsToOrganization",
-            dataProvider = "organizationDiscoveryPaginationEdgeCaseDataProvider")
-    public void testOrganizationDiscoveryPaginationEdgeCases(int limit) {
+            dataProvider = "organizationDiscoveryPaginationNumericLimitEdgeCasesProvider")
+    public void testGetPaginatedOrganizationsDiscoveryForNumericEdgeCasesOfLimit(int limit) {
 
         String queryUrl = buildQueryUrl(0, limit);
 
@@ -964,7 +964,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     }
 
     @Test(dependsOnMethods = "testAddEmailDomainsToOrganization")
-    public void testOrganizationDiscoveryGetLimitEdgeCases() {
+    public void testGetPaginatedOrganizationsDiscoveryForNonNumericEdgeCasesOfLimit() {
 
         // Test case 1: URL with LIMIT_QUERY_PARAM but no value.
         String endpointURLWithEmptyLimit =
@@ -987,6 +987,14 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         validateResponseForOrganizationDiscoveryLDefaultCases(responseWithoutLimit);
     }
+
+    //Numeric and Non-Numeric Offset Edge Cases
+        //Numeric - Limit != 0 & Offset = {0}, {20}, {25}
+        //Non-Numeric - Limit != 0 & Offset =, and no Offset param
+
+    //Numeric and Non-Numeric Limit & Offset Edge Cases
+        //Numeric - Limit = {0}, {20}, {25} & Offset = {0}, {20}, {25}
+        //Non-Numeric - Limit=&Offset=, and no Limit and Offset params
 
     private void validateOrganizationsOnPage(Response response, int pageNum, int totalOrganizations, int limit) {
 
@@ -1234,4 +1242,10 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
                 link.substring(link.lastIndexOf(
                         ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH)) : queryUrl;
     }
+
+
+    //OFFSET= LIMIT=10
+    //OFFSET= (NO LIMIT)
+    //LIMIT=OFFSET=
+    //LIMIT= OFFSET=n (n<total, n=total and n>total)
 }
