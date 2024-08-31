@@ -734,8 +734,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         validateOrganizationsOnPage(previousPageResponse, 1, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, limit);
     }
 
-    @DataProvider(name = "organizationPaginationNumericLimitEdgeCasesProvider")
-    public Object[][] organizationPaginationNumericLimitEdgeCasesProvider() {
+    @DataProvider(name = "organizationPaginationNumericEdgeCasesOfLimitDataProvider")
+    public Object[][] organizationPaginationNumericEdgeCasesOfLimitDataProvider() {
 
         return new Object[][]{
                 {0}, {20}, {25}
@@ -743,7 +743,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     }
 
     @Test(dependsOnMethods = "createOrganizationsForPaginationTests",
-            dataProvider = "organizationPaginationNumericLimitEdgeCasesProvider")
+            dataProvider = "organizationPaginationNumericEdgeCasesOfLimitDataProvider")
     public void testGetPaginatedOrganizationsForNumericEdgeCasesOfLimit(int limit) {
 
         String limitUrl =
@@ -826,7 +826,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
     @Test(dependsOnMethods = "testAddEmailDomainsToOrganization",
             dataProvider = "organizationDiscoveryLimitValidationDataProvider")
-    public void testGetOrganizationDiscoveryLimit(int limit) {
+    public void testGetPaginatedOrganizationsDiscoveryWithLimit(int limit) {
 
         int offset = 0;
         List<String> accumulatedOrganizationNames = new ArrayList<>();
@@ -924,8 +924,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         validateOrgNamesForOrganizationDiscoveryGet(backwardAccumulatedOrganizationNames);
     }
 
-    @DataProvider(name = "organizationDiscoveryPaginationNumericLimitEdgeCasesProvider")
-    public Object[][] organizationDiscoveryPaginationNumericLimitEdgeCasesProvider() {
+    @DataProvider(name = "organizationDiscoveryPaginationNumericEdgeCasesOfLimitDataProvider")
+    public Object[][] organizationDiscoveryPaginationNumericEdgeCasesOfLimitDataProvider() {
 
         return new Object[][]{
                 {0, 0}, {0, 20}, {0, 25},
@@ -934,7 +934,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     }
 
     @Test(dependsOnMethods = "testAddEmailDomainsToOrganization",
-            dataProvider = "organizationDiscoveryPaginationNumericLimitEdgeCasesProvider")
+            dataProvider = "organizationDiscoveryPaginationNumericEdgeCasesOfLimitDataProvider")
     public void testGetPaginatedOrganizationsDiscoveryForNumericEdgeCasesOfLimit(int offset, int limit) {
 
         String queryUrl = buildQueryUrl(offset, limit);
@@ -1000,7 +1000,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
     @Test(dependsOnMethods = "testAddEmailDomainsToOrganization",
             dataProvider = "organizationDiscoveryOffsetValidationDataProvider")
-    public void testGetOrganizationDiscoveryOffset(int offset, int limit) {
+    public void testGetPaginatedOrganizationsDiscoveryWithOffset(int offset, int limit) {
 
         String queryUrl = buildQueryUrl(offset, limit);
 
@@ -1020,17 +1020,17 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         Assert.assertEquals(startIndex, offset + 1, "Start index should be offset + 1.");
         Assert.assertEquals(count, expectedCount, "The count of returned organizations is incorrect.");
 
-        validateOrganizationDiscoveryOffsetEdgeCaseLinks(links, limit, offset);
+        validateOrganizationDiscoveryOffsetLinks(links, limit, offset);
     }
 
-    private void validateOrganizationDiscoveryOffsetEdgeCaseLinks(List<Map<String, String>> links, int limit,
+    private void validateOrganizationDiscoveryOffsetLinks(List<Map<String, String>> links, int limit,
                                                                   int offset) {
 
         String nextLink = getLink(links, LINK_REL_NEXT);
         if (offset + limit < NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS) {
             Assert.assertNotNull(nextLink, "The 'next' link should be present in first/middle pages.");
             int expectedOffset = offset + limit;
-            validateOffsetIsInLink(nextLink, expectedOffset);
+            validateOrganizationDiscoveryOffsetIsInLinks(nextLink, expectedOffset);
         } else {
             Assert.assertNull(nextLink, "The 'next' link should not be present in the last page.");
         }
@@ -1039,13 +1039,13 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         if (offset > 0) {
             Assert.assertNotNull(previousLink, "The 'previous' link should be present in last/middle pages.");
             int expectedOffset = Math.max((offset - limit), 0);
-            validateOffsetIsInLink(previousLink, expectedOffset);
+            validateOrganizationDiscoveryOffsetIsInLinks(previousLink, expectedOffset);
         } else {
             Assert.assertNull(previousLink, "The 'previous' link should not be present in the first page.");
         }
     }
 
-    private void validateOffsetIsInLink(String link, int expectedOffset) {
+    private void validateOrganizationDiscoveryOffsetIsInLinks(String link, int expectedOffset) {
 
         int offsetStartIndex = link.indexOf(OFFSET_QUERY_PARAM + EQUAL);
 
