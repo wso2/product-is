@@ -939,13 +939,9 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         String queryUrl = buildQueryUrl(offset, limit);
 
-        // Send GET request with the specified limit
         Response response = getResponseOfGetWithOAuth2(queryUrl, m2mToken);
 
-        // Validate the HTTP status code
         validateHttpStatusCode(response, HttpStatus.SC_OK);
-
-        int expectedCount = Math.min(limit, (NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS - offset));
 
         // Validate the response content
         int actualCount = response.jsonPath().getInt("count");
@@ -954,14 +950,17 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         List<Map<String, String>> links = response.jsonPath().getList(LINKS_PATH_PARAM);
         List<Map<String, String>> returnedOrganizations = response.jsonPath().getList("organizations");
 
+        int expectedCount = Math.min(limit, (NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS - offset));
+
         Assert.assertEquals(actualCount, expectedCount,
                 "Unexpected number of organizations returned for limit: " + limit);
         Assert.assertEquals(totalResults, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS,
                 "Total results should match the number of organizations available.");
-        Assert.assertEquals(startIndex, offset + 1, "Start index should always be 1 greater than the offset.");
+        Assert.assertEquals(startIndex, offset + 1,
+                "Start index should always be 1 greater than the offset.");
 
-        validateOrganizationDiscoveryEdgeCaseLinks(links, limit, offset);
-        validateOrganizationDiscoveryEdgeCaseOrganizations(returnedOrganizations, limit, offset);
+        validateOrganizationDiscoveryLimitsEdgeCaseLinks(links, limit, offset);
+        validateOrganizationDiscoveryLimitEdgeCaseOrganizations(returnedOrganizations, limit, offset);
     }
 
     @Test(dependsOnMethods = "testAddEmailDomainsToOrganization")
@@ -987,6 +986,80 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         validateHttpStatusCode(responseWithoutLimit, HttpStatus.SC_OK);
 
         validateResponseForOrganizationDiscoveryLDefaultCases(responseWithoutLimit);
+    }
+
+    @DataProvider(name = "organizationDiscoveryOffsetValidationDataProvider")
+    public Object[][] organizationDiscoveryOffsetValidationDataProvider() {
+
+        return new Object[][]{
+                {0, 1}, {0, 5}, {0, 10},
+                {5, 1}, {5, 5}, {5, 10},
+                {10, 1}, {10, 5}, {10, 10}
+        };
+    }
+
+    @Test(dependsOnMethods = "testAddEmailDomainsToOrganization",
+            dataProvider = "organizationDiscoveryOffsetValidationDataProvider")
+    public void testGetOrganizationDiscoveryOffset(int offset, int limit) {
+
+        String queryUrl = buildQueryUrl(offset, limit);
+
+        Response response = getResponseOfGetWithOAuth2(queryUrl, m2mToken);
+
+        validateHttpStatusCode(response, HttpStatus.SC_OK);
+
+        // Validate the response content
+        int totalResults = response.jsonPath().getInt("totalResults");
+        int startIndex = response.jsonPath().getInt("startIndex");
+        int count = response.jsonPath().getInt("count");
+        List<Map<String, String>> links = response.jsonPath().getList(LINKS_PATH_PARAM);
+
+        int expectedCount = Math.min(limit, totalResults - offset);
+
+        Assert.assertEquals(totalResults, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, "Total results mismatch.");
+        Assert.assertEquals(startIndex, offset + 1, "Start index should be offset + 1.");
+        Assert.assertEquals(count, expectedCount, "The count of returned organizations is incorrect.");
+
+        validateOrganizationDiscoveryOffsetEdgeCaseLinks(links, limit, offset);
+    }
+
+    private void validateOrganizationDiscoveryOffsetEdgeCaseLinks(List<Map<String, String>> links, int limit,
+                                                                  int offset) {
+
+        String nextLink = getLink(links, LINK_REL_NEXT);
+        if (offset + limit < NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS) {
+            Assert.assertNotNull(nextLink, "The 'next' link should be present in first/middle pages.");
+            int expectedOffset = offset + limit;
+            validateOffsetIsInLink(nextLink, expectedOffset);
+        } else {
+            Assert.assertNull(nextLink, "The 'next' link should not be present in the last page.");
+        }
+
+        String previousLink = getLink(links, LINK_REL_PREVIOUS);
+        if (offset > 0) {
+            Assert.assertNotNull(previousLink, "The 'previous' link should be present in last/middle pages.");
+            int expectedOffset = Math.max((offset - limit), 0);
+            validateOffsetIsInLink(previousLink, expectedOffset);
+        } else {
+            Assert.assertNull(previousLink, "The 'previous' link should not be present in the first page.");
+        }
+    }
+
+    private void validateOffsetIsInLink(String link, int expectedOffset) {
+
+        int offsetStartIndex = link.indexOf(OFFSET_QUERY_PARAM + EQUAL);
+
+        if (offsetStartIndex != -1) {
+            offsetStartIndex += (OFFSET_QUERY_PARAM + EQUAL).length();
+            int offsetEndIndex = link.indexOf(AMPERSAND, offsetStartIndex);
+
+            if (offsetEndIndex == -1) offsetEndIndex = link.length();
+
+            int actualOffset = Integer.parseInt(link.substring(offsetStartIndex, offsetEndIndex));
+            Assert.assertEquals(actualOffset, expectedOffset, "Offset in the link is incorrect.");
+        } else {
+            Assert.fail("Offset parameter is missing in the link.");
+        }
     }
 
     //Numeric and Non-Numeric Offset Edge Cases
@@ -1078,7 +1151,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         }
     }
 
-    private void validateOrganizationDiscoveryEdgeCaseLinks(List<Map<String, String>> links, int limit, int offset) {
+    private void validateOrganizationDiscoveryLimitsEdgeCaseLinks(List<Map<String, String>> links, int limit, int offset) {
 
         if (limit == 0) {
             if (offset == 0) {
@@ -1102,7 +1175,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
     }
 
-    private void validateOrganizationDiscoveryEdgeCaseOrganizations(List<Map<String, String>> organizations,
+    private void validateOrganizationDiscoveryLimitEdgeCaseOrganizations(List<Map<String, String>> organizations,
                                                                     int limit, int offset) {
 
         if (limit == 0) {
