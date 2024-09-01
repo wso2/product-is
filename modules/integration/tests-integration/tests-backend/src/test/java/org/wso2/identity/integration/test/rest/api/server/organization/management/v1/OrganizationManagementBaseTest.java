@@ -60,6 +60,9 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
 
     protected static final String ORGANIZATIONS_PATH_PARAM = "organizations";
     protected static final String LINKS_PATH_PARAM = "links";
+    protected static final String COUNT_PATH_PARAM = "count";
+    protected static final String TOTAL_RESULTS_PATH_PARAM = "totalResults";
+    protected static final String START_INDEX_PATH_PARAM = "startIndex";
 
     protected static final String ORGANIZATION_NAME_ATTRIBUTE = "organizationName";
 
@@ -75,6 +78,10 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
     protected static final String ZERO = "0";
 
     protected static final String FALSE = "false";
+
+    protected static final String TOTAL_RESULT_MISMATCH_ERROR = "Total results mismatched.";
+    protected static final String START_INDEX_MISMATCH_ERROR = "Start index mismatched.";
+    protected static final String COUNT_MISMATCH_ERROR = "Count mismatch";
 
     protected static final int NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS = 20;
     protected static final int DEFAULT_ORG_LIMIT = 15;

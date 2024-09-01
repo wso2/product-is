@@ -502,7 +502,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("totalResults", equalTo(1))
+                .body(TOTAL_RESULTS_PATH_PARAM, equalTo(1))
                 .body("organizations[0].organizationId", equalTo(organizationID))
                 .body("organizations[0].organizationName", equalTo("Greater Hospital"))
                 .body("organizations[0].attributes[0].type", equalTo("emailDomain"))
@@ -791,6 +791,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     public void testEnableEmailDomainDiscovery() {
 
         String enableDiscoveryPayload = "{\"properties\":[{\"key\":\"emailDomain.enable\",\"value\":true}]}";
+        String emailDomainIsEnabled = "properties.find { it.key == 'emailDomain.enable' }.value";
 
         // Send POST request to enable email domain discovery
         Response response = getResponseOfPostWithOAuth2(
@@ -802,7 +803,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         validateHttpStatusCode(response, HttpStatus.SC_CREATED);
 
         // Validate the response content
-        boolean isEnabled = response.jsonPath().getBoolean("properties.find { it.key == 'emailDomain.enable' }.value");
+        boolean isEnabled = response.jsonPath().getBoolean(emailDomainIsEnabled);
         Assert.assertTrue(isEnabled, "Email domain discovery was not successfully enabled.");
     }
 
@@ -945,9 +946,9 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         validateHttpStatusCode(response, HttpStatus.SC_OK);
 
         // Validate the response content
-        int actualCount = response.jsonPath().getInt("count");
-        int totalResults = response.jsonPath().getInt("totalResults");
-        int startIndex = response.jsonPath().getInt("startIndex");
+        int actualCount = response.jsonPath().getInt(COUNT_PATH_PARAM);
+        int totalResults = response.jsonPath().getInt(TOTAL_RESULTS_PATH_PARAM);
+        int startIndex = response.jsonPath().getInt(START_INDEX_PATH_PARAM);
         List<Map<String, String>> links = response.jsonPath().getList(LINKS_PATH_PARAM);
         List<Map<String, String>> returnedOrganizations = response.jsonPath().getList("organizations");
 
@@ -1010,14 +1011,14 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         validateHttpStatusCode(response, HttpStatus.SC_OK);
 
         // Validate the response content
-        int totalResults = response.jsonPath().getInt("totalResults");
-        int startIndex = response.jsonPath().getInt("startIndex");
-        int count = response.jsonPath().getInt("count");
+        int totalResults = response.jsonPath().getInt(TOTAL_RESULTS_PATH_PARAM);
+        int startIndex = response.jsonPath().getInt(START_INDEX_PATH_PARAM);
+        int count = response.jsonPath().getInt(COUNT_PATH_PARAM);
         List<Map<String, String>> links = response.jsonPath().getList(LINKS_PATH_PARAM);
 
         int expectedCount = Math.min(limit, totalResults - offset);
 
-        Assert.assertEquals(totalResults, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, "Total results mismatch.");
+        Assert.assertEquals(totalResults, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, TOTAL_RESULT_MISMATCH_ERROR);
         Assert.assertEquals(startIndex, offset + 1, "Start index should be offset + 1.");
         Assert.assertEquals(count, expectedCount, "The count of returned organizations is incorrect.");
 
@@ -1089,19 +1090,19 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
          validateHttpStatusCode(response, HttpStatus.SC_OK);
 
-        int totalResults = response.jsonPath().getInt("totalResults");
-        int startIndex = response.jsonPath().getInt("startIndex");
-        int count = response.jsonPath().getInt("count");
-        List<Map<String, String>> links = response.jsonPath().getList("links");
+        int totalResults = response.jsonPath().getInt(TOTAL_RESULTS_PATH_PARAM);
+        int startIndex = response.jsonPath().getInt(START_INDEX_PATH_PARAM);
+        int count = response.jsonPath().getInt(COUNT_PATH_PARAM);
+        List<Map<String, String>> links = response.jsonPath().getList(LINKS_PATH_PARAM);
 
         // Validate based on the offset and limit
-        Assert.assertEquals(totalResults, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, "Total results mismatch.");
-        Assert.assertEquals(startIndex, offset + 1, "Start index mismatch.");
-        Assert.assertEquals(count, 0, "Count mismatch.");
+        Assert.assertEquals(totalResults, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, TOTAL_RESULT_MISMATCH_ERROR);
+        Assert.assertEquals(startIndex, offset + 1, START_INDEX_MISMATCH_ERROR);
+        Assert.assertEquals(count, 0, COUNT_MISMATCH_ERROR);
 
         // Validate links
-        String nextLink = getLink(links, "next");
-        String previousLink = getLink(links, "previous");
+        String nextLink = getLink(links, LINK_REL_NEXT);
+        String previousLink = getLink(links, LINK_REL_PREVIOUS);
         Assert.assertNull(nextLink, "Next link should be null.");
         Assert.assertNotNull(previousLink, "Previous link should be present.");
 
@@ -1109,42 +1110,6 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         validateOrganizationDiscoveryOffsetIsInLinks(previousLink, expectedOffset);
 
     }
-
-    /*private int getExpectedOffsetInLinksForOffsetAndLimitEdgeCases(int offset, int limit) {
-
-        if(offset == NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS) {
-            if (limit < NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS) {
-                return offset - limit;
-            } else {
-                return 0;
-            }
-        } else if (offset > NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS) {
-            if (limit < NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS) {
-                int left = offset - limit;
-                if (left < NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS) {
-                    return left;
-                } else {
-                    while(left>=NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS){
-                        left = left - limit;
-                    }
-                    return left;
-                }
-            } else {
-                int left = offset - limit;
-                if (left < NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS) {
-                    if(left < 0) {
-                        return 0;
-                    } else {
-                        return left;
-                    }
-                } else {
-                    return 0;
-                }
-            }
-        } else {
-            return 0;
-        }
-    }*/
 
     private int getExpectedOffsetInLinksForOffsetAndLimitEdgeCases(int offset, int limit) {
 
@@ -1160,28 +1125,6 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         }
     }
 
-    //Numeric and Non-Numeric Offset Edge Cases
-    //Numeric - Limit != 0 & Offset = {0}, {20}, {25}
-    //Non-Numeric - Limit != 0 & Offset =, and no Offset param
-
-    //Numeric and Non-Numeric Limit & Offset Edge Cases
-    //Numeric - Limit = {0}, {20}, {25} & Offset = {0}, {20}, {25}
-    //Non-Numeric - Limit=&Offset=, and no Limit and Offset params
-
-    /*@DataProvider(name = "nonNumericEdgeCasesOfOffsetAndOffsetWithLimitDataProvider")
-    public Object[][] nonNumericEdgeCasesOfOffsetAndOffsetWithLimitDataProvider() {
-        return new Object[][]{
-                {5, 0},
-                {5, 5},
-                {5, 20},
-                {5, 25},
-                {0, 5},
-                {5, 5},
-                {20, 5},
-                {25, 5}
-        };
-    }*/
-
     @Test(dependsOnMethods = "testAddEmailDomainsToOrganization")
     public void testGetPaginatedOrganizationsDiscoveryForNonNumericEdgeCasesOfOffsetAndOffsetWithLimit() {
 
@@ -1192,12 +1135,12 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         validateHttpStatusCode(response1, HttpStatus.SC_OK);
 
-        Assert.assertEquals(response1.jsonPath().getInt("totalResults"), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, "Total results mismatch.");
-        Assert.assertEquals(response1.jsonPath().getInt("startIndex"), 1, "Start index mismatch.");
-        Assert.assertEquals(response1.jsonPath().getInt("count"), 0, "Count mismatch.");
+        Assert.assertEquals(response1.jsonPath().getInt(TOTAL_RESULTS_PATH_PARAM), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, TOTAL_RESULT_MISMATCH_ERROR);
+        Assert.assertEquals(response1.jsonPath().getInt(START_INDEX_PATH_PARAM), 1, START_INDEX_MISMATCH_ERROR);
+        Assert.assertEquals(response1.jsonPath().getInt(COUNT_PATH_PARAM), 0, COUNT_MISMATCH_ERROR);
 
-        List<Map<String, String>> links1 = response1.jsonPath().getList("links");
-        String nextLink1 = getLink(links1, "next");
+        List<Map<String, String>> links1 = response1.jsonPath().getList(LINKS_PATH_PARAM);
+        String nextLink1 = getLink(links1, LINK_REL_NEXT);
         Assert.assertNotNull(nextLink1, "Next link should be present.");
 
         // Case 2: When offset param is present (limit = 5)
@@ -1207,12 +1150,12 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         validateHttpStatusCode(response2, HttpStatus.SC_OK);
 
-        Assert.assertEquals(response2.jsonPath().getInt("totalResults"), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, "Total results mismatch.");
-        Assert.assertEquals(response2.jsonPath().getInt("startIndex"), 1, "Start index mismatch.");
-        Assert.assertEquals(response2.jsonPath().getInt("count"), 5, "Count mismatch.");
+        Assert.assertEquals(response2.jsonPath().getInt(TOTAL_RESULTS_PATH_PARAM), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, TOTAL_RESULT_MISMATCH_ERROR);
+        Assert.assertEquals(response2.jsonPath().getInt(START_INDEX_PATH_PARAM), 1, START_INDEX_MISMATCH_ERROR);
+        Assert.assertEquals(response2.jsonPath().getInt(COUNT_PATH_PARAM), 5, COUNT_MISMATCH_ERROR);
 
-        List<Map<String, String>> links2 = response2.jsonPath().getList("links");
-        String nextLink2 = getLink(links2, "next");
+        List<Map<String, String>> links2 = response2.jsonPath().getList(LINKS_PATH_PARAM);
+        String nextLink2 = getLink(links2, LINK_REL_NEXT);
         Assert.assertNotNull(nextLink2, "Next link should be present.");
 
         // Case 3: When offset param is present (limit = NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS)
@@ -1222,12 +1165,12 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         validateHttpStatusCode(response3, HttpStatus.SC_OK);
 
-        Assert.assertEquals(response3.jsonPath().getInt("totalResults"), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, "Total results mismatch.");
-        Assert.assertEquals(response3.jsonPath().getInt("startIndex"), 1, "Start index mismatch.");
-        Assert.assertEquals(response3.jsonPath().getInt("count"), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, "Count mismatch.");
+        Assert.assertEquals(response3.jsonPath().getInt(TOTAL_RESULTS_PATH_PARAM), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, TOTAL_RESULT_MISMATCH_ERROR);
+        Assert.assertEquals(response3.jsonPath().getInt(START_INDEX_PATH_PARAM), 1, START_INDEX_MISMATCH_ERROR);
+        Assert.assertEquals(response3.jsonPath().getInt(COUNT_PATH_PARAM), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, COUNT_MISMATCH_ERROR);
 
-        List<Map<String, String>> links3 = response3.jsonPath().getList("links");
-        String nextLink3 = getLink(links3, "next");
+        List<Map<String, String>> links3 = response3.jsonPath().getList(LINKS_PATH_PARAM);
+        String nextLink3 = getLink(links3, LINK_REL_NEXT);
         Assert.assertNull(nextLink3, "Next link should be present.");
 
         // Case 4: When offset param is present (limit > NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS)
@@ -1237,12 +1180,12 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         validateHttpStatusCode(response4, HttpStatus.SC_OK);
 
-        Assert.assertEquals(response4.jsonPath().getInt("totalResults"), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, "Total results mismatch.");
-        Assert.assertEquals(response4.jsonPath().getInt("startIndex"), 1, "Start index mismatch.");
-        Assert.assertEquals(response4.jsonPath().getInt("count"), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, "Count mismatch.");
+        Assert.assertEquals(response4.jsonPath().getInt(TOTAL_RESULTS_PATH_PARAM), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, TOTAL_RESULT_MISMATCH_ERROR);
+        Assert.assertEquals(response4.jsonPath().getInt(START_INDEX_PATH_PARAM), 1, START_INDEX_MISMATCH_ERROR);
+        Assert.assertEquals(response4.jsonPath().getInt(COUNT_PATH_PARAM), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, COUNT_MISMATCH_ERROR);
 
-        List<Map<String, String>> links4 = response4.jsonPath().getList("links");
-        String nextLink4 = getLink(links4, "next");
+        List<Map<String, String>> links4 = response4.jsonPath().getList(LINKS_PATH_PARAM);
+        String nextLink4 = getLink(links4, LINK_REL_NEXT);
         Assert.assertNull(nextLink4, "Next link should be present.");
 
         // Case 5: When offset param is not present (limit = 0)
@@ -1252,12 +1195,12 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         validateHttpStatusCode(response5, HttpStatus.SC_OK);
 
-        Assert.assertEquals(response5.jsonPath().getInt("totalResults"), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, "Total results mismatch.");
-        Assert.assertEquals(response5.jsonPath().getInt("startIndex"), 1, "Start index mismatch.");
-        Assert.assertEquals(response5.jsonPath().getInt("count"), 0, "Count mismatch.");
+        Assert.assertEquals(response5.jsonPath().getInt(TOTAL_RESULTS_PATH_PARAM), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, TOTAL_RESULT_MISMATCH_ERROR);
+        Assert.assertEquals(response5.jsonPath().getInt(START_INDEX_PATH_PARAM), 1, START_INDEX_MISMATCH_ERROR);
+        Assert.assertEquals(response5.jsonPath().getInt(COUNT_PATH_PARAM), 0, COUNT_MISMATCH_ERROR);
 
-        List<Map<String, String>> links5 = response5.jsonPath().getList("links");
-        String nextLink5 = getLink(links5, "next");
+        List<Map<String, String>> links5 = response5.jsonPath().getList(LINKS_PATH_PARAM);
+        String nextLink5 = getLink(links5, LINK_REL_NEXT);
         Assert.assertNotNull(nextLink5, "Links should not be null.");
 
         // Case 6: When offset param is not present (limit = 5)
@@ -1267,12 +1210,12 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         validateHttpStatusCode(response6, HttpStatus.SC_OK);
 
-        Assert.assertEquals(response6.jsonPath().getInt("totalResults"), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, "Total results mismatch.");
-        Assert.assertEquals(response6.jsonPath().getInt("startIndex"), 1, "Start index mismatch.");
-        Assert.assertEquals(response6.jsonPath().getInt("count"), 5, "Count mismatch.");
+        Assert.assertEquals(response6.jsonPath().getInt(TOTAL_RESULTS_PATH_PARAM), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, TOTAL_RESULT_MISMATCH_ERROR);
+        Assert.assertEquals(response6.jsonPath().getInt(START_INDEX_PATH_PARAM), 1, START_INDEX_MISMATCH_ERROR);
+        Assert.assertEquals(response6.jsonPath().getInt(COUNT_PATH_PARAM), 5, COUNT_MISMATCH_ERROR);
 
-        List<Map<String, String>> links6 = response6.jsonPath().getList("links");
-        String nextLink6 = getLink(links6, "next");
+        List<Map<String, String>> links6 = response6.jsonPath().getList(LINKS_PATH_PARAM);
+        String nextLink6 = getLink(links6, LINK_REL_NEXT);
         Assert.assertNotNull(nextLink6, "Links should not be null.");
 
         // Case 7: When offset param is not present (limit = NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS)
@@ -1282,11 +1225,11 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         validateHttpStatusCode(response7, HttpStatus.SC_OK);
 
-        Assert.assertEquals(response7.jsonPath().getInt("totalResults"), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, "Total results mismatch.");
-        Assert.assertEquals(response7.jsonPath().getInt("startIndex"), 1, "Start index mismatch.");
-        Assert.assertEquals(response7.jsonPath().getInt("count"), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, "Count mismatch.");
+        Assert.assertEquals(response7.jsonPath().getInt(TOTAL_RESULTS_PATH_PARAM), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, TOTAL_RESULT_MISMATCH_ERROR);
+        Assert.assertEquals(response7.jsonPath().getInt(START_INDEX_PATH_PARAM), 1, START_INDEX_MISMATCH_ERROR);
+        Assert.assertEquals(response7.jsonPath().getInt(COUNT_PATH_PARAM), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, COUNT_MISMATCH_ERROR);
 
-        List<Map<String, String>> links7 = response7.jsonPath().getList("links");
+        List<Map<String, String>> links7 = response7.jsonPath().getList(LINKS_PATH_PARAM);
         Assert.assertTrue(links7.isEmpty(), "Links should be empty.");
 
         // Case 8: When offset param is not present (limit > NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS)
@@ -1296,11 +1239,11 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         validateHttpStatusCode(response8, HttpStatus.SC_OK);
 
-        Assert.assertEquals(response8.jsonPath().getInt("totalResults"), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, "Total results mismatch.");
-        Assert.assertEquals(response8.jsonPath().getInt("startIndex"), 1, "Start index mismatch.");
-        Assert.assertEquals(response8.jsonPath().getInt("count"), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, "Count mismatch.");
+        Assert.assertEquals(response8.jsonPath().getInt(TOTAL_RESULTS_PATH_PARAM), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, TOTAL_RESULT_MISMATCH_ERROR);
+        Assert.assertEquals(response8.jsonPath().getInt(START_INDEX_PATH_PARAM), 1, START_INDEX_MISMATCH_ERROR);
+        Assert.assertEquals(response8.jsonPath().getInt(COUNT_PATH_PARAM), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, COUNT_MISMATCH_ERROR);
 
-        List<Map<String, String>> links8 = response8.jsonPath().getList("links");
+        List<Map<String, String>> links8 = response8.jsonPath().getList(LINKS_PATH_PARAM);
         Assert.assertTrue(links8.isEmpty(), "Links should be empty.");
 
         // Case 9: Offset= and limit=
@@ -1310,18 +1253,18 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         validateHttpStatusCode(response9, HttpStatus.SC_OK);
 
-        Assert.assertEquals(response9.jsonPath().getInt("totalResults"), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, "Total results mismatch.");
-        Assert.assertEquals(response9.jsonPath().getInt("startIndex"), 1, "Start index mismatch.");
-        Assert.assertEquals(response9.jsonPath().getInt("count"), Math.min(DEFAULT_ORG_LIMIT,
+        Assert.assertEquals(response9.jsonPath().getInt(TOTAL_RESULTS_PATH_PARAM), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, TOTAL_RESULT_MISMATCH_ERROR);
+        Assert.assertEquals(response9.jsonPath().getInt(START_INDEX_PATH_PARAM), 1, START_INDEX_MISMATCH_ERROR);
+        Assert.assertEquals(response9.jsonPath().getInt(COUNT_PATH_PARAM), Math.min(DEFAULT_ORG_LIMIT,
                         NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS),
-                "Count mismatch.");
+                COUNT_MISMATCH_ERROR);
 
-        List<Map<String, String>> links9 = response9.jsonPath().getList("links");
+        List<Map<String, String>> links9 = response9.jsonPath().getList(LINKS_PATH_PARAM);
         if (NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS > DEFAULT_ORG_LIMIT) {
-            Assert.assertNotNull(getLink(links9, "next"),
+            Assert.assertNotNull(getLink(links9, LINK_REL_NEXT),
                     "'next' link should be present when organizations exceed default limit.");
         } else {
-            Assert.assertNull(getLink(links9, "next"),
+            Assert.assertNull(getLink(links9, LINK_REL_NEXT),
                     "'next' link should not be present when organizations are within default limit.");
         }
 
@@ -1332,17 +1275,17 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         validateHttpStatusCode(response10, HttpStatus.SC_OK);
 
-        Assert.assertEquals(response10.jsonPath().getInt("totalResults"), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, "Total results mismatch.");
-        Assert.assertEquals(response10.jsonPath().getInt("startIndex"), 1, "Start index mismatch.");
-        Assert.assertEquals(response10.jsonPath().getInt("count"), Math.min(DEFAULT_ORG_LIMIT,
-                NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS), "Count mismatch.");
+        Assert.assertEquals(response10.jsonPath().getInt(TOTAL_RESULTS_PATH_PARAM), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, TOTAL_RESULT_MISMATCH_ERROR);
+        Assert.assertEquals(response10.jsonPath().getInt(START_INDEX_PATH_PARAM), 1, START_INDEX_MISMATCH_ERROR);
+        Assert.assertEquals(response10.jsonPath().getInt(COUNT_PATH_PARAM), Math.min(DEFAULT_ORG_LIMIT,
+                NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS), COUNT_MISMATCH_ERROR);
 
-        List<Map<String, String>> links10 = response10.jsonPath().getList("links");
+        List<Map<String, String>> links10 = response10.jsonPath().getList(LINKS_PATH_PARAM);
         if (NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS > DEFAULT_ORG_LIMIT) {
-            Assert.assertNotNull(getLink(links10, "next"),
+            Assert.assertNotNull(getLink(links10, LINK_REL_NEXT),
                     "'next' link should be present when organizations exceed default limit.");
         } else {
-            Assert.assertNull(getLink(links10, "next"),
+            Assert.assertNull(getLink(links10, LINK_REL_NEXT),
                     "'next' link should not be present when organizations are within default limit.");
         }
 
@@ -1488,9 +1431,9 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
     private void validateResponseForOrganizationDiscoveryLDefaultCases(Response response) {
 
-        int actualCount = response.jsonPath().getInt("count");
-        int totalResults = response.jsonPath().getInt("totalResults");
-        int startIndex = response.jsonPath().getInt("startIndex");
+        int actualCount = response.jsonPath().getInt(COUNT_PATH_PARAM);
+        int totalResults = response.jsonPath().getInt(TOTAL_RESULTS_PATH_PARAM);
+        int startIndex = response.jsonPath().getInt(START_INDEX_PATH_PARAM);
         List<Map<String, String>> links = response.jsonPath().getList(LINKS_PATH_PARAM);
         List<Map<String, String>> returnedOrganizations = response.jsonPath().getList("organizations");
 
