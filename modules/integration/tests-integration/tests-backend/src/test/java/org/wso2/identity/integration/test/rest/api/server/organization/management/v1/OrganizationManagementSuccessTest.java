@@ -977,7 +977,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         Response responseWithEmptyLimit = getResponseOfGetWithOAuth2(endpointURLWithEmptyLimit, m2mToken);
         validateHttpStatusCode(responseWithEmptyLimit, HttpStatus.SC_OK);
 
-        validateResponseForOrganizationDiscoveryLDefaultCases(responseWithEmptyLimit);
+        validateResponseForOrganizationDiscoveryLimitDefaultCases(responseWithEmptyLimit);
 
         // Test case 2: URL without LIMIT_QUERY_PARAM.
         String endpointURLWithoutLimit =
@@ -987,7 +987,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         Response responseWithoutLimit = getResponseOfGetWithOAuth2(endpointURLWithoutLimit, m2mToken);
         validateHttpStatusCode(responseWithoutLimit, HttpStatus.SC_OK);
 
-        validateResponseForOrganizationDiscoveryLDefaultCases(responseWithoutLimit);
+        validateResponseForOrganizationDiscoveryLimitDefaultCases(responseWithoutLimit);
     }
 
     @DataProvider(name = "organizationDiscoveryOffsetValidationDataProvider")
@@ -1025,48 +1025,9 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         validateOrganizationDiscoveryOffsetLinks(links, limit, offset);
     }
 
-    private void validateOrganizationDiscoveryOffsetLinks(List<Map<String, String>> links, int limit,
-                                                                  int offset) {
-
-        String nextLink = getLink(links, LINK_REL_NEXT);
-        if (offset + limit < NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS) {
-            Assert.assertNotNull(nextLink, "The 'next' link should be present in first/middle pages.");
-            int expectedOffset = offset + limit;
-            validateOrganizationDiscoveryOffsetIsInLinks(nextLink, expectedOffset);
-        } else {
-            Assert.assertNull(nextLink, "The 'next' link should not be present in the last page.");
-        }
-
-        String previousLink = getLink(links, LINK_REL_PREVIOUS);
-        if (offset > 0) {
-            Assert.assertNotNull(previousLink, "The 'previous' link should be present in last/middle pages.");
-            int expectedOffset = Math.max((offset - limit), 0);
-            validateOrganizationDiscoveryOffsetIsInLinks(previousLink, expectedOffset);
-        } else {
-            Assert.assertNull(previousLink, "The 'previous' link should not be present in the first page.");
-        }
-    }
-
-    private void validateOrganizationDiscoveryOffsetIsInLinks(String link, int expectedOffset) {
-
-        int offsetStartIndex = link.indexOf(OFFSET_QUERY_PARAM + EQUAL);
-
-        if (offsetStartIndex != -1) {
-            offsetStartIndex += (OFFSET_QUERY_PARAM + EQUAL).length();
-            int offsetEndIndex = link.indexOf(AMPERSAND, offsetStartIndex);
-
-            if (offsetEndIndex == -1) offsetEndIndex = link.length();
-
-            int actualOffset = Integer.parseInt(link.substring(offsetStartIndex, offsetEndIndex));
-
-            Assert.assertEquals(actualOffset, expectedOffset, "Offset in the link is incorrect.");
-        } else {
-            Assert.fail("Offset parameter is missing in the link.");
-        }
-    }
-
     @DataProvider(name = "numericEdgeCasesOfOffsetAndOffsetWithLimitDataProvider")
     public Object[][] numericEdgeCasesOfOffsetAndOffsetWithLimitDataProvider() {
+
         return new Object[][]{
                 {20, 5},
                 {20, 17},
@@ -1081,14 +1042,15 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         };
     }
 
-    @Test(dependsOnMethods = "testAddEmailDomainsToOrganization", dataProvider = "numericEdgeCasesOfOffsetAndOffsetWithLimitDataProvider")
+    @Test(dependsOnMethods = "testAddEmailDomainsToOrganization", 
+            dataProvider = "numericEdgeCasesOfOffsetAndOffsetWithLimitDataProvider")
     public void testGetPaginatedOrganizationsDiscoveryForNumericEdgeCasesOfOffsetAndOffsetWithLimit(int offset,
-                                                                                                 int limit) {
+                                                                                                    int limit) {
 
         String queryUrl = buildQueryUrl(offset, limit);
         Response response = getResponseOfGetWithOAuth2(queryUrl, m2mToken);
 
-         validateHttpStatusCode(response, HttpStatus.SC_OK);
+        validateHttpStatusCode(response, HttpStatus.SC_OK);
 
         int totalResults = response.jsonPath().getInt(TOTAL_RESULTS_PATH_PARAM);
         int startIndex = response.jsonPath().getInt(START_INDEX_PATH_PARAM);
@@ -1110,187 +1072,67 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         validateOrganizationDiscoveryOffsetIsInLinks(previousLink, expectedOffset);
 
     }
-
-    private int getExpectedOffsetInLinksForOffsetAndLimitEdgeCases(int offset, int limit) {
-
-        if (offset == NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS) {
-            return Math.max(0, offset - limit);
-        } else if (offset > NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS) {
-            int left = offset - limit;
-            while (left >= NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS) left -= limit;
-
-            return Math.max(0, left);
-        } else {
-            return 0;
-        }
-    }
-
+    
     @Test(dependsOnMethods = "testAddEmailDomainsToOrganization")
     public void testGetPaginatedOrganizationsDiscoveryForNonNumericEdgeCasesOfOffsetAndOffsetWithLimit() {
 
         // Case 1: When offset param is present (limit = 0)
-        String queryUrl1 = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH + QUESTION_MARK +
-                OFFSET_QUERY_PARAM + EQUAL + AMPERSAND + LIMIT_QUERY_PARAM + EQUAL + ZERO;
-        Response response1 = getResponseOfGetWithOAuth2(queryUrl1, m2mToken);
-
-        validateHttpStatusCode(response1, HttpStatus.SC_OK);
-
-        Assert.assertEquals(response1.jsonPath().getInt(TOTAL_RESULTS_PATH_PARAM), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, TOTAL_RESULT_MISMATCH_ERROR);
-        Assert.assertEquals(response1.jsonPath().getInt(START_INDEX_PATH_PARAM), 1, START_INDEX_MISMATCH_ERROR);
-        Assert.assertEquals(response1.jsonPath().getInt(COUNT_PATH_PARAM), 0, COUNT_MISMATCH_ERROR);
-
-        List<Map<String, String>> links1 = response1.jsonPath().getList(LINKS_PATH_PARAM);
-        String nextLink1 = getLink(links1, LINK_REL_NEXT);
-        Assert.assertNotNull(nextLink1, "Next link should be present.");
+        validatePaginationScenarioWithOffsetAndLimit(0, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, 1, 0, true);
 
         // Case 2: When offset param is present (limit = 5)
-        String queryUrl2 = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH + QUESTION_MARK +
-                OFFSET_QUERY_PARAM + EQUAL + AMPERSAND + LIMIT_QUERY_PARAM + EQUAL + 5;
-        Response response2 = getResponseOfGetWithOAuth2(queryUrl2, m2mToken);
-
-        validateHttpStatusCode(response2, HttpStatus.SC_OK);
-
-        Assert.assertEquals(response2.jsonPath().getInt(TOTAL_RESULTS_PATH_PARAM), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, TOTAL_RESULT_MISMATCH_ERROR);
-        Assert.assertEquals(response2.jsonPath().getInt(START_INDEX_PATH_PARAM), 1, START_INDEX_MISMATCH_ERROR);
-        Assert.assertEquals(response2.jsonPath().getInt(COUNT_PATH_PARAM), 5, COUNT_MISMATCH_ERROR);
-
-        List<Map<String, String>> links2 = response2.jsonPath().getList(LINKS_PATH_PARAM);
-        String nextLink2 = getLink(links2, LINK_REL_NEXT);
-        Assert.assertNotNull(nextLink2, "Next link should be present.");
+        validatePaginationScenarioWithOffsetAndLimit(5, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, 1, 5, true);
 
         // Case 3: When offset param is present (limit = NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS)
-        String queryUrl3 = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH + QUESTION_MARK +
-                OFFSET_QUERY_PARAM + EQUAL + AMPERSAND + LIMIT_QUERY_PARAM + EQUAL + NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS;
-        Response response3 = getResponseOfGetWithOAuth2(queryUrl3, m2mToken);
-
-        validateHttpStatusCode(response3, HttpStatus.SC_OK);
-
-        Assert.assertEquals(response3.jsonPath().getInt(TOTAL_RESULTS_PATH_PARAM), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, TOTAL_RESULT_MISMATCH_ERROR);
-        Assert.assertEquals(response3.jsonPath().getInt(START_INDEX_PATH_PARAM), 1, START_INDEX_MISMATCH_ERROR);
-        Assert.assertEquals(response3.jsonPath().getInt(COUNT_PATH_PARAM), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, COUNT_MISMATCH_ERROR);
-
-        List<Map<String, String>> links3 = response3.jsonPath().getList(LINKS_PATH_PARAM);
-        String nextLink3 = getLink(links3, LINK_REL_NEXT);
-        Assert.assertNull(nextLink3, "Next link should be present.");
+        validatePaginationScenarioWithOffsetAndLimit(NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS,
+                NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, 1, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, false);
 
         // Case 4: When offset param is present (limit > NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS)
-        String queryUrl4 = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH + QUESTION_MARK +
-                OFFSET_QUERY_PARAM + EQUAL + AMPERSAND + LIMIT_QUERY_PARAM + EQUAL + 25;
-        Response response4 = getResponseOfGetWithOAuth2(queryUrl4, m2mToken);
-
-        validateHttpStatusCode(response4, HttpStatus.SC_OK);
-
-        Assert.assertEquals(response4.jsonPath().getInt(TOTAL_RESULTS_PATH_PARAM), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, TOTAL_RESULT_MISMATCH_ERROR);
-        Assert.assertEquals(response4.jsonPath().getInt(START_INDEX_PATH_PARAM), 1, START_INDEX_MISMATCH_ERROR);
-        Assert.assertEquals(response4.jsonPath().getInt(COUNT_PATH_PARAM), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, COUNT_MISMATCH_ERROR);
-
-        List<Map<String, String>> links4 = response4.jsonPath().getList(LINKS_PATH_PARAM);
-        String nextLink4 = getLink(links4, LINK_REL_NEXT);
-        Assert.assertNull(nextLink4, "Next link should be present.");
+        validatePaginationScenarioWithOffsetAndLimit(25, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, 1,
+                NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, false);
 
         // Case 5: When offset param is not present (limit = 0)
-        String queryUrl5 = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH + QUESTION_MARK +
-                LIMIT_QUERY_PARAM + EQUAL + ZERO;
-        Response response5 = getResponseOfGetWithOAuth2(queryUrl5, m2mToken);
-
-        validateHttpStatusCode(response5, HttpStatus.SC_OK);
-
-        Assert.assertEquals(response5.jsonPath().getInt(TOTAL_RESULTS_PATH_PARAM), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, TOTAL_RESULT_MISMATCH_ERROR);
-        Assert.assertEquals(response5.jsonPath().getInt(START_INDEX_PATH_PARAM), 1, START_INDEX_MISMATCH_ERROR);
-        Assert.assertEquals(response5.jsonPath().getInt(COUNT_PATH_PARAM), 0, COUNT_MISMATCH_ERROR);
-
-        List<Map<String, String>> links5 = response5.jsonPath().getList(LINKS_PATH_PARAM);
-        String nextLink5 = getLink(links5, LINK_REL_NEXT);
-        Assert.assertNotNull(nextLink5, "Links should not be null.");
+        validatePaginationScenarioWithLimitOnly(0, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, 1, 0, true);
 
         // Case 6: When offset param is not present (limit = 5)
-        String queryUrl6 = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH + QUESTION_MARK +
-                LIMIT_QUERY_PARAM + EQUAL + 5;
-        Response response6 = getResponseOfGetWithOAuth2(queryUrl6, m2mToken);
-
-        validateHttpStatusCode(response6, HttpStatus.SC_OK);
-
-        Assert.assertEquals(response6.jsonPath().getInt(TOTAL_RESULTS_PATH_PARAM), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, TOTAL_RESULT_MISMATCH_ERROR);
-        Assert.assertEquals(response6.jsonPath().getInt(START_INDEX_PATH_PARAM), 1, START_INDEX_MISMATCH_ERROR);
-        Assert.assertEquals(response6.jsonPath().getInt(COUNT_PATH_PARAM), 5, COUNT_MISMATCH_ERROR);
-
-        List<Map<String, String>> links6 = response6.jsonPath().getList(LINKS_PATH_PARAM);
-        String nextLink6 = getLink(links6, LINK_REL_NEXT);
-        Assert.assertNotNull(nextLink6, "Links should not be null.");
+        validatePaginationScenarioWithLimitOnly(5, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, 1, 5, true);
 
         // Case 7: When offset param is not present (limit = NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS)
-        String queryUrl7 = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH + QUESTION_MARK +
-                LIMIT_QUERY_PARAM + EQUAL + NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS;
-        Response response7 = getResponseOfGetWithOAuth2(queryUrl7, m2mToken);
-
-        validateHttpStatusCode(response7, HttpStatus.SC_OK);
-
-        Assert.assertEquals(response7.jsonPath().getInt(TOTAL_RESULTS_PATH_PARAM), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, TOTAL_RESULT_MISMATCH_ERROR);
-        Assert.assertEquals(response7.jsonPath().getInt(START_INDEX_PATH_PARAM), 1, START_INDEX_MISMATCH_ERROR);
-        Assert.assertEquals(response7.jsonPath().getInt(COUNT_PATH_PARAM), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, COUNT_MISMATCH_ERROR);
-
-        List<Map<String, String>> links7 = response7.jsonPath().getList(LINKS_PATH_PARAM);
-        Assert.assertTrue(links7.isEmpty(), "Links should be empty.");
+        validatePaginationScenarioWithLimitOnly(NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS,
+                NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, 1, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, false);
 
         // Case 8: When offset param is not present (limit > NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS)
-        String queryUrl8 = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH + QUESTION_MARK +
-                LIMIT_QUERY_PARAM + EQUAL + 25;
-        Response response8 = getResponseOfGetWithOAuth2(queryUrl8, m2mToken);
-
-        validateHttpStatusCode(response8, HttpStatus.SC_OK);
-
-        Assert.assertEquals(response8.jsonPath().getInt(TOTAL_RESULTS_PATH_PARAM), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, TOTAL_RESULT_MISMATCH_ERROR);
-        Assert.assertEquals(response8.jsonPath().getInt(START_INDEX_PATH_PARAM), 1, START_INDEX_MISMATCH_ERROR);
-        Assert.assertEquals(response8.jsonPath().getInt(COUNT_PATH_PARAM), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, COUNT_MISMATCH_ERROR);
-
-        List<Map<String, String>> links8 = response8.jsonPath().getList(LINKS_PATH_PARAM);
-        Assert.assertTrue(links8.isEmpty(), "Links should be empty.");
+        validatePaginationScenarioWithLimitOnly(25, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, 1,
+                NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, false);
 
         // Case 9: Offset= and limit=
-        String queryUrl9 = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH + QUESTION_MARK +
-                OFFSET_QUERY_PARAM + EQUAL + AMPERSAND + LIMIT_QUERY_PARAM + EQUAL;
-        Response response9 = getResponseOfGetWithOAuth2(queryUrl9, m2mToken);
-
-        validateHttpStatusCode(response9, HttpStatus.SC_OK);
-
-        Assert.assertEquals(response9.jsonPath().getInt(TOTAL_RESULTS_PATH_PARAM), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, TOTAL_RESULT_MISMATCH_ERROR);
-        Assert.assertEquals(response9.jsonPath().getInt(START_INDEX_PATH_PARAM), 1, START_INDEX_MISMATCH_ERROR);
-        Assert.assertEquals(response9.jsonPath().getInt(COUNT_PATH_PARAM), Math.min(DEFAULT_ORG_LIMIT,
-                        NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS),
-                COUNT_MISMATCH_ERROR);
-
-        List<Map<String, String>> links9 = response9.jsonPath().getList(LINKS_PATH_PARAM);
-        if (NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS > DEFAULT_ORG_LIMIT) {
-            Assert.assertNotNull(getLink(links9, LINK_REL_NEXT),
-                    "'next' link should be present when organizations exceed default limit.");
-        } else {
-            Assert.assertNull(getLink(links9, LINK_REL_NEXT),
-                    "'next' link should not be present when organizations are within default limit.");
-        }
+        validatePaginationScenarioWithOffsetAndLimitAndDefaultLimit();
 
         // Case 10: Offset is not present and limit is not present
-        String queryUrl10 = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH + QUESTION_MARK +
-                FILTER_QUERY_PARAM + EQUAL;
-        Response response10 = getResponseOfGetWithOAuth2(queryUrl10, m2mToken);
-
-        validateHttpStatusCode(response10, HttpStatus.SC_OK);
-
-        Assert.assertEquals(response10.jsonPath().getInt(TOTAL_RESULTS_PATH_PARAM), NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, TOTAL_RESULT_MISMATCH_ERROR);
-        Assert.assertEquals(response10.jsonPath().getInt(START_INDEX_PATH_PARAM), 1, START_INDEX_MISMATCH_ERROR);
-        Assert.assertEquals(response10.jsonPath().getInt(COUNT_PATH_PARAM), Math.min(DEFAULT_ORG_LIMIT,
-                NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS), COUNT_MISMATCH_ERROR);
-
-        List<Map<String, String>> links10 = response10.jsonPath().getList(LINKS_PATH_PARAM);
-        if (NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS > DEFAULT_ORG_LIMIT) {
-            Assert.assertNotNull(getLink(links10, LINK_REL_NEXT),
-                    "'next' link should be present when organizations exceed default limit.");
-        } else {
-            Assert.assertNull(getLink(links10, LINK_REL_NEXT),
-                    "'next' link should not be present when organizations are within default limit.");
-        }
-
+        validatePaginationScenarioWithNoOffsetAndLimit();
     }
 
+    private void validateNextLink(Response response, boolean expectNextLink) {
+
+        List<Map<String, String>> links = response.jsonPath().getList(LINKS_PATH_PARAM);
+        String nextLink = getLink(links, LINK_REL_NEXT);
+        if (expectNextLink) {
+            Assert.assertNotNull(nextLink, "Next link should be present.");
+        } else {
+            Assert.assertNull(nextLink, "Next link should not be present.");
+        }
+    }
+
+    private void validateNextLinkBasedOnOrganizationCount(Response response) {
+
+        List<Map<String, String>> links = response.jsonPath().getList(LINKS_PATH_PARAM);
+        if (NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS > DEFAULT_ORG_LIMIT) {
+            Assert.assertNotNull(getLink(links, LINK_REL_NEXT),
+                    "'next' link should be present when organizations exceed default limit.");
+        } else {
+            Assert.assertNull(getLink(links, LINK_REL_NEXT),
+                    "'next' link should not be present when organizations are within default limit.");
+        }
+    }
 
     private void validateOrganizationsOnPage(Response response, int pageNum, int totalOrganizations, int limit) {
 
@@ -1373,7 +1215,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         }
     }
 
-    private void validateOrganizationDiscoveryLimitEdgeCaseLinks(List<Map<String, String>> links, int limit, int offset) {
+    private void validateOrganizationDiscoveryLimitEdgeCaseLinks(List<Map<String, String>> links, int limit,
+                                                                 int offset) {
 
         if (limit == 0) {
             if (offset == 0) {
@@ -1398,7 +1241,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     }
 
     private void validateOrganizationDiscoveryLimitEdgeCaseOrganizations(List<Map<String, String>> organizations,
-                                                                    int limit, int offset) {
+                                                                         int limit, int offset) {
 
         if (limit == 0) {
             Assert.assertNull(organizations,
@@ -1429,7 +1272,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         validateOrgNamesForOrganizationDiscoveryGet(accumulatedOrganizationNames);
     }
 
-    private void validateResponseForOrganizationDiscoveryLDefaultCases(Response response) {
+    private void validateResponseForOrganizationDiscoveryLimitDefaultCases(Response response) {
 
         int actualCount = response.jsonPath().getInt(COUNT_PATH_PARAM);
         int totalResults = response.jsonPath().getInt(TOTAL_RESULTS_PATH_PARAM);
@@ -1450,6 +1293,100 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         Assert.assertEquals(returnedOrganizations.size(),
                 Math.min(DEFAULT_ORG_LIMIT, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS),
                 "Number of organizations in the response does not match the expected count.");
+    }
+
+    private void validateOrganizationDiscoveryOffsetLinks(List<Map<String, String>> links, int limit,
+                                                          int offset) {
+
+        String nextLink = getLink(links, LINK_REL_NEXT);
+        if (offset + limit < NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS) {
+            Assert.assertNotNull(nextLink, "The 'next' link should be present in first/middle pages.");
+            int expectedOffset = offset + limit;
+            validateOrganizationDiscoveryOffsetIsInLinks(nextLink, expectedOffset);
+        } else {
+            Assert.assertNull(nextLink, "The 'next' link should not be present in the last page.");
+        }
+
+        String previousLink = getLink(links, LINK_REL_PREVIOUS);
+        if (offset > 0) {
+            Assert.assertNotNull(previousLink, "The 'previous' link should be present in last/middle pages.");
+            int expectedOffset = Math.max((offset - limit), 0);
+            validateOrganizationDiscoveryOffsetIsInLinks(previousLink, expectedOffset);
+        } else {
+            Assert.assertNull(previousLink, "The 'previous' link should not be present in the first page.");
+        }
+    }
+
+    private void validateOrganizationDiscoveryOffsetIsInLinks(String link, int expectedOffset) {
+
+        int offsetStartIndex = link.indexOf(OFFSET_QUERY_PARAM + EQUAL);
+
+        if (offsetStartIndex != -1) {
+            offsetStartIndex += (OFFSET_QUERY_PARAM + EQUAL).length();
+            int offsetEndIndex = link.indexOf(AMPERSAND, offsetStartIndex);
+
+            if (offsetEndIndex == -1) offsetEndIndex = link.length();
+
+            int actualOffset = Integer.parseInt(link.substring(offsetStartIndex, offsetEndIndex));
+
+            Assert.assertEquals(actualOffset, expectedOffset, "Offset in the link is incorrect.");
+        } else {
+            Assert.fail("Offset parameter is missing in the link.");
+        }
+    }
+
+    private void validatePaginationScenarioWithOffsetAndLimit(int limit, int expectedTotalResults,
+                                                              int expectedStartIndex, int expectedCount,
+                                                              boolean expectNextLink) {
+
+        String queryUrl = buildQueryUrlWithOffsetAndLimit(limit);
+        Response response = getResponseOfGetWithOAuth2(queryUrl, m2mToken);
+
+        validateCommonAssertions(response, expectedTotalResults, expectedStartIndex, expectedCount);
+        validateNextLink(response, expectNextLink);
+    }
+
+    private void validatePaginationScenarioWithLimitOnly(int limit, int expectedTotalResults, int expectedStartIndex,
+                                                         int expectedCount, boolean expectNextLink) {
+
+        String queryUrl = buildQueryUrlWithLimit(limit);
+        Response response = getResponseOfGetWithOAuth2(queryUrl, m2mToken);
+
+        validateCommonAssertions(response, expectedTotalResults, expectedStartIndex, expectedCount);
+        validateNextLink(response, expectNextLink);
+    }
+
+    private void validatePaginationScenarioWithOffsetAndLimitAndDefaultLimit() {
+
+        String queryUrl = buildQueryUrlWithOffsetAndLimitAndDefaultLimit();
+        Response response = getResponseOfGetWithOAuth2(queryUrl, m2mToken);
+
+        validateCommonAssertions(response, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, 1,
+                Math.min(DEFAULT_ORG_LIMIT, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS));
+        validateNextLinkBasedOnOrganizationCount(response);
+    }
+
+    private void validatePaginationScenarioWithNoOffsetAndLimit() {
+
+        String queryUrl = buildQueryUrlWithNoOffsetAndLimit();
+        Response response = getResponseOfGetWithOAuth2(queryUrl, m2mToken);
+
+        validateCommonAssertions(response, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, 1,
+                Math.min(DEFAULT_ORG_LIMIT, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS));
+        validateNextLinkBasedOnOrganizationCount(response);
+    }
+
+    private void validateCommonAssertions(Response response, int expectedTotalResults, int expectedStartIndex,
+                                          int expectedCount) {
+
+        validateHttpStatusCode(response, HttpStatus.SC_OK);
+
+        Assert.assertEquals(response.jsonPath().getInt(TOTAL_RESULTS_PATH_PARAM), expectedTotalResults,
+                TOTAL_RESULT_MISMATCH_ERROR);
+        Assert.assertEquals(response.jsonPath().getInt(START_INDEX_PATH_PARAM), expectedStartIndex,
+                START_INDEX_MISMATCH_ERROR);
+        Assert.assertEquals(response.jsonPath().getInt(COUNT_PATH_PARAM), expectedCount,
+                COUNT_MISMATCH_ERROR);
     }
 
     private String getLink(List<Map<String, String>> links, String rel) {
@@ -1486,6 +1423,20 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         addReturnedOrganizationsToList(returnedOrganizations, accumulatedOrganizationNames);
 
         return response.jsonPath().getList(LINKS_PATH_PARAM);
+    }
+
+    private int getExpectedOffsetInLinksForOffsetAndLimitEdgeCases(int offset, int limit) {
+
+        if (offset == NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS) {
+            return Math.max(0, offset - limit);
+        } else if (offset > NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS) {
+            int left = offset - limit;
+            while (left >= NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS) left -= limit;
+
+            return Math.max(0, left);
+        } else {
+            return 0;
+        }
     }
 
     private void addEmailDomainsToOrganization(String organizationId, String... domains) {
@@ -1557,9 +1508,27 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
                         ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH)) : queryUrl;
     }
 
+    private String buildQueryUrlWithOffsetAndLimit(int limit) {
 
-    //OFFSET= LIMIT=10
-    //OFFSET= (NO LIMIT)
-    //LIMIT=OFFSET=
-    //LIMIT= OFFSET=n (n<total, n=total and n>total)
+        return ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH + QUESTION_MARK +
+                OFFSET_QUERY_PARAM + EQUAL + AMPERSAND + LIMIT_QUERY_PARAM + EQUAL + limit;
+    }
+
+    private String buildQueryUrlWithLimit(int limit) {
+
+        return ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH + QUESTION_MARK +
+                LIMIT_QUERY_PARAM + EQUAL + limit;
+    }
+
+    private String buildQueryUrlWithOffsetAndLimitAndDefaultLimit() {
+
+        return ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH + QUESTION_MARK +
+                OFFSET_QUERY_PARAM + EQUAL + AMPERSAND + LIMIT_QUERY_PARAM + EQUAL;
+    }
+
+    private String buildQueryUrlWithNoOffsetAndLimit() {
+
+        return ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH + QUESTION_MARK +
+                FILTER_QUERY_PARAM + EQUAL;
+    }
 }
