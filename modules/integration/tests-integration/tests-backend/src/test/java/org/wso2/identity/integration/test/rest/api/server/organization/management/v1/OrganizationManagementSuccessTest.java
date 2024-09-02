@@ -612,7 +612,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         oAuth2RestClient.deleteApplication(applicationId);
     }
 
-    @Test(groups = "paginationTests", dependsOnMethods = "testDeleteOrganization")
+    @Test(groups = "organizationPaginationTests", dependsOnMethods = "testDeleteOrganization")
     public void createOrganizationsForPaginationTests() throws JSONException {
 
         organizations = createOrganizations(NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS);
@@ -629,7 +629,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         };
     }
 
-    @Test(groups = "paginationTests", dependsOnMethods = "createOrganizationsForPaginationTests",
+    @Test(groups = "organizationPaginationTests", dependsOnMethods = "createOrganizationsForPaginationTests",
             dataProvider = "organizationLimitValidationDataProvider")
     public void testGetPaginatedOrganizationsWithLimit(int limit) {
 
@@ -668,7 +668,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         };
     }
 
-    @Test(groups = "paginationTests", dependsOnMethods = "createOrganizationsForPaginationTests",
+    @Test(groups = "organizationPaginationTests", dependsOnMethods = "createOrganizationsForPaginationTests",
             dataProvider = "organizationPaginationValidationProvider")
     public void testGetPaginatedOrganizations(int limit) {
 
@@ -742,7 +742,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         };
     }
 
-    @Test(groups = "paginationTests", dependsOnMethods = "createOrganizationsForPaginationTests",
+    @Test(groups = "organizationPaginationTests", dependsOnMethods = "createOrganizationsForPaginationTests",
             dataProvider = "organizationPaginationNumericEdgeCasesOfLimitDataProvider")
     public void testGetPaginatedOrganizationsForNumericEdgeCasesOfLimit(int limit) {
 
@@ -761,7 +761,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         validateOrganizationsOnPage(response, 1, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, limit);
     }
 
-    @Test(groups = "paginationTests", dependsOnMethods = "createOrganizationsForPaginationTests")
+    @Test(groups = "organizationPaginationTests", dependsOnMethods = "createOrganizationsForPaginationTests")
     public void testGetPaginatedOrganizationsForNonNumericEdgeCasesOfLimit() {
 
         // Test case 1: URL with LIMIT_QUERY_PARAM but no value.
@@ -786,7 +786,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         validateOrganizationsForDefaultLimit(responseWithoutLimit, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS);
     }
 
-    @Test(groups = "paginationTests", dependsOnMethods = "createOrganizationsForPaginationTests")
+    @Test(groups = "organizationDiscoveryPaginationTests", dependsOnGroups = "organizationPaginationTests")
     public void testEnableEmailDomainDiscovery() {
 
         String enableDiscoveryPayload = "{\"properties\":[{\"key\":\"emailDomain.enable\",\"value\":true}]}";
@@ -806,7 +806,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         Assert.assertTrue(isEnabled, "Email domain discovery was not successfully enabled.");
     }
 
-    @Test(groups = "paginationTests", dependsOnMethods = "testEnableEmailDomainDiscovery")
+    @Test(groups = "organizationDiscoveryPaginationTests", dependsOnMethods = "testEnableEmailDomainDiscovery")
     public void testAddEmailDomainsToOrganization() {
 
         for (int i = 0; i < NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS; i++) {
@@ -825,7 +825,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         };
     }
 
-    @Test(groups = "paginationTests", dependsOnMethods = "testAddEmailDomainsToOrganization",
+    @Test(groups = "organizationDiscoveryPaginationTests", dependsOnMethods = "testAddEmailDomainsToOrganization",
             dataProvider = "organizationDiscoveryLimitValidationDataProvider")
     public void testGetPaginatedOrganizationsDiscoveryWithLimit(int limit) {
 
@@ -873,7 +873,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         };
     }
 
-    @Test(groups = "paginationTests", dependsOnMethods = "testAddEmailDomainsToOrganization",
+    @Test(groups = "organizationDiscoveryPaginationTests", dependsOnMethods = "testAddEmailDomainsToOrganization",
             dataProvider = "organizationDiscoveryPaginationValidationProvider")
     public void testGetPaginatedOrganizationsDiscovery(int limit) {
 
@@ -934,7 +934,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         };
     }
 
-    @Test(groups = "paginationTests", dependsOnMethods = "testAddEmailDomainsToOrganization",
+    @Test(groups = "organizationDiscoveryPaginationTests", dependsOnMethods = "testAddEmailDomainsToOrganization",
             dataProvider = "organizationDiscoveryPaginationNumericEdgeCasesOfLimitDataProvider")
     public void testGetPaginatedOrganizationsDiscoveryForNumericEdgeCasesOfLimit(int offset, int limit) {
 
@@ -964,7 +964,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         validateOrganizationDiscoveryLimitEdgeCaseOrganizations(returnedOrganizations, limit, offset);
     }
 
-    @Test(groups = "paginationTests", dependsOnMethods = "testAddEmailDomainsToOrganization")
+    @Test(groups = "organizationDiscoveryPaginationTests", dependsOnMethods = "testAddEmailDomainsToOrganization")
     public void testGetPaginatedOrganizationsDiscoveryForNonNumericEdgeCasesOfLimit() {
 
         // Test case 1: URL with LIMIT_QUERY_PARAM but no value.
@@ -999,7 +999,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         };
     }
 
-    @Test(groups = "paginationTests", dependsOnMethods = "testAddEmailDomainsToOrganization",
+    @Test(groups = "organizationDiscoveryPaginationTests", dependsOnMethods = "testAddEmailDomainsToOrganization",
             dataProvider = "organizationDiscoveryOffsetValidationDataProvider")
     public void testGetPaginatedOrganizationsDiscoveryWithOffset(int offset, int limit) {
 
@@ -1041,7 +1041,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         };
     }
 
-    @Test(groups = "paginationTests", dependsOnMethods = "testAddEmailDomainsToOrganization",
+    @Test(groups = "organizationDiscoveryPaginationTests", dependsOnMethods = "testAddEmailDomainsToOrganization",
             dataProvider = "numericEdgeCasesOfOffsetAndOffsetWithLimitDataProvider")
     public void testGetPaginatedOrganizationsDiscoveryForNumericEdgeCasesOfOffsetAndOffsetWithLimit(int offset,
                                                                                                     int limit) {
@@ -1072,7 +1072,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
     }
     
-    @Test(groups = "paginationTests", dependsOnMethods = "testAddEmailDomainsToOrganization")
+    @Test(groups = "organizationDiscoveryPaginationTests", dependsOnMethods = "testAddEmailDomainsToOrganization")
     public void testGetPaginatedOrganizationsDiscoveryForNonNumericEdgeCasesOfOffsetAndOffsetWithLimit() {
 
         // Case 1: When offset param is present (limit = 0)
@@ -1110,7 +1110,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         validatePaginationScenarioWithNoOffsetAndLimit();
     }
 
-    @Test(groups = "paginationTests", dependsOnMethods = "testEnableEmailDomainDiscovery")
+    @Test(groups = "organizationDiscoveryPaginationTests", dependsOnMethods = "testEnableEmailDomainDiscovery")
     public void testDisableEmailDomainDiscovery() {
 
         String emailDomainIsEnabled = "properties.find { it.key == 'emailDomain.enable' }?.value ?: false";
@@ -1131,7 +1131,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         Assert.assertFalse(isEnabled, "Email domain discovery was not successfully disabled.");
     }
 
-    @Test(dependsOnGroups = "paginationTests")
+    @Test(dependsOnGroups = "organizationDiscoveryPaginationTests")
     public void testDeleteOrganizationsForPagination() {
 
         for (Map<String, String> org : new ArrayList<>(organizations)) {
