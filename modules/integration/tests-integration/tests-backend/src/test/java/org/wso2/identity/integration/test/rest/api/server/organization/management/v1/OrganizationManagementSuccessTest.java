@@ -1111,6 +1111,28 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         validatePaginationScenarioWithNoOffsetAndLimit();
     }
 
+    @Test(dependsOnMethods = "testEnableEmailDomainDiscovery")
+    public void testDisableEmailDomainDiscovery() {
+
+        String emailDomainIsEnabled = "properties.find { it.key == 'emailDomain.enable' }?.value ?: false";
+
+        // Send DELETE request to disable email domain discovery
+        Response response = getResponseOfDeleteWithOAuth2(
+                ORGANIZATION_CONFIGS_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH,
+                m2mToken);
+
+        validateHttpStatusCode(response, HttpStatus.SC_NO_CONTENT);
+
+        // Send a GET request to validate that the email domain discovery is disabled
+        Response getResponse = getResponseOfGetWithOAuth2(
+                ORGANIZATION_CONFIGS_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH,
+                m2mToken);
+
+        boolean isEnabled = getResponse.jsonPath().getBoolean(emailDomainIsEnabled);
+        Assert.assertFalse(isEnabled, "Email domain discovery was not successfully disabled.");
+    }
+
+
     private void validateNextLink(Response response, boolean expectNextLink) {
 
         List<Map<String, String>> links = response.jsonPath().getList(LINKS_PATH_PARAM);
