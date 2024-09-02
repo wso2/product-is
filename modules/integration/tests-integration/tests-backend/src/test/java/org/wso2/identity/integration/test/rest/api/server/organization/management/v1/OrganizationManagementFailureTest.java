@@ -428,6 +428,11 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
         validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, ERROR_CODE_BAD_REQUEST);
     }
 
+    /*
+     * TODO: After the issue https://github.com/wso2/product-is/issues/21025 is fixed,
+     * remove the method testGetPaginatedOrganizationsDiscoveryWithInvalidOffsetAndLimitZero
+     * along with its data provider organizationDiscoveryInvalidOffsetAtLimitAndLimitZeroDataProvider.
+     */
     @DataProvider(name = "organizationDiscoveryInvalidOffsetAtLimitAndLimitZeroDataProvider")
     public Object[][] organizationDiscoveryInvalidOffsetAtLimitAndLimitZeroDataProvider() {
 
