@@ -411,9 +411,9 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     public Object[][] organizationDiscoveryInvalidLimitAndInvalidOffsetDataProvider() {
 
         return new Object[][]{
-                {"0", "-1"}, {"5", "-1"}, {"20", "-1"}, {"25", "-1"}, {"", "-1"}, //invalid limit
-                {"-1", "0"}, {"-1", "2"}, {"-1", "20"}, {"-1", "25"}, {"-1", ""}, //invalid offset
-                {"-1", "-1"} //invalid offset and invalid limit
+                {"0", "-1"}, {"5", "-1"}, {"20", "-1"}, {"25", "-1"}, {"", "-1"}, // Invalid limit.
+                {"-1", "0"}, {"-1", "2"}, {"-1", "20"}, {"-1", "25"}, {"-1", ""}, // Invalid offset
+                {"-1", "-1"} // Invalid offset and invalid limit.
         };
     }
 

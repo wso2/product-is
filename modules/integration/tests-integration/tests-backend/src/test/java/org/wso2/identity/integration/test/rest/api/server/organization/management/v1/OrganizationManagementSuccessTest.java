@@ -792,16 +792,16 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         String enableDiscoveryPayload = "{\"properties\":[{\"key\":\"emailDomain.enable\",\"value\":true}]}";
         String emailDomainIsEnabled = "properties.find { it.key == 'emailDomain.enable' }.value";
 
-        // Send POST request to enable email domain discovery
+        // Send POST request to enable email domain discovery.
         Response response = getResponseOfPostWithOAuth2(
                 ORGANIZATION_CONFIGS_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH,
                 enableDiscoveryPayload,
                 m2mToken);
 
-        // Validate that the request was successful
+        // Validate that the request was successful.
         validateHttpStatusCode(response, HttpStatus.SC_CREATED);
 
-        // Validate the response content
+        // Validate the response content.
         boolean isEnabled = response.jsonPath().getBoolean(emailDomainIsEnabled);
         Assert.assertTrue(isEnabled, "Email domain discovery was not successfully enabled.");
     }
@@ -832,7 +832,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         int offset = 0;
         List<String> accumulatedOrganizationNames = new ArrayList<>();
 
-        // Loop through each page to test the organization discovery GET API limit
+        // Loop through each page to test the organization discovery GET API limit.
         while (offset < NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS) {
             String queryUrl =
                     ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH + QUESTION_MARK +
@@ -847,7 +847,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
             Assert.assertEquals(returnedOrganizations.size(),
                     Math.min(limit, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS - offset));
 
-            // Validate no duplicate organization names
+            // Validate no duplicate organization names.
             for (Map<String, String> org : returnedOrganizations) {
                 String orgName = org.get(ORGANIZATION_NAME_ATTRIBUTE);
                 assertFalse(accumulatedOrganizationNames.contains(orgName),
@@ -858,10 +858,10 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
             offset += limit;
         }
 
-        // Sort the list based on the numeric part of the organization name
+        // Sort the list based on the numeric part of the organization name.
         accumulatedOrganizationNames.sort(Comparator.comparingInt(s -> Integer.parseInt(s.split("-")[1])));
 
-        // Compare accumulated organization names with the original list (order does not matter)
+        // Compare accumulated organization names with the original list (order does not matter).
         validateOrgNamesForOrganizationDiscoveryGet(accumulatedOrganizationNames);
     }
 
@@ -886,7 +886,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         List<String> forwardAccumulatedOrganizationNames = new ArrayList<>();
         List<String> backwardAccumulatedOrganizationNames = new ArrayList<>();
 
-        // Forward Pagination
+        // Forward Pagination.
         do {
             links = getPaginationLinksForOrganizationDiscovery(queryUrl, offset, limit,
                     forwardAccumulatedOrganizationNames, true);
@@ -902,7 +902,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         } while (nextLink != null);
 
-        // Backward Pagination
+        // Backward Pagination.
         do {
             links = getPaginationLinksForOrganizationDiscovery(queryUrl, offset, limit,
                     backwardAccumulatedOrganizationNames, false);
@@ -944,7 +944,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         validateHttpStatusCode(response, HttpStatus.SC_OK);
 
-        // Validate the response content
+        // Validate the response content.
         int actualCount = response.jsonPath().getInt(COUNT_PATH_PARAM);
         int totalResults = response.jsonPath().getInt(TOTAL_RESULTS_PATH_PARAM);
         int startIndex = response.jsonPath().getInt(START_INDEX_PATH_PARAM);
@@ -1009,7 +1009,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         validateHttpStatusCode(response, HttpStatus.SC_OK);
 
-        // Validate the response content
+        // Validate the response content.
         int totalResults = response.jsonPath().getInt(TOTAL_RESULTS_PATH_PARAM);
         int startIndex = response.jsonPath().getInt(START_INDEX_PATH_PARAM);
         int count = response.jsonPath().getInt(COUNT_PATH_PARAM);
@@ -1056,12 +1056,12 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         int count = response.jsonPath().getInt(COUNT_PATH_PARAM);
         List<Map<String, String>> links = response.jsonPath().getList(LINKS_PATH_PARAM);
 
-        // Validate based on the offset and limit
+        // Validate based on the offset and limit.
         Assert.assertEquals(totalResults, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, TOTAL_RESULT_MISMATCH_ERROR);
         Assert.assertEquals(startIndex, offset + 1, START_INDEX_MISMATCH_ERROR);
         Assert.assertEquals(count, 0, COUNT_MISMATCH_ERROR);
 
-        // Validate links
+        // Validate links.
         String nextLink = getLink(links, LINK_REL_NEXT);
         String previousLink = getLink(links, LINK_REL_PREVIOUS);
         Assert.assertNull(nextLink, "Next link should be null.");
@@ -1075,38 +1075,38 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @Test(groups = "organizationDiscoveryPaginationTests", dependsOnMethods = "testAddEmailDomainsToOrganization")
     public void testGetPaginatedOrganizationsDiscoveryForNonNumericEdgeCasesOfOffsetAndOffsetWithLimit() {
 
-        // Case 1: When offset param is present (limit = 0)
+        // Case 1: When offset param is present (limit = 0).
         validatePaginationScenarioWithOffsetAndLimit(0, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, 1, 0, true);
 
-        // Case 2: When offset param is present (limit = 5)
+        // Case 2: When offset param is present (limit = 5).
         validatePaginationScenarioWithOffsetAndLimit(5, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, 1, 5, true);
 
-        // Case 3: When offset param is present (limit = NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS)
+        // Case 3: When offset param is present (limit = NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS).
         validatePaginationScenarioWithOffsetAndLimit(NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS,
                 NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, 1, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, false);
 
-        // Case 4: When offset param is present (limit > NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS)
+        // Case 4: When offset param is present (limit > NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS).
         validatePaginationScenarioWithOffsetAndLimit(25, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, 1,
                 NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, false);
 
-        // Case 5: When offset param is not present (limit = 0)
+        // Case 5: When offset param is not present (limit = 0).
         validatePaginationScenarioWithLimitOnly(0, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, 1, 0, true);
 
-        // Case 6: When offset param is not present (limit = 5)
+        // Case 6: When offset param is not present (limit = 5).
         validatePaginationScenarioWithLimitOnly(5, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, 1, 5, true);
 
-        // Case 7: When offset param is not present (limit = NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS)
+        // Case 7: When offset param is not present (limit = NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS).
         validatePaginationScenarioWithLimitOnly(NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS,
                 NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, 1, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, false);
 
-        // Case 8: When offset param is not present (limit > NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS)
+        // Case 8: When offset param is not present (limit > NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS).
         validatePaginationScenarioWithLimitOnly(25, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, 1,
                 NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, false);
 
-        // Case 9: Offset= and limit=
+        // Case 9: Offset= and limit= are equal to no value.
         validatePaginationScenarioWithOffsetAndLimitAndDefaultLimit();
 
-        // Case 10: Offset is not present and limit is not present
+        // Case 10: Offset is not present and limit is not present.
         validatePaginationScenarioWithNoOffsetAndLimit();
     }
 
@@ -1115,14 +1115,14 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         String emailDomainIsEnabled = "properties.find { it.key == 'emailDomain.enable' }?.value ?: false";
 
-        // Send DELETE request to disable email domain discovery
+        // Send DELETE request to disable email domain discovery.
         Response response = getResponseOfDeleteWithOAuth2(
                 ORGANIZATION_CONFIGS_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH,
                 m2mToken);
 
         validateHttpStatusCode(response, HttpStatus.SC_NO_CONTENT);
 
-        // Send a GET request to validate that the email domain discovery is disabled
+        // Send a GET request to validate that the email domain discovery is disabled.
         Response getResponse = getResponseOfGetWithOAuth2(
                 ORGANIZATION_CONFIGS_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH,
                 m2mToken);
@@ -1222,7 +1222,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
     private void validateOrgNamesForOrganizationDiscoveryGet(List<String> accumulatedOrganizationNames) {
 
-        // Ensure both sets contain the same organization names
+        // Ensure both sets contain the same organization names.
         for (int i = 0; i < NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS; i++) {
             assertEquals(accumulatedOrganizationNames.get(i), organizations.get(i).get(ORGANIZATION_NAME),
                     "Organization names do not match.");
@@ -1534,7 +1534,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         validateHttpStatusCode(response, HttpStatus.SC_NO_CONTENT);
 
-        // Remove the organization from the list after successful deletion
+        // Remove the organization from the list after successful deletion.
         organizations.remove(org);
     }
 
