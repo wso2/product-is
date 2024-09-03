@@ -52,6 +52,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -229,10 +230,11 @@ public class PreIssueAccessTokenPasswordGrantTestCase extends ActionsBaseTestCas
     @Test(groups = "wso2.is", description = "Verify the replacement of the 'expires_in' claim in the access token")
     public void testTokenExpiresInClaimReplaceOperation() throws Exception {
 
-        if (jwtClaims.getClaim("expires_in") != null) {
-            Object expValue = jwtClaims.getLongClaim("expires_in");
-            Assert.assertEquals(expValue, 7200);
-        }
+        Date exp = jwtClaims.getDateClaim("exp");
+        Date iat = jwtClaims.getDateClaim("iat");
+        long expiresIn = (exp.getTime() - iat.getTime()) / 1000;
+
+        Assert.assertEquals(expiresIn, 7200);
     }
 
     /**
