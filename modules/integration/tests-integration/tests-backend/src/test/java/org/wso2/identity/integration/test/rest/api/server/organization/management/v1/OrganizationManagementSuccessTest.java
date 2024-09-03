@@ -660,7 +660,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         }
     }
 
-    @DataProvider(name = "organizationPaginationValidationProvider")
+    @DataProvider(name = "organizationPaginationValidationDataProvider")
     public Object[][] organizationPaginationValidationProvider() {
 
         return new Object[][]{
@@ -669,7 +669,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     }
 
     @Test(groups = "organizationPaginationTests", dependsOnMethods = "createOrganizationsForPaginationTests",
-            dataProvider = "organizationPaginationValidationProvider")
+            dataProvider = "organizationPaginationValidationDataProvider")
     public void testGetPaginatedOrganizations(int limit) {
 
         String after;
@@ -761,29 +761,26 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         validateOrganizationsOnPage(response, 1, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, limit);
     }
 
-    @Test(groups = "organizationPaginationTests", dependsOnMethods = "createOrganizationsForPaginationTests")
-    public void testGetPaginatedOrganizationsForNonNumericEdgeCasesOfLimit() {
+    @DataProvider(name = "organizationPaginationNonNumericEdgeCasesOfLimitDataProvider")
+    public Object[][] organizationPaginationNonNumericEdgeCasesOfLimitProvider() {
+        return new Object[][] {
+                {AMPERSAND + LIMIT_QUERY_PARAM + EQUAL},  // Test case 1: URL with LIMIT_QUERY_PARAM but no value.
+                {""}  // Test case 2: URL without LIMIT_QUERY_PARAM.
+        };
+    }
 
-        // Test case 1: URL with LIMIT_QUERY_PARAM but no value.
-        String endpointURLWithEmptyLimit =
-                ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + EQUAL + AMPERSAND +
-                        RECURSIVE_QUERY_PARAM + EQUAL + FALSE;
+    @Test(groups = "organizationPaginationTests", dependsOnMethods = "createOrganizationsForPaginationTests",
+            dataProvider = "organizationPaginationNonNumericEdgeCasesOfLimitDataProvider")
+    public void testGetPaginatedOrganizationsForNonNumericEdgeCasesOfLimit(String limitQueryParam) {
 
-        Response responseWithEmptyLimit = getResponseOfGetWithOAuth2(endpointURLWithEmptyLimit, m2mToken);
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + RECURSIVE_QUERY_PARAM + EQUAL + FALSE +
+                limitQueryParam;
 
-        validateHttpStatusCode(responseWithEmptyLimit, HttpStatus.SC_OK);
+        Response response = getResponseOfGetWithOAuth2(endpointURL, m2mToken);
 
-        validateOrganizationsForDefaultLimit(responseWithEmptyLimit, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS);
+        validateHttpStatusCode(response, HttpStatus.SC_OK);
 
-        // Test case 2: URL without LIMIT_QUERY_PARAM.
-        String endpointURLWithoutLimit =
-                ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + RECURSIVE_QUERY_PARAM + EQUAL + FALSE;
-
-        Response responseWithoutLimit = getResponseOfGetWithOAuth2(endpointURLWithoutLimit, m2mToken);
-
-        validateHttpStatusCode(responseWithoutLimit, HttpStatus.SC_OK);
-
-        validateOrganizationsForDefaultLimit(responseWithoutLimit, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS);
+        validateOrganizationsForDefaultLimit(response, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS);
     }
 
     @Test(groups = "organizationDiscoveryPaginationTests", dependsOnGroups = "organizationPaginationTests")
@@ -865,7 +862,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         validateOrgNamesForOrganizationDiscoveryGet(accumulatedOrganizationNames);
     }
 
-    @DataProvider(name = "organizationDiscoveryPaginationValidationProvider")
+    @DataProvider(name = "organizationDiscoveryPaginationValidationDataProvider")
     public Object[][] organizationDiscoveryPaginationValidationProvider() {
 
         return new Object[][]{
@@ -874,7 +871,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     }
 
     @Test(groups = "organizationDiscoveryPaginationTests", dependsOnMethods = "testAddEmailDomainsToOrganization",
-            dataProvider = "organizationDiscoveryPaginationValidationProvider")
+            dataProvider = "organizationDiscoveryPaginationValidationDataProvider")
     public void testGetPaginatedOrganizationsDiscovery(int limit) {
 
         int offset = 0;
@@ -964,29 +961,26 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         validateOrganizationDiscoveryLimitEdgeCaseOrganizations(returnedOrganizations, limit, offset);
     }
 
-    @Test(groups = "organizationDiscoveryPaginationTests", dependsOnMethods = "testAddEmailDomainsToOrganization")
-    public void testGetPaginatedOrganizationsDiscoveryForNonNumericEdgeCasesOfLimit() {
+    @DataProvider(name = "organizationDiscoveryPaginationNonNumericEdgeCasesOfLimitDataProvider")
+    public Object[][] organizationDiscoveryPaginationNonNumericEdgeCasesOfLimitProvider() {
+        return new Object[][] {
+                {AMPERSAND + LIMIT_QUERY_PARAM + EQUAL},  // Test case 1: URL with LIMIT_QUERY_PARAM but no value.
+                {""}  // Test case 2: URL without LIMIT_QUERY_PARAM.
+        };
+    }
 
-        // Test case 1: URL with LIMIT_QUERY_PARAM but no value.
-        String endpointURLWithEmptyLimit =
-                ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH + QUESTION_MARK +
-                        FILTER_QUERY_PARAM + EQUAL + AMPERSAND + LIMIT_QUERY_PARAM + EQUAL + AMPERSAND +
-                        OFFSET_QUERY_PARAM + EQUAL + ZERO;
+    @Test(groups = "organizationDiscoveryPaginationTests", dependsOnMethods = "testAddEmailDomainsToOrganization",
+            dataProvider = "organizationDiscoveryPaginationNonNumericEdgeCasesOfLimitDataProvider")
+    public void testGetPaginatedOrganizationsDiscoveryForNonNumericEdgeCasesOfLimit(String limitQueryParam) {
 
-        Response responseWithEmptyLimit = getResponseOfGetWithOAuth2(endpointURLWithEmptyLimit, m2mToken);
-        validateHttpStatusCode(responseWithEmptyLimit, HttpStatus.SC_OK);
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH + QUESTION_MARK +
+                FILTER_QUERY_PARAM + EQUAL + AMPERSAND + OFFSET_QUERY_PARAM + EQUAL + ZERO +
+                limitQueryParam;
 
-        validateResponseForOrganizationDiscoveryLimitDefaultCases(responseWithEmptyLimit);
+        Response response = getResponseOfGetWithOAuth2(endpointURL, m2mToken);
+        validateHttpStatusCode(response, HttpStatus.SC_OK);
 
-        // Test case 2: URL without LIMIT_QUERY_PARAM.
-        String endpointURLWithoutLimit =
-                ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH + QUESTION_MARK +
-                        FILTER_QUERY_PARAM + EQUAL + AMPERSAND + OFFSET_QUERY_PARAM + EQUAL + ZERO;
-
-        Response responseWithoutLimit = getResponseOfGetWithOAuth2(endpointURLWithoutLimit, m2mToken);
-        validateHttpStatusCode(responseWithoutLimit, HttpStatus.SC_OK);
-
-        validateResponseForOrganizationDiscoveryLimitDefaultCases(responseWithoutLimit);
+        validateResponseForOrganizationDiscoveryLimitDefaultCases(response);
     }
 
     @DataProvider(name = "organizationDiscoveryOffsetValidationDataProvider")
