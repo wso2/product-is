@@ -52,6 +52,9 @@ import org.wso2.identity.integration.common.clients.application.mgt.ApplicationM
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.oauth2.dataprovider.model.ApplicationConfig;
+import org.wso2.identity.integration.test.oauth2.dataprovider.model.AuthorizingUser;
+import org.wso2.identity.integration.test.oauth2.dataprovider.model.UserClaimConfig;
 import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.APIResourceListItem;
 import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.ScopeGetModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AccessTokenConfiguration;
@@ -65,6 +68,7 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration.DialectEnum;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimMappings;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.DomainAPICreationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.IdTokenConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.RequestedClaimConfiguration;
@@ -85,6 +89,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.wso2.identity.integration.test.saml.SAMLFederationDynamicQueryParametersTestCase.INBOUND_AUTH_TYPE;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.CALLBACK_URL;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH_APPLICATION_NAME;
 
 /**
@@ -144,6 +149,55 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		appDTO.setGrantTypes("authorization_code implicit password client_credentials refresh_token "
 				+ "urn:ietf:params:oauth:grant-type:saml2-bearer iwa:ntlm");
 		return createApplication(appDTO, SERVICE_PROVIDER_NAME);
+	}
+
+	/**
+	 * Create application with the given app configurations.
+	 * Audience list and requested claims are considered optional.
+	 * Rest of the configurations are considered mandatory for the application creation from applicationConfig.
+	 *
+	 * @param applicationConfig Application configurations needed for the test case.
+	 * @return Application model created in the server.
+	 * @throws Exception
+	 */
+	public ApplicationResponseModel addApplication(ApplicationConfig applicationConfig) throws Exception {
+
+		if (applicationConfig == null) {
+			return getBasicOAuthApplication(CALLBACK_URL);
+		}
+
+		ApplicationModel application = new ApplicationModel();
+		application.setName(OAUTH_APPLICATION_NAME);
+
+		OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
+		oidcConfig.setGrantTypes(applicationConfig.getGrantTypes());
+		oidcConfig.setCallbackURLs(Collections.singletonList(OAuth2Constant.CALLBACK_URL));
+
+		AccessTokenConfiguration accessTokenConfiguration = new AccessTokenConfiguration();
+		accessTokenConfiguration.type(applicationConfig.getTokenType().getTokenTypeProperty());
+		accessTokenConfiguration.applicationAccessTokenExpiryInSeconds(applicationConfig.getExpiryTime());
+		accessTokenConfiguration.userAccessTokenExpiryInSeconds(applicationConfig.getExpiryTime());
+		oidcConfig.accessToken(accessTokenConfiguration);
+
+		if (applicationConfig.getAudienceList() != null && !applicationConfig.getRequestedClaimList().isEmpty()) {
+			oidcConfig.idToken(new IdTokenConfiguration().audience(applicationConfig.getAudienceList()));
+		}
+
+		InboundProtocols inboundProtocolsConfig = new InboundProtocols();
+		inboundProtocolsConfig.setOidc(oidcConfig);
+		application.setInboundProtocolConfiguration(inboundProtocolsConfig);
+
+		if (applicationConfig.getRequestedClaimList() != null && !applicationConfig.getRequestedClaimList().isEmpty()) {
+			application.setClaimConfiguration(
+					buildClaimConfigurationForRequestedClaims(applicationConfig.getRequestedClaimList()));
+		}
+
+		application.advancedConfigurations(
+				new AdvancedApplicationConfiguration().skipLoginConsent(applicationConfig.isSkipConsent())
+						.skipLogoutConsent(applicationConfig.isSkipConsent()));
+
+		String appId = restClient.createApplication(application);
+		return restClient.getApplication(appId);
 	}
 
     public ApplicationResponseModel addApplication() throws Exception {
@@ -461,6 +515,16 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 
 		HttpPost request = new HttpPost(url);
 		request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
+		request.setEntity(new UrlEncodedFormEntity(urlParameters));
+
+		return client.execute(request);
+	}
+
+	public HttpResponse sendPostRequest(HttpClient client, List<Header> headerList, List<NameValuePair> urlParameters,
+										String url) throws IOException {
+
+		HttpPost request = new HttpPost(url);
+		request.setHeaders(headerList.toArray(new Header[0]));
 		request.setEntity(new UrlEncodedFormEntity(urlParameters));
 
 		return client.execute(request);
@@ -1194,5 +1258,19 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 					authorizedDomainAPICreationModel.getId() +
 					" to application " + applicationId, e);
 		}
+	}
+
+	private ClaimConfiguration buildClaimConfigurationForRequestedClaims(List<UserClaimConfig> requestedClaimList) {
+
+		ClaimConfiguration claimConfiguration = new ClaimConfiguration().dialect(DialectEnum.LOCAL);
+		for (UserClaimConfig claim : requestedClaimList) {
+			RequestedClaimConfiguration requestedClaimConfiguration = new RequestedClaimConfiguration();
+			requestedClaimConfiguration.setClaim(
+					new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(
+							claim.getLocalClaimUri()));
+			claimConfiguration.addRequestedClaimsItem(requestedClaimConfiguration);
+		}
+
+		return claimConfiguration;
 	}
 }
