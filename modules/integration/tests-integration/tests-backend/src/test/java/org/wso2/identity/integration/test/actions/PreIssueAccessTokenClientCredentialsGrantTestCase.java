@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
+ *
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 package org.wso2.identity.integration.test.actions;
 
 import com.nimbusds.jwt.JWTClaimsSet;
@@ -34,6 +52,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -134,14 +153,14 @@ public class PreIssueAccessTokenClientCredentialsGrantTestCase extends ActionsBa
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
+        deleteAction(PRE_ISSUE_ACCESS_TOKEN_API_PATH, actionId);
         restClient = null;
+        deleteRole(roleId);
         deleteApp(applicationId);
         deleteDomainAPI(domainAPIId);
         scim2RestClient.deleteUser(userId);
-        deleteRole(roleId);
         scim2RestClient = null;
         MockServer.shutDownMockServer();
-        deleteAction(PRE_ISSUE_ACCESS_TOKEN_API_PATH, actionId);
         accessToken = null;
         jwtClaims = null;
     }
@@ -211,19 +230,23 @@ public class PreIssueAccessTokenClientCredentialsGrantTestCase extends ActionsBa
     @Test(groups = "wso2.is", description = "Verify the replacement of the 'expires_in' claim in the access token")
     public void testTokenExpiresInClaimReplaceOperation() throws Exception {
 
-        if (jwtClaims.getClaim("expires_in") != null) {
-            Object expValue = jwtClaims.getLongClaim("expires_in");
-            Assert.assertEquals(expValue, 7200);
-        }
+        Date exp = jwtClaims.getDateClaim("exp");
+        Date iat = jwtClaims.getDateClaim("iat");
+        long expiresIn = (exp.getTime() - iat.getTime()) / 1000;
+
+        Assert.assertEquals(expiresIn, 7200);
     }
 
     /**
      * Creates an action for pre-issuing an access token with basic authentication.
+     *
+     * @return ID of the created action
+     * @throws IOException If an error occurred while creating the action
      */
-    private String createPreIssueAccessTokenAction() {
+    private String createPreIssueAccessTokenAction() throws IOException {
 
         AuthenticationType authenticationType = new AuthenticationType();
-        authenticationType.setType(AuthenticationType.TypeEnum.BASIC); // todo handle mock server authorization
+        authenticationType.setType(AuthenticationType.TypeEnum.BASIC);
         Map<String, Object> authProperties = new HashMap<>();
         authProperties.put(USERNAME_PROPERTY, TEST_USER);
         authProperties.put(PASSWORD_PROPERTY, ADMIN_WSO2);
@@ -238,11 +261,7 @@ public class PreIssueAccessTokenClientCredentialsGrantTestCase extends ActionsBa
         actionModel.setDescription("This is a test pre issue access token type");
         actionModel.setEndpoint(endpoint);
 
-        try {
-            return createAction(PRE_ISSUE_ACCESS_TOKEN_API_PATH, actionModel);
-        } catch (IOException e) {
-            throw new RuntimeException("Error while creating pre issue access token " + actionModel.getName());
-        }
+        return createAction(PRE_ISSUE_ACCESS_TOKEN_API_PATH, actionModel);
     }
 
     /**
@@ -269,8 +288,8 @@ public class PreIssueAccessTokenClientCredentialsGrantTestCase extends ActionsBa
                           );
         customScopes.forEach(scope -> permissions.add(new Permission(scope)));
 
-        return requestAccessToken(clientId, oidcConfig.getClientSecret(), tenantedTokenURI,
-                TEST_USER, ADMIN_WSO2, permissions);
+        return requestAccessToken(CLIENT_CREDENTIALS_GRANT_TYPE, clientId, oidcConfig.getClientSecret(),
+                tenantedTokenURI, permissions);
     }
 
     /**

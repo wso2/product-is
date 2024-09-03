@@ -30,6 +30,7 @@ import org.wso2.identity.integration.test.rest.api.server.action.management.v1.m
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * Rest client which provides methods to interact with the Actions REST API.
@@ -61,7 +62,7 @@ public class ActionsRestClient extends RestBaseClient {
      *
      * @param actionModel Request object to create the action
      * @param actionType  Type of the action
-     * @return Status code of the action creation
+     * @return ID of the created action
      * @throws IOException If an error occurred while creating the action
      */
     public String createActionType(ActionModel actionModel, String actionType) throws IOException {

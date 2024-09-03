@@ -54,7 +54,7 @@ public class ActionsBaseTestCase extends OAuth2ServiceAbstractIntegrationTest {
      *
      * @param actionType  Type of action
      * @param actionModel Request object to create the action
-     * @return Status code of the action creation
+     * @return ID of the created action
      * @throws IOException If an error occurred while creating the action
      */
     public String createAction(String actionType, ActionModel actionModel) throws IOException {

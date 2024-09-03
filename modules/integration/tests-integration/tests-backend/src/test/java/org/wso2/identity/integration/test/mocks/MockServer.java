@@ -129,7 +129,6 @@ public class MockServer {
 
             // TODO: Handle status codes related to different scenarios
             wireMockServer.stubFor(post(urlEqualTo(mockEndpoint))
-                    .withRequestBody(matchingJsonPath("$.event.request.grantType", equalTo("password")))
                     .willReturn(aResponse()
                             .withStatus(200)
                             .withHeader("Content-Type", "application/json")
