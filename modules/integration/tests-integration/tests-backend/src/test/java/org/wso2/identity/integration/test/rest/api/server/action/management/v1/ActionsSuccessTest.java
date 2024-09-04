@@ -145,14 +145,7 @@ public class ActionsSuccessTest extends ActionsTestBase {
                         notNullValue())
                 .body( "find { it.type == '" + PRE_ISSUE_ACCESS_TOKEN_ACTION_TYPE + "' }.count",
                         equalTo(1))
-                .body( "find { it.type == '" + PRE_ISSUE_ACCESS_TOKEN_ACTION_TYPE + "' }.self", notNullValue())
-                .body( "find { it.type == '" + PRE_UPDATE_PASSWORD_ACTION_TYPE + "' }.displayName",
-                        notNullValue())
-                .body( "find { it.type == '" + PRE_UPDATE_PASSWORD_ACTION_TYPE + "' }.description",
-                        notNullValue())
-                .body( "find { it.type == '" + PRE_UPDATE_PASSWORD_ACTION_TYPE + "' }.count",
-                        equalTo(0))
-                .body( "find { it.type == '" + PRE_UPDATE_PASSWORD_ACTION_TYPE + "' }.self", notNullValue());
+                .body( "find { it.type == '" + PRE_ISSUE_ACCESS_TOKEN_ACTION_TYPE + "' }.self", notNullValue());
     }
 
     @Test(dependsOnMethods = {"testGetActions"})
