@@ -863,54 +863,6 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	}
 
 	/**
-	 * Request access token from the given token generation endpoint.
-	 *
-	 * @param grantType      Grant type used to request the access token
-	 * @param consumerKey    Consumer key of the application
-	 * @param consumerSecret Consumer secret of the application
-	 * @param backendUrl     Token generation API endpoint.
-	 * @param permissions    Permissions requested with the access token
-	 * @return Token
-	 * @throws Exception If an error occurred while requesting access token
-	 */
-	public String requestAccessToken(String grantType, String consumerKey, String consumerSecret, String backendUrl,
-									 List<Permission> permissions) throws Exception {
-
-		List<NameValuePair> postParameters = new ArrayList<>();
-		HttpClient client = new DefaultHttpClient();
-		HttpPost httpPost = new HttpPost(backendUrl);
-		//generate post request
-		httpPost.setHeader("Authorization", "Basic " + getBase64EncodedString(consumerKey, consumerSecret));
-		httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
-		List<String> permissionsList = new ArrayList<>();
-		if (permissions != null) {
-			for (Permission permission : permissions) {
-				permissionsList.add(permission.getValue());
-			}
-			String nativeScopes = permissionsList.stream()
-					.map(String::toLowerCase) // Ensure uniform case
-					.collect(Collectors.joining(" "));
-			postParameters.add(new BasicNameValuePair("scope", nativeScopes));
-		} else {
-			postParameters.add(new BasicNameValuePair("scope", SCOPE_PRODUCTION));
-		}
-		postParameters.add(new BasicNameValuePair("grant_type", grantType));
-		httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
-		HttpResponse response = client.execute(httpPost);
-		String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
-		EntityUtils.consume(response.getEntity());
-		//Get access token from the response
-		JSONParser parser = new JSONParser();
-		JSONObject json = (JSONObject) parser.parse(responseString);
-		Object accessToken = json.get("access_token");
-		if (accessToken == null) {
-			throw new Exception(
-					"Error occurred while requesting access token. Access token not found in json response");
-		}
-		return accessToken.toString();
-	}
-
-	/**
 	 * Get base64 encoded string of consumer key and secret.
 	 *
 	 * @param consumerKey    Consumer key of the application.

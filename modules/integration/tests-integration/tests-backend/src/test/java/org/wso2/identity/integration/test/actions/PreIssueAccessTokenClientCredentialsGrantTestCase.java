@@ -21,6 +21,21 @@ package org.wso2.identity.integration.test.actions;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.http.Header;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.CookieSpecProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.DefaultRedirectStrategy;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -56,6 +71,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN_ENDPOINT;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZATION_HEADER;
 
 /**
  * Integration test class for testing the pre issue access token flow with client credentials grant.
@@ -106,9 +127,14 @@ public class PreIssueAccessTokenClientCredentialsGrantTestCase extends ActionsBa
     private static final String API_RESOURCE_MANAGEMENT_API = "/api/server/v1/api-resources";
     private static final String MOCK_SERVER_ENDPOINT = "/test/action";
 
+    private Lookup<CookieSpecProvider> cookieSpecRegistry;
+    private RequestConfig requestConfig;
+    private CloseableHttpClient client;
     private SCIM2RestClient scim2RestClient;
+    private List<String> customScopes;
     private String accessToken;
     private String clientId;
+    private String clientSecret;
     private String actionId;
     private String applicationId;
     private String domainAPIId;
@@ -126,14 +152,34 @@ public class PreIssueAccessTokenClientCredentialsGrantTestCase extends ActionsBa
 
         super.init(TestUserMode.TENANT_USER);
 
+        cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+                .build();
+        requestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.DEFAULT)
+                .build();
+        client = HttpClientBuilder.create()
+                .setDefaultRequestConfig(requestConfig)
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .setRedirectStrategy(new DefaultRedirectStrategy() {
+                    @Override
+                    protected boolean isRedirectable(String method) {
+
+                        return false;
+                    }
+                }).build();
+
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
         restClient = new ActionsRestClient(serverURL, tenantInfo);
         // TODO: Review if ActionsRestClient should be instantiated, or if the superclass initialization is sufficient
 
-        List<String> customScopes = Arrays.asList(CUSTOM_SCOPE_1, CUSTOM_SCOPE_2, CUSTOM_SCOPE_3);
+        customScopes = Arrays.asList(CUSTOM_SCOPE_1, CUSTOM_SCOPE_2, CUSTOM_SCOPE_3);
 
         ApplicationResponseModel application = addApplicationWithGrantType(CLIENT_CREDENTIALS_GRANT_TYPE);
         applicationId = application.getId();
+        OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(applicationId);
+        clientId = oidcConfig.getClientId();
+        clientSecret = oidcConfig.getClientSecret();
         if (!CarbonUtils.isLegacyAuthzRuntimeEnabled()) {
             authorizeSystemAPIs(applicationId, new ArrayList<>(Arrays.asList(SCIM2_USERS_API, ACTIONS_API,
                     APPLICATION_MANAGEMENT_API, API_RESOURCE_MANAGEMENT_API)));
@@ -145,9 +191,6 @@ public class PreIssueAccessTokenClientCredentialsGrantTestCase extends ActionsBa
 
         MockServer.createMockServer(MOCK_SERVER_ENDPOINT);
         actionId = createPreIssueAccessTokenAction();
-
-        accessToken = retrieveAccessToken(application.getId(), customScopes);
-        jwtClaims = extractJwtClaims(accessToken);
     }
 
     @AfterClass(alwaysRun = true)
@@ -165,7 +208,49 @@ public class PreIssueAccessTokenClientCredentialsGrantTestCase extends ActionsBa
         jwtClaims = null;
     }
 
-    @Test(groups = "wso2.is", description = "Verify the presence of the updated scopes in the access token")
+    @Test(groups = "wso2.is", description = "Get access token with client credentials grant")
+    public void testGetAccessTokenWithClientCredentialsGrant() throws IOException, JSONException, ParseException {
+
+        List<NameValuePair> parameters = new ArrayList<>();
+        parameters.add(new BasicNameValuePair("grant_type", OAuth2Constant.OAUTH2_GRANT_TYPE_CLIENT_CREDENTIALS));
+
+        List<String> permissions = new ArrayList<>();
+        Collections.addAll(permissions,
+                INTERNAL_ORG_USER_MANAGEMENT_LIST,
+                INTERNAL_ORG_USER_MANAGEMENT_VIEW,
+                INTERNAL_ORG_USER_MANAGEMENT_CREATE,
+                INTERNAL_ORG_USER_MANAGEMENT_UPDATE,
+                INTERNAL_ORG_USER_MANAGEMENT_DELETE
+                          );
+        permissions.addAll(customScopes);
+
+        String scopes = permissions.stream()
+                .map(String::toLowerCase)
+                .collect(Collectors.joining(" "));
+        parameters.add(new BasicNameValuePair("scope", scopes));
+
+        List<Header> headers = new ArrayList<>();
+        headers.add(new BasicHeader(AUTHORIZATION_HEADER, OAuth2Constant.BASIC_HEADER + " " +
+                getBase64EncodedString(clientId, clientSecret)));
+        headers.add(new BasicHeader("Content-Type", "application/x-www-form-urlencoded"));
+        headers.add(new BasicHeader("User-Agent", OAuth2Constant.USER_AGENT));
+
+        HttpResponse response = sendPostRequest(client, headers, parameters,
+                getTenantQualifiedURL(ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()));
+
+        String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
+        org.json.JSONObject jsonResponse = new org.json.JSONObject(responseString);
+
+        assertTrue(jsonResponse.has("access_token"), "Access token not found in the token response.");
+        accessToken = jsonResponse.getString("access_token");
+        assertNotNull(accessToken, "Access token is null.");
+
+        jwtClaims = extractJwtClaims(accessToken);
+        assertNotNull(jwtClaims);
+    }
+
+    @Test(groups = "wso2.is", description = "Verify that the access token contains the updated scopes " +
+            "after action execution", dependsOnMethods = "testGetAccessTokenWithClientCredentialsGrant")
     public void testTokenScopeOperations() throws Exception {
 
         String[] scopes = jwtClaims.getStringClaim("scope").split("\\s+");
@@ -178,7 +263,8 @@ public class PreIssueAccessTokenClientCredentialsGrantTestCase extends ActionsBa
         Assert.assertFalse(ArrayUtils.contains(scopes, CUSTOM_SCOPE_2));
     }
 
-    @Test(groups = "wso2.is", description = "Verify the presence of the updated aud claims in the access token")
+    @Test(groups = "wso2.is", description = "Verify that the access token contains the updated 'aud' claims " +
+            "after action execution", dependsOnMethods = "testGetAccessTokenWithClientCredentialsGrant")
     public void testTokenAUDClaimOperations() throws Exception {
 
         String[] audValueArray = jwtClaims.getStringArrayClaim("aud");
@@ -191,25 +277,23 @@ public class PreIssueAccessTokenClientCredentialsGrantTestCase extends ActionsBa
     }
 
     @Test(groups = "wso2.is", description = "Verify the presence of the specified custom string claim in the access " +
-            "token")
+            "token", dependsOnMethods = "testGetAccessTokenWithClientCredentialsGrant")
     public void testTokenStringClaimAddOperation() throws Exception {
 
         String claimStr = jwtClaims.getStringClaim("custom_claim_string_1");
         Assert.assertEquals(claimStr, "testCustomClaim1");
-
     }
 
     @Test(groups = "wso2.is", description = "Verify the presence of the specified custom number claim in the access " +
-            "token")
+            "token", dependsOnMethods = "testGetAccessTokenWithClientCredentialsGrant")
     public void testTokenNumberClaimAddOperation() throws Exception {
 
         Number claimValue = jwtClaims.getIntegerClaim("custom_claim_number_1");
         Assert.assertEquals(claimValue, 78);
-
     }
 
     @Test(groups = "wso2.is", description = "Verify the presence of the specified custom boolean claim in the access " +
-            "token")
+            "token", dependsOnMethods = "testGetAccessTokenWithClientCredentialsGrant")
     public void testTokenBooleanClaimAddOperation() throws Exception {
 
         Boolean claimValue = jwtClaims.getBooleanClaim("custom_claim_boolean_1");
@@ -217,17 +301,18 @@ public class PreIssueAccessTokenClientCredentialsGrantTestCase extends ActionsBa
     }
 
     @Test(groups = "wso2.is", description = "Verify the presence of the specified custom string array claim in the " +
-            "access token")
+            "access token", dependsOnMethods = "testGetAccessTokenWithClientCredentialsGrant")
     public void testTokenStringArrayClaimAddOperation()
             throws Exception {
 
-        String[] claimArray1 = {"TestCustomClaim1", "TestCustomClaim2", "TestCustomClaim3"};
+        String[] expectedClaimArrayInToken = {"TestCustomClaim1", "TestCustomClaim2", "TestCustomClaim3"};
 
-        String[] claimArray = jwtClaims.getStringArrayClaim("custom_claim_string_array_1");
-        Assert.assertEquals(claimArray, claimArray1);
+        String[] addedClaimArrayToToken = jwtClaims.getStringArrayClaim("custom_claim_string_array_1");
+        Assert.assertEquals(addedClaimArrayToToken, expectedClaimArrayInToken);
     }
 
-    @Test(groups = "wso2.is", description = "Verify the replacement of the 'expires_in' claim in the access token")
+    @Test(groups = "wso2.is", description = "Verify the replacement of the 'expires_in' claim in the access token",
+            dependsOnMethods = "testGetAccessTokenWithClientCredentialsGrant")
     public void testTokenExpiresInClaimReplaceOperation() throws Exception {
 
         Date exp = jwtClaims.getDateClaim("exp");
@@ -262,34 +347,6 @@ public class PreIssueAccessTokenClientCredentialsGrantTestCase extends ActionsBa
         actionModel.setEndpoint(endpoint);
 
         return createAction(PRE_ISSUE_ACCESS_TOKEN_API_PATH, actionModel);
-    }
-
-    /**
-     * Retrieves an access token for the application.
-     *
-     * @param applicationId ID of the application
-     * @param customScopes  Custom scopes related to the integrated domain APIs
-     * @return Access token
-     * @throws Exception If error occurred wile requesting access token
-     */
-    private String retrieveAccessToken(String applicationId, List<String> customScopes) throws Exception {
-
-        OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(applicationId);
-        clientId = oidcConfig.getClientId();
-        String tenantedTokenURI = getTenantQualifiedURL(OAuth2Constant.ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain());
-
-        List<Permission> permissions = new ArrayList<>();
-        Collections.addAll(permissions,
-                new Permission(INTERNAL_ORG_USER_MANAGEMENT_LIST),
-                new Permission(INTERNAL_ORG_USER_MANAGEMENT_VIEW),
-                new Permission(INTERNAL_ORG_USER_MANAGEMENT_CREATE),
-                new Permission(INTERNAL_ORG_USER_MANAGEMENT_UPDATE),
-                new Permission(INTERNAL_ORG_USER_MANAGEMENT_DELETE)
-                          );
-        customScopes.forEach(scope -> permissions.add(new Permission(scope)));
-
-        return requestAccessToken(CLIENT_CREDENTIALS_GRANT_TYPE, clientId, oidcConfig.getClientSecret(),
-                tenantedTokenURI, permissions);
     }
 
     /**
@@ -346,7 +403,6 @@ public class PreIssueAccessTokenClientCredentialsGrantTestCase extends ActionsBa
     private List<Permission> addPermissions(List<String> customScopes) {
 
         List<Permission> userPermissions = new ArrayList<>();
-
         Collections.addAll(userPermissions,
                 new Permission(INTERNAL_ACTION_MANAGEMENT_VIEW),
                 new Permission(INTERNAL_ACTION_MANAGEMENT_CREATE),
@@ -365,7 +421,6 @@ public class PreIssueAccessTokenClientCredentialsGrantTestCase extends ActionsBa
                 new Permission(INTERNAL_API_RESOURCE_VIEW),
                 new Permission(INTERNAL_API_RESOURCE_CREATE)
                           );
-
         customScopes.forEach(scope -> userPermissions.add(new Permission(scope)));
 
         return userPermissions;
