@@ -53,6 +53,7 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
 
     private static final String ERROR_CODE_BAD_REQUEST = "UE-10000";
     private static final String ERROR_CODE_INVALID_PAGINATION_CURSOR = "ORG-60026";
+    private static final String ERROR_CODE_SERVER_ERROR = "SE-50000";
 
     private List<String> organizationIDs = new ArrayList<>();
     private String applicationID;
@@ -380,7 +381,8 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     @Test(dependsOnMethods = "testUpdateDiscoveryAttributesUnauthorized")
     public void testGetPaginatedOrganizationsWithInvalidLimit() {
 
-        String invalidLimitUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + EQUAL + "-1";
+        String invalidLimitUrl =
+                ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + EQUAL + "-1";
         Response response = getResponseOfGetWithOAuth2(invalidLimitUrl, m2mToken);
         validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, ERROR_CODE_BAD_REQUEST);
     }
@@ -388,8 +390,9 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     @Test(dependsOnMethods = "testGetPaginatedOrganizationsWithInvalidLimit")
     public void testGetPaginatedOrganizationsWithInvalidAfterCursor() {
 
-        String invalidAfterCursorUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + EQUAL + "10"
-                + AMPERSAND + AFTER_QUERY_PARAM + EQUAL + INVALID_CURSOR;
+        String invalidAfterCursorUrl =
+                ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + EQUAL + "10"
+                        + AMPERSAND + AFTER_QUERY_PARAM + EQUAL + INVALID_CURSOR;
         Response response = getResponseOfGetWithOAuth2(invalidAfterCursorUrl, m2mToken);
         validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, ERROR_CODE_INVALID_PAGINATION_CURSOR);
     }
@@ -397,9 +400,58 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     @Test(dependsOnMethods = "testGetPaginatedOrganizationsWithInvalidAfterCursor")
     public void testGetPaginatedOrganizationsWithInvalidBeforeCursor() {
 
-        String invalidBeforeCursorUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + EQUAL + "10"
-                + AMPERSAND + BEFORE_QUERY_PARAM + EQUAL + INVALID_CURSOR;
+        String invalidBeforeCursorUrl =
+                ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + EQUAL + "10"
+                        + AMPERSAND + BEFORE_QUERY_PARAM + EQUAL + INVALID_CURSOR;
         Response response = getResponseOfGetWithOAuth2(invalidBeforeCursorUrl, m2mToken);
         validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, ERROR_CODE_INVALID_PAGINATION_CURSOR);
     }
+
+    @DataProvider(name = "organizationDiscoveryInvalidLimitAndOffsetDataProvider")
+    public Object[][] organizationDiscoveryInvalidLimitAndInvalidOffsetDataProvider() {
+
+        return new Object[][]{
+                {"0", "-1"}, {"5", "-1"}, {"20", "-1"}, {"25", "-1"}, {"", "-1"}, // Invalid limit.
+                {"-1", "0"}, {"-1", "2"}, {"-1", "20"}, {"-1", "25"}, {"-1", ""}, // Invalid offset
+                {"-1", "-1"} // Invalid offset and invalid limit.
+        };
+    }
+
+    @Test(dependsOnMethods = "testGetPaginatedOrganizationsWithInvalidAfterCursor",
+            dataProvider = "organizationDiscoveryInvalidLimitAndInvalidOffsetDataProvider")
+    public void testGetPaginatedOrganizationsDiscoveryWithInvalidLimitAndOffset(String offset, String limit) {
+
+        String url = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH + QUESTION_MARK +
+                OFFSET_QUERY_PARAM + EQUAL + offset + AMPERSAND + LIMIT_QUERY_PARAM + EQUAL + limit;
+
+        Response response = getResponseOfGetWithOAuth2(url, m2mToken);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, ERROR_CODE_BAD_REQUEST);
+    }
+
+    /*
+     * TODO: After the issue https://github.com/wso2/product-is/issues/21025 is fixed,
+     * remove the method testGetPaginatedOrganizationsDiscoveryWithInvalidOffsetAndLimitZero
+     * along with its data provider organizationDiscoveryInvalidOffsetAtLimitAndLimitZeroDataProvider.
+     */
+    @DataProvider(name = "organizationDiscoveryInvalidOffsetAtLimitAndLimitZeroDataProvider")
+    public Object[][] organizationDiscoveryInvalidOffsetAtLimitAndLimitZeroDataProvider() {
+
+        return new Object[][]{
+                {"20", "0"},
+                {"25", "0"}
+        };
+    }
+
+    @Test(dependsOnMethods = "testGetPaginatedOrganizationsDiscoveryWithInvalidLimitAndOffset",
+            dataProvider = "organizationDiscoveryInvalidOffsetAtLimitAndLimitZeroDataProvider")
+    public void testGetPaginatedOrganizationsDiscoveryWithInvalidOffsetAndLimitZero(String offset,
+                                                                                    String limit) {
+
+        String url = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH + QUESTION_MARK +
+                OFFSET_QUERY_PARAM + EQUAL + offset + AMPERSAND + LIMIT_QUERY_PARAM + EQUAL + limit;
+
+        Response response = getResponseOfGetWithOAuth2(url, m2mToken);
+        validateErrorResponse(response, HttpStatus.SC_INTERNAL_SERVER_ERROR, ERROR_CODE_SERVER_ERROR);
+    }
+
 }
