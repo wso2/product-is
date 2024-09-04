@@ -30,7 +30,6 @@ import org.wso2.identity.integration.test.rest.api.server.action.management.v1.m
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 /**
  * Rest client which provides methods to interact with the Actions REST API.

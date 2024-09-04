@@ -37,6 +37,7 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -209,7 +210,7 @@ public class PreIssueAccessTokenClientCredentialsGrantTestCase extends ActionsBa
     }
 
     @Test(groups = "wso2.is", description = "Get access token with client credentials grant")
-    public void testGetAccessTokenWithClientCredentialsGrant() throws IOException, JSONException, ParseException {
+    public void testGetAccessTokenWithClientCredentialsGrant() throws Exception {
 
         List<NameValuePair> parameters = new ArrayList<>();
         parameters.add(new BasicNameValuePair("grant_type", OAuth2Constant.OAUTH2_GRANT_TYPE_CLIENT_CREDENTIALS));
@@ -239,7 +240,7 @@ public class PreIssueAccessTokenClientCredentialsGrantTestCase extends ActionsBa
                 getTenantQualifiedURL(ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()));
 
         String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
-        org.json.JSONObject jsonResponse = new org.json.JSONObject(responseString);
+        JSONObject jsonResponse = new JSONObject(responseString);
 
         assertTrue(jsonResponse.has("access_token"), "Access token not found in the token response.");
         accessToken = jsonResponse.getString("access_token");
