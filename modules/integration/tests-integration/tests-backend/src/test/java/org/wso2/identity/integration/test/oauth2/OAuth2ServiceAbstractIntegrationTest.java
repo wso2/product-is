@@ -859,8 +859,8 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
         if (accessToken == null) {
             throw new Exception("Error occurred while requesting access token. Access token not found in json response");
         }
-		return accessToken.toString();
-	}
+        return accessToken.toString();
+    }
 
 	/**
 	 * Get base64 encoded string of consumer key and secret.
