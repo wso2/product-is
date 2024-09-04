@@ -90,6 +90,7 @@ import static org.hamcrest.core.IsNull.notNullValue;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.API_SERVER_PATH;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.CONTENT_TYPE_ATTRIBUTE;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.ORGANIZATION_PATH;
@@ -110,6 +111,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     private String switchedM2MToken;
     private String b2bApplicationID;
     private HttpClient client;
+    private Map<String, String> organizationForMetaAttributes;
     private List<Map<String, String>> organizations;
     private List<Map<String, String>> metaAttributes;
 
@@ -1143,6 +1145,11 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         organizations = createOrganizations(1);
         assertEquals(organizations.size(), 1);
+
+        organizationForMetaAttributes = organizations.get(0);
+        assertNotNull(organizationForMetaAttributes);
+
+        organizations.clear();
     }
 
     @Test(groups = "organizationMetaAttributesPaginationTests",
@@ -1155,29 +1162,32 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
                         "y", "z"};
         metaAttributes = new ArrayList<>();
 
-        for (Map<String, String> org : organizations) {
-            String organizationId = org.get(ORGANIZATION_ID);
-            for (String attribute : attributes) {
-                String requestBody =
-                        "[{\"operation\":\"ADD\",\"path\":\"/attributes/" + attribute + "\",\"value\":\"value-" +
-                                attribute + "\"}]";
+        String organizationId = organizationForMetaAttributes.get(ORGANIZATION_ID);
+        assertNotNull(organizationId, "Organization ID should not be null");
 
-                String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + "/" + organizationId;
-                Response response = getResponseOfPatch(endpointURL, requestBody);
+        for (String attribute : attributes) {
+            String requestBody =
+                    "[{\"operation\":\"ADD\",\"path\":\"/attributes/" + attribute + "\",\"value\":\"value-" +
+                            attribute + "\"}]";
 
-                validateHttpStatusCode(response, HttpStatus.SC_OK);
+            String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + "/" + organizationId;
+            Response response = getResponseOfPatch(endpointURL, requestBody);
 
-                // Save the attributes to the instance variable.
-                Map<String, String> attrMap = new HashMap<>();
-                attrMap.put(ORGANIZATION_ID_ATTRIBUTE, organizationId);
-                attrMap.put(ORGANIZATION_META_ATTRIBUTE_ATTRIBUTE, attribute);
-                metaAttributes.add(attrMap);
-            }
+            validateHttpStatusCode(response, HttpStatus.SC_OK);
+
+            // Save the attributes to the instance variable.
+            Map<String, String> attrMap = new HashMap<>();
+            attrMap.put(ORGANIZATION_ID_ATTRIBUTE, organizationId);
+            attrMap.put(ORGANIZATION_META_ATTRIBUTE_ATTRIBUTE, attribute);
+            metaAttributes.add(attrMap);
         }
-        int expectedAttributesSize = organizations.size() * attributes.length;
+
+        int expectedAttributesSize = attributes.length;
         Assert.assertEquals(metaAttributes.size(), expectedAttributesSize,
-                "Meta attributes were not added successfully.");
+                String.format("Expected %d meta attributes, but found %d.", expectedAttributesSize,
+                        metaAttributes.size()));
     }
+
 
     @DataProvider(name = "metaAttributesLimitValidationDataProvider")
     public Object[][] metaAttributesLimitValidationDataProvider() {
@@ -1322,6 +1332,14 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
             Assert.assertEquals(attributes.size(), DEFAULT_META_ATTRIBUTES_LIMIT);
             validateNextLinkBasedOnMetaAttributeCount(response);
         }
+    }
+
+    @Test(dependsOnGroups = "organizationMetaAttributesPaginationTests")
+    public void testDeleteOrganizationsForMetaAttributesPagination() {
+
+        deleteSingleOrganization(organizationForMetaAttributes);
+
+        Assert.assertTrue(organizations.isEmpty(), "All organizations should be deleted, but the list is not empty.");
     }
 
     private void validateNextLink(Response response, boolean expectNextLink) {
