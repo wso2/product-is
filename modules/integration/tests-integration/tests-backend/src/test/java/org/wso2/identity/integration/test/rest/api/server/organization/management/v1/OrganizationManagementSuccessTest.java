@@ -1711,14 +1711,14 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
     private String getMetaAttributesEndpoint(boolean isForward, int limit, String after, String before) {
 
+        String baseEndpoint = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_META_ATTRIBUTES_API_PATH +
+                QUESTION_MARK + LIMIT_QUERY_PARAM + EQUAL + limit +
+                AMPERSAND + RECURSIVE_QUERY_PARAM + EQUAL + false;
+
         if (isForward) {
-            return ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_META_ATTRIBUTES_API_PATH + QUESTION_MARK +
-                    LIMIT_QUERY_PARAM + EQUAL + limit + AMPERSAND + RECURSIVE_QUERY_PARAM + EQUAL + false +
-                    (after != null ? AMPERSAND + AFTER_QUERY_PARAM + EQUAL + after : "");
+            return baseEndpoint + (after != null ? AMPERSAND + AFTER_QUERY_PARAM + EQUAL + after : "");
         } else {
-            return ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_META_ATTRIBUTES_API_PATH + QUESTION_MARK +
-                    LIMIT_QUERY_PARAM + EQUAL + limit + AMPERSAND + RECURSIVE_QUERY_PARAM + EQUAL + false +
-                    (before != null ? AMPERSAND + BEFORE_QUERY_PARAM + EQUAL + before : "");
+            return baseEndpoint + (before != null ? AMPERSAND + BEFORE_QUERY_PARAM + EQUAL + before : "");
         }
     }
 
