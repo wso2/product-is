@@ -1188,7 +1188,6 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
                         metaAttributes.size()));
     }
 
-
     @DataProvider(name = "metaAttributesLimitValidationDataProvider")
     public Object[][] metaAttributesLimitValidationDataProvider() {
 
