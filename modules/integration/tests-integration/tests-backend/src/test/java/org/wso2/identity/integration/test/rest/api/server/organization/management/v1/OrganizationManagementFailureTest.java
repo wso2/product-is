@@ -454,4 +454,33 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
         validateErrorResponse(response, HttpStatus.SC_INTERNAL_SERVER_ERROR, ERROR_CODE_SERVER_ERROR);
     }
 
+    @Test(dependsOnMethods = "testGetPaginatedOrganizationsDiscoveryWithInvalidLimitAndOffset")
+    public void testGetPaginatedMetaAttributesWithInvalidLimit() {
+
+        String invalidLimitUrl =
+                ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_META_ATTRIBUTES_API_PATH + QUESTION_MARK +
+                        LIMIT_QUERY_PARAM + EQUAL + "-1";
+        Response response = getResponseOfGetWithOAuth2(invalidLimitUrl, m2mToken);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, ERROR_CODE_BAD_REQUEST);
+    }
+
+    @Test(dependsOnMethods = "testGetPaginatedMetaAttributesWithInvalidLimit")
+    public void testGetPaginatedMetaAttributesWithInvalidAfterCursor() {
+
+        String invalidAfterCursorUrl =
+                ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_META_ATTRIBUTES_API_PATH + QUESTION_MARK +
+                        LIMIT_QUERY_PARAM + EQUAL + "10" + AMPERSAND + AFTER_QUERY_PARAM + EQUAL + INVALID_CURSOR;
+        Response response = getResponseOfGetWithOAuth2(invalidAfterCursorUrl, m2mToken);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, ERROR_CODE_INVALID_PAGINATION_CURSOR);
+    }
+
+    @Test(dependsOnMethods = "testGetPaginatedMetaAttributesWithInvalidAfterCursor")
+    public void testGetPaginatedMetaAttributesWithInvalidBeforeCursor() {
+
+        String invalidBeforeCursorUrl =
+                ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_META_ATTRIBUTES_API_PATH + QUESTION_MARK +
+                        LIMIT_QUERY_PARAM + EQUAL + "10" + AMPERSAND + BEFORE_QUERY_PARAM + EQUAL + INVALID_CURSOR;
+        Response response = getResponseOfGetWithOAuth2(invalidBeforeCursorUrl, m2mToken);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, ERROR_CODE_INVALID_PAGINATION_CURSOR);
+    }
 }
