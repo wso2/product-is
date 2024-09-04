@@ -42,6 +42,7 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
     static final String ORGANIZATION_MANAGEMENT_API_BASE_PATH = "/organizations";
     static final String ORGANIZATION_CONFIGS_API_BASE_PATH = "/organization-configs";
     static final String ORGANIZATION_DISCOVERY_API_PATH = "/discovery";
+    static final String ORGANIZATION_META_ATTRIBUTES_API_PATH = "/meta-attributes";
     static final String PATH_SEPARATOR = "/";
 
     protected static final String ORGANIZATION_ID = "id";
@@ -65,6 +66,9 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
     protected static final String START_INDEX_PATH_PARAM = "startIndex";
 
     protected static final String ORGANIZATION_NAME_ATTRIBUTE = "organizationName";
+    protected static final String ORGANIZATION_ID_ATTRIBUTE = "organizationId";
+    protected static final String ORGANIZATION_META_ATTRIBUTE_ATTRIBUTE = "attribute";
+    protected static final String ORGANIZATION_MULTIPLE_META_ATTRIBUTE_ATTRIBUTES = "attributes";
 
     protected static final String LINK_REL_PREVIOUS = "previous";
     protected static final String LINK_REL_NEXT = "next";
@@ -85,6 +89,7 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
 
     protected static final int NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS = 20;
     protected static final int DEFAULT_ORG_LIMIT = 15;
+    protected static final int DEFAULT_META_ATTRIBUTES_LIMIT = 15;
 
     protected static String swaggerDefinition;
     protected OAuth2RestClient oAuth2RestClient;
