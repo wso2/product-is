@@ -31,6 +31,8 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.common.RESTAPIServerTestBase;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ActionsTestBase extends RESTAPIServerTestBase {
 
@@ -40,14 +42,12 @@ public class ActionsTestBase extends RESTAPIServerTestBase {
     protected static final String ACTION_MANAGEMENT_API_BASE_PATH = "/actions";
     protected static final String TYPES_API_PATH = "/types";
     protected static final String PRE_ISSUE_ACCESS_TOKEN_PATH = "/preIssueAccessToken";
-    protected static final String PRE_UPDATE_PASSWORD_PATH = "/preUpdatePassword";
     protected static final String ACTION_DEACTIVATE_PATH = "/deactivate";
     protected static final String ACTION_ACTIVATE_PATH = "/activate";
     protected static final String ACTION_BEARER_AUTH_PATH = "/bearer";
     protected static final String ACTION_BASIC_AUTH_PATH = "/basic";
 
     protected static final String PRE_ISSUE_ACCESS_TOKEN_ACTION_TYPE = "PRE_ISSUE_ACCESS_TOKEN";
-    protected static final String PRE_UPDATE_PASSWORD_ACTION_TYPE = "PRE_UPDATE_PASSWORD";
 
     protected static final String TEST_ACTION_NAME = "Access Token Pre Issue";
     protected static final String TEST_ACTION_DESCRIPTION = "This is the configuration of pre-action for issuing access token.";
@@ -72,9 +72,16 @@ public class ActionsTestBase extends RESTAPIServerTestBase {
     protected static final String TEST_APIKEY_VALUE_AUTH_PROPERTY = "value";
     protected static final String TEST_APIKEY_VALUE_AUTH_PROPERTY_VALUE = "secret";
 
+    protected static final Set<String> NOT_IMPLEMENTED_ACTION_TYPE_PATHS = new HashSet<>();
+
     protected static String swaggerDefinition;
 
     static {
+        NOT_IMPLEMENTED_ACTION_TYPE_PATHS.add("/preUpdatePassword");
+        NOT_IMPLEMENTED_ACTION_TYPE_PATHS.add("/preUpdateProfile");
+        NOT_IMPLEMENTED_ACTION_TYPE_PATHS.add("/preRegistration");
+        NOT_IMPLEMENTED_ACTION_TYPE_PATHS.add("/authentication");
+
         String API_PACKAGE_NAME = "org.wso2.carbon.identity.api.server.action.management.v1";
         try {
             swaggerDefinition = getAPISwaggerDefinition(API_PACKAGE_NAME, API_DEFINITION_NAME);

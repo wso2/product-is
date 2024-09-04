@@ -159,6 +159,21 @@ public class ActionsFailureTest extends ActionsTestBase {
     }
 
     @Test(dependsOnMethods = {"testCreateActionAfterReachingMaxActionCount"})
+    public void testCreateActionWithNotImplementedActionTypes() {
+
+        for (String actionTypePath : NOT_IMPLEMENTED_ACTION_TYPE_PATHS) {
+            String body = toJSONString(action1);
+            Response responseOfPost = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
+                    actionTypePath, body);
+            responseOfPost.then()
+                    .log().ifValidationFails()
+                    .assertThat().statusCode(HttpStatus.SC_NOT_IMPLEMENTED)
+                    .body("description", equalTo("The requested action type is not currently " +
+                            "supported by the server."));
+        }
+    }
+
+    @Test(dependsOnMethods = {"testCreateActionWithNotImplementedActionTypes"})
     public void testUpdateActionWithInvalidID() {
 
         // Update Action basic information with an invalid action id.
@@ -173,14 +188,6 @@ public class ActionsFailureTest extends ActionsTestBase {
                 .assertThat().statusCode(HttpStatus.SC_NOT_FOUND)
                 .body("description", equalTo("No Action is configured on the given Action Type and Id."));
 
-        // Update Action basic information with correct Id and different action type.
-        getResponseOfPatch = getResponseOfPatch(ACTION_MANAGEMENT_API_BASE_PATH +
-                PRE_UPDATE_PASSWORD_PATH + "/" + testActionId2, body);
-        getResponseOfPatch.then()
-                .log().ifValidationFails()
-                .assertThat().statusCode(HttpStatus.SC_NOT_FOUND)
-                .body("description", equalTo("No Action is configured on the given Action Type and Id."));
-
         // Update Action Endpoint Authentication Properties with an invalid action id.
         AuthenticationTypeProperties authenticationType = new AuthenticationTypeProperties()
                 .properties(new HashMap<String, Object>() {{
@@ -190,14 +197,6 @@ public class ActionsFailureTest extends ActionsTestBase {
         body = toJSONString(authenticationType);
         Response responseOfPut = getResponseOfPut(ACTION_MANAGEMENT_API_BASE_PATH +
                 PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + TEST_ACTION_INVALID_ID + ACTION_BEARER_AUTH_PATH, body);
-        responseOfPut.then()
-                .log().ifValidationFails()
-                .assertThat().statusCode(HttpStatus.SC_NOT_FOUND)
-                .body("description", equalTo("No Action is configured on the given Action Type and Id."));
-
-        // Update Action Endpoint Authentication Properties with correct Id and different action type.
-        responseOfPut = getResponseOfPut(ACTION_MANAGEMENT_API_BASE_PATH +
-                PRE_UPDATE_PASSWORD_PATH + "/" + testActionId2 + ACTION_BEARER_AUTH_PATH, body);
         responseOfPut.then()
                 .log().ifValidationFails()
                 .assertThat().statusCode(HttpStatus.SC_NOT_FOUND)
@@ -251,15 +250,6 @@ public class ActionsFailureTest extends ActionsTestBase {
                 .assertThat()
                 .statusCode(HttpStatus.SC_NOT_FOUND)
                 .body("description", equalTo("No Action is configured on the given Action Type and Id."));
-
-        // With correct Id and different action type.
-        getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH + PRE_UPDATE_PASSWORD_PATH +
-                "/" + testActionId2 + ACTION_ACTIVATE_PATH, "")
-                .then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_NOT_FOUND)
-                .body("description", equalTo("No Action is configured on the given Action Type and Id."));
     }
 
     @Test(dependsOnMethods = {"testActivateActionWithInvalidID"})
@@ -272,15 +262,6 @@ public class ActionsFailureTest extends ActionsTestBase {
                 .assertThat()
                 .statusCode(HttpStatus.SC_NOT_FOUND)
                 .body("description", equalTo("No Action is configured on the given Action Type and Id."));
-
-        // With correct Id and different action type.
-        getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH + PRE_UPDATE_PASSWORD_PATH +
-                "/" + testActionId2 + ACTION_DEACTIVATE_PATH, "")
-                .then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_NOT_FOUND)
-                .body("description", equalTo("No Action is configured on the given Action Type and Id."));
     }
 
     @Test(dependsOnMethods = {"testDeactivateActionWithInvalidID"})
@@ -288,14 +269,6 @@ public class ActionsFailureTest extends ActionsTestBase {
 
         getResponseOfDelete(ACTION_MANAGEMENT_API_BASE_PATH + PRE_ISSUE_ACCESS_TOKEN_PATH +
                 "/" + TEST_ACTION_INVALID_ID)
-                .then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_NOT_FOUND)
-                .body("description", equalTo("No Action is configured on the given Action Type and Id."));
-
-        getResponseOfDelete(ACTION_MANAGEMENT_API_BASE_PATH + PRE_UPDATE_PASSWORD_PATH +
-                "/" + testActionId2)
                 .then()
                 .log().ifValidationFails()
                 .assertThat()
