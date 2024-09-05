@@ -4,6 +4,9 @@
 name: OIDC Conformance Test
 
 on:
+  schedule:
+    # Everyday at 08:30 UTC (2:00 AM SL time)
+    - cron:  '30 20 * * *'
   # Allows the workflow to run automatically after a release
   release:
     types: [published]
