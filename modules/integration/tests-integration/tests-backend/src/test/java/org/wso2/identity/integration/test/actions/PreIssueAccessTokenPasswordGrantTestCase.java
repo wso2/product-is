@@ -127,8 +127,6 @@ public class PreIssueAccessTokenPasswordGrantTestCase extends ActionsBaseTestCas
         super.init(TestUserMode.TENANT_USER);
 
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
-        restClient = new ActionsRestClient(serverURL, tenantInfo);
-        // TODO: Review if ActionsRestClient should be instantiated, or if the superclass initialization is sufficient
 
         List<String> customScopes = Arrays.asList(CUSTOM_SCOPE_1, CUSTOM_SCOPE_2, CUSTOM_SCOPE_3);
 
@@ -154,7 +152,6 @@ public class PreIssueAccessTokenPasswordGrantTestCase extends ActionsBaseTestCas
     public void atEnd() throws Exception {
 
         deleteAction(PRE_ISSUE_ACCESS_TOKEN_API_PATH, actionId);
-        restClient = null;
         deleteRole(roleId);
         deleteApp(applicationId);
         deleteDomainAPI(domainAPIId);
