@@ -207,8 +207,8 @@ public class PreIssueAccessTokenPasswordGrantTestCase extends ActionsBaseTestCas
         jwtClaims = null;
     }
 
-    @Test(groups = "wso2.is", description = "Get access token with client credentials grant")
-    public void testGetAccessTokenWithClientCredentialsGrant() throws Exception {
+    @Test(groups = "wso2.is", description = "Get access token with password grant")
+    public void testGetAccessTokenWithPasswordGrant() throws Exception {
 
         List<NameValuePair> parameters = new ArrayList<>();
         parameters.add(new BasicNameValuePair("grant_type", OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER));
