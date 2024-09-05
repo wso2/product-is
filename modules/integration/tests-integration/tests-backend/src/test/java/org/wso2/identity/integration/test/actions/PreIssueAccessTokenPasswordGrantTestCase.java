@@ -254,10 +254,10 @@ public class PreIssueAccessTokenPasswordGrantTestCase extends ActionsBaseTestCas
 
         String[] scopes = jwtClaims.getStringClaim("scope").split("\\s+");
 
-        assertTrue(ArrayUtils.contains(scopes, NEW_SCOPE_1));
-        assertTrue(ArrayUtils.contains(scopes, NEW_SCOPE_2));
-        assertTrue(ArrayUtils.contains(scopes, NEW_SCOPE_3));
-        assertTrue(ArrayUtils.contains(scopes, NEW_SCOPE_4));
+        Assert.assertTrue(ArrayUtils.contains(scopes, NEW_SCOPE_1));
+        Assert.assertTrue(ArrayUtils.contains(scopes, NEW_SCOPE_2));
+        Assert.assertTrue(ArrayUtils.contains(scopes, NEW_SCOPE_3));
+        Assert.assertTrue(ArrayUtils.contains(scopes, NEW_SCOPE_4));
         Assert.assertFalse(ArrayUtils.contains(scopes, CUSTOM_SCOPE_3));
         Assert.assertFalse(ArrayUtils.contains(scopes, CUSTOM_SCOPE_2));
     }
@@ -267,10 +267,10 @@ public class PreIssueAccessTokenPasswordGrantTestCase extends ActionsBaseTestCas
 
         String[] audValueArray = jwtClaims.getStringArrayClaim("aud");
 
-        assertTrue(ArrayUtils.contains(audValueArray, "zzz1.com"));
-        assertTrue(ArrayUtils.contains(audValueArray, "zzz2.com"));
-        assertTrue(ArrayUtils.contains(audValueArray, "zzz3.com"));
-        assertTrue(ArrayUtils.contains(audValueArray, "zzzR.com"));
+        Assert.assertTrue(ArrayUtils.contains(audValueArray, "zzz1.com"));
+        Assert.assertTrue(ArrayUtils.contains(audValueArray, "zzz2.com"));
+        Assert.assertTrue(ArrayUtils.contains(audValueArray, "zzz3.com"));
+        Assert.assertTrue(ArrayUtils.contains(audValueArray, "zzzR.com"));
         Assert.assertFalse(ArrayUtils.contains(audValueArray, clientId));
     }
 
@@ -297,7 +297,7 @@ public class PreIssueAccessTokenPasswordGrantTestCase extends ActionsBaseTestCas
     public void testTokenBooleanClaimAddOperation() throws Exception {
 
         Boolean claimValue = jwtClaims.getBooleanClaim("custom_claim_boolean_1");
-        assertTrue(claimValue);
+        Assert.assertTrue(claimValue);
     }
 
     @Test(groups = "wso2.is", description = "Verify the presence of the specified custom string array claim in the " +
