@@ -404,22 +404,11 @@ public class PreIssueAccessTokenClientCredentialsGrantTestCase extends ActionsBa
 
         List<Permission> userPermissions = new ArrayList<>();
         Collections.addAll(userPermissions,
-                new Permission(INTERNAL_ACTION_MANAGEMENT_VIEW),
-                new Permission(INTERNAL_ACTION_MANAGEMENT_CREATE),
-                new Permission(INTERNAL_ACTION_MANAGEMENT_UPDATE),
-                new Permission(INTERNAL_ACTION_MANAGEMENT_DELETE),
-
                 new Permission(INTERNAL_ORG_USER_MANAGEMENT_LIST),
                 new Permission(INTERNAL_ORG_USER_MANAGEMENT_VIEW),
                 new Permission(INTERNAL_ORG_USER_MANAGEMENT_CREATE),
                 new Permission(INTERNAL_ORG_USER_MANAGEMENT_UPDATE),
-                new Permission(INTERNAL_ORG_USER_MANAGEMENT_DELETE),
-
-                new Permission(INTERNAL_APPLICATION_MANAGEMENT_VIEW),
-                new Permission(INTERNAL_APPLICATION_MANAGEMENT_UPDATE),
-
-                new Permission(INTERNAL_API_RESOURCE_VIEW),
-                new Permission(INTERNAL_API_RESOURCE_CREATE)
+                new Permission(INTERNAL_ORG_USER_MANAGEMENT_DELETE)
                           );
         customScopes.forEach(scope -> userPermissions.add(new Permission(scope)));
 
