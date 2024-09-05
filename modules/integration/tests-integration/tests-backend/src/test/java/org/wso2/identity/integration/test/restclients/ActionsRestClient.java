@@ -143,4 +143,14 @@ public class ActionsRestClient extends RestBaseClient {
 
         return headerList;
     }
+
+    /**
+     * Close the HTTP client.
+     *
+     * @throws IOException If an error occurred while closing the Http Client.
+     */
+    public void closeHttpClient() throws IOException {
+
+        client.close();
+    }
 }

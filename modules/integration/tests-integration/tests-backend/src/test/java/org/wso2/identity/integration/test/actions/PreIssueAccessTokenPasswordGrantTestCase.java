@@ -42,7 +42,6 @@ import org.wso2.identity.integration.test.rest.api.user.common.model.Name;
 import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperationRequestObject;
 import org.wso2.identity.integration.test.rest.api.user.common.model.RoleItemAddGroupobj;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
-import org.wso2.identity.integration.test.restclients.ActionsRestClient;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.utils.CarbonUtils;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
@@ -127,8 +126,6 @@ public class PreIssueAccessTokenPasswordGrantTestCase extends ActionsBaseTestCas
         super.init(TestUserMode.TENANT_USER);
 
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
-        restClient = new ActionsRestClient(serverURL, tenantInfo);
-        // TODO: Review if ActionsRestClient should be instantiated, or if the superclass initialization is sufficient
 
         List<String> customScopes = Arrays.asList(CUSTOM_SCOPE_1, CUSTOM_SCOPE_2, CUSTOM_SCOPE_3);
 
@@ -154,13 +151,14 @@ public class PreIssueAccessTokenPasswordGrantTestCase extends ActionsBaseTestCas
     public void atEnd() throws Exception {
 
         deleteAction(PRE_ISSUE_ACCESS_TOKEN_API_PATH, actionId);
-        restClient = null;
         deleteRole(roleId);
         deleteApp(applicationId);
         deleteDomainAPI(domainAPIId);
         scim2RestClient.deleteUser(userId);
-        scim2RestClient = null;
         MockServer.shutDownMockServer();
+        restClient.closeHttpClient();
+        scim2RestClient.closeHttpClient();
+        actionsRestClient.closeHttpClient();
         accessToken = null;
         jwtClaims = null;
     }

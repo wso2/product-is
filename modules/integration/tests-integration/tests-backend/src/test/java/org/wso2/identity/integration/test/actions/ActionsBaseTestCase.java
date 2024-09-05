@@ -32,7 +32,7 @@ import java.io.IOException;
  */
 public class ActionsBaseTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
-    protected ActionsRestClient restClient;
+    protected ActionsRestClient actionsRestClient;
 
     /**
      * Initialize the test case.
@@ -44,7 +44,7 @@ public class ActionsBaseTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
         super.init(userMode);
 
-        restClient = new ActionsRestClient(serverURL, tenantInfo);
+        actionsRestClient = new ActionsRestClient(serverURL, tenantInfo);
 
         setSystemproperties();
     }
@@ -59,7 +59,7 @@ public class ActionsBaseTestCase extends OAuth2ServiceAbstractIntegrationTest {
      */
     public String createAction(String actionType, ActionModel actionModel) throws IOException {
 
-        return restClient.createActionType(actionModel, actionType);
+        return actionsRestClient.createActionType(actionModel, actionType);
     }
 
     /**
@@ -72,6 +72,6 @@ public class ActionsBaseTestCase extends OAuth2ServiceAbstractIntegrationTest {
      */
     public int deleteAction(String actionType, String actionId) throws IOException {
 
-        return restClient.deleteActionType(actionType, actionId);
+        return actionsRestClient.deleteActionType(actionType, actionId);
     }
 }
