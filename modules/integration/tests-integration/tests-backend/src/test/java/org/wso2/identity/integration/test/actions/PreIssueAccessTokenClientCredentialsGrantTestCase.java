@@ -58,7 +58,6 @@ import org.wso2.identity.integration.test.rest.api.user.common.model.Name;
 import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperationRequestObject;
 import org.wso2.identity.integration.test.rest.api.user.common.model.RoleItemAddGroupobj;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
-import org.wso2.identity.integration.test.restclients.ActionsRestClient;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.utils.CarbonUtils;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
