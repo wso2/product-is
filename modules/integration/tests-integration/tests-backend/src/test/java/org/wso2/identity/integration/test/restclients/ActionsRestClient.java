@@ -61,7 +61,7 @@ public class ActionsRestClient extends RestBaseClient {
      *
      * @param actionModel Request object to create the action
      * @param actionType  Type of the action
-     * @return Status code of the action creation
+     * @return ID of the created action
      * @throws IOException If an error occurred while creating the action
      */
     public String createActionType(ActionModel actionModel, String actionType) throws IOException {
