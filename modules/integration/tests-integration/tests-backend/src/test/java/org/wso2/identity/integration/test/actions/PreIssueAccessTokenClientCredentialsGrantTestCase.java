@@ -199,8 +199,11 @@ public class PreIssueAccessTokenClientCredentialsGrantTestCase extends ActionsBa
         deleteApp(applicationId);
         deleteDomainAPI(domainAPIId);
         scim2RestClient.deleteUser(userId);
-        scim2RestClient = null;
         MockServer.shutDownMockServer();
+        restClient.closeHttpClient();
+        scim2RestClient.closeHttpClient();
+        actionsRestClient.closeHttpClient();
+        client.close();
         accessToken = null;
         jwtClaims = null;
     }
