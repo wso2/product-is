@@ -202,6 +202,7 @@ public class PreIssueAccessTokenPasswordGrantTestCase extends ActionsBaseTestCas
         restClient.closeHttpClient();
         scim2RestClient.closeHttpClient();
         actionsRestClient.closeHttpClient();
+        client.close();
         accessToken = null;
         jwtClaims = null;
     }
