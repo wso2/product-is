@@ -253,6 +253,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		application.setInboundProtocolConfiguration(inboundProtocolsConfig);
 		application.setName(SERVICE_PROVIDER_NAME);
 		application.setIsManagementApp(true);
+		application.advancedConfigurations(new AdvancedApplicationConfiguration().skipLoginConsent(true));
 		String appId = addApplication(application);
 
 		return getApplication(appId);

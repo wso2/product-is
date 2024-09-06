@@ -71,7 +71,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
@@ -99,20 +98,11 @@ public class PreIssueAccessTokenPasswordGrantTestCase extends ActionsBaseTestCas
     private static final String PASSWORD_GRANT_TYPE = "password";
     private static final String APPLICATION_AUDIENCE = "APPLICATION";
     private static final String TEST_ROLE_APPLICATION = "test_role_application";
-
-    private static final String INTERNAL_ACTION_MANAGEMENT_VIEW = "internal_action_mgt_view";
-    private static final String INTERNAL_ACTION_MANAGEMENT_CREATE = "internal_action_mgt_create";
-    private static final String INTERNAL_ACTION_MANAGEMENT_UPDATE = "internal_action_mgt_update";
-    private static final String INTERNAL_ACTION_MANAGEMENT_DELETE = "internal_action_mgt_delete";
     private static final String INTERNAL_ORG_USER_MANAGEMENT_LIST = "internal_org_user_mgt_list";
     private static final String INTERNAL_ORG_USER_MANAGEMENT_VIEW = "internal_org_user_mgt_view";
     private static final String INTERNAL_ORG_USER_MANAGEMENT_CREATE = "internal_org_user_mgt_create";
     private static final String INTERNAL_ORG_USER_MANAGEMENT_UPDATE = "internal_org_user_mgt_update";
     private static final String INTERNAL_ORG_USER_MANAGEMENT_DELETE = "internal_org_user_mgt_delete";
-    private static final String INTERNAL_APPLICATION_MANAGEMENT_VIEW = "internal_application_mgt_view";
-    private static final String INTERNAL_APPLICATION_MANAGEMENT_UPDATE = "internal_application_mgt_update";
-    private static final String INTERNAL_API_RESOURCE_VIEW = "internal_api_resource_view";
-    private static final String INTERNAL_API_RESOURCE_CREATE = "internal_api_resource_create";
     private static final String CUSTOM_SCOPE_1 = "test_custom_scope_1";
     private static final String CUSTOM_SCOPE_2 = "test_custom_scope_2";
     private static final String CUSTOM_SCOPE_3 = "test_custom_scope_3";
@@ -126,11 +116,11 @@ public class PreIssueAccessTokenPasswordGrantTestCase extends ActionsBaseTestCas
     private static final String APPLICATION_MANAGEMENT_API = "/api/server/v1/applications";
     private static final String API_RESOURCE_MANAGEMENT_API = "/api/server/v1/api-resources";
     private static final String MOCK_SERVER_ENDPOINT = "/test/action";
+
+    private List<String> permissions = new ArrayList<>();
+
     protected SCIM2RestClient scim2RestClient;
-    private Lookup<CookieSpecProvider> cookieSpecRegistry;
-    private RequestConfig requestConfig;
     private CloseableHttpClient client;
-    private List<String> customScopes;
     private String accessToken;
     private String clientId;
     private String clientSecret;
@@ -151,10 +141,10 @@ public class PreIssueAccessTokenPasswordGrantTestCase extends ActionsBaseTestCas
 
         super.init(TestUserMode.TENANT_USER);
 
-        cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+        Lookup<CookieSpecProvider> cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
                 .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
                 .build();
-        requestConfig = RequestConfig.custom()
+        RequestConfig requestConfig = RequestConfig.custom()
                 .setCookieSpec(CookieSpecs.DEFAULT)
                 .build();
         client = HttpClientBuilder.create()
@@ -170,7 +160,7 @@ public class PreIssueAccessTokenPasswordGrantTestCase extends ActionsBaseTestCas
 
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
 
-        customScopes = Arrays.asList(CUSTOM_SCOPE_1, CUSTOM_SCOPE_2, CUSTOM_SCOPE_3);
+        List<String> customScopes = Arrays.asList(CUSTOM_SCOPE_1, CUSTOM_SCOPE_2, CUSTOM_SCOPE_3);
 
         ApplicationResponseModel application = addApplicationWithGrantType(PASSWORD_GRANT_TYPE);
         applicationId = application.getId();
@@ -215,20 +205,7 @@ public class PreIssueAccessTokenPasswordGrantTestCase extends ActionsBaseTestCas
         parameters.add(new BasicNameValuePair("username", TEST_USER));
         parameters.add(new BasicNameValuePair("password", ADMIN_WSO2));
 
-        List<String> permissions = new ArrayList<>();
-        Collections.addAll(permissions,
-                INTERNAL_ORG_USER_MANAGEMENT_LIST,
-                INTERNAL_ORG_USER_MANAGEMENT_VIEW,
-                INTERNAL_ORG_USER_MANAGEMENT_CREATE,
-                INTERNAL_ORG_USER_MANAGEMENT_UPDATE,
-                INTERNAL_ORG_USER_MANAGEMENT_DELETE
-                          );
-        permissions.addAll(customScopes);
-
-        String scopes = permissions.stream()
-                .map(String::toLowerCase)
-                .collect(Collectors.joining(" "));
-        parameters.add(new BasicNameValuePair("scope", scopes));
+        parameters.add(new BasicNameValuePair("scope", String.join(" ", permissions)));
 
         List<Header> headers = new ArrayList<>();
         headers.add(new BasicHeader(AUTHORIZATION_HEADER, OAuth2Constant.BASIC_HEADER + " " +
@@ -374,9 +351,9 @@ public class PreIssueAccessTokenPasswordGrantTestCase extends ActionsBaseTestCas
      */
     private void addUserWithRole(String appID, List<String> customScopes) throws Exception {
         // Creates roles
-        List<Permission> permissions = addPermissions(customScopes);
+        List<Permission> userPermissions = addPermissions(customScopes);
         Audience roleAudience = new Audience(APPLICATION_AUDIENCE, appID);
-        RoleV2 role = new RoleV2(roleAudience, TEST_ROLE_APPLICATION, permissions, Collections.emptyList());
+        RoleV2 role = new RoleV2(roleAudience, TEST_ROLE_APPLICATION, userPermissions, Collections.emptyList());
         roleId = addRole(role);
 
         // Creates user
@@ -404,16 +381,15 @@ public class PreIssueAccessTokenPasswordGrantTestCase extends ActionsBaseTestCas
     private List<Permission> addPermissions(List<String> customScopes) {
 
         List<Permission> userPermissions = new ArrayList<>();
-
-        Collections.addAll(userPermissions,
-                new Permission(INTERNAL_ORG_USER_MANAGEMENT_LIST),
-                new Permission(INTERNAL_ORG_USER_MANAGEMENT_VIEW),
-                new Permission(INTERNAL_ORG_USER_MANAGEMENT_CREATE),
-                new Permission(INTERNAL_ORG_USER_MANAGEMENT_UPDATE),
-                new Permission(INTERNAL_ORG_USER_MANAGEMENT_DELETE)
+        Collections.addAll(permissions,
+                INTERNAL_ORG_USER_MANAGEMENT_CREATE,
+                INTERNAL_ORG_USER_MANAGEMENT_LIST,
+                INTERNAL_ORG_USER_MANAGEMENT_VIEW,
+                INTERNAL_ORG_USER_MANAGEMENT_UPDATE,
+                INTERNAL_ORG_USER_MANAGEMENT_DELETE
                           );
-
-        customScopes.forEach(scope -> userPermissions.add(new Permission(scope)));
+        permissions.addAll(customScopes);
+        permissions.forEach(permission -> userPermissions.add(new Permission(permission)));
 
         return userPermissions;
     }
