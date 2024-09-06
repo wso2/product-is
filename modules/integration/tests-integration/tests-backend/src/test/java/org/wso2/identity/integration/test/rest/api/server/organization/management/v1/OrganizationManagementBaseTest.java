@@ -66,8 +66,6 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
     protected static final String START_INDEX_PATH_PARAM = "startIndex";
 
     protected static final String ORGANIZATION_NAME_ATTRIBUTE = "organizationName";
-    protected static final String ORGANIZATION_ID_ATTRIBUTE = "organizationId";
-    protected static final String ORGANIZATION_META_ATTRIBUTE_ATTRIBUTE = "attribute";
     protected static final String ORGANIZATION_MULTIPLE_META_ATTRIBUTE_ATTRIBUTES = "attributes";
 
     protected static final String LINK_REL_PREVIOUS = "previous";
@@ -89,6 +87,7 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
 
     protected static final int NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS = 20;
     protected static final int DEFAULT_ORG_LIMIT = 15;
+    protected static final int NUM_OF_ORGANIZATIONS_WITH_META_ATTRIBUTES = 3;
     protected static final int DEFAULT_META_ATTRIBUTES_LIMIT = 15;
 
     protected static String swaggerDefinition;
