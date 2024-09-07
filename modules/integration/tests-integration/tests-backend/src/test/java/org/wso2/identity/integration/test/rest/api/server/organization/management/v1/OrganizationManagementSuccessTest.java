@@ -74,13 +74,18 @@ import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -89,6 +94,7 @@ import static org.hamcrest.core.IsNull.notNullValue;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.API_SERVER_PATH;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.CONTENT_TYPE_ATTRIBUTE;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.ORGANIZATION_PATH;
@@ -110,6 +116,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     private String b2bApplicationID;
     private HttpClient client;
     private List<Map<String, String>> organizations;
+    private List<String> metaAttributes;
 
     protected OAuth2RestClient restClient;
 
@@ -155,7 +162,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return new Object[][] {
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
         };
@@ -206,7 +213,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     public void getM2MAccessToken() throws Exception {
 
         OpenIDConnectConfiguration openIDConnectConfiguration = oAuth2RestClient
-                                                            .getOIDCInboundDetails(selfServiceAppId);
+                .getOIDCInboundDetails(selfServiceAppId);
         selfServiceAppClientId = openIDConnectConfiguration.getClientId();
         selfServiceAppClientSecret = openIDConnectConfiguration.getClientSecret();
         AuthorizationGrant clientCredentialsGrant = new ClientCredentialsGrant();
@@ -216,7 +223,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         Scope scope = new Scope("SYSTEM");
 
         URI tokenEndpoint = new URI(getTenantQualifiedURL(OAuth2Constant.ACCESS_TOKEN_ENDPOINT,
-                                tenantInfo.getDomain()));
+                tenantInfo.getDomain()));
         TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, clientCredentialsGrant, scope);
         HTTPResponse tokenHTTPResp = request.toHTTPRequest().send();
         Assert.assertNotNull(tokenHTTPResp, "Access token http response is null.");
@@ -252,7 +259,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     public void testGetOrganization() {
 
         Response response = getResponseOfGet(ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR
-                                        + organizationID);
+                + organizationID);
         validateHttpStatusCode(response, HttpStatus.SC_OK);
         Assert.assertNotNull(response.asString());
         response.then()
@@ -321,7 +328,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         HttpPost httpPost = new HttpPost(getTenantQualifiedURL(OAuth2Constant.ACCESS_TOKEN_ENDPOINT, tenant));
         httpPost.setHeader("Authorization", "Basic " + new String(Base64.encodeBase64(
-                        (selfServiceAppClientId + ":" + selfServiceAppClientSecret).getBytes())));
+                (selfServiceAppClientId + ":" + selfServiceAppClientSecret).getBytes())));
         httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
         httpPost.setEntity(new UrlEncodedFormEntity(urlParameters));
 
@@ -341,7 +348,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         String body = readResource("add-admin-user-in-organization-request-body.json");
         HttpPost request = new HttpPost(serverURL + TENANT_PATH + tenant + PATH_SEPARATOR + ORGANIZATION_PATH
-                                    + SCIM2_USERS_ENDPOINT);
+                + SCIM2_USERS_ENDPOINT);
         Header[] headerList = new Header[2];
         headerList[0] = new BasicHeader("Authorization", "Bearer " + switchedM2MToken);
         headerList[1] = new BasicHeader(CONTENT_TYPE_ATTRIBUTE, "application/scim+json");
@@ -375,7 +382,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
             return;
         }
         String shareApplicationUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + "/" + SUPER_ORGANIZATION_ID
-                                + "/applications/" + b2bApplicationID + "/share";
+                + "/applications/" + b2bApplicationID + "/share";
         org.json.JSONObject shareAppObject = new org.json.JSONObject();
         shareAppObject.put("shareWithAllChildren", true);
         getResponseOfPost(shareApplicationUrl, shareAppObject.toString());
@@ -388,7 +395,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
             return;
         }
         String shareApplicationUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + "/" + SUPER_ORGANIZATION_ID
-                                + "/applications/" + b2bApplicationID + "/share";
+                + "/applications/" + b2bApplicationID + "/share";
         org.json.JSONObject shareAppObject = new org.json.JSONObject();
         shareAppObject.put("shareWithAllChildren", false);
         getResponseOfPost(shareApplicationUrl, shareAppObject.toString());
@@ -400,7 +407,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         String body = readResource("add-smaller-hospital-organization-request-body.json");
         body = body.replace("${parentId}", organizationID);
         HttpPost request = new HttpPost(serverURL + TENANT_PATH + tenant + PATH_SEPARATOR + ORGANIZATION_PATH
-                                    + API_SERVER_PATH + ORGANIZATION_MANAGEMENT_API_BASE_PATH);
+                + API_SERVER_PATH + ORGANIZATION_MANAGEMENT_API_BASE_PATH);
         Header[] headerList = new Header[3];
         headerList[0] = new BasicHeader("Authorization", "Bearer " + switchedM2MToken);
         headerList[1] = new BasicHeader(CONTENT_TYPE_ATTRIBUTE, "application/json");
@@ -427,8 +434,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         };
     }
 
-    @Test(dependsOnMethods  = "testOnboardChildOrganization",
-          dataProvider      = "dataProviderForGetOrganizationsMetaAttributes")
+    @Test(dependsOnMethods = "testOnboardChildOrganization",
+            dataProvider = "dataProviderForGetOrganizationsMetaAttributes")
     public void testGetOrganizationsMetaAttributes(String filter, boolean isRecursive, boolean expectEmptyList) {
 
         String query = "?filter=" + filter + "&limit=1&recursive=" + isRecursive;
@@ -512,7 +519,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     public void testGetDiscoveryAttributesOfOrganization() {
 
         String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationID
-                        + ORGANIZATION_DISCOVERY_API_PATH;
+                + ORGANIZATION_DISCOVERY_API_PATH;
         Response response = getResponseOfGetWithOAuth2(endpointURL, m2mToken);
         response.then()
                 .log().ifValidationFails()
@@ -526,7 +533,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     public void testUpdateDiscoveryAttributesOfOrganization() throws IOException {
 
         String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationID
-                        + ORGANIZATION_DISCOVERY_API_PATH;
+                + ORGANIZATION_DISCOVERY_API_PATH;
         String requestBody = readResource("update-discovery-attributes-request-body.json");
         Response response = getResponseOfPutWithOAuth2(endpointURL, requestBody, m2mToken);
         response.then()
@@ -540,7 +547,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @DataProvider(name = "checkDiscoveryAttributes")
     public Object[][] checkDiscoveryAttributeFilePaths() {
 
-        return new Object[][]{
+        return new Object[][] {
                 {"check-discovery-attributes-available-request-body.json", true},
                 {"check-discovery-attributes-unavailable-request-body.json", false}
         };
@@ -564,7 +571,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     public void testDeleteDiscoveryAttributesOfOrganization() {
 
         String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationID
-                        + ORGANIZATION_DISCOVERY_API_PATH;
+                + ORGANIZATION_DISCOVERY_API_PATH;
         Response response = getResponseOfDeleteWithOAuth2(endpointURL, m2mToken);
         validateHttpStatusCode(response, HttpStatus.SC_NO_CONTENT);
     }
@@ -581,8 +588,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     public void testDeleteChildOrganization() throws IOException {
 
         HttpDelete request = new HttpDelete(serverURL + TENANT_PATH + tenant + PATH_SEPARATOR + ORGANIZATION_PATH
-                                        + API_SERVER_PATH + ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR
-                                        + childOrganizationID);
+                + API_SERVER_PATH + ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR
+                + childOrganizationID);
         Header[] headerList = new Header[1];
         headerList[0] = new BasicHeader("Authorization", "Bearer " + switchedM2MToken);
         request.setHeaders(headerList);
@@ -622,7 +629,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @DataProvider(name = "organizationLimitValidationDataProvider")
     public Object[][] organizationLimitValidationDataProvider() {
 
-        return new Object[][]{
+        return new Object[][] {
                 {10},
                 {20},
                 {25},
@@ -663,7 +670,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @DataProvider(name = "organizationPaginationValidationDataProvider")
     public Object[][] organizationPaginationValidationProvider() {
 
-        return new Object[][]{
+        return new Object[][] {
                 {1}, {2}, {5}, {6}, {10}, {17}
         };
     }
@@ -715,10 +722,9 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         validateOrganizationsOnPage(secondPageResponse, 2, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, limit);
 
         // Step 3: Call the previous page using the 'before' value.
-        String previousPageUrl =
-                ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + EQUAL + limit
-                        + AMPERSAND + RECURSIVE_QUERY_PARAM + EQUAL + FALSE + AMPERSAND + BEFORE_QUERY_PARAM + EQUAL +
-                        before;
+        String previousPageUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + EQUAL +
+                limit + AMPERSAND + RECURSIVE_QUERY_PARAM + EQUAL + FALSE + AMPERSAND + BEFORE_QUERY_PARAM + EQUAL +
+                before;
         Response previousPageResponse = getResponseOfGetWithOAuth2(previousPageUrl, m2mToken);
 
         validateHttpStatusCode(previousPageResponse, HttpStatus.SC_OK);
@@ -737,7 +743,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @DataProvider(name = "organizationPaginationNumericEdgeCasesOfLimitDataProvider")
     public Object[][] organizationPaginationNumericEdgeCasesOfLimitDataProvider() {
 
-        return new Object[][]{
+        return new Object[][] {
                 {0}, {20}, {25}
         };
     }
@@ -746,9 +752,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
             dataProvider = "organizationPaginationNumericEdgeCasesOfLimitDataProvider")
     public void testGetPaginatedOrganizationsForNumericEdgeCasesOfLimit(int limit) {
 
-        String limitUrl =
-                ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + EQUAL + limit + AMPERSAND +
-                        RECURSIVE_QUERY_PARAM + EQUAL + FALSE;
+        String limitUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + EQUAL + limit +
+                AMPERSAND + RECURSIVE_QUERY_PARAM + EQUAL + FALSE;
         Response response = getResponseOfGetWithOAuth2(limitUrl, m2mToken);
 
         validateHttpStatusCode(response, HttpStatus.SC_OK);
@@ -763,6 +768,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
     @DataProvider(name = "organizationPaginationNonNumericEdgeCasesOfLimitDataProvider")
     public Object[][] organizationPaginationNonNumericEdgeCasesOfLimitProvider() {
+
         return new Object[][] {
                 {AMPERSAND + LIMIT_QUERY_PARAM + EQUAL},  // Test case 1: URL with LIMIT_QUERY_PARAM but no value.
                 {""}  // Test case 2: URL without LIMIT_QUERY_PARAM.
@@ -773,8 +779,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
             dataProvider = "organizationPaginationNonNumericEdgeCasesOfLimitDataProvider")
     public void testGetPaginatedOrganizationsForNonNumericEdgeCasesOfLimit(String limitQueryParam) {
 
-        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + RECURSIVE_QUERY_PARAM + EQUAL + FALSE +
-                limitQueryParam;
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + RECURSIVE_QUERY_PARAM + EQUAL +
+                FALSE + limitQueryParam;
 
         Response response = getResponseOfGetWithOAuth2(endpointURL, m2mToken);
 
@@ -817,7 +823,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @DataProvider(name = "organizationDiscoveryLimitValidationDataProvider")
     public Object[][] organizationDiscoveryLimitValidationDataProvider() {
 
-        return new Object[][]{
+        return new Object[][] {
                 {3}, {5}, {10}, {15}, {17}, {20}, {25}
         };
     }
@@ -831,10 +837,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         // Loop through each page to test the organization discovery GET API limit.
         while (offset < NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS) {
-            String queryUrl =
-                    ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH + QUESTION_MARK +
-                            OFFSET_QUERY_PARAM + EQUAL + offset +
-                            AMPERSAND + LIMIT_QUERY_PARAM + EQUAL + limit;
+            String queryUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH + QUESTION_MARK +
+                            OFFSET_QUERY_PARAM + EQUAL + offset + AMPERSAND + LIMIT_QUERY_PARAM + EQUAL + limit;
             Response response = getResponseOfGetWithOAuth2(queryUrl, m2mToken);
 
             validateHttpStatusCode(response, HttpStatus.SC_OK);
@@ -865,7 +869,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @DataProvider(name = "organizationDiscoveryPaginationValidationDataProvider")
     public Object[][] organizationDiscoveryPaginationValidationProvider() {
 
-        return new Object[][]{
+        return new Object[][] {
                 {1}, {2}, {5}, {6}, {10}, {17}
         };
     }
@@ -925,7 +929,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @DataProvider(name = "organizationDiscoveryPaginationNumericEdgeCasesOfLimitDataProvider")
     public Object[][] organizationDiscoveryPaginationNumericEdgeCasesOfLimitDataProvider() {
 
-        return new Object[][]{
+        return new Object[][] {
                 {0, 0}, {0, 20}, {0, 25},
                 {2, 0}, {2, 20}, {2, 25}
         };
@@ -963,6 +967,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
     @DataProvider(name = "organizationDiscoveryPaginationNonNumericEdgeCasesOfLimitDataProvider")
     public Object[][] organizationDiscoveryPaginationNonNumericEdgeCasesOfLimitProvider() {
+
         return new Object[][] {
                 {AMPERSAND + LIMIT_QUERY_PARAM + EQUAL},  // Test case 1: URL with LIMIT_QUERY_PARAM but no value.
                 {""}  // Test case 2: URL without LIMIT_QUERY_PARAM.
@@ -986,7 +991,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @DataProvider(name = "organizationDiscoveryOffsetValidationDataProvider")
     public Object[][] organizationDiscoveryOffsetValidationDataProvider() {
 
-        return new Object[][]{
+        return new Object[][] {
                 {0, 1}, {0, 5}, {0, 10},
                 {5, 1}, {5, 5}, {5, 10},
                 {10, 1}, {10, 5}, {10, 10}
@@ -1021,7 +1026,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @DataProvider(name = "numericEdgeCasesOfOffsetAndOffsetWithLimitDataProvider")
     public Object[][] numericEdgeCasesOfOffsetAndOffsetWithLimitDataProvider() {
 
-        return new Object[][]{
+        return new Object[][] {
                 {20, 5},
                 {20, 17},
                 {20, 20},
@@ -1065,7 +1070,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         validateOrganizationDiscoveryOffsetIsInLinks(previousLink, expectedOffset);
 
     }
-    
+
     @Test(groups = "organizationDiscoveryPaginationTests", dependsOnMethods = "testAddEmailDomainsToOrganization")
     public void testGetPaginatedOrganizationsDiscoveryForNonNumericEdgeCasesOfOffsetAndOffsetWithLimit() {
 
@@ -1125,7 +1130,180 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         Assert.assertFalse(isEnabled, "Email domain discovery was not successfully disabled.");
     }
 
-    @Test(dependsOnGroups = "organizationDiscoveryPaginationTests")
+    @Test(groups = "organizationMetaAttributesPaginationTests",
+            dependsOnGroups = "organizationDiscoveryPaginationTests")
+    public void testAddMetaAttributesToOrganizations() {
+
+        // Initialize meta attributes in sorted order.
+        String[] attributes = {"1", "2", "3", ":", "@", "A", "B", "C", "LMN", "PQR", "STU", "a", "b", "c", "fg", "jKL",
+                "mNo", "x", "y", "z"};
+
+        metaAttributes = new ArrayList<>(Arrays.asList(attributes));
+        List<Map<String, String>> addedAttributes = new ArrayList<>();
+        List<String> shuffledAttributes = new ArrayList<>(Arrays.asList(attributes));
+        Collections.shuffle(shuffledAttributes); // Randomize attribute distribution.
+
+        int remainingAttributes = attributes.length;
+
+        for (int i = 0; i < NUM_OF_ORGANIZATIONS_WITH_META_ATTRIBUTES; i++) {
+            String organizationId = organizations.get(i).get(ORGANIZATION_ID);
+
+            int attributesToAssign = calculateAttributesToAssign(remainingAttributes, i);
+
+            for (int j = 0; j < attributesToAssign; j++) {
+                String attribute = shuffledAttributes.remove(0);
+                String requestBody = createMetaAttributeCreationPatchRequestBody(attribute);
+                String endpointURL = buildOrganizationApiEndpoint(organizationId);
+
+                Response response = getResponseOfPatch(endpointURL, requestBody);
+                validateHttpStatusCode(response, HttpStatus.SC_OK);
+
+                addedAttributes.add(createAttributeMap(attribute));
+                remainingAttributes--;
+            }
+        }
+
+        validateAttributesAddedSuccessfully(addedAttributes);
+    }
+
+    @DataProvider(name = "metaAttributesLimitValidationDataProvider")
+    public Object[][] metaAttributesLimitValidationDataProvider() {
+
+        return new Object[][] {
+                {1}, {2}, {3}, {5}, {10}, {13}
+        };
+    }
+
+    @Test(groups = "organizationMetaAttributesPaginationTests",
+            dependsOnMethods = "testAddMetaAttributesToOrganizations",
+            dataProvider = "metaAttributesLimitValidationDataProvider")
+    public void testGetPaginatedMetaAttributesWithLimit(int limit) {
+
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_META_ATTRIBUTES_API_PATH +
+                QUESTION_MARK + LIMIT_QUERY_PARAM + EQUAL + limit + AMPERSAND + RECURSIVE_QUERY_PARAM + EQUAL + false;
+        Response response = getResponseOfGetWithOAuth2(endpointURL, m2mToken);
+
+        validateHttpStatusCode(response, HttpStatus.SC_OK);
+        List<String> attributes = response.jsonPath().getList(ORGANIZATION_MULTIPLE_META_ATTRIBUTE_ATTRIBUTES);
+        Assert.assertEquals(attributes.size(), limit);
+
+        // Validate the order of the returned attributes.
+        for (int i = 0; i < limit; i++) {
+            Assert.assertEquals(attributes.get(i), metaAttributes.get(i));
+        }
+    }
+
+    @Test(groups = "organizationMetaAttributesPaginationTests",
+            dependsOnMethods = "testGetMetaAttributesPaginationForNumericEdgeCasesOfLimit",
+            dataProvider = "metaAttributesLimitValidationDataProvider")
+    public void testGetPaginatedMetaAttributes(int limit) {
+
+        String after = null;
+        String before = null;
+
+        // Forward Pagination.
+        int startIndex = 0;
+        do {
+            String endpointURL = getMetaAttributesEndpoint(true, limit, after, before);
+            Response response = getResponseOfGetWithOAuth2(endpointURL, m2mToken);
+            validateHttpStatusCode(response, HttpStatus.SC_OK);
+
+            List<String> returnedMetaAttributes =
+                    response.jsonPath().getList(ORGANIZATION_MULTIPLE_META_ATTRIBUTE_ATTRIBUTES);
+            List<String> expectedMetaAttributes =
+                    metaAttributes.subList(startIndex, startIndex + returnedMetaAttributes.size());
+
+            after = getLink(response.jsonPath().getList(LINKS_PATH_PARAM), LINK_REL_NEXT);
+            before = getLink(response.jsonPath().getList(LINKS_PATH_PARAM), LINK_REL_PREVIOUS);
+
+            Assert.assertEquals(returnedMetaAttributes, expectedMetaAttributes,
+                    "Attributes in the response do not match the expected order.");
+            validatePaginationLinksForOrganizationDiscovery(before == null, after == null, after, before);
+            validateReturnedMetaAttributesOrder(startIndex, returnedMetaAttributes);
+
+            startIndex += limit;
+        } while (after != null);
+
+        // Reset the start index for reverse validation.
+        startIndex -= 2 * limit;
+
+        // Backward Pagination.
+        do {
+            String endpointURL = getMetaAttributesEndpoint(false, limit, after, before);
+            Response response = getResponseOfGetWithOAuth2(endpointURL, m2mToken);
+            validateHttpStatusCode(response, HttpStatus.SC_OK);
+
+            List<String> returnedMetaAttributes =
+                    response.jsonPath().getList(ORGANIZATION_MULTIPLE_META_ATTRIBUTE_ATTRIBUTES);
+            List<String> expectedMetaAttributes =
+                    metaAttributes.subList(startIndex, startIndex + returnedMetaAttributes.size());
+
+            after = getLink(response.jsonPath().getList(LINKS_PATH_PARAM), LINK_REL_NEXT);
+            before = getLink(response.jsonPath().getList(LINKS_PATH_PARAM), LINK_REL_PREVIOUS);
+
+            Assert.assertEquals(returnedMetaAttributes, expectedMetaAttributes,
+                    "Attributes in the response do not match the expected order.");
+            validatePaginationLinksForOrganizationDiscovery(before == null, after == null, after, before);
+            validateReturnedMetaAttributesOrder(startIndex, returnedMetaAttributes);
+
+            startIndex -= limit;
+        } while (before != null);
+    }
+
+    @DataProvider(name = "metaAttributesPaginationNumericEdgeCasesOfLimitDataProvider")
+    public Object[][] metaAttributesPaginationNumericEdgeCasesOfLimitDataProvider() {
+
+        return new Object[][] {
+                {0}, {20}, {25}
+        };
+    }
+
+    @Test(groups = "organizationMetaAttributesPaginationTests", dependsOnMethods = "testGetPaginatedMetaAttributesWithLimit",
+            dataProvider = "metaAttributesPaginationNumericEdgeCasesOfLimitDataProvider")
+    public void testGetMetaAttributesPaginationForNumericEdgeCasesOfLimit(int limit) {
+
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_META_ATTRIBUTES_API_PATH +
+                QUESTION_MARK + LIMIT_QUERY_PARAM + EQUAL + limit + AMPERSAND + RECURSIVE_QUERY_PARAM + EQUAL + false;
+        Response response = getResponseOfGetWithOAuth2(endpointURL, m2mToken);
+        validateHttpStatusCode(response, HttpStatus.SC_OK);
+
+        if (limit == 0) {
+            Assert.assertNull(response.jsonPath().getList(ORGANIZATION_MULTIPLE_META_ATTRIBUTE_ATTRIBUTES));
+        } else {
+            List<String> attributes = response.jsonPath().getList(ORGANIZATION_MULTIPLE_META_ATTRIBUTE_ATTRIBUTES);
+            Assert.assertEquals(attributes.size(), metaAttributes.size());
+        }
+    }
+
+    @DataProvider(name = "metaAttributesPaginationNonNumericEdgeCasesOfLimitProvider")
+    public Object[][] metaAttributesPaginationNonNumericEdgeCasesOfLimitProvider() {
+
+        return new Object[][] {
+                {LIMIT_QUERY_PARAM + EQUAL},  // Case with limit= (no value), default limit is 15.
+                {""}  // Case with no limit parameter, default limit is 15.
+        };
+    }
+
+    @Test(groups = "organizationMetaAttributesPaginationTests", dependsOnMethods = "testGetPaginatedMetaAttributesWithLimit",
+            dataProvider = "metaAttributesPaginationNonNumericEdgeCasesOfLimitProvider")
+    public void testGetMetaAttributesForNonNumericEdgeCasesOfLimit(String limitQueryParam) {
+
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_META_ATTRIBUTES_API_PATH +
+                QUESTION_MARK + RECURSIVE_QUERY_PARAM + EQUAL + false + AMPERSAND + limitQueryParam;
+        Response response = getResponseOfGetWithOAuth2(endpointURL, m2mToken);
+        validateHttpStatusCode(response, HttpStatus.SC_OK);
+
+        List<String> attributes = response.jsonPath().getList(ORGANIZATION_MULTIPLE_META_ATTRIBUTE_ATTRIBUTES);
+
+        if (metaAttributes.size() <= DEFAULT_META_ATTRIBUTES_LIMIT) {
+            Assert.assertEquals(attributes.size(), metaAttributes.size());
+        } else {
+            Assert.assertEquals(attributes.size(), DEFAULT_META_ATTRIBUTES_LIMIT);
+            validateNextLinkBasedOnMetaAttributeCount(response);
+        }
+    }
+
+    @Test(dependsOnGroups = "organizationMetaAttributesPaginationTests")
     public void testDeleteOrganizationsForPagination() {
 
         for (Map<String, String> org : new ArrayList<>(organizations)) {
@@ -1413,6 +1591,33 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
                 COUNT_MISMATCH_ERROR);
     }
 
+    private void validateAttributesAddedSuccessfully(List<Map<String, String>> addedAttributes) {
+
+        Assert.assertEquals(metaAttributes.size(), addedAttributes.size(),
+                "Meta attributes were not added successfully.");
+    }
+
+    private void validateNextLinkBasedOnMetaAttributeCount(Response response) {
+
+        List<Map<String, String>> links = response.jsonPath().getList(LINKS_PATH_PARAM);
+        if (metaAttributes.size() > DEFAULT_META_ATTRIBUTES_LIMIT) {
+            Assert.assertNotNull(getLink(links, LINK_REL_NEXT),
+                    "'next' link should be present when meta attributes exceed the default limit of 15.");
+        } else {
+            Assert.assertNull(links,
+                    "'links' should not be present when meta attributes are within the default limit.");
+        }
+    }
+
+    private void validateReturnedMetaAttributesOrder(int startIndex, List<String> attributes) {
+
+        for (int i = 0; i < attributes.size(); i++) {
+            String expectedAttribute = metaAttributes.get(startIndex + i);
+            Assert.assertEquals(attributes.get(i), expectedAttribute,
+                    "The attribute at index " + i + " does not match the expected value.");
+        }
+    }
+
     private String getLink(List<Map<String, String>> links, String rel) {
 
         for (Map<String, String> link : links) {
@@ -1482,6 +1687,19 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         validateHttpStatusCode(response, HttpStatus.SC_CREATED);
     }
 
+    private String getMetaAttributesEndpoint(boolean isForward, int limit, String after, String before) {
+
+        String baseEndpoint = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_META_ATTRIBUTES_API_PATH +
+                QUESTION_MARK + LIMIT_QUERY_PARAM + EQUAL + limit +
+                AMPERSAND + RECURSIVE_QUERY_PARAM + EQUAL + false;
+
+        if (isForward) {
+            return baseEndpoint + (after != null ? AMPERSAND + AFTER_QUERY_PARAM + EQUAL + after : "");
+        } else {
+            return baseEndpoint + (before != null ? AMPERSAND + BEFORE_QUERY_PARAM + EQUAL + before : "");
+        }
+    }
+
     private void addReturnedOrganizationsToList(List<Map<String, String>> returnedOrganizations,
                                                 List<String> accumulatedOrganizationNames) {
 
@@ -1519,6 +1737,19 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         return newOrganizations;
     }
 
+    private String createMetaAttributeCreationPatchRequestBody(String attribute) {
+
+        return String.format("[{\"operation\":\"ADD\",\"path\":\"/attributes/%s\",\"value\":\"value-%s\"}]",
+                attribute, attribute);
+    }
+
+    private Map<String, String> createAttributeMap(String attribute) {
+
+        Map<String, String> attrMap = new HashMap<>();
+        attrMap.put(attribute, "value-" + attribute);
+        return attrMap;
+    }
+
     private void deleteSingleOrganization(Map<String, String> org) {
 
         String organizationId = org.get(ORGANIZATION_ID);
@@ -1530,6 +1761,12 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         // Remove the organization from the list after successful deletion.
         organizations.remove(org);
+    }
+
+    private int calculateAttributesToAssign(int remainingAttributes, int organizationIndex) {
+
+        return Math.min(remainingAttributes,
+                remainingAttributes / (NUM_OF_ORGANIZATIONS_WITH_META_ATTRIBUTES - organizationIndex));
     }
 
     private String buildQueryUrl(int offset, int limit) {
@@ -1567,5 +1804,10 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         return ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH + QUESTION_MARK +
                 FILTER_QUERY_PARAM + EQUAL;
+    }
+
+    private String buildOrganizationApiEndpoint(String organizationId) {
+
+        return String.format("%s/%s", ORGANIZATION_MANAGEMENT_API_BASE_PATH, organizationId);
     }
 }
