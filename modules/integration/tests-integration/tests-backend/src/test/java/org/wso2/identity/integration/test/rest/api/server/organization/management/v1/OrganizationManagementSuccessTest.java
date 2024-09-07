@@ -162,7 +162,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return new Object[][] {
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
         };
@@ -272,7 +272,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @DataProvider(name = "dataProviderForFilterOrganizations")
     public Object[][] dataProviderForFilterOrganizations() {
 
-        return new Object[][]{
+        return new Object[][] {
                 {"name co G", false, false},
                 {"attributes.Country co S", true, false},
                 {"attributes.Country eq Sri Lanka and name co Greater", true, false},
@@ -426,7 +426,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @DataProvider(name = "dataProviderForGetOrganizationsMetaAttributes")
     public Object[][] dataProviderForGetOrganizationsMetaAttributes() {
 
-        return new Object[][]{
+        return new Object[][] {
                 {"attributes eq Country", false, false},
                 {"attributes sw C and attributes ew try", false, false},
                 {"attributes eq Region", true, false},
@@ -547,7 +547,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @DataProvider(name = "checkDiscoveryAttributes")
     public Object[][] checkDiscoveryAttributeFilePaths() {
 
-        return new Object[][]{
+        return new Object[][] {
                 {"check-discovery-attributes-available-request-body.json", true},
                 {"check-discovery-attributes-unavailable-request-body.json", false}
         };
@@ -629,7 +629,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @DataProvider(name = "organizationLimitValidationDataProvider")
     public Object[][] organizationLimitValidationDataProvider() {
 
-        return new Object[][]{
+        return new Object[][] {
                 {10},
                 {20},
                 {25},
@@ -670,7 +670,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @DataProvider(name = "organizationPaginationValidationDataProvider")
     public Object[][] organizationPaginationValidationProvider() {
 
-        return new Object[][]{
+        return new Object[][] {
                 {1}, {2}, {5}, {6}, {10}, {17}
         };
     }
@@ -722,10 +722,9 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         validateOrganizationsOnPage(secondPageResponse, 2, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, limit);
 
         // Step 3: Call the previous page using the 'before' value.
-        String previousPageUrl =
-                ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + EQUAL + limit
-                        + AMPERSAND + RECURSIVE_QUERY_PARAM + EQUAL + FALSE + AMPERSAND + BEFORE_QUERY_PARAM + EQUAL +
-                        before;
+        String previousPageUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + EQUAL +
+                limit + AMPERSAND + RECURSIVE_QUERY_PARAM + EQUAL + FALSE + AMPERSAND + BEFORE_QUERY_PARAM + EQUAL +
+                before;
         Response previousPageResponse = getResponseOfGetWithOAuth2(previousPageUrl, m2mToken);
 
         validateHttpStatusCode(previousPageResponse, HttpStatus.SC_OK);
@@ -744,7 +743,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @DataProvider(name = "organizationPaginationNumericEdgeCasesOfLimitDataProvider")
     public Object[][] organizationPaginationNumericEdgeCasesOfLimitDataProvider() {
 
-        return new Object[][]{
+        return new Object[][] {
                 {0}, {20}, {25}
         };
     }
@@ -753,9 +752,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
             dataProvider = "organizationPaginationNumericEdgeCasesOfLimitDataProvider")
     public void testGetPaginatedOrganizationsForNumericEdgeCasesOfLimit(int limit) {
 
-        String limitUrl =
-                ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + EQUAL + limit + AMPERSAND +
-                        RECURSIVE_QUERY_PARAM + EQUAL + FALSE;
+        String limitUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + EQUAL + limit +
+                AMPERSAND + RECURSIVE_QUERY_PARAM + EQUAL + FALSE;
         Response response = getResponseOfGetWithOAuth2(limitUrl, m2mToken);
 
         validateHttpStatusCode(response, HttpStatus.SC_OK);
@@ -771,7 +769,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @DataProvider(name = "organizationPaginationNonNumericEdgeCasesOfLimitDataProvider")
     public Object[][] organizationPaginationNonNumericEdgeCasesOfLimitProvider() {
 
-        return new Object[][]{
+        return new Object[][] {
                 {AMPERSAND + LIMIT_QUERY_PARAM + EQUAL},  // Test case 1: URL with LIMIT_QUERY_PARAM but no value.
                 {""}  // Test case 2: URL without LIMIT_QUERY_PARAM.
         };
@@ -781,9 +779,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
             dataProvider = "organizationPaginationNonNumericEdgeCasesOfLimitDataProvider")
     public void testGetPaginatedOrganizationsForNonNumericEdgeCasesOfLimit(String limitQueryParam) {
 
-        String endpointURL =
-                ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + RECURSIVE_QUERY_PARAM + EQUAL + FALSE +
-                        limitQueryParam;
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + RECURSIVE_QUERY_PARAM + EQUAL +
+                FALSE + limitQueryParam;
 
         Response response = getResponseOfGetWithOAuth2(endpointURL, m2mToken);
 
@@ -826,7 +823,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @DataProvider(name = "organizationDiscoveryLimitValidationDataProvider")
     public Object[][] organizationDiscoveryLimitValidationDataProvider() {
 
-        return new Object[][]{
+        return new Object[][] {
                 {3}, {5}, {10}, {15}, {17}, {20}, {25}
         };
     }
@@ -840,10 +837,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         // Loop through each page to test the organization discovery GET API limit.
         while (offset < NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS) {
-            String queryUrl =
-                    ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH + QUESTION_MARK +
-                            OFFSET_QUERY_PARAM + EQUAL + offset +
-                            AMPERSAND + LIMIT_QUERY_PARAM + EQUAL + limit;
+            String queryUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH + QUESTION_MARK +
+                            OFFSET_QUERY_PARAM + EQUAL + offset + AMPERSAND + LIMIT_QUERY_PARAM + EQUAL + limit;
             Response response = getResponseOfGetWithOAuth2(queryUrl, m2mToken);
 
             validateHttpStatusCode(response, HttpStatus.SC_OK);
@@ -874,7 +869,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @DataProvider(name = "organizationDiscoveryPaginationValidationDataProvider")
     public Object[][] organizationDiscoveryPaginationValidationProvider() {
 
-        return new Object[][]{
+        return new Object[][] {
                 {1}, {2}, {5}, {6}, {10}, {17}
         };
     }
@@ -934,7 +929,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @DataProvider(name = "organizationDiscoveryPaginationNumericEdgeCasesOfLimitDataProvider")
     public Object[][] organizationDiscoveryPaginationNumericEdgeCasesOfLimitDataProvider() {
 
-        return new Object[][]{
+        return new Object[][] {
                 {0, 0}, {0, 20}, {0, 25},
                 {2, 0}, {2, 20}, {2, 25}
         };
@@ -973,7 +968,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @DataProvider(name = "organizationDiscoveryPaginationNonNumericEdgeCasesOfLimitDataProvider")
     public Object[][] organizationDiscoveryPaginationNonNumericEdgeCasesOfLimitProvider() {
 
-        return new Object[][]{
+        return new Object[][] {
                 {AMPERSAND + LIMIT_QUERY_PARAM + EQUAL},  // Test case 1: URL with LIMIT_QUERY_PARAM but no value.
                 {""}  // Test case 2: URL without LIMIT_QUERY_PARAM.
         };
@@ -996,7 +991,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @DataProvider(name = "organizationDiscoveryOffsetValidationDataProvider")
     public Object[][] organizationDiscoveryOffsetValidationDataProvider() {
 
-        return new Object[][]{
+        return new Object[][] {
                 {0, 1}, {0, 5}, {0, 10},
                 {5, 1}, {5, 5}, {5, 10},
                 {10, 1}, {10, 5}, {10, 10}
@@ -1031,7 +1026,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @DataProvider(name = "numericEdgeCasesOfOffsetAndOffsetWithLimitDataProvider")
     public Object[][] numericEdgeCasesOfOffsetAndOffsetWithLimitDataProvider() {
 
-        return new Object[][]{
+        return new Object[][] {
                 {20, 5},
                 {20, 17},
                 {20, 20},
@@ -1138,6 +1133,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @Test(groups = "organizationMetaAttributesPaginationTests",
             dependsOnGroups = "organizationDiscoveryPaginationTests")
     public void testAddMetaAttributesToOrganizations() {
+
         // Initialize meta attributes in sorted order.
         String[] attributes = {"1", "2", "3", ":", "@", "A", "B", "C", "LMN", "PQR", "STU", "a", "b", "c", "fg", "jKL",
                 "mNo", "x", "y", "z"};
@@ -1173,7 +1169,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @DataProvider(name = "metaAttributesLimitValidationDataProvider")
     public Object[][] metaAttributesLimitValidationDataProvider() {
 
-        return new Object[][]{
+        return new Object[][] {
                 {1}, {2}, {3}, {5}, {10}, {13}
         };
     }
@@ -1183,9 +1179,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
             dataProvider = "metaAttributesLimitValidationDataProvider")
     public void testGetPaginatedMetaAttributesWithLimit(int limit) {
 
-        String endpointURL =
-                ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_META_ATTRIBUTES_API_PATH + QUESTION_MARK +
-                        LIMIT_QUERY_PARAM + EQUAL + limit + AMPERSAND + RECURSIVE_QUERY_PARAM + EQUAL + false;
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_META_ATTRIBUTES_API_PATH +
+                QUESTION_MARK + LIMIT_QUERY_PARAM + EQUAL + limit + AMPERSAND + RECURSIVE_QUERY_PARAM + EQUAL + false;
         Response response = getResponseOfGetWithOAuth2(endpointURL, m2mToken);
 
         validateHttpStatusCode(response, HttpStatus.SC_OK);
@@ -1258,7 +1253,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @DataProvider(name = "metaAttributesPaginationNumericEdgeCasesOfLimitDataProvider")
     public Object[][] metaAttributesPaginationNumericEdgeCasesOfLimitDataProvider() {
 
-        return new Object[][]{
+        return new Object[][] {
                 {0}, {20}, {25}
         };
     }
@@ -1267,9 +1262,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
             dataProvider = "metaAttributesPaginationNumericEdgeCasesOfLimitDataProvider")
     public void testGetMetaAttributesPaginationForNumericEdgeCasesOfLimit(int limit) {
 
-        String endpointURL =
-                ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_META_ATTRIBUTES_API_PATH + QUESTION_MARK +
-                        LIMIT_QUERY_PARAM + EQUAL + limit + AMPERSAND + RECURSIVE_QUERY_PARAM + EQUAL + false;
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_META_ATTRIBUTES_API_PATH +
+                QUESTION_MARK + LIMIT_QUERY_PARAM + EQUAL + limit + AMPERSAND + RECURSIVE_QUERY_PARAM + EQUAL + false;
         Response response = getResponseOfGetWithOAuth2(endpointURL, m2mToken);
         validateHttpStatusCode(response, HttpStatus.SC_OK);
 
@@ -1284,7 +1278,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @DataProvider(name = "metaAttributesPaginationNonNumericEdgeCasesOfLimitProvider")
     public Object[][] metaAttributesPaginationNonNumericEdgeCasesOfLimitProvider() {
 
-        return new Object[][]{
+        return new Object[][] {
                 {LIMIT_QUERY_PARAM + EQUAL},  // Case with limit= (no value), default limit is 15.
                 {""}  // Case with no limit parameter, default limit is 15.
         };
@@ -1294,9 +1288,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
             dataProvider = "metaAttributesPaginationNonNumericEdgeCasesOfLimitProvider")
     public void testGetMetaAttributesForNonNumericEdgeCasesOfLimit(String limitQueryParam) {
 
-        String endpointURL =
-                ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_META_ATTRIBUTES_API_PATH + QUESTION_MARK +
-                        RECURSIVE_QUERY_PARAM + EQUAL + false + AMPERSAND + limitQueryParam;
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_META_ATTRIBUTES_API_PATH +
+                QUESTION_MARK + RECURSIVE_QUERY_PARAM + EQUAL + false + AMPERSAND + limitQueryParam;
         Response response = getResponseOfGetWithOAuth2(endpointURL, m2mToken);
         validateHttpStatusCode(response, HttpStatus.SC_OK);
 
