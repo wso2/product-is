@@ -195,6 +195,13 @@ By default mode, it would ask you to enter the master password
 
 > ciphertool -Dchange  (in UNIX)
 
+4. Change the Port by modifying the conf/axis2.xml file
+
+Locate the `<offset>` tag in the conf/axis2.xml file.
+Change the value from 0 to 2 (or the desired offset).
+> For example: `<offset>2</offset>`
+> With this change, if the default port is 9443, it will now run on port 9443 + 2 = 9445.
+
 For more details see
 https://is.docs.wso2.com/en/7.0.0/deploy/security/encrypt-passwords-with-cipher-tool/
 
