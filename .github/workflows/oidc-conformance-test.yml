@@ -36,7 +36,7 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         path: './product-is'
       
@@ -51,39 +51,6 @@ jobs:
         pip3 install psutil
         pip3 install httpx
         pip3 install httplib2
-        
-    - name: Download IS zip
-      run: |
-        INPUT_URL=${{github.event.inputs.download-url}}
-        INPUT_TAG=${{github.event.inputs.tag}}
-        if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-          if [[ -z "${INPUT_URL}" ]] && [[ -z "${INPUT_TAG}" ]]; then
-            echo "Either 'tag' or 'download-url' must be provided."
-            exit 1
-          fi
-        fi
-        if [[ -z "${INPUT_URL}" ]]; then
-          owner="wso2"
-          repo="product-is"
-          if [[ -z "${INPUT_TAG}" ]]; then
-            tag=${GITHUB_REF:10}
-            tag_trimmed=${tag// }
-          else
-            tag=${{github.event.inputs.tag}}
-            tag_trimmed=${tag// }
-          fi
-
-          artifact="wso2is-${tag_trimmed:1}.zip"
-          echo "Tag=$tag"
-          echo "Artifact=$artifact"
-          list_asset_url="https://api.github.com/repos/${owner}/${repo}/releases/tags/${tag_trimmed}"
-          asset_url=$(curl "${list_asset_url}" | jq ".assets[] | select(.name==\"${artifact}\") | .url" | sed 's/\"//g')
-          curl -vLJO -H 'Accept: application/octet-stream' \
-           "${asset_url}"
-        else
-          curl -vLJO -H 'Accept: application/octet-stream' \
-           "${INPUT_URL}"
-        fi
       
     - name: Clone conformance suite
       run: |
@@ -103,7 +70,63 @@ jobs:
     
     - name: Adding extra hosts to docker-compose-dev.yml
       run: sed -i '/^    volumes.*/i \ \ \ \ extra_hosts:\n \ \ \ \ - "localhost:\$IP\"' ./conformance-suite/docker-compose-dev.yml
-         
+
+    - name: Get IS zip
+      run: |
+        INPUT_TAG=${{github.event.inputs.tag}}
+        if [[ -z "${INPUT_TAG}" ]]; then
+          echo ">>> Building IS from source..."
+          mkdir cloned-product-is
+          cd cloned-product-is
+          git clone https://github.com/wso2/product-is
+          cd product-is
+          mvn clean install -Dmaven.test.skip=true | tee mvn-build.log
+
+          REPO_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
+          echo "==========================================================="
+          echo "BUILD $REPO_BUILD_STATUS"
+          echo "=========================================================="
+
+          if [[ "${REPO_BUILD_STATUS}" != "SUCCESS" ]]; then
+            exit 1
+          fi
+
+          zip_file=$(find . -name 'wso2is-*.zip' -type f -not -name 'wso2is-*-src.zip' -print -quit)
+
+          if [[ -z "$zip_file" ]]; then
+            echo "Zip file not found"
+            exit 1
+          fi
+
+          echo ">>> Zip file found: $zip_file"
+          echo ">>> Copying zip file to the root directory ..."
+
+          cp "$zip_file" ./../../
+          cd ../..
+          ls
+          echo ">>> Remove cloned-product-is directory"
+          rm -rf cloned-product-is
+          ls
+        else
+          owner="wso2"
+          repo="product-is"
+          if [[ -z "${INPUT_TAG}" ]]; then
+            tag=${GITHUB_REF:10}
+            tag_trimmed=${tag// }
+          else
+            tag=${{github.event.inputs.tag}}
+            tag_trimmed=${tag// }
+          fi
+
+          artifact="wso2is-${tag_trimmed:1}.zip"
+          echo "Tag=$tag"
+          echo "Artifact=$artifact"
+          list_asset_url="https://api.github.com/repos/${owner}/${repo}/releases/tags/${tag_trimmed}"
+          asset_url=$(curl "${list_asset_url}" | jq ".assets[] | select(.name==\"${artifact}\") | .url" | sed 's/\"//g')
+          curl -vLJO -H 'Accept: application/octet-stream' \
+            "${asset_url}"
+        fi
+
     - name: Run IS
       run: |
         PRODUCT_IS_ZIP=$(find ./ -name wso2is* -type f -printf "%f\n")
@@ -111,7 +134,7 @@ jobs:
         python3 ./configure_is.py ../../$PRODUCT_IS_ZIP
 
     - name: Set up JDK 17
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v3
       with:
         java-version: 17
         distribution: temurin
@@ -157,14 +180,14 @@ jobs:
         fi
       
     - name: Archive test results
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       if: always()
       with:
         name: test-results
         path: ./*test_results.zip
         
     - name: Archive test logs
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       if: always()
       with:
         name: test-logs
