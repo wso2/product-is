@@ -13,7 +13,11 @@
                 "callbackURLs": [
                     "https://localhost.emobix.co.uk:8443/test/a/test/callback"
                 ],
-                "allowedOrigins": []
+                "allowedOrigins": [],
+                "hybridFlow": {
+                  "enable": true,
+                  "responseType": "code id_token"
+                }
             }
         },
         "authenticationSequence": {
