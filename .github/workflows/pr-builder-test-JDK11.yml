@@ -79,7 +79,7 @@ jobs:
           bash pr-builder.sh
       - name: Archive PR diff file
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: repo-pr-diff
           path: |
@@ -87,7 +87,7 @@ jobs:
           if-no-files-found: warn
       - name: Archive repo mvn build log
         if: always() && steps.builder_step.outputs.REPO_NAME != 'product-is'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: repo-mvn-build-log
           path: |
@@ -95,7 +95,7 @@ jobs:
           if-no-files-found: warn
       - name: Archive repo surefire reports
         if: always() && steps.builder_step.outputs.REPO_NAME != 'product-is'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: repo-surefire-report
           path: |
@@ -103,7 +103,7 @@ jobs:
           if-no-files-found: warn
       - name: Archive product-is mvn build log
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: product-is-mvn-build-log
           path: |
@@ -111,7 +111,7 @@ jobs:
           if-no-files-found: warn
       - name: Archive product-is surefire reports
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: product-is-surefire-report
           path: |
