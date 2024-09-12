@@ -1,0 +1,94 @@
+{
+  "actionStatus": "SUCCESS",
+  "operations": [
+    {
+      "op": "add",
+      "path": "/accessToken/scopes/-",
+      "value": "new_test_custom_scope_1"
+    },
+    {
+      "op": "add",
+      "path": "/accessToken/scopes/-",
+      "value": "new_test_custom_scope_2"
+    },
+    {
+      "op": "add",
+      "path": "/accessToken/scopes/-",
+      "value": "new_test_custom_scope_3"
+    },
+    {
+      "op": "add",
+      "path": "/accessToken/claims/aud/-",
+      "value": "zzz1.com"
+    },
+    {
+      "op": "add",
+      "path": "/accessToken/claims/aud/-",
+      "value": "zzz2.com"
+    },
+    {
+      "op": "add",
+      "path": "/accessToken/claims/aud/-",
+      "value": "zzz3.com"
+    },
+    {
+      "op": "add",
+      "path": "/accessToken/claims/-",
+      "value": {
+        "name": "custom_claim_string_1",
+        "value": "testCustomClaim1"
+      }
+    },
+    {
+      "op": "add",
+      "path": "/accessToken/claims/-",
+      "value": {
+        "name": "custom_claim_number_1",
+        "value": 78
+      }
+    },
+    {
+      "op": "add",
+      "path": "/accessToken/claims/-",
+      "value": {
+        "name": "custom_claim_boolean_1",
+        "value": true
+      }
+    },
+    {
+      "op": "add",
+      "path": "/accessToken/claims/-",
+      "value": {
+        "name": "custom_claim_string_array_1",
+        "value": [
+          "TestCustomClaim1",
+          "TestCustomClaim2",
+          "TestCustomClaim3"
+        ]
+      }
+    },
+    {
+      "op": "replace",
+      "path": "/accessToken/scopes/7",
+      "value": "replaced_scope"
+    },
+    {
+      "op": "replace",
+      "path": "/accessToken/claims/aud/-",
+      "value": "zzzR.com"
+    },
+    {
+      "op": "replace",
+      "path": "/accessToken/claims/expires_in",
+      "value": 7200
+    },
+    {
+      "op": "remove",
+      "path": "/accessToken/scopes/6"
+    },
+    {
+      "op": "remove",
+      "path": "/accessToken/claims/aud/-"
+    }
+  ]
+}
