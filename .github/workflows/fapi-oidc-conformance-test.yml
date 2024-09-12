@@ -47,7 +47,13 @@ jobs:
         pip3 install psutil
         pip3 install httpx
         pip3 install httplib2
-        
+
+    - name: Get Jacoco Agent
+      id: download_jacoco
+      run: |
+        curl -vLJO -H 'Accept: application/octet-stream' https://search.maven.org/remotecontent?filepath=org/jacoco/jacoco/0.8.12/jacoco-0.8.12.zip
+        unzip jacoco-0.8.12.zip -d jacoco-0.8.12
+
     - name: Get IS zip
       run: |
         INPUT_TAG=${{github.event.inputs.tag}}
@@ -115,6 +121,10 @@ jobs:
         echo ">>> Adding deployment-fapi-config.toml configs to deployment.toml..."
         cp -f ./product-is/oidc-fapi-conformance-tests/config/deployment-fapi-config.toml $PRODUCT_IS/repository/conf/deployment.toml
 
+        touch jacoco.exec
+        echo ">>> Adding jacoco agent to wso2server.sh..."
+        sed -i '/-Dwso2.server.standalone=true \\/a -javaagent:/home/runner/work/product-is/product-is/jacoco-0.8.12/lib/jacocoagent.jar=destfile=/home/runner/work/product-is/product-is/jacoco.exec,append=true,includes=org.wso2.carbon.idp.mgt*:org.wso2.carbon.sts*:org.wso2.carbon.user.core*:org.wso2.carbon.user.mgt*:org.wso2.carbon.claim.mgt*:org.wso2.carbon.identity.*:org.wso2.carbon.xkms.mgt* \\' $PRODUCT_IS/bin/wso2server.sh
+
         echo ">>> Zipping $PRODUCT_IS to $PRODUCT_IS_ZIP"
         zip -qq -r $PRODUCT_IS_ZIP $PRODUCT_IS
         rm -r $PRODUCT_IS
@@ -174,6 +184,7 @@ jobs:
     - name: Configure IS and Conformance Suite and run IS
       run: |
         PRODUCT_IS_ZIP=$(find ./ -name wso2is* -type f -printf "%f\n")
+        echo "PRODUCT_IS_DIR=${PRODUCT_IS_ZIP%.zip}" >> $GITHUB_ENV
         cd ./product-is/oidc-fapi-conformance-tests
         python3 ./configure_is_fapi.py ../../$PRODUCT_IS_ZIP
         
@@ -202,7 +213,12 @@ jobs:
         
     - name: Run Tests
       run: bash ./product-is/oidc-fapi-conformance-tests/test_runner_fapi.sh
-      
+
+    - name: Stop IS
+      id: stop_is
+      run: |
+        sh ./product-is/oidc-fapi-conformance-tests/${{ env.PRODUCT_IS_DIR }}/bin/wso2server.sh stop
+
     - name: Test Results
       run: |
         IS_SUCCESSFUL=false
@@ -236,6 +252,13 @@ jobs:
       with:
         name: test-logs
         path: ./*log.txt
+
+    - name: Archive Jacoco results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: jacoco-exec
+        path: ./jacoco.exec
 
     - name: Send Email
       if: always()
