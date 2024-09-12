@@ -127,11 +127,19 @@ jobs:
             "${asset_url}"
         fi
 
+    - name: Download Jacoco Agent
+      id: download_jacoco
+      run: |
+        curl -vLJO -H 'Accept: application/octet-stream' https://search.maven.org/remotecontent?filepath=org/jacoco/jacoco/0.8.12/jacoco-0.8.12.zip
+
     - name: Run IS
       run: |
         PRODUCT_IS_ZIP=$(find ./ -name wso2is* -type f -printf "%f\n")
+        ROOT_DIR=$(pwd)
+        touch jacoco.exec
+        echo "PRODUCT_IS_DIR=${PRODUCT_IS_ZIP%.zip}" >> $GITHUB_ENV
         cd ./product-is/oidc-conformance-tests
-        python3 ./configure_is.py ../../$PRODUCT_IS_ZIP
+        python3 ./configure_is.py ../../$PRODUCT_IS_ZIP $ROOT_DIR $ROOT_DIR/jacoco.exec
 
     - name: Set up JDK 17
       uses: actions/setup-java@v3
@@ -158,6 +166,11 @@ jobs:
         
     - name: Run Tests
       run: bash ./product-is/oidc-conformance-tests/test_runner.sh
+
+    - name: Stop IS
+      id: stop_is
+      run: |
+        sh ./product-is/oidc-conformance-tests/${{ env.PRODUCT_IS_DIR }}/bin/wso2server.sh stop
       
     - name: Test Results
       run: |
@@ -192,6 +205,13 @@ jobs:
       with:
         name: test-logs
         path: ./*log.txt
+
+    - name: Archive Jacoco results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: jacoco-exec
+        path: ./jacoco.exec
     
     - name: Send Email
       if: always()
