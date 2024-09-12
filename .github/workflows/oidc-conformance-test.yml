@@ -207,7 +207,7 @@ jobs:
         path: ./*log.txt
 
     - name: Archive Jacoco results
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v3
       if: always()
       with:
         name: jacoco-exec
