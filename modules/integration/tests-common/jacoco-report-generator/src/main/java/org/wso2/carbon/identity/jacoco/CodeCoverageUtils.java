@@ -26,52 +26,52 @@ import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+/**
+ * Utility class for code coverage related operations.
+ */
 public class CodeCoverageUtils {
+
+    private static final int BUFFER_SIZE = 1024;
+    private static final String INVALID_EXTENSION_ERROR = "Invalid extension: %s is invalid";
+    private static final String EXTRACTION_ERROR = "Error on archive extraction";
 
     /**
      * Extract jar files given at jar file path
      *
-     * @param jarFilePath - Jar file patch
+     * @param jarFilePath - Jar file path
+     * @param tempDir     - Temporary directory to extract jar file
      * @return - Jar file extracted directory.
      * @throws IOException - Throws if jar extraction fails
      */
-    public synchronized static String extractJarFile(String jarFilePath, File tempDir)
-            throws IOException {
+    public synchronized static String extractJarFile(String jarFilePath, File tempDir) throws IOException {
 
         if (!jarFilePath.endsWith(".war") && !jarFilePath.endsWith(".jar")) {
-            throw new IllegalArgumentException("Invalid extension" + jarFilePath + " is invalid");
+            throw new IllegalArgumentException(String.format(INVALID_EXTENSION_ERROR, jarFilePath));
         }
 
-        String fileSeparator = (File.separatorChar == '\\') ? "\\" : File.separator;
-        String jarFileName = jarFilePath;
+        String jarFileName = new File(jarFilePath).getName();
+        String tempExtractedDir = new File(tempDir, jarFileName.substring(0, jarFileName.lastIndexOf('.'))).getPath();
 
-        if (jarFilePath.lastIndexOf(fileSeparator) != -1) {
-            jarFileName = jarFilePath.substring(jarFilePath.lastIndexOf(fileSeparator) + 1);
-        }
-
-        String tempExtractedDir = null;
         try {
-            tempExtractedDir = tempDir + File.separator +
-                    jarFileName.substring(0, jarFileName.lastIndexOf('.'));
-
             extractFile(jarFilePath, tempExtractedDir);
         } catch (IOException e) {
-            System.out.println("Could not extract the file " + jarFileName);
+            throw new IOException("Could not extract the file " + jarFileName, e);
         }
         return tempExtractedDir;
     }
 
     /**
-     * Method to scan given directory for include and exclude patterns.
+     * Scan given directory for include and exclude patterns.
      *
-     * @param jarExtractedDir - Patch to check for given include/exclude pattern
+     * @param jarExtractedDir - Path to check for given include/exclude pattern
      * @param includes        - Include pattern array
      * @param excludes        - Exclude class pattern array
      * @return - Included files
-     * @throws IOException - Throws if given directory patch cannot be found.
+     * @throws IOException - Throws if given directory path cannot be found.
      */
     public static String[] scanDirectory(String jarExtractedDir, String[] includes,
                                          String[] excludes) throws IOException {
+
         DirectoryScanner ds = new DirectoryScanner();
 
         ds.setIncludes(includes);
@@ -83,58 +83,33 @@ public class CodeCoverageUtils {
         return ds.getIncludedFiles();
     }
 
-    public static void extractFile(String sourceFilePath, String extractedDir) throws IOException {
-        FileOutputStream fileoutputstream = null;
-        String fileDestination = extractedDir + File.separator;
-        byte[] buf = new byte[1024];
-        ZipInputStream zipinputstream = null;
-        ZipEntry zipentry;
-        try {
-            zipinputstream = new ZipInputStream(new FileInputStream(sourceFilePath));
-            zipentry = zipinputstream.getNextEntry();
-            while (zipentry != null) {
-                //for each entry to be extracted
-                String entryName = fileDestination + zipentry.getName();
-                entryName = entryName.replace('/', File.separatorChar);
-                entryName = entryName.replace('\\', File.separatorChar);
-                int n;
-                File newFile = new File(entryName);
-                if (zipentry.isDirectory()) {
-                    if (!newFile.exists()) {
-                        if (!newFile.mkdirs()) {
-                            throw new IOException("Error occurred created new directory");
-                        }
+    private static void extractFile(String sourceFilePath, String extractedDir) throws IOException {
+
+        byte[] buf = new byte[BUFFER_SIZE];
+        try (ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(sourceFilePath))) {
+            ZipEntry zipEntry;
+            while ((zipEntry = zipInputStream.getNextEntry()) != null) {
+                File newFile = new File(extractedDir, zipEntry.getName());
+                if (zipEntry.isDirectory()) {
+                    if (!newFile.isDirectory() && !newFile.mkdirs()) {
+                        throw new IOException("Failed to create directory " + newFile);
                     }
-                    zipentry = zipinputstream.getNextEntry();
-                    continue;
                 } else {
-                    File resourceFile =
-                            new File(entryName.substring(0, entryName.lastIndexOf(File.separator)));
-                    if (!resourceFile.exists()) {
-                        if (!resourceFile.mkdirs()) {
-                            break;
+                    File parent = newFile.getParentFile();
+                    if (!parent.isDirectory() && !parent.mkdirs()) {
+                        throw new IOException("Failed to create directory " + parent);
+                    }
+                    try (FileOutputStream fos = new FileOutputStream(newFile)) {
+                        int len;
+                        while ((len = zipInputStream.read(buf)) > 0) {
+                            fos.write(buf, 0, len);
                         }
                     }
                 }
-                fileoutputstream = new FileOutputStream(entryName);
-                while ((n = zipinputstream.read(buf, 0, 1024)) > -1) {
-                    fileoutputstream.write(buf, 0, n);
-                }
-                fileoutputstream.close();
-                zipinputstream.closeEntry();
-                zipentry = zipinputstream.getNextEntry();
+                zipInputStream.closeEntry();
             }
-            zipinputstream.close();
         } catch (IOException e) {
-            System.out.println("Error on archive extraction ");
-            throw new IOException("Error on archive extraction ", e);
-        } finally {
-            if (fileoutputstream != null) {
-                fileoutputstream.close();
-            }
-            if (zipinputstream != null) {
-                zipinputstream.close();
-            }
+            throw new IOException(EXTRACTION_ERROR, e);
         }
     }
 }

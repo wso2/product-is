@@ -272,7 +272,7 @@ jobs:
 
     - name: Generate Jacoco Report
       run: |
-        java -jar ./product-is/modules/integration/tests-common/jacoco-report-generator/target/${{ env.JAR_NAME }} ./jacoco.exec ./product-is/oidc-conformance-tests/${{ env.PRODUCT_IS_DIR }}/repository/deployment/server/webapps ./product-is/oidc-conformance-tests/${{ env.PRODUCT_IS_DIR }}/repository/components/plugins ./product-is/oidc-conformance-tests/${{ env.PRODUCT_IS_DIR }}/repository/components/dropins ./product-is/oidc-conformance-tests/${{ env.PRODUCT_IS_DIR }}/lib/runtimes/cxf3
+        java -jar ./product-is/modules/integration/tests-common/jacoco-report-generator/target/${{ env.JAR_NAME }} ./jacoco.exec ./product-is/oidc-fapi-conformance-tests/${{ env.PRODUCT_IS_DIR }}/repository/deployment/server/webapps ./product-is/oidc-fapi-conformance-tests/${{ env.PRODUCT_IS_DIR }}/repository/components/plugins ./product-is/oidc-fapi-conformance-tests/${{ env.PRODUCT_IS_DIR }}/repository/components/dropins ./product-is/oidc-fapi-conformance-tests/${{ env.PRODUCT_IS_DIR }}/lib/runtimes/cxf3
 
     - name: Archive Jacoco report
       uses: actions/upload-artifact@v4
