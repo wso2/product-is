@@ -206,12 +206,33 @@ jobs:
         name: test-logs
         path: ./*log.txt
 
-    - name: Archive Jacoco results
-      uses: actions/upload-artifact@v3
+    - name: Archive Jacoco exec
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: jacoco-exec
         path: ./jacoco.exec
+
+    - name: Build Jacoco Report Generator
+      run: |
+        cd ./product-is/modules/integration/tests-common/jacoco-report-generator
+        mvn clean install
+        ARTIFACT_ID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
+        VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+        JAR_NAME="${ARTIFACT_ID}-${VERSION}.jar"
+        echo "JAR_NAME=${JAR_NAME}" >> $GITHUB_ENV
+        echo "Report generator jar name: $JAR_NAME"
+
+    - name: Generate Jacoco Report
+      run: |
+        java -jar ./product-is/modules/integration/tests-common/jacoco-report-generator/target/${{ env.JAR_NAME }} ./jacoco.exec ./product-is/oidc-conformance-tests/${{ env.PRODUCT_IS_DIR }}/repository/deployment/server/webapps ./product-is/oidc-conformance-tests/${{ env.PRODUCT_IS_DIR }}/repository/components/plugins ./product-is/oidc-conformance-tests/${{ env.PRODUCT_IS_DIR }}/repository/components/dropins ./product-is/oidc-conformance-tests/${{ env.PRODUCT_IS_DIR }}/lib/runtimes/cxf3
+
+    - name: Archive Jacoco report
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: jacoco-xml
+        path: ./report/jacoco.xml
 
     - name: Send Email
       if: always()

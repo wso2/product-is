@@ -33,6 +33,7 @@
         <module>ui-pages</module>
         <module>integration-test-utils</module>
         <module>extensions</module>
+        <module>jacoco-report-generator</module>
     </modules>
 
 </project>
