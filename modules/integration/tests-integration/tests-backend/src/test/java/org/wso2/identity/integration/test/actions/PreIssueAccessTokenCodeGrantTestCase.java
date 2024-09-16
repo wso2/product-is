@@ -44,7 +44,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.identity.integration.test.mocks.MockServer;
+import org.wso2.identity.integration.test.actions.mockserver.ActionsMockServer;
 import org.wso2.identity.integration.test.oauth2.dataprovider.model.ApplicationConfig;
 import org.wso2.identity.integration.test.oauth2.dataprovider.model.TokenScopes;
 import org.wso2.identity.integration.test.oauth2.dataprovider.model.UserClaimConfig;
@@ -141,6 +141,7 @@ public class PreIssueAccessTokenCodeGrantTestCase extends ActionsBaseTestCase {
     private String userId;
     private String roleId;
     private JWTClaimsSet jwtClaims;
+    private ActionsMockServer actionsMockServer;
 
     /**
      * Initializes Test environment and sets up necessary configurations.
@@ -184,7 +185,10 @@ public class PreIssueAccessTokenCodeGrantTestCase extends ActionsBaseTestCase {
 
         addUserWithRole(applicationId, customScopes);
 
-        MockServer.createMockServer(MOCK_SERVER_ENDPOINT);
+        actionsMockServer = new ActionsMockServer();
+
+        actionsMockServer.createMockServer(MOCK_SERVER_ENDPOINT);
+
         actionId = createPreIssueAccessTokenAction();
     }
 
@@ -196,7 +200,7 @@ public class PreIssueAccessTokenCodeGrantTestCase extends ActionsBaseTestCase {
         deleteApp(applicationId);
         deleteDomainAPI(domainAPIId);
         scim2RestClient.deleteUser(userId);
-        MockServer.shutDownMockServer();
+        actionsMockServer.shutDownMockServer();
         restClient.closeHttpClient();
         scim2RestClient.closeHttpClient();
         actionsRestClient.closeHttpClient();
