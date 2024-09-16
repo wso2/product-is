@@ -197,16 +197,20 @@ public class PreIssueAccessTokenClientCredentialsGrantTestCase extends ActionsBa
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
+        actionsMockServer.startServer();
+
         deleteAction(PRE_ISSUE_ACCESS_TOKEN_API_PATH, actionId);
         deleteRole(roleId);
         deleteApp(applicationId);
         deleteDomainAPI(domainAPIId);
         scim2RestClient.deleteUser(userId);
-        actionsMockServer.shutDownMockServer();
+
         restClient.closeHttpClient();
         scim2RestClient.closeHttpClient();
         actionsRestClient.closeHttpClient();
         client.close();
+
+        actionsMockServer = null;
         accessToken = null;
         jwtClaims = null;
     }

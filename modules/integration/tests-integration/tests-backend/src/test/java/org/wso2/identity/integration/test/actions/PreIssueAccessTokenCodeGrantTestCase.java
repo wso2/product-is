@@ -195,16 +195,20 @@ public class PreIssueAccessTokenCodeGrantTestCase extends ActionsBaseTestCase {
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
+        actionsMockServer.startServer();
+
         deleteAction(PRE_ISSUE_ACCESS_TOKEN_API_PATH, actionId);
         deleteRole(roleId);
         deleteApp(applicationId);
         deleteDomainAPI(domainAPIId);
         scim2RestClient.deleteUser(userId);
-        actionsMockServer.shutDownMockServer();
+
         restClient.closeHttpClient();
         scim2RestClient.closeHttpClient();
         actionsRestClient.closeHttpClient();
         client.close();
+
+        actionsMockServer = null;
         authorizationCode = null;
         accessToken = null;
         jwtClaims = null;
@@ -298,8 +302,8 @@ public class PreIssueAccessTokenCodeGrantTestCase extends ActionsBaseTestCase {
         Assert.assertTrue(ArrayUtils.contains(scopes, NEW_SCOPE_2));
         Assert.assertTrue(ArrayUtils.contains(scopes, NEW_SCOPE_3));
         Assert.assertTrue(ArrayUtils.contains(scopes, NEW_SCOPE_4));
-        Assert.assertFalse(ArrayUtils.contains(scopes, CUSTOM_SCOPE_3)); // replace - 7
-        Assert.assertFalse(ArrayUtils.contains(scopes, INTERNAL_ORG_USER_MANAGEMENT_CREATE)); // remove - 8
+        Assert.assertFalse(ArrayUtils.contains(scopes, CUSTOM_SCOPE_3));
+        Assert.assertFalse(ArrayUtils.contains(scopes, INTERNAL_ORG_USER_MANAGEMENT_CREATE));
     }
 
     @Test(groups = "wso2.is", description = "Verify that the access token contains the updated OIDC claims " +
