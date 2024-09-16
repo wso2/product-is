@@ -94,97 +94,106 @@ public class ActionsMockServer {
             String jsonResponse = "{\n" +
                     "    \"actionStatus\": \"SUCCESS\",\n" +
                     "    \"operations\": [\n" +
-                    "      {\n" +
-                    "        \"op\": \"add\",\n" +
-                    "        \"path\": \"/accessToken/scopes/-\",\n" +
-                    "        \"value\": \"new_test_custom_scope_1\"\n" +
-                    "      },\n" +
-                    "      {\n" +
-                    "        \"op\": \"add\",\n" +
-                    "        \"path\": \"/accessToken/scopes/-\",\n" +
-                    "        \"value\": \"new_test_custom_scope_2\"\n" +
-                    "      },\n" +
-                    "      {\n" +
-                    "        \"op\": \"add\",\n" +
-                    "        \"path\": \"/accessToken/scopes/-\",\n" +
-                    "        \"value\": \"new_test_custom_scope_3\"\n" +
-                    "      },\n" +
-                    "      {\n" +
-                    "        \"op\": \"add\",\n" +
-                    "        \"path\": \"/accessToken/claims/aud/-\",\n" +
-                    "        \"value\": \"zzz1.com\"\n" +
-                    "      },\n" +
-                    "      {\n" +
-                    "        \"op\": \"add\",\n" +
-                    "        \"path\": \"/accessToken/claims/aud/-\",\n" +
-                    "        \"value\": \"zzz2.com\"\n" +
-                    "      },\n" +
-                    "      {\n" +
-                    "        \"op\": \"add\",\n" +
-                    "        \"path\": \"/accessToken/claims/aud/-\",\n" +
-                    "        \"value\": \"zzz3.com\"\n" +
-                    "      },\n" +
-                    "      {\n" +
-                    "        \"op\": \"add\",\n" +
-                    "        \"path\": \"/accessToken/claims/-\",\n" +
-                    "        \"value\": {\n" +
-                    "          \"name\": \"custom_claim_string_1\",\n" +
-                    "          \"value\": \"testCustomClaim1\"\n" +
+                    "        {\n" +
+                    "            \"op\": \"add\",\n" +
+                    "            \"path\": \"/accessToken/scopes/-\",\n" +
+                    "            \"value\": \"new_test_custom_scope_1\"\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "            \"op\": \"add\",\n" +
+                    "            \"path\": \"/accessToken/scopes/-\",\n" +
+                    "            \"value\": \"new_test_custom_scope_2\"\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "            \"op\": \"add\",\n" +
+                    "            \"path\": \"/accessToken/scopes/-\",\n" +
+                    "            \"value\": \"new_test_custom_scope_3\"\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "            \"op\": \"add\",\n" +
+                    "            \"path\": \"/accessToken/claims/aud/-\",\n" +
+                    "            \"value\": \"zzz1.com\"\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "            \"op\": \"add\",\n" +
+                    "            \"path\": \"/accessToken/claims/aud/-\",\n" +
+                    "            \"value\": \"zzz2.com\"\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "            \"op\": \"add\",\n" +
+                    "            \"path\": \"/accessToken/claims/aud/-\",\n" +
+                    "            \"value\": \"zzz3.com\"\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "            \"op\": \"add\",\n" +
+                    "            \"path\": \"/accessToken/claims/-\",\n" +
+                    "            \"value\": {\n" +
+                    "                \"name\": \"custom_claim_string_1\",\n" +
+                    "                \"value\": \"testCustomClaim1\"\n" +
+                    "            }\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "            \"op\": \"add\",\n" +
+                    "            \"path\": \"/accessToken/claims/-\",\n" +
+                    "            \"value\": {\n" +
+                    "                \"name\": \"custom_claim_number_1\",\n" +
+                    "                \"value\": 78\n" +
+                    "            }\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "            \"op\": \"add\",\n" +
+                    "            \"path\": \"/accessToken/claims/-\",\n" +
+                    "            \"value\": {\n" +
+                    "                \"name\": \"custom_claim_boolean_1\",\n" +
+                    "                \"value\": true\n" +
+                    "            }\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "            \"op\": \"add\",\n" +
+                    "            \"path\": \"/accessToken/claims/-\",\n" +
+                    "            \"value\": {\n" +
+                    "                \"name\": \"custom_claim_string_array_1\",\n" +
+                    "                \"value\": [\n" +
+                    "                    \"TestCustomClaim1\",\n" +
+                    "                    \"TestCustomClaim2\",\n" +
+                    "                    \"TestCustomClaim3\"\n" +
+                    "                ]\n" +
+                    "            }\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "            \"op\": \"replace\",\n" +
+                    "            \"path\": \"/accessToken/scopes/-\",\n" +
+                    "            \"value\": \"replaced_scope\"\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "            \"op\": \"replace\",\n" +
+                    "            \"path\": \"/accessToken/claims/aud/-\",\n" +
+                    "            \"value\": \"zzzR.com\"\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "            \"op\": \"replace\",\n" +
+                    "            \"path\": \"/accessToken/claims/expires_in\",\n" +
+                    "            \"value\": 7200\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "            \"op\": \"replace\",\n" +
+                    "            \"path\": \"/accessToken/claims/given_name\",\n" +
+                    "            \"value\": \"replaced_given_name\"\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "            \"op\": \"remove\",\n" +
+                    "            \"path\": \"/accessToken/scopes/0\"\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "            \"op\": \"remove\",\n" +
+                    "            \"path\": \"/accessToken/claims/aud/-\"\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "            \"op\": \"remove\",\n" +
+                    "            \"path\": \"/accessToken/claims/family_name\"\n" +
                     "        }\n" +
-                    "      },\n" +
-                    "      {\n" +
-                    "        \"op\": \"add\",\n" +
-                    "        \"path\": \"/accessToken/claims/-\",\n" +
-                    "        \"value\": {\n" +
-                    "          \"name\": \"custom_claim_number_1\",\n" +
-                    "          \"value\": 78\n" +
-                    "        }\n" +
-                    "      },\n" +
-                    "      {\n" +
-                    "        \"op\": \"add\",\n" +
-                    "        \"path\": \"/accessToken/claims/-\",\n" +
-                    "        \"value\": {\n" +
-                    "          \"name\": \"custom_claim_boolean_1\",\n" +
-                    "          \"value\": true\n" +
-                    "        }\n" +
-                    "      },\n" +
-                    "      {\n" +
-                    "        \"op\": \"add\",\n" +
-                    "        \"path\": \"/accessToken/claims/-\",\n" +
-                    "        \"value\": {\n" +
-                    "          \"name\": \"custom_claim_string_array_1\",\n" +
-                    "          \"value\": [\n" +
-                    "            \"TestCustomClaim1\",\n" +
-                    "            \"TestCustomClaim2\",\n" +
-                    "            \"TestCustomClaim3\"\n" +
-                    "          ]\n" +
-                    "        }\n" +
-                    "      },\n" +
-                    "      {\n" +
-                    "        \"op\": \"replace\",\n" +
-                    "        \"path\": \"/accessToken/scopes/7\",\n" +
-                    "        \"value\": \"replaced_scope\"\n" +
-                    "      },\n" +
-                    "      {\n" +
-                    "        \"op\": \"replace\",\n" +
-                    "        \"path\": \"/accessToken/claims/aud/-\",\n" +
-                    "        \"value\": \"zzzR.com\"\n" +
-                    "      },\n" +
-                    "      {\n" +
-                    "        \"op\": \"replace\",\n" +
-                    "        \"path\": \"/accessToken/claims/expires_in\",\n" +
-                    "        \"value\": 7200\n" +
-                    "      },\n" +
-                    "      {\n" +
-                    "        \"op\": \"remove\",\n" +
-                    "        \"path\": \"/accessToken/scopes/6\"\n" +
-                    "      },\n" +
-                    "      {\n" +
-                    "        \"op\": \"remove\",\n" +
-                    "        \"path\": \"/accessToken/claims/aud/-\"\n" +
-                    "      }\n" +
                     "    ]\n" +
-                    "  }";
+                    "}\n";
 
             // TODO: Handle status codes related to different scenarios
             wireMockServer.stubFor(post(urlEqualTo(mockEndpoint))
