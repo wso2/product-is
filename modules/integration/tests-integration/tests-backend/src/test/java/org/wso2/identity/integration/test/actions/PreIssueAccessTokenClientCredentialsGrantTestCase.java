@@ -236,7 +236,7 @@ public class PreIssueAccessTokenClientCredentialsGrantTestCase extends ActionsBa
         Assert.assertTrue(ArrayUtils.contains(scopes, NEW_SCOPE_3));
         Assert.assertTrue(ArrayUtils.contains(scopes, NEW_SCOPE_4));
         Assert.assertFalse(ArrayUtils.contains(scopes, CUSTOM_SCOPE_3));
-        Assert.assertFalse(ArrayUtils.contains(scopes, CUSTOM_SCOPE_2));
+        Assert.assertFalse(ArrayUtils.contains(scopes, INTERNAL_ORG_USER_MANAGEMENT_CREATE));
     }
 
     @Test(groups = "wso2.is", description = "Verify that the access token contains the updated 'aud' claims " +
