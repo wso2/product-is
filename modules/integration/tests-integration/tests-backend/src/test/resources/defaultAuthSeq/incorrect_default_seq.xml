@@ -7,6 +7,7 @@
             <Name>BasicAusssthenticator</Name>
             <DisplayName>basic</DisplayName>
             <IsEnabled>false</IsEnabled>
+            <DefinedBy>SYSTEM</DefinedBy>
             <Properties/>
           </LocalAuthenticatorConfig>
         </LocalAuthenticatorConfigs>
@@ -21,12 +22,14 @@
             <Name>totp</Name>
             <DisplayName>totp</DisplayName>
             <IsEnabled>false</IsEnabled>
+            <DefinedBy>SYSTEM</DefinedBy>
             <Properties/>
           </LocalAuthenticatorConfig>
           <LocalAuthenticatorConfig>
             <Name>FIDOAuthesssnticator</Name>
             <DisplayName>fido</DisplayName>
             <IsEnabled>false</IsEnabled>
+            <DefinedBy>SYSTEM</DefinedBy>
             <Properties/>
           </LocalAuthenticatorConfig>
         </LocalAuthenticatorConfigs>

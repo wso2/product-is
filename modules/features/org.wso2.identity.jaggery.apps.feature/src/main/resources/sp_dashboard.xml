@@ -20,16 +20,19 @@
 						<Name>BasicAuthenticator</Name>
 						<DisplayName>basicauth</DisplayName>
 						<IsEnabled>true</IsEnabled>
+						<DefinedBy>SYSTEM</DefinedBy>
 					</LocalAuthenticatorConfig>
 				</LocalAuthenticatorConfigs>
 				<!-- FederatedIdentityProviders>
 				 <IdentityProvider>
 				       <IdentityProviderName>facebook</IdentityProviderName>
 				       <IsEnabled>true</IsEnabled>
+				       <DefinedBy>SYSTEM</DefinedBy>
                                      <DefaultAuthenticatorConfig>
                                              <FederatedAuthenticatorConfig> 
                                                      <Name>FacebookAuthenticator</Name>
                                                      <IsEnabled>true</IsEnabled>
+                                                     <DefinedBy>SYSTEM</DefinedBy>
                                              </FederatedAuthenticatorConfig>
                                      </DefaultAuthenticatorConfig>
 				 </IdentityProvider>

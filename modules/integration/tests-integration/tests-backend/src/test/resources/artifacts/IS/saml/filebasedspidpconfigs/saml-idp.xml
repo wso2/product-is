@@ -5,11 +5,13 @@
     <Alias>secondaryIS</Alias>
     <IsPrimary>true</IsPrimary>
     <IsEnabled>true</IsEnabled>
+    <DefinedBy>SYSTEM</DefinedBy>
     <FederatedAuthenticatorConfigs>
         <saml2>
             <Name>SAMLSSOAuthenticator</Name>
             <DisplayName>samlsso</DisplayName>
             <IsEnabled>true</IsEnabled>
+            <DefinedBy>SYSTEM</DefinedBy>
             <Properties>
                 <property>
                     <Name>IdpEntityId</Name>

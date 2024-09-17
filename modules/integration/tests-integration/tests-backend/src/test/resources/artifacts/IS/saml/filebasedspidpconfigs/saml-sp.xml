@@ -19,10 +19,12 @@
                     <IdentityProvider>
                         <IdentityProviderName>secondaryIS</IdentityProviderName>
                         <IsEnabled>true</IsEnabled>
+                        <DefinedBy>SYSTEM</DefinedBy>
                         <FederatedAuthenticatorConfigs>
                             <FederatedAuthenticatorConfig>
                                 <Name>SAMLSSOAuthenticator</Name>
                                 <IsEnabled>true</IsEnabled>
+                                <DefinedBy>SYSTEM</DefinedBy>
                             </FederatedAuthenticatorConfig>
                         </FederatedAuthenticatorConfigs>
                         <DefaultAuthenticatorConfig>SAMLSSOAuthenticator</DefaultAuthenticatorConfig>
