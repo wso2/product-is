@@ -34,6 +34,7 @@
     <import resource="classpath:META-INF/cxf/claim-management-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/email-template-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/email-template-server-v2-cxf.xml"/>
+    <import resource="classpath:META-INF/cxf/notification-template-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/applications-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/application-user-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/keystore-server-v1-cxf.xml"/>
@@ -113,6 +114,7 @@
         <jaxrs:serviceBeans>
             <bean class="org.wso2.carbon.identity.rest.api.server.claim.management.v1.ClaimManagementApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.server.email.template.v1.EmailApi"/>
+            <bean class="org.wso2.carbon.identity.rest.api.server.notification.template.v1.NotificationApi"/>
             <bean class="org.wso2.carbon.identity.api.server.identity.governance.v1.IdentityGovernanceApi"/>
             <bean class="org.wso2.carbon.identity.api.server.admin.advisory.management.v1.AdminAdvisoryManagementApi"/>
             <bean class="org.wso2.carbon.identity.api.server.application.management.v1.ApplicationsApi"/>
@@ -189,6 +191,7 @@
         <jaxrs:serviceBeans>
             <bean class="org.wso2.carbon.identity.rest.api.server.claim.management.v1.ClaimManagementApi"/>
             <bean class="org.wso2.carbon.identity.rest.api.server.email.template.v1.EmailApi"/>
+            <bean class="org.wso2.carbon.identity.rest.api.server.notification.template.v1.NotificationApi"/>
             <bean class="org.wso2.carbon.identity.api.server.identity.governance.v1.IdentityGovernanceApi"/>
             <bean class="org.wso2.carbon.identity.api.server.application.management.v1.ApplicationsApi"/>
             <bean class="org.wso2.carbon.identity.api.server.userstore.v1.UserstoresApi"/>
