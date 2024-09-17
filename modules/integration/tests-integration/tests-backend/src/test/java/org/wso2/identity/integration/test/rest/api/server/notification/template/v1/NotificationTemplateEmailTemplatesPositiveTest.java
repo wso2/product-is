@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import static org.hamcrest.CoreMatchers.any;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.isA;
@@ -33,9 +34,15 @@ public class NotificationTemplateEmailTemplatesPositiveTest extends Notification
     private static final String TEST_EMAIL_TEMPLATE_TYPE = "integrationTestEmailTemplateType";
     private static final String TEST_DELETE_EMAIL_TEMPLATE_TYPE = "integrationTestEmailTemplateTypeToDelete";
     private static final String COLLECTION_QUERY_BY_ID_TEMPLATE = "find{ it.id == '%s' }.";
+    private static final String COLLECTION_QUERY_BY_LOCALE_TEMPLATE = "find{ it.locale == '%s' }.";
     private static final String ATTRIBUTE_DISPLAY_NAME = "displayName";
     private static final String ATTRIBUTE_SELF = "self";
     private static final String ATTRIBUTE_ID = "id";
+    private static final String ATTRIBUTE_LOCALE = "locale";
+    private static final String ATTRIBUTE_CONTENT_TYPE = "contentType";
+    private static final String ATTRIBUTE_SUBJECT = "subject";
+    private static final String ATTRIBUTE_BODY = "body";
+    private static final String LOCALE_EN_US = "en_US";
 
 
     @Factory (dataProvider = "restAPIUserConfigProvider")
@@ -163,6 +170,22 @@ public class NotificationTemplateEmailTemplatesPositiveTest extends Notification
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_NOT_FOUND);
+    }
+
+    @Test
+    public void testGetOrgTemplatesListOfEmailTemplateType() throws Exception {
+
+        String collectionQueryByLocale = String.format(COLLECTION_QUERY_BY_LOCALE_TEMPLATE, LOCALE_EN_US);
+        Response response = getResponseOfGet(EMAIL_TEMPLATES_BASE_PATH + EMAIL_TEMPLATE_TYPES_PATH +
+                PATH_SEPARATOR + base64String(DEFAULT_EMAIL_TEMPLATE_TYPE) + ORG_EMAIL_TEMPLATES_PATH);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body(isA(List.class))
+                .body(collectionQueryByLocale + ATTRIBUTE_LOCALE, equalTo(LOCALE_EN_US))
+                .body(collectionQueryByLocale + ATTRIBUTE_CONTENT_TYPE, any(String.class))
+                .body(collectionQueryByLocale + ATTRIBUTE_SUBJECT, any(String.class));
     }
 
     private void addEmailTemplateType(String templateType) throws Exception {
