@@ -8,6 +8,7 @@
                         <Name>BasicAuthenticator</Name>
                         <DisplayName>basicauth</DisplayName>
                         <IsEnabled>false</IsEnabled>
+                        <DefinedBy>SYSTEM</DefinedBy>
                         <Properties/>
                     </LocalAuthenticatorConfig>
                 </LocalAuthenticatorConfigs>
@@ -22,6 +23,7 @@
                         <Name>totp</Name>
                         <DisplayName>totp</DisplayName>
                         <IsEnabled>false</IsEnabled>
+                        <DefinedBy>SYSTEM</DefinedBy>
                         <Properties/>
                     </LocalAuthenticatorConfig>
                 </LocalAuthenticatorConfigs>

@@ -8,6 +8,7 @@
                         <Name>BasicAuthenticator</Name>
                         <DisplayName>basic</DisplayName>
                         <IsEnabled>false</IsEnabled>
+                        <DefinedBy>SYSTEM</DefinedBy>
                         <Properties/>
                     </LocalAuthenticatorConfig>
                 </LocalAuthenticatorConfigs>
@@ -22,12 +23,14 @@
                         <Name>totp</Name>
                         <DisplayName>totp</DisplayName>
                         <IsEnabled>false</IsEnabled>
+                        <DefinedBy>SYSTEM</DefinedBy>
                         <Properties/>
                     </LocalAuthenticatorConfig>
                     <LocalAuthenticatorConfig>
                         <Name>FIDOAuthenticator</Name>
                         <DisplayName>fido</DisplayName>
                         <IsEnabled>false</IsEnabled>
+                        <DefinedBy>SYSTEM</DefinedBy>
                         <Properties/>
                     </LocalAuthenticatorConfig>
                 </LocalAuthenticatorConfigs>
@@ -73,11 +76,13 @@ function onLoginRequest(context) {
         <RequestPathAuthenticatorConfig>
             <Name>OAuthRequestPathAuthenticator</Name>
             <IsEnabled>false</IsEnabled>
+            <DefinedBy>SYSTEM</DefinedBy>
             <Properties/>
         </RequestPathAuthenticatorConfig>
         <RequestPathAuthenticatorConfig>
             <Name>BasicAuthRequestPathAuthenticator</Name>
             <IsEnabled>false</IsEnabled>
+            <DefinedBy>SYSTEM</DefinedBy>
             <Properties/>
         </RequestPathAuthenticatorConfig>
     </RequestPathAuthenticatorConfigs>
@@ -97,6 +102,7 @@ function onLoginRequest(context) {
                 <IsPrimary>false</IsPrimary>
                 <IsFederationHub>false</IsFederationHub>
                 <IsEnabled>false</IsEnabled>
+                <DefinedBy>SYSTEM</DefinedBy>
                 <FederatedAuthenticatorConfigs/>
                 <ProvisioningConnectorConfigs/>
                 <DefaultProvisioningConnectorConfig>
