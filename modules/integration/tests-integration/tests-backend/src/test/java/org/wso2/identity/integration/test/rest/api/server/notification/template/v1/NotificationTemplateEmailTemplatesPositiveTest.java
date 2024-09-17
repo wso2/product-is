@@ -182,10 +182,25 @@ public class NotificationTemplateEmailTemplatesPositiveTest extends Notification
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body(isA(List.class))
+                .body("$", isA(List.class))
                 .body(collectionQueryByLocale + ATTRIBUTE_LOCALE, equalTo(LOCALE_EN_US))
                 .body(collectionQueryByLocale + ATTRIBUTE_CONTENT_TYPE, any(String.class))
                 .body(collectionQueryByLocale + ATTRIBUTE_SUBJECT, any(String.class));
+    }
+
+    @Test
+    public void testGetOrganizationEmailTemplateOfEmailTemplateType() throws Exception {
+
+        Response response = getResponseOfGet(EMAIL_TEMPLATES_BASE_PATH + EMAIL_TEMPLATE_TYPES_PATH +
+                PATH_SEPARATOR + base64String(DEFAULT_EMAIL_TEMPLATE_TYPE) + ORG_EMAIL_TEMPLATES_PATH +
+                PATH_SEPARATOR + LOCALE_EN_US);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body(ATTRIBUTE_LOCALE, equalTo(LOCALE_EN_US))
+                .body(ATTRIBUTE_CONTENT_TYPE, any(String.class))
+                .body(ATTRIBUTE_SUBJECT, any(String.class));
     }
 
     private void addEmailTemplateType(String templateType) throws Exception {
