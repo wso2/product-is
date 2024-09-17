@@ -82,7 +82,7 @@ public class NotificationTemplateEmailTemplatesPositiveTest extends Notification
         String collectionQueryById = String.format(COLLECTION_QUERY_BY_ID_TEMPLATE, base64String(
                 DEFAULT_EMAIL_TEMPLATE_TYPE));
         String expectedSelfPath = String.format(BASE_PATH + SUB_PATH_TEMPLATE_TYPES + PATH_SEPARATOR
-                        + STRING_PLACEHOLDER, base64String(DEFAULT_EMAIL_TEMPLATE_TYPE));
+                + STRING_PLACEHOLDER, base64String(DEFAULT_EMAIL_TEMPLATE_TYPE));
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -93,10 +93,29 @@ public class NotificationTemplateEmailTemplatesPositiveTest extends Notification
                         context.getContextTenant().getDomain())));
     }
 
+    // Get all default email template types from the API and match.
+    @Test
+    public void givenValidRequest_whenGetEmailTemplateType_shouldReturnTemplateTypeWithId() throws Exception {
+
+        Response response = getResponseOfGet(
+                EMAIL_TEMPLATES_BASE_PATH + EMAIL_TEMPLATE_TYPES_PATH + PATH_SEPARATOR + base64String(
+                        DEFAULT_EMAIL_TEMPLATE_TYPE));
+        String expectedSelfPath = String.format(BASE_PATH + SUB_PATH_TEMPLATE_TYPES + PATH_SEPARATOR
+                + STRING_PLACEHOLDER, base64String(DEFAULT_EMAIL_TEMPLATE_TYPE));
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body(ATTRIBUTE_DISPLAY_NAME, equalTo(DEFAULT_EMAIL_TEMPLATE_TYPE))
+                .body(ATTRIBUTE_SELF, equalTo(getTenantedRelativePath(expectedSelfPath,
+                        context.getContextTenant().getDomain())));
+    }
+
     // Add email template type with a valid request.
     @Test
     public void givenValidRequest_whenAddEmailTemplateType_shouldReturnTemplateTypeWithId() throws Exception {
 
+        // Post a new email template type.
         String  requestBodyTemplate = readResource("request-post-email-template-type.template");
         String requestBody = requestBodyTemplate.replace(PLACE_HOLDER_DISPLAY_NAME, TEST_EMAIL_TEMPLATE_TYPE);
         String path = EMAIL_TEMPLATES_BASE_PATH + EMAIL_TEMPLATE_TYPES_PATH;
@@ -109,8 +128,22 @@ public class NotificationTemplateEmailTemplatesPositiveTest extends Notification
                 .statusCode(HttpStatus.SC_CREATED)
                 .header(HttpHeaders.LOCATION, notNullValue())
                 .body(ATTRIBUTE_DISPLAY_NAME, equalTo(TEST_EMAIL_TEMPLATE_TYPE))
-                .body(ATTRIBUTE_SELF, containsString(expectedSelfPath))
+                .body(ATTRIBUTE_SELF, equalTo(getTenantedRelativePath(expectedSelfPath,
+                        context.getContextTenant().getDomain())))
                 .body(ATTRIBUTE_ID, equalTo(base64String(TEST_EMAIL_TEMPLATE_TYPE)));
         Assert.assertEquals(response.as(Map.class).size(), 3, "Response body should only have 3 attributes.");
+
+        // Validate the added email template type is persisted.
+        Response validationResponse = getResponseOfGet(
+                EMAIL_TEMPLATES_BASE_PATH + EMAIL_TEMPLATE_TYPES_PATH + PATH_SEPARATOR + base64String(
+                        TEST_EMAIL_TEMPLATE_TYPE));
+        validationResponse.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body(ATTRIBUTE_DISPLAY_NAME, equalTo(TEST_EMAIL_TEMPLATE_TYPE))
+                .body(ATTRIBUTE_SELF, equalTo(getTenantedRelativePath(expectedSelfPath,
+                        context.getContextTenant().getDomain())))
+                .body(ATTRIBUTE_ID, equalTo(base64String(TEST_EMAIL_TEMPLATE_TYPE)));
     }
 }
