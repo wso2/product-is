@@ -109,7 +109,7 @@ public class ReportGenerator {
     }
 
     /**
-     * Create the report.
+     * Create the report based on the jacoco.exec file.
      *
      * @throws IOException - Throws if report creation fails
      */
@@ -177,9 +177,13 @@ public class ReportGenerator {
         return coverageBuilder.getBundle(title);
     }
 
+    /**
+     * Create a concrete report visitor based on some supplied configuration. In this case we use the defaults.
+     * @param bundleCoverage - Bundle coverage
+     * @throws IOException
+     */
     private void createReport(final IBundleCoverage bundleCoverage) throws IOException {
 
-        // Create a concrete report visitor based on some supplied configuration. In this case we use the defaults
         try (FileOutputStream fos = new FileOutputStream(xmlReport)) {
             final XMLFormatter xmlFormatter = new XMLFormatter();
             final IReportVisitor visitor = xmlFormatter.createVisitor(fos);
@@ -207,7 +211,7 @@ public class ReportGenerator {
      * @return - Jar file extracted directory.
      * @throws IOException - Throws if jar extraction fails
      */
-    private synchronized String extractJarFile(String jarFilePath, File tempDir) throws IOException {
+    private String extractJarFile(String jarFilePath, File tempDir) throws IOException {
 
         if (!jarFilePath.endsWith(".war") && !jarFilePath.endsWith(".jar")) {
             throw new IllegalArgumentException(String.format(INVALID_EXTENSION_ERROR, jarFilePath));
