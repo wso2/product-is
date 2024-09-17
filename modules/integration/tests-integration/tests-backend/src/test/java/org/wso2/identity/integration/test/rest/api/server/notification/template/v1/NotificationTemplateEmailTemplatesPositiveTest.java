@@ -10,15 +10,12 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.identity.rest.api.server.notification.template.v1.model.TemplateTypeWithID;
 
 import java.io.IOException;
-import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.isA;
 import static org.hamcrest.core.IsNull.notNullValue;
@@ -34,6 +31,7 @@ public class NotificationTemplateEmailTemplatesPositiveTest extends Notification
     private static final String PLACE_HOLDER_DISPLAY_NAME = "{{displayName}}";
     private static final String DEFAULT_EMAIL_TEMPLATE_TYPE = "AccountConfirmation";
     private static final String TEST_EMAIL_TEMPLATE_TYPE = "integrationTestEmailTemplateType";
+    private static final String TEST_DELETE_EMAIL_TEMPLATE_TYPE = "integrationTestEmailTemplateTypeToDelete";
     private static final String COLLECTION_QUERY_BY_ID_TEMPLATE = "find{ it.id == '%s' }.";
     private static final String ATTRIBUTE_DISPLAY_NAME = "displayName";
     private static final String ATTRIBUTE_SELF = "self";
@@ -75,7 +73,7 @@ public class NotificationTemplateEmailTemplatesPositiveTest extends Notification
 
     // Get all default email template types from the API and match.
     @Test
-    public void givenValidRequest_whenGetEmailTemplateTypes_shouldReturnTemplateTypeWithIdList() throws Exception {
+    public void testGetEmailTemplateTypesList() throws Exception {
 
         Response response = getResponseOfGet(
                 EMAIL_TEMPLATES_BASE_PATH + EMAIL_TEMPLATE_TYPES_PATH);
@@ -95,7 +93,7 @@ public class NotificationTemplateEmailTemplatesPositiveTest extends Notification
 
     // Get all default email template types from the API and match.
     @Test
-    public void givenValidRequest_whenGetEmailTemplateType_shouldReturnTemplateTypeWithId() throws Exception {
+    public void testGetEmailTemplateType() throws Exception {
 
         Response response = getResponseOfGet(
                 EMAIL_TEMPLATES_BASE_PATH + EMAIL_TEMPLATE_TYPES_PATH + PATH_SEPARATOR + base64String(
@@ -113,7 +111,7 @@ public class NotificationTemplateEmailTemplatesPositiveTest extends Notification
 
     // Add email template type with a valid request.
     @Test
-    public void givenValidRequest_whenAddEmailTemplateType_shouldReturnTemplateTypeWithId() throws Exception {
+    public void testAddEmailTemplateType() throws Exception {
 
         // Post a new email template type.
         String  requestBodyTemplate = readResource("request-post-email-template-type.template");
@@ -145,5 +143,38 @@ public class NotificationTemplateEmailTemplatesPositiveTest extends Notification
                 .body(ATTRIBUTE_SELF, equalTo(getTenantedRelativePath(expectedSelfPath,
                         context.getContextTenant().getDomain())))
                 .body(ATTRIBUTE_ID, equalTo(base64String(TEST_EMAIL_TEMPLATE_TYPE)));
+    }
+
+    // Delete email template type.
+    @Test
+    public void testDeleteEmailTemplateType() throws Exception {
+
+        addEmailTemplateType(TEST_DELETE_EMAIL_TEMPLATE_TYPE);
+        Response response = getResponseOfDelete(EMAIL_TEMPLATES_BASE_PATH + EMAIL_TEMPLATE_TYPES_PATH +
+                PATH_SEPARATOR + base64String(TEST_DELETE_EMAIL_TEMPLATE_TYPE));
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
+        Response validationResponse = getResponseOfGet(
+                EMAIL_TEMPLATES_BASE_PATH + EMAIL_TEMPLATE_TYPES_PATH + PATH_SEPARATOR + base64String(
+                        TEST_DELETE_EMAIL_TEMPLATE_TYPE));
+        validationResponse.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NOT_FOUND);
+    }
+
+    private void addEmailTemplateType(String templateType) throws Exception {
+
+        // Post a new email template type.
+        String  requestBodyTemplate = readResource("request-post-email-template-type.template");
+        String requestBody = requestBodyTemplate.replace(PLACE_HOLDER_DISPLAY_NAME, templateType);
+        String path = EMAIL_TEMPLATES_BASE_PATH + EMAIL_TEMPLATE_TYPES_PATH;
+        Response response = getResponseOfPost(path, requestBody);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED);
     }
 }
