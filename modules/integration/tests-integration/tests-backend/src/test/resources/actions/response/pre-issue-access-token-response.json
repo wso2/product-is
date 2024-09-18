@@ -69,7 +69,7 @@
     },
     {
       "op": "replace",
-      "path": "/accessToken/scopes/7",
+      "path": "/accessToken/scopes/1",
       "value": "replaced_scope"
     },
     {
