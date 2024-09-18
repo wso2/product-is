@@ -79,16 +79,25 @@
     },
     {
       "op": "replace",
+      "path": "/accessToken/claims/given_name",
+      "value": "replaced_given_name"
+    },
+    {
+      "op": "replace",
       "path": "/accessToken/claims/expires_in",
       "value": 7200
     },
     {
       "op": "remove",
-      "path": "/accessToken/scopes/6"
+      "path": "/accessToken/scopes/0"
     },
     {
       "op": "remove",
       "path": "/accessToken/claims/aud/-"
+    },
+    {
+      "op": "remove",
+      "path": "/accessToken/claims/family_name"
     }
   ]
 }
