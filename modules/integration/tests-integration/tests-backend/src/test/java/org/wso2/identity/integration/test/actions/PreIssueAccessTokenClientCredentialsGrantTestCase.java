@@ -393,18 +393,12 @@ public class PreIssueAccessTokenClientCredentialsGrantTestCase extends ActionsBa
         AccessToken accessTokenInRequest = createAccessToken();
 
         Tenant tenant = new Tenant(tenantId, tenantInfo.getDomain());
-        User user = new User(userId);
-        UserStore userStore =
-                new UserStore(Base64.getEncoder().encodeToString("PRIMARY".getBytes(StandardCharsets.UTF_8)),
-                        "PRIMARY");
 
         PreIssueAccessTokenEvent event = new PreIssueAccessTokenEvent.Builder()
                 .request(tokenRequest)
                 .accessToken(accessTokenInRequest)
                 .tenant(tenant)
                 .organization(null)
-                .user(user)
-                .userStore(userStore)
                 .build();
 
         List<AllowedOperation> allowedOperations = Arrays.asList(
