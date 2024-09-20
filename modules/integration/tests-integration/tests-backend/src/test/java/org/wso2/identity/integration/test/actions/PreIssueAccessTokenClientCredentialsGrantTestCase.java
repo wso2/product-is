@@ -87,7 +87,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -233,6 +232,12 @@ public class PreIssueAccessTokenClientCredentialsGrantTestCase extends ActionsBa
         requestedScopes.addAll(customScopes);
 
         actionId = createPreIssueAccessTokenAction();
+
+        try {
+            Thread.sleep(3600);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
 
         actionsMockServer = new ActionsMockServer();
         actionsMockServer.startServer();

@@ -244,6 +244,11 @@ public class PreIssueAccessTokenCodeGrantTestCase extends ActionsBaseTestCase {
 
         actionId = createPreIssueAccessTokenAction();
 
+        try {
+            Thread.sleep(3600);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
         actionsMockServer = new ActionsMockServer();
         actionsMockServer.startServer();
         actionsMockServer.setupStub(MOCK_SERVER_ENDPOINT_RESOURCE_PATH,
