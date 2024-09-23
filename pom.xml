@@ -2409,7 +2409,7 @@
         <identity.metadata.saml.version>1.8.3</identity.metadata.saml.version>
 
         <!-- Connector Versions -->
-        <authenticator.totp.version>3.3.29</authenticator.totp.version>
+        <authenticator.totp.version>3.3.30</authenticator.totp.version>
         <authenticator.backupcode.version>0.0.20</authenticator.backupcode.version>
         <authenticator.office365.version>2.1.3</authenticator.office365.version>
         <authenticator.smsotp.version>3.3.30</authenticator.smsotp.version>
@@ -2446,8 +2446,8 @@
         <conditional.authentication.functions.version>1.2.64</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.29.1</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.8.2</identity.apps.myaccount.version>
+        <identity.apps.console.version>2.29.2</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.8.3</identity.apps.myaccount.version>
         <identity.apps.core.version>2.4.40</identity.apps.core.version>
         <identity.apps.tests.version>1.6.378</identity.apps.tests.version>
 
