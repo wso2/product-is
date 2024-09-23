@@ -54,15 +54,21 @@ public class PreIssueAccessTokenEvent extends Event {
 
     @Override
     public boolean equals(Object o) {
-
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         PreIssueAccessTokenEvent that = (PreIssueAccessTokenEvent) o;
-        return Objects.equals(request, that.request) &&
+
+        boolean isEqualGeneral = Objects.equals(request, that.request) &&
                 Objects.equals(accessToken, that.accessToken) &&
-                Objects.equals(tenant, that.tenant) &&
-                Objects.equals(user, that.user) &&
-                Objects.equals(userStore, that.userStore);
+                Objects.equals(tenant, that.tenant);
+
+        if (!"client_credentials".equals(that.request.getGrantType())) {
+            return isEqualGeneral &&
+                    Objects.equals(user, that.user) &&
+                    Objects.equals(userStore, that.userStore);
+        }
+        return isEqualGeneral;
     }
 
     @Override
