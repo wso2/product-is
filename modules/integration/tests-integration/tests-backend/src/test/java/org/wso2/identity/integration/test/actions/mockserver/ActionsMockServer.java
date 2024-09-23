@@ -39,7 +39,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 public class ActionsMockServer {
 
     private WireMockServer wireMockServer;
-
     public void startServer() {
 
         wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig().port(8587));
@@ -60,6 +59,7 @@ public class ActionsMockServer {
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
+                        .withHeader("Connection", "Close")
                         .withBody(responseBody)));
     }
 

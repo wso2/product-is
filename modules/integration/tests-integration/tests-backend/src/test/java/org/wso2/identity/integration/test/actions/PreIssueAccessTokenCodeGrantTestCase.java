@@ -136,7 +136,6 @@ public class PreIssueAccessTokenCodeGrantTestCase extends ActionsBaseTestCase {
     private static final String NEW_SCOPE_2 = "new_test_custom_scope_2";
     private static final String NEW_SCOPE_3 = "new_test_custom_scope_3";
     private static final String NEW_SCOPE_4 = "replaced_scope";
-    private static final String CUSTOM_OIDC_SCOPE = "test_custom_oidc_scope";
     private static final String FIRST_NAME_CLAIM = "given_name";
     private static final String LAST_NAME_CLAIM = "family_name";
     private static final String PRE_ISSUE_ACCESS_TOKEN_API_PATH = "preIssueAccessToken";
@@ -154,7 +153,6 @@ public class PreIssueAccessTokenCodeGrantTestCase extends ActionsBaseTestCase {
     private RequestConfig requestConfig;
     private List<String> customScopes;
     private List<String> requestedScopes;
-    private TokenScopes appTokenScopes;
     private String sessionDataKey;
     private String authorizationCode;
     private String accessToken;
@@ -244,16 +242,12 @@ public class PreIssueAccessTokenCodeGrantTestCase extends ActionsBaseTestCase {
 
         actionId = createPreIssueAccessTokenAction();
 
-        try {
-            Thread.sleep(3600);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
         actionsMockServer = new ActionsMockServer();
         actionsMockServer.startServer();
         actionsMockServer.setupStub(MOCK_SERVER_ENDPOINT_RESOURCE_PATH,
                 "Basic " + getBase64EncodedString(MOCK_SERVER_AUTH_BASIC_USERNAME, MOCK_SERVER_AUTH_BASIC_PASSWORD),
                 FileUtils.readFileInClassPathAsString("actions/response/pre-issue-access-token-response.json"));
+
     }
 
     @AfterClass(alwaysRun = true)
@@ -684,10 +678,6 @@ public class PreIssueAccessTokenCodeGrantTestCase extends ActionsBaseTestCase {
                 .expiryTime(3600)
                 .skipConsent(true)
                 .build();
-
-        appTokenScopes = new TokenScopes.Builder().requestedScopes(Arrays.asList(OPENID_SCOPE, PROFILE_SCOPE,
-                        CUSTOM_OIDC_SCOPE))
-                .grantedScopes(Arrays.asList(OPENID_SCOPE, PROFILE_SCOPE, CUSTOM_OIDC_SCOPE)).build();
 
         ApplicationResponseModel application = addApplication(applicationConfig);
         String applicationId = application.getId();

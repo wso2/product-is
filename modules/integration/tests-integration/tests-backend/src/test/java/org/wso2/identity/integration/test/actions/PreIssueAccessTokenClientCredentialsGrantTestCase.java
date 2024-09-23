@@ -37,7 +37,6 @@ import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -55,33 +54,20 @@ import org.wso2.identity.integration.test.actions.model.PreIssueAccessTokenActio
 import org.wso2.identity.integration.test.actions.model.PreIssueAccessTokenEvent;
 import org.wso2.identity.integration.test.actions.model.Tenant;
 import org.wso2.identity.integration.test.actions.model.TokenRequest;
-import org.wso2.identity.integration.test.actions.model.User;
-import org.wso2.identity.integration.test.actions.model.UserStore;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.ActionModel;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.AuthenticationType;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.Endpoint;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
-import org.wso2.identity.integration.test.rest.api.server.roles.v2.model.Audience;
-import org.wso2.identity.integration.test.rest.api.server.roles.v2.model.Permission;
-import org.wso2.identity.integration.test.rest.api.server.roles.v2.model.RoleV2;
-import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
-import org.wso2.identity.integration.test.rest.api.user.common.model.ListObject;
-import org.wso2.identity.integration.test.rest.api.user.common.model.Name;
-import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperationRequestObject;
-import org.wso2.identity.integration.test.rest.api.user.common.model.RoleItemAddGroupobj;
-import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.utils.CarbonUtils;
 import org.wso2.identity.integration.test.utils.FileUtils;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -102,20 +88,12 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRA
  */
 public class PreIssueAccessTokenClientCredentialsGrantTestCase extends ActionsBaseTestCase {
 
-    private static final String USERS = "users";
     private static final String USERNAME_PROPERTY = "username";
     private static final String PASSWORD_PROPERTY = "password";
-    private static final String TEST_USER = "test_user";
-    private static final String ADMIN_WSO2 = "Admin@wso2";
-    private static final String TEST_USER_GIVEN = "test_user_given";
-    private static final String TEST_USER_GMAIL_COM = "test.user@gmail.com";
     private static final String EXTERNAL_SERVICE_NAME = "TestExternalService";
     private static final String EXTERNAL_SERVICE_URI = "http://localhost:8587/test/action";
     private static final String PRE_ISSUE_ACCESS_TOKEN_API_PATH = "preIssueAccessToken";
-
     private static final String CLIENT_CREDENTIALS_GRANT_TYPE = "client_credentials";
-    private static final String APPLICATION_AUDIENCE = "APPLICATION";
-    private static final String TEST_ROLE_APPLICATION = "test_role_application";
 
     private static final String INTERNAL_ORG_USER_MANAGEMENT_LIST = "internal_org_user_mgt_list";
     private static final String INTERNAL_ORG_USER_MANAGEMENT_VIEW = "internal_org_user_mgt_view";
@@ -153,8 +131,6 @@ public class PreIssueAccessTokenClientCredentialsGrantTestCase extends ActionsBa
     private String actionId;
     private String applicationId;
     private String domainAPIId;
-    private String userId;
-    private String roleId;
     private String tenantId;
     private JWTClaimsSet jwtClaims;
     private TestUserMode userMode;
@@ -220,7 +196,6 @@ public class PreIssueAccessTokenClientCredentialsGrantTestCase extends ActionsBa
         }
         domainAPIId = createDomainAPI(EXTERNAL_SERVICE_NAME, EXTERNAL_SERVICE_URI, customScopes);
         authorizeDomainAPIs(applicationId, domainAPIId, customScopes);
-        addUserWithRole(applicationId, customScopes);
 
         requestedScopes = new ArrayList<>();
         Collections.addAll(requestedScopes,
@@ -232,12 +207,6 @@ public class PreIssueAccessTokenClientCredentialsGrantTestCase extends ActionsBa
         requestedScopes.addAll(customScopes);
 
         actionId = createPreIssueAccessTokenAction();
-
-        try {
-            Thread.sleep(3600);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
 
         actionsMockServer = new ActionsMockServer();
         actionsMockServer.startServer();
@@ -252,10 +221,8 @@ public class PreIssueAccessTokenClientCredentialsGrantTestCase extends ActionsBa
         actionsMockServer.stopServer();
 
         deleteAction(PRE_ISSUE_ACCESS_TOKEN_API_PATH, actionId);
-        deleteRole(roleId);
         deleteApp(applicationId);
         deleteDomainAPI(domainAPIId);
-        scim2RestClient.deleteUser(userId);
 
         restClient.closeHttpClient();
         scim2RestClient.closeHttpClient();
@@ -502,60 +469,5 @@ public class PreIssueAccessTokenClientCredentialsGrantTestCase extends ActionsBa
 
         SignedJWT signedJWT = SignedJWT.parse(jwtToken);
         return signedJWT.getJWTClaimsSet();
-    }
-
-    /**
-     * Adds a user with a role and specific permissions based on custom scopes.
-     *
-     * @param appID        Application ID to which the role is associated
-     * @param customScopes The custom scopes based on which permissions are added
-     * @return A list of permissions that were added to the role
-     * @throws JSONException If there is an error in processing JSON
-     * @throws IOException   If there is an IO exception during user or role creation
-     */
-    private void addUserWithRole(String appID, List<String> customScopes) throws Exception {
-        // Creates roles
-        List<Permission> permissions = addPermissions(customScopes);
-        Audience roleAudience = new Audience(APPLICATION_AUDIENCE, appID);
-        RoleV2 role = new RoleV2(roleAudience, TEST_ROLE_APPLICATION, permissions, Collections.emptyList());
-        roleId = addRole(role);
-
-        // Creates user
-        UserObject userInfo = new UserObject();
-        userInfo.setUserName(TEST_USER);
-        userInfo.setPassword(ADMIN_WSO2);
-        userInfo.setName(new Name().givenName(TEST_USER_GIVEN));
-        userInfo.addEmail(new Email().value(TEST_USER_GMAIL_COM));
-        userId = scim2RestClient.createUser(userInfo);
-
-        // Assigns role to the created user
-        RoleItemAddGroupobj rolePatchReqObject = new RoleItemAddGroupobj();
-        rolePatchReqObject.setOp(RoleItemAddGroupobj.OpEnum.ADD);
-        rolePatchReqObject.setPath(USERS);
-        rolePatchReqObject.addValue(new ListObject().value(userId));
-        scim2RestClient.updateUserRole(new PatchOperationRequestObject().addOperations(rolePatchReqObject), roleId);
-    }
-
-    /**
-     * Adds permissions based on the provided custom scopes.
-     *
-     * @param customScopes A list of custom scopes to add as permissions
-     * @return A list of permissions including both predefined and custom scope-based permissions
-     */
-    private List<Permission> addPermissions(List<String> customScopes) {
-
-        List<Permission> userPermissions = new ArrayList<>();
-
-        Collections.addAll(userPermissions,
-                new Permission(INTERNAL_ORG_USER_MANAGEMENT_LIST),
-                new Permission(INTERNAL_ORG_USER_MANAGEMENT_VIEW),
-                new Permission(INTERNAL_ORG_USER_MANAGEMENT_CREATE),
-                new Permission(INTERNAL_ORG_USER_MANAGEMENT_UPDATE),
-                new Permission(INTERNAL_ORG_USER_MANAGEMENT_DELETE)
-                          );
-
-        customScopes.forEach(scope -> userPermissions.add(new Permission(scope)));
-
-        return userPermissions;
     }
 }
