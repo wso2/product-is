@@ -253,13 +253,6 @@ jobs:
         name: test-logs
         path: ./*log.txt
 
-    - name: Archive Jacoco exec
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: jacoco-exec
-        path: ./jacoco.exec
-
     - name: Build Jacoco Report Generator
       run: |
         cd ./product-is/modules/integration/tests-common/jacoco-report-generator

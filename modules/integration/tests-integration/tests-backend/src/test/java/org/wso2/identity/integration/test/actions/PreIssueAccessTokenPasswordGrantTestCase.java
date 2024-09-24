@@ -312,8 +312,8 @@ public class PreIssueAccessTokenPasswordGrantTestCase extends ActionsBaseTestCas
         Assert.assertTrue(ArrayUtils.contains(scopes, NEW_SCOPE_2));
         Assert.assertTrue(ArrayUtils.contains(scopes, NEW_SCOPE_3));
         Assert.assertTrue(ArrayUtils.contains(scopes, NEW_SCOPE_4));
-        Assert.assertFalse(ArrayUtils.contains(scopes, CUSTOM_SCOPE_3));
-        Assert.assertFalse(ArrayUtils.contains(scopes, CUSTOM_SCOPE_2));
+        Assert.assertFalse(ArrayUtils.contains(scopes, INTERNAL_ORG_USER_MANAGEMENT_DELETE));
+        Assert.assertFalse(ArrayUtils.contains(scopes, INTERNAL_ORG_USER_MANAGEMENT_CREATE));
     }
 
     @Test(groups = "wso2.is", dependsOnMethods = "testPreIssueAccessTokenActionRequest", description =
