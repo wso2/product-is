@@ -16,6 +16,7 @@
             <class name="org.wso2.identity.integration.test.IdentityServerTestSuitInitializerTestCase"/>
             <class name="org.wso2.identity.integration.test.base.TomcatInitializerTestCase"/>
             <class name="org.wso2.identity.integration.test.base.LDAPServerInitializerTestCase"/>
+            <class name="org.wso2.identity.integration.test.base.SMTPServerInitializerTestCase"/>
         </classes>
     </test>
 
@@ -141,6 +142,7 @@
             <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenCodeGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2ImpersonationTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2AuthorizationCodeGrantJWTTokenTestCase"/>
+            <class name="org.wso2.identity.integration.test.recovery.PasswordRecoveryTestCase"/>
         </classes>
     </test>
 

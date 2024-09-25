@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.util;
 
+import com.icegreen.greenmail.util.GreenMail;
 import org.apache.catalina.core.StandardHost;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.codec.binary.Base64;
@@ -80,6 +81,8 @@ public class Utils {
     public static final String REFERER = "Referer";
     public static final String SET_COOKIE = "Set-Cookie";
 
+    private static GreenMail greenMail;
+
     private static final Log log = LogFactory.getLog(Utils.class);
 
     public static boolean nameExists(FlaggedName[] allNames, String inputName) {
@@ -125,6 +128,14 @@ public class Utils {
 
         setSystemProperties(testClass);
         return tomcat;
+    }
+
+    public static GreenMail getGreenMail() {
+        return greenMail;
+    }
+
+    public static void setGreenMail(GreenMail greenMail) {
+        Utils.greenMail = greenMail;
     }
 
     public static void setSystemProperties(Class classIn) {

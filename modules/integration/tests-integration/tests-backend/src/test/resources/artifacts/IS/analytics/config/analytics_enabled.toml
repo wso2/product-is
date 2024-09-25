@@ -53,3 +53,12 @@ id = "das_publisher"
 type = "org.wso2.carbon.identity.core.handler.AbstractIdentityHandler"
 name = "org.wso2.carbon.identity.data.publisher.oauth.listener.OAuthTokenIssuanceDASDataPublisher"
 order = "13"
+
+[output_adapter.email]
+from_address= "admin@wso2.com"
+username= "admin"
+password= "admin"
+hostname= "localhost"
+port= 3025
+enable_start_tls= true
+enable_authentication= true

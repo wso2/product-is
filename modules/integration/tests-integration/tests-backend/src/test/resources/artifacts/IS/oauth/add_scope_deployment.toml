@@ -41,3 +41,12 @@ app_password = "dashboard"
 [oauth]
 drop_unregistered_scopes = false
 allowed_scopes = ["internal_test", "test"]
+
+[output_adapter.email]
+from_address= "admin@wso2.com"
+username= "admin"
+password= "admin"
+hostname= "localhost"
+port= 3025
+enable_start_tls= true
+enable_authentication= true

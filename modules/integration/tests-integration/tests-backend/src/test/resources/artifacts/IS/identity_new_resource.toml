@@ -31,3 +31,12 @@ password = "wso2carbon"
 context = "(.*)/sample-auth/(.*)"
 secure = false
 http_method = "all"
+
+[output_adapter.email]
+from_address= "admin@wso2.com"
+username= "admin"
+password= "admin"
+hostname= "localhost"
+port= 3025
+enable_start_tls= true
+enable_authentication= true
