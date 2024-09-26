@@ -52,11 +52,14 @@ public class PasswordRecoveryTestCase extends OIDCAbstractIntegrationTest {
     private OIDCApplication oidcApplication;
     private UserObject userObject;
 
-    public static final String newPassword = "Oidcsessiontestuser@1234";
+    public static final String USERNAME = "recoverytestuser";
+    public static final String PASSWORD = "Oidcsessiontestuser@123";
+    public static final String PASSWORD_NEW = "Oidcsessiontestuser@1234";
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
+        Utils.getMailServer().purgeEmailFromAllMailboxes();
         super.init();
 
         Lookup<CookieSpecProvider> cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
@@ -89,7 +92,7 @@ public class PasswordRecoveryTestCase extends OIDCAbstractIntegrationTest {
         deleteUser(userObject);
         identityGovernanceRestClient.closeHttpClient();
         client.close();
-        Utils.getGreenMail().purgeEmailFromAllMailboxes();
+        Utils.getMailServer().purgeEmailFromAllMailboxes();
     }
 
     @Test
@@ -181,8 +184,8 @@ public class PasswordRecoveryTestCase extends OIDCAbstractIntegrationTest {
     protected UserObject initUser() {
 
         UserObject user = new UserObject();
-        user.setUserName(OIDCUtilTest.username);
-        user.setPassword(OIDCUtilTest.password);
+        user.setUserName(USERNAME);
+        user.setPassword(PASSWORD);
         user.setName(new Name().givenName(OIDCUtilTest.firstName).familyName(OIDCUtilTest.lastName));
         user.addEmail(new Email().value(OIDCUtilTest.email));
         return user;
@@ -205,7 +208,7 @@ public class PasswordRecoveryTestCase extends OIDCAbstractIntegrationTest {
             String name = input.attr("name");
             String value = input.attr("value");
             if ("reset-password".equals(name) || "reset-password2".equals(name)) {
-                value = newPassword;
+                value = PASSWORD_NEW;
             }
             formParams.add(new BasicNameValuePair(name, value));
         }
@@ -215,8 +218,8 @@ public class PasswordRecoveryTestCase extends OIDCAbstractIntegrationTest {
 
     private String getRecoveryURLFromEmail() {
 
-        Assert.assertTrue(Utils.getGreenMail().waitForIncomingEmail(10000, 1));
-        Message[] messages = Utils.getGreenMail().getReceivedMessages();
+        Assert.assertTrue(Utils.getMailServer().waitForIncomingEmail(10000, 1));
+        Message[] messages = Utils.getMailServer().getReceivedMessages();
         String body = GreenMailUtil.getBody(messages[0]).replaceAll("=\r?\n", "");
         Document doc = Jsoup.parse(body);
 

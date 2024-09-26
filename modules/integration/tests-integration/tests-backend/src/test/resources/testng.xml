@@ -1,6 +1,6 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
-<suite name="Identity-suite-initializer" parallel="false" thread-count="1">
+<suite name="Identity-suite-initializer" parallel="false" thread-count="1" preserve-order="true">
     <parameter name="useDefaultListeners" value="false"/>
     <listeners>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestExecutionListener"/>
@@ -9,6 +9,7 @@
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestSuiteListener"/>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestTransformerListener"/>
         <listener class-name="org.wso2.identity.integration.test.listeners.IdentityTestListener"/>
+        <listener class-name="org.wso2.identity.integration.test.base.SMTPServerInitializerListener"/>
     </listeners>
 
     <test name="is-tests-initialize" preserve-order="true" parallel="false" group-by-instances="true">
@@ -16,7 +17,6 @@
             <class name="org.wso2.identity.integration.test.IdentityServerTestSuitInitializerTestCase"/>
             <class name="org.wso2.identity.integration.test.base.TomcatInitializerTestCase"/>
             <class name="org.wso2.identity.integration.test.base.LDAPServerInitializerTestCase"/>
-            <class name="org.wso2.identity.integration.test.base.SMTPServerInitializerTestCase"/>
         </classes>
     </test>
 

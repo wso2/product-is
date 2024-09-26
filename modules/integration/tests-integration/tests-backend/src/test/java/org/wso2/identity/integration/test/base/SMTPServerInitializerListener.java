@@ -22,11 +22,14 @@ import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.ServerSetupTest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.testng.IExecutionListener;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
+import org.wso2.carbon.automation.engine.context.AutomationContext;
+import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.automation.test.utils.common.TestConfigurationProvider;
 import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
-import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
 
 import javax.xml.xpath.XPathExpressionException;
@@ -36,12 +39,12 @@ import java.io.IOException;
 /**
  * Test class that will start and stop external ldap server for the tests in the test suite.
  */
-public class SMTPServerInitializerTestCase extends ISIntegrationTest {
+public class SMTPServerInitializerListener implements IExecutionListener {
 
-    private static final Log LOG = LogFactory.getLog(SMTPServerInitializerTestCase.class);
+    private static final Log LOG = LogFactory.getLog(SMTPServerInitializerListener.class);
 
-    @BeforeSuite(alwaysRun = true)
-    public void initTest() throws Exception {
+    @Override
+    public void onExecutionStart() {
 
         try {
             GreenMail greenMail = new GreenMail(ServerSetupTest.SMTP);
@@ -49,33 +52,48 @@ public class SMTPServerInitializerTestCase extends ISIntegrationTest {
             greenMail.start();
             Utils.setGreenMail(greenMail);
 
-            super.init();
             changeDeploymentToml();
         } catch (Exception e) {
-            throw new Exception("Failed to start SMTP server.", e);
+            LOG.error("Failed to start SMTP server.", e);
         }
+    }
+
+    @Override
+    public void onExecutionFinish() {
+
+        try {
+            Utils.getMailServer().stop();
+            LOG.info("SMTP server is stopped.");
+        } catch (Exception e) {
+            LOG.error("Failed to stop SMTP server.", e);
+        }
+    }
+    @BeforeSuite(alwaysRun = true)
+    public void initTest() throws Exception {
+
     }
 
     @AfterSuite(alwaysRun = true)
     public void tearDownTest() throws Exception {
 
-        try {
-            Utils.getGreenMail().stop();
-            LOG.info("SMTP server is stopped.");
-        } catch (Exception e) {
-            throw new Exception("Failed to stop SMTP server.", e);
-        }
+
     }
 
     private void changeDeploymentToml() throws IOException, XPathExpressionException, AutomationUtilException {
         String carbonHome = Utils.getResidentCarbonHome();
 
-        String smtpEnabledDeploymentToml = getISResourceLocation() + File.separator + "default_deployment.toml";
+        String smtpEnabledDeploymentToml = TestConfigurationProvider.getResourceLocation("IS") + File.separator + "default_deployment.toml";
         File deploymentTomlFile = getDeploymentTomlFile(carbonHome);
-        ServerConfigurationManager serverConfigurationManager = new ServerConfigurationManager(isServer);
+        ServerConfigurationManager serverConfigurationManager
+                = new ServerConfigurationManager(new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN));
         serverConfigurationManager.applyConfigurationWithoutRestart(new File(smtpEnabledDeploymentToml),
                 deploymentTomlFile, true);
         serverConfigurationManager.restartGracefully();
+    }
 
+    private File getDeploymentTomlFile(String carbonHome) {
+        File deploymentToml = new File(carbonHome + File.separator + "repository" + File.separator
+                + "conf" + File.separator + "deployment.toml");
+        return deploymentToml;
     }
 }
