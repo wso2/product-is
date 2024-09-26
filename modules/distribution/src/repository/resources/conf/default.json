@@ -5,13 +5,13 @@
   },
   "user_store.type": "database_unique_id",
 
-  "keystore.primary.type" : "JKS",
+  "keystore.primary.type" : "PKCS12",
   "keystore.userstore_password_encryption": "",
-  "truststore.type" : "JKS",
+  "truststore.type" : "PKCS12",
   "keystore.tenant.type": "JKS",
 
-  "keystore.primary.file_name": "wso2carbon.jks",
-  "truststore.file_name": "client-truststore.jks",
+  "keystore.primary.file_name": "wso2carbon.p12",
+  "truststore.file_name": "client-truststore.p12",
 
   "transport.https.sslHostConfig.properties.certificateVerification": "want",
   "transport.https.sslHostConfig.properties.protocols": "+TLSv1,+TLSv1.1,+TLSv1.2",
