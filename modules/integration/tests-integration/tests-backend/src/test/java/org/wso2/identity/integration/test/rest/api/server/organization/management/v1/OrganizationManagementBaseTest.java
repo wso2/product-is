@@ -228,9 +228,9 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
         advancedApplicationConfiguration.setSkipLoginConsent(true);
         application.setAdvancedConfigurations(advancedApplicationConfiguration);
 
-        String b2bApplicationID = oAuth2RestClient.createApplication(application);
-        Assert.assertNotNull(b2bApplicationID);
-        return b2bApplicationID;
+        String applicationID = oAuth2RestClient.createApplication(application);
+        Assert.assertNotNull(applicationID, "Application id cannot be empty.");
+        return applicationID;
     }
 
     protected void shareApplication(String applicationID) throws IOException {
