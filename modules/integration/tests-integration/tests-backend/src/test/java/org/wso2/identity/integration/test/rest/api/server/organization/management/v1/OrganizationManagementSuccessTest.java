@@ -41,12 +41,20 @@ import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.CookieSpecProvider;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -64,11 +72,11 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationListItem;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationSharePOSTRequest;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
+import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
+import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.IOException;
@@ -78,14 +86,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -94,11 +98,13 @@ import static org.hamcrest.core.IsNull.notNullValue;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.API_SERVER_PATH;
+import static org.wso2.identity.integration.test.restclients.RestBaseClient.AUTHORIZATION_ATTRIBUTE;
+import static org.wso2.identity.integration.test.restclients.RestBaseClient.BASIC_AUTHORIZATION_ATTRIBUTE;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.CONTENT_TYPE_ATTRIBUTE;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.ORGANIZATION_PATH;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.TENANT_PATH;
+import static org.wso2.identity.integration.test.restclients.RestBaseClient.USER_AGENT_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SCIM2_USERS_ENDPOINT;
 
 /**
@@ -114,11 +120,19 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     private String m2mToken;
     private String switchedM2MToken;
     private String b2bApplicationID;
+    private String b2bAppClientId;
+    private String b2bAppClientSecret;
+    private String b2bUserID;
     private HttpClient client;
+    private HttpClient httpClientWithoutAutoRedirections;
     private List<Map<String, String>> organizations;
     private List<String> metaAttributes;
 
     protected OAuth2RestClient restClient;
+
+    private Lookup<CookieSpecProvider> cookieSpecRegistry;
+    private RequestConfig requestConfig;
+    private final CookieStore cookieStore = new BasicCookieStore();
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public OrganizationManagementSuccessTest(TestUserMode userMode) throws Exception {
@@ -135,7 +149,21 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         super.testInit(API_VERSION, swaggerDefinition, tenant);
         oAuth2RestClient = new OAuth2RestClient(serverURL, tenantInfo);
+        scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
+
         client = HttpClientBuilder.create().build();
+
+        cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+                .build();
+        requestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.DEFAULT)
+                .build();
+        httpClientWithoutAutoRedirections = HttpClientBuilder.create()
+                .setDefaultRequestConfig(requestConfig)
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .disableRedirectHandling()
+                .setDefaultCookieStore(cookieStore).build();
     }
 
     @AfterClass(alwaysRun = true)
@@ -145,6 +173,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         deleteApplication(selfServiceAppId);
         deleteApplication(b2bApplicationID);
         oAuth2RestClient.closeHttpClient();
+        scim2RestClient.closeHttpClient();
     }
 
     @BeforeMethod(alwaysRun = true)
@@ -361,18 +390,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @Test(dependsOnMethods = "createUserInOrganization")
     public void addB2BApplication() throws Exception {
 
-        ApplicationModel application = new ApplicationModel();
-        List<String> grantTypes = new ArrayList<>();
-        Collections.addAll(grantTypes, "authorization_code");
-        OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
-        oidcConfig.setGrantTypes(grantTypes);
-        oidcConfig.setCallbackURLs(Collections.singletonList(OAuth2Constant.CALLBACK_URL));
-        InboundProtocols inboundProtocolsConfig = new InboundProtocols();
-        inboundProtocolsConfig.setOidc(oidcConfig);
-        application.setInboundProtocolConfiguration(inboundProtocolsConfig);
-        application.setName("Guardio-Business-App");
-        b2bApplicationID = oAuth2RestClient.createApplication(application);
-        Assert.assertNotNull(b2bApplicationID);
+        b2bApplicationID = addApplication(B2B_APP_NAME);
     }
 
     @Test(dependsOnMethods = "addB2BApplication")
@@ -530,6 +548,45 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     }
 
     @Test(dependsOnMethods = "testGetDiscoveryAttributesOfOrganization")
+    public void prepareForTestLoginHintParamInAuthRequest() throws Exception {
+
+        b2bAppClientId = getAppClientId(b2bApplicationID);
+        b2bAppClientSecret = getAppClientSecret(b2bApplicationID);
+        shareApplication(b2bApplicationID);
+
+        b2bUserID = createB2BUser(switchedM2MToken);
+    }
+
+    @DataProvider(name = "loginHintParamDataProvider")
+    public Object[][] loginHintParamDataProvider() {
+
+        return new Object[][] {
+                // Include organization discovery type.
+                {true},
+                // Exclude organization discovery type.
+                {false}
+        };
+    }
+
+    @Test(dependsOnMethods = "prepareForTestLoginHintParamInAuthRequest", dataProvider = "loginHintParamDataProvider")
+    public void testLoginHintParamInAuthRequest(boolean addOrgDiscoveryType) throws Exception {
+
+        String sessionDataKey = sendAuthorizationRequest(addOrgDiscoveryType);
+        String authorizationCode = sendLoginPost(sessionDataKey);
+        String accessToken = getAccessToken(authorizationCode);
+        validateAccessToken(accessToken);
+
+        // Clear cookies of the http client to avoid session conflicts.
+        cookieStore.clear();
+    }
+
+    @Test(dependsOnMethods = "testLoginHintParamInAuthRequest")
+    public void cleanupAfterTestLoginHintParamInAuthRequest() throws Exception {
+
+        scim2RestClient.deleteSubOrgUser(b2bUserID, switchedM2MToken);
+    }
+
+    @Test(dependsOnMethods = "cleanupAfterTestLoginHintParamInAuthRequest")
     public void testUpdateDiscoveryAttributesOfOrganization() throws IOException {
 
         String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationID
@@ -1809,5 +1866,177 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     private String buildOrganizationApiEndpoint(String organizationId) {
 
         return String.format("%s/%s", ORGANIZATION_MANAGEMENT_API_BASE_PATH, organizationId);
+    }
+
+    private String sendAuthorizationRequest(boolean addOrgDiscoveryType) throws Exception {
+
+        List<NameValuePair> queryParams = new ArrayList<>();
+        queryParams.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_SCOPE,
+                OAuth2Constant.OAUTH2_SCOPE_OPENID + PLUS + OAuth2Constant.OAUTH2_SCOPE_EMAIL));
+        queryParams.add(
+                new BasicNameValuePair(OAuth2Constant.OAUTH2_RESPONSE_TYPE, OAuth2Constant.AUTHORIZATION_CODE_NAME));
+        queryParams.add(new BasicNameValuePair(OAuth2Constant.REDIRECT_URI_NAME, OAuth2Constant.CALLBACK_URL));
+        queryParams.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_CLIENT_ID, b2bAppClientId));
+        queryParams.add(new BasicNameValuePair(LOGIN_HINT_QUERY_PARAM, B2B_USER_EMAIL));
+        queryParams.add(new BasicNameValuePair(FIDP_QUERY_PARAM, ORGANIZATION_SSO));
+        if (addOrgDiscoveryType) {
+            queryParams.add(new BasicNameValuePair(ORG_DISCOVERY_TYPE_QUERY_PARAM, EMAIL_DOMAIN_DISCOVERY));
+        }
+
+        String endpointURL = buildGetRequestURL(serverURL + AUTHORIZE_ENDPOINT, tenant, queryParams);
+
+        HttpResponse authorizeResponse = sendGetRequest(endpointURL, httpClientWithoutAutoRedirections);
+        Assert.assertNotNull(authorizeResponse, "Authorize response is null.");
+        Assert.assertEquals(authorizeResponse.getStatusLine().getStatusCode(), HttpStatus.SC_MOVED_TEMPORARILY,
+                "Authorize response status code is invalid.");
+        Header authorizeLocationHeader = authorizeResponse.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        Assert.assertNotNull(authorizeLocationHeader, "Authorize response header location is null.");
+        EntityUtils.consume(authorizeResponse.getEntity());
+
+        HttpResponse authorizeRedirectResponse =
+                sendGetRequest(authorizeLocationHeader.getValue(), httpClientWithoutAutoRedirections);
+        Assert.assertNotNull(authorizeRedirectResponse, "Redirected authorize response is null.");
+        Assert.assertEquals(authorizeRedirectResponse.getStatusLine().getStatusCode(), HttpStatus.SC_MOVED_TEMPORARILY,
+                "Redirected authorize response status code is invalid.");
+        Header authorizeRedirectLocationHeader =
+                authorizeRedirectResponse.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        Assert.assertNotNull(authorizeRedirectLocationHeader, "Redirected authorize response header location is null.");
+        Assert.assertTrue(authorizeRedirectLocationHeader.getValue().contains(ORGANIZATION_PATH + organizationID),
+                "Not redirected to child organization login page.");
+        EntityUtils.consume(authorizeRedirectResponse.getEntity());
+
+        HttpResponse childOrgLoginPageResponse =
+                sendGetRequest(authorizeRedirectLocationHeader.getValue(), httpClientWithoutAutoRedirections);
+        Assert.assertNotNull(childOrgLoginPageResponse, "Child organization login page is empty.");
+        Assert.assertEquals(childOrgLoginPageResponse.getStatusLine().getStatusCode(), HttpStatus.SC_OK,
+                "Child organization login redirection status code is invalid.");
+
+        Map<String, Integer> keyPositionMap = new HashMap<>(1);
+        keyPositionMap.put("name=\"sessionDataKey\"", 1);
+        List<DataExtractUtil.KeyValue> keyValues =
+                DataExtractUtil.extractDataFromResponse(childOrgLoginPageResponse, keyPositionMap);
+        Assert.assertNotNull(keyValues, "Retrieved key value pairs are empty.");
+
+        String sessionDataKey = keyValues.get(0).getValue();
+        Assert.assertNotNull(sessionDataKey, "Session data key is null.");
+        EntityUtils.consume(childOrgLoginPageResponse.getEntity());
+
+        return sessionDataKey;
+    }
+
+    private String sendLoginPost(String sessionDataKey) throws Exception {
+
+        String commonAuthURL = serverURL + ORGANIZATION_PATH + organizationID + COMMON_AUTH_ENDPOINT;
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair(USERNAME_PARAM, B2B_USER_EMAIL));
+        urlParameters.add(new BasicNameValuePair(PASSWORD_PARAM, B2B_USER_PASSWORD));
+        urlParameters.add(new BasicNameValuePair(SESSION_DATA_KEY_PARAM, sessionDataKey));
+
+        HttpResponse loginPostResponse =
+                sendPostRequest(commonAuthURL, urlParameters, httpClientWithoutAutoRedirections);
+
+        Assert.assertNotNull(loginPostResponse, "Login request failed. Login response is null.");
+        Assert.assertEquals(loginPostResponse.getStatusLine().getStatusCode(), HttpStatus.SC_MOVED_TEMPORARILY,
+                "Login status code is invalid.");
+        Header childOrgAuthRedirectionLocation =
+                loginPostResponse.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        Assert.assertNotNull(childOrgAuthRedirectionLocation, "Login response location header is null.");
+        EntityUtils.consume(loginPostResponse.getEntity());
+
+        HttpResponse childOrgAuthRedirectResponse =
+                sendGetRequest(childOrgAuthRedirectionLocation.getValue(), httpClientWithoutAutoRedirections);
+        Assert.assertEquals(childOrgAuthRedirectResponse.getStatusLine().getStatusCode(),
+                HttpStatus.SC_MOVED_TEMPORARILY, "Child organization auth redirection status code is invalid.");
+        Assert.assertNotNull(childOrgAuthRedirectResponse,
+                "Child organization authorize redirection response is null.");
+
+        Header rootOrgCommonAuthRedirectionLocation =
+                childOrgAuthRedirectResponse.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        Assert.assertNotNull(rootOrgCommonAuthRedirectionLocation,
+                "Child organization authorize redirection response location header is null.");
+        EntityUtils.consume(childOrgAuthRedirectResponse.getEntity());
+
+        HttpResponse rootOrgCommonAuthRedirectionResponse =
+                sendGetRequest(rootOrgCommonAuthRedirectionLocation.getValue(), httpClientWithoutAutoRedirections);
+        Assert.assertEquals(rootOrgCommonAuthRedirectionResponse.getStatusLine().getStatusCode(),
+                HttpStatus.SC_MOVED_TEMPORARILY, "Root organization common auth redirection status code is invalid.");
+        Assert.assertNotNull(rootOrgCommonAuthRedirectionResponse, "Root organization common auth response is null.");
+
+        Header rootOrgAuthRedirectionLocation =
+                rootOrgCommonAuthRedirectionResponse.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        Assert.assertNotNull(rootOrgAuthRedirectionLocation,
+                "Root organization common auth response location header is null.");
+        EntityUtils.consume(rootOrgCommonAuthRedirectionResponse.getEntity());
+
+        HttpResponse authCodeResponse =
+                sendGetRequest(rootOrgAuthRedirectionLocation.getValue(), httpClientWithoutAutoRedirections);
+        Assert.assertNotNull(authCodeResponse, "Authorization code response is null.");
+        Assert.assertEquals(authCodeResponse.getStatusLine().getStatusCode(), HttpStatus.SC_MOVED_TEMPORARILY,
+                "Authorization code retrieval status code is invalid.");
+
+        Header authCodeRedirectionLocation =
+                authCodeResponse.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        Assert.assertNotNull(authCodeRedirectionLocation, "Authorization code response location header is null.");
+        EntityUtils.consume(authCodeResponse.getEntity());
+
+        URI authCodeRedirectionURI = new URI(authCodeRedirectionLocation.getValue());
+
+        // Extract the authorization code from the location header.
+        String code = Arrays.stream(authCodeRedirectionURI.getQuery().split(AMPERSAND))
+                .filter(param -> param.startsWith(OAuth2Constant.AUTHORIZATION_CODE_NAME))
+                .map(param -> param.split(EQUAL)[1])
+                .findFirst()
+                .orElse(null);
+        Assert.assertNotNull(code, "Authorization code is null.");
+        return code;
+    }
+
+    private String getAccessToken(String code) throws Exception {
+
+        String tokenEndpoint = getTenantQualifiedURL(serverURL + TOKEN_ENDPOINT, tenant);
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.GRANT_TYPE_NAME,
+                OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE));
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.AUTHORIZATION_CODE_NAME, code));
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.REDIRECT_URI_NAME, OAuth2Constant.CALLBACK_URL));
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_CLIENT_ID, b2bAppClientId));
+        urlParameters.add(new BasicNameValuePair(CLIENT_SECRET_PARAM, b2bAppClientSecret));
+
+        HttpResponse tokenResponse = sendPostRequest(tokenEndpoint, urlParameters, httpClientWithoutAutoRedirections);
+
+        Assert.assertNotNull(tokenResponse, "Access token response is null.");
+        Assert.assertEquals(tokenResponse.getStatusLine().getStatusCode(), HttpStatus.SC_OK,
+                "Access token request failed.");
+
+        JSONObject tokenResponseBody = new JSONObject(EntityUtils.toString(tokenResponse.getEntity()));
+        String accessToken = tokenResponseBody.getString(OAuth2Constant.ACCESS_TOKEN);
+        String idToken = tokenResponseBody.getString(OAuth2Constant.ID_TOKEN);
+
+        Assert.assertNotNull(accessToken, "Access token is null.");
+        Assert.assertNotNull(idToken, "ID token is null.");
+
+        return accessToken;
+    }
+
+    private void validateAccessToken(String accessToken) throws Exception {
+
+        String introspectEndpoint = getTenantQualifiedURL(serverURL + INTROSPECT_ENDPOINT, tenant);
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_RESPONSE_TYPE_TOKEN, accessToken));
+
+        HttpPost request = new HttpPost(introspectEndpoint);
+        request.setHeader(USER_AGENT_ATTRIBUTE, OAuth2Constant.USER_AGENT);
+        request.setHeader(AUTHORIZATION_ATTRIBUTE, BASIC_AUTHORIZATION_ATTRIBUTE + new String(
+                Base64.encodeBase64((authenticatingUserName + COLON + authenticatingCredential).getBytes())));
+        request.setEntity(new UrlEncodedFormEntity(urlParameters));
+        HttpResponse introspectResponse = httpClientWithoutAutoRedirections.execute(request);
+
+        Assert.assertNotNull(introspectResponse, "Introspect response is null.");
+        Assert.assertEquals(introspectResponse.getStatusLine().getStatusCode(), HttpStatus.SC_OK,
+                "Introspect request failed.");
+
+        JSONObject introspectionResponseBody = new JSONObject(EntityUtils.toString(introspectResponse.getEntity()));
+        boolean activeStatus = Boolean.parseBoolean(introspectionResponseBody.getString("active"));
+        Assert.assertTrue(activeStatus, "Received access token is not valid.");
     }
 }

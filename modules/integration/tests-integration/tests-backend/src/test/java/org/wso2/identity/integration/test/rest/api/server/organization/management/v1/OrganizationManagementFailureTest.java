@@ -20,10 +20,25 @@ package org.wso2.identity.integration.test.rest.api.server.organization.manageme
 
 import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
+import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.CookieSpecProvider;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
@@ -31,12 +46,15 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
+import org.wso2.identity.integration.test.restclients.OrgMgtRestClient;
+import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import org.wso2.identity.integration.test.utils.OAuth2Util;
 
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.core.IsNull.notNullValue;
@@ -58,8 +76,19 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     private List<String> organizationIDs = new ArrayList<>();
     private String applicationID;
     private String m2mToken;
+    private String switchedM2MToken;
+    private String b2bApplicationID;
+    private String b2bAppClientId;
+    private String b2bUserID;
     private HttpClient client;
+    private HttpClient httpClientWithoutAutoRedirections;
+
     protected OAuth2RestClient restClient;
+    protected OrgMgtRestClient orgMgtRestClient;
+
+    private Lookup<CookieSpecProvider> cookieSpecRegistry;
+    private RequestConfig requestConfig;
+    private final CookieStore cookieStore = new BasicCookieStore();
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public OrganizationManagementFailureTest(TestUserMode userMode) throws Exception {
@@ -76,7 +105,22 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
 
         super.testInit(API_VERSION, swaggerDefinition, tenant);
         oAuth2RestClient = new OAuth2RestClient(serverURL, tenantInfo);
+        scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
+        orgMgtRestClient = new OrgMgtRestClient(context, tenantInfo, serverURL,
+                new JSONObject(readResource("organization-self-service-apis.json")));
         client = HttpClientBuilder.create().build();
+
+        cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+                .build();
+        requestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.DEFAULT)
+                .build();
+        httpClientWithoutAutoRedirections = HttpClientBuilder.create()
+                .setDefaultRequestConfig(requestConfig)
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .disableRedirectHandling()
+                .setDefaultCookieStore(cookieStore).build();
     }
 
     @AfterClass(alwaysRun = true)
@@ -84,7 +128,10 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
 
         super.conclude();
         OAuth2Util.deleteApplication(oAuth2RestClient, applicationID);
+        OAuth2Util.deleteApplication(oAuth2RestClient, b2bApplicationID);
         oAuth2RestClient.closeHttpClient();
+        orgMgtRestClient.closeHttpClient();
+        scim2RestClient.closeHttpClient();
     }
 
     @DataProvider(name = "restAPIUserConfigProvider")
@@ -268,6 +315,70 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     }
 
     @Test(dependsOnMethods = "testAddDiscoveryAttributesWhenAlreadyAdded")
+    public void prepareForTestInvalidLoginHintParamInAuthRequest() throws Exception {
+
+        switchedM2MToken = orgMgtRestClient.switchM2MToken(organizationIDs.get(0));
+
+        b2bApplicationID = addApplication(B2B_APP_NAME);
+        b2bAppClientId = getAppClientId(b2bApplicationID);
+        shareApplication(b2bApplicationID);
+
+        b2bUserID = createB2BUser(switchedM2MToken);
+    }
+
+    @DataProvider(name = "invalidLoginHintParamDataProvider")
+    public Object[][] invalidLoginHintParamDataProvider() {
+
+        return new Object[][]{
+                // User email with invalid email domain.
+                {"johndoe@cde.com", EMAIL_DOMAIN_DISCOVERY, "Can't+identify+organization"},
+                // Invalid organization discovery type.
+                {B2B_USER_EMAIL, "invalidDiscovery", "invalid.organization.discovery.type"},
+        };
+    }
+
+    @Test(dependsOnMethods = "prepareForTestInvalidLoginHintParamInAuthRequest",
+            dataProvider = "invalidLoginHintParamDataProvider")
+    public void testInvalidLoginHintParamInAuthRequest(String loginHint, String orgDiscoveryType,
+                                                       String expectedErrorMessage) throws Exception {
+
+        List<NameValuePair> queryParams = new ArrayList<>();
+        queryParams.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_SCOPE,
+                OAuth2Constant.OAUTH2_SCOPE_OPENID + PLUS + OAuth2Constant.OAUTH2_SCOPE_EMAIL));
+        queryParams.add(
+                new BasicNameValuePair(OAuth2Constant.OAUTH2_RESPONSE_TYPE, OAuth2Constant.AUTHORIZATION_CODE_NAME));
+        queryParams.add(new BasicNameValuePair(OAuth2Constant.REDIRECT_URI_NAME, OAuth2Constant.CALLBACK_URL));
+        queryParams.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_CLIENT_ID, b2bAppClientId));
+        queryParams.add(new BasicNameValuePair(LOGIN_HINT_QUERY_PARAM, loginHint));
+        queryParams.add(new BasicNameValuePair(FIDP_QUERY_PARAM, ORGANIZATION_SSO));
+        queryParams.add(new BasicNameValuePair(ORG_DISCOVERY_TYPE_QUERY_PARAM, orgDiscoveryType));
+
+        String endpointURL = buildGetRequestURL(serverURL + AUTHORIZE_ENDPOINT, tenant, queryParams);
+
+        HttpResponse authorizeResponse = sendGetRequest(endpointURL, httpClientWithoutAutoRedirections);
+        Assert.assertNotNull(authorizeResponse, "Authorize response is null.");
+        Assert.assertEquals(authorizeResponse.getStatusLine().getStatusCode(), HttpStatus.SC_MOVED_TEMPORARILY,
+                "Authorize response status code is invalid.");
+        Header authorizeLocationHeader = authorizeResponse.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        Assert.assertNotNull(authorizeLocationHeader, "Authorize response header location is null.");
+        EntityUtils.consume(authorizeResponse.getEntity());
+
+        URI authoriceResponseRedirectURI = new URI(authorizeLocationHeader.getValue());
+        String errorMsg = Arrays.stream(authoriceResponseRedirectURI.getQuery().split(AMPERSAND))
+                .filter(param -> param.startsWith(AUTH_FAILURE_MSG_QUERY_PARAM))
+                .map(param -> param.split(EQUAL)[1])
+                .findFirst()
+                .orElse(null);
+        Assert.assertEquals(errorMsg, expectedErrorMessage, "Incorrect auth failure message.");
+    }
+
+    @Test(dependsOnMethods = "testInvalidLoginHintParamInAuthRequest")
+    public void cleanupAfterTestInvalidLoginHintParamInAuthRequest() throws Exception {
+
+        scim2RestClient.deleteSubOrgUser(b2bUserID, switchedM2MToken);
+    }
+
+    @Test(dependsOnMethods = "cleanupAfterTestInvalidLoginHintParamInAuthRequest")
     public void testGetDiscoveryAttributesOfOrganizationsUnauthorized() {
 
         String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH;

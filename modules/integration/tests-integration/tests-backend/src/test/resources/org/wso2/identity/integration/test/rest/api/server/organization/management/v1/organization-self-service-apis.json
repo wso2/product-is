@@ -19,7 +19,8 @@
   ],
   "/o/scim2/Users": [
     "internal_org_user_mgt_create",
-    "internal_org_user_mgt_list"
+    "internal_org_user_mgt_list",
+    "internal_org_user_mgt_delete"
   ],
   "/o/scim2/Roles": [
     "internal_org_role_mgt_view",
