@@ -132,7 +132,7 @@ public class Utils {
         return greenMail;
     }
 
-    public static void setGreenMail(GreenMail greenMail) {
+    public static void setMailServer(GreenMail greenMail) {
         Utils.greenMail = greenMail;
     }
 

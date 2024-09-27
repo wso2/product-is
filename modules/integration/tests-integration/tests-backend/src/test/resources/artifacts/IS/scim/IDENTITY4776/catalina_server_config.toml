@@ -32,12 +32,3 @@ maxThreads = "1"
 
 [transport.http]
 maxThreads = "1"
-
-[output_adapter.email]
-from_address= "admin@wso2.com"
-username= "admin"
-password= "admin"
-hostname= "localhost"
-port= 3025
-enable_start_tls= true
-enable_authentication= true

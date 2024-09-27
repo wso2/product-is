@@ -29,12 +29,3 @@ password = "wso2carbon"
 
 [oauth]
 hash_token_algorithm = "SHA-512"
-
-[output_adapter.email]
-from_address= "admin@wso2.com"
-username= "admin"
-password= "admin"
-hostname= "localhost"
-port= 3025
-enable_start_tls= true
-enable_authentication= true

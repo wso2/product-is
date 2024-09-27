@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
+ *
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 package org.wso2.identity.integration.test.recovery;
 
 import com.icegreen.greenmail.util.GreenMailUtil;
@@ -42,6 +60,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Test password recovery functionality.
+ */
 public class PasswordRecoveryTestCase extends OIDCAbstractIntegrationTest {
 
     private IdentityGovernanceRestClient identityGovernanceRestClient;
@@ -104,7 +125,6 @@ public class PasswordRecoveryTestCase extends OIDCAbstractIntegrationTest {
         HttpResponse postResponse = resetPassword(recoveryLink);
         Assert.assertEquals(postResponse.getStatusLine().getStatusCode(), 200);
         Assert.assertTrue(EntityUtils.toString(postResponse.getEntity()).contains("Password Reset Successfully"));
-        //TODO login with new password
     }
 
     private String retrievePasswordResetURL(OIDCApplication application, HttpClient client) throws Exception {
@@ -143,7 +163,6 @@ public class PasswordRecoveryTestCase extends OIDCAbstractIntegrationTest {
             String name = input.attr("name");
             String value = input.attr("value");
             if ("username".equals(name)) {
-                //TODO check how this should be done
                 value = username;
             }
             if ("usernameUserInput".equals(name)) {
@@ -225,5 +244,4 @@ public class PasswordRecoveryTestCase extends OIDCAbstractIntegrationTest {
 
         return doc.selectFirst("#bodyCell").selectFirst("a").attr("href");
     }
-
 }
