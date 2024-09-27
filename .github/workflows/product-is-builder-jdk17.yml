@@ -34,7 +34,7 @@ jobs:
       - name: Product-IS build with JDK 17 with Integration Tests
         run: |
           ls
-          cd product-is/modules/integration/
+          cd modules/integration/
           mvn clean install --batch-mode | tee mvn-build.log
           PR_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
           PR_TEST_RESULT=$(sed -n -e '/\[INFO\] Results:/,/\[INFO\] Tests run:/ p' mvn-build.log)
