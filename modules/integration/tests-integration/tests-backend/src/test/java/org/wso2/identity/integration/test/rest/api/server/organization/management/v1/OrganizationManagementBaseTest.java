@@ -65,9 +65,9 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
     static final String ORGANIZATION_CONFIGS_API_BASE_PATH = "/organization-configs";
     static final String ORGANIZATION_DISCOVERY_API_PATH = "/discovery";
     static final String ORGANIZATION_META_ATTRIBUTES_API_PATH = "/meta-attributes";
-    static final String AUTHORIZE_ENDPOINT = "/oauth2/authorize";
-    static final String TOKEN_ENDPOINT = "/oauth2/token";
-    static final String INTROSPECT_ENDPOINT = "/oauth2/introspect";
+    static final String AUTHORIZE_ENDPOINT = "oauth2/authorize";
+    static final String TOKEN_ENDPOINT = "oauth2/token";
+    static final String INTROSPECT_ENDPOINT = "oauth2/introspect";
     static final String COMMON_AUTH_ENDPOINT = "/commonauth";
     static final String PATH_SEPARATOR = "/";
 
