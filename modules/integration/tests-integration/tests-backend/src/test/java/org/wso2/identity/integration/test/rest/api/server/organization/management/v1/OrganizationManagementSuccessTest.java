@@ -583,6 +583,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @Test(dependsOnMethods = "testLoginHintParamInAuthRequest")
     public void cleanupAfterTestLoginHintParamInAuthRequest() throws Exception {
 
+        unShareApplication(b2bApplicationID);
         scim2RestClient.deleteSubOrgUser(b2bUserID, switchedM2MToken);
     }
 

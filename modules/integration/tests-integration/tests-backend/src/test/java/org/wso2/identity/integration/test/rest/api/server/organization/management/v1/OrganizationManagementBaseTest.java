@@ -240,6 +240,13 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
         oAuth2RestClient.shareApplication(applicationID, applicationSharePOSTRequest);
     }
 
+    protected void unShareApplication(String applicationID) throws IOException {
+
+        ApplicationSharePOSTRequest applicationSharePOSTRequest = new ApplicationSharePOSTRequest();
+        applicationSharePOSTRequest.setShareWithAllChildren(false);
+        oAuth2RestClient.shareApplication(applicationID, applicationSharePOSTRequest);
+    }
+
     protected String createB2BUser(String switchedM2MToken) throws Exception {
 
         UserObject userInfo = new UserObject();

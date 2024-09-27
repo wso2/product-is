@@ -375,6 +375,7 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     @Test(dependsOnMethods = "testInvalidLoginHintParamInAuthRequest")
     public void cleanupAfterTestInvalidLoginHintParamInAuthRequest() throws Exception {
 
+        unShareApplication(b2bApplicationID);
         scim2RestClient.deleteSubOrgUser(b2bUserID, switchedM2MToken);
     }
 
