@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>7.1.0-m1-SNAPSHOT</version>
+        <version>7.1.0-m2-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -95,12 +95,12 @@
                         </goals>
                         <configuration>
                             <target>
-                                <mkdir dir="${project.build.directory}/templates"/>
+                                <mkdir dir="${project.build.directory}/templates" />
                                 <copy todir="${project.build.directory}/templates" overwrite="true">
                                     <fileset dir="${project.build.directory}/unpacked-resources">
-                                        <include name="**/*"/>
+                                        <include name="**/*" />
                                     </fileset>
-                                    <cutdirsmapper dirs="1"/>
+                                    <cutdirsmapper dirs="1" />
                                 </copy>
                             </target>
                         </configuration>
