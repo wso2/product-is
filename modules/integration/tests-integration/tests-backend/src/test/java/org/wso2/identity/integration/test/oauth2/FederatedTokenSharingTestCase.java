@@ -62,8 +62,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
@@ -214,6 +215,11 @@ public class FederatedTokenSharingTestCase extends AbstractIdentityFederationTes
 
         super.initTest();
 
+    }
+
+    @BeforeMethod(alwaysRun = true)
+    public void initTestRun() throws Exception {
+
         createServiceClients(PORT_OFFSET_0, new IdentityConstants.ServiceClientType[]{
                 IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT,
                 IdentityConstants.ServiceClientType.IDENTITY_PROVIDER_MGT});
@@ -227,22 +233,16 @@ public class FederatedTokenSharingTestCase extends AbstractIdentityFederationTes
 
         cookieStore = new BasicCookieStore();
         cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
-                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
-                .build();
-        requestConfig = RequestConfig.custom()
-                .setCookieSpec(CookieSpecs.DEFAULT)
-                .build();
-        client = HttpClientBuilder.create()
-                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
-                .setDefaultRequestConfig(requestConfig)
-                .setDefaultCookieStore(cookieStore)
-                .build();
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider()).build();
+        requestConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.DEFAULT).build();
+        client = HttpClientBuilder.create().setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .setDefaultRequestConfig(requestConfig).setDefaultCookieStore(cookieStore).build();
 
         scim2RestClient = new SCIM2RestClient(getSecondaryISURI(), tenantInfo);
         addUserToSecondaryIS();
     }
 
-    @AfterClass(alwaysRun = true)
+    @AfterMethod(alwaysRun = true)
     public void endTest() throws Exception {
 
         try {
@@ -284,12 +284,12 @@ public class FederatedTokenSharingTestCase extends AbstractIdentityFederationTes
     public static Object[][] federatedTokenSharingParams() {
 
         return new Object[][]{
-                {" when IDP config is enabled, application requested the federated token", "true", "true"},
-                {" when IDP config is enabled, application did not request the federated token", "true", "false"}
+                {" when IDP config is enabled, application requested the federated token", "true"},
+                {" when IDP config is enabled, application did not request the federated token", "false"}
         };
     }
 
-    @Test(groups = "wso2.is", description = "Send init authorize POST request to primary IDP.", dataProvider = "testFederatedTokenSharingDataProvider")
+    @Test(groups = "wso2.is", description = "Send init authorize POST request to primary IDP.", dataProvider = "federatedTokenSharingParams")
     public void testFederatedTokenSharing(String errorMessage,
                                           String shareTokenQueryParameter) throws Exception {
 
