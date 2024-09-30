@@ -23,7 +23,16 @@ import com.icegreen.greenmail.util.ServerSetupTest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.IExecutionListener;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.wso2.carbon.automation.engine.context.AutomationContext;
+import org.wso2.carbon.automation.extensions.XPathConstants;
 import org.wso2.identity.integration.test.util.Utils;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 /**
  * Listener that will start and stop mock SMTP server for the tests in the test suite.
@@ -31,15 +40,22 @@ import org.wso2.identity.integration.test.util.Utils;
 public class SMTPServerInitializerListener implements IExecutionListener {
 
     private static final Log LOG = LogFactory.getLog(SMTPServerInitializerListener.class);
+    private static final String HEADER_OUTPUT_ADAPTER_EMAIL = "[output_adapter.email]";
 
     @Override
     public void onExecutionStart() {
 
         try {
-            GreenMail greenMail = new GreenMail(ServerSetupTest.SMTP);
-            greenMail.setUser("admin", "admin");
-            greenMail.start();
-            Utils.setMailServer(greenMail);
+            AutomationContext context = new AutomationContext();
+            String smtpUsername = context.getConfigurationValue("//emailSenderConfigs/username");
+            String smtpPassword = context.getConfigurationValue("//emailSenderConfigs/password");
+
+            if (smtpUsername != null && smtpPassword != null) {
+                GreenMail greenMail = new GreenMail(ServerSetupTest.SMTP);
+                greenMail.setUser(smtpUsername, smtpPassword);
+                greenMail.start();
+                Utils.setMailServer(greenMail);
+            }
         } catch (Exception e) {
             LOG.error("Failed to start SMTP server.", e);
         }
@@ -49,8 +65,10 @@ public class SMTPServerInitializerListener implements IExecutionListener {
     public void onExecutionFinish() {
 
         try {
-            Utils.getMailServer().stop();
-            LOG.info("SMTP server is stopped.");
+            if (Utils.getMailServer() != null) {
+                Utils.getMailServer().stop();
+                LOG.info("SMTP server is stopped.");
+            }
         } catch (Exception e) {
             LOG.error("Failed to stop SMTP server.", e);
         }
