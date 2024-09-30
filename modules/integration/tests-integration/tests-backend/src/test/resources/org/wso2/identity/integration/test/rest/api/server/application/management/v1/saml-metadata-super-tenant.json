@@ -103,7 +103,6 @@
       "cn_trustcor_rootcert_ca2,ou_trustcor_certificate_authority,o_trustcor_systems_s_de_rl,l_panama_city,st_panama,c_pa",
       "cn_globalsign_root_ca,ou_root_ca,o_globalsign_nvsa,c_be",
       "cn_amazon_root_ca_2,o_amazon,c_us",
-      "newkey",
       "cn_sslcom_root_certification_authority_rsa,o_ssl_corporation,l_houston,st_texas,c_us",
       "cn_actalis_authentication_root_ca,o_actalis_spa03358520967,l_milan,c_it",
       "cn_comodo_ecc_certification_authority,o_comodo_ca_limited,l_salford,st_greater_manchester,c_gb",
