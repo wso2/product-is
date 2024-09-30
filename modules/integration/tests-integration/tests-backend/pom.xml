@@ -723,6 +723,11 @@
             <artifactId>xml-apis</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>jakarta.mail</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.is</groupId>
             <artifactId>org.wso2.identity.integration.common.utils</artifactId>
             <exclusions>
@@ -986,6 +991,12 @@
         <dependency>
             <groupId>org.wso2.orbit.com.nimbusds</groupId>
             <artifactId>nimbus-jose-jwt</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sun.mail</groupId>
+                    <artifactId>javax.mail</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.nimbusds</groupId>
@@ -1070,6 +1081,16 @@
         <dependency>
             <groupId>org.apache.directory.api</groupId>
             <artifactId>api-all</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.icegreen</groupId>
+            <artifactId>greenmail</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

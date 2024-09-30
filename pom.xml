@@ -2216,6 +2216,25 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
+                <groupId>com.icegreen</groupId>
+                <artifactId>greenmail</artifactId>
+                <version>${greenmail.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.mail</groupId>
+                <artifactId>jakarta.mail</artifactId>
+                <version>${jakarta.mail.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jsoup</groupId>
+                <artifactId>jsoup</artifactId>
+                <version>${jsoup.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>org.wso2.carbon.identity.governance</groupId>
                 <artifactId>org.wso2.carbon.identity.user.onboard.core.service</artifactId>
                 <version>${identity.governance.version}</version>
@@ -2557,7 +2576,7 @@
         <commons-lang.wso2.version>2.6.0.wso2v1</commons-lang.wso2.version>
 
         <!--  Test dependencies -->
-        <carbon.automation.version>4.4.11</carbon.automation.version>
+        <carbon.automation.version>4.4.12</carbon.automation.version>
         <carbon.automationutils.version>4.5.4</carbon.automationutils.version>
         <selenium.version>2.40.0</selenium.version>
         <testng.version>6.1.1</testng.version>
@@ -2594,6 +2613,9 @@
         <!-- Integration UI Templates Version -->
         <identity.integration.ui.templates.version>1.0.7</identity.integration.ui.templates.version>
 
+        <greenmail.version>2.0.1</greenmail.version>
+        <jakarta.mail.version>2.0.1</jakarta.mail.version>
+        <jsoup.version>1.15.3</jsoup.version>
     </properties>
 
     <repositories>
