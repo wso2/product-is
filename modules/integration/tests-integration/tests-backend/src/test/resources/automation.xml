@@ -63,6 +63,17 @@
             </browser>
         </selenium>
     </tools>
+
+    <!--  SMTP Server configs to be added to the deployment.toml during the initial server startup  -->
+    <emailSenderConfigs>
+        <from_address>admin@wso2.com</from_address>
+        <username>admin</username>
+        <password>admin</password>
+        <hostname>localhost</hostname>
+        <port>3025</port>
+        <enable_start_tls>true</enable_start_tls>
+        <enable_authentication>true</enable_authentication>
+    </emailSenderConfigs>
     <!--
     Database configuration to be used for data service testing. DB configuration in dbs files will be replaced with
                below configuration at test run time
