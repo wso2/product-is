@@ -39,7 +39,6 @@ import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.CookieSpecs;
@@ -61,7 +60,6 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -153,9 +151,6 @@ public class FederatedTokenSharingIDPConfigDisabledTestCase extends AbstractIden
     private static final String SECONDARY_IS_LOGOUT_ENDPOINT = "https://localhost:9854/oidc/logout";
     private static final String SECONDARY_IS_AUTHORIZE_ENDPOINT = "https://localhost:9854/oauth2/authorize";
     private static final String HTTPS_LOCALHOST_SERVICES = "https://localhost:%s/";
-    private static final String TRUE = "true";
-    private static final String SCOPES_APPROVED_FOR_TOKEN_SHARING =
-            "https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/calendar";
     private static final String SCOPES_REQUESTED_FOR_TOKEN_SHARING =
             "https://www.googleapis.com/auth/calendar.readonly";
     private String secondaryISAppId;
@@ -166,10 +161,7 @@ public class FederatedTokenSharingIDPConfigDisabledTestCase extends AbstractIden
     private String username;
     private String userPassword;
     private AutomationContext context;
-    private String sessionDataKey;
 
-    // Application Native Authentication related attributes
-    private String appId;
     private String flowId;
     private String flowStatus;
     private String authenticatorId;
@@ -181,14 +173,11 @@ public class FederatedTokenSharingIDPConfigDisabledTestCase extends AbstractIden
     private static final int PORT_OFFSET_0 = 0;
     private static final int PORT_OFFSET_1 = 1;
     CookieStore cookieStore;
-    private Lookup<CookieSpecProvider> cookieSpecRegistry;
-    private RequestConfig requestConfig;
     private CloseableHttpClient client;
     private String primaryISIdpId;
     private String primaryISAppId;
     private SCIM2RestClient scim2RestClient;
     private String secondaryISUserId;
-    private AuthorizationCode authorizationCode;
 
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
@@ -209,10 +198,6 @@ public class FederatedTokenSharingIDPConfigDisabledTestCase extends AbstractIden
 
         super.initTest();
 
-    }
-
-    @BeforeMethod(alwaysRun = true)
-    public void initTestRun() throws Exception {
         createServiceClients(PORT_OFFSET_0, new IdentityConstants.ServiceClientType[]{
                 IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT,
                 IdentityConstants.ServiceClientType.IDENTITY_PROVIDER_MGT});
@@ -224,11 +209,18 @@ public class FederatedTokenSharingIDPConfigDisabledTestCase extends AbstractIden
         createIDPInPrimaryIS();//Google IDP in IS
         createApplicationInPrimaryIS();// CallMeName app in IS
 
+        scim2RestClient = new SCIM2RestClient(getSecondaryISURI(), tenantInfo);
+        addUserToSecondaryIS();
+    }
+
+    @BeforeMethod(alwaysRun = true)
+    public void initTestRun() {
+
         cookieStore = new BasicCookieStore();
-        cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+        Lookup<CookieSpecProvider> cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
                 .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
                 .build();
-        requestConfig = RequestConfig.custom()
+        RequestConfig requestConfig = RequestConfig.custom()
                 .setCookieSpec(CookieSpecs.DEFAULT)
                 .build();
         client = HttpClientBuilder.create()
@@ -236,12 +228,9 @@ public class FederatedTokenSharingIDPConfigDisabledTestCase extends AbstractIden
                 .setDefaultRequestConfig(requestConfig)
                 .setDefaultCookieStore(cookieStore)
                 .build();
-
-        scim2RestClient = new SCIM2RestClient(getSecondaryISURI(), tenantInfo);
-        addUserToSecondaryIS();
     }
 
-    @AfterMethod(alwaysRun = true)
+    @AfterClass(alwaysRun = true)
     public void endTest() throws Exception {
 
         try {
@@ -259,9 +248,8 @@ public class FederatedTokenSharingIDPConfigDisabledTestCase extends AbstractIden
             username = null;
             userPassword = null;
             context = null;
-            sessionDataKey = null;
 
-            appId = null;
+            // Application Native Authentication related attributes
             flowId = null;
             flowStatus = null;
             authenticatorId = null;
@@ -274,7 +262,7 @@ public class FederatedTokenSharingIDPConfigDisabledTestCase extends AbstractIden
             client.close();
             scim2RestClient.closeHttpClient();
         } catch (Exception e) {
-            log.error("Failure occured due to :" + e.getMessage(), e);
+            log.error("Failure occurred due to :" + e.getMessage(), e);
             throw e;
         }
     }
@@ -302,16 +290,7 @@ public class FederatedTokenSharingIDPConfigDisabledTestCase extends AbstractIden
         authenticatePrimaryIDPWithFederatedResponse();
 
         // Send get access token request.
-        ClientID clientID = new ClientID(appClientID);
-        Secret clientSecret = new Secret(appClientSecret);
-        ClientSecretBasic clientSecretBasic = new ClientSecretBasic(clientID, clientSecret);
-
-        URI callbackURI = new URI(PRIMARY_IS_IDP_CALLBACK_URL);
-        authorizationCode = new AuthorizationCode(code);
-        AuthorizationCodeGrant authorizationCodeGrant = new AuthorizationCodeGrant(authorizationCode, callbackURI);
-
-        TokenRequest tokenReq = new TokenRequest(new URI(PRIMARY_IS_TOKEN_URL), clientSecretBasic,
-                authorizationCodeGrant);
+        TokenRequest tokenReq = getTokenRequest();
 
         HTTPResponse tokenHTTPResp = tokenReq.toHTTPRequest().send();
         Assert.assertNotNull(tokenHTTPResp, "Access token http response is null." + errorMessage);
@@ -332,6 +311,20 @@ public class FederatedTokenSharingIDPConfigDisabledTestCase extends AbstractIden
         Map<String, Object> customParameters = oidcTokenResponse.getCustomParameters();
         Assert.assertNull(customParameters.get("federated_tokens"),
                 "The OIDC token response have federated tokens" + errorMessage);
+    }
+
+    private TokenRequest getTokenRequest() throws URISyntaxException {
+
+        ClientID clientID = new ClientID(appClientID);
+        Secret clientSecret = new Secret(appClientSecret);
+        ClientSecretBasic clientSecretBasic = new ClientSecretBasic(clientID, clientSecret);
+
+        URI callbackURI = new URI(PRIMARY_IS_IDP_CALLBACK_URL);
+        AuthorizationCode authorizationCode = new AuthorizationCode(code);
+        AuthorizationCodeGrant authorizationCodeGrant = new AuthorizationCodeGrant(authorizationCode, callbackURI);
+
+        return new TokenRequest(new URI(PRIMARY_IS_TOKEN_URL), clientSecretBasic,
+                authorizationCodeGrant);
     }
 
     private void authorizePrimaryIDP(String shareTokenQueryParameter, String errorMessage)
@@ -439,14 +432,12 @@ public class FederatedTokenSharingIDPConfigDisabledTestCase extends AbstractIden
      * @param client                - http client
      * @param sessionDataKeyConsent - session consent data
      * @return http response
-     * @throws ClientProtocolException ClientProtocolException
      * @throws java.io.IOException     java.io.IOException
      */
     private HttpResponse sendApprovalPost(HttpClient client, String sessionDataKeyConsent)
-            throws ClientProtocolException,
-            IOException {
+            throws IOException {
 
-        List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+        List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKeyConsent));
 
         return sendPostRequestWithParameters(client, urlParameters,
@@ -617,28 +608,26 @@ public class FederatedTokenSharingIDPConfigDisabledTestCase extends AbstractIden
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
         log.info(">>> sendLoginPost:sessionDataKey: " + sessionDataKey);
 
-        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, SECONDARY_IS_IDP_CALLBACK_URL);
-        return response;
+        return sendPostRequestWithParameters(client, urlParameters, SECONDARY_IS_IDP_CALLBACK_URL);
     }
 
     private HttpResponse sendPostRequestWithParameters(HttpClient client, List<NameValuePair> urlParameters, String url)
-            throws ClientProtocolException, IOException {
+            throws IOException {
 
         HttpPost request = new HttpPost(url);
         request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
         request.setEntity(new UrlEncodedFormEntity(urlParameters));
 
-        HttpResponse response = client.execute(request);
-        return response;
+        return client.execute(request);
     }
 
     /**
      * Builds a list of OAuth 2.0 parameters required for initiating the authorization process.
      * The method constructs and returns a list of parameters necessary for initiating the OAuth 2.0 authorization process.
      *
-     * @param consumerKey              The client's unique identifier in the OAuth 2.0 system
-     * @param shareTokenQueryParameter
-     * @return A list of NameValuePair representing the OAuth 2.0 parameters
+     * @param consumerKey              The client's unique identifier in the OAuth 2.0 system.
+     * @param shareTokenQueryParameter Whether the application requests the federated token.
+     * @return A list of NameValuePair representing the OAuth 2.0 parameters.
      */
     private List<NameValuePair> buildOAuth2Parameters(String consumerKey, String callBackUrl,
                                                       String shareTokenQueryParameter) {
@@ -740,8 +729,7 @@ public class FederatedTokenSharingIDPConfigDisabledTestCase extends AbstractIden
         String responseString = EntityUtils.toString(response.getEntity(), UTF_8);
         EntityUtils.consume(response.getEntity());
         JSONParser parser = new JSONParser();
-        JSONObject json = (JSONObject) parser.parse(responseString);
-        return json;
+        return (JSONObject) parser.parse(responseString);
     }
 
     private List<NameValuePair> getNameValuePairsForExternalFederation() {
@@ -789,7 +777,7 @@ public class FederatedTokenSharingIDPConfigDisabledTestCase extends AbstractIden
 
     private String generateAuthReqBody() {
 
-        String body = "{\n" +
+        return "{\n" +
                 "    \"flowId\": \"" + flowId + "\",\n" +
                 "    \"selectedAuthenticator\": {\n" +
                 "        \"authenticatorId\": \"" + authenticatorId + "\",\n" +
@@ -799,7 +787,6 @@ public class FederatedTokenSharingIDPConfigDisabledTestCase extends AbstractIden
                 "        }\n" +
                 "    }\n" +
                 "}";
-        return body;
     }
 
 }
