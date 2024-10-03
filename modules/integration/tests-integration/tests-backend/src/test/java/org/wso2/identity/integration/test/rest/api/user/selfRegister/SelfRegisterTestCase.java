@@ -74,6 +74,9 @@ public class SelfRegisterTestCase extends SelfRegisterTestBase {
 
         updateResidentIDPProperty(ENABLE_SELF_SIGN_UP, "true", true);
         String selfRegisterUserInfoWithInvalidPassword = selfRegisterUserInfo.replaceAll("Password12!", "123");
+        // Update the username to avoid conflict with other tests.
+        selfRegisterUserInfoWithInvalidPassword = selfRegisterUserInfoWithInvalidPassword
+                .replaceAll("selfRegisterTestUser", "selfRegisterUserWithInvalidPassword");
         Response responseOfPost =
                 getResponseOfPost(SELF_REGISTRATION_ENDPOINT, selfRegisterUserInfoWithInvalidPassword);
         Assert.assertEquals(responseOfPost.statusCode(), HttpStatus.SC_BAD_REQUEST,
