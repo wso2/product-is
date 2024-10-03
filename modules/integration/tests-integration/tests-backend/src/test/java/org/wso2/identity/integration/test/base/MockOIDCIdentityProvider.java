@@ -16,12 +16,11 @@
  * under the License.
  */
 
-package org.wso2.identity.integration.test.oidc;
+package org.wso2.identity.integration.test.base;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
-import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.JWSSigner;
@@ -40,17 +39,20 @@ import java.util.Date;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.containing;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.matching;
 import static com.github.tomakehurst.wiremock.client.WireMock.notContaining;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 
-public class MockOIDCService {
+public class MockOIDCIdentityProvider {
 
     private WireMockServer wireMockServer;
 
     public void start() {
+
         wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig().port(8089)
                 .extensions(new ResponseTemplateTransformer(null, true, null, null)));
         wireMockServer.start();
@@ -60,6 +62,7 @@ public class MockOIDCService {
     }
 
     public void stop() {
+
         if (wireMockServer != null) {
             wireMockServer.stop();
         }
@@ -85,8 +88,7 @@ public class MockOIDCService {
                     .willReturn(aResponse()
                             .withHeader("Content-Type", "application/json")
                             .withBody("{\"access_token\": \"mock_access_token\", \"token_type\": \"Bearer\", " +
-                                    "\"expires_in\": 3600, \"id_token\": " +
-                                    "\"" + buildIdToken() + "\" }")));
+                                    "\"expires_in\": 3600, \"id_token\": \"" + buildIdToken() + "\" }")));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -125,7 +127,20 @@ public class MockOIDCService {
                                 "{{request.query.post_logout_redirect_uri}}?state={{request.query.state}}")));
     }
 
-    public String buildIdToken() throws Exception {
+    public void verifyForAuthzCodeFlow() {
+
+        wireMockServer.verify(postRequestedFor(urlPathEqualTo("/token"))
+                .withRequestBody(containing("grant_type=authorization_code")));
+        wireMockServer.verify(getRequestedFor(urlPathEqualTo("/authorize")));
+    }
+
+    public void verifyForLogoutFlow() {
+
+        wireMockServer.verify(getRequestedFor(urlPathEqualTo("/oidc/logout")));
+    }
+
+    private String buildIdToken() throws Exception {
+
         KeyStore wso2KeyStore = getKeyStoreFromFile("wso2carbon.p12", "wso2carbon",
                 Utils.getResidentCarbonHome());
         RSAPrivateKey rsaPrivateKey = (RSAPrivateKey) wso2KeyStore.getKey("wso2carbon", "wso2carbon".toCharArray());
@@ -152,8 +167,7 @@ public class MockOIDCService {
                 .build();
 
         SignedJWT signedJWT = new SignedJWT(
-                new JWSHeader.Builder(JWSAlgorithm.RS256).keyID(getKeyId(rsaPrivateKey)).build(),
-                claimsSet);
+                new JWSHeader.Builder(JWSAlgorithm.RS256).keyID(getKeyId(rsaPrivateKey)).build(), claimsSet);
 
         // Compute the RSA signature
         signedJWT.sign(signer);
@@ -162,8 +176,8 @@ public class MockOIDCService {
         return signedJWT.serialize();
     }
 
-    public KeyStore getKeyStoreFromFile(String keystoreName, String password,
-                                        String home) throws Exception {
+    private KeyStore getKeyStoreFromFile(String keystoreName, String password, String home) throws Exception {
+
         Path tenantKeystorePath = Paths.get(home, "repository", "resources", "security", keystoreName);
         FileInputStream file = new FileInputStream(tenantKeystorePath.toString());
         KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
@@ -171,7 +185,8 @@ public class MockOIDCService {
         return keystore;
     }
 
-    public String getKeyId(RSAPrivateKey privateKey) throws Exception {
+    private String getKeyId(RSAPrivateKey privateKey) throws Exception {
+
         java.security.MessageDigest sha256 = java.security.MessageDigest.getInstance("SHA-256");
         byte[] keyBytes = privateKey.getEncoded();
         byte[] hash = sha256.digest(keyBytes);

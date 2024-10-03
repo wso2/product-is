@@ -42,6 +42,7 @@ import org.testng.annotations.*;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.application.mgt.AbstractIdentityFederationTestCase;
+import org.wso2.identity.integration.test.base.MockOIDCIdentityProvider;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.*;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthenticationSequence.TypeEnum;
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.FederatedAuthenticatorRequest;
@@ -88,7 +89,7 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
     private CloseableHttpClient client;
     private String primaryISIdpId;
     private String primaryISAppId;
-    private MockOIDCService mockOIDCService;
+    private MockOIDCIdentityProvider mockIdP;
 
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
@@ -104,8 +105,8 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
     @BeforeClass(alwaysRun = true)
     public void initTest() throws Exception {
 
-        mockOIDCService = new MockOIDCService();
-        mockOIDCService.start();
+        mockIdP = new MockOIDCIdentityProvider();
+        mockIdP.start();
         super.initTest();
 
         createServiceClients(PORT_OFFSET_0, new IdentityConstants.ServiceClientType[]{
@@ -137,7 +138,7 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
             deleteIdp(PORT_OFFSET_0, primaryISIdpId);
 
             client.close();
-            mockOIDCService.stop();
+            mockIdP.stop();
         } catch (Exception e) {
             log.error("Failure occurred due to :" + e.getMessage(), e);
             throw e;
@@ -164,6 +165,7 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
         String homepageContent = sendSAMLResponseToWebApp(samlResponse);
         boolean isValidLogin = validateLoginHomePageContent(homepageContent);
         Assert.assertTrue(isValidLogin, "Invalid SAML login response received by travelocity app");
+        mockIdP.verifyForAuthzCodeFlow();
     }
 
     @Test(groups = "wso2.is", description = "Check SAML-to-OIDC federated logout", dependsOnMethods = {
@@ -183,6 +185,7 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
         String logoutPageContent = sendSAMLResponseToWebApp(samlLogoutResponseToWebapp);
         boolean isValidLogout = validateLogoutPageContent(logoutPageContent);
         Assert.assertTrue(isValidLogout, "Invalid SAML Logout response received by travelocity app");
+        mockIdP.verifyForLogoutFlow();
     }
 
     /**TODO Test case for consent denial from the federated IdP during the logout. Implement after resolving
