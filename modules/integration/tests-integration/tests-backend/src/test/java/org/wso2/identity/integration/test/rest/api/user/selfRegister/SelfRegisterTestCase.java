@@ -76,7 +76,7 @@ public class SelfRegisterTestCase extends SelfRegisterTestBase {
         String selfRegisterUserInfoWithInvalidPassword = selfRegisterUserInfo.replaceAll("Password12!", "123");
         // Update the username to avoid conflict with other tests.
         selfRegisterUserInfoWithInvalidPassword = selfRegisterUserInfoWithInvalidPassword
-                .replaceAll("selfRegisterTestUser", "selfRegisterTestUser1");
+                .replaceAll("selfRegisterTestUser", "selfRegisterUserWithInvalidPassword");
         Response responseOfPost =
                 getResponseOfPost(SELF_REGISTRATION_ENDPOINT, selfRegisterUserInfoWithInvalidPassword);
         Assert.assertEquals(responseOfPost.statusCode(), HttpStatus.SC_BAD_REQUEST,
