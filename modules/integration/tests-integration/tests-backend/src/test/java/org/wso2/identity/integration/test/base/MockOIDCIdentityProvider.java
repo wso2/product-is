@@ -145,12 +145,11 @@ public class MockOIDCIdentityProvider {
                 Utils.getResidentCarbonHome());
         RSAPrivateKey rsaPrivateKey = (RSAPrivateKey) wso2KeyStore.getKey("wso2carbon", "wso2carbon".toCharArray());
 
-        // Create RSA-signer with the private key
         JWSSigner signer = new RSASSASigner(rsaPrivateKey);
 
         // Prepare JWT with claims set
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-                .issuer("https://localhost:9443/oauth2/token")
+                .issuer("https://localhost:8089/token")
                 .subject("61b935a1-1915-4792-8916-99c59d03c54a")
                 .audience("LzWfxDK_7LSGxfuL3BlRdXUGEJYa")
                 .claim("azp", "LzWfxDK_7LSGxfuL3BlRdXUGEJYa")
@@ -168,11 +167,7 @@ public class MockOIDCIdentityProvider {
 
         SignedJWT signedJWT = new SignedJWT(
                 new JWSHeader.Builder(JWSAlgorithm.RS256).keyID(getKeyId(rsaPrivateKey)).build(), claimsSet);
-
-        // Compute the RSA signature
         signedJWT.sign(signer);
-
-        // Serialize the token to a compact form
         return signedJWT.serialize();
     }
 

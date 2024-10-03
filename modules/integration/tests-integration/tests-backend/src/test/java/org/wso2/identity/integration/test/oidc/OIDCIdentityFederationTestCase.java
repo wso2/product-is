@@ -80,6 +80,9 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
     private static final String PRIMARY_IS_IDP_AUTHENTICATOR_NAME_OIDC = "OpenIDConnectAuthenticator";
     private static final String ENCODED_PRIMARY_IS_IDP_AUTHENTICATOR_ID_OIDC = "T3BlbklEQ29ubmVjdEF1dGhlbnRpY2F0b3I";
     private static final String PRIMARY_IS_IDP_CALLBACK_URL = "https://localhost:9853/commonauth";
+    public static final String MOCK_IDP_AUTHORIZE_ENDPOINT = "http://localhost:8089/authorize";
+    public static final String MOCK_IDP_TOKEN_ENDPOINT = "http://localhost:8089/token";
+    public static final String MOCK_IDP_LOGOUT_ENDPOINT = "http://localhost:8089/oidc/logout";
 
     private final AutomationContext context;
 
@@ -240,22 +243,22 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
                         .value("oidcFedIdP"))
                 .addProperty(new org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Property()
                         .key(IdentityConstants.Authenticator.OIDC.CLIENT_ID)
-                        .value("secondaryISClientID"))
+                        .value("mockIdPClientID"))
                 .addProperty(new org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Property()
                         .key(IdentityConstants.Authenticator.OIDC.CLIENT_SECRET)
-                        .value("secondaryISClientSecret"))
+                        .value("mockIdPClientSecret"))
                 .addProperty(new org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Property()
                         .key(IdentityConstants.Authenticator.OIDC.OAUTH2_AUTHZ_URL)
-                        .value("http://localhost:8089/authorize"))
+                        .value(MOCK_IDP_AUTHORIZE_ENDPOINT))
                 .addProperty(new org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Property()
                         .key(IdentityConstants.Authenticator.OIDC.OAUTH2_TOKEN_URL)
-                        .value("http://localhost:8089/token"))
+                        .value(MOCK_IDP_TOKEN_ENDPOINT))
                 .addProperty(new org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Property()
                         .key(IdentityConstants.Authenticator.OIDC.CALLBACK_URL)
                         .value(PRIMARY_IS_IDP_CALLBACK_URL))
                 .addProperty(new org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Property()
                         .key(IdentityConstants.Authenticator.OIDC.OIDC_LOGOUT_URL)
-                        .value("http://localhost:8089/oidc/logout"))
+                        .value(MOCK_IDP_LOGOUT_ENDPOINT))
                 .addProperty(new org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Property()
                         .key("commonAuthQueryParams")
                         .value("scope=" + OAuth2Constant.OAUTH2_SCOPE_OPENID_WITH_INTERNAL_LOGIN));
