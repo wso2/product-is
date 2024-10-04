@@ -55,6 +55,11 @@
                                 --add-opens=java.base/java.io=ALL-UNNAMED
                                 --add-opens=java.base/sun.nio.fs=ALL-UNNAMED
                                 --add-opens=java.naming/com.sun.jndi.ldap=ALL-UNNAMED
+                                --add-opens=java.base/sun.security.util=ALL-UNNAMED
+                                --add-opens=java.base/java.security=ALL-UNNAMED
+                                --add-opens=java.base/sun.security.rsa=ALL-UNNAMED
+                                --add-opens=java.base/java.security.cert=ALL-UNNAMED
+                                --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED
                             </argLine>
                             <suiteXmlFiles>
                                 <!--<suiteXmlFile>src/test/resources/testng-server-mgt.xml</suiteXmlFile>-->
