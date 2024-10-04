@@ -20,7 +20,10 @@ package org.wso2.identity.integration.test.base;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import com.github.tomakehurst.wiremock.extension.ResponseTransformerV2;
 import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
+import com.github.tomakehurst.wiremock.http.Response;
+import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.JWSSigner;
@@ -35,6 +38,7 @@ import java.nio.file.Paths;
 import java.security.KeyStore;
 import java.security.interfaces.RSAPrivateKey;
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.containing;
@@ -50,11 +54,36 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 public class MockOIDCIdentityProvider {
 
     private WireMockServer wireMockServer;
+    private final AtomicReference<String> authorizationCode = new AtomicReference<>();
 
     public void start() {
 
         wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig().port(8089)
-                .extensions(new ResponseTemplateTransformer(null, true, null, null)));
+                .extensions(
+                        new ResponseTemplateTransformer(null, true, null, null),
+                        new ResponseTransformerV2() {
+                            @Override
+                            public Response transform(Response response, ServeEvent serveEvent) {
+                                // Extract the code parameter from the redirect URL
+                                String locationHeader = response.getHeaders().getHeader("Location").firstValue();
+                                String codeParam = locationHeader.split("code=")[1].split("&")[0];
+
+                                // Store the authorization code
+                                authorizationCode.set(codeParam);
+                                return response;
+                            }
+
+                            @Override
+                            public boolean applyGlobally() {
+                                return false;
+                            }
+
+                            @Override
+                            public String getName() {
+                                return "authz-code-transformer";
+                            }
+                        }));
+
         wireMockServer.start();
 
         // Configure the mock OIDC endpoints
@@ -101,7 +130,7 @@ public class MockOIDCIdentityProvider {
                 .withQueryParam("client_id", matching(".*"))
                 .withQueryParam("scope", matching(".*"))
                 .willReturn(aResponse()
-                        .withTransformers("response-template")
+                        .withTransformers("response-template", "authz-code-transformer")
                         .withStatus(302)
                         .withHeader("Location",
                                 "{{request.query.redirect_uri}}?session_state=mockid&code="
@@ -130,7 +159,8 @@ public class MockOIDCIdentityProvider {
     public void verifyForAuthzCodeFlow() {
 
         wireMockServer.verify(postRequestedFor(urlPathEqualTo("/token"))
-                .withRequestBody(containing("grant_type=authorization_code")));
+                .withRequestBody(containing("grant_type=authorization_code"))
+                .withRequestBody(containing("code=" + authorizationCode.get())));
         wireMockServer.verify(getRequestedFor(urlPathEqualTo("/authorize")));
     }
 
