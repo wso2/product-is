@@ -83,6 +83,7 @@
                                     <mainClass>org.wso2.carbon.identity.jacoco.ReportGenerator</mainClass>
                                 </transformer>
                             </transformers>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
                         </configuration>
                     </execution>
                 </executions>
