@@ -230,6 +230,7 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.organization.management.v1.OrganizationManagementFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.action.management.v1.ActionsSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.action.management.v1.ActionsFailureTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.extension.management.v1.ExtensionManagementSuccessTest"/>
         </classes>
     </test>
 
