@@ -33,4 +33,4 @@ secure = false
 http_method = "all"
 
 [AdaptiveAuth]
-ScriptEngine = "nashorn"
+ScriptEngine = "openjdkNashorn"
