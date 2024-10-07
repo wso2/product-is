@@ -209,7 +209,11 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
 
         String identityNewResourceFileName = "identity_new_resource.toml";
         if (scriptEngine.equalsIgnoreCase("nashorn")) {
-            identityNewResourceFileName = "identity_new_resource_nashorn.toml";
+            if (Utils.getJavaVersion() >= 15) {
+                identityNewResourceFileName = "identity_new_resource_openjdknashorn.toml";
+            } else {
+                identityNewResourceFileName = "identity_new_resource_nashorn.toml";
+            }
         }
 
         String carbonHome = Utils.getResidentCarbonHome();

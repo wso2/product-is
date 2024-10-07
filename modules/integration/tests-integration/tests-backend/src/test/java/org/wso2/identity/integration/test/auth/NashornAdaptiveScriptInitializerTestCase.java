@@ -23,6 +23,7 @@ import org.testng.annotations.BeforeTest;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
 
@@ -37,9 +38,16 @@ public class NashornAdaptiveScriptInitializerTestCase extends ISIntegrationTest 
         super.init();
         String carbonHome = CarbonUtils.getCarbonHome();
         defaultConfigFile = getDeploymentTomlFile(carbonHome);
+
+        String identityNewResourceFileName = "nashorn_script_engine_config.toml";
+        if (Utils.getJavaVersion() >= 15) {
+            identityNewResourceFileName = "openjdknashorn_script_engine_config.toml";
+        }
+
         File scriptEngineConfigFile = new File(
                 getISResourceLocation() + File.separator + "scriptEngine" + File.separator +
-                        "nashorn_script_engine_config.toml");
+                        identityNewResourceFileName);
+
         scm = new ServerConfigurationManager(isServer);
         scm.applyConfiguration(scriptEngineConfigFile, defaultConfigFile, true, true);
     }
