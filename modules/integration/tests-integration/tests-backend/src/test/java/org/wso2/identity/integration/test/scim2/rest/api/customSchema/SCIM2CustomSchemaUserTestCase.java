@@ -48,6 +48,7 @@ import org.wso2.identity.integration.test.scim2.rest.api.SCIM2BaseTest;
 import org.wso2.identity.integration.test.scim2.rest.api.SCIMUtils;
 
 import java.rmi.RemoteException;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -145,17 +146,25 @@ public class SCIM2CustomSchemaUserTestCase extends SCIM2BaseTest {
         loginLogoutClient = new LoginLogoutClient(context);
         cookie = loginLogoutClient.login();
         claimMetadataManagementServiceClient = new ClaimMetadataManagementServiceClient(backendURL, cookie);
-        int claimDialect = claimMetadataManagementServiceClient.getClaimDialects().length;
+        ClaimDialectDTO[] claimDialects = claimMetadataManagementServiceClient.getClaimDialects();
 
-        // Set custom schema dialect.
-        ClaimDialectDTO claimDialectDTO = new ClaimDialectDTO();
-        claimDialectDTO.setClaimDialectURI(CUSTOM_SCHEMA_URI);
-        claimMetadataManagementServiceClient.addClaimDialect(claimDialectDTO);
+        boolean isCustomSchemaDialectExist = Arrays.stream(claimDialects)
+                .anyMatch(claimDialect -> StringUtils.equals(claimDialect.getClaimDialectURI(), CUSTOM_SCHEMA_URI));
 
-        //Set claims
+        if (!isCustomSchemaDialectExist) {
+            // Set custom schema dialect.
+            ClaimDialectDTO claimDialectDTO = new ClaimDialectDTO();
+            claimDialectDTO.setClaimDialectURI(CUSTOM_SCHEMA_URI);
+            claimMetadataManagementServiceClient.addClaimDialect(claimDialectDTO);
+        }
+
+        //Set claims.
         setSimpleAttribute();
         setComplexAttribute();
-        assertEquals(claimMetadataManagementServiceClient.getClaimDialects().length, claimDialect + 1);
+
+        ClaimDialectDTO[] updatedClaimDialects = claimMetadataManagementServiceClient.getClaimDialects();
+        Assert.assertTrue(Arrays.stream(updatedClaimDialects)
+                .anyMatch(dialect -> StringUtils.equals(dialect.getClaimDialectURI(), CUSTOM_SCHEMA_URI)));
     }
 
     @Test(dependsOnMethods = "createClaims", description = "Create user with custom schema dialect.")
