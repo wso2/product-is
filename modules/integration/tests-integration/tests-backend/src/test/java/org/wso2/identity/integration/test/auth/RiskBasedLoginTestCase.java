@@ -110,7 +110,7 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
 
     @BeforeClass(alwaysRun = true)
     @Parameters({"scriptEngine"})
-    public void testInit(@Optional("nashorn") String scriptEngine) throws Exception {
+    public void testInit(@Optional("graaljs") String scriptEngine) throws Exception {
 
         super.init();
 
