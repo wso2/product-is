@@ -59,6 +59,12 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.wso2.identity.integration.test.base.MockOIDCIdentityProvider.MOCK_IDP_AUTHORIZE_ENDPOINT;
+import static org.wso2.identity.integration.test.base.MockOIDCIdentityProvider.MOCK_IDP_CLIENT_ID;
+import static org.wso2.identity.integration.test.base.MockOIDCIdentityProvider.MOCK_IDP_CLIENT_SECRET;
+import static org.wso2.identity.integration.test.base.MockOIDCIdentityProvider.MOCK_IDP_LOGOUT_ENDPOINT;
+import static org.wso2.identity.integration.test.base.MockOIDCIdentityProvider.MOCK_IDP_TOKEN_ENDPOINT;
+
 /**
  * Integration test cases for SAML-OIDC federation scenarios.
  */
@@ -80,9 +86,6 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
     private static final String PRIMARY_IS_IDP_AUTHENTICATOR_NAME_OIDC = "OpenIDConnectAuthenticator";
     private static final String ENCODED_PRIMARY_IS_IDP_AUTHENTICATOR_ID_OIDC = "T3BlbklEQ29ubmVjdEF1dGhlbnRpY2F0b3I";
     private static final String PRIMARY_IS_IDP_CALLBACK_URL = "https://localhost:9853/commonauth";
-    public static final String MOCK_IDP_AUTHORIZE_ENDPOINT = "http://localhost:8089/authorize";
-    public static final String MOCK_IDP_TOKEN_ENDPOINT = "http://localhost:8089/token";
-    public static final String MOCK_IDP_LOGOUT_ENDPOINT = "http://localhost:8089/oidc/logout";
 
     private final AutomationContext context;
 
@@ -243,10 +246,10 @@ public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTe
                         .value("oidcFedIdP"))
                 .addProperty(new org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Property()
                         .key(IdentityConstants.Authenticator.OIDC.CLIENT_ID)
-                        .value("mockIdPClientID"))
+                        .value(MOCK_IDP_CLIENT_ID))
                 .addProperty(new org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Property()
                         .key(IdentityConstants.Authenticator.OIDC.CLIENT_SECRET)
-                        .value("mockIdPClientSecret"))
+                        .value(MOCK_IDP_CLIENT_SECRET))
                 .addProperty(new org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Property()
                         .key(IdentityConstants.Authenticator.OIDC.OAUTH2_AUTHZ_URL)
                         .value(MOCK_IDP_AUTHORIZE_ENDPOINT))

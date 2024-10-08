@@ -53,6 +53,12 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 
 public class MockOIDCIdentityProvider {
 
+    public static final String MOCK_IDP_AUTHORIZE_ENDPOINT = "http://localhost:8089/authorize";
+    public static final String MOCK_IDP_TOKEN_ENDPOINT = "http://localhost:8089/token";
+    public static final String MOCK_IDP_LOGOUT_ENDPOINT = "http://localhost:8089/oidc/logout";
+    public static final String MOCK_IDP_CLIENT_ID = "mockIdPClientID";
+    public static final String MOCK_IDP_CLIENT_SECRET = "mockIdPClientSecret";
+
     private WireMockServer wireMockServer;
     private final AtomicReference<String> authorizationCode = new AtomicReference<>();
 
@@ -114,6 +120,8 @@ public class MockOIDCIdentityProvider {
                     .withRequestBody(containing("grant_type=authorization_code"))
                     .withRequestBody(containing("code="))
                     .withRequestBody(containing("redirect_uri="))
+                    .withRequestBody(containing("client_secret="+ MOCK_IDP_CLIENT_SECRET))
+                    .withRequestBody(containing("client_id=" + MOCK_IDP_CLIENT_ID))
                     .willReturn(aResponse()
                             .withHeader("Content-Type", "application/json")
                             .withBody("{\"access_token\": \"mock_access_token\", \"token_type\": \"Bearer\", " +
@@ -127,7 +135,7 @@ public class MockOIDCIdentityProvider {
                 .withQueryParam("redirect_uri", matching(".*"))
                 .withQueryParam("state", matching(".*"))
                 .withQueryParam("nonce", matching(".*"))
-                .withQueryParam("client_id", matching(".*"))
+                .withQueryParam("client_id", matching(MOCK_IDP_CLIENT_ID))
                 .withQueryParam("scope", matching(".*"))
                 .willReturn(aResponse()
                         .withTransformers("response-template", "authz-code-transformer")
@@ -135,15 +143,6 @@ public class MockOIDCIdentityProvider {
                         .withHeader("Location",
                                 "{{request.query.redirect_uri}}?session_state=mockid&code="
                                         + java.util.UUID.randomUUID() + "&state={{request.query.state}}")));
-
-        wireMockServer.stubFor(get(urlPathEqualTo("/authorize"))
-                .withQueryParam("id_token_hint", matching(".*"))
-                .withQueryParam("post_redirect_uri", matching(".*"))
-                .withQueryParam("state", matching(".*"))
-                .willReturn(aResponse()
-                        .withTransformers("response-template")
-                        .withStatus(302)
-                        .withHeader("Location", "{{request.query.post_redirect_uri}}")));
 
         wireMockServer.stubFor(get(urlPathEqualTo("/oidc/logout"))
                 .withQueryParam("state", matching(".*"))
