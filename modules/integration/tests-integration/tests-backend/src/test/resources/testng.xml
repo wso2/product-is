@@ -251,7 +251,6 @@
 
     <test name="is-test-adaptive-authentication" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
-            <class name="org.wso2.identity.integration.test.auth.AdaptiveScriptInitializerTestCase"/>
             <class name="org.wso2.identity.integration.test.auth.AdaptiveScriptTemporaryClaimPersistenceTestCase"/>
             <class name="org.wso2.identity.integration.test.auth.SecondaryStoreUserLoginTestCase"/>
             <class name="org.wso2.identity.integration.test.auth.HttpMethodsTestCase" />
@@ -261,17 +260,13 @@
     </test>
 
     <test name="is-test-adaptive-authentication-nashorn" preserve-order="true" parallel="false" group-by-instances="true">
+        <parameter name="scriptEngine" value="nashorn"/>
         <classes>
             <class name="org.wso2.identity.integration.test.auth.NashornAdaptiveScriptInitializerTestCase"/>
             <class name="org.wso2.identity.integration.test.auth.AdaptiveScriptTemporaryClaimPersistenceTestCase"/>
             <class name="org.wso2.identity.integration.test.auth.SecondaryStoreUserLoginTestCase"/>
             <class name="org.wso2.identity.integration.test.auth.HttpMethodsTestCase" />
-        </classes>
-    </test>
-
-    <test name="is-test-adaptive-authentication-nashorn-with-restart" preserve-order="true" parallel="false" group-by-instances="true">
-        <parameter name="scriptEngine" value="nashorn"/>
-        <classes>
+            <!-- This test has a restart-->
             <class name="org.wso2.identity.integration.test.auth.RiskBasedLoginTestCase" />
         </classes>
     </test>
