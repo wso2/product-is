@@ -141,7 +141,7 @@ public class SCIM2CustomSchemaUserTestCase extends SCIM2BaseTest {
         RestAssured.basePath = basePath;
     }
 
-    @Test(description = "Creates custom schema dialect, simple attribute and complex attributes.")
+    @Test(description = "Creates simple attribute and complex attributes in urn:scim:wso2:schema.")
     private void createClaims() throws Exception {
 
         AutomationContext context = new AutomationContext("IDENTITY", mode);
@@ -149,25 +149,10 @@ public class SCIM2CustomSchemaUserTestCase extends SCIM2BaseTest {
         loginLogoutClient = new LoginLogoutClient(context);
         cookie = loginLogoutClient.login();
         claimMetadataManagementServiceClient = new ClaimMetadataManagementServiceClient(backendURL, cookie);
-        ClaimDialectDTO[] claimDialects = claimMetadataManagementServiceClient.getClaimDialects();
-
-        boolean isCustomSchemaDialectExist = Arrays.stream(claimDialects)
-                .anyMatch(claimDialect -> StringUtils.equals(claimDialect.getClaimDialectURI(), CUSTOM_SCHEMA_URI));
-
-        if (!isCustomSchemaDialectExist) {
-            // Set custom schema dialect.
-            ClaimDialectDTO claimDialectDTO = new ClaimDialectDTO();
-            claimDialectDTO.setClaimDialectURI(CUSTOM_SCHEMA_URI);
-            claimMetadataManagementServiceClient.addClaimDialect(claimDialectDTO);
-        }
 
         //Set claims.
         setSimpleAttribute();
         setComplexAttribute();
-
-        ClaimDialectDTO[] updatedClaimDialects = claimMetadataManagementServiceClient.getClaimDialects();
-        Assert.assertTrue(Arrays.stream(updatedClaimDialects)
-                .anyMatch(dialect -> StringUtils.equals(dialect.getClaimDialectURI(), CUSTOM_SCHEMA_URI)));
 
         ExternalClaimDTO[] externalClaimDTOs =
                 claimMetadataManagementServiceClient.getExternalClaims(CUSTOM_SCHEMA_URI);
