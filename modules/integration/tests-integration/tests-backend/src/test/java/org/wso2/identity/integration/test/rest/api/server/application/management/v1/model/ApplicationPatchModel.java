@@ -30,6 +30,7 @@ public class ApplicationPatchModel {
 
     private String name;
     private String description;
+    private String applicationVersion;
     private String imageUrl;
     private String accessUrl;
     private String templateId;
@@ -74,6 +75,24 @@ public class ApplicationPatchModel {
     }
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    /**
+     **/
+    public ApplicationPatchModel applicationVersion(String applicationVersion) {
+
+        this.applicationVersion = applicationVersion;
+        return this;
+    }
+
+    @ApiModelProperty(example = "This is the configuration for Pickup application.")
+    @JsonProperty("applicationVersion")
+    @Valid
+    public String getApplicationVersion() {
+        return applicationVersion;
+    }
+    public void setApplicationVersion(String description) {
+        this.applicationVersion = applicationVersion;
     }
 
     /**
@@ -253,6 +272,7 @@ public class ApplicationPatchModel {
         ApplicationPatchModel applicationPatchModel = (ApplicationPatchModel) o;
         return Objects.equals(this.name, applicationPatchModel.name) &&
                 Objects.equals(this.description, applicationPatchModel.description) &&
+                Objects.equals(this.applicationVersion, applicationPatchModel.applicationVersion) &&
                 Objects.equals(this.imageUrl, applicationPatchModel.imageUrl) &&
                 Objects.equals(this.accessUrl, applicationPatchModel.accessUrl) &&
                 Objects.equals(this.templateId, applicationPatchModel.templateId) &&
@@ -266,7 +286,7 @@ public class ApplicationPatchModel {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, description, imageUrl, accessUrl, templateId, templateVersion, associatedRoles, claimConfiguration, authenticationSequence, advancedConfigurations, provisioningConfigurations);
+        return Objects.hash(name, description, applicationVersion, imageUrl, accessUrl, templateId, templateVersion, associatedRoles, claimConfiguration, authenticationSequence, advancedConfigurations, provisioningConfigurations);
     }
 
     @Override
@@ -277,6 +297,7 @@ public class ApplicationPatchModel {
 
         sb.append("    name: ").append(toIndentedString(name)).append("\n");
         sb.append("    description: ").append(toIndentedString(description)).append("\n");
+        sb.append("    applicationVersion: ").append(toIndentedString(applicationVersion)).append("\n");
         sb.append("    imageUrl: ").append(toIndentedString(imageUrl)).append("\n");
         sb.append("    accessUrl: ").append(toIndentedString(accessUrl)).append("\n");
         sb.append("    templateId: ").append(toIndentedString(templateId)).append("\n");
