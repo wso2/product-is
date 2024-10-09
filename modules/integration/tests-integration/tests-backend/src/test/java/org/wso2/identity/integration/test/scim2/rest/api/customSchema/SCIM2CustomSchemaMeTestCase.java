@@ -21,6 +21,7 @@ package org.wso2.identity.integration.test.scim2.rest.api.customSchema;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpHeaders;
@@ -46,6 +47,7 @@ import org.wso2.identity.integration.common.clients.claim.metadata.mgt.ClaimMeta
 import org.wso2.identity.integration.test.scim2.rest.api.SCIM2BaseTest;
 
 import java.rmi.RemoteException;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -125,7 +127,10 @@ public class SCIM2CustomSchemaMeTestCase extends SCIM2BaseTest {
     public void testFinish() {
 
         try {
-            claimMetadataManagementServiceClient.removeClaimDialect(CUSTOM_SCHEMA_URI);
+            claimMetadataManagementServiceClient.removeExternalClaim(CUSTOM_SCHEMA_URI, COUNTRY_CLAIM_ATTRIBUTE_URI);
+            claimMetadataManagementServiceClient.removeExternalClaim(CUSTOM_SCHEMA_URI,
+                    MANAGER_EMAIL_CLAIM_ATTRIBUTE_URI);
+            claimMetadataManagementServiceClient.removeExternalClaim(CUSTOM_SCHEMA_URI, MANAGER_CLAIM_ATTRIBUTE_URI);
             claimMetadataManagementServiceClient.removeLocalClaim(MANAGER_LOCAL_CLAIM_URI);
         } catch (RemoteException | ClaimMetadataManagementServiceClaimMetadataException e) {
            log.error(e);
@@ -147,17 +152,33 @@ public class SCIM2CustomSchemaMeTestCase extends SCIM2BaseTest {
         loginLogoutClient = new LoginLogoutClient(context);
         cookie = loginLogoutClient.login();
         claimMetadataManagementServiceClient = new ClaimMetadataManagementServiceClient(backendURL, cookie);
-        int claimDialect = claimMetadataManagementServiceClient.getClaimDialects().length;
+        ClaimDialectDTO[] claimDialects = claimMetadataManagementServiceClient.getClaimDialects();
 
-        // Set custom schema dialect.
-        ClaimDialectDTO claimDialectDTO = new ClaimDialectDTO();
-        claimDialectDTO.setClaimDialectURI(CUSTOM_SCHEMA_URI);
-        claimMetadataManagementServiceClient.addClaimDialect(claimDialectDTO);
+        boolean isCustomSchemaDialectExist = Arrays.stream(claimDialects)
+                .anyMatch(claimDialect -> StringUtils.equals(claimDialect.getClaimDialectURI(), CUSTOM_SCHEMA_URI));
+
+        if (!isCustomSchemaDialectExist) {
+            // Set custom schema dialect.
+            ClaimDialectDTO claimDialectDTO = new ClaimDialectDTO();
+            claimDialectDTO.setClaimDialectURI(CUSTOM_SCHEMA_URI);
+            claimMetadataManagementServiceClient.addClaimDialect(claimDialectDTO);
+        }
 
         //Set claims
         setSimpleAttribute();
         setComplexAttribute();
-        assertEquals(claimMetadataManagementServiceClient.getClaimDialects().length, claimDialect + 1);
+        ClaimDialectDTO[] updatedClaimDialects = claimMetadataManagementServiceClient.getClaimDialects();
+        Assert.assertTrue(Arrays.stream(updatedClaimDialects)
+                .anyMatch(dialect -> StringUtils.equals(dialect.getClaimDialectURI(), CUSTOM_SCHEMA_URI)));
+
+        ExternalClaimDTO[] externalClaimDTOs =
+                claimMetadataManagementServiceClient.getExternalClaims(CUSTOM_SCHEMA_URI);
+        Assert.assertTrue(Arrays.stream(externalClaimDTOs)
+                .anyMatch(claim -> StringUtils.equals(claim.getExternalClaimURI(), COUNTRY_CLAIM_ATTRIBUTE_URI)));
+        Assert.assertTrue(Arrays.stream(externalClaimDTOs)
+                .anyMatch(claim -> StringUtils.equals(claim.getExternalClaimURI(), MANAGER_CLAIM_ATTRIBUTE_URI)));
+        Assert.assertTrue(Arrays.stream(externalClaimDTOs)
+                .anyMatch(claim -> StringUtils.equals(claim.getExternalClaimURI(), MANAGER_EMAIL_CLAIM_ATTRIBUTE_URI)));
     }
 
     @Test(dependsOnMethods = "createClaims", description = "Create user with custom schema dialect.")

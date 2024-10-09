@@ -124,7 +124,10 @@ public class SCIM2CustomSchemaUserTestCase extends SCIM2BaseTest {
     public void testFinish() {
 
         try {
-            claimMetadataManagementServiceClient.removeClaimDialect(CUSTOM_SCHEMA_URI);
+            claimMetadataManagementServiceClient.removeExternalClaim(CUSTOM_SCHEMA_URI, COUNTRY_CLAIM_ATTRIBUTE_URI);
+            claimMetadataManagementServiceClient.removeExternalClaim(CUSTOM_SCHEMA_URI,
+                    MANAGER_EMAIL_CLAIM_ATTRIBUTE_URI);
+            claimMetadataManagementServiceClient.removeExternalClaim(CUSTOM_SCHEMA_URI, MANAGER_CLAIM_ATTRIBUTE_URI);
             claimMetadataManagementServiceClient.removeLocalClaim(MANAGER_LOCAL_CLAIM_URI);
         } catch (RemoteException | ClaimMetadataManagementServiceClaimMetadataException e) {
             log.error(e);
@@ -165,6 +168,15 @@ public class SCIM2CustomSchemaUserTestCase extends SCIM2BaseTest {
         ClaimDialectDTO[] updatedClaimDialects = claimMetadataManagementServiceClient.getClaimDialects();
         Assert.assertTrue(Arrays.stream(updatedClaimDialects)
                 .anyMatch(dialect -> StringUtils.equals(dialect.getClaimDialectURI(), CUSTOM_SCHEMA_URI)));
+
+        ExternalClaimDTO[] externalClaimDTOs =
+                claimMetadataManagementServiceClient.getExternalClaims(CUSTOM_SCHEMA_URI);
+        Assert.assertTrue(Arrays.stream(externalClaimDTOs)
+                .anyMatch(claim -> StringUtils.equals(claim.getExternalClaimURI(), COUNTRY_CLAIM_ATTRIBUTE_URI)));
+        Assert.assertTrue(Arrays.stream(externalClaimDTOs)
+                .anyMatch(claim -> StringUtils.equals(claim.getExternalClaimURI(), MANAGER_CLAIM_ATTRIBUTE_URI)));
+        Assert.assertTrue(Arrays.stream(externalClaimDTOs)
+                .anyMatch(claim -> StringUtils.equals(claim.getExternalClaimURI(), MANAGER_EMAIL_CLAIM_ATTRIBUTE_URI)));
     }
 
     @Test(dependsOnMethods = "createClaims", description = "Create user with custom schema dialect.")
