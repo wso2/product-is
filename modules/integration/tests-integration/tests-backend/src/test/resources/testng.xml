@@ -136,6 +136,7 @@
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenRevocationWithSessionTerminationTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenRevocationWithMultipleSessionTerminationTestCase"/>
             <class name="org.wso2.identity.integration.test.applicationNativeAuthentication.ApplicationNativeAuthenticationTestCase"/>
+            <class name="org.wso2.identity.integration.test.applicationNativeAuthentication.ApplicationNativeAuthentication2FATestCase"/>
             <class name="org.wso2.identity.integration.test.apiAuthorization.RBACWithAPIAuthorizationTestCase"/>
             <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenPasswordGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenClientCredentialsGrantTestCase"/>
