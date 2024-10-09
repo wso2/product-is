@@ -38,40 +38,5 @@ hash= "66cd9688a2ae068244ea01e70f0e230f5623b7fa4cdecb65070a09ec06452262"
 [identity.auth_framework.endpoint]
 app_password= "dashboard"
 
-# The KeyStore which is used for encrypting/decrypting internal data. By default the primary keystore is used as the internal keystore.
-
-#[keystore.internal]
-#file_name = "$ref{keystore.primary.file_name}"
-#type = "$ref{keystore.primary.type}"
-#password = "$ref{keystore.primary.password}"
-#alias = "$ref{keystore.primary.alias}"
-#key_password = "$ref{keystore.primary.key_password}"
-
-# The KeyStore which is used for tls communication. By default the primary keystore is used as the tls keystore.
-
-#[keystore.tls]
-#file_name = "$ref{keystore.primary.file_name}"
-#type = "$ref{keystore.primary.type}"
-#password = "$ref{keystore.primary.password}"
-#alias = "$ref{keystore.primary.alias}"
-#key_password = "$ref{keystore.primary.key_password}"
-
-#Google reCAPTCHA settings.
-
-#[recaptcha]
-#enabled = true
-#api_url = "https://www.google.com/recaptcha/api.js"
-#verify_url = "https://www.google.com/recaptcha/api/siteverify"
-#site_key = ""
-#secret_key = ""
-
-# SMTP email sender settings.
-#[output_adapter.email]
-#from_address= "abcd@gmail.com"
-#username= "abcd"
-#password= "xxxx"
-#hostname= "smtp.gmail.com"
-#port= 587
-
 [AdaptiveAuth]
 ScriptEngine = "openjdkNashorn"
