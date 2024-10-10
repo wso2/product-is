@@ -51,11 +51,14 @@ import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 
+/**
+ * Mock OIDC Identity Provider for testing OIDC flows.
+ */
 public class MockOIDCIdentityProvider {
 
-    public static final String MOCK_IDP_AUTHORIZE_ENDPOINT = "http://localhost:8089/authorize";
-    public static final String MOCK_IDP_TOKEN_ENDPOINT = "http://localhost:8089/token";
-    public static final String MOCK_IDP_LOGOUT_ENDPOINT = "http://localhost:8089/oidc/logout";
+    public static final String MOCK_IDP_AUTHORIZE_ENDPOINT = "https://localhost:8089/authorize";
+    public static final String MOCK_IDP_TOKEN_ENDPOINT = "https://localhost:8089/token";
+    public static final String MOCK_IDP_LOGOUT_ENDPOINT = "https://localhost:8089/oidc/logout";
     public static final String MOCK_IDP_CLIENT_ID = "mockIdPClientID";
     public static final String MOCK_IDP_CLIENT_SECRET = "mockIdPClientSecret";
 
@@ -64,7 +67,12 @@ public class MockOIDCIdentityProvider {
 
     public void start() {
 
-        wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig().port(8089)
+        wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig()
+                .httpsPort(8089)
+                .keystorePath(Paths.get(Utils.getResidentCarbonHome(), "repository", "resources", "security",
+                        "wso2carbon.p12").toAbsolutePath().toString())
+                .keystorePassword("wso2carbon")
+                .keyManagerPassword("wso2carbon")
                 .extensions(
                         new ResponseTemplateTransformer(null, true, null, null),
                         new ResponseTransformerV2() {
