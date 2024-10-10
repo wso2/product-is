@@ -2244,6 +2244,11 @@
                 <artifactId>org.wso2.carbon.extension.identity.helper</artifactId>
                 <version>${identity.extension.utils}</version>
             </dependency>
+            <dependency>
+                <groupId>com.nimbusds</groupId>
+                <artifactId>nimbus-jose-jwt</artifactId>
+                <version>${nimbus-jose-jwt.version}</version>
+            </dependency>
 
             <!-- Integration UI Templates -->
             <dependency>
@@ -2635,6 +2640,7 @@
         <greenmail.version>2.0.1</greenmail.version>
         <jakarta.mail.version>2.0.1</jakarta.mail.version>
         <jsoup.version>1.15.3</jsoup.version>
+        <nimbus-jose-jwt.version>9.41.2</nimbus-jose-jwt.version>
     </properties>
 
     <repositories>
