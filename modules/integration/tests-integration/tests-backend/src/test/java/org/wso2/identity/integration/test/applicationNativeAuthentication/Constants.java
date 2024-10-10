@@ -60,4 +60,15 @@ public class Constants {
     public static final String SUCCESS_COMPLETED = "SUCCESS_COMPLETED";
     public static final String AUTH_DATA_CODE = "authData.code";
     public static final String AUTH_DATA_SESSION_STATE = "authData.session_state";
+    public static final String PARAM = "param";
+    public static final String TYPE = "type";
+    public static final String ORDER = "order";
+    public static final String I18N_KEY = "i18nKey";
+    public static final String DISPLAY_NAME = "displayName";
+    public static final String CONFIDENTIAL = "confidential";
+    public static final String MESSAGE = "message";
+    public static final String DESCRIPTION = "description";
+    public static final String MESSAGE_ID = "messageId";
+    public static final String MESSAGES = "messages";
+    public static final String FAIL_INCOMPLETE = "FAIL_INCOMPLETE";
 }
