@@ -133,6 +133,7 @@ public class OIDCDiscoveryTestCase extends ISIntegrationTest {
 
     @DataProvider(name = "oidcDiscoveryConfigProvider")
     public static Object[][] configProvider() {
+
         return new Object[][]{
                 {"", "oidcdiscovery"},
                 {"carbon.super", "oidcdiscovery"},
@@ -145,6 +146,7 @@ public class OIDCDiscoveryTestCase extends ISIntegrationTest {
 
     @DataProvider(name = "webfingerConfigProvider")
     public static Object[][] webfingerConfigProvider(){
+
         return new DiscoveryConfig[][]{
                 {new DiscoveryConfig("acct:admin@localhost", "")},
                 {new DiscoveryConfig("acct:admin%40wso2.com@localhost", "wso2.com")},
@@ -189,6 +191,7 @@ public class OIDCDiscoveryTestCase extends ISIntegrationTest {
      */
     private void validateEndpoint(JSONObject jsonResponse, String endpointKey, String expectedEndpoint,
                                   String tenantDomain) {
+
         String endpointUrl = jsonResponse.get(endpointKey).toString();
         String expectedUrl = getTenantQualifiedURL(isServerBackendUrl + expectedEndpoint, tenantDomain);
         Assert.assertEquals(endpointUrl, expectedUrl,
@@ -196,6 +199,7 @@ public class OIDCDiscoveryTestCase extends ISIntegrationTest {
     }
 
     private void validateArrayElements(JSONObject jsonResponse, String key, String[] expectedElements) {
+
         JSONArray elementsArray = (JSONArray) jsonResponse.get(key);
         String[] actualElements = new String[elementsArray.size()];
         for (int i = 0; i < elementsArray.size(); i++) {
@@ -209,6 +213,7 @@ public class OIDCDiscoveryTestCase extends ISIntegrationTest {
     }
 
     private boolean containsAll(String[] actualElements, String[] expectedElements) {
+
         for (String expectedElement : expectedElements) {
             boolean found = false;
             for (String actualElement : actualElements) {
@@ -226,7 +231,6 @@ public class OIDCDiscoveryTestCase extends ISIntegrationTest {
 
     @Test(alwaysRun = true, groups = "wso2.is", description = "Discovery test", dependsOnMethods = { "testDiscovery" })
     public void testDiscoveryForInvalidIssuer() throws IOException {
-
 
         try (CloseableHttpClient client = HttpClients.createDefault()) {
             String discoveryUrl =  isServerBackendUrl + "/oauth2/invalidIssuer/.well-known/openid-configuration";
