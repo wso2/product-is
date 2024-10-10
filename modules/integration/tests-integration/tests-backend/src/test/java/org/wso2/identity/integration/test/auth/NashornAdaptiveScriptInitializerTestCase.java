@@ -57,7 +57,8 @@ public class NashornAdaptiveScriptInitializerTestCase extends AbstractAdaptiveAu
         File scriptEngineConfigFile = new File(
                 getISResourceLocation() + File.separator + "scriptEngine" + File.separator +
                         identityNewResourceFileName);
-        serverConfigurationManager.applyConfiguration(scriptEngineConfigFile, defaultConfigFile, true, true);
+        serverConfigurationManager.applyConfigurationWithoutRestart(scriptEngineConfigFile, defaultConfigFile, true);
+        serverConfigurationManager.restartGracefully();
     }
 
     private void runAdaptiveAuthenticationDependencyScript(boolean disable) {
