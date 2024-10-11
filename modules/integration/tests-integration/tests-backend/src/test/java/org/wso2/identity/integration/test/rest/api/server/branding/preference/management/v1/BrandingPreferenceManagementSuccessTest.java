@@ -36,11 +36,11 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 
 import java.io.IOException;
+import static org.wso2.identity.integration.test.util.Utils.areJSONObjectsEqual;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.testng.Assert.assertNotNull;
-import static org.wso2.identity.integration.test.entitlement.EntitlementJSONSupportMultiDecisionProfileTestCase.areJSONObjectsEqual;
 
 /**
  * Test class for Branding Preference Management REST APIs success paths.
