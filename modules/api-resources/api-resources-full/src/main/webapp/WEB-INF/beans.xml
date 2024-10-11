@@ -425,15 +425,6 @@
             <bean class="org.apache.cxf.jaxrs.ext.search.SearchContextProvider"/>
         </jaxrs:providers>
     </jaxrs:server>
-    <jaxrs:server id="entitlement" address="/identity/entitlement/decision">
-        <jaxrs:serviceBeans>
-            <bean class="org.wso2.carbon.identity.entitlement.endpoint.resources.DecisionResource"/>
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider"/>
-            <bean class="org.wso2.carbon.identity.entitlement.endpoint.filter.EntitlementExceptionMapper"/>
-        </jaxrs:providers>
-    </jaxrs:server>
     <jaxrs:server id="recovery" address="/identity/recovery/v0.9">
         <jaxrs:serviceBeans>
             <bean class="org.wso2.carbon.identity.recovery.endpoint.ClaimsApi"/>
