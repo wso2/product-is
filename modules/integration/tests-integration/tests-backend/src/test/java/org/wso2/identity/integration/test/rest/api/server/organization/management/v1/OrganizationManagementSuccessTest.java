@@ -1133,7 +1133,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     public void testGetPaginatedOrganizationsDiscoveryForNonNumericEdgeCasesOfOffsetAndOffsetWithLimit() {
 
         // Case 1: When offset param is present (limit = 0).
-        validatePaginationScenarioWithOffsetAndLimit(0, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, 1, 0, true);
+        validatePaginationScenarioWithOffsetAndLimit(0, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, 1, 0, false);
 
         // Case 2: When offset param is present (limit = 5).
         validatePaginationScenarioWithOffsetAndLimit(5, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, 1, 5, true);
@@ -1147,7 +1147,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
                 NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, false);
 
         // Case 5: When offset param is not present (limit = 0).
-        validatePaginationScenarioWithLimitOnly(0, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, 1, 0, true);
+        validatePaginationScenarioWithLimitOnly(0, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, 1, 0, false);
 
         // Case 6: When offset param is not present (limit = 5).
         validatePaginationScenarioWithLimitOnly(5, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, 1, 5, true);
@@ -1479,15 +1479,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
                                                                  int offset) {
 
         if (limit == 0) {
-            if (offset == 0) {
-                Assert.assertNotNull(getLink(links, LINK_REL_NEXT),
-                        "'next' link should be present when the limit and offset is 0.");
-            } else {
-                Assert.assertNotNull(getLink(links, LINK_REL_NEXT),
-                        "'next' link should be present when the limit is 0 but the offset is non-zero.");
-                Assert.assertNotNull(getLink(links, LINK_REL_PREVIOUS),
-                        "'previous' link should be present when the limit is 0 but the offset is non-zero.");
-            }
+            Assert.assertTrue(links.isEmpty(),
+                        "'links' should be empty when the limit is 0.");
         } else {
             if (offset == 0) {
                 Assert.assertTrue(links.isEmpty(),
