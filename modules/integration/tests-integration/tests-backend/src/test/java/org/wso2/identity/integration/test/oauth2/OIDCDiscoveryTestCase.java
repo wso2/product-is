@@ -72,7 +72,7 @@ public class OIDCDiscoveryTestCase extends ISIntegrationTest {
     }
 
     @Test(alwaysRun = true, groups = "wso2.is", description = "webfinger test",
-            dataProvider = "webfingerConfigProvider")
+            dataProvider = "webFingerConfigProvider")
     public void testWebFinger(DiscoveryConfig config) {
 
         String relUri = "http://openid.net/specs/connect/1.0/issuer";
@@ -144,8 +144,8 @@ public class OIDCDiscoveryTestCase extends ISIntegrationTest {
         };
     }
 
-    @DataProvider(name = "webfingerConfigProvider")
-    public static Object[][] webfingerConfigProvider(){
+    @DataProvider(name = "webFingerConfigProvider")
+    public static Object[][] webFingerConfigProvider(){
 
         return new DiscoveryConfig[][]{
                 {new DiscoveryConfig("acct:admin@localhost", "")},
