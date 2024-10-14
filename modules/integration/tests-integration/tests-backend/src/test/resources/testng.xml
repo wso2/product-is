@@ -251,10 +251,13 @@
             <class name="org.wso2.identity.integration.test.scim2.rest.api.customSchema.SCIM2CustomSchemaMeTestCase"/>
         </classes>
     </test>
-
+    <!--This test block, is-test-adaptive-authentication, executes adaptive script-related integration tests
+        using the default script engine of product-is, which is GraalJS. There is no additional configurations
+        or initialize scripts required for the moment. Currently, this test block supports JDK runtimes
+        up to version 21.
+    -->
     <test name="is-test-adaptive-authentication" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
-            <class name="org.wso2.identity.integration.test.auth.AdaptiveScriptInitializerTestCase"/>
             <class name="org.wso2.identity.integration.test.auth.AdaptiveScriptTemporaryClaimPersistenceTestCase"/>
             <class name="org.wso2.identity.integration.test.auth.SecondaryStoreUserLoginTestCase"/>
             <class name="org.wso2.identity.integration.test.auth.HttpMethodsTestCase" />
@@ -263,7 +266,17 @@
         </classes>
     </test>
 
+    <!--This test block, is-test-adaptive-authentication-nashorn, runs adaptive script-related integration tests
+        specifically enabling the Nashorn script engine in product-is using a deployment.toml configuration.
+         The NashornAdaptiveScriptInitializerTestCase is responsible for downloading the necessary jars
+         to enable the Nashorn engine.
+
+         Two different Nashorn engines are used based on JDK runtime compatibility in integration tests:
+                Nashorn: Supports JDK runtimes up to version 15.
+                OpenJDKNashorn: Supports JDK runtimes above version 15.
+    -->
     <test name="is-test-adaptive-authentication-nashorn" preserve-order="true" parallel="false" group-by-instances="true">
+        <parameter name="scriptEngine" value="nashorn"/>
         <classes>
             <class name="org.wso2.identity.integration.test.auth.NashornAdaptiveScriptInitializerTestCase"/>
             <class name="org.wso2.identity.integration.test.auth.AdaptiveScriptTemporaryClaimPersistenceTestCase"/>
@@ -272,9 +285,17 @@
         </classes>
     </test>
 
+    <!--This test block executes RiskBasedLoginTestCase specifically on nashorn. Required initialization is done by the
+        test class itself.
+
+        Two different Nashorn engines are used based on JDK runtime compatibility in integration tests:
+                Nashorn: Supports JDK runtimes up to version 15.
+                OpenJDKNashorn: Supports JDK runtimes above version 15.
+    -->
     <test name="is-test-adaptive-authentication-nashorn-with-restart" preserve-order="true" parallel="false" group-by-instances="true">
         <parameter name="scriptEngine" value="nashorn"/>
         <classes>
+            <!-- This test has a restart-->
             <class name="org.wso2.identity.integration.test.auth.RiskBasedLoginTestCase" />
         </classes>
     </test>

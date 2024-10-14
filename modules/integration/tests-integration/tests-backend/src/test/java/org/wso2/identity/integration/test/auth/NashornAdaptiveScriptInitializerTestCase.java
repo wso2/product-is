@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2022 WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -18,38 +18,138 @@
 
 package org.wso2.identity.integration.test.auth;
 
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
-import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
-import org.wso2.carbon.utils.CarbonUtils;
-import org.wso2.identity.integration.common.utils.ISIntegrationTest;
-
 import java.io.File;
 
-public class NashornAdaptiveScriptInitializerTestCase extends ISIntegrationTest {
+import org.apache.commons.logging.Log;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
+import org.wso2.carbon.automation.extensions.servers.utils.ServerLogReader;
+import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
+import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.identity.integration.test.util.Utils;
 
-    private ServerConfigurationManager scm;
-    private File defaultConfigFile;
+/**
+ * Initiation Test for adaptive authentication.
+ */
+public class NashornAdaptiveScriptInitializerTestCase extends AbstractAdaptiveAuthenticationTestCase {
+
+    private ServerConfigurationManager serverConfigurationManager;
+
+    private int javaVersion;
 
     @BeforeTest(alwaysRun = true)
-    public void initScriptEngineConfig() throws Exception {
+    public void testInit() throws Exception {
 
         super.init();
+        serverConfigurationManager = new ServerConfigurationManager(isServer);
         String carbonHome = CarbonUtils.getCarbonHome();
-        defaultConfigFile = getDeploymentTomlFile(carbonHome);
+        File defaultConfigFile = getDeploymentTomlFile(carbonHome);
+
+        javaVersion = Utils.getJavaVersion();
+        String identityNewResourceFileName = "nashorn_script_engine_config.toml";
+
+        if (javaVersion >= 15) {
+            // Download OpenJDK Nashorn only if the JDK version is Higher or Equal to 15.
+            runAdaptiveAuthenticationDependencyScript(false, serverConfigurationManager, log);
+            identityNewResourceFileName = "openjdknashorn_script_engine_config.toml";
+        }
+
         File scriptEngineConfigFile = new File(
                 getISResourceLocation() + File.separator + "scriptEngine" + File.separator +
-                        "nashorn_script_engine_config.toml");
-        scm = new ServerConfigurationManager(isServer);
-        scm.applyConfiguration(scriptEngineConfigFile, defaultConfigFile, true, true);
+                        identityNewResourceFileName);
+        serverConfigurationManager.applyConfigurationWithoutRestart(scriptEngineConfigFile, defaultConfigFile, true);
+        serverConfigurationManager.restartGracefully();
+    }
+
+    protected static void runAdaptiveAuthenticationDependencyScript(boolean disable, ServerConfigurationManager scm, Log logger) {
+
+        ServerLogReader inputStreamHandler;
+        ServerLogReader errorStreamHandler;
+        String targetFolder = System.getProperty("carbon.home");
+        String scriptFolder = FrameworkPathUtil.getSystemResourceLocation() + File.separator;
+        Process tempProcess = null;
+        File scriptFile = new File(scriptFolder);
+        Runtime runtime = Runtime.getRuntime();
+
+        try {
+            if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+                logger.info("Operating System is Windows. Executing batch script");
+                if (disable) {
+                    /*
+                    Restarting before the excution to release the locks on nashorn
+                    and asm-util jars in the dropins directory.
+                     */
+                    scm.restartGracefully();
+                    tempProcess = runtime.exec(
+                            new String[]{"cmd", "/c", "adaptive.bat", targetFolder, "DISABLE"}, null, scriptFile);
+                } else {
+                    tempProcess = runtime.exec(
+                            new String[]{"cmd", "/c", "adaptive.bat", targetFolder}, null, scriptFile);
+                }
+                errorStreamHandler = new ServerLogReader("errorStream", tempProcess.getErrorStream());
+                inputStreamHandler = new ServerLogReader("inputStream", tempProcess.getInputStream());
+                inputStreamHandler.start();
+                errorStreamHandler.start();
+                boolean runStatus = waitForMessage(inputStreamHandler, disable);
+                logger.info("Status Message : " + runStatus);
+                scm.restartGracefully();
+            } else {
+                logger.info("Operating system is not windows. Executing shell script");
+                if (disable) {
+                    tempProcess = Runtime.getRuntime().exec(
+                            new String[]{"/bin/bash", "adaptive.sh", targetFolder, "DISABLE"}, null, scriptFile);
+                } else {
+                    tempProcess = Runtime.getRuntime().exec(
+                            new String[]{"/bin/bash", "adaptive.sh", targetFolder}, null, scriptFile);
+                }
+                errorStreamHandler = new ServerLogReader("errorStream", tempProcess.getErrorStream());
+                inputStreamHandler = new ServerLogReader("inputStream", tempProcess.getInputStream());
+                inputStreamHandler.start();
+                errorStreamHandler.start();
+                boolean runStatus = waitForMessage(inputStreamHandler, disable);
+                logger.info("Status Message : " + runStatus);
+                scm.restartGracefully();
+            }
+        } catch (Exception e) {
+            logger.error("Failed to execute adaptive authentication dependency script", e);
+        } finally {
+            if (tempProcess != null) {
+                tempProcess.destroy();
+            }
+        }
+    }
+
+    private void restartServer() throws AutomationUtilException {
+
+        serverConfigurationManager.restartGracefully();
+    }
+
+    private static boolean waitForMessage(ServerLogReader inputStreamHandler, boolean disable) {
+
+        long time = System.currentTimeMillis() + 60 * 1000;
+        String message = "Adaptive authentication successfully enabled.";
+        if (disable) {
+            message = "Adaptive authentication successfully disabled.";
+        }
+        while (System.currentTimeMillis() < time) {
+            if (inputStreamHandler.getOutput().contains(message)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @AfterTest(alwaysRun = true)
     public void resetScriptEngineConfig() throws Exception {
 
         super.init();
-        scm.restoreToLastConfiguration(false);
-        scm.restartGracefully();
+        serverConfigurationManager.restoreToLastConfiguration(false);
+        javaVersion = (javaVersion == 0) ? Utils.getJavaVersion() : javaVersion;
+        if (javaVersion >= 15) {
+            runAdaptiveAuthenticationDependencyScript(true, serverConfigurationManager, log);
+        }
+        restartServer();
     }
-
 }
