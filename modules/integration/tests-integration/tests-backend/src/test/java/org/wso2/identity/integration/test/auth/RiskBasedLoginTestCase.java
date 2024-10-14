@@ -94,13 +94,10 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
     private ApplicationManagementServiceClient applicationManagementServiceClient;
     private WebAppAdminClient webAppAdminClient;
     private CookieStore cookieStore = new BasicCookieStore();
-    private Lookup<CookieSpecProvider> cookieSpecRegistry;
-    private RequestConfig requestConfig;
     private HttpClient client;
     private HttpResponse response;
-    private List<NameValuePair> consentParameters = new ArrayList<>();
     private ServerConfigurationManager serverConfigurationManager;
-    private IdentityProvider superTenantResidentIDP;
+    private boolean openJDKNashornEnabled = false;
 
     private Map<String, Integer> userRiskScores = new HashMap<>();
 
@@ -145,7 +142,7 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
         String authenticatorWebappPathString = Utils.getResidentCarbonHome()
                 + File.separator + "repository" + File.separator + "deployment" + File.separator
                 + "server" + File.separator + "webapps" + File.separator + "sample-auth";
-        waitForWebappToDeploy(authenticatorWebappPathString, 120000L);
+        waitForWebappToDeploy(authenticatorWebappPathString);
 
         log.info("Copied the demo authenticator war file to " + authenticatorWarPathString);
         Assert.assertTrue(Files.exists(Paths.get(authenticatorWarPathString)), "Demo Authenticator war is not copied " +
@@ -168,10 +165,10 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
                 configContext);
         webAppAdminClient = new WebAppAdminClient(backendURL, sessionCookie);
 
-        cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+        Lookup<CookieSpecProvider> cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
                 .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
                 .build();
-        requestConfig = RequestConfig.custom()
+        RequestConfig requestConfig = RequestConfig.custom()
                 .setCookieSpec(CookieSpecs.DEFAULT)
                 .build();
         client = HttpClientBuilder.create()
@@ -191,16 +188,16 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
         microserviceServer = MicroserviceUtil.initMicroserviceServer();
         MicroserviceUtil.deployService(microserviceServer, this);
 
-        superTenantResidentIDP = superTenantIDPMgtClient.getResidentIdP();
+        IdentityProvider superTenantResidentIDP = superTenantIDPMgtClient.getResidentIdP();
         updateResidentIDPProperty(superTenantResidentIDP, "adaptive_authentication.analytics.receiver",
                 "http://localhost:" + microserviceServer.getPort());
 
         userRiskScores.put(userInfo.getUserName(), 0);
     }
 
-    private void changeAdaptiveAuthenticationScript(String scriptFileName) throws Exception {
+    private void changeAdaptiveAuthenticationScript() throws Exception {
 
-        String script = getConditionalAuthScript(scriptFileName);
+        String script = getConditionalAuthScript("RiskBasedLoginScriptPayload.js");
         serviceProvider.getLocalAndOutBoundAuthenticationConfig().getAuthenticationScriptConfig().setContent(script);
         applicationManagementServiceClient.updateApplicationData(serviceProvider);
     }
@@ -211,6 +208,9 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
         if (scriptEngine.equalsIgnoreCase("nashorn")) {
             if (Utils.getJavaVersion() >= 15) {
                 identityNewResourceFileName = "identity_new_resource_openjdknashorn.toml";
+                NashornAdaptiveScriptInitializerTestCase.runAdaptiveAuthenticationDependencyScript(false,
+                        serverConfigurationManager, log);
+                openJDKNashornEnabled = true;
             } else {
                 identityNewResourceFileName = "identity_new_resource_nashorn.toml";
             }
@@ -228,13 +228,17 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
     private void resetISConfiguration() throws Exception {
 
         serverConfigurationManager.restoreToLastConfiguration(false);
+        if (openJDKNashornEnabled) {
+            NashornAdaptiveScriptInitializerTestCase.runAdaptiveAuthenticationDependencyScript(true,
+                    serverConfigurationManager, log);
+        }
     }
 
-    private void waitForWebappToDeploy(String authenticatorWebappPathString, long timeout) {
+    private void waitForWebappToDeploy(String authenticatorWebappPathString) {
 
         long startTime = System.currentTimeMillis();
 
-        while (System.currentTimeMillis() - startTime < timeout) {
+        while (System.currentTimeMillis() - startTime < 120000L) {
             if (Files.exists(Paths.get(authenticatorWebappPathString))) {
                 log.info(authenticatorWebappPathString + " deployed successfully.");
                 break;
@@ -380,7 +384,7 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
     @Test(groups = "wso2.is", description = "Check conditional authentication flow.")
     public void testAuthenticationForRiskWithComplexPayload() throws Exception {
 
-        changeAdaptiveAuthenticationScript("RiskBasedLoginScriptPayload.js");
+        changeAdaptiveAuthenticationScript();
         cookieStore.clear();
         response = loginWithOIDC(PRIMARY_IS_APPLICATION_NAME, consumerKey, client);
 

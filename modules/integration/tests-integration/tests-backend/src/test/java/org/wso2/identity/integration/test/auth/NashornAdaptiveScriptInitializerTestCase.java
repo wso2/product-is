@@ -20,8 +20,10 @@ package org.wso2.identity.integration.test.auth;
 
 import java.io.File;
 
+import org.apache.commons.logging.Log;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
+import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.automation.extensions.servers.utils.ServerLogReader;
 import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
@@ -50,7 +52,7 @@ public class NashornAdaptiveScriptInitializerTestCase extends AbstractAdaptiveAu
 
         if (javaVersion >= 15) {
             // Download OpenJDK Nashorn only if the JDK version is Higher or Equal to 15.
-            runAdaptiveAuthenticationDependencyScript(false);
+            runAdaptiveAuthenticationDependencyScript(false, serverConfigurationManager, log);
             identityNewResourceFileName = "openjdknashorn_script_engine_config.toml";
         }
 
@@ -61,25 +63,25 @@ public class NashornAdaptiveScriptInitializerTestCase extends AbstractAdaptiveAu
         serverConfigurationManager.restartGracefully();
     }
 
-    private void runAdaptiveAuthenticationDependencyScript(boolean disable) {
+    protected static void runAdaptiveAuthenticationDependencyScript(boolean disable, ServerConfigurationManager scm, Log logger) {
 
         ServerLogReader inputStreamHandler;
         ServerLogReader errorStreamHandler;
         String targetFolder = System.getProperty("carbon.home");
-        String scriptFolder = getTestArtifactLocation() + File.separator;
+        String scriptFolder = FrameworkPathUtil.getSystemResourceLocation() + File.separator;
         Process tempProcess = null;
         File scriptFile = new File(scriptFolder);
         Runtime runtime = Runtime.getRuntime();
 
         try {
             if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-                log.info("Operating System is Windows. Executing batch script");
+                logger.info("Operating System is Windows. Executing batch script");
                 if (disable) {
                     /*
                     Restarting before the excution to release the locks on nashorn
                     and asm-util jars in the dropins directory.
                      */
-                    restartServer();
+                    scm.restartGracefully();
                     tempProcess = runtime.exec(
                             new String[]{"cmd", "/c", "adaptive.bat", targetFolder, "DISABLE"}, null, scriptFile);
                 } else {
@@ -91,10 +93,10 @@ public class NashornAdaptiveScriptInitializerTestCase extends AbstractAdaptiveAu
                 inputStreamHandler.start();
                 errorStreamHandler.start();
                 boolean runStatus = waitForMessage(inputStreamHandler, disable);
-                log.info("Status Message : " + runStatus);
-                restartServer();
+                logger.info("Status Message : " + runStatus);
+                scm.restartGracefully();
             } else {
-                log.info("Operating system is not windows. Executing shell script");
+                logger.info("Operating system is not windows. Executing shell script");
                 if (disable) {
                     tempProcess = Runtime.getRuntime().exec(
                             new String[]{"/bin/bash", "adaptive.sh", targetFolder, "DISABLE"}, null, scriptFile);
@@ -107,11 +109,11 @@ public class NashornAdaptiveScriptInitializerTestCase extends AbstractAdaptiveAu
                 inputStreamHandler.start();
                 errorStreamHandler.start();
                 boolean runStatus = waitForMessage(inputStreamHandler, disable);
-                log.info("Status Message : " + runStatus);
-                restartServer();
+                logger.info("Status Message : " + runStatus);
+                scm.restartGracefully();
             }
         } catch (Exception e) {
-            log.error("Failed to execute adaptive authentication dependency script", e);
+            logger.error("Failed to execute adaptive authentication dependency script", e);
         } finally {
             if (tempProcess != null) {
                 tempProcess.destroy();
@@ -124,7 +126,7 @@ public class NashornAdaptiveScriptInitializerTestCase extends AbstractAdaptiveAu
         serverConfigurationManager.restartGracefully();
     }
 
-    private boolean waitForMessage(ServerLogReader inputStreamHandler, boolean disable) {
+    private static boolean waitForMessage(ServerLogReader inputStreamHandler, boolean disable) {
 
         long time = System.currentTimeMillis() + 60 * 1000;
         String message = "Adaptive authentication successfully enabled.";
@@ -146,7 +148,7 @@ public class NashornAdaptiveScriptInitializerTestCase extends AbstractAdaptiveAu
         serverConfigurationManager.restoreToLastConfiguration(false);
         javaVersion = (javaVersion == 0) ? Utils.getJavaVersion() : javaVersion;
         if (javaVersion >= 15) {
-            runAdaptiveAuthenticationDependencyScript(true);
+            runAdaptiveAuthenticationDependencyScript(true, serverConfigurationManager, log);
         }
         restartServer();
     }
