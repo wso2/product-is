@@ -41,7 +41,7 @@ import java.io.IOException;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.testng.Assert.assertNotNull;
-import static org.wso2.identity.integration.test.entitlement.EntitlementJSONSupportMultiDecisionProfileTestCase.areJSONObjectsEqual;
+import static org.wso2.identity.integration.test.util.Utils.areJSONObjectsEqual;
 
 /**
  * Tests for happy paths of the managing application branding using Branding Preference Management REST API.
