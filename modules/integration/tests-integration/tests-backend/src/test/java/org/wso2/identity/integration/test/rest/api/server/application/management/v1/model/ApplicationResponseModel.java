@@ -32,6 +32,7 @@ public class ApplicationResponseModel {
     private String id;
     private String name;
     private String description;
+    private String applicationVersion;
     private String imageUrl;
     private String accessUrl;
     private String logoutReturnUrl;
@@ -138,6 +139,24 @@ public class ApplicationResponseModel {
     }
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    /**
+     **/
+    public ApplicationResponseModel applicationVersion(String applicationVersion) {
+
+        this.applicationVersion = applicationVersion;
+        return this;
+    }
+
+    @ApiModelProperty(example = "This is the configuration for Pickup application.")
+    @JsonProperty("applicationVersion")
+    @Valid
+    public String getApplicationVersion() {
+        return applicationVersion;
+    }
+    public void setApplicationVersion(String description) {
+        this.applicationVersion = applicationVersion;
     }
 
     /**
@@ -483,6 +502,7 @@ public class ApplicationResponseModel {
         return Objects.equals(this.id, applicationResponseModel.id) &&
                 Objects.equals(this.name, applicationResponseModel.name) &&
                 Objects.equals(this.description, applicationResponseModel.description) &&
+                Objects.equals(this.applicationVersion, applicationResponseModel.applicationVersion) &&
                 Objects.equals(this.imageUrl, applicationResponseModel.imageUrl) &&
                 Objects.equals(this.accessUrl, applicationResponseModel.accessUrl) &&
                 Objects.equals(this.logoutReturnUrl, applicationResponseModel.logoutReturnUrl) &&
@@ -505,7 +525,7 @@ public class ApplicationResponseModel {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, imageUrl, accessUrl, logoutReturnUrl, clientId, issuer, realm, templateId, templateVersion, isManagementApp, isB2BSelfServiceApp, applicationEnabled, associatedRoles, claimConfiguration, inboundProtocols, authenticationSequence, advancedConfigurations, provisioningConfigurations, access);
+        return Objects.hash(id, name, description, applicationVersion, imageUrl, accessUrl, logoutReturnUrl, clientId, issuer, realm, templateId, templateVersion, isManagementApp, isB2BSelfServiceApp, applicationEnabled, associatedRoles, claimConfiguration, inboundProtocols, authenticationSequence, advancedConfigurations, provisioningConfigurations, access);
     }
 
     @Override
@@ -516,6 +536,7 @@ public class ApplicationResponseModel {
         sb.append("    id: ").append(toIndentedString(id)).append("\n");
         sb.append("    name: ").append(toIndentedString(name)).append("\n");
         sb.append("    description: ").append(toIndentedString(description)).append("\n");
+        sb.append("    applicationVersion: ").append(toIndentedString(applicationVersion)).append("\n");
         sb.append("    imageUrl: ").append(toIndentedString(imageUrl)).append("\n");
         sb.append("    accessUrl: ").append(toIndentedString(accessUrl)).append("\n");
         sb.append("    logoutReturnUrl: ").append(toIndentedString(logoutReturnUrl)).append("\n");
