@@ -3,8 +3,8 @@ name: product-is-builder-jdk21
 on:
   workflow_dispatch:
   schedule:
-#    At 00:00 on day-of-month 1
-    - cron:  '0 0 1 * *'
+#    Daily at 23:00 UTC (04.30 AM SL time)
+    - cron:  '0 23 * * *'
 
 
 env:
@@ -56,10 +56,10 @@ jobs:
           echo "::warning::$PR_BUILD_RESULT_LOG"
           
           PR_BUILD_SUCCESS_COUNT=$(grep -o -i "\[INFO\] BUILD SUCCESS" mvn-build.log | wc -l)
-          echo "Success Count $PR_BUILD_SUCCESS_COUNT"
           if [ "$PR_BUILD_SUCCESS_COUNT" != "11" ]; then
             echo "PR BUILD not successfull. Aborting."
             echo "::error::PR BUILD not successfull. Check artifacts for logs."
+            echo "Success Count $PR_BUILD_SUCCESS_COUNT"
             exit 1
           fi
           
