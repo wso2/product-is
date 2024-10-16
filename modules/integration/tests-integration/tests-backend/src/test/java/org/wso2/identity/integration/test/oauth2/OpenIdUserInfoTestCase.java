@@ -361,7 +361,7 @@ public class OpenIdUserInfoTestCase extends OAuth2ServiceAbstractIntegrationTest
         Assert.assertNotNull(jsonResponse.get("email"), "sub from introspection endpoint response is null.");
     }
 
-    @Test(groups = "wso2.is", description = "request user info using POST iwht invalid token",
+    @Test(groups = "wso2.is", description = "request user info using POST with invalid token",
             dependsOnMethods = "testUserInfoPostRequest")
     public void testUserInfoPostWithInvalidToken() throws Exception {
 
@@ -391,7 +391,7 @@ public class OpenIdUserInfoTestCase extends OAuth2ServiceAbstractIntegrationTest
                 "Unexpected error message");
     }
 
-    @Test(groups = "wso2.is", description = "Send authorize user request without openid and invoke introspect",
+    @Test(groups = "wso2.is", description = "Send user info request using m2m token",
             dependsOnMethods = "testUserInfoPostWithInvalidToken")
     public void testSendAuthorizedPostWithM2MToken() throws Exception {
 
