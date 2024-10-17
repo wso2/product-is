@@ -43,6 +43,7 @@ public class TenantSuccessTest extends TenantManagementBaseTest {
 
     private String tenantId;
     private String userId;
+    private static final String TELEPHONE_CLAIM = "http://wso2.org/claims/telephone";
 
     public TenantSuccessTest() throws Exception {
 
@@ -151,5 +152,35 @@ public class TenantSuccessTest extends TenantManagementBaseTest {
                 .statusCode(HttpStatus.SC_OK)
                 .body(activeStatusIdentifier, notNullValue())
                 .body(activeStatusIdentifier + ".username", equalTo("kim"));
+    }
+
+    @Test(dependsOnMethods = {"testGetTenant"})
+    public void testUpdateOwner() throws Exception {
+
+        String body = readResource("update-owner.json");
+        Response response = getResponseOfPut(TENANT_API_BASE_PATH + PATH_SEPARATOR + tenantId +
+                TENANT_API_OWNER_PATH + PATH_SEPARATOR + userId, body);
+
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK);
+    }
+
+    @Test(dependsOnMethods = {"testUpdateOwner"})
+    public void testGetOwner() {
+
+        Response response = getResponseOfGet(TENANT_API_BASE_PATH + PATH_SEPARATOR + tenantId +
+                TENANT_API_OWNER_PATH + PATH_SEPARATOR + userId + "?additionalClaims=" + TELEPHONE_CLAIM);
+
+        String claimsIdentifier = "additionalClaims.find{ it.claim == '" + TELEPHONE_CLAIM + "' }";
+
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("username", equalTo("kim"))
+                .body( "lastname", equalTo("lee"))
+                .body(claimsIdentifier + ".value", equalTo("+94 77 123 4568"));
     }
 }

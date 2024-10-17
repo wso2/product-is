@@ -1,0 +1,11 @@
+{
+  "firstname": "kim",
+  "lastname": "lee",
+  "email": "kim@wso2.com",
+  "additionalClaims": [
+    {
+      "claim": "http://wso2.org/claims/telephone",
+      "value": "+94 77 123 4568"
+    }
+  ]
+}
