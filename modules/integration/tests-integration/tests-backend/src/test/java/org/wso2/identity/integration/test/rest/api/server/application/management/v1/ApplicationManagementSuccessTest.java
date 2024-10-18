@@ -91,6 +91,28 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
     }
 
     @Test
+    public void testGetAllApplicationsExcludingSystemApps() throws IOException {
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("excludeSystemPortals", true);
+        Response response = getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH, params);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK);
+        ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+        ApplicationListResponse listResponse = jsonWriter.readValue(response.asString(), ApplicationListResponse.class);
+        Assert.assertFalse(listResponse.getApplications()
+                        .stream()
+                        .anyMatch(appBasicInfo -> appBasicInfo.getName().equals(ApplicationConstants.CONSOLE_APPLICATION_NAME)),
+                "Default resident service provider '" + ApplicationConstants.CONSOLE_APPLICATION_NAME + "' is listed by the API");
+        Assert.assertFalse(listResponse.getApplications()
+                        .stream()
+                        .anyMatch(appBasicInfo -> appBasicInfo.getName().equals(ApplicationConstants.MY_ACCOUNT_APPLICATION_NAME)),
+                "Default resident service provider '" + ApplicationConstants.MY_ACCOUNT_APPLICATION_NAME + "' is listed by the API");
+    }
+
+    @Test
     public void testGetResidentApplication() throws IOException {
 
         Response response = getResponseOfGet(RESIDENT_APP_API_BASE_PATH);
