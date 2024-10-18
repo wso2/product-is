@@ -123,9 +123,11 @@ public class OAuth2PushedAuthRequestTestCase extends OAuth2ServiceAbstractIntegr
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_REDIRECT_URI, OAuth2Constant.CALLBACK_URL));
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_RESPONSE_TYPE,
                 OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
-        String response = responsePost(OAuth2Constant.PAR_ENDPOINT, urlParameters);
+        HttpResponse response = sendPostRequest(OAuth2Constant.PAR_ENDPOINT, urlParameters);
+        String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
+        EntityUtils.consume(response.getEntity());
         JSONParser parser = new JSONParser();
-        JSONObject jsonResponse = (JSONObject) parser.parse(response);
+        JSONObject jsonResponse = (JSONObject) parser.parse(responseString);
         if (jsonResponse == null) {
             throw new Exception("Error occurred while getting the response.");
         }
@@ -141,8 +143,10 @@ public class OAuth2PushedAuthRequestTestCase extends OAuth2ServiceAbstractIntegr
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(REQUEST_URI, requestUri));
         urlParameters.add(new BasicNameValuePair(CLIENT_ID_PARAM, consumerKey));
-        String response = responsePost(OAuth2Constant.AUTHORIZE_ENDPOINT_URL, urlParameters);
-        Assert.assertNotNull(response, "Authorized response is null");
+        HttpResponse response = sendPostRequest(OAuth2Constant.PAR_ENDPOINT, urlParameters);
+        String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
+        EntityUtils.consume(response.getEntity());
+        Assert.assertNotNull(responseString, "Authorized response is null");
     }
 
     @Test(groups = "wso2.is", description = "Send PAR with openid request object", dependsOnMethods =
@@ -156,9 +160,11 @@ public class OAuth2PushedAuthRequestTestCase extends OAuth2ServiceAbstractIntegr
                 OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH_OIDC_REQUEST, REQUEST));
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_SCOPE, OAuth2Constant.OAUTH2_SCOPE_OPENID));
-        String response = responsePost(OAuth2Constant.PAR_ENDPOINT, urlParameters);
+        HttpResponse response = sendPostRequest(OAuth2Constant.PAR_ENDPOINT, urlParameters);
+        String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
+        EntityUtils.consume(response.getEntity());
         JSONParser parser = new JSONParser();
-        JSONObject jsonResponse = (JSONObject) parser.parse(response);
+        JSONObject jsonResponse = (JSONObject) parser.parse(responseString);
         if (jsonResponse == null) {
             throw new Exception("Error occurred while getting the response.");
         }
@@ -166,80 +172,6 @@ public class OAuth2PushedAuthRequestTestCase extends OAuth2ServiceAbstractIntegr
         expiryTime = jsonResponse.get(EXPIRY_TIME).toString();
         Assert.assertNotNull(requestUri, "request_uri is null");
         Assert.assertNotNull(expiryTime, "expiry_time is null");
-    }
-
-    private String responsePost(String endpoint, List<NameValuePair> postParameters)
-            throws Exception {
-
-        HttpPost httpPost = new HttpPost(endpoint);
-        httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
-        httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
-        HttpResponse response = client.execute(httpPost);
-        String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
-        EntityUtils.consume(response.getEntity());
-        return responseString;
-    }
-
-    /**
-     * Create Application with the given app configurations
-     *
-     * @return ApplicationResponseModel
-     * @throws Exception exception
-     */
-    private ApplicationResponseModel createApp() throws Exception {
-
-        ApplicationModel application = new ApplicationModel();
-
-        List<String> grantTypes = new ArrayList<>();
-        Collections.addAll(grantTypes, "authorization_code", "implicit", "password", "client_credentials",
-                "refresh_token", "urn:ietf:params:oauth:grant-type:saml2-bearer", "iwa:ntlm",
-                "urn:ietf:params:oauth:grant-type:device_code");
-
-        List<String> callBackUrls = new ArrayList<>();
-        Collections.addAll(callBackUrls, OAuth2Constant.CALLBACK_URL);
-
-        OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
-        oidcConfig.setGrantTypes(grantTypes);
-        oidcConfig.setCallbackURLs(callBackUrls);
-        oidcConfig.setPublicClient(true);
-
-        InboundProtocols inboundProtocolsConfig = new InboundProtocols();
-        inboundProtocolsConfig.setOidc(oidcConfig);
-
-        application.setInboundProtocolConfiguration(inboundProtocolsConfig);
-        application.setName(OAuth2Constant.OAUTH_APPLICATION_NAME);
-
-        String appId = addApplication(application);
-
-        return getApplication(appId);
-    }
-
-    private HttpResponse sendPostRequest(String endpoint, List<NameValuePair> parameters) throws Exception {
-
-        HttpPost httpPost = new HttpPost(endpoint);
-        httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
-        httpPost.setEntity(new UrlEncodedFormEntity(parameters));
-        return client.execute(httpPost);
-    }
-
-    private void assertResponse(HttpResponse response, int expectedStatusCode,
-                                String expectedErrorDescription, String expectedError) throws Exception {
-
-        int responseCode = response.getStatusLine().getStatusCode();
-        String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
-        EntityUtils.consume(response.getEntity());
-
-        JSONParser parser = new JSONParser();
-        JSONObject jsonResponse = (JSONObject) parser.parse(responseString);
-        if (jsonResponse == null) {
-            throw new Exception("Error occurred while getting the response.");
-        }
-
-        Assert.assertEquals(responseCode, expectedStatusCode, "Response status code does not match.");
-        Assert.assertEquals(jsonResponse.get("error_description").toString(), expectedErrorDescription,
-                "Error description is missing or invalid value");
-        Assert.assertEquals(jsonResponse.get("error").toString(), expectedError,
-                "Error is missing or invalid value");
     }
 
     @Test(groups = "wso2.is", description = "Send authorize user request with invalid client id",
@@ -384,5 +316,67 @@ public class OAuth2PushedAuthRequestTestCase extends OAuth2ServiceAbstractIntegr
         HttpResponse response = sendPostRequest(OAuth2Constant.PAR_ENDPOINT, urlParameters);
         assertResponse(response, Response.Status.BAD_REQUEST.getStatusCode(),
                 "Request with request_uri not allowed.", "invalid_request");
+    }
+
+    /**
+     * Create Application with the given app configurations
+     *
+     * @return ApplicationResponseModel
+     * @throws Exception exception
+     */
+    private ApplicationResponseModel createApp() throws Exception {
+
+        ApplicationModel application = new ApplicationModel();
+
+        List<String> grantTypes = new ArrayList<>();
+        Collections.addAll(grantTypes, "authorization_code", "implicit", "password", "client_credentials",
+                "refresh_token", "urn:ietf:params:oauth:grant-type:saml2-bearer", "iwa:ntlm",
+                "urn:ietf:params:oauth:grant-type:device_code");
+
+        List<String> callBackUrls = new ArrayList<>();
+        Collections.addAll(callBackUrls, OAuth2Constant.CALLBACK_URL);
+
+        OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
+        oidcConfig.setGrantTypes(grantTypes);
+        oidcConfig.setCallbackURLs(callBackUrls);
+        oidcConfig.setPublicClient(true);
+
+        InboundProtocols inboundProtocolsConfig = new InboundProtocols();
+        inboundProtocolsConfig.setOidc(oidcConfig);
+
+        application.setInboundProtocolConfiguration(inboundProtocolsConfig);
+        application.setName(OAuth2Constant.OAUTH_APPLICATION_NAME);
+
+        String appId = addApplication(application);
+
+        return getApplication(appId);
+    }
+
+    private HttpResponse sendPostRequest(String endpoint, List<NameValuePair> parameters) throws Exception {
+
+        HttpPost httpPost = new HttpPost(endpoint);
+        httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
+        httpPost.setEntity(new UrlEncodedFormEntity(parameters));
+        return client.execute(httpPost);
+    }
+
+    private void assertResponse(HttpResponse response, int expectedStatusCode,
+                                String expectedErrorDescription, String expectedError) throws Exception {
+
+        int responseCode = response.getStatusLine().getStatusCode();
+        String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
+        EntityUtils.consume(response.getEntity());
+
+        JSONParser parser = new JSONParser();
+        JSONObject jsonResponse = (JSONObject) parser.parse(responseString);
+        if (jsonResponse == null) {
+            throw new Exception("Error occurred while getting the response.");
+        }
+
+        Assert.assertEquals(responseCode, expectedStatusCode, "Response status code does not match.");
+        Assert.assertEquals(jsonResponse.get("error_description").toString(), expectedErrorDescription,
+                "Error description is missing or invalid value");
+        Assert.assertEquals(jsonResponse.get("error").toString(), expectedError,
+                "Error is missing or invalid value");
     }
 }
