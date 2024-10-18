@@ -17,6 +17,7 @@
  */
 package org.wso2.identity.integration.test.oauth2;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.config.CookieSpecs;
@@ -44,6 +45,7 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
+import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -121,9 +123,11 @@ public class OAuth2PushedAuthRequestTestCase extends OAuth2ServiceAbstractIntegr
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_REDIRECT_URI, OAuth2Constant.CALLBACK_URL));
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_RESPONSE_TYPE,
                 OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
-        String response = responsePost(OAuth2Constant.PAR_ENDPOINT, urlParameters);
+        HttpResponse response = sendPostRequest(OAuth2Constant.PAR_ENDPOINT, urlParameters);
+        String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
+        EntityUtils.consume(response.getEntity());
         JSONParser parser = new JSONParser();
-        JSONObject jsonResponse = (JSONObject) parser.parse(response);
+        JSONObject jsonResponse = (JSONObject) parser.parse(responseString);
         if (jsonResponse == null) {
             throw new Exception("Error occurred while getting the response.");
         }
@@ -139,8 +143,10 @@ public class OAuth2PushedAuthRequestTestCase extends OAuth2ServiceAbstractIntegr
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(REQUEST_URI, requestUri));
         urlParameters.add(new BasicNameValuePair(CLIENT_ID_PARAM, consumerKey));
-        String response = responsePost(OAuth2Constant.AUTHORIZE_ENDPOINT_URL, urlParameters);
-        Assert.assertNotNull(response, "Authorized response is null");
+        HttpResponse response = sendPostRequest(OAuth2Constant.PAR_ENDPOINT, urlParameters);
+        String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
+        EntityUtils.consume(response.getEntity());
+        Assert.assertNotNull(responseString, "Authorized response is null");
     }
 
     @Test(groups = "wso2.is", description = "Send PAR with openid request object", dependsOnMethods =
@@ -154,9 +160,11 @@ public class OAuth2PushedAuthRequestTestCase extends OAuth2ServiceAbstractIntegr
                 OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH_OIDC_REQUEST, REQUEST));
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_SCOPE, OAuth2Constant.OAUTH2_SCOPE_OPENID));
-        String response = responsePost(OAuth2Constant.PAR_ENDPOINT, urlParameters);
+        HttpResponse response = sendPostRequest(OAuth2Constant.PAR_ENDPOINT, urlParameters);
+        String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
+        EntityUtils.consume(response.getEntity());
         JSONParser parser = new JSONParser();
-        JSONObject jsonResponse = (JSONObject) parser.parse(response);
+        JSONObject jsonResponse = (JSONObject) parser.parse(responseString);
         if (jsonResponse == null) {
             throw new Exception("Error occurred while getting the response.");
         }
@@ -166,16 +174,148 @@ public class OAuth2PushedAuthRequestTestCase extends OAuth2ServiceAbstractIntegr
         Assert.assertNotNull(expiryTime, "expiry_time is null");
     }
 
-    private String responsePost(String endpoint, List<NameValuePair> postParameters)
-            throws Exception {
+    @Test(groups = "wso2.is", description = "Send authorize user request with invalid client id",
+            dependsOnMethods = "testSendPar")
+    public void testSendAuthorizeWithInvalidClient() throws Exception {
 
-        HttpPost httpPost = new HttpPost(endpoint);
-        httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
-        httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
-        HttpResponse response = client.execute(httpPost);
-        String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
-        EntityUtils.consume(response.getEntity());
-        return responseString;
+        testSendPar();
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair(REQUEST_URI, requestUri));
+        urlParameters.add(new BasicNameValuePair(CLIENT_ID_PARAM, "invalid_client_id"));
+
+        HttpResponse response = sendPostRequest(OAuth2Constant.AUTHORIZE_ENDPOINT_URL, urlParameters);
+        String locationHeader = response.getFirstHeader("Location") != null ?
+                response.getFirstHeader("Location").getValue() : null;
+
+        Assert.assertNotNull(locationHeader, "Location header from the authz response is null");
+        Assert.assertTrue(StringUtils.contains(locationHeader, "oauthErrorMsg=par.client.id.not.match"));
+    }
+
+    @Test(groups = "wso2.is", description = "Send authorize user request with invalid request uri",
+            dependsOnMethods = "testSendAuthorizeWithInvalidClient")
+    public void testSendAuthorizeWithInvalidRequestURI() throws Exception {
+
+        testSendPar();
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair(REQUEST_URI,
+                "urn:ietf:params:oauth:par:request_uri:invalid_request_uri"));
+        urlParameters.add(new BasicNameValuePair(CLIENT_ID_PARAM, consumerKey));
+
+        HttpResponse response = sendPostRequest(OAuth2Constant.AUTHORIZE_ENDPOINT_URL, urlParameters);
+        String locationHeader = response.getFirstHeader("Location") != null ?
+                response.getFirstHeader("Location").getValue() : null;
+
+        Assert.assertNotNull(locationHeader, "Location header from the authz response is null");
+        Assert.assertTrue(StringUtils.contains(locationHeader, "oauthErrorMsg=par.invalid.request.uri"));
+    }
+
+    @Test(groups = "wso2.is", description = "Send authorize user request with expired request uri",
+            dependsOnMethods = "testSendAuthorizeWithInvalidRequestURI")
+    public void testSendAuthorizeWithExpiredRequestURI() throws Exception {
+
+        testSendPar();
+        // Sleep for 1 min for request uri timeout
+        Thread.sleep(60 * 1000);
+
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair(REQUEST_URI, requestUri));
+        urlParameters.add(new BasicNameValuePair(CLIENT_ID_PARAM, consumerKey));
+
+        HttpResponse response = sendPostRequest(OAuth2Constant.AUTHORIZE_ENDPOINT_URL, urlParameters);
+        String locationHeader = response.getFirstHeader("Location") != null ?
+                response.getFirstHeader("Location").getValue() : null;
+
+        Assert.assertNotNull(locationHeader, "Location header from the authz response is null");
+        Assert.assertTrue(StringUtils.contains(locationHeader, "oauthErrorMsg=par.request.uri.expired"));
+    }
+
+    @Test(groups = "wso2.is", description = "Send PAR with repeated param",
+            dependsOnMethods = "testSendAuthorizeWithExpiredRequestURI")
+    public void testSendParWithRepeatedParam() throws Exception {
+
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair(CLIENT_ID_PARAM, consumerKey));
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_REDIRECT_URI, OAuth2Constant.CALLBACK_URL));
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_REDIRECT_URI, "repeated_redirect_uri"));
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_RESPONSE_TYPE,
+                OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
+
+        HttpResponse response = sendPostRequest(OAuth2Constant.PAR_ENDPOINT, urlParameters);
+        assertResponse(response, Response.Status.BAD_REQUEST.getStatusCode(),
+                "Invalid request with repeated parameters.", "invalid_request");
+    }
+
+    @Test(groups = "wso2.is", description = "Send PAR with invalid client id",
+            dependsOnMethods = "testSendParWithRepeatedParam")
+    public void testSendParWithInvalidClient() throws Exception {
+
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair(CLIENT_ID_PARAM, "invalid_consumerKey"));
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_REDIRECT_URI, OAuth2Constant.CALLBACK_URL));
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_RESPONSE_TYPE, OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
+
+        HttpResponse response = sendPostRequest(OAuth2Constant.PAR_ENDPOINT, urlParameters);
+        assertResponse(response, Response.Status.UNAUTHORIZED.getStatusCode(),
+                "A valid OAuth client could not be found for client_id: invalid_consumerKey",
+                "invalid_client");
+    }
+
+    @Test(groups = "wso2.is", description = "Send PAR without client id",
+            dependsOnMethods = "testSendParWithInvalidClient")
+    public void testSendParWithoutClient() throws Exception {
+
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_REDIRECT_URI, OAuth2Constant.CALLBACK_URL));
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_RESPONSE_TYPE, OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
+
+        HttpResponse response = sendPostRequest(OAuth2Constant.PAR_ENDPOINT, urlParameters);
+        assertResponse(response, Response.Status.UNAUTHORIZED.getStatusCode(),
+                "Client ID not found in the request.", "invalid_client");
+    }
+
+    @Test(groups = "wso2.is", description = "Send PAR with invalid response type",
+            dependsOnMethods = "testSendParWithoutClient")
+    public void testSendParWithInvalidResponseType() throws Exception {
+
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair(CLIENT_ID_PARAM, consumerKey));
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_REDIRECT_URI, OAuth2Constant.CALLBACK_URL));
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_RESPONSE_TYPE, "invalid_responseType"));
+
+        HttpResponse response = sendPostRequest(OAuth2Constant.PAR_ENDPOINT, urlParameters);
+        assertResponse(response, Response.Status.BAD_REQUEST.getStatusCode(),
+                "Invalid response_type parameter value", "invalid_request");
+    }
+
+    @Test(groups = "wso2.is", description = "Send PAR with invalid redirect uri",
+            dependsOnMethods = "testSendParWithInvalidResponseType")
+    public void testSendParWithInvalidRedirectURI() throws Exception {
+
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair(CLIENT_ID_PARAM, consumerKey));
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_REDIRECT_URI, "invalid_redirect_URI"));
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_RESPONSE_TYPE, OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
+
+        HttpResponse response = sendPostRequest(OAuth2Constant.PAR_ENDPOINT, urlParameters);
+        assertResponse(response, Response.Status.BAD_REQUEST.getStatusCode(),
+                "callback.not.match", "invalid_request");
+    }
+
+    @Test(groups = "wso2.is", description = "Send PAR with request uri",
+            dependsOnMethods = "testSendParWithInvalidRedirectURI")
+    public void testSendParWithRequestURI() throws Exception {
+
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair(CLIENT_ID_PARAM, consumerKey));
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_REDIRECT_URI, OAuth2Constant.CALLBACK_URL));
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_RESPONSE_TYPE,
+                OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
+        urlParameters.add(new BasicNameValuePair(REQUEST_URI,
+                "urn:ietf:params:oauth:par:request_uri:75fb6713-62fa-4d2f-9f72-0e05eab0d331"));
+
+        HttpResponse response = sendPostRequest(OAuth2Constant.PAR_ENDPOINT, urlParameters);
+        assertResponse(response, Response.Status.BAD_REQUEST.getStatusCode(),
+                "Request with request_uri not allowed.", "invalid_request");
     }
 
     /**
@@ -210,5 +350,33 @@ public class OAuth2PushedAuthRequestTestCase extends OAuth2ServiceAbstractIntegr
         String appId = addApplication(application);
 
         return getApplication(appId);
+    }
+
+    private HttpResponse sendPostRequest(String endpoint, List<NameValuePair> parameters) throws Exception {
+
+        HttpPost httpPost = new HttpPost(endpoint);
+        httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
+        httpPost.setEntity(new UrlEncodedFormEntity(parameters));
+        return client.execute(httpPost);
+    }
+
+    private void assertResponse(HttpResponse response, int expectedStatusCode,
+                                String expectedErrorDescription, String expectedError) throws Exception {
+
+        int responseCode = response.getStatusLine().getStatusCode();
+        String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
+        EntityUtils.consume(response.getEntity());
+
+        JSONParser parser = new JSONParser();
+        JSONObject jsonResponse = (JSONObject) parser.parse(responseString);
+        if (jsonResponse == null) {
+            throw new Exception("Error occurred while getting the response.");
+        }
+
+        Assert.assertEquals(responseCode, expectedStatusCode, "Response status code does not match.");
+        Assert.assertEquals(jsonResponse.get("error_description").toString(), expectedErrorDescription,
+                "Error description is missing or invalid value");
+        Assert.assertEquals(jsonResponse.get("error").toString(), expectedError,
+                "Error is missing or invalid value");
     }
 }
