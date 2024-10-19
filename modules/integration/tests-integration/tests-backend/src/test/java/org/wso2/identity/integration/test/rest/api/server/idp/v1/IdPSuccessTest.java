@@ -360,7 +360,8 @@ public class IdPSuccessTest extends IdPTestBase {
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
-                .statusCode(HttpStatus.SC_OK);
+                .statusCode(HttpStatus.SC_OK)
+                .body("definedBy", equalTo("SYSTEM"));
     }
 
     @Test(dependsOnMethods = {"testUpdateIdPFederatedAuthenticator"})
@@ -377,6 +378,7 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body("isEnabled", equalTo(true))
                 .body("isDefault", equalTo(true))
                 .body("properties", notNullValue())
+                .body("definedBy", equalTo("SYSTEM"))
                 .body("properties.find{ it.key == 'ClientId' }.value", equalTo
                         ("165474950684-7mvqd8m6hieb8mdnffcarnku2aua0tpl.apps.googleusercontent.com"))
                 .body("properties.find{ it.key == 'ClientSecret' }.value", equalTo("testclientsecret"))
