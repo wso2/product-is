@@ -28,7 +28,7 @@
     <artifactId>identity-server-parent</artifactId>
     <packaging>pom</packaging>
     <description>WSO2 Identity Server</description>
-    <version>7.1.0-m2-SNAPSHOT</version>
+    <version>7.1.0-m4-SNAPSHOT</version>
     <name>WSO2 Identity Server</name>
     <url>http://wso2.org/projects/identity</url>
 
@@ -2244,6 +2244,11 @@
                 <artifactId>org.wso2.carbon.extension.identity.helper</artifactId>
                 <version>${identity.extension.utils}</version>
             </dependency>
+            <dependency>
+                <groupId>com.nimbusds</groupId>
+                <artifactId>nimbus-jose-jwt</artifactId>
+                <version>${nimbus-jose-jwt.version}</version>
+            </dependency>
 
             <!-- Integration UI Templates -->
             <dependency>
@@ -2360,7 +2365,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>7.5.57</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.5.72</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2382,12 +2387,12 @@
 
         <!-- Identity Inbound Versions   -->
 
-        <identity.inbound.auth.oauth.version>7.0.162</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.0.169</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.saml.version>5.11.43</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
-        <identity.inbound.auth.sts.version>5.11.9</identity.inbound.auth.sts.version>
+        <identity.inbound.auth.sts.version>5.11.10</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.7</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>3.4.94</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim2.version>3.4.97</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity User Versions -->
         <identity.user.account.association.version>5.5.10</identity.user.account.association.version>
@@ -2403,7 +2408,7 @@
 
         <!-- Identity Event Handler Versions -->
         <identity.event.handler.account.lock.version>1.9.12</identity.event.handler.account.lock.version>
-        <identity.event.handler.notification.version>1.9.10</identity.event.handler.notification.version>
+        <identity.event.handler.notification.version>1.9.11</identity.event.handler.notification.version>
 
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
@@ -2480,13 +2485,13 @@
         <identity.tool.samlsso.validator.version>5.5.9</identity.tool.samlsso.validator.version>
         <identity.app.authz.xacml.version>2.3.2</identity.app.authz.xacml.version>
         <identity.oauth.addons.version>2.5.17</identity.oauth.addons.version>
-        <org.wso2.carbon.extension.identity.x509certificate.version>1.1.12</org.wso2.carbon.extension.identity.x509certificate.version>
+        <org.wso2.carbon.extension.identity.x509certificate.version>1.1.13</org.wso2.carbon.extension.identity.x509certificate.version>
         <conditional.authentication.functions.version>1.2.65</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.30.2</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.8.22</identity.apps.myaccount.version>
-        <identity.apps.core.version>2.4.45</identity.apps.core.version>
+        <identity.apps.console.version>2.30.14</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.8.33</identity.apps.myaccount.version>
+        <identity.apps.core.version>2.4.47</identity.apps.core.version>
         <identity.apps.tests.version>1.6.378</identity.apps.tests.version>
 
         <!-- Charon -->
@@ -2496,13 +2501,13 @@
         <carbon.kernel.version>4.10.23</carbon.kernel.version>
 
         <!-- Identity Verification -->
-        <identity.verification.version>1.0.12</identity.verification.version>
+        <identity.verification.version>1.0.13</identity.verification.version>
 
         <!-- Carbon Repo Versions -->
         <carbon.deployment.version>4.12.29</carbon.deployment.version>
-        <carbon.commons.version>4.10.9</carbon.commons.version>
+        <carbon.commons.version>4.10.12</carbon.commons.version>
         <carbon.registry.version>4.8.35</carbon.registry.version>
-        <carbon.multitenancy.version>4.11.24</carbon.multitenancy.version>
+        <carbon.multitenancy.version>4.11.27</carbon.multitenancy.version>
         <carbon.metrics.version>1.3.12</carbon.metrics.version>
         <carbon.analytics-common.version>5.2.58</carbon.analytics-common.version>
         <carbon.dashboards.version>2.0.27</carbon.dashboards.version>
@@ -2635,6 +2640,7 @@
         <greenmail.version>2.0.1</greenmail.version>
         <jakarta.mail.version>2.0.1</jakarta.mail.version>
         <jsoup.version>1.15.3</jsoup.version>
+        <nimbus-jose-jwt.version>9.41.2</nimbus-jose-jwt.version>
     </properties>
 
     <repositories>

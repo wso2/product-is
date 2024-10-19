@@ -25,7 +25,9 @@ import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.config.Lookup;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.cookie.CookieSpecProvider;
@@ -33,10 +35,12 @@ import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
+import org.json.simple.parser.JSONParser;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -48,9 +52,6 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
-import org.wso2.identity.integration.test.rest.api.user.common.model.ListObject;
-import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperationRequestObject;
-import org.wso2.identity.integration.test.rest.api.user.common.model.RoleItemAddGroupobj;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
@@ -60,33 +61,30 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.testng.Assert.assertNotNull;
 import static org.wso2.identity.integration.test.utils.DataExtractUtil.KeyValue;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN_ENDPOINT;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZATION_HEADER;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.COMMON_AUTH_URL;
 
-public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstractIntegrationTest {
+public class OpenIdUserInfoTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
     private String accessToken;
     private String sessionDataKeyConsent;
     private String sessionDataKey;
     private String authorizationCode;
     AutomationContext context;
-
     private String consumerKey;
     private String consumerSecret;
-
-    private Lookup<CookieSpecProvider> cookieSpecRegistry;
-    private RequestConfig requestConfig;
     private CloseableHttpClient client;
-
-    private static final String USERS_PATH = "users";
     private static final String USER_EMAIL = "abc@wso2.com";
     private static final String USERNAME = "authcodegrantuser";
     private static final String PASSWORD = "Pass@123";
-
     private final List<NameValuePair> consentParameters = new ArrayList<>();
     private final CookieStore cookieStore = new BasicCookieStore();
     private final String username;
@@ -102,7 +100,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
     }
 
     @Factory(dataProvider = "configProvider")
-    public OAuth2ServiceAuthCodeGrantOpenIdTestCase(TestUserMode userMode) throws Exception {
+    public OpenIdUserInfoTestCase(TestUserMode userMode) throws Exception {
 
         super.init(userMode);
         context = new AutomationContext("IDENTITY", userMode);
@@ -116,10 +114,10 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
         tenantInfo = context.getContextTenant();
         scim2RestClient =  new SCIM2RestClient(serverURL, tenantInfo);
 
-        cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+        Lookup<CookieSpecProvider> cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
                 .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
                 .build();
-        requestConfig = RequestConfig.custom()
+        RequestConfig requestConfig = RequestConfig.custom()
                 .setCookieSpec(CookieSpecs.DEFAULT)
                 .build();
         client = HttpClientBuilder.create()
@@ -336,6 +334,120 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
         Assert.assertTrue(scopes.contains("openid"), "Invalid JWT Token scope Value");
     }
 
+    @Test(groups = "wso2.is", description = "request user info using POST", dependsOnMethods = "testValidateTokenScope")
+    public void testUserInfoPostRequest() throws Exception {
+
+        String userInfoUrl = tenantInfo.getDomain().equalsIgnoreCase("carbon.super") ?
+                OAuth2Constant.USER_INFO_ENDPOINT : OAuth2Constant.TENANT_USER_INFO_ENDPOINT;
+        HttpPost request = new HttpPost(userInfoUrl);
+
+        List<NameValuePair> urlParameters = Collections.singletonList(
+                new BasicNameValuePair("access_token", accessToken)
+        );
+        request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
+        request.setHeader("Content-Type", "application/x-www-form-urlencoded");
+        request.setEntity(new UrlEncodedFormEntity(urlParameters));
+
+        HttpResponse response = client.execute(request);
+
+        String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
+        EntityUtils.consume(response.getEntity());
+        JSONParser parser = new JSONParser();
+        JSONObject jsonResponse = (JSONObject) parser.parse(responseString);
+        if (jsonResponse == null) {
+            throw new Exception("Error occurred while getting the response.");
+        }
+        Assert.assertNotNull(jsonResponse.get("sub"), "sub from introspection endpoint response is null.");
+        Assert.assertNotNull(jsonResponse.get("email"), "sub from introspection endpoint response is null.");
+    }
+
+    @Test(groups = "wso2.is", description = "request user info using POST with invalid token",
+            dependsOnMethods = "testUserInfoPostRequest")
+    public void testUserInfoPostWithInvalidToken() throws Exception {
+
+        String userInfoUrl = tenantInfo.getDomain().equalsIgnoreCase("carbon.super") ?
+                OAuth2Constant.USER_INFO_ENDPOINT : OAuth2Constant.TENANT_USER_INFO_ENDPOINT;
+        HttpPost request = new HttpPost(userInfoUrl);
+
+        List<NameValuePair> urlParameters = Collections.singletonList(
+                new BasicNameValuePair("access_token", "invalid_access_token")
+        );
+        request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
+        request.setHeader("Content-Type", "application/x-www-form-urlencoded");
+        request.setEntity(new UrlEncodedFormEntity(urlParameters));
+
+        HttpResponse response = client.execute(request);
+
+        String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
+        EntityUtils.consume(response.getEntity());
+        JSONParser parser = new JSONParser();
+        JSONObject jsonResponse = (JSONObject) parser.parse(responseString);
+        if (jsonResponse == null) {
+            throw new Exception("Error occurred while getting the response.");
+        }
+        Assert.assertEquals(jsonResponse.get("error_description"),
+                "Access token validation failed", "Unexpected error description");
+        Assert.assertEquals(jsonResponse.get("error"), "invalid_token",
+                "Unexpected error message");
+    }
+
+    @Test(groups = "wso2.is", description = "Send user info request using m2m token",
+            dependsOnMethods = "testUserInfoPostWithInvalidToken")
+    public void testSendAuthorizedPostWithM2MToken() throws Exception {
+
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair("grant_type",
+                OAuth2Constant.OAUTH2_GRANT_TYPE_CLIENT_CREDENTIALS));
+        urlParameters.add(new BasicNameValuePair("scope",  OAuth2Constant.OAUTH2_SCOPE_OPENID+ " "
+                + OAuth2Constant.OAUTH2_SCOPE_EMAIL));
+
+        List<Header> headers = new ArrayList<>();
+        headers.add(new BasicHeader(AUTHORIZATION_HEADER, OAuth2Constant.BASIC_HEADER + " " +
+                getBase64EncodedString(consumerKey, consumerSecret)));
+        headers.add(new BasicHeader("Content-Type", "application/x-www-form-urlencoded"));
+        headers.add(new BasicHeader("User-Agent", OAuth2Constant.USER_AGENT));
+
+        HttpResponse response = sendPostRequest(client, headers, urlParameters,
+                getTenantQualifiedURL(ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()));
+
+        Assert.assertNotNull(response, "Authorization request failed. Authorized response is null");
+
+        String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
+        EntityUtils.consume(response.getEntity());
+        JSONParser parser = new JSONParser();
+        JSONObject jsonResponse = (JSONObject) parser.parse(responseString);
+        if (jsonResponse == null) {
+            throw new Exception("Error occurred while getting the m2m token response.");
+        }
+        String m2mAccessToken = (String) jsonResponse.get("access_token");
+        assertNotNull(m2mAccessToken, "M2M Access token is null.");
+
+        String userInfoUrl = tenantInfo.getDomain().equalsIgnoreCase("carbon.super") ?
+                OAuth2Constant.USER_INFO_ENDPOINT : OAuth2Constant.TENANT_USER_INFO_ENDPOINT;
+        HttpPost request = new HttpPost(userInfoUrl);
+
+        urlParameters = Collections.singletonList(
+                new BasicNameValuePair("access_token", m2mAccessToken)
+        );
+        request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
+        request.setHeader("Content-Type", "application/x-www-form-urlencoded");
+        request.setEntity(new UrlEncodedFormEntity(urlParameters));
+
+        response = client.execute(request);
+
+        responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
+        EntityUtils.consume(response.getEntity());
+        jsonResponse = (JSONObject) parser.parse(responseString);
+        if (jsonResponse == null) {
+            throw new Exception("Error occurred while getting the response.");
+        }
+        Assert.assertEquals(jsonResponse.get("error_description"),
+                "Access token does not have the openid scope", "Unexpected error description");
+        Assert.assertEquals(jsonResponse.get("error"), "insufficient_scope",
+                "Unexpected error message");
+    }
+
+
     public HttpResponse sendLoginPost(HttpClient client, String sessionDataKey) throws IOException {
 
         List<NameValuePair> urlParameters = new ArrayList<>();
@@ -361,15 +473,6 @@ public class OAuth2ServiceAuthCodeGrantOpenIdTestCase extends OAuth2ServiceAbstr
         userInfo.setUserName(USERNAME);
         userInfo.setPassword(PASSWORD);
         userInfo.addEmail(new Email().value(USER_EMAIL));
-
         userId = scim2RestClient.createUser(userInfo);
-        String roleId = scim2RestClient.getRoleIdByName("admin");
-
-        RoleItemAddGroupobj patchRoleItem = new RoleItemAddGroupobj();
-        patchRoleItem.setOp(RoleItemAddGroupobj.OpEnum.ADD);
-        patchRoleItem.setPath(USERS_PATH);
-        patchRoleItem.addValue(new ListObject().value(userId));
-
-        scim2RestClient.updateUserRole(new PatchOperationRequestObject().addOperations(patchRoleItem), roleId);
     }
 }
