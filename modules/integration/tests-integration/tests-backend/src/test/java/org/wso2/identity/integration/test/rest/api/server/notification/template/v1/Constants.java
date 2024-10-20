@@ -3,10 +3,11 @@ package org.wso2.identity.integration.test.rest.api.server.notification.template
 public class Constants {
     
     public static final String BASE_PATH = "/api/server/v1";
-    public static final String EMAIL_TEMPLATES_BASE_PATH = "/notification/email";
-    public static final String EMAIL_TEMPLATE_TYPES_PATH = "/template-types";
-    public static final String ORG_EMAIL_TEMPLATES_PATH = "/org-templates";
-    public static final String APP_EMAIL_TEMPLATES_PATH = "/app-templates";
+    public static final String EMAIL_TEMPLATES_PATH = "/notification/email";
+    public static final String SMS_TEMPLATES_PATH = "/notification/sms";
+    public static final String TEMPLATE_TYPES_PATH = "/template-types";
+    public static final String ORG_TEMPLATES_PATH = "/org-templates";
+    public static final String APP_TEMPLATES_PATH = "/app-templates";
     public static final String PATH_SEPARATOR = "/";
     public static final String STRING_PLACEHOLDER = "%s";
 
