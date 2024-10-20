@@ -17,16 +17,6 @@ public class NotificationTemplateEmailTemplatesTestBase extends RESTAPIServerTes
     static final String API_VERSION = "v1";
     private static final String API_PACKAGE_NAME = "org.wso2.carbon.identity.rest.api.server.notification.template.v1";
 
-    public static final String EMAIL_TEMPLATES_BASE_PATH = "/notification/email";
-    public static final String EMAIL_TEMPLATE_TYPES_PATH = "/template-types";
-    public static final String ORG_EMAIL_TEMPLATES_PATH = "/org-templates";
-    public static final String APP_EMAIL_TEMPLATES_PATH = "/app-templates";
-    public static final String PATH_SEPARATOR = "/";
-    public static final String STRING_PLACEHOLDER = "%s";
-
-    public static final String SAMPLE_TEMPLATE_TYPE_ID = "QWNjb3VudEVuYWJsZQ";
-    public static final String SAMPLE_APPLICATION_UUID = "159341d6-bc1e-4445-982d-43d4df707b9a";
-
     protected static String swaggerDefinition;
 
     static {

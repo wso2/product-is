@@ -258,6 +258,16 @@
                 <artifactId>org.wso2.carbon.identity.api.server.email.template.common</artifactId>
                 <version>${identity.server.api.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.server.api</groupId>
+                <artifactId>org.wso2.carbon.identity.rest.api.server.notification.template.v1</artifactId>
+                <version>${identity.server.api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.server.api</groupId>
+                <artifactId>org.wso2.carbon.identity.api.server.notification.template.common</artifactId>
+                <version>${identity.server.api.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.wso2.carbon.identity.server.api</groupId>
