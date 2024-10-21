@@ -405,6 +405,105 @@
                         </configuration>
                     </execution>
                     <execution>
+                        <id>copy-jms-cache-sync-manager</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.carbon.cache.sync.manager</groupId>
+                                    <artifactId>org.wso2.carbon.cache.sync.jms.manager</artifactId>
+                                    <version>${cache.sync.jms.manager.version}</version>
+                                    <type>jar</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>
+                                        ${basedir}/target/test-classes/samples/cache
+                                    </outputDirectory>
+                                    <destFileName>org.wso2.carbon.cache.sync.jms.manager-2.0.14.jar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.apache.geronimo.specs</groupId>
+                                    <artifactId>geronimo-j2ee-management_1.1_spec</artifactId>
+                                    <version>${geronimo-j2ee-management_1.1_spec.version}</version>
+                                    <type>jar</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>
+                                        ${basedir}/target/test-classes/samples/cache
+                                    </outputDirectory>
+                                    <destFileName>geronimo-j2ee-management_1.1_spec-1.0.1.jar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.apache.activemq</groupId>
+                                    <artifactId>activemq-broker</artifactId>
+                                    <version>${activemq.version}</version>
+                                    <type>jar</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>
+                                        ${basedir}/target/test-classes/samples/cache
+                                    </outputDirectory>
+                                    <destFileName>activemq-broker-5.16.3.jar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.apache.activemq</groupId>
+                                    <artifactId>activemq-client</artifactId>
+                                    <version>${activemq.version}</version>
+                                    <type>jar</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>
+                                        ${basedir}/target/test-classes/samples/cache
+                                    </outputDirectory>
+                                    <destFileName>activemq-client-5.16.3.jar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.apache.geronimo.specs</groupId>
+                                    <artifactId>geronimo-jms_1.1_spec</artifactId>
+                                    <version>${geronimo-jms_1.1_spec.version}</version>
+                                    <type>jar</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>
+                                        ${basedir}/target/test-classes/samples/cache
+                                    </outputDirectory>
+                                    <destFileName>geronimo-jms_1.1_spec-1.1.1.jar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.fusesource.hawtbuf</groupId>
+                                    <artifactId>hawtbuf</artifactId>
+                                    <version>${hawtbuf.version}</version>
+                                    <type>jar</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>
+                                        ${basedir}/target/test-classes/samples/cache
+                                    </outputDirectory>
+                                    <destFileName>hawtbuf-1.11.jar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.slf4j</groupId>
+                                    <artifactId>slf4j-api</artifactId>
+                                    <version>${slf4j-api-server.version}</version>
+                                    <type>jar</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>
+                                        ${basedir}/target/test-classes/samples/cache
+                                    </outputDirectory>
+                                    <destFileName>slf4j-api-1.7.31.jar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.wso2.orbit.javax.jms</groupId>
+                                    <artifactId>jms-api</artifactId>
+                                    <version>${jms-api.version}</version>
+                                    <type>jar</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>
+                                        ${basedir}/target/test-classes/samples/cache
+                                    </outputDirectory>
+                                    <destFileName>jms-api_2-2.0.1.wso2v1.jar</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>copy-resources-dropins</id>
                         <phase>compile</phase>
                         <goals>
@@ -623,6 +722,39 @@
             </plugin>
         </plugins>
     </build>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.activemq</groupId>
+                <artifactId>activemq-all</artifactId>
+                <version>${activemq.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.activemq</groupId>
+                <artifactId>activemq-core</artifactId>
+                <version>${old-activemq-core.version}</version>
+                <scope>compile</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.activemq</groupId>
+                        <artifactId>activemq-core</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>log4j-over-slf4j</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <!-- Rest assured dependency requires the http client 4.5.1 or above. -->
@@ -957,6 +1089,81 @@
             <type>war</type>
         </dependency>
         <dependency>
+            <groupId>org.wso2.carbon.cache.sync.manager</groupId>
+            <artifactId>org.wso2.carbon.cache.sync.jms.manager</artifactId>
+            <version>${cache.sync.jms.manager.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-broker</artifactId>
+            <version>${activemq.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-client</artifactId>
+            <version>${activemq.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-all</artifactId>
+            <version>${activemq.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${logging.log4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${logging.log4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>${logging.log4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-j2ee-management_1.1_spec</artifactId>
+            <version>${geronimo-j2ee-management_1.1_spec.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-jms_1.1_spec</artifactId>
+            <version>${geronimo-jms_1.1_spec.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.fusesource.hawtbuf</groupId>
+            <artifactId>hawtbuf</artifactId>
+            <version>${hawtbuf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j-api-server.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.orbit.javax.jms</groupId>
+            <artifactId>jms-api</artifactId>
+            <version>${jms-api.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.samples.is</groupId>
             <artifactId>org.wso2.carbon.identity.sample.extension.authenticators</artifactId>
             <version>${samples.is.version}</version>
@@ -1104,4 +1311,19 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <properties>
+        <java.version>11</java.version>
+        <activemq.version>5.16.3</activemq.version>
+        <slf4j.version>1.7.32</slf4j.version>
+        <logback.version>1.2.6</logback.version>
+        <geronimo-jms_1.1_spec.version>1.1.1</geronimo-jms_1.1_spec.version>
+        <geronimo-j2ee-management_1.1_spec.version>1.0.1</geronimo-j2ee-management_1.1_spec.version>
+        <hawtbuf.version>1.11</hawtbuf.version>
+        <slf4j-api-server.version>1.7.31</slf4j-api-server.version>
+        <jms-api.version>2.0.1.wso2v1</jms-api.version>
+        <cache.sync.jms.manager.version>2.0.14</cache.sync.jms.manager.version>
+        <logging.log4j.version>2.17.1</logging.log4j.version>
+        <old-activemq-core.version>5.7.0</old-activemq-core.version>
+    </properties>
 </project>
