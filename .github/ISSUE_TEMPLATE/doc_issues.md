@@ -2,7 +2,7 @@
 name: 📕 Doc issues
 about: Please report documentation issues here
 title: ''
-labels: 'docs'
+labels: 'Type/Docs'
 assignees: ''
 
 ---
