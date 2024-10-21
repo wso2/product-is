@@ -2,7 +2,7 @@
 name: "✅ Testing Task"
 about: Create a testing task to improve the quality of the product.
 title: ''
-labels: 'test'
+labels: 'Type/Test'
 assignees: ''
 
 ---
