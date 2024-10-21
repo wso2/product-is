@@ -40,16 +40,16 @@ import static org.wso2.identity.integration.test.rest.api.server.notification.te
         .Constants.PLACE_HOLDER_DISPLAY_NAME;
 
 /**
- * Integration tests for Notification Template API Email Templates.
+ * Integration tests for Notification Template API.
  * Test class for Templates Types REST API positive paths.
  */
-public class NotificationTemplateTypesPositiveTest extends NotificationTemplateEmailTemplatesTestBase {
+public class NotificationTypesPositiveTest extends NotificationTemplatesTestBase {
 
     private static final String TEMPLATE_TYPE_EMAIL = "email-positive-template-type";
     private static final String TEMPLATE_TYPE_SMS = "sms-positive-template-type";
 
     @Factory (dataProvider = "restAPIUserConfigProvider")
-    public NotificationTemplateTypesPositiveTest(TestUserMode userMode) throws Exception {
+    public NotificationTypesPositiveTest(TestUserMode userMode) throws Exception {
 
         super.init(userMode);
         this.context = isServer;
@@ -89,7 +89,7 @@ public class NotificationTemplateTypesPositiveTest extends NotificationTemplateE
         };
     }
 
-    @Test(dataProvider = "notificationChannelDataProvider")
+    @Test(groups = "wso2.is", dataProvider = "notificationChannelDataProvider")
     public void testAddTemplateType(String templateTypeDisplayName, String channelBasePath) throws Exception {
 
         String testTemplateTypeId = base64String(templateTypeDisplayName);
@@ -110,7 +110,10 @@ public class NotificationTemplateTypesPositiveTest extends NotificationTemplateE
         Assert.assertEquals(response.as(Map.class).size(), 3, "Response body should have 3 attributes.");
     }
 
-    @Test(dataProvider = "notificationChannelDataProvider", dependsOnMethods = {"testAddTemplateType"})
+    @Test(
+            groups = "wso2.is",
+            dataProvider = "notificationChannelDataProvider",
+            dependsOnMethods = {"testAddTemplateType"})
     public void testGetTemplateTypesList(String templateTypeDisplayName, String channelBasePath) throws Exception {
 
         String testTemplateTypeId = base64String(templateTypeDisplayName);
@@ -129,7 +132,9 @@ public class NotificationTemplateTypesPositiveTest extends NotificationTemplateE
                 .body(collectionQueryById + ATTRIBUTE_SELF, equalTo(selfPath));
     }
 
-    @Test(dataProvider = "notificationChannelDataProvider", dependsOnMethods = {"testAddTemplateType"})
+    @Test(groups = "wso2.is",
+            dataProvider = "notificationChannelDataProvider",
+            dependsOnMethods = {"testAddTemplateType"})
     public void testGetEmailTemplateType(String templateTypeDisplayName, String channelBasePath) throws Exception {
 
         String testTemplateTypeId = base64String(templateTypeDisplayName);
@@ -147,6 +152,7 @@ public class NotificationTemplateTypesPositiveTest extends NotificationTemplateE
     }
 
     @Test(
+            groups = "wso2.is",
             dataProvider = "notificationChannelDataProvider",
             dependsOnMethods = {"testAddTemplateType", "testGetEmailTemplateType", "testGetTemplateTypesList"})
     public void testDeleteEmailTemplateType(String templateTypeDisplayName, String channelBasePath) {

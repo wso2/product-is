@@ -11,7 +11,7 @@ import org.wso2.identity.integration.test.rest.api.server.common.RESTAPIServerTe
 import java.io.IOException;
 import java.util.Base64;
 
-public class NotificationTemplateEmailTemplatesTestBase extends RESTAPIServerTestBase {
+public class NotificationTemplatesTestBase extends RESTAPIServerTestBase {
 
     private static final String API_DEFINITION_NAME = "notification-template.yml";
     static final String API_VERSION = "v1";
@@ -46,7 +46,7 @@ public class NotificationTemplateEmailTemplatesTestBase extends RESTAPIServerTes
         RestAssured.basePath = StringUtils.EMPTY;
     }
 
-    protected String base64String(String value) {
+    protected static String base64String(String value) {
 
         return Base64.getEncoder().withoutPadding().encodeToString(value.getBytes());
     }
