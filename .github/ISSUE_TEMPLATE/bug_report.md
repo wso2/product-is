@@ -2,7 +2,7 @@
 name: ❗️ Issue/Bug report
 about: Report issue or bug related to the project
 title: ''
-labels: 'bug'
+labels: 'Type/Bug'
 assignees: ''
 
 ---
