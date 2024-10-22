@@ -1,0 +1,4 @@
+{
+  "templateTypeId": "{{templateTypeId}}",
+  "channel": "{{channel}}"
+}
