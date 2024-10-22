@@ -35,6 +35,10 @@
         "value": "false"
       },
       {
+        "name": "SelfRegistration.ShowUsernameUnavailability",
+        "value": "true"
+      },
+      {
         "name": "SelfRegistration.Notification.InternallyManage",
         "value": "true"
       },
