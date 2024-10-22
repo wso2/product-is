@@ -21,7 +21,9 @@ package org.wso2.identity.integration.test.oauth2;
 import com.nimbusds.oauth2.sdk.AccessTokenResponse;
 import com.nimbusds.oauth2.sdk.AuthorizationGrant;
 import com.nimbusds.oauth2.sdk.ClientCredentialsGrant;
+import com.nimbusds.oauth2.sdk.ErrorObject;
 import com.nimbusds.oauth2.sdk.Scope;
+import com.nimbusds.oauth2.sdk.TokenErrorResponse;
 import com.nimbusds.oauth2.sdk.TokenRequest;
 import com.nimbusds.oauth2.sdk.TokenResponse;
 import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
@@ -30,8 +32,16 @@ import com.nimbusds.oauth2.sdk.auth.Secret;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.openid.connect.sdk.OIDCTokenResponse;
+import org.apache.http.Header;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -44,10 +54,19 @@ import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
+import org.wso2.identity.integration.test.utils.CarbonUtils;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN_ENDPOINT;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZATION_HEADER;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_SCOPE_OPENID;
 
 /**
@@ -55,6 +74,13 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_SCO
  */
 public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
+    private static final String JWT = "JWT";
+    private static final String API_USERS_V1_OFFLINE_INVITE_LINK = "/api/users/v1/offline-invite-link/";
+    public static final String SCIM2_BULK = "/scim2/Bulk";
+    public static final String OAUTH2_INTROSPECT = "/oauth2/introspect";
+    private static final String INTERNAL_BULK_RESOURCE_CREATE = "internal_bulk_resource_create";
+    private static final String INTERNAL_OFFLINE_INVITE = "internal_offline_invite";
+    private static final String SCOPE = "scope";
     private String accessToken;
     private String consumerKey;
     private String consumerSecret;
@@ -110,6 +136,13 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
     public void testRegisterApplication() throws Exception {
 
         ApplicationResponseModel application = addApplication();
+
+        String applicationId = application.getId();
+        if (!CarbonUtils.isLegacyAuthzRuntimeEnabled()) {
+            // Authorize few system APIs.
+            authorizeSystemAPIs(applicationId,
+                    new ArrayList<>(Arrays.asList(SCIM2_BULK, OAUTH2_INTROSPECT)));
+        }
         Assert.assertNotNull(application, "OAuth App creation failed.");
 
         OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(application.getId());
@@ -119,8 +152,6 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
 
         consumerSecret = oidcConfig.getClientSecret();
         Assert.assertNotNull(consumerSecret, "Application creation failed.");
-
-        applicationId = application.getId();
     }
 
     @Test(groups = "wso2.is", description = "Send client credentials token request.", dependsOnMethods = "testRegisterApplication")
@@ -130,7 +161,7 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
         ClientID clientID = new ClientID(consumerKey);
         Secret clientSecret = new Secret(consumerSecret);
         ClientAuthentication clientAuth = new ClientSecretBasic(clientID, clientSecret);
-        Scope scope = new Scope(OAUTH2_SCOPE_OPENID, "xyz", VALID_RANDOM_SCOPE);
+        Scope scope = new Scope(OAUTH2_SCOPE_OPENID, "xyz", VALID_RANDOM_SCOPE, INTERNAL_BULK_RESOURCE_CREATE);
 
         URI tokenEndpoint = new URI(getTenantQualifiedURL(OAuth2Constant.ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()));
         TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, clientCredentialsGrant, scope);
@@ -150,13 +181,111 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
         Scope scopesInResponse = accessTokenResponse.getTokens().getAccessToken().getScope();
         Assert.assertFalse(scopesInResponse.contains("xyz"), "Not allowed random scope is issued for client credential " +
                 "grant type.");
+        Assert.assertFalse(scopesInResponse.contains(INTERNAL_OFFLINE_INVITE), "Not allowed random scope is issued for client credential " +
+                "grant type.");
+
         Assert.assertTrue(scopesInResponse.contains(VALID_RANDOM_SCOPE), "Allowed random scope is not issued for " +
                 "client credential grant type.");
+        Assert.assertTrue(scopesInResponse.contains(INTERNAL_BULK_RESOURCE_CREATE),
+                "Allowed bulk resource create scope is not issued for client credential grant type.");
 
         // This ensures that openid scopes are not issued for client credential grant type.
         Assert.assertFalse(accessTokenResponse instanceof OIDCTokenResponse, "Client credential grant type cannot " +
                 "get a OIDC Token Response.");
         Assert.assertFalse(scopesInResponse.contains(OAUTH2_SCOPE_OPENID), "Client credentials cannot get openid scope.");
+    }
+
+    @Test(groups = "wso2.is", description = "Send client credentials token request with invalid client Id.",
+            dependsOnMethods = "testGetTokenUsingClientCredentialsGrant")
+    public void testGetTokenUsingCCGrantWithInvalidClientId() throws Exception {
+
+        AuthorizationGrant clientCredentialsGrant = new ClientCredentialsGrant();
+        ClientID clientID = new ClientID("invalidConsumerKey");
+        Secret clientSecret = new Secret(consumerSecret);
+        ClientAuthentication clientAuth = new ClientSecretBasic(clientID, clientSecret);
+        Scope scope = new Scope(OAUTH2_SCOPE_OPENID, "xyz", VALID_RANDOM_SCOPE, INTERNAL_BULK_RESOURCE_CREATE);
+
+        URI tokenEndpoint = new URI(getTenantQualifiedURL(OAuth2Constant.ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()));
+        TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, clientCredentialsGrant, scope);
+        HTTPResponse tokenHTTPResp = request.toHTTPRequest().send();
+        Assert.assertNotNull(tokenHTTPResp, "Access token http response is null.");
+
+        TokenResponse tokenResponse = TokenResponse.parse(tokenHTTPResp);
+        Assert.assertFalse(tokenResponse.indicatesSuccess(),
+                "Token response indicated success. Token request should fail with invalid client id.");
+
+        TokenErrorResponse accessTokenResponse = (TokenErrorResponse) tokenResponse;
+        ErrorObject errorObject =  accessTokenResponse.getErrorObject();
+        Assert.assertEquals(errorObject.getHTTPStatusCode(), HttpStatus.SC_UNAUTHORIZED,
+                "Invalid access token response doesn't contain bad request status code.");
+        Assert.assertEquals(errorObject.getCode(), "invalid_client",
+                "Invalid access token response doesn't contain required error message.");
+        Assert.assertEquals(errorObject.getDescription(),
+                "A valid OAuth client could not be found for client_id: invalidConsumerKey",
+                "Invalid access token response doesn't contain required error description.");
+    }
+
+    @Test(groups = "wso2.is", description = "Send client credentials token request with invalid client secret.",
+            dependsOnMethods = "testGetTokenUsingCCGrantWithInvalidClientId")
+    public void testGetTokenUsingCCGrantWithInvalidClientCredentials() throws Exception {
+
+        AuthorizationGrant clientCredentialsGrant = new ClientCredentialsGrant();
+        ClientID clientID = new ClientID(consumerKey);
+        Secret clientSecret = new Secret("invalidConsumerSecret");
+        ClientAuthentication clientAuth = new ClientSecretBasic(clientID, clientSecret);
+        Scope scope = new Scope(OAUTH2_SCOPE_OPENID, "xyz", VALID_RANDOM_SCOPE, INTERNAL_BULK_RESOURCE_CREATE);
+
+        URI tokenEndpoint = new URI(getTenantQualifiedURL(OAuth2Constant.ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()));
+        TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, clientCredentialsGrant, scope);
+        HTTPResponse tokenHTTPResp = request.toHTTPRequest().send();
+        Assert.assertNotNull(tokenHTTPResp, "Access token http response is null.");
+
+        TokenResponse tokenResponse = TokenResponse.parse(tokenHTTPResp);
+        Assert.assertFalse(tokenResponse.indicatesSuccess(),
+                "Token response indicated success. Token request should fail with invalid client id.");
+
+        TokenErrorResponse accessTokenResponse = (TokenErrorResponse) tokenResponse;
+        ErrorObject errorObject =  accessTokenResponse.getErrorObject();
+        Assert.assertEquals(errorObject.getHTTPStatusCode(), HttpStatus.SC_UNAUTHORIZED,
+                "Invalid access token response doesn't contain bad request status code.");
+        Assert.assertEquals(errorObject.getCode(), "invalid_client",
+                "Invalid access token response doesn't contain required error message.");
+        Assert.assertEquals(errorObject.getDescription(),
+                "Client credentials are invalid.",
+                "Invalid access token response doesn't contain required error description.");
+    }
+
+    @Test(groups = "wso2.is", description = "Send client credentials token request without client secret.",
+            dependsOnMethods = "testGetTokenUsingCCGrantWithInvalidClientCredentials")
+    public void testGetTokenUsingCCGrantWithoutCredentials() throws Exception {
+
+
+        List<NameValuePair> parameters = new ArrayList<>();
+        parameters.add(new BasicNameValuePair("grant_type", OAuth2Constant.OAUTH2_GRANT_TYPE_CLIENT_CREDENTIALS));
+
+        String scopes = "xyz " + VALID_RANDOM_SCOPE + " " + INTERNAL_BULK_RESOURCE_CREATE;
+        parameters.add(new BasicNameValuePair("scope", scopes));
+
+        List<Header> headers = new ArrayList<>();
+        headers.add(new BasicHeader(AUTHORIZATION_HEADER, OAuth2Constant.BASIC_HEADER + " " +
+                getBase64EncodedString("", "")));
+        headers.add(new BasicHeader("Content-Type", "application/x-www-form-urlencoded"));
+        headers.add(new BasicHeader("User-Agent", OAuth2Constant.USER_AGENT));
+
+        HttpResponse response = sendPostRequest(client, headers, parameters,
+                getTenantQualifiedURL(ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()));
+
+        String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
+        JSONObject jsonResponse = new JSONObject(responseString);
+
+        assertTrue(jsonResponse.has("error"), "Invalid access token response doesn't contain" +
+                " error message.");
+        assertEquals(jsonResponse.getString("error"), "invalid_client",
+                "Invalid access token response doesn't contain required error message.");
+
+        assertTrue(jsonResponse.has("error_description"), "Error not found in the token response.");
+        assertEquals(jsonResponse.getString("error_description"), "Client ID not found in the request.",
+                "Invalid access token response doesn't contain required error description.");
     }
 
     @Test(groups = "wso2.is", description = "Validate access token",
