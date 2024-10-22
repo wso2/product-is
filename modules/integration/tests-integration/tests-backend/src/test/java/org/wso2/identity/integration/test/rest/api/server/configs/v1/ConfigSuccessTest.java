@@ -104,7 +104,8 @@ public class ConfigSuccessTest extends ConfigTestBase {
                 .body("name", equalTo("BasicAuthenticator"))
                 .body("displayName", equalTo("Username & Password"))
                 .body("isEnabled", equalTo(true))
-                .body("properties", notNullValue());
+                .body("properties", notNullValue())
+                .body("definedBy", equalTo("SYSTEM"));
     }
 
     @Test(dependsOnMethods = {"testGetAuthenticator"})
@@ -118,7 +119,8 @@ public class ConfigSuccessTest extends ConfigTestBase {
                 .statusCode(HttpStatus.SC_OK)
                 .body(baseIdentifier + "name", equalTo("BasicAuthenticator"))
                 .body(baseIdentifier + "displayName", equalTo("Username & Password"))
-                .body(baseIdentifier + "isEnabled", equalTo(true));
+                .body(baseIdentifier + "isEnabled", equalTo(true))
+                .body(baseIdentifier + "definedBy", equalTo("SYSTEM"));
     }
 
     @Test(dependsOnMethods = {"testGetAuthenticators"})
